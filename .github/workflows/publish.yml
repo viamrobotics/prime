@@ -1,0 +1,34 @@
+name: Publish and Deploy Storybook
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.4.0
+        with:
+          persist-credentials: false
+
+      - name: Install and Build 🔧
+        run: |
+          npm ci --production --audit=false
+          npm run build-storybook
+          npm run build
+
+      # - name: Publish 🚀
+      #   run: npm publish
+
+      - name: Deploy Storybook 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.6
+        with:
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: prime # The folder that the build-storybook script generates files.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
+          clean-exclude: |
+            .nojekyll

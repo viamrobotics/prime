@@ -1,0 +1,62 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title="Elements/Input"
+  parameters={{
+    docs: {
+      description: {
+        component: 'Used for all text single-line user inputs.',
+      },
+    },
+  }}
+  argTypes={{
+    placeholder: {
+      description: 'The input placeholder text',
+      control: 'text',
+      defaultValue: 'Favorite soup',
+      table: { defaultValue: { summary: '' } },
+    },
+    type: {
+      description: 'The input type',
+      control: 'select',
+      options: ['text', 'email', 'number'],
+      defaultValue: 'text',
+      table: { defaultValue: { summary: 'text' } },
+    },
+  }}
+/>
+
+<Canvas>
+  <Story
+    name='Text'
+    args={{
+      type: 'text'
+    }}
+    parameters={{ docs: { source: { state: 'open' } } }}
+  >
+    {({ type, placeholder }) => `
+      <v-input
+        type='${type}'
+        placeholder='${placeholder}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Number'
+    args={{
+      type: 'number',
+      placeholder: 'Amount of soup'
+    }}
+    parameters={{ docs: { source: { state: 'open' } } }}
+  >
+    {({ type, placeholder }) => `
+      <v-input
+        type='${type}'
+        placeholder='${placeholder}'
+      />
+    `}
+  </Story>
+</Canvas>

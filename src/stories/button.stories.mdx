@@ -1,0 +1,78 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title="Elements/Button"
+  parameters={{
+    docs: {
+      description: {
+        component: 'For user triggered actions'
+      },
+    },
+  }}
+  argTypes={{
+    label: {
+      description: 'Text displayed to users',
+      control: 'text',
+      defaultValue: 'Test',
+      table: { defaultValue: { summary: '' } }
+    },
+    size: {
+      description: 'The size of the button',
+      control: { type: 'select' },
+      options: ['small', 'medium', 'large'],
+      defaultValue: 'medium',
+      table: { defaultValue: { summary: 'medium' } }
+    },
+    variant: {
+      description: 'The button purpose',
+      control: 'select',
+      options: ['primary', 'danger', 'outline-danger'],
+      defaultValue: 'primary',
+      table: { defaultValue: { summary: 'primary' } }
+    },
+  }}
+/>
+
+<Canvas>
+  <Story
+    name="Primary"
+    parameters={{ docs: { source: { state: 'open' } } }}
+  >
+    {({ label, variant, size }) => `
+      <v-button
+        variant="${variant}"
+        label="${label}"
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name="Danger"
+    args={{ variant: 'danger' }}
+    parameters={{ docs: { source: { state: 'open' } } }}
+  >
+    {({ label, variant, size }) => `
+      <v-button
+        variant="${variant}"
+        label="${label}"
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name="Danger (outline)"
+    args={{ variant: 'outline-danger' }}
+    parameters={{ docs: { source: { state: 'open' } } }}
+  >
+    {({ label, variant, size }) => `
+      <v-button
+        variant='${variant}'
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
