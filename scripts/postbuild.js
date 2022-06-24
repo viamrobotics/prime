@@ -79,7 +79,7 @@ const main = async () => {
   write('prime/.nojekyll', '')
 
   // Move assets to the storybook directory
-  copy('static/favicon.ico', 'prime/favicon.ico')
+  // copy('static/favicon.ico', 'prime/favicon.ico')
   copy('dist/prime.es.js', 'prime/prime.es.js')
   copy('dist/prime.css', 'prime/prime.css')
   copy('dist/icons.css', 'prime/icons.css')
