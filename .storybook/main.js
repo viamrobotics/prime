@@ -1,5 +1,6 @@
 const { svelte } = require('@sveltejs/vite-plugin-svelte')
 const { preprocess } = require('../svelte.config.js')
+const { mergeConfig } = require('vite')
 
 // const webpackFinal = async (config) => {
 //   if (process.env.NODE_ENV !== 'development') {
@@ -18,9 +19,6 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-  ],
-  staticDirs: [
-    '../assets',
   ],
   core: {
     builder: '@storybook/builder-vite'
@@ -46,7 +44,9 @@ module.exports = {
     //   config.output.publicPath = '/prime/'
     // }
 
-    return config
+    return mergeConfig(config, {
+      base: process.env.NODE_ENV !== 'development' ? '/prime' : '/'
+    })
   },
   // webpackFinal,
   // managerWebpack: webpackFinal,
