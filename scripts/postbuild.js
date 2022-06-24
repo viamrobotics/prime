@@ -32,7 +32,7 @@ const main = async () => {
   rename('dist/style.css', 'dist/prime.css')
 
   // Add Typescript definitions to the library directory
-  copy('src/global.d.ts', 'dist/prime.d.ts')
+  copy('src/prime.d.ts', 'dist/prime.d.ts')
 
   // Add icon resources
   // copy('icons.css', 'dist/icons.css')
