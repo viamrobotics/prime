@@ -29,6 +29,7 @@
   "dependencies": {
     "@babel/core": "^7.18.5",
     "@storybook/addon-actions": "^6.5.9",
+    "@storybook/addon-docs": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-interactions": "^6.5.9",
     "@storybook/addon-links": "^6.5.9",
@@ -60,8 +61,5 @@
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
     "vite": "2.9.12"
-  },
-  "devDependencies": {
-    
   }
 }
