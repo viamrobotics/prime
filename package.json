@@ -24,7 +24,7 @@
     "lint": "eslint --ext .ts,.tsx,.svelte, ./src/elements",
     "storybook": "start-storybook -p 6006",
     "storybook-docs": "start-storybook --docs --no-manager-cache",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook --docs -o prime --preview-url=/prime/iframe.html --force-build-preview"
   },
   "dependencies": {
     "@babel/core": "^7.18.5",

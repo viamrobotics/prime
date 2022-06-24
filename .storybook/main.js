@@ -1,13 +1,13 @@
 const { svelte } = require('@sveltejs/vite-plugin-svelte')
 const { preprocess } = require('../svelte.config.js')
 
-const webpackFinal = async (config) => {
-  if (dev === false) {
-    config.output.publicPath = '/prime/'
-  }
+// const webpackFinal = async (config) => {
+//   if (process.env.NODE_ENV !== 'development') {
+//     config.output.publicPath = '/prime/'
+//   }
   
-  return config
-}
+//   return config
+// }
 
 module.exports = {
   stories: [
@@ -39,8 +39,12 @@ module.exports = {
       })
     )
 
+    // if (process.env.NODE_ENV !== 'development') {
+    //   config.output.publicPath = '/prime/'
+    // }
+
     return config
   },
-  webpackFinal,
-  managerWebpack: webpackFinal,
+  // webpackFinal,
+  // managerWebpack: webpackFinal,
 }
