@@ -2,14 +2,6 @@ const { svelte } = require('@sveltejs/vite-plugin-svelte')
 const { preprocess } = require('../svelte.config.js')
 const { mergeConfig } = require('vite')
 
-// const webpackFinal = async (config) => {
-//   if (process.env.NODE_ENV !== 'development') {
-//     config.output.publicPath = '/prime/'
-//   }
-  
-//   return config
-// }
-
 module.exports = {
   stories: [
     '../src/stories/docs/introduction.stories.mdx',
@@ -40,14 +32,8 @@ module.exports = {
       })
     )
 
-    // if (process.env.NODE_ENV !== 'development') {
-    //   config.output.publicPath = '/prime/'
-    // }
-
     return mergeConfig(config, {
       base: process.env.NODE_ENV !== 'development' ? '/prime' : '/'
     })
   },
-  // webpackFinal,
-  // managerWebpack: webpackFinal,
 }
