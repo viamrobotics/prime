@@ -89,7 +89,6 @@ const main = async () => {
   // Update correct paths for iframe resources
   {
     const file = read('prime/iframe.html')
-      .replace(/\/assets\//g, '/prime/assets/')
       .replace("src='/src/elements/index.ts'", "src='/prime/prime.es.js'")
       .replace(`href="./prime.css"`, `href="/prime/prime.css"`)
     write('prime/iframe.html', file)

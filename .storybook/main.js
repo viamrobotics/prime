@@ -33,7 +33,7 @@ module.exports = {
     )
 
     return mergeConfig(config, {
-      base: process.env.NODE_ENV !== 'development' ? '/prime' : '/'
+      base: process.env.NODE_ENV !== 'development' ? '/prime/' : '/'
     })
   },
 }

@@ -1,7 +1,7 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
-  title="Elements/Button"
+  title='Elements/Button'
   parameters={{
     docs: {
       description: {
@@ -35,13 +35,13 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Canvas>
   <Story
-    name="Primary"
+    name='Primary'
     parameters={{ docs: { source: { state: 'open' } } }}
   >
     {({ label, variant, size }) => `
       <v-button
-        variant="${variant}"
-        label="${label}"
+        variant='${variant}'
+        label='${label}'
       />
     `}
   </Story>
@@ -49,14 +49,14 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Canvas>
   <Story
-    name="Danger"
+    name='Danger'
     args={{ variant: 'danger' }}
     parameters={{ docs: { source: { state: 'open' } } }}
   >
     {({ label, variant, size }) => `
       <v-button
-        variant="${variant}"
-        label="${label}"
+        variant='${variant}'
+        label='${label}'
       />
     `}
   </Story>
@@ -64,7 +64,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Canvas>
   <Story
-    name="Danger (outline)"
+    name='Danger (outline)'
     args={{ variant: 'outline-danger' }}
     parameters={{ docs: { source: { state: 'open' } } }}
   >
