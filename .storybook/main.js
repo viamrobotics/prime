@@ -19,6 +19,9 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
   ],
+  staticDirs: [
+    '/prime',
+  ],
   core: {
     builder: '@storybook/builder-vite'
   },
