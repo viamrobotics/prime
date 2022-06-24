@@ -20,7 +20,7 @@ module.exports = {
     '@storybook/addon-interactions',
   ],
   staticDirs: [
-    '/prime',
+    'assets',
   ],
   core: {
     builder: '@storybook/builder-vite'
