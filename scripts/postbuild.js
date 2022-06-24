@@ -82,9 +82,9 @@ const main = async () => {
   // copy('static/favicon.ico', 'prime/favicon.ico')
   copy('dist/prime.es.js', 'prime/prime.es.js')
   copy('dist/prime.css', 'prime/prime.css')
-  copy('dist/icons.css', 'prime/icons.css')
+  // copy('dist/icons.css', 'prime/icons.css')
   mkdir('prime/fonts')
-  copy('dist/fonts/icons.woff2', 'prime/fonts/icons.woff2')
+  // copy('dist/fonts/icons.woff2', 'prime/fonts/icons.woff2')
 
   // Update correct paths for iframe resources
   {
