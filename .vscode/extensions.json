@@ -3,6 +3,7 @@
     "dbaeumer.vscode-eslint",
     "csstools.postcss",
     "bradlc.vscode-tailwindcss",
-    "svelte.svelte-vscode"
+    "svelte.svelte-vscode",
+    "silvenon.mdx"
   ]
 }
