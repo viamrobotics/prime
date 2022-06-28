@@ -1,0 +1,65 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title='Elements/Slider'
+  argTypes={{
+    min: {
+      description: 'The minimum value',
+      control: 'number',
+      defaultValue: '',
+      table: { defaultValue: { summary: '' } }
+    },
+    max: {
+      description: 'The maxiumum value',
+      control: 'number',
+      defaultValue: '',
+      table: { defaultValue: { summary: '' } }
+    },
+  }}
+/>
+
+# Radio
+
+For user triggered actions
+
+<Canvas>
+  <Story
+    name='Slider'
+    args={{
+      min: 0,
+      max: 100,
+      step: 10,
+    }}
+  >
+    {({ min, max, step }) => `
+      <v-slider
+        min="${min}"
+        max="${max}"
+        step="${step}"
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Multivalue'
+    args={{
+      min: 0,
+      max: 100,
+      start: 10,
+      end: 90,
+      step: 10,
+    }}
+  >
+    {({ min, max, step, start, end }) => `
+      <v-slider
+        min="${min}"
+        max="${max}"
+        step="${step}"
+        start="${start}"
+        end="${end}"
+      />
+    `}
+  </Story>
+</Canvas>

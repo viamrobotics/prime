@@ -1,0 +1,34 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title='Elements/Radio'
+  argTypes={{
+    options: {
+      description: 'The list of options',
+      control: 'text',
+      defaultValue: '',
+      table: { defaultValue: { summary: '' } }
+    },
+  }}
+/>
+
+# Radio
+
+For user triggered actions
+
+<Canvas>
+  <Story
+    name='Radio'
+    args={{
+      options: 'Opt 1, Opt 2',
+      selected: 'Opt 1'
+    }}
+  >
+    {({ options, selected }) => `
+      <v-radio
+        options="${options}"
+        selected="${selected}"
+      />
+    `}
+  </Story>
+</Canvas>

@@ -8,3 +8,12 @@
   font-family: 'Space Mono', monospace;
 }
 
+v-breadcrumbs,
+v-button,
+v-input
+v-radio,
+v-slider,
+v-switch,
+v-tabs {
+  display: block;
+}

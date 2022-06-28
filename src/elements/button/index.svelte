@@ -3,6 +3,10 @@
   tag='v-button'
 />
 
+<style>
+  :host { display: block }
+</style>
+
 <link rel='stylesheet' href='/prime.css' />
 
 <script lang='ts'>

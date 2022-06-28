@@ -1,0 +1,28 @@
+<svelte:options
+  immutable={true}
+  tag='v-breadcrumbs'
+/>
+
+<link rel='stylesheet' href='/prime.css' />
+
+<script lang='ts'>
+
+export let crumbs = ''
+
+$: parsedCrumbs = crumbs.split(',').map((str) => str.trim())
+
+</script>
+
+<div class="inline-flex gap-3 px-4 border border-black rounded-full">
+  {#each parsedCrumbs as crumb, index (crumb)}
+    <small class="py1">
+      { crumb }
+    </small>
+    {#if index !== parsedCrumbs.length - 1}
+      <div>
+        <div class="w-px h-[60%] border-l border-black -rotate-[30deg] -mt-px" />
+        <div class="w-px h-[60%] border-l border-black rotate-[30deg] -mt-0.5" />
+      </div>
+    {/if}
+  {/each}
+</div>
