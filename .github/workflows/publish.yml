@@ -30,9 +30,7 @@ jobs:
           clean-exclude: |
             .nojekyll
 
-      - name: Publish 🚀
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }} 
-
-      
+      # - name: Publish 🚀
+      #   uses: JS-DevTools/npm-publish@v1
+      #   with:
+      #     token: ${{ secrets.NPM_TOKEN }} 
