@@ -22,9 +22,10 @@ jobs:
           npm run build
 
       - name: Publish 🚀
-        run: npm publish
         with:
           token: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm publish
 
       - name: Deploy Storybook 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.6
