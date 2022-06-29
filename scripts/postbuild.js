@@ -86,6 +86,13 @@ const main = async () => {
   mkdir('prime/fonts')
   // copy('dist/fonts/icons.woff2', 'prime/fonts/icons.woff2')
 
+  // Add noindex rule
+  {
+    const file = read('prime/index.html')
+      .replace('<meta charset="utf-8"/>', '<meta charset="utf-8"/><meta name="robots" content="noindex">')
+    write('prime/index.html', file)
+  }
+
   // Update correct paths for iframe resources
   {
     const file = read('prime/iframe.html')
