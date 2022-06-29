@@ -9,6 +9,8 @@
 
 export let crumbs = ''
 
+let parsedCrumbs: string[]
+
 $: parsedCrumbs = crumbs.split(',').map((str) => str.trim())
 
 </script>

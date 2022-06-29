@@ -13,7 +13,7 @@ export let tabs = ''
 export let selected = ''
 
 $: parsedTabs = tabs.split(',').map((str) => str.trim())
-$: selectedIndex = parsedTabs.findIndex((tab) => tab === selected)
+$: selectedIndex = parsedTabs.indexOf(selected)
 
 const handleClick = (option: string) => {
   selected = option

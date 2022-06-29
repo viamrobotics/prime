@@ -1,0 +1,25 @@
+name: Pull Request Update
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install 🔧
+      run: npm ci --audit=false
+    - name: Run ESLint
+      run: npm run lint
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install 🔧
+      run: npm ci --audit=false
+    - name: Run Check
+      run: npm run check

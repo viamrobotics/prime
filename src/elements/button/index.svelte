@@ -25,7 +25,7 @@ export let label = ''
   class={cx('py-1.5 px-2 text-xs border', {
     'border-black': variant === 'primary',
     'bg-red/90 text-white border-red/90': variant === 'danger',
-    'border-red/90 text-red/90': variant === 'outline-danger'
+    'border-red/90 text-red/90': variant === 'outline-danger',
   })}
 >
   {label}
