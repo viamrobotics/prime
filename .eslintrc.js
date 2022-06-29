@@ -2,16 +2,15 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    jasmine: true,
-    es2021: true,
-    node: true,
-    jest: true,
+    es6: true,
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
     tsConfigRootDir: __dirname,
-    project: './tsconfig.json',
     extraFileExtensions: ['.svelte'],
+    project: ['./tsconfig.json'],
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
   plugins: [
     'svelte3',
@@ -21,33 +20,70 @@ module.exports = {
     'jsx-a11y',
     'sonarjs',
     'prefer-arrow',
-    'jest-dom',
   ],
   overrides: [
     {
-      files: ['*.wc.svelte'],
+      files: ['*.svelte'],
       processor: 'svelte3/svelte3',
       settings: {
         'svelte3/compiler-options': {
           customElement: true,
         },
       }
-    }, {
-      files: ['*.stories.svelte'],
-      processor: 'svelte3/svelte3',
-      parser: 'espree',
     }
   ],
   extends: [
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:jsx-a11y/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
     'plugin:unicorn/recommended',
+    'plugin:jsx-a11y/recommended',
     'plugin:sonarjs/recommended',
-    'plugin:jest-dom/recommended',
-    'eslint:recommended',
+    
   ],
   rules: {
+    // Spacing and code style
+    indent: ['error', 2],
+    'arrow-spacing': 'error',
+    'block-spacing': 'error',
+    'comma-spacing': 'error',
+    'computed-property-spacing': 'error',
+    'func-call-spacing': 'error',
+    'key-spacing': 'error',
+    'keyword-spacing': 'error',
+    'rest-spread-spacing': 'error',
+    'semi-spacing': 'error',
+    'array-bracket-spacing': 'error',
+    'space-before-blocks': 'error',
+    'space-in-parens': 'error',
+    'space-infix-ops': 'error',
+    'space-unary-ops': 'error',
+    'spaced-comment': 'error',
+    'template-curly-spacing': 'error',
+    'object-curly-spacing': ['error', 'always'],
+    // https://github.com/sveltejs/eslint-plugin-svelte3/issues/41
+    'no-multiple-empty-lines': 'off',
+    'no-multi-spaces': 'error',
+    'eol-last': 'error',
+    'brace-style': 'error',
+    'semi-style': 'error',
+    'dot-notation': 'error',
+    'nonblock-statement-body-position': 'error',
+    quotes: ['error', 'single', { avoidEscape: true }],
+    semi: ['error', 'always'],
+    'comma-dangle': [
+      'error',
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'never',
+        functions: 'never',
+      },
+    ],
+
     'one-var': [
       'error',
       {
@@ -140,8 +176,9 @@ module.exports = {
     'import/no-cycle': 'error',
     'import/no-useless-path-segments': 'error',
     'import/export': 'error',
-    'import/extensions': ['error', 'never'],
-    'import/first': 'error',
+    'import/extensions': ["error", "never", { "svelte": "always" }],
+    // Do not currently work with eslint-plugin-svelte
+    'import/first': 'off',
 
     // Svelte
     'svelte3/missing-custom-element-compile-options': 'off',
@@ -153,11 +190,13 @@ module.exports = {
     },
     'import/resolver': {
       typescript: {
+        extensions: ['.js', '.ts', '.svelte'],
         // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
         alwaysTryTypes: true,
         project: './tsconfig.json',
       },
     },
-    'svelte3/typescript': true
+    'svelte3/typescript': () => require('typescript'),
   },
+  ignorePatterns: ['**/cypress/**', '**/node_modules/**', '*.json'],
 }
