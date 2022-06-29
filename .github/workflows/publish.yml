@@ -34,11 +34,3 @@ jobs:
           CLEAN: true # Automatically remove deleted files from the deploy branch
           clean-exclude: |
             .nojekyll
-
-on: push
-
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      
