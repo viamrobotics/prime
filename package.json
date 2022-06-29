@@ -1,5 +1,5 @@
 {
-  "name": "@viam/prime",
+  "name": "@viamrobotics/prime",
   "version": "0.0.1",
   "type": "commonjs",
   "files": [
@@ -13,8 +13,8 @@
       "require": "./dist/prime.umd.js"
     }
   },
-  "homepage": "http://viam.github.io/prime",
-  "repository": "git://github.com/viam/prime.git",
+  "homepage": "http://viamrobotics.github.io/prime",
+  "repository": "git://github.com/viamrobotics/prime.git",
   "scripts": {
     "start": "vite --host",
     "build": "vite build",
