@@ -1,0 +1,68 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title='Elements/Badge'
+  argTypes={{
+    variant: {
+      description: 'The badge color',
+      control: { type: 'select' },
+      options: ['green', 'orange', 'red'],
+      defaultValue: 'Test',
+      table: { defaultValue: { summary: '' } }
+    },
+    label: {
+      description: 'The badge status',
+      control: 'text',
+      defaultValue: 'Test',
+      table: { defaultValue: { summary: '' } }
+    }
+  }}
+/>
+
+# Badge
+
+To display status of something
+
+<Canvas>
+  <Story
+    name='green'
+    args={{
+      variant: 'green'
+    }}
+  >
+    {({ label, variant }) => `
+      <v-badge
+        variant='${variant}'
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='orange'
+    args={{ variant: 'orange' }}
+  >
+    {({ label, variant }) => `
+      <v-badge
+        variant='${variant}'
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='red'
+    args={{ variant: 'red' }}
+  >
+    {({ label, variant }) => `
+      <v-badge
+        variant='${variant}'
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
