@@ -21,11 +21,6 @@ jobs:
           npm run build-storybook
           npm run build
 
-      - name: Publish 🚀
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }} 
-
       - name: Deploy Storybook 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.6
         with:
@@ -34,3 +29,10 @@ jobs:
           CLEAN: true # Automatically remove deleted files from the deploy branch
           clean-exclude: |
             .nojekyll
+
+      - name: Publish 🚀
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }} 
+
+      
