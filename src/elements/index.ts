@@ -1,6 +1,7 @@
 import '../../prime.css'
 import './breadcrumbs/index.svelte'
 import './button/index.svelte'
+import './collapse/index.svelte'
 import './input/index.svelte'
 import './radio/index.svelte'
 import './slider/index.svelte'
