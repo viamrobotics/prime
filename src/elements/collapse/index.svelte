@@ -17,8 +17,8 @@ export let content = ''
     type="checkbox"
     class="absolute w-full h-12 opacity-0 cursor-pointer peer">
 
-  <div class="border border-black bg-white h-12 w-full pl-5 pr-5 flex items-center">
-    <p class="text-black">{title}</p>
+  <div class="border text-black border-black bg-white h-12 w-full pl-5 pr-5 flex items-center">
+    {title}
   </div>
 
   <div class="absolute top-3 right-3 transition-transform duration-500 rotate-0 peer-checked:rotate-180">
@@ -35,8 +35,8 @@ export let content = ''
   </svg>
   </div>
 
-  <div class="bg-white overflow-hidden pl-5 pr-5 pt-2 transition-all duration-500 max-h-0 peer-checked:max-h-fit">
-    <p class="text-black">{content}</p>
+  <div class="bg-white text-black overflow-hidden pl-5 pr-5 pt-2 transition-all duration-500 max-h-0 peer-checked:max-h-fit">
+    {content}
   </div>
 </div>  
 
