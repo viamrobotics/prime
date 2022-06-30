@@ -99,7 +99,7 @@
     } else {
       // update the value of the spring function for animated handles
       // whenever the values has updated
-      springPositions.set(arr.map((v) => percentOf(v, minNum, maxNum, 2))).catch(error => console.error(error))
+      springPositions.set(arr.map((v) => percentOf(v, minNum, maxNum, 2))).catch((error) => console.error(error))
     }
     // set the valueLength for the next check
     valueLength = arr.length
