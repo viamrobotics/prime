@@ -14,6 +14,7 @@ export let name = ''
 export let value: 'on' | 'off' = 'off'
 
 let input: HTMLInputElement
+let on: boolean
 
 $: on = value === 'on'
 

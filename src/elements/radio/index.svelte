@@ -23,7 +23,7 @@ const handleClick = (option: string) => {
 {#each parsedOptions as option}
   <button
     class={cx('border-y border-l last:border-r border-black px-2 py-1 text-sm', {
-      'bg-black text-white': option === selected
+      'bg-black text-white': option === selected,
     })}
     on:click={() => handleClick(option)}
   >

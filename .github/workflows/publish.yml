@@ -1,4 +1,4 @@
-name: Publish and Deploy Storybook
+name: Deploy Storybook / NPM Publish
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  publish-npm:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,12 +17,9 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          npm ci --production --audit=false
+          npm ci --audit=false
           npm run build-storybook
           npm run build
-
-      # - name: Publish 🚀
-      #   run: npm publish
 
       - name: Deploy Storybook 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.6
@@ -32,3 +29,8 @@ jobs:
           CLEAN: true # Automatically remove deleted files from the deploy branch
           clean-exclude: |
             .nojekyll
+
+      # - name: Publish 🚀
+      #   uses: JS-DevTools/npm-publish@v1
+      #   with:
+      #     token: ${{ secrets.NPM_TOKEN }} 

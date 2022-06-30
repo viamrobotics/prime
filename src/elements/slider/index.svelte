@@ -148,9 +148,9 @@
    * check if an element is a handle on the slider
    **/
   const targetIsHandle = (el: HTMLElement): boolean => {
-    const handles = slider.querySelectorAll('.handle')
-    const isHandle = Array.prototype.includes.call(handles, el)
-    const isChild = Array.prototype.some.call(handles, (e) => e.contains(el))
+    const handles = [...slider.querySelectorAll('.handle')]
+    const isHandle = handles.includes(el)
+    const isChild = handles.some((e) => e.contains(el))
     return isHandle || isChild
   }
 
@@ -189,11 +189,7 @@
     // position, we want a simple check if the interaction
     // value is greater than return the second handle
     if (range && startValue === endValue) {
-      if (handleVal > endValue!) {
-        return 1
-      } else {
-        return 0
-      }
+      return handleVal > endValue ? 1 : 0
     } else if (range) {
       closest = [startValue, endValue!].indexOf(
         [startValue, endValue!].sort((a, b) => Math.abs(handleVal - a) - Math.abs(handleVal - b))[0]!
@@ -308,28 +304,6 @@
     if (!disabled) {
       activeHandle = index
       focus = true
-    }
-  }
-
-  /**
-   * handle the keyboard accessible features by checking the
-   * input type, and modfier key then moving handle by appropriate amount
-   **/
-  const handleSliderKeydown = (e: KeyboardEvent, index: number) => {
-    if (disabled) return
-
-    const value = index === 0 ? startValue : endValue!
-
-    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-      e.preventDefault()
-      e.stopPropagation()
-      moveHandle(index, value + stepNum)
-    }
-
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-      e.preventDefault()
-      e.stopPropagation()
-      moveHandle(index, value - stepNum)
     }
   }
 
@@ -453,7 +427,7 @@
 <div
   bind:this={slider}
   class={cn('slider relative rounded-full h-2 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-gray-100', {
-    'opacity-50': disabled
+    'opacity-50': disabled,
   })}
   class:range
   class:focus
@@ -473,7 +447,6 @@
       data-handle={index}
       on:blur={handleSliderBlur}
       on:focus={() => handleSliderFocus(index)}
-      on:keydown={(event) => handleSliderKeydown(event, index)}
       style='left: {$springPositions[index]}%; z-index: {activeHandle === index ? 3 : 2}'
       aria-valuemin={range === true && index === 1 ? startValue : minNum}
       aria-valuemax={range === true && index === 0 ? endValue : maxNum}

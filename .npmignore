@@ -1,0 +1,17 @@
+.github
+.storybook
+.vscode
+node_modules
+prime
+scripts
+src
+.eslintrc.js
+index.html
+postcss.config.js
+prime.css
+svelte.config.js
+tailwind.config.js
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+!dist
