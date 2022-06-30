@@ -20,6 +20,7 @@ module.exports = {
     'jsx-a11y',
     'sonarjs',
     'prefer-arrow',
+    'tailwindcss',
   ],
   overrides: [
     {
@@ -41,6 +42,7 @@ module.exports = {
     'plugin:unicorn/recommended',
     'plugin:jsx-a11y/recommended',
     'plugin:sonarjs/recommended',
+    'plugin:tailwindcss/recommended',
     
   ],
   rules: {
@@ -157,6 +159,10 @@ module.exports = {
     'unicorn/filename-case': 'off',
     'unicorn/no-null': 'off',
     'unicorn/consistent-destructuring': 'off',
+    'unicorn/prefer-top-level-await': 'off',
+
+    // Tailwind
+    'tailwindcss/no-custom-classname': 'off',
 
     // Typescript
     '@typescript-eslint/no-explicit-any': 'error',
@@ -179,6 +185,7 @@ module.exports = {
     'import/extensions': ["error", "never", { "svelte": "always" }],
     // Do not currently work with eslint-plugin-svelte
     'import/first': 'off',
+    'import/order': 'error',
 
     // Svelte
     'svelte3/missing-custom-element-compile-options': 'off',
