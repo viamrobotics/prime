@@ -1,3 +1,4 @@
+import { onMount } from 'svelte'
 import { get_current_component } from 'svelte/internal'
 
 const { base = '', query = '' } = (window as unknown as {
@@ -13,11 +14,13 @@ link.href = `${base ?? ''}/prime.css${query}`
 
 export const addStyles = () => {
   const element = get_current_component() as HTMLElement
-  element.style.display = 'none'
-
-  const clone = link.cloneNode()
-  clone.addEventListener('load', () => {
-    element.style.removeProperty('display')
+  
+  onMount(() => {
+    element.style.display = 'none'
+    const clone = link.cloneNode()
+    clone.addEventListener('load', () => {
+      element.style.removeProperty('display')
+    })
+    element.shadowRoot!.prepend(clone)
   })
-  element.shadowRoot!.prepend(clone)
 }

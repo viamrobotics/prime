@@ -15,4 +15,14 @@ npm install
 npm run storybook
 ```
 
+### Playground
+
+To use the Vue playground
+
+```bash
+npm start
+```
+
+Then navigate to `http:localhost:3000/playground/index.html`
+
 More detailed docs exist on [the storybook](https://www.viam.com/prime).
