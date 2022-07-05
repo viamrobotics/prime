@@ -2,6 +2,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import sveltePreprocess from 'svelte-preprocess'
 import { defineConfig } from 'vite'
 import path from 'node:path'
+import vue from '@vitejs/plugin-vue'
 
 const preprocess = sveltePreprocess()
 
@@ -9,10 +10,11 @@ const preprocess = sveltePreprocess()
 export default defineConfig({
   assetsInclude: ['fonts'],
   plugins: [
+    vue(),
     svelte({
       compilerOptions: { customElement: true },
       preprocess
-    })
+    }),
   ],
   build: {
     target: 'esnext',
