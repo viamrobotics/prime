@@ -8,5 +8,3 @@ import './radio/index.svelte'
 import './slider/index.svelte'
 import './switch/index.svelte'
 import './tabs/index.svelte'
-
-

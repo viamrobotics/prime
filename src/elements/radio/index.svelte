@@ -1,16 +1,16 @@
-<svelte:options
-  immutable={true}
-  tag='v-radio'
-/>
-
-<link rel='stylesheet' href='/prime.css' />
+<svelte:options immutable={true} tag='v-radio' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
+import { addStyles } from '../../lib/index'
 
 export let options = ''
 export let selected = ''
+
+addStyles()
+
+let parsedOptions: string[]
 
 $: parsedOptions = options.split(',').map((str) => str.trim())
 

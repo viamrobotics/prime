@@ -1,13 +1,12 @@
-<svelte:options
-  immutable={true}
-  tag='v-breadcrumbs'
-/>
-
-<link rel='stylesheet' href='/prime.css' />
+<svelte:options immutable={true} tag='v-breadcrumbs' />
 
 <script lang='ts'>
 
+import { addStyles } from '../../lib/index'
+
 export let crumbs = ''
+
+addStyles()
 
 let parsedCrumbs: string[]
 

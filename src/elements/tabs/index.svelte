@@ -1,16 +1,14 @@
-<svelte:options
-  immutable={true}
-  tag='v-tabs'
-/>
-
-<link rel='stylesheet' href='/prime.css' />
+<svelte:options immutable={true} tag='v-tabs' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
+import { addStyles } from '../../lib/index'
 
 export let tabs = ''
 export let selected = ''
+
+addStyles()
 
 $: parsedTabs = tabs.split(',').map((str) => str.trim())
 $: selectedIndex = parsedTabs.indexOf(selected)
