@@ -1,14 +1,15 @@
 import { get_current_component } from 'svelte/internal'
 
-const { PRIME_CONFIG } = window as unknown as {
+const { base = '', query = '' } = (window as unknown as {
   PRIME_CONFIG?: {
     base?: string
+    query?: string
   }
-}
+}).PRIME_CONFIG ?? {}
 
 const link = document.createElement('link')
 link.rel = 'stylesheet'
-link.href = `${PRIME_CONFIG?.base ?? ''}/prime.css`
+link.href = `${base ?? ''}/prime.css${query}`
 
 export const addStyles = () => {
   const element = get_current_component() as HTMLElement
