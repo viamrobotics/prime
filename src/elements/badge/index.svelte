@@ -1,19 +1,17 @@
-<svelte:options
-  immutable={true}
-  tag='v-badge'
-/>
-
-<link rel='stylesheet' href='/prime.css' />
+<svelte:options immutable={true} tag='v-badge' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
+import { addStyles } from '../../lib/index'
 
 export let label = ''
 
 type Variants = 'green' | 'orange' | 'red'
 
 export let variant: Variants = 'green'
+
+addStyles()
 
 </script>
 
@@ -24,4 +22,3 @@ export let variant: Variants = 'green'
 })}>
   <small>{ label }</small>
 </div>
-

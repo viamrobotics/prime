@@ -173,7 +173,7 @@ module.exports = {
 
     // Import
     'import/no-unresolved': 'error',
-    'import/named': 'error',
+    'import/named': 'off',
     'import/default': 'error',
     'import/namespace': 'error',
     'import/no-absolute-path': 'error',

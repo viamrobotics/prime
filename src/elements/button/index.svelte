@@ -1,22 +1,16 @@
-<svelte:options
-  immutable={true}
-  tag='v-button'
-/>
-
-<style>
-  :host { display: block }
-</style>
-
-<link rel='stylesheet' href='/prime.css' />
+<svelte:options immutable={true} tag='v-button' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
+import { addStyles } from '../../lib/index'
 
 type Variants = 'primary' | 'danger' | 'outline-danger'
 
 export let variant: Variants = 'primary'
 export let label = ''
+
+addStyles()
 
 </script>
 

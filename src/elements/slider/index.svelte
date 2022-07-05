@@ -1,7 +1,5 @@
 <svelte:options tag='v-slider' />
 
-<link rel='stylesheet' href='/prime.css' />
-
 <style>
   :host { display: block }
 
@@ -24,6 +22,7 @@
   import type { Spring } from 'svelte/motion'
   import cn from 'classnames'
   import { clamp, percentOf } from '../../lib/math'
+  import { addStyles } from '../../lib/index'
 
   // dom references
   export let slider: HTMLElement
@@ -40,6 +39,8 @@
 
   // formatting props
   export let suffix = ''
+
+  addStyles()
 
   const springValues = { stiffness: 0.1, damping: 0.4 }
 

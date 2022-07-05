@@ -1,14 +1,13 @@
-<svelte:options
-  immutable={true}
-  tag='v-collapse'
-/>
-
-<link rel='stylesheet' href='/prime.css' />
+<svelte:options immutable={true} tag='v-collapse' />
 
 <script lang='ts'>
 
+import { addStyles } from '../../lib/index'
+
 export let title = ''
 export let content = ''
+
+addStyles()
 
 </script>
 

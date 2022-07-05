@@ -1,17 +1,15 @@
-<svelte:options
-  immutable={true}
-  tag='v-switch'
-/>
-
-<link rel='stylesheet' href='/prime.css' />
+<svelte:options immutable={true} tag='v-switch' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
+import { addStyles } from '../../lib/index'
 
 export let label = ''
 export let name = ''
 export let value: 'on' | 'off' = 'off'
+
+addStyles()
 
 let input: HTMLInputElement
 let on: boolean

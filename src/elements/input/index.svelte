@@ -1,16 +1,15 @@
-<svelte:options
-  immutable={true}
-  tag='v-input'
-/>
-
-<link rel='stylesheet' href='/prime.css' />
+<svelte:options immutable={true} tag='v-input' />
 
 <script lang='ts'>
+
+import { addStyles } from '../../lib/index'
 
 type Types = 'text' | 'email' | 'number'
 
 export let type: Types = 'text'
 export let placeholder = ''
+
+addStyles()
 
 </script>
 
