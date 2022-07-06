@@ -18,7 +18,7 @@ addStyles()
 
 <!-- :class="`relative inline-block ${className} group`" -->
 
-<div class='relative inline-block ml-2 group'>
+<div class='relative inline-block group'>
   <slot />
   <span 
     class={cx('invisible bg-white text-black text-left p-3 border absolute z-10 min-w-[200px] group-hover:visible after:absolute after:-ml-4 after:border-8 after:border-solid after:border-transparent', {
