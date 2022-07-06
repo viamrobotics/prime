@@ -44,7 +44,7 @@
     "babel-loader": "^8.2.5",
     "classnames": "^2.3.1",
     "eslint": "^8.19.0",
-    "eslint-import-resolver-typescript": "^3.2.1",
+    "eslint-import-resolver-typescript": "^3.2.4",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
