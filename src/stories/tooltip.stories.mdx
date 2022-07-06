@@ -1,0 +1,80 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title='Elements/Tooltip'
+  argTypes={{
+    variant: {
+      description: 'The placement of the tooltip/tooltip direction',
+      control: { type: 'select' },
+      options: [' top', 'bottom', 'left', 'right'],
+      defaultValue: '',
+      table: { defaultValue: { summary: '' } }
+    },
+    text: {
+      description: 'The message displayed within the tooltip',
+      control: 'text',
+      defaultValue: 'Test information for the tooltip',
+      table: { defaultValue: { summary: '' } }
+    }
+  }}
+/>
+
+# Tooltip
+
+Used to display text box when hovering over an element. 
+
+<Canvas>
+  <Story
+    name='top'
+    args={{ variant: 'top' }}
+  >
+    {({ text, variant }) => `
+      <v-tooltip
+        variant='${variant}'
+        text='${text}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='bottom'
+    args={{ variant: 'bottom' }}
+  >
+    {({ text, variant }) => `
+      <v-tooltip
+        variant='${variant}'
+        text='${text}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='right'
+    args={{ variant: 'right' }}
+  >
+    {({ text, variant }) => `
+      <v-tooltip
+        variant='${variant}'
+        text='${text}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='left'
+    args={{ variant: 'left' }}
+  >
+    {({ text, variant }) => `
+      <v-tooltip
+        variant='${variant}'
+        text='${text}'
+      />
+    `}
+  </Story>
+</Canvas>

@@ -16,6 +16,7 @@ v-input,
 v-radio,
 v-slider,
 v-switch,
+v-tooltip,
 v-tabs {
   display: block;
 }
