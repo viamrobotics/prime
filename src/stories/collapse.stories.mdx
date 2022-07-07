@@ -26,12 +26,14 @@ Toggles visibility of content
   <Story
     name='Collapse'
   >
-    {({ title, content }) => `
+    {({ title, content }) => {
+      return `
       <v-collapse
         title='${title}'
-        content='${content}'
-      />
-    `}
+      >
+        <span>${content}</span>
+      </v-collapse>
+    `}}
   </Story>
 </Canvas>
 
