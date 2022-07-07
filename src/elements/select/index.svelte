@@ -5,10 +5,10 @@
 // import cx from 'classnames'
 import { addStyles } from '../../lib/index'
 
-export let options: string = ''
-export let selected: string = ''
-export let open: boolean = false
-export let placeholder: string = ''
+export let options = ''
+export let selected = ''
+export let open = false
+export let placeholder = ''
 
 let rootElement: HTMLElement
 let parsedOptions: string[] 
@@ -24,7 +24,7 @@ const handleClick = (option: string) => {
     composed: true,
     bubbles: true,
     detail: {
-      selected: selected
+      selected,
     },
   }))
 }
@@ -33,7 +33,7 @@ let selectedOption: string
 
 $: selectedOption = parsedOptions.find(opt => opt === selected) || placeholder
 
-const handleToggle = (event: CustomEvent) => {
+const handleToggle = (event: CustomEvent<{open: boolean}>) => {
   open = event.detail.open
 }
 

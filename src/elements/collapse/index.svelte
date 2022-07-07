@@ -5,8 +5,8 @@
 import cx from 'classnames'
 import { addStyles } from '../../lib/index'
 
-export let title: string = ''
-export let open: boolean = false
+export let title = ''
+export let open = false
 
 let rootElement: HTMLElement
 
@@ -30,7 +30,7 @@ const handleClick = () => {
       {title}
     </div>
 
-    <div class="{cx('absolute top-3 right-3 transition-transform duration-500 rotate-0', {'rotate-180': open})}">
+    <div class="{cx('absolute top-3 right-3 transition-transform duration-500 rotate-0', { 'rotate-180': open })}">
       <svg
         width="24"
         height="24"
@@ -45,7 +45,7 @@ const handleClick = () => {
     </div>
   </div>
 
-  <div class="{cx('bg-white text-black overflow-hidden transition-all duration-500 max-h-0', {'max-h-fit': open})}">
+  <div class="{cx('bg-white text-black overflow-hidden transition-all duration-500 max-h-0', { 'max-h-fit': open })}">
     <slot />
   </div>
 </div>  
