@@ -10,6 +10,12 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       defaultValue: '',
       table: { defaultValue: { summary: '' } }
     },
+    label: {
+      description: 'The label for the tooltip',
+      control: 'text',
+      defaultValue: 'Test label for the tooltip',
+      table: { defaultValue: { summary: '' } }
+    },
     text: {
       description: 'The message displayed within the tooltip',
       control: 'text',
@@ -28,8 +34,9 @@ Used to display text box when hovering over an element.
     name='top'
     args={{ variant: 'top' }}
   >
-    {({ text, variant }) => `
+    {({ label, text, variant }) => `
       <v-tooltip
+        label='${label}'
         variant='${variant}'
         text='${text}'
       />
@@ -66,6 +73,8 @@ Used to display text box when hovering over an element.
 </Canvas>
 
 <Canvas>
+  <div>
+  </div>
   <Story
     name='left'
     args={{ variant: 'left' }}
