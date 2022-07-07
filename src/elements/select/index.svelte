@@ -1,8 +1,6 @@
 <svelte:options immutable={true} tag='v-select' />
 
 <script lang='ts'>
-
-// import cx from 'classnames'
 import { addStyles } from '../../lib/index'
 
 export let options = ''
