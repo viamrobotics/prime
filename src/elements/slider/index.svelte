@@ -1,20 +1,20 @@
 <svelte:options tag='v-slider' />
 
 <style>
-  :host { display: block }
 
-  .slider .range:hover .handle-bg {
-    transform: scale(1.5);
-  }
+.slider .range:hover .handle-bg {
+  transform: scale(1.5);
+}
 
-  .slider .range.active .handle-bg {
-    transform: scale(2.0);
-  }
+.slider .range.active .handle-bg {
+  transform: scale(2.0);
+}
 
-  .slider .range.active .floating,
-  .slider .range:hover .floating {
-    opacity: 1;
-  }
+.slider .range.active .floating,
+.slider .range:hover .floating {
+  opacity: 1;
+}
+
 </style>
 
 <script lang='ts'>
@@ -22,7 +22,7 @@
   import type { Spring } from 'svelte/motion'
   import cn from 'classnames'
   import { clamp, percentOf } from '../../lib/math'
-  import { addStyles } from '../../lib/index'
+  import { addStyles, dispatch } from '../../lib/index'
 
   // dom references
   export let slider: HTMLElement
@@ -410,18 +410,14 @@
   const onChange = () => {
     if (disabled) return
 
-    slider.dispatchEvent(new CustomEvent('input', {
-      composed: true,
-      bubbles: true,
-      detail: {
-        activeHandle,
-        previousValue,
-        value: activeHandle === 0 ? startValue : endValue,
-        values: endValue
-          ? [startValue, endValue].map((v) => alignValueToStep(v, minNum, maxNum))
-          : undefined,
-      },
-    }))
+    dispatch(slider, 'input', {
+      activeHandle,
+      previousValue,
+      value: activeHandle === 0 ? startValue : endValue,
+      values: endValue
+        ? [startValue, endValue].map((v) => alignValueToStep(v, minNum, maxNum))
+        : undefined,
+    })
   }
 </script>
 

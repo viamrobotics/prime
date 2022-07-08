@@ -3,10 +3,12 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles } from '../../lib/index'
+import { addStyles, dispatch } from '../../lib/index'
 
 export let tabs = ''
 export let selected = ''
+
+let root: HTMLElement
 
 addStyles()
 
@@ -15,11 +17,12 @@ $: selectedIndex = parsedTabs.indexOf(selected)
 
 const handleClick = (option: string) => {
   selected = option
+  dispatch(root, 'input', { value: selected })
 }
 
 </script>
 
-<div class='w-full flex bg-black/20'>
+<div bind:this={root} class='w-full flex bg-black/20'>
   {#each parsedTabs as tab, index (tab)}
     <button
       class={cx('px-4 py-1 uppercase text-sm', {
