@@ -2,40 +2,61 @@
 
 <script lang='ts'>
 
+import cx from 'classnames'
 import { addStyles } from '../../lib/index'
 
 export let title = ''
-export let content = ''
+export let open = false
+
+let rootElement: HTMLElement
 
 addStyles()
 
+const handleClick = () => {
+  open = !open
+  rootElement.dispatchEvent(new CustomEvent('toggle', {
+    composed: true,
+    bubbles: true,
+    detail: { open },
+  }))
+}
+
 </script>
 
-<div class="relative w-full overflow-hidden">
-  <input 
-    type="checkbox"
-    class="absolute w-full h-12 opacity-0 cursor-pointer peer">
+<div bind:this={rootElement} class='relative w-full overflow-hidden'>
+  <div
+    class='w-full py-1.5 px-4 flex items-center justify-between border text-black border-black bg-white cursor-pointer'
+    on:click={handleClick}
+  >
+    <h2 class=''>{title}</h2>
 
-  <div class="border text-black border-black bg-white h-12 w-full pl-5 pr-5 flex items-center">
-    {title}
+    <div class='h-full flex items-center gap-3'>
+      <slot name='header'></slot>
+      <svg
+        class={cx('transition-transform duration-200', {
+          'rotate-0': !open,
+          'rotate-180': open,
+        })}
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+        fill="none"
+      >
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </div>
   </div>
 
-  <div class="absolute top-3 right-3 transition-transform duration-500 rotate-0 peer-checked:rotate-180">
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      stroke-linejoin="round"
-      stroke-linecap="round"
-      fill="none"
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  </div>
-
-  <div class="bg-white text-black overflow-hidden pl-5 pr-5 pt-2 transition-all duration-500 max-h-0 peer-checked:max-h-fit">
-    {content}
+  <div
+    class="{cx('bg-white text-black overflow-hidden transition-all duration-500', {
+      'max-h-0': !open,
+      'max-h-fit': open,
+    })}"
+  >
+    <slot />
   </div>
 </div>  
 
