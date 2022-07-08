@@ -5,24 +5,20 @@
 import cx from 'classnames'
 import { addStyles } from '../../lib/index'
 
-export let label = 'HELLO'
-export let text = 'Test'
+export let icon: string = ''
+export let label: string = ''
+export let text: string = ''
 
 type Variants = 'top' | 'bottom' | 'right' | 'left'
-// type className = string
 
 export let variant: Variants = 'top'
 
 addStyles()
-console.log(label)
+
 </script>
 
-<!-- :class="`relative inline-block ${className} group`" -->
-<!-- icon-info-outline text-base -->
-
-<div class="group">
-  <div>{label}</div>
-  <div class='relative inline-block '>
+<div>
+  <div class='relative inline-block group'>
     <slot />
     <span 
       class={cx('invisible bg-white text-black text-left p-3 border absolute z-10 min-w-[200px] group-hover:visible after:absolute after:-ml-4 after:border-8 after:border-solid after:border-transparent', {
@@ -33,5 +29,6 @@ console.log(label)
       })}>
       {text}
     </span>
+    <span class={icon}>{label}</span>
   </div>
 </div>

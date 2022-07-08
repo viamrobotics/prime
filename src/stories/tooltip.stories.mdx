@@ -11,9 +11,15 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       table: { defaultValue: { summary: '' } }
     },
     label: {
-      description: 'The label for the tooltip',
+      description: 'Optional text (tooltip will display upon hover)',
       control: 'text',
-      defaultValue: 'Test label for the tooltip',
+      defaultValue: 'Hover Here',
+      table: { defaultValue: { summary: '' } }
+    },
+    icon: {
+      description: 'Optional icon (tooltip will display upon hover)',
+      control: 'text',
+      defaultValue: '',
       table: { defaultValue: { summary: '' } }
     },
     text: {
@@ -21,7 +27,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       control: 'text',
       defaultValue: 'Test information for the tooltip',
       table: { defaultValue: { summary: '' } }
-    }
+    },
   }}
 />
 
@@ -34,10 +40,11 @@ Used to display text box when hovering over an element.
     name='top'
     args={{ variant: 'top' }}
   >
-    {({ label, text, variant }) => `
+    {({ variant, label, icon, text }) => `
       <v-tooltip
-        label='${label}'
         variant='${variant}'
+        label='${label}'
+        icon='${icon}'
         text='${text}'
       />
     `}
@@ -49,9 +56,11 @@ Used to display text box when hovering over an element.
     name='bottom'
     args={{ variant: 'bottom' }}
   >
-    {({ text, variant }) => `
+    {({ variant, label, icon, text }) => `
       <v-tooltip
         variant='${variant}'
+        label='${label}'
+        icon='${icon}'
         text='${text}'
       />
     `}
@@ -63,9 +72,11 @@ Used to display text box when hovering over an element.
     name='right'
     args={{ variant: 'right' }}
   >
-    {({ text, variant }) => `
+    {({ variant, label, icon, text }) => `
       <v-tooltip
         variant='${variant}'
+        label='${label}'
+        icon='${icon}'
         text='${text}'
       />
     `}
@@ -79,9 +90,11 @@ Used to display text box when hovering over an element.
     name='left'
     args={{ variant: 'left' }}
   >
-    {({ text, variant }) => `
+    {({ variant, label, icon, text }) => `
       <v-tooltip
         variant='${variant}'
+        label='${label}'
+        icon='${icon}'
         text='${text}'
       />
     `}
