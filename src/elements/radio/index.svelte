@@ -10,13 +10,14 @@ export let selected = ''
 
 addStyles()
 
+let buttonElement: HTMLElement
 let parsedOptions: string[]
 
 $: parsedOptions = options.split(',').map((str) => str.trim())
 
-const handleClick = (event: MouseEvent, option: string) => {
+const handleClick = (option: string) => {
   selected = option
-  event.target!.dispatchEvent(new CustomEvent('input', {
+  buttonElement.dispatchEvent(new CustomEvent('input', {
     composed: true,
     bubbles: true,
     detail: {
@@ -25,15 +26,15 @@ const handleClick = (event: MouseEvent, option: string) => {
   }))
 }
 
-
 </script>
 
 {#each parsedOptions as option}
   <button
+    bind:this={buttonElement}
     class={cx('border-y border-l last:border-r border-black px-2 py-1 text-sm', {
       'bg-black text-white': option === selected,
     })}
-    on:click={(event) => handleClick(event, option)}
+    on:click={() => handleClick(option)}
   >
     {option}
   </button>
