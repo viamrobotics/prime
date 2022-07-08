@@ -1010,8 +1010,17 @@ function create_fragment$6(ctx) {
 			attr(svg, "stroke-linejoin", "round");
 			attr(svg, "stroke-linecap", "round");
 			attr(svg, "fill", "none");
-			attr(div1, "class", div1_class_value = cx('absolute top-3 right-3 transition-transform duration-500 rotate-0', { 'rotate-180': /*open*/ ctx[0] }));
-			attr(div3, "class", div3_class_value = cx('bg-white text-black overflow-hidden transition-all duration-500 max-h-0', { 'max-h-fit': /*open*/ ctx[0] }));
+
+			attr(div1, "class", div1_class_value = cx('absolute top-3 right-3 transition-transform duration-500', {
+				'rotate-0': !/*open*/ ctx[0],
+				'rotate-180': /*open*/ ctx[0]
+			}));
+
+			attr(div3, "class", div3_class_value = cx('bg-white text-black overflow-hidden transition-all duration-500', {
+				'max-h-0': !/*open*/ ctx[0],
+				'max-h-fit': /*open*/ ctx[0]
+			}));
+
 			attr(div4, "class", "relative w-full overflow-hidden");
 		},
 		m(target, anchor) {
@@ -1036,11 +1045,17 @@ function create_fragment$6(ctx) {
 		p(ctx, [dirty]) {
 			if (dirty & /*title*/ 2) set_data(t0, /*title*/ ctx[1]);
 
-			if (dirty & /*open*/ 1 && div1_class_value !== (div1_class_value = cx('absolute top-3 right-3 transition-transform duration-500 rotate-0', { 'rotate-180': /*open*/ ctx[0] }))) {
+			if (dirty & /*open*/ 1 && div1_class_value !== (div1_class_value = cx('absolute top-3 right-3 transition-transform duration-500', {
+				'rotate-0': !/*open*/ ctx[0],
+				'rotate-180': /*open*/ ctx[0]
+			}))) {
 				attr(div1, "class", div1_class_value);
 			}
 
-			if (dirty & /*open*/ 1 && div3_class_value !== (div3_class_value = cx('bg-white text-black overflow-hidden transition-all duration-500 max-h-0', { 'max-h-fit': /*open*/ ctx[0] }))) {
+			if (dirty & /*open*/ 1 && div3_class_value !== (div3_class_value = cx('bg-white text-black overflow-hidden transition-all duration-500', {
+				'max-h-0': !/*open*/ ctx[0],
+				'max-h-fit': /*open*/ ctx[0]
+			}))) {
 				attr(div3, "class", div3_class_value);
 			}
 		},
