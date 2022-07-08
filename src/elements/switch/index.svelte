@@ -3,7 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles } from '../../lib/index'
+import { addStyles, dispatch } from '../../lib/index'
 
 export let label = ''
 export let name = ''
@@ -19,7 +19,7 @@ $: on = value === 'on'
 const handleClick = () => {
   value = (!on) ? 'on' : 'off'
   input.checked = on
-  input.dispatchEvent(new InputEvent('input', { composed: true, bubbles: true }))
+  dispatch(input, 'input', { value: input.checked })
 }
 
 </script>
