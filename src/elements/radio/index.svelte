@@ -32,6 +32,7 @@ const handleClick = (option: string) => {
   <button
     bind:this={buttonElement}
     class={cx('border-y border-l last:border-r border-black px-2 py-1 text-sm', {
+      'bg-white': option !== selected,
       'bg-black text-white': option === selected,
     })}
     on:click={() => handleClick(option)}

@@ -11,32 +11,32 @@ export let open = false
 let rootElement: HTMLElement
 
 addStyles()
+
 const handleClick = () => {
   open = !open
   rootElement.dispatchEvent(new CustomEvent('toggle', {
     composed: true,
     bubbles: true,
-    detail: {
-      open,
-    },
+    detail: { open },
   }))
 }
 
 </script>
 
-<div bind:this={rootElement} class="relative w-full overflow-hidden" >
-  <div on:click={handleClick}>
-    <div class="border text-black border-black bg-white h-12 w-full pl-5 pr-5 flex items-center">
-      {title}
-    </div>
+<div bind:this={rootElement} class='relative w-full overflow-hidden'>
+  <div
+    class='w-full py-1.5 px-4 flex items-center justify-between border text-black border-black bg-white cursor-pointer'
+    on:click={handleClick}
+  >
+    <h2 class=''>{title}</h2>
 
-    <div
-      class="{cx('absolute top-3 right-3 transition-transform duration-500', {
-        'rotate-0': !open,
-        'rotate-180': open,
-      })}"
-    >
+    <div class='h-full flex items-center gap-3'>
+      <slot name='header'></slot>
       <svg
+        class={cx('transition-transform duration-200', {
+          'rotate-0': !open,
+          'rotate-180': open,
+        })}
         width="24"
         height="24"
         viewBox="0 0 24 24"

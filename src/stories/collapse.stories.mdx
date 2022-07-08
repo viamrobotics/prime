@@ -38,3 +38,21 @@ Toggles visibility of content
 </Canvas>
 
 
+<Canvas>
+  <Story
+    name='Header slot'
+  >
+    {({ title, content }) => `
+      <v-collapse
+        title='${title}'
+      >
+        <v-badge slot='header' label='Test'></v-badge>
+        <span>${content}</span>
+      </v-collapse>
+    `
+    }
+  </Story>
+</Canvas>
+
+
+
