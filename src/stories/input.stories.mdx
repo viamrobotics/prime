@@ -2,6 +2,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title="Elements/Input"
+  parameters={{
+    actions: {
+      handles: ['input'],
+    },
+  }}
   argTypes={{
     type: {
       description: 'The input type',
