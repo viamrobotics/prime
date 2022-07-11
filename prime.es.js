@@ -1,4 +1,4 @@
-var prime = /* #__PURE__ */ (() => "@import\"https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap\";*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}:before,:after{--tw-content: \"\"}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",Segoe UI Symbol,\"Noto Color Emoji\"}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}*,:before,:after{--tw-border-spacing-x: 0;--tw-border-spacing-y: 0;--tw-translate-x: 0;--tw-translate-y: 0;--tw-rotate: 0;--tw-skew-x: 0;--tw-skew-y: 0;--tw-scale-x: 1;--tw-scale-y: 1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness: proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width: 0px;--tw-ring-offset-color: #fff;--tw-ring-color: rgb(59 130 246 / .5);--tw-ring-offset-shadow: 0 0 #0000;--tw-ring-shadow: 0 0 #0000;--tw-shadow: 0 0 #0000;--tw-shadow-colored: 0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }::backdrop{--tw-border-spacing-x: 0;--tw-border-spacing-y: 0;--tw-translate-x: 0;--tw-translate-y: 0;--tw-rotate: 0;--tw-skew-x: 0;--tw-skew-y: 0;--tw-scale-x: 1;--tw-scale-y: 1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness: proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width: 0px;--tw-ring-offset-color: #fff;--tw-ring-color: rgb(59 130 246 / .5);--tw-ring-offset-shadow: 0 0 #0000;--tw-ring-shadow: 0 0 #0000;--tw-shadow: 0 0 #0000;--tw-shadow-colored: 0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }.pointer-events-none{pointer-events:none}.absolute{position:absolute}.relative{position:relative}.top-1{top:.25rem}.bottom-auto{bottom:auto}.left-0{left:0}.top-0{top:0}.left-1\\/2{left:50%}.bottom-3\\/4{bottom:75%}.right-0{right:0}.bottom-full{bottom:100%}.top-\\[calc\\(50\\%-1\\.5px\\)\\]{top:calc(50% - 1.5px)}.z-\\[2\\]{z-index:2}.z-\\[1\\]{z-index:1}.m-4{margin:1rem}.-mt-px{margin-top:-1px}.-mt-0\\.5{margin-top:-.125rem}.-mt-0{margin-top:-0px}.mt-7{margin-top:1.75rem}.mb-2{margin-bottom:.5rem}.mt-0\\.5{margin-top:.125rem}.ml-0\\.5{margin-left:.125rem}.mt-0{margin-top:0}.ml-0{margin-left:0}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.hidden{display:none}.h-\\[60\\%\\]{height:60%}.h-full{height:100%}.h-2{height:.5rem}.h-5{height:1.25rem}.h-\\[3px\\]{height:3px}.h-6{height:1.5rem}.h-4{height:1rem}.max-h-0{max-height:0px}.max-h-fit{max-height:fit-content}.w-px{width:1px}.w-full{width:100%}.w-5{width:1.25rem}.w-\\[3px\\]{width:3px}.w-11{width:2.75rem}.w-4{width:1rem}.flex-shrink-0{flex-shrink:0}.-translate-x-1\\/2{--tw-translate-x: -50%;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\\/2{--tw-translate-y: -50%;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1{--tw-translate-y: -.25rem;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-0{--tw-translate-x: 0px;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-5{--tw-translate-x: 1.25rem;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-rotate-\\[30deg\\]{--tw-rotate: -30deg;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.rotate-\\[30deg\\]{--tw-rotate: 30deg;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.rotate-0{--tw-rotate: 0deg;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.rotate-180{--tw-rotate: 180deg;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.select-none{user-select:none}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-3{gap:.75rem}.gap-2{gap:.5rem}.overflow-hidden{overflow:hidden}.whitespace-nowrap{white-space:nowrap}.rounded-full{border-radius:9999px}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.border{border-width:1px}.border-2{border-width:2px}.border-y{border-top-width:1px;border-bottom-width:1px}.border-l{border-left-width:1px}.border-r{border-right-width:1px}.border-black{--tw-border-opacity: 1;border-color:rgb(0 0 0 / var(--tw-border-opacity))}.border-red\\/90{--tw-border-opacity: 1;border-color:rgb(190 48 38 / var(--tw-border-opacity))}.border-green\\/100{--tw-border-opacity: 1;border-color:rgb(41 91 51 / var(--tw-border-opacity))}.border-x-black{--tw-border-opacity: 1;border-left-color:rgb(0 0 0 / var(--tw-border-opacity));border-right-color:rgb(0 0 0 / var(--tw-border-opacity))}.border-t-black{--tw-border-opacity: 1;border-top-color:rgb(0 0 0 / var(--tw-border-opacity))}.border-b-white{--tw-border-opacity: 1;border-bottom-color:rgb(255 255 255 / var(--tw-border-opacity))}.border-l-gray-300{--tw-border-opacity: 1;border-left-color:rgb(209 213 219 / var(--tw-border-opacity))}.border-r-gray-300{--tw-border-opacity: 1;border-right-color:rgb(209 213 219 / var(--tw-border-opacity))}.bg-green-200{--tw-bg-opacity: 1;background-color:rgb(187 247 208 / var(--tw-bg-opacity))}.bg-orange-200{--tw-bg-opacity: 1;background-color:rgb(254 215 170 / var(--tw-bg-opacity))}.bg-red-200{--tw-bg-opacity: 1;background-color:rgb(254 202 202 / var(--tw-bg-opacity))}.bg-red\\/90{--tw-bg-opacity: 1;background-color:rgb(190 48 38 / var(--tw-bg-opacity))}.bg-white{--tw-bg-opacity: 1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}.bg-black{--tw-bg-opacity: 1;background-color:rgb(0 0 0 / var(--tw-bg-opacity))}.bg-gray-100{--tw-bg-opacity: 1;background-color:rgb(243 244 246 / var(--tw-bg-opacity))}.bg-gray-400{--tw-bg-opacity: 1;background-color:rgb(156 163 175 / var(--tw-bg-opacity))}.bg-\\[\\#99a2a2\\]{--tw-bg-opacity: 1;background-color:rgb(153 162 162 / var(--tw-bg-opacity))}.bg-gray-200{--tw-bg-opacity: 1;background-color:rgb(229 231 235 / var(--tw-bg-opacity))}.bg-green\\/80{--tw-bg-opacity: 1;background-color:rgb(73 162 92 / var(--tw-bg-opacity))}.bg-black\\/20{--tw-bg-opacity: 1;background-color:rgb(233 233 233 / var(--tw-bg-opacity))}.p-2{padding:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.py-0\\.5{padding-top:.125rem;padding-bottom:.125rem}.py-0{padding-top:0;padding-bottom:0}.px-4{padding-left:1rem;padding-right:1rem}.py-1\\.5{padding-top:.375rem;padding-bottom:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.px-1\\.5{padding-left:.375rem;padding-right:.375rem}.px-1{padding-left:.25rem;padding-right:.25rem}.text-center{text-align:center}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xs{font-size:.75rem;line-height:1rem}.text-base{font-size:1rem;line-height:1.5rem}.font-bold{font-weight:700}.uppercase{text-transform:uppercase}.text-green-900{--tw-text-opacity: 1;color:rgb(20 83 45 / var(--tw-text-opacity))}.text-orange-900{--tw-text-opacity: 1;color:rgb(124 45 18 / var(--tw-text-opacity))}.text-red-900{--tw-text-opacity: 1;color:rgb(127 29 29 / var(--tw-text-opacity))}.text-white{--tw-text-opacity: 1;color:rgb(255 255 255 / var(--tw-text-opacity))}.text-red\\/90{--tw-text-opacity: 1;color:rgb(190 48 38 / var(--tw-text-opacity))}.text-black{--tw-text-opacity: 1;color:rgb(0 0 0 / var(--tw-text-opacity))}.text-black\\/70{--tw-text-opacity: 1;color:rgb(85 85 85 / var(--tw-text-opacity))}.opacity-50{opacity:.5}.opacity-0{opacity:0}.shadow-lg{--tw-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);--tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow)}.shadow{--tw-shadow: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);--tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.ring-0{--tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow, 0 0 #0000)}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.duration-200{transition-duration:.2s}.duration-500{transition-duration:.5s}.ease-in-out{transition-timing-function:cubic-bezier(.4,0,.2,1)}*,input,button{font-family:Space Mono,monospace}v-badge,v-breadcrumbs,v-button,v-collapse,v-input,v-radio,v-select,v-slider,v-switch,v-tabs{display:block}.last\\:border-r:last-child{border-right-width:1px}.hover\\:bg-gray-100:hover{--tw-bg-opacity: 1;background-color:rgb(243 244 246 / var(--tw-bg-opacity))}.focus\\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}@media (prefers-reduced-motion: no-preference){.motion-safe\\:transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.motion-safe\\:transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}}\n")();
+var prime = '';
 
 function noop() { }
 function run(fn) {
@@ -560,51 +560,50 @@ const dispatch = (element, name, detail) => {
 /* src/elements/badge/index.svelte generated by Svelte v3.49.0 */
 
 function create_fragment$9(ctx) {
-	let div;
 	let small;
 	let t;
-	let div_class_value;
+	let small_class_value;
 
 	return {
 		c() {
-			div = element("div");
 			small = element("small");
 			t = text(/*label*/ ctx[0]);
 			this.c = noop;
 
-			attr(div, "class", div_class_value = cx('inline-flex gap-3 rounded-full px-3 py-0.5 text-sm', {
+			attr(small, "class", small_class_value = cx('rounded-full px-3 py-0.5 text-xs', {
 				'text-green-900 bg-green-200': /*variant*/ ctx[1] === 'green',
 				'text-orange-900 bg-orange-200': /*variant*/ ctx[1] === 'orange',
-				'text-red-900 bg-red-200': /*variant*/ ctx[1] === 'red'
+				'text-red-900 bg-red-200': /*variant*/ ctx[1] === 'red',
+				'text-gray-800 bg-gray-200': /*variant*/ ctx[1] === 'gray'
 			}));
 		},
 		m(target, anchor) {
-			insert(target, div, anchor);
-			append(div, small);
+			insert(target, small, anchor);
 			append(small, t);
 		},
 		p(ctx, [dirty]) {
 			if (dirty & /*label*/ 1) set_data(t, /*label*/ ctx[0]);
 
-			if (dirty & /*variant*/ 2 && div_class_value !== (div_class_value = cx('inline-flex gap-3 rounded-full px-3 py-0.5 text-sm', {
+			if (dirty & /*variant*/ 2 && small_class_value !== (small_class_value = cx('rounded-full px-3 py-0.5 text-xs', {
 				'text-green-900 bg-green-200': /*variant*/ ctx[1] === 'green',
 				'text-orange-900 bg-orange-200': /*variant*/ ctx[1] === 'orange',
-				'text-red-900 bg-red-200': /*variant*/ ctx[1] === 'red'
+				'text-red-900 bg-red-200': /*variant*/ ctx[1] === 'red',
+				'text-gray-800 bg-gray-200': /*variant*/ ctx[1] === 'gray'
 			}))) {
-				attr(div, "class", div_class_value);
+				attr(small, "class", small_class_value);
 			}
 		},
 		i: noop,
 		o: noop,
 		d(detaching) {
-			if (detaching) detach(div);
+			if (detaching) detach(small);
 		}
 	};
 }
 
 function instance$9($$self, $$props, $$invalidate) {
 	let { label = '' } = $$props;
-	let { variant = 'green' } = $$props;
+	let { variant = 'gray' } = $$props;
 	addStyles();
 
 	$$self.$$set = $$props => {
@@ -680,7 +679,7 @@ function get_each_context$4(ctx, list, i) {
 }
 
 // (15:4) {#if index !== parsedCrumbs.length - 1}
-function create_if_block$1(ctx) {
+function create_if_block$3(ctx) {
 	let div2;
 
 	return {
@@ -707,7 +706,7 @@ function create_each_block$4(key_1, ctx) {
 	let t0;
 	let t1;
 	let if_block_anchor;
-	let if_block = /*index*/ ctx[4] !== /*parsedCrumbs*/ ctx[0].length - 1 && create_if_block$1();
+	let if_block = /*index*/ ctx[4] !== /*parsedCrumbs*/ ctx[0].length - 1 && create_if_block$3();
 
 	return {
 		key: key_1,
@@ -734,7 +733,7 @@ function create_each_block$4(key_1, ctx) {
 
 			if (/*index*/ ctx[4] !== /*parsedCrumbs*/ ctx[0].length - 1) {
 				if (if_block) ; else {
-					if_block = create_if_block$1();
+					if_block = create_if_block$3();
 					if_block.c();
 					if_block.m(if_block_anchor.parentNode, if_block_anchor);
 				}
@@ -978,43 +977,71 @@ customElements.define("v-button", Button);
 
 /* src/elements/collapse/index.svelte generated by Svelte v3.49.0 */
 
-function create_fragment$6(ctx) {
-	let div3;
-	let div1;
+function create_if_block$2(ctx) {
 	let h2;
-	let t0;
-	let t1;
+	let t;
+
+	return {
+		c() {
+			h2 = element("h2");
+			t = text(/*title*/ ctx[1]);
+			attr(h2, "class", "text-sm");
+		},
+		m(target, anchor) {
+			insert(target, h2, anchor);
+			append(h2, t);
+		},
+		p(ctx, dirty) {
+			if (dirty & /*title*/ 2) set_data(t, /*title*/ ctx[1]);
+		},
+		d(detaching) {
+			if (detaching) detach(h2);
+		}
+	};
+}
+
+function create_fragment$6(ctx) {
+	let div4;
+	let div2;
 	let div0;
+	let t0;
 	let slot0;
+	let t1;
+	let div1;
+	let slot1;
 	let t2;
 	let svg;
 	let polyline;
 	let svg_class_value;
 	let t3;
-	let div2;
-	let slot1;
-	let div2_class_value;
+	let div3;
+	let slot2;
+	let div3_class_value;
 	let mounted;
 	let dispose;
+	let if_block = /*title*/ ctx[1] && create_if_block$2(ctx);
 
 	return {
 		c() {
-			div3 = element("div");
-			div1 = element("div");
-			h2 = element("h2");
-			t0 = text(/*title*/ ctx[1]);
-			t1 = space();
+			div4 = element("div");
+			div2 = element("div");
 			div0 = element("div");
+			if (if_block) if_block.c();
+			t0 = space();
 			slot0 = element("slot");
+			t1 = space();
+			div1 = element("div");
+			slot1 = element("slot");
 			t2 = space();
 			svg = svg_element("svg");
 			polyline = svg_element("polyline");
 			t3 = space();
-			div2 = element("div");
-			slot1 = element("slot");
+			div3 = element("div");
+			slot2 = element("slot");
 			this.c = noop;
-			attr(h2, "class", "");
-			attr(slot0, "name", "header");
+			attr(slot0, "name", "title");
+			attr(div0, "class", "flex items-center gap-2");
+			attr(slot1, "name", "header");
 			attr(polyline, "points", "6 9 12 15 18 9");
 
 			attr(svg, "class", svg_class_value = cx('transition-transform duration-200', {
@@ -1029,39 +1056,52 @@ function create_fragment$6(ctx) {
 			attr(svg, "stroke-linejoin", "round");
 			attr(svg, "stroke-linecap", "round");
 			attr(svg, "fill", "none");
-			attr(div0, "class", "h-full flex items-center gap-3");
-			attr(div1, "class", "w-full py-1.5 px-4 flex items-center justify-between border text-black border-black bg-white cursor-pointer");
+			attr(div1, "class", "h-full flex items-center gap-3");
+			attr(div2, "class", "w-full py-1.5 px-4 flex items-center justify-between border text-black border-black bg-white cursor-pointer");
 
-			attr(div2, "class", div2_class_value = cx('bg-white text-black overflow-hidden transition-all duration-500', {
+			attr(div3, "class", div3_class_value = cx('bg-white text-black overflow-hidden transition-all duration-500', {
 				'max-h-0': !/*open*/ ctx[0],
 				'max-h-fit': /*open*/ ctx[0]
 			}));
 
-			attr(div3, "class", "relative w-full overflow-hidden");
+			attr(div4, "class", "relative w-full overflow-hidden");
 		},
 		m(target, anchor) {
-			insert(target, div3, anchor);
-			append(div3, div1);
-			append(div1, h2);
-			append(h2, t0);
-			append(div1, t1);
-			append(div1, div0);
+			insert(target, div4, anchor);
+			append(div4, div2);
+			append(div2, div0);
+			if (if_block) if_block.m(div0, null);
+			append(div0, t0);
 			append(div0, slot0);
-			append(div0, t2);
-			append(div0, svg);
+			append(div2, t1);
+			append(div2, div1);
+			append(div1, slot1);
+			append(div1, t2);
+			append(div1, svg);
 			append(svg, polyline);
-			append(div3, t3);
-			append(div3, div2);
-			append(div2, slot1);
-			/*div3_binding*/ ctx[4](div3);
+			append(div4, t3);
+			append(div4, div3);
+			append(div3, slot2);
+			/*div4_binding*/ ctx[4](div4);
 
 			if (!mounted) {
-				dispose = listen(div1, "click", /*handleClick*/ ctx[3]);
+				dispose = listen(div2, "click", /*handleClick*/ ctx[3]);
 				mounted = true;
 			}
 		},
 		p(ctx, [dirty]) {
-			if (dirty & /*title*/ 2) set_data(t0, /*title*/ ctx[1]);
+			if (/*title*/ ctx[1]) {
+				if (if_block) {
+					if_block.p(ctx, dirty);
+				} else {
+					if_block = create_if_block$2(ctx);
+					if_block.c();
+					if_block.m(div0, t0);
+				}
+			} else if (if_block) {
+				if_block.d(1);
+				if_block = null;
+			}
 
 			if (dirty & /*open*/ 1 && svg_class_value !== (svg_class_value = cx('transition-transform duration-200', {
 				'rotate-0': !/*open*/ ctx[0],
@@ -1070,18 +1110,19 @@ function create_fragment$6(ctx) {
 				attr(svg, "class", svg_class_value);
 			}
 
-			if (dirty & /*open*/ 1 && div2_class_value !== (div2_class_value = cx('bg-white text-black overflow-hidden transition-all duration-500', {
+			if (dirty & /*open*/ 1 && div3_class_value !== (div3_class_value = cx('bg-white text-black overflow-hidden transition-all duration-500', {
 				'max-h-0': !/*open*/ ctx[0],
 				'max-h-fit': /*open*/ ctx[0]
 			}))) {
-				attr(div2, "class", div2_class_value);
+				attr(div3, "class", div3_class_value);
 			}
 		},
 		i: noop,
 		o: noop,
 		d(detaching) {
-			if (detaching) detach(div3);
-			/*div3_binding*/ ctx[4](null);
+			if (detaching) detach(div4);
+			if (if_block) if_block.d();
+			/*div4_binding*/ ctx[4](null);
 			mounted = false;
 			dispose();
 		}
@@ -1099,7 +1140,7 @@ function instance$6($$self, $$props, $$invalidate) {
 		dispatch(root, 'toggle', { open });
 	};
 
-	function div3_binding($$value) {
+	function div4_binding($$value) {
 		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
 			root = $$value;
 			$$invalidate(2, root);
@@ -1111,7 +1152,7 @@ function instance$6($$self, $$props, $$invalidate) {
 		if ('open' in $$props) $$invalidate(0, open = $$props.open);
 	};
 
-	return [open, title, root, handleClick, div3_binding];
+	return [open, title, root, handleClick, div4_binding];
 }
 
 class Collapse extends SvelteElement {
@@ -1171,40 +1212,179 @@ customElements.define("v-collapse", Collapse);
 
 /* src/elements/input/index.svelte generated by Svelte v3.49.0 */
 
-function create_fragment$5(ctx) {
-	let input_1;
+function create_if_block_1$1(ctx) {
+	let p;
+	let t;
+	let p_class_value;
+
+	return {
+		c() {
+			p = element("p");
+			t = text(/*label*/ ctx[3]);
+
+			attr(p, "class", p_class_value = cx('text-xs', {
+				'pb-1': /*labelposition*/ ctx[4] === 'top',
+				inline: /*labelposition*/ ctx[4] === 'left'
+			}));
+		},
+		m(target, anchor) {
+			insert(target, p, anchor);
+			append(p, t);
+		},
+		p(ctx, dirty) {
+			if (dirty & /*label*/ 8) set_data(t, /*label*/ ctx[3]);
+
+			if (dirty & /*labelposition*/ 16 && p_class_value !== (p_class_value = cx('text-xs', {
+				'pb-1': /*labelposition*/ ctx[4] === 'top',
+				inline: /*labelposition*/ ctx[4] === 'left'
+			}))) {
+				attr(p, "class", p_class_value);
+			}
+		},
+		d(detaching) {
+			if (detaching) detach(p);
+		}
+	};
+}
+
+// (43:2) {#if type === 'number'}
+function create_if_block$1(ctx) {
+	let div;
+	let svg0;
+	let path0;
+	let t;
+	let svg1;
+	let path1;
 	let mounted;
 	let dispose;
 
 	return {
 		c() {
-			input_1 = element("input");
-			this.c = noop;
-			attr(input_1, "type", /*type*/ ctx[0]);
-			attr(input_1, "placeholder", /*placeholder*/ ctx[1]);
-			attr(input_1, "class", "py-1 px-2 border text-xs border-black bg-white outline-none");
+			div = element("div");
+			svg0 = svg_element("svg");
+			path0 = svg_element("path");
+			t = space();
+			svg1 = svg_element("svg");
+			path1 = svg_element("path");
+			attr(path0, "d", "M9.29 13l0.71 0.71 5.66-5.66-1.41-1.41-4.24 4.24-4.24-4.24-1.41 1.41z");
+			attr(svg0, "class", "h-[15px] rotate-180");
+			attr(svg0, "viewBox", "0 0 20 20");
+			attr(path1, "d", "M9.29 13l0.71 0.71 5.66-5.66-1.41-1.41-4.24 4.24-4.24-4.24-1.41 1.41z");
+			attr(svg1, "class", "h-[15px]");
+			attr(svg1, "viewBox", "0 0 20 20");
+			attr(div, "class", "absolute right-0 bottom-0 cursor-pointer select-none");
 		},
 		m(target, anchor) {
-			insert(target, input_1, anchor);
+			insert(target, div, anchor);
+			append(div, svg0);
+			append(svg0, path0);
+			append(div, t);
+			append(div, svg1);
+			append(svg1, path1);
 
 			if (!mounted) {
-				dispose = listen(input_1, "input", /*handleInput*/ ctx[2]);
+				dispose = [
+					listen(svg0, "click", /*click_handler*/ ctx[10]),
+					listen(svg1, "click", /*click_handler_1*/ ctx[11])
+				];
+
+				mounted = true;
+			}
+		},
+		p: noop,
+		d(detaching) {
+			if (detaching) detach(div);
+			mounted = false;
+			run_all(dispose);
+		}
+	};
+}
+
+function create_fragment$5(ctx) {
+	let label_1;
+	let t0;
+	let input_1;
+	let t1;
+	let mounted;
+	let dispose;
+	let if_block0 = /*label*/ ctx[3] && create_if_block_1$1(ctx);
+	let if_block1 = /*type*/ ctx[1] === 'number' && create_if_block$1(ctx);
+
+	return {
+		c() {
+			label_1 = element("label");
+			if (if_block0) if_block0.c();
+			t0 = space();
+			input_1 = element("input");
+			t1 = space();
+			if (if_block1) if_block1.c();
+			this.c = noop;
+			attr(input_1, "class", "py-1.5 px-2.5 border text-xs border-black bg-white outline-none");
+			attr(input_1, "type", /*type*/ ctx[1]);
+			attr(input_1, "placeholder", /*placeholder*/ ctx[2]);
+			input_1.value = /*value*/ ctx[0];
+			attr(label_1, "class", "relative flex flex-col max-w-[14rem]");
+		},
+		m(target, anchor) {
+			insert(target, label_1, anchor);
+			if (if_block0) if_block0.m(label_1, null);
+			append(label_1, t0);
+			append(label_1, input_1);
+			/*input_1_binding*/ ctx[9](input_1);
+			append(label_1, t1);
+			if (if_block1) if_block1.m(label_1, null);
+
+			if (!mounted) {
+				dispose = listen(input_1, "input", /*handleInput*/ ctx[6]);
 				mounted = true;
 			}
 		},
 		p(ctx, [dirty]) {
-			if (dirty & /*type*/ 1) {
-				attr(input_1, "type", /*type*/ ctx[0]);
+			if (/*label*/ ctx[3]) {
+				if (if_block0) {
+					if_block0.p(ctx, dirty);
+				} else {
+					if_block0 = create_if_block_1$1(ctx);
+					if_block0.c();
+					if_block0.m(label_1, t0);
+				}
+			} else if (if_block0) {
+				if_block0.d(1);
+				if_block0 = null;
 			}
 
-			if (dirty & /*placeholder*/ 2) {
-				attr(input_1, "placeholder", /*placeholder*/ ctx[1]);
+			if (dirty & /*type*/ 2) {
+				attr(input_1, "type", /*type*/ ctx[1]);
+			}
+
+			if (dirty & /*placeholder*/ 4) {
+				attr(input_1, "placeholder", /*placeholder*/ ctx[2]);
+			}
+
+			if (dirty & /*value*/ 1 && input_1.value !== /*value*/ ctx[0]) {
+				input_1.value = /*value*/ ctx[0];
+			}
+
+			if (/*type*/ ctx[1] === 'number') {
+				if (if_block1) {
+					if_block1.p(ctx, dirty);
+				} else {
+					if_block1 = create_if_block$1(ctx);
+					if_block1.c();
+					if_block1.m(label_1, null);
+				}
+			} else if (if_block1) {
+				if_block1.d(1);
+				if_block1 = null;
 			}
 		},
 		i: noop,
 		o: noop,
 		d(detaching) {
-			if (detaching) detach(input_1);
+			if (detaching) detach(label_1);
+			if (if_block0) if_block0.d();
+			/*input_1_binding*/ ctx[9](null);
+			if (if_block1) if_block1.d();
 			mounted = false;
 			dispose();
 		}
@@ -1214,24 +1394,68 @@ function create_fragment$5(ctx) {
 function instance$5($$self, $$props, $$invalidate) {
 	let { type = 'text' } = $$props;
 	let { placeholder = '' } = $$props;
+	let { label = '' } = $$props;
+	let { value = '' } = $$props;
+	let { step = '1' } = $$props;
+	let { labelposition = 'top' } = $$props;
 	let input;
+	let stepNumber;
 	addStyles();
 
 	const handleInput = () => {
 		dispatch(input, 'input', { value: input.value });
 	};
 
-	$$self.$$set = $$props => {
-		if ('type' in $$props) $$invalidate(0, type = $$props.type);
-		if ('placeholder' in $$props) $$invalidate(1, placeholder = $$props.placeholder);
+	const increment = direction => {
+		const numberValue = Number.parseFloat(value || '0');
+		$$invalidate(0, value = String(numberValue + stepNumber * direction));
 	};
 
-	return [type, placeholder, handleInput];
+	function input_1_binding($$value) {
+		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+			input = $$value;
+			$$invalidate(5, input);
+		});
+	}
+
+	const click_handler = () => increment(1);
+	const click_handler_1 = () => increment(-1);
+
+	$$self.$$set = $$props => {
+		if ('type' in $$props) $$invalidate(1, type = $$props.type);
+		if ('placeholder' in $$props) $$invalidate(2, placeholder = $$props.placeholder);
+		if ('label' in $$props) $$invalidate(3, label = $$props.label);
+		if ('value' in $$props) $$invalidate(0, value = $$props.value);
+		if ('step' in $$props) $$invalidate(8, step = $$props.step);
+		if ('labelposition' in $$props) $$invalidate(4, labelposition = $$props.labelposition);
+	};
+
+	$$self.$$.update = () => {
+		if ($$self.$$.dirty & /*step*/ 256) {
+			stepNumber = Number.parseFloat(step);
+		}
+	};
+
+	return [
+		value,
+		type,
+		placeholder,
+		label,
+		labelposition,
+		input,
+		handleInput,
+		increment,
+		step,
+		input_1_binding,
+		click_handler,
+		click_handler_1
+	];
 }
 
 class Input extends SvelteElement {
 	constructor(options) {
 		super();
+		this.shadowRoot.innerHTML = `<style>input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{appearance:none}</style>`;
 
 		init(
 			this,
@@ -1243,7 +1467,14 @@ class Input extends SvelteElement {
 			instance$5,
 			create_fragment$5,
 			not_equal,
-			{ type: 0, placeholder: 1 },
+			{
+				type: 1,
+				placeholder: 2,
+				label: 3,
+				value: 0,
+				step: 8,
+				labelposition: 4
+			},
 			null
 		);
 
@@ -1260,11 +1491,11 @@ class Input extends SvelteElement {
 	}
 
 	static get observedAttributes() {
-		return ["type", "placeholder"];
+		return ["type", "placeholder", "label", "value", "step", "labelposition"];
 	}
 
 	get type() {
-		return this.$$.ctx[0];
+		return this.$$.ctx[1];
 	}
 
 	set type(type) {
@@ -1273,11 +1504,47 @@ class Input extends SvelteElement {
 	}
 
 	get placeholder() {
-		return this.$$.ctx[1];
+		return this.$$.ctx[2];
 	}
 
 	set placeholder(placeholder) {
 		this.$$set({ placeholder });
+		flush();
+	}
+
+	get label() {
+		return this.$$.ctx[3];
+	}
+
+	set label(label) {
+		this.$$set({ label });
+		flush();
+	}
+
+	get value() {
+		return this.$$.ctx[0];
+	}
+
+	set value(value) {
+		this.$$set({ value });
+		flush();
+	}
+
+	get step() {
+		return this.$$.ctx[8];
+	}
+
+	set step(step) {
+		this.$$set({ step });
+		flush();
+	}
+
+	get labelposition() {
+		return this.$$.ctx[4];
+	}
+
+	set labelposition(labelposition) {
+		this.$$set({ labelposition });
 		flush();
 	}
 }
@@ -3442,7 +3709,7 @@ function create_each_block(key_1, ctx) {
 			t0 = text(t0_value);
 			t1 = space();
 
-			attr(button, "class", button_class_value = cx('px-4 py-1 uppercase text-sm', {
+			attr(button, "class", button_class_value = cx('px-4 py-1 uppercase text-sm first:ml-4', {
 				'bg-white border border-x-black border-t-black border-b-white font-bold': /*tab*/ ctx[8] === /*selected*/ ctx[0],
 				'text-black/70': /*tab*/ ctx[8] !== /*selected*/ ctx[0],
 				'border-l border-l-gray-300': /*selectedIndex*/ ctx[3] > /*index*/ ctx[10],
@@ -3465,7 +3732,7 @@ function create_each_block(key_1, ctx) {
 			ctx = new_ctx;
 			if (dirty & /*parsedTabs*/ 2 && t0_value !== (t0_value = /*tab*/ ctx[8] + "")) set_data(t0, t0_value);
 
-			if (dirty & /*parsedTabs, selected, selectedIndex*/ 11 && button_class_value !== (button_class_value = cx('px-4 py-1 uppercase text-sm', {
+			if (dirty & /*parsedTabs, selected, selectedIndex*/ 11 && button_class_value !== (button_class_value = cx('px-4 py-1 uppercase text-sm first:ml-4', {
 				'bg-white border border-x-black border-t-black border-b-white font-bold': /*tab*/ ctx[8] === /*selected*/ ctx[0],
 				'text-black/70': /*tab*/ ctx[8] !== /*selected*/ ctx[0],
 				'border-l border-l-gray-300': /*selectedIndex*/ ctx[3] > /*index*/ ctx[10],
