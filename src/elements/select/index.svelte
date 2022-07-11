@@ -2,14 +2,14 @@
 
 <script lang='ts'>
 
-import { addStyles } from '../../lib/index'
+import { addStyles, dispatch } from '../../lib/index'
 
 export let options = ''
 export let selected = ''
 export let open = false
 export let placeholder = ''
 
-let rootElement: HTMLElement
+let root: HTMLElement
 let parsedOptions: string[]
 let selectedOption: string
 
@@ -18,17 +18,10 @@ $: selectedOption = parsedOptions.find(opt => opt === selected) || placeholder
 
 addStyles()
 
-const handleClick = (option: string) => {
-  selected = option
+const handleClick = (value: string) => {
+  selected = value
   open = !open
-
-  rootElement.dispatchEvent(new CustomEvent('select', {
-    composed: true,
-    bubbles: true,
-    detail: {
-      selected,
-    },
-  }))
+  dispatch(root, 'input', { value })
 }
 
 const handleToggle = (event: CustomEvent<{open: boolean}>) => {
@@ -37,7 +30,7 @@ const handleToggle = (event: CustomEvent<{open: boolean}>) => {
 
 </script>
 
-<v-collapse bind:this={rootElement} title={selectedOption} open={open} on:toggle={handleToggle}>
+<v-collapse bind:this={root} title={selectedOption} open={open} on:toggle={handleToggle}>
   <div class="flex flex-col gap-2 p-2">
     {#each parsedOptions as option (option)}
       <div

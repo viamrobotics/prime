@@ -3,27 +3,23 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles } from '../../lib/index'
+import { addStyles, dispatch } from '../../lib/index'
 
 export let title = ''
 export let open = false
 
-let rootElement: HTMLElement
+let root: HTMLElement
 
 addStyles()
 
 const handleClick = () => {
   open = !open
-  rootElement.dispatchEvent(new CustomEvent('toggle', {
-    composed: true,
-    bubbles: true,
-    detail: { open },
-  }))
+  dispatch(root, 'toggle', { open })
 }
 
 </script>
 
-<div bind:this={rootElement} class='relative w-full overflow-hidden'>
+<div bind:this={root} class='relative w-full overflow-hidden'>
   <div
     class='w-full py-1.5 px-4 flex items-center justify-between border text-black border-black bg-white cursor-pointer'
     on:click={handleClick}
