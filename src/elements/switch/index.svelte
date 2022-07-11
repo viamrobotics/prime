@@ -11,6 +11,7 @@ export let value: 'on' | 'off' = 'off'
 
 addStyles()
 
+let button: HTMLButtonElement
 let input: HTMLInputElement
 let on: boolean
 
@@ -19,12 +20,13 @@ $: on = value === 'on'
 const handleClick = () => {
   value = (!on) ? 'on' : 'off'
   input.checked = on
-  dispatch(input, 'input', { value: input.checked })
+  dispatch(button, 'input', { value: input.checked })
 }
 
 </script>
 
 <button
+  bind:this={button}
   on:click={handleClick}
   type='button'
   class={cx('relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-green/100 rounded-full cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {

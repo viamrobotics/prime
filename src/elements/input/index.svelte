@@ -15,6 +15,7 @@ export let value = ''
 export let step = '1'
 export let labelposition: LabelPosition = 'top'
 
+let root: HTMLElement
 let input: HTMLInputElement
 
 let stepNumber: number
@@ -23,18 +24,25 @@ $: stepNumber = Number.parseFloat(step)
 
 addStyles()
 
-const handleInput = () => {
-  dispatch(input, 'input', { value: input.value })
+const handleInput = (event: Event) => {
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  value = input.value
+  dispatch(root, 'input', { value })
 }
 
 const increment = (direction: 1 | -1) => {
   const numberValue = Number.parseFloat(value || '0')
-  value = String(numberValue + stepNumber * direction)
+  value = input.value = String(numberValue + stepNumber * direction)
+  dispatch(root, 'input', { value })
 }
 
 </script>
 
-<label class='relative flex flex-col max-w-[14rem]'>
+<label
+  bind:this={root}
+  class='relative flex flex-col max-w-[14rem]'
+>
   {#if label}
     <p class={cx('text-xs', {
       'pb-1': labelposition === 'top',
