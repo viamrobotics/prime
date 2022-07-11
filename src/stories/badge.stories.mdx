@@ -25,6 +25,22 @@ To display status of something
 
 <Canvas>
   <Story
+    name='gray'
+    args={{
+      variant: 'gray'
+    }}
+  >
+    {({ label, variant }) => `
+      <v-badge
+        variant='${variant}'
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
     name='green'
     args={{
       variant: 'green'
