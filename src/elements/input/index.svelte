@@ -2,7 +2,6 @@
 
 <script lang='ts'>
 
-import { tick } from 'svelte'
 import cx from 'classnames'
 import { addStyles, dispatch } from '../../lib/index'
 
@@ -16,7 +15,6 @@ export let value = ''
 export let step = '1'
 export let labelposition: LabelPosition = 'top'
 
-let dispatchOff = false
 let input: HTMLInputElement
 
 let stepNumber: number
@@ -25,11 +23,7 @@ $: stepNumber = Number.parseFloat(step)
 
 addStyles()
 
-const handleInput = async () => {
-  if (dispatchOff) {
-    return
-  }
-
+const handleInput = () => {
   dispatch(input, 'input', { value: input.value })
 }
 
