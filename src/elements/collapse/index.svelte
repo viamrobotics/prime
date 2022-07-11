@@ -24,10 +24,17 @@ const handleClick = () => {
     class='w-full py-1.5 px-4 flex items-center justify-between border text-black border-black bg-white cursor-pointer'
     on:click={handleClick}
   >
-    <h2 class=''>{title}</h2>
+    <div class='flex items-center gap-2'>
+      {#if title}
+        <h2 class='text-sm'>{title}</h2>
+      {/if}
+
+      <slot name='title' />
+    </div>
 
     <div class='h-full flex items-center gap-3'>
-      <slot name='header'></slot>
+      <slot name='header' />
+
       <svg
         class={cx('transition-transform duration-200', {
           'rotate-0': !open,

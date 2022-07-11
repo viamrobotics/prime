@@ -37,7 +37,6 @@ Toggles visibility of content
   </Story>
 </Canvas>
 
-
 <Canvas>
   <Story
     name='Header slot'
@@ -54,5 +53,21 @@ Toggles visibility of content
   </Story>
 </Canvas>
 
+<Canvas>
+  <Story
+    name='Title slot'
+  >
+    {({ title, content }) => `
+      <v-collapse
+        title='${title}'
+      >
+        <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
+        <v-badge slot='header' label='Test'></v-badge>
+        <span>${content}</span>
+      </v-collapse>
+    `
+    }
+  </Story>
+</Canvas>
 
 
