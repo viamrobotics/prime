@@ -13,6 +13,7 @@ export let disabled: 'true' | 'false' = 'false'
 
 addStyles()
 
+let button: HTMLButtonElement
 let input: HTMLInputElement
 let on: boolean
 let isDisabled: boolean
@@ -23,7 +24,7 @@ $: isDisabled = disabled === 'true'
 const handleClick = () => {
   value = (!on) ? 'on' : 'off'
   input.checked = on
-  dispatch(input, 'input', { value: input.checked })
+  dispatch(button, 'input', { value: input.checked })
 }
 
 </script>
