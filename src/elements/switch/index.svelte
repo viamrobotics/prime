@@ -27,7 +27,7 @@ const handleClick = () => {
 <button
   on:click={handleClick}
   type='button'
-  class={cx('relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-green/100 rounded-full cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
+  class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
     'bg-green/80': on,
   })}
   role='switch'
@@ -35,9 +35,9 @@ const handleClick = () => {
   aria-checked={on ? 'true' : 'false'}
 >
   <span
-    class='pointer-events-none relative inline-block border-2 border-green/100 h-4 w-4 mt-0.5 ml-0.5 rounded-full bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200'
+    class='pointer-events-none relative inline-block border border-green/100 h-4 w-4 mt-px ml-px bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200'
     class:translate-x-0={!on}
-    class:translate-x-5={on}
+    class:translate-x-6={on}
   />
 
   <input
