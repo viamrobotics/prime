@@ -13,7 +13,7 @@ export let disabled: 'true' | 'false' = 'false'
 
 addStyles()
 
-let button: HTMLButtonElement
+let root: HTMLElement
 let input: HTMLInputElement
 let on: boolean
 let isDisabled: boolean
@@ -24,14 +24,17 @@ $: isDisabled = disabled === 'true'
 const handleClick = () => {
   value = (!on) ? 'on' : 'off'
   input.checked = on
-  dispatch(button, 'input', { value: input.checked })
+  dispatch(root, 'input', { value: input.checked })
 }
 
 </script>
 
-<label class={cx('flex items-center gap-1.5', {
-  'opacity-50 pointer-events-none': isDisabled,
-})}>
+<label
+  bind:this={root}
+  class={cx('flex items-center gap-1.5', {
+    'opacity-50 pointer-events-none': isDisabled,
+  })}
+>
   <button
     on:click={handleClick}
     type='button'
