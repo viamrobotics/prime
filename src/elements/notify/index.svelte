@@ -14,14 +14,14 @@
 </script>
 
 <div
-  class={cx("flex border-l-4 bg-gray-100 px-1 py-2", {
+  class={cx("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
     "border-red/90": variant === "error",
     "border-orange/90": variant === "warning",
     "border-green/90": variant === "success",
     "border-blue/90": variant === "info",
   })}
 >
-  <div class="mt-1 mr-2">
+  <div class="mt-1">
     <svg
       width="14"
       height="14"
