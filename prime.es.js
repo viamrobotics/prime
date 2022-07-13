@@ -3875,12 +3875,12 @@ function create_if_block(ctx) {
 
 function create_fragment$1(ctx) {
 	let label_1;
-	let button_1;
+	let button;
 	let span;
 	let t0;
 	let input_1;
-	let button_1_class_value;
-	let button_1_aria_checked_value;
+	let button_class_value;
+	let button_aria_checked_value;
 	let t1;
 	let label_1_class_value;
 	let mounted;
@@ -3890,7 +3890,7 @@ function create_fragment$1(ctx) {
 	return {
 		c() {
 			label_1 = element("label");
-			button_1 = element("button");
+			button = element("button");
 			span = element("span");
 			t0 = space();
 			input_1 = element("input");
@@ -3898,45 +3898,46 @@ function create_fragment$1(ctx) {
 			if (if_block) if_block.c();
 			this.c = noop;
 			attr(span, "class", "pointer-events-none relative inline-block border border-green/100 h-4 w-4 mt-px ml-px bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200");
-			toggle_class(span, "translate-x-0", !/*on*/ ctx[5]);
-			toggle_class(span, "translate-x-6", /*on*/ ctx[5]);
+			toggle_class(span, "translate-x-0", !/*on*/ ctx[6]);
+			toggle_class(span, "translate-x-6", /*on*/ ctx[6]);
 			attr(input_1, "name", /*name*/ ctx[2]);
 			input_1.value = /*value*/ ctx[0];
 			attr(input_1, "class", "hidden");
 			attr(input_1, "type", "checkbox");
-			input_1.checked = /*on*/ ctx[5];
-			attr(button_1, "type", "button");
-			attr(button_1, "class", button_1_class_value = cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', { 'bg-green/80': /*on*/ ctx[5] }));
-			attr(button_1, "role", "switch");
-			attr(button_1, "aria-label", /*label*/ ctx[1]);
-			attr(button_1, "aria-checked", button_1_aria_checked_value = /*on*/ ctx[5] ? 'true' : 'false');
+			input_1.checked = /*on*/ ctx[6];
+			attr(button, "type", "button");
+			attr(button, "class", button_class_value = cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', { 'bg-green/80': /*on*/ ctx[6] }));
+			attr(button, "role", "switch");
+			attr(button, "aria-label", /*label*/ ctx[1]);
+			attr(button, "aria-checked", button_aria_checked_value = /*on*/ ctx[6] ? 'true' : 'false');
 
 			attr(label_1, "class", label_1_class_value = cx('flex items-center gap-1.5', {
-				'opacity-50 pointer-events-none': /*isDisabled*/ ctx[6]
+				'opacity-50 pointer-events-none': /*isDisabled*/ ctx[7]
 			}));
 		},
 		m(target, anchor) {
 			insert(target, label_1, anchor);
-			append(label_1, button_1);
-			append(button_1, span);
-			append(button_1, t0);
-			append(button_1, input_1);
-			/*input_1_binding*/ ctx[9](input_1);
+			append(label_1, button);
+			append(button, span);
+			append(button, t0);
+			append(button, input_1);
+			/*input_1_binding*/ ctx[10](input_1);
 			append(label_1, t1);
 			if (if_block) if_block.m(label_1, null);
+			/*label_1_binding*/ ctx[11](label_1);
 
 			if (!mounted) {
-				dispose = listen(button_1, "click", /*handleClick*/ ctx[7]);
+				dispose = listen(button, "click", /*handleClick*/ ctx[8]);
 				mounted = true;
 			}
 		},
 		p(ctx, [dirty]) {
-			if (dirty & /*on*/ 32) {
-				toggle_class(span, "translate-x-0", !/*on*/ ctx[5]);
+			if (dirty & /*on*/ 64) {
+				toggle_class(span, "translate-x-0", !/*on*/ ctx[6]);
 			}
 
-			if (dirty & /*on*/ 32) {
-				toggle_class(span, "translate-x-6", /*on*/ ctx[5]);
+			if (dirty & /*on*/ 64) {
+				toggle_class(span, "translate-x-6", /*on*/ ctx[6]);
 			}
 
 			if (dirty & /*name*/ 4) {
@@ -3947,20 +3948,20 @@ function create_fragment$1(ctx) {
 				input_1.value = /*value*/ ctx[0];
 			}
 
-			if (dirty & /*on*/ 32) {
-				input_1.checked = /*on*/ ctx[5];
+			if (dirty & /*on*/ 64) {
+				input_1.checked = /*on*/ ctx[6];
 			}
 
-			if (dirty & /*on*/ 32 && button_1_class_value !== (button_1_class_value = cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', { 'bg-green/80': /*on*/ ctx[5] }))) {
-				attr(button_1, "class", button_1_class_value);
+			if (dirty & /*on*/ 64 && button_class_value !== (button_class_value = cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', { 'bg-green/80': /*on*/ ctx[6] }))) {
+				attr(button, "class", button_class_value);
 			}
 
 			if (dirty & /*label*/ 2) {
-				attr(button_1, "aria-label", /*label*/ ctx[1]);
+				attr(button, "aria-label", /*label*/ ctx[1]);
 			}
 
-			if (dirty & /*on*/ 32 && button_1_aria_checked_value !== (button_1_aria_checked_value = /*on*/ ctx[5] ? 'true' : 'false')) {
-				attr(button_1, "aria-checked", button_1_aria_checked_value);
+			if (dirty & /*on*/ 64 && button_aria_checked_value !== (button_aria_checked_value = /*on*/ ctx[6] ? 'true' : 'false')) {
+				attr(button, "aria-checked", button_aria_checked_value);
 			}
 
 			if (/*variant*/ ctx[3] === 'labeled') {
@@ -3976,8 +3977,8 @@ function create_fragment$1(ctx) {
 				if_block = null;
 			}
 
-			if (dirty & /*isDisabled*/ 64 && label_1_class_value !== (label_1_class_value = cx('flex items-center gap-1.5', {
-				'opacity-50 pointer-events-none': /*isDisabled*/ ctx[6]
+			if (dirty & /*isDisabled*/ 128 && label_1_class_value !== (label_1_class_value = cx('flex items-center gap-1.5', {
+				'opacity-50 pointer-events-none': /*isDisabled*/ ctx[7]
 			}))) {
 				attr(label_1, "class", label_1_class_value);
 			}
@@ -3986,8 +3987,9 @@ function create_fragment$1(ctx) {
 		o: noop,
 		d(detaching) {
 			if (detaching) detach(label_1);
-			/*input_1_binding*/ ctx[9](null);
+			/*input_1_binding*/ ctx[10](null);
 			if (if_block) if_block.d();
+			/*label_1_binding*/ ctx[11](null);
 			mounted = false;
 			dispose();
 		}
@@ -4001,21 +4003,28 @@ function instance$1($$self, $$props, $$invalidate) {
 	let { variant = 'default' } = $$props;
 	let { disabled = 'false' } = $$props;
 	addStyles();
-	let button;
+	let root;
 	let input;
 	let on;
 	let isDisabled;
 
 	const handleClick = () => {
 		$$invalidate(0, value = !on ? 'on' : 'off');
-		$$invalidate(4, input.checked = on, input);
-		dispatch(button, 'input', { value: input.checked });
+		$$invalidate(5, input.checked = on, input);
+		dispatch(root, 'input', { value: input.checked });
 	};
 
 	function input_1_binding($$value) {
 		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
 			input = $$value;
-			$$invalidate(4, input);
+			$$invalidate(5, input);
+		});
+	}
+
+	function label_1_binding($$value) {
+		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+			root = $$value;
+			$$invalidate(4, root);
 		});
 	}
 
@@ -4024,16 +4033,16 @@ function instance$1($$self, $$props, $$invalidate) {
 		if ('name' in $$props) $$invalidate(2, name = $$props.name);
 		if ('value' in $$props) $$invalidate(0, value = $$props.value);
 		if ('variant' in $$props) $$invalidate(3, variant = $$props.variant);
-		if ('disabled' in $$props) $$invalidate(8, disabled = $$props.disabled);
+		if ('disabled' in $$props) $$invalidate(9, disabled = $$props.disabled);
 	};
 
 	$$self.$$.update = () => {
 		if ($$self.$$.dirty & /*value*/ 1) {
-			$$invalidate(5, on = value === 'on');
+			$$invalidate(6, on = value === 'on');
 		}
 
-		if ($$self.$$.dirty & /*disabled*/ 256) {
-			$$invalidate(6, isDisabled = disabled === 'true');
+		if ($$self.$$.dirty & /*disabled*/ 512) {
+			$$invalidate(7, isDisabled = disabled === 'true');
 		}
 	};
 
@@ -4042,12 +4051,14 @@ function instance$1($$self, $$props, $$invalidate) {
 		label,
 		name,
 		variant,
+		root,
 		input,
 		on,
 		isDisabled,
 		handleClick,
 		disabled,
-		input_1_binding
+		input_1_binding,
+		label_1_binding
 	];
 }
 
@@ -4070,7 +4081,7 @@ class Switch extends SvelteElement {
 				name: 2,
 				value: 0,
 				variant: 3,
-				disabled: 8
+				disabled: 9
 			},
 			null
 		);
@@ -4128,7 +4139,7 @@ class Switch extends SvelteElement {
 	}
 
 	get disabled() {
-		return this.$$.ctx[8];
+		return this.$$.ctx[9];
 	}
 
 	set disabled(disabled) {
