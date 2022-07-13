@@ -32,11 +32,68 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 # Notify
 
-Toggles visibility of content
+Notify message of type info, success, warning, or error
 
 <Canvas>
   <Story
-    name='Notify'
+    name='info'
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message='${message}'
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='success'
+    args={{
+      variant: 'success'
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message='${message}'
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='warning'
+    args={{
+      variant: 'warning'
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message='${message}'
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='error'
+    args={{
+      variant: 'error'
+    }}
   >
     {({ title, message, variant }) => `
       <v-notify
