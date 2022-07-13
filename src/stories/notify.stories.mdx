@@ -1,0 +1,43 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title="Elements/Notify"
+  parameters={{
+    actions: {
+      handles: ['toggle'],
+    },
+  }}
+  argTypes={{
+    title: {
+      description: 'This is the title',
+      control: 'text',
+      defaultValue: 'This is the title.',
+      table: { defaultValue: { summary: '' } },
+    },
+    content: {
+      description: 'This is the content',
+      control: 'text',
+      defaultValue: 'This is the content: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      table: { defaultValue: { summary: '' } },
+    }
+  }}
+/>
+
+# Notify
+
+Toggles visibility of content
+
+<Canvas>
+  <Story
+    name='Notify'
+  >
+    {({ title, content }) => `
+      <v-notify
+        title='${title}'
+      >
+        <span>${content}</span>
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
