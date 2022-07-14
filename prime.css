@@ -24,7 +24,7 @@ v-tabs {
 
 @font-face {
   font-family: 'icons';
-  src: url('./icons.woff2?yaw0e2') format('woff2');
+  src: url('icons.woff2?yaw0e2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: block;
