@@ -4,10 +4,10 @@
   import cx from 'classnames'
   import { addStyles } from '../../lib/index'
 
-  export let message = ''
-  export let title = ''
-
   type Variants = 'error' | 'warning' | 'success' | 'info';
+
+  export let title = ''
+  export let message = ''
   export let variant: Variants = 'info'
 
   addStyles()
@@ -54,8 +54,8 @@
   </div>
   <figure>
     <figcaption class="text-sm">{title}</figcaption>
-
-    {#if message !== ''}
+    
+    {#if message}
       <p class="text-xs">{message}</p>
     {/if}
   </figure>

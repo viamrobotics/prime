@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,8 +21,8 @@ v-tabs {
 }
 
 @font-face {
-  font-family: 'icons';
-  src: url('icons.woff2?yaw0e2') format('woff2');
+  font-family: icons;
+  src: url(icons.woff2?yaw0e2) format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -32,8 +30,7 @@ v-tabs {
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icons' !important;
-  speak: never;
+  font-family: icons !important;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
