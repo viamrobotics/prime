@@ -146,3 +146,23 @@ Used for all text single-line user inputs.
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      label: `Last favorite soup`,
+      readonly: 'readonly',
+      value: 'New england clam chowder',
+    }}
+  >
+    {({ label, readonly, value }) => `
+      <v-input
+        label='${label}'
+        readonly='${readonly}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
