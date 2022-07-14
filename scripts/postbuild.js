@@ -37,6 +37,13 @@ const main = async () => {
   // Add icon resources
   copy('public/icons.woff2', 'dist/icons.woff2')
 
+  // Update icons path
+  {
+    const file = read('dist/prime.css')
+      .replace(/.\/icons.woff2/, 'icons.woff2')
+    write('dist/prime.css', file)
+  }
+
   // Create versioned resources for consumers with cache-busting
   copy('dist/prime.es.js', `dist/prime@${version}.es.js`)
   copy('dist/prime.umd.js', `dist/prime@${version}.umd.js`)
