@@ -10,3 +10,6 @@ import './select/index.svelte'
 import './slider/index.svelte'
 import './switch/index.svelte'
 import './tabs/index.svelte'
+import { loadFonts } from '../lib/add-styles'
+
+loadFonts().catch(error => console.error(error))

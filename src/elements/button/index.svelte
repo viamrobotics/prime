@@ -20,9 +20,9 @@ addStyles()
   type='button'
   class={cx('flex items-center gap-1.5 py-1.5 px-2 text-xs border', {
     'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true',
-    'border-black': variant === 'primary',
+    'bg-white border-black': variant === 'primary',
     'bg-red/90 text-white border-red/90': variant === 'danger',
-    'border-red/90 text-red/90': variant === 'outline-danger',
+    'bg-white border-red/90 text-red/90': variant === 'outline-danger',
   })}
 >
   {#if icon}
