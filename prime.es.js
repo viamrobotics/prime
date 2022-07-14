@@ -402,7 +402,7 @@ function $t(t) {
     if (g[2] === "info")
       return Qt;
   }
-  let k = h(t), c = k && k(t), p = t[1] !== "" && Re(t);
+  let k = h(t), c = k && k(t), p = t[0] !== "" && Re(t);
   return {
     c() {
       e = E("div"), l = E("div"), n = G("svg"), c && c.c(), s = R(), i = E("figure"), r = E("figcaption"), a = O(t[1]), o = R(), p && p.c(), this.c = P, f(n, "width", "14"), f(n, "height", "14"), f(n, "viewBox", "0 0 15 15"), f(n, "fill", "none"), f(n, "xmlns", "http://www.w3.org/2000/svg"), f(l, "class", "mt-1"), f(r, "class", "text-sm"), f(e, "class", u = V("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
@@ -416,7 +416,7 @@ function $t(t) {
       M(g, e, b), _(e, l), _(l, n), c && c.m(n, null), _(e, s), _(e, i), _(i, r), _(r, a), _(i, o), p && p.m(i, null);
     },
     p(g, [b]) {
-      k !== (k = h(g)) && (c && c.d(1), c = k && k(g), c && (c.c(), c.m(n, null))), b & 2 && D(a, g[1]), g[1] !== "" ? p ? p.p(g, b) : (p = Re(g), p.c(), p.m(i, null)) : p && (p.d(1), p = null), b & 4 && u !== (u = V("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
+      k !== (k = h(g)) && (c && c.d(1), c = k && k(g), c && (c.c(), c.m(n, null))), b & 2 && D(a, g[1]), g[0] !== "" ? p ? p.p(g, b) : (p = Re(g), p.c(), p.m(i, null)) : p && (p.d(1), p = null), b & 4 && u !== (u = V("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
         "border-red/90": g[2] === "error",
         "border-orange/90": g[2] === "warning",
         "border-green/90": g[2] === "success",
