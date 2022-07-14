@@ -82,7 +82,6 @@ const main = async () => {
   // Move assets to the storybook directory
   copy('dist/prime.es.js', 'prime/prime.es.js')
   copy('dist/prime.css', 'prime/prime.css')
-  mkdir('prime/fonts')
   copy('dist/icons.woff2', 'prime/icons.woff2')
 
   {
@@ -99,7 +98,7 @@ const main = async () => {
     const file = read('prime/iframe.html')
       // Add production prime config
       .replace('<head>', `<head><script type="module">window.PRIME_CONFIG = { base: '/prime' }</script>`)
-      .replace("src='/src/elements/index.ts'", "src='/prime/prime.es.js'")
+      .replace('<script type="module" src="src/elements/index.ts"></script>', '<script type="module" src="prime.es.js"></script>')
     write('prime/iframe.html', file)
   }
 

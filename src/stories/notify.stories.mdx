@@ -12,19 +12,14 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       control: { type: 'select' },
       options: ['error', 'warning', 'success', 'info'],
       description: 'Notification type',
-      defaultValue: 'info',
-      table: { defaultValue: { summary: '' } }
+      table: { defaultValue: { summary: 'info' } },
     },
     title: {
       description: 'Title',
-      control: 'title text',
-      defaultValue: 'This is the title.',
       table: { defaultValue: { summary: '' } },
     },
     message: {
       description: 'Message',
-      control: 'message text',
-      defaultValue: 'This is the message.',
       table: { defaultValue: { summary: '' } },
     },
   }}
@@ -37,16 +32,19 @@ Notify message of type info, success, warning, or error
 <Canvas>
   <Story
     name='info'
+    args={{
+      variant: 'info',
+      title: 'This is the title.',
+      message: 'This is the message.',
+    }}
   >
     {({ title, message, variant }) => `
       <v-notify
+        variant='${variant}'
         title='${title}'
         message='${message}'
-        variant='${variant}'
-      >
-      </v-notify>
-    `
-    }
+      />
+    `}
   </Story>
 </Canvas>
 
@@ -54,18 +52,18 @@ Notify message of type info, success, warning, or error
   <Story
     name='success'
     args={{
-      variant: 'success'
+      variant: 'success',
+      title: 'This is the title.',
+      message: 'This is the message.',
     }}
   >
     {({ title, message, variant }) => `
       <v-notify
+        variant='${variant}'
         title='${title}'
         message='${message}'
-        variant='${variant}'
-      >
-      </v-notify>
-    `
-    }
+      />
+    `}
   </Story>
 </Canvas>
 
@@ -73,18 +71,18 @@ Notify message of type info, success, warning, or error
   <Story
     name='warning'
     args={{
-      variant: 'warning'
+      variant: 'warning',
+      title: 'This is the title.',
+      message: 'This is the message.',
     }}
   >
     {({ title, message, variant }) => `
       <v-notify
+        variant='${variant}'
         title='${title}'
         message='${message}'
-        variant='${variant}'
-      >
-      </v-notify>
-    `
-    }
+      />
+    `}
   </Story>
 </Canvas>
 
@@ -92,33 +90,35 @@ Notify message of type info, success, warning, or error
   <Story
     name='error'
     args={{
-      variant: 'error'
+      variant: 'error',
+      title: 'This is the title.',
+      message: 'This is the message.',
     }}
   >
     {({ title, message, variant }) => `
       <v-notify
+        variant='${variant}'
         title='${title}'
         message='${message}'
-        variant='${variant}'
-      >
-      </v-notify>
-    `
-    }
+      />
+    `}
   </Story>
 </Canvas>
 
 <Canvas>
   <Story
     name='no message info'
+    args={{
+      variant: 'info',
+      title: 'This is the title.',
+    }}
   >
-    {({ title, message, variant }) => `
+    {({ title, variant }) => `
       <v-notify
-        title='${title}'
         variant='${variant}'
-      >
-      </v-notify>
-    `
-    }
+        title='${title}'
+      />
+    `}
   </Story>
 </Canvas>
 
@@ -126,17 +126,16 @@ Notify message of type info, success, warning, or error
   <Story
     name='no message success'
     args={{
-      variant: 'success'
+      variant: 'success',
+      title: 'This is the title.',
     }}
   >
     {({ title, message, variant }) => `
       <v-notify
-        title='${title}'
         variant='${variant}'
-      >
-      </v-notify>
-    `
-    }
+        title='${title}'
+      />
+    `}
   </Story>
 </Canvas>
 
@@ -144,17 +143,16 @@ Notify message of type info, success, warning, or error
   <Story
     name='no message warning'
     args={{
-      variant: 'warning'
+      variant: 'warning',
+      title: 'This is the title.',
     }}
   >
-    {({ title, message, variant }) => `
+    {({ title, variant }) => `
       <v-notify
-        title='${title}'
         variant='${variant}'
-      >
-      </v-notify>
-    `
-    }
+        title='${title}'
+      />
+    `}
   </Story>
 </Canvas>
 
@@ -162,16 +160,15 @@ Notify message of type info, success, warning, or error
   <Story
     name='no message error'
     args={{
-      variant: 'error'
+      variant: 'error',
+      title: 'This is the title.',
     }}
   >
-    {({ title, message, variant }) => `
+    {({ title, variant }) => `
       <v-notify
         title='${title}'
         variant='${variant}'
-      >
-      </v-notify>
-    `
-    }
+      />
+    `}
   </Story>
 </Canvas>
