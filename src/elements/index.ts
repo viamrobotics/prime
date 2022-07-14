@@ -1,4 +1,5 @@
 import '../../prime.css'
+import './notify/index.svelte'
 import './badge/index.svelte'
 import './breadcrumbs/index.svelte'
 import './button/index.svelte'

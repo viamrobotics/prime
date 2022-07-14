@@ -1,0 +1,108 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title="Elements/Notify"
+  parameters={{
+    actions: {
+      handles: ['toggle'],
+    },
+  }}
+  argTypes={{
+    variant: {
+      control: { type: 'select' },
+      options: ['error', 'warning', 'success', 'info'],
+      description: 'Notification type',
+      defaultValue: 'info',
+      table: { defaultValue: { summary: '' } }
+    },
+    title: {
+      description: 'Title',
+      control: 'title text',
+      defaultValue: 'This is the title.',
+      table: { defaultValue: { summary: '' } },
+    },
+    message: {
+      description: 'Message',
+      control: 'message text',
+      defaultValue: 'This is the message.',
+      table: { defaultValue: { summary: '' } },
+    },
+  }}
+/>
+
+# Notify
+
+Notify message of type info, success, warning, or error
+
+<Canvas>
+  <Story
+    name='info'
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message='${message}'
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='success'
+    args={{
+      variant: 'success'
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message='${message}'
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='warning'
+    args={{
+      variant: 'warning'
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message='${message}'
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='error'
+    args={{
+      variant: 'error'
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message='${message}'
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>

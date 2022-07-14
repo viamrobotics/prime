@@ -2,6 +2,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title='Elements/Slider'
+  parameters={{
+    actions: {
+      handles: ['input', 'click'],
+    },
+  }}
   argTypes={{
     min: {
       description: 'The minimum value',
@@ -18,7 +23,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
   }}
 />
 
-# Radio
+# Slider
 
 For user triggered actions
 
