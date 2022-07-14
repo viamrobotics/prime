@@ -8,6 +8,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     },
   }}
   argTypes={{
+    label: {
+      description: 'The input label',
+      control: 'text',
+      table: { defaultValue: { summary: '' } }
+    },
     options: {
       description: 'The list of options',
       control: 'text',
@@ -37,16 +42,18 @@ For user triggered actions
   <Story
     name='Select'
     args={{
+      label: 'Your options',
       options: 'Option 1, Option 2, Option 3',
       selected: '',
       placeholder: "Some placeholder..."
     }}
   >
-    {({ options, selected, placeholder }) => `
+    {({ label, options, selected, placeholder }) => `
       <v-select
-        options="${options}"
-        selected="${selected}"
-        placeholder="${placeholder}"
+        label='${label}'
+        options='${options}'
+        selected='${selected}'
+        placeholder='${placeholder}'
       />
     `}
   </Story>

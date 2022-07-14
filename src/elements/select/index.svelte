@@ -2,12 +2,17 @@
 
 <script lang='ts'>
 
+import cx from 'classnames'
 import { addStyles, dispatch } from '../../lib/index'
+
+type LabelPosition = 'top' | 'left'
 
 export let options = ''
 export let selected = ''
 export let open = false
 export let placeholder = ''
+export let label = ''
+export let labelposition: LabelPosition = 'top'
 
 let root: HTMLElement
 let parsedOptions: string[]
@@ -30,7 +35,24 @@ const handleToggle = (event: CustomEvent<{open: boolean}>) => {
 
 </script>
 
-<v-collapse bind:this={root} title={selectedOption} open={open} on:toggle={handleToggle}>
+<label bind:this={root}>
+  {#if label}
+    <p class={cx('text-xs pb-1', {
+      'pb-1': labelposition === 'top',
+      inline: labelposition === 'left',
+    })}>
+      {label}
+    </p>
+  {/if}
+
+  <select class='py-1 px-2.5 text-xs border border-black'>
+    {#each parsedOptions as option (option)}
+      <option>{option}</option>
+    {/each}
+  </select>
+</label>
+
+<!-- <v-collapse bind:this={root} title={selectedOption} open={open} on:toggle={handleToggle}>
   <div class="flex flex-col gap-2 p-2">
     {#each parsedOptions as option (option)}
       <div
@@ -41,4 +63,4 @@ const handleToggle = (event: CustomEvent<{open: boolean}>) => {
       </div>
     {/each}
   </div>
-</v-collapse>
+</v-collapse> -->
