@@ -1,22 +1,10 @@
 import { onMount } from 'svelte'
 import { get_current_component } from 'svelte/internal'
-
-const { base = '', query = '' } = (window as unknown as {
-  PRIME_CONFIG?: {
-    base?: string
-    query?: string
-  }
-}).PRIME_CONFIG ?? {}
+import { base, query } from './config'
 
 const link = document.createElement('link')
 link.rel = 'stylesheet'
 link.href = `${base ?? ''}/prime.css${query}`
-
-export const loadFonts = async () => {
-  const font = new FontFace('icons', 'url(icons.woff2?yaw0e2)')
-  await font.load()
-  document.fonts.add(font)
-}
 
 export const addStyles = () => {
   const element = get_current_component() as HTMLElement
