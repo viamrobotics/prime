@@ -107,7 +107,7 @@ Used for all text single-line user inputs.
   <Story
     name='Left label'
     args={{
-      label: `Who does this soup belong to?`,
+      label: `Whose soup?`,
       placeholder: 'Enter name',
       value: '',
       labelPosition: 'left',
@@ -115,6 +115,29 @@ Used for all text single-line user inputs.
   >
     {({ type, label, placeholder, value, labelPosition }) => `
       <v-input
+        label='${label}'
+        placeholder='${placeholder}'
+        value='${value}'
+        labelposition='${labelPosition}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Left label with number'
+    args={{
+      type: 'number',
+      label: `Soups?`,
+      placeholder: 'Enter name',
+      value: '',
+      labelPosition: 'left',
+    }}
+  >
+    {({ type, label, placeholder, value, labelPosition }) => `
+      <v-input
+        type='${type}'
         label='${label}'
         placeholder='${placeholder}'
         value='${value}'

@@ -41,11 +41,13 @@ const increment = (direction: 1 | -1) => {
 
 <label
   bind:this={root}
-  class='relative flex flex-col max-w-[14rem]'
+  class={cx('relative flex gap-1 max-w-[14rem]', {
+    'flex-col': labelposition === 'top',
+    'items-center': labelposition === 'left',
+  })}
 >
   {#if label}
     <p class={cx('text-xs', {
-      'pb-1': labelposition === 'top',
       inline: labelposition === 'left',
     })}>
       {label}
@@ -62,7 +64,7 @@ const increment = (direction: 1 | -1) => {
   />
 
   {#if type === 'number'}
-    <div class='absolute right-0 bottom-0 cursor-pointer select-none flex flex-col'>
+    <div class='absolute right-0.5 bottom-0 cursor-pointer select-none flex flex-col'>
       <button
         on:click={() => increment(+1)}
         aria-label='Increment up by {stepNumber}'
