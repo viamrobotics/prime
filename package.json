@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "type": "commonjs",
   "files": [
     "dist"
@@ -11,7 +11,8 @@
     ".": {
       "import": "./dist/prime.es.js",
       "require": "./dist/prime.umd.js"
-    }
+    },
+    "./prime.css": "./dist/prime.css"
   },
   "homepage": "http://viamrobotics.github.io/prime",
   "repository": "git://github.com/viamrobotics/prime.git",

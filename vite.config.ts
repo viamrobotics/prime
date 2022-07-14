@@ -24,11 +24,12 @@ export default defineConfig({
       name: 'Prime',
       fileName: (format) => `prime.${format}.js`
     },
+    
     rollupOptions: {
       output: {
         inlineDynamicImports: true,
-        manualChunks: undefined
-      }
+        manualChunks: undefined,
+      },
     },
   }
 })
