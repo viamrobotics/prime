@@ -35,23 +35,27 @@ const main = async () => {
   copy('src/prime.d.ts', 'dist/prime.d.ts')
 
   // Add icon resources
-  // copy('icons.css', 'dist/icons.css')
-  // mkdir('dist/fonts')
-  // copy('fonts/icons.woff2', 'dist/fonts/icons.woff2')
+  copy('public/icons.woff2', 'dist/icons.woff2')
+
+  // Update icons path
+  {
+    const file = read('dist/prime.css')
+      .replace(/.\/icons.woff2/, 'icons.woff2')
+    write('dist/prime.css', file)
+  }
 
   // Create versioned resources for consumers with cache-busting
   copy('dist/prime.es.js', `dist/prime@${version}.es.js`)
   copy('dist/prime.umd.js', `dist/prime@${version}.umd.js`)
   copy('dist/prime.css', `dist/prime@${version}.css`)
-  // copy('dist/icons.css', `dist/icons@${version}.css`)
-  // copy('dist/fonts/icons.woff2', `dist/fonts/icons@${version}.woff2`)
+  copy('dist/icons.woff2', `dist/icons@${version}.woff2`)
 
   // Update paths for versioned resources
-  // {
-  //   const file = read(`dist/icons@${version}.css`)
-  //     .replace(/'fonts\/icons.woff2'/, `'fonts/icons@${version}.woff2'`)
-  //   write(`dist/icons@${version}.css`, file)
-  // }
+  {
+    const file = read(`dist/prime@${version}.css`)
+      .replace(/icons.woff2/, `icons@${version}.woff2'`)
+    write(`dist/prime@${version}.css`, file)
+  }
 
   {
     const file = read(`dist/prime@${version}.es.js`)
@@ -76,14 +80,10 @@ const main = async () => {
   write('prime/.nojekyll', '')
 
   // Move assets to the storybook directory
-  // copy('static/favicon.ico', 'prime/favicon.ico')
   copy('dist/prime.es.js', 'prime/prime.es.js')
   copy('dist/prime.css', 'prime/prime.css')
-  // copy('dist/icons.css', 'prime/icons.css')
-  mkdir('prime/fonts')
-  // copy('dist/fonts/icons.woff2', 'prime/fonts/icons.woff2')
+  copy('dist/icons.woff2', 'prime/icons.woff2')
 
-  
   {
     const file = read('prime/index.html')
       // Add noindex rule
@@ -98,7 +98,7 @@ const main = async () => {
     const file = read('prime/iframe.html')
       // Add production prime config
       .replace('<head>', `<head><script type="module">window.PRIME_CONFIG = { base: '/prime' }</script>`)
-      .replace("src='/src/elements/index.ts'", "src='/prime/prime.es.js'")
+      .replace('<script type="module" src="src/elements/index.ts"></script>', '<script type="module" src="prime.es.js"></script>')
     write('prime/iframe.html', file)
   }
 

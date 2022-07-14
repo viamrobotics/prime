@@ -1,0 +1,174 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title="Elements/Notify"
+  parameters={{
+    actions: {
+      handles: ['toggle'],
+    },
+  }}
+  argTypes={{
+    variant: {
+      control: { type: 'select' },
+      options: ['error', 'warning', 'success', 'info'],
+      description: 'Notification type',
+      table: { defaultValue: { summary: 'info' } },
+    },
+    title: {
+      description: 'Title',
+      table: { defaultValue: { summary: '' } },
+    },
+    message: {
+      description: 'Message',
+      table: { defaultValue: { summary: '' } },
+    },
+  }}
+/>
+
+# Notify
+
+Notify message of type info, success, warning, or error
+
+<Canvas>
+  <Story
+    name='info'
+    args={{
+      variant: 'info',
+      title: 'This is the title.',
+      message: 'This is the message.',
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        variant='${variant}'
+        title='${title}'
+        message='${message}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='success'
+    args={{
+      variant: 'success',
+      title: 'This is the title.',
+      message: 'This is the message.',
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        variant='${variant}'
+        title='${title}'
+        message='${message}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='warning'
+    args={{
+      variant: 'warning',
+      title: 'This is the title.',
+      message: 'This is the message.',
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        variant='${variant}'
+        title='${title}'
+        message='${message}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='error'
+    args={{
+      variant: 'error',
+      title: 'This is the title.',
+      message: 'This is the message.',
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        variant='${variant}'
+        title='${title}'
+        message='${message}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='no message info'
+    args={{
+      variant: 'info',
+      title: 'This is the title.',
+    }}
+  >
+    {({ title, variant }) => `
+      <v-notify
+        variant='${variant}'
+        title='${title}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='no message success'
+    args={{
+      variant: 'success',
+      title: 'This is the title.',
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        variant='${variant}'
+        title='${title}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='no message warning'
+    args={{
+      variant: 'warning',
+      title: 'This is the title.',
+    }}
+  >
+    {({ title, variant }) => `
+      <v-notify
+        variant='${variant}'
+        title='${title}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='no message error'
+    args={{
+      variant: 'error',
+      title: 'This is the title.',
+    }}
+  >
+    {({ title, variant }) => `
+      <v-notify
+        title='${title}'
+        variant='${variant}'
+      />
+    `}
+  </Story>
+</Canvas>

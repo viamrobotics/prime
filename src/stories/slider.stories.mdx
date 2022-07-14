@@ -2,23 +2,34 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title='Elements/Slider'
+  parameters={{
+    actions: {
+      handles: ['input', 'click'],
+    },
+  }}
   argTypes={{
     min: {
       description: 'The minimum value',
       control: 'number',
-      defaultValue: '',
       table: { defaultValue: { summary: '' } }
     },
     max: {
       description: 'The maxiumum value',
       control: 'number',
-      defaultValue: '',
       table: { defaultValue: { summary: '' } }
+    },
+    step: {
+      description: 'An optional discrete step between values',
+      control: 'number',
+      table: { defaultValue: { summary: '' } }
+    },
+    'on:input': {
+      description: 'Event fired when an option is selected',
     },
   }}
 />
 
-# Radio
+# Slider
 
 For user triggered actions
 

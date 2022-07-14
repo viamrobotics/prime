@@ -2,19 +2,24 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title="Elements/Collapse"
+  parameters={{
+    actions: {
+      handles: ['toggle'],
+    },
+  }}
   argTypes={{
     title: {
       description: 'This is the title',
-      control: 'text',
-      defaultValue: 'This is the title.',
       table: { defaultValue: { summary: '' } },
     },
     content: {
       description: 'This is the content',
       control: 'text',
-      defaultValue: 'This is the content: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       table: { defaultValue: { summary: '' } },
-    }
+    },
+    'on:toggle': {
+      description: 'Event fired when an option is selected',
+    },
   }}
 />
 
@@ -25,6 +30,10 @@ Toggles visibility of content
 <Canvas>
   <Story
     name='Collapse'
+    args={{
+      title: 'Motor 1',
+      content: 'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+    }}
   >
     {({ title, content }) => `
       <v-collapse
@@ -36,17 +45,20 @@ Toggles visibility of content
     }
   </Story>
 </Canvas>
-
 
 <Canvas>
   <Story
     name='Header slot'
+    args={{
+      title: 'Motor 1',
+      content: 'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+    }}
   >
     {({ title, content }) => `
       <v-collapse
         title='${title}'
       >
-        <v-badge slot='header' label='Test'></v-badge>
+        <v-badge slot='header' label='Inactive'></v-badge>
         <span>${content}</span>
       </v-collapse>
     `
@@ -54,5 +66,25 @@ Toggles visibility of content
   </Story>
 </Canvas>
 
+<Canvas>
+  <Story
+    name='Title slot'
+    args={{
+      title: 'Motor 1',
+      content: 'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+    }}
+  >
+    {({ title, content }) => `
+      <v-collapse
+        title='${title}'
+      >
+        <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
+        <v-badge slot='header' label='Inactive'></v-badge>
+        <span>${content}</span>
+      </v-collapse>
+    `
+    }
+  </Story>
+</Canvas>
 
 

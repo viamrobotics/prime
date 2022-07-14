@@ -2,26 +2,91 @@
 
 <script lang='ts'>
 
+import cx from 'classnames'
 import { addStyles, dispatch } from '../../lib/index'
 
+type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number'
 
 export let type: Types = 'text'
 export let placeholder = ''
+export let label = ''
+export let value = ''
+export let step = '1'
+export let labelposition: LabelPosition = 'top'
 
+let root: HTMLElement
 let input: HTMLInputElement
+
+let stepNumber: number
+
+$: stepNumber = Number.parseFloat(step)
 
 addStyles()
 
-const handleInput = () => {
-  dispatch(input, 'input', { value: input.value })
+const handleInput = (event: Event) => {
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  value = input.value
+  dispatch(root, 'input', { value })
+}
+
+const increment = (direction: 1 | -1) => {
+  const numberValue = Number.parseFloat(value || '0')
+  value = input.value = String(numberValue + stepNumber * direction)
+  dispatch(root, 'input', { value })
 }
 
 </script>
 
-<input
-  type={type}
-  placeholder={placeholder}
-  class='py-1 px-2 border text-xs border-black bg-white outline-none'
-  on:input={handleInput}
-/>
+<label
+  bind:this={root}
+  class={cx('relative flex gap-1 max-w-[14rem]', {
+    'flex-col': labelposition === 'top',
+    'items-center': labelposition === 'left',
+  })}
+>
+  {#if label}
+    <p class={cx('text-xs', {
+      inline: labelposition === 'left',
+    })}>
+      {label}
+    </p>
+  {/if}
+
+  <input
+    bind:this={input}
+    class='py-1.5 px-2.5 border text-xs border-black bg-white outline-none'
+    type={type}
+    placeholder={placeholder}
+    value={value}
+    on:input={handleInput}
+  />
+
+  {#if type === 'number'}
+    <div class='absolute right-0.5 bottom-0 cursor-pointer select-none flex flex-col'>
+      <button
+        on:click={() => increment(+1)}
+        aria-label='Increment up by {stepNumber}'
+        class='icon-chevron-down rotate-180 text-[15px]'
+      />
+      <button
+        on:click={() => increment(-1)}
+        aria-label='Increment down by {stepNumber}'
+        class='icon-chevron-down text-[15px]'
+      />
+    </div>
+  {/if}
+</label>
+
+<style>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+input[type=number] {
+  -moz-appearance:textfield;
+}
+
+</style>

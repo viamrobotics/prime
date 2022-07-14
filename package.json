@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.0.8",
+  "version": "0.0.18",
   "type": "commonjs",
   "files": [
     "dist"
@@ -11,7 +11,8 @@
     ".": {
       "import": "./dist/prime.es.js",
       "require": "./dist/prime.umd.js"
-    }
+    },
+    "./prime.css": "./dist/prime.css"
   },
   "homepage": "http://viamrobotics.github.io/prime",
   "repository": "git://github.com/viamrobotics/prime.git",
@@ -21,48 +22,50 @@
     "postbuild": "node ./scripts/postbuild",
     "serve": "vite preview --host",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "lint": "eslint --ext .ts,.tsx,.svelte, ./src/elements",
+    "lint": "eslint --fix --ext .ts,.tsx,.svelte, ./src/elements",
     "storybook": "start-storybook -p 6006",
     "storybook-docs": "start-storybook --docs --no-manager-cache",
     "build-storybook": "build-storybook --docs -o prime"
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.18.6",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-docs": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-interactions": "^6.5.9",
     "@storybook/addon-links": "^6.5.9",
-    "@storybook/builder-vite": "0.1.37",
+    "@storybook/builder-vite": "0.2.0",
     "@storybook/html": "^6.5.9",
     "@storybook/testing-library": "^0.0.13",
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.49",
+    "@sveltejs/vite-plugin-svelte": "^1.0.1",
     "@tsconfig/svelte": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.30.5",
-    "@typescript-eslint/parser": "^5.30.5",
-    "@vitejs/plugin-vue": "^2.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
     "babel-loader": "^8.2.5",
     "classnames": "^2.3.1",
     "eslint": "^8.19.0",
-    "eslint-import-resolver-typescript": "^3.2.4",
+    "eslint-import-resolver-typescript": "^3.2.5",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-sonarjs": "^0.13.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "eslint-plugin-tailwindcss": "^3.6.0",
-    "eslint-plugin-unicorn": "^43.0.0",
+    "eslint-plugin-unicorn": "^43.0.1",
     "lit-html": "^2.2.6",
     "postcss": "^8.4.14",
     "svelte": "^3.49.0",
     "svelte-check": "^2.8.0",
     "svelte-loader": "^3.1.3",
     "svelte-preprocess": "^4.10.7",
-    "tailwindcss": "^3.1.5",
-    "terser": "^5.14.1",
+    "tailwindcss": "^3.1.6",
+    "terser": "^5.14.2",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
-    "vite": "2.9.13",
+    "vite": "3.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.0",
     "vue": "^3.2.37"
   }
 }

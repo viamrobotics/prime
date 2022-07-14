@@ -2,24 +2,30 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title='Elements/Select'
+  parameters={{
+    actions: {
+      handles: ['input'],
+    },
+  }}
   argTypes={{
+    label: {
+      description: 'The input label',
+      table: { defaultValue: { summary: '' } }
+    },
     options: {
       description: 'The list of options',
-      control: 'text',
       table: { defaultValue: { summary: '' } }
     },
     selected: {
       description: 'The selected value',
-      control: 'text',
       table: { defaultValue: { summary: '' } }
     },
     placeholder: {
       description: 'The placeholder value',
-      control: 'text',
       table: { defaultValue: { summary: '' } }
     },
-    'on:select': {
-      description: 'Callback invoked when an option is selected'
+    'on:input': {
+      description: 'Event fired when an option is selected'
     },
   }}
 />
@@ -32,16 +38,18 @@ For user triggered actions
   <Story
     name='Select'
     args={{
+      label: 'Your options',
       options: 'Option 1, Option 2, Option 3',
       selected: '',
       placeholder: "Some placeholder..."
     }}
   >
-    {({ options, selected, placeholder }) => `
+    {({ label, options, selected, placeholder }) => `
       <v-select
-        options="${options}"
-        selected="${selected}"
-        placeholder="${placeholder}"
+        label='${label}'
+        options='${options}'
+        selected='${selected}'
+        placeholder='${placeholder}'
       />
     `}
   </Story>

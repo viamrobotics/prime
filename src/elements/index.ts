@@ -1,4 +1,5 @@
 import '../../prime.css'
+import './notify/index.svelte'
 import './badge/index.svelte'
 import './breadcrumbs/index.svelte'
 import './button/index.svelte'
@@ -15,3 +16,6 @@ import './table/table-cell.svelte'
 import './table/table-header.svelte'
 import './table/table-row.svelte'
 import './tabs/index.svelte'
+import { loadFonts } from '../lib/add-styles'
+
+loadFonts().catch(error => console.error(error))

@@ -2,12 +2,26 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title='Elements/Radio'
+  parameters={{
+    actions: {
+      handles: ['input'],
+    },
+  }}
   argTypes={{
     options: {
       description: 'The list of options',
-      control: 'text',
-      defaultValue: '',
-      table: { defaultValue: { summary: '' } }
+      table: { defaultValue: { summary: '' } },
+    },
+    selected: {
+      description: 'The selected option',
+      table: { defaultValue: { summary: '' } },
+    },
+    label: {
+      description: 'An optional label',
+      table: { defaultValue: { summary: '' } },
+    },
+    'on:input': {
+      description: 'Event fired when an option is selected',
     },
   }}
 />
@@ -20,14 +34,33 @@ For user triggered actions
   <Story
     name='Radio'
     args={{
-      options: 'Opt 1, Opt 2',
-      selected: 'Opt 1'
+      options: 'Opt 1, Opt 2, Opt 3',
+      selected: 'Opt 1',
     }}
   >
     {({ options, selected }) => `
       <v-radio
         options="${options}"
         selected="${selected}"
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With label'
+    args={{
+      label: 'These are your options',
+      options: 'Opt 1, Opt 2',
+      selected: 'Opt 1',
+    }}
+  >
+    {({ options, selected, label }) => `
+      <v-radio
+        label='${label}'
+        options='${options}'
+        selected='${selected}'
       />
     `}
   </Story>

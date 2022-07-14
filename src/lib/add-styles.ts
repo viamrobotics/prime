@@ -12,14 +12,25 @@ const link = document.createElement('link')
 link.rel = 'stylesheet'
 link.href = `${base ?? ''}/prime.css${query}`
 
+export const loadFonts = async () => {
+  const font = new FontFace('icons', 'url(icons.woff2?yaw0e2)')
+  await font.load()
+  document.fonts.add(font)
+}
+
 export const addStyles = () => {
   const element = get_current_component() as HTMLElement
   
   onMount(() => {
-    element.style.display = 'none'
+    const originalDisplay = element.style.getPropertyValue('display')
+    element.style.setProperty('display', 'none')
     const clone = link.cloneNode()
     clone.addEventListener('load', () => {
-      element.style.removeProperty('display')
+      if (originalDisplay) {
+        element.style.setProperty('display', originalDisplay)
+      } else {
+        element.style.removeProperty('display')
+      }
     })
     element.shadowRoot!.prepend(clone)
   })

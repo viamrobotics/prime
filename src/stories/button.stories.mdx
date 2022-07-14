@@ -2,25 +2,20 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title='Elements/Button'
+  parameters={{
+    actions: {
+      handles: ['click'],
+    },
+  }}
   argTypes={{
     label: {
       description: 'Text displayed to users',
-      control: 'text',
-      defaultValue: 'Test',
       table: { defaultValue: { summary: '' } }
     },
-    size: {
-      description: 'The size of the button',
-      control: { type: 'select' },
-      options: ['small', 'medium', 'large'],
-      defaultValue: 'medium',
-      table: { defaultValue: { summary: 'medium' } }
-    },
     variant: {
-      description: 'The button purpose',
+      description: 'The communicated action type of the button',
       control: 'select',
       options: ['primary', 'danger', 'outline-danger'],
-      defaultValue: 'primary',
       table: { defaultValue: { summary: 'primary' } }
     },
   }}
@@ -33,10 +28,12 @@ For user triggered actions
 <Canvas>
   <Story
     name='Primary'
+    args={{
+      label: 'RUN',
+    }}
   >
-    {({ label, variant, size }) => `
+    {({ label, variant }) => `
       <v-button
-        variant='${variant}'
         label='${label}'
       />
     `}
@@ -46,9 +43,12 @@ For user triggered actions
 <Canvas>
   <Story
     name='Danger'
-    args={{ variant: 'danger' }}
+    args={{
+      label: 'STOP',
+      variant: 'danger',
+    }}
   >
-    {({ label, variant, size }) => `
+    {({ label, variant }) => `
       <v-button
         variant='${variant}'
         label='${label}'
@@ -60,12 +60,49 @@ For user triggered actions
 <Canvas>
   <Story
     name='Danger (outline)'
-    args={{ variant: 'outline-danger' }}
+    args={{
+      label: 'SLOW DOWN',
+      variant: 'outline-danger',
+    }}
   >
-    {({ label, variant, size }) => `
+    {({ label, variant }) => `
       <v-button
         variant='${variant}'
         label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Disabled'
+    args={{
+      disabled: 'true',
+      label: 'RUN',
+    }}
+  >
+    {({ label, disabled }) => `
+      <v-button
+        label='${label}'
+        disabled='${disabled}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With icon'
+    args={{
+      label: 'Refresh',
+      icon: 'refresh',
+    }}
+  >
+    {({ label, icon }) => `
+      <v-button
+        label='${label}'
+        icon='${icon}'
       />
     `}
   </Story>
