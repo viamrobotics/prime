@@ -106,3 +106,76 @@ Notify message of type info, success, warning, or error
     }
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='no message info'
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message=''
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='no message success'
+    args={{
+      variant: 'success'
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message=''
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='no message warning'
+    args={{
+      variant: 'warning'
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message=''
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='no message error'
+    args={{
+      variant: 'error'
+    }}
+  >
+    {({ title, message, variant }) => `
+      <v-notify
+        title='${title}'
+        message=''
+        variant='${variant}'
+      >
+      </v-notify>
+    `
+    }
+  </Story>
+</Canvas>
