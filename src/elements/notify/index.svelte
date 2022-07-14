@@ -54,6 +54,9 @@
   </div>
   <figure>
     <figcaption class="text-sm">{title}</figcaption>
-    <p class="text-xs">{message}</p>
+    
+    {#if title !== ''}
+      <p class="text-xs">{message}</p>
+    {/if}
   </figure>
 </div>
