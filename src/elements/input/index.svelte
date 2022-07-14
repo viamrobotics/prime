@@ -10,6 +10,7 @@ type Types = 'text' | 'email' | 'number'
 
 export let type: Types = 'text'
 export let placeholder = ''
+export let readonly: undefined | '' | 'readonly' = undefined
 export let label = ''
 export let value = ''
 export let step = '1'
@@ -17,9 +18,10 @@ export let labelposition: LabelPosition = 'top'
 
 let root: HTMLElement
 let input: HTMLInputElement
-
+let isReadonly: boolean
 let stepNumber: number
 
+$: isReadonly = readonly === 'readonly' || readonly === ''
 $: stepNumber = Number.parseFloat(step)
 
 addStyles()
@@ -55,11 +57,12 @@ const increment = (direction: 1 | -1) => {
   {/if}
 
   <input
+    {type}
+    {placeholder}
+    {value}
+    readonly={isReadonly}
     bind:this={input}
     class='py-1.5 px-2.5 border text-xs border-black bg-white outline-none'
-    type={type}
-    placeholder={placeholder}
-    value={value}
     on:input={handleInput}
   />
 
