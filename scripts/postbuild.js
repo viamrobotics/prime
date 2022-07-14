@@ -35,18 +35,18 @@ const main = async () => {
   copy('src/prime.d.ts', 'dist/prime.d.ts')
 
   // Add icon resources
-  copy('icons.woff', 'dist/icons.woff')
+  copy('icons.woff2', 'dist/icons.woff2')
 
   // Create versioned resources for consumers with cache-busting
   copy('dist/prime.es.js', `dist/prime@${version}.es.js`)
   copy('dist/prime.umd.js', `dist/prime@${version}.umd.js`)
   copy('dist/prime.css', `dist/prime@${version}.css`)
-  copy('dist/icons.woff', `dist/icons@${version}.woff`)
+  copy('dist/icons.woff2', `dist/icons@${version}.woff2`)
 
   // Update paths for versioned resources
   {
     const file = read(`dist/prime@${version}.css`)
-      .replace(/icons.woff/, `icons@${version}.woff'`)
+      .replace(/icons.woff2/, `icons@${version}.woff2'`)
     write(`dist/prime@${version}.css`, file)
   }
 
