@@ -1,0 +1,11 @@
+<svelte:options immutable={true} tag='v-td' />
+
+<script lang='ts'>
+// import cx from 'classnames'
+import { addStyles } from '../../lib/index'
+addStyles()
+</script>
+
+<td class="p-2 overflow-hidden">
+  <slot></slot>
+</td>

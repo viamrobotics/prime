@@ -20,3 +20,13 @@ v-switch,
 v-tabs {
   display: block;
 }
+
+v-table,
+v-th,
+v-tr,
+v-td,
+v-tbody,
+v-thead,
+:host {
+  display: contents;
+}
