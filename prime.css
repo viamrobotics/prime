@@ -6,12 +6,13 @@
   font-family: 'Space Mono', monospace;
 }
 
-v-notify,
+
 v-badge,
 v-breadcrumbs,
 v-button,
 v-collapse,
 v-input,
+v-notify,
 v-radio,
 v-select,
 v-slider,
