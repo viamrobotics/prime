@@ -10,22 +10,12 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
   argTypes={{
     label: {
       description: 'Text displayed to users',
-      control: 'text',
-      defaultValue: 'Test',
       table: { defaultValue: { summary: '' } }
     },
-    size: {
-      description: 'The size of the button',
-      control: { type: 'select' },
-      options: ['small', 'medium', 'large'],
-      defaultValue: 'medium',
-      table: { defaultValue: { summary: 'medium' } }
-    },
     variant: {
-      description: 'The button purpose',
+      description: 'The communicated action type of the button',
       control: 'select',
       options: ['primary', 'danger', 'outline-danger'],
-      defaultValue: 'primary',
       table: { defaultValue: { summary: 'primary' } }
     },
   }}
@@ -38,8 +28,12 @@ For user triggered actions
 <Canvas>
   <Story
     name='Primary'
+    args={{
+      label: 'RUN',
+      crumbs: 'Crumb 1, Crumb 2',
+    }}
   >
-    {({ label, variant, size }) => `
+    {({ label, variant }) => `
       <v-button
         variant='${variant}'
         label='${label}'
@@ -51,9 +45,12 @@ For user triggered actions
 <Canvas>
   <Story
     name='Danger'
-    args={{ variant: 'danger' }}
+    args={{
+      label: 'STOP',
+      variant: 'danger',
+    }}
   >
-    {({ label, variant, size }) => `
+    {({ label, variant }) => `
       <v-button
         variant='${variant}'
         label='${label}'
@@ -65,9 +62,12 @@ For user triggered actions
 <Canvas>
   <Story
     name='Danger (outline)'
-    args={{ variant: 'outline-danger' }}
+    args={{
+      label: 'SLOW DOWN',
+      variant: 'outline-danger',
+    }}
   >
-    {({ label, variant, size }) => `
+    {({ label, variant }) => `
       <v-button
         variant='${variant}'
         label='${label}'

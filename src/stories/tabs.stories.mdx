@@ -10,15 +10,14 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
   argTypes={{
     tabs: {
       description: 'The list of tabs',
-      control: 'text',
-      defaultValue: '',
       table: { defaultValue: { summary: '' } }
     },
     selected: {
       description: 'The selected tab',
-      control: 'text',
-      defaultValue: '',
-      table: { defaultValue: { summary: '' } }
+      table: { defaultValue: { summary: '' } },
+    },
+    'on:input': {
+      description: 'Event fired when tab is selected',
     },
   }}
 />
