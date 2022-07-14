@@ -41,11 +41,13 @@ const increment = (direction: 1 | -1) => {
 
 <label
   bind:this={root}
-  class='relative flex flex-col max-w-[14rem]'
+  class={cx('relative flex gap-1 max-w-[14rem]', {
+    'flex-col': labelposition === 'top',
+    'items-center': labelposition === 'left',
+  })}
 >
   {#if label}
     <p class={cx('text-xs', {
-      'pb-1': labelposition === 'top',
       inline: labelposition === 'left',
     })}>
       {label}
@@ -62,13 +64,17 @@ const increment = (direction: 1 | -1) => {
   />
 
   {#if type === 'number'}
-    <div class='absolute right-0 bottom-0 cursor-pointer select-none'>
-      <svg class='h-[15px] rotate-180' viewBox="0 0 20 20" on:click={() => increment(1)}>
-        <path d="M9.29 13l0.71 0.71 5.66-5.66-1.41-1.41-4.24 4.24-4.24-4.24-1.41 1.41z" />
-      </svg>
-      <svg class='h-[15px]' viewBox="0 0 20 20" on:click={() => increment(-1)}>
-        <path d="M9.29 13l0.71 0.71 5.66-5.66-1.41-1.41-4.24 4.24-4.24-4.24-1.41 1.41z" />
-      </svg>
+    <div class='absolute right-0.5 bottom-0 cursor-pointer select-none flex flex-col'>
+      <button
+        on:click={() => increment(+1)}
+        aria-label='Increment up by {stepNumber}'
+        class='icon-chevron-down rotate-180 text-[15px]'
+      />
+      <button
+        on:click={() => increment(-1)}
+        aria-label='Increment down by {stepNumber}'
+        class='icon-chevron-down text-[15px]'
+      />
     </div>
   {/if}
 </label>

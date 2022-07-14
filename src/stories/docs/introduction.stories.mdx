@@ -2,25 +2,44 @@
 
 # P.R.I.M.E.
 
-Pretty rad interactive modular elements
+Pretty Rad Interactive Modular Elements.
 
-Made with love at viam
+Made with ❤️ at Viam.
 
 ### Getting started
 
 PRIME is a collection of atomic UI elements, designed to "just work" in any HTML-based environment, regardless of framework or lack thereof. It is a web component library.
 
+### Installation
+
 The PRIME NPM package contains the following necessary exports for usage:
 * `prime.es.js` or `prime.umd.js` - JS that defines custom elements. ES modules are recommended over UMD.
 * `prime.css` - stylesheet shared by all elements.
 
-If the necessary `.css` and `.js` files have been added to your HTML document, then no additional imports are needed!
-You can immediately start adding PRIME elements to your app:
+If using ES modules, import Prime's JS file into your code:
 
-```html
-<b-button label='Hello world!' />
+```ts
+import '@viamrobotics/prime'
 ```
 
-### Further Reading
+You must host `prime.css` in a static file server. This is every prime element loads it as a shared stylesheet.
 
-- [Custom Elements Best Practices](https://web.dev/custom-elements-best-practices/)
+If you are not hosting `prime.css` at the root directory of your domain, you will need to add a PRIME_CONFIG global variable before loading the JS file:
+
+```html
+<script type="module">
+window.PRIME_CONFIG = {
+  base: '/path/to/static/folder',
+  query: '?v=someCacheBustingHashIfNeeded',
+}
+</script>
+```
+
+If the necessary `.css` and `.js` files have been added, then no additional imports are needed!
+You can immediately start adding PRIME elements to your app, since prime elements are simply custom HTML elements:
+
+```html
+<v-button label='Hello world!' />
+```
+
+All elements are prefixed with `v-`. This stands for Viam, the cool company where these elements are made.
