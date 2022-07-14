@@ -8,7 +8,6 @@ export const parameters = {
     },
   },
   docs: {
-    inlineStories: true,
     source: {
       state: 'open'
     }
