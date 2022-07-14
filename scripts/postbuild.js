@@ -35,7 +35,7 @@ const main = async () => {
   copy('src/prime.d.ts', 'dist/prime.d.ts')
 
   // Add icon resources
-  copy('icons.woff2', 'dist/icons.woff2')
+  copy('public/icons.woff2', 'dist/icons.woff2')
 
   // Create versioned resources for consumers with cache-busting
   copy('dist/prime.es.js', `dist/prime@${version}.es.js`)
