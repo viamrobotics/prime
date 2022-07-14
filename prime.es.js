@@ -377,13 +377,13 @@ function Ie(t) {
   let e, l;
   return {
     c() {
-      e = E("p"), l = j(t[0]), f(e, "class", "text-xs");
+      e = E("p"), l = j(t[1]), f(e, "class", "text-xs");
     },
     m(n, s) {
       M(n, e, s), w(e, l);
     },
     p(n, s) {
-      s & 1 && D(l, n[0]);
+      s & 2 && D(l, n[1]);
     },
     d(n) {
       n && H(e);
@@ -402,10 +402,10 @@ function el(t) {
     if (p[2] === "info")
       return Wt;
   }
-  let g = c(t), d = g && g(t), _ = t[0] !== "" && Ie(t);
+  let g = c(t), d = g && g(t), _ = t[1] && Ie(t);
   return {
     c() {
-      e = E("div"), l = E("div"), n = te("svg"), d && d.c(), s = I(), i = E("figure"), r = E("figcaption"), a = j(t[1]), o = I(), _ && _.c(), this.c = P, f(n, "width", "14"), f(n, "height", "14"), f(n, "viewBox", "0 0 15 15"), f(n, "fill", "none"), f(n, "xmlns", "http://www.w3.org/2000/svg"), f(l, "class", "mt-1"), f(r, "class", "text-sm"), f(e, "class", u = V("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
+      e = E("div"), l = E("div"), n = te("svg"), d && d.c(), s = I(), i = E("figure"), r = E("figcaption"), a = j(t[0]), o = I(), _ && _.c(), this.c = P, f(n, "width", "14"), f(n, "height", "14"), f(n, "viewBox", "0 0 15 15"), f(n, "fill", "none"), f(n, "xmlns", "http://www.w3.org/2000/svg"), f(l, "class", "mt-1"), f(r, "class", "text-sm"), f(e, "class", u = V("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
         "border-red/90": t[2] === "error",
         "border-orange/90": t[2] === "warning",
         "border-green/90": t[2] === "success",
@@ -416,7 +416,7 @@ function el(t) {
       M(p, e, b), w(e, l), w(l, n), d && d.m(n, null), w(e, s), w(e, i), w(i, r), w(r, a), w(i, o), _ && _.m(i, null);
     },
     p(p, [b]) {
-      g !== (g = c(p)) && (d && d.d(1), d = g && g(p), d && (d.c(), d.m(n, null))), b & 2 && D(a, p[1]), p[0] !== "" ? _ ? _.p(p, b) : (_ = Ie(p), _.c(), _.m(i, null)) : _ && (_.d(1), _ = null), b & 4 && u !== (u = V("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
+      g !== (g = c(p)) && (d && d.d(1), d = g && g(p), d && (d.c(), d.m(n, null))), b & 1 && D(a, p[0]), p[1] ? _ ? _.p(p, b) : (_ = Ie(p), _.c(), _.m(i, null)) : _ && (_.d(1), _ = null), b & 4 && u !== (u = V("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
         "border-red/90": p[2] === "error",
         "border-orange/90": p[2] === "warning",
         "border-green/90": p[2] === "success",
@@ -431,9 +431,9 @@ function el(t) {
   };
 }
 function tl(t, e, l) {
-  let { message: n = "" } = e, { title: s = "" } = e, { variant: i = "info" } = e;
+  let { title: n = "" } = e, { message: s = "" } = e, { variant: i = "info" } = e;
   return U(), t.$$set = (r) => {
-    "message" in r && l(0, n = r.message), "title" in r && l(1, s = r.title), "variant" in r && l(2, i = r.variant);
+    "title" in r && l(0, n = r.title), "message" in r && l(1, s = r.message), "variant" in r && l(2, i = r.variant);
   }, [n, s, i];
 }
 class ll extends q {
@@ -442,22 +442,22 @@ class ll extends q {
       target: this.shadowRoot,
       props: G(this.attributes),
       customElement: !0
-    }, tl, el, Q, { message: 0, title: 1, variant: 2 }, null), e && (e.target && M(e.target, this, e.anchor), e.props && (this.$set(e.props), v()));
+    }, tl, el, Q, { title: 0, message: 1, variant: 2 }, null), e && (e.target && M(e.target, this, e.anchor), e.props && (this.$set(e.props), v()));
   }
   static get observedAttributes() {
-    return ["message", "title", "variant"];
-  }
-  get message() {
-    return this.$$.ctx[0];
-  }
-  set message(e) {
-    this.$$set({ message: e }), v();
+    return ["title", "message", "variant"];
   }
   get title() {
-    return this.$$.ctx[1];
+    return this.$$.ctx[0];
   }
   set title(e) {
     this.$$set({ title: e }), v();
+  }
+  get message() {
+    return this.$$.ctx[1];
+  }
+  set message(e) {
+    this.$$set({ message: e }), v();
   }
   get variant() {
     return this.$$.ctx[2];
