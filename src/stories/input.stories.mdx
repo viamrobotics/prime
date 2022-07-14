@@ -16,28 +16,24 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     },
     label: {
       description: 'The input label',
-      control: 'text',
       table: { defaultValue: { summary: '' } },
     },
     placeholder: {
       description: 'The input placeholder text',
-      control: 'text',
       table: { defaultValue: { summary: '' } },
     },
     value: {
       description: 'The starting input value',
-      control: 'text',
       table: { defaultValue: { summary: '' } },
     },
-    labelPosition: {
+    labelposition: {
       description: 'The label position',
       control: { type: 'select' },
       options: ['top', 'left'],
-      table: { defaultValue: { summary: 'top' } }
+      table: { defaultValue: { summary: 'top' } },
     },
-    input: {
-      description: 'Fired whenever the input changes',
-      onInput: { action: 'input' },
+    'on:input': {
+      description: 'Event fired whenever the input changes',
     },
   }}
 />

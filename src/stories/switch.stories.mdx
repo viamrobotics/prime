@@ -12,12 +12,10 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       control: { type: 'select' },
       options: ['on', 'off'],
       description: 'Whether or not the switch is on.',
-      defaultValue: 'off',
       table: { defaultValue: { summary: 'off' } },
     },
-    onInput: {
-      action: 'onInput',
-      description: 'Callback that fires when input value changes.',
+    'on:input': {
+      description: 'Event fired when input value changes.',
     },
   }}
 />
@@ -29,6 +27,9 @@ Used to handle binary input.
 <Canvas>
   <Story
     name='Switch'
+    args={{
+      value: 'off',
+    }}
   >
     {({ value }) => `
       <v-switch

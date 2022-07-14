@@ -10,26 +10,22 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
   argTypes={{
     label: {
       description: 'The input label',
-      control: 'text',
       table: { defaultValue: { summary: '' } }
     },
     options: {
       description: 'The list of options',
-      control: 'text',
       table: { defaultValue: { summary: '' } }
     },
     selected: {
       description: 'The selected value',
-      control: 'text',
       table: { defaultValue: { summary: '' } }
     },
     placeholder: {
       description: 'The placeholder value',
-      control: 'text',
       table: { defaultValue: { summary: '' } }
     },
-    'on:select': {
-      description: 'Callback invoked when an option is selected'
+    'on:input': {
+      description: 'Event fired when an option is selected'
     },
   }}
 />

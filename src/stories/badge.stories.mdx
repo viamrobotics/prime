@@ -6,14 +6,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     variant: {
       description: 'The badge color',
       control: { type: 'select' },
-      options: ['green', 'orange', 'red'],
-      defaultValue: 'Test',
-      table: { defaultValue: { summary: '' } }
+      options: ['gray', 'green', 'orange', 'red'],
+      table: { defaultValue: { summary: 'gray' } }
     },
     label: {
       description: 'The badge status',
-      control: 'text',
-      defaultValue: 'Test',
       table: { defaultValue: { summary: '' } }
     }
   }}
@@ -27,7 +24,8 @@ To display status of something
   <Story
     name='gray'
     args={{
-      variant: 'gray'
+      variant: 'gray',
+      label: 'Inactive',
     }}
   >
     {({ label, variant }) => `
@@ -43,7 +41,8 @@ To display status of something
   <Story
     name='green'
     args={{
-      variant: 'green'
+      variant: 'green',
+      label: 'Active',
     }}
   >
     {({ label, variant }) => `
@@ -58,7 +57,10 @@ To display status of something
 <Canvas>
   <Story
     name='orange'
-    args={{ variant: 'orange' }}
+    args={{
+      variant: 'orange',
+      label: 'Danger',
+    }}
   >
     {({ label, variant }) => `
       <v-badge
@@ -72,7 +74,10 @@ To display status of something
 <Canvas>
   <Story
     name='red'
-    args={{ variant: 'red' }}
+    args={{
+      variant: 'red',
+      label: 'Unhealthy',
+    }}
   >
     {({ label, variant }) => `
       <v-badge
