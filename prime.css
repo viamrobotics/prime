@@ -21,3 +21,85 @@ v-switch,
 v-tabs {
   display: block;
 }
+
+@font-face {
+  font-family: 'icons';
+  src: url('./icons.woff?yaw0e2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icons' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-refresh:before {
+  content: "\e911";
+}
+.icon-info-outline:before {
+  content: "\e910";
+}
+.icon-pause-circle-filled:before {
+  content: "\e90e";
+}
+.icon-play-circle-filled:before {
+  content: "\e90f";
+}
+.icon-logout:before {
+  content: "\e900";
+}
+.icon-instagram:before {
+  content: "\e901";
+}
+.icon-settings:before {
+  content: "\e903";
+}
+.icon-trash:before {
+  content: "\e905";
+}
+.icon-alert:before {
+  content: "\e904";
+}
+.icon-ask:before {
+  content: "\e908";
+}
+.icon-x:before {
+  content: "\e942";
+}
+.icon-social-medium:before {
+  content: "\e906";
+}
+.icon-copy:before {
+  content: "\e907";
+}
+.icon-save:before {
+  content: "\e909";
+}
+.icon-edit:before {
+  content: "\e90a";
+  color: #555;
+}
+.icon-twitter:before {
+  content: "\e902";
+}
+.icon-linkedin:before {
+  content: "\e90b";
+}
+.icon-chevron-down:before {
+  content: "\e90c";
+}
+.icon-checkmark:before {
+  content: "\e90d";
+}

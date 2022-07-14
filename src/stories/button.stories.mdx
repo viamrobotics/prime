@@ -30,12 +30,10 @@ For user triggered actions
     name='Primary'
     args={{
       label: 'RUN',
-      crumbs: 'Crumb 1, Crumb 2',
     }}
   >
     {({ label, variant }) => `
       <v-button
-        variant='${variant}'
         label='${label}'
       />
     `}
@@ -71,6 +69,40 @@ For user triggered actions
       <v-button
         variant='${variant}'
         label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Disabled'
+    args={{
+      disabled: 'true',
+      label: 'RUN',
+    }}
+  >
+    {({ label, disabled }) => `
+      <v-button
+        label='${label}'
+        disabled='${disabled}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With icon'
+    args={{
+      label: 'Refresh',
+      icon: 'refresh',
+    }}
+  >
+    {({ label, icon }) => `
+      <v-button
+        label='${label}'
+        icon='${icon}'
       />
     `}
   </Story>
