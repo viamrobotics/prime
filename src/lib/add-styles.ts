@@ -12,8 +12,6 @@ const link = document.createElement('link')
 link.rel = 'stylesheet'
 link.href = `${base ?? ''}/prime.css${query}`
 
-console.log('here')
-
 export const loadFonts = async () => {
   const font = new FontFace('icons', 'url(icons.woff2?yaw0e2)')
   await font.load()
