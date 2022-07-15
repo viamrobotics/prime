@@ -17,7 +17,8 @@ v-radio,
 v-select,
 v-slider,
 v-switch,
-v-tabs {
+v-tabs,
+v-tooltip {
   display: block;
 }
 
