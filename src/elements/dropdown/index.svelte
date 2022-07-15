@@ -9,8 +9,8 @@
   let root: HTMLElement
   
   // coerce "" and null to boolean
-  $: match = match === "" ? true : false
-  $: open = open === "" || open ? true : false
+  $: match = match === ""
+  $: open = open === "" || open
   addStyles()
 
 
