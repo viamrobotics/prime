@@ -9,12 +9,15 @@
   export let title = ''
   export let message = ''
   export let variant: Variants = 'info'
+  export let background: 'gray' | 'white' = 'gray'
 
   addStyles()
 </script>
 
 <div
-  class={cx('flex gap-2 border-l-4 bg-gray-100 py-2 px-2', {
+  class={cx('flex gap-2 border-l-4 py-2 px-2', {
+    'bg-gray-100': background === 'gray',
+    'bg-white': background === 'white',
     'border-red/90': variant === 'error',
     'border-orange/90': variant === 'warning',
     'border-green/90': variant === 'success',

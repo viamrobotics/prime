@@ -22,6 +22,12 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'Message',
       table: { defaultValue: { summary: '' } },
     },
+    background: {
+      description: 'The background color',
+      control: { type: 'select' },
+      options: ['gray', 'white'],
+      table: { defaultValue: { summary: 'gray' } },
+    },
   }}
 />
 
@@ -168,6 +174,25 @@ Notify message of type info, success, warning, or error
       <v-notify
         title='${title}'
         variant='${variant}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='White background'
+    args={{
+      variant: 'error',
+      title: 'This is the title.',
+      background: 'white',
+    }}
+  >
+    {({ title, variant, background }) => `
+      <v-notify
+        title='${title}'
+        variant='${variant}'
+        background='${background}'
       />
     `}
   </Story>
