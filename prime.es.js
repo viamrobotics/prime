@@ -409,7 +409,9 @@ function tl(t) {
   let m = c(t), d = m && m(t), _ = t[1] && Ie(t);
   return {
     c() {
-      e = M("div"), l = M("div"), n = te("svg"), d && d.c(), s = T(), i = M("figure"), r = M("figcaption"), a = O(t[0]), o = T(), _ && _.c(), this.c = v, f(n, "width", "14"), f(n, "height", "14"), f(n, "viewBox", "0 0 15 15"), f(n, "fill", "none"), f(n, "xmlns", "http://www.w3.org/2000/svg"), f(l, "class", "mt-1"), f(r, "class", "text-sm"), f(e, "class", u = F("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
+      e = M("div"), l = M("div"), n = te("svg"), d && d.c(), s = T(), i = M("figure"), r = M("figcaption"), a = O(t[0]), o = T(), _ && _.c(), this.c = v, f(n, "width", "14"), f(n, "height", "14"), f(n, "viewBox", "0 0 15 15"), f(n, "fill", "none"), f(n, "xmlns", "http://www.w3.org/2000/svg"), f(l, "class", "mt-1"), f(r, "class", "text-sm"), f(e, "class", u = F("flex gap-2 border-l-4 py-2 px-2", {
+        "bg-gray-100": t[3] === "gray",
+        "bg-white": t[3] === "white",
         "border-red/90": t[2] === "error",
         "border-orange/90": t[2] === "warning",
         "border-green/90": t[2] === "success",
@@ -420,7 +422,9 @@ function tl(t) {
       E(p, e, h), w(e, l), w(l, n), d && d.m(n, null), w(e, s), w(e, i), w(i, r), w(r, a), w(i, o), _ && _.m(i, null);
     },
     p(p, [h]) {
-      m !== (m = c(p)) && (d && d.d(1), d = m && m(p), d && (d.c(), d.m(n, null))), h & 1 && D(a, p[0]), p[1] ? _ ? _.p(p, h) : (_ = Ie(p), _.c(), _.m(i, null)) : _ && (_.d(1), _ = null), h & 4 && u !== (u = F("flex gap-2 border-l-4 bg-gray-100 py-2 px-2", {
+      m !== (m = c(p)) && (d && d.d(1), d = m && m(p), d && (d.c(), d.m(n, null))), h & 1 && D(a, p[0]), p[1] ? _ ? _.p(p, h) : (_ = Ie(p), _.c(), _.m(i, null)) : _ && (_.d(1), _ = null), h & 12 && u !== (u = F("flex gap-2 border-l-4 py-2 px-2", {
+        "bg-gray-100": p[3] === "gray",
+        "bg-white": p[3] === "white",
         "border-red/90": p[2] === "error",
         "border-orange/90": p[2] === "warning",
         "border-green/90": p[2] === "success",
@@ -435,10 +439,10 @@ function tl(t) {
   };
 }
 function ll(t, e, l) {
-  let { title: n = "" } = e, { message: s = "" } = e, { variant: i = "info" } = e;
-  return K(), t.$$set = (r) => {
-    "title" in r && l(0, n = r.title), "message" in r && l(1, s = r.message), "variant" in r && l(2, i = r.variant);
-  }, [n, s, i];
+  let { title: n = "" } = e, { message: s = "" } = e, { variant: i = "info" } = e, { background: r = "gray" } = e;
+  return K(), t.$$set = (a) => {
+    "title" in a && l(0, n = a.title), "message" in a && l(1, s = a.message), "variant" in a && l(2, i = a.variant), "background" in a && l(3, r = a.background);
+  }, [n, s, i, r];
 }
 class nl extends B {
   constructor(e) {
@@ -446,10 +450,15 @@ class nl extends B {
       target: this.shadowRoot,
       props: q(this.attributes),
       customElement: !0
-    }, ll, tl, G, { title: 0, message: 1, variant: 2 }, null), e && (e.target && E(e.target, this, e.anchor), e.props && (this.$set(e.props), C()));
+    }, ll, tl, G, {
+      title: 0,
+      message: 1,
+      variant: 2,
+      background: 3
+    }, null), e && (e.target && E(e.target, this, e.anchor), e.props && (this.$set(e.props), C()));
   }
   static get observedAttributes() {
-    return ["title", "message", "variant"];
+    return ["title", "message", "variant", "background"];
   }
   get title() {
     return this.$$.ctx[0];
@@ -468,6 +477,12 @@ class nl extends B {
   }
   set variant(e) {
     this.$$set({ variant: e }), C();
+  }
+  get background() {
+    return this.$$.ctx[3];
+  }
+  set background(e) {
+    this.$$set({ background: e }), C();
   }
 }
 customElements.define("v-notify", nl);
