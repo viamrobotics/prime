@@ -1450,7 +1450,7 @@ function et(t) {
   }
   return {
     c() {
-      e = M("span"), l = M("span"), n = T(), s = M("span"), i = T(), r = M("span"), o = O(a), u = T(), k && k.c(), f(l, "class", "handle-bg absolute left-0 top-0 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400"), f(s, "class", "absolute left-0 top-0 block rounded-full h-full w-full shadow-lg bg-gray-400"), f(r, "class", c = F("floating text-white block absolute left-1/2 bottom-3/4 -translate-x-1/2 -translate-y-1/2", "py-1 px-1.5 rounded text-base text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 bg-[#99a2a2]", {
+      e = M("span"), l = M("span"), n = T(), s = M("span"), i = T(), r = M("span"), o = O(a), u = T(), k && k.c(), f(l, "class", "handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400"), f(s, "class", "absolute left-0 bottom-1 block rounded-full h-full w-full border border-black bg-white"), f(r, "class", c = F("floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2", "py-1 px-1.5 text-base text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white", {
         "-translate-y-1": !t[11] || t[13] !== t[56]
       })), f(e, "role", "slider"), f(e, "class", "range absolute block h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]"), f(e, "data-handle", m = t[56]), Q(e, "left", t[15][t[56]] + "%"), Q(e, "z-index", t[13] === t[56] ? 3 : 2), f(e, "aria-valuemin", d = t[1] === !0 && t[56] === 1 ? t[7] : t[5]), f(e, "aria-valuemax", _ = t[1] === !0 && t[56] === 0 ? t[8] : t[6]), f(e, "aria-valuenow", p = t[54]), f(e, "aria-valuetext", h = t[54]?.toString()), f(e, "aria-orientation", "horizontal"), f(e, "aria-disabled", t[2]), f(e, "disabled", t[2]), f(e, "tabindex", N = t[2] ? -1 : 0), z(e, "active", t[11] && t[13] === t[56]), z(e, "press", t[12] && t[13] === t[56]);
     },
@@ -1461,7 +1461,7 @@ function et(t) {
       ], L = !0);
     },
     p(S, b) {
-      t = S, b[0] & 384 && a !== (a = t[54] + "") && D(o, a), t[4] ? k ? k.p(t, b) : (k = $e(t), k.c(), k.m(r, null)) : k && (k.d(1), k = null), b[0] & 10240 && c !== (c = F("floating text-white block absolute left-1/2 bottom-3/4 -translate-x-1/2 -translate-y-1/2", "py-1 px-1.5 rounded text-base text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 bg-[#99a2a2]", {
+      t = S, b[0] & 384 && a !== (a = t[54] + "") && D(o, a), t[4] ? k ? k.p(t, b) : (k = $e(t), k.c(), k.m(r, null)) : k && (k.d(1), k = null), b[0] & 10240 && c !== (c = F("floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2", "py-1 px-1.5 text-base text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white", {
         "-translate-y-1": !t[11] || t[13] !== t[56]
       })) && f(r, "class", c), b[0] & 32768 && Q(e, "left", t[15][t[56]] + "%"), b[0] & 8192 && Q(e, "z-index", t[13] === t[56] ? 3 : 2), b[0] & 162 && d !== (d = t[1] === !0 && t[56] === 1 ? t[7] : t[5]) && f(e, "aria-valuemin", d), b[0] & 322 && _ !== (_ = t[1] === !0 && t[56] === 0 ? t[8] : t[6]) && f(e, "aria-valuemax", _), b[0] & 384 && p !== (p = t[54]) && f(e, "aria-valuenow", p), b[0] & 384 && h !== (h = t[54]?.toString()) && f(e, "aria-valuetext", h), b[0] & 4 && f(e, "aria-disabled", t[2]), b[0] & 4 && f(e, "disabled", t[2]), b[0] & 4 && N !== (N = t[2] ? -1 : 0) && f(e, "tabindex", N), b[0] & 10240 && z(e, "active", t[11] && t[13] === t[56]), b[0] & 12288 && z(e, "press", t[12] && t[13] === t[56]);
     },
@@ -1474,7 +1474,7 @@ function tt(t) {
   let e;
   return {
     c() {
-      e = M("span"), f(e, "class", "rangeBar absolute block transition duration-200 rounded-2xl h-2 top-0 select-none z-[1] bg-gray-200"), Q(e, "left", t[16](t[15]) + "%"), Q(e, "right", t[17](t[15]) + "%");
+      e = M("span"), f(e, "class", "rangeBar absolute block transition duration-200 h-2 top-0 select-none z-[1] bg-black"), Q(e, "left", t[16](t[15]) + "%"), Q(e, "right", t[17](t[15]) + "%");
     },
     m(l, n) {
       E(l, e, n);
@@ -1541,7 +1541,7 @@ function st(t) {
   let e;
   return {
     c() {
-      e = M("span"), f(e, "class", "absolute h-[3px] w-[3px] top-[calc(50%-1.5px)] whitespace-nowrap transition bg-gray-400 rounded-full"), Q(e, "left", me(t[14](t[53]), t[5], t[6], 2) + "%");
+      e = M("span"), f(e, "class", "absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-black/50"), Q(e, "left", me(t[14](t[53]), t[5], t[6], 2) + "%");
     },
     m(l, n) {
       E(l, e, n);
@@ -1598,7 +1598,7 @@ function Nl(t) {
       e = M("div");
       for (let b = 0; b < L.length; b += 1)
         L[b].c();
-      l = T(), H && H.c(), n = T(), s = M("div"), i = M("small"), r = O(t[5]), a = T(), k && k.c(), o = T(), y && y.c(), u = T(), c = M("small"), m = O(t[6]), d = T(), S && S.c(), this.c = v, f(i, "class", "absolute bottom-full left-0 mb-2 whitespace-nowrap"), f(c, "class", "absolute bottom-full right-0 mb-2 whitespace-nowrap"), f(s, "class", "absolute h-2 left-0 right-0"), z(s, "disabled", t[2]), z(s, "focus", t[11]), f(e, "class", _ = F("slider relative rounded-full h-2 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-gray-100", { "opacity-50": t[2] })), z(e, "range", t[1]), z(e, "focus", t[11]), z(e, "min", t[1] === "min"), z(e, "max", t[1] === "max");
+      l = T(), H && H.c(), n = T(), s = M("div"), i = M("small"), r = O(t[5]), a = T(), k && k.c(), o = T(), y && y.c(), u = T(), c = M("small"), m = O(t[6]), d = T(), S && S.c(), this.c = v, f(i, "class", "absolute bottom-full left-0 mb-2 whitespace-nowrap"), f(c, "class", "absolute bottom-full right-0 mb-2 whitespace-nowrap"), f(s, "class", "absolute h-2 left-0 right-0"), z(s, "disabled", t[2]), z(s, "focus", t[11]), f(e, "class", _ = F("slider relative h-0.5 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-black/50", { "opacity-50": t[2] })), z(e, "range", t[1]), z(e, "focus", t[11]), z(e, "min", t[1] === "min"), z(e, "max", t[1] === "max");
     },
     m(b, A) {
       E(b, e, A);
@@ -1630,7 +1630,7 @@ function Nl(t) {
           L[R].d(1);
         L.length = N.length;
       }
-      b[1] ? H ? H.p(b, A) : (H = tt(b), H.c(), H.m(e, n)) : H && (H.d(1), H = null), A[0] & 32 && D(r, b[5]), b[4] ? k ? k.p(b, A) : (k = lt(b), k.c(), k.m(i, null)) : k && (k.d(1), k = null), b[3] ? y ? y.p(b, A) : (y = nt(b), y.c(), y.m(s, u)) : y && (y.d(1), y = null), A[0] & 64 && D(m, b[6]), b[4] ? S ? S.p(b, A) : (S = rt(b), S.c(), S.m(c, null)) : S && (S.d(1), S = null), A[0] & 4 && z(s, "disabled", b[2]), A[0] & 2048 && z(s, "focus", b[11]), A[0] & 4 && _ !== (_ = F("slider relative rounded-full h-2 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-gray-100", { "opacity-50": b[2] })) && f(e, "class", _), A[0] & 6 && z(e, "range", b[1]), A[0] & 2052 && z(e, "focus", b[11]), A[0] & 6 && z(e, "min", b[1] === "min"), A[0] & 6 && z(e, "max", b[1] === "max");
+      b[1] ? H ? H.p(b, A) : (H = tt(b), H.c(), H.m(e, n)) : H && (H.d(1), H = null), A[0] & 32 && D(r, b[5]), b[4] ? k ? k.p(b, A) : (k = lt(b), k.c(), k.m(i, null)) : k && (k.d(1), k = null), b[3] ? y ? y.p(b, A) : (y = nt(b), y.c(), y.m(s, u)) : y && (y.d(1), y = null), A[0] & 64 && D(m, b[6]), b[4] ? S ? S.p(b, A) : (S = rt(b), S.c(), S.m(c, null)) : S && (S.d(1), S = null), A[0] & 4 && z(s, "disabled", b[2]), A[0] & 2048 && z(s, "focus", b[11]), A[0] & 4 && _ !== (_ = F("slider relative h-0.5 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-black/50", { "opacity-50": b[2] })) && f(e, "class", _), A[0] & 6 && z(e, "range", b[1]), A[0] & 2052 && z(e, "focus", b[11]), A[0] & 6 && z(e, "min", b[1] === "min"), A[0] & 6 && z(e, "max", b[1] === "max");
     },
     i: v,
     o: v,
