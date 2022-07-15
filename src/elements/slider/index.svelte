@@ -423,7 +423,7 @@
 
 <div
   bind:this={slider}
-  class={cn('slider relative rounded-full h-2 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-gray-100', {
+  class={cn('slider relative h-0.5 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-black/50', {
     'opacity-50': disabled,
   })}
   class:range
@@ -435,6 +435,7 @@
   on:touchstart|preventDefault={sliderInteractStart}
   on:touchend|preventDefault={sliderInteractEnd}
 >
+
   {#each endValue ? [startValue, endValue] : [startValue] as value, index}
     <span
       role='slider'
@@ -454,13 +455,14 @@
       {disabled}
       tabindex='{ disabled ? -1 : 0 }'
     > 
-      <span class='handle-bg absolute left-0 top-0 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400' />
 
-      <span class='absolute left-0 top-0 block rounded-full h-full w-full shadow-lg bg-gray-400' />
+      <span class='handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400' />
+
+      <span class='absolute left-0 bottom-1 block rounded-full h-full w-full border border-black bg-white' />
 
       <span class={cn(
-        'floating text-white block absolute left-1/2 bottom-3/4 -translate-x-1/2 -translate-y-1/2',
-        'py-1 px-1.5 rounded text-base text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 bg-[#99a2a2]',
+        'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
+        'py-1 px-1.5 text-base text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white',
         {
           '-translate-y-1': !focus || activeHandle !== index,
         }
@@ -476,7 +478,7 @@
 
   {#if range}
     <span
-      class='rangeBar absolute block transition duration-200 rounded-2xl h-2 top-0 select-none z-[1] bg-gray-200'
+      class='rangeBar absolute block transition duration-200 h-2 top-0 select-none z-[1] bg-black'
       style='left: {rangeStart($springPositions)}%; right: {rangeEnd($springPositions)}%' />
   {/if}
 
@@ -497,7 +499,7 @@
       {#each Array.from({ length: pipCount + 1 }) as _, i}
         {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
           <span
-            class='absolute h-[3px] w-[3px] top-[calc(50%-1.5px)] whitespace-nowrap transition bg-gray-400 rounded-full'
+            class='absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-black/50'
             style='left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;'
           />
         {/if}
