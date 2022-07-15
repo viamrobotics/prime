@@ -15,7 +15,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     variant: {
       description: 'The communicated action type of the button',
       control: 'select',
-      options: ['primary', 'danger', 'outline-danger'],
+      options: ['primary', 'success', 'danger', 'outline-danger'],
       table: { defaultValue: { summary: 'primary' } }
     },
   }}
@@ -34,6 +34,23 @@ For user triggered actions
   >
     {({ label, variant }) => `
       <v-button
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Success'
+    args={{
+      label: 'SUCCESS',
+      variant: 'success',
+    }}
+  >
+    {({ label, variant }) => `
+      <v-button
+        variant="${variant}"
         label='${label}'
       />
     `}
