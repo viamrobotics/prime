@@ -12,7 +12,11 @@ let root: HTMLElement
 
 addStyles()
 
-const handleClick = () => {
+const handleClick = (event: Event) => {
+  if ((event.target as HTMLElement).getAttribute('slot') === 'header') {
+    return
+  }
+
   open = !open
   dispatch(root, 'toggle', { open })
 }
