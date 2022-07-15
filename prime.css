@@ -33,7 +33,7 @@ v-thead,
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: icons !important;
+  font-family: 'icons' !important;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -45,6 +45,27 @@ v-thead,
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-error-outline:before {
+  content: "\e912";
+}
+.icon-warning:before {
+  content: "\e916";
+}
+.icon-download:before {
+  content: "\e913";
+}
+.icon-camera:before {
+  content: "\e914";
+}
+.icon-center:before {
+  content: "\e915";
+}
+.icon-arrow-up:before {
+  content: "\e917";
+}
+.icon-settings:before {
+  content: "\e918";
+}
 .icon-refresh:before {
   content: "\e911";
 }
@@ -63,21 +84,6 @@ v-thead,
 .icon-instagram:before {
   content: "\e901";
 }
-.icon-settings:before {
-  content: "\e903";
-}
-.icon-trash:before {
-  content: "\e905";
-}
-.icon-alert:before {
-  content: "\e904";
-}
-.icon-ask:before {
-  content: "\e908";
-}
-.icon-x:before {
-  content: "\e942";
-}
 .icon-social-medium:before {
   content: "\e906";
 }
@@ -91,11 +97,26 @@ v-thead,
   content: "\e90a";
   color: #555;
 }
+.icon-stop-circle:before {
+  content: "\e903";
+}
 .icon-twitter:before {
   content: "\e902";
 }
 .icon-linkedin:before {
   content: "\e90b";
+}
+.icon-trash:before {
+  content: "\e905";
+}
+.icon-alert:before {
+  content: "\e904";
+}
+.icon-ask:before {
+  content: "\e908";
+}
+.icon-x:before {
+  content: "\e942";
 }
 .icon-chevron-down:before {
   content: "\e90c";
