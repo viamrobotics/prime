@@ -16,6 +16,7 @@ import './table/table-cell.svelte'
 import './table/table-header.svelte'
 import './table/table-row.svelte'
 import './tabs/index.svelte'
+import './tooltip/index.svelte'
 import { loadFonts } from '../lib'
 
 loadFonts().catch(error => console.error(error))
