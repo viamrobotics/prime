@@ -423,7 +423,7 @@
 
 <div
   bind:this={slider}
-  class={cn('slider relative h-0.5 m-4 mt-7 transition-opacity duration-200 select-none pip-label bg-black/50', {
+  class={cn('slider relative h-0.5 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-black/50', {
     'opacity-50': disabled,
   })}
   class:range
