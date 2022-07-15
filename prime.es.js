@@ -655,6 +655,7 @@ function fl(t) {
         "cursor-not-allowed opacity-50 pointer-events-none": t[0] === "true",
         "bg-white border-black": t[1] === "primary",
         "bg-red/90 text-white border-red/90": t[1] === "danger",
+        "bg-green/90 border-green/90 text-white": t[1] === "success",
         "bg-white border-red/90 text-red/90": t[1] === "outline-danger"
       }));
     },
@@ -666,6 +667,7 @@ function fl(t) {
         "cursor-not-allowed opacity-50 pointer-events-none": r[0] === "true",
         "bg-white border-black": r[1] === "primary",
         "bg-red/90 text-white border-red/90": r[1] === "danger",
+        "bg-green/90 border-green/90 text-white": r[1] === "success",
         "bg-white border-red/90 text-red/90": r[1] === "outline-danger"
       })) && f(e, "class", s);
     },
