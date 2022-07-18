@@ -14,7 +14,7 @@ addStyles()
 
 </script>
 
-<div class='relative inline-block'>
+<div class='relative inline-block group'>
   <slot />
   <span 
     class={cx('invisible bg-white text-black text-left p-3 border absolute z-10 min-w-[200px] group-hover:visible after:absolute after:-ml-2 after:border-4 after:border-solid after:border-transparent', {
