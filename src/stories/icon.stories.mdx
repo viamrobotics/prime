@@ -1,0 +1,36 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title='Elements/Icon'
+  argTypes={{
+    name: {
+      description: 'The icon name',
+      table: { defaultValue: { summary: '' } }
+    },
+    size: {
+      description: 'The badge status',
+      control: { type: 'select' },
+      options: ['xs', 'sm', 'base', 'lg', 'xl'],
+      table: { defaultValue: { summary: 'base' } }
+    }
+  }}
+/>
+
+# Icon
+
+<Canvas>
+  <Story
+    name='gray'
+    args={{
+      name: 'camera',
+      size: 'base',
+    }}
+  >
+    {({ name, size }) => `
+      <v-icon
+        name='${name}'
+        size='${size}'
+      />
+    `}
+  </Story>
+</Canvas>
