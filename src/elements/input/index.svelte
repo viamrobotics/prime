@@ -85,7 +85,8 @@ const increment = (direction: 1 | -1) => {
 <style>
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input[type=number] {
