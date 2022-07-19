@@ -18,6 +18,8 @@ let input: HTMLSelectElement
 let parsedOptions: string[]
 let selectedOption: string
 
+const widthClasses = 'max-w-[14rem] w-full';
+
 $: parsedOptions = options.split(',').map((str) => str.trim())
 $: selectedOption = parsedOptions.find(opt => opt === value) ?? ''
 
@@ -32,7 +34,7 @@ const handleInput = (event: Event) => {
 
 </script>
 
-<label bind:this={root}>
+<label bind:this={root} class={cx(widthClasses, 'relative')}>
   {#if label}
     <p class={cx('text-xs pb-1', {
       'pb-1': labelposition === 'top',
@@ -44,7 +46,7 @@ const handleInput = (event: Event) => {
 
   <select
     bind:this={input}
-    class='py-1 px-2.5 text-xs border border-black'
+    class={cx(widthClasses, 'py-1 px-2.5 text-xs border border-black')}
     on:input={handleInput}
   >
     <option value=''>
@@ -57,3 +59,27 @@ const handleInput = (event: Event) => {
     {/each}
   </select>
 </label>
+
+<style>
+  label {
+    --select-chevron-color: black;
+    --select-chevron-size: 15px;
+  }
+
+  label::after {
+    content: '';
+    position: absolute;
+    background-color: var(--select-chevron-color);
+    clip-path: polygon(25% 25%, 17.5% 32.5%, 40% 55%, 50% 65%, 60% 55%, 82.5% 32.5%, 75% 25%, 50% 50%);
+    width: var(--select-chevron-size);
+    height: var(--select-chevron-size);
+    right: 2px;
+    bottom: 2px;
+  }
+
+  select {
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+</style>
+  
