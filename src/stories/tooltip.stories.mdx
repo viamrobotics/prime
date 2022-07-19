@@ -22,74 +22,18 @@ Used to display text box when hovering over an element.
 
 <Canvas>
   <Story
-    name='top'
+    name='Tooltip'
     args={{
       text: 'Test information for the tooltip',
+      location: "top",
     }}
   >
-    {({ text }) => `
-      <v-tooltip text='${text}'>
-        <p>Hover here</p>
-      </v-tooltip>
-    `}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
-    name='Bottom'
-    args={{
-      location: 'bottom',
-      text: 'Test information for the tooltip',
-    }}
-  >
-    {({ location, text }) => `
-      <v-tooltip
-        location='${location}'
-        text='${text}'
-      >
-        <p>Text</p>
-      </v-tooltip>
-    `}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
-    name='right'
-    args={{
-      location: 'right',
-      text: 'Test information for the tooltip',
-    }}
-  >
-    {({ location, text }) => `
-      <v-tooltip
-        location='${location}'
-        text='${text}'
-      >
-        <p>Text</p>
-      </v-tooltip>
-    `}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <div>
-  </div>
-  <Story
-    name='Left'
-    args={{
-      location: 'left',
-      text: 'Test information for the tooltip',
-    }}
-  >
-    {({ location, text }) => `
-      <v-tooltip
-        location='${location}'
-        text='${text}'
-      >
-        <p>Text</p>
-      </v-tooltip>
+    {({ text, location }) => `
+    <div style="width: 100%; height: 200px; display: flex; align-items: center; justify-content:center">
+        <v-tooltip text='${text}' location="${location}">
+          <p>Hover here for more info you crazy crazy person</p>
+        </v-tooltip>
+    <div>
     `}
   </Story>
 </Canvas>
