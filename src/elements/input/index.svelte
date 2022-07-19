@@ -62,7 +62,7 @@ const increment = (direction: 1 | -1) => {
     {value}
     readonly={isReadonly}
     bind:this={input}
-    class='py-1.5 px-2.5 border text-xs border-black bg-white outline-none'
+    class='w-full py-1.5 px-2.5 border text-xs border-black bg-white outline-none'
     on:input={handleInput}
   />
 
