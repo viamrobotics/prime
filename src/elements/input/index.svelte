@@ -50,7 +50,7 @@ const increment = (direction: 1 | -1) => {
 >
   {#if label}
     <p class={cx('text-xs', {
-      inline: labelposition === 'left',
+      'inline whitespace-nowrap': labelposition === 'left',
     })}>
       {label}
     </p>

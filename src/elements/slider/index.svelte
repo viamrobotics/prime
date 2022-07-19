@@ -32,12 +32,14 @@
   export let min: string
   export let max: string
   export let step: string
+  export let value: string
   export let start: string
   export let end: string
   export let disabled = false
   export let discrete = true
 
   // formatting props
+  export let label = ''
   export let suffix = ''
 
   addStyles()
@@ -58,7 +60,7 @@
   $: minNum = Number.parseFloat(min || '0')
   $: maxNum = Number.parseFloat(max || '100')
   $: stepNum = Number.parseFloat(step || '1')
-  $: startValue = start ? Number.parseFloat(start) : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2
+  $: startValue = start || value ? Number.parseFloat(start || value) : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2
   $: endValue = end ? Number.parseFloat(end) : undefined
 
   // state management
@@ -421,99 +423,108 @@
   }
 </script>
 
-<div
-  bind:this={slider}
-  class={cn('slider relative rounded-full h-2 m-4 mt-7 transition-opacity duration-200 select-none pip-labels bg-gray-100', {
-    'opacity-50': disabled,
-  })}
-  class:range
-  class:focus
-  class:min={range === 'min'}
-  class:max={range === 'max'}
-  on:mousedown={sliderInteractStart}
-  on:mouseup={sliderInteractEnd}
-  on:touchstart|preventDefault={sliderInteractStart}
-  on:touchend|preventDefault={sliderInteractEnd}
->
-  {#each endValue ? [startValue, endValue] : [startValue] as value, index}
-    <span
-      role='slider'
-      class='range absolute block h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]'
-      class:active={focus && activeHandle === index}
-      class:press={handlePressed && activeHandle === index}
-      data-handle={index}
-      on:blur={handleSliderBlur}
-      on:focus={() => handleSliderFocus(index)}
-      style='left: {$springPositions[index]}%; z-index: {activeHandle === index ? 3 : 2}'
-      aria-valuemin={range === true && index === 1 ? startValue : minNum}
-      aria-valuemax={range === true && index === 0 ? endValue : maxNum}
-      aria-valuenow={value}
-      aria-valuetext={value?.toString()}
-      aria-orientation='horizontal'
-      aria-disabled={disabled}
-      {disabled}
-      tabindex='{ disabled ? -1 : 0 }'
-    > 
-      <span class='handle-bg absolute left-0 top-0 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400' />
-
-      <span class='absolute left-0 top-0 block rounded-full h-full w-full shadow-lg bg-gray-400' />
-
-      <span class={cn(
-        'floating text-white block absolute left-1/2 bottom-3/4 -translate-x-1/2 -translate-y-1/2',
-        'py-1 px-1.5 rounded text-base text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 bg-[#99a2a2]',
-        {
-          '-translate-y-1': !focus || activeHandle !== index,
-        }
-      )}>
-        {value}
-
-        {#if suffix}
-          <span class='floating-suffix'>{suffix}</span>
-        {/if}
-      </span>
-    </span>
-  {/each}
-
-  {#if range}
-    <span
-      class='rangeBar absolute block transition duration-200 rounded-2xl h-2 top-0 select-none z-[1] bg-gray-200'
-      style='left: {rangeStart($springPositions)}%; right: {rangeEnd($springPositions)}%' />
+<!-- svelte-ignore a11y-label-has-associated-control -->
+<label class='flex flex-col gap-2'>
+  {#if label}
+    <p class='text-xs'>{label}</p>
   {/if}
 
-  <div 
-    class='absolute h-2 left-0 right-0' 
-    class:disabled
-    class:focus 
+  <div
+    bind:this={slider}
+    class={cn('slider relative h-0.5 mt-7 transition-opacity duration-200 select-none pip-labels bg-black/50', {
+      'opacity-50': disabled,
+    })}
+    class:range
+    class:focus
+    class:min={range === 'min'}
+    class:max={range === 'max'}
+    on:mousedown={sliderInteractStart}
+    on:mouseup={sliderInteractEnd}
+    on:touchstart|preventDefault={sliderInteractStart}
+    on:touchend|preventDefault={sliderInteractEnd}
   >
-    <small class='absolute bottom-full left-0 mb-2 whitespace-nowrap'>
-      {minNum}
-      
-      {#if suffix}
-        <span class='pipVal-suffix'>{suffix}</span>
-      {/if}
-    </small>
 
-    {#if discrete}
-      {#each Array.from({ length: pipCount + 1 }) as _, i}
-        {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
-          <span
-            class='absolute h-[3px] w-[3px] top-[calc(50%-1.5px)] whitespace-nowrap transition bg-gray-400 rounded-full'
-            style='left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;'
-          />
-        {/if}
-      {/each}
+    {#each endValue ? [startValue, endValue] : [startValue] as value, index}
+      <span
+        role='slider'
+        class='range absolute block h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]'
+        class:active={focus && activeHandle === index}
+        class:press={handlePressed && activeHandle === index}
+        data-handle={index}
+        on:blur={handleSliderBlur}
+        on:focus={() => handleSliderFocus(index)}
+        style='left: {$springPositions[index]}%; z-index: {activeHandle === index ? 3 : 2}'
+        aria-valuemin={range === true && index === 1 ? startValue : minNum}
+        aria-valuemax={range === true && index === 0 ? endValue : maxNum}
+        aria-valuenow={value}
+        aria-valuetext={value?.toString()}
+        aria-orientation='horizontal'
+        aria-disabled={disabled}
+        {disabled}
+        tabindex='{ disabled ? -1 : 0 }'
+      > 
+
+        <span class='handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400' />
+
+        <span class='absolute left-0 bottom-1 block rounded-full h-full w-full border border-black bg-white' />
+
+        <span class={cn(
+          'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
+          'py-1 px-1.5 text-sm text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white',
+          {
+            '-translate-y-1.5': !focus || activeHandle !== index,
+          }
+        )}>
+          {value}
+
+          {#if suffix}
+            <span class='floating-suffix'>{suffix}</span>
+          {/if}
+        </span>
+      </span>
+    {/each}
+
+    {#if range}
+      <span
+        class='rangeBar absolute block transition duration-200 h-2 top-0 select-none z-[1] bg-black'
+        style='left: {rangeStart($springPositions)}%; right: {rangeEnd($springPositions)}%' />
     {/if}
 
-    <small class='absolute bottom-full right-0 mb-2 whitespace-nowrap'>
-      {maxNum}
-      
-      {#if suffix}
-        <span class='pipVal-suffix'>{suffix}</span>
-      {/if}
-    </small>
+    <div 
+      class='absolute h-2 left-0 right-0' 
+      class:disabled
+      class:focus 
+    >
+      <small class='absolute bottom-full left-0 -translate-x-1/2 mb-3 whitespace-nowrap'>
+        {minNum}
+        
+        {#if suffix}
+          <span class='pipVal-suffix'>{suffix}</span>
+        {/if}
+      </small>
 
+      {#if discrete}
+        {#each Array.from({ length: pipCount + 1 }) as _, i}
+          {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
+            <span
+              class='absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-black/50'
+              style='left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;'
+            />
+          {/if}
+        {/each}
+      {/if}
+
+      <small class='absolute bottom-full right-0 translate-x-1/2 mb-3 whitespace-nowrap'>
+        {maxNum}
+        
+        {#if suffix}
+          <span class='pipVal-suffix'>{suffix}</span>
+        {/if}
+      </small>
+
+    </div>
   </div>
-</div>
+</label>
 
 <svelte:window
   on:mousedown={bodyInteractStart}
