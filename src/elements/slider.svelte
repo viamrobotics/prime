@@ -11,7 +11,7 @@
   export let slider: HTMLElement
 
   // range slider props
-  export let range: string | boolean
+  export let range: string | boolean = false
   export let min: string
   export let max: string
   export let step: string
