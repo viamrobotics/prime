@@ -5,6 +5,7 @@ import Badge from './elements/badge.svelte'
 import Breadcrumbs from './elements/breadcrumbs.svelte'
 import Button from './elements/button.svelte'
 import Collapse from './elements/collapse.svelte'
+import Dropdown from './elements/dropdown.svelte'
 import Icon from './elements/icon.svelte'
 import Input from './elements/input.svelte'
 import Notify from './elements/notify.svelte'
@@ -26,6 +27,7 @@ const elements = {
   'breadcrumbs': Breadcrumbs,
   'button': Button,
   'collapse': Collapse,
+  'dropdown': Dropdown,
   'icon': Icon,
   'input': Input,
   'notify': Notify,
@@ -48,6 +50,7 @@ let warn = false
 for (const [name, element] of Object.entries(elements)) {
   if (customElements.get(`v-${name}`) === undefined) {
     customElements.define(`v-${name}`, element as unknown as CustomElementConstructor)
+    console.log(customElements.get(`v-${name}`))
   } else {
     warn = true
   }

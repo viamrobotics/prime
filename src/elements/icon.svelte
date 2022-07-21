@@ -6,7 +6,6 @@ import { addStyles } from '../lib/index'
 
 type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl'
 
-
 export let name = ''
 export let size: Size = 'base'
 

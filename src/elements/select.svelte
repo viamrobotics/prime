@@ -18,7 +18,7 @@ let input: HTMLSelectElement
 let parsedOptions: string[]
 let selectedOption: string
 
-const widthClasses = 'max-w-[14rem] w-full';
+const widthClasses = 'max-w-[14rem] w-full'
 
 $: parsedOptions = options.split(',').map((str) => str.trim())
 $: selectedOption = parsedOptions.find(opt => opt === value) ?? ''

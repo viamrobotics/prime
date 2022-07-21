@@ -22,6 +22,7 @@ v-tooltip {
   display: block;
 }
 
+v-dropdown,
 v-table,
 v-th,
 v-tr,
