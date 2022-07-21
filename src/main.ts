@@ -50,7 +50,6 @@ let warn = false
 for (const [name, element] of Object.entries(elements)) {
   if (customElements.get(`v-${name}`) === undefined) {
     customElements.define(`v-${name}`, element as unknown as CustomElementConstructor)
-    console.log(customElements.get(`v-${name}`))
   } else {
     warn = true
   }
