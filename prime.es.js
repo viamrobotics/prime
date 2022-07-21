@@ -853,7 +853,7 @@ function Tl(t) {
   };
 }
 function Fl(t, e, l) {
-  let { type: n = "text" } = e, { placeholder: s = "" } = e, { readonly: i = void 0 } = e, { label: r = "" } = e, { value: a = "" } = e, { step: o = "1" } = e, { labelposition: f = "top" } = e, d, m, c, _;
+  let { type: n = "text" } = e, { placeholder: s = "" } = e, { readonly: i = "false" } = e, { label: r = "" } = e, { value: a = "" } = e, { step: o = "1" } = e, { labelposition: f = "top" } = e, d, m, c, _;
   J();
   const w = (p) => {
     p.preventDefault(), p.stopImmediatePropagation(), l(0, a = m.value), ee(d, "input", { value: a });
