@@ -45,6 +45,7 @@
   $: stepNum = Number.parseFloat(step || '1')
   $: startValue = start || value ? Number.parseFloat(start || value) : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2
   $: endValue = end ? Number.parseFloat(end) : undefined
+  $: range = typeof range === 'string' ? range : end !== undefined
 
   // state management
   let valueLength = 0
@@ -469,8 +470,9 @@
 
     {#if range}
       <span
-        class='rangeBar absolute block transition duration-200 h-2 top-0 select-none z-[1] bg-black'
-        style='left: {rangeStart($springPositions)}%; right: {rangeEnd($springPositions)}%' />
+        class='absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-black'
+        style='left: {rangeStart($springPositions)}%; right: {rangeEnd($springPositions)}%'
+      />
     {/if}
 
     <div 

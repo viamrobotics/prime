@@ -67,7 +67,7 @@ For user triggered actions
 
 <Canvas>
   <Story
-    name='Multivalue'
+    name='Range'
     args={{
       min: 0,
       max: 100,
@@ -83,6 +83,50 @@ For user triggered actions
         step='${step}'
         start='${start}'
         end='${end}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Min range'
+    args={{
+      range: 'min',
+      min: 0,
+      max: 100,
+      value: 30,
+      step: 10,
+    }}
+  >
+    {({ range, min, max, step, value }) => `
+      <v-slider
+        range='${range}'
+        max='${max}'
+        step='${step}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Max range'
+    args={{
+      range: 'max',
+      min: 0,
+      max: 100,
+      value: 70,
+      step: 10,
+    }}
+  >
+    {({ range, min, max, step, value }) => `
+      <v-slider
+        range='${range}'
+        max='${max}'
+        step='${step}'
+        value='${value}'
       />
     `}
   </Story>
