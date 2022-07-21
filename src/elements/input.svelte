@@ -10,7 +10,7 @@ type Types = 'text' | 'email' | 'number'
 
 export let type: Types = 'text'
 export let placeholder = ''
-export let readonly: undefined | '' | 'readonly' = undefined
+export let readonly: undefined | '' | 'readonly' | 'false' = 'false'
 export let label = ''
 export let value = ''
 export let step = '1'
