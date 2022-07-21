@@ -98,7 +98,7 @@ const main = async () => {
     const file = read('prime/iframe.html')
       // Add production prime config
       .replace('<head>', `<head><script type="module">window.PRIME_CONFIG = { base: '/prime' }</script>`)
-      .replace('<script type="module" src="src/elements/index.ts"></script>', '<script type="module" src="prime.es.js"></script>')
+      .replace('<script type="module" src="src/main.ts"></script>', '<script type="module" src="prime.es.js"></script>')
     write('prime/iframe.html', file)
   }
 

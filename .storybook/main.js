@@ -24,6 +24,7 @@ module.exports = {
   },
   async viteFinal(config) {
     const index = config.plugins.findIndex(({name}) => name === 'vite-plugin-svelte')
+    console.log(index, config.plugins[index])
     config.plugins.splice(index, 1)
 
     config.plugins.push(

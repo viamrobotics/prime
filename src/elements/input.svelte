@@ -3,7 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles, dispatch } from '../../lib/index'
+import { addStyles, dispatch } from '../lib/index'
 
 type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number'
@@ -62,7 +62,7 @@ const increment = (direction: 1 | -1) => {
     {value}
     readonly={isReadonly}
     bind:this={input}
-    class='py-1.5 px-2.5 border text-xs border-black bg-white outline-none'
+    class='w-full py-1.5 px-2.5 border text-xs border-black bg-white outline-none appearance-none'
     on:input={handleInput}
   />
 
@@ -83,9 +83,11 @@ const increment = (direction: 1 | -1) => {
 </label>
 
 <style>
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input[type=number] {
