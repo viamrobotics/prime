@@ -3,7 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles, dispatch } from '../../lib/index'
+import { addStyles, dispatch } from '../lib/index'
 
 type LabelPosition = 'top' | 'left'
 
@@ -18,7 +18,7 @@ let input: HTMLSelectElement
 let parsedOptions: string[]
 let selectedOption: string
 
-const widthClasses = 'max-w-[14rem] w-full';
+const widthClasses = 'max-w-[14rem] w-full'
 
 $: parsedOptions = options.split(',').map((str) => str.trim())
 $: selectedOption = parsedOptions.find(opt => opt === value) ?? ''
@@ -46,7 +46,7 @@ const handleInput = (event: Event) => {
 
   <select
     bind:this={input}
-    class={cx(widthClasses, 'py-1 px-2.5 text-xs border border-black')}
+    class={cx(widthClasses, 'py-1 px-2.5 text-xs border border-black appearance-none rounded-none')}
     on:input={handleInput}
   >
     <option value=''>
@@ -61,25 +61,22 @@ const handleInput = (event: Event) => {
 </label>
 
 <style>
-  label {
-    --select-chevron-color: black;
-    --select-chevron-size: 15px;
-  }
 
-  label::after {
-    content: '';
-    position: absolute;
-    background-color: var(--select-chevron-color);
-    clip-path: polygon(25% 25%, 17.5% 32.5%, 40% 55%, 50% 65%, 60% 55%, 82.5% 32.5%, 75% 25%, 50% 50%);
-    width: var(--select-chevron-size);
-    height: var(--select-chevron-size);
-    right: 2px;
-    bottom: 2px;
-  }
+label {
+  --select-chevron-color: black;
+  --select-chevron-size: 15px;
+}
 
-  select {
-    -webkit-appearance: none;
-    border-radius: 0;
-  }
+label::after {
+  content: '';
+  position: absolute;
+  background-color: var(--select-chevron-color);
+  clip-path: polygon(25% 25%, 17.5% 32.5%, 40% 55%, 50% 65%, 60% 55%, 82.5% 32.5%, 75% 25%, 50% 50%);
+  width: var(--select-chevron-size);
+  height: var(--select-chevron-size);
+  right: 2px;
+  bottom: 2px;
+}
+
 </style>
   

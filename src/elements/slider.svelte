@@ -1,28 +1,11 @@
 <svelte:options tag='v-slider' />
 
-<style>
-
-.slider .range:hover .handle-bg {
-  transform: scale(1.5);
-}
-
-.slider .range.active .handle-bg {
-  transform: scale(2.0);
-}
-
-.slider .range.active .floating,
-.slider .range:hover .floating {
-  opacity: 1;
-}
-
-</style>
-
 <script lang='ts'>
   import { spring } from 'svelte/motion'
   import type { Spring } from 'svelte/motion'
   import cn from 'classnames'
-  import { clamp, percentOf } from '../../lib/math'
-  import { addStyles, dispatch } from '../../lib/index'
+  import { clamp, percentOf } from '../lib/math'
+  import { addStyles, dispatch } from '../lib/index'
 
   // dom references
   export let slider: HTMLElement
@@ -535,3 +518,20 @@
   on:touchend={bodyTouchEnd}
   on:keydown={bodyKeyDown}
 />
+
+<style>
+
+.slider .range:hover .handle-bg {
+  transform: scale(1.5);
+}
+
+.slider .range.active .handle-bg {
+  transform: scale(2.0);
+}
+
+.slider .range.active .floating,
+.slider .range:hover .floating {
+  opacity: 1;
+}
+
+</style>

@@ -2,7 +2,7 @@
 
 <script lang='ts'>
 
-import { addStyles } from '../../lib/index'
+import { addStyles } from '../lib/index'
 
 export let crumbs = ''
 

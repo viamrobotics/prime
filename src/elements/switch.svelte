@@ -3,7 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles, dispatch } from '../../lib/index'
+import { addStyles, dispatch } from '../lib/index'
 
 export let label = ''
 export let name = ''
