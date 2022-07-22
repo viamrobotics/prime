@@ -17,24 +17,23 @@ module.exports = {
     builder: '@storybook/builder-vite'
   },
   svelteOptions: {
-    preprocess
+    preprocess,
+    compilerOptions: { customElement: true },
   },
   features: {
     storyStoreV7: true
   },
   async viteFinal(config) {
-    const index = config.plugins.findIndex(({name}) => name === 'vite-plugin-svelte')
-    config.plugins.splice(index, 1)
-
-    config.plugins.push(
-      svelte({
-        compilerOptions: { customElement: true },
-        preprocess
-      })
-    )
-
     return mergeConfig(config, {
-      base: process.env.NODE_ENV !== 'development' ? '/prime/' : '/'
+      plugins: [
+        svelte({
+          compilerOptions: {
+            customElement: true
+          },
+          preprocess
+        }),
+      ],
+      base: process.env.NODE_ENV === 'development' ? '/' : '/prime/'
     })
   },
 }

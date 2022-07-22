@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "type": "commonjs",
   "files": [
     "dist"
