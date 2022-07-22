@@ -11,11 +11,18 @@
     </script>
 
     <script type="module" src="../dist/prime.es.js"></script>
-    <!-- <script type="module" src="./main.js"></script> -->
+    <script type="module" src="../dist/prime.es.js"></script>
+    <script type="module">
+      import '../dist/prime.es.js'
+      import '../dist/prime.es.js'
+      console.log('hi')
+    </script>
   </head>
   <body>
     <div id="app"></div>
-    <v-input />
+    <v-input label="test"></v-input>
+    <v-badge label="hi"></v-badge>
+
 
     <script>
       document.querySelector('v-input').addEventListener('input', (e) => {
