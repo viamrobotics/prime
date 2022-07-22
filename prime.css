@@ -53,6 +53,12 @@ v-thead,
 .icon-warning:before {
   content: "\e916";
 }
+.icon-disconnected:before {
+  content: "\e919";
+}
+.icon-connected:before {
+  content: "\e91a";
+}
 .icon-download:before {
   content: "\e913";
 }
