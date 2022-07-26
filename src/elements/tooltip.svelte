@@ -59,6 +59,7 @@ addStyles()
       bg-white
       text-black
       text-left
+      text-xs
       p-3
       border
       z-10
