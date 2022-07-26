@@ -3,7 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles } from '../../lib/index'
+import { addStyles } from '../lib/index'
 
 export let label = ''
 

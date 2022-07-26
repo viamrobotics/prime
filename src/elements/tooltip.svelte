@@ -4,7 +4,7 @@
 
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 
-import { addStyles } from '../../lib/index'
+import { addStyles } from '../lib/index'
 
 type Locations = 'top' | 'bottom' | 'right' | 'left'
 

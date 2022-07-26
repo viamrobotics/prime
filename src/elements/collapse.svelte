@@ -3,7 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles, dispatch } from '../../lib/index'
+import { addStyles, dispatch } from '../lib/index'
 
 export let title = ''
 export let open = false
@@ -23,7 +23,10 @@ const handleClick = (event: Event) => {
 
 </script>
 
-<div bind:this={root} class='relative w-full overflow-hidden'>
+<div
+  bind:this={root}
+  class='relative w-full overflow-hidden'
+>
   <div
     class='w-full py-1.5 px-4 flex items-center justify-between border text-black border-black bg-white cursor-pointer'
     on:click={handleClick}

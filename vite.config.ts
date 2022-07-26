@@ -20,7 +20,7 @@ export default defineConfig({
     target: 'esnext',
     assetsInlineLimit: 0,
     lib: {
-      entry: path.resolve(__dirname, 'src/elements/index.ts'),
+      entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'Prime',
       fileName: (format) => `prime.${format}.js`
     },

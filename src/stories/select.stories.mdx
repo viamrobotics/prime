@@ -16,7 +16,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'The list of options',
       table: { defaultValue: { summary: '' } }
     },
-    selected: {
+    value: {
       description: 'The selected value',
       table: { defaultValue: { summary: '' } }
     },
@@ -40,15 +40,34 @@ For user triggered actions
     args={{
       label: 'Your options',
       options: 'Option 1, Option 2, Option 3',
-      selected: '',
       placeholder: "Some placeholder..."
     }}
   >
-    {({ label, options, selected, placeholder }) => `
+    {({ label, options, placeholder }) => `
       <v-select
         label='${label}'
         options='${options}'
-        selected='${selected}'
+        placeholder='${placeholder}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With value'
+    args={{
+      label: 'Your options',
+      options: 'Option 1, Option 2, Option 3',
+      value: 'Option 3',
+      placeholder: "Some placeholder..."
+    }}
+  >
+    {({ label, options, value, placeholder }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        value='${value}'
         placeholder='${placeholder}'
       />
     `}
