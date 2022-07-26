@@ -18,6 +18,12 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       options: ['primary', 'success', 'danger', 'outline-danger'],
       table: { defaultValue: { summary: 'primary' } }
     },
+    type: {
+      description: 'The type attribute for the button',
+      control: 'select',
+      options: [ 'button', 'submit', 'reset'],
+      table: { defaultValue: { summary: 'button' } }
+    },
   }}
 />
 

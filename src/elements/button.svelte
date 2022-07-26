@@ -8,6 +8,7 @@ import { addStyles } from '../lib/index'
 type Variants = 'primary' | 'danger' | 'outline-danger' | 'success'
 
 export let disabled: 'true' | 'false' = 'false'
+export let type: 'button' | 'submit' | 'reset' = 'button'
 export let variant: Variants = 'primary'
 export let label = ''
 export let icon = ''
@@ -17,7 +18,7 @@ addStyles()
 </script>
 
 <button
-  type='button'
+  type={type}
   class={cx('flex items-center gap-1.5 py-1.5 px-2 text-xs border', {
     'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true',
     'bg-white border-black': variant === 'primary',
