@@ -2,27 +2,70 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
+import { computePosition, flip, shift, offset } from '@floating-ui/dom';
+
 import { addStyles } from '../lib/index'
 
 type Locations = 'top' | 'bottom' | 'right' | 'left'
 
 export let text = ''
 export let location: Locations = 'top'
+let container: HTMLElement
+let tooltip: HTMLElement
+
+let invisible = true
+
+let x = 0
+let y = 0
+
+const recalculateStyle = async () => {
+  const position = await computePosition(container, tooltip, {
+    placement: location,
+    middleware: [flip(), shift({ padding: 5 }), offset(10)]
+  })
+
+  x = position.x
+  y = position.y
+}
+
+const handleMouseEnter = async () => {
+  await recalculateStyle()
+  invisible = false
+}
+
+const handleMouseLeave = () => {
+  invisible = true
+}
 
 addStyles()
 
 </script>
 
-<div class='relative inline-block'>
+<div
+  bind:this={container}
+  class="relative"
+  aria-describedby="tooltip"
+  on:mouseenter={handleMouseEnter}
+  on:mouseleave={handleMouseLeave}
+>
   <slot />
-  <span 
-    class={cx('invisible bg-white text-black text-left p-3 border absolute z-10 min-w-[200px] group-hover:visible after:absolute after:-ml-2 after:border-4 after:border-solid after:border-transparent', {
-      'bottom-[125%] left-[-80%] after:border-t-black after:top-[100%] after:left-[13.5%]': location === 'top',
-      'top-[125%] left-[-80%] after:border-b-black after:bottom-[100%] after:left-[13.5%]': location === 'bottom',
-      'left-[170%] bottom-0 after:border-r-black after:bottom-[83%] after:left-[0%]': location === 'right',
-      'right-[165%] after:border-l-black after:bottom-[83%] after:right-[-8%]': location === 'left',
-    })}>
+  <div
+    bind:this={tooltip}
+    role="tooltip"
+    class={`
+      absolute
+      top-0
+      left-0
+      bg-white
+      text-black
+      text-left
+      p-3
+      border
+      z-10
+    `}
+    class:invisible={invisible}
+    style='transform: translate({x}px, {y}px);'
+    >
     {text}
-  </span>
+  </div>
 </div>
