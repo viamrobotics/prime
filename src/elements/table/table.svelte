@@ -8,6 +8,6 @@ addStyles()
 
 </script>
 
-<table class="bg-white table-fixed w-full">
+<table class="bg-white table-fixed text-xs w-full">
   <slot />
 </table>
