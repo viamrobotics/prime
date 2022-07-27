@@ -494,13 +494,13 @@ function st(t) {
   let e, n;
   return {
     c() {
-      e = k("i"), u(e, "aria-hidden", ""), u(e, "class", n = "icon-" + t[3] + " text-base");
+      e = k("i"), u(e, "aria-hidden", ""), u(e, "class", n = "icon-" + t[4] + " text-base");
     },
     m(l, i) {
       P(l, e, i);
     },
     p(l, i) {
-      i & 8 && n !== (n = "icon-" + l[3] + " text-base") && u(e, "class", n);
+      i & 16 && n !== (n = "icon-" + l[4] + " text-base") && u(e, "class", n);
     },
     d(l) {
       l && T(e);
@@ -508,27 +508,27 @@ function st(t) {
   };
 }
 function cl(t) {
-  let e, n, l, i, s = t[3] && st(t);
+  let e, n, l, i, s = t[4] && st(t);
   return {
     c() {
-      e = k("button"), s && s.c(), n = x(), l = D(t[2]), this.c = y, u(e, "type", "button"), u(e, "class", i = N("flex items-center gap-1.5 py-1.5 px-2 text-xs border", {
+      e = k("button"), s && s.c(), n = x(), l = D(t[3]), this.c = y, u(e, "type", t[1]), u(e, "class", i = N("flex items-center gap-1.5 py-1.5 px-2 text-xs border", {
         "cursor-not-allowed opacity-50 pointer-events-none": t[0] === "true",
-        "bg-white border-black": t[1] === "primary",
-        "bg-red/90 text-white border-red/90": t[1] === "danger",
-        "bg-green/90 border-green/90 text-white": t[1] === "success",
-        "bg-white border-red/90 text-red/90": t[1] === "outline-danger"
+        "bg-white border-black": t[2] === "primary",
+        "bg-red/90 text-white border-red/90": t[2] === "danger",
+        "bg-green/90 border-green/90 text-white": t[2] === "success",
+        "bg-white border-red/90 text-red/90": t[2] === "outline-danger"
       }));
     },
     m(r, o) {
       P(r, e, o), s && s.m(e, null), w(e, n), w(e, l);
     },
     p(r, [o]) {
-      r[3] ? s ? s.p(r, o) : (s = st(r), s.c(), s.m(e, n)) : s && (s.d(1), s = null), o & 4 && W(l, r[2]), o & 3 && i !== (i = N("flex items-center gap-1.5 py-1.5 px-2 text-xs border", {
+      r[4] ? s ? s.p(r, o) : (s = st(r), s.c(), s.m(e, n)) : s && (s.d(1), s = null), o & 8 && W(l, r[3]), o & 2 && u(e, "type", r[1]), o & 5 && i !== (i = N("flex items-center gap-1.5 py-1.5 px-2 text-xs border", {
         "cursor-not-allowed opacity-50 pointer-events-none": r[0] === "true",
-        "bg-white border-black": r[1] === "primary",
-        "bg-red/90 text-white border-red/90": r[1] === "danger",
-        "bg-green/90 border-green/90 text-white": r[1] === "success",
-        "bg-white border-red/90 text-red/90": r[1] === "outline-danger"
+        "bg-white border-black": r[2] === "primary",
+        "bg-red/90 text-white border-red/90": r[2] === "danger",
+        "bg-green/90 border-green/90 text-white": r[2] === "success",
+        "bg-white border-red/90 text-red/90": r[2] === "outline-danger"
       })) && u(e, "class", i);
     },
     i: y,
@@ -539,10 +539,10 @@ function cl(t) {
   };
 }
 function ul(t, e, n) {
-  let { disabled: l = "false" } = e, { variant: i = "primary" } = e, { label: s = "" } = e, { icon: r = "" } = e;
-  return U(), t.$$set = (o) => {
-    "disabled" in o && n(0, l = o.disabled), "variant" in o && n(1, i = o.variant), "label" in o && n(2, s = o.label), "icon" in o && n(3, r = o.icon);
-  }, [l, i, s, r];
+  let { disabled: l = "false" } = e, { type: i = "button" } = e, { variant: s = "primary" } = e, { label: r = "" } = e, { icon: o = "" } = e;
+  return U(), t.$$set = (a) => {
+    "disabled" in a && n(0, l = a.disabled), "type" in a && n(1, i = a.type), "variant" in a && n(2, s = a.variant), "label" in a && n(3, r = a.label), "icon" in a && n(4, o = a.icon);
+  }, [l, i, s, r, o];
 }
 class Ut extends X {
   constructor(e) {
@@ -552,13 +552,14 @@ class Ut extends X {
       customElement: !0
     }, ul, cl, G, {
       disabled: 0,
-      variant: 1,
-      label: 2,
-      icon: 3
+      type: 1,
+      variant: 2,
+      label: 3,
+      icon: 4
     }, null), e && (e.target && P(e.target, this, e.anchor), e.props && (this.$set(e.props), v()));
   }
   static get observedAttributes() {
-    return ["disabled", "variant", "label", "icon"];
+    return ["disabled", "type", "variant", "label", "icon"];
   }
   get disabled() {
     return this.$$.ctx[0];
@@ -566,20 +567,26 @@ class Ut extends X {
   set disabled(e) {
     this.$$set({ disabled: e }), v();
   }
-  get variant() {
+  get type() {
     return this.$$.ctx[1];
+  }
+  set type(e) {
+    this.$$set({ type: e }), v();
+  }
+  get variant() {
+    return this.$$.ctx[2];
   }
   set variant(e) {
     this.$$set({ variant: e }), v();
   }
   get label() {
-    return this.$$.ctx[2];
+    return this.$$.ctx[3];
   }
   set label(e) {
     this.$$set({ label: e }), v();
   }
   get icon() {
-    return this.$$.ctx[3];
+    return this.$$.ctx[4];
   }
   set icon(e) {
     this.$$set({ icon: e }), v();
