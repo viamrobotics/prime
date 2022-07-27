@@ -56,6 +56,12 @@ v-thead,
 .icon-disconnected:before {
   content: "\e919";
 }
+.icon-send:before {
+  content: "\e91b";
+}
+.icon-undo:before {
+  content: "\e91c";
+}
 .icon-connected:before {
   content: "\e91a";
 }
