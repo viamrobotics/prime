@@ -6,31 +6,8 @@
   font-family: 'Space Mono', monospace;
 }
 
-
-v-badge,
-v-breadcrumbs,
-v-button,
-v-collapse,
-v-input,
-v-notify,
-v-radio,
-v-select,
-v-slider,
-v-switch,
-v-tabs,
-v-tooltip {
-  display: block;
-}
-
-v-dropdown,
-v-table,
-v-th,
-v-tr,
-v-td,
-v-tbody,
-v-thead,
 :host {
-  display: contents;
+  display: contents
 }
 
 [class^="icon-"], [class*=" icon-"] {
