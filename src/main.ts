@@ -1,4 +1,10 @@
 import '../prime.css'
+/**
+ * @TODO remove once safari support is widespread enough (~90-95% total support)
+ * See: https://caniuse.com/mdn-api_elementinternals
+ * and: https://bugs.webkit.org/show_bug.cgi?id=197960
+ */
+import 'element-internals-polyfill'
 import { loadFonts } from './lib'
 
 if (customElements.get('v-badge')) {
@@ -8,11 +14,11 @@ if (customElements.get('v-badge')) {
 
   import('./elements/badge.svelte')
   import('./elements/breadcrumbs.svelte')
-  import('./elements/button.svelte')
+  import('./elements/button/button')
   import('./elements/collapse.svelte')
   import('./elements/dropdown.svelte')
   import('./elements/icon.svelte')
-  import('./elements/input.svelte')
+  import('./elements/input/input')
   import('./elements/notify.svelte')
   import('./elements/radio.svelte')
   import('./elements/select.svelte')

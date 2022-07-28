@@ -1,9 +1,10 @@
-<svelte:options immutable={true} tag='v-button' />
+<svelte:options immutable={true} tag='v-button-internal' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles } from '../lib/index'
+import { get_current_component } from 'svelte/internal'
+import { addStyles } from '../../lib/index'
 
 type Variants = 'primary' | 'danger' | 'outline-danger' | 'success'
 
@@ -15,10 +16,24 @@ export let icon = ''
 
 addStyles()
 
+// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
+const component = get_current_component() as HTMLElement & { internals: ElementInternals }
+const internals = component.attachInternals()
+
+const handleClick = () => {
+  const { form } = internals
+
+  if (form?.requestSubmit) {
+    form.requestSubmit()
+  } else {
+    form?.submit()
+  }
+}
+
 </script>
 
 <button
-  type={type}
+  {type}
   class={cx('flex items-center gap-1.5 py-1.5 px-2 text-xs border', {
     'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true',
     'bg-white border-black': variant === 'primary',
@@ -26,6 +41,7 @@ addStyles()
     'bg-green/90 border-green/90 text-white': variant === 'success',
     'bg-white border-red/90 text-red/90': variant === 'outline-danger',
   })}
+  on:click={handleClick}
 >
   {#if icon}
     <i
