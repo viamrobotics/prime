@@ -1,9 +1,9 @@
-<svelte:options immutable={true} tag='v-button' />
+<svelte:options immutable={true} tag='v-button-internal' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles } from '../lib/index'
+import { addStyles } from '../../lib/index'
 
 type Variants = 'primary' | 'danger' | 'outline-danger' | 'success'
 
@@ -18,7 +18,7 @@ addStyles()
 </script>
 
 <button
-  type={type}
+  {type}
   class={cx('flex items-center gap-1.5 py-1.5 px-2 text-xs border', {
     'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true',
     'bg-white border-black': variant === 'primary',

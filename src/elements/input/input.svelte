@@ -1,9 +1,9 @@
-<svelte:options immutable={true} tag='v-input' />
+<svelte:options tag='v-input-internal' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles, dispatch } from '../lib/index'
+import { addStyles, dispatch } from '../../lib/index'
 
 type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number'
@@ -14,6 +14,7 @@ export let readonly: undefined | '' | 'readonly' | 'false' = 'false'
 export let label = ''
 export let value = ''
 export let step = '1'
+export let name = ''
 export let labelposition: LabelPosition = 'top'
 
 let root: HTMLElement
@@ -59,6 +60,7 @@ const increment = (direction: 1 | -1) => {
   <input
     {type}
     {placeholder}
+    {name}
     {value}
     readonly={isReadonly}
     bind:this={input}
