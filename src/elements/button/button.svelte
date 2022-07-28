@@ -3,6 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames'
+import { get_current_component } from 'svelte/internal'
 import { addStyles } from '../../lib/index'
 
 type Variants = 'primary' | 'danger' | 'outline-danger' | 'success'
@@ -15,6 +16,18 @@ export let icon = ''
 
 addStyles()
 
+const component = get_current_component()
+
+const handleClick = () => {
+  const { form } = component.internals
+
+  if (form.requestSubmit) {
+    form.requestSubmit()
+  } else {
+    form.submit()
+  }
+}
+
 </script>
 
 <button
@@ -26,6 +39,7 @@ addStyles()
     'bg-green/90 border-green/90 text-white': variant === 'success',
     'bg-white border-red/90 text-red/90': variant === 'outline-danger',
   })}
+  on:click={handleClick}
 >
   {#if icon}
     <i

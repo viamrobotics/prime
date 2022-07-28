@@ -4,6 +4,9 @@
 
 import cx from 'classnames'
 import { addStyles, dispatch } from '../../lib/index'
+import { get_current_component } from 'svelte/internal'
+
+const component = get_current_component()
 
 type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number'
@@ -30,13 +33,19 @@ addStyles()
 const handleInput = (event: Event) => {
   event.preventDefault()
   event.stopImmediatePropagation()
+
   value = input.value
+
+  component.internals.setFormValue(value)
   dispatch(root, 'input', { value })
 }
 
 const increment = (direction: 1 | -1) => {
   const numberValue = Number.parseFloat(value || '0')
+
   value = input.value = String(numberValue + stepNumber * direction)
+
+  component.internals.setFormValue(value)
   dispatch(root, 'input', { value })
 }
 
