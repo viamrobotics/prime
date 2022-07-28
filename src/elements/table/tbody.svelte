@@ -3,3 +3,9 @@
 <tbody>
   <slot />
 </tbody>
+
+<style>
+  :host {
+    display: contents
+  }
+</style>
