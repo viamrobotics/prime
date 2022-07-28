@@ -16,15 +16,17 @@ export let icon = ''
 
 addStyles()
 
-const component = get_current_component()
+// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
+const component = get_current_component() as HTMLElement & { internals: ElementInternals }
+const internals = component.attachInternals()
 
 const handleClick = () => {
-  const { form } = component.internals
+  const { form } = internals
 
-  if (form.requestSubmit) {
+  if (form?.requestSubmit) {
     form.requestSubmit()
   } else {
-    form.submit()
+    form?.submit()
   }
 }
 

@@ -3,10 +3,12 @@
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles, dispatch } from '../../lib/index'
 import { get_current_component } from 'svelte/internal'
+import { addStyles, dispatch } from '../../lib/index'
 
-const component = get_current_component()
+// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
+const component = get_current_component() as HTMLElement & { internals: ElementInternals }
+const internals = component.attachInternals()
 
 type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number'
@@ -36,7 +38,7 @@ const handleInput = (event: Event) => {
 
   value = input.value
 
-  component.internals.setFormValue(value)
+  internals.setFormValue(value)
   dispatch(root, 'input', { value })
 }
 
@@ -45,7 +47,7 @@ const increment = (direction: 1 | -1) => {
 
   value = input.value = String(numberValue + stepNumber * direction)
 
-  component.internals.setFormValue(value)
+  internals.setFormValue(value)
   dispatch(root, 'input', { value })
 }
 
