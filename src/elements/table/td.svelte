@@ -10,6 +10,6 @@ addStyles()
 export let baseclass = ''
 </script>
 
-<td class={cx("p-2 overflow-hidden", baseclass)}>
+<td class={cx(['p-2 overflow-hidden', baseclass])}>
   <slot />
 </td>

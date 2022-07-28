@@ -9,6 +9,6 @@ addStyles()
 export let baseclass = ''
 </script>
 
-<th class={cx("p-2 text-neutral-600 font-normal overflow-hidden", baseclass)}>
+<th class={cx(['p-2 text-neutral-600 font-normal overflow-hidden', baseclass])}>
   <slot />
 </th>

@@ -2,7 +2,7 @@
 
 <script lang='ts'>
 
-import { computePosition, flip, shift, offset } from '@floating-ui/dom';
+import { computePosition, flip, shift, offset } from '@floating-ui/dom'
 
 import { addStyles } from '../lib/index'
 
@@ -21,7 +21,7 @@ let y = 0
 const recalculateStyle = async () => {
   const position = await computePosition(container, tooltip, {
     placement: location,
-    middleware: [flip(), shift({ padding: 5 }), offset(10)]
+    middleware: [flip(), shift({ padding: 5 }), offset(10)],
   })
 
   x = position.x

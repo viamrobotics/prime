@@ -9,6 +9,6 @@ addStyles()
 export let variant = ''
 </script>
 
-<table class={cx("bg-white text-xs w-full", {'table-fixed': variant === 'fixed'})}>
+<table class={cx('bg-white text-xs w-full', { 'table-fixed': variant === 'fixed' })}>
   <slot />
 </table>
