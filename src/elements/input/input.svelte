@@ -1,9 +1,14 @@
-<svelte:options immutable={true} tag='v-input' />
+<svelte:options immutable={true} tag='v-input-internal' />
 
 <script lang='ts'>
 
 import cx from 'classnames'
-import { addStyles, dispatch } from '../lib/index'
+import { get_current_component } from 'svelte/internal'
+import { addStyles, dispatch } from '../../lib/index'
+
+// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
+const component = get_current_component() as HTMLElement & { internals: ElementInternals }
+const internals = component.attachInternals()
 
 type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number'
@@ -14,6 +19,7 @@ export let readonly: undefined | '' | 'readonly' | 'false' = 'false'
 export let label = ''
 export let value = ''
 export let step = '1'
+export let name = ''
 export let labelposition: LabelPosition = 'top'
 
 let root: HTMLElement
@@ -29,13 +35,19 @@ addStyles()
 const handleInput = (event: Event) => {
   event.preventDefault()
   event.stopImmediatePropagation()
+
   value = input.value
+
+  internals.setFormValue(value)
   dispatch(root, 'input', { value })
 }
 
 const increment = (direction: 1 | -1) => {
   const numberValue = Number.parseFloat(value || '0')
+
   value = input.value = String(numberValue + stepNumber * direction)
+
+  internals.setFormValue(value)
   dispatch(root, 'input', { value })
 }
 
@@ -59,6 +71,7 @@ const increment = (direction: 1 | -1) => {
   <input
     {type}
     {placeholder}
+    {name}
     {value}
     readonly={isReadonly}
     bind:this={input}
