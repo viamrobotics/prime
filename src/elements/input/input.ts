@@ -8,15 +8,15 @@ class Input extends customElements.get('v-input-internal')! {
   override connectedCallback () {
     super.connectedCallback()
     this.internals.setFormValue(this.getAttribute('value'))
-    this.addEventListener('input', this.handleInput)
+    this.addEventListener('input', this.updateFormState)
   }
 
   override disconnectedCallback () {
     super.disconnectedCallback()
-    this.removeEventListener('input', this.handleInput)
+    this.removeEventListener('input', this.updateFormState)
   }
 
-  handleInput = (event: Event) => {
+  updateFormState = (event: Event) => {
     this.internals.setFormValue((event as unknown as CustomEvent<{ value: string }>).detail.value)
   }
 }
