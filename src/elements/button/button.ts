@@ -5,16 +5,6 @@ class Button extends customElements.get('v-button-internal')! {
 
   internals = this.attachInternals()
 
-  requestSubmit = () => {
-    const { form } = this.internals
-
-    if (form.requestSubmit) {
-      form.requestSubmit()
-    } else {
-      form.submit()
-    }
-  }
-
   override connectedCallback () {
     super.connectedCallback()
     this.addEventListener('click', this.requestSubmit)
@@ -23,6 +13,16 @@ class Button extends customElements.get('v-button-internal')! {
   override disconnectedCallback () {
     super.disconnectedCallback()
     this.removeEventListener('click', this.requestSubmit)
+  }
+
+  requestSubmit = () => {
+    const { form } = this.internals
+
+    if (form.requestSubmit) {
+      form.requestSubmit()
+    } else {
+      form.submit()
+    }
   }
 }
 
