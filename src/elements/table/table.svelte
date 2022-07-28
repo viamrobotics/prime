@@ -7,8 +7,16 @@ import { addStyles } from '../../lib/index'
 addStyles()
 
 export let variant = ''
+export let cols = ''
+
+const colSizes = cols.split(",").map(col => col.trim())
 </script>
 
 <table class={cx('bg-white text-xs w-full', { 'table-fixed': variant === 'fixed' })}>
+  <colgroup>
+    {#each colSizes as col}
+      <col style="width: {col};">
+    {/each}
+  </colgroup>
   <slot />
 </table>

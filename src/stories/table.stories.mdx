@@ -8,6 +8,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       control: { type: 'select' },
       options: ['fixed', 'auto'],
       table: { defaultValue: { summary: 'auto' } }
+    },
+    cols: {
+      description: 'Can force columns into certain sizes. Use a comma separated list, leaving an empty space if you wish to skip a column. Takes px and % values.',
+      control: { type: 'text' },
+      table: { defaultValue: { summary: '' } }
     }
   }}
 />
@@ -20,28 +25,32 @@ Used to tabular data.
   <Story
     name='Table'
     args={{
-      variant: 'auto'
+      variant: 'auto',
+      cols: '10%, 10%, 60%, 10%, 10%'
     }}
   >
-    {({ variant }) => `
-      <v-table variant="${variant}">
+    {({ variant, cols }) => `
+      <v-table variant="${variant}" cols="${cols}">
         <v-thead>
-          <v-th baseclass="bg-black">Name</v-th>
+          <v-th><input type="checkbox"></v-th>
+          <v-th>Name</v-th>
           <v-th>Address</v-th>
           <v-th>Overlylongunbrokenheader</v-th>
           <v-th>Phone</v-th>
         </v-thead>
-        <v-tbody>
+        <v-tbody class="text-center">
           <v-tr>
+            <v-td><input type="checkbox"></v-td>
             <v-td>John Connor</v-td>
             <v-td>42 Terminal Ave</v-td>
             <v-td>Someunbrokenlongtextthingamajig</v-td>
             <v-td>555-555-5555</v-td>
           </v-tr>
           <v-tr>
+            <v-td><input type="checkbox"></v-td>
             <v-td>P Sherman</v-td>
             <v-td>42 Wallaby Way</v-td>
-            <v-td baseclass="bg-green-200">x</v-td>
+            <v-td>x</v-td>
             <v-td>555-555-5555</v-td>
           </v-tr>
         </v-tbody>
