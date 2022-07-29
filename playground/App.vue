@@ -7,8 +7,17 @@ const value = ref('bob')
 </script>
 
 <template>
-  <div>
-    <v-button label="Hello" />
+  <div style="display: flex; flex-direction: column; gap: 0.5rem">
+    <div style="display: flex; gap: 0.5rem">
+      <v-button icon="send" label="Hello"></v-button>
+      <v-button icon="undo" label="Hello"></v-button>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem">
+      <v-button icon="send" label="Hello"></v-button>
+      <v-button icon="undo" label="Hello"></v-button>
+    </div>
+
     <v-input
       label="My input"
       :value="value"
@@ -16,4 +25,4 @@ const value = ref('bob')
     />
   </div>
 </template>
-l
+

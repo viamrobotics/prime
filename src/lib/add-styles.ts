@@ -1,25 +1,25 @@
-import { onMount } from 'svelte'
 import { get_current_component } from 'svelte/internal'
-import { base, query } from './config'
+import css from '../../prime.css'
 
-const link = document.createElement('link')
-link.rel = 'stylesheet'
-link.href = `${base ?? ''}/prime.css${query}`
+let sheet: CSSStyleSheet
+let fallback = false
+try {
+  sheet = new CSSStyleSheet();
+  // See https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/897
+  (sheet as unknown as { replaceSync(x: string): void }).replaceSync(css)
+} catch {
+  fallback = true
+}
 
 export const addStyles = () => {
   const element = get_current_component() as HTMLElement
-  
-  onMount(() => {
-    const originalDisplay = element.style.getPropertyValue('display')
-    element.style.setProperty('display', 'none')
-    const clone = link.cloneNode()
-    clone.addEventListener('load', () => {
-      if (originalDisplay) {
-        element.style.setProperty('display', originalDisplay)
-      } else {
-        element.style.removeProperty('display')
-      }
-    })
-    element.shadowRoot!.prepend(clone)
-  })
+
+  if (fallback) {
+    const style = document.createElement('style')
+    style.innerHTML = css
+    element.shadowRoot!.append(style)
+  } else {
+    // See https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/897
+    (element.shadowRoot as unknown as { adoptedStyleSheets: unknown[] }).adoptedStyleSheets = [sheet]
+  }
 }
