@@ -22,7 +22,7 @@
     "postbuild": "node ./scripts/postbuild",
     "serve": "vite preview --host",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "lint": "eslint --fix --ext .ts,.svelte, ./src/elements",
+    "lint": "eslint --ext .ts,.svelte, ./src/elements",
     "storybook": "start-storybook -p 6006",
     "storybook-docs": "start-storybook --docs --no-manager-cache",
     "build-storybook": "build-storybook --docs -o prime"

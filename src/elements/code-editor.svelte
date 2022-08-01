@@ -2,7 +2,9 @@
 
 <script lang='ts' context='module'>
 
-import type { Monaco } from '../lib/index'
+import { onMount, afterUpdate, onDestroy } from 'svelte'
+import { get_current_component } from 'svelte/internal'
+import type { Monaco, MonacoSupportedLanguages, MonacoSupportedThemes } from '../lib/index'
 
 interface Window extends globalThis.Window {
   require: ((dependencies: string[], callback: () => void) => void) & { config: (options: object) => void }
@@ -12,7 +14,7 @@ interface Window extends globalThis.Window {
   monaco: typeof Monaco
 }
 
-declare var window: Window
+declare const window: Window
 
 const loadedCallbacks = new Set<(monaco: typeof Monaco) => void>()
 const version = '0.33.0'
@@ -27,7 +29,7 @@ const proxy = URL.createObjectURL(new Blob([`
 `], { type: 'text/javascript' }))
 
 const handleLoad = () => {
-  window.require.config({ paths: { 'vs': `${monacoURL}/min/vs` }})
+  window.require.config({ paths: { 'vs': `${monacoURL}/min/vs` } })
   window.MonacoEnvironment = { getWorkerUrl: () => proxy }
 
   window.require(['vs/editor/editor.main'], () => {
@@ -48,20 +50,11 @@ document.head.append(script)
 
 <script lang='ts'>
 
-import { onMount, afterUpdate, onDestroy } from 'svelte'
-import { get_current_component } from 'svelte/internal'
-
 import {
   addStyles,
   dispatch,
   removeNewlineWhitespace
 } from '../lib/index'
-
-import type {
-  MonacoSupportedLanguages,
-  MonacoSupportedThemes
-} from '../lib/index'
-
 
 export let value: string
 export let language: MonacoSupportedLanguages
@@ -77,7 +70,9 @@ addStyles()
 const link = document.createElement('link')
 link.rel = 'stylesheet'
 link.href = `${monacoURL}/min/vs/editor/editor.main.min.css`
-get_current_component().shadowRoot.append(link)
+
+const component = get_current_component() as HTMLElement & { shadowRoot: ShadowRoot }
+component.shadowRoot.append(link)
 
 const setModel = () => {
   if (!editor) {
