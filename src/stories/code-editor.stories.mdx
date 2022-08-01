@@ -1,0 +1,27 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title='Elements/Code Editor'
+  parameters={{ }}
+  argTypes={{ }}
+/>
+
+# Code Editor
+
+Uses `monaco` for syntax-highlighting.
+
+<Canvas>
+  <Story
+    name='JSON editor'
+    args={{}}
+  >
+    {({  }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor 
+        value='{ foo: "bar" }'
+        language='json'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
