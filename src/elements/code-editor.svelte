@@ -9,7 +9,7 @@ import type { Monaco, MonacoSupportedLanguages, MonacoSupportedThemes } from '..
 interface Window extends globalThis.Window {
   require: ((dependencies: string[], callback: () => void) => void) & { config: (options: object) => void }
   MonacoEnvironment: {
-    getWorkerUrl(): unknown
+    getWorkerUrl(): string
   }
   monaco: typeof Monaco
 }
