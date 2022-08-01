@@ -12,6 +12,7 @@ dist
 dist-ssr
 prime
 *.local
+.storybook/workers
 
 # Editor directories and files
 .vscode/*

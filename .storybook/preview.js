@@ -14,5 +14,3 @@ export const parameters = {
   },
   inlineStories: true,
 }
-
-
