@@ -1,115 +1,175 @@
-<svelte:options immutable={true} tag="v-code-editor" />
+<svelte:options immutable tag='v-code-editor' />
 
-<script lang="ts">
-    import { afterUpdate, onDestroy, onMount } from "svelte";
+<script lang='ts' context='module'>
 
-    import {
-        addStyles,
-        dispatch,
-        monaco,
-        removeNewlineWhitespace,
-    } from "../lib/index";
-    
-    import type {
-        MonacoSupportedLanguages,
-        MonacoSupportedThemes,
-    } from "../lib/index";
+import { onMount, afterUpdate, onDestroy } from 'svelte'
+import { get_current_component } from 'svelte/internal'
+import type { Monaco, MonacoSupportedLanguages, MonacoSupportedThemes } from '../lib/index'
 
-    export let id: string;
-    export let value: string;
-    export let language: MonacoSupportedLanguages;
-    export let theme: MonacoSupportedThemes = "vs";
-    export let readonly: boolean = false;
-    export let minimap: boolean = false;
-    // export let getmodeluri: (id: string) => monaco.Uri;
-    // export let destroy: () => void;
+interface Window extends globalThis.Window {
+  require: ((dependencies: string[], callback: () => void) => void) & { config: (options: object) => void }
+  MonacoEnvironment: {
+    getWorkerUrl(): string
+  }
+  monaco: typeof Monaco
+}
 
-    let container: HTMLDivElement;
-    let editor: null | monaco.editor.IStandaloneCodeEditor = null;
+declare const window: Window
 
-    const setModel = () => {
-        const lastModel = editor?.getModel();
-        lastModel?.dispose();
+const loadedCallbacks = new Set<(monaco: typeof Monaco) => void>()
+const version = '0.33.0'
+const monacoURL = `https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/${version}`
 
-        // const uri = getmodeluri?.(id);
-        const model = monaco.editor.createModel(value, language /* , uri */);
+const proxy = URL.createObjectURL(new Blob([`
+  self.MonacoEnvironment = {
+    baseUrl: '${monacoURL}/min/'
+  };
+  importScripts('${monacoURL}/min/vs/base/worker/workerMain.js');
+  importScripts('${monacoURL}/min/vs/language/json/jsonWorker.min.js');
+`], { type: 'text/javascript' }))
 
-        console.log('model', model);
+const handleLoad = () => {
+  window.require.config({ paths: { 'vs': `${monacoURL}/min/vs` } })
+  window.MonacoEnvironment = { getWorkerUrl: () => proxy }
 
-        editor?.setModel(model);
-    };
-    
+  window.require(['vs/editor/editor.main'], () => {
+    for (const callback of loadedCallbacks) {
+      callback(window.monaco)
+    }
+  })
+}
 
-    addStyles();
+const script = document.createElement('script')
+script.addEventListener('load', handleLoad)
+script.async = true
+script.src = `${monacoURL}/min/vs/loader.js`
 
-    onMount(() => {
-        editor = monaco.editor.create(container, {
-            value,
-            language,
-            theme,
-            readOnly: readonly,
-            minimap: {
-                enabled: minimap,
-            },
-            scrollbar: {
-                verticalScrollbarSize: 3,
-                horizontalScrollbarSize: 3,
-                vertical: "auto",
-                horizontal: "auto",
-                alwaysConsumeMouseWheel: false,
-            },
-            scrollBeyondLastLine: false,
-        });
+document.head.append(script)
 
-        const element = editor?.getDomNode() ?? container;
+</script>
 
-        editor.onDidChangeModelContent(() =>
-            dispatch(element, "input", {
-                value: editor?.getValue(),
-            })
-        );
+<script lang='ts'>
 
-        editor.onDidBlurEditorWidget(() => {
-            const markers = monaco.editor.getModelMarkers({});
-            dispatch(element, "updateMarkers", { markers });
-            dispatch(element, "blur", { value: editor?.getValue() });
-        });
+import {
+  addStyles,
+  dispatch,
+  removeNewlineWhitespace
+} from '../lib/index'
 
-        editor.layout();
-        setModel();
+export let value: string
+export let language: MonacoSupportedLanguages
+export let theme: MonacoSupportedThemes = 'vs'
+export let readonly = false
+export let minimap = false
 
-        window.setTimeout(() => {
-            const markers = monaco.editor.getModelMarkers({});
-            dispatch(element, "updateMarkers", markers);
-        });
-    });
+let container: HTMLDivElement
+let editor: null | Monaco.editor.IStandaloneCodeEditor = null
 
-    onDestroy(() => {
-        const model = editor?.getModel();
-        model?.dispose();
+addStyles()
 
-        editor?.dispose();
-        // destroy?.();
-    });
+const link = document.createElement('link')
+link.rel = 'stylesheet'
+link.href = `${monacoURL}/min/vs/editor/editor.main.min.css`
 
-    afterUpdate(() => {
-        setModel();
+const component = get_current_component() as HTMLElement & { shadowRoot: ShadowRoot }
+component.shadowRoot.append(link)
 
-        let currentValue = editor?.getValue() ?? '';
+const setModel = () => {
+  if (!editor) {
+    return
+  }
 
-        const originalFormatted = removeNewlineWhitespace(value);
-        const updatedFormatted = removeNewlineWhitespace(currentValue);
+  const lastModel = editor.getModel()
+  lastModel?.dispose()
 
-        console.log('update', { originalFormatted, updatedFormatted })
+  // const uri = getmodeluri?.(id);
+  const model = window.monaco.editor.createModel(value, language /* , uri */)
 
-        if (updatedFormatted === originalFormatted) {
-            return;
-        }
+  console.log('model', model)
 
-        editor?.setValue(currentValue);
-    });
+  editor.setModel(model)
+}
+
+const init = (monaco: typeof Monaco) => {
+  editor = monaco.editor.create(container, {
+    value,
+    language,
+    theme,
+    readOnly: readonly,
+    minimap: {
+      enabled: minimap,
+    },
+    scrollbar: {
+      verticalScrollbarSize: 3,
+      horizontalScrollbarSize: 3,
+      vertical: 'auto',
+      horizontal: 'auto',
+      alwaysConsumeMouseWheel: false,
+    },
+    scrollBeyondLastLine: false,
+  })
+
+  const element = editor?.getDomNode() ?? container
+
+  editor.onDidChangeModelContent(() =>
+    dispatch(element, 'input', {
+      value: editor?.getValue(),
+    })
+  )
+
+  editor.onDidBlurEditorWidget(() => {
+    const markers = monaco.editor.getModelMarkers({})
+    dispatch(element, 'updateMarkers', { markers })
+    dispatch(element, 'blur', { value: editor?.getValue() })
+  })
+
+  editor.layout()
+  setModel()
+
+  window.setTimeout(() => {
+    const markers = monaco.editor.getModelMarkers({})
+    dispatch(element, 'updateMarkers', markers)
+  })
+}
+
+onMount(() => {
+  if (window.monaco) {
+    init(window.monaco)
+  } else {
+    loadedCallbacks.add(init)
+  }
+})
+
+afterUpdate(() => {
+  setModel()
+
+  const currentValue = editor?.getValue() ?? ''
+
+  const originalFormatted = removeNewlineWhitespace(value)
+  const updatedFormatted = removeNewlineWhitespace(currentValue)
+
+  console.log('update', { originalFormatted, updatedFormatted })
+
+  if (updatedFormatted === originalFormatted) {
+    return
+  }
+
+  editor?.setValue(currentValue)
+})
+
+onDestroy(() => {
+  const model = editor?.getModel()
+  model?.dispose()
+
+  editor?.dispose()
+  // destroy?.();
+})
+
 </script>
 
 <svelte:window on:resize={() => editor?.layout()} />
 
-<div class="w-full h-full relative isolate" bind:this={container} />
+<div
+  class='w-full h-full relative isolate'
+  bind:this={container}
+/>

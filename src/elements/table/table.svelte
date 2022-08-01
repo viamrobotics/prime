@@ -9,7 +9,7 @@ addStyles()
 export let variant = ''
 export let cols = ''
 
-const colSizes = cols.split(",").map(col => col.trim())
+const colSizes = cols.split(',').map(col => col.trim())
 </script>
 
 <table class={cx('bg-white text-xs w-full', { 'table-fixed': variant === 'fixed' })}>
