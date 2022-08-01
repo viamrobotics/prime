@@ -1,7 +1,7 @@
 <svelte:options immutable={true} tag="v-code-editor" />
 
 <script lang="ts">
-    import { afterUpdate, createEventDispatcher, onDestroy, onMount } from "svelte";
+    import { afterUpdate, onDestroy, onMount } from "svelte";
 
     import {
         addStyles,
