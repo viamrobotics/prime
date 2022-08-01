@@ -2,8 +2,55 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title='Elements/Code Editor'
-  parameters={{ }}
-  argTypes={{ }}
+  parameters={{ 
+    actions: {
+      handles: [
+        'input',
+        'updateMarkers',
+        'blur',
+      ],
+    },
+  }}
+  argTypes={{ 
+    value: {
+      description: 'The conent for the editor',
+      table: { defaultValue: { summary: '' } },
+    },
+    language: {
+      control: { type: 'select' },
+      options: [
+        'json',
+        'javascript',
+        'typescript',
+        'python',
+        'go',
+      ],
+      description: 'The language to use for syntax highlighting',
+      table: { defaultValue: { summary: 'json' } },
+    },
+    theme: {
+      description: 'The `monaco` theme to use',
+      control: { type: 'select' },
+      options: ['vs', 'vs-dark'],
+      table: { defaultValue: { summary: 'vs' } },
+    },
+    readonly: {
+      description: 'Determines if the editor should be readonly or editable',
+      control: { type: 'select' },
+      options: ['true', 'false'],
+      table: { defaultValue: { summary: 'false' } }
+    },
+    minimap: {
+      description: 'Determines if the editor should render the minimap',
+      control: { type: 'select' },
+      options: ['true', 'false'],
+      table: { defaultValue: { summary: 'false' } }
+    },
+    uri: {
+      description: 'When defined, is passed to `window.monaco.editor.createModel`',
+      table: { defaultValue: { summary: '' } },
+    },
+  }}
 />
 
 # Code Editor
@@ -13,13 +60,109 @@ Uses `monaco` for syntax-highlighting.
 <Canvas>
   <Story
     name='JSON editor'
-    args={{}}
+    args={{ 
+      value: `
+{ 
+  "foo": "bar",
+  "some": "thing",
+  "yes": true,
+  "count": 10
+}
+`
+    }}
   >
-    {({  }) => `
+    {({ value  }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
-        value='{ foo: "bar" }'
+        value='${value}'
         language='json'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='JavaScript editor'
+    args={{
+      value: `
+function doSomething(thing) { 
+  console.log(thing) 
+}
+`
+    }}
+  >
+    {({ value  }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor 
+        value='${value}'
+        language='javascript'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='TypeScript editor'
+    args={{
+      value: `
+function doSomething(thing: string): void { 
+  console.log(thing) 
+}
+`
+    }}
+  >
+    {({ value  }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor 
+        value='${value}'
+        language='typescript'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Python editor'
+    args={{
+      value: `
+def do_something(thing):
+  print(thing)
+`
+    }}
+  >
+    {({ value  }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor 
+        value='${value}'
+        language='python'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Go editor'
+    args={{
+      value: `
+func DoSomething(thing string) {
+	fmt.Println(thing)
+}
+`
+    }}
+  >
+    {({ value  }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor 
+        value='${value}'
+        language='go'
       />
     </div>
     `}
