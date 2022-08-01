@@ -17,17 +17,17 @@ import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
-import { workers } from './config'
+// import { workers } from './config'
 
-const getWorkerModule = (type: string, label: string) => {
-  const url = `${workers.monaco ?? ''}/${type}.worker.js`
-  console.log('url', url)
-
-  return new Worker(new URL(url, import.meta.url), {
-    name: label,
-    type: 'module',
-  })
-}
+// const getWorkerModule = (type: string, label: string) => {
+//   const url = `${workers.monaco ?? ''}/${type}.worker.js`
+//   console.log('url', url)
+// 
+//   return new Worker(new URL(url, import.meta.url), {
+//     name: label,
+//     type: 'module',
+//   })
+// }
 
 // In development mode we use a server that hosts assets in a dev environment on another port than our html files (:8080).
 // This presents problems when working with web workers (Monaco uses them for syntax parsing / highlighting).
