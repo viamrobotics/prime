@@ -87,6 +87,9 @@ const setModel = () => {
   const modelUri = uri !== undefined && uri !== '' ? window.monaco.Uri.parse(uri) : undefined
   const model = window.monaco.editor.createModel(value, language, modelUri)
 
+  const element = editor?.getDomNode() ?? container
+  dispatch(element, 'updateModel', { model })
+
   editor.setModel(model)
 }
 
