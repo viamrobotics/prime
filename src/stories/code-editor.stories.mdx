@@ -61,14 +61,12 @@ Uses `monaco` for syntax-highlighting.
   <Story
     name='JSON editor'
     args={{ 
-      value: `
-{ 
+      value: `{ 
   "foo": "bar",
   "some": "thing",
   "yes": true,
   "count": 10
-}
-`
+}`
     }}
   >
     {({ value  }) => `
@@ -86,11 +84,9 @@ Uses `monaco` for syntax-highlighting.
   <Story
     name='JavaScript editor'
     args={{
-      value: `
-function doSomething(thing) { 
+      value: `function doSomething(thing) { 
   console.log(thing) 
-}
-`
+}`
     }}
   >
     {({ value  }) => `
@@ -108,11 +104,9 @@ function doSomething(thing) {
   <Story
     name='TypeScript editor'
     args={{
-      value: `
-function doSomething(thing: string): void { 
+      value: `function doSomething(thing: string): void { 
   console.log(thing) 
-}
-`
+}`
     }}
   >
     {({ value  }) => `
@@ -130,10 +124,8 @@ function doSomething(thing: string): void {
   <Story
     name='Python editor'
     args={{
-      value: `
-def do_something(thing):
-  print(thing)
-`
+      value: `def do_something(thing):
+  print(thing)`
     }}
   >
     {({ value  }) => `
