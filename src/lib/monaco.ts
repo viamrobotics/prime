@@ -1,5 +1,4 @@
-
-import type * as monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor'
 
 export type MonacoSupportedLanguages =
 | 'json'
@@ -8,9 +7,9 @@ export type MonacoSupportedLanguages =
 | 'python'
 | 'go';
 
-export type MonacoSupportedThemes = 'vs' | 'vs-dark';
-
+export type MonacoSupportedThemes = 'vs' | 'vs-dark'
 export type MonacoMarker = monaco.editor.IMarker
 
-// eslint-disable-next-line unicorn/prefer-export-from
+export { version as MonacoVersion } from 'monaco-editor/package.json'
+
 export type { monaco as Monaco }

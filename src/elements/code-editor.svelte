@@ -1,10 +1,18 @@
 <svelte:options immutable tag='v-code-editor' />
 
 <script lang='ts' context='module'>
-
 import { onMount, afterUpdate, onDestroy } from 'svelte'
 import { get_current_component } from 'svelte/internal'
-import type { Monaco, MonacoSupportedLanguages, MonacoSupportedThemes } from '../lib/index'
+
+import {
+  addStyles,
+  dispatch,
+  removeNewlineWhitespace,
+  MonacoVersion,
+  type MonacoSupportedLanguages,  
+  type MonacoSupportedThemes,
+  type Monaco
+} from '../lib/index'
 
 interface Window extends globalThis.Window {
   require: ((dependencies: string[], callback: () => void) => void) & { config: (options: object) => void }
@@ -17,8 +25,7 @@ interface Window extends globalThis.Window {
 declare const window: Window
 
 const loadedCallbacks = new Set<(monaco: typeof Monaco) => void>()
-const version = '0.33.0'
-const monacoURL = `https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/${version}`
+const monacoURL = `https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/${MonacoVersion}`
 
 const proxy = URL.createObjectURL(new Blob([`
   self.MonacoEnvironment = {
@@ -50,17 +57,12 @@ document.head.append(script)
 
 <script lang='ts'>
 
-import {
-  addStyles,
-  dispatch,
-  removeNewlineWhitespace
-} from '../lib/index'
-
 export let value: string
 export let language: MonacoSupportedLanguages
 export let theme: MonacoSupportedThemes = 'vs'
 export let readonly = false
 export let minimap = false
+export let uri: string | undefined
 
 let container: HTMLDivElement
 let editor: null | Monaco.editor.IStandaloneCodeEditor = null
@@ -82,10 +84,11 @@ const setModel = () => {
   const lastModel = editor.getModel()
   lastModel?.dispose()
 
-  // const uri = getmodeluri?.(id);
-  const model = window.monaco.editor.createModel(value, language /* , uri */)
+  const modelUri = uri !== undefined && uri !== '' ? window.monaco.Uri.parse(uri) : undefined
+  const model = window.monaco.editor.createModel(value, language, modelUri)
 
-  console.log('model', model)
+  const element = editor?.getDomNode() ?? container
+  dispatch(element, 'updateModel', { model })
 
   editor.setModel(model)
 }
@@ -148,8 +151,6 @@ afterUpdate(() => {
   const originalFormatted = removeNewlineWhitespace(value)
   const updatedFormatted = removeNewlineWhitespace(currentValue)
 
-  console.log('update', { originalFormatted, updatedFormatted })
-
   if (updatedFormatted === originalFormatted) {
     return
   }
@@ -162,7 +163,9 @@ onDestroy(() => {
   model?.dispose()
 
   editor?.dispose()
-  // destroy?.();
+
+  const element = editor?.getDomNode() ?? container
+  dispatch(element, 'destroy')
 })
 
 </script>
