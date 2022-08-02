@@ -1,11 +1,8 @@
 <svelte:options immutable tag='v-code-editor' />
 
 <script lang='ts' context='module'>
-
-import { onMount, afterUpdate, onDestroy } from 'svelte'
-import { get_current_component } from 'svelte/internal'
-import { MonacoVersion } from '../lib/index'
-import type { Monaco, MonacoSupportedLanguages, MonacoSupportedThemes } from '../lib/index'
+/* eslint-disable-next-line import/order,import/no-duplicates */
+import { type Monaco, MonacoVersion } from '../lib/index'
 
 interface Window extends globalThis.Window {
   require: ((dependencies: string[], callback: () => void) => void) & { config: (options: object) => void }
@@ -49,11 +46,16 @@ document.head.append(script)
 </script>
 
 <script lang='ts'>
+import { onMount, afterUpdate, onDestroy } from 'svelte'
+import { get_current_component } from 'svelte/internal'
 
 import {
   addStyles,
   dispatch,
-  removeNewlineWhitespace
+  removeNewlineWhitespace,
+  type MonacoSupportedLanguages,  
+  type MonacoSupportedThemes 
+/* eslint-disable-next-line import/no-duplicates */
 } from '../lib/index'
 
 export let value: string
@@ -61,7 +63,7 @@ export let language: MonacoSupportedLanguages
 export let theme: MonacoSupportedThemes = 'vs'
 export let readonly = false
 export let minimap = false
-export let uri: string | undefined;
+export let uri: string | undefined
 
 let container: HTMLDivElement
 let editor: null | Monaco.editor.IStandaloneCodeEditor = null
@@ -83,7 +85,7 @@ const setModel = () => {
   const lastModel = editor.getModel()
   lastModel?.dispose()
 
-  const modelUri = uri ? monaco.Uri.parse(uri) : undefined;
+  const modelUri = uri ? window.monaco.Uri.parse(uri) : undefined
   const model = window.monaco.editor.createModel(value, language, modelUri)
 
   editor.setModel(model)
