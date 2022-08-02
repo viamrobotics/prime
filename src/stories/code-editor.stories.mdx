@@ -1,4 +1,9 @@
 import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import jsonCodeExampleSrc from "./assets/json-code-example"
+import jsCodeExampleSrc from "./assets/javascript-code-example"
+import tsCodeExampleSrc from "./assets/typescript-code-example"
+import pythonCodeExampleSrc from "./assets/python-code-example"
+import goCodeExampleSrc from "./assets/go-code-example"
 
 <Meta
   title="Elements/Code Editor"
@@ -54,12 +59,7 @@ Uses `monaco` for syntax-highlighting.
     name="JSON editor"
     args={{
       language: "json",
-      value: `{ 
-  "foo": "bar",
-  "some": "thing",
-  "yes": true,
-  "count": 10
-}`,
+      value: jsonCodeExampleSrc,
     }}
   >
     {({ value, language, theme, readonly, minimap, uri }) => `
@@ -82,9 +82,7 @@ Uses `monaco` for syntax-highlighting.
     name="JavaScript editor"
     args={{
       language: "javascript",
-      value: `function doSomething(thing) { 
-  console.log(thing) 
-}`,
+      value: jsCodeExampleSrc,
     }}
   >
     {({ value, language, theme, readonly, minimap, uri }) => `
@@ -107,9 +105,7 @@ Uses `monaco` for syntax-highlighting.
     name="TypeScript editor"
     args={{
       language: "typescript",
-      value: `function doSomething(thing: string): void { 
-  console.log(thing) 
-}`,
+      value: tsCodeExampleSrc,
     }}
   >
     {({ value, language, theme, readonly, minimap, uri }) => `
@@ -132,8 +128,7 @@ Uses `monaco` for syntax-highlighting.
     name="Python editor"
     args={{
       language: "python",
-      value: `def do_something(thing):
-  print(thing)`,
+      value: pythonCodeExampleSrc,
     }}
   >
     {({ value, language, theme, readonly, minimap, uri }) => `
@@ -156,9 +151,7 @@ Uses `monaco` for syntax-highlighting.
     name="Go editor"
     args={{
       language: "go",
-      value: `func DoSomething(thing string) {
-	fmt.Println(thing)
-}`,
+      value: goCodeExampleSrc,
     }}
   >
     {({ value, language, theme, readonly, minimap, uri }) => `
