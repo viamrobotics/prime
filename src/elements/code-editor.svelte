@@ -85,7 +85,7 @@ const setModel = () => {
   const lastModel = editor.getModel()
   lastModel?.dispose()
 
-  const modelUri = uri ? window.monaco.Uri.parse(uri) : undefined
+  const modelUri = uri !== undefined && uri !== '' ? window.monaco.Uri.parse(uri) : undefined
   const model = window.monaco.editor.createModel(value, language, modelUri)
 
   editor.setModel(model)

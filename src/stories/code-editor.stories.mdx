@@ -1,54 +1,46 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from "@storybook/addon-docs";
 
 <Meta
-  title='Elements/Code Editor'
-  parameters={{ 
+  title="Elements/Code Editor"
+  parameters={{
     actions: {
-      handles: [
-        'input',
-        'updateMarkers',
-        'blur',
-      ],
+      handles: ["input", "updateMarkers", "blur"],
     },
   }}
-  argTypes={{ 
+  argTypes={{
     value: {
-      description: 'The content for the editor',
-      table: { defaultValue: { summary: '' } },
+      description: "The content for the editor",
+      table: { defaultValue: { summary: "" } },
     },
     language: {
-      control: { type: 'select' },
-      options: [
-        'json',
-        'javascript',
-        'typescript',
-        'python',
-        'go',
-      ],
-      description: 'The language to use for syntax highlighting',
-      table: { defaultValue: { summary: 'json' } },
+      control: { type: "select" },
+      options: ["json", "javascript", "typescript", "python", "go"],
+      description: "The language to use for syntax highlighting",
+      table: { defaultValue: { summary: "json" } },
     },
     theme: {
-      description: 'The `monaco` theme to use',
-      control: { type: 'select' },
-      options: ['vs', 'vs-dark'],
-      table: { defaultValue: { summary: 'vs' } },
+      description: "The `monaco` theme to use",
+      control: { type: "select" },
+      options: ["vs", "vs-dark"],
+      table: { defaultValue: { summary: "vs" } },
     },
     readonly: {
-      description: 'Determines if the editor should be readonly or editable',
-      control: { type: 'select' },
-      options: ['true', 'false'],
-      table: { defaultValue: { summary: 'false' } }
+      description: "Determines if the editor should be readonly or editable",
+      control: { type: "select" },
+      options: ["true", "false"],
+      table: { defaultValue: { summary: "false" } },
     },
     minimap: {
-      description: 'Determines if the editor should render the minimap',
-      control: { type: 'select' },
-      options: ['true', 'false'],
-      table: { defaultValue: { summary: 'false' } }
+      description: "Determines if the editor should render the minimap",
+      control: { type: "select" },
+      options: ["true", "false"],
+      table: { defaultValue: { summary: "false" } },
     },
     uri: {
-      description: 'When defined, is passed to `window.monaco.editor.createModel`',
-      table: { defaultValue: { summary: '' } },
+      description:
+        "When defined, is passed to `window.monaco.editor.createModel`",
+      control: { type: 'text' },
+      table: { defaultValue: { summary: "" } },
     },
   }}
 />
@@ -59,21 +51,26 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name='JSON editor'
-    args={{ 
+    name="JSON editor"
+    args={{
+      language: "json",
       value: `{ 
   "foo": "bar",
   "some": "thing",
   "yes": true,
   "count": 10
-}`
+}`,
     }}
   >
-    {({ value  }) => `
+    {({ value, language, theme, readonly, minimap, uri }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${value}'
-        language='json'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
@@ -82,18 +79,23 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name='JavaScript editor'
+    name="JavaScript editor"
     args={{
+      language: "javascript",
       value: `function doSomething(thing) { 
   console.log(thing) 
-}`
+}`,
     }}
   >
-    {({ value  }) => `
+    {({ value, language, theme, readonly, minimap, uri }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${value}'
-        language='javascript'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
@@ -102,18 +104,23 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name='TypeScript editor'
+    name="TypeScript editor"
     args={{
+      language: "typescript",
       value: `function doSomething(thing: string): void { 
   console.log(thing) 
-}`
+}`,
     }}
   >
-    {({ value  }) => `
+    {({ value, language, theme, readonly, minimap, uri }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${value}'
-        language='typescript'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
@@ -122,17 +129,22 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name='Python editor'
+    name="Python editor"
     args={{
+      language: "python",
       value: `def do_something(thing):
-  print(thing)`
+  print(thing)`,
     }}
   >
-    {({ value  }) => `
+    {({ value, language, theme, readonly, minimap, uri }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${value}'
-        language='python'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
@@ -141,18 +153,23 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name='Go editor'
+    name="Go editor"
     args={{
+      language: "go",
       value: `func DoSomething(thing string) {
 	fmt.Println(thing)
-}`
+}`,
     }}
   >
-    {({ value  }) => `
+    {({ value, language, theme, readonly, minimap, uri }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${value}'
-        language='go'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
