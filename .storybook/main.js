@@ -23,7 +23,6 @@ module.exports = {
   features: {
     storyStoreV7: true
   },
-  staticDirs: ['workers'],
   async viteFinal(config) {
     return mergeConfig(config, {
       plugins: [
