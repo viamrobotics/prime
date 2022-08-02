@@ -1,8 +1,18 @@
 <svelte:options immutable tag='v-code-editor' />
 
 <script lang='ts' context='module'>
-/* eslint-disable-next-line import/order,import/no-duplicates */
-import { type Monaco, MonacoVersion } from '../lib/index'
+import { onMount, afterUpdate, onDestroy } from 'svelte'
+import { get_current_component } from 'svelte/internal'
+
+import {
+  addStyles,
+  dispatch,
+  removeNewlineWhitespace,
+  MonacoVersion,
+  type MonacoSupportedLanguages,  
+  type MonacoSupportedThemes,
+  type Monaco
+} from '../lib/index'
 
 interface Window extends globalThis.Window {
   require: ((dependencies: string[], callback: () => void) => void) & { config: (options: object) => void }
@@ -46,17 +56,6 @@ document.head.append(script)
 </script>
 
 <script lang='ts'>
-import { onMount, afterUpdate, onDestroy } from 'svelte'
-import { get_current_component } from 'svelte/internal'
-
-import {
-  addStyles,
-  dispatch,
-  removeNewlineWhitespace,
-  type MonacoSupportedLanguages,  
-  type MonacoSupportedThemes 
-/* eslint-disable-next-line import/no-duplicates */
-} from '../lib/index'
 
 export let value: string
 export let language: MonacoSupportedLanguages
