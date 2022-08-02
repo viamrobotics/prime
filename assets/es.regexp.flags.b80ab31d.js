@@ -1,2 +1,0 @@
-import{K as p,c as v,aR as u,aS as d,p as y}from"./iframe.d6834302.js";var R=p,E=v,O=u,b=d,m=y,o=R.RegExp,g=o.prototype,x=E&&m(function(){var r=!0;try{o(".","d")}catch{r=!1}var a={},t="",s=r?"dgimsy":"gimsy",c=function(l,f){Object.defineProperty(a,l,{get:function(){return t+=f,!0}})},e={dotAll:"s",global:"g",ignoreCase:"i",multiline:"m",sticky:"y"};r&&(e.hasIndices="d");for(var i in e)c(i,e[i]);var n=Object.getOwnPropertyDescriptor(g,"flags").get.call(a);return n!==s||t!==s});x&&O(g,"flags",{configurable:!0,get:b});
-//# sourceMappingURL=es.regexp.flags.b80ab31d.js.map
