@@ -2,33 +2,33 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { get_current_component } from 'svelte/internal'
-import { addStyles } from '../../lib/index'
+import cx from 'classnames';
+import { get_current_component } from 'svelte/internal';
+import { addStyles } from '../../lib/index';
 
 type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success'
 
-export let disabled: 'true' | 'false' = 'false'
-export let type: 'button' | 'submit' | 'reset' = 'button'
-export let variant: Variants = 'primary'
-export let label = ''
-export let icon = ''
+export let disabled: 'true' | 'false' = 'false';
+export let type: 'button' | 'submit' | 'reset' = 'button';
+export let variant: Variants = 'primary';
+export let label = '';
+export let icon = '';
 
-addStyles()
+addStyles();
 
 // @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
-const component = get_current_component() as HTMLElement & { internals: ElementInternals }
-const internals = component.attachInternals()
+const component = get_current_component() as HTMLElement & { internals: ElementInternals };
+const internals = component.attachInternals();
 
 const handleClick = () => {
-  const { form } = internals
+  const { form } = internals;
 
   if (form?.requestSubmit) {
-    form.requestSubmit()
+    form.requestSubmit();
   } else {
-    form?.submit()
+    form?.submit();
   }
-}
+};
 
 </script>
 
