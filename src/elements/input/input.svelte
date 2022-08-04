@@ -2,54 +2,54 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { get_current_component } from 'svelte/internal'
-import { addStyles, dispatch } from '../../lib/index'
+import cx from 'classnames';
+import { get_current_component } from 'svelte/internal';
+import { addStyles, dispatch } from '../../lib/index';
 
 // @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
-const component = get_current_component() as HTMLElement & { internals: ElementInternals }
-const internals = component.attachInternals()
+const component = get_current_component() as HTMLElement & { internals: ElementInternals };
+const internals = component.attachInternals();
 
 type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number'
 
-export let type: Types = 'text'
-export let placeholder = ''
-export let readonly: undefined | '' | 'readonly' | 'false' = 'false'
-export let label = ''
-export let value = ''
-export let step = '1'
-export let name = ''
-export let labelposition: LabelPosition = 'top'
+export let type: Types = 'text';
+export let placeholder = '';
+export let readonly: undefined | '' | 'readonly' | 'false' = 'false';
+export let label = '';
+export let value = '';
+export let step = '1';
+export let name = '';
+export let labelposition: LabelPosition = 'top';
 
-let root: HTMLElement
-let input: HTMLInputElement
-let isReadonly: boolean
-let stepNumber: number
+let root: HTMLElement;
+let input: HTMLInputElement;
+let isReadonly: boolean;
+let stepNumber: number;
 
-$: isReadonly = readonly === 'readonly' || readonly === ''
-$: stepNumber = Number.parseFloat(step)
+$: isReadonly = readonly === 'readonly' || readonly === '';
+$: stepNumber = Number.parseFloat(step);
 
-addStyles()
+addStyles();
 
 const handleInput = (event: Event) => {
-  event.preventDefault()
-  event.stopImmediatePropagation()
+  event.preventDefault();
+  event.stopImmediatePropagation();
 
-  value = input.value
+  value = input.value;
 
-  internals.setFormValue(value)
-  dispatch(root, 'input', { value })
-}
+  internals.setFormValue(value);
+  dispatch(root, 'input', { value });
+};
 
 const increment = (direction: 1 | -1) => {
-  const numberValue = Number.parseFloat(value || '0')
+  const numberValue = Number.parseFloat(value || '0');
 
-  value = input.value = String(numberValue + stepNumber * direction)
+  value = input.value = String(numberValue + stepNumber * direction);
 
-  internals.setFormValue(value)
-  dispatch(root, 'input', { value })
-}
+  internals.setFormValue(value);
+  dispatch(root, 'input', { value });
+};
 
 </script>
 

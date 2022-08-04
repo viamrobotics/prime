@@ -2,23 +2,23 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { addStyles, dispatch } from '../lib/index'
+import cx from 'classnames';
+import { addStyles, dispatch } from '../lib/index';
 
-export let tabs = ''
-export let selected = ''
+export let tabs = '';
+export let selected = '';
 
-let root: HTMLElement
+let root: HTMLElement;
 
-addStyles()
+addStyles();
 
-$: parsedTabs = tabs.split(',').map((str) => str.trim())
-$: selectedIndex = parsedTabs.indexOf(selected)
+$: parsedTabs = tabs.split(',').map((str) => str.trim());
+$: selectedIndex = parsedTabs.indexOf(selected);
 
 const handleClick = (option: string) => {
-  selected = option
-  dispatch(root, 'input', { value: selected })
-}
+  selected = option;
+  dispatch(root, 'input', { value: selected });
+};
 
 </script>
 

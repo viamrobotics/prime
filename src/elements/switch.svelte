@@ -2,30 +2,30 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { addStyles, dispatch } from '../lib/index'
+import cx from 'classnames';
+import { addStyles, dispatch } from '../lib/index';
 
-export let label = ''
-export let name = ''
-export let value: 'on' | 'off' = 'off'
-export let variant: 'labeled' | 'default' = 'default'
-export let disabled: 'true' | 'false' = 'false'
+export let label = '';
+export let name = '';
+export let value: 'on' | 'off' = 'off';
+export let variant: 'labeled' | 'default' = 'default';
+export let disabled: 'true' | 'false' = 'false';
 
-addStyles()
+addStyles();
 
-let root: HTMLElement
-let input: HTMLInputElement
-let on: boolean
-let isDisabled: boolean
+let root: HTMLElement;
+let input: HTMLInputElement;
+let on: boolean;
+let isDisabled: boolean;
 
-$: on = value === 'on'
-$: isDisabled = disabled === 'true'
+$: on = value === 'on';
+$: isDisabled = disabled === 'true';
 
 const handleClick = () => {
-  value = (!on) ? 'on' : 'off'
-  input.checked = on
-  dispatch(root, 'input', { value: input.checked })
-}
+  value = (!on) ? 'on' : 'off';
+  input.checked = on;
+  dispatch(root, 'input', { value: input.checked });
+};
 
 </script>
 

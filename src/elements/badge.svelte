@@ -2,16 +2,16 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { addStyles } from '../lib/index'
+import cx from 'classnames';
+import { addStyles } from '../lib/index';
 
-export let label = ''
+export let label = '';
 
 type Variants = 'green' | 'orange' | 'red' | 'gray'
 
-export let variant: Variants = 'gray'
+export let variant: Variants = 'gray';
 
-addStyles()
+addStyles();
 
 </script>
 

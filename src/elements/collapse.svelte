@@ -2,24 +2,24 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { addStyles, dispatch } from '../lib/index'
+import cx from 'classnames';
+import { addStyles, dispatch } from '../lib/index';
 
-export let title = ''
-export let open = false
+export let title = '';
+export let open = false;
 
-let root: HTMLElement
+let root: HTMLElement;
 
-addStyles()
+addStyles();
 
 const handleClick = (event: Event) => {
   if ((event.target as HTMLElement).getAttribute('slot') === 'header') {
-    return
+    return;
   }
 
-  open = !open
-  dispatch(root, 'toggle', { open })
-}
+  open = !open;
+  dispatch(root, 'toggle', { open });
+};
 
 </script>
 
