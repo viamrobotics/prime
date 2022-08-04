@@ -1,8 +1,9 @@
 <svelte:options immutable tag='v-code-editor' />
 
 <script lang='ts' context='module'>
-import { onMount, afterUpdate, onDestroy } from 'svelte'
+import { onMount, onDestroy } from 'svelte'
 import { get_current_component } from 'svelte/internal'
+import ResizeObserver from "resize-observer-polyfill";
 
 import {
   addStyles,
@@ -66,6 +67,7 @@ export let uri: string | undefined
 
 let container: HTMLDivElement
 let editor: null | Monaco.editor.IStandaloneCodeEditor = null
+let resizeObserver: ResizeObserver;
 
 addStyles()
 
@@ -138,24 +140,10 @@ const init = (monaco: typeof Monaco) => {
 onMount(() => {
   if (window.monaco) {
     init(window.monaco)
-  } else {
-    loadedCallbacks.add(init)
-  }
-})
-
-afterUpdate(() => {
-  setModel()
-
-  const currentValue = editor?.getValue() ?? ''
-
-  const originalFormatted = removeNewlineWhitespace(value)
-  const updatedFormatted = removeNewlineWhitespace(currentValue)
-
-  if (updatedFormatted === originalFormatted) {
     return
-  }
-
-  editor?.setValue(currentValue)
+  } 
+  
+  loadedCallbacks.add(init)
 })
 
 onDestroy(() => {
@@ -164,13 +152,42 @@ onDestroy(() => {
 
   editor?.dispose()
 
+  resizeObserver.disconnect()
+
   const element = editor?.getDomNode() ?? container
   dispatch(element, 'destroy')
 })
 
-</script>
+$: {
+  if(editor) {
+    setModel()
 
-<svelte:window on:resize={() => editor?.layout()} />
+    const currentValue = editor?.getValue() ?? ''
+
+    if (value !== undefined) {
+      const originalFormatted = removeNewlineWhitespace(value)
+      const updatedFormatted = removeNewlineWhitespace(currentValue)
+
+      if (updatedFormatted !== originalFormatted) {
+        editor?.setValue(value)
+        editor?.layout()
+      }
+    }
+
+    if (!resizeObserver && editor) {
+      resizeObserver = new ResizeObserver((e) => {
+        editor?.layout();
+      });
+    }
+
+    if (resizeObserver) {
+      resizeObserver.observe(document.body);
+    }
+
+  }
+}
+
+</script>
 
 <div
   class='w-full h-full relative isolate'

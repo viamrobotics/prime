@@ -23,6 +23,6 @@ To use the Vue playground
 npm start
 ```
 
-Then navigate to `http:localhost:3000/playground/index.html`
+Then navigate to [http://localhost:5173/playground/index.html](http://localhost:5173/playground/index.html)
 
 More detailed docs exist on [the storybook](https://www.viam.com/prime).
