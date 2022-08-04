@@ -15,7 +15,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     variant: {
       description: 'The communicated action type of the button',
       control: 'select',
-      options: ['primary', 'success', 'danger', 'outline-danger'],
+      options: ['primary', 'inverse-primary', 'success', 'danger', 'outline-danger'],
       table: { defaultValue: { summary: 'primary' } }
     },
     type: {
@@ -41,6 +41,23 @@ For user triggered actions
     {({ label, variant }) => `
       <v-button
         label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Inverse Primary'
+    args={{
+      label: 'RUN',
+      variant: 'inverse-primary'
+    }}
+  >
+    {({ label, variant }) => `
+      <v-button
+        label='${label}'
+        variant="${variant}"
       />
     `}
   </Story>
