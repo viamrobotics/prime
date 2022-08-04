@@ -65,7 +65,7 @@ export let minimap = false
 export let uri: string | undefined
 
 let container: HTMLDivElement
-let editor: Monaco.editor.IStandaloneCodeEditor = null
+let editor: Monaco.editor.IStandaloneCodeEditor
 let resizeObserver: ResizeObserver
 
 addStyles()
@@ -111,7 +111,7 @@ const init = (monaco: typeof Monaco) => {
       alwaysConsumeMouseWheel: false,
     },
     scrollBeyondLastLine: false,
-  })
+  }) as MonacoEditor
 
   const element = editor?.getDomNode() ?? container
 
