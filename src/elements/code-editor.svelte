@@ -3,7 +3,6 @@
 <script lang='ts' context='module'>
 import { onMount, onDestroy } from 'svelte'
 import { get_current_component } from 'svelte/internal'
-import ResizeObserver from "resize-observer-polyfill";
 
 import {
   addStyles,
