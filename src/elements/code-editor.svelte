@@ -111,7 +111,7 @@ const init = (monaco: typeof Monaco) => {
       alwaysConsumeMouseWheel: false,
     },
     scrollBeyondLastLine: false,
-  }) as MonacoEditor
+  })
 
   const element = editor?.getDomNode() ?? container
 
