@@ -2,15 +2,15 @@
 
 <script lang='ts'>
 
-import { addStyles } from '../lib/index'
+import { addStyles } from '../lib/index';
 
-export let crumbs = ''
+export let crumbs = '';
 
-addStyles()
+addStyles();
 
-let parsedCrumbs: string[]
+let parsedCrumbs: string[];
 
-$: parsedCrumbs = crumbs.split(',').map((str) => str.trim())
+$: parsedCrumbs = crumbs.split(',').map((str) => str.trim());
 
 </script>
 

@@ -2,28 +2,28 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { addStyles, dispatch } from '../lib/index'
+import cx from 'classnames';
+import { addStyles, dispatch } from '../lib/index';
 
 type LabelPosition = 'top' | 'left'
 
-export let label = ''
-export let options = ''
-export let selected = ''
-export let labelposition: LabelPosition = 'top'
+export let label = '';
+export let options = '';
+export let selected = '';
+export let labelposition: LabelPosition = 'top';
 
 
-addStyles()
+addStyles();
 
-let button: HTMLButtonElement
-let parsedOptions: string[]
+let button: HTMLButtonElement;
+let parsedOptions: string[];
 
-$: parsedOptions = options.split(',').map((str) => str.trim())
+$: parsedOptions = options.split(',').map((str) => str.trim());
 
 const handleClick = (value: string) => {
-  selected = value
-  dispatch(button, 'input', { value })
-}
+  selected = value;
+  dispatch(button, 'input', { value });
+};
 
 </script>
 

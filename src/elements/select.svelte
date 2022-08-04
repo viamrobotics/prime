@@ -2,35 +2,35 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { addStyles, dispatch } from '../lib/index'
+import cx from 'classnames';
+import { addStyles, dispatch } from '../lib/index';
 
 type LabelPosition = 'top' | 'left'
 
-export let options = ''
-export let value = ''
-export let placeholder = ''
-export let label = ''
-export let labelposition: LabelPosition = 'top'
+export let options = '';
+export let value = '';
+export let placeholder = '';
+export let label = '';
+export let labelposition: LabelPosition = 'top';
 
-let root: HTMLElement
-let input: HTMLSelectElement
-let parsedOptions: string[]
-let selectedOption: string
+let root: HTMLElement;
+let input: HTMLSelectElement;
+let parsedOptions: string[];
+let selectedOption: string;
 
-const widthClasses = 'max-w-[14rem] w-full'
+const widthClasses = 'max-w-[14rem] w-full';
 
-$: parsedOptions = options.split(',').map((str) => str.trim())
-$: selectedOption = parsedOptions.find(opt => opt === value) ?? ''
+$: parsedOptions = options.split(',').map((str) => str.trim());
+$: selectedOption = parsedOptions.find(opt => opt === value) ?? '';
 
-addStyles()
+addStyles();
 
 const handleInput = (event: Event) => {
-  event.preventDefault()
-  event.stopImmediatePropagation()
-  value = input.value.trim()
-  dispatch(root, 'input', { value })
-}
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  value = input.value.trim();
+  dispatch(root, 'input', { value });
+};
 
 </script>
 
