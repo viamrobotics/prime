@@ -65,8 +65,8 @@ export let minimap = false
 export let uri: string | undefined
 
 let container: HTMLDivElement
-let editor: null | Monaco.editor.IStandaloneCodeEditor = null
-let resizeObserver: ResizeObserver;
+let editor: Monaco.editor.IStandaloneCodeEditor = null
+let resizeObserver: ResizeObserver
 
 addStyles()
 
@@ -158,10 +158,10 @@ onDestroy(() => {
 })
 
 $: {
-  if(editor) {
+  if (editor) {
     setModel()
 
-    const currentValue = editor?.getValue() ?? ''
+    const currentValue: string = editor?.getValue() ?? ''
 
     if (value !== undefined) {
       const originalFormatted = removeNewlineWhitespace(value)
@@ -174,14 +174,14 @@ $: {
     }
 
     if (!resizeObserver && editor) {
-      resizeObserver = new ResizeObserver((e) => {
-        editor?.layout();
-      });
+      resizeObserver = new ResizeObserver(() => {
+        editor?.layout()
+      })
     }
 
     if (resizeObserver) {
-      const element = editor?.getDomNode() ?? container
-      resizeObserver.observe(element);
+      const element: Element = editor?.getDomNode() ?? container
+      resizeObserver.observe(element)
     }
 
   }
