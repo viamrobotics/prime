@@ -181,7 +181,8 @@ $: {
     }
 
     if (resizeObserver) {
-      resizeObserver.observe(document.body);
+      const element = editor?.getDomNode() ?? container
+      resizeObserver.observe(element);
     }
 
   }
