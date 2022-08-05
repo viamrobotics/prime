@@ -7,16 +7,21 @@ import { addStyles, dispatch } from '../lib/index';
 
 export let open: null | string | boolean = null;
 export let match: null | string | boolean = null;
+export let controlled: null | string | boolean = null;
 
 let root: HTMLElement;
 
-// coerce '' and null to boolean
+// coerce '' to boolean
 $: match = match === '';
+$: controlled = controlled === '';
 $: open = open === '' || open;
 
 addStyles();
 
 const toggleDropdown = () => {
+  if (controlled) {
+    return
+  }
   open = !open;
   dispatch(root, 'toggle', { open });
 };
@@ -27,16 +32,11 @@ const toggleDropdown = () => {
   class='relative inline-block w-full'
   bind:this={root}
 >
-  <div class="w-full">
-    <div
-      class='inline-block w-full'
-      on:click={toggleDropdown}
-    >
-      <slot name='target'/>
-    </div>
-    <div class="w-full">
-      <slot name='extra'/>
-    </div>
+  <div
+    class='inline-block w-full'
+    on:click={toggleDropdown}
+  >
+    <slot name='target'/>
   </div>
   <div 
     class={
