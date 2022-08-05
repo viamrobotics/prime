@@ -7,12 +7,12 @@ import { addStyles, dispatch } from '../lib/index';
 
 type LabelPosition = 'top' | 'left'
 
-export let options = ''
-export let value = ''
-export let placeholder = ''
-export let label = ''
-export let labelposition: LabelPosition = 'top'
-export let disabled: 'true' | 'false' = 'false'
+export let options = '';
+export let value = '';
+export let placeholder = '';
+export let label = '';
+export let labelposition: LabelPosition = 'top';
+export let disabled: 'true' | 'false' = 'false';
 
 let root: HTMLElement;
 let input: HTMLSelectElement;
@@ -50,7 +50,7 @@ const handleInput = (event: Event) => {
     class={cx(
       widthClasses, 
       'py-1 px-2.5 text-xs border border-black appearance-none rounded-none', { 
-        'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true' 
+        'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true', 
       }
     )}
     on:input={handleInput}

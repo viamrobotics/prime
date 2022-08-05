@@ -57,12 +57,12 @@ document.head.append(script);
 
 <script lang='ts'>
 
-export let value: string
-export let language: MonacoSupportedLanguages
-export let theme: MonacoSupportedThemes = 'vs'
-export let readonly: 'true' | 'false' = 'false'
-export let minimap: 'true' | 'false' = 'false'
-export let uri: string | undefined
+export let value: string;
+export let language: MonacoSupportedLanguages;
+export let theme: MonacoSupportedThemes = 'vs';
+export let readonly: 'true' | 'false' = 'false';
+export let minimap: 'true' | 'false' = 'false';
+export let uri: string | undefined;
 
 let container: HTMLDivElement;
 let editor: Monaco.editor.IStandaloneCodeEditor;
@@ -88,9 +88,9 @@ const setModel = () => {
   const modelUri = uri !== undefined && uri !== '' ? window.monaco.Uri.parse(uri) : undefined;
   const model = window.monaco.editor.createModel(value, language, modelUri);
 
-  dispatch(container, 'update-model', { model })
-  editor.setModel(model)
-}
+  dispatch(container, 'update-model', { model });
+  editor.setModel(model);
+};
 
 const init = (monaco: typeof Monaco) => {
   editor = monaco.editor.create(container, {
@@ -114,27 +114,27 @@ const init = (monaco: typeof Monaco) => {
   editor.onDidChangeModelContent(() => {
     dispatch(container, 'input', {
       value: editor?.getValue(),
-    })
+    });
     
     dispatch(container, 'update-content', {
       value: editor?.getValue(),
-    })
-  })
+    });
+  });
 
   editor.onDidBlurEditorWidget(() => {
-    const markers = monaco.editor.getModelMarkers({})
-    dispatch(container, 'update-markers', { markers })
-    dispatch(container, 'blur', { value: editor?.getValue() })
-  })
+    const markers = monaco.editor.getModelMarkers({});
+    dispatch(container, 'update-markers', { markers });
+    dispatch(container, 'blur', { value: editor?.getValue() });
+  });
 
   editor.layout();
   setModel();
 
   window.setTimeout(() => {
-    const markers = monaco.editor.getModelMarkers({})
-    dispatch(container, 'update-markers', markers)
-  })
-}
+    const markers = monaco.editor.getModelMarkers({});
+    dispatch(container, 'update-markers', markers);
+  });
+};
 
 onMount(() => {
   if (window.monaco) {
