@@ -115,10 +115,6 @@ const init = (monaco: typeof Monaco) => {
     dispatch(container, 'input', {
       value: editor?.getValue(),
     });
-    
-    dispatch(container, 'update-content', {
-      value: editor?.getValue(),
-    });
   });
 
   editor.onDidBlurEditorWidget(() => {
@@ -192,4 +188,10 @@ $: {
 <div
   class='w-full h-full relative isolate'
   bind:this={container}
+  on:input={(event) => {
+    if (event instanceof InputEvent) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }}
 />
