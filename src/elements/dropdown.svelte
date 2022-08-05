@@ -20,7 +20,7 @@ addStyles();
 
 const toggleDropdown = () => {
   if (controlled) {
-    return
+    return;
   }
   open = !open;
   dispatch(root, 'toggle', { open });
