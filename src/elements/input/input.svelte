@@ -51,7 +51,7 @@ const increment = (direction: 1 | -1) => {
   dispatch(root, 'input', { value });
 };
 
-const insertStepAttribute = type === 'time' || type  === 'number'
+const insertStepAttribute = type === 'time' || type === 'number';
 </script>
 
 <label
