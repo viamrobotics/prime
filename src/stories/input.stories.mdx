@@ -11,7 +11,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     type: {
       description: 'The input type',
       control: 'select',
-      options: ['text', 'email', 'number'],
+      options: ['text', 'email', 'number', 'date', 'time', 'datetime-local'],
       table: { defaultValue: { summary: 'text' } },
     },
     label: {
@@ -83,6 +83,71 @@ Used for all text single-line user inputs.
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Date'
+    args={{
+      type: 'date',
+      label: 'Birthday',
+      placeholder: 'Enter day here',
+      value: '1985-10-22',
+    }}
+  >
+    {({ type, label, placeholder, value }) => `
+      <v-input
+        type='${type}'
+        label='${label}'
+        placeholder='${placeholder}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Time'
+    args={{
+      type: 'time',
+      label: 'Lunch Time',
+      placeholder: '00:00:00',
+      value: '12:52:48',
+    }}
+  >
+    {({ type, label, placeholder, value }) => `
+      <v-input
+        type='${type}'
+        label='${label}'
+        placeholder='${placeholder}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Datetime Local'
+    args={{
+      type: 'datetime-local',
+      label: 'Judgement Day',
+      placeholder: '',
+      value: '2022-08-09T11:03',
+    }}
+  >
+    {({ type, label, placeholder, value }) => `
+      <v-input
+        type='${type}'
+        label='${label}'
+        placeholder='${placeholder}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+
 
 <Canvas>
   <Story
