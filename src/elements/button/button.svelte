@@ -34,7 +34,7 @@ const handleClick = () => {
 
 <button
   {type}
-  class={cx('flex items-center gap-1.5 py-1.5 px-2 text-xs border', {
+  class={cx('flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border', {
     'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true',
     'bg-white border-black': variant === 'primary',
     'bg-black border-white text-white': variant === 'inverse-primary',
@@ -50,5 +50,7 @@ const handleClick = () => {
       class='icon-{icon} text-base'
     />
   {/if}
-  {label}
+  <span class="mx-auto">
+    {label}
+  </span>
 </button>

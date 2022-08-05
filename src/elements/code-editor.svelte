@@ -60,8 +60,8 @@ document.head.append(script);
 export let value: string;
 export let language: MonacoSupportedLanguages;
 export let theme: MonacoSupportedThemes = 'vs';
-export let readonly = false;
-export let minimap = false;
+export let readonly: 'true' | 'false' = 'false';
+export let minimap: 'true' | 'false' = 'false';
 export let uri: string | undefined;
 
 let container: HTMLDivElement;
@@ -88,9 +88,7 @@ const setModel = () => {
   const modelUri = uri !== undefined && uri !== '' ? window.monaco.Uri.parse(uri) : undefined;
   const model = window.monaco.editor.createModel(value, language, modelUri);
 
-  const element = editor?.getDomNode() ?? container;
-  dispatch(element, 'updateModel', { model });
-
+  dispatch(container, 'update-model', { model });
   editor.setModel(model);
 };
 
@@ -99,9 +97,9 @@ const init = (monaco: typeof Monaco) => {
     value,
     language,
     theme,
-    readOnly: readonly,
+    readOnly: readonly === 'true',
     minimap: {
-      enabled: minimap,
+      enabled: minimap === 'true',
     },
     scrollbar: {
       verticalScrollbarSize: 3,
@@ -109,22 +107,24 @@ const init = (monaco: typeof Monaco) => {
       vertical: 'auto',
       horizontal: 'auto',
       alwaysConsumeMouseWheel: false,
-    },
+    },    
     scrollBeyondLastLine: false,
   });
 
-  const element = editor?.getDomNode() ?? container;
-
-  editor.onDidChangeModelContent(() =>
-    dispatch(element, 'input', {
+  editor.onDidChangeModelContent(() => {
+    dispatch(container, 'input', {
       value: editor?.getValue(),
-    })
-  );
+    });
+    
+    dispatch(container, 'update-content', {
+      value: editor?.getValue(),
+    });
+  });
 
   editor.onDidBlurEditorWidget(() => {
     const markers = monaco.editor.getModelMarkers({});
-    dispatch(element, 'updateMarkers', { markers });
-    dispatch(element, 'blur', { value: editor?.getValue() });
+    dispatch(container, 'update-markers', { markers });
+    dispatch(container, 'blur', { value: editor?.getValue() });
   });
 
   editor.layout();
@@ -132,7 +132,7 @@ const init = (monaco: typeof Monaco) => {
 
   window.setTimeout(() => {
     const markers = monaco.editor.getModelMarkers({});
-    dispatch(element, 'updateMarkers', markers);
+    dispatch(container, 'update-markers', markers);
   });
 };
 
