@@ -26,9 +26,12 @@ let root: HTMLElement;
 let input: HTMLInputElement;
 let isReadonly: boolean;
 let stepNumber: number;
+let insertStepAttribute: boolean;
+
 
 $: isReadonly = readonly === 'readonly' || readonly === '';
 $: stepNumber = Number.parseFloat(step);
+$: insertStepAttribute = type === 'time' || type === 'number';
 
 addStyles();
 
@@ -51,7 +54,6 @@ const increment = (direction: 1 | -1) => {
   dispatch(root, 'input', { value });
 };
 
-const insertStepAttribute = type === 'time' || type === 'number';
 </script>
 
 <label
