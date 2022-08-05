@@ -1,80 +1,80 @@
 <svelte:options tag='v-slider' />
 
 <script lang='ts'>
-  import { spring } from 'svelte/motion'
-  import type { Spring } from 'svelte/motion'
-  import cn from 'classnames'
-  import { clamp, percentOf } from '../lib/math'
-  import { addStyles, dispatch } from '../lib/index'
+  import { spring } from 'svelte/motion';
+  import type { Spring } from 'svelte/motion';
+  import cn from 'classnames';
+  import { clamp, percentOf } from '../lib/math';
+  import { addStyles, dispatch } from '../lib/index';
 
   // dom references
-  export let slider: HTMLElement
+  export let slider: HTMLElement;
 
   // range slider props
-  export let range: string | boolean = false
-  export let min: string
-  export let max: string
-  export let step: string
-  export let value: string
-  export let start: string
-  export let end: string
-  export let disabled = false
-  export let discrete = true
+  export let range: string | boolean = false;
+  export let min: string;
+  export let max: string;
+  export let step: string;
+  export let value: string;
+  export let start: string;
+  export let end: string;
+  export let disabled = false;
+  export let discrete = true;
 
   // formatting props
-  export let label = ''
-  export let suffix = ''
+  export let label = '';
+  export let suffix = '';
 
-  addStyles()
+  addStyles();
 
-  const springValues = { stiffness: 0.1, damping: 0.4 }
+  const springValues = { stiffness: 0.1, damping: 0.4 };
 
-  let minNum: number
-  let maxNum: number
-  let stepNum: number
-  let startValue: number
-  let endValue: number | undefined
-  let pipStep: number
-  let pipCount: number
+  let minNum: number;
+  let maxNum: number;
+  let stepNum: number;
+  let startValue: number;
+  let endValue: number | undefined;
+  let pipStep: number;
+  let pipCount: number;
 
-  $: pipStep = ((maxNum - minNum) / stepNum >= 100 ? (maxNum - minNum) / 20 : 1)
-  $: pipCount = (maxNum - minNum) / stepNum
-  $: pipVal = (val: number): number => minNum + val * stepNum * pipStep
-  $: minNum = Number.parseFloat(min || '0')
-  $: maxNum = Number.parseFloat(max || '100')
-  $: stepNum = Number.parseFloat(step || '1')
-  $: startValue = start || value ? Number.parseFloat(start || value) : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2
-  $: endValue = end ? Number.parseFloat(end) : undefined
-  $: range = typeof range === 'string' ? range : end !== undefined
+  $: pipStep = ((maxNum - minNum) / stepNum >= 100 ? (maxNum - minNum) / 20 : 1);
+  $: pipCount = (maxNum - minNum) / stepNum;
+  $: pipVal = (val: number): number => minNum + val * stepNum * pipStep;
+  $: minNum = Number.parseFloat(min || '0');
+  $: maxNum = Number.parseFloat(max || '100');
+  $: stepNum = Number.parseFloat(step || '1');
+  $: startValue = start || value ? Number.parseFloat(start || value) : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2;
+  $: endValue = end ? Number.parseFloat(end) : undefined;
+  $: range = typeof range === 'string' ? range : end !== undefined;
 
   // state management
-  let valueLength = 0
-  let focus = false
-  let handleActivated = false
-  let handlePressed = false
-  let keyboardActive = false
-  let activeHandle = -1
-  let previousValue: number
-  let sliderDimensions: DOMRect
+  let valueLength = 0;
+  let focus = false;
+  let handleActivated = false;
+  let handlePressed = false;
+  let keyboardActive = false;
+  let activeHandle = -1;
+  let previousValue: number;
+  let sliderDimensions: DOMRect;
 
   // copy the initial values in to a spring function which
   // will update every time the values array is modified
 
-  let springPositions: Spring<number[]>
+  let springPositions: Spring<number[]>;
 
   $: {
     // trim the range so it remains as a min/max (only 2 handles)
     // and also align the handles to the steps
-    startValue = alignValueToStep(startValue, minNum, maxNum)
+    startValue = alignValueToStep(startValue, minNum, maxNum);
 
-    let arr = [startValue]
+    let arr = [startValue];
 
     if (endValue) {
-      endValue = alignValueToStep(endValue, minNum, maxNum)
-      arr.push(endValue)
+      endValue = alignValueToStep(endValue, minNum, maxNum);
+      arr.push(endValue);
     }
 
-    arr = trimRange(arr)
+    arr = trimRange(arr);
 
     // check if the valueLength (length of values[]) has changed,
     // because if so we need to re-seed the spring function with the
@@ -82,14 +82,14 @@
     if (valueLength !== arr.length) {
       // set the initial spring values when the slider initialises,
       // or when values array length has changed
-      springPositions = spring(arr.map((v) => percentOf(v, minNum, maxNum, 2)), springValues)
+      springPositions = spring(arr.map((v) => percentOf(v, minNum, maxNum, 2)), springValues);
     } else {
       // update the value of the spring function for animated handles
       // whenever the values has updated
-      springPositions.set(arr.map((v) => percentOf(v, minNum, maxNum, 2))).catch((error) => console.error(error))
+      springPositions.set(arr.map((v) => percentOf(v, minNum, maxNum, 2))).catch((error) => console.error(error));
     }
     // set the valueLength for the next check
-    valueLength = arr.length
+    valueLength = arr.length;
   }
 
   /**
@@ -99,27 +99,27 @@
   const alignValueToStep = (val: number, minVal: number, maxVal: number): number => {
     // sanity check for performance
     if (val <= minVal) {
-      return minVal
+      return minVal;
     } else if (val >= maxVal) {
-      return maxVal
+      return maxVal;
     }
 
     // find the middle-point between steps
     // and see if the value is closer to the
     // next step, or previous step
-    const remainder = (val - minVal) % stepNum
-    let aligned = val - remainder
+    const remainder = (val - minVal) % stepNum;
+    let aligned = val - remainder;
     if (Math.abs(remainder) * 2 >= stepNum) {
-      aligned += remainder > 0 ? stepNum : -stepNum
+      aligned += remainder > 0 ? stepNum : -stepNum;
     }
     // make sure the value is within acceptable limits
-    aligned = clamp(aligned, minVal, maxVal)
+    aligned = clamp(aligned, minVal, maxVal);
     // make sure the returned value is set to the precision desired
     // this is also because javascript often returns weird floats
     // when dealing with odd numbers and percentages
 
-    return Number.parseFloat(aligned.toFixed(2))
-  }
+    return Number.parseFloat(aligned.toFixed(2));
+  };
 
   /**
    * normalise a mouse or touch event to return the
@@ -128,18 +128,18 @@
   const normalisedClient = (event: MouseEvent | TouchEvent): MouseEvent | Touch => {
     return event.type.includes('touch')
       ? (event as TouchEvent).touches[0]!
-      : event as MouseEvent
-  }
+      : event as MouseEvent;
+  };
 
   /**
    * check if an element is a handle on the slider
    **/
   const targetIsHandle = (el: HTMLElement): boolean => {
-    const handles = [...slider.querySelectorAll('.handle')]
-    const isHandle = handles.includes(el)
-    const isChild = handles.some((e) => e.contains(el))
-    return isHandle || isChild
-  }
+    const handles = [...slider.querySelectorAll('.handle')];
+    const isHandle = handles.includes(el);
+    const isChild = handles.some((e) => e.contains(el));
+    return isHandle || isChild;
+  };
 
   /**
    * trim the values array based on whether the property
@@ -149,42 +149,42 @@
    **/
   const trimRange = (arr: number[]): number[] => {
     if (range === 'min' || range === 'max') {
-      return arr.slice(0, 1)
+      return arr.slice(0, 1);
     } else if (range) {
-      return arr.slice(0, 2)
+      return arr.slice(0, 2);
     } else {
-      return arr
+      return arr;
     }
-  }
+  };
 
   const getSliderDimensions = () => {
-    sliderDimensions = slider.getBoundingClientRect()
-  }
+    sliderDimensions = slider.getBoundingClientRect();
+  };
 
   /**
    * helper to return closest handle to user interaction
    **/
   const getClosestHandle = (clientPos: Touch | MouseEvent): number => {
     // calculate the interaction position, percent and value
-    const handlePos = clientPos.clientX - sliderDimensions.left
-    const handlePercent = (handlePos / sliderDimensions.width) * 100
-    const handleVal = ((maxNum - minNum) / 100) * handlePercent + minNum
+    const handlePos = clientPos.clientX - sliderDimensions.left;
+    const handlePercent = (handlePos / sliderDimensions.width) * 100;
+    const handleVal = ((maxNum - minNum) / 100) * handlePercent + minNum;
 
-    let closest = 0
+    let closest = 0;
 
     // if we have a range, and the handles are at the same
     // position, we want a simple check if the interaction
     // value is greater than return the second handle
     if (range && startValue === endValue) {
-      return handleVal > endValue ? 1 : 0
+      return handleVal > endValue ? 1 : 0;
     } else if (range) {
       closest = [startValue, endValue!].indexOf(
         [startValue, endValue!].sort((a, b) => Math.abs(handleVal - a) - Math.abs(handleVal - b))[0]!
-      )
+      );
     }
 
-    return closest
-  }
+    return closest;
+  };
 
   /**
    * take the interaction position on the slider, convert
@@ -194,82 +194,82 @@
    **/
   const handleInteract = (clientPos: { clientX: number; clientY: number }) => {
     // calculate the interaction position, percent and value
-    const handlePos = clientPos.clientX - sliderDimensions.left
-    const handlePercent = (handlePos / sliderDimensions.width) * 100
-    const handleVal = ((maxNum - minNum) / 100) * handlePercent + minNum
+    const handlePos = clientPos.clientX - sliderDimensions.left;
+    const handlePercent = (handlePos / sliderDimensions.width) * 100;
+    const handleVal = ((maxNum - minNum) / 100) * handlePercent + minNum;
 
     // move handle to the value
-    moveHandle(activeHandle, handleVal)
-  }
+    moveHandle(activeHandle, handleVal);
+  };
 
   /**
    * move a handle to a specific value, respecting the clamp/align rules
    **/
   const moveHandle = (i: number, value: number): number => {
-    let index = i
+    let index = i;
 
     // align & clamp the value so we're not doing extra
     // calculation on an out-of-range value down below
-    const alignedValue = alignValueToStep(value, minNum, maxNum)
+    const alignedValue = alignValueToStep(value, minNum, maxNum);
 
     // use the active handle if handle index is not provided
     if (typeof index === 'undefined') {
-      index = activeHandle
+      index = activeHandle;
     }
 
     // if this is a range slider perform special checks
     if (range) {
       if (index === 0 && alignedValue > endValue!) {
-        endValue = alignedValue
+        endValue = alignedValue;
       } else if (index === 1 && alignedValue < startValue) {
-        startValue = alignedValue
+        startValue = alignedValue;
       }
     }
 
     // if the value has changed, update it
     if (index === 0 && startValue !== alignedValue) {
-      startValue = alignedValue
+      startValue = alignedValue;
     }
 
     if (index === 1 && endValue !== alignedValue) {
-      endValue = alignedValue
+      endValue = alignedValue;
     }
 
     // fire the change event when the handle moves,
     // and store the previous value for the next time
     if (previousValue !== alignedValue) {
-      onChange()
-      previousValue = alignedValue
+      onChange();
+      previousValue = alignedValue;
     }
 
     if (index === 0) {
-      start = startValue.toString()
+      start = startValue.toString();
     } else if (index === 1) {
-      end = endValue!.toString()
+      end = endValue!.toString();
     }
 
-    return alignedValue
-  }
+    return alignedValue;
+  };
 
   /**
    * helper to find the beginning range value for use with css style
    **/
   const rangeStart = (arr: number[]): number => {
-    return range === 'min' ? 0 : arr[0]!
-  }
+    return range === 'min' ? 0 : arr[0]!;
+  };
 
   /**
    * helper to find the ending range value for use with css style
    **/
   const rangeEnd = (arr: number[]): number => {
     if (range === 'max') {
-      return 0
+      return 0;
     } else if (range === 'min') {
-      return 100 - arr[0]!
+      return 100 - arr[0]!;
     } else {
-      return 100 - arr[1]!
+      return 100 - arr[1]!;
     }
-  }
+  };
 
   /**
    * when the user has unfocussed (blurred) from the
@@ -277,11 +277,11 @@
    **/
   const handleSliderBlur = () => {
     if (keyboardActive) {
-      focus = false
-      handleActivated = false
-      handlePressed = false
+      focus = false;
+      handleActivated = false;
+      handlePressed = false;
     }
-  }
+  };
 
   /**
    * when the user focusses the handle of a slider
@@ -289,10 +289,10 @@
    **/
   const handleSliderFocus = (index: number) => {
     if (!disabled) {
-      activeHandle = index
-      focus = true
+      activeHandle = index;
+      focus = true;
     }
-  }
+  };
 
   /**
    * function to run when the user touches
@@ -300,45 +300,45 @@
    * @param {event} e the event from browser
    **/
   const sliderInteractStart = (e: MouseEvent | TouchEvent) => {
-    if (disabled) return
+    if (disabled) return;
 
-    getSliderDimensions()
-    const el = e.target as HTMLElement
-    const clientPos = normalisedClient(e)
+    getSliderDimensions();
+    const el = e.target as HTMLElement;
+    const clientPos = normalisedClient(e);
 
     // set the closest handle as active
-    focus = true
-    handleActivated = true
-    handlePressed = true
-    activeHandle = getClosestHandle(clientPos)
-    previousValue = alignValueToStep(activeHandle === 0 ? startValue : endValue!, minNum, maxNum)
+    focus = true;
+    handleActivated = true;
+    handlePressed = true;
+    activeHandle = getClosestHandle(clientPos);
+    previousValue = alignValueToStep(activeHandle === 0 ? startValue : endValue!, minNum, maxNum);
 
     // for touch devices we want the handle to instantly
     // move to the position touched for more responsive feeling
     if (e.type === 'touchstart' && !el.matches('.pipVal')) {
-      handleInteract(clientPos)
+      handleInteract(clientPos);
     }
-  }
+  };
 
   const sliderInteractEnd = () => {
-    handlePressed = false
-  }
+    handlePressed = false;
+  };
 
   /**
    * unfocus the slider if the user clicked off of
    * it, somewhere else on the screen
    **/
   const bodyInteractStart = (e: MouseEvent | TouchEvent) => {
-    keyboardActive = false
+    keyboardActive = false;
 
     if (
       focus &&
       e.target !== slider &&
       !slider.contains(e.target as Node)
     ) {
-      focus = false
+      focus = false;
     }
-  }
+  };
 
   /**
    * send the clientX through to handle the interaction
@@ -346,11 +346,11 @@
    * @param {event} e the event from browser
    **/
   const bodyInteract = (e: MouseEvent | TouchEvent) => {
-    if (disabled || !handleActivated) return
+    if (disabled || !handleActivated) return;
 
-    focus = true
-    handleInteract(normalisedClient(e))
-  }
+    focus = true;
+    handleInteract(normalisedClient(e));
+  };
 
   /**
    * if user triggers mouseup on the body while
@@ -359,42 +359,42 @@
    **/
   const bodyMouseUp = (e: MouseEvent) => {
     if (!disabled) {
-      const el = e.target as HTMLElement
+      const el = e.target as HTMLElement;
       // this only works if a handle is active, which can
       // only happen if there was sliderInteractStart triggered
       // on the slider, already
       if (handleActivated && el && el === slider || slider.contains(el as Node)) {
-        focus = true
+        focus = true;
         // don't trigger interact if the target is a handle (no need) or
         // if the target is a label (we want to move to that value from rangePips)
         if (!targetIsHandle(el) && !el.matches('.pipVal')) {
-          handleInteract(normalisedClient(e))
+          handleInteract(normalisedClient(e));
         }
       }
     }
-    handleActivated = false
-    handlePressed = false
-  }
+    handleActivated = false;
+    handlePressed = false;
+  };
 
   /**
    * if user triggers touchend on the body then we
    * defocus the slider completely
    **/
   const bodyTouchEnd = () => {
-    handleActivated = false
-    handlePressed = false
-  }
+    handleActivated = false;
+    handlePressed = false;
+  };
 
   const bodyKeyDown = (e: KeyboardEvent) => {
-    if (disabled) return
+    if (disabled) return;
 
     if (e.target === slider || slider.contains(e.target as Node)) {
-      keyboardActive = true
+      keyboardActive = true;
     }
-  }
+  };
 
   const onChange = () => {
-    if (disabled) return
+    if (disabled) return;
 
     dispatch(slider, 'input', {
       activeHandle,
@@ -403,8 +403,8 @@
       values: endValue
         ? [startValue, endValue].map((v) => alignValueToStep(v, minNum, maxNum))
         : undefined,
-    })
-  }
+    });
+  };
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->

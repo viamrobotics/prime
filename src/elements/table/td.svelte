@@ -1,9 +1,9 @@
 <svelte:options immutable={true} tag='v-td' />
 
 <script lang='ts'>
-import { addStyles } from '../../lib/index'
+import { addStyles } from '../../lib/index';
 
-addStyles()
+addStyles();
 
 </script>
 

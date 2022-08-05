@@ -2,24 +2,24 @@
 
 <script lang='ts'>
 
-import cx from 'classnames'
-import { addStyles, dispatch } from '../lib/index'
+import cx from 'classnames';
+import { addStyles, dispatch } from '../lib/index';
 
-export let open: null | string | boolean = null
-export let match: null | string | boolean = null
+export let open: null | string | boolean = null;
+export let match: null | string | boolean = null;
 
-let root: HTMLElement
+let root: HTMLElement;
 
 // coerce '' and null to boolean
-$: match = match === ''
-$: open = open === '' || open
+$: match = match === '';
+$: open = open === '' || open;
 
-addStyles()
+addStyles();
 
 const toggleDropdown = () => {
-  open = !open
-  dispatch(root, 'toggle', { open })
-}
+  open = !open;
+  dispatch(root, 'toggle', { open });
+};
 
 </script>
 
