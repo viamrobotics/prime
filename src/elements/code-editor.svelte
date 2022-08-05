@@ -57,12 +57,21 @@ document.head.append(script);
 
 <script lang='ts'>
 
+<<<<<<< Updated upstream
 export let value: string;
 export let language: MonacoSupportedLanguages;
 export let theme: MonacoSupportedThemes = 'vs';
 export let readonly = false;
 export let minimap = false;
 export let uri: string | undefined;
+=======
+export let value: string
+export let language: MonacoSupportedLanguages
+export let theme: MonacoSupportedThemes = 'vs'
+export let readonly: 'true' | 'false' = 'false'
+export let minimap: 'true' | 'false' = 'false'
+export let uri: string | undefined
+>>>>>>> Stashed changes
 
 let container: HTMLDivElement;
 let editor: Monaco.editor.IStandaloneCodeEditor;
@@ -88,20 +97,26 @@ const setModel = () => {
   const modelUri = uri !== undefined && uri !== '' ? window.monaco.Uri.parse(uri) : undefined;
   const model = window.monaco.editor.createModel(value, language, modelUri);
 
+<<<<<<< Updated upstream
   const element = editor?.getDomNode() ?? container;
   dispatch(element, 'updateModel', { model });
 
   editor.setModel(model);
 };
+=======
+  dispatch(container, 'update-model', { model })
+  editor.setModel(model)
+}
+>>>>>>> Stashed changes
 
 const init = (monaco: typeof Monaco) => {
   editor = monaco.editor.create(container, {
     value,
     language,
     theme,
-    readOnly: readonly,
+    readOnly: readonly === 'true',
     minimap: {
-      enabled: minimap,
+      enabled: minimap === 'true',
     },
     scrollbar: {
       verticalScrollbarSize: 3,
@@ -109,10 +124,11 @@ const init = (monaco: typeof Monaco) => {
       vertical: 'auto',
       horizontal: 'auto',
       alwaysConsumeMouseWheel: false,
-    },
+    },    
     scrollBeyondLastLine: false,
   });
 
+<<<<<<< Updated upstream
   const element = editor?.getDomNode() ?? container;
 
   editor.onDidChangeModelContent(() =>
@@ -126,15 +142,39 @@ const init = (monaco: typeof Monaco) => {
     dispatch(element, 'updateMarkers', { markers });
     dispatch(element, 'blur', { value: editor?.getValue() });
   });
+=======
+  editor.onDidChangeModelContent(() => {
+    dispatch(container, 'input', {
+      value: editor?.getValue(),
+    })
+    
+    dispatch(container, 'update-content', {
+      value: editor?.getValue(),
+    })
+  })
+
+  editor.onDidBlurEditorWidget(() => {
+    const markers = monaco.editor.getModelMarkers({})
+    dispatch(container, 'update-markers', { markers })
+    dispatch(container, 'blur', { value: editor?.getValue() })
+  })
+>>>>>>> Stashed changes
 
   editor.layout();
   setModel();
 
   window.setTimeout(() => {
+<<<<<<< Updated upstream
     const markers = monaco.editor.getModelMarkers({});
     dispatch(element, 'updateMarkers', markers);
   });
 };
+=======
+    const markers = monaco.editor.getModelMarkers({})
+    dispatch(container, 'update-markers', markers)
+  })
+}
+>>>>>>> Stashed changes
 
 onMount(() => {
   if (window.monaco) {
