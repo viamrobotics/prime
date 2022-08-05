@@ -7,20 +7,12 @@ import { addStyles, dispatch } from '../lib/index';
 
 type LabelPosition = 'top' | 'left'
 
-<<<<<<< Updated upstream
-export let options = '';
-export let value = '';
-export let placeholder = '';
-export let label = '';
-export let labelposition: LabelPosition = 'top';
-=======
 export let options = ''
 export let value = ''
 export let placeholder = ''
 export let label = ''
 export let labelposition: LabelPosition = 'top'
 export let disabled: 'true' | 'false' = 'false'
->>>>>>> Stashed changes
 
 let root: HTMLElement;
 let input: HTMLSelectElement;
