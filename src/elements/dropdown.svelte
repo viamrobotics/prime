@@ -24,10 +24,10 @@ const toggleDropdown = () => {
 </script>
 
 <div
-  class='relative inline-block'
+  class='relative inline-block w-full'
   bind:this={root}
 >
-  <div >
+  <div class="w-full">
     <div
       class='inline-block w-full'
       on:click={toggleDropdown}
