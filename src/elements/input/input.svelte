@@ -11,7 +11,7 @@ const component = get_current_component() as HTMLElement & { internals: ElementI
 const internals = component.attachInternals();
 
 type LabelPosition = 'top' | 'left'
-type Types = 'text' | 'email' | 'number'
+type Types = 'text' | 'email' | 'number' | 'time' | 'date' | 'datetime-local'
 
 export let type: Types = 'text';
 export let placeholder = '';
@@ -26,9 +26,12 @@ let root: HTMLElement;
 let input: HTMLInputElement;
 let isReadonly: boolean;
 let stepNumber: number;
+let insertStepAttribute: boolean;
+
 
 $: isReadonly = readonly === 'readonly' || readonly === '';
 $: stepNumber = Number.parseFloat(step);
+$: insertStepAttribute = type === 'time' || type === 'number';
 
 addStyles();
 
@@ -77,6 +80,7 @@ const increment = (direction: 1 | -1) => {
     bind:this={input}
     class='w-full py-1.5 px-2.5 border text-xs border-black bg-white outline-none appearance-none'
     on:input={handleInput}
+    step={insertStepAttribute ? step : null}
   />
 
   {#if type === 'number'}
