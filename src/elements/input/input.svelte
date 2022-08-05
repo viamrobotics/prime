@@ -11,7 +11,7 @@ const component = get_current_component() as HTMLElement & { internals: ElementI
 const internals = component.attachInternals()
 
 type LabelPosition = 'top' | 'left'
-type Types = 'text' | 'email' | 'number' | 'time' | 'date'
+type Types = 'text' | 'email' | 'number' | 'time' | 'date' | 'datetime-local'
 
 export let type: Types = 'text'
 export let placeholder = ''
@@ -50,6 +50,8 @@ const increment = (direction: 1 | -1) => {
   internals.setFormValue(value)
   dispatch(root, 'input', { value })
 }
+
+const insertStepAttribute = type === 'time' || type  === 'number'
 </script>
 
 <label
@@ -76,7 +78,7 @@ const increment = (direction: 1 | -1) => {
     bind:this={input}
     class='w-full py-1.5 px-2.5 border text-xs border-black bg-white outline-none appearance-none'
     on:input={handleInput}
-    step={type === 'time' ? step : null}
+    step={insertStepAttribute ? step : null}
   />
 
   {#if type === 'number'}
