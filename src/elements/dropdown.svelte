@@ -19,9 +19,6 @@ $: open = open === '' || open;
 addStyles();
 
 const toggleDropdown = () => {
-  if (controlled) {
-    return;
-  }
   open = !open;
   dispatch(root, 'toggle', { open });
 };
@@ -34,7 +31,7 @@ const toggleDropdown = () => {
 >
   <div
     class='inline-block w-full'
-    on:click={toggleDropdown}
+    on:click={controlled ? null : toggleDropdown}
   >
     <slot name='target'/>
   </div>
