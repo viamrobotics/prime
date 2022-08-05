@@ -27,11 +27,16 @@ const toggleDropdown = () => {
   class='relative inline-block'
   bind:this={root}
 >
-  <div
-    class='inline-block'
-    on:click={toggleDropdown}
-  >
-    <slot name='target'/>
+  <div >
+    <div
+      class='inline-block w-full'
+      on:click={toggleDropdown}
+    >
+      <slot name='target'/>
+    </div>
+    <div class="w-full">
+      <slot name='extra'/>
+    </div>
   </div>
   <div 
     class={
