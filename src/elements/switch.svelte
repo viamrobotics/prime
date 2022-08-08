@@ -19,7 +19,7 @@ let on: boolean;
 let isDisabled: boolean;
 
 $: on = value === 'on';
-$: isDisabled = disabled === 'true' || disabled === 'disabled' || disabled === ''
+$: isDisabled = disabled === 'true' || disabled === 'disabled' || disabled === '';
 
 const handleClick = () => {
   value = (!on) ? 'on' : 'off';

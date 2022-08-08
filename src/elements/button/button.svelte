@@ -14,7 +14,7 @@ export let variant: Variants = 'primary';
 export let label = '';
 export let icon = '';
 
-let isDisabled: boolean
+let isDisabled: boolean;
 
 $: isDisabled = disabled === 'true' || disabled === 'disabled' || disabled === '';
 

@@ -10,8 +10,8 @@ export let match: string | undefined;
 
 let root: HTMLElement;
 
-let isMatch: boolean
-let isOpen: boolean
+let isMatch: boolean;
+let isOpen: boolean;
 
 $: isMatch = match === 'true' || match === 'match' || match === '';
 $: isOpen = open === 'true' || open === 'open' || open === '';

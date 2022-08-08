@@ -64,11 +64,11 @@ export let readonly: string | undefined;
 export let minimap: string | undefined;
 export let uri: string | undefined;
 
-let isReadonly: boolean
-let hasMinimap: boolean
+let isReadonly: boolean;
+let hasMinimap: boolean;
 
 $: isReadonly = readonly === 'true' || readonly === 'readonly' || readonly === '';
-$: hasMinimap = minimap === 'true' || minimap === 'minimap' || minimap === ''
+$: hasMinimap = minimap === 'true' || minimap === 'minimap' || minimap === '';
 
 let container: HTMLDivElement;
 let editor: Monaco.editor.IStandaloneCodeEditor;
@@ -96,6 +96,13 @@ const setModel = () => {
 
   dispatch(container, 'update-model', { model });
   editor.setModel(model);
+};
+
+const handleInput = (event: Event) => {
+  if (event instanceof InputEvent) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
 };
 
 const init = (monaco: typeof Monaco) => {
@@ -194,10 +201,5 @@ $: {
 <div
   class='w-full h-full relative isolate'
   bind:this={container}
-  on:input={(event) => {
-    if (event instanceof InputEvent) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    }
-  }}
+  on:input={handleInput}
 />
