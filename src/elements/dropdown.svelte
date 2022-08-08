@@ -20,18 +20,17 @@ $: isOpen = htmlToBoolean(open, 'open');
 addStyles();
 
 const toggleDropdown = () => {
-  open = isOpen ? undefined : '';
-  dispatch(root, 'toggle', { open });
+  dispatch(root, 'toggle', { open: !isOpen });
 };
 
 </script>
 
 <div
-  class='relative inline-block'
+  class='relative inline-block w-full'
   bind:this={root}
 >
   <div
-    class='inline-block'
+    class='inline-block w-full'
     on:click={toggleDropdown}
   >
     <slot name='target'/>
