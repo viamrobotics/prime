@@ -4,23 +4,23 @@
 
 import cx from 'classnames';
 import { addStyles, dispatch } from '../lib/index';
+import { htmlToBoolean } from '../lib/boolean';
 
-export let open: null | string | boolean = null;
-export let match: null | string | boolean = null;
-export let controlled: null | string | boolean = null;
+export let open: string | undefined;
+export let match: string | undefined;
 
 let root: HTMLElement;
 
-// coerce '' to boolean
-$: match = match === '';
-$: controlled = controlled === '';
-$: open = open === '' || open;
+let isMatch: boolean;
+let isOpen: boolean;
+
+$: isMatch = htmlToBoolean(match, 'match');
+$: isOpen = htmlToBoolean(open, 'open');
 
 addStyles();
 
 const toggleDropdown = () => {
-  open = !open;
-  dispatch(root, 'toggle', { open });
+  dispatch(root, 'toggle', { open: !isOpen });
 };
 
 </script>
@@ -31,17 +31,17 @@ const toggleDropdown = () => {
 >
   <div
     class='inline-block w-full'
-    on:click={controlled ? null : toggleDropdown}
+    on:click={toggleDropdown}
   >
     <slot name='target'/>
   </div>
   <div 
     class={
       cx('absolute z-10', {
-        'left-0': match,
-        'right-0': match,
-        'overflow-hidden': match,
-        invisible: !open,
+        'left-0': isMatch,
+        'right-0': isMatch,
+        'overflow-hidden': isMatch,
+        invisible: !isOpen,
       }
     )}
   >

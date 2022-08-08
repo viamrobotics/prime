@@ -18,11 +18,6 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       control: { type: 'text' },
       table: { defaultValue: {summary: ""} }
     },
-    controlled: {
-      description: 'Determines whether the component should manage its own open state or not',
-      control: { type: 'boolean' },
-      table: { defaultValue: {summary: false} }
-    },
     content: {
       description: 'Dropdown content. Receives text and HTML',
       control: { type: 'text' },
@@ -32,7 +27,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'Event fired when dropdown is toggled'
     },
     open: {
-      description: 'Can be used to programmatically control whether dropdown is open',
+      description: 'Used to control whether dropdown is open',
       control: { type: 'boolean' },
     },
   }}
@@ -49,13 +44,12 @@ Gives target element the ability to open a dropdown below itself
       match: false,
       open: false,
       content: "This is the dropdown content",
-      controlled: false,
       target: "Dropdown target",
     }}
   >
     {({ content, match, open, controlled, target  }) => `
       <div style="padding: 50px 0px">
-        <v-dropdown ${match ? "match" : ""} ${open ? "open" : ""} ${controlled ? "controlled" : ""}>
+        <v-dropdown ${match ? "match" : ""} ${open ? "open" : ""}>
           <v-button label="${target}" slot="target"></v-button>
           <div 
             slot="content"

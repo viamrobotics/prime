@@ -4,15 +4,20 @@
 
 import cx from 'classnames';
 import { get_current_component } from 'svelte/internal';
+import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
 
 type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success'
 
-export let disabled: 'true' | 'false' = 'false';
+export let disabled: string | undefined;
 export let type: 'button' | 'submit' | 'reset' = 'button';
 export let variant: Variants = 'primary';
 export let label = '';
 export let icon = '';
+
+let isDisabled: boolean;
+
+$: isDisabled = htmlToBoolean(disabled, 'disabled');
 
 addStyles();
 
@@ -35,7 +40,7 @@ const handleClick = () => {
 <button
   {type}
   class={cx('flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border', {
-    'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true',
+    'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
     'bg-white border-black': variant === 'primary',
     'bg-black border-white text-white': variant === 'inverse-primary',
     'bg-red/90 text-white border-red/90': variant === 'danger',

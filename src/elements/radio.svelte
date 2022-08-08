@@ -12,7 +12,6 @@ export let options = '';
 export let selected = '';
 export let labelposition: LabelPosition = 'top';
 
-
 addStyles();
 
 let button: HTMLButtonElement;

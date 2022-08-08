@@ -3,6 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames';
+import { htmlToBoolean } from '../lib/boolean';
 import { addStyles, dispatch } from '../lib/index';
 
 type LabelPosition = 'top' | 'left'
@@ -12,15 +13,17 @@ export let value = '';
 export let placeholder = '';
 export let label = '';
 export let labelposition: LabelPosition = 'top';
-export let disabled: 'true' | 'false' = 'false';
+export let disabled: string | undefined;
 
 let root: HTMLElement;
 let input: HTMLSelectElement;
 let parsedOptions: string[];
 let selectedOption: string;
+let isDisabled: boolean;
 
 const widthClasses = 'max-w-[14rem] w-full';
 
+$: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: selectedOption = parsedOptions.find(opt => opt === value) ?? '';
 
@@ -50,7 +53,7 @@ const handleInput = (event: Event) => {
     class={cx(
       widthClasses, 
       'py-1 px-2.5 text-xs border border-black appearance-none rounded-none', { 
-        'cursor-not-allowed opacity-50 pointer-events-none': disabled === 'true', 
+        'cursor-not-allowed opacity-50 pointer-events-none': isDisabled, 
       }
     )}
     on:input={handleInput}
