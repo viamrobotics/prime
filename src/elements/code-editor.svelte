@@ -60,9 +60,15 @@ document.head.append(script);
 export let value: string;
 export let language: MonacoSupportedLanguages;
 export let theme: MonacoSupportedThemes = 'vs';
-export let readonly: 'true' | 'false' = 'false';
-export let minimap: 'true' | 'false' = 'false';
+export let readonly: string | undefined;
+export let minimap: string | undefined;
 export let uri: string | undefined;
+
+let isReadonly: boolean
+let hasMinimap: boolean
+
+$: isReadonly = readonly === 'true' || readonly === 'readonly' || readonly === '';
+$: hasMinimap = minimap === 'true' || minimap === 'minimap' || minimap === ''
 
 let container: HTMLDivElement;
 let editor: Monaco.editor.IStandaloneCodeEditor;
@@ -97,9 +103,9 @@ const init = (monaco: typeof Monaco) => {
     value,
     language,
     theme,
-    readOnly: readonly === 'true',
+    readOnly: isReadonly,
     minimap: {
-      enabled: minimap === 'true',
+      enabled: hasMinimap,
     },
     scrollbar: {
       verticalScrollbarSize: 3,

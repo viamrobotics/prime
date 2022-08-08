@@ -15,7 +15,7 @@ type Types = 'text' | 'email' | 'number' | 'time' | 'date' | 'datetime-local'
 
 export let type: Types = 'text';
 export let placeholder = '';
-export let readonly: undefined | '' | 'readonly' | 'false' = 'false';
+export let readonly: string | undefined;
 export let label = '';
 export let value = '';
 export let step = '1';
@@ -29,7 +29,7 @@ let stepNumber: number;
 let insertStepAttribute: boolean;
 
 
-$: isReadonly = readonly === 'readonly' || readonly === '';
+$: isReadonly = readonly === 'true' || readonly === 'readonly' || readonly === '';
 $: stepNumber = Number.parseFloat(step);
 $: insertStepAttribute = type === 'time' || type === 'number';
 

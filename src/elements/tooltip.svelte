@@ -10,6 +10,7 @@ type Locations = 'top' | 'bottom' | 'right' | 'left'
 
 export let text = '';
 export let location: Locations = 'top';
+
 let container: HTMLElement;
 let tooltip: HTMLElement;
 

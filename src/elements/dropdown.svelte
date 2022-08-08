@@ -5,19 +5,21 @@
 import cx from 'classnames';
 import { addStyles, dispatch } from '../lib/index';
 
-export let open: null | string | boolean = null;
-export let match: null | string | boolean = null;
+export let open: string | undefined;
+export let match: string | undefined;
 
 let root: HTMLElement;
 
-// coerce '' and null to boolean
-$: match = match === '';
-$: open = open === '' || open;
+let isMatch: boolean
+let isOpen: boolean
+
+$: isMatch = match === 'true' || match === 'match' || match === '';
+$: isOpen = open === 'true' || open === 'open' || open === '';
 
 addStyles();
 
 const toggleDropdown = () => {
-  open = !open;
+  open = isOpen ? undefined : '';
   dispatch(root, 'toggle', { open });
 };
 
@@ -36,10 +38,10 @@ const toggleDropdown = () => {
   <div 
     class={
       cx('absolute z-10', {
-        'left-0': match,
-        'right-0': match,
-        'overflow-hidden': match,
-        invisible: !open,
+        'left-0': isMatch,
+        'right-0': isMatch,
+        'overflow-hidden': isMatch,
+        invisible: !isOpen,
       }
     )}
   >

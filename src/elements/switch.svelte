@@ -9,7 +9,7 @@ export let label = '';
 export let name = '';
 export let value: 'on' | 'off' = 'off';
 export let variant: 'labeled' | 'default' = 'default';
-export let disabled: 'true' | 'false' = 'false';
+export let disabled: string | undefined;
 
 addStyles();
 
@@ -19,7 +19,7 @@ let on: boolean;
 let isDisabled: boolean;
 
 $: on = value === 'on';
-$: isDisabled = disabled === 'true';
+$: isDisabled = disabled === 'true' || disabled === 'disabled' || disabled === ''
 
 const handleClick = () => {
   value = (!on) ? 'on' : 'off';
