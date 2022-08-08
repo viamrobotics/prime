@@ -4,6 +4,7 @@
 
 import cx from 'classnames';
 import { get_current_component } from 'svelte/internal';
+import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles, dispatch } from '../../lib/index';
 
 // @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
@@ -15,7 +16,7 @@ type Types = 'text' | 'email' | 'number' | 'time' | 'date' | 'datetime-local'
 
 export let type: Types = 'text';
 export let placeholder = '';
-export let readonly: undefined | '' | 'readonly' | 'false' = 'false';
+export let readonly: string | undefined;
 export let label = '';
 export let value = '';
 export let step = '1';
@@ -29,7 +30,7 @@ let stepNumber: number;
 let insertStepAttribute: boolean;
 
 
-$: isReadonly = readonly === 'readonly' || readonly === '';
+$: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: stepNumber = Number.parseFloat(step);
 $: insertStepAttribute = type === 'time' || type === 'number';
 

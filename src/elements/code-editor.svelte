@@ -57,12 +57,20 @@ document.head.append(script);
 
 <script lang='ts'>
 
+import { htmlToBoolean } from '../lib/boolean';
+
 export let value: string;
 export let language: MonacoSupportedLanguages;
 export let theme: MonacoSupportedThemes = 'vs';
-export let readonly: 'true' | 'false' = 'false';
-export let minimap: 'true' | 'false' = 'false';
+export let readonly: string | undefined;
+export let minimap: string | undefined;
 export let uri: string | undefined;
+
+let isReadonly: boolean;
+let hasMinimap: boolean;
+
+$: isReadonly = htmlToBoolean(readonly, 'readonly');
+$: hasMinimap = htmlToBoolean(minimap, 'minimap');
 
 let container: HTMLDivElement;
 let editor: Monaco.editor.IStandaloneCodeEditor;
@@ -92,14 +100,21 @@ const setModel = () => {
   editor.setModel(model);
 };
 
+const handleInput = (event: Event) => {
+  if (event instanceof InputEvent) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+};
+
 const init = (monaco: typeof Monaco) => {
   editor = monaco.editor.create(container, {
     value,
     language,
     theme,
-    readOnly: readonly === 'true',
+    readOnly: isReadonly,
     minimap: {
-      enabled: minimap === 'true',
+      enabled: hasMinimap,
     },
     scrollbar: {
       verticalScrollbarSize: 3,
@@ -188,10 +203,5 @@ $: {
 <div
   class='w-full h-full relative isolate'
   bind:this={container}
-  on:input={(event) => {
-    if (event instanceof InputEvent) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    }
-  }}
+  on:input={handleInput}
 />

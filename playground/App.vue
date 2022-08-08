@@ -1,5 +1,6 @@
 <script setup>
 
+import '../src/main'
 import { ref } from 'vue'
 
 const value = ref('bob')
@@ -14,15 +15,19 @@ const json = JSON.stringify({
 
 <template>
   <div style="display: flex; flex-direction: column; gap: 0.5rem">
-    <div style="display: flex; gap: 0.5rem">
-      <v-button icon="send" label="Hello"></v-button>
-      <v-button icon="undo" label="Hello"></v-button>
-    </div>
+    <v-table>
+      <v-thead>
+        <v-th>buttonz</v-th>
+      </v-thead>
 
-    <div style="display: flex; gap: 0.5rem">
-      <v-button icon="send" label="Hello"></v-button>
-      <v-button icon="undo" label="Hello"></v-button>
-    </div>
+      <v-tbody>
+        <v-tr v-for="i in [1,2,3,4,5]" :key="i" style="display: flex; gap: 0.5rem">
+          <v-button icon="send" label="Hello"></v-button>
+          <v-button icon="undo" label="hi"></v-button>
+        </v-tr>
+      </v-tbody>
+    </v-table>
+    
 
     <v-input
       label="My input"
@@ -36,5 +41,13 @@ const json = JSON.stringify({
       :value="json"
     />
   </div>
+
+  <v-collapse open>
+    Hello world
+  </v-collapse>
+
+  <v-dropdown match>
+    
+  </v-dropdown>
 </template>
 
