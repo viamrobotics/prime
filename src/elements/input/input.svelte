@@ -3,6 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames';
+import { htmlToBoolean } from '../../lib/boolean';
 import { get_current_component } from 'svelte/internal';
 import { addStyles, dispatch } from '../../lib/index';
 
@@ -29,7 +30,7 @@ let stepNumber: number;
 let insertStepAttribute: boolean;
 
 
-$: isReadonly = readonly === 'true' || readonly === 'readonly' || readonly === '';
+$: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: stepNumber = Number.parseFloat(step);
 $: insertStepAttribute = type === 'time' || type === 'number';
 

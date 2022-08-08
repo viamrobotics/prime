@@ -3,6 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames';
+import { htmlToBoolean } from '../../lib/boolean';
 import { get_current_component } from 'svelte/internal';
 import { addStyles } from '../../lib/index';
 
@@ -16,7 +17,7 @@ export let icon = '';
 
 let isDisabled: boolean;
 
-$: isDisabled = disabled === 'true' || disabled === 'disabled' || disabled === '';
+$: isDisabled = htmlToBoolean(disabled, 'disabled');
 
 addStyles();
 

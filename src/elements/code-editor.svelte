@@ -57,6 +57,8 @@ document.head.append(script);
 
 <script lang='ts'>
 
+import { htmlToBoolean } from '../lib/boolean'
+
 export let value: string;
 export let language: MonacoSupportedLanguages;
 export let theme: MonacoSupportedThemes = 'vs';
@@ -67,8 +69,8 @@ export let uri: string | undefined;
 let isReadonly: boolean;
 let hasMinimap: boolean;
 
-$: isReadonly = readonly === 'true' || readonly === 'readonly' || readonly === '';
-$: hasMinimap = minimap === 'true' || minimap === 'minimap' || minimap === '';
+$: isReadonly = htmlToBoolean(readonly, 'readonly');
+$: hasMinimap = htmlToBoolean(minimap, 'minimap');
 
 let container: HTMLDivElement;
 let editor: Monaco.editor.IStandaloneCodeEditor;

@@ -4,6 +4,7 @@
 
 import cx from 'classnames';
 import { addStyles, dispatch } from '../lib/index';
+import { htmlToBoolean } from '../lib/boolean'
 
 export let open: string | undefined;
 export let match: string | undefined;
@@ -13,8 +14,8 @@ let root: HTMLElement;
 let isMatch: boolean;
 let isOpen: boolean;
 
-$: isMatch = match === 'true' || match === 'match' || match === '';
-$: isOpen = open === 'true' || open === 'open' || open === '';
+$: isMatch = htmlToBoolean(match, 'match');
+$: isOpen = htmlToBoolean(open, 'open');
 
 addStyles();
 

@@ -3,6 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames';
+import { htmlToBoolean } from '../lib/boolean';
 import { addStyles, dispatch } from '../lib/index';
 
 export let label = '';
@@ -19,7 +20,7 @@ let on: boolean;
 let isDisabled: boolean;
 
 $: on = value === 'on';
-$: isDisabled = disabled === 'true' || disabled === 'disabled' || disabled === '';
+$: isDisabled = htmlToBoolean(disabled, 'disabled');
 
 const handleClick = () => {
   value = (!on) ? 'on' : 'off';
