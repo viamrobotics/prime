@@ -4,7 +4,7 @@
 
 import cx from 'classnames';
 import { addStyles, dispatch } from '../lib/index';
-import { htmlToBoolean } from '../lib/boolean'
+import { htmlToBoolean } from '../lib/boolean';
 
 export let open: string | undefined;
 export let match: string | undefined;

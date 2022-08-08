@@ -3,8 +3,8 @@
 <script lang='ts'>
 
 import cx from 'classnames';
-import { htmlToBoolean } from '../../lib/boolean';
 import { get_current_component } from 'svelte/internal';
+import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles, dispatch } from '../../lib/index';
 
 // @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58

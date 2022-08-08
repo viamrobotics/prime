@@ -3,8 +3,8 @@
 <script lang='ts'>
 
 import cx from 'classnames';
-import { htmlToBoolean } from '../../lib/boolean';
 import { get_current_component } from 'svelte/internal';
+import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
 
 type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success'

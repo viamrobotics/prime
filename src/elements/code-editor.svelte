@@ -57,7 +57,7 @@ document.head.append(script);
 
 <script lang='ts'>
 
-import { htmlToBoolean } from '../lib/boolean'
+import { htmlToBoolean } from '../lib/boolean';
 
 export let value: string;
 export let language: MonacoSupportedLanguages;
