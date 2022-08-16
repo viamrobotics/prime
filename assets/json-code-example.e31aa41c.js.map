@@ -1,0 +1,1 @@
+{"version":3,"file":"json-code-example.e31aa41c.js","sources":["../../src/stories/assets/json-code-example.js"],"sourcesContent":["export default JSON.stringify({ \n  name: 'Bob',\n  age: 400,\n  favorite_food: 'pizza',\n}, null, 2);\n"],"names":[],"mappings":"AAAA,KAAe,GAAA,KAAK,UAAU,CAC5B,KAAM,MACN,IAAK,IACL,cAAe,OACjB,EAAG,KAAM,CAAC"}
