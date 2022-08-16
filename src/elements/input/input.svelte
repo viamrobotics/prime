@@ -25,6 +25,7 @@ export let labelposition: LabelPosition = 'top';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
+let stepDecimalDigits: number;
 let isReadonly: boolean;
 let stepNumber: number;
 let insertStepAttribute: boolean;
@@ -48,12 +49,12 @@ const handleInput = (event: Event) => {
 
 const increment = (direction: 1 | -1) => {
   const numberValue = Number.parseFloat(value || '0');
-  const currentValueDigits = String(value).split('.').pop()?.length ?? 0
+  const currentValueDigits = String(value).split('.').pop()?.length ?? 0;
 
   if (type === 'number') {
     value = input.value = (numberValue + stepNumber * direction).toFixed(Math.max(stepDecimalDigits, currentValueDigits));
   } else if (type === 'integer') {
-    value = input.value = String(Math.round(numberValue + stepNumber * direction))
+    value = input.value = String(Math.round(numberValue + stepNumber * direction));
   }
   
   internals.setFormValue(value);

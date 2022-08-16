@@ -35,7 +35,7 @@ const handleClick = (option: string) => {
     >
       <div
         class={cx({
-          '-mb-px': tab !== selected
+          '-mb-px': tab !== selected,
         })}
       >
         {tab}

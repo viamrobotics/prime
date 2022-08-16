@@ -2,7 +2,7 @@
 
 <script lang='ts'>
 
-import { onMount, onDestroy, tick } from 'svelte';
+import { onMount, onDestroy } from 'svelte';
 import { get_current_component } from 'svelte/internal';
 
 import {
@@ -16,7 +16,8 @@ import type {
   MonacoSupportedLanguages,  
   MonacoSupportedThemes,
   Monaco,
-} from '../lib/monaco/types'
+  Schema,
+} from '../lib/monaco/types';
 
 import { loadMonaco } from '../lib/monaco/loader';
 import { monacoUtils } from '../lib/monaco';
@@ -34,13 +35,14 @@ export let variant: 'default' | 'diff' = 'default';
 
 let isReadonly: boolean;
 let hasMinimap: boolean;
+let parsedSchema: Schema | undefined;
 
-$: parsedSchema = schema ? JSON.parse(schema) : undefined
+$: parsedSchema = schema ? JSON.parse(schema) as Schema : undefined;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: hasMinimap = htmlToBoolean(minimap, 'minimap');
 
 let container: HTMLDivElement;
-let diffEditor: monaco.editor.IStandaloneDiffEditor;
+let diffEditor: Monaco.editor.IStandaloneDiffEditor;
 let editor: Monaco.editor.IStandaloneCodeEditor;
 let resizeObserver: ResizeObserver;
 
@@ -61,16 +63,16 @@ const setModel = () => {
   const lastModel = editor.getModel();
   lastModel?.dispose();
 
-  let model: monaco.editor.ITextModel
+  let model: Monaco.editor.ITextModel;
 
   if (parsedSchema) {
-    const id = String(hashCode(schema))
+    const id = String(hashCode(schema));
     const uri = `http://${id}.json/`;
-    const modelUri = monaco.Uri.parse(uri);
+    const modelUri = window.monaco.Uri.parse(uri);
 
     monacoUtils.removeSchemas(id, parsedSchema);
     monacoUtils.addSchemas(id, parsedSchema, [modelUri.toString()]);
-    model = monaco.editor.createModel(value, language, modelUri);
+    model = window.monaco.editor.createModel(value, language, modelUri);
   } else {
     model = window.monaco.editor.createModel(value, language);
   }
@@ -81,14 +83,14 @@ const setModel = () => {
 
 const setDiffModel = () => {
   const lastModel = diffEditor?.getModel();
-  lastModel?.modified.dispose()
-  lastModel?.original.dispose()
+  lastModel?.modified.dispose();
+  lastModel?.original.dispose();
 
   diffEditor.setModel({
-    original: monaco.editor.createModel(previous, 'json'),
-    modified: monaco.editor.createModel(value, 'json'),
+    original: window.monaco.editor.createModel(previous, 'json'),
+    modified: window.monaco.editor.createModel(value, 'json'),
   });
-}
+};
 
 const handleInput = (event: Event) => {
   if (event instanceof InputEvent) {
@@ -114,23 +116,24 @@ const opts = () => {
       alwaysConsumeMouseWheel: false,
     },
     scrollBeyondLastLine: false,
-  } as const
-}
+  } as const;
+};
 
 const initDiff = () => {
-  diffEditor = monaco.editor.createDiffEditor(container, {
+  // @TODO Why are these types incompatible?
+  diffEditor = window.monaco.editor.createDiffEditor(container, {
     ...opts(),
     readOnly: true,
-  })
+  }) as unknown as Monaco.editor.IStandaloneDiffEditor;
   diffEditor.setModel({
-    original: monaco.editor.createModel(previous, language),
-    modified: monaco.editor.createModel(value, language),
+    original: window.monaco.editor.createModel(previous, language),
+    modified: window.monaco.editor.createModel(value, language),
   });
-}
+};
 
-const init = async (monaco: typeof Monaco) => {
+const init = (monaco: typeof Monaco) => {
   if (variant === 'diff') {
-    return initDiff()
+    return initDiff();
   }
 
   editor = monaco.editor.create(container, opts());
@@ -148,21 +151,18 @@ const init = async (monaco: typeof Monaco) => {
 
   editor.layout();
   setModel();
-
-  await tick()
-
   emitMarkers();
 };
 
 const emitMarkers = () => {
-  const markers = monaco.editor.getModelMarkers({});
-  const id = hashCode(schema)
+  const markers = window.monaco.editor.getModelMarkers({});
+  const id = hashCode(schema);
   const ownedMarkers = markers.filter((marker) => {
     return marker.resource.authority === `${id}.json`;
   });
 
   dispatch(container, 'markers', { markers: ownedMarkers });
-}
+};
 
 const handleResize = () => {
   if (!resizeObserver && editor) {
@@ -175,7 +175,7 @@ const handleResize = () => {
     const element: Element = editor?.getDomNode() ?? container;
     resizeObserver.observe(element);
   }
-}
+};
 
 onMount(() => {
   loadMonaco(init);

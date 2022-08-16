@@ -8,13 +8,13 @@ import type { MonacoSupportedThemes } from '../lib/monaco/types';
 export let theme: MonacoSupportedThemes = 'vs';
 export let schema = '';
 export let value: string;
-export let minimap: string
+export let minimap: string;
 
-let element: HTMLElement
+let element: HTMLElement;
 
 onMount(() => {
-  console.log(element)
-})
+  console.log(element);
+});
 
 </script>
 
