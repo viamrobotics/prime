@@ -52,7 +52,7 @@ const handleInput = (event: Event) => {
     bind:this={input}
     class={cx(
       widthClasses, 
-      'py-1 px-2.5 text-xs border border-black appearance-none rounded-none', { 
+      'py-1.5 px-2.5 text-xs border border-black appearance-none rounded-none outline-none', { 
         'cursor-not-allowed opacity-50 pointer-events-none': isDisabled, 
       }
     )}

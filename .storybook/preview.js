@@ -13,4 +13,7 @@ export const parameters = {
     }
   },
   inlineStories: true,
+  options: {
+    enableShortcuts: false
+  }
 }

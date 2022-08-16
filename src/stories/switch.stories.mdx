@@ -14,10 +14,14 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'Whether or not the switch is on.',
       table: { defaultValue: { summary: 'off' } },
     },
+    label: {
+      description: 'The input label',
+      table: { defaultValue: { summary: '' } }
+    },
     variant: {
       description: 'The displayed style of the switch',
       control: 'select',
-      options: ['default', 'labeled'],
+      options: ['default', 'annotated'],
       table: { defaultValue: { summary: 'default' } }
     },
     disabled: {
@@ -38,7 +42,7 @@ Used to handle binary input.
 
 <Canvas>
   <Story
-    name='No label'
+    name='Default'
     args={{
       value: 'off',
     }}
@@ -53,16 +57,33 @@ Used to handle binary input.
 
 <Canvas>
   <Story
-    name='Right label'
+    name='Annotated'
     args={{
       value: 'off',
-      variant: 'labeled',
+      variant: 'annotated',
     }}
   >
     {({ value, variant }) => `
       <v-switch
         value='${value}'
         variant='${variant}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With label'
+    args={{
+      value: 'off',
+      label: 'Lunchtime',
+    }}
+  >
+    {({ value, label }) => `
+      <v-switch
+        value='${value}'
+        label='${label}'
       />
     `}
   </Story>

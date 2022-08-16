@@ -13,7 +13,14 @@ export default defineConfig({
   },
   assetsInclude: ['fonts'],
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          // treat all tags with a dash as custom elements
+          isCustomElement: (tag) => tag.startsWith('v-'),
+        },
+      },
+    }),
     svelte({
       compilerOptions: { customElement: true },
       preprocess

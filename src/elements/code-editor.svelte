@@ -1,6 +1,7 @@
 <svelte:options immutable tag='v-code-editor' />
 
-<script lang='ts' context='module'>
+<script lang='ts'>
+
 import { onMount, onDestroy } from 'svelte';
 import { get_current_component } from 'svelte/internal';
 
@@ -8,71 +9,40 @@ import {
   addStyles,
   dispatch,
   removeNewlineWhitespace,
-  MonacoVersion,
-  type MonacoSupportedLanguages,  
-  type MonacoSupportedThemes,
-  type Monaco,
+  monacoURL,
 } from '../lib/index';
 
-interface Window extends globalThis.Window {
-  require: ((dependencies: string[], callback: () => void) => void) & { config: (options: object) => void }
-  MonacoEnvironment: {
-    getWorkerUrl(): string
-  }
-  monaco: typeof Monaco
-}
+import type {
+  MonacoSupportedLanguages,  
+  MonacoSupportedThemes,
+  Monaco,
+  Schema,
+} from '../lib/monaco/types';
 
-declare const window: Window;
-
-const loadedCallbacks = new Set<(monaco: typeof Monaco) => void>();
-const monacoURL = `https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/${MonacoVersion}`;
-
-const proxy = URL.createObjectURL(new Blob([`
-  self.MonacoEnvironment = {
-    baseUrl: '${monacoURL}/min/'
-  };
-  importScripts('${monacoURL}/min/vs/base/worker/workerMain.js');
-  importScripts('${monacoURL}/min/vs/language/json/jsonWorker.min.js');
-`], { type: 'text/javascript' }));
-
-const handleLoad = () => {
-  window.require.config({ paths: { 'vs': `${monacoURL}/min/vs` } });
-  window.MonacoEnvironment = { getWorkerUrl: () => proxy };
-
-  window.require(['vs/editor/editor.main'], () => {
-    for (const callback of loadedCallbacks) {
-      callback(window.monaco);
-    }
-  });
-};
-
-const script = document.createElement('script');
-script.addEventListener('load', handleLoad);
-script.async = true;
-script.src = `${monacoURL}/min/vs/loader.js`;
-
-document.head.append(script);
-
-</script>
-
-<script lang='ts'>
-
+import { loadMonaco } from '../lib/monaco/loader';
+import { monacoUtils } from '../lib/monaco';
 import { htmlToBoolean } from '../lib/boolean';
+import { hashCode } from '../lib/math';
 
-export let value: string;
+export let value = '';
+export let previous = '';
 export let language: MonacoSupportedLanguages;
 export let theme: MonacoSupportedThemes = 'vs';
-export let readonly: string | undefined;
-export let minimap: string | undefined;
-export let uri: string | undefined;
+export let readonly = 'false';
+export let minimap = 'false';
+export let schema = '';
+export let variant: 'default' | 'diff' = 'default';
 
 let isReadonly: boolean;
 let hasMinimap: boolean;
+let parsedSchema: Schema | undefined;
 
+$: parsedSchema = schema ? JSON.parse(schema) as Schema : undefined;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: hasMinimap = htmlToBoolean(minimap, 'minimap');
 
 let container: HTMLDivElement;
+let diffEditor: Monaco.editor.IStandaloneDiffEditor;
 let editor: Monaco.editor.IStandaloneCodeEditor;
 let resizeObserver: ResizeObserver;
 
@@ -93,11 +63,33 @@ const setModel = () => {
   const lastModel = editor.getModel();
   lastModel?.dispose();
 
-  const modelUri = uri !== undefined && uri !== '' ? window.monaco.Uri.parse(uri) : undefined;
-  const model = window.monaco.editor.createModel(value, language, modelUri);
+  let model: Monaco.editor.ITextModel;
+
+  if (parsedSchema) {
+    const id = String(hashCode(schema));
+    const uri = `http://${id}.json/`;
+    const modelUri = window.monaco.Uri.parse(uri);
+
+    monacoUtils.removeSchemas(id, parsedSchema);
+    monacoUtils.addSchemas(id, parsedSchema, [modelUri.toString()]);
+    model = window.monaco.editor.createModel(value, language, modelUri);
+  } else {
+    model = window.monaco.editor.createModel(value, language);
+  }
 
   dispatch(container, 'update-model', { model });
   editor.setModel(model);
+};
+
+const setDiffModel = () => {
+  const lastModel = diffEditor?.getModel();
+  lastModel?.modified.dispose();
+  lastModel?.original.dispose();
+
+  diffEditor.setModel({
+    original: window.monaco.editor.createModel(previous, 'json'),
+    modified: window.monaco.editor.createModel(value, 'json'),
+  });
 };
 
 const handleInput = (event: Event) => {
@@ -107,8 +99,8 @@ const handleInput = (event: Event) => {
   }
 };
 
-const init = (monaco: typeof Monaco) => {
-  editor = monaco.editor.create(container, {
+const opts = () => {
+  return {
     value,
     language,
     theme,
@@ -122,9 +114,29 @@ const init = (monaco: typeof Monaco) => {
       vertical: 'auto',
       horizontal: 'auto',
       alwaysConsumeMouseWheel: false,
-    },    
+    },
     scrollBeyondLastLine: false,
+  } as const;
+};
+
+const initDiff = () => {
+  // @TODO Why are these types incompatible?
+  diffEditor = window.monaco.editor.createDiffEditor(container, {
+    ...opts(),
+    readOnly: true,
+  }) as unknown as Monaco.editor.IStandaloneDiffEditor;
+  diffEditor.setModel({
+    original: window.monaco.editor.createModel(previous, language),
+    modified: window.monaco.editor.createModel(value, language),
   });
+};
+
+const init = (monaco: typeof Monaco) => {
+  if (variant === 'diff') {
+    return initDiff();
+  }
+
+  editor = monaco.editor.create(container, opts());
 
   editor.onDidChangeModelContent(() => {
     dispatch(container, 'input', {
@@ -133,33 +145,47 @@ const init = (monaco: typeof Monaco) => {
   });
 
   editor.onDidBlurEditorWidget(() => {
-    const markers = monaco.editor.getModelMarkers({});
-    dispatch(container, 'update-markers', { markers });
     dispatch(container, 'blur', { value: editor?.getValue() });
+    emitMarkers();
   });
 
   editor.layout();
   setModel();
+  emitMarkers();
+};
 
-  window.setTimeout(() => {
-    const markers = monaco.editor.getModelMarkers({});
-    dispatch(container, 'update-markers', markers);
+const emitMarkers = () => {
+  const markers = window.monaco.editor.getModelMarkers({});
+  const id = hashCode(schema);
+  const ownedMarkers = markers.filter((marker) => {
+    return marker.resource.authority === `${id}.json`;
   });
+
+  dispatch(container, 'markers', { markers: ownedMarkers });
+};
+
+const handleResize = () => {
+  if (!resizeObserver && editor) {
+    resizeObserver = new ResizeObserver(() => {
+      editor?.layout();
+    });
+  }
+
+  if (resizeObserver) {
+    const element: Element = editor?.getDomNode() ?? container;
+    resizeObserver.observe(element);
+  }
 };
 
 onMount(() => {
-  if (window.monaco) {
-    init(window.monaco);
-    return;
-  } 
-  
-  loadedCallbacks.add(init);
+  loadMonaco(init);
 });
 
 onDestroy(() => {
   const model = editor?.getModel();
   model?.dispose();
 
+  diffEditor?.dispose();
   editor?.dispose();
 
   resizeObserver.disconnect();
@@ -169,7 +195,10 @@ onDestroy(() => {
 });
 
 $: {
-  if (editor) {
+  if (diffEditor) {
+    setDiffModel();
+    handleResize();
+  } else if (editor) {
     setModel();
 
     const currentValue: string = editor?.getValue() ?? '';
@@ -184,17 +213,7 @@ $: {
       }
     }
 
-    if (!resizeObserver && editor) {
-      resizeObserver = new ResizeObserver(() => {
-        editor?.layout();
-      });
-    }
-
-    if (resizeObserver) {
-      const element: Element = editor?.getDomNode() ?? container;
-      resizeObserver.observe(element);
-    }
-
+    handleResize();
   }
 }
 

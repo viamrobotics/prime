@@ -1,8 +1,5 @@
-export default (`
-{ 
-  "foo": "bar",
-  "some": "thing",
-  "yes": true,
-  "count": 10
-}
-`).trim()
+export default JSON.stringify({ 
+  name: 'Bob',
+  age: 400,
+  favorite_food: 'pizza',
+}, null, 2);
