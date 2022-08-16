@@ -64,7 +64,6 @@ const setModel = () => {
   let model: monaco.editor.ITextModel
 
   if (parsedSchema) {
-    console.log(parsedSchema)
     const id = String(hashCode(schema))
     const uri = `http://${id}.json/`;
     const modelUri = monaco.Uri.parse(uri);
