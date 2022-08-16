@@ -12,11 +12,11 @@ const component = get_current_component() as HTMLElement & { internals: ElementI
 const internals = component.attachInternals();
 
 type LabelPosition = 'top' | 'left'
-type Types = 'text' | 'email' | 'number' | 'time' | 'date' | 'datetime-local'
+type Types = 'text' | 'email' | 'number' | 'integer' | 'time' | 'date' | 'datetime-local'
 
 export let type: Types = 'text';
 export let placeholder = '';
-export let readonly: string | undefined;
+export let readonly = 'false';
 export let label = '';
 export let value = '';
 export let step = '1';
@@ -29,7 +29,7 @@ let isReadonly: boolean;
 let stepNumber: number;
 let insertStepAttribute: boolean;
 
-
+$: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: stepNumber = Number.parseFloat(step);
 $: insertStepAttribute = type === 'time' || type === 'number';
@@ -48,9 +48,14 @@ const handleInput = (event: Event) => {
 
 const increment = (direction: 1 | -1) => {
   const numberValue = Number.parseFloat(value || '0');
+  const currentValueDigits = String(value).split('.').pop()?.length ?? 0
 
-  value = input.value = String(numberValue + stepNumber * direction);
-
+  if (type === 'number') {
+    value = input.value = (numberValue + stepNumber * direction).toFixed(Math.max(stepDecimalDigits, currentValueDigits));
+  } else if (type === 'integer') {
+    value = input.value = String(Math.round(numberValue + stepNumber * direction))
+  }
+  
   internals.setFormValue(value);
   dispatch(root, 'input', { value });
 };
@@ -73,10 +78,11 @@ const increment = (direction: 1 | -1) => {
   {/if}
 
   <input
-    {type}
+    type={type === 'integer' ? 'number' : type}
     {placeholder}
     {name}
     {value}
+    pattern={type === 'integer' ? '[0-9]*' : undefined}
     readonly={isReadonly}
     bind:this={input}
     class='w-full py-1.5 px-2.5 border text-xs border-black bg-white outline-none appearance-none'
@@ -84,7 +90,7 @@ const increment = (direction: 1 | -1) => {
     step={insertStepAttribute ? step : null}
   />
 
-  {#if type === 'number'}
+  {#if type === 'number' || type === 'integer'}
     <div class='absolute right-0.5 bottom-0 cursor-pointer select-none flex flex-col'>
       <button
         on:click={() => increment(+1)}

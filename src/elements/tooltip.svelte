@@ -63,6 +63,7 @@ addStyles();
       text-xs
       p-3
       border
+      border-black
       z-10
     `}
     class:invisible={invisible}

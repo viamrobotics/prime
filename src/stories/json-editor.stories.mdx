@@ -1,0 +1,68 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import jsonCodeExampleSrc from './assets/json-code-example';
+import jsonSchemaExampleSrc from './assets/json-schema-example';
+
+<Meta
+  title='Elements/JSON Editor'
+  parameters={{
+    actions: {
+      handles: [
+        'blur',
+        'destroy',
+        'input',
+        'resize',
+        'update-markers',
+        'update-model',
+      ],
+    },
+  }}
+  argTypes={{
+    value: {
+      description: 'The content for the editor',
+      table: { defaultValue: { summary: '' } },
+    },
+    theme: {
+      description: 'The `monaco` theme to use',
+      control: { type: 'select' },
+      options: ['vs', 'vs-dark'],
+      table: { defaultValue: { summary: 'vs' } },
+    },
+    minimap: {
+      description: 'Determines if the editor should render the minimap',
+      control: { type: 'select' },
+      options: ['true', 'false'],
+      table: { defaultValue: { summary: 'false' } },
+    },
+    uri: {
+      description:
+        'When defined, is passed to `window.monaco.editor.createModel`',
+      control: { type: 'text' },
+      table: { defaultValue: { summary: '' } },
+    },
+  }}
+/>
+
+# Code Editor
+
+Uses `monaco` for syntax-highlighting.
+
+<Canvas>
+  <Story
+    name='With validation'
+    args={{
+      value: jsonCodeExampleSrc,
+      schema: jsonSchemaExampleSrc,
+    }}
+  >
+    {({ value, theme, minimap, schema }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-json-editor
+        value='${value}'
+        theme='${theme}'
+        minimap='${minimap}'
+        schema='${schema}'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>

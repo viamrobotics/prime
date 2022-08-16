@@ -26,6 +26,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'The starting input value',
       table: { defaultValue: { summary: '' } },
     },
+    step: {
+      description: 'For number inputs, the increment step',
+      control: 'number',
+      table: { defaultValue: { summary: 1 } },
+    },
     labelposition: {
       description: 'The label position',
       control: { type: 'select' },
@@ -68,17 +73,42 @@ Used for all text single-line user inputs.
     name='Number'
     args={{
       type: 'number',
-      label: 'Amount of soup',
+      label: 'Volume of soup',
       placeholder: '0',
       value: '',
+      step: 0.1,
     }}
   >
-    {({ type, label, placeholder, value }) => `
+    {({ type, label, placeholder, value, step }) => `
       <v-input
         type='${type}'
         label='${label}'
         placeholder='${placeholder}'
         value='${value}'
+        step='${step}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Integer'
+    args={{
+      type: 'integer',
+      label: 'Bowls of soup',
+      placeholder: '0',
+      value: '',
+      step: 1,
+    }}
+  >
+    {({ type, label, placeholder, value, step }) => `
+      <v-input
+        type='${type}'
+        label='${label}'
+        placeholder='${placeholder}'
+        value='${value}'
+        step='${step}'
       />
     `}
   </Story>

@@ -9,8 +9,9 @@ import { addStyles, dispatch } from '../lib/index';
 export let label = '';
 export let name = '';
 export let value: 'on' | 'off' = 'off';
-export let variant: 'labeled' | 'default' = 'default';
+export let variant: 'annotated' | 'default' = 'default';
 export let disabled: string | undefined;
+export let labelposition: 'left' | 'top' = 'top';
 
 addStyles();
 
@@ -32,36 +33,50 @@ const handleClick = () => {
 
 <label
   bind:this={root}
-  class={cx('flex items-center gap-1.5', {
+  class={cx('flex gap-1', {
+    'flex-col justify-start': labelposition === 'top',
+    'items-center': labelposition === 'left',
     'opacity-50 pointer-events-none': isDisabled,
   })}
 >
+  {#if label}
+    <p class={cx('text-xs', {
+      'whitespace-nowrap': labelposition === 'left',
+    })}>
+      {label}
+    </p>
+  {/if}
+
   <button
     on:click={handleClick}
     type='button'
-    class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
-      'bg-green/80': on,
-    })}
+    class='flex gap-1.5 items-center'
     role='switch'
     aria-label={label}
     aria-checked={on ? 'true' : 'false'}
   >
-    <span
-      class='pointer-events-none relative inline-block border border-green/100 h-4 w-4 mt-px ml-px bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200'
-      class:translate-x-0={!on}
-      class:translate-x-6={on}
-    />
-    <input
-      {name}
-      {value}
-      class='hidden'
-      type='checkbox'
-      checked={on}
-      bind:this={input}
-    />
-  </button>
+    <div
+      class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
+        'bg-green/80': on,
+      })}
+    >
+      <span
+        class='pointer-events-none relative inline-block border border-green/100 h-4 w-4 mt-px ml-px bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200'
+        class:translate-x-0={!on}
+        class:translate-x-6={on}
+      />
+      <input
+        {name}
+        {value}
+        class='hidden'
+        type='checkbox'
+        checked={on}
+        bind:this={input}
+      />
+    </div>
 
-  {#if variant === 'labeled'}
-    <p class="capitalize text-xs">{value}</p>
-  {/if}
+    {#if variant === 'annotated'}
+      <p class="capitalize text-xs">{value}</p>
+    {/if}
+  </button>
 </label>

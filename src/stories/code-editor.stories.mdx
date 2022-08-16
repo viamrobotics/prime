@@ -1,58 +1,65 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
-import jsonCodeExampleSrc from "./assets/json-code-example";
-import jsCodeExampleSrc from "./assets/javascript-code-example";
-import tsCodeExampleSrc from "./assets/typescript-code-example";
-import pythonCodeExampleSrc from "./assets/python-code-example";
-import goCodeExampleSrc from "./assets/go-code-example";
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import jsonCodeExampleSrc from './assets/json-code-example';
+import jsCodeExampleSrc from './assets/javascript-code-example';
+import tsCodeExampleSrc from './assets/typescript-code-example';
+import pythonCodeExampleSrc from './assets/python-code-example';
+import goCodeExampleSrc from './assets/go-code-example';
+import * as diffCodeExampleSrc from './assets/diff-example';
 
 <Meta
-  title="Elements/Code Editor"
+  title='Elements/Code Editor'
   parameters={{
     actions: {
       handles: [
-        "blur",
-        "destroy",
-        "input",
-        "resize",
-        "update-markers",
-        "update-model",
+        'blur',
+        'destroy',
+        'input',
+        'resize',
+        'update-markers',
+        'update-model',
       ],
     },
   }}
   argTypes={{
     value: {
-      description: "The content for the editor",
-      table: { defaultValue: { summary: "" } },
+      description: 'The content for the editor',
+      table: { defaultValue: { summary: '' } },
+    },
+    variant: {
+      description: 'The type of editor to display',
+      control: { type: 'select' },
+      options: ['default', 'diff'],
+      table: { defaultValue: { summary: 'default' } },
     },
     language: {
-      control: { type: "select" },
-      options: ["json", "javascript", "typescript", "python", "go"],
-      description: "The language to use for syntax highlighting",
-      table: { defaultValue: { summary: "json" } },
+      control: { type: 'select' },
+      options: ['json', 'javascript', 'typescript', 'python', 'go'],
+      description: 'The language to use for syntax highlighting',
+      table: { defaultValue: { summary: 'json' } },
     },
     theme: {
-      description: "The `monaco` theme to use",
-      control: { type: "select" },
-      options: ["vs", "vs-dark"],
-      table: { defaultValue: { summary: "vs" } },
+      description: 'The `monaco` theme to use',
+      control: { type: 'select' },
+      options: ['vs', 'vs-dark'],
+      table: { defaultValue: { summary: 'vs' } },
     },
     readonly: {
-      description: "Determines if the editor should be readonly or editable",
-      control: { type: "select" },
-      options: ["true", "false"],
-      table: { defaultValue: { summary: "false" } },
+      description: 'Determines if the editor should be readonly or editable',
+      control: { type: 'select' },
+      options: ['true', 'false'],
+      table: { defaultValue: { summary: 'false' } },
     },
     minimap: {
-      description: "Determines if the editor should render the minimap",
-      control: { type: "select" },
-      options: ["true", "false"],
-      table: { defaultValue: { summary: "false" } },
+      description: 'Determines if the editor should render the minimap',
+      control: { type: 'select' },
+      options: ['true', 'false'],
+      table: { defaultValue: { summary: 'false' } },
     },
     uri: {
       description:
-        "When defined, is passed to `window.monaco.editor.createModel`",
-      control: { type: "text" },
-      table: { defaultValue: { summary: "" } },
+        'When defined, is passed to `window.monaco.editor.createModel`',
+      control: { type: 'text' },
+      table: { defaultValue: { summary: '' } },
     },
   }}
 />
@@ -63,44 +70,22 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name="JSON editor"
+    name='JavaScript editor'
     args={{
-      language: "json",
-      value: jsonCodeExampleSrc,
-    }}
-  >
-    {({ value, language, theme, readonly, minimap, uri }) => `
-    <div style='width: 400px; height: 400px;'>
-      <v-code-editor 
-        value='${value}'
-        language='${language}'
-        theme='${theme}'
-        readonly='${readonly}'
-        minimap='${minimap}'
-        uri='${uri ?? ""}'
-      />
-    </div>
-    `}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
-    name="JavaScript editor"
-    args={{
-      language: "javascript",
+      language: 'javascript',
       value: jsCodeExampleSrc,
     }}
   >
-    {({ value, language, theme, readonly, minimap, uri }) => `
+    {({ value, previous, language, theme, readonly, minimap, uri }) => `
     <div style='width: 400px; height: 400px;'>
-      <v-code-editor 
+      <v-code-editor
         value='${value}'
+        previous='${previous}'
         language='${language}'
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ""}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
@@ -109,9 +94,9 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name="TypeScript editor"
+    name='TypeScript editor'
     args={{
-      language: "typescript",
+      language: 'typescript',
       value: tsCodeExampleSrc,
     }}
   >
@@ -123,7 +108,7 @@ Uses `monaco` for syntax-highlighting.
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ""}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
@@ -132,9 +117,9 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name="Python editor"
+    name='Python editor'
     args={{
-      language: "python",
+      language: 'python',
       value: pythonCodeExampleSrc,
     }}
   >
@@ -146,7 +131,7 @@ Uses `monaco` for syntax-highlighting.
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ""}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
@@ -155,9 +140,9 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name="Go editor"
+    name='Go editor'
     args={{
-      language: "go",
+      language: 'go',
       value: goCodeExampleSrc,
     }}
   >
@@ -169,7 +154,34 @@ Uses `monaco` for syntax-highlighting.
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ""}'
+        uri='${uri ?? ''}'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Diff editor'
+    args={{
+      variant: 'diff',
+      language: 'json',
+      value: diffCodeExampleSrc.value,
+      previous: diffCodeExampleSrc.previous,
+    }}
+  >
+    {({ variant, value, previous, language, theme, readonly, minimap, uri }) => `
+    <div style='width: auto; height: 400px;'>
+      <v-code-editor
+        variant='${variant}'
+        value='${value}'
+        previous='${previous}'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        uri='${uri ?? ''}'
       />
     </div>
     `}
