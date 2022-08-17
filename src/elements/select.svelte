@@ -2,10 +2,6 @@
 
 <script lang='ts'>
 
-/**
- * 1. Should hitting enter
- */
-
 import cx from 'classnames';
 import { searchSort } from '../lib/sort';
 import { htmlToBoolean } from '../lib/boolean';
