@@ -97,7 +97,7 @@ const handleEnter = () => {
     value = value.includes(option)
       ? [...parsedSelected.filter(item => item !== option)].toString()
       : [...parsedSelected, option].toString();
-    input.focus()
+    input.focus();
   } else {
     if (navigationIndex > -1) {
       value = sortedOptions[navigationIndex]!;
@@ -149,7 +149,15 @@ const handleFocus = () => {
   input.focus();
 };
 
-const handleUnfocus = (event: FocusEvent) => {
+const handleFocusOut = (event: FocusEvent) => {
+  if (isMultiple) {
+    searchTerm = ''
+  }
+
+  if (isExact && sortedOptions.includes(value) === false) {
+    value = ''
+  }
+
   if (!root.contains(event.relatedTarget as Node)) {
     open = false;
     navigationIndex = -1;
@@ -235,7 +243,7 @@ const shouldBeChecked = (value: string, option: string) => {
   })}
   tabindex='-1'
   on:focusin={handleFocus}
-  on:focusout={handleUnfocus}
+  on:focusout={handleFocusOut}
   on:keyup|stopPropagation|preventDefault={handleKeyUp}
   on:mousemove={() => setKeyboardControl(false)}
 >
