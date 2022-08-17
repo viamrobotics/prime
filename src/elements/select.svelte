@@ -99,7 +99,6 @@ const handleEnter = () => {
       : [...parsedSelected, option].toString();
     input.focus()
   } else {
-    console.log(navigationIndex)
     if (navigationIndex > -1) {
       value = sortedOptions[navigationIndex]!;
     } else {
@@ -119,8 +118,6 @@ const handleEnter = () => {
 
 const handleNavigate = (direction: number) => {
   navigationIndex += direction;
-
-  console.log(navigationIndex)
 
   if (navigationIndex < 0) {
     navigationIndex = sortedOptions.length - 1;
