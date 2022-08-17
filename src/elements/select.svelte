@@ -94,7 +94,9 @@ const handleKeyUp = (event: KeyboardEvent) => {
 const handleEnter = () => {
   if (isMultiple) {
     const option = sortedOptions[navigationIndex]!;
-    value = value.includes(option) ? [...parsedSelected.filter(item => item !== option)].toString() : [...parsedSelected, option].toString();
+    value = value.includes(option)
+      ? [...parsedSelected.filter(item => item !== option)].toString()
+      : [...parsedSelected, option].toString();
     input.focus()
   } else {
     console.log(navigationIndex)
