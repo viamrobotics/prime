@@ -18,7 +18,6 @@ export let variant: 'single' | 'multiple' = 'single';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
 export let exact = 'false';
-export let prefix = 'false';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -36,7 +35,6 @@ let searchTerm = '';
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isExact = htmlToBoolean(exact, 'exact');
-$: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: isMultiple = variant === 'multiple';
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = isMultiple
@@ -204,11 +202,11 @@ const handleClearAll = () => {
 $: {
   if (!open) {
     if (isMultiple) {
-      searchTerm = ''
+      searchTerm = '';
     }
 
     if (isExact && parsedOptions.includes(value) === false) {
-      value = ''
+      value = '';
     }
   }
 }
