@@ -35,7 +35,7 @@ export const loadMonaco = (onload: Callback) => {
       baseUrl: '${monacoURL}/min/'
     };
     importScripts('${monacoURL}/min/vs/base/worker/workerMain.js');
-    importScripts('${monacoURL}/min/vs/language/json/jsonWorker.min.js');
+    importScripts('${monacoURL}/min/vs/language/json/jsonWorker.js');
   `], { type: 'text/javascript' }));
 
   const handleLoad = () => {
@@ -51,10 +51,11 @@ export const loadMonaco = (onload: Callback) => {
     });
   };
 
-  const script = document.createElement('script');
-  script.addEventListener('load', handleLoad);
-  script.async = true;
-  script.src = `${monacoURL}/min/vs/loader.js`;
-
-  document.head.append(script);
+  {
+    const script = document.createElement('script');
+    script.addEventListener('load', handleLoad);
+    script.async = true;
+    script.src = `${monacoURL}/min/vs/loader.js`;
+    document.head.append(script);
+  }
 };

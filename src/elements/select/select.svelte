@@ -3,9 +3,10 @@
 <script lang='ts'>
 
 import cx from 'classnames';
-import { searchSort } from '../lib/sort';
-import { htmlToBoolean } from '../lib/boolean';
-import { addStyles, dispatch } from '../lib/index';
+import { searchSort } from '../../lib/sort';
+import { htmlToBoolean } from '../../lib/boolean';
+import { addStyles, dispatch } from '../../lib/index';
+import * as utils from './utils';
 
 type LabelPosition = 'top' | 'left'
 
@@ -17,6 +18,7 @@ export let variant: 'single' | 'multiple' = 'single';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
 export let exact = 'false';
+export let prefix = 'false';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -28,12 +30,13 @@ let isMultiple: boolean;
 let parsedOptions: string[];
 let parsedSelected: string[];
 let sortedOptions: string[];
-let searchedOptions: (string | string[])[];
+let searchedOptions: { option: string; search?: string[] }[];
 
 let searchTerm = '';
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isExact = htmlToBoolean(exact, 'exact');
+$: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: isMultiple = variant === 'multiple';
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = isMultiple
@@ -43,8 +46,8 @@ $: sortedOptions = isMultiple
   ? applySearchSort(searchTerm, parsedOptions)
   : applySearchSort(value, parsedOptions);
 $: searchedOptions = isMultiple 
-  ? sortedOptions.map((option) => applySearchHighlight(option, searchTerm))
-  : sortedOptions.map((option) => applySearchHighlight(option, value)); 
+  ? utils.applySearchHighlight(sortedOptions, searchTerm)
+  : utils.applySearchHighlight(sortedOptions, value); 
 
 let open = false;
 let navigationIndex = -1;
@@ -59,14 +62,6 @@ const setKeyboardControl = (toggle: boolean) => {
 const applySearchSort = (term: string, options: string[]) => {
   return term ? searchSort(options, term) : options;
 };
-
-const isElementInScrollView = (element: Element) => {
-  const { top, bottom } = element.getBoundingClientRect();
-  const parentRect = element.parentElement!.getBoundingClientRect();
-
-  return (bottom < parentRect.bottom && top > parentRect.top);
-};
-
 
 const handleInput = (event: Event) => {
   navigationIndex = -1;
@@ -127,7 +122,7 @@ const handleNavigate = (direction: number) => {
 
   const element = optionsContainer.children[navigationIndex]!;
 
-  if (isElementInScrollView(element) === false) {
+  if (utils.isElementInScrollView(element) === false) {
     element.scrollIntoView();
   }
 };
@@ -150,14 +145,6 @@ const handleFocus = () => {
 };
 
 const handleFocusOut = (event: FocusEvent) => {
-  if (isMultiple) {
-    searchTerm = ''
-  }
-
-  if (isExact && sortedOptions.includes(value) === false) {
-    value = ''
-  }
-
   if (!root.contains(event.relatedTarget as Node)) {
     open = false;
     navigationIndex = -1;
@@ -211,25 +198,20 @@ const handleOptionSelect = (target: string, event: Event) => {
 const handleClearAll = () => {
   value = '';
   optionsContainer.scrollTop = 0;
-  dispatch(root, 'input', { value: [] });
+  dispatch(root, 'input', { value });
 };
 
-const applySearchHighlight = (target: string, newValue: string) => {
-  const match = target.match(new RegExp(newValue, 'i'));
+$: {
+  if (!open) {
+    if (isMultiple) {
+      searchTerm = ''
+    }
 
-  if (match?.index !== undefined) {
-    const begin = target.slice(0, match.index);
-    const middle = target.slice(match.index, match.index + newValue.length);
-    const end = target.slice(match.index + newValue.length);
-    return [begin, middle, end];
+    if (isExact && parsedOptions.includes(value) === false) {
+      value = ''
+    }
   }
-
-  return target;
-};
-
-const shouldBeChecked = (value: string, option: string) => {
-  return value.includes(option);
-};
+}
 
 </script>
 
@@ -257,7 +239,7 @@ const shouldBeChecked = (value: string, option: string) => {
 
   <v-dropdown
     match
-    open={open ? '' : 'false'}
+    open={open ? '' : undefined}
   >
     <div
       slot='target'
@@ -310,7 +292,7 @@ const shouldBeChecked = (value: string, option: string) => {
           class='options-container flex max-h-36 flex-col overflow-y-auto'
           on:mouseleave={clearNavigationIndex}
         >
-          {#each searchedOptions as option, index (option)}
+          {#each searchedOptions as { search, option }, index (option)}
             <label
               class={cx('flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1.5 text-xs', {
                 'bg-slate-200': navigationIndex === index,
@@ -321,15 +303,15 @@ const shouldBeChecked = (value: string, option: string) => {
                 tabindex="-1"
                 type='checkbox'
                 class={cx('bg-black outline-none', isMultiple ? '' : 'hidden')}
-                checked={shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
+                checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
                 on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
                 on:input|stopPropagation
                 on:focus|preventDefault|stopPropagation
               >
 
-              {#if Array.isArray(option)}
+              {#if search}
                 <div>
-                  {#each option as part, splitIndex (splitIndex)}
+                  {#each search as part, splitIndex (splitIndex)}
                     <span class={cx({
                       'bg-yellow-100': splitIndex === 1 && navigationIndex !== index,
                     })}>

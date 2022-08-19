@@ -123,20 +123,20 @@ For user triggered actions
 
 <Canvas>
   <Story
-    name='Leading text'
+    name='With prefix'
     args={{
       label: 'Your options',
       options: gpioOptions,
       placeholder: 'Select...',
-      exact: 'true',
+      prefix: 'true',
     }}
   >
-    {({ label, options, value, placeholder, variant, exact }) => `
+    {({ label, options, value, placeholder, variant, prefix }) => `
       <v-select
         label='${label}'
         options='${options}'
         placeholder='${placeholder}'
-        exact='${exact}'
+        prefix='${prefix}'
       />
     `}
   </Story>
