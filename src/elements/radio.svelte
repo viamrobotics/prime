@@ -40,7 +40,7 @@ const handleClick = (value: string) => {
   {#each parsedOptions as option}
     <button
       bind:this={button}
-      class={cx('border-y border-l last:border-r border-black px-2 py-1 text-sm', {
+      class={cx('capitalize border-y border-l last:border-r border-black px-2 py-1 text-xs', {
         'bg-white': option !== selected,
         'bg-black text-white': option === selected,
       })}

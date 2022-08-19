@@ -410,7 +410,7 @@
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label class='flex flex-col gap-2'>
   {#if label}
-    <p class='text-xs'>{label}</p>
+    <p class='text-xs capitalize'>{label}</p>
   {/if}
 
   <div

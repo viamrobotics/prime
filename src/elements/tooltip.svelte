@@ -2,8 +2,8 @@
 
 <script lang='ts'>
 
-import { computePosition, flip, shift, offset } from '@floating-ui/dom';
-
+import { onMount } from 'svelte';
+import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
 import { addStyles } from '../lib/index';
 
 type Locations = 'top' | 'bottom' | 'right' | 'left'
@@ -13,6 +13,7 @@ export let location: Locations = 'top';
 
 let container: HTMLElement;
 let tooltip: HTMLElement;
+let arrowElement: HTMLElement;
 
 let invisible = true;
 
@@ -22,8 +23,36 @@ let y = 0;
 const recalculateStyle = async () => {
   const position = await computePosition(container, tooltip, {
     placement: location,
-    middleware: [flip(), shift({ padding: 5 }), offset(10)],
+    middleware: [
+      offset(7),
+      flip(),
+      shift({ padding: 5 }),
+      arrow({ element: arrowElement }),
+    ],
   });
+
+  const staticSide = {
+    top: 'bottom',
+    right: 'left',
+    bottom: 'top',
+    left: 'right',
+  }[position.placement.split('-')[0]!]!;
+
+  const arrowX = position.middlewareData.arrow?.x ?? 0;
+  const arrowY = position.middlewareData.arrow?.y ?? 0;
+
+  // eslint-disable-next-line require-atomic-updates
+  arrowElement.style.cssText = staticSide === 'right' || staticSide === 'left' ? `
+      top: ${arrowY}px;
+      ${staticSide}: ${arrowX}px;
+      margin-${staticSide}: -10px;
+      transform: ${staticSide === 'right' ? 'rotate(90deg)' : 'rotate(270deg)'};
+    ` : `
+      left: ${arrowX}px;
+      ${staticSide}: ${arrowY}px;
+      margin-${staticSide}: -6px;
+      transform: ${staticSide === 'bottom' ? 'rotate(180deg)' : ''};
+    `;
 
   x = position.x;
   y = position.y;
@@ -40,6 +69,8 @@ const handleMouseLeave = () => {
 
 addStyles();
 
+onMount(recalculateStyle);
+
 </script>
 
 <div
@@ -52,6 +83,7 @@ addStyles();
   <slot />
   <div
     bind:this={tooltip}
+    class:invisible={invisible}
     role="tooltip"
     class={`
       absolute
@@ -66,9 +98,20 @@ addStyles();
       border-black
       z-10
     `}
-    class:invisible={invisible}
     style='transform: translate({x}px, {y}px);'
     >
+    <div
+      bind:this={arrowElement}
+      class='absolute triangle w-0 h-0'
+    />
     {text}
   </div>
 </div>
+
+<style>
+  .triangle {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid black;
+  }
+</style>
