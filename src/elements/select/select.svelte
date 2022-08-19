@@ -228,7 +228,7 @@ $: {
   on:mousemove={() => setKeyboardControl(false)}
 >
   {#if label}
-    <p class={cx('text-xs', {
+    <p class={cx('text-xs capitalize', {
       'inline whitespace-nowrap': labelposition === 'left',
     })}>
       {label}

@@ -40,7 +40,7 @@ const handleClick = () => {
   })}
 >
   {#if label}
-    <p class={cx('text-xs', {
+    <p class={cx('text-xs capitalize', {
       'whitespace-nowrap': labelposition === 'left',
     })}>
       {label}
