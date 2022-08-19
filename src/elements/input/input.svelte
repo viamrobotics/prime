@@ -17,21 +17,25 @@ type Types = 'text' | 'email' | 'number' | 'integer' | 'time' | 'date' | 'dateti
 export let type: Types = 'text';
 export let placeholder = '';
 export let readonly = 'false';
+export let disabled = 'false';
 export let label = '';
 export let value = '';
 export let step = '1';
 export let name = '';
 export let labelposition: LabelPosition = 'top';
+export let tooltip = '';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
 let stepDecimalDigits: number;
 let isReadonly: boolean;
+let isDisabled: boolean;
 let stepNumber: number;
 let insertStepAttribute: boolean;
 
 $: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
+$: isDisabled = htmlToBoolean(disabled, 'disabled')
 $: stepNumber = Number.parseFloat(step);
 $: insertStepAttribute = type === 'time' || type === 'number';
 
@@ -70,13 +74,22 @@ const increment = (direction: 1 | -1) => {
     'items-center': labelposition === 'left',
   })}
 >
-  {#if label}
-    <p class={cx('text-xs capitalize', {
-      'inline whitespace-nowrap': labelposition === 'left',
-    })}>
-      {label}
-    </p>
-  {/if}
+  <div class='flex items-center gap-1.5'>
+    {#if label}
+      <p class={cx('text-xs capitalize', {
+        'inline whitespace-nowrap': labelposition === 'left',
+        'opacity-50 pointer-events-none': isDisabled,
+      })}>
+        {label}
+      </p>
+    {/if}
+
+    {#if tooltip}
+      <v-tooltip text={tooltip}>
+        <div class="icon-info-outline text-orange-400" />
+      </v-tooltip>
+    {/if}
+  </div>
 
   <input
     type={type === 'integer' ? 'number' : type}
@@ -84,9 +97,11 @@ const increment = (direction: 1 | -1) => {
     {name}
     {value}
     pattern={type === 'integer' ? '[0-9]*' : undefined}
-    readonly={isReadonly}
+    readonly={isReadonly || isDisabled}
     bind:this={input}
-    class='w-full py-1.5 px-2.5 border text-xs border-black bg-white outline-none appearance-none'
+    class={cx('w-full py-1.5 px-2.5 border text-xs border-black bg-white outline-none appearance-none', {
+      'opacity-50 pointer-events-none': isDisabled,
+    })}
     on:input={handleInput}
     step={insertStepAttribute ? step : null}
   />
