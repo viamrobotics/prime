@@ -76,7 +76,6 @@ onMount(recalculateStyle);
 <div
   bind:this={container}
   class="relative"
-  
   aria-describedby="tooltip"
   on:mouseenter={handleMouseEnter}
   on:mouseleave={handleMouseLeave}
