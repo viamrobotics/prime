@@ -1,4 +1,5 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import gpioOptions from './assets/gpio-options'
 
 <Meta
   title='Elements/Select'
@@ -38,8 +39,8 @@ For user triggered actions
   <Story
     name='Select'
     args={{
-      label: 'Your options',
-      options: 'Option 1, Option 2, Option 3',
+      label: 'Names',
+      options: 'Bob, Sally, Jimothy, Raechel, Apple, Andy, Robert',
       placeholder: "Some placeholder..."
     }}
   >
@@ -81,16 +82,84 @@ For user triggered actions
       label: 'Your options',
       options: 'Option 1, Option 2, Option 3',
       value: 'Option 3',
-      placeholder: "Some placeholder..."
+      placeholder: 'Some placeholder...',
+      disabled: 'true',
     }}
   >
-    {({ label, options, value, placeholder }) => `
+    {({ label, options, value, placeholder, disabled }) => `
       <v-select
         label='${label}'
         options='${options}'
         value='${value}'
         placeholder='${placeholder}'
-        disabled='true'
+        disabled='${disabled}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Exact'
+    args={{
+      label: 'Your options',
+      options: 'Option 1, Option 2, Option 3',
+      value: 'Option',
+      placeholder: 'Some placeholder...',
+      exact: 'true',
+    }}
+  >
+    {({ label, options, value, placeholder, variant, exact }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        placeholder='${placeholder}'
+        exact='${exact}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With prefix'
+    args={{
+      label: 'Your options',
+      options: gpioOptions,
+      placeholder: 'Select...',
+      prefix: 'true',
+    }}
+  >
+    {({ label, options, value, placeholder, variant, prefix }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        placeholder='${placeholder}'
+        prefix='${prefix}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Multiple'
+    args={{
+      label: 'Your options',
+      options: 'Bob, Sally, Jimothy, Raechel, Apple, Andy, Robert',
+      value: 'Jimothy, Apple',
+      placeholder: 'Some placeholder...',
+      variant: 'multiple',
+    }}
+  >
+    {({ label, options, value, placeholder, variant }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        placeholder='${placeholder}'
+        variant='${variant}'
       />
     `}
   </Story>
