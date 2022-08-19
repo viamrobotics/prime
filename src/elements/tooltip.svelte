@@ -98,7 +98,6 @@ onMount(recalculateStyle);
       border-black
       z-10
     `}
-    
     style='transform: translate({x}px, {y}px);'
     >
     <div
