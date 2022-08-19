@@ -35,7 +35,7 @@ let insertStepAttribute: boolean;
 
 $: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
-$: isDisabled = htmlToBoolean(disabled, 'disabled')
+$: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: stepNumber = Number.parseFloat(step);
 $: insertStepAttribute = type === 'time' || type === 'number';
 

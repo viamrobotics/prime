@@ -2,7 +2,7 @@
 
 <script lang='ts'>
 
-import { onMount } from 'svelte'
+import { onMount } from 'svelte';
 import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
 import { addStyles } from '../lib/index';
 
@@ -36,26 +36,23 @@ const recalculateStyle = async () => {
     right: 'left',
     bottom: 'top',
     left: 'right',
-  }[position.placement.split('-')[0]!];
+  }[position.placement.split('-')[0]!]!;
 
-  const arrowX = position.middlewareData.arrow?.x ?? 0
-  const arrowY = position.middlewareData.arrow?.y ?? 0
+  const arrowX = position.middlewareData.arrow?.x ?? 0;
+  const arrowY = position.middlewareData.arrow?.y ?? 0;
 
-  if (staticSide === 'right' || staticSide === 'left') {
-    arrowElement.style.cssText = `
+  // eslint-disable-next-line require-atomic-updates
+  arrowElement.style.cssText = staticSide === 'right' || staticSide === 'left' ? `
       top: ${arrowY}px;
       ${staticSide}: ${arrowX}px;
       margin-${staticSide}: -10px;
       transform: ${staticSide === 'right' ? 'rotate(90deg)' : 'rotate(270deg)'};
-    `;
-  } else {
-    arrowElement.style.cssText = `
+    ` : `
       left: ${arrowX}px;
       ${staticSide}: ${arrowY}px;
       margin-${staticSide}: -6px;
       transform: ${staticSide === 'bottom' ? 'rotate(180deg)' : ''};
     `;
-  }
 
   x = position.x;
   y = position.y;
@@ -72,7 +69,7 @@ const handleMouseLeave = () => {
 
 addStyles();
 
-onMount(recalculateStyle)
+onMount(recalculateStyle);
 
 </script>
 
