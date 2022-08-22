@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-tooltip' />
+<svelte:options immutable tag='v-tooltip' />
 
 <script lang='ts'>
 
@@ -75,8 +75,8 @@ onMount(recalculateStyle);
 
 <div
   bind:this={container}
-  class="relative"
-  aria-describedby="tooltip"
+  class='relative'
+  aria-describedby='tooltip'
   on:mouseenter={handleMouseEnter}
   on:mouseleave={handleMouseLeave}
 >
@@ -84,7 +84,7 @@ onMount(recalculateStyle);
   <div
     bind:this={tooltip}
     class:invisible={invisible}
-    role="tooltip"
+    role='tooltip'
     class={`
       absolute
       top-0
@@ -96,6 +96,7 @@ onMount(recalculateStyle);
       p-3
       border
       border-black
+      min-w-[12rem]
       z-10
     `}
     style='transform: translate({x}px, {y}px);'

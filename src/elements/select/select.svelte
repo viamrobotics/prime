@@ -18,6 +18,7 @@ export let variant: 'single' | 'multiple' = 'single';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
 export let exact = 'false';
+export let tooltip = '';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -227,13 +228,21 @@ $: {
   on:keyup|stopPropagation|preventDefault={handleKeyUp}
   on:mousemove={() => setKeyboardControl(false)}
 >
-  {#if label}
-    <p class={cx('text-xs capitalize', {
-      'inline whitespace-nowrap': labelposition === 'left',
-    })}>
-      {label}
-    </p>
-  {/if}
+  <div class='flex items-center gap-1.5'>
+    {#if label}
+      <p class={cx('text-xs capitalize', {
+        'inline whitespace-nowrap': labelposition === 'left',
+      })}>
+        {label}
+      </p>
+    {/if}
+
+    {#if tooltip}
+      <v-tooltip text={tooltip}>
+        <div class="icon-info-outline text-orange-400" />
+      </v-tooltip>
+    {/if}
+  </div>
 
   <v-dropdown
     match

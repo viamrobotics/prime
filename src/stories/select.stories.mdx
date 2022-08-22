@@ -109,13 +109,36 @@ For user triggered actions
       exact: 'true',
     }}
   >
-    {({ label, options, value, placeholder, variant, exact }) => `
+    {({ label, options, value, placeholder, exact }) => `
       <v-select
         label='${label}'
         options='${options}'
         value='${value}'
         placeholder='${placeholder}'
         exact='${exact}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Tooltip'
+    args={{
+      label: 'Your options',
+      options: 'Option 1, Option 2, Option 3',
+      value: 'Option',
+      placeholder: 'Some placeholder...',
+      tooltip: 'Warning: these options may not be your only options.'
+    }}
+  >
+    {({ label, options, value, placeholder, tooltip }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        placeholder='${placeholder}'
+        tooltip='${tooltip}'
       />
     `}
   </Story>
