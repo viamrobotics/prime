@@ -454,7 +454,7 @@
 
         <span class={cn(
           'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
-          'py-1 px-1.5 text-sm text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white',
+          'py-1 px-1.5 text-sm text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white text-xs',
           {
             '-translate-y-1.5': !focus || activeHandle !== index,
           }
@@ -480,7 +480,7 @@
       class:disabled
       class:focus 
     >
-      <small class='absolute bottom-full left-0 -translate-x-1/2 mb-3 whitespace-nowrap'>
+      <small class='absolute bottom-full left-0 -translate-x-1/2 mb-3 whitespace-nowrap text-xs'>
         {minNum}
         
         {#if suffix}
@@ -499,7 +499,7 @@
         {/each}
       {/if}
 
-      <small class='absolute bottom-full right-0 translate-x-1/2 mb-3 whitespace-nowrap'>
+      <small class='absolute bottom-full right-0 translate-x-1/2 mb-3 whitespace-nowrap text-xs'>
         {maxNum}
         
         {#if suffix}

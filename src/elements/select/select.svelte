@@ -220,7 +220,6 @@ $: {
   class={cx('relative max-w-[14rem] w-full flex gap-1', {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
-    'opacity-50 pointer-events-none': isDisabled,
   })}
   tabindex='-1'
   on:focusin={handleFocus}
@@ -231,6 +230,7 @@ $: {
   <div class='flex items-center gap-1.5'>
     {#if label}
       <p class={cx('text-xs capitalize', {
+        'opacity-50 pointer-events-none': isDisabled,
         'inline whitespace-nowrap': labelposition === 'left',
       })}>
         {label}
@@ -257,9 +257,11 @@ $: {
           bind:this={input}
           {placeholder}
           value={isMultiple ? searchTerm : value}
-          readonly={isDisabled ? true : undefined}
+          readonly={isDisabled}
           type='text'
-          class='grow text-xs border-0 bg-transparent outline-none appearance-none'
+          class={cx('grow text-xs border-0 bg-transparent outline-none appearance-none', {
+            'opacity-50 pointer-events-none': isDisabled,
+          })}
           on:input|preventDefault={handleInput}
         >
         <button
