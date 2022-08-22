@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-input-internal' />
+<svelte:options immutable tag='v-input-internal' />
 
 <script lang='ts'>
 
