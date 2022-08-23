@@ -30,7 +30,7 @@ Used to tabular data.
     }}
   >
     {({ variant, cols }) => `
-      <v-table variant="${variant}" cols="${cols}">
+      <v-table class='table' variant="${variant}" cols="${cols}">
         <v-thead>
           <v-th><input type="checkbox"></v-th>
           <v-th>Name</v-th>
@@ -47,6 +47,27 @@ Used to tabular data.
             <v-td>555-555-5555</v-td>
           </v-tr>
           <v-tr>
+            <v-td><input type="checkbox"></v-td>
+            <v-td>P Sherman</v-td>
+            <v-td>42 Wallaby Way</v-td>
+            <v-td>x</v-td>
+            <v-td>555-555-5555</v-td>
+          </v-tr>
+          <v-tr variant='success'>
+            <v-td><input type="checkbox"></v-td>
+            <v-td>P Sherman</v-td>
+            <v-td>42 Wallaby Way</v-td>
+            <v-td>x</v-td>
+            <v-td>555-555-5555</v-td>
+          </v-tr>
+          <v-tr variant='disabled'>
+            <v-td><input type="checkbox"></v-td>
+            <v-td>P Sherman</v-td>
+            <v-td>42 Wallaby Way</v-td>
+            <v-td>x</v-td>
+            <v-td>555-555-5555</v-td>
+          </v-tr>
+          <v-tr variant='error'>
             <v-td><input type="checkbox"></v-td>
             <v-td>P Sherman</v-td>
             <v-td>42 Wallaby Way</v-td>

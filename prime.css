@@ -7,11 +7,11 @@
 }
 
 :host {
-  display: contents
+  display: block;
 }
 
 :host([hidden]) {
-  display: none
+  display: none;
 }
 
 [class^="icon-"], [class*=" icon-"] {
