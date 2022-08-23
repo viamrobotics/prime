@@ -84,10 +84,11 @@ For user triggered actions
       value: 'Option 3',
       placeholder: 'Some placeholder...',
       disabled: 'true',
-      tooltip: 'This is disabled.'
+      tooltip: 'This is disabled.',
+      state: 'error',
     }}
   >
-    {({ label, options, value, placeholder, disabled, tooltip }) => `
+    {({ label, options, value, placeholder, disabled, tooltip, state }) => `
       <v-select
         label='${label}'
         options='${options}'
@@ -95,6 +96,7 @@ For user triggered actions
         placeholder='${placeholder}'
         disabled='${disabled}'
         tooltip='${tooltip}'
+        state='${state}'
       />
     `}
   </Story>
@@ -131,16 +133,18 @@ For user triggered actions
       options: 'Option 1, Option 2, Option 3',
       value: 'Option',
       placeholder: 'Some placeholder...',
-      tooltip: 'Warning: these options may not be your only options.'
+      tooltip: 'Warning: these options may not be your only options.',
+      state: 'warn',
     }}
   >
-    {({ label, options, value, placeholder, tooltip }) => `
+    {({ label, options, value, placeholder, tooltip, state }) => `
       <v-select
         label='${label}'
         options='${options}'
         value='${value}'
         placeholder='${placeholder}'
         tooltip='${tooltip}'
+        state='${state}'
       />
     `}
   </Story>

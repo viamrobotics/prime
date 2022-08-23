@@ -1,6 +1,7 @@
-<svelte:options immutable={true} tag='v-table' />
+<svelte:options immutable tag='v-table' />
 
 <script lang='ts'>
+
 import cx from 'classnames';
 import { addStyles } from '../../lib/index';
 
@@ -8,11 +9,20 @@ addStyles();
 
 export let variant = '';
 export let cols = '';
+export let style = '';
 
 const colSizes = cols.split(',').map(col => col.trim());
+
 </script>
 
-<table class={cx('bg-white text-xs w-full', { 'table-fixed': variant === 'fixed' })}>
+<style>
+:host { display: contents !important; }
+</style>
+
+<table
+  {style}
+  class={cx('bg-white text-xs w-full', { 'table-fixed': variant === 'fixed' })}
+>
   <colgroup>
     {#each colSizes as col}
       <col style="width: {col};">

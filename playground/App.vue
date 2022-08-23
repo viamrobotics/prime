@@ -17,7 +17,7 @@ const json = JSON.stringify({
 <template>
   <Monaco />
   <div style="display: flex; flex-direction: column; gap: 0.5rem">
-    <v-table>
+    <v-table class="bg-blue">
       <v-thead>
         <v-th>buttonz</v-th>
       </v-thead>
@@ -47,3 +47,6 @@ const json = JSON.stringify({
   </v-dropdown>
 </template>
 
+<style>
+  .bg-blue { background: blue; }
+</style>

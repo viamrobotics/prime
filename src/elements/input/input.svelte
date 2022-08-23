@@ -99,11 +99,12 @@ const increment = (direction: 1 | -1) => {
     pattern={type === 'integer' ? '[0-9]*' : undefined}
     readonly={isReadonly || isDisabled}
     bind:this={input}
-    class={cx('w-full py-1.5 px-2.5 border text-xs border-black bg-white outline-none appearance-none', {
-      'opacity-50 pointer-events-none': isDisabled,
+    class={cx('w-full py-1.5 px-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
+      'bg-white': !isDisabled,
+      'opacity-50 pointer-events-none bg-gray-200': isDisabled,
     })}
-    on:input={handleInput}
     step={insertStepAttribute ? step : null}
+    on:input={handleInput}
   />
 
   {#if type === 'number' || type === 'integer'}

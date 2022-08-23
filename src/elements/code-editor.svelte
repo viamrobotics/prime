@@ -219,6 +219,10 @@ $: {
 
 </script>
 
+<style>
+:host { display: contents !important; }
+</style>
+
 <div
   class='w-full h-full relative isolate'
   bind:this={container}

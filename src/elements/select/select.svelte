@@ -19,6 +19,7 @@ export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
 export let exact = 'false';
 export let tooltip = '';
+export let state: 'info' | 'warn' | 'error' | '' = 'info'
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -239,7 +240,11 @@ $: {
 
     {#if tooltip}
       <v-tooltip text={tooltip}>
-        <div class="icon-info-outline text-orange-400" />
+        <div class={cx({
+          'icon-info-outline': state === 'info',
+          'icon-warning text-orange-400': state === 'warn',
+          'icon-error-outline text-red-600': state === 'error',
+        })} />
       </v-tooltip>
     {/if}
   </div>
@@ -251,26 +256,26 @@ $: {
     <div
       slot='target'
       class={cx('w-full border border-black', {
-        'opacity-50 pointer-events-none': isDisabled,
+        'opacity-50 pointer-events-none bg-gray-200': isDisabled,
       })}
     >
-      <div class='flex py-1.5 pl-2.5 pr-1'>
+      <div class='flex'>
         <input
           bind:this={input}
           {placeholder}
           value={isMultiple ? searchTerm : value}
           readonly={isDisabled}
           type='text'
-          class='grow text-xs border-0 bg-transparent outline-none appearance-none'
+          class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none'
           on:input|preventDefault={handleInput}
         >
         <button
           tabindex='-1'
-          class={cx('grid place-content-center transition-transform duration-200', { 'rotate-180': open })}
+          class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 'rotate-180': open })}
           on:click={handleIconClick}
           on:focusin|stopPropagation
         >
-          <v-icon name='chevron-down' />
+          <v-icon class='flex' name='chevron-down' />
         </button>
       </div>
 
