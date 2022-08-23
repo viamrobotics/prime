@@ -4,7 +4,7 @@
 
 import { addStyles } from '../../lib/index';
 
-export let style = ''
+export let style = '';
 
 addStyles();
 

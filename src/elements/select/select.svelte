@@ -19,7 +19,7 @@ export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
 export let exact = 'false';
 export let tooltip = '';
-export let state: 'info' | 'warn' | 'error' | '' = 'info'
+export let state: 'info' | 'warn' | 'error' | '' = 'info';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
