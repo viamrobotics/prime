@@ -84,15 +84,17 @@ For user triggered actions
       value: 'Option 3',
       placeholder: 'Some placeholder...',
       disabled: 'true',
+      tooltip: 'This is disabled.'
     }}
   >
-    {({ label, options, value, placeholder, disabled }) => `
+    {({ label, options, value, placeholder, disabled, tooltip }) => `
       <v-select
         label='${label}'
         options='${options}'
         value='${value}'
         placeholder='${placeholder}'
         disabled='${disabled}'
+        tooltip='${tooltip}'
       />
     `}
   </Story>

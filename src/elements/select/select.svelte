@@ -135,7 +135,7 @@ const handleEscape = () => {
 };
 
 const handleFocus = () => {
-  if (open) {
+  if (open || isDisabled) {
     return;
   }
 
@@ -250,7 +250,9 @@ $: {
   >
     <div
       slot='target'
-      class='w-full border border-black'
+      class={cx('w-full border border-black', {
+        'opacity-50 pointer-events-none': isDisabled,
+      })}
     >
       <div class='flex py-1.5 pl-2.5 pr-1'>
         <input
@@ -259,9 +261,7 @@ $: {
           value={isMultiple ? searchTerm : value}
           readonly={isDisabled}
           type='text'
-          class={cx('grow text-xs border-0 bg-transparent outline-none appearance-none', {
-            'opacity-50 pointer-events-none': isDisabled,
-          })}
+          class='grow text-xs border-0 bg-transparent outline-none appearance-none'
           on:input|preventDefault={handleInput}
         >
         <button
