@@ -242,7 +242,7 @@ $: {
       <v-tooltip text={tooltip}>
         <div class={cx({
           'icon-info-outline': state === 'info',
-          'icon-warning text-orange-400': state === 'warn',
+          'icon-error-outline text-orange-400': state === 'warn',
           'icon-error-outline text-red-600': state === 'error',
         })} />
       </v-tooltip>
