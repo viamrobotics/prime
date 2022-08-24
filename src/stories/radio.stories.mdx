@@ -65,3 +65,26 @@ For user triggered actions
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Tooltip and state'
+    args={{
+      label: 'Your options',
+      options: 'Option 1, Option 2, Option 3',
+      selected: 'Option 1',
+      tooltip: 'Warning: these options may not be your only options.',
+      state: 'warn',
+    }}
+  >
+    {({ label, options, selected, placeholder, tooltip, state }) => `
+      <v-radio
+        label='${label}'
+        selected='${selected}'
+        options='${options}'
+        tooltip='${tooltip}'
+        state='${state}'
+      />
+    `}
+  </Story>
+</Canvas>
