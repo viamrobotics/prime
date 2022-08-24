@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-radio' />
+<svelte:options immutable tag='v-radio' />
 
 <script lang='ts'>
 
@@ -11,6 +11,8 @@ export let label = '';
 export let options = '';
 export let selected = '';
 export let labelposition: LabelPosition = 'top';
+export let tooltip = '';
+export let state: 'info' | 'warn' | 'error' | '' = 'info';
 
 addStyles();
 
@@ -28,14 +30,27 @@ const handleClick = (value: string) => {
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label>
-  {#if label}
-    <p class={cx('text-xs', {
-      'pb-1': labelposition === 'top',
-      inline: labelposition === 'left',
-    })}>
-      {label}
-    </p>
-  {/if}
+  <div class={cx('flex items-center gap-1.5', {
+    'pb-1': labelposition === 'top',
+  })}>
+    {#if label}
+      <p class={cx('text-xs', {
+        inline: labelposition === 'left',
+      })}>
+        {label}
+      </p>
+    {/if}
+
+    {#if tooltip}
+      <v-tooltip text={tooltip}>
+        <div class={cx({
+          'icon-info-outline': state === 'info',
+          'icon-error-outline text-orange-400': state === 'warn',
+          'icon-error-outline text-red-600': state === 'error',
+        })} />
+      </v-tooltip>
+    {/if}
+  </div>
 
   {#each parsedOptions as option}
     <button
