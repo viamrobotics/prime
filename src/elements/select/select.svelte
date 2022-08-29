@@ -205,6 +205,10 @@ const handleClearAll = () => {
   dispatch(root, 'input', { value });
 };
 
+const splitOptionOnWord = (option: string) => {
+  return option.split(' ');
+};
+
 $: {
   if (!open) {
     if (isMultiple) {
@@ -331,13 +335,13 @@ $: {
               {#if search}
 
                 <span class='flex w-full gap-2 text-ellipsis whitespace-nowrap'>
-                  {#each option.split(' ') as word, wordIndex}
+                  {#each splitOptionOnWord(option) as word, wordIndex}
                     <span class={cx('inline-block', {
-                      'w-5 text-gray-800': hasPrefix && wordIndex === 0
+                      'w-5 text-gray-800': hasPrefix && wordIndex === 0,
                     })}>
-                      {#each word.split('') as token}
+                      {#each [...word] as token}
                         <span class={cx({
-                          'bg-yellow-100': token !== ' ' && search[1]?.includes(token),
+                          'bg-yellow-100': token !== ' ' && typeof search[1] === 'string' && search[1].includes(token),
                         })}>{token}</span>
                       {/each}
                     </span>
@@ -346,7 +350,7 @@ $: {
 
               {:else if hasPrefix}
 
-                {#each option.split(' ') as optionPart, optionPartIndex (optionPart)}
+                {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
                   <span
                     class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
                   >
