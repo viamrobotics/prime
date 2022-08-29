@@ -24,6 +24,7 @@ export let step = '1';
 export let name = '';
 export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
+export let state: 'info' | 'warn' | 'error' | '' = 'info';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -86,7 +87,11 @@ const increment = (direction: 1 | -1) => {
 
     {#if tooltip}
       <v-tooltip text={tooltip}>
-        <div class="icon-info-outline text-orange-400" />
+        <div class={cx({
+          'icon-info-outline': state === 'info',
+          'icon-error-outline text-orange-400': state === 'warn',
+          'icon-error-outline text-red-600': state === 'error',
+        })} />
       </v-tooltip>
     {/if}
   </div>

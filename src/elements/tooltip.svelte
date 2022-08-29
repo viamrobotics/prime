@@ -97,7 +97,7 @@ onMount(recalculateStyle);
       border
       border-black
       min-w-[12rem]
-      z-10
+      z-[100]
     `}
     style='transform: translate({x}px, {y}px);'
     >

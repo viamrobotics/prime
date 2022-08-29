@@ -1,8 +1,4 @@
 /* eslint-disable unicorn/prefer-regexp-test */
-const optionLocaleCompare = (a: string, b: string) => {
-  return a.localeCompare(b);
-};
-
 export const searchSort = (data: string[], searchTerm: string) => {
   const results: Record<string, string[]> = {};
 
@@ -34,7 +30,7 @@ export const searchSort = (data: string[], searchTerm: string) => {
   const finalResults: string[] = [];
 
   for (const key of Object.keys(results)) {
-    const sorted = (results[key] || []).sort(optionLocaleCompare);
+    const sorted = (results[key] || []);
     
     finalResults.push(...sorted);
   }
