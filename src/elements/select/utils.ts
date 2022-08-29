@@ -10,23 +10,39 @@ export const shouldBeChecked = (value: string, option: string) => {
 };
 
 export const applySearchHighlight = (options: string[], value: string) => {
-  return options.map((option) => {
+  if (!value) {
+    return options.map((option) => ({ search: undefined, option }));
+  }
+
+  const matches = [];
+  const noMatches = [];
+
+  for (const option of options) {
     const match = option.match(new RegExp(value, 'i'));
 
     if (match?.index !== undefined) {
       const begin = option.slice(0, match.index);
       const middle = option.slice(match.index, match.index + value.length);
       const end = option.slice(match.index + value.length);
-
-      return {
+      matches.push({
         search: [begin, middle, end],
         option,
-      };
+      });
+    } else {
+      noMatches.push({
+        search: undefined,
+        option,
+      });
+    }
+  }
+
+  matches.sort((a, b) => {
+    if (a.option.indexOf(a.search[1]!) < b.option.indexOf(b.search[1]!)) {
+      return -1;
     }
 
-    return {
-      search: undefined,
-      option,
-    };
+    return 1;
   });
+
+  return [...matches, ...noMatches];
 };

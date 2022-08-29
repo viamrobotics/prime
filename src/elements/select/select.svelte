@@ -2,6 +2,7 @@
 
 <script lang='ts'>
 
+// This entire component is pretty hacked together and should be refactored.
 import cx from 'classnames';
 import { searchSort } from '../../lib/sort';
 import { htmlToBoolean } from '../../lib/boolean';
@@ -18,6 +19,7 @@ export let variant: 'single' | 'multiple' = 'single';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
 export let exact = 'false';
+export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
 
@@ -28,6 +30,7 @@ let optionsContainer: HTMLElement;
 let isDisabled: boolean;
 let isExact: boolean;
 let isMultiple: boolean;
+let hasPrefix: boolean;
 let parsedOptions: string[];
 let parsedSelected: string[];
 let sortedOptions: string[];
@@ -38,6 +41,7 @@ let searchTerm = '';
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isExact = htmlToBoolean(exact, 'exact');
 $: isMultiple = variant === 'multiple';
+$: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = isMultiple
   ? value.split(',').filter(Boolean).map((str) => str.trim())
@@ -310,6 +314,7 @@ $: {
             <label
               class={cx('flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1.5 text-xs', {
                 'bg-slate-200': navigationIndex === index,
+                'text-gray-500': hasPrefix,
               })}
               on:mouseenter={() => handleOptionMouseEnter(index)}
             >
@@ -324,17 +329,33 @@ $: {
               >
 
               {#if search}
-                <div>
-                  {#each search as part, splitIndex (splitIndex)}
-                    <span class={cx({
-                      'bg-yellow-100': splitIndex === 1 && navigationIndex !== index,
+
+                <span class='flex w-full gap-2 text-ellipsis whitespace-nowrap'>
+                  {#each option.split(' ') as word, wordIndex}
+                    <span class={cx('inline-block', {
+                      'w-5 text-gray-800': hasPrefix && wordIndex === 0
                     })}>
-                      { part }
+                      {#each word.split('') as token}
+                        <span class={cx({
+                          'bg-yellow-100': token !== ' ' && search[1]?.includes(token),
+                        })}>{token}</span>
+                      {/each}
                     </span>
                   {/each}
-                </div>
+                </span>
+
+              {:else if hasPrefix}
+
+                {#each option.split(' ') as optionPart, optionPartIndex (optionPart)}
+                  <span
+                    class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
+                  >
+                    { optionPart }
+                  </span>
+                {/each}
+
               {:else}
-                {option}
+                { option }
               {/if}
             </label>
           {/each}
