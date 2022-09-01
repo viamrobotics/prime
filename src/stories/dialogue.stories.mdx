@@ -53,9 +53,13 @@ Creates a dialogue overlay
         ${open ? "open" : ""}
         title='${title}'
         message='${message}'
-        text='${buttonText}'
-        variant='${variant}'
-      />
+      >
+        <v-button
+          class='ml-4'
+          variant='${variant}'
+          label='${buttonText}'
+        />
+      </v-dialogue>
     `}
   </Story>
 </Canvas>

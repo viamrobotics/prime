@@ -6,10 +6,8 @@ import cx from 'classnames';
 import { addStyles } from '../lib/index';
 import { htmlToBoolean } from '../lib/boolean';
 
-export let variant = '';
 export let title = '';
 export let message = '';
-export let text = '';
 
 export let open = 'false';
 let isOpen: boolean;
@@ -55,11 +53,7 @@ addStyles();
       {/if}
 
       <div class='flex flex-row-reverse'>
-        <v-button
-          class='ml-4'
-          variant='{variant}'
-          label='{text}'
-        />
+        <slot />
       </div>
     </figure>
   </div>
