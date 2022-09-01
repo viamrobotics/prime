@@ -34,8 +34,23 @@
 .icon-warning:before {
   content: "\e916";
 }
+.icon-naught:before {
+  content: "\e907";
+}
 .icon-disconnected:before {
   content: "\e919";
+}
+.icon-add:before {
+  content: "\e90d";
+}
+.icon-x:before {
+  content: "\e920";
+}
+.icon-copy:before {
+  content: "\e924";
+}
+.icon-remove:before {
+  content: "\e921";
 }
 .icon-send:before {
   content: "\e91b";
@@ -55,11 +70,38 @@
 .icon-center:before {
   content: "\e915";
 }
+.icon-zoom_out_map:before {
+  content: "\e904";
+}
+.icon-chevron-down:before {
+  content: "\e926";
+}
+.icon-menu:before {
+  content: "\e927";
+}
+.icon-keyboard_control:before {
+  content: "\e91d";
+}
 .icon-arrow-up:before {
   content: "\e917";
 }
+.icon-checkmark:before {
+  content: "\e91e";
+}
+.icon-info_outline:before {
+  content: "\e908";
+}
 .icon-settings:before {
   content: "\e918";
+}
+.icon-refresh-camera:before {
+  content: "\e90c";
+}
+.icon-filter:before {
+  content: "\e922";
+}
+.icon-open-full:before {
+  content: "\e923";
 }
 .icon-refresh:before {
   content: "\e911";
@@ -82,9 +124,6 @@
 .icon-social-medium:before {
   content: "\e906";
 }
-.icon-copy:before {
-  content: "\e907";
-}
 .icon-save:before {
   content: "\e909";
 }
@@ -103,19 +142,4 @@
 }
 .icon-trash:before {
   content: "\e905";
-}
-.icon-alert:before {
-  content: "\e904";
-}
-.icon-ask:before {
-  content: "\e908";
-}
-.icon-x:before {
-  content: "\e942";
-}
-.icon-chevron-down:before {
-  content: "\e90c";
-}
-.icon-checkmark:before {
-  content: "\e90d";
 }
