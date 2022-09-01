@@ -39,7 +39,8 @@ const handleClick = () => {
 
 <button
   {type}
-  class={cx('flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border', {
+  class={cx('flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border',
+    'hover:scale-105 transition-transform', {
     'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
     'bg-white border-black': variant === 'primary',
     'bg-black border-white text-white': variant === 'inverse-primary',
