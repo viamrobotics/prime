@@ -32,11 +32,10 @@
     on:click|stopPropagation
   >
     <button 
-      class="absolute right-0 top-0 p-2 hover:scale-125 transition-transform"
+      class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-black"
       on:click={hideModal}
     >
       <v-icon
-        class=' text-gray-500 hover:text-black'
         name='x'
         size='2xl'
       />
