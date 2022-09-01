@@ -5,7 +5,7 @@
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
 
-type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl'
+type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl'| '3xl'| '4xl'
 
 export let name = '';
 export let size: Size = 'base';

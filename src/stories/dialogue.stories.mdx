@@ -1,0 +1,65 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+  title="Elements/dialogue"
+  parameters={{
+    actions: {
+      handles: ['toggle'],
+    },
+  }}
+  argTypes={{
+    title: {
+      description: 'Title',
+      table: { defaultValue: { summary: '' } },
+    },
+    message: {
+      description: 'Message',
+      table: { defaultValue: { summary: '' } },
+    },
+    buttonText: {
+      description: 'The button text',
+      table: { defaultValue: { summary: 'DELETE' } },
+    },
+    variant: {
+      description: 'The communicated action type of the button',
+      control: 'select',
+      options: ['primary', 'inverse-primary', 'success', 'danger', 'outline-danger'],
+      table: { defaultValue: { summary: 'primary' } }
+    },
+    open: {
+      description: 'Used to control whether dialogue is open',
+      control: { type: 'boolean' },
+    },
+  }}
+/>
+
+# Dialogue
+
+Creates a dialogue overlay
+
+<Canvas>
+  <Story
+    name='delete'
+    args={{
+      title: 'Delete example.',
+      message: 'Are you sure you want to delete this?',
+      buttonText: 'DELETE',
+      variant: 'danger',
+      open: true,
+    }}
+  >
+    {({ title, message, variant, buttonText, open }) => `
+      <v-dialogue
+        ${open ? "open" : ""}
+        title='${title}'
+        message='${message}'
+      >
+        <v-button
+          class='ml-4'
+          variant='${variant}'
+          label='${buttonText}'
+        />
+      </v-dialogue>
+    `}
+  </Story>
+</Canvas>

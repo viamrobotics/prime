@@ -14,6 +14,9 @@ module.exports = {
         'green/100': '#295B33',
         'orange/90': '#FF9900',
         'red/90': '#BE3026',
+      },
+      boxShadow: {
+        'solid4': '4px 4px 0px #000',
       }
     },
   },

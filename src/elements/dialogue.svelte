@@ -1,0 +1,60 @@
+<svelte:options immutable={true} tag='v-dialogue' />
+
+<script lang='ts'>
+
+import cx from 'classnames';
+import { addStyles } from '../lib/index';
+import { htmlToBoolean } from '../lib/boolean';
+
+export let title = '';
+export let message = '';
+
+export let open = 'false';
+let isOpen: boolean;
+
+$: isOpen = htmlToBoolean(open, 'open');
+
+const hideModal = () => {
+  isOpen = false;
+};
+
+addStyles();
+</script>
+
+<div 
+  class={
+    cx('z-50 bg-gray-200 bg-opacity-25 w-full h-full absolute top-0 left-0 p-10 flex justify-center items-center', {
+      invisible: !isOpen,
+    }
+  )}
+  on:click={hideModal}
+>
+  <div 
+    class='min-w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4'
+    on:click|stopPropagation
+  >
+    <button 
+      class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-black"
+      on:click={hideModal}
+    >
+      <v-icon
+        name='x'
+        size='2xl'
+      />
+    </button>
+
+    <figure>
+      <figcaption class='mb-2 pr-12 text-2xl font-bold'>
+        {title}
+      </figcaption>
+      
+      {#if message}
+        <p class='mb-8 text-base'>{message}</p>
+      {/if}
+
+      <div class='flex flex-row-reverse'>
+        <slot />
+      </div>
+    </figure>
+  </div>
+</div>
