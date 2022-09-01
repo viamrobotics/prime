@@ -32,7 +32,7 @@ addStyles();
   on:click={hideModal}
 >
   <div 
-    class='min-w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg' style='box-shadow:4px 4px 0px #000'
+    class='min-w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4'
     on:click|stopPropagation
   >
     <button 
