@@ -37,7 +37,7 @@ const toggleDropdown = () => {
   </div>
   <div 
     class={
-      cx('absolute z-10', {
+      cx('absolute z-40', {
         'left-0': isMatch,
         'right-0': isMatch,
         'overflow-hidden': isMatch,
