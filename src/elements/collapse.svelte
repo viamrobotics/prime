@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-collapse' />
+<svelte:options immutable tag='v-collapse' />
 
 <script lang='ts'>
 
@@ -42,21 +42,14 @@ const handleClick = (event: Event) => {
     <div class='h-full flex items-center gap-3'>
       <slot name='header' />
 
-      <svg
+      <v-icon
         class={cx('transition-transform duration-200', {
           'rotate-0': !open,
           'rotate-180': open,
         })}
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-linejoin="round"
-        stroke-linecap="round"
-        fill="none"
-      >
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
+        name='chevron-down'
+        size='2xl'
+      />
     </div>
   </div>
 

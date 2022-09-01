@@ -70,7 +70,7 @@ const increment = (direction: 1 | -1) => {
 
 <label
   bind:this={root}
-  class={cx('relative flex gap-1 max-w-[14rem]', {
+  class={cx('relative flex gap-1 min-w-[6rem] max-w-[14rem] w-full', {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
   })}
