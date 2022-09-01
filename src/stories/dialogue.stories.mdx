@@ -26,6 +26,10 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       options: ['primary', 'inverse-primary', 'success', 'danger', 'outline-danger'],
       table: { defaultValue: { summary: 'primary' } }
     },
+    open: {
+      description: 'Used to control whether dialogue is open',
+      control: { type: 'boolean' },
+    },
   }}
 />
 
@@ -41,10 +45,12 @@ Creates a dialogue overlay
       message: 'This is the message.',
       buttonText: 'DELETE',
       variant: 'danger',
+      open: true,
     }}
   >
-    {({ title, message, variant, buttonText }) => `
+    {({ title, message, variant, buttonText, open }) => `
       <v-dialogue
+        ${open ? "open" : ""}
         title='${title}'
         message='${message}'
         text='${buttonText}'

@@ -1,22 +1,26 @@
 <svelte:options immutable={true} tag='v-dialogue' />
 
 <script lang='ts'>
-  import cx from 'classnames';
 
-  import { addStyles } from '../lib/index';
+import cx from 'classnames';
+import { addStyles } from '../lib/index';
+import { htmlToBoolean } from '../lib/boolean';
 
-  export let variant = '';
-  export let title = '';
-  export let message = '';
-  export let text = '';
+export let variant = '';
+export let title = '';
+export let message = '';
+export let text = '';
 
-  export let isOpen = true;
+export let open = 'false';
+let isOpen: boolean;
 
-  const hideModal = () => {
-    isOpen = false;
-  };
+$: isOpen = htmlToBoolean(open, 'open');
 
-  addStyles();
+const hideModal = () => {
+  isOpen = false;
+};
+
+addStyles();
 </script>
 
 <div 
@@ -50,7 +54,6 @@
         <p class='mb-8 text-base'>{message}</p>
       {/if}
 
-      {#if isOpen}
       <div class='flex flex-row-reverse'>
         <v-button
           class='ml-4'
@@ -58,7 +61,6 @@
           label='{text}'
         />
       </div>
-      {/if}
     </figure>
   </div>
 </div>
