@@ -346,7 +346,7 @@
       let ie = S.apply(this, U);
       return W(this, ie, "reportValidity");
     };
-    var ht = M, bt = m, et = O;
+    var bt = M, et = m, ht = O;
     window.ElementInternals = Te, HTMLElement.prototype.attachInternals = function() {
       if (this.tagName.indexOf("-") === -1)
         throw new Error("Failed to execute 'attachInternals' on 'HTMLElement': Unable to attach ElementInternals to non-custom elements.");
