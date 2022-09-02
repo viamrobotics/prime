@@ -1,7 +1,7 @@
 const plugin = require('tailwindcss/plugin')
 
 module.exports = {
-  content: ['./index.html', './src/**/*.{ts,vue,svelte,mdx}'],
+  content: ['./index.html', './src/**/*.{ts,vue,svelte}'],
   theme: {
     extend: {
       colors: {
