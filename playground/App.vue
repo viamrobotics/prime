@@ -12,8 +12,6 @@ const json = JSON.stringify({
   count: 10,
 });
 
-const open = ref(false)
-
 </script>
 
 <template>
@@ -31,30 +29,12 @@ const open = ref(false)
         </v-tr>
       </v-tbody>
     </v-table>
-    
-    <v-button
-      label='open'
-      @click='open = true'
-    />
 
     <v-input
       label="My input"
       :value="value"
       @input="value = $event.detail.value"
     />
-
-    <v-modal
-      :open="open ? 'true' : 'false'"
-      title="Are you sure you want to click?"
-      @close="open = false"
-    >
-      <h5>I like:</h5>
-      <ul>
-        <li>Ponies</li>
-        <li>Myself after therapy</li>
-      </ul>
-      <v-button slot='action' label='Click me' />
-    </v-modal>
   </div>
 
   <v-collapse open>
