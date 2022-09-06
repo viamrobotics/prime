@@ -16,7 +16,7 @@ let isOpen: boolean;
 $: isOpen = htmlToBoolean(open, 'open');
 
 const handleClick = (event: Event) => {
-  dispatch(event.currentTarget as HTMLVideoElement, 'close');
+  dispatch(event.currentTarget as HTMLElement, 'close');
 };
 
 addStyles();
@@ -24,7 +24,7 @@ addStyles();
 
 <div 
   class={
-    cx('z-50 bg-gray-300 bg-opacity-25 w-full h-full absolute top-0 left-0 p-10 flex justify-center items-center', {
+    cx('z-50 bg-gray-300 bg-opacity-25 w-full h-full fixed top-0 left-0 p-10 flex justify-center items-center', {
       'invisible': !isOpen,
     }
   )}
