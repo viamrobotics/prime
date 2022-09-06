@@ -16,7 +16,7 @@ let isOpen: boolean;
 $: isOpen = htmlToBoolean(open, 'open');
 
 const handleClick = (event: Event) => {
-  dispatch(event.currentTarget as HTMLVideoElement, 'close')
+  dispatch(event.currentTarget as HTMLVideoElement, 'close');
 };
 
 addStyles();
