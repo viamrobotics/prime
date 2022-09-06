@@ -29,7 +29,6 @@ const json = JSON.stringify({
         </v-tr>
       </v-tbody>
     </v-table>
-    
 
     <v-input
       label="My input"

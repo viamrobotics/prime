@@ -14,6 +14,7 @@ export let type: 'button' | 'submit' | 'reset' = 'button';
 export let variant: Variants = 'primary';
 export let label = '';
 export let icon = '';
+export let tooltip = '';
 
 let isDisabled: boolean;
 
@@ -37,26 +38,32 @@ const handleClick = () => {
 
 </script>
 
-<button
-  {type}
-  class={cx('flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border',
-    'hover:scale-105 transition-transform', {
-    'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
-    'bg-white border-black': variant === 'primary',
-    'bg-black border-white text-white': variant === 'inverse-primary',
-    'bg-red/90 text-white border-red/90': variant === 'danger',
-    'bg-green/90 border-green/90 text-white': variant === 'success',
-    'bg-white border-red/90 text-red/90': variant === 'outline-danger',
-  })}
-  on:click={handleClick}
->
-  {#if icon}
-    <i
-      aria-hidden
-      class='icon-{icon} text-base'
-    />
-  {/if}
-  <span class="mx-auto">
-    {label}
-  </span>
-</button>
+<style>
+  :host { display: inline-block !important }
+</style>
+
+<v-tooltip text={tooltip}>
+  <button
+    {type}
+    class={cx('inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border',
+      'hover:scale-105 transition-transform', {
+      'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
+      'bg-white border-black': variant === 'primary',
+      'bg-black border-white text-white': variant === 'inverse-primary',
+      'bg-red/90 text-white border-red/90': variant === 'danger',
+      'bg-green/90 border-green/90 text-white': variant === 'success',
+      'bg-white border-red/90 text-red/90': variant === 'outline-danger',
+    })}
+    on:click={handleClick}
+  >
+    {#if icon}
+      <i
+        aria-hidden
+        class='icon-{icon} text-base'
+      />
+    {/if}
+    <span class="mx-auto">
+      {label}
+    </span>
+  </button>
+</v-tooltip>

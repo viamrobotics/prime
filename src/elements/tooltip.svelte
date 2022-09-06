@@ -59,6 +59,8 @@ const recalculateStyle = async () => {
 };
 
 const handleMouseEnter = async () => {
+  if (!text) return;
+
   await recalculateStyle();
   invisible = false;
 };

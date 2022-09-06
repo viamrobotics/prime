@@ -147,3 +147,24 @@ For user triggered actions
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='With tooltip'
+    args={{
+      label: 'Hug',
+      icon: 'naught',
+      disabled: 'true',
+      tooltip: 'Hugging is disabled',
+    }}
+  >
+    {({ label, icon, tooltip, disabled }) => `
+      <v-button
+        label='${label}'
+        icon='${icon}'
+        disabled='${disabled}'
+        tooltip='${tooltip}'
+      />
+    `}
+  </Story>
+</Canvas>
