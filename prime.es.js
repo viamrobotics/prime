@@ -2022,7 +2022,7 @@ function Pi(t) {
   let e, n, r, i, o, l, s, a, c, f, d, h, w, b, y, m = t[1] && Ut(t);
   return {
     c() {
-      e = _("div"), n = _("div"), r = _("button"), r.innerHTML = '<v-icon name="x" size="2xl"></v-icon>', i = B(), o = _("figure"), l = _("figcaption"), s = Z(t[0]), a = B(), m && m.c(), c = B(), f = _("slot"), d = B(), h = _("div"), h.innerHTML = '<slot name="action"></slot>', this.c = j, u(r, "class", "absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-black"), u(l, "class", "mb-2 pr-12 text-2xl font-bold"), u(h, "class", "flex flex-row-reverse"), u(n, "class", "min-w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4"), u(e, "class", w = D("z-50 bg-gray-300 bg-opacity-25 w-full h-full absolute top-0 left-0 p-10 flex justify-center items-center", { invisible: !t[2] }));
+      e = _("div"), n = _("div"), r = _("button"), r.innerHTML = '<v-icon name="x" size="2xl"></v-icon>', i = B(), o = _("figure"), l = _("figcaption"), s = Z(t[0]), a = B(), m && m.c(), c = B(), f = _("slot"), d = B(), h = _("div"), h.innerHTML = '<slot name="action"></slot>', this.c = j, u(r, "class", "absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-black"), u(l, "class", "mb-2 pr-12 text-2xl font-bold"), u(h, "class", "flex flex-row-reverse"), u(n, "class", "min-w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4"), u(e, "class", w = D("z-50 bg-gray-300 bg-opacity-25 w-full h-full fixed top-0 left-0 p-10 flex justify-center items-center", { invisible: !t[2] }));
     },
     m(v, k) {
       R(v, e, k), p(e, n), p(n, r), p(n, i), p(n, o), p(o, l), p(l, s), p(o, a), m && m.m(o, null), p(o, c), p(o, f), p(o, d), p(o, h), b || (y = [
@@ -2032,7 +2032,7 @@ function Pi(t) {
       ], b = !0);
     },
     p(v, [k]) {
-      k & 1 && Q(s, v[0]), v[1] ? m ? m.p(v, k) : (m = Ut(v), m.c(), m.m(o, c)) : m && (m.d(1), m = null), k & 4 && w !== (w = D("z-50 bg-gray-300 bg-opacity-25 w-full h-full absolute top-0 left-0 p-10 flex justify-center items-center", { invisible: !v[2] })) && u(e, "class", w);
+      k & 1 && Q(s, v[0]), v[1] ? m ? m.p(v, k) : (m = Ut(v), m.c(), m.m(o, c)) : m && (m.d(1), m = null), k & 4 && w !== (w = D("z-50 bg-gray-300 bg-opacity-25 w-full h-full fixed top-0 left-0 p-10 flex justify-center items-center", { invisible: !v[2] })) && u(e, "class", w);
     },
     i: j,
     o: j,
