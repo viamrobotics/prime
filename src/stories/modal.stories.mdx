@@ -1,10 +1,10 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
-  title="Elements/Dialogue"
+  title="Elements/Modal"
   parameters={{
     actions: {
-      handles: ['toggle'],
+      handles: ['close'],
     },
   }}
   argTypes={{
@@ -27,15 +27,15 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       table: { defaultValue: { summary: 'primary' } }
     },
     open: {
-      description: 'Used to control whether dialogue is open',
+      description: 'Used to control whether modal is open',
       control: { type: 'boolean' },
     },
   }}
 />
 
-# Dialogue
+# Modal
 
-Creates a dialogue overlay
+Creates a modal overlay
 
 <Canvas>
   <Story
@@ -50,7 +50,7 @@ Creates a dialogue overlay
   >
     {({ title, message, variant, buttonText, open }) => `
       <div style="height: 16rem">
-        <v-dialogue
+        <v-modal
           ${open ? "open" : ""}
           title='${title}'
           message='${message}'
@@ -60,7 +60,7 @@ Creates a dialogue overlay
             variant='${variant}'
             label='${buttonText}'
           />
-        </v-dialogue>
+        </v-modal>
       </div>
     `}
   </Story>
