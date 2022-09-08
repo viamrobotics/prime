@@ -9,7 +9,7 @@ import { addStyles } from '../../lib/index';
 
 type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success'
 
-export let disabled: string | undefined;
+export let disabled = 'false';
 export let type: 'button' | 'submit' | 'reset' = 'button';
 export let variant: Variants = 'primary';
 export let label = '';

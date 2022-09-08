@@ -42,6 +42,19 @@ You can immediately start adding PRIME elements to your app, since prime element
 
 All elements are prefixed with `v-`. This stands for Viam, the cool company where these elements are made.
 
+## Playground
+
+To use the playground, go to the `playground` directory, and:
+```bash
+npm install
+npm start
+```
+Or to run in production mode:
+```
+npm run build
+npm run serve
+```
+
 ### Browser Compatibility
 
 `PRIME` supports the following browsers:
