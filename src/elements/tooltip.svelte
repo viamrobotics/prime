@@ -2,7 +2,6 @@
 
 <script lang='ts'>
 
-import { onMount } from 'svelte';
 import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
 import { addStyles } from '../lib/index';
 
@@ -59,8 +58,6 @@ const recalculateStyle = async () => {
 };
 
 const handleMouseEnter = async () => {
-  if (!text) return;
-
   await recalculateStyle();
   invisible = false;
 };
@@ -71,45 +68,47 @@ const handleMouseLeave = () => {
 
 addStyles();
 
-onMount(recalculateStyle);
-
 </script>
 
-<div
-  bind:this={container}
-  class='relative'
-  aria-describedby='tooltip'
-  on:mouseenter={handleMouseEnter}
-  on:mouseleave={handleMouseLeave}
->
+{#if !text}
   <slot />
+{:else}
   <div
-    bind:this={tooltip}
-    class:invisible={invisible}
-    role='tooltip'
-    class={`
-      absolute
-      top-0
-      left-0
-      bg-white
-      text-black
-      text-left
-      text-xs
-      p-3
-      border
-      border-black
-      min-w-[12rem]
-      z-[100]
-    `}
-    style='transform: translate({x}px, {y}px);'
-    >
+    bind:this={container}
+    class='relative'
+    aria-describedby='tooltip'
+    on:mouseenter={handleMouseEnter}
+    on:mouseleave={handleMouseLeave}
+  >
+    <slot />
     <div
-      bind:this={arrowElement}
-      class='absolute triangle w-0 h-0'
-    />
-    {text}
+      bind:this={tooltip}
+      class:invisible={invisible}
+      role='tooltip'
+      class={`
+        absolute
+        top-0
+        left-0
+        bg-white
+        text-black
+        text-left
+        text-xs
+        p-3
+        border
+        border-black
+        min-w-[12rem]
+        z-[100]
+      `}
+      style='transform: translate({x}px, {y}px);'
+      >
+      <div
+        bind:this={arrowElement}
+        class='absolute triangle w-0 h-0'
+      />
+      {text}
+    </div>
   </div>
-</div>
+{/if}
 
 <style>
   .triangle {

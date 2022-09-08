@@ -2,7 +2,6 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import sveltePreprocess from 'svelte-preprocess'
 import { defineConfig } from 'vite'
 import path from 'node:path'
-import vue from '@vitejs/plugin-vue'
 
 const preprocess = sveltePreprocess()
 
@@ -13,14 +12,6 @@ export default defineConfig({
   },
   assetsInclude: ['fonts'],
   plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          // treat all tags with a dash as custom elements
-          isCustomElement: (tag) => tag.startsWith('v-'),
-        },
-      },
-    }),
     svelte({
       compilerOptions: { customElement: true },
       preprocess

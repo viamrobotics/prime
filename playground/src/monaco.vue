@@ -47,15 +47,15 @@ const schema = JSON.stringify({
 </script>
 
 <template>
-  <button @click="handleClick">
-    Click
-  </button>
+  <div class="p-3 flex flex-col gap-3">
+    <v-button label="Click to open editor" @click="handleClick" />
 
-  <div v-if="loaded" style="height: 400px;">
-    <v-code-editor language="javascript" :value="value" />
-  </div>
+    <div v-if="loaded" style="height: 400px;">
+      <v-code-editor language="javascript" :value="value" />
+    </div>
 
-  <div v-if="loaded" style="height: 400px;">
-    <v-json-editor :value="json" :schema="schema" />
+    <div v-if="loaded" style="height: 400px;">
+      <v-json-editor :value="json" :schema="schema" />
+    </div>
   </div>
 </template>
