@@ -3,6 +3,7 @@
 <script lang='ts'>
 
 // Added temporarily because <svelte:element> does not recognize "text" as a valid prop
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
 import cx from 'classnames';
