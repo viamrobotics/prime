@@ -1,6 +1,10 @@
-<svelte:options immutable={true} tag='v-button-internal' />
+<svelte:options immutable tag='v-button-internal' />
 
 <script lang='ts'>
+
+// Added temporarily because <svelte:element> does not recognize "text" as a valid prop
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 
 import cx from 'classnames';
 import { get_current_component } from 'svelte/internal';
@@ -14,6 +18,7 @@ export let type: 'button' | 'submit' | 'reset' = 'button';
 export let variant: Variants = 'primary';
 export let label = '';
 export let icon = '';
+export let size = 'base';
 export let tooltip = '';
 
 let isDisabled: boolean;
@@ -42,11 +47,14 @@ const handleClick = () => {
   :host { display: inline-block !important }
 </style>
 
-<v-tooltip text={tooltip}>
+<svelte:element
+  this={tooltip ? 'v-tooltip' : 'span'}
+  text={tooltip}
+>
   <button
     {type}
-    class={cx('inline-flex items-center justify-center gap-1.5 hover:scale-105 transition-transform', {
-      'py-1.5 px-2 text-xs border': variant !== 'icon',
+    class={cx('will-change-transform hover:scale-105 motion-safe:transition-transform', {
+      'inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border': variant !== 'icon',
       'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
       'bg-white border-black': variant === 'primary',
       'bg-black border-white text-white': variant === 'inverse-primary',
@@ -59,11 +67,11 @@ const handleClick = () => {
     {#if icon}
       <i
         aria-hidden
-        class='icon-{icon} text-base'
+        class='icon-{icon} text-{size}'
       />
     {/if}
     <span class="mx-auto">
       {label}
     </span>
   </button>
-</v-tooltip>
+</svelte:element>

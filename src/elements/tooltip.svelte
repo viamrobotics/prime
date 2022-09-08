@@ -70,45 +70,42 @@ addStyles();
 
 </script>
 
-{#if !text}
+<div
+  bind:this={container}
+  class='relative'
+  aria-describedby='tooltip'
+  on:mouseenter={handleMouseEnter}
+  on:mouseleave={handleMouseLeave}
+>
   <slot />
-{:else}
   <div
-    bind:this={container}
-    class='relative'
-    aria-describedby='tooltip'
-    on:mouseenter={handleMouseEnter}
-    on:mouseleave={handleMouseLeave}
-  >
-    <slot />
+    bind:this={tooltip}
+    class:invisible={invisible}
+    role='tooltip'
+    class={`
+      absolute
+      top-0
+      left-0
+      bg-white
+      text-black
+      text-left
+      text-xs
+      p-3
+      border
+      border-black
+      min-w-[12rem]
+      z-[100]
+    `}
+    style='transform: translate({x}px, {y}px);'
+    >
     <div
-      bind:this={tooltip}
-      class:invisible={invisible}
-      role='tooltip'
-      class={`
-        absolute
-        top-0
-        left-0
-        bg-white
-        text-black
-        text-left
-        text-xs
-        p-3
-        border
-        border-black
-        min-w-[12rem]
-        z-[100]
-      `}
-      style='transform: translate({x}px, {y}px);'
-      >
-      <div
-        bind:this={arrowElement}
-        class='absolute triangle w-0 h-0'
-      />
-      {text}
-    </div>
+      bind:this={arrowElement}
+      class='absolute triangle w-0 h-0'
+    />
+    {text}
+    <slot name='text' />
   </div>
-{/if}
+</div>
 
 <style>
   .triangle {
