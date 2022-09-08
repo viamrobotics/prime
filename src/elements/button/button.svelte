@@ -7,7 +7,7 @@ import { get_current_component } from 'svelte/internal';
 import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
 
-type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success'
+type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success' | 'icon'
 
 export let disabled = 'false';
 export let type: 'button' | 'submit' | 'reset' = 'button';
@@ -45,8 +45,8 @@ const handleClick = () => {
 <v-tooltip text={tooltip}>
   <button
     {type}
-    class={cx('inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border',
-      'hover:scale-105 transition-transform', {
+    class={cx('inline-flex items-center justify-center gap-1.5 hover:scale-105 transition-transform', {
+      'py-1.5 px-2 text-xs border': variant !== 'icon',
       'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
       'bg-white border-black': variant === 'primary',
       'bg-black border-white text-white': variant === 'inverse-primary',

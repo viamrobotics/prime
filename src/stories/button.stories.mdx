@@ -168,3 +168,20 @@ For user triggered actions
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Icon variant'
+    args={{
+      icon: 'trash',
+      variant: 'icon',
+    }}
+  >
+    {({ icon, variant }) => `
+      <v-button
+        icon='${icon}'
+        variant='${variant}'
+      />
+    `}
+  </Story>
+</Canvas>
