@@ -88,7 +88,7 @@
 .icon-checkmark:before {
   content: "\e91e";
 }
-.icon-info_outline:before {
+.icon-pop-out:before {
   content: "\e908";
 }
 .icon-settings:before {
@@ -130,6 +130,9 @@
 .icon-edit:before {
   content: "\e90a";
   color: #555;
+}
+.icon-github:before {
+  content: "\e91f";
 }
 .icon-stop-circle:before {
   content: "\e903";
