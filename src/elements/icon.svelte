@@ -23,5 +23,7 @@ addStyles();
     'text-lg': size === 'lg',
     'text-xl': size === 'xl',
     'text-2xl': size === '2xl',
+    'text-3xl': size === '2xl',
+    'text-4xl': size === '2xl',
   })}
 />
