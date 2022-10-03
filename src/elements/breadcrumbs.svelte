@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-breadcrumbs' />
+<svelte:options immutable tag='v-breadcrumbs' />
 
 <script lang='ts'>
 
@@ -14,7 +14,7 @@ $: parsedCrumbs = crumbs.split(',').map((str) => str.trim());
 
 </script>
 
-<div class="flex gap-3 px-4 border border-black rounded-full">
+<div class="inline-flex gap-3 px-4 border border-black rounded-full">
   {#each parsedCrumbs as crumb, index (crumb)}
     <small class="py1">
       { crumb }

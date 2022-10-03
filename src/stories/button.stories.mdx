@@ -175,11 +175,13 @@ For user triggered actions
     args={{
       icon: 'trash',
       variant: 'icon',
+      label: 'Delete component',
     }}
   >
-    {({ icon, variant }) => `
+    {({ icon, variant, label }) => `
       <v-button
         icon='${icon}'
+        label='${label}'
         variant='${variant}'
       />
     `}
