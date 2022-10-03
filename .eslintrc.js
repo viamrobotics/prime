@@ -128,6 +128,7 @@ module.exports = {
     ],
 
     // Unicorn rules
+    'unicorn/switch-case-braces': 'off',
     'unicorn/no-unsafe-regex': 'error',
     'unicorn/no-unused-properties': 'error',
     'unicorn/custom-error-definition': 'error',
