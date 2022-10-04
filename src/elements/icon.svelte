@@ -15,7 +15,7 @@ addStyles();
 </script>
 
 <i
-  aria-hidden
+  aria-hidden='true'
   class={cx(`icon-${name} block`, {
     'text-xs': size === 'xs',
     'text-sm': size === 'sm',

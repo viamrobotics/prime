@@ -226,7 +226,7 @@ $: {
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label
   bind:this={root}
-  class={cx('relative min-w-[6rem] max-w-[14rem] w-full flex gap-1', {
+  class={cx('relative min-w-[6rem] w-full flex gap-1', {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
   })}
@@ -272,6 +272,7 @@ $: {
           bind:this={input}
           {placeholder}
           value={isMultiple ? searchTerm : value}
+          aria-disabled={isDisabled}
           readonly={isDisabled}
           type='text'
           class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none'
@@ -279,6 +280,7 @@ $: {
         >
         <button
           tabindex='-1'
+          aria-label='Open dropdown'
           class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 'rotate-180': open })}
           on:click={handleIconClick}
           on:focusin|stopPropagation

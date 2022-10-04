@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-modal' />
+<svelte:options immutable tag='v-modal' />
 
 <script lang='ts'>
 
@@ -20,6 +20,7 @@ const handleClick = (event: Event) => {
 };
 
 addStyles();
+
 </script>
 
 <div 
@@ -36,6 +37,7 @@ addStyles();
   >
     <button 
       class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-black"
+      aria-label='Cancel'
       on:click={handleClick}
     >
       <v-icon

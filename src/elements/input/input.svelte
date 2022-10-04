@@ -70,7 +70,7 @@ const increment = (direction: 1 | -1) => {
 
 <label
   bind:this={root}
-  class={cx('relative flex gap-1 min-w-[6rem] max-w-[14rem] w-full', {
+  class={cx('relative flex gap-1 min-w-[6rem] w-full', {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
   })}
@@ -103,6 +103,7 @@ const increment = (direction: 1 | -1) => {
     {value}
     pattern={type === 'integer' ? '[0-9]*' : undefined}
     readonly={isReadonly || isDisabled}
+    aria-disabled={isDisabled}
     bind:this={input}
     class={cx('w-full py-1.5 px-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
       'bg-white': !isDisabled,

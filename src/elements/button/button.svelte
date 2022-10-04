@@ -53,6 +53,8 @@ const handleClick = () => {
 >
   <button
     {type}
+    aria-label={variant === 'icon' ? label : undefined}
+    aria-disabled={isDisabled}
     class={cx('will-change-transform hover:scale-105 motion-safe:transition-transform', {
       'inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border': variant !== 'icon',
       'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
@@ -66,12 +68,15 @@ const handleClick = () => {
   >
     {#if icon}
       <i
-        aria-hidden
+        aria-hidden='true'
         class='icon-{icon} text-{size}'
       />
     {/if}
-    <span class="mx-auto">
-      {label}
-    </span>
+
+    {#if variant !== 'icon'}
+      <span class="mx-auto">
+        {label}
+      </span>
+    {/if}
   </button>
 </svelte:element>

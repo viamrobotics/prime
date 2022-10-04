@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-notify' />
+<svelte:options immutable tag='v-notify' />
 
 <script lang='ts'>
   import cx from 'classnames';

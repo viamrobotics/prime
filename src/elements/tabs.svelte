@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-tabs' />
+<svelte:options immutable tag='v-tabs' />
 
 <script lang='ts'>
 
