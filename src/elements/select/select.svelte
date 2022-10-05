@@ -275,7 +275,7 @@ $: {
           aria-disabled={isDisabled}
           readonly={isDisabled}
           type='text'
-          class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none'
+          class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
           on:input|preventDefault={handleInput}
         >
         <button
