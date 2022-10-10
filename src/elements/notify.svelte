@@ -53,5 +53,7 @@
     {#if message}
       <p class='text-xs'>{message}</p>
     {/if}
+
+    <slot/>
   </figure>
 </div>
