@@ -24,7 +24,8 @@ export let step = '1';
 export let name = '';
 export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
-export let state: 'info' | 'warn' | 'error' | '' = 'info';
+export let state: 'info' | 'warn' | 'error'| 'success' | '' = 'info';
+export let message: '';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -91,6 +92,7 @@ const increment = (direction: 1 | -1) => {
           'icon-info-outline': state === 'info',
           'icon-error-outline text-orange-400': state === 'warn',
           'icon-error-outline text-red-600': state === 'error',
+          'icon-error-outline text-green-700': state === 'success',
         })} />
       </v-tooltip>
     {/if}
@@ -108,6 +110,9 @@ const increment = (direction: 1 | -1) => {
     class={cx('w-full py-1.5 px-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
       'bg-white': !isDisabled,
       'opacity-50 pointer-events-none bg-gray-200': isDisabled,
+      'border-orange-400 border-2 bg-orange-100': state === 'warn',
+      'border-red-600 border-2 bg-red-100': state === 'error',
+      'border-green-700 border-2 bg-green-100': state === 'success',
     })}
     step={insertStepAttribute ? step : null}
     on:input={handleInput}
@@ -126,6 +131,15 @@ const increment = (direction: 1 | -1) => {
         class='icon-chevron-down text-[15px]'
       />
     </div>
+  {/if}
+  {#if message}
+    <span class={cx('text-xs', {
+      'text-orange-400': state === 'warn',
+      'text-red-600': state === 'error',
+      'text-green-700': state === 'success',
+    })}>
+      {message}
+    </span>
   {/if}
 </label>
 
