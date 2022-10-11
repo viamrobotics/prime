@@ -301,3 +301,23 @@ Used for all text single-line user inputs.
   </Story>
 </Canvas>
 
+<Canvas>
+  <Story
+    name='Message'
+    args={{
+      label: `Board`,
+      value: '',
+      message: 'some message',
+      state: 'info'
+    }}
+  >
+    {({ label, value, message, state }) => `
+      <v-input
+        label='${label}'
+        value='${value}'
+        message='${message}'
+        state='${state}'
+      />
+    `}
+  </Story>
+</Canvas>

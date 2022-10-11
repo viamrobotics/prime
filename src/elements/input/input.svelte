@@ -24,7 +24,8 @@ export let step = '1';
 export let name = '';
 export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
-export let state: 'info' | 'warn' | 'error' | '' = 'info';
+export let state: 'info' | 'warn' | 'error'| 'success' | '' = 'info';
+export let message: '';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -108,6 +109,7 @@ const increment = (direction: 1 | -1) => {
     class={cx('w-full py-1.5 px-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
       'bg-white': !isDisabled,
       'opacity-50 pointer-events-none bg-gray-200': isDisabled,
+      'border-red-600 border': state === 'error',
     })}
     step={insertStepAttribute ? step : null}
     on:input={handleInput}
@@ -126,6 +128,13 @@ const increment = (direction: 1 | -1) => {
         class='icon-chevron-down text-[15px]'
       />
     </div>
+  {/if}
+  {#if message}
+    <span class={cx('text-xs', {
+      'text-red-600': state === 'error',
+    })}>
+      {message}
+    </span>
   {/if}
 </label>
 
