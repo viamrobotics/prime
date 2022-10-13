@@ -1,4 +1,4 @@
-<svelte:options immutable={true} tag='v-badge' />
+<svelte:options immutable tag='v-badge' />
 
 <script lang='ts'>
 
