@@ -57,6 +57,8 @@ let open = false;
 let navigationIndex = -1;
 let keyboardControlling = false;
 
+let optionMatch = false;
+
 addStyles();
 
 const setKeyboardControl = (toggle: boolean) => {
@@ -73,6 +75,12 @@ const handleInput = (event: Event) => {
   event.stopImmediatePropagation();
   if (isMultiple) {
     searchTerm = input.value.trim();
+    optionMatch = false;
+    for (let value of sortedOptions) {
+      if (searchTerm.toLowerCase() === value.toLowerCase()) {
+        optionMatch = true;
+      } 
+    }
   } else {
     value = input.value.trim();
     dispatch(root, 'input', { value });
@@ -97,6 +105,10 @@ const handleEnter = () => {
       ? [...parsedSelected.filter(item => item !== option)].toString()
       : [...parsedSelected, option].toString();
     input.focus();
+
+    if (optionMatch) {
+      value += searchTerm;
+    }
   } else {
     if (navigationIndex > -1) {
       value = sortedOptions[navigationIndex]!;
@@ -107,11 +119,10 @@ const handleEnter = () => {
         value = result;
       }
     }
-
-    if (open) {
-      input.blur();
-      dispatch(root, 'input', { value });
-    }
+    input.blur();
+  }
+  if (open) {
+    dispatch(root, 'input', { value });
   }
 };
 
