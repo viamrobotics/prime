@@ -30,7 +30,7 @@ const handleClick = (value: string) => {
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label>
-  <div class={cx('flex', {
+  <div class={cx('flex items-center gap-1.5', {
     'pb-1': labelposition === 'top',
   })}>
     {#if label}
