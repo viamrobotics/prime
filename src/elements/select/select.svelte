@@ -58,6 +58,7 @@ let navigationIndex = -1;
 let keyboardControlling = false;
 
 let optionMatch = false;
+let optionMatchText = '';
 
 addStyles();
 
@@ -79,6 +80,7 @@ const handleInput = (event: Event) => {
     for (let value of sortedOptions) {
       if (searchTerm.toLowerCase() === value.toLowerCase()) {
         optionMatch = true;
+        optionMatchText = value;
       } 
     }
   } else {
@@ -107,7 +109,9 @@ const handleEnter = () => {
     input.focus();
 
     if (optionMatch) {
-      value += searchTerm;
+      console.log('value', value);
+      value += `${optionMatchText},`;
+      console.log(value);
     }
   } else {
     if (navigationIndex > -1) {
