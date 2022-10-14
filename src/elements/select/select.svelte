@@ -77,7 +77,7 @@ const handleInput = (event: Event) => {
   if (isMultiple) {
     searchTerm = input.value.trim();
     optionMatch = false;
-    for (let value of sortedOptions) {
+    for (const value of sortedOptions) {
       if (searchTerm.toLowerCase() === value.toLowerCase()) {
         optionMatch = true;
         optionMatchText = value;
