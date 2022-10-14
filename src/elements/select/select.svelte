@@ -109,9 +109,7 @@ const handleEnter = () => {
     input.focus();
 
     if (optionMatch) {
-      console.log('value', value);
       value += `${optionMatchText},`;
-      console.log(value);
     }
   } else {
     if (navigationIndex > -1) {
