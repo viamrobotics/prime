@@ -1,5 +1,5 @@
 const { version } = require('../package.json')
-const { rename, copy, mkdir, write, read, readDir } = require('./util')
+const { rename, copy, write, read } = require('./util')
 const terser = require('terser')
 
 const minify = async (file) => {
@@ -88,35 +88,14 @@ const main = async () => {
     const file = read('prime/index.html')
       // Add noindex rule
       .replace('<meta charset="utf-8"/>', '<meta charset="utf-8"/><meta name="robots" content="noindex">')
-      // Add production prime config
-      .replace('<head>', `<head><script type="module">window.PRIME_CONFIG = { base: '/prime' }</script>`)
     write('prime/index.html', file)
   }
 
   // Update correct paths for iframe resources
   {
     const file = read('prime/iframe.html')
-      // Add production prime config
-      .replace('<head>', `<head><script type="module">window.PRIME_CONFIG = { base: '/prime' }</script>`)
       .replace('<script type="module" src="src/main.ts"></script>', '<script type="module" src="prime.es.js"></script>')
     write('prime/iframe.html', file)
-  }
-
-
-  const assets = readDir('prime/assets')
-
-  // Update correct paths for stylesheets
-  {
-    const files = assets.filter(file => {
-      return file.startsWith('iframe') && (file.endsWith('.js') || file.endsWith('.js.map'))
-    })
-
-    for (const filename of files) {
-      const file = read(`prime/assets/${filename}`)
-        .replace(/"\/prime.css"/g, '"/prime/prime.css"')
-        .replace(/"\/icons.css"/g, '"/prime/icons.css"')
-      write(`prime/assets/${filename}`, file)
-    }
   }
 }
 
