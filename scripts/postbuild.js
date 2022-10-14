@@ -88,16 +88,12 @@ const main = async () => {
     const file = read('prime/index.html')
       // Add noindex rule
       .replace('<meta charset="utf-8"/>', '<meta charset="utf-8"/><meta name="robots" content="noindex">')
-      // Add production prime config
-      .replace('<head>', `<head><script type="module">window.PRIME_CONFIG = { base: '/' }</script>`)
     write('prime/index.html', file)
   }
 
   // Update correct paths for iframe resources
   {
     const file = read('prime/iframe.html')
-      // Add production prime config
-      .replace('<head>', `<head><script type="module">window.PRIME_CONFIG = { base: '/' }</script>`)
       .replace('<script type="module" src="src/main.ts"></script>', '<script type="module" src="prime.es.js"></script>')
     write('prime/iframe.html', file)
   }
