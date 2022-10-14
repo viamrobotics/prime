@@ -30,7 +30,7 @@ const handleClick = (value: string) => {
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label>
-  <div class={cx('flex items-center gap-1.5', {
+  <div class={cx('flex', {
     'pb-1': labelposition === 'top',
   })}>
     {#if label}
@@ -52,16 +52,30 @@ const handleClick = (value: string) => {
     {/if}
   </div>
 
-  {#each parsedOptions as option}
-    <button
-      bind:this={button}
-      class={cx('capitalize border-y border-l last:border-r border-black px-2 py-1 text-xs', {
-        'bg-white': option !== selected,
-        'bg-black text-white': option === selected,
-      })}
-      on:click={() => handleClick(option)}
-    >
-      {option}
+  <div class="flex">
+    {#each parsedOptions as option}
+      <button
+        bind:this={button}
+        class={cx('capitalize border-y border-l last:border-r border-black px-3 py-2 text-xs', {
+          'bg-white': option !== selected,
+          'bg-black text-white': option === selected,
+        })}
+        on:click={() => handleClick(option)}
+      >
+        {#if option === selected}
+          <div class="flex">
+            <v-icon
+              class='mr-1'
+              name='checkmark'
+              size='base'
+            />
+            {option}
+          </div>
+        {:else}
+          {option}
+        {/if}
     </button>
-  {/each}
+    {/each}
+  </div>
+  
 </label>
