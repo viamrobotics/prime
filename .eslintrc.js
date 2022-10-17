@@ -158,6 +158,7 @@ module.exports = {
 
     // Sonar
     'sonarjs/no-duplicate-string': 'off',
+    'sonarjs/cognitive-complexity': ['error', 18],
 
     // Import
     'import/no-unresolved': 'error',
