@@ -115,7 +115,10 @@ const handleEnter = () => {
         value += `${optionMatchText},`;
       }
       searchTerm = '';
+      optionMatch = false;
     }
+
+    dispatch(root, 'input', { value, values: value.split(',') });
   } else {
     if (navigationIndex > -1) {
       value = sortedOptions[navigationIndex]!;
@@ -129,8 +132,10 @@ const handleEnter = () => {
     if (open) {
       input.blur();
     }
+
+    dispatch(root, 'input', { value });
   }
-  dispatch(root, 'input', { value });
+  
 };
 
 const handleNavigate = (direction: number) => {
@@ -183,7 +188,7 @@ const handleIconClick = () => {
 
 const handlePillClick = (target: string) => {
   value = [...parsedSelected.filter((item: string) => item !== target)].toString();
-  dispatch(root, 'input', { value });
+  dispatch(root, 'input', { value, values: value.split(',') });
   input.focus();
 };
 
@@ -208,19 +213,23 @@ const handleOptionSelect = (target: string, event: Event) => {
     ? [...parsedSelected, target].toString()
     : [...parsedSelected.filter((item: string) => item !== target)].toString();
 
-  dispatch(root, 'input', { value });
-
   if (isMultiple) {
     input.focus();
+    dispatch(root, 'input', { value, values: value.split(',') });
   } else {
     open = false;
+    dispatch(root, 'input', { value });
   }
 };
 
 const handleClearAll = () => {
   value = '';
   optionsContainer.scrollTop = 0;
-  dispatch(root, 'input', { value });
+  if (isMultiple) {
+    dispatch(root, 'input', { value, values: value.split(',') });
+  } else {
+    dispatch(root, 'input', { value });
+  }
 };
 
 const splitOptionOnWord = (option: string) => {
