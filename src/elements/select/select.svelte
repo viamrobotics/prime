@@ -121,11 +121,11 @@ const handleEnter = () => {
         value = result;
       }
     }
-    input.blur();
+    if (open) {
+      input.blur();
+    }
   }
-  if (open) {
-    dispatch(root, 'input', { value });
-  }
+  dispatch(root, 'input', { value });
 };
 
 const handleNavigate = (direction: number) => {
