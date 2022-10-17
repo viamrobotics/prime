@@ -109,7 +109,12 @@ const handleEnter = () => {
     input.focus();
 
     if (optionMatch) {
-      value += `${optionMatchText},`;
+      if (value.includes(optionMatchText)) {
+        value = value.replace(`${optionMatchText},`, '');
+      } else {
+        value += `${optionMatchText},`;
+      }
+      searchTerm = '';
     }
   } else {
     if (navigationIndex > -1) {
@@ -122,7 +127,7 @@ const handleEnter = () => {
       }
     }
     if (open) {
-      dispatch(root, 'input', { value });
+      input.blur();
     }
   }
   dispatch(root, 'input', { value });
