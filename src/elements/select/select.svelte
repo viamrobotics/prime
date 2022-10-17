@@ -115,6 +115,7 @@ const handleEnter = () => {
         value += `${optionMatchText},`;
       }
       searchTerm = '';
+      optionMatch = false;
     }
   } else {
     if (navigationIndex > -1) {
