@@ -57,6 +57,9 @@ let open = false;
 let navigationIndex = -1;
 let keyboardControlling = false;
 
+let optionMatch = false;
+let optionMatchText = '';
+
 addStyles();
 
 const setKeyboardControl = (toggle: boolean) => {
@@ -73,6 +76,13 @@ const handleInput = (event: Event) => {
   event.stopImmediatePropagation();
   if (isMultiple) {
     searchTerm = input.value.trim();
+    optionMatch = false;
+    for (const value of sortedOptions) {
+      if (searchTerm.toLowerCase() === value.toLowerCase()) {
+        optionMatch = true;
+        optionMatchText = value;
+      } 
+    }
   } else {
     value = input.value.trim();
     dispatch(root, 'input', { value });
@@ -97,6 +107,18 @@ const handleEnter = () => {
       ? [...parsedSelected.filter(item => item !== option)].toString()
       : [...parsedSelected, option].toString();
     input.focus();
+
+    if (optionMatch) {
+      if (value.includes(optionMatchText)) {
+        value = value.replace(`${optionMatchText},`, '');
+      } else {
+        value += `${optionMatchText},`;
+      }
+      searchTerm = '';
+      optionMatch = false;
+    }
+
+    dispatch(root, 'input', { value, values: value.split(',') });
   } else {
     if (navigationIndex > -1) {
       value = sortedOptions[navigationIndex]!;
@@ -107,12 +129,13 @@ const handleEnter = () => {
         value = result;
       }
     }
-
     if (open) {
       input.blur();
-      dispatch(root, 'input', { value });
     }
+
+    dispatch(root, 'input', { value });
   }
+  
 };
 
 const handleNavigate = (direction: number) => {
@@ -165,7 +188,7 @@ const handleIconClick = () => {
 
 const handlePillClick = (target: string) => {
   value = [...parsedSelected.filter((item: string) => item !== target)].toString();
-  dispatch(root, 'input', { value });
+  dispatch(root, 'input', { value, values: value.split(',') });
   input.focus();
 };
 
@@ -190,19 +213,23 @@ const handleOptionSelect = (target: string, event: Event) => {
     ? [...parsedSelected, target].toString()
     : [...parsedSelected.filter((item: string) => item !== target)].toString();
 
-  dispatch(root, 'input', { value });
-
   if (isMultiple) {
     input.focus();
+    dispatch(root, 'input', { value, values: value.split(',') });
   } else {
     open = false;
+    dispatch(root, 'input', { value });
   }
 };
 
 const handleClearAll = () => {
   value = '';
   optionsContainer.scrollTop = 0;
-  dispatch(root, 'input', { value });
+  if (isMultiple) {
+    dispatch(root, 'input', { value, values: value.split(',') });
+  } else {
+    dispatch(root, 'input', { value });
+  }
 };
 
 const splitOptionOnWord = (option: string) => {
