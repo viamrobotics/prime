@@ -30,6 +30,9 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       options: ['true', 'false'],
       table: { defaultValue: { summary: 'false' } }
     },
+      tooltip: {
+      description: 'The tooltip message.',
+    },
     'on:input': {
       description: 'Event fired when input value changes.',
     },
@@ -103,6 +106,27 @@ Used to handle binary input.
         value='${value}'
         variant='${variant}'
         disabled='${disabled}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Tooltip'
+    args={{
+      value: 'off',
+      variant: 'labeled',
+      label: 'Switch Label',
+      tooltip: 'This is the tooltip message.'
+    }}
+  >
+    {({ value, variant, tooltip, label }) => `
+      <v-switch
+        value='${value}'
+        variant='${variant}'
+        tooltip='${tooltip}'
+        label='${label}'
       />
     `}
   </Story>
