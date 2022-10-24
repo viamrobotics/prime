@@ -133,16 +133,16 @@ For user triggered actions
 
 <Canvas>
   <Story
-    name='With icon'
+    name='With title'
     args={{
-      label: 'Refresh',
-      icon: 'refresh',
+      label: 'RUN',
+      title: 'Run this command',
     }}
   >
-    {({ label, icon }) => `
+    {({ label, title }) => `
       <v-button
         label='${label}'
-        icon='${icon}'
+        title='${title}'
       />
     `}
   </Story>
@@ -164,6 +164,23 @@ For user triggered actions
         icon='${icon}'
         disabled='${disabled}'
         tooltip='${tooltip}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With icon'
+    args={{
+      label: 'Refresh',
+      icon: 'refresh',
+    }}
+  >
+    {({ label, icon }) => `
+      <v-button
+        label='${label}'
+        icon='${icon}'
       />
     `}
   </Story>
