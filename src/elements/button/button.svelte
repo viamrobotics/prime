@@ -17,6 +17,7 @@ export let disabled = 'false';
 export let type: 'button' | 'submit' | 'reset' = 'button';
 export let variant: Variants = 'primary';
 export let label = '';
+export let title = '';
 export let icon = '';
 export let size = 'base';
 export let tooltip = '';
@@ -55,6 +56,7 @@ const handleClick = () => {
     {type}
     aria-label={variant === 'icon' ? label : undefined}
     aria-disabled={isDisabled}
+    title={title}
     class={cx('will-change-transform hover:scale-105 motion-safe:transition-transform', {
       'inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border': variant !== 'icon',
       'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
