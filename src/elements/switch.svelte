@@ -12,6 +12,7 @@ export let value: 'on' | 'off' = 'off';
 export let variant: 'annotated' | 'default' = 'default';
 export let disabled: string | undefined;
 export let labelposition: 'left' | 'top' = 'top';
+export let tooltip = '';
 
 addStyles();
 
@@ -39,6 +40,7 @@ const handleClick = () => {
     'opacity-50 pointer-events-none': isDisabled,
   })}
 >
+<div class='flex items-center gap-1.5'>
   {#if label}
     <p class={cx('text-xs capitalize', {
       'whitespace-nowrap': labelposition === 'left',
@@ -46,6 +48,14 @@ const handleClick = () => {
       {label}
     </p>
   {/if}
+
+  {#if tooltip}
+  <v-tooltip text={tooltip}>
+    <div class="icon-info-outline text-black" />
+  </v-tooltip>
+  {/if}
+</div>
+  
 
   <button
     on:click={handleClick}
