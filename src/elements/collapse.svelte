@@ -28,12 +28,13 @@ const handleClick = (event: Event) => {
   class='relative w-full overflow-hidden'
 >
   <div
-    class='w-full py-1.5 px-4 flex items-center justify-between border text-black border-black bg-white cursor-pointer'
+    class='w-full py-2 px-4 flex flex-reverse items-baseline justify-between border text-black border-black bg-white cursor-pointer'
     on:click={handleClick}
+    on:keyup|stopPropagation|preventDefault={handleClick}
   >
-    <div class='flex items-center gap-2'>
+    <div class='flex flex-wrap gap-x-3 gap-y-1 items-center'>
       {#if title}
-        <h2 class='text-sm'>{title}</h2>
+        <h2 class='m-0 text-sm'>{title}</h2>
       {/if}
 
       <slot name='title' />
