@@ -14,7 +14,7 @@ $: parsedCrumbs = crumbs.split(',').map((str) => str.trim());
 
 </script>
 
-<div class="inline-flex gap-3 px-4 border border-black rounded-full">
+<div class="flex gap-3 -ml-1 px-4 border border-black rounded-full">
   {#each parsedCrumbs as crumb, index (crumb)}
     <small class="py1">
       { crumb }
