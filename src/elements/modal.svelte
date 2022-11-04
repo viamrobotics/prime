@@ -30,10 +30,12 @@ addStyles();
     }
   )}
   on:click={handleClick}
+  on:keyup|stopPropagation|preventDefault={handleClick}
 >
   <div 
-    class='w-[400px] max-w-full relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4'
+    class='w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4'
     on:click|stopPropagation
+    on:keyup|stopPropagation
   >
     <button 
       class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-black"
