@@ -25,14 +25,14 @@ addStyles();
 
 <div 
   class={
-    cx('z-50 bg-gray-300 bg-opacity-25 w-full h-full fixed top-0 left-0 p-10 flex justify-center items-center', {
+    cx('z-50 bg-gray-300 bg-opacity-25 w-full h-full fixed top-0 left-0 flex justify-center items-center', {
       'invisible': !isOpen,
     }
   )}
   on:click={handleClick}
 >
   <div 
-    class='min-w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4'
+    class='w-[400px] max-w-full relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4'
     on:click|stopPropagation
   >
     <button 
