@@ -22,7 +22,7 @@ jobs:
           npm run build
 
       - name: Deploy Storybook 🚀
-        uses: JamesIves/github-pages-deploy-action@4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: prime # The folder that the build-storybook script generates files.
