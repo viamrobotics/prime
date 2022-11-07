@@ -32,6 +32,7 @@ const toggleDropdown = () => {
   <div
     class='inline-block w-full'
     on:click={toggleDropdown}
+    on:keyup|stopPropagation|preventDefault={toggleDropdown}
   >
     <slot name='target'/>
   </div>
