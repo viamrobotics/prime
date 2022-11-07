@@ -10,7 +10,7 @@ type Locations = 'top' | 'bottom' | 'right' | 'left'
 export let text = '';
 export let location: Locations = 'top';
 export let minwidth: number | string = '12rem';
-export let state: 'visible' | 'invisible' = 'invisible'
+export let state: 'visible' | 'invisible' = 'invisible';
 
 let container: HTMLElement;
 let tooltip: HTMLElement;
@@ -19,8 +19,8 @@ let arrowElement: HTMLElement;
 let invisible = true;
 
 $: {
-  invisible = state === 'invisible'
-  recalculateStyle()
+  invisible = state === 'invisible';
+  recalculateStyle().catch((error) => console.error(error));
 }
 
 let x = 0;

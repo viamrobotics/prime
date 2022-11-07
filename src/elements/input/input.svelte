@@ -32,7 +32,6 @@ export let message: '';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
-let stepDecimalDigits: number;
 let isReadonly: boolean;
 let isDisabled: boolean;
 let stepNumber: number;
@@ -40,7 +39,6 @@ let minNumber: number;
 let maxNumber: number;
 let insertStepAttribute: boolean;
 
-$: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: stepNumber = Number.parseFloat(step);
@@ -60,67 +58,73 @@ const handleInput = (event: Event) => {
   dispatch(root, 'input', { value });
 };
 
-let numberDragTooltip: HTMLElement & { recalculateStyle(): void }
-let numberDragCord: HTMLElement
-let numberDragHead: HTMLElement
-let isDragging = false
-let lastX = 0
-let startX = 0
-let totalDelta = 0
+let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
+let numberDragCord: HTMLElement;
+let numberDragHead: HTMLElement;
+let isDragging = false;
+let startX = 0;
+let startValue = 0;
 
 const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
-  const delta = -(lastX - x);
-  const numberValue = Number.parseFloat(value || '0');
-  const currentValueDigits = String(value).split('.').pop()?.length ?? 0;
+  const delta = -(startX - x) * stepNumber / 10;
 
-  value = input.value = (numberValue + delta).toFixed(Math.max(stepDecimalDigits, currentValueDigits));
-  lastX = x
-  numberDragHead.style.transform = `translate(${x - 4}px, 0)`
-  totalDelta += delta
+  value = input.value = (startValue + delta).toFixed(type === 'integer' ? 0 : 1);
 
-  if (totalDelta > 0) {
-    numberDragCord.style.cssText = `
+  const valueNum = Number.parseFloat(value);
+
+  if (valueNum > maxNumber) {
+    value = String(maxNumber);
+    return;
+  }
+
+  if (valueNum < minNumber) {
+    value = String(minNumber);
+    return;
+  }
+
+  numberDragHead.style.transform = `translate(${x - 4}px, 0)`;
+
+  numberDragCord.style.cssText = valueNum > startValue ? `
       left: ${startX}px;
       right: ${x}px;
       width: ${x - startX}px;
-    `
-  } else {
-    numberDragCord.style.cssText = `
-      right: ${startX}px;
+    ` : `
       left: ${x}px;
+      right: ${startX}px;
       width: ${startX - x}px;
-    `
-  }
+    `;
+
+  console.log('x:', x, 'startX', startX, 'width:', startX - x);
 
   internals.setFormValue(value);
   dispatch(root, 'input', { value });
 
-  numberDragTooltip.recalculateStyle()
-}
+  numberDragTooltip.recalculateStyle();
+};
 
 const handleNumberDragUp = () => {
-  isDragging = false
+  isDragging = false;
 
-  window.removeEventListener('pointermove', handleNumberDragMove)
-}
+  window.removeEventListener('pointermove', handleNumberDragMove);
+};
 
 const handleNumberDragDown = async (event: PointerEvent) => {
-  event.preventDefault()
-  event.stopPropagation()
+  event.preventDefault();
+  event.stopPropagation();
 
-  startX = lastX = event.clientX
-  isDragging = true
-  totalDelta = 0
+  startX = event.clientX;
+  startValue = Number.parseFloat(value);
+  isDragging = true;
 
-  await tick()
+  await tick();
 
-  numberDragHead.style.transform = `translate(${event.clientX - 4}px, 0)`
-  numberDragTooltip.recalculateStyle()
+  numberDragHead.style.transform = `translate(${event.clientX - 4}px, 0)`;
+  numberDragTooltip.recalculateStyle();
 
-  window.addEventListener('pointermove', handleNumberDragMove)
-  window.addEventListener('pointerup', handleNumberDragUp, { once: true })
-}
+  window.addEventListener('pointermove', handleNumberDragMove);
+  window.addEventListener('pointerup', handleNumberDragUp, { once: true });
+};
 
 </script>
 
