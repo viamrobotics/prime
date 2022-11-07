@@ -9,6 +9,8 @@ type Locations = 'top' | 'bottom' | 'right' | 'left'
 
 export let text = '';
 export let location: Locations = 'top';
+export let minwidth: number | string = '12rem';
+export let state: 'visible' | 'invisible' = 'invisible'
 
 let container: HTMLElement;
 let tooltip: HTMLElement;
@@ -16,10 +18,15 @@ let arrowElement: HTMLElement;
 
 let invisible = true;
 
+$: {
+  invisible = state === 'invisible'
+  recalculateStyle()
+}
+
 let x = 0;
 let y = 0;
 
-const recalculateStyle = async () => {
+export const recalculateStyle = async () => {
   const position = await computePosition(container, tooltip, {
     placement: location,
     middleware: [
@@ -63,6 +70,10 @@ const handleMouseEnter = async () => {
 };
 
 const handleMouseLeave = () => {
+  if (state === 'visible') {
+    return;
+  }
+
   invisible = true;
 };
 
@@ -90,13 +101,15 @@ addStyles();
       text-black
       text-left
       text-xs
-      p-3
+      py-1 px-2
       border
       border-black
-      min-w-[12rem]
       z-[100]
     `}
-    style='transform: translate({x}px, {y}px);'
+    style='
+      transform: translate({x}px, {y}px);
+      min-width: {minwidth};
+    '
     >
     <div
       bind:this={arrowElement}

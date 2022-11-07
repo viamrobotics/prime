@@ -7,6 +7,7 @@ import '../prime.css';
 import 'element-internals-polyfill';
 import { loadFonts } from './lib';
 
+
 if (customElements.get('v-badge')) {
   console.warn('WARNING: Multiple instances of PRIME being imported.');
 } else {
