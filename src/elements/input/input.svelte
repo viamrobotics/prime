@@ -12,6 +12,9 @@ import { addStyles, dispatch } from '../../lib/index';
 const component = get_current_component() as HTMLElement & { internals: ElementInternals };
 const internals = component.attachInternals();
 
+// @TODO remove when we decide which number input we like
+const experimental = window.localStorage.getItem('__PRIME_useExperimentalNumberInput') !== null
+
 type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number' | 'integer' | 'time' | 'date' | 'datetime-local'
 
@@ -32,6 +35,7 @@ export let message: '';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
+let stepDecimalDigits: number;
 let isReadonly: boolean;
 let isDisabled: boolean;
 let stepNumber: number;
@@ -39,6 +43,7 @@ let minNumber: number;
 let maxNumber: number;
 let insertStepAttribute: boolean;
 
+$: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: stepNumber = Number.parseFloat(step);
@@ -62,6 +67,7 @@ let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
 let numberDragCord: HTMLElement;
 let numberDragHead: HTMLElement;
 let isDragging = false;
+let y = 0;
 let startX = 0;
 let startValue = 0;
 
@@ -83,19 +89,21 @@ const handleNumberDragMove = (event: PointerEvent) => {
     return;
   }
 
-  numberDragHead.style.transform = `translate(${x - 4}px, 0)`;
+  numberDragHead.style.transform = `translate(${x - 4}px, 0px)`;
 
-  numberDragCord.style.cssText = valueNum > startValue ? `
+  if (valueNum > startValue) {
+    numberDragCord.style.cssText = `
       left: ${startX}px;
       right: ${x}px;
       width: ${x - startX}px;
-    ` : `
+    `;
+  } else if (valueNum < startValue) {
+    numberDragCord.style.cssText = `
       left: ${x}px;
       right: ${startX}px;
       width: ${startX - x}px;
     `;
-
-  console.log('x:', x, 'startX', startX, 'width:', startX - x);
+  }
 
   internals.setFormValue(value);
   dispatch(root, 'input', { value });
@@ -113,18 +121,34 @@ const handleNumberDragDown = async (event: PointerEvent) => {
   event.preventDefault();
   event.stopPropagation();
 
+  const el = event.target as HTMLElement
+  const rect = el.getBoundingClientRect()
+
+  y = rect.top + (rect.height / 2)
   startX = event.clientX;
+  value ||= '0'
   startValue = Number.parseFloat(value);
   isDragging = true;
 
   await tick();
 
-  numberDragHead.style.transform = `translate(${event.clientX - 4}px, 0)`;
+  numberDragHead.style.transform = `translate(${event.clientX - 4}px, 0px)`;
   numberDragTooltip.recalculateStyle();
 
   window.addEventListener('pointermove', handleNumberDragMove);
   window.addEventListener('pointerup', handleNumberDragUp, { once: true });
 };
+
+const increment = (direction: 1 | -1) => {
+  const numberValue = Number.parseFloat(value || '0');
+  const currentValueDigits = String(value).split('.').pop()?.length ?? 0;
+
+  if (type === 'number') {
+    value = input.value = (numberValue + stepNumber * direction).toFixed(Math.max(stepDecimalDigits, currentValueDigits));
+  } else if (type === 'integer') {
+    value = input.value = String(Math.round(numberValue + stepNumber * direction));
+  }
+}
 
 </script>
 
@@ -176,7 +200,22 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     on:input={handleInput}
   />
 
-  {#if type === 'number' || type === 'integer'}
+  {#if !experimental && (type === 'number' || type === 'integer')}
+    <div class='absolute right-0.5 bottom-0 cursor-pointer select-none flex flex-col'>
+      <button
+        on:click={() => increment(+1)}
+        aria-label='Increment up by {stepNumber}'
+        class='icon-chevron-down rotate-180 text-[15px]'
+      />
+      <button
+        on:click={() => increment(-1)}
+        aria-label='Increment down by {stepNumber}'
+        class='icon-chevron-down text-[15px]'
+      />
+    </div>
+  {/if}
+
+  {#if experimental && (type === 'number' || type === 'integer')}
     <div
       class='absolute left-[0.2rem] bottom-[3px] h-[24px] w-1 bg-gray-400 hover:bg-gray-700 cursor-pointer'
       on:pointerdown={handleNumberDragDown}
@@ -201,7 +240,6 @@ const handleNumberDragDown = async (event: PointerEvent) => {
             </v-tooltip>
           </div>
         </div>
-        
       {/if}
     </div>
   {/if}
