@@ -2,7 +2,7 @@
   "name": "@viamrobotics/prime-playground",
   "license": "MIT",
   "scripts": {
-    "start": "vite --host",
+    "start": "vite --host --open",
     "build": "vite build --mode production",
     "preview": "vite preview --host"
   },

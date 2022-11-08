@@ -10,25 +10,6 @@ const rotate = $ref(0)
 </script>
 
 <template>
-  <div class="h-[300px] w-screen grid place-content-center">
-
-    <div class="flex gap-2 items-center">
-      <v-input
-        type="integer"
-        value="0"
-        @input="rotate = $event.detail.value"
-        step="10"
-      />
-
-      <svg class="h-full" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-        <circle stroke-width="0.5" stroke="#111" fill="rgba(0,0,0,0)" cx="25" cy="25" r="12.5" />
-        <circle stroke-width="0.5" stroke="#111" fill="rgba(0,0,0,0)" cx="25" cy="25" r="10" />
-        <line stroke-width="0.5" x1="25" y1="25" x2="25" y2="15" stroke="black" class="origin-center" :style="{ transform: `rotate(${rotate}deg)` }" />
-      </svg>
-    </div>
-
-  </div>
-
   <main class="m-3 border border-black">
     <v-tabs
       tabs="Tab 1, Tab 2"
@@ -83,4 +64,22 @@ const rotate = $ref(0)
       Hello world
     </v-collapse>
   </main>
+
+  <div class="h-[300px] w-screen grid place-content-center">
+    <div class="flex gap-2 items-center">
+      <v-input
+        type="integer"
+        incrementor="slider"
+        value="0"
+        @input="rotate = $event.detail.value"
+        step="10"
+      />
+
+      <svg class="h-full" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+        <circle stroke-width="0.5" stroke="#111" fill="rgba(0,0,0,0)" cx="25" cy="25" r="12.5" />
+        <circle stroke-width="0.5" stroke="#111" fill="rgba(0,0,0,0)" cx="25" cy="25" r="10" />
+        <line stroke-width="0.5" x1="25" y1="25" x2="25" y2="15" stroke="black" class="origin-center" :style="{ transform: `rotate(${rotate}deg)` }" />
+      </svg>
+    </div>
+  </div>
 </template>

@@ -32,6 +32,7 @@ export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error'| 'success' | '' = 'info';
 export let message: '';
+export let incrementor: 'buttons' | 'slider' = 'buttons';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -88,20 +89,19 @@ const handleNumberDragMove = (event: PointerEvent) => {
     return;
   }
 
-  numberDragHead.style.transform = `translate(${x - 4}px, 0px)`;
-
   if (valueNum > startValue) {
+    const dx = x - startX;
     numberDragCord.style.cssText = `
-      left: ${startX}px;
-      right: ${x}px;
-      width: ${x - startX}px;
+      width: ${dx}px;
     `;
+    numberDragHead.style.transform = `translate(${dx}px, 0px)`;
   } else if (valueNum < startValue) {
+    const dx = startX - x;
     numberDragCord.style.cssText = `
-      left: ${x}px;
-      right: ${startX}px;
-      width: ${startX - x}px;
+      width: ${dx}px;
+      transform: translate(-${dx}px, 0);
     `;
+    numberDragHead.style.transform = `translate(-${dx}px, 0px)`;
   }
 
   internals.setFormValue(value);
@@ -131,7 +131,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
 
   await tick();
 
-  numberDragHead.style.transform = `translate(${event.clientX - 4}px, 0px)`;
+  numberDragHead.style.transform = 'translate(0px, 0px)';
   numberDragTooltip.recalculateStyle();
 
   window.addEventListener('pointermove', handleNumberDragMove);
@@ -199,7 +199,7 @@ const increment = (direction: 1 | -1) => {
     on:input={handleInput}
   />
 
-  {#if !experimental && (type === 'number' || type === 'integer')}
+  {#if !experimental && incrementor === 'buttons' && (type === 'number' || type === 'integer')}
     <div class='absolute right-0.5 bottom-0 cursor-pointer select-none flex flex-col'>
       <button
         on:click={() => increment(+1)}
@@ -214,7 +214,7 @@ const increment = (direction: 1 | -1) => {
     </div>
   {/if}
 
-  {#if experimental && (type === 'number' || type === 'integer')}
+  {#if (experimental || incrementor === 'slider') && (type === 'number' || type === 'integer')}
     <div
       class='absolute left-[0.2rem] bottom-[3px] h-[24px] w-1 z-50 bg-gray-400 hover:bg-gray-700 cursor-pointer'
       on:pointerdown={handleNumberDragDown}
@@ -222,20 +222,20 @@ const increment = (direction: 1 | -1) => {
       {#if isDragging}
         <div
           bind:this={numberDragCord}
-          class='fixed h-px bg-gray-400 mt-[calc(13px)] pointer-events-none'
+          class='h-px bg-gray-400 mt-[calc(13px)] pointer-events-none'
         />
         <div
           bind:this={numberDragHead}
-          class='fixed left-0 w-2 h-[26px] pointer-events-none'
+          class='pointer-events-none -mt-[5px] -ml-[2px]'
         >
-          <div class='absolute h-2 w-2 top-[calc(9px)]'>
+          <div class='h-2 w-2'>
             <v-tooltip
               bind:this={numberDragTooltip}
               state='visible'
               minwidth='auto'
               text={value}
             >
-              <div class='absolute  h-2 w-2 bg-gray-800 rounded-full ' />
+              <div class='h-2 w-2 bg-gray-800 rounded-full ' />
             </v-tooltip>
           </div>
         </div>
