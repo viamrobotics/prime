@@ -28,7 +28,7 @@ let y = 0;
 
 export const recalculateStyle = async () => {
   if (!container) {
-    return
+    return;
   }
 
   const position = await computePosition(container, tooltip, {

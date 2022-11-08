@@ -13,7 +13,7 @@ const component = get_current_component() as HTMLElement & { internals: ElementI
 const internals = component.attachInternals();
 
 // @TODO remove when we decide which number input we like
-const experimental = window.localStorage.getItem('__PRIME_useExperimentalNumberInput') !== null
+const experimental = window.localStorage.getItem('__PRIME_useExperimentalNumberInput') !== null;
 
 type LabelPosition = 'top' | 'left'
 type Types = 'text' | 'email' | 'number' | 'integer' | 'time' | 'date' | 'datetime-local'
@@ -67,7 +67,6 @@ let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
 let numberDragCord: HTMLElement;
 let numberDragHead: HTMLElement;
 let isDragging = false;
-let y = 0;
 let startX = 0;
 let startValue = 0;
 
@@ -121,12 +120,12 @@ const handleNumberDragDown = async (event: PointerEvent) => {
   event.preventDefault();
   event.stopPropagation();
 
-  const el = event.target as HTMLElement
-  const rect = el.getBoundingClientRect()
+  // const el = event.target as HTMLElement;
+  
+  // const rect = el.getBoundingClientRect();
 
-  y = rect.top + (rect.height / 2)
   startX = event.clientX;
-  value ||= '0'
+  value ||= '0';
   startValue = Number.parseFloat(value);
   isDragging = true;
 
@@ -148,7 +147,7 @@ const increment = (direction: 1 | -1) => {
   } else if (type === 'integer') {
     value = input.value = String(Math.round(numberValue + stepNumber * direction));
   }
-}
+};
 
 </script>
 
@@ -217,7 +216,7 @@ const increment = (direction: 1 | -1) => {
 
   {#if experimental && (type === 'number' || type === 'integer')}
     <div
-      class='absolute left-[0.2rem] bottom-[3px] h-[24px] w-1 bg-gray-400 hover:bg-gray-700 cursor-pointer'
+      class='absolute left-[0.2rem] bottom-[3px] h-[24px] w-1 z-50 bg-gray-400 hover:bg-gray-700 cursor-pointer'
       on:pointerdown={handleNumberDragDown}
     >
       {#if isDragging}
