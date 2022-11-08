@@ -28,7 +28,7 @@ const handleClick = (event: Event) => {
   class='relative w-full overflow-hidden'
 >
   <div
-    class='w-full py-2 px-4 flex flex-reverse items-baseline justify-between border text-black border-black bg-white cursor-pointer'
+    class='w-full py-2 px-4 flex flex-reverse items-center justify-between border text-black border-black bg-white cursor-pointer'
     on:click={handleClick}
     on:keyup|stopPropagation|preventDefault={handleClick}
   >
