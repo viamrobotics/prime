@@ -32,7 +32,7 @@ export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error'| 'success' | '' = 'info';
 export let message: '';
-export let incrementor: 'buttons' | 'slider' = 'buttons'
+export let incrementor: 'buttons' | 'slider' = 'buttons';
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -90,13 +90,13 @@ const handleNumberDragMove = (event: PointerEvent) => {
   }
 
   if (valueNum > startValue) {
-    const dx = x - startX
+    const dx = x - startX;
     numberDragCord.style.cssText = `
       width: ${dx}px;
     `;
     numberDragHead.style.transform = `translate(${dx}px, 0px)`;
   } else if (valueNum < startValue) {
-    const dx = startX - x
+    const dx = startX - x;
     numberDragCord.style.cssText = `
       width: ${dx}px;
       transform: translate(-${dx}px, 0);
@@ -131,7 +131,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
 
   await tick();
 
-  numberDragHead.style.transform = `translate(0px, 0px)`;
+  numberDragHead.style.transform = 'translate(0px, 0px)';
   numberDragTooltip.recalculateStyle();
 
   window.addEventListener('pointermove', handleNumberDragMove);
