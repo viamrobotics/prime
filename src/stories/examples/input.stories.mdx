@@ -9,8 +9,8 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
         <v-input
           type="number"
           value="0"
+          step="10"
           oninput="
-            console.log(event.detail.value)
             document.querySelector('#illustration').style.transform = 'rotate(' + event.detail.value + 'deg)'
           "
         >
