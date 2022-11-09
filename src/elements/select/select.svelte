@@ -260,7 +260,6 @@ $: {
   tabindex='-1'
   on:focusin={handleFocus}
   on:focusout={handleFocusOut}
-  on:keyup|stopPropagation|preventDefault={handleKeyUp}
   on:mousemove={() => setKeyboardControl(false)}
 >
   <div class='flex items-center gap-1.5'>
@@ -304,6 +303,7 @@ $: {
           type='text'
           class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
           on:input|preventDefault={handleInput}
+          on:keyup|stopPropagation|preventDefault={handleKeyUp}
         >
         <button
           tabindex='-1'
