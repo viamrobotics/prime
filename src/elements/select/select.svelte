@@ -90,6 +90,7 @@ const handleInput = (event: Event) => {
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
+  console.log('event', event);
   setKeyboardControl(true);
 
   switch (event.key.toLowerCase()) {
@@ -101,6 +102,7 @@ const handleKeyUp = (event: KeyboardEvent) => {
 };
 
 const handleEnter = () => {
+  console.log('handleEnter');
   if (isMultiple) {
     const option = sortedOptions[navigationIndex]!;
     value = value.includes(option)
@@ -260,7 +262,6 @@ $: {
   tabindex='-1'
   on:focusin={handleFocus}
   on:focusout={handleFocusOut}
-  on:keyup|stopPropagation|preventDefault={handleKeyUp}
   on:mousemove={() => setKeyboardControl(false)}
 >
   <div class='flex items-center gap-1.5'>
@@ -304,6 +305,7 @@ $: {
           type='text'
           class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
           on:input|preventDefault={handleInput}
+          on:keyup|stopPropagation|preventDefault={handleKeyUp}
         >
         <button
           tabindex='-1'
@@ -322,6 +324,7 @@ $: {
             <div
               class='flex cursor-pointer items-center gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300'
               on:click={() => handlePillClick(option)}
+              on:keyup={() => handlePillClick(option)}
             >
               <span>
                 { option }
