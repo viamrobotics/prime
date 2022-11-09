@@ -90,7 +90,6 @@ const handleInput = (event: Event) => {
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
-  console.log('event', event);
   setKeyboardControl(true);
 
   switch (event.key.toLowerCase()) {
@@ -102,7 +101,6 @@ const handleKeyUp = (event: KeyboardEvent) => {
 };
 
 const handleEnter = () => {
-  console.log('handleEnter');
   if (isMultiple) {
     const option = sortedOptions[navigationIndex]!;
     value = value.includes(option)
