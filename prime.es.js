@@ -3167,11 +3167,11 @@ function ro(t) {
     m(Y, V) {
       T(Y, e, V), g(e, n), y && y.m(n, null), g(n, i), C && C.m(n, null), g(e, r), g(e, o), g(o, l), g(l, s), g(s, a), t[40](a), g(s, u), g(s, d), g(d, m), g(l, p), L && L.m(l, null), g(o, _), g(o, x), W.m(x, null), t[44](e), S || (z = [
         X(a, "input", Re(t[19])),
+        X(a, "keyup", Te(Re(t[20]))),
         X(d, "click", t[24]),
         X(d, "focusin", Te(t[39])),
         X(e, "focusin", t[22]),
         X(e, "focusout", t[23]),
-        X(e, "keyup", Te(Re(t[20]))),
         X(e, "mousemove", t[45])
       ], S = !0);
     },
