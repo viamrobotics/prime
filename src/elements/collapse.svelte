@@ -8,9 +8,10 @@ import { addStyles, dispatch } from '../lib/index';
 export let title = '';
 export let open = false;
 
-let root: HTMLElement;
+type Variants = 'default'
+export let variant: Variants = 'default';
 
-addStyles();
+let root: HTMLElement;
 
 const handleClick = (event: Event) => {
   if ((event.target as HTMLElement).getAttribute('slot') === 'header') {
@@ -21,14 +22,20 @@ const handleClick = (event: Event) => {
   dispatch(root, 'toggle', { open });
 };
 
+addStyles();
+
 </script>
+
+
 
 <div
   bind:this={root}
   class='relative w-full overflow-hidden'
 >
   <div
-    class='w-full py-2 px-4 flex flex-reverse items-center justify-between border text-black border-black bg-white cursor-pointer'
+    class={cx('w-full py-2 px-4 flex flex-reverse items-center justify-between text-black cursor-pointer', {
+      'border border-black bg-white': variant === 'default',
+    })},
     on:click={handleClick}
     on:keyup|stopPropagation|preventDefault={handleClick}
   >
@@ -63,4 +70,4 @@ const handleClick = (event: Event) => {
   >
     <slot />
   </div>
-</div>  
+</div> 
