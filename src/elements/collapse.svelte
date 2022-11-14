@@ -8,10 +8,9 @@ import { addStyles, dispatch } from '../lib/index';
 export let title = '';
 export let open = false;
 
-type Variants = 'noBorderBackground' | 'default'
+type Variants = 'default'
 export let variant: Variants = 'default';
 
-addStyles();
 let root: HTMLElement;
 
 const handleClick = (event: Event) => {
@@ -23,6 +22,8 @@ const handleClick = (event: Event) => {
   dispatch(root, 'toggle', { open });
 };
 
+addStyles();
+
 </script>
 
 
@@ -32,8 +33,8 @@ const handleClick = (event: Event) => {
   class='relative w-full overflow-hidden'
 >
   <div
-    class={cx('w-full py-2 px-4 flex flex-reverse items-center justify-between border text-black border-black bg-white cursor-pointer', {
-      'border-none bg-none': variant === 'noBorderBackground',
+    class={cx('w-full py-2 px-4 flex flex-reverse items-center justify-between text-black cursor-pointer', {
+      'border border-black bg-white': variant === 'default',
     })},
     on:click={handleClick}
     on:keyup|stopPropagation|preventDefault={handleClick}

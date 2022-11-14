@@ -8,10 +8,6 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     },
   }}
   argTypes={{
-    variant: {
-      description: 'Theses are the variant options.',
-      options: ['noBorderBackground', 'default']
-    },
     title: {
       description: 'This is the title',
       table: { defaultValue: { summary: '' } },
@@ -95,14 +91,14 @@ Toggles visibility of content
   <Story
     name='No Background and No Border'
     args={{
-      variant: 'noBorderBackground',
       title: 'Motor 1',
       content: 'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
     }}
   >
-    {({ title, content, variant }) => `
+    {({ title, content }) => `
       <v-collapse
         title='${title}'
+        variant=''
       >
         <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
         <v-badge slot='header' label='Inactive'></v-badge>
