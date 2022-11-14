@@ -8,10 +8,11 @@ import { addStyles, dispatch } from '../lib/index';
 export let title = '';
 export let open = false;
 
-let root: HTMLElement;
-const variant = 'noBorderBackground';
+type Variants = 'noBorderBackground' | 'default'
+export let variant: Variants = 'default';
 
 addStyles();
+let root: HTMLElement;
 
 const handleClick = (event: Event) => {
   if ((event.target as HTMLElement).getAttribute('slot') === 'header') {
@@ -33,7 +34,7 @@ const handleClick = (event: Event) => {
   <div
     class={cx('w-full py-2 px-4 flex flex-reverse items-center justify-between border text-black border-black bg-white cursor-pointer', {
       'border-none bg-none': variant === 'noBorderBackground',
-    })}
+    })},
     on:click={handleClick}
     on:keyup|stopPropagation|preventDefault={handleClick}
   >

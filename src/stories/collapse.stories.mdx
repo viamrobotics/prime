@@ -8,6 +8,10 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     },
   }}
   argTypes={{
+    variant: {
+      description: 'Theses are the variant options.',
+      options: ['noBorderBackground', 'default']
+    },
     title: {
       description: 'This is the title',
       table: { defaultValue: { summary: '' } },
@@ -96,7 +100,7 @@ Toggles visibility of content
       content: 'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
     }}
   >
-    {({ title, content }) => `
+    {({ title, content, variant }) => `
       <v-collapse
         title='${title}'
       >
