@@ -70,5 +70,3 @@ addStyles();
     <slot />
   </div>
 </div> 
-
-
