@@ -63,7 +63,7 @@ addStyles();
 
   <div
     class="{cx(' text-black overflow-hidden transition-all duration-500', {
-      'default': 'bg-white',
+      'bg-white': variant === 'default',
       'max-h-0': !open,
       'max-h-fit': open,
     })}"
