@@ -8,6 +8,12 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     },
   }}
   argTypes={{
+    variant: {
+      options: ['default', ''],
+      control: { type: 'select' },
+      description: 'These are the options. The default variant adds a black border and white background',
+      table: { defaultValue: { summary: 'default' } },
+    },
     title: {
       description: 'This is the title',
       table: { defaultValue: { summary: '' } },
