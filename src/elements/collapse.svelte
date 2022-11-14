@@ -9,7 +9,7 @@ export let title = '';
 export let open = false;
 
 let root: HTMLElement;
-let variant = 'secretUI'
+const variant = 'secretUI';
 
 addStyles();
 
