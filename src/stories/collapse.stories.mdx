@@ -87,4 +87,25 @@ Toggles visibility of content
   </Story>
 </Canvas>
 
+<Canvas>
+  <Story
+    name='No Background and No Border'
+    args={{
+      title: 'Motor 1',
+      content: 'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+    }}
+  >
+    {({ title, content }) => `
+      <v-collapse
+        title='${title}'
+      >
+        <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
+        <v-badge slot='header' label='Inactive'></v-badge>
+        <div style='font-size: 12px; padding: 1rem'>${content}</div>
+      </v-collapse>
+    `
+    }
+  </Story>
+</Canvas>
+
 

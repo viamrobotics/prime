@@ -9,6 +9,7 @@ export let title = '';
 export let open = false;
 
 let root: HTMLElement;
+let variant = 'secretUI'
 
 addStyles();
 
@@ -23,12 +24,16 @@ const handleClick = (event: Event) => {
 
 </script>
 
+
+
 <div
   bind:this={root}
   class='relative w-full overflow-hidden'
 >
   <div
-    class='w-full py-2 px-4 flex flex-reverse items-center justify-between border text-black border-black bg-white cursor-pointer'
+    class={cx('w-full py-2 px-4 flex flex-reverse items-center justify-between border text-black border-black bg-white cursor-pointer', {
+      'border-none bg-none': variant === 'secretUI'
+    })}
     on:click={handleClick}
     on:keyup|stopPropagation|preventDefault={handleClick}
   >
@@ -62,4 +67,6 @@ const handleClick = (event: Event) => {
   >
     <slot />
   </div>
-</div>  
+</div> 
+
+
