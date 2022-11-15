@@ -1914,7 +1914,7 @@ function Rr(t) {
         "bg-white": !t[14],
         "opacity-50 pointer-events-none bg-gray-200": t[14] || t[20],
         "border-red-600 border": t[8] === "error"
-      })), f(o, "step", u = t[16] ? t[4] : null), f(e, "class", p = F("relative flex gap-1 min-w-[6rem] w-full", {
+      })), f(o, "step", u = t[16] ? t[4] : null), f(e, "class", p = F("relative flex gap-1 w-full", {
         "flex-col": t[6] === "top",
         "items-center": t[6] === "left"
       }));
@@ -1929,7 +1929,7 @@ function Rr(t) {
         "bg-white": !v[14],
         "opacity-50 pointer-events-none bg-gray-200": v[14] || v[20],
         "border-red-600 border": v[8] === "error"
-      })) && f(o, "class", c), z[0] & 65552 && u !== (u = v[16] ? v[4] : null) && f(o, "step", u), !v[21] && v[10] === "buttons" && (v[1] === "number" || v[1] === "integer") ? w ? w.p(v, z) : (w = Jt(v), w.c(), w.m(e, m)) : w && (w.d(1), w = null), (v[21] || v[10] === "slider") && (v[1] === "number" || v[1] === "integer") ? E ? E.p(v, z) : (E = Zt(v), E.c(), E.m(e, b)) : E && (E.d(1), E = null), v[9] ? T ? T.p(v, z) : (T = Qt(v), T.c(), T.m(e, null)) : T && (T.d(1), T = null), z[0] & 64 && p !== (p = F("relative flex gap-1 min-w-[6rem] w-full", {
+      })) && f(o, "class", c), z[0] & 65552 && u !== (u = v[16] ? v[4] : null) && f(o, "step", u), !v[21] && v[10] === "buttons" && (v[1] === "number" || v[1] === "integer") ? w ? w.p(v, z) : (w = Jt(v), w.c(), w.m(e, m)) : w && (w.d(1), w = null), (v[21] || v[10] === "slider") && (v[1] === "number" || v[1] === "integer") ? E ? E.p(v, z) : (E = Zt(v), E.c(), E.m(e, b)) : E && (E.d(1), E = null), v[9] ? T ? T.p(v, z) : (T = Qt(v), T.c(), T.m(e, null)) : T && (T.d(1), T = null), z[0] & 64 && p !== (p = F("relative flex gap-1 w-full", {
         "flex-col": v[6] === "top",
         "items-center": v[6] === "left"
       })) && f(e, "class", p);
