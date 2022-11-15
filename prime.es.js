@@ -1447,7 +1447,8 @@ function vr(t) {
         "rotate-180": t[0]
       })), U(u, "name", "chevron-down"), U(u, "size", "2xl"), f(s, "class", "h-full flex items-center gap-3"), f(n, "class", m = F("w-full py-2 px-4 flex flex-reverse items-center justify-between text-black cursor-pointer", {
         "border border-black bg-white": t[2] === "default"
-      }) + ","), f(p, "class", y = F("bg-white text-black overflow-hidden transition-all duration-500", {
+      }) + ","), f(p, "class", y = F(" text-black overflow-hidden transition-all duration-500", {
+        "bg-white": t[2] === "default",
         "max-h-0": !t[0],
         "max-h-fit": t[0]
       })), f(e, "class", "relative w-full overflow-hidden");
@@ -1464,7 +1465,8 @@ function vr(t) {
         "rotate-180": E[0]
       })) && U(u, "class", d), T & 4 && m !== (m = F("w-full py-2 px-4 flex flex-reverse items-center justify-between text-black cursor-pointer", {
         "border border-black bg-white": E[2] === "default"
-      }) + ",") && f(n, "class", m), T & 1 && y !== (y = F("bg-white text-black overflow-hidden transition-all duration-500", {
+      }) + ",") && f(n, "class", m), T & 5 && y !== (y = F(" text-black overflow-hidden transition-all duration-500", {
+        "bg-white": E[2] === "default",
         "max-h-0": !E[0],
         "max-h-fit": E[0]
       })) && f(p, "class", y);
