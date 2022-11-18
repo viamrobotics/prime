@@ -15,7 +15,7 @@ export let disabled: string | undefined;
 export let labelposition: 'left' | 'top' = 'top';
 export let tooltip = '';
 
-const dispatch = dispatcher()
+const dispatch = dispatcher();
 
 addStyles();
 

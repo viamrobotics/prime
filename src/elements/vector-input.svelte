@@ -5,35 +5,45 @@
 import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 
-export let label: string
-export let dimensions = 3
-export let step = 1
-export let type: 'integer' | 'number' = 'number'
-export let value: string
-export let placeholders = ['x', 'y', 'z', 'w']
+export let label: string;
+export let dimensions = 3;
+export let step = 1;
+export let type: 'integer' | 'number' = 'number';
+export let value: string;
+export let placeholders = ['x', 'y', 'z', 'w'];
 
 const dispatch = dispatcher();
 
 addStyles();
 
-let valueArray: number[]
+let valueArray: (number | undefined)[];
 
 $: {
-  const arr = []
-  const split = value.split(',')
+  const arr: (number | undefined)[] = [];
+  const split = value.split(',');
   for (let i = 0; i < dimensions; i += 1) {
-    arr[i] = typeof split[i] === 'string' ? Number.parseFloat(split[i]!) : undefined
+    arr[i] = typeof split[i] === 'string' ? Number.parseFloat(split[i]!) : undefined;
   }
-  valueArray = typeof value === 'string' ? value.split(',').map(n => Number.parseFloat(n)) : []
+  valueArray = arr;
 }
 
 const handleInput = (index: number) => {
-  return (event: CustomEvent) => {
+  return (event: CustomEvent<{ value: string }>) => {
     valueArray[index] = Number.parseFloat(event.detail.value || '0');
-    value = valueArray.join(',')
-    console.log(valueArray)
+    value = valueArray.join(',');
+    console.log(valueArray);
     dispatch('input', { value: valueArray });
   };
+};
+
+const dimensionsArray = () => {
+  const arr = [];
+
+  for (let i = 0; i < dimensions; i += 1) {
+    arr.push(i);
+  }
+
+  return arr;
 };
 
 </script>
@@ -43,7 +53,7 @@ const handleInput = (index: number) => {
     {label}
   </p>
   <div class="flex gap-1">
-    {#each Array(dimensions).fill(0).map((_, i) => i) as i (i)}
+    {#each dimensionsArray() as i (i)}
     <div class="w-16">
       <v-input
         {type}

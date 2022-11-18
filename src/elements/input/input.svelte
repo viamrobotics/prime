@@ -47,7 +47,7 @@ let maxNumber: number;
 let insertStepAttribute: boolean;
 
 $: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
-$: isNumeric = type === 'number' || type === 'integer'
+$: isNumeric = type === 'number' || type === 'integer';
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: stepNumber = Number.parseFloat(step);
@@ -64,13 +64,13 @@ let startValue = 0;
 
 const inputType = () => {
   if (type === 'number') {
-    return 'text'
+    return 'text';
   } else if (type === 'integer') {
-    return 'number'
+    return 'number';
   } else {
-    return type
+    return type;
   }
-}
+};
 
 const handleInput = () => {
   if (value === input.value) {
@@ -85,31 +85,30 @@ const handleInput = () => {
 
   internals.setFormValue(value);
 
-  dispatch('input', { value })
+  dispatch('input', { value });
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
   const key = event.key.toLowerCase();
 
   if (key !== 'arrowup' && key !== 'arrowdown') {
-    return
+    return;
   }
 
-  event.preventDefault()
+  event.preventDefault();
 
-  const l = step.split('.').pop()?.length ?? 1
-  const x = Number.parseFloat(input.value || '0')
+  const x = Number.parseFloat(input.value || '0');
 
   if (key === 'arrowup') {
-    value = (x + stepNumber).toFixed(type === 'integer' ? 0 : l)
+    value = (x + stepNumber).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
   } else if (key === 'arrowdown') {
-    value = (x - stepNumber).toFixed(type === 'integer' ? 0 : l)
+    value = (x - stepNumber).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
   }
 
-  input.value = value
+  input.value = value;
 
-  handleInput()
-}
+  handleInput();
+};
 
 const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
@@ -207,8 +206,8 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     {placeholder}
     {name}
     {value}
-    inputmode={isNumeric ? "numeric" : undefined}
-    pattern={isNumeric ? '\d*' : undefined}
+    inputmode={isNumeric ? 'numeric' : undefined}
+    pattern={isNumeric ? '[0-9]+' : undefined}
     readonly={isReadonly || isDisabled}
     aria-disabled={isDisabled}
     bind:this={input}

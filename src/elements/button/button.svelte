@@ -2,11 +2,11 @@
 
 <script lang='ts'>
 
-type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success' | 'icon'
-
 // Added temporarily because <svelte:element> does not recognize "text" as a valid prop
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
+type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success' | 'icon'
 
 import cx from 'classnames';
 import { get_current_component } from 'svelte/internal';
