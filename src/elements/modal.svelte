@@ -5,21 +5,23 @@
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
 import { htmlToBoolean } from '../lib/boolean';
-import { dispatch } from '../lib/dispatch';
+import { dispatcher } from '../lib/dispatch';
 
 export let title = '';
 export let message = '';
-
 export let open = 'false';
+
+const dispatch = dispatcher();
+
+addStyles();
+
 let isOpen: boolean;
 
 $: isOpen = htmlToBoolean(open, 'open');
 
-const handleClick = (event: Event) => {
-  dispatch(event.currentTarget as HTMLElement, 'close');
+const handleClick = () => {
+  dispatch('close');
 };
-
-addStyles();
 
 </script>
 

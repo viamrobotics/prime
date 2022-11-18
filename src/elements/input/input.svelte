@@ -2,21 +2,15 @@
 
 <script lang='ts'>
 
+type LabelPosition = 'top' | 'left'
+type Types = 'text' | 'email' | 'number' | 'integer' | 'time' | 'date' | 'datetime-local'
+
 import cx from 'classnames';
 import { tick } from 'svelte';
 import { get_current_component } from 'svelte/internal';
 import { htmlToBoolean } from '../../lib/boolean';
-import { addStyles, dispatch } from '../../lib/index';
-
-// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
-const component = get_current_component() as HTMLElement & { internals: ElementInternals };
-const internals = component.attachInternals();
-
-// @TODO remove when we decide which number input we like
-const experimental = window.localStorage.getItem('__PRIME_useExperimentalNumberInput') !== null;
-
-type LabelPosition = 'top' | 'left'
-type Types = 'text' | 'email' | 'number' | 'integer' | 'time' | 'date' | 'datetime-local'
+import { addStyles } from '../../lib/index';
+import { dispatcher } from '../../lib/dispatch';
 
 export let type: Types = 'text';
 export let placeholder = '';
@@ -32,9 +26,16 @@ export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error'| 'success' | '' = 'info';
 export let message: '';
-export let incrementor: 'buttons' | 'slider' = 'buttons';
+export let incrementor: 'buttons' | 'slider' | 'none' = 'none';
 
-let root: HTMLElement;
+const dispatch = dispatcher();
+
+addStyles();
+
+// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
+const component = get_current_component() as HTMLElement & { internals: ElementInternals };
+const internals = component.attachInternals();
+
 let input: HTMLInputElement;
 let stepDecimalDigits: number;
 let isReadonly: boolean;
@@ -52,16 +53,19 @@ $: minNumber = Number.parseFloat(min);
 $: maxNumber = Number.parseFloat(max);
 $: insertStepAttribute = type === 'time' || type === 'number';
 
-addStyles();
-
 const handleInput = (event: Event) => {
   event.preventDefault();
   event.stopImmediatePropagation();
 
+  if (value === input.value) {
+    return;
+  }
+
   value = input.value;
 
   internals.setFormValue(value);
-  dispatch(root, 'input', { value });
+
+  dispatch('input', { value })
 };
 
 let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
@@ -105,7 +109,7 @@ const handleNumberDragMove = (event: PointerEvent) => {
   }
 
   internals.setFormValue(value);
-  dispatch(root, 'input', { value });
+  dispatch('input', { value });
 
   numberDragTooltip.recalculateStyle();
 };
@@ -119,10 +123,6 @@ const handleNumberDragUp = () => {
 const handleNumberDragDown = async (event: PointerEvent) => {
   event.preventDefault();
   event.stopPropagation();
-
-  // const el = event.target as HTMLElement;
-  
-  // const rect = el.getBoundingClientRect();
 
   startX = event.clientX;
   value ||= '0';
@@ -138,21 +138,9 @@ const handleNumberDragDown = async (event: PointerEvent) => {
   window.addEventListener('pointerup', handleNumberDragUp, { once: true });
 };
 
-const increment = (direction: 1 | -1) => {
-  const numberValue = Number.parseFloat(value || '0');
-  const currentValueDigits = String(value).split('.').pop()?.length ?? 0;
-
-  if (type === 'number') {
-    value = input.value = (numberValue + stepNumber * direction).toFixed(Math.max(stepDecimalDigits, currentValueDigits));
-  } else if (type === 'integer') {
-    value = input.value = String(Math.round(numberValue + stepNumber * direction));
-  }
-};
-
 </script>
 
 <label
-  bind:this={root}
   class={cx('relative flex gap-1 w-full', {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
@@ -199,22 +187,7 @@ const increment = (direction: 1 | -1) => {
     on:input={handleInput}
   />
 
-  {#if !experimental && incrementor === 'buttons' && (type === 'number' || type === 'integer')}
-    <div class='absolute right-0.5 bottom-0 cursor-pointer select-none flex flex-col'>
-      <button
-        on:click={() => increment(+1)}
-        aria-label='Increment up by {stepNumber}'
-        class='icon-chevron-down rotate-180 text-[15px]'
-      />
-      <button
-        on:click={() => increment(-1)}
-        aria-label='Increment down by {stepNumber}'
-        class='icon-chevron-down text-[15px]'
-      />
-    </div>
-  {/if}
-
-  {#if (experimental || incrementor === 'slider') && (type === 'number' || type === 'integer')}
+  {#if incrementor === 'slider' && (type === 'number' || type === 'integer')}
     <div
       class='absolute left-[0.2rem] bottom-[3px] h-[24px] w-1 z-50 bg-gray-400 hover:bg-gray-700 cursor-pointer'
       on:pointerdown={handleNumberDragDown}

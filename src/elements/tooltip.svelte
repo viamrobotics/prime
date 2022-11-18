@@ -2,10 +2,10 @@
 
 <script lang='ts'>
 
+type Locations = 'top' | 'bottom' | 'right' | 'left'
+
 import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
 import { addStyles } from '../lib/index';
-
-type Locations = 'top' | 'bottom' | 'right' | 'left'
 
 export let text = '';
 export let location: Locations = 'top';

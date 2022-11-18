@@ -5,11 +5,11 @@
 import cx from 'classnames';
 import { addStyles } from '../../lib/index';
 
-addStyles();
-
 export let variant = '';
 export let cols = '';
 export let style = '';
+
+addStyles();
 
 const colSizes = cols.split(',').map(col => col.trim());
 

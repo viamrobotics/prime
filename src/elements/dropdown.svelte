@@ -3,13 +3,16 @@
 <script lang='ts'>
 
 import cx from 'classnames';
-import { addStyles, dispatch } from '../lib/index';
+import { addStyles } from '../lib/index';
+import { dispatcher } from '../lib/dispatch';
 import { htmlToBoolean } from '../lib/boolean';
 
 export let open = 'false';
 export let match = 'false';
 
-let root: HTMLElement;
+const dispatch = dispatcher();
+
+addStyles();
 
 let isMatch: boolean;
 let isOpen: boolean;
@@ -17,18 +20,14 @@ let isOpen: boolean;
 $: isMatch = htmlToBoolean(match, 'match');
 $: isOpen = htmlToBoolean(open, 'open');
 
-addStyles();
 
 const toggleDropdown = () => {
-  dispatch(root, 'toggle', { open: !isOpen });
+  dispatch('toggle', { open: !isOpen });
 };
 
 </script>
 
-<div
-  class='relative inline-block w-full'
-  bind:this={root}
->
+<div class='relative inline-block w-full'>
   <div
     class='inline-block w-full'
     on:click={toggleDropdown}
