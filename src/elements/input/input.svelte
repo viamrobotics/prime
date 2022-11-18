@@ -38,6 +38,7 @@ const internals = component.attachInternals();
 
 let input: HTMLInputElement;
 let stepDecimalDigits: number;
+let isNumeric: boolean;
 let isReadonly: boolean;
 let isDisabled: boolean;
 let stepNumber: number;
@@ -46,18 +47,37 @@ let maxNumber: number;
 let insertStepAttribute: boolean;
 
 $: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
+$: isNumeric = type === 'number' || type === 'integer'
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: stepNumber = Number.parseFloat(step);
 $: minNumber = Number.parseFloat(min);
 $: maxNumber = Number.parseFloat(max);
-$: insertStepAttribute = type === 'time' || type === 'number';
+$: insertStepAttribute = type === 'time' || isNumeric;
 
-const handleInput = (event: Event) => {
-  event.preventDefault();
-  event.stopImmediatePropagation();
+let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
+let numberDragCord: HTMLElement;
+let numberDragHead: HTMLElement;
+let isDragging = false;
+let startX = 0;
+let startValue = 0;
 
+const inputType = () => {
+  if (type === 'number') {
+    return 'text'
+  } else if (type === 'integer') {
+    return 'number'
+  } else {
+    return type
+  }
+}
+
+const handleInput = () => {
   if (value === input.value) {
+    return;
+  }
+
+  if (type === 'number' && input.value.endsWith('.')) {
     return;
   }
 
@@ -68,12 +88,28 @@ const handleInput = (event: Event) => {
   dispatch('input', { value })
 };
 
-let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
-let numberDragCord: HTMLElement;
-let numberDragHead: HTMLElement;
-let isDragging = false;
-let startX = 0;
-let startValue = 0;
+const handleKeydown = (event: KeyboardEvent) => {
+  const key = event.key.toLowerCase();
+
+  if (key !== 'arrowup' && key !== 'arrowdown') {
+    return
+  }
+
+  event.preventDefault()
+
+  const l = step.split('.').pop()?.length ?? 1
+  const x = Number.parseFloat(input.value || '0')
+
+  if (key === 'arrowup') {
+    value = (x + stepNumber).toFixed(type === 'integer' ? 0 : l)
+  } else if (key === 'arrowdown') {
+    value = (x - stepNumber).toFixed(type === 'integer' ? 0 : l)
+  }
+
+  input.value = value
+
+  handleInput()
+}
 
 const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
@@ -166,28 +202,29 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       </v-tooltip>
     {/if}
   </div>
-
   <input
-    type={type === 'integer' ? 'number' : type}
+    type={inputType()}
     {placeholder}
     {name}
     {value}
-    pattern={type === 'integer' ? '[0-9]*' : undefined}
+    inputmode={isNumeric ? "numeric" : undefined}
+    pattern={isNumeric ? '\d*' : undefined}
     readonly={isReadonly || isDisabled}
     aria-disabled={isDisabled}
     bind:this={input}
     class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
-      'pl-2.5': type !== 'number' && type !== 'integer',
-      'pl-3': type === 'number' || type === 'integer',
+      'pl-2.5': isNumeric === false,
+      'pl-3': isNumeric,
       'bg-white': !isDisabled,
       'opacity-50 pointer-events-none bg-gray-200': isDisabled || isDragging,
       'border-red-600 border': state === 'error',
     })}
     step={insertStepAttribute ? step : null}
-    on:input={handleInput}
+    on:input|preventDefault|stopPropagation={handleInput}
+    on:keydown={isNumeric ? handleKeydown : undefined}
   />
 
-  {#if incrementor === 'slider' && (type === 'number' || type === 'integer')}
+  {#if incrementor === 'slider' && isNumeric}
     <div
       class='absolute left-[0.2rem] bottom-[3px] h-[24px] w-1 z-50 bg-gray-400 hover:bg-gray-700 cursor-pointer'
       on:pointerdown={handleNumberDragDown}
