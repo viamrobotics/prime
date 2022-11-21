@@ -74,13 +74,13 @@ const inputType = () => {
 
 const inputPattern = () => {
   if (type === 'number') {
-    return '^([-+,0-9.]+)'
+    return '^([-+,0-9.]+)';
   } else if (type === 'integer') {
-    return '[0-9]+'
+    return '[0-9]+';
   } else {
-    return undefined
+    return;
   }
-}
+};
 
 const handleInput = () => {
   if (value === input.value) {
