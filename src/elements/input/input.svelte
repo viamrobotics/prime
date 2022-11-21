@@ -133,7 +133,6 @@ const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
   const deltaString = (-(startX - x) * stepNumber / 10).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
   const delta = type === 'integer' ? Number.parseInt(deltaString, 10) : Number.parseFloat(deltaString);
-  console.log(delta, stepDecimalDigits);
 
   value = input.value = (startValue + delta).toFixed(getDecimals(input.value));
 
