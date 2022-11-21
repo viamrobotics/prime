@@ -46,7 +46,10 @@ let minNumber: number;
 let maxNumber: number;
 let insertStepAttribute: boolean;
 
-$: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
+$: {
+  const arr = String(step).split('.');
+  stepDecimalDigits = arr.length === 2 ? arr.pop()?.length ?? 0 : 0;
+}
 $: isNumeric = type === 'number' || type === 'integer';
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
@@ -98,6 +101,10 @@ const handleInput = () => {
   dispatch('input', { value });
 };
 
+const getDecimals = (value = '') => {
+  return Math.max(value.split('.').pop()?.length ?? 0, stepDecimalDigits)
+}
+
 const handleKeydown = (event: KeyboardEvent) => {
   const key = event.key.toLowerCase();
 
@@ -110,21 +117,25 @@ const handleKeydown = (event: KeyboardEvent) => {
   const x = Number.parseFloat(input.value || '0');
 
   if (key === 'arrowup') {
-    value = (x + stepNumber).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
+    value = (x + stepNumber).toFixed(type === 'integer' ? 0 : getDecimals(input.value));
   } else if (key === 'arrowdown') {
-    value = (x - stepNumber).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
+    value = (x - stepNumber).toFixed(type === 'integer' ? 0 : getDecimals(input.value));
   }
 
-  input.value = value;
+  input.value = value
 
-  handleInput();
+  internals.setFormValue(value);
+
+  dispatch('input', { value });
 };
 
 const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
-  const delta = -(startX - x) * stepNumber / 10;
+  const deltaString = (-(startX - x) * stepNumber / 10).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
+  const delta = type === 'integer' ? Number.parseInt(deltaString, 10) : Number.parseFloat(deltaString)
+  console.log(delta, stepDecimalDigits)
 
-  value = input.value = (startValue + delta).toFixed(type === 'integer' ? 0 : 1);
+  value = input.value = (startValue + delta).toFixed(getDecimals(input.value));
 
   const valueNum = Number.parseFloat(value);
 
