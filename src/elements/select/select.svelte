@@ -322,6 +322,7 @@ $: {
       {#if parsedSelected.length > 0}
         <div class='flex flex-wrap gap-2 p-1'>
           {#each parsedSelected as option (option)}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
               class='flex cursor-pointer items-center gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300'
               on:click={() => handlePillClick(option)}
