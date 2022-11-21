@@ -102,8 +102,8 @@ const handleInput = () => {
 };
 
 const getDecimals = (value = '') => {
-  return Math.max(value.split('.').pop()?.length ?? 0, stepDecimalDigits)
-}
+  return Math.max(value.split('.').pop()?.length ?? 0, stepDecimalDigits);
+};
 
 const handleKeydown = (event: KeyboardEvent) => {
   const key = event.key.toLowerCase();
@@ -122,7 +122,7 @@ const handleKeydown = (event: KeyboardEvent) => {
     value = (x - stepNumber).toFixed(type === 'integer' ? 0 : getDecimals(input.value));
   }
 
-  input.value = value
+  input.value = value;
 
   internals.setFormValue(value);
 
@@ -132,8 +132,8 @@ const handleKeydown = (event: KeyboardEvent) => {
 const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
   const deltaString = (-(startX - x) * stepNumber / 10).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
-  const delta = type === 'integer' ? Number.parseInt(deltaString, 10) : Number.parseFloat(deltaString)
-  console.log(delta, stepDecimalDigits)
+  const delta = type === 'integer' ? Number.parseInt(deltaString, 10) : Number.parseFloat(deltaString);
+  console.log(delta, stepDecimalDigits);
 
   value = input.value = (startValue + delta).toFixed(getDecimals(input.value));
 
