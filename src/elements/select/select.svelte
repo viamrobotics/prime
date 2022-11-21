@@ -256,7 +256,7 @@ $: {
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label
   bind:this={root}
-  class={cx('z-[100] relative min-w-[6rem] w-full flex gap-1', {
+  class={cx('relative min-w-[6rem] w-full flex gap-1', {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
   })}

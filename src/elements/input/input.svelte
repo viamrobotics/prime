@@ -72,6 +72,16 @@ const inputType = () => {
   }
 };
 
+const inputPattern = () => {
+  if (type === 'number') {
+    return '^([-+,0-9.]+)';
+  } else if (type === 'integer') {
+    return '[0-9]+';
+  } else {
+    return;
+  }
+};
+
 const handleInput = () => {
   if (value === input.value) {
     return;
@@ -207,7 +217,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     {name}
     {value}
     inputmode={isNumeric ? 'numeric' : undefined}
-    pattern={isNumeric ? '[0-9]+' : undefined}
+    pattern={inputPattern()}
     readonly={isReadonly || isDisabled}
     aria-disabled={isDisabled}
     bind:this={input}
