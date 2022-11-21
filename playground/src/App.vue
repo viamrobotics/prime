@@ -2,10 +2,20 @@
 
 import Monaco from './monaco.vue'
 
-const value = $ref('bob')
 const selectedTab = $ref('Tab 1')
 
-const rotate = $ref(0)
+let value = $ref(1)
+let rotate = $ref(0)
+
+const handleRotate = (event: CustomEvent) => {
+  console.log(event.detail.value, typeof event.detail.value)
+  rotate = Number.parseFloat(event.detail.value)
+}
+
+const handleInput = (event: CustomEvent) => {
+  console.log(event)
+  value = event.detail.value
+}
 
 </script>
 
@@ -40,21 +50,23 @@ const rotate = $ref(0)
         :key="i"
         :title="'This is a warning'"
         variant="warning"
-        @click="() => { /* remove */ }"
       />
 
       <v-input
         label="My input"
         :value="value"
-        @input="value = $event.detail.value"
+        type="number"
+        step="0.1"
+        incrementor="slider"
+        @input="handleInput"
       />
       
       <button>
         <v-icon name="edit" />
       </button>
 
-      <section :key="i" v-for="i in [0,1,2,3,4,5]">
-        <v-icon name="trash" @mouse-over="() => { /* remove */ }" />
+      <section :key="i" v-for="i in [0, 1, 2, 3, 4, 5]">
+        <v-icon name="trash" />
       </section>
     </div>
 
@@ -68,11 +80,11 @@ const rotate = $ref(0)
   <div class="h-[300px] w-screen grid place-content-center">
     <div class="flex gap-2 items-center">
       <v-input
-        type="integer"
+        type="number"
         incrementor="slider"
-        value="0"
-        @input="rotate = $event.detail.value"
-        step="10"
+        :value="rotate"
+        @input="handleRotate"
+        step="0.1"
       />
 
       <svg class="h-full" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">

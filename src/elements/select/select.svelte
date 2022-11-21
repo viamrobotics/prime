@@ -257,6 +257,7 @@ $: {
 <label
   bind:this={root}
   class={cx('relative min-w-[6rem] w-full flex gap-1', {
+    'z-[100]': open,
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
   })}
