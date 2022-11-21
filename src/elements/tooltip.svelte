@@ -108,7 +108,7 @@ addStyles();
       py-1 px-2
       border
       border-black
-      z-[100]
+      z-[1000]
     `}
     style='
       transform: translate({x}px, {y}px);
