@@ -7,6 +7,7 @@ import { addStyles } from '../../lib/index';
 export let style = '';
 
 addStyles();
+
 </script>
 
 <style>

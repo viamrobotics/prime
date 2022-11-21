@@ -93,6 +93,32 @@ Used for all text single-line user inputs.
 
 <Canvas>
   <Story
+    name='Number with slider'
+    args={{
+      type: 'number',
+      label: 'Volume of soup',
+      placeholder: '0',
+      value: '',
+      step: 0.1,
+      incrementor: 'slider'
+    }}
+  >
+    {({ type, label, placeholder, value, step, incrementor }) => `
+      <v-input
+        type='${type}'
+        label='${label}'
+        placeholder='${placeholder}'
+        incrementor='${incrementor}'
+        value='${value}'
+        step='${step}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+
+<Canvas>
+  <Story
     name='Integer'
     args={{
       type: 'integer',

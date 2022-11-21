@@ -2,14 +2,15 @@
 
 <script lang='ts'>
 
-// This entire component is pretty hacked together and should be refactored.
+type LabelPosition = 'top' | 'left'
+
+// This entire component is pretty hacked together and should be refactored. Maybe split multi / single select.
 import cx from 'classnames';
 import { searchSort } from '../../lib/sort';
 import { htmlToBoolean } from '../../lib/boolean';
-import { addStyles, dispatch } from '../../lib/index';
+import { addStyles } from '../../lib/index';
+import { dispatcher } from '../../lib/dispatch';
 import * as utils from './utils';
-
-type LabelPosition = 'top' | 'left'
 
 export let options = '';
 export let value = '';
@@ -22,6 +23,10 @@ export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
+
+const dispatch = dispatcher();
+
+addStyles();
 
 let root: HTMLElement;
 let input: HTMLInputElement;
@@ -60,8 +65,6 @@ let keyboardControlling = false;
 let optionMatch = false;
 let optionMatchText = '';
 
-addStyles();
-
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
@@ -85,7 +88,7 @@ const handleInput = (event: Event) => {
     }
   } else {
     value = input.value.trim();
-    dispatch(root, 'input', { value });
+    dispatch('input', { value });
   }
 };
 
@@ -118,7 +121,7 @@ const handleEnter = () => {
       optionMatch = false;
     }
 
-    dispatch(root, 'input', { value, values: value.split(',') });
+    dispatch('input', { value, values: value.split(',') });
   } else {
     if (navigationIndex > -1) {
       value = sortedOptions[navigationIndex]!;
@@ -133,7 +136,7 @@ const handleEnter = () => {
       input.blur();
     }
 
-    dispatch(root, 'input', { value });
+    dispatch('input', { value });
   }
   
 };
@@ -188,7 +191,7 @@ const handleIconClick = () => {
 
 const handlePillClick = (target: string) => {
   value = [...parsedSelected.filter((item: string) => item !== target)].toString();
-  dispatch(root, 'input', { value, values: value.split(',') });
+  dispatch('input', { value, values: value.split(',') });
   input.focus();
 };
 
@@ -215,10 +218,10 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   if (isMultiple) {
     input.focus();
-    dispatch(root, 'input', { value, values: value.split(',') });
+    dispatch('input', { value, values: value.split(',') });
   } else {
     open = false;
-    dispatch(root, 'input', { value });
+    dispatch('input', { value });
   }
 };
 
@@ -226,9 +229,9 @@ const handleClearAll = () => {
   value = '';
   optionsContainer.scrollTop = 0;
   if (isMultiple) {
-    dispatch(root, 'input', { value, values: value.split(',') });
+    dispatch('input', { value, values: value.split(',') });
   } else {
-    dispatch(root, 'input', { value });
+    dispatch('input', { value });
   }
 };
 
@@ -253,7 +256,7 @@ $: {
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label
   bind:this={root}
-  class={cx('relative min-w-[6rem] w-full flex gap-1', {
+  class={cx('z-[100] relative min-w-[6rem] w-full flex gap-1', {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
   })}

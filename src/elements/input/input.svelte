@@ -2,21 +2,15 @@
 
 <script lang='ts'>
 
+type LabelPosition = 'top' | 'left'
+type Types = 'text' | 'email' | 'number' | 'integer' | 'time' | 'date' | 'datetime-local'
+
 import cx from 'classnames';
 import { tick } from 'svelte';
 import { get_current_component } from 'svelte/internal';
 import { htmlToBoolean } from '../../lib/boolean';
-import { addStyles, dispatch } from '../../lib/index';
-
-// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
-const component = get_current_component() as HTMLElement & { internals: ElementInternals };
-const internals = component.attachInternals();
-
-// @TODO remove when we decide which number input we like
-const experimental = window.localStorage.getItem('__PRIME_useExperimentalNumberInput') !== null;
-
-type LabelPosition = 'top' | 'left'
-type Types = 'text' | 'email' | 'number' | 'integer' | 'time' | 'date' | 'datetime-local'
+import { addStyles } from '../../lib/index';
+import { dispatcher } from '../../lib/dispatch';
 
 export let type: Types = 'text';
 export let placeholder = '';
@@ -32,11 +26,19 @@ export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error'| 'success' | '' = 'info';
 export let message: '';
-export let incrementor: 'buttons' | 'slider' = 'buttons';
+export let incrementor: 'buttons' | 'slider' | 'none' = 'none';
 
-let root: HTMLElement;
+const dispatch = dispatcher();
+
+addStyles();
+
+// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
+const component = get_current_component() as HTMLElement & { internals: ElementInternals };
+const internals = component.attachInternals();
+
 let input: HTMLInputElement;
 let stepDecimalDigits: number;
+let isNumeric: boolean;
 let isReadonly: boolean;
 let isDisabled: boolean;
 let stepNumber: number;
@@ -45,24 +47,13 @@ let maxNumber: number;
 let insertStepAttribute: boolean;
 
 $: stepDecimalDigits = String(step).split('.').pop()?.length ?? 0;
+$: isNumeric = type === 'number' || type === 'integer';
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: stepNumber = Number.parseFloat(step);
 $: minNumber = Number.parseFloat(min);
 $: maxNumber = Number.parseFloat(max);
-$: insertStepAttribute = type === 'time' || type === 'number';
-
-addStyles();
-
-const handleInput = (event: Event) => {
-  event.preventDefault();
-  event.stopImmediatePropagation();
-
-  value = input.value;
-
-  internals.setFormValue(value);
-  dispatch(root, 'input', { value });
-};
+$: insertStepAttribute = type === 'time' || isNumeric;
 
 let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
 let numberDragCord: HTMLElement;
@@ -70,6 +61,54 @@ let numberDragHead: HTMLElement;
 let isDragging = false;
 let startX = 0;
 let startValue = 0;
+
+const inputType = () => {
+  if (type === 'number') {
+    return 'text';
+  } else if (type === 'integer') {
+    return 'number';
+  } else {
+    return type;
+  }
+};
+
+const handleInput = () => {
+  if (value === input.value) {
+    return;
+  }
+
+  if (type === 'number' && input.value.endsWith('.')) {
+    return;
+  }
+
+  value = input.value;
+
+  internals.setFormValue(value);
+
+  dispatch('input', { value });
+};
+
+const handleKeydown = (event: KeyboardEvent) => {
+  const key = event.key.toLowerCase();
+
+  if (key !== 'arrowup' && key !== 'arrowdown') {
+    return;
+  }
+
+  event.preventDefault();
+
+  const x = Number.parseFloat(input.value || '0');
+
+  if (key === 'arrowup') {
+    value = (x + stepNumber).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
+  } else if (key === 'arrowdown') {
+    value = (x - stepNumber).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
+  }
+
+  input.value = value;
+
+  handleInput();
+};
 
 const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
@@ -105,7 +144,7 @@ const handleNumberDragMove = (event: PointerEvent) => {
   }
 
   internals.setFormValue(value);
-  dispatch(root, 'input', { value });
+  dispatch('input', { value });
 
   numberDragTooltip.recalculateStyle();
 };
@@ -119,10 +158,6 @@ const handleNumberDragUp = () => {
 const handleNumberDragDown = async (event: PointerEvent) => {
   event.preventDefault();
   event.stopPropagation();
-
-  // const el = event.target as HTMLElement;
-  
-  // const rect = el.getBoundingClientRect();
 
   startX = event.clientX;
   value ||= '0';
@@ -138,21 +173,9 @@ const handleNumberDragDown = async (event: PointerEvent) => {
   window.addEventListener('pointerup', handleNumberDragUp, { once: true });
 };
 
-const increment = (direction: 1 | -1) => {
-  const numberValue = Number.parseFloat(value || '0');
-  const currentValueDigits = String(value).split('.').pop()?.length ?? 0;
-
-  if (type === 'number') {
-    value = input.value = (numberValue + stepNumber * direction).toFixed(Math.max(stepDecimalDigits, currentValueDigits));
-  } else if (type === 'integer') {
-    value = input.value = String(Math.round(numberValue + stepNumber * direction));
-  }
-};
-
 </script>
 
 <label
-  bind:this={root}
   class={cx('relative flex gap-1 w-full', {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
@@ -178,43 +201,29 @@ const increment = (direction: 1 | -1) => {
       </v-tooltip>
     {/if}
   </div>
-
   <input
-    type={type === 'integer' ? 'number' : type}
+    type={inputType()}
     {placeholder}
     {name}
     {value}
-    pattern={type === 'integer' ? '[0-9]*' : undefined}
+    inputmode={isNumeric ? 'numeric' : undefined}
+    pattern={isNumeric ? '[0-9]+' : undefined}
     readonly={isReadonly || isDisabled}
     aria-disabled={isDisabled}
     bind:this={input}
     class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
-      'pl-2.5': type !== 'number' && type !== 'integer',
-      'pl-3': type === 'number' || type === 'integer',
+      'pl-2.5': isNumeric === false,
+      'pl-3': isNumeric,
       'bg-white': !isDisabled,
       'opacity-50 pointer-events-none bg-gray-200': isDisabled || isDragging,
       'border-red-600 border': state === 'error',
     })}
     step={insertStepAttribute ? step : null}
-    on:input={handleInput}
+    on:input|preventDefault|stopPropagation={handleInput}
+    on:keydown={isNumeric ? handleKeydown : undefined}
   />
 
-  {#if !experimental && incrementor === 'buttons' && (type === 'number' || type === 'integer')}
-    <div class='absolute right-0.5 bottom-0 cursor-pointer select-none flex flex-col'>
-      <button
-        on:click={() => increment(+1)}
-        aria-label='Increment up by {stepNumber}'
-        class='icon-chevron-down rotate-180 text-[15px]'
-      />
-      <button
-        on:click={() => increment(-1)}
-        aria-label='Increment down by {stepNumber}'
-        class='icon-chevron-down text-[15px]'
-      />
-    </div>
-  {/if}
-
-  {#if (experimental || incrementor === 'slider') && (type === 'number' || type === 'integer')}
+  {#if incrementor === 'slider' && isNumeric}
     <div
       class='absolute left-[0.2rem] bottom-[3px] h-[24px] w-1 z-50 bg-gray-400 hover:bg-gray-700 cursor-pointer'
       on:pointerdown={handleNumberDragDown}

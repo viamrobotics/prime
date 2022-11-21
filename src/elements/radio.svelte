@@ -2,10 +2,11 @@
 
 <script lang='ts'>
 
-import cx from 'classnames';
-import { addStyles, dispatch } from '../lib/index';
-
 type LabelPosition = 'top' | 'left'
+
+import cx from 'classnames';
+import { addStyles } from '../lib/index';
+import { dispatcher } from '../lib/dispatch';
 
 export let label = '';
 export let options = '';
@@ -14,16 +15,16 @@ export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
 
+const dispatch = dispatcher();
+
 addStyles();
 
-let button: HTMLButtonElement;
 let parsedOptions: string[];
-
 $: parsedOptions = options.split(',').map((str) => str.trim());
 
 const handleClick = (value: string) => {
   selected = value;
-  dispatch(button, 'input', { value });
+  dispatch('input', { value });
 };
 
 </script>
@@ -55,7 +56,6 @@ const handleClick = (value: string) => {
   <div class="flex flex-nowrap">
     {#each parsedOptions as option}
       <button
-        bind:this={button}
         class={cx('whitespace-nowrap capitalize border-y border-l last:border-r border-black px-2 py-1 text-xs', {
           'bg-white': option !== selected,
           'bg-black text-white': option === selected,

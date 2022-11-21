@@ -7,10 +7,11 @@ import { get_current_component } from 'svelte/internal';
 
 import {
   addStyles,
-  dispatch,
   removeNewlineWhitespace,
   monacoURL,
 } from '../lib/index';
+
+import { dispatcher } from '../lib/dispatch';
 
 import type {
   MonacoSupportedLanguages,  
@@ -33,6 +34,10 @@ export let minimap = 'false';
 export let schema = '';
 export let variant: 'default' | 'diff' = 'default';
 
+const dispatch = dispatcher();
+
+addStyles();
+
 let isReadonly: boolean;
 let hasMinimap: boolean;
 let parsedSchema: Schema | undefined;
@@ -45,8 +50,6 @@ let container: HTMLDivElement;
 let diffEditor: Monaco.editor.IStandaloneDiffEditor;
 let editor: Monaco.editor.IStandaloneCodeEditor;
 let resizeObserver: ResizeObserver;
-
-addStyles();
 
 const link = document.createElement('link');
 link.rel = 'stylesheet';
@@ -77,7 +80,7 @@ const setModel = () => {
     model = window.monaco.editor.createModel(value, language);
   }
 
-  dispatch(container, 'update-model', { model });
+  dispatch('update-model', { model });
   editor.setModel(model);
 };
 
@@ -139,13 +142,11 @@ const init = (monaco: typeof Monaco) => {
   editor = monaco.editor.create(container, opts());
 
   editor.onDidChangeModelContent(() => {
-    dispatch(container, 'input', {
-      value: editor?.getValue(),
-    });
+    dispatch('input', { value: editor?.getValue() });
   });
 
   editor.onDidBlurEditorWidget(() => {
-    dispatch(container, 'blur', { value: editor?.getValue() });
+    dispatch('blur', { value: editor?.getValue() });
     emitMarkers();
   });
 
@@ -161,7 +162,7 @@ const emitMarkers = () => {
     return marker.resource.authority === `${id}.json`;
   });
 
-  dispatch(container, 'markers', { markers: ownedMarkers });
+  dispatch('markers', { markers: ownedMarkers });
 };
 
 const handleResize = () => {
@@ -190,8 +191,7 @@ onDestroy(() => {
 
   resizeObserver.disconnect();
 
-  const element = editor?.getDomNode() ?? container;
-  dispatch(element, 'destroy');
+  dispatch('destroy');
 });
 
 $: {

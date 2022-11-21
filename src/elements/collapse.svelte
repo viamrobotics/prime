@@ -2,16 +2,19 @@
 
 <script lang='ts'>
 
+type Variants = 'default' | 'minimal'
+
 import cx from 'classnames';
-import { addStyles, dispatch } from '../lib/index';
+import { addStyles } from '../lib/index';
+import { dispatcher } from '../lib/dispatch';
 
 export let title = '';
 export let open = false;
-
-type Variants = 'default'
 export let variant: Variants = 'default';
 
-let root: HTMLElement;
+const dispatch = dispatcher();
+
+addStyles();
 
 const handleClick = (event: Event) => {
   if ((event.target as HTMLElement).getAttribute('slot') === 'header') {
@@ -19,19 +22,12 @@ const handleClick = (event: Event) => {
   }
 
   open = !open;
-  dispatch(root, 'toggle', { open });
+  dispatch('toggle', { open });
 };
-
-addStyles();
 
 </script>
 
-
-
-<div
-  bind:this={root}
-  class='relative w-full overflow-hidden'
->
+<div class='relative w-full overflow-hidden'>
   <div
     class={cx('w-full py-2 px-4 flex flex-reverse items-center justify-between text-black cursor-pointer', {
       'border border-black bg-white': variant === 'default',

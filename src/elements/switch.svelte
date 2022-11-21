@@ -4,7 +4,8 @@
 
 import cx from 'classnames';
 import { htmlToBoolean } from '../lib/boolean';
-import { addStyles, dispatch } from '../lib/index';
+import { addStyles } from '../lib/index';
+import { dispatcher } from '../lib/dispatch';
 
 export let label = '';
 export let name = '';
@@ -14,9 +15,10 @@ export let disabled: string | undefined;
 export let labelposition: 'left' | 'top' = 'top';
 export let tooltip = '';
 
+const dispatch = dispatcher();
+
 addStyles();
 
-let root: HTMLElement;
 let input: HTMLInputElement;
 let on: boolean;
 let isDisabled: boolean;
@@ -27,13 +29,12 @@ $: isDisabled = htmlToBoolean(disabled, 'disabled');
 const handleClick = () => {
   value = (!on) ? 'on' : 'off';
   input.checked = on;
-  dispatch(root, 'input', { value: input.checked });
+  dispatch('input', { value: input.checked });
 };
 
 </script>
 
 <label
-  bind:this={root}
   class={cx('flex gap-1', {
     'flex-col justify-start': labelposition === 'top',
     'items-center': labelposition === 'left',

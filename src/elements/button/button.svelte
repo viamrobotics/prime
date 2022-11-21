@@ -6,12 +6,12 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success' | 'icon'
+
 import cx from 'classnames';
 import { get_current_component } from 'svelte/internal';
 import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
-
-type Variants = 'primary' | 'inverse-primary' | 'danger' | 'outline-danger' | 'success' | 'icon'
 
 export let disabled = 'false';
 export let type: 'button' | 'submit' | 'reset' = 'button';
@@ -22,11 +22,11 @@ export let icon = '';
 export let size = 'base';
 export let tooltip = '';
 
+addStyles();
+
 let isDisabled: boolean;
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
-
-addStyles();
 
 // @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
 const component = get_current_component() as HTMLElement & { internals: ElementInternals };
