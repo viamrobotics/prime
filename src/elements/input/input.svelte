@@ -77,7 +77,7 @@ $: {
   } else if (type === 'integer') {
     inputPattern = '[0-9]+';
   }
-};
+}
 
 let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
 let numberDragCord: HTMLElement;

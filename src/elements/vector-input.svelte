@@ -21,11 +21,11 @@ let valueArray: (number | undefined)[];
 $: {
   const arr: (number | undefined)[] = [];
 
-  const split = value.split(',')
+  const split = value.split(',');
   for (let i = 0; i < dimensions; i += 1) {
-    const num = Number.parseFloat(split[i]!)
+    const num = Number.parseFloat(split[i]!);
     if (!Number.isNaN(num)) {
-      arr[i] = num
+      arr[i] = num;
     }
   }
 
