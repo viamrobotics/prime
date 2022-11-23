@@ -5,11 +5,11 @@
 import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 
-export let label: string;
+export let label = '';
 export let dimensions = 3;
 export let step = 1;
 export let type: 'integer' | 'number' = 'number';
-export let value: string;
+export let value = '';
 export let placeholders = ['x', 'y', 'z', 'w'];
 
 const dispatch = dispatcher();
@@ -20,10 +20,15 @@ let valueArray: (number | undefined)[];
 
 $: {
   const arr: (number | undefined)[] = [];
-  const split = value.split(',');
+
+  const split = value.split(',')
   for (let i = 0; i < dimensions; i += 1) {
-    arr[i] = typeof split[i] === 'string' ? Number.parseFloat(split[i]!) : undefined;
+    const num = Number.parseFloat(split[i]!)
+    if (!Number.isNaN(num)) {
+      arr[i] = num
+    }
   }
+
   valueArray = arr;
 }
 
@@ -58,7 +63,7 @@ const dimensionsArray = () => {
       <v-input
         {type}
         {step}
-        value={valueArray[i]}
+        value={valueArray[i] ?? ''}
         placeholder={placeholders[i]}
         incrementor="slider"
         on:input={handleInput(i)}

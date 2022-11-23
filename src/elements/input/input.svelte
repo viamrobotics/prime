@@ -45,11 +45,9 @@ let stepNumber: number;
 let minNumber: number;
 let maxNumber: number;
 let insertStepAttribute: boolean;
+let inputType: string;
+let inputPattern: string;
 
-$: {
-  const arr = String(step).split('.');
-  stepDecimalDigits = arr.length === 2 ? arr.pop()?.length ?? 0 : 0;
-}
 $: isNumeric = type === 'number' || type === 'integer';
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
@@ -58,6 +56,29 @@ $: minNumber = Number.parseFloat(min);
 $: maxNumber = Number.parseFloat(max);
 $: insertStepAttribute = type === 'time' || isNumeric;
 
+$: {
+  const arr = String(step).split('.');
+  stepDecimalDigits = arr.length === 2 ? arr.pop()?.length ?? 0 : 0;
+}
+
+$: {
+  if (type === 'number') {
+    inputType = 'text';
+  } else if (type === 'integer') {
+    inputType = 'number';
+  } else {
+    inputType = type;
+  }
+}
+
+$: {
+  if (type === 'number') {
+    inputPattern = '^([-+,0-9.]+)';
+  } else if (type === 'integer') {
+    inputPattern = '[0-9]+';
+  }
+};
+
 let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
 let numberDragCord: HTMLElement;
 let numberDragHead: HTMLElement;
@@ -65,25 +86,6 @@ let isDragging = false;
 let startX = 0;
 let startValue = 0;
 
-const inputType = () => {
-  if (type === 'number') {
-    return 'text';
-  } else if (type === 'integer') {
-    return 'number';
-  } else {
-    return type;
-  }
-};
-
-const inputPattern = () => {
-  if (type === 'number') {
-    return '^([-+,0-9.]+)';
-  } else if (type === 'integer') {
-    return '[0-9]+';
-  } else {
-    return;
-  }
-};
 
 const handleInput = () => {
   if (value === input.value) {
@@ -222,12 +224,12 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     {/if}
   </div>
   <input
-    type={inputType()}
+    type={inputType}
     {placeholder}
     {name}
     {value}
     inputmode={isNumeric ? 'numeric' : undefined}
-    pattern={inputPattern()}
+    pattern={inputPattern}
     readonly={isReadonly || isDisabled}
     aria-disabled={isDisabled}
     bind:this={input}
