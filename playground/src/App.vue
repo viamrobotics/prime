@@ -71,16 +71,7 @@ const handleInput = (event: CustomEvent) => {
     </div>
 
     <Monaco />
-    <v-pill 
-      value='hi'
-    />
-    <v-select 
-      variant='multiple'
-      options='a, b, c, d, e, f, g, h, i, j'
-      value="b, c"
-      clearable="true"
-      showpill='false'
-    />
+    
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
     </v-collapse>
