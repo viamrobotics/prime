@@ -1,11 +1,13 @@
 <script setup lang="ts">
 
+import { lazy } from 'react';
 import Monaco from './monaco.vue'
 
 const selectedTab = $ref('Tab 1')
 
 let value = $ref(1)
 let rotate = $ref(0)
+let vector = $ref({ x: 0, y: 0, z: 0 })
 
 const handleRotate = (event: CustomEvent) => {
   console.log(event.detail.value, typeof event.detail.value)
@@ -17,9 +19,27 @@ const handleInput = (event: CustomEvent) => {
   value = event.detail.value
 }
 
+let lazyValue = $ref('')
+
+setTimeout(() => {
+  lazyValue = '1989-01-01'
+}, 2000)
+
 </script>
 
 <template>
+  <div class="flex flex-wrap justify-between gap-2">
+    <v-input
+      class="w-full"
+      type="date"
+      :value="lazyValue"
+    />
+    <v-input
+      class="w-full"
+      type="time"
+    />
+  </div>
+
   <main class="m-3 border border-black">
     <v-tabs
       tabs="Tab 1, Tab 2"
@@ -87,6 +107,9 @@ const handleInput = (event: CustomEvent) => {
         step="0.1"
       />
 
+      <v-vector-input
+        .value="vector"
+      />
 
       <svg class="h-full" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
         <circle stroke-width="0.5" stroke="#111" fill="rgba(0,0,0,0)" cx="25" cy="25" r="12.5" />
