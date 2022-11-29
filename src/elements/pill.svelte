@@ -21,15 +21,16 @@ const handleRemove = () => {
 
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+
 <div class='flex cursor-pointer items-center max-w-fit gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300'>
   <span>
     {value}
   </span>
   {#if isRemovable}
-  <v-icon 
-    name='x'
-    on:click={handleRemove}
-  />
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <v-icon 
+      name='x'
+      on:click={handleRemove}
+    />
   {/if}
 </div>
