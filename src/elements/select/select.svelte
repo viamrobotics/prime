@@ -23,6 +23,7 @@ export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
+export let buttontext = 'go';
 
 const dispatch = dispatcher();
 
