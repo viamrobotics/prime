@@ -91,7 +91,7 @@ setTimeout(() => {
     </div>
 
     <Monaco />
-    
+
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
     </v-collapse>
