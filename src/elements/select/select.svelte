@@ -223,7 +223,12 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   if (isMultiple) {
     input.focus();
-    dispatch('input', { value, values: value.split(',') });
+    if (checked) {
+      dispatch('input', { value, values: value.split(','), added: target });
+    } else {
+      dispatch('input', { value, values: value.split(','), removed: target });
+    }
+    
   } else {
     open = false;
     dispatch('input', { value });
@@ -426,7 +431,7 @@ $: {
       {#if hasButton}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div 
-          class='flex hover:bg-gray-200 items-center p-2 border-t-[1px] border-t-gray-200 '
+          class='flex cursor-pointer hover:bg-gray-200 items-center p-2 border-t-[1px] border-t-gray-200 '
           on:click={handleButtonClick}
         >
           {#if buttonicon}

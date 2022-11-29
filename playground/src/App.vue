@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import { lazy } from 'react';
 import Monaco from './monaco.vue'
 
 const selectedTab = $ref('Tab 1')
@@ -17,10 +16,6 @@ const handleRotate = (event: CustomEvent) => {
 const handleInput = (event: CustomEvent) => {
   console.log(event)
   value = event.detail.value
-}
-
-const handleClick = () => {
-  console.log('button has been clicked')
 }
 
 let lazyValue = $ref('')
@@ -95,14 +90,7 @@ setTimeout(() => {
     </div>
 
     <Monaco />
-    <v-select 
-      options="a, b, c, d, e, f, g, h"
-      variant="multiple"
-      button="true"
-      buttontext="ADD NEW TAG"
-      buttonicon="add"
-      @buttonclick="handleClick"
-    />
+
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
     </v-collapse>
