@@ -14,7 +14,6 @@ export const dispatcher = () => {
 
 export const dispatcherWithEventPassThrough = () => {
   const element = get_current_component() as HTMLElement;
-  // eslint-disable-next-line no-prototype-builtins
   return <EventType extends Event>(name: string, event: EventType) => {
     const copyEvent = new Proxy(event, 
       { get: (target: object, prop: keyof object) => prop === 'composed' || prop === 'bubbles' ? true : target[prop] }
