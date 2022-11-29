@@ -71,7 +71,16 @@ const handleInput = (event: CustomEvent) => {
     </div>
 
     <Monaco />
-
+    <v-pill 
+      value='hi'
+    />
+    <v-select 
+      variant='multiple'
+      options='a, b, c, d, e, f, g, h, i, j'
+      value="b, c"
+      clearable="true"
+      showpill='false'
+    />
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
     </v-collapse>
@@ -86,6 +95,7 @@ const handleInput = (event: CustomEvent) => {
         @input="handleRotate"
         step="0.1"
       />
+
 
       <svg class="h-full" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
         <circle stroke-width="0.5" stroke="#111" fill="rgba(0,0,0,0)" cx="25" cy="25" r="12.5" />

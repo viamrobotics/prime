@@ -193,3 +193,32 @@ For user triggered actions
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Multiple With Pills Not Clearable'
+    args={{
+      label: 'Your options',
+      options: 'Bob, Sally, Jimothy, Raechel, Apple, Andy, Robert',
+      value: 'Jimothy, Apple',
+      placeholder: 'Some placeholder...',
+      variant: 'multiple',
+      showpill: 'true',
+      clearable: 'false',
+    }}
+  >
+    {({ label, options, value, placeholder, variant, showpill, clearable  }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        placeholder='${placeholder}'
+        variant='${variant}'
+        showpill='${showpill}'
+        clearable='${clearable}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+
