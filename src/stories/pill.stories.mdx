@@ -2,6 +2,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
   title='Elements/Pill'
+  parameters={{
+    actions: {
+      handles: ['remove'],
+    },
+  }}
   argTypes={{
     value: {
       description: 'Text displayed to within the pill',
