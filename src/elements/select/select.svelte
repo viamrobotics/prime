@@ -24,6 +24,8 @@ export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
 export let buttontext = 'go';
+export let button = 'false';
+export let buttonicon = '';
 
 const dispatch = dispatcher();
 
@@ -37,6 +39,7 @@ let isDisabled: boolean;
 let isExact: boolean;
 let isMultiple: boolean;
 let hasPrefix: boolean;
+let hasButton: boolean;
 let parsedOptions: string[];
 let parsedSelected: string[];
 let sortedOptions: string[];
@@ -48,6 +51,7 @@ $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isExact = htmlToBoolean(exact, 'exact');
 $: isMultiple = variant === 'multiple';
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
+$: hasButton = htmlToBoolean(button, 'button');
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = isMultiple
   ? value.split(',').filter(Boolean).map((str) => str.trim())
@@ -236,6 +240,10 @@ const handleClearAll = () => {
   }
 };
 
+const handleButtonClick = () => {
+  dispatch('buttonclick');
+};
+
 const splitOptionOnWord = (option: string) => {
   return option.split(' ');
 };
@@ -412,6 +420,18 @@ $: {
       {:else}
         <div class='flex py-1.5 px-2.5 justify-center text-xs'>
           No matching results
+        </div>
+      {/if}
+      
+      {#if hasButton}
+        <div 
+          class='flex hover:bg-gray-200 items-center p-2 border-t-[1px] border-t-gray-200 '
+          on:click={handleButtonClick}
+        >
+          {#if buttonicon}
+            <v-icon name={buttonicon}/>
+          {/if}
+          <span class='text-xs pl-2'>{buttontext}</span>
         </div>
       {/if}
     </div>

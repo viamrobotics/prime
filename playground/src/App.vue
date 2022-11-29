@@ -19,6 +19,10 @@ const handleInput = (event: CustomEvent) => {
   value = event.detail.value
 }
 
+const handleClick = () => {
+  console.log('button has been clicked')
+}
+
 let lazyValue = $ref('')
 
 setTimeout(() => {
@@ -92,6 +96,12 @@ setTimeout(() => {
 
     <Monaco />
     <v-select 
+      options="a, b, c, d, e, f, g, h"
+      variant="multiple"
+      button="true"
+      buttontext="ADD NEW TAG"
+      buttonicon="add"
+      @buttonclick="handleClick"
     />
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
