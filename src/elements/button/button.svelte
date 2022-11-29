@@ -44,12 +44,12 @@ const handleClick = () => {
   }
 };
 
-const handleParentClick = (e) => {
+const handleParentClick = (e: PointerEvent) => {
   e.stopImmediatePropagation();
   if (!isDisabled) {
-    dispatch<PointerEvent>('click', e)
+    dispatch<PointerEvent>('click', e);
   }
-}
+};
 
 </script>
 
