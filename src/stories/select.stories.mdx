@@ -25,6 +25,14 @@ import gpioOptions from './assets/gpio-options'
       description: 'The placeholder value',
       table: { defaultValue: { summary: '' } }
     },
+    showpill: { 
+      description: 'when in multi-select variant, have the option to show pills in the select representing selected values',
+      table: { defaultValue: { summary: 'false' } }
+    },
+    clearable: {
+      description: 'option to show the clear all button to deselect all otpions',
+      table: { defaultValue: { summary: 'true' } }
+    },
     'on:input': {
       description: 'Event fired when an option is selected'
     },
