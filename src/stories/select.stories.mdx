@@ -25,8 +25,23 @@ import gpioOptions from './assets/gpio-options'
       description: 'The placeholder value',
       table: { defaultValue: { summary: '' } }
     },
+    button: {
+      description: 'Whether a button exists at the bottom to conduct an action',
+      table: { defaultValue: { summary: 'false' } }
+    },
+    buttontext: {
+      description: 'The text on the button',
+      table: { defaultValue: { summary: 'ENTER' } }
+    },
+    buttonicon: {
+      description: 'The icon on the button, can use any from v-icon',
+      table: { defaultValue: { summary: '' } }
+    },
     'on:input': {
       description: 'Event fired when an option is selected'
+    },
+    'on:buttonclick': {
+      description: 'Event fired when button is clicked'
     },
   }}
 />
@@ -70,6 +85,29 @@ For user triggered actions
         options='${options}'
         value='${value}'
         placeholder='${placeholder}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Photos'
+    args={{
+      label: 'Your options',
+      options: 'Photo 1, Photo 2, Photo 3',
+      button: 'true',
+      buttontext: 'TAKE PHOTO',
+      buttonicon: 'camera',
+    }}
+  >
+    {({ label, options, button, buttontext, buttonicon }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        button='${button}'
+        buttontext='${buttontext}'
+        buttonicon='${buttonicon}'
       />
     `}
   </Story>

@@ -23,8 +23,8 @@ export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
-export let buttontext = 'go';
 export let button = 'false';
+export let buttontext = 'ENTER';
 export let buttonicon = '';
 
 const dispatch = dispatcher();
@@ -424,6 +424,7 @@ $: {
       {/if}
       
       {#if hasButton}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div 
           class='flex hover:bg-gray-200 items-center p-2 border-t-[1px] border-t-gray-200 '
           on:click={handleButtonClick}
