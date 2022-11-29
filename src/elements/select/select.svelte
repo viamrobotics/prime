@@ -71,8 +71,6 @@ let keyboardControlling = false;
 let optionMatch = false;
 let optionMatchText = '';
 
-console.log("showsPill", showsPill)
-
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
@@ -331,7 +329,6 @@ $: {
       {#if parsedSelected.length > 0 && showsPill}
         <div class='flex flex-wrap gap-2 p-1'>
           {#each parsedSelected as option (option)}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <v-pill
               on:remove={() => handlePillClick(option)}
               value={option}
