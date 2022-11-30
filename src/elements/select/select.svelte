@@ -23,6 +23,8 @@ export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
+export let showpill = 'false';
+export let clearable = 'true';
 export let button = 'false';
 export let buttontext = 'ENTER';
 export let buttonicon = '';
@@ -39,6 +41,8 @@ let isDisabled: boolean;
 let isExact: boolean;
 let isMultiple: boolean;
 let hasPrefix: boolean;
+let showsPill: boolean;
+let canClearAll: boolean;
 let hasButton: boolean;
 let parsedOptions: string[];
 let parsedSelected: string[];
@@ -51,6 +55,8 @@ $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isExact = htmlToBoolean(exact, 'exact');
 $: isMultiple = variant === 'multiple';
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
+$: showsPill = htmlToBoolean(showpill, 'showpill');
+$: canClearAll = htmlToBoolean(clearable, 'clearable');
 $: hasButton = htmlToBoolean(button, 'button');
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = isMultiple
@@ -334,19 +340,13 @@ $: {
         </button>
       </div>
 
-      {#if parsedSelected.length > 0}
+      {#if parsedSelected.length > 0 && showsPill}
         <div class='flex flex-wrap gap-2 p-1'>
           {#each parsedSelected as option (option)}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
-              class='flex cursor-pointer items-center gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300'
-              on:click={() => handlePillClick(option)}
-            >
-              <span>
-                { option }
-              </span>
-              <v-icon name='x' />
-            </div>
+            <v-pill
+              on:remove={() => handlePillClick(option)}
+              value={option}
+            />
           {/each}
         </div>
       {/if}
@@ -412,7 +412,7 @@ $: {
             </label>
           {/each}
 
-          {#if isMultiple}
+          {#if isMultiple && canClearAll}
             <button
               class='w-full px-2 py-1 hover:bg-slate-200 text-xs text-left'
               on:mouseenter={clearNavigationIndex}

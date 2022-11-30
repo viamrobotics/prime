@@ -23,6 +23,7 @@ if (customElements.get('v-badge')) {
   import('./elements/input/input');
   import('./elements/notify.svelte');
   import('./elements/modal.svelte');
+  import('./elements/pill.svelte');
   import('./elements/radio.svelte');
   import('./elements/select/select.svelte');
   import('./elements/slider.svelte');
