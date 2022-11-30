@@ -25,7 +25,7 @@ export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
 export let showpill = 'false';
 export let clearable = 'true';
-export let button = 'false';
+export let withbutton = 'false';
 export let buttontext = 'ENTER';
 export let buttonicon = '';
 
@@ -57,7 +57,7 @@ $: isMultiple = variant === 'multiple';
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: showsPill = htmlToBoolean(showpill, 'showpill');
 $: canClearAll = htmlToBoolean(clearable, 'clearable');
-$: hasButton = htmlToBoolean(button, 'button');
+$: hasButton = htmlToBoolean(withbutton, 'withbutton');
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = isMultiple
   ? value.split(',').filter(Boolean).map((str) => str.trim())
@@ -252,7 +252,7 @@ const handleClearAll = () => {
 };
 
 const handleButtonClick = () => {
-  dispatch('buttonclick');
+  dispatch('button-click');
 };
 
 const splitOptionOnWord = (option: string) => {
