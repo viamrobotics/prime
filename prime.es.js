@@ -3305,7 +3305,7 @@ function vo(t, e, n) {
   let E, A, F, D, L, S, B, U, K, q, C, X, ee, oe, ne = "", de = !1, te = -1, ye = !1, Ee = !1, xe = "";
   const Ae = (j) => {
     ye = j;
-  }, Me = (j, ge) => j ? uo(ge, j) : ge, je = (j) => {
+  }, Me = (j, ge) => (_("search", { term: j }), j ? uo(ge, j) : ge), je = (j) => {
     if (n(22, te = -1), n(14, F.scrollTop = 0, F), j.stopImmediatePropagation(), S) {
       n(10, ne = A.value.trim()), Ee = !1;
       for (const ge of ee)
