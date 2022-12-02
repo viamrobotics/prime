@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/prefer-regexp-test */
-export const searchSort = (data: string[], searchTerm: string) => {
+export const searchSort = (data: string[], searchTerm: string, reduce: boolean) => {
   const results: Record<string, string[]> = {};
 
   const initialCharacterMatch = new RegExp(`^${searchTerm}`, 'i');
@@ -15,6 +15,7 @@ export const searchSort = (data: string[], searchTerm: string) => {
 
       if (word.match(initialCharacterMatch)) {
         index = 0;
+        break;
       } else if (word.match(anyMatch)) {
         index = i + 1;
       }
@@ -22,7 +23,7 @@ export const searchSort = (data: string[], searchTerm: string) => {
 
     if (results[index]) {
       results[index]!.push(datum);
-    } else {
+    } else if (!reduce) {
       results[index] = [datum];
     }
   }
