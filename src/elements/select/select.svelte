@@ -30,7 +30,6 @@ export let withbutton = 'false';
 export let buttontext = 'ENTER';
 export let buttonicon = '';
 export let reducesort = 'false';
-export let dosearch = 'true';
 
 const dispatch = dispatcher();
 
@@ -48,7 +47,6 @@ let showsPill: boolean;
 let canClearAll: boolean;
 let hasButton: boolean;
 let isReduceSort: boolean;
-let doesSearch: boolean
 let parsedOptions: string[];
 let parsedSelected: string[];
 let sortedOptions: string[];
@@ -64,16 +62,15 @@ $: showsPill = htmlToBoolean(showpill, 'showpill');
 $: canClearAll = htmlToBoolean(clearable, 'clearable');
 $: hasButton = htmlToBoolean(withbutton, 'withbutton');
 $: isReduceSort = htmlToBoolean(reducesort, 'reducesort');
-$: doesSearch = htmlToBoolean(dosearch, 'dosearch');
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = isMultiple
   ? value.split(',').filter(Boolean).map((str) => str.trim())
   : [];
-$: sortedOptions = determineSortedOptions(parsedOptions, doesSearch);
-$: searchedOptions = doesSearch ? (isMultiple ? 
+$: sortedOptions = isMultiple ? applySearchSort(searchTerm, parsedOptions) : 
+applySearchSort(value, parsedOptions);
+$: searchedOptions = isMultiple ? 
 utils.applySearchHighlight(sortedOptions, searchTerm) : 
-utils.applySearchHighlight(sortedOptions, value)) :
-utils.applySearchHighlight(sortedOptions, '');
+utils.applySearchHighlight(sortedOptions, value);
 
 let open = false;
 let navigationIndex = -1;
@@ -90,28 +87,6 @@ const applySearchSort = (term: string, options: string[]) => {
   dispatch('search', { term })
   return term ? searchSort(options, term, isReduceSort) : options;
 };
-
-const determineSortedOptions = (inputOptions: string[], search: boolean) => {
-  if (!search) {
-    return inputOptions;
-  }
-  if (isMultiple) {
-    return applySearchSort(searchTerm, inputOptions);
-  } else {
-    return applySearchSort(value, inputOptions);
-  }
-}
-
-// const transformToSearchedOptions = (sorted: string[], search: boolean, term: string) => {
-//   if (!search) {
-//     return utils.applySearchHighlight(sorted, '');
-//   }
-//   if (isMultiple) {
-//     return utils.applySearchHighlight(sorted, term);
-//   } else {
-//     return utils.applySearchHighlight(sorted, value);
-//   }
-// }
 
 const handleInput = (event: Event) => {
   navigationIndex = -1;
@@ -178,7 +153,6 @@ const handleEnter = () => {
 
     dispatch('input', { value });
   }
-  
 };
 
 const handleNavigate = (direction: number) => {

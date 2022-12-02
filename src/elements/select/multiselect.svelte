@@ -360,7 +360,6 @@ $: {
                 </span>
 
               {:else if hasPrefix}
-
                 {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
                   <span
                     class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
