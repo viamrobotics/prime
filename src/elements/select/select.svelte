@@ -81,6 +81,7 @@ const setKeyboardControl = (toggle: boolean) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
+  dispatch('search', { term });
   return term ? searchSort(options, term) : options;
 };
 
