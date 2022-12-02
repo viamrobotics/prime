@@ -26,6 +26,7 @@ if (customElements.get('v-badge')) {
   import('./elements/pill.svelte');
   import('./elements/radio.svelte');
   import('./elements/select/select.svelte');
+  import('./elements/select/multiselect.svelte');
   import('./elements/slider.svelte');
   import('./elements/switch.svelte');
   import('./elements/table/table.svelte');
