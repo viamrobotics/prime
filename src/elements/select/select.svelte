@@ -10,6 +10,7 @@ import { searchSort } from '../../lib/sort';
 import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
+import SelectButton from './select-button.svelte';
 import * as utils from './utils';
 
 export let options = '';
@@ -457,16 +458,11 @@ $: {
       {/if}
       
       {#if hasButton}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div 
-          class='flex cursor-pointer hover:bg-gray-200 items-center p-2 border-t-[1px] border-t-gray-200 '
-          on:click={handleButtonClick}
-        >
-          {#if buttonicon}
-            <v-icon name={buttonicon}/>
-          {/if}
-          <span class='text-xs pl-2'>{buttontext}</span>
-        </div>
+        <SelectButton
+        buttontext={buttontext}
+        buttonicon={buttonicon}
+        on:button-click={handleButtonClick}
+      />
       {/if}
     </div>
   </v-dropdown>

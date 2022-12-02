@@ -1,4 +1,4 @@
-<svelte:options immutable tag='v-select' />
+<svelte:options immutable tag='v-multiselect' />
 
 <script lang='ts'>
 
@@ -10,6 +10,7 @@ import { searchSort } from '../../lib/sort';
 import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
+import SelectButton from './select-button.svelte';
 import * as utils from './utils';
 
 export let options = '';
@@ -37,7 +38,6 @@ addStyles();
 let root: HTMLElement;
 let input: HTMLInputElement;
 let optionsContainer: HTMLElement;
-
 let isDisabled: boolean;
 let isExact: boolean;
 let hasPrefix: boolean;
@@ -62,13 +62,9 @@ $: hasButton = htmlToBoolean(withbutton, 'withbutton');
 $: isReduceSort = htmlToBoolean(reducesort, 'reducesort');
 $: doesSearch = htmlToBoolean(dosearch, 'dosearch');
 $: parsedOptions = options.split(',').map((str) => str.trim());
-$: parsedSelected = isMultiple
-  ? value.split(',').filter(Boolean).map((str) => str.trim())
-  : [];
-$: sortedOptions = determineSortedOptions(parsedOptions, doesSearch);
-$: searchedOptions = doesSearch ? (isMultiple ? 
-utils.applySearchHighlight(sortedOptions, searchTerm) : 
-utils.applySearchHighlight(sortedOptions, value)) :
+$: parsedSelected = value.split(',').filter(Boolean).map((str) => str.trim());
+$: sortedOptions = doesSearch ? applySearchSort(searchTerm, parsedOptions) : parsedOptions;
+$: searchedOptions = doesSearch ? utils.applySearchHighlight(sortedOptions, searchTerm) : 
 utils.applySearchHighlight(sortedOptions, '');
 
 let open = false;
@@ -77,6 +73,9 @@ let keyboardControlling = false;
 
 let optionMatch = false;
 let optionMatchText = '';
+
+console.log('check withbutton:', withbutton);
+console.log('check hasButton:', hasButton);
 
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
@@ -87,45 +86,19 @@ const applySearchSort = (term: string, options: string[]) => {
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
-const determineSortedOptions = (inputOptions: string[], search: boolean) => {
-  if (!search) {
-    return inputOptions;
-  }
-  if (isMultiple) {
-    return applySearchSort(searchTerm, inputOptions);
-  } else {
-    return applySearchSort(value, inputOptions);
-  }
-}
-
-// const transformToSearchedOptions = (sorted: string[], search: boolean, term: string) => {
-//   if (!search) {
-//     return utils.applySearchHighlight(sorted, '');
-//   }
-//   if (isMultiple) {
-//     return utils.applySearchHighlight(sorted, term);
-//   } else {
-//     return utils.applySearchHighlight(sorted, value);
-//   }
-// }
-
 const handleInput = (event: Event) => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
-  if (isMultiple) {
-    searchTerm = input.value.trim();
-    optionMatch = false;
-    for (const value of sortedOptions) {
-      if (searchTerm.toLowerCase() === value.toLowerCase()) {
-        optionMatch = true;
-        optionMatchText = value;
-      } 
-    }
-  } else {
-    value = input.value.trim();
-    dispatch('input', { value });
+  searchTerm = input.value.trim();
+  optionMatch = false;
+  for (const value of sortedOptions) {
+    if (searchTerm.toLowerCase() === value.toLowerCase()) {
+      optionMatch = true;
+      optionMatchText = value;
+    } 
   }
+
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
@@ -140,41 +113,23 @@ const handleKeyUp = (event: KeyboardEvent) => {
 };
 
 const handleEnter = () => {
-  if (isMultiple) {
-    const option = sortedOptions[navigationIndex]!;
-    value = value.includes(option)
-      ? [...parsedSelected.filter(item => item !== option)].toString()
-      : [...parsedSelected, option].toString();
-    input.focus();
+  const option = sortedOptions[navigationIndex]!;
+  value = value.includes(option)
+    ? [...parsedSelected.filter(item => item !== option)].toString()
+    : [...parsedSelected, option].toString();
+  input.focus();
 
-    if (optionMatch) {
-      if (value.includes(optionMatchText)) {
-        value = value.replace(`${optionMatchText},`, '');
-      } else {
-        value += `${optionMatchText},`;
-      }
-      searchTerm = '';
-      optionMatch = false;
-    }
-
-    dispatch('input', { value, values: value.split(',') });
-  } else {
-    if (navigationIndex > -1) {
-      value = sortedOptions[navigationIndex]!;
+  if (optionMatch) {
+    if (value.includes(optionMatchText)) {
+      value = value.replace(`${optionMatchText},`, '');
     } else {
-      const result = sortedOptions.find(item => item.toLowerCase() === value);
-
-      if (result) {
-        value = result;
-      }
+      value += `${optionMatchText},`;
     }
-    if (open) {
-      input.blur();
-    }
-
-    dispatch('input', { value });
+    searchTerm = '';
+    optionMatch = false;
   }
-  
+
+  dispatch('input', { value, values: value.split(',') });
 };
 
 const handleNavigate = (direction: number) => {
@@ -242,38 +197,23 @@ const handleOptionMouseEnter = (index: number) => {
 const handleOptionSelect = (target: string, event: Event) => {
   const { checked } = (event.target as HTMLInputElement);
 
-  if (isMultiple === false && value === target) {
-    event.preventDefault();
-    open = false;
-    return;
-  }
-
   value = checked
     ? [...parsedSelected, target].toString()
     : [...parsedSelected.filter((item: string) => item !== target)].toString();
 
-  if (isMultiple) {
-    input.focus();
-    if (checked) {
-      dispatch('input', { value, values: value.split(','), added: target });
-    } else {
-      dispatch('input', { value, values: value.split(','), removed: target });
-    }
-    
+  input.focus();
+  if (checked) {
+    dispatch('input', { value, values: value.split(','), added: target });
   } else {
-    open = false;
-    dispatch('input', { value });
+    dispatch('input', { value, values: value.split(','), removed: target });
   }
 };
 
 const handleClearAll = () => {
   value = '';
   optionsContainer.scrollTop = 0;
-  if (isMultiple) {
-    dispatch('input', { value, values: value.split(',') });
-  } else {
-    dispatch('input', { value });
-  }
+  dispatch('input', { value, values: value.split(',') });
+
 };
 
 const handleButtonClick = () => {
@@ -286,9 +226,7 @@ const splitOptionOnWord = (option: string) => {
 
 $: {
   if (!open) {
-    if (isMultiple) {
-      searchTerm = '';
-    }
+    searchTerm = '';
 
     if (isExact && parsedOptions.includes(value) === false) {
       value = '';
@@ -346,7 +284,7 @@ $: {
         <input
           bind:this={input}
           {placeholder}
-          value={isMultiple ? searchTerm : value}
+          value={searchTerm}
           aria-disabled={isDisabled}
           readonly={isDisabled}
           type='text'
@@ -398,7 +336,7 @@ $: {
               <input
                 tabindex="-1"
                 type='checkbox'
-                class={cx('bg-black outline-none', isMultiple ? '' : 'hidden')}
+                class={cx('bg-black outline-none')}
                 checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
                 on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
                 on:input|stopPropagation
@@ -436,7 +374,7 @@ $: {
               {/if}
             </label>
           {/each}
-          {#if isMultiple && canClearAll}
+          {#if canClearAll}
             <button
               class='w-full px-2 py-1 hover:bg-slate-200 text-xs text-left'
               on:mouseenter={clearNavigationIndex}
@@ -452,24 +390,22 @@ $: {
           No matching results
         </div>
       {/if}
-      
       {#if hasButton}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div 
-          class='flex cursor-pointer hover:bg-gray-200 items-center p-2 border-t-[1px] border-t-gray-200 '
-          on:click={handleButtonClick}
-        >
-          {#if buttonicon}
-            <v-icon name={buttonicon}/>
-          {/if}
-          <span class='text-xs pl-2'>{buttontext}</span>
-        </div>
+        <SelectButton
+          buttontext={buttontext}
+          buttonicon={buttonicon}
+          on:button-click={handleButtonClick}
+        />
       {/if}
+
     </div>
   </v-dropdown>
 </label>
 
 <style>
+
+        
+
 .options-container::-webkit-scrollbar {
   width: 6px;
 }
