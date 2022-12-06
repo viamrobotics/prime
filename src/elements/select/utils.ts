@@ -5,7 +5,7 @@ interface Match {
 
 export const isElementInScrollView = (element: Element) => {
   const { top, bottom } = element.getBoundingClientRect();
-  const parentRect = element.parentElement!.getBoundingClientRect();
+  const parentRect = element.parentElement!.parentElement!.getBoundingClientRect();
 
   return (bottom < parentRect.bottom && top > parentRect.top);
 };

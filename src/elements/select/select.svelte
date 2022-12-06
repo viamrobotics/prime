@@ -164,7 +164,7 @@ const handleNavigate = (direction: number) => {
     navigationIndex = 0;
   }
 
-  const element = optionsContainer.children[navigationIndex]!;
+  const element = optionsContainer.children[0]!.children[navigationIndex]!;
 
   if (utils.isElementInScrollView(element) === false) {
     element.scrollIntoView();
