@@ -11,15 +11,3 @@ export const dispatcher = () => {
   }));
 };
 
-
-export const dispatcherWithEventPassThrough = () => {
-  const element = get_current_component() as HTMLElement;
-  return <EventType extends Event>(name: string, event: EventType) => {
-    const copyEvent = new Proxy(event, 
-      { get: (target: object, prop: keyof object) => prop === 'composed' || prop === 'bubbles' ? true : target[prop] }
-    );
-
-    const Constructor = event.constructor as unknown as typeof Event;
-    return element.dispatchEvent(new Constructor(name, copyEvent));
-  };
-};

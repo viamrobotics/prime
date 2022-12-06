@@ -12,7 +12,6 @@ import cx from 'classnames';
 import { get_current_component } from 'svelte/internal';
 import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
-import { dispatcherWithEventPassThrough } from '../../lib/dispatch';
 
 export let disabled = 'false';
 export let type: 'button' | 'submit' | 'reset' = 'button';
@@ -32,7 +31,6 @@ $: isDisabled = htmlToBoolean(disabled, 'disabled');
 // @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
 const component = get_current_component() as HTMLElement & { internals: ElementInternals };
 const internals = component.attachInternals();
-const dispatch = dispatcherWithEventPassThrough();
 
 const handleClick = () => {
   const { form } = internals;
@@ -45,9 +43,8 @@ const handleClick = () => {
 };
 
 const handleParentClick = (e: PointerEvent) => {
-  e.stopImmediatePropagation();
-  if (!isDisabled) {
-    dispatch<PointerEvent>('click', e);
+  if (isDisabled) {
+    e.stopImmediatePropagation();
   }
 };
 
