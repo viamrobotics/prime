@@ -23,6 +23,11 @@ export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
+export let showpill = 'false';
+export let clearable = 'true';
+export let withbutton = 'false';
+export let buttontext = 'ENTER';
+export let buttonicon = '';
 
 const dispatch = dispatcher();
 
@@ -36,6 +41,9 @@ let isDisabled: boolean;
 let isExact: boolean;
 let isMultiple: boolean;
 let hasPrefix: boolean;
+let showsPill: boolean;
+let canClearAll: boolean;
+let hasButton: boolean;
 let parsedOptions: string[];
 let parsedSelected: string[];
 let sortedOptions: string[];
@@ -47,6 +55,9 @@ $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isExact = htmlToBoolean(exact, 'exact');
 $: isMultiple = variant === 'multiple';
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
+$: showsPill = htmlToBoolean(showpill, 'showpill');
+$: canClearAll = htmlToBoolean(clearable, 'clearable');
+$: hasButton = htmlToBoolean(withbutton, 'withbutton');
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = isMultiple
   ? value.split(',').filter(Boolean).map((str) => str.trim())
@@ -70,6 +81,7 @@ const setKeyboardControl = (toggle: boolean) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
+  dispatch('search', { term });
   return term ? searchSort(options, term) : options;
 };
 
@@ -218,7 +230,12 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   if (isMultiple) {
     input.focus();
-    dispatch('input', { value, values: value.split(',') });
+    if (checked) {
+      dispatch('input', { value, values: value.split(','), added: target });
+    } else {
+      dispatch('input', { value, values: value.split(','), removed: target });
+    }
+    
   } else {
     open = false;
     dispatch('input', { value });
@@ -233,6 +250,10 @@ const handleClearAll = () => {
   } else {
     dispatch('input', { value });
   }
+};
+
+const handleButtonClick = () => {
+  dispatch('button-click');
 };
 
 const splitOptionOnWord = (option: string) => {
@@ -320,19 +341,13 @@ $: {
         </button>
       </div>
 
-      {#if parsedSelected.length > 0}
+      {#if parsedSelected.length > 0 && showsPill}
         <div class='flex flex-wrap gap-2 p-1'>
           {#each parsedSelected as option (option)}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
-              class='flex cursor-pointer items-center gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300'
-              on:click={() => handlePillClick(option)}
-            >
-              <span>
-                { option }
-              </span>
-              <v-icon name='x' />
-            </div>
+            <v-pill
+              on:remove={() => handlePillClick(option)}
+              value={option}
+            />
           {/each}
         </div>
       {/if}
@@ -398,7 +413,7 @@ $: {
             </label>
           {/each}
 
-          {#if isMultiple}
+          {#if isMultiple && canClearAll}
             <button
               class='w-full px-2 py-1 hover:bg-slate-200 text-xs text-left'
               on:mouseenter={clearNavigationIndex}
@@ -411,6 +426,19 @@ $: {
       {:else}
         <div class='flex py-1.5 px-2.5 justify-center text-xs'>
           No matching results
+        </div>
+      {/if}
+      
+      {#if hasButton}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div 
+          class='flex cursor-pointer hover:bg-gray-200 items-center p-2 border-t-[1px] border-t-gray-200 '
+          on:click={handleButtonClick}
+        >
+          {#if buttonicon}
+            <v-icon name={buttonicon}/>
+          {/if}
+          <span class='text-xs pl-2'>{buttontext}</span>
         </div>
       {/if}
     </div>

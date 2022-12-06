@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import { lazy } from 'react';
 import Monaco from './monaco.vue'
 
 const selectedTab = $ref('Tab 1')
