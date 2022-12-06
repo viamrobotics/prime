@@ -1,0 +1,335 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import gpioOptions from './assets/gpio-options'
+import MultiSelect from './../elements/select/multiselect.svelte'
+
+<Meta
+  title='Elements/Select/Multi-Select'
+  parameters={{
+    actions: {
+      handles: ['input', 'button-click', 'search'],
+    },
+  }}
+  component={MultiSelect}
+  argTypes={{
+    label: {
+      description: 'The label of the multiselect',
+      table: { 
+        defaultValue: { summary: '' },
+        type: { summary: 'string' }
+      },
+      control: 'text'
+    },
+    options: {
+      description: 'The list of options that can be selected from, separated by commas',
+      table: { 
+        defaultValue: { summary: '' },
+        type: { summary: 'string' }
+      },
+      control: 'text'
+    },
+    value: {
+      description: 'Options that are selected',
+      table: { 
+        defaultValue: { summary: '' },
+        type: { summary: 'string' }
+      },
+      control: 'text'
+    },
+    placeholder: {
+      description: 'The placeholder value in input',
+      table: { 
+        defaultValue: { summary: '' },
+        type: { summary: 'string' }
+      },
+      control: 'text'
+    },
+    showpill: { 
+      description: 'The option to show pills representing selected values',
+      table: { 
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' }
+      },
+      control: { type: 'boolean' }
+    },
+    clearable: {
+      description: 'Option to have "Clear all" button to deselect all options',
+      table: {
+        defaultValue: { summary: 'true' },
+        type: { summary: 'boolean' }
+      },
+      control: { type: 'boolean' }
+    },
+    withbutton: {
+      description: 'Whether a button exists at the bottom to conduct an action',
+      table: { 
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' }
+      },
+      control: { type: 'boolean' }
+    },
+    buttontext: {
+      description: 'Text on the button',
+      table: { 
+        defaultValue: { summary: 'ENTER' },
+        type: { summary: 'string' }
+      },
+      control: 'text'
+    },
+    buttonicon: {
+      description: 'Icon on the button, can use any from v-icon',
+      table: { 
+        defaultValue: { summary: '' },
+        type: { summary: 'string' }
+      },
+      control: 'text'
+    },
+    reducesort: {
+      description: 'If true, only results with matching elements will display on search',
+      table: { 
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean'}
+       },
+      control: { type: 'boolean' }
+    }, 
+    dosearch: {
+      description: 'Whether results will be searched inside of the component',
+      table: { 
+        defaultValue: { summary: 'true' },
+        type: { summary: 'boolean'}
+      },
+      control: { type: 'boolean' }
+    },
+    'on:input': {
+      description: 'Event fired when an option is selected',
+      table: { 
+        type: { summary: 'object' }
+      },
+    },
+    'on:button-click': {
+      description: 'Event fired when button is clicked',
+      table: { 
+      },
+    },
+    'on:search': {
+      description: 'Event fired when the search input is changed',
+      table: { 
+        type: { summary: 'string' },
+      },
+    },
+  }}
+/>
+
+
+# Multi-Select
+
+Dropdown that allows the user to select multiple choices.
+
+<Canvas>
+  <Story
+    name='Default'
+    args={{
+      label: "Default Multi-select",
+      options: 'happy, sad, angry',
+    }}
+  >
+    {({label, options}) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name="With Value and Placeholder"
+    args={{
+      label: "With Value and Placeholder",
+      options: "Option 1, Option 2, Option 3",
+      value: "Option 1, Option 3",
+      placeholder: "Some placeholder..."
+    }}
+  >
+    {({ label, options, value, placeholder }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        placeholder='${placeholder}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+
+<Canvas>
+  <Story
+    name='With Button'
+    args={{
+      label: 'With Button',
+      options: 'Photo 1, Photo 2, Photo 3',
+      withbutton: 'true',
+      buttontext: 'TAKE PHOTO',
+      buttonicon: 'camera',
+    }}
+  >
+    {({ label, options, withbutton, buttontext, buttonicon }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        withbutton='${withbutton}'
+        buttontext='${buttontext}'
+        buttonicon='${buttonicon}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Disabled'
+    args={{
+      label: 'Your options',
+      options: 'Option 1, Option 2, Option 3',
+      disabled: 'true',
+      tooltip: 'This is disabled.',
+      state: 'error',
+    }}
+  >
+    {({ label, options, disabled, tooltip, state }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        disabled='${disabled}'
+        tooltip='${tooltip}'
+        state='${state}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+
+<Canvas>
+  <Story
+    name='With Tooltip'
+    args={{
+      label: 'With Tooltip',
+      options: 'Option 1, Option 2, Option 3',
+      value: 'Option',
+      tooltip: 'Warning: these options may not be your only options.',
+      state: 'warn',
+    }}
+  >
+    {({ label, options, value, tooltip, state }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        tooltip='${tooltip}'
+        state='${state}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With prefix'
+    args={{
+      label: 'Options With Prefixes',
+      options: gpioOptions,
+      placeholder: 'Select...',
+      prefix: 'true',
+    }}
+  >
+    {({ label, options, placeholder, prefix }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        placeholder='${placeholder}'
+        prefix='${prefix}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Show Pills'
+    args={{
+      label: 'Show Pills',
+      options: 'Bob, Sally, Jimothy, Raechel, Apple, Andy, Robert',
+      value: 'Jimothy, Apple',
+      showpill: 'true',
+    }}
+  >
+    {({ label, options, value, showpill  }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        showpill='${showpill}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Reduce Search'
+    args={{
+      label: 'Reduce Search',
+      options: 'hello, hi, yo, halo',
+      reducesort: 'true',
+    }}
+  >
+    {({ label, options, reducesort }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        reducesort='${reducesort}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Do Not Search'
+    args={{
+      label: 'Do Not Search',
+      options: 'hello, hi, yo, halo',
+      dosearch: 'false',
+    }}
+  >
+    {({ label, options, dosearch }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        dosearch='${dosearch}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Not Clearable'
+    args={{
+      label: 'Not Clearable',
+      options: 'hello, hi, yo, halo',
+      value: 'hi, halo',
+      clearable: 'false',
+    }}
+  >
+    {({ label, options, clearable, value }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        clearable='${clearable}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>

@@ -15,8 +15,6 @@ export const shouldBeChecked = (value: string, option: string) => {
 };
 
 export const applySearchHighlight = (options: string[], value: string) => {
-  console.log('apply search highlight');
-  console.log(options);
   if (!value) {
     return options.map((option) => ({ search: undefined, option }));
   }
@@ -44,8 +42,6 @@ export const applySearchHighlight = (options: string[], value: string) => {
   }
 
   sortArr(matches);
-
-  console.log([...matches, ...noMatches]);
   return [...matches, ...noMatches];
 };
 

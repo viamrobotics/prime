@@ -23,17 +23,26 @@ export const searchSort = (data: string[], searchTerm: string, reduce: boolean) 
 
     if (results[index]) {
       results[index]!.push(datum);
-    } else if (!reduce) {
+    } else {
       results[index] = [datum];
     }
   }
 
   const finalResults: string[] = [];
 
-  for (const key of Object.keys(results)) {
-    const sorted = (results[key] || []);
-    
-    finalResults.push(...sorted);
+
+  if (reduce) {
+    for (const key of Object.keys(results)) {
+      if (Number(key) !== -1) {
+        const sorted = (results[key] || []);
+        finalResults.push(...sorted);
+      }
+    }
+  } else {
+    for (const key of Object.keys(results)) {
+      const sorted = (results[key] || []);
+      finalResults.push(...sorted);
+    }
   }
 
   return finalResults;

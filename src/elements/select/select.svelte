@@ -67,10 +67,10 @@ $: parsedSelected = isMultiple
   ? value.split(',').filter(Boolean).map((str) => str.trim())
   : [];
 $: sortedOptions = isMultiple ? applySearchSort(searchTerm, parsedOptions) : 
-applySearchSort(value, parsedOptions);
+  applySearchSort(value, parsedOptions);
 $: searchedOptions = isMultiple ? 
-utils.applySearchHighlight(sortedOptions, searchTerm) : 
-utils.applySearchHighlight(sortedOptions, value);
+  utils.applySearchHighlight(sortedOptions, searchTerm) : 
+  utils.applySearchHighlight(sortedOptions, value);
 
 let open = false;
 let navigationIndex = -1;
@@ -84,7 +84,7 @@ const setKeyboardControl = (toggle: boolean) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
-  dispatch('search', { term })
+  dispatch('search', { term });
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
@@ -359,10 +359,13 @@ $: {
       slot='content'
       class='mt-1 border border-black bg-white drop-shadow-md'
     >
+    <div
+      bind:this={optionsContainer}
+      class='options-container overflow-y-auto'
+    >
       {#if sortedOptions.length > 0}
         <div
-          bind:this={optionsContainer}
-          class='options-container flex max-h-36 flex-col overflow-y-auto'
+          class='flex max-h-36 flex-col '
           on:mouseleave={clearNavigationIndex}
         >
           {#each searchedOptions as { search, option }, index (option)}
@@ -430,7 +433,7 @@ $: {
           No matching results
         </div>
       {/if}
-      
+    </div>
       {#if hasButton}
         <SelectButton
         buttontext={buttontext}

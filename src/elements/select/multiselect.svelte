@@ -19,7 +19,6 @@ export let placeholder = '';
 export let label = '';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
-export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
@@ -39,13 +38,12 @@ let root: HTMLElement;
 let input: HTMLInputElement;
 let optionsContainer: HTMLElement;
 let isDisabled: boolean;
-let isExact: boolean;
 let hasPrefix: boolean;
 let showsPill: boolean;
 let canClearAll: boolean;
 let hasButton: boolean;
 let isReduceSort: boolean;
-let doesSearch: boolean
+let doesSearch: boolean;
 let parsedOptions: string[];
 let parsedSelected: string[];
 let sortedOptions: string[];
@@ -54,7 +52,6 @@ let searchedOptions: { option: string; search?: string[] }[];
 let searchTerm = '';
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
-$: isExact = htmlToBoolean(exact, 'exact');
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: showsPill = htmlToBoolean(showpill, 'showpill');
 $: canClearAll = htmlToBoolean(clearable, 'clearable');
@@ -65,7 +62,7 @@ $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = value.split(',').filter(Boolean).map((str) => str.trim());
 $: sortedOptions = doesSearch ? applySearchSort(searchTerm, parsedOptions) : parsedOptions;
 $: searchedOptions = doesSearch ? utils.applySearchHighlight(sortedOptions, searchTerm) : 
-utils.applySearchHighlight(sortedOptions, '');
+  utils.applySearchHighlight(sortedOptions, '');
 
 let open = false;
 let navigationIndex = -1;
@@ -74,15 +71,12 @@ let keyboardControlling = false;
 let optionMatch = false;
 let optionMatchText = '';
 
-console.log('check withbutton:', withbutton);
-console.log('check hasButton:', hasButton);
-
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
 
 const applySearchSort = (term: string, options: string[]) => {
-  dispatch('search', { term })
+  dispatch('search', { term });
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
@@ -227,10 +221,6 @@ const splitOptionOnWord = (option: string) => {
 $: {
   if (!open) {
     searchTerm = '';
-
-    if (isExact && parsedOptions.includes(value) === false) {
-      value = '';
-    }
   }
 }
 
@@ -315,14 +305,14 @@ $: {
       {/if}
     </div>
 
-    <div 
+    <div  
       slot='content'
       class='mt-1 border border-black bg-white drop-shadow-md'
     >
+      <div bind:this={optionsContainer} class="options-container overflow-y-auto">
       {#if sortedOptions.length > 0}
         <div
-          bind:this={optionsContainer}
-          class='options-container flex max-h-36 flex-col overflow-y-auto'
+          class='flex max-h-36 flex-col'
           on:mouseleave={clearNavigationIndex}
         >
           {#each searchedOptions as { search, option }, index (option)}
@@ -389,6 +379,7 @@ $: {
           No matching results
         </div>
       {/if}
+      </div>
       {#if hasButton}
         <SelectButton
           buttontext={buttontext}
