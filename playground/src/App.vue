@@ -99,6 +99,7 @@ setTimeout(() => {
       withbutton="true"
       buttontext="hello"
       buttonicon="x"
+      heading="heading title"
     />
 
     <v-collapse class="p-3" title='Hello world?'>

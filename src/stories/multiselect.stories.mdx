@@ -99,6 +99,14 @@ import MultiSelect from './../elements/select/multiselect.svelte'
       },
       control: { type: 'boolean' }
     },
+    heading: {
+      description: 'Subheading inside the dropdown to describe the information',
+      table: { 
+        defaultValue: { summary: '' },
+        type: { summary: 'string'}
+      },
+      control: 'text'
+    },
     'on:input': {
       description: 'Event fired when an option is selected',
       table: { 
@@ -181,6 +189,25 @@ Dropdown that allows the user to select multiple choices.
         withbutton='${withbutton}'
         buttontext='${buttontext}'
         buttonicon='${buttonicon}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With Heading'
+    args={{
+      label: 'With Heading',
+      options: 'a1, a2, a3, a4',
+      heading: 'A Values'
+    }}
+  >
+    {({ label, options, heading}) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        heading='${heading}'
       />
     `}
   </Story>

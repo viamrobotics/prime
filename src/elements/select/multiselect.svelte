@@ -29,6 +29,7 @@ export let buttontext = 'ENTER';
 export let buttonicon = '';
 export let reducesort = 'false';
 export let dosearch = 'true';
+export let heading = '';
 
 const dispatch = dispatcher();
 
@@ -315,6 +316,11 @@ $: {
           class='flex max-h-36 flex-col'
           on:mouseleave={clearNavigationIndex}
         >
+          <span
+            class='flex text-xs text-gray-500 pl-2 pt-2 flex-wrap'
+          >
+            {heading}
+          </span>
           {#each searchedOptions as { search, option }, index (option)}
             <label
               class={cx('flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1.5 text-xs', {
