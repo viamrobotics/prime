@@ -77,6 +77,9 @@ const setKeyboardControl = (toggle: boolean) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
+  if (options[0] === '' && options.length === 1){
+    return [];
+  }
   dispatch('search', { term });
   return term ? searchSort(options, term, isReduceSort) : options;
 };
@@ -208,7 +211,7 @@ const handleClearAll = () => {
   value = '';
   optionsContainer.scrollTop = 0;
   dispatch('input', { value, values: value.split(',') });
-
+  dispatch('clear-all-click');
 };
 
 const handleButtonClick = () => {
