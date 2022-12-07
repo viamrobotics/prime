@@ -10,7 +10,6 @@ import { searchSort } from '../../lib/sort';
 import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
-import SelectButton from './select-button.svelte';
 import * as utils from './utils';
 
 export let options = '';
@@ -77,7 +76,7 @@ const setKeyboardControl = (toggle: boolean) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
-  if (options[0] === '' && options.length === 1){
+  if (options[0] === '' && options.length === 1) {
     return [];
   }
   dispatch('search', { term });
@@ -392,10 +391,11 @@ $: {
       {/if}
       </div>
       {#if hasButton}
-        <SelectButton
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <v-select-button
           buttontext={buttontext}
           buttonicon={buttonicon}
-          on:button-click={handleButtonClick}
+          on:click={handleButtonClick}
         />
       {/if}
 

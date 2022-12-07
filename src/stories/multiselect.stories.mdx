@@ -115,14 +115,15 @@ import MultiSelect from './../elements/select/multiselect.svelte'
     },
     'on:button-click': {
       description: 'Event fired when button is clicked',
-      table: { 
-      },
     },
     'on:search': {
       description: 'Event fired when the search input is changed',
       table: { 
         type: { summary: 'string' },
       },
+    },
+    'on:clear-all-click': {
+      description: 'Event fired when "Clear All" is pressed and values are cleared',
     },
   }}
 />

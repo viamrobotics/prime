@@ -33,7 +33,7 @@ export const searchSort = (data: string[], searchTerm: string, reduce: boolean) 
 
   if (reduce) {
     for (const key of Object.keys(results)) {
-      if (Number(key) !== -1) {
+      if (Number.parseInt(key, 10) !== -1) {
         const sorted = (results[key] || []);
         finalResults.push(...sorted);
       }
