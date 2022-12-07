@@ -326,7 +326,7 @@ $: {
           aria-disabled={isDisabled}
           readonly={isDisabled}
           type='text'
-          class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
+          class='py-1.5 pl-2 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
           on:input|preventDefault={handleInput}
           on:keyup|stopPropagation|preventDefault={handleKeyUp}
         >
@@ -341,16 +341,22 @@ $: {
         </button>
       </div>
 
-      {#if parsedSelected.length > 0 && showsPill}
-        <div class='flex flex-wrap gap-2 p-1'>
+      <div class='flex flex-wrap gap-2 pl-1.5 pb-2 min-h-[1rem]'>
+        {#if parsedSelected.length > 0 && showsPill}
           {#each parsedSelected as option (option)}
             <v-pill
               on:remove={() => handlePillClick(option)}
               value={option}
             />
           {/each}
-        </div>
-      {/if}
+        {:else}
+          <v-pill
+            value='Selected Options'
+            removable='false'
+            class='whitespace-nowrap opacity-50'
+          />
+        {/if}
+      </div>
     </div>
 
     <div 

@@ -22,7 +22,7 @@ const handleRemove = () => {
 </script>
 
 
-<div class='flex items-center max-w-fit gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300'>
+<div class='min-h-[20px] flex items-center max-w-fit gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300'>
   <span>
     {value}
   </span>
