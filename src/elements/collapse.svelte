@@ -58,7 +58,7 @@ const handleClick = (event: Event) => {
   </div>
 
   <div
-    class="{cx(' text-black overflow-hidden transition-all duration-500', {
+    class="{cx(' text-black transition-all duration-500', {
       'bg-white': variant === 'default',
       'max-h-0': !open,
       'max-h-fit': open,
