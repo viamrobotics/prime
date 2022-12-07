@@ -42,6 +42,12 @@ const handleClick = () => {
   }
 };
 
+const handleParentClick = (e: PointerEvent) => {
+  if (isDisabled) {
+    e.stopImmediatePropagation();
+  }
+};
+
 </script>
 
 <style>
@@ -51,6 +57,7 @@ const handleClick = () => {
 <svelte:element
   this={tooltip ? 'v-tooltip' : 'span'}
   text={tooltip}
+  on:click={handleParentClick}
 >
   <button
     {type}
