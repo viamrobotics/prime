@@ -91,6 +91,16 @@ setTimeout(() => {
 
     <Monaco />
 
+    <v-multiselect 
+      options="ab, bc, cd, dz, e24gsdg, f dskfm 3??, abs, abd, ac, ad, adb"
+      value="ab, cd"
+      sortoption="reduce"
+      withbutton="true"
+      buttontext="hello"
+      buttonicon="x"
+      heading="heading title"
+    />
+
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
     </v-collapse>
