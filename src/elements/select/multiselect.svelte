@@ -4,7 +4,6 @@
 
 type LabelPosition = 'top' | 'left'
 
-// This entire component is pretty hacked together and should be refactored. Maybe split multi / single select.
 import cx from 'classnames';
 import { searchSort } from '../../lib/sort';
 import { htmlToBoolean } from '../../lib/boolean';
