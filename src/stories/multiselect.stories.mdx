@@ -44,9 +44,9 @@ import MultiSelect from './../elements/select/multiselect.svelte'
       control: 'text'
     },
     showpill: { 
-      description: 'The option to show pills representing selected values',
+      description: 'The option to not show pills representing selected values',
       table: { 
-        defaultValue: { summary: 'false' },
+        defaultValue: { summary: 'true' },
         type: { summary: 'boolean' }
       },
       control: { type: 'boolean' }
@@ -83,22 +83,14 @@ import MultiSelect from './../elements/select/multiselect.svelte'
       },
       control: 'text'
     },
-    reducesort: {
-      description: 'If true, only results with matching elements will display on search',
+    sortoption: {
+      description: 'how we want the values to be searched and sorted inside the component',
       table: { 
         defaultValue: { summary: 'false' },
-        type: { summary: 'boolean'}
+        type: { summary: 'string'}
        },
-      control: { type: 'boolean' }
+      control: 'text'
     }, 
-    dosearch: {
-      description: 'Whether results will be searched inside of the component',
-      table: { 
-        defaultValue: { summary: 'true' },
-        type: { summary: 'boolean'}
-      },
-      control: { type: 'boolean' }
-    },
     heading: {
       description: 'Subheading inside the dropdown to describe the information',
       table: { 
@@ -284,12 +276,12 @@ Dropdown that allows the user to select multiple choices.
 
 <Canvas>
   <Story
-    name='Show Pills'
+    name='Hide Pills'
     args={{
-      label: 'Show Pills',
+      label: 'Hide Pills',
       options: 'Bob, Sally, Jimothy, Raechel, Apple, Andy, Robert',
       value: 'Jimothy, Apple',
-      showpill: 'true',
+      showpill: 'false',
     }}
   >
     {({ label, options, value, showpill  }) => `
@@ -309,14 +301,14 @@ Dropdown that allows the user to select multiple choices.
     args={{
       label: 'Reduce Search',
       options: 'hello, hi, yo, halo',
-      reducesort: 'true',
+      sortoption: 'reduce',
     }}
   >
-    {({ label, options, reducesort }) => `
+    {({ label, options, sortoption }) => `
       <v-multiselect
         label='${label}'
         options='${options}'
-        reducesort='${reducesort}'
+        sortoption='${sortoption}'
       />
     `}
   </Story>
@@ -328,14 +320,14 @@ Dropdown that allows the user to select multiple choices.
     args={{
       label: 'Do Not Search',
       options: 'hello, hi, yo, halo',
-      dosearch: 'false',
+      sortoption: 'off',
     }}
   >
-    {({ label, options, dosearch }) => `
+    {({ label, options, sortoption }) => `
       <v-multiselect
         label='${label}'
         options='${options}'
-        dosearch='${dosearch}'
+        sortoption='${sortoption}'
       />
     `}
   </Story>
