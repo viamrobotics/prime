@@ -94,8 +94,7 @@ setTimeout(() => {
     <v-multiselect 
       options="ab, bc, cd, dz, e24gsdg, f dskfm 3??, abs, abd, ac, ad, adb"
       value="ab, cd"
-      reducesort="true"
-      dosearch="true"
+      sortoption="reduce"
       withbutton="true"
       buttontext="hello"
       buttonicon="x"

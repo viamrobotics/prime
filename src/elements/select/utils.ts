@@ -3,6 +3,8 @@ interface Match {
   option: string,
 }
 
+export type SortOptions = 'default' | 'reduce' | 'off'
+
 export const isElementInScrollView = (element: Element) => {
   const { top, bottom } = element.getBoundingClientRect();
   const parentRect = element.parentElement!.parentElement!.getBoundingClientRect();

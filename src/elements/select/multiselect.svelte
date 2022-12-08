@@ -12,6 +12,7 @@ import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
 import * as utils from './utils';
 
+
 export let options = '';
 export let value = '';
 export let placeholder = '';
@@ -26,8 +27,7 @@ export let clearable = 'true';
 export let withbutton = 'false';
 export let buttontext = 'ENTER';
 export let buttonicon = '';
-export let reducesort = 'false';
-export let dosearch = 'true';
+export let sortoption: utils.SortOptions = 'default';
 export let heading = '';
 
 const dispatch = dispatcher();
@@ -56,8 +56,8 @@ $: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: showsPill = htmlToBoolean(showpill, 'showpill');
 $: canClearAll = htmlToBoolean(clearable, 'clearable');
 $: hasButton = htmlToBoolean(withbutton, 'withbutton');
-$: isReduceSort = htmlToBoolean(reducesort, 'reducesort');
-$: doesSearch = htmlToBoolean(dosearch, 'dosearch');
+$: isReduceSort = sortoption === 'reduce';
+$: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = value.split(',').filter(Boolean).map((str) => str.trim());
 $: sortedOptions = doesSearch ? applySearchSort(searchTerm, parsedOptions) : parsedOptions;
