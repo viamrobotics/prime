@@ -27,7 +27,7 @@ const handleClick = (event: Event) => {
 
 </script>
 
-<div class='relative w-full overflow-hidden'>
+<div class='relative w-full'>
   <div
     class={cx('w-full py-2 px-4 flex flex-reverse items-center justify-between text-black cursor-pointer', {
       'border border-black bg-white': variant === 'default',
@@ -58,7 +58,7 @@ const handleClick = (event: Event) => {
   </div>
 
   <div
-    class="{cx(' text-black overflow-hidden transition-all duration-500', {
+    class="{cx(' text-black transition-all duration-500', {
       'bg-white': variant === 'default',
       'max-h-0': !open,
       'max-h-fit': open,
