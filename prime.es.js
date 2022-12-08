@@ -1457,11 +1457,11 @@ function Cr(t) {
         "rotate-180": t[0]
       })), W(f, "name", "chevron-down"), W(f, "size", "2xl"), u(l, "class", "h-full flex items-center gap-3"), u(n, "class", m = V("w-full py-2 px-4 flex flex-reverse items-center justify-between text-black cursor-pointer", {
         "border border-black bg-white": t[2] === "default"
-      }) + ","), u(_, "class", p = V(" text-black overflow-hidden transition-all duration-500", {
+      }) + ","), u(_, "class", p = V(" text-black transition-all duration-500", {
         "bg-white": t[2] === "default",
         "max-h-0": !t[0],
         "max-h-fit": t[0]
-      })), u(e, "class", "relative w-full overflow-hidden");
+      })), u(e, "class", "relative w-full");
     },
     m(E, A) {
       z(E, e, A), g(e, n), g(n, i), v && v.m(i, null), g(i, r), g(i, o), g(n, s), g(n, l), g(l, a), g(l, c), g(l, f), g(e, b), g(e, _), g(_, x), k || (M = [
@@ -1475,7 +1475,7 @@ function Cr(t) {
         "rotate-180": E[0]
       })) && W(f, "class", d), A & 4 && m !== (m = V("w-full py-2 px-4 flex flex-reverse items-center justify-between text-black cursor-pointer", {
         "border border-black bg-white": E[2] === "default"
-      }) + ",") && u(n, "class", m), A & 5 && p !== (p = V(" text-black overflow-hidden transition-all duration-500", {
+      }) + ",") && u(n, "class", m), A & 5 && p !== (p = V(" text-black transition-all duration-500", {
         "bg-white": E[2] === "default",
         "max-h-0": !E[0],
         "max-h-fit": E[0]
