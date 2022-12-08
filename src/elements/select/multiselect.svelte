@@ -1,4 +1,4 @@
-<svelte:options immutable tag='v-select' />
+<svelte:options immutable tag='v-multiselect' />
 
 <script lang='ts'>
 
@@ -12,14 +12,13 @@ import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
 import * as utils from './utils';
 
+
 export let options = '';
 export let value = '';
 export let placeholder = '';
 export let label = '';
-export let variant: 'single' | 'multiple' = 'single';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
-export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
@@ -28,7 +27,8 @@ export let clearable = 'true';
 export let withbutton = 'false';
 export let buttontext = 'ENTER';
 export let buttonicon = '';
-export let reducesort = 'false';
+export let sortoption: utils.SortOptions = 'default';
+export let heading = '';
 
 const dispatch = dispatcher();
 
@@ -37,15 +37,13 @@ addStyles();
 let root: HTMLElement;
 let input: HTMLInputElement;
 let optionsContainer: HTMLElement;
-
 let isDisabled: boolean;
-let isExact: boolean;
-let isMultiple: boolean;
 let hasPrefix: boolean;
 let showsPill: boolean;
 let canClearAll: boolean;
 let hasButton: boolean;
 let isReduceSort: boolean;
+let doesSearch: boolean;
 let parsedOptions: string[];
 let parsedSelected: string[];
 let sortedOptions: string[];
@@ -54,22 +52,17 @@ let searchedOptions: { option: string; search?: string[] }[];
 let searchTerm = '';
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
-$: isExact = htmlToBoolean(exact, 'exact');
-$: isMultiple = variant === 'multiple';
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: showsPill = htmlToBoolean(showpill, 'showpill');
 $: canClearAll = htmlToBoolean(clearable, 'clearable');
 $: hasButton = htmlToBoolean(withbutton, 'withbutton');
-$: isReduceSort = htmlToBoolean(reducesort, 'reducesort');
+$: isReduceSort = sortoption === 'reduce';
+$: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
-$: parsedSelected = isMultiple
-  ? value.split(',').filter(Boolean).map((str) => str.trim())
-  : [];
-$: sortedOptions = isMultiple ? applySearchSort(searchTerm, parsedOptions) : 
-  applySearchSort(value, parsedOptions);
-$: searchedOptions = isMultiple ? 
-  utils.applySearchHighlight(sortedOptions, searchTerm) : 
-  utils.applySearchHighlight(sortedOptions, value);
+$: parsedSelected = value.split(',').filter(Boolean).map((str) => str.trim());
+$: sortedOptions = doesSearch ? applySearchSort(searchTerm, parsedOptions) : parsedOptions;
+$: searchedOptions = doesSearch ? utils.applySearchHighlight(sortedOptions, searchTerm) : 
+  utils.applySearchHighlight(sortedOptions, '');
 
 let open = false;
 let navigationIndex = -1;
@@ -83,6 +76,9 @@ const setKeyboardControl = (toggle: boolean) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
+  if (options[0] === '' && options.length === 1) {
+    return [];
+  }
   dispatch('search', { term });
   return term ? searchSort(options, term, isReduceSort) : options;
 };
@@ -91,19 +87,15 @@ const handleInput = (event: Event) => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
-  if (isMultiple) {
-    searchTerm = input.value.trim();
-    optionMatch = false;
-    for (const value of sortedOptions) {
-      if (searchTerm.toLowerCase() === value.toLowerCase()) {
-        optionMatch = true;
-        optionMatchText = value;
-      } 
-    }
-  } else {
-    value = input.value.trim();
-    dispatch('input', { value });
+  searchTerm = input.value.trim();
+  optionMatch = false;
+  for (const value of sortedOptions) {
+    if (searchTerm.toLowerCase() === value.toLowerCase()) {
+      optionMatch = true;
+      optionMatchText = value;
+    } 
   }
+
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
@@ -118,40 +110,23 @@ const handleKeyUp = (event: KeyboardEvent) => {
 };
 
 const handleEnter = () => {
-  if (isMultiple) {
-    const option = sortedOptions[navigationIndex]!;
-    value = value.includes(option)
-      ? [...parsedSelected.filter(item => item !== option)].toString()
-      : [...parsedSelected, option].toString();
-    input.focus();
+  const option = sortedOptions[navigationIndex]!;
+  value = value.includes(option)
+    ? [...parsedSelected.filter(item => item !== option)].toString()
+    : [...parsedSelected, option].toString();
+  input.focus();
 
-    if (optionMatch) {
-      if (value.includes(optionMatchText)) {
-        value = value.replace(`${optionMatchText},`, '');
-      } else {
-        value += `${optionMatchText},`;
-      }
-      searchTerm = '';
-      optionMatch = false;
-    }
-
-    dispatch('input', { value, values: value.split(',') });
-  } else {
-    if (navigationIndex > -1) {
-      value = sortedOptions[navigationIndex]!;
+  if (optionMatch) {
+    if (value.includes(optionMatchText)) {
+      value = value.replace(`${optionMatchText},`, '');
     } else {
-      const result = sortedOptions.find(item => item.toLowerCase() === value);
-
-      if (result) {
-        value = result;
-      }
+      value += `${optionMatchText},`;
     }
-    if (open) {
-      input.blur();
-    }
-
-    dispatch('input', { value });
+    searchTerm = '';
+    optionMatch = false;
   }
+
+  dispatch('input', { value, values: value.split(',') });
 };
 
 const handleNavigate = (direction: number) => {
@@ -219,38 +194,23 @@ const handleOptionMouseEnter = (index: number) => {
 const handleOptionSelect = (target: string, event: Event) => {
   const { checked } = (event.target as HTMLInputElement);
 
-  if (isMultiple === false && value === target) {
-    event.preventDefault();
-    open = false;
-    return;
-  }
-
   value = checked
     ? [...parsedSelected, target].toString()
     : [...parsedSelected.filter((item: string) => item !== target)].toString();
 
-  if (isMultiple) {
-    input.focus();
-    if (checked) {
-      dispatch('input', { value, values: value.split(','), added: target });
-    } else {
-      dispatch('input', { value, values: value.split(','), removed: target });
-    }
-    
+  input.focus();
+  if (checked) {
+    dispatch('input', { value, values: value.split(','), added: target });
   } else {
-    open = false;
-    dispatch('input', { value });
+    dispatch('input', { value, values: value.split(','), removed: target });
   }
 };
 
 const handleClearAll = () => {
   value = '';
   optionsContainer.scrollTop = 0;
-  if (isMultiple) {
-    dispatch('input', { value, values: value.split(',') });
-  } else {
-    dispatch('input', { value });
-  }
+  dispatch('input', { value, values: value.split(',') });
+  dispatch('clear-all-click');
 };
 
 const handleButtonClick = () => {
@@ -263,13 +223,7 @@ const splitOptionOnWord = (option: string) => {
 
 $: {
   if (!open) {
-    if (isMultiple) {
-      searchTerm = '';
-    }
-
-    if (isExact && parsedOptions.includes(value) === false) {
-      value = '';
-    }
+    searchTerm = '';
   }
 }
 
@@ -323,11 +277,11 @@ $: {
         <input
           bind:this={input}
           {placeholder}
-          value={isMultiple ? searchTerm : value}
+          value={searchTerm}
           aria-disabled={isDisabled}
           readonly={isDisabled}
           type='text'
-          class='py-1.5 pl-2 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
+          class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
           on:input|preventDefault={handleInput}
           on:keyup|stopPropagation|preventDefault={handleKeyUp}
         >
@@ -342,37 +296,35 @@ $: {
         </button>
       </div>
 
-      <div class='flex flex-wrap gap-2 pl-1.5 pb-2 min-h-[1rem]'>
-        {#if parsedSelected.length > 0 && showsPill}
+      {#if parsedSelected.length > 0 && showsPill}
+        <div class='flex flex-wrap gap-2 p-1'>
           {#each parsedSelected as option (option)}
             <v-pill
               on:remove={() => handlePillClick(option)}
               value={option}
             />
           {/each}
-        {:else}
-          <v-pill
-            value='Selected Options'
-            removable='false'
-            class='whitespace-nowrap opacity-50'
-          />
-        {/if}
-      </div>
+        </div>
+      {/if}
     </div>
 
-    <div 
+    <div  
       slot='content'
       class='mt-1 border border-black bg-white drop-shadow-md'
     >
-    <div
-      bind:this={optionsContainer}
-      class='options-container overflow-y-auto'
-    >
+      <div bind:this={optionsContainer} class="options-container overflow-y-auto">
       {#if sortedOptions.length > 0}
         <div
-          class='flex max-h-36 flex-col '
+          class='flex max-h-36 flex-col'
           on:mouseleave={clearNavigationIndex}
         >
+          {#if heading}
+            <span
+              class='flex text-xs text-gray-500 pl-2 pt-2 flex-wrap'
+            >
+              {heading}
+            </span>
+          {/if}
           {#each searchedOptions as { search, option }, index (option)}
             <label
               class={cx('flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1.5 text-xs', {
@@ -384,7 +336,7 @@ $: {
               <input
                 tabindex="-1"
                 type='checkbox'
-                class={cx('bg-black outline-none', isMultiple ? '' : 'hidden')}
+                class={cx('bg-black outline-none')}
                 checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
                 on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
                 on:input|stopPropagation
@@ -408,7 +360,6 @@ $: {
                 </span>
 
               {:else if hasPrefix}
-
                 {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
                   <span
                     class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
@@ -422,7 +373,7 @@ $: {
               {/if}
             </label>
           {/each}
-          {#if isMultiple && canClearAll}
+          {#if canClearAll}
             <button
               class='w-full px-2 py-1 hover:bg-slate-200 text-xs text-left'
               on:mouseenter={clearNavigationIndex}
@@ -438,20 +389,24 @@ $: {
           No matching results
         </div>
       {/if}
-    </div>
+      </div>
       {#if hasButton}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <v-select-button
-        buttontext={buttontext}
-        buttonicon={buttonicon}
-        on:click={handleButtonClick}
-      />
+          buttontext={buttontext}
+          buttonicon={buttonicon}
+          on:click={handleButtonClick}
+        />
       {/if}
+
     </div>
   </v-dropdown>
 </label>
 
 <style>
+
+        
+
 .options-container::-webkit-scrollbar {
   width: 6px;
 }

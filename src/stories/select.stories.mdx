@@ -2,7 +2,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
 import gpioOptions from './assets/gpio-options'
 
 <Meta
-  title='Elements/Select'
+  title='Elements/Select/Select'
   parameters={{
     actions: {
       handles: ['input', 'button-click', 'search'],
@@ -30,13 +30,18 @@ import gpioOptions from './assets/gpio-options'
       control: 'text'
     },
     showpill: { 
-      description: 'when in multi-select variant, have the option to show pills in the select representing selected values',
+      description: 'When in multi-select variant, have the option to show pills in the select representing selected values',
       table: { defaultValue: { summary: 'false' } },
       control: { type: 'boolean' }
     },
     clearable: {
-      description: 'option to show the clear all button to deselect all otpions',
+      description: 'Option to have the "Clear All" button to deselect all otpions',
       table: { defaultValue: { summary: 'true' } },
+      control: { type: 'boolean' }
+    },
+    exact: {
+      description: 'If true, values can only be selected if an existing value matches what is inputted (single select ONLY)',
+      table: { defaultValue: { summary: 'false' } },
       control: { type: 'boolean' }
     },
     withbutton: {
@@ -53,6 +58,11 @@ import gpioOptions from './assets/gpio-options'
       description: 'The icon on the button, can use any from v-icon',
       table: { defaultValue: { summary: '' } },
       control: 'text'
+    },
+    reducesort: {
+      description: 'If true, only results with matching elements will display on search',
+      table: { defaultValue: { summary: 'false' } },
+      control: { type: 'boolean' }
     },
     'on:input': {
       description: 'Event fired when an option is selected'
