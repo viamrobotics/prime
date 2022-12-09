@@ -101,7 +101,7 @@ const handleKeyUp = (event: KeyboardEvent) => {
 const handleEnter = () => {
   if (navigationIndex === -1) {
     // if user hits enter when focused on the search input
-    const match = sortedOptions.find((opt) => opt.toLowerCase() === searchterm.toLowerCase())
+    const match = sortedOptions.find((opt) => opt.toLowerCase() === searchterm.toLowerCase());
     if (match) {
       handleChange(match);
     } else {
@@ -110,19 +110,19 @@ const handleEnter = () => {
   } else {
     // if the user has used arrow keys to navigate options, enter should add/remove item
     const option = sortedOptions[navigationIndex]!;
-    handleChange(option)
+    handleChange(option);
   }
 };
 
 const handleChange = (changedOption: string) => {
-    if (parsedSelected.includes(changedOption)) {
-      const newValue = [...parsedSelected.filter(item => item !== changedOption)];
-      dispatch('input', { value: newValue.toString(), values: newValue, removed: changedOption });
-    } else {
-      const newValue = [...parsedSelected, changedOption];
-      dispatch('input', { value: newValue.toString(), values: newValue, added: changedOption });
-    }
-    input.focus();
+  if (parsedSelected.includes(changedOption)) {
+    const newValue = [...parsedSelected.filter(item => item !== changedOption)];
+    dispatch('input', { value: newValue.toString(), values: newValue, removed: changedOption });
+  } else {
+    const newValue = [...parsedSelected, changedOption];
+    dispatch('input', { value: newValue.toString(), values: newValue, added: changedOption });
+  }
+  input.focus();
 };
 
 
