@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.0.90",
+  "version": "0.0.92",
   "license": "Apache-2.0",
   "type": "commonjs",
   "files": [
