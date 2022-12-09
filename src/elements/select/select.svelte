@@ -51,7 +51,7 @@ $: hasButton = htmlToBoolean(withbutton, 'withbutton');
 $: isReduceSort = sortoption === 'reduce';
 $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
-$: sortedOptions = doesSearch ? applySearchSort(value, parsedOptions): parsedOptions;
+$: sortedOptions = doesSearch ? applySearchSort(value, parsedOptions) : parsedOptions;
 $: searchedOptions = utils.applySearchHighlight(sortedOptions, doesSearch ? value : '');
 
 let open = false;
@@ -169,10 +169,8 @@ const splitOptionOnWord = (option: string) => {
 };
 
 $: {
-  if (!open) {
-    if (isExact && parsedOptions.includes(value) === false) {
-      value = '';
-    }
+  if (!open && isExact && parsedOptions.includes(value) === false) {
+    value = '';
   }
 }
 
