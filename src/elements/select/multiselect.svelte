@@ -106,7 +106,7 @@ const handleEnter = () => {
     // if the user has used arrow keys to navigate options, enter should add/remove item
     const option = sortedOptions[navigationIndex]!;
     if (value.includes(option)) {
-      const newValue = [...parsedSelected.filter(item => item !== option)]
+      const newValue = [...parsedSelected.filter(item => item !== option)];
       dispatch('input', { value: newValue.toString(), values: newValue, removed: option });
     } else {
       const newValue = [...parsedSelected, option];
@@ -179,11 +179,11 @@ const handleOptionMouseEnter = (index: number) => {
 };
 
 const handleOptionSelect = (target: string, event: Event) => {
-  const targetElement= event.target as HTMLInputElement
+  const targetElement = event.target as HTMLInputElement;
   const { checked } = (targetElement);
   // cannot suppress checkbox check
   if (targetElement.checked) {
-    targetElement.checked = !checked
+    targetElement.checked = !checked;
   }
   const newValue = checked
     ? [...parsedSelected, target]
