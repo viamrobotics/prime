@@ -101,20 +101,30 @@ const handleKeyUp = (event: KeyboardEvent) => {
 const handleEnter = () => {
   if (navigationIndex === -1) {
     // if user hits enter when focused on the search input
-    dispatch('enter-press');
+    const match = sortedOptions.find((opt) => opt.toLowerCase() === searchterm.toLowerCase())
+    if (match) {
+      handleChange(match);
+    } else {
+      dispatch('enter-press', { options: sortedOptions });
+    }
   } else {
     // if the user has used arrow keys to navigate options, enter should add/remove item
     const option = sortedOptions[navigationIndex]!;
-    if (value.includes(option)) {
-      const newValue = [...parsedSelected.filter(item => item !== option)];
-      dispatch('input', { value: newValue.toString(), values: newValue, removed: option });
-    } else {
-      const newValue = [...parsedSelected, option];
-      dispatch('input', { value: newValue.toString(), values: newValue, added: option });
-    }
-    input.focus();
+    handleChange(option)
   }
 };
+
+const handleChange = (changedOption: string) => {
+    if (parsedSelected.includes(changedOption)) {
+      const newValue = [...parsedSelected.filter(item => item !== changedOption)];
+      dispatch('input', { value: newValue.toString(), values: newValue, removed: changedOption });
+    } else {
+      const newValue = [...parsedSelected, changedOption];
+      dispatch('input', { value: newValue.toString(), values: newValue, added: changedOption });
+    }
+    input.focus();
+};
+
 
 const handleNavigate = (direction: number) => {
   navigationIndex += direction;
