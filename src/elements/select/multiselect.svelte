@@ -28,6 +28,7 @@ export let buttontext = 'ENTER';
 export let buttonicon = '';
 export let sortoption: utils.SortOptions = 'default';
 export let heading = '';
+export let searchterm = '';
 
 const dispatch = dispatcher();
 
@@ -48,7 +49,6 @@ let parsedSelected: string[];
 let sortedOptions: string[];
 let searchedOptions: { option: string; search?: string[] }[];
 
-let searchTerm = '';
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
@@ -59,8 +59,8 @@ $: isReduceSort = sortoption === 'reduce';
 $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = value.split(',').filter(Boolean).map((str) => str.trim());
-$: sortedOptions = doesSearch ? applySearchSort(searchTerm, parsedOptions) : parsedOptions;
-$: searchedOptions = doesSearch ? utils.applySearchHighlight(sortedOptions, searchTerm) : 
+$: sortedOptions = doesSearch ? applySearchSort(searchterm, parsedOptions) : parsedOptions;
+$: searchedOptions = doesSearch ? utils.applySearchHighlight(sortedOptions, searchterm) :
   utils.applySearchHighlight(sortedOptions, '');
 
 let open = false;
@@ -78,7 +78,6 @@ const applySearchSort = (term: string, options: string[]) => {
   if (options[0] === '' && options.length === 1) {
     return [];
   }
-  dispatch('search', { term });
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
@@ -86,10 +85,13 @@ const handleInput = (event: Event) => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
-  searchTerm = input.value.trim();
+
+  const newTerm = input.value.trim();
+  dispatch('search', { term: newTerm });
+
   optionMatch = false;
   for (const value of sortedOptions) {
-    if (searchTerm.toLowerCase() === value.toLowerCase()) {
+    if (newTerm.toLowerCase() === value.toLowerCase()) {
       optionMatch = true;
       optionMatchText = value;
     } 
@@ -109,6 +111,7 @@ const handleKeyUp = (event: KeyboardEvent) => {
 };
 
 const handleEnter = () => {
+  dispatch('enter-press');
   const option = sortedOptions[navigationIndex]!;
   value = value.includes(option)
     ? [...parsedSelected.filter(item => item !== option)].toString()
@@ -121,7 +124,6 @@ const handleEnter = () => {
     } else {
       value += `${optionMatchText},`;
     }
-    searchTerm = '';
     optionMatch = false;
   }
 
@@ -221,8 +223,10 @@ const splitOptionOnWord = (option: string) => {
 };
 
 $: {
-  if (!open) {
-    searchTerm = '';
+  if (open) {
+    dispatch('open');
+  } else {
+    dispatch('close');
   }
 }
 
@@ -276,7 +280,7 @@ $: {
         <input
           bind:this={input}
           {placeholder}
-          value={searchTerm}
+          value={searchterm}
           aria-disabled={isDisabled}
           readonly={isDisabled}
           type='text'

@@ -5,7 +5,7 @@ import gpioOptions from './assets/gpio-options'
   title='Elements/Select/Multi-Select'
   parameters={{
     actions: {
-      handles: ['input', 'button-click', 'search', 'clear-all-click'],
+      handles: ['input', 'button-click', 'search', 'clear-all-click', 'enter-press', 'open', 'close'],
     },
   }}
   argTypes={{
@@ -111,6 +111,15 @@ import gpioOptions from './assets/gpio-options'
       table: { 
         type: { summary: 'string' },
       },
+    },
+    'on:enter-press': {
+      description: 'Event fired when enter button is pressed',
+    },
+    'on:open': {
+      description: 'Event fired when dropdown opens',
+    },
+    'on:close': {
+      description: 'Event fired when dropdown closes',
     },
     'on:clear-all-click': {
       description: 'Event fired when "Clear All" is pressed and values are cleared',
