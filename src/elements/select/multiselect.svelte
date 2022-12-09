@@ -106,11 +106,11 @@ const handleEnter = () => {
     // if the user has used arrow keys to navigate options, enter should add/remove item
     const option = sortedOptions[navigationIndex]!;
     if (value.includes(option)) {
-      value = [...parsedSelected.filter(item => item !== option)].toString()
-      dispatch('input', { value, values: value.split(','), removed: option });
+      const newValue = [...parsedSelected.filter(item => item !== option)]
+      dispatch('input', { value: newValue.toString(), values: newValue, removed: option });
     } else {
-      value = [...parsedSelected, option].toString();
-      dispatch('input', { value, values: value.split(','), added: option });
+      const newValue = [...parsedSelected, option];
+      dispatch('input', { value: newValue.toString(), values: newValue, added: option });
     }
     input.focus();
   }
@@ -165,8 +165,8 @@ const handleIconClick = () => {
 };
 
 const handlePillClick = (target: string) => {
-  value = [...parsedSelected.filter((item: string) => item !== target)].toString();
-  dispatch('input', { value, values: value.split(','), removed: target });
+  const newValue = [...parsedSelected.filter((item: string) => item !== target)];
+  dispatch('input', { value: newValue.toString(), values: newValue, removed: target });
   input.focus();
 };
 
@@ -179,24 +179,27 @@ const handleOptionMouseEnter = (index: number) => {
 };
 
 const handleOptionSelect = (target: string, event: Event) => {
-  const { checked } = (event.target as HTMLInputElement);
-
-  value = checked
-    ? [...parsedSelected, target].toString()
-    : [...parsedSelected.filter((item: string) => item !== target)].toString();
+  const targetElement= event.target as HTMLInputElement
+  const { checked } = (targetElement);
+  // cannot suppress checkbox check
+  if (targetElement.checked) {
+    targetElement.checked = !checked
+  }
+  const newValue = checked
+    ? [...parsedSelected, target]
+    : [...parsedSelected.filter((item: string) => item !== target)];
 
   input.focus();
   if (checked) {
-    dispatch('input', { value, values: value.split(','), added: target });
+    dispatch('input', { value: newValue.toString(), values: newValue, added: target });
   } else {
-    dispatch('input', { value, values: value.split(','), removed: target });
+    dispatch('input', { value: newValue.toString(), values: newValue, removed: target });
   }
 };
 
 const handleClearAll = () => {
-  value = '';
   optionsContainer.scrollTop = 0;
-  dispatch('input', { value, values: [] });
+  dispatch('input', { value: '', values: [] });
   dispatch('clear-all-click');
 };
 
