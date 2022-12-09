@@ -87,7 +87,7 @@ const handleInput = (event: Event) => {
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
 
-  const newTerm = input.value.trim()
+  const newTerm = input.value.trim();
   dispatch('search', { term: newTerm });
 
   optionMatch = false;
@@ -225,9 +225,9 @@ const splitOptionOnWord = (option: string) => {
 
 $: {
   if (open) {
-    dispatch('open')
+    dispatch('open');
   } else {
-    dispatch('close')
+    dispatch('close');
   }
 }
 
