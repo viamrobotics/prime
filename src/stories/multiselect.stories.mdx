@@ -86,11 +86,13 @@ import MultiSelect from './../elements/select/multiselect.svelte'
     sortoption: {
       description: 'how we want the values to be searched and sorted inside the component',
       table: { 
-        defaultValue: { summary: 'false' },
+        defaultValue: { summary: 'default' },
         type: { summary: 'string'}
-       },
-      control: 'text'
-    }, 
+      },
+      options: ['default', 'reduce', 'off'],
+      control: { type: 'radio' },
+      type: 'text'
+    },
     heading: {
       description: 'Subheading inside the dropdown to describe the information',
       table: { 
