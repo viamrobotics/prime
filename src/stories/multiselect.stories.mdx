@@ -6,7 +6,7 @@ import MultiSelect from './../elements/select/multiselect.svelte'
   title='Elements/Select/Multi-Select'
   parameters={{
     actions: {
-      handles: ['input', 'button-click', 'search', 'clear-all-click'],
+      handles: ['input', 'button-click', 'search', 'clear-all-click', 'enter-press', 'open', 'close'],
     },
   }}
   component={MultiSelect}
@@ -121,6 +121,15 @@ import MultiSelect from './../elements/select/multiselect.svelte'
       table: { 
         type: { summary: 'string' },
       },
+    },
+    'on:enter-press': {
+      description: 'Event fired when enter button is pressed',
+    },
+    'on:open': {
+      description: 'Event fired when dropdown opens',
+    },
+    'on:close': {
+      description: 'Event fired when dropdown closes',
     },
     'on:clear-all-click': {
       description: 'Event fired when "Clear All" is pressed and values are cleared',
