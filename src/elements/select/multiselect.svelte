@@ -344,7 +344,7 @@ $: {
                 tabindex="-1"
                 type='checkbox'
                 class={cx('bg-black outline-none')}
-                checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
+                checked={utils.shouldBeChecked(parsedSelected.toString(0), Array.isArray(option) ? option.join('') : option)}
                 on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
                 on:input|stopPropagation
                 on:focus|preventDefault|stopPropagation
