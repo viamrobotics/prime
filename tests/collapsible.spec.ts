@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('collapsible shows and hides child content', async ({ page }) => {
-  await page.goto('http://localhost:1000/test.html');
+  await page.goto('/test.html');
 
   const collapseTitle = page.getByText(/click to find out!/i)
 
@@ -15,5 +15,5 @@ test('collapsible shows and hides child content', async ({ page }) => {
 
   collapseTitle.click()
 
-  await expect(page.getByText(/you found out!/i)).toBeVisible()
+  await expect(page.getByText(/you found out!/i)).not.toBeVisible()
 });
