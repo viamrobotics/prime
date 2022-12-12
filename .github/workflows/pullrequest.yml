@@ -32,12 +32,11 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - name: Start the testing server
+    - name: Install deps
       run: |
         npm ci --audit=false --legacy-peer-deps
         cd playground
         npm ci --audit=false --legacy-peer-deps
-        npm start & cd ..
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
