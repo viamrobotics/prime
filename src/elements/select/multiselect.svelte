@@ -118,11 +118,11 @@ const handleChange = (changedOption: string) => {
   if (parsedSelected.includes(changedOption)) {
     const newValue = [...parsedSelected.filter(item => item !== changedOption)];
     value = newValue.toString();
-    dispatch('input', { value , values: newValue, removed: changedOption });
+    dispatch('input', { value, values: newValue, removed: changedOption });
   } else {
     const newValue = [...parsedSelected, changedOption];
     value = newValue.toString();
-    dispatch('input', { value , values: newValue, added: changedOption });
+    dispatch('input', { value, values: newValue, added: changedOption });
   }
   input.focus();
 };
@@ -178,8 +178,8 @@ const handleIconClick = () => {
 
 const handlePillClick = (target: string) => {
   const newValue = [...parsedSelected.filter((item: string) => item !== target)];
-  value = newValue.toString()
-  dispatch('input', { value , values: newValue, removed: target });
+  value = newValue.toString();
+  dispatch('input', { value, values: newValue, removed: target });
   input.focus();
 };
 
@@ -202,7 +202,7 @@ const handleOptionSelect = (target: string, event: Event) => {
     ? [...parsedSelected, target]
     : [...parsedSelected.filter((item: string) => item !== target)];
 
-  value = newValue.toString()
+  value = newValue.toString();
 
   input.focus();
   if (checked) {
