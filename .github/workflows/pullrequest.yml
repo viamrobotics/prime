@@ -34,14 +34,12 @@ jobs:
         node-version: 16
     - name: Start the testing server
       run: |
-        npm ci
+        npm ci --audit=false --legacy-peer-deps
         npm run build
         cd playground
-        npm ci
+        npm ci --audit=false --legacy-peer-deps
         npm run build
         npm run preview & cd ..
-    - name: Install dependencies
-      run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
