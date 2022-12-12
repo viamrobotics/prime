@@ -4,7 +4,6 @@
 
 type LabelPosition = 'top' | 'left'
 
-// This entire component is pretty hacked together and should be refactored. Maybe split multi / single select.
 import cx from 'classnames';
 import { searchSort } from '../../lib/sort';
 import { htmlToBoolean } from '../../lib/boolean';
@@ -22,13 +21,14 @@ export let disabled = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
-export let showpill = 'false';
+export let showpill = 'true';
 export let clearable = 'true';
 export let withbutton = 'false';
 export let buttontext = 'ENTER';
 export let buttonicon = '';
 export let sortoption: utils.SortOptions = 'default';
 export let heading = '';
+export let searchterm = '';
 
 const dispatch = dispatcher();
 
@@ -49,7 +49,6 @@ let parsedSelected: string[];
 let sortedOptions: string[];
 let searchedOptions: { option: string; search?: string[] }[];
 
-let searchTerm = '';
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
@@ -60,16 +59,13 @@ $: isReduceSort = sortoption === 'reduce';
 $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: parsedSelected = value.split(',').filter(Boolean).map((str) => str.trim());
-$: sortedOptions = doesSearch ? applySearchSort(searchTerm, parsedOptions) : parsedOptions;
-$: searchedOptions = doesSearch ? utils.applySearchHighlight(sortedOptions, searchTerm) : 
+$: sortedOptions = doesSearch ? applySearchSort(searchterm, parsedOptions) : parsedOptions;
+$: searchedOptions = doesSearch ? utils.applySearchHighlight(sortedOptions, searchterm) :
   utils.applySearchHighlight(sortedOptions, '');
 
 let open = false;
 let navigationIndex = -1;
 let keyboardControlling = false;
-
-let optionMatch = false;
-let optionMatchText = '';
 
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
@@ -79,7 +75,6 @@ const applySearchSort = (term: string, options: string[]) => {
   if (options[0] === '' && options.length === 1) {
     return [];
   }
-  dispatch('search', { term });
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
@@ -87,15 +82,9 @@ const handleInput = (event: Event) => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
-  searchTerm = input.value.trim();
-  optionMatch = false;
-  for (const value of sortedOptions) {
-    if (searchTerm.toLowerCase() === value.toLowerCase()) {
-      optionMatch = true;
-      optionMatchText = value;
-    } 
-  }
 
+  const newTerm = input.value.trim();
+  dispatch('search', { term: newTerm });
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
@@ -110,24 +99,34 @@ const handleKeyUp = (event: KeyboardEvent) => {
 };
 
 const handleEnter = () => {
-  const option = sortedOptions[navigationIndex]!;
-  value = value.includes(option)
-    ? [...parsedSelected.filter(item => item !== option)].toString()
-    : [...parsedSelected, option].toString();
-  input.focus();
-
-  if (optionMatch) {
-    if (value.includes(optionMatchText)) {
-      value = value.replace(`${optionMatchText},`, '');
+  if (navigationIndex === -1) {
+    // if user hits enter when focused on the search input
+    const match = sortedOptions.find((opt) => opt.toLowerCase() === searchterm.toLowerCase());
+    if (match) {
+      handleChange(match);
     } else {
-      value += `${optionMatchText},`;
+      dispatch('enter-press', { options: sortedOptions });
     }
-    searchTerm = '';
-    optionMatch = false;
+  } else {
+    // if the user has used arrow keys to navigate options, enter should add/remove item
+    const option = sortedOptions[navigationIndex]!;
+    handleChange(option);
   }
-
-  dispatch('input', { value, values: value.split(',') });
 };
+
+const handleChange = (changedOption: string) => {
+  if (parsedSelected.includes(changedOption)) {
+    const newValue = [...parsedSelected.filter(item => item !== changedOption)];
+    value = newValue.toString();
+    dispatch('input', { value, values: newValue, removed: changedOption });
+  } else {
+    const newValue = [...parsedSelected, changedOption];
+    value = newValue.toString();
+    dispatch('input', { value, values: newValue, added: changedOption });
+  }
+  input.focus();
+};
+
 
 const handleNavigate = (direction: number) => {
   navigationIndex += direction;
@@ -178,8 +177,9 @@ const handleIconClick = () => {
 };
 
 const handlePillClick = (target: string) => {
-  value = [...parsedSelected.filter((item: string) => item !== target)].toString();
-  dispatch('input', { value, values: value.split(',') });
+  const newValue = [...parsedSelected.filter((item: string) => item !== target)];
+  value = newValue.toString();
+  dispatch('input', { value, values: newValue, removed: target });
   input.focus();
 };
 
@@ -192,24 +192,29 @@ const handleOptionMouseEnter = (index: number) => {
 };
 
 const handleOptionSelect = (target: string, event: Event) => {
-  const { checked } = (event.target as HTMLInputElement);
+  const targetElement = event.target as HTMLInputElement;
+  const { checked } = (targetElement);
+  // cannot suppress checkbox check
+  if (targetElement.checked) {
+    targetElement.checked = !checked;
+  }
+  const newValue = checked
+    ? [...parsedSelected, target]
+    : [...parsedSelected.filter((item: string) => item !== target)];
 
-  value = checked
-    ? [...parsedSelected, target].toString()
-    : [...parsedSelected.filter((item: string) => item !== target)].toString();
+  value = newValue.toString();
 
   input.focus();
   if (checked) {
-    dispatch('input', { value, values: value.split(','), added: target });
+    dispatch('input', { value, values: newValue, added: target });
   } else {
-    dispatch('input', { value, values: value.split(','), removed: target });
+    dispatch('input', { value, values: newValue, removed: target });
   }
 };
 
 const handleClearAll = () => {
-  value = '';
   optionsContainer.scrollTop = 0;
-  dispatch('input', { value, values: value.split(',') });
+  dispatch('input', { value: '', values: [] });
   dispatch('clear-all-click');
 };
 
@@ -222,8 +227,10 @@ const splitOptionOnWord = (option: string) => {
 };
 
 $: {
-  if (!open) {
-    searchTerm = '';
+  if (open) {
+    dispatch('open');
+  } else {
+    dispatch('close');
   }
 }
 
@@ -277,7 +284,7 @@ $: {
         <input
           bind:this={input}
           {placeholder}
-          value={searchTerm}
+          value={searchterm}
           aria-disabled={isDisabled}
           readonly={isDisabled}
           type='text'
@@ -337,7 +344,7 @@ $: {
                 tabindex="-1"
                 type='checkbox'
                 class={cx('bg-black outline-none')}
-                checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
+                checked={utils.shouldBeChecked(parsedSelected.toString(), Array.isArray(option) ? option.join('') : option)}
                 on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
                 on:input|stopPropagation
                 on:focus|preventDefault|stopPropagation

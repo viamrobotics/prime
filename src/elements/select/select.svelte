@@ -16,19 +16,16 @@ export let options = '';
 export let value = '';
 export let placeholder = '';
 export let label = '';
-export let variant: 'single' | 'multiple' = 'single';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
 export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
-export let showpill = 'false';
-export let clearable = 'true';
 export let withbutton = 'false';
 export let buttontext = 'ENTER';
 export let buttonicon = '';
-export let reducesort = 'false';
+export let sortoption: utils.SortOptions = 'default';
 
 const dispatch = dispatcher();
 
@@ -37,46 +34,29 @@ addStyles();
 let root: HTMLElement;
 let input: HTMLInputElement;
 let optionsContainer: HTMLElement;
-
 let isDisabled: boolean;
 let isExact: boolean;
-let isMultiple: boolean;
 let hasPrefix: boolean;
-let showsPill: boolean;
-let canClearAll: boolean;
 let hasButton: boolean;
 let isReduceSort: boolean;
+let doesSearch: boolean;
 let parsedOptions: string[];
-let parsedSelected: string[];
 let sortedOptions: string[];
 let searchedOptions: { option: string; search?: string[] }[];
 
-let searchTerm = '';
-
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isExact = htmlToBoolean(exact, 'exact');
-$: isMultiple = variant === 'multiple';
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
-$: showsPill = htmlToBoolean(showpill, 'showpill');
-$: canClearAll = htmlToBoolean(clearable, 'clearable');
 $: hasButton = htmlToBoolean(withbutton, 'withbutton');
-$: isReduceSort = htmlToBoolean(reducesort, 'reducesort');
+$: isReduceSort = sortoption === 'reduce';
+$: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
-$: parsedSelected = isMultiple
-  ? value.split(',').filter(Boolean).map((str) => str.trim())
-  : [];
-$: sortedOptions = isMultiple ? applySearchSort(searchTerm, parsedOptions) : 
-  applySearchSort(value, parsedOptions);
-$: searchedOptions = isMultiple ? 
-  utils.applySearchHighlight(sortedOptions, searchTerm) : 
-  utils.applySearchHighlight(sortedOptions, value);
+$: sortedOptions = doesSearch ? applySearchSort(value, parsedOptions) : parsedOptions;
+$: searchedOptions = utils.applySearchHighlight(sortedOptions, doesSearch ? value : '');
 
 let open = false;
 let navigationIndex = -1;
 let keyboardControlling = false;
-
-let optionMatch = false;
-let optionMatchText = '';
 
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
@@ -91,19 +71,8 @@ const handleInput = (event: Event) => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
-  if (isMultiple) {
-    searchTerm = input.value.trim();
-    optionMatch = false;
-    for (const value of sortedOptions) {
-      if (searchTerm.toLowerCase() === value.toLowerCase()) {
-        optionMatch = true;
-        optionMatchText = value;
-      } 
-    }
-  } else {
-    value = input.value.trim();
-    dispatch('input', { value });
-  }
+  value = input.value.trim();
+  dispatch('input', { value });
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
@@ -118,40 +87,21 @@ const handleKeyUp = (event: KeyboardEvent) => {
 };
 
 const handleEnter = () => {
-  if (isMultiple) {
-    const option = sortedOptions[navigationIndex]!;
-    value = value.includes(option)
-      ? [...parsedSelected.filter(item => item !== option)].toString()
-      : [...parsedSelected, option].toString();
-    input.focus();
-
-    if (optionMatch) {
-      if (value.includes(optionMatchText)) {
-        value = value.replace(`${optionMatchText},`, '');
-      } else {
-        value += `${optionMatchText},`;
-      }
-      searchTerm = '';
-      optionMatch = false;
-    }
-
-    dispatch('input', { value, values: value.split(',') });
+  if (navigationIndex > -1) {
+    value = sortedOptions[navigationIndex]!;
   } else {
-    if (navigationIndex > -1) {
-      value = sortedOptions[navigationIndex]!;
-    } else {
-      const result = sortedOptions.find(item => item.toLowerCase() === value);
+    const result = sortedOptions.find(item => item.toLowerCase() === value);
 
-      if (result) {
-        value = result;
-      }
+    if (result) {
+      value = result;
     }
-    if (open) {
-      input.blur();
-    }
-
-    dispatch('input', { value });
   }
+  if (open) {
+    input.blur();
+  }
+
+  dispatch('input', { value });
+  
 };
 
 const handleNavigate = (direction: number) => {
@@ -202,55 +152,12 @@ const handleIconClick = () => {
   }
 };
 
-const handlePillClick = (target: string) => {
-  value = [...parsedSelected.filter((item: string) => item !== target)].toString();
-  dispatch('input', { value, values: value.split(',') });
-  input.focus();
-};
-
 const handleOptionMouseEnter = (index: number) => {
   if (keyboardControlling) {
     return;
   }
 
   navigationIndex = index;
-};
-
-const handleOptionSelect = (target: string, event: Event) => {
-  const { checked } = (event.target as HTMLInputElement);
-
-  if (isMultiple === false && value === target) {
-    event.preventDefault();
-    open = false;
-    return;
-  }
-
-  value = checked
-    ? [...parsedSelected, target].toString()
-    : [...parsedSelected.filter((item: string) => item !== target)].toString();
-
-  if (isMultiple) {
-    input.focus();
-    if (checked) {
-      dispatch('input', { value, values: value.split(','), added: target });
-    } else {
-      dispatch('input', { value, values: value.split(','), removed: target });
-    }
-    
-  } else {
-    open = false;
-    dispatch('input', { value });
-  }
-};
-
-const handleClearAll = () => {
-  value = '';
-  optionsContainer.scrollTop = 0;
-  if (isMultiple) {
-    dispatch('input', { value, values: value.split(',') });
-  } else {
-    dispatch('input', { value });
-  }
 };
 
 const handleButtonClick = () => {
@@ -262,14 +169,8 @@ const splitOptionOnWord = (option: string) => {
 };
 
 $: {
-  if (!open) {
-    if (isMultiple) {
-      searchTerm = '';
-    }
-
-    if (isExact && parsedOptions.includes(value) === false) {
-      value = '';
-    }
+  if (!open && isExact && parsedOptions.includes(value) === false) {
+    value = '';
   }
 }
 
@@ -323,7 +224,7 @@ $: {
         <input
           bind:this={input}
           {placeholder}
-          value={isMultiple ? searchTerm : value}
+          value={value}
           aria-disabled={isDisabled}
           readonly={isDisabled}
           type='text'
@@ -341,17 +242,6 @@ $: {
           <v-icon class='flex' name='chevron-down' />
         </button>
       </div>
-
-      {#if parsedSelected.length > 0 && showsPill}
-        <div class='flex flex-wrap gap-2 p-1'>
-          {#each parsedSelected as option (option)}
-            <v-pill
-              on:remove={() => handlePillClick(option)}
-              value={option}
-            />
-          {/each}
-        </div>
-      {/if}
     </div>
 
     <div 
@@ -375,18 +265,7 @@ $: {
               })}
               on:mouseenter={() => handleOptionMouseEnter(index)}
             >
-              <input
-                tabindex="-1"
-                type='checkbox'
-                class={cx('bg-black outline-none', isMultiple ? '' : 'hidden')}
-                checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
-                on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
-                on:input|stopPropagation
-                on:focus|preventDefault|stopPropagation
-              >
-
               {#if search}
-
                 <span class='flex w-full gap-2 text-ellipsis whitespace-nowrap'>
                   {#each splitOptionOnWord(option) as word, wordIndex}
                     <span class={cx('inline-block', {
@@ -416,15 +295,6 @@ $: {
               {/if}
             </label>
           {/each}
-          {#if isMultiple && canClearAll}
-            <button
-              class='w-full px-2 py-1 hover:bg-slate-200 text-xs text-left'
-              on:mouseenter={clearNavigationIndex}
-              on:click={handleClearAll}
-            >
-              Clear all
-            </button>
-            {/if}
         </div>
 
       {:else}
