@@ -24,6 +24,8 @@
     "serve": "vite preview --host",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint --ext .ts,.svelte, ./src/elements",
+    "test": "npx playwright test",
+    "test-dev": "npx playwright test --debug",
     "storybook": "start-storybook -p 6006",
     "storybook-docs": "start-storybook --docs --no-manager-cache",
     "build-storybook": "build-storybook --docs -o prime"
