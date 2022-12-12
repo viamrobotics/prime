@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import { fileURLToPath } from 'url'
 import vue from '@vitejs/plugin-vue'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import sveltePreprocess from 'svelte-preprocess'
@@ -26,5 +27,11 @@ export default defineConfig({
   build: {
     target: 'esnext',
     assetsInlineLimit: 0,
+    rollupOptions: {
+      input: {
+        appSchoool: fileURLToPath(new URL('./index.html', import.meta.url)),
+        appStudent: fileURLToPath(new URL('./test.html', import.meta.url)),
+      },
+    },
   }
 })
