@@ -1,0 +1,34 @@
+var c=Object.defineProperty;var n=(e,t)=>c(e,"name",{value:t,configurable:!0});import"./jsx-runtime.f0857561.js";import{c as a,A as d,M as y,C as p,S as u}from"./Props.3d2740a5.js";import"./iframe.f87997e8.js";import"./es.map.constructor.905eaff3.js";import"./es.number.to-fixed.8cacef64.js";function m(){return m=Object.assign?Object.assign.bind():function(e){for(var t=1;t<arguments.length;t++){var o=arguments[t];for(var r in o)Object.prototype.hasOwnProperty.call(o,r)&&(e[r]=o[r])}return e},m.apply(this,arguments)}n(m,"_extends");const b={},x="wrapper";function v({components:e,...t}){return a(x,m({},b,t,{components:e,mdxType:"MDXLayout"}),a(y,{title:"Elements/Pill",parameters:{actions:{handles:["remove"]}},argTypes:{value:{description:"Text displayed to within the pill",table:{defaultValue:{summary:""}},control:"text"},removable:{description:"to display the x icon and signal to external component to remove",table:{defaultValue:{summary:"true"}},control:{type:"boolean"}},"on:remove":{description:"Event fired when x icon is clicked"}},mdxType:"Meta"}),a("h1",null,"Pill"),a("p",null,"For displaying a list of items"),a(p,{mdxType:"Canvas"},a(u,{name:"Primary",args:{value:"cool pill"},mdxType:"Story"},({value:o})=>`
+      <v-pill
+        value='${o}'
+      />
+    `)),a(p,{mdxType:"Canvas"},a(u,{name:"unremovable",args:{value:"not removable",removable:"false"},mdxType:"Story"},({value:o,removable:r})=>`
+      <v-pill
+        value='${o}'
+        removable='${r}'
+      />
+    `)))}n(v,"MDXContent");v.isMDXComponent=!0;const s=n(({value:e})=>`
+      <v-pill
+        value='${e}'
+      />
+    `,"primary");s.storyName="Primary";s.args={value:"cool pill"};s.parameters={storySource:{source:`({
+  value
+}) => \`
+      <v-pill
+        value='\${value}'
+      />
+    \``}};const i=n(({value:e,removable:t})=>`
+      <v-pill
+        value='${e}'
+        removable='${t}'
+      />
+    `,"unremovable");i.storyName="unremovable";i.args={value:"not removable",removable:"false"};i.parameters={storySource:{source:`({
+  value,
+  removable
+}) => \`
+      <v-pill
+        value='\${value}'
+        removable='\${removable}'
+      />
+    \``}};const l={title:"Elements/Pill",parameters:{actions:{handles:["remove"]}},argTypes:{value:{description:"Text displayed to within the pill",table:{defaultValue:{summary:""}},control:"text"},removable:{description:"to display the x icon and signal to external component to remove",table:{defaultValue:{summary:"true"}},control:{type:"boolean"}},"on:remove":{description:"Event fired when x icon is clicked"}},includeStories:["primary","unremovable"]},f={Primary:"primary",unremovable:"unremovable"};l.parameters=l.parameters||{};l.parameters.docs={...l.parameters.docs||{},page:()=>a(d,{mdxStoryNameToKey:f,mdxComponentAnnotations:l},a(v,null))};const M=["primary","unremovable"];export{M as __namedExportsOrder,l as default,s as primary,i as unremovable};
+//# sourceMappingURL=pill.stories.0ed667e2.js.map
