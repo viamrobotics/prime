@@ -38,8 +38,7 @@ jobs:
         npm run build
         cd playground
         npm ci --audit=false --legacy-peer-deps
-        npm run build
-        npm run preview & cd ..
+        npm starts & cd ..
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
