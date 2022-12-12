@@ -117,10 +117,12 @@ const handleEnter = () => {
 const handleChange = (changedOption: string) => {
   if (parsedSelected.includes(changedOption)) {
     const newValue = [...parsedSelected.filter(item => item !== changedOption)];
-    dispatch('input', { value: newValue.toString(), values: newValue, removed: changedOption });
+    value = newValue.toString();
+    dispatch('input', { value , values: newValue, removed: changedOption });
   } else {
     const newValue = [...parsedSelected, changedOption];
-    dispatch('input', { value: newValue.toString(), values: newValue, added: changedOption });
+    value = newValue.toString();
+    dispatch('input', { value , values: newValue, added: changedOption });
   }
   input.focus();
 };
@@ -176,7 +178,8 @@ const handleIconClick = () => {
 
 const handlePillClick = (target: string) => {
   const newValue = [...parsedSelected.filter((item: string) => item !== target)];
-  dispatch('input', { value: newValue.toString(), values: newValue, removed: target });
+  value = newValue.toString()
+  dispatch('input', { value , values: newValue, removed: target });
   input.focus();
 };
 
@@ -199,11 +202,13 @@ const handleOptionSelect = (target: string, event: Event) => {
     ? [...parsedSelected, target]
     : [...parsedSelected.filter((item: string) => item !== target)];
 
+  value = newValue.toString()
+
   input.focus();
   if (checked) {
-    dispatch('input', { value: newValue.toString(), values: newValue, added: target });
+    dispatch('input', { value, values: newValue, added: target });
   } else {
-    dispatch('input', { value: newValue.toString(), values: newValue, removed: target });
+    dispatch('input', { value, values: newValue, removed: target });
   }
 };
 
