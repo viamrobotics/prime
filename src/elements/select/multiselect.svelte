@@ -67,9 +67,6 @@ let open = false;
 let navigationIndex = -1;
 let keyboardControlling = false;
 
-let optionMatch = false;
-let optionMatchText = '';
-
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
@@ -88,15 +85,6 @@ const handleInput = (event: Event) => {
 
   const newTerm = input.value.trim();
   dispatch('search', { term: newTerm });
-
-  optionMatch = false;
-  for (const value of sortedOptions) {
-    if (newTerm.toLowerCase() === value.toLowerCase()) {
-      optionMatch = true;
-      optionMatchText = value;
-    } 
-  }
-
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
@@ -111,24 +99,34 @@ const handleKeyUp = (event: KeyboardEvent) => {
 };
 
 const handleEnter = () => {
-  dispatch('enter-press');
-  const option = sortedOptions[navigationIndex]!;
-  value = value.includes(option)
-    ? [...parsedSelected.filter(item => item !== option)].toString()
-    : [...parsedSelected, option].toString();
-  input.focus();
-
-  if (optionMatch) {
-    if (value.includes(optionMatchText)) {
-      value = value.replace(`${optionMatchText},`, '');
+  if (navigationIndex === -1) {
+    // if user hits enter when focused on the search input
+    const match = sortedOptions.find((opt) => opt.toLowerCase() === searchterm.toLowerCase());
+    if (match) {
+      handleChange(match);
     } else {
-      value += `${optionMatchText},`;
+      dispatch('enter-press', { options: sortedOptions });
     }
-    optionMatch = false;
+  } else {
+    // if the user has used arrow keys to navigate options, enter should add/remove item
+    const option = sortedOptions[navigationIndex]!;
+    handleChange(option);
   }
-
-  dispatch('input', { value, values: value.split(',') });
 };
+
+const handleChange = (changedOption: string) => {
+  if (parsedSelected.includes(changedOption)) {
+    const newValue = [...parsedSelected.filter(item => item !== changedOption)];
+    value = newValue.toString();
+    dispatch('input', { value, values: newValue, removed: changedOption });
+  } else {
+    const newValue = [...parsedSelected, changedOption];
+    value = newValue.toString();
+    dispatch('input', { value, values: newValue, added: changedOption });
+  }
+  input.focus();
+};
+
 
 const handleNavigate = (direction: number) => {
   navigationIndex += direction;
@@ -179,8 +177,9 @@ const handleIconClick = () => {
 };
 
 const handlePillClick = (target: string) => {
-  value = [...parsedSelected.filter((item: string) => item !== target)].toString();
-  dispatch('input', { value, values: value.split(',') });
+  const newValue = [...parsedSelected.filter((item: string) => item !== target)];
+  value = newValue.toString();
+  dispatch('input', { value, values: newValue, removed: target });
   input.focus();
 };
 
@@ -193,24 +192,29 @@ const handleOptionMouseEnter = (index: number) => {
 };
 
 const handleOptionSelect = (target: string, event: Event) => {
-  const { checked } = (event.target as HTMLInputElement);
+  const targetElement = event.target as HTMLInputElement;
+  const { checked } = (targetElement);
+  // cannot suppress checkbox check
+  if (targetElement.checked) {
+    targetElement.checked = !checked;
+  }
+  const newValue = checked
+    ? [...parsedSelected, target]
+    : [...parsedSelected.filter((item: string) => item !== target)];
 
-  value = checked
-    ? [...parsedSelected, target].toString()
-    : [...parsedSelected.filter((item: string) => item !== target)].toString();
+  value = newValue.toString();
 
   input.focus();
   if (checked) {
-    dispatch('input', { value, values: value.split(','), added: target });
+    dispatch('input', { value, values: newValue, added: target });
   } else {
-    dispatch('input', { value, values: value.split(','), removed: target });
+    dispatch('input', { value, values: newValue, removed: target });
   }
 };
 
 const handleClearAll = () => {
-  value = '';
   optionsContainer.scrollTop = 0;
-  dispatch('input', { value, values: value.split(',') });
+  dispatch('input', { value: '', values: [] });
   dispatch('clear-all-click');
 };
 
@@ -340,7 +344,7 @@ $: {
                 tabindex="-1"
                 type='checkbox'
                 class={cx('bg-black outline-none')}
-                checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
+                checked={utils.shouldBeChecked(parsedSelected.toString(), Array.isArray(option) ? option.join('') : option)}
                 on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
                 on:input|stopPropagation
                 on:focus|preventDefault|stopPropagation
