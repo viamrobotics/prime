@@ -101,15 +101,6 @@ setTimeout(() => {
       heading="heading title"
     />
 
-    <v-select
-      options="a, b, abc, der, nar, yar"
-      value="abc"
-      sortoption="off"
-      withbutton="true"
-      buttontext="hi hi"
-      buttonicon="camera"
-    />
-
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
     </v-collapse>
