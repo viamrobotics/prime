@@ -9,8 +9,15 @@
     </v-collapse>
 
     <v-multiselect
+      label="Trinkets"
+      options="Jolly logins, Sleeping hogins, Sticky bogins, Fiendish dogins"
+      placeholder="Select some Bobbinses"
+    />
+
+    <v-select
       label="Bobbins"
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
+      placeholder="Select a Bobbins"
     />
   </main>
 </template>
