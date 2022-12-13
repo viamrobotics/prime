@@ -29,8 +29,8 @@ export default defineConfig({
     assetsInlineLimit: 0,
     rollupOptions: {
       input: {
-        appSchoool: fileURLToPath(new URL('./index.html', import.meta.url)),
-        appStudent: fileURLToPath(new URL('./test.html', import.meta.url)),
+        index: fileURLToPath(new URL('./index.html', import.meta.url)),
+        test: fileURLToPath(new URL('./test.html', import.meta.url)),
       },
     },
   }
