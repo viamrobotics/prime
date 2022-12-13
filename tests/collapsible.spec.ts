@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('collapsible shows and hides child content', async ({ page }) => {
-  await page.goto('/test');
+  await page.goto('/test.html');
 
   const collapseTitle = page.getByText(/click to find out!/i)
 
