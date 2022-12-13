@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.0.94",
+  "version": "0.0.95",
   "license": "Apache-2.0",
   "type": "commonjs",
   "files": [
@@ -24,6 +24,8 @@
     "serve": "vite preview --host",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint --ext .ts,.svelte, ./src/elements",
+    "test": "npx playwright test",
+    "test-dev": "npx playwright test --debug",
     "storybook": "start-storybook -p 6006",
     "storybook-docs": "start-storybook --docs --no-manager-cache",
     "build-storybook": "build-storybook --docs -o prime"
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@babel/core": "^7.19.6",
     "@floating-ui/dom": "^1.0.4",
+    "@playwright/test": "^1.28.1",
     "@storybook/addon-a11y": "^6.5.13",
     "@storybook/addon-actions": "^6.5.13",
     "@storybook/addon-docs": "^6.5.13",

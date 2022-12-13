@@ -55,6 +55,20 @@ npm run build
 npm run serve
 ```
 
+## Linting / Testing
+To lint and typecheck:
+```bash
+npm run lint
+npm run check
+```
+
+To test:
+```bash
+npm run test-dev # to test with the playwright debug UI
+# or
+npm run test # to test in headless mode
+```
+
 ### Browser Compatibility
 
 `PRIME` supports the following browsers:
