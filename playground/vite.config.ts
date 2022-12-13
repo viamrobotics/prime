@@ -7,7 +7,7 @@ import sveltePreprocess from 'svelte-preprocess'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    port: 1000,
+    port: 5174,
   },
   plugins: [
     vue({

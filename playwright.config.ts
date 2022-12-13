@@ -100,7 +100,7 @@ const config: PlaywrightTestConfig = {
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'cd playground && npm start',
-    port: 1000,
+    port: 5174,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
