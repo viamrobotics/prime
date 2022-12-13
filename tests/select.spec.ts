@@ -7,7 +7,7 @@ test('user is able to make a selection with mouse', async ({ page }) => {
 
   const input = page.getByPlaceholder(/select a bobbins/i).last()
 
-  input.click()
+  input.focus()
   input.type('bogs')
 
   const option = page.getByText(/sticky bogs/i)
