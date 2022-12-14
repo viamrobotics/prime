@@ -120,6 +120,22 @@ const handleNavigate = (direction: number) => {
   }
 };
 
+const handleOptionSelect = (target: string, event: Event) => {
+  const { checked } = (event.target as HTMLInputElement);
+  if (value === target) {
+    event.preventDefault();
+    open = false;
+    return;
+  }
+
+  value = checked
+    ? target
+    : '';
+
+  open = false;
+  dispatch('input', { value });
+};
+
 const clearNavigationIndex = () => {
   navigationIndex = -1;
 };
@@ -265,6 +281,16 @@ $: {
               })}
               on:mouseenter={() => handleOptionMouseEnter(index)}
             >
+              <input
+                tabindex="-1"
+                type='checkbox'
+                class='bg-black outline-none hidden'
+                checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
+                on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
+                on:input|stopPropagation
+                on:focus|preventDefault|stopPropagation
+              >
+
               {#if search}
                 <span class='flex w-full gap-2 text-ellipsis whitespace-nowrap'>
                   {#each splitOptionOnWord(option) as word, wordIndex}
