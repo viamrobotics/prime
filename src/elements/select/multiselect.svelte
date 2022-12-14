@@ -269,6 +269,7 @@ $: {
   <v-dropdown
     match
     open={open ? '' : undefined}
+    class="relative"
   >
     <div
       slot='target'
@@ -309,99 +310,100 @@ $: {
           {/each}
         </div>
       {/if}
-    </div>
 
-    <div  
-      slot='content'
-      class='mt-1 border border-black bg-white drop-shadow-md'
-    >
-      <div bind:this={optionsContainer} class="options-container overflow-y-auto">
-      {#if sortedOptions.length > 0}
-        <div
-          class='flex max-h-36 flex-col'
-          on:mouseleave={clearNavigationIndex}
-        >
-          {#if heading}
-            <span
-              class='flex text-xs text-gray-500 pl-2 pt-2 flex-wrap'
-            >
-              {heading}
-            </span>
-          {/if}
-          {#each searchedOptions as { search, option }, index (option)}
-            <label
-              class={cx('flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1.5 text-xs', {
-                'bg-slate-200': navigationIndex === index,
-                'text-gray-500': hasPrefix,
-              })}
-              on:mouseenter={() => handleOptionMouseEnter(index)}
-            >
-              <input
-                tabindex="-1"
-                type='checkbox'
-                class={cx('bg-black outline-none')}
-                checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
-                on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
-                on:input|stopPropagation
-                on:focus|preventDefault|stopPropagation
+      <div  
+        slot='content'
+        class={cx('absolute top-7 left-0 w-full border border-black bg-white drop-shadow-md', {
+          'hidden': !open,
+        })}
+      >
+        <div bind:this={optionsContainer} class="options-container overflow-y-auto">
+        {#if sortedOptions.length > 0}
+          <div
+            class='flex max-h-36 flex-col'
+            on:mouseleave={clearNavigationIndex}
+          >
+            {#if heading}
+              <span
+                class='flex text-xs text-gray-500 pl-2 pt-2 flex-wrap'
               >
+                {heading}
+              </span>
+            {/if}
+            {#each searchedOptions as { search, option }, index (option)}
+              <label
+                class={cx('flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1.5 text-xs', {
+                  'bg-slate-200': navigationIndex === index,
+                  'text-gray-500': hasPrefix,
+                })}
+                on:mouseenter={() => handleOptionMouseEnter(index)}
+              >
+                <input
+                  tabindex="-1"
+                  type='checkbox'
+                  class={cx('bg-black outline-none')}
+                  checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
+                  on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
+                  on:input|stopPropagation
+                  on:focus|preventDefault|stopPropagation
+                >
 
-              {#if search}
+                {#if search}
 
-                <span class='flex w-full gap-2 text-ellipsis whitespace-nowrap'>
-                  {#each splitOptionOnWord(option) as word, wordIndex}
-                    <span class={cx('inline-block', {
-                      'w-5 text-gray-800': hasPrefix && wordIndex === 0,
-                    })}>
-                      {#each [...word] as token}
-                        <span class={cx({
-                          'bg-yellow-100': token !== ' ' && typeof search[1] === 'string' && search[1].includes(token),
-                        })}>{token}</span>
-                      {/each}
+                  <span class='flex w-full gap-2 text-ellipsis whitespace-nowrap'>
+                    {#each splitOptionOnWord(option) as word, wordIndex}
+                      <span class={cx('inline-block', {
+                        'w-5 text-gray-800': hasPrefix && wordIndex === 0,
+                      })}>
+                        {#each [...word] as token}
+                          <span class={cx({
+                            'bg-yellow-100': token !== ' ' && typeof search[1] === 'string' && search[1].includes(token),
+                          })}>{token}</span>
+                        {/each}
+                      </span>
+                    {/each}
+                  </span>
+
+                {:else if hasPrefix}
+                  {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
+                    <span
+                      class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
+                    >
+                      { optionPart }
                     </span>
                   {/each}
-                </span>
 
-              {:else if hasPrefix}
-                {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
-                  <span
-                    class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
-                  >
-                    { optionPart }
-                  </span>
-                {/each}
-
-              {:else}
-                { option }
+                {:else}
+                  { option }
+                {/if}
+              </label>
+            {/each}
+            {#if canClearAll}
+              <button
+                class='w-full px-2 py-1 hover:bg-slate-200 text-xs text-left'
+                on:mouseenter={clearNavigationIndex}
+                on:click={handleClearAll}
+              >
+                Clear all
+              </button>
               {/if}
-            </label>
-          {/each}
-          {#if canClearAll}
-            <button
-              class='w-full px-2 py-1 hover:bg-slate-200 text-xs text-left'
-              on:mouseenter={clearNavigationIndex}
-              on:click={handleClearAll}
-            >
-              Clear all
-            </button>
-            {/if}
-        </div>
+          </div>
 
-      {:else}
-        <div class='flex py-1.5 px-2.5 justify-center text-xs'>
-          No matching results
+        {:else}
+          <div class='flex py-1.5 px-2.5 justify-center text-xs'>
+            No matching results
+          </div>
+        {/if}
         </div>
-      {/if}
+        {#if hasButton}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <v-select-button
+            buttontext={buttontext}
+            buttonicon={buttonicon}
+            on:click={handleButtonClick}
+          />
+        {/if}
       </div>
-      {#if hasButton}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <v-select-button
-          buttontext={buttontext}
-          buttonicon={buttonicon}
-          on:click={handleButtonClick}
-        />
-      {/if}
-
     </div>
   </v-dropdown>
 </label>
