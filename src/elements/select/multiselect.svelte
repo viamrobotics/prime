@@ -278,7 +278,7 @@ $: {
       <div
         slot='target'
         class={cx('w-full border border-black', {
-          'border-b-0': parsedSelected.length && showsPill,
+          'border-b-0': parsedSelected.length > 0 && showsPill,
           'opacity-50 pointer-events-none bg-gray-200': isDisabled,
         })}
       >
@@ -401,7 +401,7 @@ $: {
       </div>
     </v-dropdown>
   </label>
-  {#if parsedSelected.length && showsPill}
+  {#if parsedSelected.length > 0 && showsPill}
     <div class='flex flex-wrap gap-2 p-1 pt-0 border border-black border-t-0 '>
       {#each parsedSelected as option (option)}
         <v-pill
