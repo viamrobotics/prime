@@ -213,6 +213,7 @@ const handleOptionSelect = (target: string, event: Event) => {
 
 const handleClearAll = () => {
   optionsContainer.scrollTop = 0;
+  value = '';
   dispatch('input', { value: '', values: [] });
   dispatch('clear-all-click');
 };
