@@ -4027,7 +4027,7 @@ function Xo(t, e, n) {
     const Et = xt ? [...U, N] : [...U.filter((fr) => fr !== N)];
     n(0, r = Et.toString()), R.focus(), xt ? E("input", { value: r, values: Et, added: N }) : E("input", { value: r, values: Et, removed: N });
   }, Q = () => {
-    n(14, V.scrollTop = 0, V), E("input", { value: "", values: [] }), E("clear-all-click");
+    n(14, V.scrollTop = 0, V), n(0, r = ""), E("input", { value: "", values: [] }), E("clear-all-click");
   }, re = () => {
     E("button-click");
   }, fe = (N) => N.split(" ");
