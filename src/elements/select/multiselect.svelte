@@ -83,8 +83,8 @@ const handleInput = (event: Event) => {
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
 
-  const newTerm = input.value.trim();
-  dispatch('search', { term: newTerm });
+  searchterm = input.value.trim();
+  dispatch('search', { term: searchterm });
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
