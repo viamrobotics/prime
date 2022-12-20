@@ -27,7 +27,7 @@ $: on = value === 'on';
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 
 const handleClick = () => {
-  value = (!on) ? 'on' : 'off';
+  value = (on) ? 'off' : 'on';
   input.checked = on;
   dispatch('input', { value: input.checked });
 };
