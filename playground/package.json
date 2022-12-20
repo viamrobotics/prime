@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime-playground",
-  "license": "MIT",
+  "type": "module",
   "scripts": {
     "start": "vite --host --open",
     "build": "vite build --mode production",
