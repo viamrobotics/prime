@@ -1,4 +1,3 @@
-// import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { preprocess } from '../svelte.config.js';
 import { mergeConfig } from 'vite';
 
@@ -11,8 +10,8 @@ export default {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    // '@storybook/addon-docs',
-    // '@storybook/addon-a11y',
+    '@storybook/addon-docs',
+    '@storybook/addon-a11y',
   ],
   svelteOptions: {
     preprocess,
@@ -22,14 +21,6 @@ export default {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
-      plugins: [
-        // svelte({
-        //   compilerOptions: {
-        //     customElement: true
-        //   },
-        //   preprocess,
-        // })
-      ],
       base: '/'
     });
   },
@@ -41,7 +32,4 @@ export default {
     modernInlineRender: true,
     storyStoreV7: true,
   },
-  // docs: {
-  //   docsPage: 'automatic'
-  // }
 };

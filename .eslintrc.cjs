@@ -123,24 +123,30 @@ module.exports = {
     'unicorn/import-style': 'error',
     'unicorn/prefer-string-replace-all': 'error',
     'unicorn/string-content': 'error',
+
     // @TODO: switch to error once safari supports these:
     // https://caniuse.com/?search=array.prototype.at
     'unicorn/prefer-at': 'off',
     // https://caniuse.com/?search=object.hasOwn
     'unicorn/prefer-object-has-own': 'off',
+
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/filename-case': 'off',
     'unicorn/no-null': 'off',
     'unicorn/consistent-destructuring': 'off',
     'unicorn/prefer-top-level-await': 'off',
+
     // Tailwind
     'tailwindcss/no-custom-classname': 'off',
+
     // Typescript
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-non-null-assertion': 'off',
+
     // Sonar
     'sonarjs/no-duplicate-string': 'off',
     'sonarjs/cognitive-complexity': ['error', 18],
+
     // Import
     'import/no-unresolved': 'error',
     'import/named': 'off',
@@ -158,6 +164,7 @@ module.exports = {
     // Do not currently work with eslint-plugin-svelte
     'import/first': 'off',
     'import/order': 'error',
+
     // Svelte
     'svelte3/missing-custom-element-compile-options': 'off',
     'missing-custom-element-compile-options': 'off',
