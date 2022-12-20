@@ -30,7 +30,7 @@ module.exports = {
         'svelte3/compiler-options': {
           customElement: true,
         },
-      }
+      },
     }
   ],
   extends: [
@@ -43,7 +43,7 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:sonarjs/recommended',
     'plugin:tailwindcss/recommended',
-    
+    'plugin:storybook/recommended',
   ],
   rules: {
     // Eslint rules
@@ -53,27 +53,20 @@ module.exports = {
     'arrow-spacing': 'error',
     'block-spacing': 'error',
     'brace-style': 'error',
-    'comma-dangle': [
-      'error',
-      {
-        arrays: 'always-multiline',
-        objects: 'always-multiline',
-        imports: 'always-multiline',
-        exports: 'never',
-        functions: 'never',
-      },
-    ],
+    'comma-dangle': ['error', {
+      arrays: 'always-multiline',
+      objects: 'always-multiline',
+      imports: 'always-multiline',
+      exports: 'never',
+      functions: 'never',
+    }],
     'comma-spacing': 'error',
     'computed-property-spacing': 'error',
     'dot-notation': 'error',
     'eol-last': 'error',
-    eqeqeq: [
-      'error',
-      'always',
-      {
-        null: 'always',
-      },
-    ],
+    eqeqeq: ['error', 'always', {
+      null: 'always',
+    }],
     'func-call-spacing': 'error',
     'key-spacing': 'error',
     'keyword-spacing': 'error',
@@ -88,14 +81,13 @@ module.exports = {
     'no-unsafe-optional-chaining': 'error',
     'nonblock-statement-body-position': 'error',
     'object-curly-spacing': ['error', 'always'],
-    'one-var': [
-      'error',
-      {
-        let: 'never',
-        const: 'never',
-      },
-    ],
-    quotes: ['error', 'single', { avoidEscape: true }],
+    'one-var': ['error', {
+      let: 'never',
+      const: 'never',
+    }],
+    quotes: ['error', 'single', {
+      avoidEscape: true,
+    }],
     'require-atomic-updates': 'error',
     'rest-spread-spacing': 'error',
     semi: ['error', 'always'],
@@ -117,16 +109,11 @@ module.exports = {
     'prefer-const': 'error',
     'prefer-template': 'error',
     'require-await': 'error',
-
-    'prefer-arrow/prefer-arrow-functions': [
-      'error',
-      {
-        disallowPrototype: true,
-        singleReturnOnly: false,
-        classPropertiesAllowed: false,
-      },
-    ],
-
+    'prefer-arrow/prefer-arrow-functions': ['error', {
+      disallowPrototype: true,
+      singleReturnOnly: false,
+      classPropertiesAllowed: false,
+    }],
     // Unicorn rules
     'unicorn/switch-case-braces': 'off',
     'unicorn/no-unsafe-regex': 'error',
@@ -136,30 +123,24 @@ module.exports = {
     'unicorn/import-style': 'error',
     'unicorn/prefer-string-replace-all': 'error',
     'unicorn/string-content': 'error',
-
     // @TODO: switch to error once safari supports these:
     // https://caniuse.com/?search=array.prototype.at
     'unicorn/prefer-at': 'off',
     // https://caniuse.com/?search=object.hasOwn
     'unicorn/prefer-object-has-own': 'off',
-
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/filename-case': 'off',
     'unicorn/no-null': 'off',
     'unicorn/consistent-destructuring': 'off',
     'unicorn/prefer-top-level-await': 'off',
-
     // Tailwind
     'tailwindcss/no-custom-classname': 'off',
-
     // Typescript
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-non-null-assertion': 'off',
-
     // Sonar
     'sonarjs/no-duplicate-string': 'off',
     'sonarjs/cognitive-complexity': ['error', 18],
-
     // Import
     'import/no-unresolved': 'error',
     'import/named': 'off',
@@ -171,11 +152,12 @@ module.exports = {
     'import/no-cycle': 'error',
     'import/no-useless-path-segments': 'error',
     'import/export': 'error',
-    'import/extensions': ["error", "never", { "svelte": "always" }],
+    'import/extensions': ["error", "never", {
+      "svelte": "always"
+    }],
     // Do not currently work with eslint-plugin-svelte
     'import/first': 'off',
     'import/order': 'error',
-
     // Svelte
     'svelte3/missing-custom-element-compile-options': 'off',
     'missing-custom-element-compile-options': 'off',
@@ -190,9 +172,9 @@ module.exports = {
         // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
         alwaysTryTypes: true,
         project: './tsconfig.json',
-      },
+      }
     },
     'svelte3/typescript': () => require('typescript'),
   },
   ignorePatterns: ['**/cypress/**', '**/node_modules/**', '*.json'],
-}
+};
