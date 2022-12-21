@@ -1,5 +1,5 @@
-const fs = require('node:fs')
-const { resolve } = require('node:path')
+import fs from 'node:fs'
+import { resolve } from 'node:path'
 
 const rename = (src, dest) =>
   fs.renameSync(
