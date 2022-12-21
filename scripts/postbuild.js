@@ -1,6 +1,6 @@
-const { version } = require('../package.json')
-const { rename, copy, write, read } = require('./util')
-const terser = require('terser')
+import { version } from '../package.json'
+import { rename, copy, write, read } from './util.js'
+import terser from 'terser'
 
 const minify = async (file) => {
   const minified = await terser.minify(file, {
