@@ -1,5 +1,8 @@
 import fs from 'node:fs'
-import { resolve } from 'node:path'
+import { resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const rename = (src, dest) =>
   fs.renameSync(

@@ -1,9 +1,11 @@
-import { version } from '../package.json' assert { type: 'json' }
+import pkg from '../package.json' assert { type: 'json' }
 import { rename, copy, write, read } from './util.js'
-import terser from 'terser'
+import { minify } from 'terser'
 
-const minify = async (file) => {
-  const minified = await terser.minify(file, {
+const { version } = pkg
+
+const compress = async (file) => {
+  const minified = await minify(file, {
     ecma: 2020,
     module: true,
     parse: {
@@ -62,7 +64,7 @@ const main = async () => {
       .replace(/"\/prime.css"/g, `"/prime@${version}.css"`)
       .replace(/"\/icons.css"/g, `"/icons@${version}.css"`)
     write(`dist/prime@${version}.es.js`, file)
-    write(`dist/prime@${version}.min.es.js`, await minify(file))
+    write(`dist/prime@${version}.min.es.js`, await compress(file))
   }
 
   {
