@@ -20,6 +20,7 @@ jobs:
           npm ci --audit=false --legacy-peer-deps
           npm run build-storybook
           npm run build
+          touch ./prime/.nojekyll
 
       - name: Deploy Storybook 🚀
         uses: JamesIves/github-pages-deploy-action@v4
