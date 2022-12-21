@@ -1,4 +1,4 @@
-import { version } from '../package.json'
+import { version } from '../package.json' assert { type: 'json' }
 import { rename, copy, write, read } from './util.js'
 import terser from 'terser'
 
