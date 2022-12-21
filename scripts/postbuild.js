@@ -1,5 +1,5 @@
 import { version } from '../package.json'
-import { rename, copy, write, read } from './util'
+import { rename, copy, write, read } from './util.js'
 import terser from 'terser'
 
 const minify = async (file) => {
