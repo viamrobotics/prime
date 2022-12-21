@@ -161,10 +161,10 @@ const handleFocusOut = (event: FocusEvent) => {
 };
 
 const handleIconClick = () => {
-  if (!open) {
-    input.focus();
-  } else {
+  if (open) {
     open = false;
+  } else {
+    input.focus();
   }
 };
 

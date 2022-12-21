@@ -80,14 +80,14 @@ $: {
   // check if the valueLength (length of values[]) has changed,
   // because if so we need to re-seed the spring function with the
   // new values array.
-  if (valueLength !== arr.length) {
-    // set the initial spring values when the slider initialises,
-    // or when values array length has changed
-    springPositions = spring(arr.map((v) => percentOf(v, minNum, maxNum, 2)), springValues);
-  } else {
+  if (valueLength === arr.length) {
     // update the value of the spring function for animated handles
     // whenever the values has updated
     springPositions.set(arr.map((v) => percentOf(v, minNum, maxNum, 2))).catch((error) => console.error(error));
+  } else {
+    // set the initial spring values when the slider initialises,
+    // or when values array length has changed
+    springPositions = spring(arr.map((v) => percentOf(v, minNum, maxNum, 2)), springValues);
   }
   // set the valueLength for the next check
   valueLength = arr.length;
@@ -214,7 +214,7 @@ const moveHandle = (i: number, value: number): number => {
   const alignedValue = alignValueToStep(value, minNum, maxNum);
 
   // use the active handle if handle index is not provided
-  if (typeof index === 'undefined') {
+  if (index === undefined) {
     index = activeHandle;
   }
 

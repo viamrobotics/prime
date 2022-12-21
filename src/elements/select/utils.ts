@@ -27,17 +27,17 @@ export const applySearchHighlight = (options: string[], value: string) => {
   for (const option of options) {
     const match = option.match(new RegExp(value, 'i'));
 
-    if (match?.index !== undefined) {
+    if (match?.index === undefined) {
+      noMatches.push({
+        search: undefined,
+        option,
+      });
+    } else {
       const begin = option.slice(0, match.index);
       const middle = option.slice(match.index, match.index + value.length);
       const end = option.slice(match.index + value.length);
       matches.push({
         search: [begin, middle, end],
-        option,
-      });
-    } else {
-      noMatches.push({
-        search: undefined,
         option,
       });
     }
