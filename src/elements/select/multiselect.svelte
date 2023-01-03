@@ -76,7 +76,7 @@ const reduceEmptyOptions = (options: string[]) => {
     return [];
   }
   return options;
-}
+};
 
 const applySearchSort = (term: string, options: string[]) => {
   const updatedOptions = reduceEmptyOptions(options);
