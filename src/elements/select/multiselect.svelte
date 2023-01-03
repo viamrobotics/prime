@@ -79,8 +79,11 @@ const reduceEmptyOptions = (options: string[]) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
-  const updatedOptions = reduceEmptyOptions(options);
-  return term ? searchSort(options, term, isReduceSort) : updatedOptions;
+  if (reduceEmptyOptions(options).length === 0){
+    return [];
+  };
+  
+  return term ? searchSort(options, term, isReduceSort) : options;
 };
 
 const handleInput = (event: Event) => {
