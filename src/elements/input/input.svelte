@@ -232,7 +232,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     {value}
     inputmode={isNumeric ? 'numeric' : undefined}
     pattern={inputPattern}
-    readonly={isReadonly ? true : undefined}
+    readonly={isDisabled ? true : undefined}
     aria-disabled={isDisabled ? true : undefined}
     bind:this={input}
     class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
