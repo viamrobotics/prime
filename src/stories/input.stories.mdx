@@ -330,27 +330,6 @@ Used for all text single-line user inputs.
 
 <Canvas>
   <Story
-    name='Aria Disabled'
-    args={{
-      label: `Board`,
-      value: '',
-      tooltip: 'Create a board component first.',
-      ariaDisabled: true,
-    }}
-  >
-    {({ label, tooltip, value, ariaDisabled }) => `
-      <v-input
-        label='${label}'
-        aria-disabled='${ariaDisabled}'
-        tooltip='${tooltip}'
-        value='${value}'
-      />
-    `}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
     name='Message'
     args={{
       label: `Board`,
