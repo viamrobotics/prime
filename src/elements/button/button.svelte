@@ -61,7 +61,7 @@ const handleParentClick = (event: PointerEvent) => {
   <button
     {type}
     aria-label={variant === 'icon' ? label : undefined}
-    disabled={isDisabled}
+    aria-disabled={isDisabled ? true : undefined}
     title={title}
     class={cx('will-change-transform hover:scale-105 motion-safe:transition-transform', {
       'inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border': variant !== 'icon',

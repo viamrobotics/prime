@@ -44,4 +44,3 @@ const handleClick = (option: string) => {
     </button>
   {/each}
 </div>
-

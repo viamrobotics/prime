@@ -11,7 +11,7 @@ export let label = '';
 export let name = '';
 export let value: 'on' | 'off' = 'off';
 export let variant: 'annotated' | 'default' = 'default';
-export let disabled = 'false';
+export let disabled: string;
 export let labelposition: 'left' | 'top' = 'top';
 export let tooltip = '';
 
@@ -64,6 +64,7 @@ const handleClick = () => {
     class='flex gap-1.5 items-center'
     role='switch'
     aria-label={label}
+    aria-disabled={isDisabled}
     aria-checked={on ? 'true' : 'false'}
   >
     <div
