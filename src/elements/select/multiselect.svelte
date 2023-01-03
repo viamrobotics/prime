@@ -79,10 +79,10 @@ const reduceEmptyOptions = (options: string[]) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
-  if (reduceEmptyOptions(options).length === 0){
+  if (reduceEmptyOptions(options).length === 0) {
     return [];
-  };
-  
+  }
+
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
