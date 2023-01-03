@@ -11,7 +11,7 @@ export let label = '';
 export let name = '';
 export let value: 'on' | 'off' = 'off';
 export let variant: 'annotated' | 'default' = 'default';
-export let disabled: string | undefined;
+export let disabled = 'false';
 export let labelposition: 'left' | 'top' = 'top';
 export let tooltip = '';
 
@@ -79,6 +79,7 @@ const handleClick = () => {
       <input
         {name}
         {value}
+        disabled={isDisabled}
         class='hidden'
         type='checkbox'
         checked={on}

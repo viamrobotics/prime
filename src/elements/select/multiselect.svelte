@@ -287,8 +287,7 @@ $: {
             bind:this={input}
             {placeholder}
             value={searchterm}
-            aria-disabled={isDisabled}
-            readonly={isDisabled}
+            disabled={isDisabled}
             type='text'
             class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
             on:input|preventDefault={handleInput}

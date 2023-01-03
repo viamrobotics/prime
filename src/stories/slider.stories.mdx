@@ -194,3 +194,24 @@ For user triggered actions
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Disabled'
+    args={{
+      min: 0,
+      max: 100,
+      step: 10,
+      disabled: true,
+    }}
+  >
+    {({ min, max, step, disabled }) => `
+      <v-slider
+        min='${min}'
+        max='${max}'
+        step='${step}'
+        disabled='${disabled}'
+      />
+    `}
+  </Story>
+</Canvas>
