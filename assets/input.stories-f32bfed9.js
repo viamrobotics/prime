@@ -85,17 +85,17 @@ import{M as E,C as u,S as i}from"./chunk-MA2MUXQN-bbbbfbe5.js";import"./chunk-R4
         labelposition='${d}'
       />
     `})}),`
-`,l.exports.jsx(u,{children:l.exports.jsx(i,{name:"Readonly",args:{label:"Least favorite soup",readonly:"readonly",value:"New england clam chowder"},children:({label:e,readonly:r,value:o})=>`
-      <v-input
-        label='${e}'
-        readonly='${r}'
-        value='${o}'
-      />
-    `})}),`
 `,l.exports.jsx(u,{children:l.exports.jsx(i,{name:"Tooltip",args:{label:"Favorite soup",value:"Cereal",tooltip:"Unsupported soup type. Eat at your own risk. Or eat a recognized soup instead."},children:({label:e,tooltip:r,value:o})=>`
       <v-input
         label='${e}'
         tooltip='${r}'
+        value='${o}'
+      />
+    `})}),`
+`,l.exports.jsx(u,{children:l.exports.jsx(i,{name:"Readonly",args:{label:"Least favorite soup",readonly:"readonly",value:"New england clam chowder"},children:({label:e,readonly:r,value:o})=>`
+      <v-input
+        label='${e}'
+        readonly='${r}'
         value='${o}'
       />
     `})}),`
@@ -318,29 +318,13 @@ import{M as E,C as u,S as i}from"./chunk-MA2MUXQN-bbbbfbe5.js";import"./chunk-R4
         value='\${value}'
         labelposition='\${labelPosition}'
       />
-    \``}};const N=({label:a,readonly:n,value:t})=>`
-      <v-input
-        label='${a}'
-        readonly='${n}'
-        value='${t}'
-      />
-    `;N.storyName="Readonly";N.args={label:"Least favorite soup",readonly:"readonly",value:"New england clam chowder"};N.parameters={storySource:{source:`({
-  label,
-  readonly,
-  value
-}) => \`
-      <v-input
-        label='\${label}'
-        readonly='\${readonly}'
-        value='\${value}'
-      />
-    \``}};const L=({label:a,tooltip:n,value:t})=>`
+    \``}};const N=({label:a,tooltip:n,value:t})=>`
       <v-input
         label='${a}'
         tooltip='${n}'
         value='${t}'
       />
-    `;L.storyName="Tooltip";L.args={label:"Favorite soup",value:"Cereal",tooltip:"Unsupported soup type. Eat at your own risk. Or eat a recognized soup instead."};L.parameters={storySource:{source:`({
+    `;N.storyName="Tooltip";N.args={label:"Favorite soup",value:"Cereal",tooltip:"Unsupported soup type. Eat at your own risk. Or eat a recognized soup instead."};N.parameters={storySource:{source:`({
   label,
   tooltip,
   value
@@ -348,6 +332,22 @@ import{M as E,C as u,S as i}from"./chunk-MA2MUXQN-bbbbfbe5.js";import"./chunk-R4
       <v-input
         label='\${label}'
         tooltip='\${tooltip}'
+        value='\${value}'
+      />
+    \``}};const L=({label:a,readonly:n,value:t})=>`
+      <v-input
+        label='${a}'
+        readonly='${n}'
+        value='${t}'
+      />
+    `;L.storyName="Readonly";L.args={label:"Least favorite soup",readonly:"readonly",value:"New england clam chowder"};L.parameters={storySource:{source:`({
+  label,
+  readonly,
+  value
+}) => \`
+      <v-input
+        label='\${label}'
+        readonly='\${readonly}'
         value='\${value}'
       />
     \``}};const S=({label:a,tooltip:n,value:t,disabled:p})=>`
@@ -388,5 +388,5 @@ import{M as E,C as u,S as i}from"./chunk-MA2MUXQN-bbbbfbe5.js";import"./chunk-R4
         message='\${message}'
         state='\${state}'
       />
-    \``}};const c={title:"Elements/Input",parameters:{actions:{handles:["input"]}},argTypes:{type:{description:"The input type",control:"select",options:["text","email","number","date","time","datetime-local"],table:{defaultValue:{summary:"text"}}},label:{description:"The input label",table:{defaultValue:{summary:""}}},placeholder:{description:"The input placeholder text",table:{defaultValue:{summary:""}}},value:{description:"The starting input value",table:{defaultValue:{summary:""}}},step:{description:"For number inputs, the increment step",control:"number",table:{defaultValue:{summary:1}}},labelposition:{description:"The label position",control:{type:"select"},options:["top","left"],table:{defaultValue:{summary:"top"}}},"on:input":{description:"Event fired whenever the input changes"}},tags:["mdx"],includeStories:["text","number","numberWithSlider","integer","date","time","datetimeLocal","noLabel","leftLabel","leftLabelWithNumber","readonly","tooltip","disabled","message"]};c.parameters=c.parameters||{};c.parameters.docs={...c.parameters.docs||{},page:D};const Q=["text","number","numberWithSlider","integer","date","time","datetimeLocal","noLabel","leftLabel","leftLabelWithNumber","readonly","tooltip","disabled","message"];export{Q as __namedExportsOrder,h as date,x as datetimeLocal,c as default,S as disabled,v as integer,f as leftLabel,j as leftLabelWithNumber,T as message,g as noLabel,b as number,$ as numberWithSlider,N as readonly,m as text,y as time,L as tooltip};
-//# sourceMappingURL=input.stories-98e4da0f.js.map
+    \``}};const c={title:"Elements/Input",parameters:{actions:{handles:["input"]}},argTypes:{type:{description:"The input type",control:"select",options:["text","email","number","date","time","datetime-local"],table:{defaultValue:{summary:"text"}}},label:{description:"The input label",table:{defaultValue:{summary:""}}},placeholder:{description:"The input placeholder text",table:{defaultValue:{summary:""}}},value:{description:"The starting input value",table:{defaultValue:{summary:""}}},step:{description:"For number inputs, the increment step",control:"number",table:{defaultValue:{summary:1}}},labelposition:{description:"The label position",control:{type:"select"},options:["top","left"],table:{defaultValue:{summary:"top"}}},"on:input":{description:"Event fired whenever the input changes"}},tags:["mdx"],includeStories:["text","number","numberWithSlider","integer","date","time","datetimeLocal","noLabel","leftLabel","leftLabelWithNumber","tooltip","readonly","disabled","message"]};c.parameters=c.parameters||{};c.parameters.docs={...c.parameters.docs||{},page:D};const Q=["text","number","numberWithSlider","integer","date","time","datetimeLocal","noLabel","leftLabel","leftLabelWithNumber","tooltip","readonly","disabled","message"];export{Q as __namedExportsOrder,h as date,x as datetimeLocal,c as default,S as disabled,v as integer,f as leftLabel,j as leftLabelWithNumber,T as message,g as noLabel,b as number,$ as numberWithSlider,L as readonly,m as text,y as time,N as tooltip};
+//# sourceMappingURL=input.stories-f32bfed9.js.map
