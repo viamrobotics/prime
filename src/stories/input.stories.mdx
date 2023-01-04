@@ -270,25 +270,6 @@ Used for all text single-line user inputs.
 
 <Canvas>
   <Story
-    name='Readonly'
-    args={{
-      label: `Least favorite soup`,
-      readonly: 'readonly',
-      value: 'New england clam chowder',
-    }}
-  >
-    {({ label, readonly, value }) => `
-      <v-input
-        label='${label}'
-        readonly='${readonly}'
-        value='${value}'
-      />
-    `}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
     name='Tooltip'
     args={{
       label: `Favorite soup`,
@@ -300,6 +281,26 @@ Used for all text single-line user inputs.
       <v-input
         label='${label}'
         tooltip='${tooltip}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      label: `Least favorite soup`,
+      readonly: 'readonly',
+      value: 'New england clam chowder',
+    }}
+  >
+    {({ label, readonly, value }) => `
+      <v-input
+        label='${label}'
+        readonly='${readonly}'
         value='${value}'
       />
     `}

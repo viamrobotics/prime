@@ -42,10 +42,8 @@ const handleClick = () => {
   }
 };
 
-const handleParentClick = (e: PointerEvent) => {
-  if (isDisabled) {
-    e.stopImmediatePropagation();
-  }
+const handleParentClick = (event: PointerEvent) => {
+  event.stopImmediatePropagation();
 };
 
 </script>
@@ -54,15 +52,16 @@ const handleParentClick = (e: PointerEvent) => {
   :host { display: inline-block !important }
 </style>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <svelte:element
   this={tooltip ? 'v-tooltip' : 'span'}
   text={tooltip}
-  on:click={handleParentClick}
+  on:click={isDisabled ? handleParentClick : undefined}
 >
   <button
     {type}
     aria-label={variant === 'icon' ? label : undefined}
-    aria-disabled={isDisabled}
+    aria-disabled={isDisabled ? true : undefined}
     title={title}
     class={cx('will-change-transform hover:scale-105 motion-safe:transition-transform', {
       'inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border': variant !== 'icon',

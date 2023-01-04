@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install 🔧
-      run: npm ci --audit=false --legacy-peer-deps
+      run: npm ci --audit=false
     - name: Run ESLint
       run: npm run lint
 
@@ -20,7 +20,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install 🔧
-      run: npm ci --audit=false --legacy-peer-deps
+      run: npm ci --audit=false
     - name: Run Check
       run: npm run check
 
@@ -34,9 +34,9 @@ jobs:
         node-version: 16
     - name: Install deps
       run: |
-        npm ci --audit=false --legacy-peer-deps
+        npm ci --audit=false
         cd playground
-        npm ci --audit=false --legacy-peer-deps
+        npm ci --audit=false
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests

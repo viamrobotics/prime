@@ -286,7 +286,7 @@ $: {
     >
       <div
         slot='target'
-        class={cx('w-full border border-black', {
+        class={cx('w-full border border-black bg-white', {
           'opacity-50 pointer-events-none bg-gray-200': isDisabled,
         })}
       >
@@ -295,10 +295,10 @@ $: {
             bind:this={input}
             {placeholder}
             value={searchterm}
-            aria-disabled={isDisabled}
-            readonly={isDisabled}
+            readonly={isDisabled ? true : undefined}
+            aria-disabled={isDisabled ? true : undefined}
             type='text'
-            class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-white outline-none appearance-none'
+            class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 outline-none bg-transparent appearance-none'
             on:input|preventDefault={handleInput}
             on:keyup|stopPropagation|preventDefault={handleKeyUp}
           >

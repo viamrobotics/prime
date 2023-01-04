@@ -446,7 +446,6 @@ const onChange = () => {
         aria-valuetext={value?.toString()}
         aria-orientation='horizontal'
         aria-disabled={disabled}
-        {disabled}
         tabindex='{ disabled ? -1 : 0 }'
       > 
 

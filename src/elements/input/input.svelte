@@ -13,13 +13,14 @@ import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
 
 export let type: Types = 'text';
+export let autocomplete: string;
 export let placeholder = '';
-export let readonly = 'false';
-export let disabled = 'false';
-export let label = '';
+export let readonly: string;
+export let disabled: string;
+export let label: string;
 export let value = '';
 export let step = '1';
-export let name = '';
+export let name: string;
 export let min = '-Infinity';
 export let max = '+Infinity';
 export let labelposition: LabelPosition = 'top';
@@ -225,13 +226,14 @@ const handleNumberDragDown = async (event: PointerEvent) => {
   </div>
   <input
     type={inputType}
+    {autocomplete}
     {placeholder}
     {name}
     {value}
     inputmode={isNumeric ? 'numeric' : undefined}
     pattern={inputPattern}
-    readonly={isReadonly || isDisabled}
-    aria-disabled={isDisabled}
+    readonly={(isDisabled || isReadonly) ? true : undefined}
+    aria-disabled={isDisabled ? true : undefined}
     bind:this={input}
     class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
       'pl-2.5': isNumeric === false,
