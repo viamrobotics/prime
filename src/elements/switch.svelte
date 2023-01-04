@@ -26,9 +26,9 @@ let isDisabled: boolean;
 $: on = value === 'on';
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 
-const handleClick = () => {
+const handleClick = () => { 
   value = (on) ? 'off' : 'on';
-  input.checked = on;
+  input.checked = value === 'on';
   dispatch('input', { value: input.checked });
 };
 
@@ -68,7 +68,8 @@ const handleClick = () => {
     aria-checked={on ? 'true' : 'false'}
   >
     <div
-      class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
+      class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
+        'bg-black/50': !on,
         'bg-green/80': on,
       })}
     >
