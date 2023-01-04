@@ -4991,7 +4991,10 @@ function il(t) {
   let e, n, i, r, o, l, s, a, c, f, h, m, d, y, O, p = t[1] && ri(t), k = t[5] && oi(t), E = t[3] === "annotated" && li(t);
   return {
     c() {
-      e = w("label"), n = w("div"), p && p.c(), i = X(), k && k.c(), r = X(), o = w("button"), l = w("div"), s = w("span"), a = X(), c = w("input"), h = X(), E && E.c(), this.c = L, u(n, "class", "flex items-center gap-1.5"), u(s, "class", "pointer-events-none relative inline-block border border-green/100 h-4 w-4 mt-px ml-px bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200"), pe(s, "translate-x-0", !t[7]), pe(s, "translate-x-6", t[7]), u(c, "name", t[2]), c.value = t[0], c.disabled = t[8], u(c, "class", "hidden"), u(c, "type", "checkbox"), c.checked = t[7], u(l, "class", f = I("relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none", { "bg-green/80": t[7] })), u(o, "type", "button"), u(o, "class", "flex gap-1.5 items-center"), u(o, "role", "switch"), u(o, "aria-label", t[1]), u(o, "aria-disabled", t[8]), u(o, "aria-checked", m = t[7] ? "true" : "false"), u(e, "class", d = I("flex gap-1", {
+      e = w("label"), n = w("div"), p && p.c(), i = X(), k && k.c(), r = X(), o = w("button"), l = w("div"), s = w("span"), a = X(), c = w("input"), h = X(), E && E.c(), this.c = L, u(n, "class", "flex items-center gap-1.5"), u(s, "class", "pointer-events-none relative inline-block border border-green/100 h-4 w-4 mt-px ml-px bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200"), pe(s, "translate-x-0", !t[7]), pe(s, "translate-x-6", t[7]), u(c, "name", t[2]), c.value = t[0], c.disabled = t[8], u(c, "class", "hidden"), u(c, "type", "checkbox"), c.checked = t[7], u(l, "class", f = I("relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none", {
+        "bg-black/50": !t[7],
+        "bg-green/80": t[7]
+      })), u(o, "type", "button"), u(o, "class", "flex gap-1.5 items-center"), u(o, "role", "switch"), u(o, "aria-label", t[1]), u(o, "aria-disabled", t[8]), u(o, "aria-checked", m = t[7] ? "true" : "false"), u(e, "class", d = I("flex gap-1", {
         "flex-col justify-start": t[4] === "top",
         "items-center": t[4] === "left",
         "opacity-50 pointer-events-none": t[8]
@@ -5001,7 +5004,10 @@ function il(t) {
       M(v, e, S), g(e, n), p && p.m(n, null), g(n, i), k && k.m(n, null), g(e, r), g(e, o), g(o, l), g(l, s), g(l, a), g(l, c), t[11](c), g(o, h), E && E.m(o, null), y || (O = U(o, "click", t[9]), y = !0);
     },
     p(v, [S]) {
-      v[1] ? p ? p.p(v, S) : (p = ri(v), p.c(), p.m(n, i)) : p && (p.d(1), p = null), v[5] ? k ? k.p(v, S) : (k = oi(v), k.c(), k.m(n, null)) : k && (k.d(1), k = null), S & 128 && pe(s, "translate-x-0", !v[7]), S & 128 && pe(s, "translate-x-6", v[7]), S & 4 && u(c, "name", v[2]), S & 1 && (c.value = v[0]), S & 256 && (c.disabled = v[8]), S & 128 && (c.checked = v[7]), S & 128 && f !== (f = I("relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 bg-black/50 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none", { "bg-green/80": v[7] })) && u(l, "class", f), v[3] === "annotated" ? E ? E.p(v, S) : (E = li(v), E.c(), E.m(o, null)) : E && (E.d(1), E = null), S & 2 && u(o, "aria-label", v[1]), S & 256 && u(o, "aria-disabled", v[8]), S & 128 && m !== (m = v[7] ? "true" : "false") && u(o, "aria-checked", m), S & 272 && d !== (d = I("flex gap-1", {
+      v[1] ? p ? p.p(v, S) : (p = ri(v), p.c(), p.m(n, i)) : p && (p.d(1), p = null), v[5] ? k ? k.p(v, S) : (k = oi(v), k.c(), k.m(n, null)) : k && (k.d(1), k = null), S & 128 && pe(s, "translate-x-0", !v[7]), S & 128 && pe(s, "translate-x-6", v[7]), S & 4 && u(c, "name", v[2]), S & 1 && (c.value = v[0]), S & 256 && (c.disabled = v[8]), S & 128 && (c.checked = v[7]), S & 128 && f !== (f = I("relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none", {
+        "bg-black/50": !v[7],
+        "bg-green/80": v[7]
+      })) && u(l, "class", f), v[3] === "annotated" ? E ? E.p(v, S) : (E = li(v), E.c(), E.m(o, null)) : E && (E.d(1), E = null), S & 2 && u(o, "aria-label", v[1]), S & 256 && u(o, "aria-disabled", v[8]), S & 128 && m !== (m = v[7] ? "true" : "false") && u(o, "aria-checked", m), S & 272 && d !== (d = I("flex gap-1", {
         "flex-col justify-start": v[4] === "top",
         "items-center": v[4] === "left",
         "opacity-50 pointer-events-none": v[8]
@@ -5020,7 +5026,7 @@ function rl(t, e, n) {
   de();
   let h, m, d;
   const y = () => {
-    n(0, o = m ? "off" : "on"), n(6, h.checked = m, h), f("input", { value: h.checked });
+    n(0, o = m ? "off" : "on"), n(6, h.checked = o === "on", h), f("input", { value: h.checked });
   };
   function O(p) {
     _e[p ? "unshift" : "push"](() => {
