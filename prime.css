@@ -28,6 +28,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-video-camera:before {
+  content: "\e925";
+}
 .icon-error-outline:before {
   content: "\e912";
 }
@@ -70,7 +73,7 @@
 .icon-center:before {
   content: "\e915";
 }
-.icon-zoom_out_map:before {
+.icon-zoom-out:before {
   content: "\e904";
 }
 .icon-chevron-down:before {
@@ -79,7 +82,7 @@
 .icon-menu:before {
   content: "\e927";
 }
-.icon-keyboard_control:before {
+.icon-more:before {
   content: "\e91d";
 }
 .icon-arrow-up:before {
@@ -93,6 +96,9 @@
 }
 .icon-settings:before {
   content: "\e918";
+}
+.icon-help-outline:before {
+  content: "\e928";
 }
 .icon-refresh-camera:before {
   content: "\e90c";
