@@ -16,6 +16,7 @@ export let type: Types = 'text';
 export let autocomplete: string;
 export let placeholder = '';
 export let readonly: string;
+export let required: string;
 export let disabled: string;
 export let label: string;
 export let value = '';
@@ -51,6 +52,7 @@ let inputPattern: string;
 
 $: isNumeric = type === 'number' || type === 'integer';
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
+$: isRequired = htmlToBoolean(required, 'required');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: stepNumber = Number.parseFloat(step);
 $: minNumber = Number.parseFloat(min);
@@ -209,6 +211,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       <p class={cx('text-xs capitalize', {
         'inline whitespace-nowrap': labelposition === 'left',
         'opacity-50 pointer-events-none': isDisabled,
+        'after:text-red-500 after:content-["*"] after:ml': isRequired,
       })}>
         {label}
       </p>
@@ -233,6 +236,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     inputmode={isNumeric ? 'numeric' : undefined}
     pattern={inputPattern}
     readonly={(isDisabled || isReadonly) ? true : undefined}
+    required={(isRequired) ? true : undefined}
     aria-disabled={isDisabled ? true : undefined}
     bind:this={input}
     class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
