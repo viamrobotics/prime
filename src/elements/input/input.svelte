@@ -211,7 +211,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       <p class={cx('text-xs capitalize', {
         'inline whitespace-nowrap': labelposition === 'left',
         'opacity-50 pointer-events-none': isDisabled,
-        'after:text-red-500 after:content-["*"] after:ml': isRequired,
+        'after:text-red-500 after:content-["*"] after:ml-1': isRequired,
       })}>
         {label}
       </p>
