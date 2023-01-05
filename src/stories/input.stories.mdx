@@ -70,6 +70,31 @@ Used for all text single-line user inputs.
 
 <Canvas>
   <Story
+    name='Required'
+    args={{
+      type: 'text',
+      label: 'Required soup',
+      tooltip: 'It works with a tooltip too.',
+      placeholder: 'Enter soup here',
+      value: 'Chicken Noodle',
+      required: true
+    }}
+  >
+    {({ type, label, tooltip, placeholder, value }) => `
+      <v-input
+        type='${type}'
+        label='${label}'
+        placeholder='${placeholder}'
+        tooltip='${tooltip}'
+        value='${value}'
+        required='true'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
     name='Number'
     args={{
       type: 'number',
