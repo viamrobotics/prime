@@ -417,7 +417,7 @@ const onChange = () => {
 
   <div
     bind:this={slider}
-    class={cn('slider relative h-0.5 mt-7 transition-opacity duration-200 select-none pip-labels bg-black/50', {
+    class={cn('slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-black/50', {
       'opacity-50': disabled,
     })}
     class:range
@@ -455,7 +455,7 @@ const onChange = () => {
 
         <span class={cn(
           'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
-          'py-1 px-1.5 text-sm text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white text-xs',
+          'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white text-xs',
           {
             '-translate-y-1.5': !focus || activeHandle !== index,
           }
@@ -481,11 +481,11 @@ const onChange = () => {
       class:disabled
       class:focus 
     >
-      <small class='absolute bottom-full left-0 -translate-x-1/2 mb-3 whitespace-nowrap text-xs'>
+      <small class='absolute bottom-full left-0 mb-3 whitespace-nowrap text-xs'>
         {minNum}
         
         {#if suffix}
-          <span class='pipVal-suffix'>{suffix}</span>
+          <span>{suffix}</span>
         {/if}
       </small>
 
@@ -500,11 +500,11 @@ const onChange = () => {
         {/each}
       {/if}
 
-      <small class='absolute bottom-full right-0 translate-x-1/2 mb-3 whitespace-nowrap text-xs'>
+      <small class='absolute bottom-full right-0 mb-3 whitespace-nowrap text-xs'>
         {maxNum}
         
         {#if suffix}
-          <span class='pipVal-suffix'>{suffix}</span>
+          <span>{suffix}</span>
         {/if}
       </small>
 
