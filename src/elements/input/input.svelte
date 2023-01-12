@@ -211,6 +211,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       <p class={cx('text-xs capitalize', {
         'inline whitespace-nowrap': labelposition === 'left',
         'opacity-50 pointer-events-none': isDisabled,
+        'opacity-75 pointer-events-none': isReadonly,
         'after:text-red-500 after:content-["*"] after:ml-1': isRequired,
       })}>
         {label}
@@ -244,6 +245,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       'pl-3': isNumeric,
       'bg-white': !isDisabled,
       'opacity-50 pointer-events-none bg-gray-200': isDisabled || isDragging,
+      'opacity-75 pointer-events-none bg-gray-200': isReadonly,
       'border-red-600 border': state === 'error',
     })}
     step={insertStepAttribute ? step : null}

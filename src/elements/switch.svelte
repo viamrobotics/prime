@@ -12,6 +12,7 @@ export let name = '';
 export let value: 'on' | 'off' = 'off';
 export let variant: 'annotated' | 'default' = 'default';
 export let disabled: string;
+export let readonly: string;
 export let labelposition: 'left' | 'top' = 'top';
 export let tooltip = '';
 
@@ -22,9 +23,11 @@ addStyles();
 let input: HTMLInputElement;
 let on: boolean;
 let isDisabled: boolean;
+let isReadonly: boolean;
 
 $: on = value === 'on';
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
+$: isReadonly = htmlToBoolean(readonly, 'readonly');
 
 const handleClick = () => { 
   value = (on) ? 'off' : 'on';
@@ -39,6 +42,7 @@ const handleClick = () => {
     'flex-col justify-start': labelposition === 'top',
     'items-center': labelposition === 'left',
     'opacity-50 pointer-events-none': isDisabled,
+    'opacity-75 pointer-events-none': isReadonly,
   })}
 >
 <div class='flex items-center gap-1.5'>
@@ -82,6 +86,7 @@ const handleClick = () => {
         {name}
         {value}
         disabled={isDisabled}
+        readonly={(isDisabled || isReadonly) ? true : undefined}
         class='hidden'
         type='checkbox'
         checked={on}

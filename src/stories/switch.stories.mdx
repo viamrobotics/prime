@@ -131,3 +131,22 @@ Used to handle binary input.
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      value: 'off',
+      variant: 'annotated',
+      readonly: 'true'
+    }}
+  >
+    {({ value, variant, readonly }) => `
+      <v-switch
+        value='${value}'
+        variant='${variant}'
+        readonly='${readonly}'
+      />
+    `}
+  </Story>
+</Canvas>

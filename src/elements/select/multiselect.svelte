@@ -18,6 +18,7 @@ export let placeholder = '';
 export let label = '';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
+export let readonly: string;
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
@@ -38,6 +39,7 @@ let root: HTMLElement;
 let input: HTMLInputElement;
 let optionsContainer: HTMLElement;
 let isDisabled: boolean;
+let isReadonly: boolean;
 let hasPrefix: boolean;
 let showsPill: boolean;
 let canClearAll: boolean;
@@ -51,6 +53,7 @@ let searchedOptions: { option: string; search?: string[] }[];
 
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
+$: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: showsPill = htmlToBoolean(showpill, 'showpill');
 $: canClearAll = htmlToBoolean(clearable, 'clearable');
@@ -161,7 +164,7 @@ const handleEscape = () => {
 };
 
 const handleFocus = () => {
-  if (open || isDisabled) {
+  if (open || isDisabled || isReadonly) {
     return;
   }
 
@@ -262,6 +265,7 @@ $: {
       {#if label}
         <p class={cx('text-xs capitalize', {
           'opacity-50 pointer-events-none': isDisabled,
+          'opacity-75 pointer-events-none': isReadonly,
           'inline whitespace-nowrap': labelposition === 'left',
         })}>
           {label}
@@ -288,6 +292,7 @@ $: {
         slot='target'
         class={cx('w-full border border-black bg-white', {
           'opacity-50 pointer-events-none bg-gray-200': isDisabled,
+          'opacity-75 pointer-events-none bg-gray-200': isReadonly,
         })}
       >
         <div class='flex'>
@@ -295,7 +300,7 @@ $: {
             bind:this={input}
             {placeholder}
             value={searchterm}
-            readonly={isDisabled ? true : undefined}
+            readonly={(isDisabled || isReadonly) ? true : undefined}
             aria-disabled={isDisabled ? true : undefined}
             type='text'
             class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 outline-none bg-transparent appearance-none'
