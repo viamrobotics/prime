@@ -40,7 +40,7 @@ let endValue: number | undefined;
 let pipStep: number;
 let pipCount: number;
 let isReadonly: boolean;
-let isDisabled: boolean
+let isDisabled: boolean;
 
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
@@ -419,7 +419,7 @@ const onChange = () => {
 <label class='flex flex-col gap-2'>
   {#if label}
     <p class={cn('text-xs capitalize', {
-      'text-black/50': isDisabled || isReadonly
+      'text-black/50': isDisabled || isReadonly,
     })}>
       {label}
     </p>
@@ -462,7 +462,7 @@ const onChange = () => {
         <span class='handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400' />
 
         <span class={cn('absolute left-0 bottom-1 block rounded-full h-full w-full border border-black bg-white', {
-          'border-black/50': isDisabled || isReadonly
+          'border-black/50': isDisabled || isReadonly,
         })} />
 
         <span class={cn(
@@ -471,7 +471,7 @@ const onChange = () => {
           {
             '-translate-y-1.5': !focus || activeHandle !== index,
             'border-black/50': isDisabled || isReadonly,
-            'text-black/50': isDisabled || isReadonly
+            'text-black/50': isDisabled || isReadonly,
           }
         )}>
           {value}
@@ -510,7 +510,7 @@ const onChange = () => {
           {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
             <span
               class={cn('absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-black/50', {
-                'bg-black/20': isDisabled || isReadonly
+                'bg-black/20': isDisabled || isReadonly,
               })}
               style='left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;'
             />

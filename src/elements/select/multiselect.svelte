@@ -188,7 +188,7 @@ const handleIconClick = () => {
 };
 
 const handlePillClick = (target: string) => {
-  if(!isReadonly){
+  if (!isReadonly) {
     const newValue = parsedSelected.filter((item: string) => item !== target);
     value = newValue.toString();
     dispatch('input', { value, values: newValue, removed: target });
@@ -266,7 +266,7 @@ $: {
     <div class='flex items-center gap-1.5'>
       {#if label}
         <p class={cx('text-xs capitalize', {
-          'text-black/50': isDisabled|| isReadonly,
+          'text-black/50': isDisabled || isReadonly,
           'inline whitespace-nowrap': labelposition === 'left',
         })}>
           {label}
@@ -292,7 +292,7 @@ $: {
       <div
         slot='target'
         class={cx('w-full border border-black bg-white', {
-          'border-black/50': isDisabled || isReadonly
+          'border-black/50': isDisabled || isReadonly,
         })}
       >
         <div class='flex'>
@@ -312,7 +312,7 @@ $: {
             aria-label='Open dropdown'
             class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 
               'rotate-180': open,
-              'text-black/50': isDisabled || isReadonly
+              'text-black/50': isDisabled || isReadonly,
             })}
             on:click={handleIconClick}
             on:focusin|stopPropagation
@@ -420,7 +420,7 @@ $: {
   {#if parsedSelected.length > 0 && showsPill}
     <div class={cx('flex flex-wrap gap-2 pt-2', {
       'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
-      'text-black/50' : isDisabled || isReadonly
+      'text-black/50': isDisabled || isReadonly,
     })}>
       {#each parsedSelected as option (option)}
         <v-pill

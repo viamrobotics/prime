@@ -235,7 +235,7 @@ $: {
     <div
       slot='target'
       class={cx('w-full border border-black bg-white', {
-        'border-black/50': isDisabled || isReadonly
+        'border-black/50': isDisabled || isReadonly,
       })}
     >
       <div class='flex'>
@@ -247,7 +247,7 @@ $: {
           readonly={(isDisabled || isReadonly) ? true : undefined}
           type='text'
           class={cx('py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none', {
-            'text-black/50': isDisabled || isReadonly
+            'text-black/50': isDisabled || isReadonly,
           })}
           on:input|preventDefault={handleInput}
           on:keyup|stopPropagation|preventDefault={handleKeyUp}
@@ -257,7 +257,7 @@ $: {
           aria-label='Open dropdown'
           class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 
             'rotate-180': open,
-            'text-black/50': isDisabled || isReadonly
+            'text-black/50': isDisabled || isReadonly,
           })}
           on:click={handleIconClick}
           on:focusin|stopPropagation

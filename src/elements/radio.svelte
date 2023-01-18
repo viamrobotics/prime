@@ -27,7 +27,7 @@ $: parsedOptions = options.split(',').map((str) => str.trim());
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 
 const handleClick = (value: string) => {
-  if(!isReadonly){
+  if (!isReadonly) {
     selected = value;
     dispatch('input', { value });
   }
@@ -68,7 +68,7 @@ const handleClick = (value: string) => {
           'bg-black text-white font-bold': ((option === selected) && !isReadonly),
           'bg-black/20 text-black/50 font-bold': ((option === selected) && isReadonly),
           'border-black/50 text-black/50 ': isReadonly,
-          'cursor-not-allowed pointer-events-none': isReadonly
+          'cursor-not-allowed pointer-events-none': isReadonly,
         })}
         on:click={() => handleClick(option)}
       >

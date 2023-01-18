@@ -30,7 +30,7 @@ $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 
 const handleClick = () => { 
-  if(!(isDisabled || isReadonly)){
+  if (!(isDisabled || isReadonly)) {
     value = (on) ? 'off' : 'on';
     input.checked = value === 'on';
     dispatch('input', { value: input.checked });
@@ -67,7 +67,7 @@ const handleClick = () => {
     on:click={handleClick}
     type='button'
     class={cx('flex gap-1.5 items-center', {
-      'cursor-not-allowed pointer-events-none': isDisabled || isReadonly
+      'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
     })}
     role='switch'
     aria-label={label}
@@ -83,7 +83,7 @@ const handleClick = () => {
     >
       <span
         class={cx('pointer-events-none relative inline-block border border-green/100 h-4 w-4 mt-px ml-px bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200', {
-          'border-black/40': isDisabled || isReadonly
+          'border-black/40': isDisabled || isReadonly,
         })}
         class:translate-x-0={!on}
         class:translate-x-6={on}

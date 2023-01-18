@@ -29,7 +29,7 @@ const handleRemove = () => {
 
 
 <div class={cx('flex items-center max-w-fit gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300', {
-  'bg-black/20': isDisabled || isReadonly
+  'bg-black/20': isDisabled || isReadonly,
 })}>
   <span>
     {value}
