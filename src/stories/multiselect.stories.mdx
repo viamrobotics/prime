@@ -245,18 +245,14 @@ Dropdown that allows the user to select multiple choices.
       label: 'Your options',
       options: 'Option 1, Option 2, Option 3',
       readonly: 'true',
-      tooltip: 'This is readonly.',
-      state: 'warn',
-      value: 'Option 1'
+      value: 'Option 1, Option 2'
     }}
   >
-    {({ label, options, readonly, tooltip, state, value }) => `
+    {({ label, options, readonly, value }) => `
       <v-multiselect
         label='${label}'
         options='${options}'
         readonly='${readonly}'
-        tooltip='${tooltip}'
-        state='${state}'
         value='${value}'
       />
     `}

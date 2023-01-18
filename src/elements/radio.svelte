@@ -43,7 +43,7 @@ const handleClick = (value: string) => {
     {#if label}
       <p class={cx('text-xs', {
         inline: labelposition === 'left',
-        'opacity-75 pointer-events-none': isReadonly,
+        'text-black/50': isReadonly,
       })}>
         {label}
       </p>
@@ -65,8 +65,10 @@ const handleClick = (value: string) => {
       <button
         class={cx('whitespace-nowrap capitalize border-y border-l last:border-r border-black px-2 py-1 text-xs', {
           'bg-white': option !== selected,
-          'bg-black text-white': option === selected,
-          'opacity-75 pointer-events-none': isReadonly,
+          'bg-black text-white font-bold': ((option === selected) && !isReadonly),
+          'bg-black/20 text-black/50 font-bold': ((option === selected) && isReadonly),
+          'border-black/50 text-black/50 ': isReadonly,
+          'cursor-not-allowed pointer-events-none': isReadonly
         })}
         on:click={() => handleClick(option)}
       >

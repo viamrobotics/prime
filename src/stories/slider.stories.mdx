@@ -220,18 +220,22 @@ For user triggered actions
   <Story
     name='Readonly'
     args={{
-      min: 0,
+      range: 'min',
       max: 100,
       step: 10,
-      readonly: true,
+      value: 30,
+      readonly: 'true',
+      label: 'readonly'
     }}
   >
-    {({ min, max, step, readonly }) => `
+    {({ range, max, step, value, readonly, label }) => `
       <v-slider
-        min='${min}'
+        range='${range}'
         max='${max}'
         step='${step}'
+        value='${value}'
         readonly='${readonly}'
+        label='${label}'
       />
     `}
   </Story>

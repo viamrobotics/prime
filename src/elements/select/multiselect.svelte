@@ -188,9 +188,11 @@ const handleIconClick = () => {
 };
 
 const handlePillClick = (target: string) => {
-  const newValue = parsedSelected.filter((item: string) => item !== target);
-  value = newValue.toString();
-  dispatch('input', { value, values: newValue, removed: target });
+  if(!isReadonly){
+    const newValue = parsedSelected.filter((item: string) => item !== target);
+    value = newValue.toString();
+    dispatch('input', { value, values: newValue, removed: target });
+  }
 };
 
 const handleOptionMouseEnter = (index: number) => {
@@ -264,8 +266,7 @@ $: {
     <div class='flex items-center gap-1.5'>
       {#if label}
         <p class={cx('text-xs capitalize', {
-          'opacity-50 pointer-events-none': isDisabled,
-          'opacity-75 pointer-events-none': isReadonly,
+          'text-black/50': isDisabled|| isReadonly,
           'inline whitespace-nowrap': labelposition === 'left',
         })}>
           {label}
@@ -291,8 +292,7 @@ $: {
       <div
         slot='target'
         class={cx('w-full border border-black bg-white', {
-          'opacity-50 pointer-events-none bg-gray-200': isDisabled,
-          'opacity-75 pointer-events-none bg-gray-200': isReadonly,
+          'border-black/50': isDisabled || isReadonly
         })}
       >
         <div class='flex'>
@@ -310,7 +310,10 @@ $: {
           <button
             tabindex='-1'
             aria-label='Open dropdown'
-            class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 'rotate-180': open })}
+            class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 
+              'rotate-180': open,
+              'text-black/50': isDisabled || isReadonly
+            })}
             on:click={handleIconClick}
             on:focusin|stopPropagation
           >
@@ -415,11 +418,16 @@ $: {
     </v-dropdown>
   </label>
   {#if parsedSelected.length > 0 && showsPill}
-    <div class='flex flex-wrap gap-2 pt-2'>
+    <div class={cx('flex flex-wrap gap-2 pt-2', {
+      'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
+      'text-black/50' : isDisabled || isReadonly
+    })}>
       {#each parsedSelected as option (option)}
         <v-pill
           on:remove={() => handlePillClick(option)}
           value={option}
+          {readonly}
+          {disabled}
         />
       {/each}
     </div>

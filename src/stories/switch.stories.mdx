@@ -98,14 +98,16 @@ Used to handle binary input.
     args={{
       value: 'off',
       variant: 'labeled',
-      disabled: 'true'
+      disabled: 'true',
+      label: 'disabled',
     }}
   >
-    {({ value, variant, disabled }) => `
+    {({ value, variant, disabled, label }) => `
       <v-switch
         value='${value}'
         variant='${variant}'
         disabled='${disabled}'
+        label='${label}'
       />
     `}
   </Story>
@@ -136,16 +138,18 @@ Used to handle binary input.
   <Story
     name='Readonly'
     args={{
-      value: 'off',
+      value: 'on',
       variant: 'annotated',
-      readonly: 'true'
+      readonly: 'true',
+      label: 'readonly'
     }}
   >
-    {({ value, variant, readonly }) => `
+    {({ value, variant, readonly, label }) => `
       <v-switch
         value='${value}'
         variant='${variant}'
         readonly='${readonly}'
+        label='${label}'
       />
     `}
   </Story>

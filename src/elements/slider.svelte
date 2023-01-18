@@ -418,14 +418,17 @@ const onChange = () => {
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label class='flex flex-col gap-2'>
   {#if label}
-    <p class='text-xs capitalize'>{label}</p>
+    <p class={cn('text-xs capitalize', {
+      'text-black/50': isDisabled || isReadonly
+    })}>
+      {label}
+    </p>
   {/if}
 
   <div
     bind:this={slider}
     class={cn('slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-black/50', {
-      'opacity-50': isDisabled,
-      'opacity-75': isReadonly,
+      'bg-black/20 text-black/50': isDisabled || isReadonly,
     })}
     class:range
     class:focus
@@ -458,13 +461,17 @@ const onChange = () => {
 
         <span class='handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400' />
 
-        <span class='absolute left-0 bottom-1 block rounded-full h-full w-full border border-black bg-white' />
+        <span class={cn('absolute left-0 bottom-1 block rounded-full h-full w-full border border-black bg-white', {
+          'border-black/50': isDisabled || isReadonly
+        })} />
 
         <span class={cn(
           'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
           'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white text-xs',
           {
             '-translate-y-1.5': !focus || activeHandle !== index,
+            'border-black/50': isDisabled || isReadonly,
+            'text-black/50': isDisabled || isReadonly
           }
         )}>
           {value}
@@ -478,7 +485,9 @@ const onChange = () => {
 
     {#if range}
       <span
-        class='absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-black'
+        class={cn('absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-black', {
+          'bg-black/50': isDisabled || isReadonly,
+        })}
         style='left: {rangeStart($springPositions)}%; right: {rangeEnd($springPositions)}%'
       />
     {/if}
@@ -500,7 +509,9 @@ const onChange = () => {
         {#each Array.from({ length: pipCount + 1 }) as _, i}
           {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
             <span
-              class='absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-black/50'
+              class={cn('absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-black/50', {
+                'bg-black/20': isDisabled || isReadonly
+              })}
               style='left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;'
             />
           {/if}
