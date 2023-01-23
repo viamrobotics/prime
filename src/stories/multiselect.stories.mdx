@@ -238,6 +238,27 @@ Dropdown that allows the user to select multiple choices.
   </Story>
 </Canvas>
 
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      label: 'Your options',
+      options: 'Option 1, Option 2, Option 3',
+      readonly: 'true',
+      value: 'Option 1, Option 2'
+    }}
+  >
+    {({ label, options, readonly, value }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        readonly='${readonly}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
 
 <Canvas>
   <Story

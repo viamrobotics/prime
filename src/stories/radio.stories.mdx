@@ -88,3 +88,22 @@ For user triggered actions
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      options: 'Opt 1, Opt 2, Opt 3',
+      selected: 'Opt 1',
+      readonly: 'true'
+    }}
+  >
+    {({ options, selected, readonly }) => `
+      <v-radio
+        options='${options}'
+        selected='${selected}'
+        readonly='${readonly}'
+      />
+    `}
+  </Story>
+</Canvas>
