@@ -6,7 +6,7 @@ Please follow these instructions for contributing to `PRIME`.
 
 To run the `Storybook` page locally, pull down the project and run:
 
-```bash
+```basha
 npm install
 npm run storybook
 ```
