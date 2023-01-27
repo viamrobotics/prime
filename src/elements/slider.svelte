@@ -68,8 +68,10 @@
 
   // copy the initial values in to a spring function which
   // will update every time the values array is modified
-
   let springPositions: Spring<number[]>;
+
+  let input: HTMLInputElement;
+  let inputEnd: HTMLInputElement;
 
   $: {
     // trim the range so it remains as a min/max (only 2 handles)
@@ -430,6 +432,37 @@
         : undefined,
     });
   };
+
+  const handleInput = () => {
+    value = input.value
+    startValue = Number.parseFloat(input.value)
+    
+    if (value === input.value) {
+      return
+    }
+
+    if (input.value.endsWith('.')) {
+      return
+    }
+
+    return {value, startValue}
+  };
+
+  const handleInputEnd = () => {
+    value = inputEnd.value
+    endValue = Number.parseFloat(inputEnd.value)
+    
+    if (value === input.value) {
+      return
+    }
+
+    if (input.value.endsWith('.')) {
+      return
+    }
+
+    return {value, endValue}
+  };
+
 </script>
 
 <div class="flex gap-4 items-end">
@@ -575,12 +608,28 @@
     </label>
   </div>
   <div class="flex gap-2">
-    {#each endValue ? [startValue, endValue] : [startValue] as value}
-      <v-input
-        class="w-12"
-        value={value}
-      />
-    {/each}
+    <!-- {#each endValue ? [startValue, endValue] : [startValue] as value} -->
+    <input
+      value={startValue}
+      inputmode='numeric'
+      aria-disabled={isDisabled ? true : undefined}
+      class='w-full py-1.5 px-2.5 leading-tight text-xs h-[30px] border border-black'
+      step={step}
+      bind:this={input}
+      on:change={handleInput}
+    >
+    {#if endValue }
+    <input
+      value={endValue}
+      inputmode='numeric'
+      aria-disabled={isDisabled ? true : undefined}
+      class='w-full py-1.5 px-2.5 leading-tight text-xs h-[30px] border border-black'
+      step={step}
+      bind:this={inputEnd}
+      on:change={handleInputEnd}
+    >
+    {/if}
+    <!-- {/each} -->
   </div>
 </div>
 
