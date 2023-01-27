@@ -40,7 +40,7 @@ const handleClick = () => {
 </script>
 
 <label
-  class={cx('flex gap-1', {
+  class={cx('flex gap-1 w-fit', {
     'flex-col justify-start': labelposition === 'top',
     'items-center': labelposition === 'left',
     'text-black/50': isDisabled || isReadonly,
@@ -48,7 +48,7 @@ const handleClick = () => {
 >
 <div class='flex items-center gap-1.5'>
   {#if label}
-    <p class={cx('text-xs capitalize', {
+    <p class={cx('w-fit text-xs capitalize', {
       'whitespace-nowrap': labelposition === 'left',
     })}>
       {label}
