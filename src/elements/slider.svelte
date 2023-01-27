@@ -1,13 +1,13 @@
-<svelte:options tag="v-slider" />
+<svelte:options tag='v-slider' />
 
-<script lang="ts">
-  import { spring } from "svelte/motion";
-  import type { Spring } from "svelte/motion";
-  import cn from "classnames";
-  import { clamp, percentOf } from "../lib/math";
-  import { addStyles } from "../lib/index";
-  import { dispatcher } from "../lib/dispatch";
-  import { htmlToBoolean } from "../lib/boolean";
+<script lang='ts'>
+  import { spring } from 'svelte/motion';
+  import type { Spring } from 'svelte/motion';
+  import cn from 'classnames';
+  import { clamp, percentOf } from '../lib/math';
+  import { addStyles } from '../lib/index';
+  import { dispatcher } from '../lib/dispatch';
+  import { htmlToBoolean } from '../lib/boolean';
 
   export let slider: HTMLElement;
   export let range: string | boolean = false;
@@ -22,8 +22,8 @@
   export let discrete = true;
 
   // formatting props
-  export let label = "";
-  export let suffix = "";
+  export let label = '';
+  export let suffix = '';
 
   const dispatch = dispatcher();
 
@@ -41,20 +41,20 @@
   let isReadonly: boolean;
   let isDisabled: boolean;
 
-  $: isReadonly = htmlToBoolean(readonly, "readonly");
-  $: isDisabled = htmlToBoolean(disabled, "disabled");
+  $: isReadonly = htmlToBoolean(readonly, 'readonly');
+  $: isDisabled = htmlToBoolean(disabled, 'disabled');
   $: pipStep = (maxNum - minNum) / stepNum >= 100 ? (maxNum - minNum) / 20 : 1;
   $: pipCount = (maxNum - minNum) / stepNum;
   $: pipVal = (val: number): number => minNum + val * stepNum * pipStep;
-  $: minNum = Number.parseFloat(min || "0");
-  $: maxNum = Number.parseFloat(max || "100");
-  $: stepNum = Number.parseFloat(step || "1");
+  $: minNum = Number.parseFloat(min || '0');
+  $: maxNum = Number.parseFloat(max || '100');
+  $: stepNum = Number.parseFloat(step || '1');
   $: startValue =
     start || value
       ? Number.parseFloat(start || value)
-      : (Number.parseFloat(min || "0") + Number.parseFloat(max || "100")) / 2;
+      : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2;
   $: endValue = end ? Number.parseFloat(end) : undefined;
-  $: range = typeof range === "string" ? range : end !== undefined;
+  $: range = typeof range === 'string' ? range : end !== undefined;
 
   // state management
   let valueLength = 0;
@@ -148,7 +148,7 @@
   const normalisedClient = (
     event: MouseEvent | TouchEvent
   ): MouseEvent | Touch => {
-    return event.type.includes("touch")
+    return event.type.includes('touch')
       ? (event as TouchEvent).touches[0]!
       : (event as MouseEvent);
   };
@@ -157,7 +157,7 @@
    * check if an element is a handle on the slider
    **/
   const targetIsHandle = (el: HTMLElement): boolean => {
-    const handles = [...slider.querySelectorAll(".handle")];
+    const handles = [...slider.querySelectorAll('.handle')];
     const isHandle = handles.includes(el);
     const isChild = handles.some((e) => e.contains(el));
     return isHandle || isChild;
@@ -170,7 +170,7 @@
    * not want more than two handles for a true range.
    **/
   const trimRange = (arr: number[]): number[] => {
-    if (range === "min" || range === "max") {
+    if (range === 'min' || range === 'max') {
       return arr.slice(0, 1);
     } else if (range) {
       return arr.slice(0, 2);
@@ -279,16 +279,16 @@
    * helper to find the beginning range value for use with css style
    **/
   const rangeStart = (arr: number[]): number => {
-    return range === "min" ? 0 : arr[0]!;
+    return range === 'min' ? 0 : arr[0]!;
   };
 
   /**
    * helper to find the ending range value for use with css style
    **/
   const rangeEnd = (arr: number[]): number => {
-    if (range === "max") {
+    if (range === 'max') {
       return 0;
-    } else if (range === "min") {
+    } else if (range === 'min') {
       return 100 - arr[0]!;
     } else {
       return 100 - arr[1]!;
@@ -343,7 +343,7 @@
 
     // for touch devices we want the handle to instantly
     // move to the position touched for more responsive feeling
-    if (e.type === "touchstart" && !el.matches(".pipVal")) {
+    if (e.type === 'touchstart' && !el.matches('.pipVal')) {
       handleInteract(clientPos);
     }
   };
@@ -394,7 +394,7 @@
         focus = true;
         // don't trigger interact if the target is a handle (no need) or
         // if the target is a label (we want to move to that value from rangePips)
-        if (!targetIsHandle(el) && !el.matches(".pipVal")) {
+        if (!targetIsHandle(el) && !el.matches('.pipVal')) {
           handleInteract(normalisedClient(e));
         }
       }
@@ -423,7 +423,7 @@
   const onChange = () => {
     if (isDisabled || isReadonly) return;
 
-    dispatch("input", {
+    dispatch('input', {
       activeHandle,
       previousValue,
       value: activeHandle === 0 ? startValue : endValue,
@@ -434,45 +434,45 @@
   };
 
   const handleInput = () => {
-    value = input.value
-    startValue = Number.parseFloat(input.value)
+    value = input.value;
+    startValue = Number.parseFloat(input.value);
     
     if (value === input.value) {
-      return
+      return;
     }
 
     if (input.value.endsWith('.')) {
-      return
+      return;
     }
 
-    return {value, startValue}
+    return { value, startValue };
   };
 
   const handleInputEnd = () => {
-    value = inputEnd.value
-    endValue = Number.parseFloat(inputEnd.value)
+    value = inputEnd.value;
+    endValue = Number.parseFloat(inputEnd.value);
     
     if (value === input.value) {
-      return
+      return;
     }
 
     if (input.value.endsWith('.')) {
-      return
+      return;
     }
 
-    return {value, endValue}
+    return { value, endValue };
   };
 
 </script>
 
-<div class="flex gap-4 items-end">
-  <div class="w-full">
+<div class='flex gap-4 items-end'>
+  <div class='w-full'>
     <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="flex flex-col gap-2">
+    <label class='flex flex-col gap-2'>
       {#if label}
         <p
-          class={cn("text-xs capitalize", {
-            "text-black/50": isDisabled || isReadonly,
+          class={cn('text-xs capitalize', {
+            'text-black/50': isDisabled || isReadonly,
           })}
         >
           {label}
@@ -483,15 +483,15 @@
         <div
           bind:this={slider}
           class={cn(
-            "slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-black/50",
+            'slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-black/50',
             {
-              "bg-black/20 text-black/50": isDisabled || isReadonly,
+              'bg-black/20 text-black/50': isDisabled || isReadonly,
             }
           )}
           class:range
           class:focus
-          class:min={range === "min"}
-          class:max={range === "max"}
+          class:min={range === 'min'}
+          class:max={range === 'max'}
           on:mousedown={sliderInteractStart}
           on:mouseup={sliderInteractEnd}
           on:touchstart|preventDefault={sliderInteractStart}
@@ -499,54 +499,54 @@
         >
           {#each endValue ? [startValue, endValue] : [startValue] as value, index}
             <div
-              role="slider"
-              class="range absolute h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]"
+              role='slider'
+              class='range absolute h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]'
               class:active={focus && activeHandle === index}
               class:press={handlePressed && activeHandle === index}
               data-handle={index}
               on:blur={handleSliderBlur}
               on:focus={() => handleSliderFocus(index)}
-              style="left: {$springPositions[
+              style='left: {$springPositions[
                 index
-              ]}%; z-index: {activeHandle === index ? 3 : 2}"
+              ]}%; z-index: {activeHandle === index ? 3 : 2}'
               aria-valuemin={range === true && index === 1
                 ? startValue
                 : minNum}
               aria-valuemax={range === true && index === 0 ? endValue : maxNum}
               aria-valuenow={value}
               aria-valuetext={value?.toString()}
-              aria-orientation="horizontal"
+              aria-orientation='horizontal'
               aria-disabled={isDisabled ? true : undefined}
               tabindex={disabled ? -1 : 0}
             >
               <span
-                class="handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400"
+                class='handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400'
               />
 
               <span
                 class={cn(
-                  "absolute left-0 bottom-1 block rounded-full h-full w-full border border-black bg-white",
+                  'absolute left-0 bottom-1 block rounded-full h-full w-full border border-black bg-white',
                   {
-                    "border-black/50": isDisabled || isReadonly,
+                    'border-black/50': isDisabled || isReadonly,
                   }
                 )}
               />
 
               <span
                 class={cn(
-                  "floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2",
-                  "py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white text-xs",
+                  'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
+                  'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-black bg-white text-xs',
                   {
-                    "-translate-y-1.5": !focus || activeHandle !== index,
-                    "border-black/50": isDisabled || isReadonly,
-                    "text-black/50": isDisabled || isReadonly,
+                    '-translate-y-1.5': !focus || activeHandle !== index,
+                    'border-black/50': isDisabled || isReadonly,
+                    'text-black/50': isDisabled || isReadonly,
                   }
                 )}
               >
                 {value}
 
                 {#if suffix}
-                  <span class="floating-suffix">{suffix}</span>
+                  <span class='floating-suffix'>{suffix}</span>
                 {/if}
               </span>
             </div>
@@ -555,20 +555,20 @@
           {#if range}
             <div
               class={cn(
-                "absolute transition duration-200 h-1 -top-0.5 select-none z-[1] bg-black",
+                'absolute transition duration-200 h-1 -top-0.5 select-none z-[1] bg-black',
                 {
-                  "bg-black/50": isDisabled || isReadonly,
+                  'bg-black/50': isDisabled || isReadonly,
                 }
               )}
-              style="left: {rangeStart($springPositions)}%; right: {rangeEnd(
+              style='left: {rangeStart($springPositions)}%; right: {rangeEnd(
                 $springPositions
-              )}%"
+              )}%'
             />
           {/if}
 
-          <div class="absolute h-2 left-0 right-0" class:disabled class:focus>
+          <div class='absolute h-2 left-0 right-0' class:disabled class:focus>
             <small
-              class="absolute bottom-full left-0 mb-3 whitespace-nowrap text-xs"
+              class='absolute bottom-full left-0 mb-3 whitespace-nowrap text-xs'
             >
               {minNum}
 
@@ -582,19 +582,19 @@
                 {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
                   <span
                     class={cn(
-                      "absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-black/50",
+                      'absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-black/50',
                       {
-                        "bg-black/20": isDisabled || isReadonly,
+                        'bg-black/20': isDisabled || isReadonly,
                       }
                     )}
-                    style="left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;"
+                    style='left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;'
                   />
                 {/if}
               {/each}
             {/if}
 
             <small
-              class="absolute bottom-full right-0 mb-3 whitespace-nowrap text-xs"
+              class='absolute bottom-full right-0 mb-3 whitespace-nowrap text-xs'
             >
               {maxNum}
 
@@ -607,7 +607,7 @@
       </div>
     </label>
   </div>
-  <div class="flex gap-2">
+  <div class='flex gap-2'>
     <!-- {#each endValue ? [startValue, endValue] : [startValue] as value} -->
     <input
       value={startValue}
