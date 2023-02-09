@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import pillTest from'./pillTest.vue'
 
 </script>
 
@@ -19,5 +20,6 @@
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
+    <pillTest></pillTest>
   </main>
 </template>
