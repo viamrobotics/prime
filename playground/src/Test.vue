@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BadgeTest from './badge-test.vue'
 
 </script>
 
@@ -19,5 +20,8 @@
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
+
+    <BadgeTest />
+
   </main>
 </template>
