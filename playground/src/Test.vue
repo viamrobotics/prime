@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Tabs from './tabs.vue'
 
 </script>
 
@@ -19,5 +20,7 @@
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
+
+    <Tabs />
   </main>
 </template>
