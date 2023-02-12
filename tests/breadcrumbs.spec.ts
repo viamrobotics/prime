@@ -8,7 +8,11 @@ test('breadcrumbs should render the list of values as pills', async ({ page }) =
   // WHEN the element is rendered
   // THEN the breadcrumbs should render the list of values as pills
 
-  await expect(page.getByTestId("Breadcrumb Test")).toBeVisible()
+  const breadcrumbs = page.getByText('Chocolate Chip Oatmeal Raisin')
+  await expect(breadcrumbs).toBeVisible()
+  await expect(breadcrumbs).toHaveCSS('border-color', 'rgb(0, 0, 0)')
+  await expect(breadcrumbs).toHaveCSS('border-radius', '9999px')
+  await expect(breadcrumbs).toHaveText('Chocolate Chip Oatmeal Raisin')
   await expect(page.getByText(/Chocolate Chip/i)).toBeVisible()
   await expect(page.getByText(/Oatmeal Raisin/i)).toBeVisible()
 
