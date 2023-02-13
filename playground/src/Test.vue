@@ -20,6 +20,6 @@ import pillTest from'./pillTest.vue'
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
-    <pillTest></pillTest>
+    <pillTest/>
   </main>
 </template>
