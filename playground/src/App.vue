@@ -37,8 +37,9 @@ let rightOptions = $ref("four,five,six,eight,nine")
       rightlabel="Models on robot"
       :left="leftOptions"
       :right="rightOptions"
-      height="400px"
-    />
+    >
+      <div slot="left-empty" class="h-full">BEEF</div>
+    </v-list-box>
   </div>
 
   <div class="flex flex-wrap justify-between gap-2">

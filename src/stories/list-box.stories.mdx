@@ -92,3 +92,31 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Empty state'
+    args={{
+      left: '',
+      right: '',
+      leftlabel: 'Team',
+      rightlabel: 'Box 1',
+      disabled: false,
+      height: '200px'
+    }}
+  >
+    {({ left, right, leftlabel, rightlabel, disabled, height }) => `
+      <v-list-box
+        left="${left}"
+        right="${right}"
+        leftlabel="${leftlabel}"
+        rightlabel="${rightlabel}"
+        disabled="${disabled}"
+        height="${height}"
+      >
+        <div slot="left-empty">Left empty state</div>
+        <div slot="right-empty">Right empty state</div>
+      </v-list-box>
+    `}
+  </Story>
+</Canvas>

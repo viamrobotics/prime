@@ -37,8 +37,8 @@ const RIGHT = 'right';
 
 let isDisabled: boolean;
 let options = {
-  left: left.split(',').map((value) => ({ value, selected: false })),
-  right: right.split(',').map((value) => ({ value, selected: false })),
+  left: left ? left.split(',').map((value) => ({ value, selected: false })) : [],
+  right: right ? right.split(',').map((value) => ({ value, selected: false })) : [],
 };
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
@@ -49,8 +49,8 @@ const addNewData = () => {
     ...options.left.map(opt => opt.value),
     ...options.right.map(opt => opt.value),
   ]);
-  const newLeftOptions = left.split(',').filter((opt) => !allValues.has(opt));
-  const newRightOptions = right.split(',').filter((opt) => !allValues.has(opt));
+  const newLeftOptions = left ? left.split(',').filter((opt) => !allValues.has(opt)) : [];
+  const newRightOptions = right ? right.split(',').filter((opt) => !allValues.has(opt)) : [];
 
   const newOptions = {
     left: [...options.left, ...newLeftOptions.map((value) => ({ value, selected: false }))],
@@ -107,16 +107,21 @@ const handleMoveClick = (target: ListBoxSide) => {
   class={cx('w-full grid grid-cols-[1fr_32px_1fr] gap-8 items-center p-2', { '!text-black/50': isDisabled })}
 >
   <div class="w-full flex flex-col gap-2 self-stretch" style={`height: ${height};`}>
-    <span class="text-xs">{ leftlabel }</span>
-    <div class="border border-[#D7D7D] grow px-4 py-3 bg-white flex flex-col overflow-auto">
-      {#each options.left as option}
-        <button
-          class={cx('flex items-start', { 'bg-[#E2F1FD]': option.selected })}
-          on:click={() => handleOptionClick(option, LEFT)}
-        >        
-          <span class="text-sm px-2 py-0.5">{ option.value }</span>
-        </button>
-      {/each}
+    <span class="text-xs text-[#4E4F52]">{ leftlabel }</span>
+    <div class="border border-[#D7D7D9] grow p-2 bg-white flex flex-col overflow-auto">
+      {#if options.left.length > 0 }
+       {#each options.left as option}
+          <button
+            class={cx('flex items-center px-2 py', { 'bg-[#E2F1FD]': option.selected })}
+            on:click={() => handleOptionClick(option, LEFT)}
+          > 
+            <input type='checkbox' checked={option.selected} disabled={isDisabled}/>       
+            <span class="text-sm px-4">{ option.value }</span>
+          </button>
+        {/each}
+      {:else}
+        <slot name="left-empty" />
+      {/if}
     </div>
   </div>
   <div class="flex flex-col gap-4">
@@ -144,16 +149,21 @@ const handleMoveClick = (target: ListBoxSide) => {
     </button>
   </div>
   <div class="w-full flex flex-col gap-2 self-stretch" style={`height: ${height};`}>
-    <span class="text-xs">{ rightlabel }</span>
-    <div class="border border-[#D7D7D] grow px-4 py-3 bg-white flex flex-col overflow-auto">  
-      {#each options.right as option}
-      <button
-        class={cx('flex items-start', { 'bg-[#E2F1FD]': option.selected })}
-        on:click={() => handleOptionClick(option, RIGHT)}
-      >
-        <span class="text-sm px-2 py-0.5">{ option.value }</span>
-      </button>
-      {/each}
+    <span class="text-xs text-[#4E4F52]">{ rightlabel }</span>
+    <div class="border border-[#D7D7D9] grow p-2 bg-white flex flex-col overflow-auto"> 
+      {#if options.right.length > 0 }
+        {#each options.right as option}
+          <button
+            class={cx('flex items-center px-2 py', { 'bg-[#E2F1FD]': option.selected })}
+            on:click={() => handleOptionClick(option, RIGHT)}
+          >
+            <input type='checkbox' checked={option.selected} disabled={isDisabled}/>       
+            <span class="text-sm px-4">{ option.value }</span>
+          </button>
+        {/each}
+      {:else}
+        <slot name="right-empty"/> 
+      {/if}
     </div>
   </div>
 </div>

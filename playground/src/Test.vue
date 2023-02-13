@@ -25,6 +25,9 @@
       leftlabel="Team"
       rightlabel="Box 1"
       disabled="false"
-    />
+    >
+      <div slot="left-empty">Your roster is empty</div>
+      <div slot="right-empty">This box is empty</div>
+    </v-list-box>
   </main>
 </template>
