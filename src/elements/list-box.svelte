@@ -3,7 +3,7 @@
 <script lang='ts'>
 
 import cx from 'classnames';
-import { onMount, afterUpdate } from 'svelte';
+import { afterUpdate } from 'svelte';
 
 import { dispatcher } from '../lib/dispatch';
 import { addStyles } from '../lib/index';
@@ -114,6 +114,7 @@ const handleMoveClick = (target: ListBoxSide) => {
       class={cx("rotate-90 border border-black h-8 w-8 flex items-center justify-center cursor-pointer hover:scale-105 bg-white",
         {'border-black/50': isDisabled},
       )}
+      data-testid="move-right"
       on:click={() => handleMoveClick(RIGHT)}
       >
       <i
@@ -125,6 +126,7 @@ const handleMoveClick = (target: ListBoxSide) => {
         {'border-black/50': isDisabled},
       )}
       on:click={() =>  handleMoveClick(LEFT)}
+      data-testid="move-left"
     >
       <i
         class="icon-arrow-up"

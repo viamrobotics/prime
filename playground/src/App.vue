@@ -24,9 +24,23 @@ setTimeout(() => {
   lazyValue = '1989-01-01'
 }, 2000)
 
+let leftOptions = $ref("one,two,three,ten")
+let rightOptions = $ref("four,five,six,eight,nine")
+
 </script>
 
 <template>
+  <div class="my-10">
+    <h1>LIST BOX</h1>
+    <v-list-box
+      leftlabel="Available models"
+      rightlabel="Models on robot"
+      :left="leftOptions"
+      :right="rightOptions"
+      height="400px"
+    />
+  </div>
+
   <div class="flex flex-wrap justify-between gap-2">
     <v-input
       class="w-full"

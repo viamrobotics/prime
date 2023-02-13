@@ -19,5 +19,12 @@
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
+    <v-list-box
+      left="Charmander,Pikachu,Venusaur"
+      right="Nidoqueen,Butterfree,Ditto,Gyardos,Machamp"
+      leftlabel="Team"
+      rightlabel="Box 1"
+      disabled="false"
+    />
   </main>
 </template>
