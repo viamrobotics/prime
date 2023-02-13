@@ -4,11 +4,15 @@ test('Tabs E2E Test', async ({ page }) => {
   await page.goto('/test.html');
 
   // Confirm All Tabs Render Correctly
+  const selectedTestTabs = page.getByTestId("Selected Test")
+
   const tab1 = page.getByRole('button', { name: 'Tab 1' })
   const tab2 = page.getByRole('button', { name: 'Tab 2' })
   const tab3 = page.getByRole('button', { name: 'Tab 3' })
 
   // Check Tabs Buttons Are Visible
+  await expect(selectedTestTabs).toBeVisible()
+
   await expect(tab1).toBeVisible()
   await expect(tab2).toBeVisible()
   await expect(tab3).toBeVisible()
@@ -18,6 +22,8 @@ test('Tabs E2E Test', async ({ page }) => {
   await expect(tab2).toHaveText('Tab 2')
   await expect(tab3).toHaveText('Tab 3')
 
+  // Check Selected Attribute is Correct (Tab 2)
+  await expect(selectedTestTabs).toHaveAttribute("selected", "Tab 2")
 
   // Check Selected Tab Has Correct Background Color of White (Tab 2)
   await expect(tab1).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
@@ -32,6 +38,7 @@ test('Tabs E2E Test', async ({ page }) => {
   await expect(tab2).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
   await expect(tab3).toHaveCSS("background-color", "rgb(255, 255, 255)")
 
+
   // Check That If No Selected Value, Default Selected Is First Value (Tab A)
   // Currently, there is no default behavior.
   // const tabA = page.getByRole('button', { name: 'Tab A' })
@@ -44,6 +51,9 @@ test('Tabs E2E Test', async ({ page }) => {
 
   // Focus, Keydown Test
   // Check That Selected Tab to Start Is Tab Z
+
+  const keyEnterTestTabs = page.getByTestId("Key Enter Test")
+  await expect(keyEnterTestTabs).toHaveAttribute("selected", "Tab Z")
 
   const tabX = page.getByRole('button', { name: 'Tab X' })
   const tabY = page.getByRole('button', { name: 'Tab Y' })
@@ -59,6 +69,7 @@ test('Tabs E2E Test', async ({ page }) => {
   await page.keyboard.press('Enter')
   
   // Check That New Selected Tab is Tab Y
+
   await expect(tabX).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
   await expect(tabY).toHaveCSS("background-color", "rgb(255, 255, 255)")
   await expect(tabZ).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
