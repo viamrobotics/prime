@@ -1,4 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+import {waitForCustomEvent, waitForCustomEventTimeout} from './lib/helper'
+
+
 
 test('Pills render and interact as expected', async ({ page }) => {
     await page.goto('/test.html');
@@ -25,7 +28,7 @@ test('Pills render and interact as expected', async ({ page }) => {
     await expect(page.getByTestId("Disabled:true").locator("div")).toHaveAttribute("aria-disabled","true")
     // Disabled:false
     await expect(page.getByTestId("Disabled:false")).toBeVisible()
-    await expect(page.getByTestId("Disabled:false").locator("div")).not.toBeDisabled()
+    await expect(page.getByTestId("Disabled:false").locator("div")).not.toHaveAttribute("aria-readonly","true")
     // Readonly:default
     await expect(testDefault).toBeVisible()
     await expect(testDefault.getByRole('button')).toBeVisible()
@@ -35,19 +38,30 @@ test('Pills render and interact as expected', async ({ page }) => {
     // Readonly:false
     await expect(page.getByTestId("Readonly:false")).toBeVisible()
     await expect(page.getByTestId("Readonly:false").getByRole('button')).toBeVisible()
-    await expect(page.getByTestId("Readonly:false")).not.toBeDisabled()
+    await expect(page.getByTestId("Readonly:false")).not.toHaveAttribute("aria-readonly","true")
     // Click:default
-    const handleRet = page.waitForFunction('handleRemove')
-    testDefault.click()
-    await handleRet
+    const clickDefault = waitForCustomEvent(page,'remove')
+    // const clickDefault = page.evaluate(eventName => new Promise(callback => window.addEventListener(eventName, callback)), 'remove')
+    await testDefault.getByRole('button').click()
+    await expect(clickDefault).toBeTruthy()
     // Click:disabled
-    
-    // Click:readonly
-    // Key Down:default
-    await expect(testDefault)
-    // Key Down:disabled
-    // Key Down:readonly
-    
-
-
+    const clickDisabled = waitForCustomEventTimeout(page, 'remove')
+    await page.getByTestId("Disabled:true").getByRole('button').press("Enter")
+    await clickDisabled
+    // // Click:readonly
+    const clickReadOnly = waitForCustomEventTimeout(page, 'remove')
+    page.getByTestId("Readonly:true").getByRole('button').press("Enter")
+    await clickReadOnly
+    // // Key Down:default
+    const keyDownDefault = waitForCustomEvent(page,'remove')
+    await testDefault.getByRole('button').press("Enter")
+    await expect(keyDownDefault).toBeTruthy()
+    // // Key Down:disabled
+    const keyDownDisabled = waitForCustomEventTimeout(page, 'remove')
+    page.getByTestId("Disabled:true").getByRole('button').press("Enter")
+    await keyDownDisabled
+    // // Key Down:readonly
+    const keyDownReadOnly= waitForCustomEventTimeout(page, 'remove')
+    page.getByTestId("Readonly:true").getByRole('button').press("Enter")
+    await keyDownReadOnly
 });
