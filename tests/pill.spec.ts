@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-import {waitForCustomEvent, waitForCustomEventTimeout} from './lib/helper'
+import {waitForCustomEvent, waitForCustomEventTimeout} from './lib/helper.ts'
 
 
 
@@ -40,16 +40,15 @@ test('Pills render and interact as expected', async ({ page }) => {
     await expect(page.getByTestId("Readonly:false").getByRole('button')).toBeVisible()
     await expect(page.getByTestId("Readonly:false")).not.toHaveAttribute("aria-readonly","true")
     // Click:default
-    const clickDefault = waitForCustomEvent(page,'remove')
-    // const clickDefault = page.evaluate(eventName => new Promise(callback => window.addEventListener(eventName, callback)), 'remove')
+    const clickDefault = await waitForCustomEvent(page,'remove')
     await testDefault.getByRole('button').click()
     await expect(clickDefault).toBeTruthy()
     // Click:disabled
-    const clickDisabled = waitForCustomEventTimeout(page, 'remove')
+    const clickDisabled = await waitForCustomEventTimeout(page, 'remove')
     await page.getByTestId("Disabled:true").getByRole('button').press("Enter")
     await clickDisabled
     // // Click:readonly
-    const clickReadOnly = waitForCustomEventTimeout(page, 'remove')
+    const clickReadOnly = await waitForCustomEventTimeout(page, 'remove')
     page.getByTestId("Readonly:true").getByRole('button').press("Enter")
     await clickReadOnly
     // // Key Down:default
@@ -57,11 +56,11 @@ test('Pills render and interact as expected', async ({ page }) => {
     await testDefault.getByRole('button').press("Enter")
     await expect(keyDownDefault).toBeTruthy()
     // // Key Down:disabled
-    const keyDownDisabled = waitForCustomEventTimeout(page, 'remove')
+    const keyDownDisabled = await waitForCustomEventTimeout(page, 'remove')
     page.getByTestId("Disabled:true").getByRole('button').press("Enter")
     await keyDownDisabled
     // // Key Down:readonly
-    const keyDownReadOnly= waitForCustomEventTimeout(page, 'remove')
+    const keyDownReadOnly= await waitForCustomEventTimeout(page, 'remove')
     page.getByTestId("Readonly:true").getByRole('button').press("Enter")
     await keyDownReadOnly
 });
