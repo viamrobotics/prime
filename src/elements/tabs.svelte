@@ -15,6 +15,8 @@ addStyles();
 
 $: parsedTabs = tabs.split(',').map((str) => str.trim());
 $: selectedIndex = parsedTabs.indexOf(selected);
+// $: selectedIndex = !selected ? 0 : parsedTabs.indexOf(selected);
+
 
 const handleClick = (option: string) => {
   selected = option;
