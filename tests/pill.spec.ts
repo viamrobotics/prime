@@ -40,27 +40,27 @@ test('Pills render and interact as expected', async ({ page }) => {
     await expect(page.getByTestId("Readonly:false").getByRole('button')).toBeVisible()
     await expect(page.getByTestId("Readonly:false")).not.toHaveAttribute("aria-readonly","true")
     // Click:default
-    const clickDefault = await waitForCustomEvent(page,'remove')
+    const clickDefault = waitForCustomEvent(page,'remove')
     await testDefault.getByRole('button').click()
     await expect(clickDefault).toBeTruthy()
     // Click:disabled
-    const clickDisabled = await waitForCustomEventTimeout(page, 'remove')
+    const clickDisabled = waitForCustomEventTimeout(page, 'remove')
     await page.getByTestId("Disabled:true").getByRole('button').press("Enter")
     await clickDisabled
     // // Click:readonly
-    const clickReadOnly = await waitForCustomEventTimeout(page, 'remove')
-    page.getByTestId("Readonly:true").getByRole('button').press("Enter")
+    const clickReadOnly = waitForCustomEventTimeout(page, 'remove')
+    await page.getByTestId("Readonly:true").getByRole('button').press("Enter")
     await clickReadOnly
     // // Key Down:default
     const keyDownDefault = waitForCustomEvent(page,'remove')
     await testDefault.getByRole('button').press("Enter")
     await expect(keyDownDefault).toBeTruthy()
     // // Key Down:disabled
-    const keyDownDisabled = await waitForCustomEventTimeout(page, 'remove')
-    page.getByTestId("Disabled:true").getByRole('button').press("Enter")
+    const keyDownDisabled = waitForCustomEventTimeout(page, 'remove')
+    await page.getByTestId("Disabled:true").getByRole('button').press("Enter")
     await keyDownDisabled
     // // Key Down:readonly
-    const keyDownReadOnly= await waitForCustomEventTimeout(page, 'remove')
-    page.getByTestId("Readonly:true").getByRole('button').press("Enter")
+    const keyDownReadOnly = waitForCustomEventTimeout(page, 'remove')
+    await page.getByTestId("Readonly:true").getByRole('button').press("Enter")
     await keyDownReadOnly
 });
