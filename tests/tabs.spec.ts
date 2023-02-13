@@ -38,6 +38,9 @@ test('Tabs E2E Test', async ({ page }) => {
   await expect(tab2).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
   await expect(tab3).toHaveCSS("background-color", "rgb(255, 255, 255)")
 
+//   const waitForCustomEvent = async(page:Page, customEventName:string) => {
+//     return await page.evaluate(eventName => new Promise(callback => window.addEventListener(eventName, callback)), customEventName)
+// }
 
   // Check That If No Selected Value, Default Selected Is First Value (Tab A)
   // Currently, there is no default behavior.
