@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { waitForCustomEvent } from './lib/helper.ts'
 
 test('Tabs E2E Test', async ({ page }) => {
   await page.goto('/test.html');
@@ -31,16 +32,15 @@ test('Tabs E2E Test', async ({ page }) => {
   await expect(tab3).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
 
   // Click on Tab 3 
+  // Check That New Selected Tab is Correct (Tab 3)
+  const tab3Selected = waitForCustomEvent(page,'input')
   await tab3.click()
+  await expect(tab3Selected).toBeTruthy()
 
   // Check That New Selected Tab Has Correct Background Color of White (Tab 3)
   await expect(tab1).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
   await expect(tab2).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
   await expect(tab3).toHaveCSS("background-color", "rgb(255, 255, 255)")
-
-//   const waitForCustomEvent = async(page:Page, customEventName:string) => {
-//     return await page.evaluate(eventName => new Promise(callback => window.addEventListener(eventName, callback)), customEventName)
-// }
 
   // Check That If No Selected Value, Default Selected Is First Value (Tab A)
   // Currently, there is no default behavior.
@@ -67,11 +67,13 @@ test('Tabs E2E Test', async ({ page }) => {
   await expect(tabZ).toHaveCSS("background-color", "rgb(255, 255, 255)")
 
   // Focus on Tab Y
+  const tabYSelected = waitForCustomEvent(page,'input')
   await tabY.focus()
   // Hit Enter
   await page.keyboard.press('Enter')
   
   // Check That New Selected Tab is Tab Y
+  await expect(tabYSelected).toBeTruthy()
 
   await expect(tabX).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
   await expect(tabY).toHaveCSS("background-color", "rgb(255, 255, 255)")
