@@ -1,6 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { Children } from 'react';
-import { OrganizeImportsMode } from 'typescript';
 
 test('Badge E2E Tests', async ({ page }) => {
   await page.goto('/test.html');
