@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import pillTest from'./pillTest.vue'
 
 import BreadcrumbsTest from './breadcrumb-test.vue';
 
@@ -21,6 +22,8 @@ import BreadcrumbsTest from './breadcrumb-test.vue';
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
+    
+    <pillTest/>
 
   <BreadcrumbsTest />
   
