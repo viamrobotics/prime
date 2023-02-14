@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import BreadcrumbsTest from './breadcrumb-test.vue';
+
 </script>
 
 <template>
@@ -19,5 +21,8 @@
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
+
+  <BreadcrumbsTest />
+  
   </main>
 </template>
