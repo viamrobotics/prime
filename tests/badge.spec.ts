@@ -1,68 +1,59 @@
 import { test, expect } from '@playwright/test';
 import { Children } from 'react';
+import { OrganizeImportsMode } from 'typescript';
 
 test('Badge E2E Tests', async ({ page }) => {
   await page.goto('/test.html');
 
   // Gray Badge Test
 
-  const grayBadge = page.getByTestId("gray")
+  const grayBadge = page.getByText('Inactive')
   
   await expect(grayBadge).toBeVisible()
   await expect(grayBadge).toHaveText("Inactive")
-
-  const childGrayBadge = grayBadge.locator('small').nth(0)
   
-  await expect(childGrayBadge).toHaveCSS("background-color", "rgb(229, 231, 235)")
-  await expect(childGrayBadge).toHaveCSS("color", "rgb(31, 41, 55)")
+  await expect(grayBadge).toHaveCSS("background-color", "rgb(229, 231, 235)")
+  await expect(grayBadge).toHaveCSS("color", "rgb(31, 41, 55)")
 
 
   // Default Badge Test
 
-  const defaultBadge = page.getByTestId("default")
+  const defaultBadge = page.getByText("Default")
   
   await expect(defaultBadge).toBeVisible()
   await expect(defaultBadge).toHaveText("Default")
 
-  const childDefaultBadge = defaultBadge.locator('small').nth(0)
-
-  await expect(childDefaultBadge).toHaveCSS("background-color", "rgb(229, 231, 235)")
-  await expect(childDefaultBadge).toHaveCSS("color", "rgb(31, 41, 55)")
+  await expect(defaultBadge).toHaveCSS("background-color", "rgb(229, 231, 235)")
+  await expect(defaultBadge).toHaveCSS("color", "rgb(31, 41, 55)")
 
   // Green Badge Test
 
-  const greenBadge = page.getByTestId("green")
+  const greenBadge = page.getByText("Go")
   
   await expect(greenBadge).toBeVisible()
-  await expect(greenBadge).toHaveText("Active")
+  await expect(greenBadge).toHaveText("Go")
 
-  const childGreenBadge = greenBadge.locator('small').nth(0)
-
-  await expect(childGreenBadge).toHaveCSS("background-color", "rgb(187, 247, 208)")
-  await expect(childGreenBadge).toHaveCSS("color", "rgb(20, 83, 45)")
+  await expect(greenBadge).toHaveCSS("background-color", "rgb(187, 247, 208)")
+  await expect(greenBadge).toHaveCSS("color", "rgb(20, 83, 45)")
 
   // Orange Badge Test
 
-  const orangeBadge = page.getByTestId("orange")
+  const orangeBadge = page.getByText("Danger")
   
   await expect(orangeBadge).toBeVisible()
   await expect(orangeBadge).toHaveText("Danger")
 
-  const childOrangeBadge = orangeBadge.locator('small').nth(0)
-
-  await expect(childOrangeBadge).toHaveCSS("background-color", "rgb(254, 215, 170)")
-  await expect(childOrangeBadge).toHaveCSS("color", "rgb(124, 45, 18)")
+  await expect(orangeBadge).toHaveCSS("background-color", "rgb(254, 215, 170)")
+  await expect(orangeBadge).toHaveCSS("color", "rgb(124, 45, 18)")
 
   // Red Badge Test
 
-  const redBadge = page.getByTestId("red")
+  const redBadge = page.getByText("Unhealthy")
   
   await expect(redBadge).toBeVisible()
   await expect(redBadge).toHaveText("Unhealthy")
 
-  const childRedBadge = redBadge.locator('small').nth(0)
-
-  await expect(childRedBadge).toHaveCSS("background-color", "rgb(254, 202, 202)")
-  await expect(childRedBadge).toHaveCSS("color", "rgb(127, 29, 29)")
+  await expect(redBadge).toHaveCSS("background-color", "rgb(254, 202, 202)")
+  await expect(redBadge).toHaveCSS("color", "rgb(127, 29, 29)")
 
 });
