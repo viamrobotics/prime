@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import pillTest from'./pillTest.vue'
+
+import BreadcrumbsTest from './breadcrumb-test.vue';
 
 </script>
 
@@ -29,5 +32,7 @@
       <div slot="left-empty">Your roster is empty</div>
       <div slot="right-empty">This box is empty</div>
     </v-list-box>
+    <pillTest/>
+    <BreadcrumbsTest /> 
   </main>
 </template>
