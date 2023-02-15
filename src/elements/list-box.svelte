@@ -107,12 +107,12 @@ const handleMoveClick = (target: ListBoxSide) => {
   class={cx('w-full grid grid-cols-[1fr_32px_1fr] gap-8 items-center p-2', { '!text-black/50': isDisabled })}
 >
   <div class="w-full flex flex-col gap-2 self-stretch" style={`height: ${height};`}>
-    <span class="text-xs text-[#4E4F52]">{ leftlabel }</span>
-    <div class="border border-[#D7D7D9] grow p-2 bg-white flex flex-col overflow-auto">
+    <span class="text-xs text-text/subtle-1">{ leftlabel }</span>
+    <div class="border border-borders/border-2 grow p-2 bg-white flex flex-col overflow-auto">
       {#if options.left.length > 0 }
        {#each options.left as option}
           <button
-            class={cx('flex items-center px-2 py', { 'bg-[#E2F1FD]': option.selected })}
+            class={cx('flex items-center px-2 py', { 'bg-focus/highlight': option.selected })}
             on:click={() => handleOptionClick(option, LEFT)}
           > 
             <input type='checkbox' checked={option.selected} disabled={isDisabled}/>       
@@ -149,12 +149,12 @@ const handleMoveClick = (target: ListBoxSide) => {
     </button>
   </div>
   <div class="w-full flex flex-col gap-2 self-stretch" style={`height: ${height};`}>
-    <span class="text-xs text-[#4E4F52]">{ rightlabel }</span>
-    <div class="border border-[#D7D7D9] grow p-2 bg-white flex flex-col overflow-auto"> 
+    <span class="text-xs text-text/subtle-1">{ rightlabel }</span>
+    <div class="border border-borders/border-2 grow p-2 bg-white flex flex-col overflow-auto"> 
       {#if options.right.length > 0 }
         {#each options.right as option}
           <button
-            class={cx('flex items-center px-2 py', { 'bg-[#E2F1FD]': option.selected })}
+            class={cx('flex items-center px-2 py', { 'bg-focus/highlight': option.selected })}
             on:click={() => handleOptionClick(option, RIGHT)}
           >
             <input type='checkbox' checked={option.selected} disabled={isDisabled}/>       
