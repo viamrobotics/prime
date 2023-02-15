@@ -17,6 +17,7 @@ export let right = '';
 export let leftlabel = ''; 
 export let rightlabel = ''; 
 export let height = '200px';
+export let suffix = '';
 
 const dispatch = dispatcher();
 
@@ -25,6 +26,7 @@ type ListBoxSide = 'left' | 'right';
 type ListBoxOption = {
   value: string
   selected: boolean
+  suffix?: string
 }
 
 type Options = {
@@ -36,12 +38,27 @@ const LEFT = 'left';
 const RIGHT = 'right';
 
 let isDisabled: boolean;
-let options = {
-  left: left ? left.split(',').map((value) => ({ value, selected: false })) : [],
-  right: right ? right.split(',').map((value) => ({ value, selected: false })) : [],
-};
+// needs to be calculated on initial render
+let displaySuffix = htmlToBoolean(suffix, 'suffix');
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
+$: displaySuffix = htmlToBoolean(suffix, 'suffix');
+
+
+const generateOption = (initial: string): ListBoxOption => {
+  if (displaySuffix) {
+    const split = initial.split(' ');
+    return { value: split[0] || '', suffix: split[1], selected: false }
+  }
+
+  return { value: initial, selected: false }
+};
+
+let options = {
+  left: left ? left.split(',').map(generateOption) : [],
+  right: right ? right.split(',').map(generateOption) : [],
+};
+
 
 // when new values are added, we want to update the state of options to include those values
 const addNewData = () => {
@@ -49,12 +66,20 @@ const addNewData = () => {
     ...options.left.map(opt => opt.value),
     ...options.right.map(opt => opt.value),
   ]);
-  const newLeftOptions = left ? left.split(',').filter((opt) => !allValues.has(opt)) : [];
-  const newRightOptions = right ? right.split(',').filter((opt) => !allValues.has(opt)) : [];
+  const newLeftOptions = left 
+    ? left.split(',')
+      .map(generateOption)
+      .filter((opt) => !allValues.has(opt.value))
+    : [];
+  const newRightOptions = right 
+    ? right.split(',')
+      .map(generateOption)
+      .filter((opt) => !allValues.has(opt.value))
+    : [];
 
   const newOptions = {
-    left: [...options.left, ...newLeftOptions.map((value) => ({ value, selected: false }))],
-    right: [...options.right, ...newRightOptions.map((value) => ({ value, selected: false }))],
+    left: [...options.left, ...newLeftOptions],
+    right: [...options.right, ...newRightOptions],
   };
   
   options = newOptions;
@@ -112,11 +137,14 @@ const handleMoveClick = (target: ListBoxSide) => {
       {#if options.left.length > 0 }
        {#each options.left as option}
           <button
-            class={cx('flex items-center px-2 py', { 'bg-focus/highlight': option.selected })}
+            class={cx('flex items-center px-2 py text-sm', { 'bg-focus/highlight': option.selected })}
             on:click={() => handleOptionClick(option, LEFT)}
           > 
             <input type='checkbox' checked={option.selected} disabled={isDisabled}/>       
-            <span class="text-sm px-4">{ option.value }</span>
+            <span class="px-4">{ option.value }</span>
+            {#if displaySuffix && option.suffix}
+              <span class="text-text/subtle-2" >{option.suffix}</span>
+            {/if}
           </button>
         {/each}
       {:else}
@@ -154,11 +182,14 @@ const handleMoveClick = (target: ListBoxSide) => {
       {#if options.right.length > 0 }
         {#each options.right as option}
           <button
-            class={cx('flex items-center px-2 py', { 'bg-focus/highlight': option.selected })}
+            class={cx('flex items-center px-2 py text-sm', { 'bg-focus/highlight': option.selected })}
             on:click={() => handleOptionClick(option, RIGHT)}
           >
             <input type='checkbox' checked={option.selected} disabled={isDisabled}/>       
-            <span class="text-sm px-4">{ option.value }</span>
+            <span class="px-4">{ option.value }</span>
+            {#if displaySuffix && option.suffix}
+              <span class="text-text/subtle-2" >{option.suffix}</span>
+            {/if}
           </button>
         {/each}
       {:else}

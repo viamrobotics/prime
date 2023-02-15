@@ -15,6 +15,7 @@ module.exports = {
         'orange/90': '#FF9900',
         'red/90': '#BE3026',
         'text/subtle-1': '#4E4F52',
+        'text/subtle-2': '#7A7C80',
         'borders/border-2': '#D7D7D9',
         'focus/highlight': '#E2F1FD',
       },
