@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import config from '../tailwind.config.cjs'
 
-export const hexToRGB = (hex) => {
+const hexToRGB = (hex) => {
   let alpha = false;
   let h = hex.slice(hex.startsWith('#') ? 1 : 0);
   if (h.length === 3) h = [...h].map(x => x + x).join('');
