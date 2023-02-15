@@ -48,15 +48,15 @@ $: displaySuffix = htmlToBoolean(suffix, 'suffix');
 const generateOption = (initial: string): ListBoxOption => {
   if (displaySuffix) {
     const split = initial.split(' ');
-    return { value: split[0] || '', suffix: split[1], selected: false }
+    return { value: split[0] || '', suffix: split[1], selected: false };
   }
 
-  return { value: initial, selected: false }
+  return { value: initial, selected: false };
 };
 
 let options = {
-  left: left ? left.split(',').map(generateOption) : [],
-  right: right ? right.split(',').map(generateOption) : [],
+  left: left ? left.split(',').map((val) => generateOption(val)) : [],
+  right: right ? right.split(',').map((val) => generateOption(val)) : [],
 };
 
 
@@ -68,12 +68,12 @@ const addNewData = () => {
   ]);
   const newLeftOptions = left 
     ? left.split(',')
-      .map(generateOption)
+      .map((val) => generateOption(val))
       .filter((opt) => !allValues.has(opt.value))
     : [];
   const newRightOptions = right 
     ? right.split(',')
-      .map(generateOption)
+      .map((val) => generateOption(val))
       .filter((opt) => !allValues.has(opt.value))
     : [];
 
