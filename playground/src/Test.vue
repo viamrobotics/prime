@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import BadgeTest from './badge-test.vue'
 import pillTest from'./pillTest.vue'
-
 import BreadcrumbsTest from './breadcrumb-test.vue';
 
 </script>
@@ -22,6 +22,9 @@ import BreadcrumbsTest from './breadcrumb-test.vue';
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
+
+    <BadgeTest />
+
     <v-list-box
       left="Charmander,Pikachu,Venusaur"
       right="Nidoqueen,Butterfree,Ditto,Gyardos,Machamp"
