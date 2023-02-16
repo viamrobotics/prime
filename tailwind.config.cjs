@@ -20,15 +20,12 @@ module.exports = {
         'orange/200': '#FED7AA',
         'orange/900': '#7C2D12',
         'red/90': '#BE3026',
-<<<<<<< HEAD
         'red/200': '#FECACA',
         'red/900': '#7F1D1D',
-=======
         'text/subtle-1': '#4E4F52',
         'text/subtle-2': '#7A7C80',
         'borders/border-2': '#D7D7D9',
         'focus/highlight': '#E2F1FD',
->>>>>>> main
       },
       boxShadow: {
         'solid4': '4px 4px 0px #000',
