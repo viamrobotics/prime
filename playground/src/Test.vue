@@ -1,5 +1,11 @@
 <script setup lang="ts">
+<<<<<<< HEAD
 import BadgeTest from './badge-test.vue'
+=======
+import pillTest from'./pillTest.vue'
+
+import BreadcrumbsTest from './breadcrumb-test.vue';
+>>>>>>> main
 
 </script>
 
@@ -20,8 +26,23 @@ import BadgeTest from './badge-test.vue'
       options="Jolly logs, Sleeping hogs, Sticky bogs, Fiendish dogs"
       placeholder="Select a Bobbins"
     />
+<<<<<<< HEAD
 
     <BadgeTest />
 
+=======
+    <v-list-box
+      left="Charmander,Pikachu,Venusaur"
+      right="Nidoqueen,Butterfree,Ditto,Gyardos,Machamp"
+      leftlabel="Team"
+      rightlabel="Box 1"
+      disabled="false"
+    >
+      <div slot="left-empty">Your roster is empty</div>
+      <div slot="right-empty">This box is empty</div>
+    </v-list-box>
+    <pillTest/>
+    <BreadcrumbsTest /> 
+>>>>>>> main
   </main>
 </template>
