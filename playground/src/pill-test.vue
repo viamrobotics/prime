@@ -3,40 +3,38 @@
 </script>
 
 <template>
-  <main class="m-3">
     <v-pill
-      data-testid="default"
+      data-testid="pill-default"
     />
     <v-pill
-      data-testid="Value"
+      data-testid="pill-value"
       value='one'
     />
     <v-pill
-        data-testid="Removable:default"
+        data-testid="pill-removable-default"
     />
     <v-pill
-    data-testid="Removable:true"
+    data-testid="pill-removable-true"
       removable="true"
     />
     <v-pill
-    data-testid="Removable:false"
+    data-testid="pill-removable-false"
       removable="false"
     />
     <v-pill
-    data-testid="Disabled:true"
+    data-testid="pill-disabled-true"
     disabled="true"
     />
     <v-pill
-    data-testid="Disabled:false"
+    data-testid="pill-disabled-false"
     disabled="false"
     />
     <v-pill
-    data-testid="Readonly:true"
+    data-testid="pill-readonly-true"
     readonly="true"
     />
     <v-pill
-    data-testid="Readonly:false"
+    data-testid="pill-readonly-false"
     readonly="false"
     />
-  </main>
 </template>
