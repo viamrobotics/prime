@@ -3,6 +3,7 @@
 </script>
 
 <template>
+  <main class="m-3">
     <v-pill
       data-testid="default"
     />
@@ -37,4 +38,5 @@
     data-testid="Readonly:false"
     readonly="false"
     />
+  </main>
 </template>
