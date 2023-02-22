@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import BadgeTest from './badge-test.vue'
-import pillTest from'./pillTest.vue'
+import PillTest from'./pill-test.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';
 import NotifyTest from './notify-test.vue'
+import IconTest from './icon-test.vue'
 
 </script>
 
 <template>
-  <main class="m-3">
+  <main>
     <v-collapse title="Click to find out!">
       <p>You found out!</p>
     </v-collapse>
@@ -36,8 +37,9 @@ import NotifyTest from './notify-test.vue'
       <div slot="left-empty">Your roster is empty</div>
       <div slot="right-empty">This box is empty</div>
     </v-list-box>
-    <pillTest/>
+    <PillTest/>
     <BreadcrumbsTest /> 
     <NotifyTest />
+    <IconTest />
   </main>
 </template>
