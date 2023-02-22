@@ -3,6 +3,7 @@ import BadgeTest from './badge-test.vue'
 import PillTest from'./pill-test.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';
 import IconTest from './icon-test.vue'
+import CollapseTest from './collapse-test.vue'
 
 </script>
 
@@ -39,5 +40,6 @@ import IconTest from './icon-test.vue'
     <PillTest/>
     <BreadcrumbsTest /> 
     <IconTest />
+    <CollapseTest />
   </main>
 </template>
