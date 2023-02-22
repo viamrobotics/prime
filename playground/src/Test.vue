@@ -2,6 +2,7 @@
 import BadgeTest from './badge-test.vue'
 import pillTest from'./pillTest.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';
+import NotifyTest from './notify-test.vue'
 
 </script>
 
@@ -37,5 +38,6 @@ import BreadcrumbsTest from './breadcrumb-test.vue';
     </v-list-box>
     <pillTest/>
     <BreadcrumbsTest /> 
+    <NotifyTest />
   </main>
 </template>
