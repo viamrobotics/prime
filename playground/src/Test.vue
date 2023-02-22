@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import BadgeTest from './badge-test.vue'
-import pillTest from'./pillTest.vue'
+import PillTest from'./pill-test.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';
+import IconTest from './icon-test.vue'
 
 </script>
 
@@ -35,7 +36,8 @@ import BreadcrumbsTest from './breadcrumb-test.vue';
       <div slot="left-empty">Your roster is empty</div>
       <div slot="right-empty">This box is empty</div>
     </v-list-box>
-    <pillTest/>
+    <PillTest/>
     <BreadcrumbsTest /> 
+    <IconTest />
   </main>
 </template>
