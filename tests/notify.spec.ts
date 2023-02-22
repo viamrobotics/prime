@@ -51,9 +51,9 @@ test('Notify displays text properly', async ({ page }) => {
   await expect(page.getByTestId("notify-background-white")).toHaveText(/message text/)
   await expect(page.getByTestId("notify-background-white").locator("div")).toHaveClass(/bg-white/)
 
-    // slot
-    await expect(page.getByTestId("notify-slot")).toBeVisible()
-    await expect(page.getByTestId("notify-slot")).toHaveText(/title text/)
-    await expect(page.getByTestId("notify-slot")).toHaveText(/message text/)
-    await expect(page.getByTestId("notify-slot")).toHaveText(/slot text/)
+  // slot
+  await expect(page.getByTestId("notify-slot")).toBeVisible()
+  await expect(page.getByTestId("notify-slot")).toHaveText(/title text/)
+  await expect(page.getByTestId("notify-slot")).toHaveText(/message text/)
+  await expect(page.getByTestId("notify-slot")).toHaveText(/slot text/)
 });
