@@ -12,18 +12,5 @@
     <v-notify data-testid="notify-background-gray" title='title text' message='message text' background="gray"/>
     <v-notify data-testid="notify-background-white" title='title text' message='message text' background="white"/>
     <v-notify data-testid="notify-slot" title='title text' message="message text">slot text</v-notify>
-
   </main>
 </template>
-
-<!-- Title
-Message
-Variant: default
-Variant: error
-Variant: warning
-Variant: success
-Variant: info
-Background: default
-Background: gray
-Background: white
-Slot -->
