@@ -5,7 +5,7 @@
 <template>
   <main class="m-3">
     <v-collapse
-      data-testid="collapse"
+      data-testid="collapse-default"
       title='Robots...'
     >
       <div slot='title'>(title)</div>
