@@ -40,7 +40,6 @@ test('Collapse E2E Tests', async ({ page }) => {
   const headerSlot = page.getByText(headerSlotText)
   await expect(headerSlot).toBeVisible()
   await expect(headerSlot).toHaveText(headerSlotText)
-  // THEN the collapse should render the child element  before the chevron in the collapse header
 
   // If closed, after click, collapse should open (and display child)
   await expect(collapse).toHaveJSProperty('open', 'false')
