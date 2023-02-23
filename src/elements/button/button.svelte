@@ -65,7 +65,7 @@ const handleParentClick = (event: PointerEvent) => {
     title={title}
     class={cx('will-change-transform hover:scale-105 motion-safe:transition-transform', {
       'inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border': variant !== 'icon',
-      'cursor-not-allowed text-black/50 border-black/50 pointer-events-none': isDisabled,
+      'cursor-not-allowed !opacity-50 pointer-events-none': isDisabled,
       'bg-white border-black': variant === 'primary',
       'bg-black border-black text-white': variant === 'inverse-primary',
       'bg-red/90 text-white border-red/90': variant === 'danger',
