@@ -32,7 +32,7 @@ test('Collapse E2E Tests', async ({ page }) => {
   await expect(openCollapse.locator('v-icon')).toHaveClass(/rotate-180/)
 
   // Closed collapse should display chevron down
-  
+
   // no "open" property, default display closed
   await expect(collapse.locator('i')).toHaveClass(/icon-chevron-down/)
   await expect(collapse.locator('i')).toBeVisible()
@@ -69,4 +69,18 @@ test('Collapse E2E Tests', async ({ page }) => {
   await expect(closedCollapse.locator('i')).toHaveClass(/icon-chevron-down/)
   await expect(closedCollapse.locator('i')).toBeVisible()
   await expect(closedCollapse.locator('v-icon')).toHaveClass(/rotate-0/)
+
+  // Collapse with breadcrumbs and badge should display properly
+  const bbTitleText = "A word on bread"
+  const bbCollapse = page.getByText(bbTitleText)
+  await expect(bbCollapse).toBeVisible()
+  await expect(bbCollapse).toHaveText(bbTitleText)
+  // Breadcrumbs should display
+  await expect(bbCollapse.getByText('sourdough')).toBeVisible()
+  await expect(bbCollapse.getByText('ciabatta')).toBeVisible()
+  // Badge should display
+  await expect(bbCollapse.getByText('FRESH')).toBeVisible()
+  const bbExpandText = "How do you tell how good bread is without tasting it? Not the smell, not the look, but the sound of the crust. Listen. Symphony of crackle."
+  await expect(bbCollapse.getByText(bbExpandText)).toBeHidden()
+
 });

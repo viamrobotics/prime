@@ -24,5 +24,14 @@
       open="false"
     >
     </v-collapse>
+
+    <v-collapse
+      data-testid="collapse-bread-badge"
+      title='A word on bread'
+    >
+      <v-breadcrumbs slot='title' crumbs='sourdough,ciabatta'></v-breadcrumbs>
+      <v-badge slot='header' label='FRESH'></v-badge>
+      <div>How do you tell how good bread is without tasting it? Not the smell, not the look, but the sound of the crust. Listen. Symphony of crackle.</div>
+    </v-collapse>
   </main>
 </template>
