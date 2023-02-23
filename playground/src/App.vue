@@ -31,6 +31,14 @@ let rightOptions = $ref("four,five,six,eight,nine")
 
 <template>
   <div class="my-10">
+    <v-button 
+      variant="success"
+      disabled="false"
+      label="testing"/>
+    <v-button 
+      variant="success"
+      disabled="true"
+      label="testing 2"/>
     <h1>LIST BOX</h1>
     <v-list-box
       leftlabel="Available models"
