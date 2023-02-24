@@ -4,6 +4,7 @@ import PillTest from'./pill-test.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';
 import NotifyTest from './notify-test.vue'
 import IconTest from './icon-test.vue'
+import CollapseTest from './collapse-test.vue'
 
 </script>
 
@@ -41,5 +42,6 @@ import IconTest from './icon-test.vue'
     <BreadcrumbsTest /> 
     <NotifyTest />
     <IconTest />
+    <CollapseTest />
   </main>
 </template>
