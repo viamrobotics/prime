@@ -48,7 +48,7 @@ test('Badge E2E Tests', async ({ page }) => {
 
   // Green Badge Test
 
-  const greenBadge = page.getByText("Go")
+  const greenBadge = page.getByText("Go", { exact: true })
   
   await expect(greenBadge).toBeVisible()
   await expect(greenBadge).toHaveText("Go")

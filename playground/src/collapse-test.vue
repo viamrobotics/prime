@@ -26,7 +26,7 @@
     </v-collapse>
 
     <v-collapse
-      data-testid="collapse-bread-badge"
+      data-testid="collapse-breadcrumbs-badge"
       title='A word on bread'
     >
       <v-breadcrumbs slot='title' crumbs='sourdough,ciabatta'></v-breadcrumbs>

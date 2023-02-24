@@ -13,6 +13,9 @@ test('Collapse E2E Tests', async ({ page }) => {
   const closedCollapse = page.getByTestId('collapse-closed')
   await expect(closedCollapse).toBeVisible()
 
+  const bbCollapse = page.getByTestId('collapse-breadcrumbs-badge')
+  await expect(bbCollapse).toBeVisible()
+
   // Main title should display
   const collapseTitleText = 'Robots...'
   const collapseTitle = collapse.getByText(collapseTitleText)
@@ -24,6 +27,12 @@ test('Collapse E2E Tests', async ({ page }) => {
   const titleSlot = collapse.getByText(titleSlotText)
   await expect(titleSlot).toBeVisible()
   await expect(titleSlot).toHaveText(titleSlotText)
+
+  // Slot:header should display
+  const headerSlotText = '(header)'
+  const headerSlot = collapse.getByText(headerSlotText)
+  await expect(headerSlot).toBeVisible()
+  await expect(headerSlot).toHaveText(headerSlotText)
 
   // Open collapse (by "open" property) should display chevron up
   await expect(openCollapse).toHaveJSProperty('open','true')
@@ -43,12 +52,6 @@ test('Collapse E2E Tests', async ({ page }) => {
   await expect(closedCollapse.locator('i')).toBeVisible()
   await expect(closedCollapse.locator('v-icon')).toHaveClass(/rotate-0/)
 
-  // Slot:header should display
-  const headerSlotText = '(header)'
-  const headerSlot = page.getByText(headerSlotText)
-  await expect(headerSlot).toBeVisible()
-  await expect(headerSlot).toHaveText(headerSlotText)
-
   // If closed, after click, collapse should open (and display child)
   const expandText = '...are pretty cool!'
   const expand = collapse.getByText(expandText)
@@ -58,23 +61,22 @@ test('Collapse E2E Tests', async ({ page }) => {
   await collapse.click()
   await expect(expand).toBeVisible()
   await expect(expand).toHaveText(expandText)
-  await expect(openCollapse.locator('i')).toHaveClass(/icon-chevron-down/)
-  await expect(openCollapse.locator('i')).toBeVisible()
-  await expect(openCollapse.locator('v-icon')).toHaveClass(/rotate-180/)
+  await expect(collapse.locator('i')).toHaveClass(/icon-chevron-down/)
+  await expect(collapse.locator('i')).toBeVisible()
+  await expect(collapse.locator('v-icon')).toHaveClass(/rotate-180/)
 
   // If open, after click, collapse should close (and hide child)
   await expect(expand).toBeVisible()
   await collapse.click()
   await expect(expand).toBeHidden()
-  await expect(closedCollapse.locator('i')).toHaveClass(/icon-chevron-down/)
-  await expect(closedCollapse.locator('i')).toBeVisible()
-  await expect(closedCollapse.locator('v-icon')).toHaveClass(/rotate-0/)
+  await expect(collapse.locator('i')).toHaveClass(/icon-chevron-down/)
+  await expect(collapse.locator('i')).toBeVisible()
+  await expect(collapse.locator('v-icon')).toHaveClass(/rotate-0/)
 
   // Collapse with breadcrumbs and badge should display properly
   const bbTitleText = "A word on bread"
-  const bbCollapse = page.getByText(bbTitleText)
-  await expect(bbCollapse).toBeVisible()
-  await expect(bbCollapse).toHaveText(bbTitleText)
+  await expect(bbCollapse.getByText(bbTitleText)).toBeVisible()
+  await expect(bbCollapse.getByText(bbTitleText)).toHaveText(bbTitleText)
   // Breadcrumbs should display
   await expect(bbCollapse.getByText('sourdough')).toBeVisible()
   await expect(bbCollapse.getByText('ciabatta')).toBeVisible()
@@ -82,5 +84,4 @@ test('Collapse E2E Tests', async ({ page }) => {
   await expect(bbCollapse.getByText('FRESH')).toBeVisible()
   const bbExpandText = "How do you tell how good bread is without tasting it? Not the smell, not the look, but the sound of the crust. Listen. Symphony of crackle."
   await expect(bbCollapse.getByText(bbExpandText)).toBeHidden()
-
 });
