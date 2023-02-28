@@ -7,21 +7,21 @@
 
     <!-- Selected Value -->
     <v-tabs
-      data-testid="Selected Test"
+      data-testid="selected-test"
       tabs="Tab 1, Tab 2, Tab 3"
       selected="Tab 2"
     />
 
     <!-- No Selected Value, Default Should Be First Tab -->
     <v-tabs
-      data-testid="Default Test"
+      data-testid="default-test"
       class="mt-2"
       tabs="Tab A, Tab B, Tab C"
     />
 
     <!-- Focus KeyDown Test -->
     <v-tabs
-      data-testid="Key Enter Test"
+      data-testid="key-enter-test"
       class="mt-2"
       tabs="Tab X, Tab Y, Tab Z"
       selected="Tab Z"
