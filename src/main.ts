@@ -21,8 +21,9 @@ if (customElements.get('v-badge')) {
   import('./elements/icon.svelte');
   import('./elements/json-editor.svelte');
   import('./elements/input/input');
-  import('./elements/notify.svelte');
+  import('./elements/list-box.svelte');
   import('./elements/modal.svelte');
+  import('./elements/notify.svelte');
   import('./elements/pill.svelte');
   import('./elements/radio.svelte');
   import('./elements/select/select.svelte');

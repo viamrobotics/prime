@@ -1,0 +1,40 @@
+<script setup lang="ts">
+
+</script>
+
+<template>
+    <v-pill
+      data-testid="pill-default"
+    />
+    <v-pill
+      data-testid="pill-value"
+      value='one'
+    />
+    <v-pill
+        data-testid="pill-removable-default"
+    />
+    <v-pill
+    data-testid="pill-removable-true"
+      removable="true"
+    />
+    <v-pill
+    data-testid="pill-removable-false"
+      removable="false"
+    />
+    <v-pill
+    data-testid="pill-disabled-true"
+    disabled="true"
+    />
+    <v-pill
+    data-testid="pill-disabled-false"
+    disabled="false"
+    />
+    <v-pill
+    data-testid="pill-readonly-true"
+    readonly="true"
+    />
+    <v-pill
+    data-testid="pill-readonly-false"
+    readonly="false"
+    />
+</template>

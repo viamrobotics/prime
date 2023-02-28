@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import Tabs from './tabs.vue'
+import BadgeTest from './badge-test.vue'
+import PillTest from'./pill-test.vue'
+import BreadcrumbsTest from './breadcrumb-test.vue';
+import NotifyTest from './notify-test.vue'
+import IconTest from './icon-test.vue'
+import CollapseTest from './collapse-test.vue'
 
 </script>
 
 <template>
-  <main class="m-3">
+  <main>
     <v-collapse title="Click to find out!">
       <p>You found out!</p>
     </v-collapse>
@@ -22,5 +28,22 @@ import Tabs from './tabs.vue'
     />
 
     <Tabs />
+    <BadgeTest />
+
+    <v-list-box
+      left="Charmander,Pikachu,Venusaur"
+      right="Nidoqueen,Butterfree,Ditto,Gyardos,Machamp"
+      leftlabel="Team"
+      rightlabel="Box 1"
+      disabled="false"
+    >
+      <div slot="left-empty">Your roster is empty</div>
+      <div slot="right-empty">This box is empty</div>
+    </v-list-box>
+    <PillTest/>
+    <BreadcrumbsTest /> 
+    <NotifyTest />
+    <IconTest />
+    <CollapseTest />
   </main>
 </template>
