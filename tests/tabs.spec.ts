@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { waitForCustomEvent } from './lib/helper.ts'
 
+
 test('Tabs E2E Test', async ({ page }) => {
   await page.goto('/test.html');
 
@@ -27,9 +28,10 @@ test('Tabs E2E Test', async ({ page }) => {
   await expect(selectedTestTabs).toHaveAttribute("selected", "Tab 2")
 
   // Check Selected Tab Has Correct Background Color of White (Tab 2)
-  await expect(tab1).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
-  await expect(tab2).toHaveCSS("background-color", "rgb(255, 255, 255)")
-  await expect(tab3).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
+  await expect(tab1).not.toHaveClass(/bg-white/)
+  await expect(tab2).toHaveClass(/bg-white/)
+  await expect(tab3).not.toHaveClass(/bg-white/)
+
 
   // Click on Tab 3 
   // Check That New Selected Tab is Correct (Tab 3)
@@ -37,13 +39,15 @@ test('Tabs E2E Test', async ({ page }) => {
   await tab3.click()
   await expect(tab3Selected).toBeTruthy()
 
+
   // Check That New Selected Tab Has Correct Background Color of White (Tab 3)
-  await expect(tab1).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
-  await expect(tab2).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
-  await expect(tab3).toHaveCSS("background-color", "rgb(255, 255, 255)")
+  await expect(tab1).not.toHaveClass(/bg-white/)
+  await expect(tab2).not.toHaveClass(/bg-white/)
+  await expect(tab3).toHaveClass(/bg-white/)
 
   // Check That If No Selected Value, Default Selected Is First Value (Tab A)
   // Currently, there is no default behavior.
+  
   // const tabA = page.getByRole('button', { name: 'Tab A' })
   // const tabB = page.getByRole('button', { name: 'Tab B' })
   // const tabC = page.getByRole('button', { name: 'Tab C' })
@@ -62,9 +66,9 @@ test('Tabs E2E Test', async ({ page }) => {
   const tabY = page.getByRole('button', { name: 'Tab Y' })
   const tabZ = page.getByRole('button', { name: 'Tab Z' })
 
-  await expect(tabX).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
-  await expect(tabY).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
-  await expect(tabZ).toHaveCSS("background-color", "rgb(255, 255, 255)")
+  await expect(tabX).not.toHaveClass(/bg-white/)
+  await expect(tabY).not.toHaveClass(/bg-white/)
+  await expect(tabZ).toHaveClass(/bg-white/)
 
   // Focus on Tab Y
   const tabYSelected = waitForCustomEvent(page,'input')
@@ -75,8 +79,8 @@ test('Tabs E2E Test', async ({ page }) => {
   // Check That New Selected Tab is Tab Y
   await expect(tabYSelected).toBeTruthy()
 
-  await expect(tabX).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
-  await expect(tabY).toHaveCSS("background-color", "rgb(255, 255, 255)")
-  await expect(tabZ).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
+  await expect(tabX).not.toHaveClass(/bg-white/)
+  await expect(tabY).toHaveClass(/bg-white/)
+  await expect(tabZ).not.toHaveClass(/bg-white/)
 });
 

@@ -12,3 +12,9 @@ export const waitForCustomEventTimeout = async (page:Page,customEventName:string
 
   expect(value).toBe("timeout")
 }
+
+export const waitForCustomEventTest = async(page:Page, customEventName:string) => {
+  const value = page.evaluate(eventName => new Promise(callback => window.addEventListener(eventName, callback,{ once: true })), customEventName)
+  console.log(value);
+  return value
+}
