@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Tabs from './tabs.vue'
+import Tabs from './tabs-test.vue'
 import BadgeTest from './badge-test.vue'
 import PillTest from'./pill-test.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';

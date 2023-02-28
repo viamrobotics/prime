@@ -5,13 +5,6 @@
 <template>
   <main class="m-3">
 
-    <!-- 	
-        GIVEN a "tabs" attribute has been applied to the v-tabs element
-        AND the value passed to the "tabs" attribute is a comma-separated list of strings
-        WHEN the element is rendered
-        THEN the tabs should render the list of values as tabs 
-    -->
-
     <!-- Selected Value -->
     <v-tabs
       data-testid="Selected Test"
