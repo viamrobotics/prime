@@ -6,7 +6,7 @@ test('Tabs E2E Test', async ({ page }) => {
   await page.goto('/test.html');
 
   // Confirm All Tabs Render Correctly
-  const selectedTestTabs = page.getByTestId("selected-test")
+  const selectedTestTabs = page.getByTestId("tabs-selected-test")
 
   const tab1 = page.getByRole('button', { name: 'Tab 1' })
   const tab2 = page.getByRole('button', { name: 'Tab 2' })
@@ -59,7 +59,7 @@ test('Tabs E2E Test', async ({ page }) => {
   // Focus, Keydown Test
   // Check That Selected Tab to Start Is Tab Z
 
-  const keyEnterTestTabs = page.getByTestId("key-enter-test")
+  const keyEnterTestTabs = page.getByTestId("tabs-key-enter-test")
   await expect(keyEnterTestTabs).toHaveAttribute("selected", "Tab Z")
 
   const tabX = page.getByRole('button', { name: 'Tab X' })
