@@ -4,6 +4,7 @@ import jsCodeExampleSrc from './assets/javascript-code-example';
 import tsCodeExampleSrc from './assets/typescript-code-example';
 import pythonCodeExampleSrc from './assets/python-code-example';
 import goCodeExampleSrc from './assets/go-code-example';
+import shellCodeExampleSrc from './assets/shell-code-example';
 import * as diffCodeExampleSrc from './assets/diff-example';
 
 <Meta
@@ -33,7 +34,7 @@ import * as diffCodeExampleSrc from './assets/diff-example';
     },
     language: {
       control: { type: 'select' },
-      options: ['json', 'javascript', 'typescript', 'python', 'go'],
+      options: ['json', 'javascript', 'typescript', 'python', 'go', 'shell'],
       description: 'The language to use for syntax highlighting',
       table: { defaultValue: { summary: 'json' } },
     },
@@ -55,9 +56,9 @@ import * as diffCodeExampleSrc from './assets/diff-example';
       options: ['true', 'false'],
       table: { defaultValue: { summary: 'false' } },
     },
-    uri: {
+    schema: {
       description:
-        'When defined, is passed to `window.monaco.editor.createModel`',
+        'When defined, is used to create the model URI passed to `window.monaco.editor.createModel`',
       control: { type: 'text' },
       table: { defaultValue: { summary: '' } },
     },
@@ -70,13 +71,13 @@ Uses `monaco` for syntax-highlighting.
 
 <Canvas>
   <Story
-    name='JavaScript editor'
+    name='JSON editor'
     args={{
-      language: 'javascript',
-      value: jsCodeExampleSrc,
+      language: 'json',
+      value: jsonCodeExampleSrc,
     }}
   >
-    {({ value, previous, language, theme, readonly, minimap, uri }) => `
+    {({ value, previous, language, theme, readonly, minimap, schema }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor
         value='${value}'
@@ -85,7 +86,31 @@ Uses `monaco` for syntax-highlighting.
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ''}'
+        schema='${schema ?? ''}'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='JavaScript editor'
+    args={{
+      language: 'javascript',
+      value: jsCodeExampleSrc,
+    }}
+  >
+    {({ value, previous, language, theme, readonly, minimap, schema }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor
+        value='${value}'
+        previous='${previous}'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        schema='${schema ?? ''}'
       />
     </div>
     `}
@@ -100,7 +125,7 @@ Uses `monaco` for syntax-highlighting.
       value: tsCodeExampleSrc,
     }}
   >
-    {({ value, language, theme, readonly, minimap, uri }) => `
+    {({ value, language, theme, readonly, minimap, schema }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${value}'
@@ -108,7 +133,7 @@ Uses `monaco` for syntax-highlighting.
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ''}'
+        schema='${schema ?? ''}'
       />
     </div>
     `}
@@ -123,7 +148,7 @@ Uses `monaco` for syntax-highlighting.
       value: pythonCodeExampleSrc,
     }}
   >
-    {({ value, language, theme, readonly, minimap, uri }) => `
+    {({ value, language, theme, readonly, minimap, schema }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${value}'
@@ -131,7 +156,7 @@ Uses `monaco` for syntax-highlighting.
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ''}'
+        schema='${schema ?? ''}'
       />
     </div>
     `}
@@ -146,7 +171,7 @@ Uses `monaco` for syntax-highlighting.
       value: goCodeExampleSrc,
     }}
   >
-    {({ value, language, theme, readonly, minimap, uri }) => `
+    {({ value, language, theme, readonly, minimap, schema }) => `
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${value}'
@@ -154,7 +179,80 @@ Uses `monaco` for syntax-highlighting.
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ''}'
+        schema='${schema ?? ''}'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Shell editor'
+    args={{
+      language: 'shell',
+      value: shellCodeExampleSrc,
+    }}
+  >
+    {({ value, language, theme, readonly, minimap, schema }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor 
+        value='${value}'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        schema='${schema ?? ''}'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly editor'
+    args={{
+      language: 'json',
+      value: jsonCodeExampleSrc,
+      readonly: true,
+    }}
+  >
+    {({ value, previous, language, theme, readonly, minimap, schema }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor
+        value='${value}'
+        previous='${previous}'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        schema='${schema ?? ''}'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Mini Map'
+    args={{
+      language: 'json',
+      value: jsonCodeExampleSrc,
+      minimap: true,
+    }}
+  >
+    {({ value, previous, language, theme, readonly, minimap, schema }) => `
+    <div style='width: 400px; height: 400px;'>
+      <v-code-editor
+        value='${value}'
+        previous='${previous}'
+        language='${language}'
+        theme='${theme}'
+        readonly='${readonly}'
+        minimap='${minimap}'
+        schema='${schema ?? ''}'
       />
     </div>
     `}
@@ -171,7 +269,16 @@ Uses `monaco` for syntax-highlighting.
       previous: diffCodeExampleSrc.previous,
     }}
   >
-    {({ variant, value, previous, language, theme, readonly, minimap, uri }) => `
+    {({
+      variant,
+      value,
+      previous,
+      language,
+      theme,
+      readonly,
+      minimap,
+      schema,
+    }) => `
     <div style='width: auto; height: 400px;'>
       <v-code-editor
         variant='${variant}'
@@ -181,7 +288,7 @@ Uses `monaco` for syntax-highlighting.
         theme='${theme}'
         readonly='${readonly}'
         minimap='${minimap}'
-        uri='${uri ?? ''}'
+        schema='${schema ?? ''}'
       />
     </div>
     `}

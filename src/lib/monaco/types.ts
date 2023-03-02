@@ -5,7 +5,8 @@ export type MonacoSupportedLanguages =
 | 'javascript'
 | 'typescript'
 | 'python'
-| 'go';
+| 'go'
+| 'shell';
 
 export interface Schema {
   $ref: string
