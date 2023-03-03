@@ -45,17 +45,6 @@ test('Tabs E2E Test', async ({ page }) => {
   await expect(tab2).not.toHaveClass(/bg-white/)
   await expect(tab3).toHaveClass(/bg-white/)
 
-  // Check That If No Selected Value, Default Selected Is First Value (Tab A)
-  // Currently, there is no default behavior.
-  
-  // const tabA = page.getByRole('button', { name: 'Tab A' })
-  // const tabB = page.getByRole('button', { name: 'Tab B' })
-  // const tabC = page.getByRole('button', { name: 'Tab C' })
-
-  // await expect(tabA).toHaveCSS("background-color", "rgb(255, 255, 255)")
-  // await expect(tabB).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
-  // await expect(tabC).not.toHaveCSS("background-color", "rgb(255, 255, 255)")
-
   // Focus, Keydown Test
   // Check That Selected Tab to Start Is Tab Z
 
