@@ -22,7 +22,7 @@ const handleRemove = () => {
 </script>
 
 
-<div class='flex items-center max-w-fit gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300'>
+<div class='flex items-center max-w-fit gap-1 rounded-xl bg-bg-3 py-0.5 px-2 text-[10px] hover:bg-gray-3'>
   <span>
     {value}
   </span>
@@ -31,6 +31,7 @@ const handleRemove = () => {
     <v-icon 
       class='cursor-pointer'
       name='x'
+      size='sm'
       on:click={handleRemove}
     />
   {/if}

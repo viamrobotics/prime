@@ -27,7 +27,7 @@ const handleClick = () => {
 
 <div 
   class={
-    cx('z-50 bg-gray-300 bg-opacity-25 w-full h-full fixed top-0 left-0 flex justify-center items-center', {
+    cx('z-50 bg-gray-2 bg-opacity-25 w-full h-full fixed top-0 left-0 flex justify-center items-center', {
       'invisible': !isOpen,
     }
   )}
@@ -35,12 +35,12 @@ const handleClick = () => {
   on:keyup|stopPropagation|preventDefault={handleClick}
 >
   <div 
-    class='w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4'
+    class='w-[400px] relative border border-gray-9 bg-white m-2 p-4 max-w-lg shadow-solid4'
     on:click|stopPropagation
     on:keyup|stopPropagation
   >
     <button 
-      class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-black"
+      class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-gray-9"
       aria-label='Cancel'
       on:click={handleClick}
     >

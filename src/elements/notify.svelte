@@ -18,20 +18,20 @@ addStyles();
 
 <div
   class={cx('flex gap-2 border-l-4 py-2 px-2', {
-    'bg-gray-100': background === 'gray',
     'bg-white': background === 'white',
-    'border-red/90': variant === 'error',
-    'border-orange/90': variant === 'warning',
-    'border-green/90': variant === 'success',
-    'border-blue/90': variant === 'info',
+    'bg-bg-2': background === 'gray',
+    'border-danger-fg': variant === 'error',
+    'border-warning-fg': variant === 'warning',
+    'border-success-fg': variant === 'success',
+    'border-info-fg': variant === 'info',
   })}
 >
   {#if variant === 'error'}
-    <v-icon class='mt-0.5 text-red/90' name='error-outline' />
+    <v-icon class='mt-0.5 text-danger-fg' name='error-outline' />
   {:else if variant === 'info'}
-    <v-icon class='mt-0.5 text-blue/90' name='info-outline' />
+    <v-icon class='mt-0.5 text-info-fg' name='info-outline' />
   {:else if variant === 'success'}
-    <v-icon class='mt-0.5 text-green/90' name='checkmark' />
+    <v-icon class='mt-0.5 text-success-fg' name='checkmark' />
   {/if}
 
   {#if variant === 'warning'}

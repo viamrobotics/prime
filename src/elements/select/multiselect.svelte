@@ -272,8 +272,8 @@ $: {
         <v-tooltip text={tooltip}>
           <div class={cx({
             'icon-info-outline': state === 'info',
-            'icon-error-outline text-orange-400': state === 'warn',
-            'icon-error-outline text-red-600': state === 'error',
+            'icon-error-outline text-warning-fg': state === 'warn',
+            'icon-error-outline text-danger-fg': state === 'error',
           })} />
         </v-tooltip>
       {/if}
@@ -286,8 +286,9 @@ $: {
     >
       <div
         slot='target'
-        class={cx('w-full border border-black bg-white', {
-          'opacity-50 pointer-events-none bg-gray-200': isDisabled,
+        class={cx('w-full border bg-white', {
+          'border-gray-8': !isDisabled,
+          'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg': isDisabled,
         })}
       >
         <div class='flex'>
@@ -309,7 +310,10 @@ $: {
             on:click={handleIconClick}
             on:focusin|stopPropagation
           >
-            <v-icon class='flex' name='chevron-down' />
+            <v-icon
+              class={cx('flex', { 'text-disabled-fg': isDisabled })}
+              name='chevron-down'
+            />
           </button>
         </div>
 

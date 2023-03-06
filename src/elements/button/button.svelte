@@ -65,13 +65,14 @@ const handleParentClick = (event: PointerEvent) => {
     title={title}
     class={cx('will-change-transform hover:scale-105 motion-safe:transition-transform', {
       'inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border': variant !== 'icon',
-      'cursor-not-allowed opacity-50 pointer-events-none': isDisabled,
-      'bg-white border-black': variant === 'primary',
-      'bg-black border-black text-white': variant === 'inverse-primary',
-      'bg-red/90 text-white border-red/90': variant === 'danger',
-      'bg-green/90 border-green/90 text-white': variant === 'success',
-      'bg-white border-red/90 text-red/90': variant === 'outline-danger',
+      'bg-white border-gray-9': variant === 'primary',
+      'bg-gray-9 border-gray-9 text-white': variant === 'inverse-primary',
+      'bg-danger-fg text-white border-danger-fg': variant === 'danger',
+      'bg-success-fg border-success-fg text-white': variant === 'success',
+      'bg-danger-bg border-danger-bg text-danger-fg': variant === 'outline-danger',
+      'bg-disabled-bg border-disabled-bg text-disabled-fg pointer-events-none select-none': isDisabled,
     })}
+    style={isDisabled ? '-webkit-user-select: none' : ''}
     on:click={handleClick}
   >
     {#if icon}
