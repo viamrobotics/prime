@@ -18,6 +18,7 @@ export let placeholder = '';
 export let label = '';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
+export let readonly: string;
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
@@ -38,6 +39,7 @@ let root: HTMLElement;
 let input: HTMLInputElement;
 let optionsContainer: HTMLElement;
 let isDisabled: boolean;
+let isReadonly: boolean;
 let hasPrefix: boolean;
 let showsPill: boolean;
 let canClearAll: boolean;
@@ -51,6 +53,7 @@ let searchedOptions: { option: string; search?: string[] }[];
 
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
+$: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: showsPill = htmlToBoolean(showpill, 'showpill');
 $: canClearAll = htmlToBoolean(clearable, 'clearable');
@@ -161,7 +164,7 @@ const handleEscape = () => {
 };
 
 const handleFocus = () => {
-  if (open || isDisabled) {
+  if (open || isDisabled || isReadonly) {
     return;
   }
 
@@ -185,9 +188,11 @@ const handleIconClick = () => {
 };
 
 const handlePillClick = (target: string) => {
-  const newValue = parsedSelected.filter((item: string) => item !== target);
-  value = newValue.toString();
-  dispatch('input', { value, values: newValue, removed: target });
+  if (!isReadonly) {
+    const newValue = parsedSelected.filter((item: string) => item !== target);
+    value = newValue.toString();
+    dispatch('input', { value, values: newValue, removed: target });
+  }
 };
 
 const handleOptionMouseEnter = (index: number) => {
@@ -261,7 +266,7 @@ $: {
     <div class='flex items-center gap-1.5'>
       {#if label}
         <p class={cx('text-xs capitalize', {
-          'opacity-50 pointer-events-none': isDisabled,
+          'text-black/50': isDisabled || isReadonly,
           'inline whitespace-nowrap': labelposition === 'left',
         })}>
           {label}
@@ -287,8 +292,8 @@ $: {
       <div
         slot='target'
         class={cx('w-full border bg-white', {
-          'border-gray-8': !isDisabled,
-          'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg': isDisabled,
+          'border-gray-8': !isDisabled || isReadonly,
+          'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg': isDisabled || isReadonly,
         })}
       >
         <div class='flex'>
@@ -296,7 +301,7 @@ $: {
             bind:this={input}
             {placeholder}
             value={searchterm}
-            readonly={isDisabled ? true : undefined}
+            readonly={(isDisabled || isReadonly) ? true : undefined}
             aria-disabled={isDisabled ? true : undefined}
             type='text'
             class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 outline-none bg-transparent appearance-none'
@@ -306,7 +311,10 @@ $: {
           <button
             tabindex='-1'
             aria-label='Open dropdown'
-            class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 'rotate-180': open })}
+            class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 
+              'rotate-180': open,
+              'text-disabled-fg': isDisabled || isReadonly,
+            })}
             on:click={handleIconClick}
             on:focusin|stopPropagation
           >
@@ -414,11 +422,16 @@ $: {
     </v-dropdown>
   </label>
   {#if parsedSelected.length > 0 && showsPill}
-    <div class='flex flex-wrap gap-2 pt-2'>
+    <div class={cx('flex flex-wrap gap-2 pt-2', {
+      'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
+      'text-black/50': isDisabled || isReadonly,
+    })}>
       {#each parsedSelected as option (option)}
         <v-pill
           on:remove={() => handlePillClick(option)}
           value={option}
+          {readonly}
+          {disabled}
         />
       {/each}
     </div>

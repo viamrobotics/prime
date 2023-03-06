@@ -6,4 +6,4 @@ import "fmt"
 func DoSomething(thing string) {
 	fmt.Println(thing)
 }
-`).trim()
+`).trim();

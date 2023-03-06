@@ -7,22 +7,27 @@ type Variants = 'default' | 'minimal'
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
+import { htmlToBoolean } from '../lib/boolean';
 
 export let title = '';
-export let open = false;
+export let open = 'false';
 export let variant: Variants = 'default';
 
 const dispatch = dispatcher();
 
 addStyles();
 
+let isOpen: boolean;
+
+$: isOpen = htmlToBoolean(open, 'open');
+
 const handleClick = (event: Event) => {
   if ((event.target as HTMLElement).getAttribute('slot') === 'header') {
     return;
   }
 
-  open = !open;
-  dispatch('toggle', { open });
+  isOpen = !isOpen;
+  dispatch('toggle', { isOpen });
 };
 
 </script>
@@ -48,8 +53,8 @@ const handleClick = (event: Event) => {
 
       <v-icon
         class={cx('transition-transform duration-200', {
-          'rotate-0': !open,
-          'rotate-180': open,
+          'rotate-0': !isOpen,
+          'rotate-180': isOpen,
         })}
         name='chevron-down'
         size='2xl'
@@ -60,7 +65,7 @@ const handleClick = (event: Event) => {
   <div
     class="{cx('text-black transition-all duration-500', {
       'bg-white': variant === 'default',
-      'hidden': !open,
+      'hidden': !isOpen,
     })}"
   >
     <slot />

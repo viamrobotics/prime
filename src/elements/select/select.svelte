@@ -18,6 +18,7 @@ export let placeholder = '';
 export let label: string;
 export let labelposition: LabelPosition = 'top';
 export let disabled: string;
+export let readonly: string;
 export let exact = 'false';
 export let prefix = 'false';
 export let tooltip = '';
@@ -35,6 +36,7 @@ let root: HTMLElement;
 let input: HTMLInputElement;
 let optionsContainer: HTMLElement;
 let isDisabled: boolean;
+let isReadonly: boolean;
 let isExact: boolean;
 let hasPrefix: boolean;
 let hasButton: boolean;
@@ -45,6 +47,7 @@ let sortedOptions: string[];
 let searchedOptions: { option: string; search?: string[] }[];
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
+$: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isExact = htmlToBoolean(exact, 'exact');
 $: hasPrefix = htmlToBoolean(prefix, 'prefix');
 $: hasButton = htmlToBoolean(withbutton, 'withbutton');
@@ -144,7 +147,7 @@ const handleEscape = () => {
 };
 
 const handleFocus = () => {
-  if (open || isDisabled) {
+  if (open || isDisabled || isReadonly) {
     return;
   }
 
@@ -207,7 +210,7 @@ $: {
   <div class='flex items-center gap-1.5'>
     {#if label}
       <p class={cx('text-xs capitalize', {
-        'opacity-50 pointer-events-none': isDisabled,
+        'text-black/50': isDisabled || isReadonly,
         'inline whitespace-nowrap': labelposition === 'left',
       })}>
         {label}
@@ -232,7 +235,7 @@ $: {
     <div
       slot='target'
       class={cx('w-full border border-black bg-white', {
-        'opacity-50 pointer-events-none bg-gray-200': isDisabled,
+        'border-black/50': isDisabled || isReadonly,
       })}
     >
       <div class='flex'>
@@ -241,16 +244,21 @@ $: {
           {placeholder}
           value={value}
           aria-disabled={isDisabled ? true : undefined}
-          readonly={isDisabled ? true : undefined}
+          readonly={(isDisabled || isReadonly) ? true : undefined}
           type='text'
-          class='py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none'
+          class={cx('py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none', {
+            'text-black/50': isDisabled || isReadonly,
+          })}
           on:input|preventDefault={handleInput}
           on:keyup|stopPropagation|preventDefault={handleKeyUp}
         >
         <button
           tabindex='-1'
           aria-label='Open dropdown'
-          class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 'rotate-180': open })}
+          class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 
+            'rotate-180': open,
+            'text-black/50': isDisabled || isReadonly,
+          })}
           on:click={handleIconClick}
           on:focusin|stopPropagation
         >

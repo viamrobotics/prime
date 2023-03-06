@@ -215,3 +215,28 @@ For user triggered actions
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      range: 'min',
+      max: 100,
+      step: 10,
+      value: 30,
+      readonly: 'true',
+      label: 'readonly'
+    }}
+  >
+    {({ range, max, step, value, readonly, label }) => `
+      <v-slider
+        range='${range}'
+        max='${max}'
+        step='${step}'
+        value='${value}'
+        readonly='${readonly}'
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>

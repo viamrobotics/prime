@@ -20,6 +20,24 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'An optional label',
       table: { defaultValue: { summary: '' } },
     },
+    labelposition: {
+      description: 'The position for the optional label',
+      table: { defaultValue: { summary: 'top' } },
+      control: { type: 'radio' },
+      options: ['top', 'left'],
+      type: 'text'
+    },
+    tooltip: {
+      description: 'An optional tooltip',
+      table: { defaultValue: { summary: '' } },
+    },
+    state: {
+      description: 'The state for the optional tooltip (determines the icon type)',
+      table: { defaultValue: { summary: 'info' } },
+      control: { type: 'radio' },
+      options: ['info', 'warn', 'error'],
+      type: 'text'
+    },
     'on:input': {
       description: 'Event fired when an option is selected',
     },
@@ -52,13 +70,15 @@ For user triggered actions
     name='With label'
     args={{
       label: 'These are your options',
+      labelposition: 'top',
       options: 'Opt 1, Opt 2',
       selected: 'Opt 1',
     }}
   >
-    {({ options, selected, label }) => `
+    {({ options, selected, label, labelposition }) => `
       <v-radio
         label='${label}'
+        labelposition='${labelposition}'
         options='${options}'
         selected='${selected}'
       />
@@ -71,19 +91,40 @@ For user triggered actions
     name='Tooltip and state'
     args={{
       label: 'Your options',
+      labelposition: 'top',
       options: 'Option 1, Option 2, Option 3',
       selected: 'Option 1',
       tooltip: 'Warning: these options may not be your only options.',
       state: 'warn',
     }}
   >
-    {({ label, options, selected, placeholder, tooltip, state }) => `
+    {({ label, labelposition, options, selected, placeholder, tooltip, state }) => `
       <v-radio
         label='${label}'
+        labelposition='${labelposition}'
         selected='${selected}'
         options='${options}'
         tooltip='${tooltip}'
         state='${state}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      options: 'Opt 1, Opt 2, Opt 3',
+      selected: 'Opt 1',
+      readonly: 'true'
+    }}
+  >
+    {({ options, selected, readonly }) => `
+      <v-radio
+        options='${options}'
+        selected='${selected}'
+        readonly='${readonly}'
       />
     `}
   </Story>

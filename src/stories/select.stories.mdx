@@ -184,6 +184,27 @@ For a dropdown that allows the user to select a single option
 
 <Canvas>
   <Story
+    name='Readonly'
+    args={{
+      label: 'Readonly',
+      options: 'Option 1, Option 2, Option 3',
+      readonly: 'readonly',
+      value: 'Option 1'
+    }}
+  >
+    {({ label, options, readonly, value }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        readonly='${readonly}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
     name='Exact'
     args={{
       label: 'Exact Option',

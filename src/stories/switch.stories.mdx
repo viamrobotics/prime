@@ -98,14 +98,16 @@ Used to handle binary input.
     args={{
       value: 'off',
       variant: 'labeled',
-      disabled: 'true'
+      disabled: 'true',
+      label: 'disabled',
     }}
   >
-    {({ value, variant, disabled }) => `
+    {({ value, variant, disabled, label }) => `
       <v-switch
         value='${value}'
         variant='${variant}'
         disabled='${disabled}'
+        label='${label}'
       />
     `}
   </Story>
@@ -126,6 +128,27 @@ Used to handle binary input.
         value='${value}'
         variant='${variant}'
         tooltip='${tooltip}'
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      value: 'on',
+      variant: 'annotated',
+      readonly: 'true',
+      label: 'readonly'
+    }}
+  >
+    {({ value, variant, readonly, label }) => `
+      <v-switch
+        value='${value}'
+        variant='${variant}'
+        readonly='${readonly}'
         label='${label}'
       />
     `}
