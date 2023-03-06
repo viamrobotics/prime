@@ -16,19 +16,19 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'Message',
       table: { defaultValue: { summary: '' } },
     },
-    buttonText: {
-      description: 'The button text',
-      table: { defaultValue: { summary: 'DELETE' } },
-    },
-    variant: {
-      description: 'The communicated action type of the button',
-      control: 'select',
-      options: ['primary', 'inverse-primary', 'success', 'danger', 'outline-danger'],
-      table: { defaultValue: { summary: 'primary' } }
-    },
     open: {
       description: 'Used to control whether modal is open',
       control: { type: 'boolean' },
+    },
+    buttonText: {
+      description: 'The button text (demo only)',
+      table: { defaultValue: { summary: 'DELETE' } },
+    },
+    variant: {
+      description: 'The communicated action type of the button (demo only)',
+      control: 'select',
+      options: ['primary', 'inverse-primary', 'success', 'danger', 'outline-danger'],
+      table: { defaultValue: { summary: 'primary' } }
     },
   }}
 />
@@ -39,9 +39,9 @@ Creates a modal overlay
 
 <Canvas>
   <Story
-    name='Delete'
+    name='Confirmation'
     args={{
-      title: 'Delete example.',
+      title: 'Delete Confirmation!',
       message: 'Are you sure you want to delete this?',
       buttonText: 'DELETE',
       variant: 'danger',
@@ -54,6 +54,7 @@ Creates a modal overlay
           ${open ? "open" : ""}
           title='${title}'
           message='${message}'
+          onclose='this.removeAttribute("open")'
         >
           <v-button
             class='ml-4'

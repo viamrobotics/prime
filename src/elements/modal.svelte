@@ -6,6 +6,7 @@ import cx from 'classnames';
 import { addStyles } from '../lib/index';
 import { htmlToBoolean } from '../lib/boolean';
 import { dispatcher } from '../lib/dispatch';
+import { checkKeyboardEvent } from '../lib/events';
 
 export let title = '';
 export let message = '';
@@ -19,20 +20,33 @@ let isOpen: boolean;
 
 $: isOpen = htmlToBoolean(open, 'open');
 
-const handleClick = () => {
+const handleClose = (event: MouseEvent | KeyboardEvent) => {
+  if (
+    event instanceof KeyboardEvent &&
+    !checkKeyboardEvent(event, ['Enter'])
+  ) {
+    return;
+  }
+
   dispatch('close');
 };
 
 </script>
 
+<!-- 
+  In order to make the overlay keyboard navigable for the keyup behavior we need to apply a tab index to this div.
+  svelte-ignore a11y-no-noninteractive-tabindex 
+-->
 <div 
   class={
     cx('z-50 bg-gray-300 bg-opacity-25 w-full h-full fixed top-0 left-0 flex justify-center items-center', {
       'invisible': !isOpen,
     }
   )}
-  on:click={handleClick}
-  on:keyup|stopPropagation|preventDefault={handleClick}
+  tabindex="0"
+  aria-label={`${title}`}
+  on:click={handleClose}
+  on:keyup|stopPropagation|preventDefault={handleClose}
 >
   <div 
     class='w-[400px] relative border border-black bg-white m-2 p-4 max-w-lg shadow-solid4'
@@ -42,7 +56,7 @@ const handleClick = () => {
     <button 
       class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-black"
       aria-label='Cancel'
-      on:click={handleClick}
+      on:click={handleClose}
     >
       <v-icon
         name='x'
