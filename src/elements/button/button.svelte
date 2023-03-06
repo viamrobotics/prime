@@ -70,7 +70,7 @@ const handleParentClick = (event: PointerEvent) => {
       'bg-danger-fg text-white border-danger-fg': variant === 'danger',
       'bg-success-fg border-success-fg text-white': variant === 'success',
       'bg-danger-bg border-danger-bg text-danger-fg': variant === 'outline-danger',
-      'bg-disabled-bg border-disabled-bg text-disabled-fg pointer-events-none select-none': isDisabled,
+      '!bg-disabled-bg border-disabled-bg text-disabled-fg pointer-events-none select-none': isDisabled,
     })}
     style={isDisabled ? '-webkit-user-select: none' : ''}
     on:click={handleClick}

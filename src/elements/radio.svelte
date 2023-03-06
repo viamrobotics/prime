@@ -66,7 +66,7 @@ const handleClick = (value: string) => {
         class={cx('whitespace-nowrap capitalize border-y border-l last:border-r border-gray-9 px-2 py-1 text-xs', {
           'bg-white': option !== selected,
           'bg-gray-9 text-white font-bold': ((option === selected) && !isReadonly),
-          'bg-disabled-bg text-disabled-fg font-bold': ((option === selected) && isReadonly),
+          'bg-disabled-fg text-white font-bold': ((option === selected) && isReadonly),
           'border-disabled-fg text-disabled-fg': isReadonly,
           'cursor-not-allowed pointer-events-none': isReadonly,
         })}
