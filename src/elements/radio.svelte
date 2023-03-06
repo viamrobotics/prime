@@ -14,7 +14,7 @@ export let options = '';
 export let selected = '';
 export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
-export let state: 'info' | 'warn' | 'error' | '' = 'info';
+export let state: 'info' | 'warn' | 'error' = 'info';
 export let readonly: string;
 
 const dispatch = dispatcher();
@@ -36,13 +36,13 @@ const handleClick = (value: string) => {
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<label>
-  <div class={cx('flex items-center gap-1.5', {
-    'pb-1': labelposition === 'top',
-  })}>
+<label class={cx('flex gap-1.5', {
+  'flex-col': labelposition === 'top',
+  'flex-row': labelposition === 'left',
+})}>
+  <div class='flex items-center gap-1.5'>
     {#if label}
       <p class={cx('text-xs', {
-        inline: labelposition === 'left',
         'text-black/50': isReadonly,
       })}>
         {label}
