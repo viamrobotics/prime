@@ -1,3 +1,5 @@
+import { addSpecialCharacterEscapes } from '../../lib/sort';
+
 interface Match { 
   search: string[],
   option: string,
@@ -24,8 +26,10 @@ export const applySearchHighlight = (options: string[], value: string) => {
   const matches = [];
   const noMatches = [];
 
+  const valueCopy = addSpecialCharacterEscapes(value);
+
   for (const option of options) {
-    const match = option.match(new RegExp(value, 'i'));
+    const match = option.match(new RegExp(valueCopy, 'i'));
 
     if (match?.index === undefined) {
       noMatches.push({
@@ -34,8 +38,8 @@ export const applySearchHighlight = (options: string[], value: string) => {
       });
     } else {
       const begin = option.slice(0, match.index);
-      const middle = option.slice(match.index, match.index + value.length);
-      const end = option.slice(match.index + value.length);
+      const middle = option.slice(match.index, match.index + valueCopy.length);
+      const end = option.slice(match.index + valueCopy.length);
       matches.push({
         search: [begin, middle, end],
         option,
