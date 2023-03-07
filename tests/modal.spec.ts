@@ -10,7 +10,8 @@ test('Renders appropriately according to open attribute', async ({ page }) => {
   await expect(page.getByTestId('modal-closed')).toBeHidden()
 
   // open="true" attribute applied
-  await expect(page.getByTestId('modal-open')).toHaveJSProperty('hidden', false)
+  const modalOpen = page.getByTestId('modal-open')
+  await expect(modalOpen.locator('div').first()).toBeVisible() // v-modal has 0-size, check first element with size
 });
 
 test('Renders title and message', async ({ page }) => {
