@@ -277,8 +277,8 @@ $: {
         <v-tooltip text={tooltip}>
           <div class={cx({
             'icon-info-outline': state === 'info',
-            'icon-error-outline text-orange-400': state === 'warn',
-            'icon-error-outline text-red-600': state === 'error',
+            'icon-error-outline text-warning-fg': state === 'warn',
+            'icon-error-outline text-danger-fg': state === 'error',
           })} />
         </v-tooltip>
       {/if}
@@ -291,8 +291,9 @@ $: {
     >
       <div
         slot='target'
-        class={cx('w-full border border-black bg-white', {
-          'border-black/50': isDisabled || isReadonly,
+        class={cx('w-full border bg-white', {
+          'border-gray-8': !isDisabled || isReadonly,
+          'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg': isDisabled || isReadonly,
         })}
       >
         <div class='flex'>
@@ -312,12 +313,15 @@ $: {
             aria-label='Open dropdown'
             class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 
               'rotate-180': open,
-              'text-black/50': isDisabled || isReadonly,
+              'text-disabled-fg': isDisabled || isReadonly,
             })}
             on:click={handleIconClick}
             on:focusin|stopPropagation
           >
-            <v-icon class='flex' name='chevron-down' />
+            <v-icon
+              class={cx('flex', { 'text-disabled-fg': isDisabled })}
+              name='chevron-down'
+            />
           </button>
         </div>
 

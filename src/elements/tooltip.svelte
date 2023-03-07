@@ -101,13 +101,13 @@ addStyles();
       absolute
       top-0
       left-0
-      bg-white
-      text-black
+      bg-gray-9
+      text-white
       text-left
       text-xs
       py-1 px-2
       border
-      border-black
+      border-gray-9
       z-[1000]
     `}
     style='
@@ -117,7 +117,7 @@ addStyles();
     >
     <div
       bind:this={arrowElement}
-      class='absolute triangle w-0 h-0'
+      class='absolute triangle border-b-gray-9 w-0 h-0'
     />
     {text}
     <slot name='text' />
@@ -128,6 +128,6 @@ addStyles();
   .triangle {
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-bottom: 6px solid black;
+    border-bottom: 6px solid;
   }
 </style>

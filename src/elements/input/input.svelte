@@ -210,8 +210,8 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     {#if label}
       <p class={cx('text-xs capitalize', {
         'inline whitespace-nowrap': labelposition === 'left',
-        'text-black/50': isDisabled || isReadonly,
-        'after:text-red-500 after:content-["*"] after:ml-1': isRequired,
+        'text-text-disabled-fg pointer-events-none': isDisabled,
+        'after:text-danger-fg after:content-["*"] after:ml-1': isRequired,
       })}>
         {label}
       </p>
@@ -220,9 +220,9 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     {#if tooltip}
       <v-tooltip text={tooltip}>
         <div class={cx({
-          'icon-info-outline': state === 'info',
-          'icon-error-outline text-orange-400': state === 'warn',
-          'icon-error-outline text-red-600': state === 'error',
+          'icon-info-outline text-gray-6': state === 'info',
+          'icon-error-outline text-warning-fg': state === 'warn',
+          'icon-error-outline text-danger-fg': state === 'error',
         })} />
       </v-tooltip>
     {/if}
@@ -239,14 +239,12 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     required={(isRequired) ? true : undefined}
     aria-disabled={isDisabled ? true : undefined}
     bind:this={input}
-    class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border border-black outline-none appearance-none', {
+    class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border outline-none appearance-none', {
       'pl-2.5': isNumeric === false,
       'pl-3': isNumeric,
-      'bg-white': !isDisabled,
-      'bg-black/20': (isDisabled || isDragging || isReadonly),
-      'border-black/50': isDisabled || isReadonly,
-      'text-black/50': isDisabled || isReadonly,
-      'border-red-600 border': state === 'error',
+      'bg-white border-gray-8': !isDisabled,
+      'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg': isDisabled || isDragging || isReadonly,
+      'border-danger-fg border': state === 'error',
     })}
     step={insertStepAttribute ? step : null}
     on:input|preventDefault|stopPropagation={handleInput}

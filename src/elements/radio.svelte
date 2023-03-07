@@ -53,8 +53,8 @@ const handleClick = (value: string) => {
       <v-tooltip text={tooltip}>
         <div class={cx({
           'icon-info-outline': state === 'info',
-          'icon-error-outline text-orange-400': state === 'warn',
-          'icon-error-outline text-red-600': state === 'error',
+          'icon-error-outline text-warning-fg': state === 'warn',
+          'icon-error-outline text-danger-fg': state === 'error',
         })} />
       </v-tooltip>
     {/if}
@@ -63,11 +63,11 @@ const handleClick = (value: string) => {
   <div class="flex flex-nowrap">
     {#each parsedOptions as option}
       <button
-        class={cx('whitespace-nowrap capitalize border-y border-l last:border-r border-black px-2 py-1 text-xs', {
+        class={cx('whitespace-nowrap capitalize border-y border-l last:border-r border-gray-9 px-2 py-1 text-xs', {
           'bg-white': option !== selected,
-          'bg-black text-white font-bold': ((option === selected) && !isReadonly),
-          'bg-black/20 text-black/50 font-bold': ((option === selected) && isReadonly),
-          'border-black/50 text-black/50 ': isReadonly,
+          'bg-gray-9 text-white font-bold': ((option === selected) && !isReadonly),
+          'bg-disabled-fg text-white font-bold': ((option === selected) && isReadonly),
+          'border-disabled-fg text-disabled-fg': isReadonly,
           'cursor-not-allowed pointer-events-none': isReadonly,
         })}
         on:click={() => handleClick(option)}
