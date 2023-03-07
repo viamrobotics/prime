@@ -67,6 +67,9 @@ To test:
 npm run test-dev # to test with the playwright debug UI
 # or
 npm run test # to test in headless mode
+
+# to run specific tests
+npm run test <test-name> # for <test-name>.spec.ts
 ```
 
 ### Browser Compatibility
