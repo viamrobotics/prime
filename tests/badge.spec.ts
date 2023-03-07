@@ -1,7 +1,13 @@
 import { test, expect } from '@playwright/test';
 import config from '../tailwind.config.cjs'
 
-const hexToRGB = (hex) => {
+const hexToRGB = (color?: string) => {
+  const hex = config.theme.extend.colors[color];
+
+  if (!hex) {
+    throw new Error(`hex not found for color: ${color}`)
+  }
+
   let alpha = false;
   let h = hex.slice(hex.startsWith('#') ? 1 : 0);
   if (h.length === 3) h = [...h].map(x => x + x).join('');
@@ -33,8 +39,8 @@ test('Badge E2E Tests', async ({ page }) => {
   await expect(grayBadge).toHaveText("Inactive")
   
 
-  await expect(grayBadge).toHaveCSS("background-color", hexToRGB(config.theme.extend.colors['gray/200']))
-  await expect(grayBadge).toHaveCSS("color", hexToRGB(config.theme.extend.colors['gray/800']))
+  await expect(grayBadge).toHaveCSS("background-color", hexToRGB('disabled-bg'))
+  await expect(grayBadge).toHaveCSS("color", hexToRGB('text-default'))
 
   // Default Badge Test
 
@@ -43,8 +49,8 @@ test('Badge E2E Tests', async ({ page }) => {
   await expect(defaultBadge).toBeVisible()
   await expect(defaultBadge).toHaveText("Default")
 
-  await expect(defaultBadge).toHaveCSS("background-color", hexToRGB(config.theme.extend.colors['gray/200']))
-  await expect(defaultBadge).toHaveCSS("color", hexToRGB(config.theme.extend.colors['gray/800']))
+  await expect(defaultBadge).toHaveCSS("background-color", hexToRGB('disabled-bg'))
+  await expect(defaultBadge).toHaveCSS("color", hexToRGB('text-default'))
 
   // Green Badge Test
 
@@ -53,8 +59,8 @@ test('Badge E2E Tests', async ({ page }) => {
   await expect(greenBadge).toBeVisible()
   await expect(greenBadge).toHaveText("Go")
 
-  await expect(greenBadge).toHaveCSS("background-color", hexToRGB(config.theme.extend.colors['green/200']))
-  await expect(greenBadge).toHaveCSS("color", hexToRGB(config.theme.extend.colors['green/900']))
+  await expect(greenBadge).toHaveCSS("background-color", hexToRGB('success-bg'))
+  await expect(greenBadge).toHaveCSS("color", hexToRGB('success-fg'))
 
   // Orange Badge Test
 
@@ -63,8 +69,8 @@ test('Badge E2E Tests', async ({ page }) => {
   await expect(orangeBadge).toBeVisible()
   await expect(orangeBadge).toHaveText("Danger")
 
-  await expect(orangeBadge).toHaveCSS("background-color", hexToRGB(config.theme.extend.colors['orange/200']))
-  await expect(orangeBadge).toHaveCSS("color", hexToRGB(config.theme.extend.colors['orange/900']))
+  await expect(orangeBadge).toHaveCSS("background-color", hexToRGB('warning-bg'))
+  await expect(orangeBadge).toHaveCSS("color", hexToRGB('warning-fg'))
 
   // Red Badge Test
 
@@ -73,7 +79,7 @@ test('Badge E2E Tests', async ({ page }) => {
   await expect(redBadge).toBeVisible()
   await expect(redBadge).toHaveText("Unhealthy")
 
-  await expect(redBadge).toHaveCSS("background-color", hexToRGB(config.theme.extend.colors['red/200']))
-  await expect(redBadge).toHaveCSS("color", hexToRGB(config.theme.extend.colors['red/900']))
+  await expect(redBadge).toHaveCSS("background-color", hexToRGB('danger-bg'))
+  await expect(redBadge).toHaveCSS("color", hexToRGB('danger-fg'))
 
 });

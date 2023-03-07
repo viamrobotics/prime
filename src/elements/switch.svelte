@@ -75,16 +75,17 @@ const handleClick = () => {
     aria-checked={on ? 'true' : 'false'}
   >
     <div
-      class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border border-black/70 cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
-        'bg-black/20 border-black/40': isDisabled || isReadonly,
-        'bg-black/50': !on,
-        'bg-green/80': on,
+      class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
+        'bg-disabled-bg border-disabled-bg': isDisabled || isReadonly,
+        'bg-gray-6 border-gray-6': !on,
+        'bg-success-fg border-success-fg': on,
       })}
     >
       <span
-        class={cx('pointer-events-none relative inline-block border border-green/100 h-4 w-4 mt-px ml-px bg-white shadow transform ring-0 motion-safe:transition-transform ease-in-out duration-200', {
-          'border-black/40': isDisabled || isReadonly,
+        class={cx('pointer-events-none relative inline-block h-4 w-4 mt-px ml-px bg-white transform ring-0 motion-safe:transition-transform ease-in-out duration-200', {
+          'border-disabled-fg': isDisabled || isReadonly,
         })}
+
         class:translate-x-0={!on}
         class:translate-x-6={on}
       />
