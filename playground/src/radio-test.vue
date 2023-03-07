@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <main class="m-3">
+  <main>
 
     <!-- Options, Selected Value, Click -->
     <v-radio
