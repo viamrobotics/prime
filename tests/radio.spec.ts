@@ -61,7 +61,7 @@ test('Radio E2E Test', async ({ page }) => {
   await expect(opt5).toHaveClass(/bg-white/)
   await expect(opt6).toHaveClass(/bg-black/)
 
-  // Label Default
+  // Label Default (Render Top)
   // Label Top
   // Label Left
 
@@ -84,6 +84,11 @@ test('Radio E2E Test', async ({ page }) => {
   // Tooltip Left
 
   // Tooltip Hover
+  const tooltipHover = page.getByTestId("radio-tooltip-hover-test").locator('v-tooltip div').first()
+  const tooltipText = page.getByRole('tooltip', { name: 'This is the hover tooltip test'})
+  await tooltipHover.hover()
+  await expect(tooltipText).toBeVisible()
+  await expect(tooltipText).toHaveText('This is the hover tooltip test')
 
   // Readonly, Click
   const readonly2 = page.getByRole('button', { name: 'Readonly 2' })
