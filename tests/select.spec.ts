@@ -17,4 +17,5 @@ test('user is able to make a selection with mouse', async ({ page }) => {
   option.click()
 
   await expect(input).toHaveValue(/sticky bogs/i)
+
 });
