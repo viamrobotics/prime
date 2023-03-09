@@ -85,6 +85,8 @@
       options="Tool 10, Tool 11, Tool 12"
       data-testid="radio-tooltip-left-test"
       selected="Tool 11"
+      label="Tooltip Left Test"
+      labelposition="left"
       tooltip="This is the left tooltip test"
     />
 

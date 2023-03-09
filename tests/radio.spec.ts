@@ -61,9 +61,17 @@ test('Radio E2E Test', async ({ page }) => {
   await expect(opt5).toHaveClass(/bg-white/)
   await expect(opt6).toHaveClass(/bg-black/)
 
-  // Label Default (Render Top)
-  // Label Top
-  // Label Left
+  // Label Default (Render Label On Top Of Radio) (Checks that button with text "Def 1" is below label of "Def Position") 
+  const def1Button = await page.locator("button:below(:text('Def Position'))").first().textContent()
+  expect(def1Button).toContain('Def 1')
+
+  // Label Top (Render Label On Top Of Radio) (Checks that button with text "Top 1" is below label of "Top Position")
+  const top1Button = await page.locator("button:below(:text('Top Position'))").first().textContent()
+  expect(top1Button).toContain('Top 1')
+  
+  // Label Left (Check That Button Is Right Of Label)
+  const left1Button = await page.locator("button:right-of(:text('Left Position'))").first().textContent()
+  expect(left1Button).toContain('Left 1')
 
   // Tooltip Default
   const tooltipDef = page.getByTestId("radio-tooltip-def-test").locator('v-tooltip div').first()
@@ -82,6 +90,9 @@ test('Radio E2E Test', async ({ page }) => {
   await expect(tooltipInfo).toHaveClass(/icon-info-outline/)
 
   // Tooltip Left
+  const tooltipLeft = page.locator("div.icon-info-outline:left-of(:text('Tool 10'))").first()
+  await expect(tooltipLeft).toHaveClass(/icon-info-outline/)
+
 
   // Tooltip Hover
   const tooltipHover = page.getByTestId("radio-tooltip-hover-test").locator('v-tooltip div').first()
