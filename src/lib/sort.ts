@@ -1,9 +1,21 @@
 /* eslint-disable unicorn/prefer-regexp-test */
+export const addSpecialCharacterEscapes = (value: string) => {
+  // This function takes a value and adds backslashes for special chars 
+  // so that it doesn't treat it as a special character in a
+  let newValue = '';
+
+  for (const element of value) {
+    newValue += /[^\dA-Za-z]/.test(element) ? `\\${element}` : element;
+  }
+  return newValue
+};
+
 export const searchSort = (data: string[], searchTerm: string, reduce: boolean) => {
   const results: Record<string, string[]> = {};
+  const termCopy = addSpecialCharacterEscapes(searchTerm);
 
-  const initialCharacterMatch = new RegExp(`^${searchTerm}`, 'i');
-  const anyMatch = new RegExp(searchTerm, 'gi');
+  const initialCharacterMatch = new RegExp(`^${termCopy}`, 'i');
+  const anyMatch = new RegExp(termCopy, 'gi');
 
   for (const datum of data) {
     let index = -1;

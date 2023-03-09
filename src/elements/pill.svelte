@@ -42,9 +42,9 @@ const handleRemove = (event: MouseEvent | KeyboardEvent) => {
 
 <div
 class={cx(
-  'flex items-center max-w-fit gap-1 rounded-xl bg-[#C4C4C4] py-0.5 px-2 text-[10px] hover:bg-gray-300',
+  'flex items-center max-w-fit gap-1 rounded-xl bg-bg-3 py-0.5 px-2 text-[10px] hover:bg-gray-3',
   {
-    'bg-black/20 cursor-not-allowed': isDisabled || isReadonly,
+    'bg-disabled-bg text-disabled-fg cursor-not-allowed': isDisabled || isReadonly,
   }
 )}
 aria-disabled={isDisabled}

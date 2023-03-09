@@ -26,7 +26,7 @@ setTimeout(() => {
 
 let leftOptions = $ref("one,two,three,ten")
 let rightOptions = $ref("four,five,six,eight,nine")
-
+let selectInput = $ref("")
 </script>
 
 <template>
@@ -123,7 +123,16 @@ let rightOptions = $ref("four,five,six,eight,nine")
       buttonicon="x"
       heading="heading title"
     />
+    <section>
+      <v-select
+      options="test1, test2, test3, test3[]"
+      v-model="selectInput"
+      label="Test Select"
+      state="'info'"
+      class="my-6"
+    />  
 
+    </section>
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
     </v-collapse>
