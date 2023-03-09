@@ -6,6 +6,7 @@ import BreadcrumbsTest from './breadcrumb-test.vue';
 import NotifyTest from './notify-test.vue'
 import IconTest from './icon-test.vue'
 import CollapseTest from './collapse-test.vue'
+import TooltipTest from './tooltip-test.vue'
 
 </script>
 
@@ -45,5 +46,6 @@ import CollapseTest from './collapse-test.vue'
     <NotifyTest />
     <IconTest />
     <CollapseTest />
+    <TooltipTest />
   </main>
 </template>
