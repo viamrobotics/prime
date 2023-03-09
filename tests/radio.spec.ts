@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.ts'
 
 
-test('Radio E2E Test', async ({ page }) => {
+test('Radio E2E Test, Options, Selected, Click, Keydown ', async ({ page }) => {
   await page.goto('/test.html');
 
   // Confirm All Options Render Correctly As Buttons
@@ -24,7 +24,7 @@ test('Radio E2E Test', async ({ page }) => {
   // Confirm Selected Value - Opt 3
   await expect(opt1).toHaveClass(/bg-white/)
   await expect(opt2).toHaveClass(/bg-white/)
-  await expect(opt3).toHaveClass(/bg-black/)
+  await expect(opt3).toHaveClass(/bg-gray-9/)
 
   // Confirm Click Changes Selected to Opt 2
   const opt2Selected = waitForCustomEvent(page,'input')
@@ -32,7 +32,7 @@ test('Radio E2E Test', async ({ page }) => {
   await expect(opt2Selected).toBeTruthy()
 
   await expect(opt1).toHaveClass(/bg-white/)
-  await expect(opt2).toHaveClass(/bg-black/)
+  await expect(opt2).toHaveClass(/bg-gray-9/)
   await expect(opt3).toHaveClass(/bg-white/)
 
   // Check that Keydown Changes Value 
@@ -48,7 +48,7 @@ test('Radio E2E Test', async ({ page }) => {
   await expect(opt6).toBeVisible()
 
   await expect(opt4).toHaveClass(/bg-white/)
-  await expect(opt5).toHaveClass(/bg-black/)
+  await expect(opt5).toHaveClass(/bg-gray-9/)
   await expect(opt6).toHaveClass(/bg-white/)
 
   // Focus on Opt 6 - Keydown Test
@@ -59,7 +59,12 @@ test('Radio E2E Test', async ({ page }) => {
 
   await expect(opt4).toHaveClass(/bg-white/)
   await expect(opt5).toHaveClass(/bg-white/)
-  await expect(opt6).toHaveClass(/bg-black/)
+  await expect(opt6).toHaveClass(/bg-gray-9/)
+});
+
+
+test('Radio E2E Test, Label Position', async ({ page }) => {
+  await page.goto('/test.html');
 
   // Label Default (Render Label On Top Of Radio) (Checks that button with text "Def 1" is below label of "Def Position") 
   const def1Button = await page.locator("button:below(:text('Def Position'))").first().textContent()
@@ -72,6 +77,11 @@ test('Radio E2E Test', async ({ page }) => {
   // Label Left (Check That Button Is Right Of Label)
   const left1Button = await page.locator("button:right-of(:text('Left Position'))").first().textContent()
   expect(left1Button).toContain('Left 1')
+});
+
+
+test('Radio E2E Test, Tooltips', async ({ page }) => {
+  await page.goto('/test.html');
 
   // Tooltip Default
   const tooltipDef = page.getByTestId("radio-tooltip-def-test").locator('v-tooltip div').first()
@@ -79,11 +89,11 @@ test('Radio E2E Test', async ({ page }) => {
 
   // Tooltip Warn
   const tooltipWarn = page.getByTestId("radio-tooltip-warn-test").locator('v-tooltip div').first()
-  await expect(tooltipWarn).toHaveClass(/icon-error-outline text-orange-400/)
+  await expect(tooltipWarn).toHaveClass(/icon-error-outline text-warning-fg/)
 
   // Tooltip Error
   const tooltipError = page.getByTestId("radio-tooltip-error-test").locator('v-tooltip div').first()
-  await expect(tooltipError).toHaveClass(/icon-error-outline text-red-600/)
+  await expect(tooltipError).toHaveClass(/icon-error-outline text-danger-fg/)
 
   // Tooltip Info
   const tooltipInfo = page.getByTestId("radio-tooltip-info-test").locator('v-tooltip div').first()
@@ -93,13 +103,17 @@ test('Radio E2E Test', async ({ page }) => {
   const tooltipLeft = page.locator("div.icon-info-outline:left-of(:text('Tool 10'))").first()
   await expect(tooltipLeft).toHaveClass(/icon-info-outline/)
 
-
   // Tooltip Hover
   const tooltipHover = page.getByTestId("radio-tooltip-hover-test").locator('v-tooltip div').first()
   const tooltipText = page.getByRole('tooltip', { name: 'This is the hover tooltip test'})
   await tooltipHover.hover()
   await expect(tooltipText).toBeVisible()
   await expect(tooltipText).toHaveText('This is the hover tooltip test')
+});
+
+
+test('Radio E2E Test, Readonly', async ({ page }) => {
+  await page.goto('/test.html');
 
   // Readonly, Click
   const readonly2 = page.getByRole('button', { name: 'Readonly 2' })
