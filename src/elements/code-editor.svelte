@@ -72,7 +72,6 @@ const setModel = () => {
     const id = String(hashCode(schema));
     const uri = `http://${id}.json/`;
     const modelUri = window.monaco.Uri.parse(uri);
-
     monacoUtils.removeSchemas(id, parsedSchema);
     monacoUtils.addSchemas(id, parsedSchema, [modelUri.toString()]);
     model = window.monaco.editor.createModel(value, language, modelUri);

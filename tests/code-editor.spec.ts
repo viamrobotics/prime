@@ -1,11 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-// Value: JSON
-
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "json" has been applied to the v-code-editor-element
-// WHEN the element is rendered
-// THEN the code editor should render the "value" attribute value in the code-editor with JSON language syntax highlighting
-
 test('Renders JSON code editor correctly', async ({ page }) => {
   await page.goto('/code-editor-test.html');
   const validJSONEditor = page.getByTestId('code-editor-json-valid')
@@ -17,7 +11,6 @@ test('Renders JSON code editor correctly', async ({ page }) => {
   await expect(monacoContainer).toHaveAttribute('data-mode-id', 'json')
 
   // TODO: Add language syntax -- should we be checking that the keys and the values are in the 
-
 });
 
 // Value: JSON invalid
@@ -108,74 +101,148 @@ test('Renders python editor that is invalid', async ({page}) => {
     await expect(invalidEditor).toHaveAttribute('data-mode-id', 'python')
 })
 
-// Value: JavaScript invalid
+test('Renders a golang editor that is valid', async ({page}) => {
+    await page.goto('/code-editor-test.html');
+    const editor = page.getByTestId('code-editor-golang-valid')
+    await expect(editor).toHaveCount(1)
+    await expect(editor).toHaveAttribute('language', 'go')
+    await expect(editor).toHaveAttribute('value', "func (s *Custom) help(x int)")
+    const editorContainer = editor.locator('div').first()
+    await expect(editorContainer).toHaveCount(1)
+    await expect(editorContainer).toHaveAttribute('data-mode-id', 'go')
+})
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "javascript" has been applied to the v-code-editor-elementAND the "value" attribute is invalid JavaScriptWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with JavaScript language syntax highlightingAND the invalid portion of the "value" attribute value should be highlighted as an error
+test('Renders a golang editor that is invalid', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-golang-invalid')
+    await expect(editor).toHaveCount(1)
+    await expect(editor).toHaveAttribute('language', 'go')
+    await expect(editor).toHaveAttribute('value', "def help(x int)")
+    const editorContainer = editor.locator('div').first()
+    await expect(editorContainer).toHaveCount(1)
+    await expect(editorContainer).toHaveAttribute('data-mode-id', 'go')
+})
 
-// Value: TypeScript
+test('Renders a shell editor that is valid', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-shell-valid')
+    await expect(editor).toHaveCount(1)
+    await expect(editor).toHaveAttribute('language', 'shell')
+    await expect(editor).toHaveAttribute('value', "echo test")
+    const editorContainer = editor.locator('div').first()
+    await expect(editorContainer).toHaveCount(1)
+    await expect(editorContainer).toHaveAttribute('data-mode-id', 'shell')
+})
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "typescript" has been applied to the v-code-editor-elementWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with TypeScript language syntax highlighting
+test('Renders a shell editor that is invalid', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-shell-invalid')
+    await expect(editor).toHaveCount(1)
+    await expect(editor).toHaveAttribute('language', 'shell')
+    await expect(editor).toHaveAttribute('value', "help me!!")
+    const editorContainer = editor.locator('div').first()
+    await expect(editorContainer).toHaveCount(1)
+    await expect(editorContainer).toHaveAttribute('data-mode-id', 'shell')
+})
 
-// Value: TypeScript invalid
+test('Renders the default vs-code theme if none is provided', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-json-valid')
+    await expect(editor).toHaveCount(1)
+    const monacoEditor = editor.locator('.monaco-editor').first()
+    await expect(monacoEditor).toHaveCount(1)
+    await expect(monacoEditor).toHaveClass(/vs/)
+})
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "typescript" has been applied to the v-code-editor-elementAND the "value" attribute is invalid TypeScriptWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with TypeScript language syntax highlightingAND the invalid portion of the "value" attribute value should be highlighted as an error
+test('Renders the vs theme if set on the vs-code-editor element', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-vs')
+    await expect(editor).toHaveCount(1)
+    const monacoEditor = editor.locator('.monaco-editor').first()
+    await expect(monacoEditor).toHaveCount(1)
+    await expect(monacoEditor).toHaveClass(/vs/)
+})
 
-// Value: Python
+test('Renders the vs-dark theme if set on the vs-code-editor element', async ({page}) => {
+    // TODO: Fix the issue if there are many editors in a row then it makes all of them vs dark
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-vs-dark')
+    await expect(editor).toHaveCount(1)
+    const monacoEditor = editor.locator('.monaco-editor').first()
+    await expect(monacoEditor).toHaveCount(1)
+    await expect(monacoEditor).toHaveClass(/vs-dark/)
+})
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "python" has been applied to the v-code-editor-elementWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with Python language syntax highlighting
+test('If a readonly attribute is not set, the editor should be editable', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const validJSONEditor = page.getByTestId('code-editor-json-valid')
+    const originalString = '{"component": "JSON"}'
 
-// Value: Python invalid
+    await expect(validJSONEditor).toHaveCount(1)
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "python" has been applied to the v-code-editor-elementAND the "value" attribute is invalid PythonWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with Python language syntax highlightingAND the invalid portion of the "value" attribute value should be highlighted as an error
+    const textarea = validJSONEditor.locator('textarea')
+    await expect(textarea).toHaveCount(1)
 
-// Value: Go
+    // clears the input -- this was the only way to do it without hanging
+    for (let i = 0; i < originalString.length; i++) {
+        await textarea.clear()
+    }
+    await textarea.fill('{"remote": "test"}')
+    await expect(validJSONEditor.locator('.message', {hasText: 'Cannot edit in read-only editor'})).toHaveCount(0)
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "go" has been applied to the v-code-editor-elementWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with Go language syntax highlighting
+    expect(await textarea.inputValue()).toEqual('{"remote": "test"}')
+    // check that the value in the div has the new string
+    await expect(validJSONEditor).toContainText('{"remote": "test"}')
+    await expect(validJSONEditor).not.toContainText(originalString)
+})
 
-// Value: Go invalid
+test('If a readonly attribute is set, then the editor should be not editable', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-readonly')
+    await expect(editor).toHaveCount(1)
+    // get the textarea input
+    const textarea = editor.locator('textarea')
+    await expect(textarea).toHaveCount(1)
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "go" has been applied to the v-code-editor-elementAND the "value" attribute is invalid GoWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with Go language syntax highlightingAND the invalid portion of the "value" attribute value should be highlighted as an error
+    await textarea.type('hello')
+    await expect(editor.locator('.message', {hasText: 'Cannot edit in read-only editor'})).toHaveCount(1)
 
-// Value: Shell
+    // expect the text on the editor to not actually change
+    await textarea.fill('hello')
+    await expect(editor).not.toContainText(/hello/)
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "shell" has been applied to the v-code-editor-elementWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with Shell language syntax highlighting
+})
 
-// Value: Shell invalid
+test('Render a minimap if the minimap attribute is set to true', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-minimap')
+    await expect(editor).toHaveCount(1)
+    const width = parseInt(await editor.locator('.minimap-decorations-layer').getAttribute('width') ?? '0')
+    expect(width).toBeGreaterThan(0)
+})
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "shell" has been applied to the v-code-editor-elementAND the "value" attribute is invalid ShellWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with Shell language syntax highlightingAND the invalid portion of the "value" attribute value should be highlighted as an error
+test('If a minimap attribute is not set, the it should not render one', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-json-valid')
+    await expect(editor).toHaveCount(1)
+    const width = parseInt(await editor.locator('.minimap-decorations-layer').getAttribute('width') ?? '0')
+    expect(width).toEqual(0)
+})
 
-// Value: invalid language
+test('Render a diff code editor if there is a previous attribute and variant diff', async ({page}) => {
+    await page.goto('/code-editor-test.html')
+    const editor = page.getByTestId('code-editor-diff')
+    await expect(editor).toHaveCount(1)
+    const diffEditor = editor.locator('.monaco-diff-editor')
+    await expect(diffEditor).toHaveClass(/side-by-side/)
+    await expect(diffEditor).toHaveCount(1)
 
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute has been applied to the v-code-editor-element with an invalid language typeWHEN the element is renderedTHEN the code editor should render the "value" attribute value in the code-editor with no language syntax highlighting
+    // default renders in JSON
+    await expect(editor.locator('.editor.original')).toHaveAttribute('data-mode-id', 'json')
+    await expect(editor.locator('.editor.modified')).toHaveAttribute('data-mode-id', 'json')
 
-// Theme: default
+    // modified should have the "current state" -- the difference is an extra row so just check for that
+    await expect(editor.locator('.editor.modified')).toContainText('test5')
+    await expect(editor.locator('.editor.original')).not.toContainText('test5')
 
-// GIVEN no "theme" attribute has been applied to the v-code-editor elementWHEN the element is renderedTHEN the code editor should render with the default "vs" theme
-
-// Theme: vs
-
-// GIVEN a "theme" attribute of "vs" has been applied to the v-code-editor elementWHEN the element is renderedTHEN the code editor should render with the "vs" theme
-
-// Theme: vs-dark
-
-// GIVEN a "theme" attribute of "vs-dark" has been applied to the v-code-editor elementWHEN the element is renderedTHEN the code editor should render with the "vs-dark" theme
-
-// Readonly
-
-// GIVEN a "readonly" attribute of "true" has been applied to the v-code-editor elementWHEN the element is renderedTHEN the editor value should not be editableAND a info tooltip should render when attempting to edit the value
-
-// Mini Map
-
-// GIVEN a "minimap" attribute of "true" has been applied to the v-code-editor elementWHEN the element is renderedTHEN the code editor should render a "mini map" of the value on the right side of the editor
-
-// Schema
-
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "language" attribute of "json" has been applied to the v-code-editor-elementAND a "schema" attribute has been applied to the v-code-editor elementWHEN the element is renderedTHEN the code editor should use the custom schema for validation
-
-// Variant: default
-
-// GIVEN no "variant" attribute has been applied to the v-code-editor elementWHEN the element is renderedTHEN the code editor should render as a standard editor
-
-// Variant: diff
-
-// GIVEN a "value" attribute has been applied to the v-code-editor elementAND a "variant" attribute of "diff" has been applied to the v-code-editor elementAND a "previous" attribute has been applied to the v-code-editor elementWHEN the element is renderedTHEN the code editor should render as a diff editorAND differences between the "value" and "previous" values should be highlighted
+})
