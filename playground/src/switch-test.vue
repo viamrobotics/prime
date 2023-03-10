@@ -14,29 +14,50 @@
       value='off'
     />
     <v-switch
-      label='switch me!'
       data-testid='switch-default'
+      label='default'
+      tooltip='message'
     />
     <v-switch
+      data-testid='switch-disabled-off'
       disabled='true'
       label='disabled'
-      data-testid='switch-disabled'
+      variant='annotated'
     />
     <v-switch
+      data-testid='switch-disabled-on'
+      disabled='true'
+      value='on'
+      label='disabled'
+      variant='annotated'
+    />
+    <v-switch
+      data-testid='switch-readonly-off'
       readonly='true'
       label='read only'
-      data-testid='switch-read-only'
+      variant='annotated'
     />
     <v-switch
+      data-testid='switch-readonly-on'
+      value='on'
+      readonly='true'
+      label='read only'
+      variant='annotated'
+    />
+    <v-switch
+      data-testid='switch-label-left'
+      tooltip='message'
       label='left'
       labelposition='left'
-      data-testid='switch-label-left'
     />
     <v-switch
+      data-testid='switch-label-top'
       label='top'
       labelposition='top'
-      data-testid='switch-label-top'
     />
-    <div id="emit-value"></div>
+    <v-switch
+      data-testid='switch-annotated'
+      variant='annotated'
+    />
   </main>
 </template>

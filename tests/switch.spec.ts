@@ -1,5 +1,5 @@
-import { test, expect, Page } from '@playwright/test';
-import { waitForCustomEventWithParam } from './lib/helper.ts'
+import { test, expect } from '@playwright/test';
+import { hexToRGB, waitForCustomEventTimeout, waitForCustomEventWithParam } from './lib/helper.ts'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/switch-test.html');
@@ -17,18 +17,17 @@ test('Renders appropriately according to value attribute', async ({ page }) => {
   await expect(switchOff).toBeVisible()
   await expect(switchOff.getByRole('switch')).not.toBeChecked()
   await expect(switchOff.locator('input')).toHaveValue('off')
-  // check color
+  await expect(switchOff.getByRole('switch').locator('div').first()).toHaveCSS("background-color", hexToRGB('gray-6'))
 
   // value='on' applied
   const switchOn = page.getByTestId('switch-on')
   await expect(switchOn).toBeVisible()
   await expect(switchOn.getByRole('switch')).toBeChecked()
   await expect(switchOn.locator('input')).toHaveValue('on')
-  // check color
+  await expect(switchOn.getByRole('switch').locator('div').first()).toHaveCSS("background-color", hexToRGB('success-fg'))
 });
 
 test('Responds to click from on to off', async ({ page }) => {
-  // clicks off
   const isInputEventEmitted = waitForCustomEventWithParam(page,'input', 'value')
   const switchOn = page.getByTestId('switch-on')
   await switchOn.locator('label').click()
@@ -38,7 +37,6 @@ test('Responds to click from on to off', async ({ page }) => {
 })
 
 test('Responds to click from off to on', async ({ page }) => {
-  // clicks on
   const isInputEventEmitted = waitForCustomEventWithParam(page,'input', 'value')
   const switchOff = page.getByTestId('switch-off')
   await switchOff.locator('label').click()
@@ -67,10 +65,9 @@ test('Responds to keydown "enter" from off to on', async ({ page }) => {
 
 test('Renders label on top of switch by default', async ({ page }) => {
   const switchWithLabel = page.getByTestId('switch-default')
-  // check text color
-  await expect(switchWithLabel.getByText('Switch me!')).toBeVisible()
+  await expect(switchWithLabel.getByText('default')).toBeVisible()
   const topLabelText = await switchWithLabel.locator(':above(button)').first().textContent()
-  expect(topLabelText).toMatch(/Switch me!/i)
+  expect(topLabelText).toMatch(/default/i)
 })
 
 test('Renders label on top of switch given labelposition: top', async ({ page }) => {
@@ -90,31 +87,78 @@ test('Renders label on left side of switch given labelposition: left', async ({ 
 })
 
 test('Renders as disabled', async ({ page }) => {
-  const switchDisabled = page.getByTestId('switch-disabled')
-  await expect(switchDisabled).toBeVisible()
-  await expect(switchDisabled.getByRole('switch')).toBeDisabled()
-  await expect(switchDisabled.locator('input')).toBeDisabled()
-  // check text color
-  // check background color
-  // bug where it has readonly attribute? even when _just_ disabled
+  const switchDisabledOff = page.getByTestId('switch-disabled-off')
+  await expect(switchDisabledOff).toBeVisible()
+  await expect(switchDisabledOff.getByRole('switch')).toBeDisabled()
+  await expect(switchDisabledOff.locator('input')).toBeDisabled()
+  await expect(switchDisabledOff.getByText('disabled')).toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(switchDisabledOff.getByText('off')).toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(switchDisabledOff.getByRole('switch').locator('div').first()).toHaveCSS("background-color", hexToRGB('gray-4'))
+
+  const switchDisabledOn = page.getByTestId('switch-disabled-on')
+  await expect(switchDisabledOn).toBeVisible()
+  await expect(switchDisabledOn.locator('input')).toHaveValue('on')
+  await expect(switchDisabledOn.getByRole('switch')).toBeDisabled()
+  await expect(switchDisabledOn.locator('input')).toBeDisabled()
+  await expect(switchDisabledOn.getByText('disabled')).toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(switchDisabledOn.getByText('on')).toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(switchDisabledOn.getByRole('switch').locator('div').first()).toHaveCSS("background-color", hexToRGB('gray-4'))
 })
+
+test('Precludes value change if disabled', async ({ page }) => {
+  const switchDisabledOff = page.getByTestId('switch-disabled-off')
+  const isInputEventEmitted = waitForCustomEventTimeout(page,'input')
+  await switchDisabledOff.locator('label').click({ force: true })
+  await expect(switchDisabledOff.locator('input')).toHaveValue('off')
+  await isInputEventEmitted
+})
+
 
 test('Renders as read only', async ({ page }) => {
-  const switchReadOnly = page.getByTestId('switch-read-only')
-  await expect(switchReadOnly).toBeVisible()
-  await expect(switchReadOnly.locator('input')).not.toBeEditable()
-  // check text color
-  // check background color
+  const switchReadOnlyOff = page.getByTestId('switch-readonly-off')
+  await expect(switchReadOnlyOff).toBeVisible()
+  await expect(switchReadOnlyOff.locator('input')).not.toBeEditable()
+  await expect(switchReadOnlyOff.getByText('read only')).not.toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(switchReadOnlyOff.getByText('off')).not.toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(switchReadOnlyOff.getByRole('switch').locator('div').first()).toHaveCSS("background-color", hexToRGB('gray-4'))
+
+  const switchReadOnlyOn = page.getByTestId('switch-readonly-on')
+  await expect(switchReadOnlyOn).toBeVisible()
+  await expect(switchReadOnlyOn.locator('input')).toHaveValue('on')
+  await expect(switchReadOnlyOn.locator('input')).not.toBeEditable()
+  await expect(switchReadOnlyOn.getByText('read only')).not.toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(switchReadOnlyOn.getByText('on', { exact: true })).not.toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(switchReadOnlyOn.getByRole('switch').locator('div').first()).toHaveCSS("background-color", hexToRGB('gray-4'))
 })
 
-// Tooltip: label
+test('Precludes value change if read only', async ({ page }) => {
+  const switchReadOnlyOff = page.getByTestId('switch-readonly-off')
+  const isInputEventEmitted = waitForCustomEventTimeout(page,'input')
+  await switchReadOnlyOff.locator('label').click({ force: true })
+  await expect(switchReadOnlyOff.locator('input')).toHaveValue('off')
+  await isInputEventEmitted
+})
 
-// GIVEN a tooltip attribute has been applied to a switch element
-// AND a label attribute has been applied to a switch element
-// WHEN the element is rendered
-// THEN the label attribute value should render above the switch element
-// AND an info icon should be rendered to the right of the label attribute value
-// AND if the info icon is hovered
-// THEN the tooltip attribute value should render above the info icon
+test('Displays tooltip in correct position given tooltip attribute', async ({ page }) => {
+  const switchTooltipDefault = page.getByTestId('switch-default')
+  await expect(switchTooltipDefault).toBeVisible()
+  await expect(switchTooltipDefault.locator('v-tooltip')).toBeVisible()
+  await expect(switchTooltipDefault.locator('v-tooltip:above(button)').first()).toBeVisible()
+  await expect(switchTooltipDefault.locator('v-tooltip:right-of(:text("Default"))').first()).toBeVisible()
 
-// annotated?
+  const switchTooltipLeft = page.getByTestId('switch-label-left')
+  await expect(switchTooltipLeft).toBeVisible()
+  await expect(switchTooltipLeft.locator('v-tooltip')).toBeVisible()
+  await expect(switchTooltipLeft.locator('v-tooltip:left-of(button)').first()).toBeVisible()
+  await expect(switchTooltipLeft.locator('v-tooltip:right-of(:text("Left"))').first()).toBeVisible()
+})
+
+test('If variant is annotated, displays annotations on right side of switch', async ({ page }) => {
+  const switchAnnotated = page.getByTestId('switch-annotated')
+  await expect(switchAnnotated).toBeVisible()
+  await expect(switchAnnotated.getByText('Off')).toBeVisible()
+  await expect(switchAnnotated.locator('span:left-of(:text("Off"))').first()).toBeVisible()
+  await switchAnnotated.locator('label').click()
+  await expect(switchAnnotated.getByText('On')).toBeVisible()
+  await expect(switchAnnotated.locator('span:left-of(:text("On"))').first()).toBeVisible()
+})
