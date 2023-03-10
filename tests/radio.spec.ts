@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.ts'
 
-
-test('Radio E2E Test, Options, Selected, Click, Keydown ', async ({ page }) => {
+test('Renders options as radio buttons', async ({ page }) => {
   await page.goto('/test.html');
 
   // Confirm All Options Render Correctly As Buttons
@@ -20,11 +19,28 @@ test('Radio E2E Test, Options, Selected, Click, Keydown ', async ({ page }) => {
   await expect(opt1).toHaveText('Opt 1')
   await expect(opt2).toHaveText('Opt 2')
   await expect(opt3).toHaveText('Opt 3')
+});
+
+test('Confirms selected attribute value renders as selected radio button', async ({ page }) => {
+  await page.goto('/test.html');
+
+  const opt1 = page.getByRole('button', { name: 'Opt 1' })
+  const opt2 = page.getByRole('button', { name: 'Opt 2' })
+  const opt3 = page.getByRole('button', { name: 'Opt 3' })
 
   // Confirm Selected Value - Opt 3
   await expect(opt1).toHaveClass(/bg-white/)
   await expect(opt2).toHaveClass(/bg-white/)
   await expect(opt3).toHaveClass(/bg-gray-9/)
+});
+
+
+test('Confirms selected radio button updates on click', async ({ page }) => {
+  await page.goto('/test.html');
+
+  const opt1 = page.getByRole('button', { name: 'Opt 1' })
+  const opt2 = page.getByRole('button', { name: 'Opt 2' })
+  const opt3 = page.getByRole('button', { name: 'Opt 3' })
 
   // Confirm Click Changes Selected to Opt 2
   const opt2Selected = waitForCustomEvent(page,'input')
@@ -34,6 +50,10 @@ test('Radio E2E Test, Options, Selected, Click, Keydown ', async ({ page }) => {
   await expect(opt1).toHaveClass(/bg-white/)
   await expect(opt2).toHaveClass(/bg-gray-9/)
   await expect(opt3).toHaveClass(/bg-white/)
+});
+
+test('Confirms selected radio button updates on keydown enter', async ({ page }) => {
+  await page.goto('/test.html');
 
   // Check that Keydown Changes Value 
   const radioKeydown = page.getByTestId("radio-keydown-test")
@@ -62,47 +82,67 @@ test('Radio E2E Test, Options, Selected, Click, Keydown ', async ({ page }) => {
   await expect(opt6).toHaveClass(/bg-gray-9/)
 });
 
-
-test('Radio E2E Test, Label Position', async ({ page }) => {
+test('Confirms the radio element default behavior renders label to the top of the radio buttons', async ({ page }) => {
   await page.goto('/test.html');
 
   // Label Default (Render Label On Top Of Radio) (Checks that button with text "Def 1" is below label of "Def Position") 
   const def1Button = await page.locator("button:below(:text('Def Position'))").first().textContent()
   expect(def1Button).toContain('Def 1')
+});
 
+test('Confirms if labelposition is set to top, label is rendered to the top of the radio buttons', async ({ page }) => {
+  await page.goto('/test.html');
   // Label Top (Render Label On Top Of Radio) (Checks that button with text "Top 1" is below label of "Top Position")
   const top1Button = await page.locator("button:below(:text('Top Position'))").first().textContent()
   expect(top1Button).toContain('Top 1')
+});
   
+test('Confirms if labelposition is set to left, label is rendered to the left of the radio buttons', async ({ page }) => {
+  await page.goto('/test.html');
   // Label Left (Check That Button Is Right Of Label)
   const left1Button = await page.locator("button:right-of(:text('Left Position'))").first().textContent()
   expect(left1Button).toContain('Left 1')
 });
 
 
-test('Radio E2E Test, Tooltips', async ({ page }) => {
+test('Default behavior for radio tooltips renders them as info icons', async ({ page }) => {
   await page.goto('/test.html');
 
   // Tooltip Default
   const tooltipDef = page.getByTestId("radio-tooltip-def-test").locator('v-tooltip div').first()
   await expect(tooltipDef).toHaveClass(/icon-info-outline/)
+});
 
+test('Radio tooltips are rendered as warn icon when state attribute is set to warn', async ({ page }) => {
+    await page.goto('/test.html');
   // Tooltip Warn
   const tooltipWarn = page.getByTestId("radio-tooltip-warn-test").locator('v-tooltip div').first()
   await expect(tooltipWarn).toHaveClass(/icon-error-outline text-warning-fg/)
+});
 
+test('Radio tooltips are rendered as warn icon when state attribute is set to error', async ({ page }) => {
+  await page.goto('/test.html');
   // Tooltip Error
   const tooltipError = page.getByTestId("radio-tooltip-error-test").locator('v-tooltip div').first()
   await expect(tooltipError).toHaveClass(/icon-error-outline text-danger-fg/)
+});
 
+test('Radio tooltips are rendered as info icon when state attribute is set to info', async ({ page }) => {
+  await page.goto('/test.html');
   // Tooltip Info
   const tooltipInfo = page.getByTestId("radio-tooltip-info-test").locator('v-tooltip div').first()
   await expect(tooltipInfo).toHaveClass(/icon-info-outline/)
+});
 
+test('Radio tooltip is rendered to the left of the label when label position attribute is specified as left', async ({ page }) => {
+  await page.goto('/test.html');
   // Tooltip Left
   const tooltipLeft = page.locator("div.icon-info-outline:left-of(:text('Tool 10'))").first()
   await expect(tooltipLeft).toHaveClass(/icon-info-outline/)
+});
 
+test('Radio tooltip text is visable upon hover', async ({ page }) => {
+  await page.goto('/test.html');
   // Tooltip Hover
   const tooltipHover = page.getByTestId("radio-tooltip-hover-test").locator('v-tooltip div').first()
   const tooltipText = page.getByRole('tooltip', { name: 'This is the hover tooltip test'})
@@ -112,7 +152,7 @@ test('Radio E2E Test, Tooltips', async ({ page }) => {
 });
 
 
-test('Radio E2E Test, Readonly', async ({ page }) => {
+test('Renders radio element in readonly state if readonly attribute is true', async ({ page }) => {
   await page.goto('/test.html');
 
   // Readonly, Click
