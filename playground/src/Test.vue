@@ -12,6 +12,7 @@ import TooltipTest from './tooltip-test.vue'
 
 <template>
   <main>
+   <TooltipTest />
     <v-collapse title="Click to find out!">
       <p>You found out!</p>
     </v-collapse>
@@ -46,6 +47,5 @@ import TooltipTest from './tooltip-test.vue'
     <NotifyTest />
     <IconTest />
     <CollapseTest />
-    <TooltipTest />
   </main>
 </template>
