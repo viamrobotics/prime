@@ -8,7 +8,7 @@
     <!-- Hover -->
     <div style="width: 100%; height: 200px; display: flex; align-items: center; justify-content:center">
     <v-tooltip data-testid="tooltip-hover-test" text='This is the hover test' location="top">
-      <p>Hover here - Hover Test</p>
+      <p>Hover Test</p>
     </v-tooltip>
     </div>
 
