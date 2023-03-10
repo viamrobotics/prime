@@ -76,6 +76,7 @@ test('Confirms selected radio button updates on keydown enter', async ({ page })
   await opt6.focus()
   // Hit Enter
   await page.keyboard.press('Enter')
+  await expect(opt6Selected).toBeTruthy()
 
   await expect(opt4).toHaveClass(/bg-white/)
   await expect(opt5).toHaveClass(/bg-white/)
@@ -140,7 +141,7 @@ test('Radio tooltip is rendered to the left of the label when label position att
 });
 
 test('Radio tooltip text is visable upon hover', async ({ page }) => {
-  // await page.goto('/test.html');
+
   // Tooltip Hover
   const tooltipHover = page.getByTestId("radio-tooltip-hover-test").locator('v-tooltip div').first()
   const tooltipText = page.getByRole('tooltip', { name: 'This is the hover tooltip test'})
