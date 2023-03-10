@@ -1,25 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-// import {waitForCustomEvent} from './lib/helper.ts'
-
-const waitForCustomEvent = (page:Page, customEventName:string) => {
-  return page.evaluate(
-    eventName => {
-      function listener(event) {
-        const para = document.createElement("p");
-        const node = document.createTextNode(JSON.stringify(event.target.value));
-        para.appendChild(node);
-        const element = document.getElementById("emit-value");
-        element!.appendChild(para);
-        console.log(event.target.value)
-        window.input = event.target.value
-        return event.target.value
-      }
-      return new Promise(resolve => {
-        window.addEventListener(eventName, listener, { once: true })
-        resolve('hi')
-      })}, 
-  customEventName)
-}
+import { waitForCustomEventWithParam } from './lib/helper.ts'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/switch-test.html');
@@ -49,57 +29,64 @@ test('Renders appropriately according to value attribute', async ({ page }) => {
 
 test('Responds to click from on to off', async ({ page }) => {
   // clicks off
-  const isInputEventEmitted = waitForCustomEvent(page,'input')
+  const isInputEventEmitted = waitForCustomEventWithParam(page,'input', 'value')
   const switchOn = page.getByTestId('switch-on')
   await switchOn.locator('label').click()
   await expect(switchOn.locator('input')).toHaveValue('off')
-  await expect(isInputEventEmitted).toBeTruthy() // add test for value?
-  console.log(page.evaluate(() => window.input))
-  // console.log(isInputEventEmitted)
+  await expect(isInputEventEmitted).toBeTruthy()
+  await expect(await page.evaluate('window.input')).toBe('off') // test emitted value from input event
 })
 
 test('Responds to click from off to on', async ({ page }) => {
   // clicks on
-  // const isInputEventEmitted = waitForCustomEvent(page,'input')
+  const isInputEventEmitted = waitForCustomEventWithParam(page,'input', 'value')
   const switchOff = page.getByTestId('switch-off')
   await switchOff.locator('label').click()
   await expect(switchOff.locator('input')).toHaveValue('on')
-  // await expect(isInputEventEmitted).toBeTruthy() // add test for value?
+  await expect(isInputEventEmitted).toBeTruthy()
+  await expect(await page.evaluate('window.input')).toBe('on') // test emitted value from input event
 })
 
 test('Responds to keydown "enter" from on to off', async ({ page }) => {
+  const isInputEventEmitted = waitForCustomEventWithParam(page,'input', 'value')
   const switchOn = page.getByTestId('switch-on')
   await switchOn.locator('label').press('Enter')
   await expect(switchOn.locator('input')).toHaveValue('off')
-  // check event
+  await expect(isInputEventEmitted).toBeTruthy()
+  await expect(await page.evaluate('window.input')).toBe('off') // test emitted value from input event
 })
 
 test('Responds to keydown "enter" from off to on', async ({ page }) => {
+  const isInputEventEmitted = waitForCustomEventWithParam(page,'input', 'value')
   const switchOff = page.getByTestId('switch-off')
   await switchOff.locator('label').press('Enter')
   await expect(switchOff.locator('input')).toHaveValue('on')
-  // check event
+  await expect(isInputEventEmitted).toBeTruthy()
+  await expect(await page.evaluate('window.input')).toBe('on') // test emitted value from input event
 })
 
 test('Renders label on top of switch by default', async ({ page }) => {
   const switchWithLabel = page.getByTestId('switch-default')
   // check text color
   await expect(switchWithLabel.getByText('Switch me!')).toBeVisible()
-  await expect(switchWithLabel.locator('label')).toHaveClass(/flex-col/i) // label should appear above switch by default
+  const topLabelText = await switchWithLabel.locator(':above(button)').first().textContent()
+  expect(topLabelText).toMatch(/Switch me!/i)
 })
 
 test('Renders label on top of switch given labelposition: top', async ({ page }) => {
   const switchLabelTop = page.getByTestId('switch-label-top')
   await expect(switchLabelTop).toBeVisible()
   await expect(switchLabelTop.getByText('top')).toBeVisible()
-  await expect(switchLabelTop.locator('label')).toHaveClass(/flex-col/i) // label should appear above switch
+  const topLabelText = await switchLabelTop.locator(':above(button)').first().textContent()
+  expect(topLabelText).toMatch(/top/i)
 })
 
 test('Renders label on left side of switch given labelposition: left', async ({ page }) => {
   const switchLabelLeft = page.getByTestId('switch-label-left')
   await expect(switchLabelLeft).toBeVisible()
   await expect(switchLabelLeft.getByText('left')).toBeVisible()
-  await expect(switchLabelLeft.locator('label')).not.toHaveClass(/flex-col/i) // label should appear to left of switch
+  const leftLabelText = await switchLabelLeft.locator(':left-of(button)').first().textContent()
+  expect(leftLabelText).toMatch(/left/i)
 })
 
 test('Renders as disabled', async ({ page }) => {
