@@ -36,12 +36,12 @@ test('Confirms selected attribute value renders as selected radio button', async
   await expect(opt3).toHaveClass(/bg-gray-9/)
 });
 
-
 test('Confirms selected radio button updates on click', async ({ page }) => {
 
   const opt1 = page.getByRole('button', { name: 'Opt 1' })
   const opt2 = page.getByRole('button', { name: 'Opt 2' })
   const opt3 = page.getByRole('button', { name: 'Opt 3' })
+
 
   // Confirm Click Changes Selected to Opt 2
   const opt2Selected = waitForCustomEvent(page,'input')
@@ -148,7 +148,6 @@ test('Radio tooltip text is visable upon hover', async ({ page }) => {
   await expect(tooltipText).toBeVisible()
   await expect(tooltipText).toHaveText('This is the hover tooltip test')
 });
-
 
 test('Renders radio element in readonly state if readonly attribute is true', async ({ page }) => {
 
