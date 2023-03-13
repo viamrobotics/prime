@@ -78,7 +78,7 @@ const setModel = () => {
   } else {
     model = window.monaco.editor.createModel(value, language);
   }
-
+  
   dispatch('update-model', { model });
   editor.setModel(model);
 };
