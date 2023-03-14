@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { hexToRGB, waitForCustomEventTimeout, waitForCustomEventWithParam } from './lib/helper.ts'
+import { hexToRGB, waitForCustomEventTimeout, waitForCustomEventWithParam, getCustomEventParam } from './lib/helper.ts'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/switch-test.html');
@@ -33,7 +33,7 @@ test('Responds to click from on to off', async ({ page }) => {
   await switchOn.locator('label').click()
   await expect(switchOn.locator('input')).toHaveValue('off')
   await expect(isInputEventEmitted).toBeTruthy()
-  await expect(await page.evaluate('window.input')).toBe('off') // test emitted value from input event
+  await expect(await getCustomEventParam(page, 'input', 'value')).toBe('off') // test emitted value from input event
 })
 
 test('Responds to click from off to on', async ({ page }) => {
@@ -42,7 +42,7 @@ test('Responds to click from off to on', async ({ page }) => {
   await switchOff.locator('label').click()
   await expect(switchOff.locator('input')).toHaveValue('on')
   await expect(isInputEventEmitted).toBeTruthy()
-  await expect(await page.evaluate('window.input')).toBe('on') // test emitted value from input event
+  await expect(await getCustomEventParam(page, 'input', 'value')).toBe('on') // test emitted value from input event
 })
 
 test('Responds to keydown "enter" from on to off', async ({ page }) => {
@@ -51,7 +51,7 @@ test('Responds to keydown "enter" from on to off', async ({ page }) => {
   await switchOn.locator('label').press('Enter')
   await expect(switchOn.locator('input')).toHaveValue('off')
   await expect(isInputEventEmitted).toBeTruthy()
-  await expect(await page.evaluate('window.input')).toBe('off') // test emitted value from input event
+  await expect(await getCustomEventParam(page, 'input', 'value')).toBe('off') // test emitted value from input event
 })
 
 test('Responds to keydown "enter" from off to on', async ({ page }) => {
@@ -60,7 +60,7 @@ test('Responds to keydown "enter" from off to on', async ({ page }) => {
   await switchOff.locator('label').press('Enter')
   await expect(switchOff.locator('input')).toHaveValue('on')
   await expect(isInputEventEmitted).toBeTruthy()
-  await expect(await page.evaluate('window.input')).toBe('on') // test emitted value from input event
+  await expect(await getCustomEventParam(page, 'input', 'value')).toBe('on') // test emitted value from input event
 })
 
 test('Renders label on top of switch by default', async ({ page }) => {
