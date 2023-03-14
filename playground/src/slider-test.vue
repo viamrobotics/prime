@@ -46,5 +46,18 @@
       min="-50"
       max="50"
     />
+    <v-slider
+      data-testid="slider-disabled"
+      disabled="true"
+      label="disabled"
+    />
+    <v-slider
+      data-testid="slider-readonly"
+      readonly="true"
+      label="readonly"
+    />
+    <v-slider
+      data-testid="slider-default"
+    />
   </main>
 </template>

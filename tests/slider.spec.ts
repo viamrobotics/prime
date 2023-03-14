@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { waitForCustomEventWithParam, getCustomEventParam, waitForCustomEventTimeout, hexToRGB } from './lib/helper.ts'
 
 const customMin = -50
 const customMax = 50
@@ -88,30 +89,58 @@ test('Renders unit suffix with min and max values', async ({ page }) => {
   await expect(sliderSuffix.getByText(String(customMax) + ' units', { exact: true })).toBeVisible()
 });
 
-// On: Input
+test('Dispatches "input" event with value when user drags slider to value', async ({ page }) => {
+  const sliderValue = page.getByTestId('slider-value')
 
-// GIVEN an option is selected using the v-slider element (user dragged slider to a certain value)
-// THEN the slider should emit an "input" event with that value
+  const slider = sliderValue.getByRole('slider')
+  const isInputEventDispatched = await waitForCustomEventWithParam(page, 'input', 'value')
+  await slider.dragTo(await sliderValue.locator('span.bg-gray-6').first()) // slide to first tick, value -45
+  await expect(isInputEventDispatched).toBeTruthy()
+  await expect(await getCustomEventParam(page, 'input', 'value')).toBe(-45)
+});
 
-// Disabled
+test('Given disabled attribute as true, displays slider as disabled and prevents interaction', async ({ page }) => {
+  const sliderDisabled = page.getByTestId('slider-disabled')
+  const slider = sliderDisabled.getByRole('slider')
+  const startBox = await slider.boundingBox()
+  await expect(sliderDisabled).toBeVisible()
+  const isInputEventDispatched = await waitForCustomEventTimeout(page, 'input');
+  await slider.dragTo(await sliderDisabled.locator('span.bg-gray-6').first()) // try to slide
+  const endBox = await slider.boundingBox()
+  // make sure slider did not move
+  await expect(endBox.x).toBe(startBox.x)
+  await expect(endBox.y).toBe(startBox.y)
+  await isInputEventDispatched;
 
-// GIVEN a "disabled" attribute has been applied to the v-slider element
-// AND the "disabled" attribute is "true"
-// WHEN the element is rendered
-// THEN the slider element should render as disabled
+  await expect(sliderDisabled.getByText('0', { exact: true })).toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(sliderDisabled.getByText('100', { exact: true })).toHaveCSS('color', hexToRGB('text-disabled'))
+  await expect(sliderDisabled.getByText('disabled', { exact: true })).toHaveCSS('color', hexToRGB('text-disabled'))
+});
 
-// Readonly
 
-// GIVEN a "readonly" attribute of "true" has been applied to the v-slider element
-// WHEN the element is rendered
-// THEN the slider should render as readonly
+test('Given readonly attribute as true, displays slider as readonly and prevents interaction', async ({ page }) => {
+  const sliderReadonly = page.getByTestId('slider-readonly')
+  const slider = sliderReadonly.getByRole('slider')
+  const startBox = await slider.boundingBox()
+  await expect(sliderReadonly).toBeVisible()
+  const isInputEventDispatched = await waitForCustomEventTimeout(page, 'input');
+  await slider.dragTo(await sliderReadonly.locator('span.bg-gray-6').first()) // try to slide
+  const endBox = await slider.boundingBox()
+  // make sure slider did not move
+  await expect(endBox.x).toBe(startBox.x)
+  await expect(endBox.y).toBe(startBox.y)
+  await isInputEventDispatched;
 
-// Default
+  await expect(sliderReadonly.getByText('0', { exact: true })).toHaveCSS('color', 'rgb(0, 0, 0)')
+  await expect(sliderReadonly.getByText('100', { exact: true })).toHaveCSS('color', 'rgb(0, 0, 0)')
+  await expect(sliderReadonly.getByText('readonly', { exact: true })).toHaveCSS('color', 'rgb(0, 0, 0)')
+});
 
-// GIVEN no "min", "max", "step", and "value" have been applied to the v-slider element
-// WHEN the element is rendered
-// THEN the slider element should render 0 as the min value
-// AND 100 as the max value
-// AND 50 as the starting value
-// AND 1 as the step value
+test('Given no attributes, renders slider with { min: 0, max: 100, value: 50, step: 1 }', async ({ page }) => {
+  const sliderDefault = page.getByTestId('slider-default')
+  await expect(sliderDefault.getByText('0', { exact: true })).toBeVisible()
+  await expect(sliderDefault.getByText('50', { exact: true })).toBeVisible()
+  await expect(sliderDefault.getByText('100', { exact: true })).toBeVisible()
+  // check step by drag and drop?
+});
 
