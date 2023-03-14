@@ -1,32 +1,5 @@
 import { test, expect } from '@playwright/test';
-import config from '../tailwind.config.cjs'
-
-const hexToRGB = (color?: string) => {
-  const hex = config.theme.extend.colors[color];
-
-  if (!hex) {
-    throw new Error(`hex not found for color: ${color}`)
-  }
-
-  let alpha = false;
-  let h = hex.slice(hex.startsWith('#') ? 1 : 0);
-  if (h.length === 3) h = [...h].map(x => x + x).join('');
-  else if (h.length === 8) alpha = true;
-  h = Number.parseInt(h, 16);
-  return (
-    `rgb${ 
-      alpha ? 'a' : '' 
-    }(${ 
-      h >>> (alpha ? 24 : 16) 
-    }, ${ 
-      (h & (alpha ? 0x00_FF_00_00 : 0x00_FF_00)) >>> (alpha ? 16 : 8) 
-    }, ${ 
-      (h & (alpha ? 0x00_00_FF_00 : 0x00_00_FF)) >>> (alpha ? 8 : 0) 
-    }${alpha ? `, ${h & 0x00_00_00_FF}` : '' 
-    })`
-  );
-};
-
+import { hexToRGB } from './lib/helper.js';
 
 test('Badge E2E Tests', async ({ page }) => {
   await page.goto('/test.html');

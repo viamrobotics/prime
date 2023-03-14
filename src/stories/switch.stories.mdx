@@ -18,6 +18,12 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'The input label',
       table: { defaultValue: { summary: '' } }
     },
+    labelposition: {
+      description: 'The position of the label',
+      control: 'select',
+      options: ['top', 'left'],
+      table: { defaultValue: { summary: 'top' } }
+    },
     variant: {
       description: 'The displayed style of the switch',
       control: 'select',
@@ -87,6 +93,25 @@ Used to handle binary input.
       <v-switch
         value='${value}'
         label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Label position'
+    args={{
+      value: 'off',
+      label: 'Lunchtime',
+      labelposition: 'left',
+    }}
+  >
+    {({ value, label, labelposition }) => `
+      <v-switch
+        value='${value}'
+        label='${label}'
+        labelposition='${labelposition}'
       />
     `}
   </Story>
