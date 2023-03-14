@@ -45,7 +45,6 @@ const updateRefs = (id: string, definition: SubSchema): Record<string, string> =
 
 const addSchemas = (id: string, schema: Schema, fileMatch: string[]) => {
   const { $ref, definitions = {} } = schema;
-
   for (const [key, definition] of Object.entries(definitions)) {
     schemas.push({
       uri: makeRefUri(id, key),
@@ -54,7 +53,6 @@ const addSchemas = (id: string, schema: Schema, fileMatch: string[]) => {
       ...(keyFromRef($ref) === key ? { fileMatch } : undefined),
     });
   }
-
   window.monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
     validate: true,
     schemas,
