@@ -80,7 +80,6 @@ const handleInput = (event: Event) => {
 
 const handleKeyUp = (event: KeyboardEvent) => {
   setKeyboardControl(true);
-
   switch (event.key.toLowerCase()) {
     case 'enter': return handleEnter();
     case 'arrowup': return handleNavigate(-1);
@@ -102,7 +101,6 @@ const handleEnter = () => {
   if (open) {
     input.blur();
   }
-
   dispatch('input', { value });
 };
 
@@ -242,7 +240,7 @@ $: {
       <div class='flex'>
         <input
           bind:this={input}
-          {placeholder}
+          placeholder={placeholder}
           value={value}
           aria-disabled={isDisabled ? true : undefined}
           readonly={(isDisabled || isReadonly) ? true : undefined}
