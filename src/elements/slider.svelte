@@ -2,6 +2,7 @@
 
 <script lang='ts'>
 
+import { onMount } from 'svelte';
 import { spring } from 'svelte/motion';
 import type { Spring } from 'svelte/motion';
 import cn from 'classnames';
@@ -98,6 +99,13 @@ $: {
   // set the valueLength for the next check
   valueLength = arr.length;
 }
+
+// Validate parameters
+onMount(() => {
+  if ((maxNum - minNum) % stepNum !== 0) {
+    console.error(`<v-slider> step (${step}) is not a multiple of the range (${maxNum - minNum})`);
+  }
+});
 
 /**
  * align the value with the steps so that it
@@ -419,7 +427,7 @@ const onChange = () => {
 <label class='flex flex-col gap-2'>
   {#if label}
     <p class={cn('text-xs capitalize', {
-      'text-black/50': isDisabled || isReadonly,
+      'text-disabled-fg': isDisabled,
     })}>
       {label}
     </p>
@@ -428,7 +436,7 @@ const onChange = () => {
   <div
     bind:this={slider}
     class={cn('slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-gray-6', {
-      'bg-disabled-bg text-disabled-fg': isDisabled || isReadonly,
+      'bg-disabled-bg text-disabled-fg': isDisabled,
     })}
     class:range
     class:focus
