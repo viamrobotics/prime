@@ -7,6 +7,7 @@ import NotifyTest from './notify-test.vue'
 import IconTest from './icon-test.vue'
 import CollapseTest from './collapse-test.vue'
 import RadioTest from './radio-test.vue'
+import VectorInputTest from './vector-input-test.vue'
 
 </script>
 
@@ -47,5 +48,6 @@ import RadioTest from './radio-test.vue'
     <IconTest />
     <CollapseTest />
     <RadioTest />
+    <VectorInputTest />
   </main>
 </template>
