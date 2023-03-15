@@ -295,7 +295,6 @@ const handleSliderBlur = () => {
  * set it to be active
  **/
 const handleSliderFocus = (index: number) => {
-  console.log('slider focus! move to ' + String(index))
   if (!isDisabled) {
     activeHandle = index;
     focus = true;
@@ -404,7 +403,6 @@ const bodyKeyDown = (e: KeyboardEvent) => {
 const onChange = () => {
   if (isDisabled || isReadonly) return;
 
-  console.log(`active handle: ${activeHandle}`)
   dispatch('input', {
     activeHandle,
     previousValue,

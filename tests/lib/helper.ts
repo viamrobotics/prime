@@ -45,7 +45,6 @@ export const waitForCustomEventWithParam = async (page:Page, eventName:string, p
   return page.evaluate(
     (eventInfo) => {
       function listener(event) {
-        console.log(event.detail)
         const dispatchedEvent = { [eventInfo.eventName]: { [eventInfo.paramName]: event.detail[eventInfo.paramName] } }
         window['__testingCustomEvents'] = dispatchedEvent
       }
