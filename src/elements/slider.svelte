@@ -2,6 +2,7 @@
 
 <script lang='ts'>
 
+import { onMount } from 'svelte';
 import { spring } from 'svelte/motion';
 import type { Spring } from 'svelte/motion';
 import cn from 'classnames';
@@ -9,7 +10,6 @@ import { clamp, percentOf } from '../lib/math';
 import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 import { htmlToBoolean } from '../lib/boolean';
-import { onMount } from 'svelte';
 
 export let slider: HTMLElement;
 export let range: string | boolean = false;
@@ -101,9 +101,9 @@ $: {
 }
 
 // Validate parameters
-onMount(async () => {
+onMount(() => {
   if ((maxNum - minNum) % stepNum !== 0) {
-    console.error(`<v-slider> step (${step}) is not a multiple of the range (${maxNum - minNum})`)
+    console.error(`<v-slider> step (${step}) is not a multiple of the range (${maxNum - minNum})`);
   }
 });
 
