@@ -8,6 +8,10 @@ const customEnd = 30
 const value = 15
 const step = 25
 
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/slider-test.html');
 });
@@ -17,13 +21,12 @@ test('Displays min and max values', async ({ page }) => {
   await expect(sliderMinMax).toBeVisible()
 
   await expect(sliderMinMax.getByText(String(customMin), { exact: true })).toBeVisible()
-  // await sliderDefault.locator('span:below(:text("0")').first().click()
   await expect(sliderMinMax.getByText(String(customMax), { exact: true })).toBeVisible()
-  // how to check positions of text?
 });
 
 test('Displays start and and end values', async ({ page }) => {
   const sliderMinMax = page.getByTestId('slider-min-max')
+  await expect(sliderMinMax).toBeVisible()
   const box = await sliderMinMax.boundingBox()
   await expect(sliderMinMax.getByText(String(customStart), { exact: true })).toBeVisible()
   const startPercentage = (customStart - customMin) / (customMax - customMin)
@@ -32,12 +35,24 @@ test('Displays start and and end values', async ({ page }) => {
   await expect(sliderMinMax.getByText(String(customEnd), { exact: true })).toBeVisible()
   const endPercentage = (customEnd - customMin) / (customMax - customMin)
   await expect(sliderMinMax.getByRole('slider').filter({ hasText: String(customEnd) })).toHaveCSS('left', String(endPercentage * box.width) + 'px')
-  // how to test hover functionality? change in opacity
+  
+  // check that slider labels are not visible until on hover
+  const sliderLabels = await sliderMinMax.locator('.floating')
+  await expect((await sliderLabels.all()).length).toBe(2)
 
-  // const initialColor = await sliderMinMax.getByRole('slider').filter({ hasText: customStart }).evaluate((el) => {
-  //   return getComputedStyle(el).opacity;
-  // });
-  // console.log(initialColor)
+  let startLabelOpacity = await sliderMinMax.locator('.floating').first().evaluate((e) => { return getComputedStyle(e).opacity })
+  expect(startLabelOpacity).toBe("0")
+  await sliderMinMax.getByRole('slider').first().hover()
+  await delay(250); // wait for opacity transition
+  startLabelOpacity = await sliderMinMax.locator('.floating').first().evaluate((e) => { return getComputedStyle(e).opacity })
+  expect(startLabelOpacity).toBe("1")
+
+  let endLabelOpacity = await sliderMinMax.locator('.floating').nth(1).evaluate((e) => { return getComputedStyle(e).opacity })
+  expect(endLabelOpacity).toBe("0")
+  await sliderMinMax.getByRole('slider').nth(1).hover()
+  await delay(250); // wait for opacity transition
+  endLabelOpacity = await sliderMinMax.locator('.floating').nth(1).evaluate((e) => { return getComputedStyle(e).opacity })
+  expect(endLabelOpacity).toBe("1")
 });
 
 test('Starts slider at minimum value', async ({ page }) => {
@@ -141,6 +156,13 @@ test('Given no attributes, renders slider with { min: 0, max: 100, value: 50, st
   await expect(sliderDefault.getByText('0', { exact: true })).toBeVisible()
   await expect(sliderDefault.getByText('50', { exact: true })).toBeVisible()
   await expect(sliderDefault.getByText('100', { exact: true })).toBeVisible()
-  // check step by drag and drop?
+
+  // check step: 1 by sliding from 50 to 49
+  const slider = await sliderDefault.getByRole('slider')
+  const isInputEventDispatched = await waitForCustomEventWithParam(page, 'input', 'value')
+  await expect(slider).toBeVisible()
+  const box = await slider.boundingBox()
+  await slider.dragTo(slider, { targetPosition: { x: -5, y: 0} })
+  await expect(await getCustomEventParam(page, 'input', 'value')).toBe(49)
 });
 
