@@ -124,7 +124,7 @@ test('When inputs are updated, events fire', async ({ page }) => {
 
 });
 
-test('When label is specified, render label to the left of inputs', async ({ page }) => {
+test('When label is specified, label renders to the left of inputs', async ({ page }) => {
   const vectorInputLabelLeft = page.getByTestId('vector-input-label')
 
   await expect(vectorInputLabelLeft).toBeVisible()
@@ -138,7 +138,7 @@ test('When label is specified, render label to the left of inputs', async ({ pag
 
 });
 
-test('Render values in x, y, z inputs if they are specified in the value attribute', async ({ page }) => {
+test('Render values in x, y, z inputs as starting values if they are specified in the value attribute', async ({ page }) => {
   const vectorInputValue = page.getByTestId('vector-input-value')
 
   await expect(vectorInputValue).toBeVisible()
