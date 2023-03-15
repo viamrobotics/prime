@@ -37,8 +37,7 @@ test('Displays start and and end values', async ({ page }) => {
   await expect(sliderMinMax.getByRole('slider').filter({ hasText: String(customEnd) })).toHaveCSS('left', String(endPercentage * box.width) + 'px')
   
   // check that slider labels are not visible until on hover
-  const sliderLabels = await sliderMinMax.locator('.floating')
-  await expect((await sliderLabels.all()).length).toBe(2)
+  await expect(await sliderMinMax.locator('.floating').count()).toBe(2)
 
   let startLabelOpacity = await sliderMinMax.locator('.floating').first().evaluate((e) => { return getComputedStyle(e).opacity })
   expect(startLabelOpacity).toBe("0")
@@ -77,6 +76,8 @@ test('Starts slider placement at value', async ({ page }) => {
 });
 
 test('Displays axis ticks at intervals of size step', async ({ page }) => {
+  // for reasonable step size, axis ticks display at intervals of size step
+  // does not hold true for relatively small step sizes
   const sliderStep = page.getByTestId('slider-step')
   await expect(sliderStep).toBeVisible()
   const axisTicks = await sliderStep.locator('span.bg-gray-6').all()
@@ -88,6 +89,19 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
   for (let i = 0; i < numTicks; i++) {
     await expect(axisTicks[i]).toHaveCSS('left', String((i + 1) / (numTicks + 1) * box.width) + 'px')
   }
+});
+
+test('Restricts slider value to intervals of size step', async ({ page }) => {
+  const sliderStep = await page.getByTestId('slider-step')
+  const slider = await sliderStep.getByRole('slider')
+  const isInputEventDispatched = await waitForCustomEventWithParam(page, 'input', 'value')
+  await expect(sliderStep).toBeVisible()
+  const axisBox = await sliderStep.boundingBox()
+  // slide a random amount, ensuring slide is large enough to change value
+  const randomSlide = (-1 * Math.sign(Math.random() - 0.5)) * ((Math.random() * (3 * axisBox.width / 8)) + (axisBox.width / 8));
+  await slider.dragTo(slider, { targetPosition: { x: randomSlide, y: 0 }, force: true })
+  await expect(isInputEventDispatched).toBeTruthy()
+  await expect(Math.abs(await getCustomEventParam(page, 'input', 'value') % 25)).toBe(0)
 });
 
 test('Renders label above slider', async ({ page }) => {

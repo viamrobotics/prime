@@ -9,6 +9,7 @@ import { clamp, percentOf } from '../lib/math';
 import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 import { htmlToBoolean } from '../lib/boolean';
+import { onMount } from 'svelte';
 
 export let slider: HTMLElement;
 export let range: string | boolean = false;
@@ -98,6 +99,13 @@ $: {
   // set the valueLength for the next check
   valueLength = arr.length;
 }
+
+// Validate parameters
+onMount(async () => {
+  if ((maxNum - minNum) % stepNum !== 0) {
+    console.error(`<v-slider> step (${step}) is not a multiple of the range (${maxNum - minNum})`)
+  }
+});
 
 /**
  * align the value with the steps so that it
