@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEvent } from './lib/helper.ts'
+import { waitForCustomEvent, waitForCustomEventWithParam, getCustomEventParam } from './lib/helper.ts'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/vector-input-test.html');
@@ -95,30 +95,32 @@ test('Renders three inputs with type number if integer type specified', async ({
 
 });
 
-test('Confirms when inputs are updated, events fire', async ({ page }) => {
+test('When inputs are updated, events fire', async ({ page }) => {
   const vectorInputOnInput = page.getByTestId('vector-input-on-input')
 
   await expect(vectorInputOnInput).toBeVisible()
 
   const xInput = vectorInputOnInput.locator('input').nth(0)
-  const xInputEvent = waitForCustomEvent(page,'input')
+  const xInputEvent = waitForCustomEventWithParam(page, 'input', 'value')
   await xInput.focus()
   await xInput.press('ArrowUp')
   expect(xInputEvent).toBeTruthy()
+  expect(await getCustomEventParam(page, 'input', 'value')).toBe('1')
   
   const yInput = vectorInputOnInput.locator('input').nth(1)
-  const yInputEvent = waitForCustomEvent(page,'input')
+  const yInputEvent = waitForCustomEventWithParam(page, 'input', 'value')
   await yInput.focus()
   await yInput.press('ArrowUp')
   expect(yInputEvent).toBeTruthy()
+  expect(await getCustomEventParam(page, 'input', 'value')).toBe('1,1')
 
 
   const zInput = vectorInputOnInput.locator('input').nth(2)
-  const zInputEvent = waitForCustomEvent(page,'input')
+  const zInputEvent = waitForCustomEventWithParam(page, 'input', 'value')
   await zInput.focus()
   await zInput.press('ArrowUp')
-  expect(await zInput.inputValue()).toBe('1')
   expect(zInputEvent).toBeTruthy()
+  expect(await getCustomEventParam(page, 'input', 'value')).toBe('1,1,1')
 
 });
 
