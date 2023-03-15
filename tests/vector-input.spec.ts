@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { waitForCustomEvent } from './lib/helper.ts'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/test.html');
+  await page.goto('/vector-input-test.html');
 });
 
 test('Renders the default vector input with x, y, z placeholders, a step of 1, and input type text', async ({ page }) => {
