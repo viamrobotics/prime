@@ -91,9 +91,5 @@ test('Renders the button as an icon if an icon attribute is specified and the bu
 test('Tests that the button is clickable if not disabled', async ({ page }) => {
   const clickMeButton = page.getByRole('button', { name: 'Click Me' })
   await clickMeButton.isEnabled()
-  // when using .click, playwright checks if the element is clickable
-  // by checking the element is:
-  // attached to the dom, visible, stable, receives events, is enabled
-  // if the below .click doesn't work, this test will fail.
   await clickMeButton.click()
 })
