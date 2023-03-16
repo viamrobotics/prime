@@ -65,11 +65,11 @@ test('Renders a button as disabled if the button has a disabled attribute of tru
 
 test('Renders a tooltip over the button if a tooltip attribute is specified', async ({ page }) => {
   const tooltipButton = page.getByRole('button', { name: 'Tooltip Label' })
-  const tooltipText = page.getByRole('tooltip', { name: 'This is the message for the tooltip'})
+  const tooltip = page.getByRole('tooltip', { name: 'This is the message for the tooltip'})
   await expect(tooltipButton).toBeVisible()
+  await expect(tooltip).not.toBeVisible()
   await tooltipButton.hover()
-  await expect(tooltipText).toBeVisible()
-  await expect(tooltipText).toHaveText('This is the message for the tooltip')
+  await expect(tooltip).toBeVisible()
 })
 
 test('Renders an icon within the button/next to the label if an icon attribute is specified', async ({ page }) => {
