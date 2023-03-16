@@ -1,0 +1,94 @@
+<script setup lang="ts">
+
+</script>
+
+<template>
+  <main>
+    <v-input
+      data-testid="input-default"
+      label="default"
+    />
+    <v-input
+      data-testid="input-text"
+      type="text"
+      value="value"
+    />
+    <v-input
+      data-testid="input-number"
+      type="number"
+      value="3.14159"
+    />
+    <v-input
+      data-testid="input-required"
+      label=">:)"
+      required="true"
+    />
+    <v-input
+      data-testid="input-label-top"
+      label=":D"
+      labelposition="top"
+    />
+    <v-input
+      data-testid="input-label-left"
+      label="D:"
+      labelposition="left"
+    />
+    <v-input
+      data-testid="input-placeholder"
+      placeholder="waka waka"
+    />
+    <v-input
+      data-testid="input-date"
+      type="date"
+    />
+    <v-input
+      data-testid="input-time"
+      type="time"
+    />
+    <v-input
+      data-testid="input-datetimelocal"
+      type="datetime-local"
+    />
+    <v-input
+      data-testid="input-email"
+      type="email"
+    />
+    <v-input
+      data-testid="input-tooltip-default"
+      tooltip="message"
+    />
+    <v-input
+      data-testid="input-tooltip-info"
+      tooltip="message"
+      state="info"
+    />
+    <v-input
+      data-testid="input-tooltip-warn"
+      tooltip="message"
+      state="warn"
+    />
+    <v-input
+      data-testid="input-tooltip-error"
+      tooltip="message"
+      state="error"
+    />
+    <v-input
+      data-testid="input-readonly"
+      readonly="readonly"
+      value="teehee"
+    />
+    <v-input
+      data-testid="input-disabled"
+      disabled="true"
+    />
+    <v-input
+      data-testid="input-message"
+      message="it's the cliiimb"
+    />
+    <v-input
+      data-testid="input-message-error"
+      message="fell off the cliiimb"
+      state="error"
+    />
+  </main>
+</template>
