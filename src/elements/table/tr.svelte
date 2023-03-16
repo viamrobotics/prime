@@ -24,7 +24,7 @@
 
 import { addStyles } from '../../lib/index';
 
-export let variant = '';
+export const variant = '';
 export let style = '';
 
 addStyles();
