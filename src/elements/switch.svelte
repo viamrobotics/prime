@@ -43,7 +43,7 @@ const handleClick = () => {
   class={cx('flex gap-1 w-fit', {
     'flex-col justify-start': labelposition === 'top',
     'items-center': labelposition === 'left',
-    'text-black/50': isDisabled || isReadonly,
+    'text-disabled-fg': isDisabled,
   })}
 >
 <div class='flex items-center gap-1.5'>
@@ -76,14 +76,15 @@ const handleClick = () => {
   >
     <div
       class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
-        'bg-disabled-bg border-disabled-bg': isDisabled || isReadonly,
-        'bg-gray-6 border-gray-6': !on,
-        'bg-success-fg border-success-fg': on,
+        'bg-gray-4 border-gray-4': isDisabled || isReadonly,
+        'bg-gray-6 border-gray-6': !on && !(isDisabled || isReadonly),
+        'bg-success-fg border-success-fg': on && !(isDisabled || isReadonly),
+        'text-disabled-fg': isDisabled,
       })}
     >
       <span
         class={cx('pointer-events-none relative inline-block h-4 w-4 mt-px ml-px bg-white transform ring-0 motion-safe:transition-transform ease-in-out duration-200', {
-          'border-disabled-fg': isDisabled || isReadonly,
+          'border-gray-4': isDisabled || isReadonly,
         })}
 
         class:translate-x-0={!on}
@@ -93,7 +94,7 @@ const handleClick = () => {
         {name}
         {value}
         disabled={isDisabled}
-        readonly={(isDisabled || isReadonly) ? true : undefined}
+        readonly={isReadonly}
         class='hidden'
         type='checkbox'
         checked={on}

@@ -7,6 +7,7 @@ import NotifyTest from './notify-test.vue'
 import IconTest from './icon-test.vue'
 import CollapseTest from './collapse-test.vue'
 import TooltipTest from './tooltip-test.vue'
+import RadioTest from './radio-test.vue'
 
 </script>
 
@@ -47,5 +48,6 @@ import TooltipTest from './tooltip-test.vue'
     <NotifyTest />
     <IconTest />
     <CollapseTest />
+    <RadioTest />
   </main>
 </template>
