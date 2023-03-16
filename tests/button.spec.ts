@@ -78,6 +78,7 @@ test('Renders an icon within the button/next to the label if an icon attribute i
   await expect(iconWithinButton).toBeVisible()
   await expect(iconWithinButton).toContainText('Label')
   await expect(iconWithinButton.locator('i')).toHaveClass(/icon-refresh/)
+  await expect(iconWithinButton).toHaveClass(/border-gray-9/)
 })
 
 test('Renders the button as an icon if an icon attribute is specified and the button variant is icon', async ({ page }) => {
@@ -85,9 +86,15 @@ test('Renders the button as an icon if an icon attribute is specified and the bu
   await expect(iconAsButton).toBeVisible()
   await expect(iconAsButton).not.toContainText('Icon As Button')
   await expect(iconAsButton.locator('i')).toHaveClass(/icon-refresh/)
+  await expect(iconAsButton).not.toHaveClass(/border-gray-9/)
 })
 
 test('Tests that the button is clickable if not disabled', async ({ page }) => {
   const clickMeButton = page.getByRole('button', { name: 'Click Me' })
+  await clickMeButton.isEnabled()
+  // when using .click, playwright checks if the element is clickable
+  // by checking the element is:
+  // attached to the dom, visible, stable, receives events, is enabled
+  // if the below .click doesn't work, this test will fail.
   await clickMeButton.click()
 })

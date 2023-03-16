@@ -88,13 +88,5 @@
       label="Click Me"
     />
 
-
-
-
-
-
-
-
-    
   </main>
 </template>
