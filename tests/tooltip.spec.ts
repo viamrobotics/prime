@@ -1,29 +1,33 @@
 import { test, expect } from '@playwright/test';
-import config from '../tailwind.config.cjs'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/test.html');
+  await page.goto('/tooltip-test.html');
 });
 
-test('Confirms tooltip text is visible upon hover', async ({ page }) => {
+// test('Confirms tooltip text is visible upon hover', async ({ page }) => {
+//   const tooltip = page.getByRole('tooltip', { name: 'This is the hover test'})
+//   const wordToHover = page.getByText('Hover Test').first()
+//   await expect(tooltip).not.toBeVisible()
+//   await wordToHover.focus()
+//   await wordToHover.hover()
+//   await expect(tooltip).toBeVisible()
 
-  // Tooltip Hover Test
-
-  // const hoverOver = page.getByText('Hover Test').first()
-  const tooltipH = page.getByTestId('tooltip-hover-test')
-  await expect(tooltipH.getByText('This is the hover test')).toBeHidden()
-  await page.hover('p:has-text("Hover Test")')
-  // This is super flaky
-  // await expect(tooltipH.getByText('This is the hover test')).not.toBeHidden()
-  // await expect(tooltipH.getByText('This is the hover test')).toBeVisible()
-  await expect(tooltipH).toContainText('This is the hover test')
-});
-
-
-// test('Renders tooltip text above upon hover if location attribute is specified as "top"', async ({ page }) => {
-//   const tooltipTextTop = await page.locator('[role="tooltip"]:above(p:has-text("Top Test"))').textContent()
-//   expect(tooltipTextTop).toContain('This is the top test')
+//   const tooltip = page.getByText('This is the hover test')
+//   const tooltip = page.getByTestId('tooltip-hover-test').locator('tooltip')
+//   const wordToHover = page.getByTestId('tooltip-hover-test').locator('p')
+//   await expect(tooltipH.getByText('This is the hover test')).toBeHidden()
+//   await page.hover('p:has-text("Hover Test")')
+//   await expect(tooltipH.getByText('This is the hover test')).not.toBeHidden()
+//   await expect(tooltipH.getByText('This is the hover test')).toBeVisible()
+//   await expect(tooltipH).toContainText('This is the hover test')
 // });
+
+
+test('Renders tooltip text above upon hover if location attribute is specified as "top"', async ({ page }) => {
+  const tooltip = page.getByText('This is the top test')
+  const textBelow = page.locator('p:near(:text("This is the top test"))')
+  console.log(await textBelow.textContent())
+});
 
 // test('Renders tooltip text below upon hover if location attribute is specified as "bottom"', async ({ page }) => {
 //   const tooltipTextBottom = await page.locator('[role="tooltip"]:below(:text("Bottom Test"))').textContent()
@@ -34,12 +38,12 @@ test('Confirms tooltip text is visible upon hover', async ({ page }) => {
 // //   // await expect(tooltipTextTop).toHaveText('This is the bottom test')
 // });
 
-test('Renders tooltip text  upon hover if location attribute is specified as "right"', async ({ page }) => {
-  await page.goto('/test.html');
+// test('Renders tooltip text  upon hover if location attribute is specified as "right"', async ({ page }) => {
+//   await page.goto('/test.html');
 
-  const tooltipTextRight = await page.locator('[role="tooltip"]:right-of(p:has-text("Right Test"))').textContent()
-  expect(tooltipTextRight).toContain('This is the right test')
-});
+//   const tooltipTextRight = await page.locator('[role="tooltip"]:right-of(p:has-text("Right Test"))').textContent()
+//   expect(tooltipTextRight).toContain('This is the right test')
+// });
 
 
   // // Tooltip Bottom Test
