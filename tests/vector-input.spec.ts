@@ -105,14 +105,14 @@ test('When inputs are updated, events fire', async ({ page }) => {
   await xInput.focus()
   await xInput.press('ArrowUp')
   expect(xInputEvent).toBeTruthy()
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('1')
+  expect(await getCustomEventParam(page, 'input', 'value')).toStrictEqual([1])
   
   const yInput = vectorInputOnInput.locator('input').nth(1)
   const yInputEvent = waitForCustomEventWithParam(page, 'input', 'value')
   await yInput.focus()
   await yInput.press('ArrowUp')
   expect(yInputEvent).toBeTruthy()
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('1,1')
+  expect(await getCustomEventParam(page, 'input', 'value')).toStrictEqual([1, 1])
 
 
   const zInput = vectorInputOnInput.locator('input').nth(2)
@@ -120,7 +120,7 @@ test('When inputs are updated, events fire', async ({ page }) => {
   await zInput.focus()
   await zInput.press('ArrowUp')
   expect(zInputEvent).toBeTruthy()
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('1,1,1')
+  expect(await getCustomEventParam(page, 'input', 'value')).toStrictEqual([1, 1, 1])
 
 });
 
