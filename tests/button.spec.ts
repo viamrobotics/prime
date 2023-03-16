@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEventWithParam, getCustomEventParam } from './lib/helper.ts'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/button-test.html');
