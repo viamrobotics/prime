@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Tabs from './tabs-test.vue'
 import BadgeTest from './badge-test.vue'
 import PillTest from'./pill-test.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';
@@ -28,7 +27,6 @@ import RadioTest from './radio-test.vue'
       placeholder="Select a Bobbins"
     />
 
-    <Tabs />
     <BadgeTest />
 
     <v-list-box
