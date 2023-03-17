@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import PillTest from'./pill-test.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';
 import NotifyTest from './notify-test.vue'
 import IconTest from './icon-test.vue'
@@ -35,7 +34,6 @@ import CollapseTest from './collapse-test.vue'
       <div slot="left-empty">Your roster is empty</div>
       <div slot="right-empty">This box is empty</div>
     </v-list-box>
-    <PillTest/>
     <BreadcrumbsTest /> 
     <NotifyTest />
     <IconTest />
