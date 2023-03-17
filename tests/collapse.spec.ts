@@ -1,57 +1,64 @@
 import { test, expect } from '@playwright/test';
 
-test('Collapse E2E Tests', async ({ page }) => {
-  await page.goto('/test.html');
+test.beforeEach(async ({ page }) => {
+  await page.goto('/collapse-test.html');
+});
 
-  // All collapse elements should be visible
+test('Confirms main title displays in collapse element if title attribute has been specified', async ({ page }) => {
   const collapse = page.getByTestId('collapse-default')
   await expect(collapse).toBeVisible()
-
-  const openCollapse = page.getByTestId('collapse-open')
-  await expect(openCollapse).toBeVisible()
-
-  const closedCollapse = page.getByTestId('collapse-closed')
-  await expect(closedCollapse).toBeVisible()
-
-  const bbCollapse = page.getByTestId('collapse-breadcrumbs-badge')
-  await expect(bbCollapse).toBeVisible()
-
-  // Main title should display
+  
   const collapseTitleText = 'Robots...'
   const collapseTitle = collapse.getByText(collapseTitleText)
   await expect(collapseTitle).toBeVisible()
   await expect(collapseTitle).toHaveText(collapseTitleText)
+});
 
-  // Slot:title should display
+test('Collapse renders title slot text', async ({ page }) => {
+  const collapse = page.getByTestId('collapse-default')
+  
   const titleSlotText = '(title)'
   const titleSlot = collapse.getByText(titleSlotText)
   await expect(titleSlot).toBeVisible()
   await expect(titleSlot).toHaveText(titleSlotText)
+});
 
-  // Slot:header should display
+test('Collapse renders header slot text', async ({ page }) => {
+  const collapse = page.getByTestId('collapse-default')
+  
   const headerSlotText = '(header)'
   const headerSlot = collapse.getByText(headerSlotText)
   await expect(headerSlot).toBeVisible()
   await expect(headerSlot).toHaveText(headerSlotText)
+});
 
-  // Open collapse (by "open" property) should display chevron up
+test('Collapse renders open with chevron in closed position if open attribute specified as true', async ({ page }) => {
+  const openCollapse = page.getByTestId('collapse-open')
+  await expect(openCollapse).toBeVisible()
+
   await expect(openCollapse).toHaveJSProperty('open','true')
   await expect(openCollapse.locator('i')).toHaveClass(/icon-chevron-down/)
   await expect(openCollapse.locator('i')).toBeVisible()
   await expect(openCollapse.locator('v-icon')).toHaveClass(/rotate-180/)
+});
 
-  // Closed collapse should display chevron down
-
+test('Collapse renders closed with chevron in closed position if open attribute specified as false', async ({ page }) => {
   // no "open" property, default display closed
+  const collapse = page.getByTestId('collapse-default')
   await expect(collapse.locator('i')).toHaveClass(/icon-chevron-down/)
   await expect(collapse.locator('i')).toBeVisible()
   await expect(collapse.locator('v-icon')).toHaveClass(/rotate-0/)
 
   // "open" property "false" has been applied
+  const closedCollapse = page.getByTestId('collapse-closed')
+  await expect(closedCollapse).toBeVisible()
   await expect(closedCollapse.locator('i')).toHaveClass(/icon-chevron-down/)
   await expect(closedCollapse.locator('i')).toBeVisible()
   await expect(closedCollapse.locator('v-icon')).toHaveClass(/rotate-0/)
+});
 
+test('If collapse is in closed position, confirm it opens after click and vice versa', async ({ page }) => {
+  const collapse = page.getByTestId('collapse-default')
   // If closed, after click, collapse should open (and display child)
   const expandText = '...are pretty cool!'
   const expand = collapse.getByText(expandText)
@@ -72,7 +79,11 @@ test('Collapse E2E Tests', async ({ page }) => {
   await expect(collapse.locator('i')).toHaveClass(/icon-chevron-down/)
   await expect(collapse.locator('i')).toBeVisible()
   await expect(collapse.locator('v-icon')).toHaveClass(/rotate-0/)
+});
 
+test('Confirms collapse with breadcrumbs and badge displays properly', async ({ page }) => {
+  const bbCollapse = page.getByTestId('collapse-breadcrumbs-badge')
+  await expect(bbCollapse).toBeVisible()
   // Collapse with breadcrumbs and badge should display properly
   const bbTitleText = "A word on bread"
   await expect(bbCollapse.getByText(bbTitleText)).toBeVisible()

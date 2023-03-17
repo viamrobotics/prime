@@ -1,13 +1,10 @@
 import { test, expect } from '@playwright/test';
 
-test('breadcrumbs should render the list of values as pills', async ({ page }) => {
-  await page.goto('/test.html');
+test.beforeEach(async ({ page }) => {
+  await page.goto('/breadcrumb-test.html');
+});
 
-  // GIVEN a "crumbs" attribute has been applied to the v-breadcrumbs element
-  // AND the value passed to the "crumbs" attribute is a comma-separated list of strings
-  // WHEN the element is rendered
-  // THEN the breadcrumbs should render the list of values as pills
-
+test('Renders breadcrumbs with the list of values specified in crumbs attribute as pills', async ({ page }) => {
   const breadcrumbs = page.getByText('Chocolate Chip Oatmeal Raisin')
   await expect(breadcrumbs).toBeVisible()
   await expect(breadcrumbs).toHaveText('Chocolate Chip Oatmeal Raisin')

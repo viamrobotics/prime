@@ -1,7 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+test.beforeEach(async ({ page }) => {
+  await page.goto('/list-box-test.html');
+});
+
 test('Renders left options and can move them to the right', async ({ page }) => {
-  await page.goto('/test.html');
 
   const leftOption = page.getByText(/Pikachu/i)
   await expect(leftOption).toBeVisible()
@@ -16,7 +19,6 @@ test('Renders left options and can move them to the right', async ({ page }) => 
 });
 
 test('Renders left options and does not move when move left button is clicked', async ({ page }) => {
-  await page.goto('/test.html');
 
   const leftOption = page.getByText(/Pikachu/i)
   await expect(leftOption).toBeVisible()
@@ -29,7 +31,6 @@ test('Renders left options and does not move when move left button is clicked', 
 });
 
 test('Renders right options and can move them to the left', async ({ page }) => {
-  await page.goto('/test.html');
 
   const rightOption = page.getByText(/Butterfree/i)
   await expect(rightOption).toBeVisible()
@@ -44,7 +45,6 @@ test('Renders right options and can move them to the left', async ({ page }) => 
 });
 
 test('Renders right options and does not move when move right button is clicked', async ({ page }) => {
-  await page.goto('/test.html');
 
   const rightOption = page.getByText(/Butterfree/i)
   await expect(rightOption).toBeVisible()
@@ -58,7 +58,6 @@ test('Renders right options and does not move when move right button is clicked'
 
 
 test('Only selected options move in the specified direction', async ({ page }) => {
-  await page.goto('/test.html');
 
   const leftOption1 = page.getByText(/Charmander/i)
   const leftOption2 = page.getByText(/Pikachu/i)
@@ -82,7 +81,6 @@ test('Only selected options move in the specified direction', async ({ page }) =
 });
 
 test('Displays the left empty state', async ({ page }) => {
-  await page.goto('/test.html');
 
   await page.getByText(/Charmander/i).click()
   await page.getByText(/Pikachu/i).click()
@@ -98,7 +96,6 @@ test('Displays the left empty state', async ({ page }) => {
 
 
 test('Displays the right empty state', async ({ page }) => {
-  await page.goto('/test.html');
 
   await page.getByText(/Nidoqueen/i).click()
   await page.getByText(/Butterfree/i).click()

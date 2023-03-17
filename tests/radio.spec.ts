@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.ts'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/test.html');
+  await page.goto('/radio-test.html');
 });
 
 test('Renders options as radio buttons', async ({ page }) => {
