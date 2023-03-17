@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import BadgeTest from './badge-test.vue'
 import PillTest from'./pill-test.vue'
 import BreadcrumbsTest from './breadcrumb-test.vue';
 import NotifyTest from './notify-test.vue'
 import IconTest from './icon-test.vue'
 import CollapseTest from './collapse-test.vue'
-import RadioTest from './radio-test.vue'
 
 </script>
 
@@ -27,8 +25,6 @@ import RadioTest from './radio-test.vue'
       placeholder="Select a Bobbins"
     />
 
-    <BadgeTest />
-
     <v-list-box
       left="Charmander,Pikachu,Venusaur"
       right="Nidoqueen,Butterfree,Ditto,Gyardos,Machamp"
@@ -44,6 +40,5 @@ import RadioTest from './radio-test.vue'
     <NotifyTest />
     <IconTest />
     <CollapseTest />
-    <RadioTest />
   </main>
 </template>
