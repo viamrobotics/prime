@@ -4,30 +4,40 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/tooltip-test.html');
 });
 
-// test('Confirms tooltip text is visible upon hover', async ({ page }) => {
-//   const tooltip = page.getByRole('tooltip', { name: 'This is the hover test'})
-//   const wordToHover = page.getByText('Hover Test').first()
-//   await expect(tooltip).not.toBeVisible()
-//   await wordToHover.focus()
-//   await wordToHover.hover()
-//   await expect(tooltip).toBeVisible()
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
 
-//   const tooltip = page.getByText('This is the hover test')
-//   const tooltip = page.getByTestId('tooltip-hover-test').locator('tooltip')
-//   const wordToHover = page.getByTestId('tooltip-hover-test').locator('p')
-//   await expect(tooltipH.getByText('This is the hover test')).toBeHidden()
-//   await page.hover('p:has-text("Hover Test")')
-//   await expect(tooltipH.getByText('This is the hover test')).not.toBeHidden()
-//   await expect(tooltipH.getByText('This is the hover test')).toBeVisible()
-//   await expect(tooltipH).toContainText('This is the hover test')
-// });
+test('Confirms tooltip text is visible upon hover', async ({ page }) => {
+  const entireTooltipElement = page.getByTestId('tooltip-hover-test')
+  const tooltip = page.getByRole('tooltip', { name: 'This is the hover test'})
 
 
-test('Renders tooltip text above upon hover if location attribute is specified as "top"', async ({ page }) => {
-  const tooltip = page.getByText('This is the top test')
-  const textBelow = page.locator('p:near(:text("This is the top test"))')
-  console.log(await textBelow.textContent())
+  await expect(tooltip).not.toBeVisible()
+  const wordToHover = page.getByText('Hover Test').first()
+  // await page.hover('p:has-text("Hover Test")')
+  await wordToHover.hover(); 
+  // page.waitForSelector('div:has-text("This is the hover test"')
+  // await entireTooltipElement.hover()
+  await page.screenshot({path: 'screenshot.png', fullPage: true})
+  await expect(tooltip).toBeVisible()
+
+  // const tooltip = page.getByText('This is the hover test')
+  // const tooltip = page.getByTestId('tooltip-hover-test').locator('tooltip')
+  // const wordToHover = page.getByTestId('tooltip-hover-test').locator('p')
+  // await expect(tooltipH.getByText('This is the hover test')).toBeHidden()
+  // await page.hover('p:has-text("Hover Test")')
+  // await expect(tooltipH.getByText('This is the hover test')).not.toBeHidden()
+  // await expect(tooltipH.getByText('This is the hover test')).toBeVisible()
+  // await expect(tooltipH).toContainText('This is the hover test')
 });
+
+
+// test('Renders tooltip text above upon hover if location attribute is specified as "top"', async ({ page }) => {
+//   const tooltip = page.getByText('This is the top test')
+//   const textBelow = page.locator('p:near(:text("This is the top test"))')
+//   console.log(await textBelow.textContent())
+// });
 
 // test('Renders tooltip text below upon hover if location attribute is specified as "bottom"', async ({ page }) => {
 //   const tooltipTextBottom = await page.locator('[role="tooltip"]:below(:text("Bottom Test"))').textContent()
