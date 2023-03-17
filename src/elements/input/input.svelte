@@ -98,11 +98,30 @@ const handleInput = () => {
   if (type === 'number') {
     // ensure input of chars that form valid numbers
     let numString = '';
+
+    let pointCount = 0;
+    let minusCount = 0;
+    let plusCount = 0;
+    let eCount = 0;
+
     for (const c of input.value) {
-      if (/[\d+.e-]/.test(c)) {
+      if (/\d/.test(c)) {
+        numString += c;
+      } else if (c === '.' && pointCount < 1) {
+        pointCount += 1;
+        numString += c;
+      } else if ((c === 'e' || c === 'E') && eCount < 1) {
+        eCount += 1
+        numString += c
+      } else if (c === '-' && minusCount < 2) {
+        minusCount += 1;
+        numString += c;
+      } else if (c === '+' && plusCount < 2) {
+        plusCount += 1;
         numString += c;
       }
     }
+    
     input.value = value = numString;
 
     // only send value if formatted as valid number
