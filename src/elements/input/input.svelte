@@ -97,16 +97,16 @@ const handleInput = () => {
 
   if (type === 'number') {
     // ensure input of chars that form valid numbers
-    let numString = ''
+    let numString = '';
     for (const c of input.value) {
-      if (/\+|\-|\.|e|\d/.test(c)) {
-        numString += c
+      if (/[\d+.e-]/.test(c)) {
+        numString += c;
       }
     }
-    input.value = value = numString
+    input.value = value = numString;
 
     // only send value if formatted as valid number
-    if (!/^[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$/.test(value)) {
+    if (isNaN(Number.parseFloat(value))) {
       return;
     }
   } else {
