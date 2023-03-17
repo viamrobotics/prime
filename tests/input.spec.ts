@@ -135,8 +135,8 @@ test('Given type integer, responds to up and down keys and slider with integers 
   expect(await input.inputValue()).toBe('20')
 
   const slider = await inputInteger.locator("div.cursor-pointer").first()
-  await slider.dragTo(slider, { targetPosition: { x: 1000, y: 0 }, force: true})
-  expect((await input.inputValue()).indexOf('.')).toBe(-1)
+  await slider.dragTo(slider, { targetPosition: { x: 500, y: 0 }, force: true})
+  expect((await input.inputValue()).includes('.')).toBe(false)
   expect(Number.parseInt(await input.inputValue()) % 10).toBe(0)
 });
 

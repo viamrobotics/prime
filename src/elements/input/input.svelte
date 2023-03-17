@@ -118,7 +118,7 @@ const handleInput = () => {
 };
 
 const getDecimals = (value = '') => {
-  return Math.max(value.includes('.') ? 0 : value.length - value.indexOf('.') - 1, stepDecimalDigits);
+  return Math.max(value.includes('.') ? value.length - value.indexOf('.') - 1 : 0, stepDecimalDigits);
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
@@ -149,7 +149,6 @@ const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
   const deltaString = (-(startX - x) * stepNumber / 10).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
   const delta = type === 'integer' ? Number.parseInt(deltaString, 10) : Number.parseFloat(deltaString);
-
   value = input.value = (startValue + (delta * stepNumber)).toFixed(getDecimals(input.value));
 
   const valueNum = Number.parseFloat(value);
