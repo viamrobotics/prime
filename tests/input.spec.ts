@@ -55,11 +55,7 @@ test('Displays label to left of input with labelposition left', async ({ page })
   await expect(await inputLabelLeft.locator("input:right-of(:text('D:'))").first()).toBeVisible()
 });
 
-// TODO: implement in PRIME-???, a breaking change
-// test('Given type number, has number-type value', async ({ page }) => {
-// });
-
-test('Given type number, initializes with given value as number', async ({ page }) => {
+test('Given type number, initializes with given number value', async ({ page }) => {
   const inputNumber = await page.getByTestId('input-number')
   await expect(inputNumber).toBeVisible()
   await expect(inputNumber.locator('input').first()).toHaveValue('3.14159')
@@ -83,7 +79,7 @@ test('Given type number, only allows number input', async ({ page }) => {
 });
 
 test('Responds to up and down keys according to step value', async ({ page }) => {
-  // no provided step value should have default step 1
+  // default step 1
   const inputNumber = await page.getByTestId('input-number')
   const inputBoxNumber = await inputNumber.locator('input').first()
   await inputBoxNumber.fill('0')
