@@ -106,7 +106,7 @@ const handleInput = () => {
     input.value = value = numString;
 
     // only send value if formatted as valid number
-    if (isNaN(Number.parseFloat(value))) {
+    if (Number.isNaN(Number.parseFloat(value))) {
       return;
     }
   } else {
