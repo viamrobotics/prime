@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import IconTest from './icon-test.vue'
-import CollapseTest from './collapse-test.vue'
 
 </script>
 
@@ -33,6 +32,5 @@ import CollapseTest from './collapse-test.vue'
       <div slot="right-empty">This box is empty</div>
     </v-list-box>
     <IconTest />
-    <CollapseTest />
   </main>
 </template>

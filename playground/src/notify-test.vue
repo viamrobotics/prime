@@ -48,7 +48,8 @@
     <v-notify 
       data-testid="notify-slot" 
       title='title text' 
-      message="message text">
+      message="message text"
+    >
         slot text
     </v-notify>
   </main>
