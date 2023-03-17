@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import IconTest from './icon-test.vue'
 
 </script>
 
@@ -31,6 +30,5 @@ import IconTest from './icon-test.vue'
       <div slot="left-empty">Your roster is empty</div>
       <div slot="right-empty">This box is empty</div>
     </v-list-box>
-    <IconTest />
   </main>
 </template>
