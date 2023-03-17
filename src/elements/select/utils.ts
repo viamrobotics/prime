@@ -15,7 +15,8 @@ export const isElementInScrollView = (element: Element) => {
 };
 
 export const shouldBeChecked = (value: string, option: string) => {
-  return value.split(',').includes(option);
+  const values = value.split(',').map((v) => v.trim());
+  return values.includes(option);
 };
 
 export const applySearchHighlight = (options: string[], value: string) => {
