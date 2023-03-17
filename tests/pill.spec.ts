@@ -1,66 +1,102 @@
 import { test, expect, Page } from '@playwright/test';
 import {waitForCustomEvent, waitForCustomEventTimeout} from './lib/helper.ts'
 
+test.beforeEach(async ({ page }) => {
+    await page.goto('/pill-test.html');
+});
 
-
-test('Pills render and interact as expected', async ({ page }) => {
-    await page.goto('/test.html');
-
-    const testDefault = page.getByTestId("pill-default")
-    const testReadOnly = page.getByTestId('pill-readonly-true')
-    const testDisabled = page.getByTestId("pill-disabled-true")
-
-    // Value
+test('Renders text within the pill if a value attribute is specified', async ({ page }) => {
     await expect(page.getByTestId("pill-value")).toBeVisible()
     await expect(page.getByTestId("pill-value")).toContainText("one")
-    // removable-default
+});  
+
+test('Renders a removable button if no removable attribute has been specified', async ({ page }) => {
+    const testDefault = page.getByTestId("pill-default")
+
     await expect(testDefault).toBeVisible()
     await expect(testDefault.getByRole('button')).toBeVisible()
-    // removable-true
+});  
+
+test('Renders a removable button if a removable attribute has been specified as true', async ({ page }) => {
     await expect(page.getByTestId("pill-removable-true")).toBeVisible()
     await expect(page.getByTestId("pill-removable-true").getByRole('button')).toBeVisible()
-    // removable-false
+});  
+
+test('Renders no removable button if a removable attribute has been specified as false', async ({ page }) => {
     await expect(page.getByTestId("pill-removable-false")).toBeVisible()
     await expect(page.getByTestId("pill-removable-false").getByRole('button')).toHaveCount(0)
-    // disabled-default
-    await expect(testDefault).toBeVisible()
-    // disabled-true
-    await expect(page.getByTestId("pill-disabled-true").locator("div")).toHaveAttribute("aria-disabled","true")
-    // disabled-false
-    await expect(page.getByTestId("pill-disabled-false")).toBeVisible()
-    await expect(page.getByTestId("pill-disabled-false").locator("div")).not.toHaveAttribute("aria-readonly","true")
-    // readonly-default
+}); 
+
+test('Renders a normal pill that is not readonly if no readonly attribute has been specified', async ({ page }) => {
+    const testDefault = page.getByTestId("pill-default")
+    
     await expect(testDefault).toBeVisible()
     await expect(testDefault.getByRole('button')).toBeVisible()
-    // readonly-true
+}); 
+
+test('Renders a pill that is readonly if a readonly attribute of true has been specified', async ({ page }) => {
     await expect(page.getByTestId("pill-readonly-true")).toBeVisible()
     await expect(page.getByTestId("pill-readonly-true").locator("div")).toHaveAttribute("aria-readonly","true")
-    // readonly-false
+}); 
+
+test('Renders a pill that is not readonly if a readonly attribute of false has been specified', async ({ page }) => {
     await expect(page.getByTestId("pill-readonly-false")).toBeVisible()
     await expect(page.getByTestId("pill-readonly-false").getByRole('button')).toBeVisible()
     await expect(page.getByTestId("pill-readonly-false")).not.toHaveAttribute("aria-readonly","true")
-    // Click:default
+}); 
+
+test('Renders a normal pill if no disabled attribute has been specified', async ({ page }) => {
+    const testDefault = page.getByTestId("pill-default")
+
+    await expect(testDefault).toBeVisible()
+}); 
+
+test('Renders a disabled pill if a disabled attribute of true has been specified', async ({ page }) => {
+    await expect(page.getByTestId("pill-disabled-true").locator("div")).toHaveAttribute("aria-disabled","true")
+}); 
+
+test('Renders a normal pill if a disabled attribute of false has been specified', async ({ page }) => {
+    await expect(page.getByTestId("pill-disabled-false")).toBeVisible()
+    await expect(page.getByTestId("pill-disabled-false").locator("div")).not.toHaveAttribute("aria-readonly","true")
+});  
+
+test('Confirms default pill is clickable', async ({ page }) => {
+    const testDefault = page.getByTestId("pill-default")
+
     const clickDefault = waitForCustomEvent(page,'remove')
     await testDefault.getByRole('button').click()
-    await expect(clickDefault).toBeTruthy()
-    // Click:disabled
+    expect(clickDefault).toBeTruthy()
+});
+
+test('Confirms disbled pill is not clickable', async ({ page }) => {
     const clickDisabled = waitForCustomEventTimeout(page, 'remove')
     await page.getByTestId("pill-disabled-true").getByRole('button').press("Enter")
     await clickDisabled
-    // // Click:readonly
+});
+
+test('Confirms readonly pill is not clickable', async ({ page }) => {
     const clickReadOnly = waitForCustomEventTimeout(page, 'remove')
     await page.getByTestId("pill-readonly-true").getByRole('button').press("Enter")
     await clickReadOnly
-    // // Key Down:default
+});
+
+test('Confirms keydown enter is effective on the default pill', async ({ page }) => {
+    const testDefault = page.getByTestId("pill-default")
+
     const keyDownDefault = waitForCustomEvent(page,'remove')
     await testDefault.getByRole('button').press("Enter")
-    await expect(keyDownDefault).toBeTruthy()
-    // // Key Down:disabled
+    expect(keyDownDefault).toBeTruthy()
+});
+
+test('Confirms keydown enter is not effective on the disabled pill', async ({ page }) => {
     const keyDownDisabled = waitForCustomEventTimeout(page, 'remove')
     await page.getByTestId("pill-disabled-true").getByRole('button').press("Enter")
     await keyDownDisabled
-    // // Key Down:readonly
+});
+
+test('Confirms keydown enter is effective on the readonly pill', async ({ page }) => {
     const keyDownReadOnly = waitForCustomEventTimeout(page, 'remove')
     await page.getByTestId("pill-readonly-true").getByRole('button').press("Enter")
     await keyDownReadOnly
 });
+
