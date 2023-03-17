@@ -78,7 +78,7 @@ test('Given type number, only allows number input', async ({ page }) => {
   await expect(input).toHaveValue('3.141e2')
 });
 
-test('Responds to up and down keys according to step value', async ({ page }) => {
+test('Given type number, responds to up and down keys according to step value', async ({ page }) => {
   // default step 1
   const inputNumber = await page.getByTestId('input-number')
   const inputBoxNumber = await inputNumber.locator('input').first()
@@ -96,7 +96,7 @@ test('Responds to up and down keys according to step value', async ({ page }) =>
   await expect(Number.parseFloat(await inputBoxStep.inputValue())).toBe(0)
 });
 
-test('Limits input to range within max and min values with slider', async ({ page }) => {
+test('Given type number, limits input to range within max and min values with slider', async ({ page }) => {
   const inputSlider = await page.getByTestId('input-slider')
   const input = await inputSlider.locator('input').first()
   const slider = await inputSlider.locator("div.cursor-pointer").first()
@@ -117,6 +117,27 @@ test('Given type number and no step value, defaults step to 1', async ({ page })
   const inputNumber = await page.getByTestId('input-number')
   await expect(inputNumber).toBeVisible()
   await expect(inputNumber.locator('input').first()).toHaveJSProperty('step', '1')
+});
+
+test('Given type integer, renders number input and initializes with given value', async ({ page }) => {
+  const inputInteger = await page.getByTestId('input-integer')
+  await expect(inputInteger).toBeVisible()
+  await expect(inputInteger.locator('input').first()).toHaveAttribute('type', 'number')
+  await expect(inputInteger.locator('input').first()).toHaveValue('20')
+});
+
+test('Given type integer, responds to up and down keys and slider with integers according to step value', async ({ page }) => {
+  const inputInteger = await page.getByTestId('input-integer')
+  const input = await inputInteger.locator('input').first()
+  await input.press('ArrowUp')
+  expect(await input.inputValue()).toBe('30')
+  await input.press('ArrowDown')
+  expect(await input.inputValue()).toBe('20')
+
+  const slider = await inputInteger.locator("div.cursor-pointer").first()
+  await slider.dragTo(slider, { targetPosition: { x: 1000, y: 0 }, force: true})
+  expect((await input.inputValue()).indexOf('.')).toBe(-1)
+  expect(Number.parseInt(await input.inputValue()) % 10).toBe(0)
 });
 
 test('Displays placeholder', async ({ page }) => {

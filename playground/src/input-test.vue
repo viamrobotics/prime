@@ -19,6 +19,14 @@
       value="3.14159"
     />
     <v-input
+      data-testid="input-integer"
+      type="integer"
+      label="integer"
+      value="20"
+      step="10"
+      incrementor="slider"
+    />
+    <v-input
       data-testid="input-slider"
       incrementor="slider"
       type="number"
