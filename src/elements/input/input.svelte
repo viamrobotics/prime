@@ -95,12 +95,23 @@ const handleInput = () => {
     return;
   }
 
-  if (type === 'number' && input.value.endsWith('.')) {
-    return;
+  if (type === 'number') {
+    // ensure input of chars that form valid numbers
+    let numString = ''
+    for (const c of input.value) {
+      if (/\+|\-|\.|e|\d/.test(c)) {
+        numString += c
+      }
+    }
+    input.value = value = numString
+
+    // only send value if formatted as valid number
+    if (!/^[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$/.test(value)) {
+      return;
+    }
+  } else {
+    input.value = value = input.value;
   }
-
-  value = input.value;
-
   internals.setFormValue(value);
 
   dispatch('input', { value });

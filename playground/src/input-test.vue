@@ -19,6 +19,19 @@
       value="3.14159"
     />
     <v-input
+      data-testid="input-slider"
+      incrementor="slider"
+      type="number"
+      label="slider max min"
+      max="50"
+      min="-50"
+    />
+    <v-input
+      data-testid="input-step"
+      type="number"
+      step="0.5"
+    />
+    <v-input
       data-testid="input-required"
       label=">:)"
       required="true"

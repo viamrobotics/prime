@@ -55,39 +55,73 @@ test('Displays label to left of input with labelposition left', async ({ page })
   await expect(await inputLabelLeft.locator("input:right-of(:text('D:'))").first()).toBeVisible()
 });
 
-// test('Given type number, renders ??? something', async ({ page }) => {
+// TODO: implement in PRIME-???, a breaking change
+// test('Given type number, has number-type value', async ({ page }) => {
 // });
 
-// Number
-
-// GIVEN a "type" attribute of "number" has been applied to a v-input element
-// AND a "step" attribute is specified
-// WHEN the element is rendered
-// THEN it should render as a number input
-// AND the input should increment/decrement by the specified step value
-
-// CHECK THIS ONE TOO
 test('Given type number, initializes with given value as number', async ({ page }) => {
   const inputNumber = await page.getByTestId('input-number')
   await expect(inputNumber).toBeVisible()
   await expect(inputNumber.locator('input').first()).toHaveValue('3.14159')
 });
 
-// Number: Value
+test('Given type number, only allows number input', async ({ page }) => {
+  const inputNumber = await page.getByTestId('input-number')
+  const input = await inputNumber.locator('input').first()
 
-// GIVEN a "type" attribute of "number" has been applied to a v-input element
-// AND a "value" attribute with a number of your choosing has been applied
-// WHEN the element is rendered
-// THEN it should render as a number input
-// AND the starting value of the input should reflect the value attribute
+  await input.fill('NaN!!!')
+  await expect(input).toHaveValue('')
+
+  await input.fill('101')
+  await expect(input).toHaveValue('101')
+
+  await input.fill('3.14')
+  await expect(input).toHaveValue('3.14')
+
+  await input.fill('3.141e2')
+  await expect(input).toHaveValue('3.141e2')
+});
+
+test('Responds to up and down keys according to step value', async ({ page }) => {
+  // no provided step value should have default step 1
+  const inputNumber = await page.getByTestId('input-number')
+  const inputBoxNumber = await inputNumber.locator('input').first()
+  await inputBoxNumber.fill('0')
+  await inputBoxNumber.press('ArrowUp')
+  await expect(Number.parseFloat(await inputBoxNumber.inputValue())).toBe(1)
+  await inputBoxNumber.press('ArrowDown')
+  await expect(Number.parseFloat(await inputBoxNumber.inputValue())).toBe(0)
+
+  const inputStep = await page.getByTestId('input-step')
+  const inputBoxStep = await inputStep.locator('input').first()
+  await inputBoxStep.press('ArrowUp')
+  await expect(Number.parseFloat(await inputBoxStep.inputValue())).toBe(0.5)
+  await inputBoxStep.press('ArrowDown')
+  await expect(Number.parseFloat(await inputBoxStep.inputValue())).toBe(0)
+});
+
+test('Limits input to range within max and min values with slider', async ({ page }) => {
+  const inputSlider = await page.getByTestId('input-slider')
+  const input = await inputSlider.locator('input').first()
+  const slider = await inputSlider.locator("div.cursor-pointer").first()
+  await slider.dragTo(slider, { targetPosition: { x: 200, y: 0 }, force: true})
+  expect(Number.parseFloat(await input.inputValue())).toBeGreaterThan(0)
+  expect(Number.parseFloat(await input.inputValue())).toBeLessThan(50) // don't slide to max yet
+  
+  // test max
+  await slider.dragTo(slider, { targetPosition: { x: 1000, y: 0 }, force: true})
+  await expect(Number.parseFloat(await input.inputValue())).toBe(50)
+
+  // test min
+  await slider.dragTo(slider, { targetPosition: { x: -1000, y: 0 }, force: true})
+  await expect(Number.parseFloat(await input.inputValue())).toBe(-50)
+});
 
 test('Given type number and no step value, defaults step to 1', async ({ page }) => {
   const inputNumber = await page.getByTestId('input-number')
   await expect(inputNumber).toBeVisible()
   await expect(inputNumber.locator('input').first()).toHaveJSProperty('step', '1')
 });
-
-// test given step value, max and min?
 
 test('Displays placeholder', async ({ page }) => {
   const inputPlaceholder = await page.getByTestId('input-placeholder')
