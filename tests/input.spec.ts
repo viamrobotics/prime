@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { hexToRGB, getCustomEventParam, waitForCustomEventWithParam } from './lib/helper.ts';
+import { hexToRGB, getCustomEventParam, waitForCustomEventTimeout, waitForCustomEventWithParam } from './lib/helper.ts';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/input-test.html');
@@ -61,7 +61,7 @@ test('Given type number, initializes with given number value', async ({ page }) 
   await expect(inputNumber.locator('input').first()).toHaveValue('3.14159')
 });
 
-test('Given type number, only allows number input', async ({ page }) => {
+test('Given type number, only allows number-related characters ([0-9eE+-.]) to be input', async ({ page }) => {
   const inputNumber = await page.getByTestId('input-number')
   const input = await inputNumber.locator('input').first()
 
@@ -76,6 +76,21 @@ test('Given type number, only allows number input', async ({ page }) => {
 
   await input.fill('3.141e2')
   await expect(input).toHaveValue('3.141e2')
+
+  await input.fill('-3.141e+2')
+  await expect(input).toHaveValue('-3.141e+2')
+
+  await input.fill('3aBc!.+-e')
+  await expect(input).toHaveValue('3.+-e')
+});
+
+test('Given type number, displays error state if number if invalid on blur', async ({ page }) => {
+  const inputNumber = await page.getByTestId('input-number')
+  const input = await inputNumber.locator('input').first()
+
+  await input.fill('eeeEEE')
+  await input.blur()
+  await expect(input).toHaveCSS('border-color', hexToRGB('danger-fg'))
 });
 
 test('Given type number, responds to up and down keys according to step value', async ({ page }) => {
@@ -220,6 +235,23 @@ test('With error state, displays message below input box in red', async ({ page 
   const inputMessageError = page.getByTestId("input-message-error")
   await expect(inputMessageError.getByText('fell off the cliiimb')).toHaveClass(/text-red-600/)
   await expect(inputMessageError.locator('input:above(:text("fell off the cliiimb"))')).toBeVisible()
+});
+
+test('Given type number, only dispatches valid number values', async ({ page }) => {
+  const inputNumber = await page.getByTestId('input-number')
+  const input = await inputNumber.locator('input').first()
+
+  const noInputEvent1 = await waitForCustomEventTimeout(page, 'input')
+  await input.fill('NaN')
+  await noInputEvent1
+
+  const isInputEventEmitted = await waitForCustomEventWithParam(page, 'input', 'value')
+  await input.fill('1')
+  expect(await getCustomEventParam(page, 'input', 'value')).toBe("1")
+
+  const noInputEvent2 = await waitForCustomEventTimeout(page, 'input')
+  await input.type('.')
+  await noInputEvent2
 });
 
 test('Fires input event with value on input', async ({ page }) => {

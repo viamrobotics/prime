@@ -51,6 +51,7 @@ let inputType: string;
 let inputPattern: string;
 
 $: isNumeric = type === 'number' || type === 'integer';
+$: isInvalidNumericInput = false;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isRequired = htmlToBoolean(required, 'required');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
@@ -88,7 +89,7 @@ let numberDragHead: HTMLElement;
 let isDragging = false;
 let startX = 0;
 let startValue = 0;
-
+let prevNumberValue = value;
 
 const handleInput = () => {
   if (value === input.value) {
@@ -96,44 +97,24 @@ const handleInput = () => {
   }
 
   if (type === 'number') {
-    // ensure input of chars that form valid numbers
-    let numString = '';
+    prevNumberValue = value;
 
-    let pointCount = 0;
-    let minusCount = 0;
-    let plusCount = 0;
-    let eCount = 0;
+    // only allow number-related characters to be typed
+    value = input.value = input.value.replaceAll(new RegExp(/[^\d+.e-]/i, 'g'), '');
 
-    for (const c of input.value) {
-      if (/\d/.test(c)) {
-        numString += c;
-      } else if (c === '.' && pointCount < 1) {
-        pointCount += 1;
-        numString += c;
-      } else if ((c === 'e' || c === 'E') && eCount < 1) {
-        eCount += 1
-        numString += c
-      } else if (c === '-' && minusCount < 2) {
-        minusCount += 1;
-        numString += c;
-      } else if (c === '+' && plusCount < 2) {
-        plusCount += 1;
-        numString += c;
-      }
-    }
-    
-    input.value = value = numString;
-
-    // only send value if formatted as valid number
-    if (Number.isNaN(Number.parseFloat(value))) {
+    // only set and send value if valid, and different from previous value
+    if (Number.isNaN(Number(value)) || Number(prevNumberValue) === Number(value)) {
       return;
     }
   } else {
     input.value = value = input.value;
   }
   internals.setFormValue(value);
-
   dispatch('input', { value });
+};
+
+const handleBlur = () => {
+  isInvalidNumericInput = Number.isNaN(Number(input.value));
 };
 
 const getDecimals = (value = '') => {
@@ -271,13 +252,14 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border outline-none appearance-none', {
       'pl-2.5': isNumeric === false,
       'pl-3': isNumeric,
-      'bg-white border-gray-8': !isDisabled,
+      'bg-white border-gray-8': !isDisabled && !isInvalidNumericInput,
       'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg': isDisabled || isDragging || isReadonly,
-      'border-danger-fg border': state === 'error',
+      'border-danger-fg border': state === 'error' || isInvalidNumericInput,
     })}
     step={insertStepAttribute ? step : null}
     on:input|preventDefault|stopPropagation={handleInput}
     on:keydown={isNumeric ? handleKeydown : undefined}
+    on:blur={isNumeric ? handleBlur : undefined}
   />
 
   {#if incrementor === 'slider' && isNumeric}
