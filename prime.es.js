@@ -3201,7 +3201,7 @@ const Ul = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
 }, ir = (t) => {
   const { top: e, bottom: n } = t.getBoundingClientRect(), i = t.parentElement.parentElement.getBoundingClientRect();
   return n < i.bottom && e > i.top;
-}, yt = (t, e) => t.split(",").includes(e), Nt = (t, e) => {
+}, yt = (t, e) => t.split(",").map((i) => i.trim()).includes(e), Nt = (t, e) => {
   if (!e)
     return t.map((l) => ({ search: void 0, option: l }));
   const n = [], i = [], r = tr(e);
@@ -4364,7 +4364,7 @@ function ao(t) {
   };
 }
 function co(t, e, n) {
-  let { options: i = "" } = e, { value: r = "" } = e, { placeholder: l = "" } = e, { label: o = "" } = e, { labelposition: s = "top" } = e, { disabled: a = "false" } = e, { readonly: f } = e, { prefix: d = "false" } = e, { tooltip: u = "" } = e, { state: b = "info" } = e, { showpill: h = "true" } = e, { clearable: m = "true" } = e, { withbutton: y = "false" } = e, { buttontext: v = "ENTER" } = e, { buttonicon: A = "" } = e, { sortoption: k = "default" } = e, { heading: x = "" } = e, { searchterm: S = "" } = e;
+  let { options: i = "" } = e, { value: r = "" } = e, { placeholder: l = "" } = e, { label: o = "" } = e, { labelposition: s = "top" } = e, { disabled: a = "false" } = e, { readonly: f = "false" } = e, { prefix: d = "false" } = e, { tooltip: u = "" } = e, { state: b = "info" } = e, { showpill: h = "true" } = e, { clearable: m = "true" } = e, { withbutton: y = "false" } = e, { buttontext: v = "ENTER" } = e, { buttonicon: A = "" } = e, { sortoption: k = "default" } = e, { heading: x = "" } = e, { searchterm: S = "" } = e;
   const M = ze();
   me();
   let w, T, F, C, V, G, $, K, D, q, Y, X, Q, J, te, ce = !1, ue = -1, Se = !1;
