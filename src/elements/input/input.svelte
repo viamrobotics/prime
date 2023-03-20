@@ -51,6 +51,7 @@ let inputType: string;
 let inputPattern: string;
 
 $: isNumeric = type === 'number' || type === 'integer';
+$: isInvalidNumericInput = false;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isRequired = htmlToBoolean(required, 'required');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
@@ -88,26 +89,36 @@ let numberDragHead: HTMLElement;
 let isDragging = false;
 let startX = 0;
 let startValue = 0;
-
+let prevNumberValue = value;
 
 const handleInput = () => {
   if (value === input.value) {
     return;
   }
 
-  if (type === 'number' && input.value.endsWith('.')) {
-    return;
+  if (type === 'number') {
+    prevNumberValue = value;
+
+    // only allow number-related characters to be typed
+    value = input.value = input.value.replaceAll(new RegExp(/[^\d+.e-]/i, 'g'), '');
+
+    // only set and send value if valid, and different from previous value
+    if (Number.isNaN(Number(value)) || Number(prevNumberValue) === Number(value)) {
+      return;
+    }
+  } else {
+    input.value = value = input.value;
   }
-
-  value = input.value;
-
   internals.setFormValue(value);
-
   dispatch('input', { value });
 };
 
+const handleBlur = () => {
+  isInvalidNumericInput = Number.isNaN(Number(input.value));
+};
+
 const getDecimals = (value = '') => {
-  return Math.max(value.split('.').pop()?.length ?? 0, stepDecimalDigits);
+  return Math.max(value.includes('.') ? value.length - value.indexOf('.') - 1 : 0, stepDecimalDigits);
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
@@ -138,8 +149,7 @@ const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
   const deltaString = (-(startX - x) * stepNumber / 10).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
   const delta = type === 'integer' ? Number.parseInt(deltaString, 10) : Number.parseFloat(deltaString);
-
-  value = input.value = (startValue + delta).toFixed(getDecimals(input.value));
+  value = input.value = (startValue + (delta * stepNumber)).toFixed(getDecimals(input.value));
 
   const valueNum = Number.parseFloat(value);
 
@@ -242,13 +252,14 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border outline-none appearance-none', {
       'pl-2.5': isNumeric === false,
       'pl-3': isNumeric,
-      'bg-white border-gray-8': !isDisabled,
+      'bg-white border-gray-8': !isDisabled && !isInvalidNumericInput,
       'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg': isDisabled || isDragging || isReadonly,
-      'border-danger-fg border': state === 'error',
+      'border-danger-fg border': state === 'error' || isInvalidNumericInput,
     })}
     step={insertStepAttribute ? step : null}
     on:input|preventDefault|stopPropagation={handleInput}
     on:keydown={isNumeric ? handleKeydown : undefined}
+    on:blur={isNumeric ? handleBlur : undefined}
   />
 
   {#if incrementor === 'slider' && isNumeric}
