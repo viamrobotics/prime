@@ -42,7 +42,6 @@ export const searchSort = (data: string[], searchTerm: string, reduce: boolean) 
 
   const finalResults: string[] = [];
 
-
   if (reduce) {
     for (const key of Object.keys(results)) {
       if (Number.parseInt(key, 10) !== -1) {
