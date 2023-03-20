@@ -237,7 +237,7 @@ test('With error state, displays message below input box in red', async ({ page 
   await expect(inputMessageError.locator('input:above(:text("fell off the cliiimb"))')).toBeVisible()
 });
 
-test('Given type number, only dispatches valid number values', async ({ page }) => {
+test('Given type number, only dispatches valid and new number values', async ({ page }) => {
   const inputNumber = await page.getByTestId('input-number')
   const input = await inputNumber.locator('input').first()
 
