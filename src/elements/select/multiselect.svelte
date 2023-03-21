@@ -3,6 +3,7 @@
 <script lang='ts'>
 
 type LabelPosition = 'top' | 'left'
+type PillPosition = 'bottom' | 'right'
 
 import cx from 'classnames';
 import { searchSort } from '../../lib/sort';
@@ -10,6 +11,7 @@ import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
 import * as utils from './utils';
+    import Pill from '../pill.svelte';
 
 
 export let options = '';
@@ -17,6 +19,7 @@ export let value = '';
 export let placeholder = '';
 export let label = '';
 export let labelposition: LabelPosition = 'top';
+export let pillposition: PillPosition = 'bottom';
 export let disabled = 'false';
 export let readonly = 'false';
 export let prefix = 'false';
@@ -249,7 +252,7 @@ $: {
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<div class="relative">
+<div class={cx('relative', { 'flex flex-row': pillposition === 'right' })}>
   <label
     bind:this={root}
     class={cx('relative min-w-[6rem] w-full flex gap-1', {
@@ -421,7 +424,10 @@ $: {
     </v-dropdown>
   </label>
   {#if parsedSelected.length > 0 && showsPill}
-    <div class={cx('flex flex-wrap gap-2 pt-2', {
+    <div class={cx('flex gap-2', {
+      'pt-2 flex-wrap': pillposition === 'bottom',
+      'pt-1': labelposition === 'left' && pillposition === 'right',
+      'pt-6 pl-2': labelposition === 'top' && pillposition === 'right',
       'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
       'text-black/50': isDisabled || isReadonly,
     })}>

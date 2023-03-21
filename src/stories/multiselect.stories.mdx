@@ -17,6 +17,24 @@ import gpioOptions from './assets/gpio-options'
       },
       control: 'text'
     },
+    labelposition: {
+      description: 'The label position',
+      options: ['top', 'left'],
+      table: { 
+        defaultValue: { summary: 'top' },
+        type: { summary: 'string' }
+      },
+      control: { type: 'select' }
+    },
+    pillposition: {
+      description: 'The pills position',
+      options: ['bottom', 'right'],
+      table: { 
+        defaultValue: { summary: 'bottom' },
+        type: { summary: 'string' }
+      },
+      control: { type: 'select' }
+    },
     options: {
       description: 'The list of options that can be selected from, separated by commas',
       table: { 
@@ -378,6 +396,48 @@ Dropdown that allows the user to select multiple choices.
         label='${label}'
         options='${options}'
         clearable='${clearable}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Label Position'
+    args={{
+      label: 'Label Position left',
+      labelposition: 'left',
+      options: 'hello, hi, yo, halo',
+      value: 'hi, halo',
+    }}
+  >
+    {({ label, labelposition, options, value }) => `
+      <v-multiselect
+        label='${label}'
+        labelposition='${labelposition}'
+        options='${options}'
+        value='${value}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Pill Position'
+    args={{
+      label: 'Pill Position right',
+      pillposition: 'right',
+      options: 'hello, hi, yo, halo',
+      value: 'hi, halo',
+    }}
+  >
+    {({ label, pillposition, options, value }) => `
+      <v-multiselect
+        label='${label}'
+        pillposition='${pillposition}'
+        options='${options}'
         value='${value}'
       />
     `}

@@ -261,3 +261,27 @@ test('opening and closing dropdown fires events', async ({page}) => {
     await expect(optionsContainer).not.toBeVisible()
     expect(closeEvent).toBeTruthy()
 })
+
+test('Renders label on top by default', async ({page}) => {
+    const multiselect = page.getByTestId('basic-multiselect')
+    await expect(multiselect).toBeVisible()
+    expect(await multiselect.locator('v-dropdown:below(:text("Default multi-select"))').count()).toBe(1)
+})
+
+test('Renders label on left given attribute labelposition with value left', async ({page}) => {
+    const multiselect = page.getByTestId('multiselect-labelposition-left')
+    await expect(multiselect).toBeVisible()
+    expect(await multiselect.locator('v-dropdown:right-of(:text("left label position"))').count()).toBe(1)
+})
+
+test('Renders pills on bottom by default', async ({page}) => {
+    const multiselect = page.getByTestId('multiselect-values')
+    await expect(multiselect).toBeVisible()
+    expect(await multiselect.locator('v-dropdown:above(:text("happy"))').count()).toBe(1)
+})
+
+test('Renders pills on right given attribute pillposition with value right', async ({page}) => {
+    const multiselect = page.getByTestId('multiselect-pillposition-right')
+    await expect(multiselect).toBeVisible()
+    expect(await multiselect.locator('v-dropdown:left-of(:text("happy"))').count()).toBe(1)
+})

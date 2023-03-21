@@ -113,5 +113,22 @@
                 sortoption="reduce"
             />
         </section>
+        <section style="width: 400px; margin-top: 30px">
+            <v-multiselect
+                data-testid="multiselect-pillposition-right"
+                label='Right pill position'
+                pillposition="right"
+                options='happy, sad, angry'
+                value='happy'
+            />
+        </section>
+        <section style="width: 400px; margin-top: 30px">
+            <v-multiselect
+                data-testid="multiselect-labelposition-left"
+                label='Left label position'
+                labelposition='left'
+                options='happy, sad, angry'
+            />
+        </section>
     </main>
 </template>
