@@ -11,8 +11,6 @@ import { htmlToBoolean } from '../../lib/boolean';
 import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
 import * as utils from './utils';
-    import Pill from '../pill.svelte';
-
 
 export let options = '';
 export let value = '';
