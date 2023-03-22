@@ -18,7 +18,7 @@ export let placeholder = '';
 export let label = '';
 export let labelposition: LabelPosition = 'top';
 export let disabled = 'false';
-export let readonly: string;
+export let readonly = 'false';
 export let prefix = 'false';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | '' = 'info';
@@ -69,7 +69,6 @@ $: searchedOptions = doesSearch ? utils.applySearchHighlight(sortedOptions, sear
 let open = false;
 let navigationIndex = -1;
 let keyboardControlling = false;
-
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
