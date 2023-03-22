@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install 🔧
-        run: npm ci --audit=false
+        uses: ./.github/actions/setup
       - name: Run ESLint and Prettier
         run: |
           npm run lint
@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install 🔧
-        run: npm ci --audit=false
+        uses: ./.github/actions/setup
       - name: Run Check
         run: npm run check
 
@@ -31,12 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Install 🔧
+        uses: ./.github/actions/setup
         with:
           node-version: 16
-      - name: Install deps
+      - name: Install playground deps
         run: |
-          npm ci --audit=false
           cd playground
           npm ci --audit=false
       - name: Install Playwright Browsers
