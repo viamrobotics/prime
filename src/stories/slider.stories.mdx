@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta
   title='Elements/Slider'
@@ -11,17 +11,17 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     min: {
       description: 'The minimum value',
       control: 'number',
-      table: { defaultValue: { summary: 0 } }
+      table: { defaultValue: { summary: 0 } },
     },
     max: {
       description: 'The maxiumum value',
       control: 'number',
-      table: { defaultValue: { summary: 100 } }
+      table: { defaultValue: { summary: 100 } },
     },
     step: {
       description: 'An optional discrete step between values',
       control: 'number',
-      table: { defaultValue: { summary: 1 } }
+      table: { defaultValue: { summary: 1 } },
     },
     value: {
       description: 'An optional starting value',
@@ -225,7 +225,7 @@ For user triggered actions
       step: 10,
       value: 30,
       readonly: 'true',
-      label: 'readonly'
+      label: 'readonly',
     }}
   >
     {({ range, max, step, value, readonly, label }) => `

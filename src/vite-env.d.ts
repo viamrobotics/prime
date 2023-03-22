@@ -5,7 +5,11 @@
 /// <reference types="monaco-editor/monaco" />
 
 interface HTMLElement {
-  connectedCallback(): void
-  disconnectedCallback(): void
-  attributeChangedCallback(name: string, oldValue: string, newValue: string): void
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  attributeChangedCallback(
+    name: string,
+    oldValue: string,
+    newValue: string
+  ): void;
 }

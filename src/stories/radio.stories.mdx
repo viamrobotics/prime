@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta
   title='Elements/Radio'
@@ -25,18 +25,19 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       table: { defaultValue: { summary: 'top' } },
       control: { type: 'radio' },
       options: ['top', 'left'],
-      type: 'text'
+      type: 'text',
     },
     tooltip: {
       description: 'An optional tooltip',
       table: { defaultValue: { summary: '' } },
     },
     state: {
-      description: 'The state for the optional tooltip (determines the icon type)',
+      description:
+        'The state for the optional tooltip (determines the icon type)',
       table: { defaultValue: { summary: 'info' } },
       control: { type: 'radio' },
       options: ['info', 'warn', 'error'],
-      type: 'text'
+      type: 'text',
     },
     'on:input': {
       description: 'Event fired when an option is selected',
@@ -98,7 +99,15 @@ For user triggered actions
       state: 'warn',
     }}
   >
-    {({ label, labelposition, options, selected, placeholder, tooltip, state }) => `
+    {({
+      label,
+      labelposition,
+      options,
+      selected,
+      placeholder,
+      tooltip,
+      state,
+    }) => `
       <v-radio
         label='${label}'
         labelposition='${labelposition}'
@@ -117,7 +126,7 @@ For user triggered actions
     args={{
       options: 'Opt 1, Opt 2, Opt 3',
       selected: 'Opt 1',
-      readonly: 'true'
+      readonly: 'true',
     }}
   >
     {({ options, selected, readonly }) => `

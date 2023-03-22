@@ -1,22 +1,19 @@
-<svelte:options immutable tag='v-thead' />
+<svelte:options immutable tag="v-thead" />
 
-<script lang='ts'>
-
+<script lang="ts">
 import { addStyles } from '../../lib/index';
 
 export let style = '';
 
 addStyles();
-
 </script>
 
-<style>
-:host { display: contents !important; }
-</style>
-
-<thead
-  {style}
-  class="border-b border-black"
->
+<thead {style} class="border-b border-black">
   <slot />
 </thead>
+
+<style>
+:host {
+  display: contents !important;
+}
+</style>

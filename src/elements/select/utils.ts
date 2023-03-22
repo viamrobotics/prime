@@ -1,17 +1,18 @@
 import { addSpecialCharacterEscapes } from '../../lib/sort';
 
-interface Match { 
-  search: string[],
-  option: string,
+interface Match {
+  search: string[];
+  option: string;
 }
 
-export type SortOptions = 'default' | 'reduce' | 'off'
+export type SortOptions = 'default' | 'reduce' | 'off';
 
 export const isElementInScrollView = (element: Element) => {
   const { top, bottom } = element.getBoundingClientRect();
-  const parentRect = element.parentElement!.parentElement!.getBoundingClientRect();
+  const parentRect =
+    element.parentElement!.parentElement!.getBoundingClientRect();
 
-  return (bottom < parentRect.bottom && top > parentRect.top);
+  return bottom < parentRect.bottom && top > parentRect.top;
 };
 
 export const shouldBeChecked = (value: string, option: string) => {
@@ -51,7 +52,6 @@ export const applySearchHighlight = (options: string[], value: string) => {
   sortArr(matches);
   return [...matches, ...noMatches];
 };
-
 
 const sortArr = (arr: Match[]) => {
   arr.sort((a, b) => {

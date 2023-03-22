@@ -1,9 +1,7 @@
-
 import { version as MonacoVersion } from 'monaco-editor/package.json';
 import type { MonacoSchema, Schema, SubSchema } from './types';
 
 export const monacoURL = `https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/${MonacoVersion}`;
-
 
 // eslint-disable-next-line unicorn/prefer-export-from
 
@@ -18,8 +16,10 @@ const makeRefUri = (id: string, key: string) => {
 
 const keyFromRef = (ref = '') => ref.split('/').pop()!;
 
-
-const updateRefs = (id: string, definition: SubSchema): Record<string, string> => {
+const updateRefs = (
+  id: string,
+  definition: SubSchema
+): Record<string, string> => {
   for (const property of Object.values(definition.properties ?? [])) {
     if (property.type === 'array' && property.items?.type) {
       property.description = `"array" of type "${property.items?.type}"`;
@@ -30,7 +30,7 @@ const updateRefs = (id: string, definition: SubSchema): Record<string, string> =
     }
   }
 
-  return (JSON.parse(JSON.stringify(definition), (key, value: string) => {
+  return JSON.parse(JSON.stringify(definition), (key, value: string) => {
     if (key === '$ref') {
       return makeRefUri(id, keyFromRef(value));
     }
@@ -40,7 +40,7 @@ const updateRefs = (id: string, definition: SubSchema): Record<string, string> =
     }
 
     return value;
-  }) as Record<string, string>);
+  }) as Record<string, string>;
 };
 
 const addSchemas = (id: string, schema: Schema, fileMatch: string[]) => {
