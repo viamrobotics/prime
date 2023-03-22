@@ -54,12 +54,6 @@ const handleParentClick = (event: PointerEvent) => {
 };
 </script>
 
-<style>
-:host {
-  display: inline-block !important;
-}
-</style>
-
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <svelte:element
   this={tooltip ? 'v-tooltip' : 'span'}
@@ -100,3 +94,9 @@ const handleParentClick = (event: PointerEvent) => {
     {/if}
   </button>
 </svelte:element>
+
+<style>
+:host {
+  display: inline-block !important;
+}
+</style>

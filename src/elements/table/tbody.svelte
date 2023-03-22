@@ -8,12 +8,12 @@ export let style = '';
 addStyles();
 </script>
 
+<tbody {style}>
+  <slot />
+</tbody>
+
 <style>
 :host {
   display: contents !important;
 }
 </style>
-
-<tbody {style}>
-  <slot />
-</tbody>

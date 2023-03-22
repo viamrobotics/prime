@@ -197,27 +197,6 @@ $: {
 }
 </script>
 
-<style>
-.options-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.options-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.options-container::-webkit-scrollbar-thumb {
-  background-color: black;
-  border-radius: 0;
-  border: 0 solid transparent;
-}
-
-.options-container {
-  scrollbar-width: thin;
-  scrollbar-color: black transparent;
-}
-</style>
-
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label
   bind:this={root}
@@ -393,3 +372,24 @@ $: {
     </div>
   </v-dropdown>
 </label>
+
+<style>
+.options-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.options-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.options-container::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 0;
+  border: 0 solid transparent;
+}
+
+.options-container {
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+</style>

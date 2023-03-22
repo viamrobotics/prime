@@ -444,21 +444,6 @@ const onChange = () => {
 };
 </script>
 
-<style>
-.slider .range:hover .handle-bg {
-  transform: scale(1.5);
-}
-
-.slider .range.active .handle-bg {
-  transform: scale(2);
-}
-
-.slider .range.active .floating,
-.slider .range:hover .floating {
-  opacity: 1;
-}
-</style>
-
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label class="flex flex-col gap-2">
   {#if label}
@@ -603,3 +588,18 @@ const onChange = () => {
   on:touchend={bodyTouchEnd}
   on:keydown={bodyKeyDown}
 />
+
+<style>
+.slider .range:hover .handle-bg {
+  transform: scale(1.5);
+}
+
+.slider .range.active .handle-bg {
+  transform: scale(2);
+}
+
+.slider .range.active .floating,
+.slider .range:hover .floating {
+  opacity: 1;
+}
+</style>

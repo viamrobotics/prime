@@ -215,18 +215,6 @@ const handleNumberDragDown = async (event: PointerEvent) => {
 };
 </script>
 
-<style>
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type='number'] {
-  -moz-appearance: textfield;
-}
-</style>
-
 <label
   class={cx('relative flex gap-1 w-full', {
     'flex-col': labelposition === 'top',
@@ -325,3 +313,15 @@ input[type='number'] {
     </span>
   {/if}
 </label>
+
+<style>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+</style>

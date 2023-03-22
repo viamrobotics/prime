@@ -8,12 +8,12 @@ export let style = '';
 addStyles();
 </script>
 
+<td {style} part="table-cell" class="p-2 overflow-hidden">
+  <slot />
+</td>
+
 <style>
 :host {
   display: contents !important;
 }
 </style>
-
-<td {style} part="table-cell" class="p-2 overflow-hidden">
-  <slot />
-</td>

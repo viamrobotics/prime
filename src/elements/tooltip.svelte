@@ -86,14 +86,6 @@ const handleMouseLeave = () => {
 addStyles();
 </script>
 
-<style>
-.triangle {
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid;
-}
-</style>
-
 <div
   bind:this={container}
   class="relative"
@@ -132,3 +124,11 @@ addStyles();
     <slot name="text" />
   </div>
 </div>
+
+<style>
+.triangle {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid;
+}
+</style>

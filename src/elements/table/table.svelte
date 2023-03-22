@@ -13,12 +13,6 @@ addStyles();
 const colSizes = cols.split(',').map((col) => col.trim());
 </script>
 
-<style>
-:host {
-  display: contents !important;
-}
-</style>
-
 <table
   {style}
   class={cx('bg-white text-xs w-full', { 'table-fixed': variant === 'fixed' })}
@@ -30,3 +24,9 @@ const colSizes = cols.split(',').map((col) => col.trim());
   </colgroup>
   <slot />
 </table>
+
+<style>
+:host {
+  display: contents !important;
+}
+</style>
