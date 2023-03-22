@@ -1,20 +1,20 @@
-name: "Set up Node.js"
-description: "Install Node.js and development dependencies"
+name: 'Set up Node.js'
+description: 'Install Node.js and development dependencies'
 
 inputs:
   node-version:
-    description: "Node.js version to install"
-    default: "18"
+    description: 'Node.js version to install'
+    default: '18'
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
-    - name: "Install Node.js"
+    - name: 'Install Node.js'
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
         cache: npm
 
-    - name: "Install development dependencies"
+    - name: 'Install development dependencies'
       run: npm ci --audit=false
       shell: bash
