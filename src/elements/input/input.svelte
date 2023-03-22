@@ -108,10 +108,16 @@ const handleInput = () => {
     prevNumberValue = value;
 
     // only allow number-related characters to be typed
-    value = input.value = input.value.replaceAll(new RegExp(/[^\d+.e-]/i, 'g'), '');
+    value = input.value = input.value.replaceAll(
+      new RegExp(/[^\d+.e-]/i, 'g'),
+      ''
+    );
 
     // only set and send value if valid, and different from previous value
-    if (Number.isNaN(Number(value)) || Number(prevNumberValue) === Number(value)) {
+    if (
+      Number.isNaN(Number(value)) ||
+      Number(prevNumberValue) === Number(value)
+    ) {
       return;
     }
   } else {
@@ -126,7 +132,10 @@ const handleBlur = () => {
 };
 
 const getDecimals = (value = '') => {
-  return Math.max(value.includes('.') ? value.length - value.indexOf('.') - 1 : 0, stepDecimalDigits);
+  return Math.max(
+    value.includes('.') ? value.length - value.indexOf('.') - 1 : 0,
+    stepDecimalDigits
+  );
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
@@ -159,9 +168,16 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 const handleNumberDragMove = (event: PointerEvent) => {
   const x = event.clientX;
-  const deltaString = (-(startX - x) * stepNumber / 10).toFixed(type === 'integer' ? 0 : stepDecimalDigits);
-  const delta = type === 'integer' ? Number.parseInt(deltaString, 10) : Number.parseFloat(deltaString);
-  value = input.value = (startValue + (delta * stepNumber)).toFixed(getDecimals(input.value));
+  const deltaString = ((-(startX - x) * stepNumber) / 10).toFixed(
+    type === 'integer' ? 0 : stepDecimalDigits
+  );
+  const delta =
+    type === 'integer'
+      ? Number.parseInt(deltaString, 10)
+      : Number.parseFloat(deltaString);
+  value = input.value = (startValue + delta * stepNumber).toFixed(
+    getDecimals(input.value)
+  );
 
   const valueNum = Number.parseFloat(value);
 
@@ -264,13 +280,17 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     required={isRequired ? true : undefined}
     aria-disabled={isDisabled ? true : undefined}
     bind:this={input}
-    class={cx('w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border outline-none appearance-none', {
-      'pl-2.5': isNumeric === false,
-      'pl-3': isNumeric,
-      'bg-white border-gray-8': !isDisabled && !isInvalidNumericInput,
-      'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg': isDisabled || isDragging || isReadonly,
-      'border-danger-fg border': state === 'error' || isInvalidNumericInput,
-    })}
+    class={cx(
+      'w-full py-1.5 pr-2.5 leading-tight text-xs h-[30px] border outline-none appearance-none',
+      {
+        'pl-2.5': isNumeric === false,
+        'pl-3': isNumeric,
+        'bg-white border-gray-8': !isDisabled && !isInvalidNumericInput,
+        'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg':
+          isDisabled || isDragging || isReadonly,
+        'border-danger-fg border': state === 'error' || isInvalidNumericInput,
+      }
+    )}
     step={insertStepAttribute ? step : null}
     on:input|preventDefault|stopPropagation={handleInput}
     on:keydown={isNumeric ? handleKeydown : undefined}
