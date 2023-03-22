@@ -27,6 +27,10 @@ export const hexToRGB = (color?: string) => {
   );
 };
 
+export const delay = async (time: number) => {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 export const waitForCustomEvent = async (page:Page, customEventName:string) => {
   return page.evaluate(eventName => new Promise(callback => window.addEventListener(eventName, callback,{ once: true })), customEventName)
 }

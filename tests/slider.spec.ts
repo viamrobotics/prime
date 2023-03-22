@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEventWithParam, getCustomEventParam, waitForCustomEventTimeout, hexToRGB } from './lib/helper.ts'
+import { delay, waitForCustomEventWithParam, getCustomEventParam, waitForCustomEventTimeout, hexToRGB } from './lib/helper.ts'
 
 const customMin = -50
 const customMax = 50
@@ -7,10 +7,6 @@ const customStart = -20
 const customEnd = 30
 const value = 15
 const step = 25
-
-function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-}
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/slider-test.html');
