@@ -713,8 +713,15 @@ const ge = () => {
     const e = t.shadowRoot;
     e.adoptedStyleSheets = [Pt];
   }
-}, { base: Zt = "", query: Gt = "", workers: ks = {} } = window.PRIME_CONFIG ?? {}, Hr = async () => {
-  const t = new FontFace("icons", Zt ? `url(${Zt}/icons.woff2${Gt})` : `url(icons.woff2${Gt})`);
+}, {
+  base: Zt = "",
+  query: Gt = "",
+  workers: ks = {}
+} = window.PRIME_CONFIG ?? {}, Hr = async () => {
+  const t = new FontFace(
+    "icons",
+    Zt ? `url(${Zt}/icons.woff2${Gt})` : `url(icons.woff2${Gt})`
+  );
   await t.load(), document.fonts.add(t);
 }, Br = "0.34.1", et = `https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/${Br}`, at = [], Dt = (t, e) => `http://definitions/${t}-${e}.json`, Hi = (t = "") => t.split("/").pop(), Wr = (t, e) => {
   for (const n of Object.values(e.properties ?? []))
@@ -1096,7 +1103,7 @@ function tl(t, e, n) {
 }
 let nl = class extends fe {
   constructor(e) {
-    super(), this.shadowRoot.innerHTML = "<style>:host{display:inline-block !important }</style>", be(
+    super(), this.shadowRoot.innerHTML = "<style>:host{display:inline-block !important}</style>", be(
       this,
       {
         target: this.shadowRoot,
@@ -1180,11 +1187,13 @@ const rl = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null
 }, Symbol.toStringTag, { value: "Module" })), Ce = () => {
   const t = Ke();
-  return (e, n) => t.dispatchEvent(new CustomEvent(e, {
-    composed: !0,
-    bubbles: !0,
-    detail: n
-  }));
+  return (e, n) => t.dispatchEvent(
+    new CustomEvent(e, {
+      composed: !0,
+      bubbles: !0,
+      detail: n
+    })
+  );
 };
 let bt = "uninitialized";
 const on = /* @__PURE__ */ new Set(), ll = (t) => {
@@ -1193,13 +1202,20 @@ const on = /* @__PURE__ */ new Set(), ll = (t) => {
   if (on.add(t), bt === "loading")
     return;
   bt = "loading";
-  const e = URL.createObjectURL(new Blob([`
+  const e = URL.createObjectURL(
+    new Blob(
+      [
+        `
     self.MonacoEnvironment = {
       baseUrl: '${et}/min/'
     };
     importScripts('${et}/min/vs/base/worker/workerMain.js');
     importScripts('${et}/min/vs/language/json/jsonWorker.js');
-  `], { type: "text/javascript" })), n = () => {
+  `
+      ],
+      { type: "text/javascript" }
+    )
+  ), n = () => {
     window.require.config({ paths: { vs: `${et}/min/vs` } }), window.MonacoEnvironment = { getWorkerUrl: () => e }, window.require(["vs/editor/editor.main"], () => {
       for (const i of on)
         i(window.monaco);
@@ -1996,7 +2012,7 @@ function _l(t, e, n) {
 }
 let vl = class extends fe {
   constructor(e) {
-    super(), this.shadowRoot.innerHTML = "<style>input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield}</style>", be(
+    super(), this.shadowRoot.innerHTML = "<style>input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input[type='number']{-moz-appearance:textfield}</style>", be(
       this,
       {
         target: this.shadowRoot,
@@ -5265,7 +5281,7 @@ function wo(t, e, n) {
 }
 class sr extends fe {
   constructor(e) {
-    super(), this.shadowRoot.innerHTML = "<style>.slider .range:hover .handle-bg{transform:scale(1.5)}.slider .range.active .handle-bg{transform:scale(2.0)}.slider .range.active .floating,.slider .range:hover .floating{opacity:1}</style>", be(
+    super(), this.shadowRoot.innerHTML = "<style>.slider .range:hover .handle-bg{transform:scale(1.5)}.slider .range.active .handle-bg{transform:scale(2)}.slider .range.active .floating,.slider .range:hover .floating{opacity:1}</style>", be(
       this,
       {
         target: this.shadowRoot,
@@ -7001,21 +7017,21 @@ function ms(t) {
   let e, n, i, r;
   return {
     c() {
-      e = p("style"), e.textContent = `v-tr[variant="success"] v-td::part(table-cell) {
-      --tw-text-opacity: 1;
-      color: rgba(4, 120, 87, var(--tw-text-opacity));
-      /* @apply text-green-700; */
-    }
-    v-tr[variant="disabled"] v-td::part(table-cell) {
-      --tw-text-opacity: 1;
-      color: rgba(107, 114, 128, var(--tw-text-opacity));
-      /* @apply text-gray-500; */
-    }
-    v-tr[variant="error"] v-td::part(table-cell) {
-      --tw-text-opacity: 1;
-      color: rgb(239 68 68 / var(--tw-text-opacity));
-      /* @apply text-red-500; */
-    }`, n = W(), i = p("tr"), r = p("slot"), this.c = L, c(i, "style", t[0]), c(i, "class", "border-b");
+      e = p("style"), e.textContent = `v-tr[variant='success'] v-td::part(table-cell) {
+    --tw-text-opacity: 1;
+    color: rgba(4, 120, 87, var(--tw-text-opacity));
+    /* @apply text-green-700; */
+  }
+  v-tr[variant='disabled'] v-td::part(table-cell) {
+    --tw-text-opacity: 1;
+    color: rgba(107, 114, 128, var(--tw-text-opacity));
+    /* @apply text-gray-500; */
+  }
+  v-tr[variant='error'] v-td::part(table-cell) {
+    --tw-text-opacity: 1;
+    color: rgb(239 68 68 / var(--tw-text-opacity));
+    /* @apply text-red-500; */
+  }`, n = W(), i = p("tr"), r = p("slot"), this.c = L, c(i, "style", t[0]), c(i, "class", "border-b");
     },
     m(l, o) {
       g(document.head, e), A(l, n, o), A(l, i, o), g(i, r);
@@ -7039,7 +7055,7 @@ function ps(t, e, n) {
 }
 class Er extends fe {
   constructor(e) {
-    super(), this.shadowRoot.innerHTML = '<style>:host{display:contents !important}:host([variant="success"]) tr{--tw-bg-opacity:1;--tw-border-opacity:1;background-color:rgba(236, 253, 245, var(--tw-bg-opacity));border-color:rgba(209, 250, 229, var(--tw-border-opacity))}:host([variant="disabled"]) tr{--tw-bg-opacity:1;background-color:rgba(249, 250, 251, var(--tw-bg-opacity))}:host([variant="error"]) tr{--tw-bg-opacity:1;--tw-border-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity));border-color:rgb(254 226 226 / var(--tw-border-opacity))}</style>', be(
+    super(), this.shadowRoot.innerHTML = "<style>:host{display:contents !important}:host([variant='success']) tr{--tw-bg-opacity:1;--tw-border-opacity:1;background-color:rgba(236, 253, 245, var(--tw-bg-opacity));border-color:rgba(209, 250, 229, var(--tw-border-opacity))}:host([variant='disabled']) tr{--tw-bg-opacity:1;background-color:rgba(249, 250, 251, var(--tw-bg-opacity))}:host([variant='error']) tr{--tw-bg-opacity:1;--tw-border-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity));border-color:rgb(254 226 226 / var(--tw-border-opacity))}</style>", be(
       this,
       {
         target: this.shadowRoot,
