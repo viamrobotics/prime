@@ -1,4 +1,4 @@
-export default (`
+export default `
 #!/bin/sh
 echo "Hello world"
-`).trim();
+`.trim();

@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta
   title='Elements/Table'
@@ -7,13 +7,14 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'Determines table sizing',
       control: { type: 'select' },
       options: ['fixed', 'auto'],
-      table: { defaultValue: { summary: 'auto' } }
+      table: { defaultValue: { summary: 'auto' } },
     },
     cols: {
-      description: 'Can force columns into certain sizes. Use a comma separated list, leaving an empty space if you wish to skip a column. Takes px and % values.',
+      description:
+        'Can force columns into certain sizes. Use a comma separated list, leaving an empty space if you wish to skip a column. Takes px and % values.',
       control: { type: 'text' },
-      table: { defaultValue: { summary: '' } }
-    }
+      table: { defaultValue: { summary: '' } },
+    },
   }}
 />
 
@@ -26,7 +27,7 @@ Used to tabular data.
     name='Table'
     args={{
       variant: 'auto',
-      cols: '10%, 10%, 60%, 10%, 10%'
+      cols: '10%, 10%, 60%, 10%, 10%',
     }}
   >
     {({ variant, cols }) => `

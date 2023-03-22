@@ -1,7 +1,6 @@
-<svelte:options tag='v-slider' />
+<svelte:options tag="v-slider" />
 
-<script lang='ts'>
-
+<script lang="ts">
 import { onMount } from 'svelte';
 import { spring } from 'svelte/motion';
 import type { Spring } from 'svelte/motion';
@@ -45,13 +44,16 @@ let isDisabled: boolean;
 
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
-$: pipStep = ((maxNum - minNum) / stepNum >= 100 ? (maxNum - minNum) / 20 : 1);
+$: pipStep = (maxNum - minNum) / stepNum >= 100 ? (maxNum - minNum) / 20 : 1;
 $: pipCount = (maxNum - minNum) / stepNum;
 $: pipVal = (val: number): number => minNum + val * stepNum * pipStep;
 $: minNum = Number.parseFloat(min || '0');
 $: maxNum = Number.parseFloat(max || '100');
 $: stepNum = Number.parseFloat(step || '1');
-$: startValue = start || value ? Number.parseFloat(start || value) : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2;
+$: startValue =
+  start || value
+    ? Number.parseFloat(start || value)
+    : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2;
 $: endValue = end ? Number.parseFloat(end) : undefined;
 $: range = typeof range === 'string' ? range : end !== undefined;
 
@@ -90,11 +92,16 @@ $: {
   if (valueLength === arr.length) {
     // update the value of the spring function for animated handles
     // whenever the values has updated
-    springPositions.set(arr.map((v) => percentOf(v, minNum, maxNum, 2))).catch((error) => console.error(error));
+    springPositions
+      .set(arr.map((v) => percentOf(v, minNum, maxNum, 2)))
+      .catch((error) => console.error(error));
   } else {
     // set the initial spring values when the slider initialises,
     // or when values array length has changed
-    springPositions = spring(arr.map((v) => percentOf(v, minNum, maxNum, 2)), springValues);
+    springPositions = spring(
+      arr.map((v) => percentOf(v, minNum, maxNum, 2)),
+      springValues
+    );
   }
   // set the valueLength for the next check
   valueLength = arr.length;
@@ -103,7 +110,11 @@ $: {
 // Validate parameters
 onMount(() => {
   if ((maxNum - minNum) % stepNum !== 0) {
-    console.error(`<v-slider> step (${step}) is not a multiple of the range (${maxNum - minNum})`);
+    console.error(
+      `<v-slider> step (${step}) is not a multiple of the range (${
+        maxNum - minNum
+      })`
+    );
   }
 });
 
@@ -111,7 +122,11 @@ onMount(() => {
  * align the value with the steps so that it
  * always sits on the closest (above/below) step
  **/
-const alignValueToStep = (val: number, minVal: number, maxVal: number): number => {
+const alignValueToStep = (
+  val: number,
+  minVal: number,
+  maxVal: number
+): number => {
   // sanity check for performance
   if (val <= minVal) {
     return minVal;
@@ -140,10 +155,12 @@ const alignValueToStep = (val: number, minVal: number, maxVal: number): number =
  * normalise a mouse or touch event to return the
  * client (x/y) object for that event
  **/
-const normalisedClient = (event: MouseEvent | TouchEvent): MouseEvent | Touch => {
+const normalisedClient = (
+  event: MouseEvent | TouchEvent
+): MouseEvent | Touch => {
   return event.type.includes('touch')
     ? (event as TouchEvent).touches[0]!
-    : event as MouseEvent;
+    : (event as MouseEvent);
 };
 
 /**
@@ -194,7 +211,9 @@ const getClosestHandle = (clientPos: Touch | MouseEvent): number => {
     return handleVal > endValue ? 1 : 0;
   } else if (range) {
     closest = [startValue, endValue!].indexOf(
-      [startValue, endValue!].sort((a, b) => Math.abs(handleVal - a) - Math.abs(handleVal - b))[0]!
+      [startValue, endValue!].sort(
+        (a, b) => Math.abs(handleVal - a) - Math.abs(handleVal - b)
+      )[0]!
     );
   }
 
@@ -315,7 +334,7 @@ const handleSliderFocus = (index: number) => {
  * @param {event} e the event from browser
  **/
 const sliderInteractStart = (e: MouseEvent | TouchEvent) => {
-  if ((isDisabled || isReadonly)) return;
+  if (isDisabled || isReadonly) return;
 
   getSliderDimensions();
   const el = e.target as HTMLElement;
@@ -326,7 +345,11 @@ const sliderInteractStart = (e: MouseEvent | TouchEvent) => {
   handleActivated = true;
   handlePressed = true;
   activeHandle = getClosestHandle(clientPos);
-  previousValue = alignValueToStep(activeHandle === 0 ? startValue : endValue!, minNum, maxNum);
+  previousValue = alignValueToStep(
+    activeHandle === 0 ? startValue : endValue!,
+    minNum,
+    maxNum
+  );
 
   // for touch devices we want the handle to instantly
   // move to the position touched for more responsive feeling
@@ -346,11 +369,7 @@ const sliderInteractEnd = () => {
 const bodyInteractStart = (e: MouseEvent | TouchEvent) => {
   keyboardActive = false;
 
-  if (
-    focus &&
-    e.target !== slider &&
-    !slider.contains(e.target as Node)
-  ) {
+  if (focus && e.target !== slider && !slider.contains(e.target as Node)) {
     focus = false;
   }
 };
@@ -378,7 +397,10 @@ const bodyMouseUp = (e: MouseEvent) => {
     // this only works if a handle is active, which can
     // only happen if there was sliderInteractStart triggered
     // on the slider, already
-    if (handleActivated && el && el === slider || slider.contains(el as Node)) {
+    if (
+      (handleActivated && el && el === slider) ||
+      slider.contains(el as Node)
+    ) {
       focus = true;
       // don't trigger interact if the target is a handle (no need) or
       // if the target is a label (we want to move to that value from rangePips)
@@ -420,24 +442,28 @@ const onChange = () => {
       : undefined,
   });
 };
-
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<label class='flex flex-col gap-2'>
+<label class="flex flex-col gap-2">
   {#if label}
-    <p class={cn('text-xs capitalize', {
-      'text-disabled-fg': isDisabled,
-    })}>
+    <p
+      class={cn('text-xs capitalize', {
+        'text-disabled-fg': isDisabled,
+      })}
+    >
       {label}
     </p>
   {/if}
 
   <div
     bind:this={slider}
-    class={cn('slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-gray-6', {
-      'bg-disabled-bg text-disabled-fg': isDisabled,
-    })}
+    class={cn(
+      'slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-gray-6',
+      {
+        'bg-disabled-bg text-disabled-fg': isDisabled,
+      }
+    )}
     class:range
     class:focus
     class:min={range === 'min'}
@@ -447,45 +473,55 @@ const onChange = () => {
     on:touchstart|preventDefault={sliderInteractStart}
     on:touchend|preventDefault={sliderInteractEnd}
   >
-
     {#each endValue ? [startValue, endValue] : [startValue] as value, index}
       <span
-        role='slider'
-        class='range absolute block h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]'
+        role="slider"
+        class="range absolute block h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]"
         class:active={focus && activeHandle === index}
         class:press={handlePressed && activeHandle === index}
         data-handle={index}
         on:blur={handleSliderBlur}
         on:focus={() => handleSliderFocus(index)}
-        style='left: {$springPositions[index]}%; z-index: {activeHandle === index ? 3 : 2}'
+        style="left: {$springPositions[index]}%; z-index: {activeHandle ===
+        index
+          ? 3
+          : 2}"
         aria-valuemin={range === true && index === 1 ? startValue : minNum}
         aria-valuemax={range === true && index === 0 ? endValue : maxNum}
         aria-valuenow={value}
         aria-valuetext={value?.toString()}
-        aria-orientation='horizontal'
+        aria-orientation="horizontal"
         aria-disabled={isDisabled ? true : undefined}
-        tabindex='{ disabled ? -1 : 0 }'
-      > 
+        tabindex={disabled ? -1 : 0}
+      >
+        <span
+          class="handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400"
+        />
 
-        <span class='handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400' />
+        <span
+          class={cn(
+            'absolute left-0 bottom-1 block rounded-full h-full w-full border border-gray-9 bg-white',
+            {
+              'border-disabled-fg': isDisabled || isReadonly,
+            }
+          )}
+        />
 
-        <span class={cn('absolute left-0 bottom-1 block rounded-full h-full w-full border border-gray-9 bg-white', {
-          'border-disabled-fg': isDisabled || isReadonly,
-        })} />
-
-        <span class={cn(
-          'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
-          'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-gray-9 bg-white text-xs',
-          {
-            '-translate-y-1.5': !focus || activeHandle !== index,
-            'border-disabled-fg': isDisabled || isReadonly,
-            'text-disabled-fg': isDisabled || isReadonly,
-          }
-        )}>
+        <span
+          class={cn(
+            'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
+            'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-gray-9 bg-white text-xs',
+            {
+              '-translate-y-1.5': !focus || activeHandle !== index,
+              'border-disabled-fg': isDisabled || isReadonly,
+              'text-disabled-fg': isDisabled || isReadonly,
+            }
+          )}
+        >
           {value}
 
           {#if suffix}
-            <span class='floating-suffix'>{suffix}</span>
+            <span class="floating-suffix">{suffix}</span>
           {/if}
         </span>
       </span>
@@ -493,21 +529,22 @@ const onChange = () => {
 
     {#if range}
       <span
-        class={cn('absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-gray-9', {
-          'bg-disabled-bg': isDisabled || isReadonly,
-        })}
-        style='left: {rangeStart($springPositions)}%; right: {rangeEnd($springPositions)}%'
+        class={cn(
+          'absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-gray-9',
+          {
+            'bg-disabled-bg': isDisabled || isReadonly,
+          }
+        )}
+        style="left: {rangeStart($springPositions)}%; right: {rangeEnd(
+          $springPositions
+        )}%"
       />
     {/if}
 
-    <div 
-      class='absolute h-2 left-0 right-0' 
-      class:disabled
-      class:focus 
-    >
-      <small class='absolute bottom-full left-0 mb-3 whitespace-nowrap text-xs'>
+    <div class="absolute h-2 left-0 right-0" class:disabled class:focus>
+      <small class="absolute bottom-full left-0 mb-3 whitespace-nowrap text-xs">
         {minNum}
-        
+
         {#if suffix}
           <span>{suffix}</span>
         {/if}
@@ -517,23 +554,27 @@ const onChange = () => {
         {#each Array.from({ length: pipCount + 1 }) as _, i}
           {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
             <span
-              class={cn('absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-gray-6', {
-                'bg-disabled-bg': isDisabled || isReadonly,
-              })}
-              style='left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;'
+              class={cn(
+                'absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-gray-6',
+                {
+                  'bg-disabled-bg': isDisabled || isReadonly,
+                }
+              )}
+              style="left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;"
             />
           {/if}
         {/each}
       {/if}
 
-      <small class='absolute bottom-full right-0 mb-3 whitespace-nowrap text-xs'>
+      <small
+        class="absolute bottom-full right-0 mb-3 whitespace-nowrap text-xs"
+      >
         {maxNum}
-        
+
         {#if suffix}
           <span>{suffix}</span>
         {/if}
       </small>
-
     </div>
   </div>
 </label>
@@ -549,18 +590,16 @@ const onChange = () => {
 />
 
 <style>
-
 .slider .range:hover .handle-bg {
   transform: scale(1.5);
 }
 
 .slider .range.active .handle-bg {
-  transform: scale(2.0);
+  transform: scale(2);
 }
 
 .slider .range.active .floating,
 .slider .range:hover .floating {
   opacity: 1;
 }
-
 </style>

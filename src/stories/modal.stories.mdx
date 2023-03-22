@@ -1,7 +1,7 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta
-  title="Elements/Modal"
+  title='Elements/Modal'
   parameters={{
     actions: {
       handles: ['close'],
@@ -27,8 +27,14 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     variant: {
       description: 'The communicated action type of the button (demo only)',
       control: 'select',
-      options: ['primary', 'inverse-primary', 'success', 'danger', 'outline-danger'],
-      table: { defaultValue: { summary: 'primary' } }
+      options: [
+        'primary',
+        'inverse-primary',
+        'success',
+        'danger',
+        'outline-danger',
+      ],
+      table: { defaultValue: { summary: 'primary' } },
     },
   }}
 />
@@ -51,7 +57,7 @@ Creates a modal overlay
     {({ title, message, variant, buttonText, open }) => `
       <div style="height: 16rem">
         <v-modal
-          ${open ? "open" : ""}
+          ${open ? 'open' : ''}
           title='${title}'
           message='${message}'
           onclose='this.removeAttribute("open")'
