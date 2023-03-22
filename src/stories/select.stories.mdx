@@ -1,5 +1,5 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
-import gpioOptions from './assets/gpio-options'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import gpioOptions from './assets/gpio-options';
 
 <Meta
   title='Elements/Select/Select'
@@ -12,17 +12,17 @@ import gpioOptions from './assets/gpio-options'
     label: {
       description: 'The input label',
       table: { defaultValue: { summary: '' } },
-      control: 'text'
+      control: 'text',
     },
     options: {
       description: 'The list of options',
       table: { defaultValue: { summary: '' } },
-      control: 'text'
+      control: 'text',
     },
     value: {
       description: 'The selected value',
       table: { defaultValue: { summary: '' } },
-      control: 'text'
+      control: 'text',
     },
     placeholder: {
       description: 'The placeholder value',
@@ -30,53 +30,55 @@ import gpioOptions from './assets/gpio-options'
       control: 'text',
     },
     exact: {
-      description: 'If true, values can only be selected if an existing value matches what is inputted (single select ONLY)',
+      description:
+        'If true, values can only be selected if an existing value matches what is inputted (single select ONLY)',
       table: { defaultValue: { summary: 'false' } },
-      control: { type: 'boolean' }
+      control: { type: 'boolean' },
     },
     withbutton: {
       description: 'Whether a button exists at the bottom to conduct an action',
       table: { defaultValue: { summary: 'false' } },
-      control: { type: 'boolean' }
+      control: { type: 'boolean' },
     },
     buttontext: {
       description: 'The text on the button',
       table: { defaultValue: { summary: 'ENTER' } },
-      control: 'text'
+      control: 'text',
     },
     buttonicon: {
       description: 'The icon on the button, can use any from v-icon',
       table: { defaultValue: { summary: '' } },
-      control: 'text'
+      control: 'text',
     },
     sortoption: {
-      description: 'how we want the values to be searched and sorted inside the component',
-      table: { 
+      description:
+        'how we want the values to be searched and sorted inside the component',
+      table: {
         defaultValue: { summary: 'default' },
-        type: { summary: 'string'}
+        type: { summary: 'string' },
       },
       options: ['default', 'reduce', 'off'],
       control: { type: 'radio' },
-      type: 'text'
+      type: 'text',
     },
     state: {
       description: 'the state of the tooltip',
-      table: { 
+      table: {
         defaultValue: { summary: 'info' },
-        type: { summary: 'string'}
+        type: { summary: 'string' },
       },
       options: ['info', 'warn', 'error'],
       control: { type: 'radio' },
-      type: 'text'
+      type: 'text',
     },
     'on:input': {
-      description: 'Event fired when an option is selected'
+      description: 'Event fired when an option is selected',
     },
     'on:button-click': {
-      description: 'Event fired when button is clicked'
+      description: 'Event fired when button is clicked',
     },
     'on:search': {
-      description: 'Event fired when the search input is changed'
+      description: 'Event fired when the search input is changed',
     },
   }}
 />
@@ -108,7 +110,7 @@ For a dropdown that allows the user to select a single option
     args={{
       label: 'Select with Placeholder',
       options: 'Bob, Sally, Jimothy, Raechel, Apple, Andy, Robert',
-      placeholder: "Some placeholder..."
+      placeholder: 'Some placeholder...',
     }}
   >
     {({ label, options, placeholder }) => `
@@ -172,7 +174,7 @@ For a dropdown that allows the user to select a single option
       disabled: 'true',
     }}
   >
-    {({ label, options, disabled}) => `
+    {({ label, options, disabled }) => `
       <v-select
         label='${label}'
         options='${options}'
@@ -189,7 +191,7 @@ For a dropdown that allows the user to select a single option
       label: 'Readonly',
       options: 'Option 1, Option 2, Option 3',
       readonly: 'readonly',
-      value: 'Option 1'
+      value: 'Option 1',
     }}
   >
     {({ label, options, readonly, value }) => `
@@ -263,7 +265,3 @@ For a dropdown that allows the user to select a single option
     `}
   </Story>
 </Canvas>
-
-
-
-

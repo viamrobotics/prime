@@ -1,5 +1,5 @@
-const plugin = require('tailwindcss/plugin')
-const { theme } = require('../tailwind.config.cjs')
+const plugin = require('tailwindcss/plugin');
+const { theme } = require('../tailwind.config.cjs');
 
 module.exports = {
   content: ['./index.html', './src/**/*.{ts,vue}', '../src/**/*.{ts,svelte}'],
@@ -7,4 +7,4 @@ module.exports = {
   variants: {
     extend: {},
   },
-}
+};

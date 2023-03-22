@@ -1,8 +1,7 @@
-<svelte:options immutable tag='v-radio' />
+<svelte:options immutable tag="v-radio" />
 
-<script lang='ts'>
-
-type LabelPosition = 'top' | 'left'
+<script lang="ts">
+type LabelPosition = 'top' | 'left';
 
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
@@ -32,30 +31,35 @@ const handleClick = (value: string) => {
     dispatch('input', { value });
   }
 };
-
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<label class={cx('flex gap-1.5', {
-  'flex-col': labelposition === 'top',
-  'flex-row': labelposition === 'left',
-})}>
-  <div class='flex items-center gap-1.5'>
+<label
+  class={cx('flex gap-1.5', {
+    'flex-col': labelposition === 'top',
+    'flex-row': labelposition === 'left',
+  })}
+>
+  <div class="flex items-center gap-1.5">
     {#if label}
-      <p class={cx('text-xs', {
-        'text-black/50': isReadonly,
-      })}>
+      <p
+        class={cx('text-xs', {
+          'text-black/50': isReadonly,
+        })}
+      >
         {label}
       </p>
     {/if}
 
     {#if tooltip}
       <v-tooltip text={tooltip}>
-        <div class={cx({
-          'icon-info-outline': state === 'info',
-          'icon-error-outline text-warning-fg': state === 'warn',
-          'icon-error-outline text-danger-fg': state === 'error',
-        })} />
+        <div
+          class={cx({
+            'icon-info-outline': state === 'info',
+            'icon-error-outline text-warning-fg': state === 'warn',
+            'icon-error-outline text-danger-fg': state === 'error',
+          })}
+        />
       </v-tooltip>
     {/if}
   </div>
@@ -63,29 +67,29 @@ const handleClick = (value: string) => {
   <div class="flex flex-nowrap">
     {#each parsedOptions as option}
       <button
-        class={cx('whitespace-nowrap capitalize border-y border-l last:border-r border-gray-9 px-2 py-1 text-xs', {
-          'bg-white': option !== selected,
-          'bg-gray-9 text-white font-bold': ((option === selected) && !isReadonly),
-          'bg-disabled-fg text-white font-bold': ((option === selected) && isReadonly),
-          'border-disabled-fg text-disabled-fg': isReadonly,
-          'cursor-not-allowed pointer-events-none': isReadonly,
-        })}
+        class={cx(
+          'whitespace-nowrap capitalize border-y border-l last:border-r border-gray-9 px-2 py-1 text-xs',
+          {
+            'bg-white': option !== selected,
+            'bg-gray-9 text-white font-bold':
+              option === selected && !isReadonly,
+            'bg-disabled-fg text-white font-bold':
+              option === selected && isReadonly,
+            'border-disabled-fg text-disabled-fg': isReadonly,
+            'cursor-not-allowed pointer-events-none': isReadonly,
+          }
+        )}
         on:click={() => handleClick(option)}
       >
         {#if option === selected}
           <div class="flex">
-            <v-icon
-              class='mr-1'
-              name='checkmark'
-              size='base'
-            />
+            <v-icon class="mr-1" name="checkmark" size="base" />
             {option}
           </div>
         {:else}
           {option}
         {/if}
-    </button>
+      </button>
     {/each}
   </div>
-  
 </label>

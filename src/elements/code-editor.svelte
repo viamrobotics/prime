@@ -1,20 +1,15 @@
-<svelte:options immutable tag='v-code-editor' />
+<svelte:options immutable tag="v-code-editor" />
 
-<script lang='ts'>
-
+<script lang="ts">
 import { onMount, onDestroy } from 'svelte';
 import { get_current_component } from 'svelte/internal';
 
-import {
-  addStyles,
-  removeNewlineWhitespace,
-  monacoURL,
-} from '../lib/index';
+import { addStyles, removeNewlineWhitespace, monacoURL } from '../lib/index';
 
 import { dispatcher } from '../lib/dispatch';
 
 import type {
-  MonacoSupportedLanguages,  
+  MonacoSupportedLanguages,
   MonacoSupportedThemes,
   Monaco,
   Schema,
@@ -42,7 +37,7 @@ let isReadonly: boolean;
 let hasMinimap: boolean;
 let parsedSchema: Schema | undefined;
 
-$: parsedSchema = schema ? JSON.parse(schema) as Schema : undefined;
+$: parsedSchema = schema ? (JSON.parse(schema) as Schema) : undefined;
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: hasMinimap = htmlToBoolean(minimap, 'minimap');
 
@@ -55,7 +50,9 @@ const link = document.createElement('link');
 link.rel = 'stylesheet';
 link.href = `${monacoURL}/min/vs/editor/editor.main.min.css`;
 
-const component = get_current_component() as HTMLElement & { shadowRoot: ShadowRoot };
+const component = get_current_component() as HTMLElement & {
+  shadowRoot: ShadowRoot;
+};
 component.shadowRoot.append(link);
 
 const setModel = () => {
@@ -78,7 +75,7 @@ const setModel = () => {
   } else {
     model = window.monaco.editor.createModel(value, language);
   }
-  
+
   dispatch('update-model', { model });
   editor.setModel(model);
 };
@@ -215,15 +212,16 @@ $: {
     handleResize();
   }
 }
-
 </script>
 
 <style>
-:host { display: contents !important; }
+:host {
+  display: contents !important;
+}
 </style>
 
 <div
-  class='w-full h-full relative isolate'
+  class="w-full h-full relative isolate"
   bind:this={container}
   on:input={handleInput}
 />

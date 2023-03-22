@@ -2,16 +2,18 @@ import type { Monaco } from './types';
 import { monacoURL } from './index';
 
 interface Window extends globalThis.Window {
-  require: ((dependencies: string[], callback: () => void) => void) & { config: (options: object) => void }
+  require: ((dependencies: string[], callback: () => void) => void) & {
+    config: (options: object) => void;
+  };
   MonacoEnvironment: {
-    getWorkerUrl(): string
-  }
-  monaco: typeof Monaco
+    getWorkerUrl(): string;
+  };
+  monaco: typeof Monaco;
 }
 
 declare const window: Window;
 
-type Callback = (monaco: typeof Monaco) => void
+type Callback = (monaco: typeof Monaco) => void;
 
 let state = 'uninitialized';
 
@@ -30,16 +32,23 @@ export const loadMonaco = (onload: Callback) => {
 
   state = 'loading';
 
-  const proxy = URL.createObjectURL(new Blob([`
+  const proxy = URL.createObjectURL(
+    new Blob(
+      [
+        `
     self.MonacoEnvironment = {
       baseUrl: '${monacoURL}/min/'
     };
     importScripts('${monacoURL}/min/vs/base/worker/workerMain.js');
     importScripts('${monacoURL}/min/vs/language/json/jsonWorker.js');
-  `], { type: 'text/javascript' }));
+  `,
+      ],
+      { type: 'text/javascript' }
+    )
+  );
 
   const handleLoad = () => {
-    window.require.config({ paths: { 'vs': `${monacoURL}/min/vs` } });
+    window.require.config({ paths: { vs: `${monacoURL}/min/vs` } });
     window.MonacoEnvironment = { getWorkerUrl: () => proxy };
 
     window.require(['vs/editor/editor.main'], () => {

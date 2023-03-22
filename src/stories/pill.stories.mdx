@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta
   title='Elements/Pill'
@@ -11,15 +11,16 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     value: {
       description: 'Text displayed to within the pill',
       table: { defaultValue: { summary: '' } },
-      control: 'text'
+      control: 'text',
     },
     removable: {
-      description: 'to display the x icon and signal to external component to remove',
+      description:
+        'to display the x icon and signal to external component to remove',
       table: { defaultValue: { summary: 'true' } },
-      control: { type: 'boolean' }
+      control: { type: 'boolean' },
     },
     'on:remove': {
-      description: 'Event fired when x icon is clicked'
+      description: 'Event fired when x icon is clicked',
     },
   }}
 />

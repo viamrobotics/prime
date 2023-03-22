@@ -1,8 +1,7 @@
-<svelte:options immutable tag='v-icon' />
+<svelte:options immutable tag="v-icon" />
 
-<script lang='ts'>
-
-type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl'| '3xl'| '4xl'
+<script lang="ts">
+type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
@@ -11,11 +10,10 @@ export let name = '';
 export let size: Size = 'base';
 
 addStyles();
-
 </script>
 
 <i
-  aria-hidden='true'
+  aria-hidden="true"
   class={cx(`icon-${name} block`, {
     'text-xs': size === 'xs',
     'text-sm': size === 'sm',

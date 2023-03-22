@@ -1,8 +1,7 @@
-<svelte:options immutable tag='v-tooltip' />
+<svelte:options immutable tag="v-tooltip" />
 
-<script lang='ts'>
-
-type Locations = 'top' | 'bottom' | 'right' | 'left'
+<script lang="ts">
+type Locations = 'top' | 'bottom' | 'right' | 'left';
 
 import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
 import { addStyles } from '../lib/index';
@@ -52,12 +51,15 @@ export const recalculateStyle = async () => {
   const arrowY = position.middlewareData.arrow?.y ?? 0;
 
   // eslint-disable-next-line require-atomic-updates
-  arrowElement.style.cssText = staticSide === 'right' || staticSide === 'left' ? `
+  arrowElement.style.cssText =
+    staticSide === 'right' || staticSide === 'left'
+      ? `
       top: ${arrowY}px;
       ${staticSide}: ${arrowX}px;
       margin-${staticSide}: -10px;
       transform: ${staticSide === 'right' ? 'rotate(90deg)' : 'rotate(270deg)'};
-    ` : `
+    `
+      : `
       left: ${arrowX}px;
       ${staticSide}: ${arrowY}px;
       margin-${staticSide}: -6px;
@@ -82,21 +84,28 @@ const handleMouseLeave = () => {
 };
 
 addStyles();
-
 </script>
+
+<style>
+.triangle {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid;
+}
+</style>
 
 <div
   bind:this={container}
-  class='relative'
-  aria-describedby='tooltip'
+  class="relative"
+  aria-describedby="tooltip"
   on:mouseenter={handleMouseEnter}
   on:mouseleave={handleMouseLeave}
 >
   <slot />
   <div
     bind:this={tooltip}
-    class:invisible={invisible}
-    role='tooltip'
+    class:invisible
+    role="tooltip"
     class={`
       absolute
       top-0
@@ -110,24 +119,16 @@ addStyles();
       border-gray-9
       z-[1000]
     `}
-    style='
+    style="
       transform: translate({x}px, {y}px);
       min-width: {minwidth};
-    '
-    >
+    "
+  >
     <div
       bind:this={arrowElement}
-      class='absolute triangle border-b-gray-9 w-0 h-0'
+      class="absolute triangle border-b-gray-9 w-0 h-0"
     />
     {text}
-    <slot name='text' />
+    <slot name="text" />
   </div>
 </div>
-
-<style>
-  .triangle {
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 6px solid;
-  }
-</style>

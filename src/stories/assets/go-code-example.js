@@ -1,4 +1,4 @@
-export default (`
+export default `
 package main
 
 import "fmt"
@@ -6,4 +6,4 @@ import "fmt"
 func DoSomething(thing string) {
 	fmt.Println(thing)
 }
-`).trim();
+`.trim();

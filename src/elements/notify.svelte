@@ -1,7 +1,6 @@
-<svelte:options immutable tag='v-notify' />
+<svelte:options immutable tag="v-notify" />
 
-<script lang='ts'>
-
+<script lang="ts">
 type Variants = 'error' | 'warning' | 'success' | 'info';
 
 import cx from 'classnames';
@@ -13,7 +12,6 @@ export let variant: Variants = 'info';
 export let background: 'gray' | 'white' = 'gray';
 
 addStyles();
-
 </script>
 
 <div
@@ -27,34 +25,34 @@ addStyles();
   })}
 >
   {#if variant === 'error'}
-    <v-icon class='mt-0.5 text-danger-fg' name='error-outline' />
+    <v-icon class="mt-0.5 text-danger-fg" name="error-outline" />
   {:else if variant === 'info'}
-    <v-icon class='mt-0.5 text-info-fg' name='info-outline' />
+    <v-icon class="mt-0.5 text-info-fg" name="info-outline" />
   {:else if variant === 'success'}
-    <v-icon class='mt-0.5 text-success-fg' name='checkmark' />
+    <v-icon class="mt-0.5 text-success-fg" name="checkmark" />
   {/if}
 
   {#if variant === 'warning'}
-  <svg
-    width='14'
-    height='14'
-    viewBox='0 0 15 15'
-    fill='none'
-    class='mt-1 fill-warning-fg'
-  >
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 15 15"
+      fill="none"
+      class="mt-1 fill-warning-fg"
+    >
       <path
-        d='M8 2.99333L13.02 11.6667H2.98L8 2.99333ZM8 0.333328L0.666672 13H15.3333L8 0.333328ZM8.66667 9.66666H7.33334V11H8.66667V9.66666ZM8.66667 5.66666H7.33334V8.33333H8.66667V5.66666Z'
+        d="M8 2.99333L13.02 11.6667H2.98L8 2.99333ZM8 0.333328L0.666672 13H15.3333L8 0.333328ZM8.66667 9.66666H7.33334V11H8.66667V9.66666ZM8.66667 5.66666H7.33334V8.33333H8.66667V5.66666Z"
       />
-  </svg>
+    </svg>
   {/if}
 
   <figure>
-    <figcaption class='text-sm'>{title}</figcaption>
-    
+    <figcaption class="text-sm">{title}</figcaption>
+
     {#if message}
-      <p class='text-xs'>{message}</p>
+      <p class="text-xs">{message}</p>
     {/if}
 
-    <slot/>
+    <slot />
   </figure>
 </div>
