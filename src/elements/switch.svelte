@@ -1,7 +1,6 @@
-<svelte:options immutable tag='v-switch' />
+<svelte:options immutable tag="v-switch" />
 
-<script lang='ts'>
-
+<script lang="ts">
 import cx from 'classnames';
 import { htmlToBoolean } from '../lib/boolean';
 import { addStyles } from '../lib/index';
@@ -29,14 +28,13 @@ $: on = value === 'on';
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 
-const handleClick = () => { 
+const handleClick = () => {
   if (!(isDisabled || isReadonly)) {
-    value = (on) ? 'off' : 'on';
+    value = on ? 'off' : 'on';
     input.checked = value === 'on';
     dispatch('input', { value: input.checked });
   }
 };
-
 </script>
 
 <label
@@ -46,47 +44,53 @@ const handleClick = () => {
     'text-disabled-fg': isDisabled,
   })}
 >
-<div class='flex items-center gap-1.5'>
-  {#if label}
-    <p class={cx('w-fit text-xs capitalize', {
-      'whitespace-nowrap': labelposition === 'left',
-    })}>
-      {label}
-    </p>
-  {/if}
+  <div class="flex items-center gap-1.5">
+    {#if label}
+      <p
+        class={cx('w-fit text-xs capitalize', {
+          'whitespace-nowrap': labelposition === 'left',
+        })}
+      >
+        {label}
+      </p>
+    {/if}
 
-  {#if tooltip}
-  <v-tooltip text={tooltip}>
-    <div class="icon-info-outline text-black"/>
-  </v-tooltip>
-  {/if}
-</div>
-  
+    {#if tooltip}
+      <v-tooltip text={tooltip}>
+        <div class="icon-info-outline text-black" />
+      </v-tooltip>
+    {/if}
+  </div>
 
   <button
     on:click={handleClick}
-    type='button'
+    type="button"
     class={cx('flex gap-1.5 items-center', {
       'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
     })}
-    role='switch'
+    role="switch"
     aria-label={label}
     aria-disabled={isDisabled}
     aria-checked={on ? 'true' : 'false'}
   >
     <div
-      class={cx('relative inline-flex flex-shrink-0 h-5 w-11 border cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none', {
-        'bg-gray-4 border-gray-4': isDisabled || isReadonly,
-        'bg-gray-6 border-gray-6': !on && !(isDisabled || isReadonly),
-        'bg-success-fg border-success-fg': on && !(isDisabled || isReadonly),
-        'text-disabled-fg': isDisabled,
-      })}
+      class={cx(
+        'relative inline-flex flex-shrink-0 h-5 w-11 border cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none',
+        {
+          'bg-gray-4 border-gray-4': isDisabled || isReadonly,
+          'bg-gray-6 border-gray-6': !on && !(isDisabled || isReadonly),
+          'bg-success-fg border-success-fg': on && !(isDisabled || isReadonly),
+          'text-disabled-fg': isDisabled,
+        }
+      )}
     >
       <span
-        class={cx('pointer-events-none relative inline-block h-4 w-4 mt-px ml-px bg-white transform ring-0 motion-safe:transition-transform ease-in-out duration-200', {
-          'border-gray-4': isDisabled || isReadonly,
-        })}
-
+        class={cx(
+          'pointer-events-none relative inline-block h-4 w-4 mt-px ml-px bg-white transform ring-0 motion-safe:transition-transform ease-in-out duration-200',
+          {
+            'border-gray-4': isDisabled || isReadonly,
+          }
+        )}
         class:translate-x-0={!on}
         class:translate-x-6={on}
       />
@@ -95,8 +99,8 @@ const handleClick = () => {
         {value}
         disabled={isDisabled}
         readonly={isReadonly}
-        class='hidden'
-        type='checkbox'
+        class="hidden"
+        type="checkbox"
         checked={on}
         bind:this={input}
       />

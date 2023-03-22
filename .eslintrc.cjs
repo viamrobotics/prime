@@ -31,7 +31,7 @@ module.exports = {
           customElement: true,
         },
       },
-    }
+    },
   ],
   extends: [
     'eslint:recommended',
@@ -44,61 +44,34 @@ module.exports = {
     'plugin:sonarjs/recommended',
     'plugin:tailwindcss/recommended',
     'plugin:storybook/recommended',
+    'prettier',
   ],
   rules: {
     // Eslint rules
-    '@typescript-eslint/indent': ['error', 2],
-    'array-bracket-spacing': 'error',
     'array-callback-return': 'error',
-    'arrow-spacing': 'error',
-    'block-spacing': 'error',
-    'brace-style': 'error',
-    'comma-dangle': ['error', {
-      arrays: 'always-multiline',
-      objects: 'always-multiline',
-      imports: 'always-multiline',
-      exports: 'never',
-      functions: 'never',
-    }],
-    'comma-spacing': 'error',
-    'computed-property-spacing': 'error',
     'dot-notation': 'error',
-    'eol-last': 'error',
-    eqeqeq: ['error', 'always', {
-      null: 'always',
-    }],
-    'func-call-spacing': 'error',
-    'key-spacing': 'error',
-    'keyword-spacing': 'error',
+    eqeqeq: [
+      'error',
+      'always',
+      {
+        null: 'always',
+      },
+    ],
     'no-caller': 'error',
-    'no-multi-spaces': 'error',
-    // https://github.com/sveltejs/eslint-plugin-svelte3/issues/41
-    'no-multiple-empty-lines': 'off',
-    'no-multi-spaces': 'error',
     'no-param-reassign': 'error',
     'no-return-await': 'error',
     'no-unreachable-loop': 'error',
     'no-unsafe-optional-chaining': 'error',
     'nonblock-statement-body-position': 'error',
-    'object-curly-spacing': ['error', 'always'],
-    'one-var': ['error', {
-      let: 'never',
-      const: 'never',
-    }],
-    quotes: ['error', 'single', {
-      avoidEscape: true,
-    }],
+    'one-var': [
+      'error',
+      {
+        let: 'never',
+        const: 'never',
+      },
+    ],
     'require-atomic-updates': 'error',
-    'rest-spread-spacing': 'error',
-    semi: ['error', 'always'],
-    'semi-spacing': 'error',
-    'semi-style': 'error',
-    'space-before-blocks': 'error',
-    'space-in-parens': 'error',
-    'space-infix-ops': 'error',
-    'space-unary-ops': 'error',
     'spaced-comment': 'error',
-    'template-curly-spacing': 'error',
     radix: 'error',
     'require-await': 'error',
     strict: 'error',
@@ -109,11 +82,14 @@ module.exports = {
     'prefer-const': 'error',
     'prefer-template': 'error',
     'require-await': 'error',
-    'prefer-arrow/prefer-arrow-functions': ['error', {
-      disallowPrototype: true,
-      singleReturnOnly: false,
-      classPropertiesAllowed: false,
-    }],
+    'prefer-arrow/prefer-arrow-functions': [
+      'error',
+      {
+        disallowPrototype: true,
+        singleReturnOnly: false,
+        classPropertiesAllowed: false,
+      },
+    ],
     // Unicorn rules
     'unicorn/switch-case-braces': 'off',
     'unicorn/no-unsafe-regex': 'error',
@@ -158,9 +134,13 @@ module.exports = {
     'import/no-cycle': 'error',
     'import/no-useless-path-segments': 'error',
     'import/export': 'error',
-    'import/extensions': ["error", "never", {
-      "svelte": "always"
-    }],
+    'import/extensions': [
+      'error',
+      'never',
+      {
+        svelte: 'always',
+      },
+    ],
     // Do not currently work with eslint-plugin-svelte
     'import/first': 'off',
     'import/order': 'error',
@@ -179,7 +159,7 @@ module.exports = {
         // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
         alwaysTryTypes: true,
         project: './tsconfig.json',
-      }
+      },
     },
     'svelte3/typescript': () => require('typescript'),
   },

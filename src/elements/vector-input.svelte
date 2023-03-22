@@ -1,7 +1,6 @@
-<svelte:options immutable tag='v-vector-input' />
+<svelte:options immutable tag="v-vector-input" />
 
-<script lang='ts'>
-
+<script lang="ts">
 import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 
@@ -51,26 +50,24 @@ const dimensionsArray = () => {
 
   return arr;
 };
-
 </script>
-  
+
 <div class="flex justify-between items-center gap-2">
   <p class="m-0 text-[11px]">
     {label}
   </p>
   <div class="flex gap-1">
     {#each dimensionsArray() as i (i)}
-    <div class="w-16">
-      <v-input
-        {type}
-        {step}
-        value={valueArray[i] ?? ''}
-        placeholder={placeholders[i]}
-        incrementor="slider"
-        on:input={handleInput(i)}
-      />
-    </div>
+      <div class="w-16">
+        <v-input
+          {type}
+          {step}
+          value={valueArray[i] ?? ''}
+          placeholder={placeholders[i]}
+          incrementor="slider"
+          on:input={handleInput(i)}
+        />
+      </div>
     {/each}
   </div>
 </div>
-  

@@ -1,7 +1,6 @@
-<svelte:options immutable tag='v-breadcrumbs' />
+<svelte:options immutable tag="v-breadcrumbs" />
 
-<script lang='ts'>
-
+<script lang="ts">
 import { addStyles } from '../lib/index';
 
 export let crumbs = '';
@@ -11,18 +10,21 @@ addStyles();
 let parsedCrumbs: string[];
 
 $: parsedCrumbs = crumbs.split(',').map((str) => str.trim());
-
 </script>
 
 <div class="inline-flex gap-3 -ml-1 px-4 border border-gray-9 rounded-full">
   {#each parsedCrumbs as crumb, index (crumb)}
     <small class="py1">
-      { crumb }
+      {crumb}
     </small>
     {#if index !== parsedCrumbs.length - 1}
       <div>
-        <div class="w-px h-[60%] border-l border-gray-9 -rotate-[30deg] -mt-px" />
-        <div class="w-px h-[60%] border-l border-gray-9 rotate-[30deg] -mt-0.5" />
+        <div
+          class="w-px h-[60%] border-l border-gray-9 -rotate-[30deg] -mt-px"
+        />
+        <div
+          class="w-px h-[60%] border-l border-gray-9 rotate-[30deg] -mt-0.5"
+        />
       </div>
     {/if}
   {/each}

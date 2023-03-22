@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta
   title='Elements/Switch'
@@ -16,27 +16,27 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
     },
     label: {
       description: 'The input label',
-      table: { defaultValue: { summary: '' } }
+      table: { defaultValue: { summary: '' } },
     },
     labelposition: {
       description: 'The position of the label',
       control: 'select',
       options: ['top', 'left'],
-      table: { defaultValue: { summary: 'top' } }
+      table: { defaultValue: { summary: 'top' } },
     },
     variant: {
       description: 'The displayed style of the switch',
       control: 'select',
       options: ['default', 'annotated'],
-      table: { defaultValue: { summary: 'default' } }
+      table: { defaultValue: { summary: 'default' } },
     },
     disabled: {
       description: 'Whether the input is disabled',
       control: 'select',
       options: ['true', 'false'],
-      table: { defaultValue: { summary: 'false' } }
+      table: { defaultValue: { summary: 'false' } },
     },
-      tooltip: {
+    tooltip: {
       description: 'The tooltip message.',
     },
     'on:input': {
@@ -145,7 +145,7 @@ Used to handle binary input.
       value: 'off',
       variant: 'labeled',
       label: 'Switch Label',
-      tooltip: 'This is the tooltip message.'
+      tooltip: 'This is the tooltip message.',
     }}
   >
     {({ value, variant, tooltip, label }) => `
@@ -166,7 +166,7 @@ Used to handle binary input.
       value: 'on',
       variant: 'annotated',
       readonly: 'true',
-      label: 'readonly'
+      label: 'readonly',
     }}
   >
     {({ value, variant, readonly, label }) => `

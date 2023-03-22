@@ -1,13 +1,13 @@
-export const previous = (`
+export const previous = `
 { 
   "name": "bob",
   "age": "400",
   "role": "Senescence research",
   "favorite_food": "pizza"
 }
-`).trim();
+`.trim();
 
-export const value = (`
+export const value = `
 { 
   "name": "bob",
   "age": "400",
@@ -15,5 +15,4 @@ export const value = (`
   "favorite_food": "salad",
   "status": "healthy"
 }
-`).trim();
-
+`.trim();

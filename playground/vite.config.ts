@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite'
-import { fileURLToPath } from 'url'
-import vue from '@vitejs/plugin-vue'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
-import sveltePreprocess from 'svelte-preprocess'
+import { defineConfig } from 'vite';
+import { fileURLToPath } from 'url';
+import vue from '@vitejs/plugin-vue';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import sveltePreprocess from 'svelte-preprocess';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -33,5 +33,5 @@ export default defineConfig({
         test: fileURLToPath(new URL('./test.html', import.meta.url)),
       },
     },
-  }
-})
+  },
+});
