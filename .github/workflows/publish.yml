@@ -15,15 +15,19 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install and Build 🔧
+      - name: Install 🔧
+        uses: ./.github/actions/setup
+
+      - name: Build 🏗️
         run: |
-          npm ci --audit=false
           npm run build-storybook
           npm run build
           touch ./prime/.nojekyll
 
+      # TODO(mc, 2023-03-22): replace with GitHub-official action
+      # https://github.com/actions/deploy-pages
       - name: Deploy Storybook 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@ba1486788b0490a235422264426c45848eac35c6
         with:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: prime # The folder that the build-storybook script generates files.
@@ -32,6 +36,6 @@ jobs:
             .nojekyll
 
       - name: Publish 🚀
-        uses: JS-DevTools/npm-publish@v1
+        uses: JS-DevTools/npm-publish@0f451a94170d1699fd50710966d48fb26194d939
         with:
-          token: ${{ secrets.NPM_TOKEN }} 
+          token: ${{ secrets.NPM_TOKEN }}
