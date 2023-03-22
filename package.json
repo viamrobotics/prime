@@ -52,6 +52,7 @@
     "classnames": "^2.3.2",
     "element-internals-polyfill": "^1.1.17",
     "eslint": "^8.30.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
