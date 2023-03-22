@@ -34,8 +34,8 @@ export const waitForCustomEvent = async (
 };
 
 export const delay = async (time: number) => {
-  return new Promise(resolve => setTimeout(resolve, time));
-}
+  return new Promise((resolve) => setTimeout(resolve, time));
+};
 
 export const waitForCustomEventTimeout = async (
   page: Page,
