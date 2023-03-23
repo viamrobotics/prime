@@ -53,9 +53,9 @@ test('Confirms tooltip text is left of text to hover if location attribute is sp
   const tooltip = page.getByRole('tooltip', { name: 'This is the left test'})
   const wordToHover = page.getByText('Left Test').first()
 
-  const textLocation = await text.evaluate(node => node.getBoundingClientRect());
+  const textLocation = await text.evaluate(element => element.getBoundingClientRect());
   wordToHover.hover()
-  const tooltipLocation = await tooltip.evaluate(node => node.getBoundingClientRect());
+  const tooltipLocation = await tooltip.evaluate(element => element.getBoundingClientRect());
 
   expect(tooltipLocation.x).toBeLessThan(textLocation.x)
 });
@@ -65,9 +65,9 @@ test('Confirms tooltip text is above text to hover if no location attribute is s
   const tooltip = page.getByRole('tooltip', { name: 'This text should display above'})
   const wordToHover = page.getByText('Def Test').first()
 
-  const textLocation = await text.evaluate(node => node.getBoundingClientRect());
+  const textLocation = await text.evaluate(element => element.getBoundingClientRect());
   wordToHover.hover()
-  const tooltipLocation = await tooltip.evaluate(node => node.getBoundingClientRect());
+  const tooltipLocation = await tooltip.evaluate(element => element.getBoundingClientRect());
 
   expect(tooltipLocation.y).toBeLessThan(textLocation.y)
 });
