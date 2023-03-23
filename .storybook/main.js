@@ -21,12 +21,12 @@ export default {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
-      base: '/'
+      base: '/',
     });
   },
   framework: {
     name: '@storybook/html-vite',
-    options: {}
+    options: {},
   },
   features: {
     modernInlineRender: true,

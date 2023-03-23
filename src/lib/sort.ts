@@ -1,16 +1,20 @@
 /* eslint-disable unicorn/prefer-regexp-test */
 export const addSpecialCharacterEscapes = (value: string) => {
-  // This function takes a value and adds backslashes for special chars 
+  // This function takes a value and adds backslashes for special chars
   // so that it doesn't treat it as a special character in a
   let newValue = '';
 
   for (const element of value) {
     newValue += /[^\dA-Za-z]/.test(element) ? `\\${element}` : element;
   }
-  return newValue
+  return newValue;
 };
 
-export const searchSort = (data: string[], searchTerm: string, reduce: boolean) => {
+export const searchSort = (
+  data: string[],
+  searchTerm: string,
+  reduce: boolean
+) => {
   const results: Record<string, string[]> = {};
   const termCopy = addSpecialCharacterEscapes(searchTerm);
 
@@ -45,13 +49,13 @@ export const searchSort = (data: string[], searchTerm: string, reduce: boolean) 
   if (reduce) {
     for (const key of Object.keys(results)) {
       if (Number.parseInt(key, 10) !== -1) {
-        const sorted = (results[key] || []);
+        const sorted = results[key] || [];
         finalResults.push(...sorted);
       }
     }
   } else {
     for (const key of Object.keys(results)) {
-      const sorted = (results[key] || []);
+      const sorted = results[key] || [];
       finalResults.push(...sorted);
     }
   }

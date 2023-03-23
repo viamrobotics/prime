@@ -1,7 +1,6 @@
-<svelte:options immutable tag='v-table' />
+<svelte:options immutable tag="v-table" />
 
-<script lang='ts'>
-
+<script lang="ts">
 import cx from 'classnames';
 import { addStyles } from '../../lib/index';
 
@@ -11,13 +10,8 @@ export let style = '';
 
 addStyles();
 
-const colSizes = cols.split(',').map(col => col.trim());
-
+const colSizes = cols.split(',').map((col) => col.trim());
 </script>
-
-<style>
-:host { display: contents !important; }
-</style>
 
 <table
   {style}
@@ -25,8 +19,14 @@ const colSizes = cols.split(',').map(col => col.trim());
 >
   <colgroup>
     {#each colSizes as col}
-      <col style="width: {col};">
+      <col style="width: {col};" />
     {/each}
   </colgroup>
   <slot />
 </table>
+
+<style>
+:host {
+  display: contents !important;
+}
+</style>

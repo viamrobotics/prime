@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta
   title='Elements/Tooltip'
@@ -7,25 +7,25 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
       description: 'The placement of the tooltip/tooltip direction',
       control: { type: 'select' },
       options: ['top', 'bottom', 'left', 'right'],
-      table: { defaultValue: { summary: 'top' } }
+      table: { defaultValue: { summary: 'top' } },
     },
     text: {
       description: 'The message displayed within the tooltip',
-      table: { defaultValue: { summary: '' } }
+      table: { defaultValue: { summary: '' } },
     },
   }}
 />
 
 # Tooltip
 
-Used to display text box when hovering over an element. 
+Used to display text box when hovering over an element.
 
 <Canvas>
   <Story
     name='Tooltip'
     args={{
       text: 'Test information for the tooltip',
-      location: "top",
+      location: 'top',
     }}
   >
     {({ text, location }) => `

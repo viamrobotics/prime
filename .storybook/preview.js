@@ -1,5 +1,5 @@
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
+  actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
     expanded: true,
     matchers: {
@@ -9,8 +9,8 @@ export const parameters = {
   },
   docs: {
     source: {
-      state: 'open'
-    }
+      state: 'open',
+    },
   },
   inlineStories: true,
-}
+};

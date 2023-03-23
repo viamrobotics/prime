@@ -1,8 +1,7 @@
-<svelte:options immutable tag='v-select' />
+<svelte:options immutable tag="v-select" />
 
-<script lang='ts'>
-
-type LabelPosition = 'top' | 'left'
+<script lang="ts">
+type LabelPosition = 'top' | 'left';
 
 // This entire component is pretty hacked together and should be refactored. Maybe split multi / single select.
 import cx from 'classnames';
@@ -54,8 +53,13 @@ $: hasButton = htmlToBoolean(withbutton, 'withbutton');
 $: isReduceSort = sortoption === 'reduce';
 $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
-$: sortedOptions = doesSearch ? applySearchSort(value, parsedOptions) : parsedOptions;
-$: searchedOptions = utils.applySearchHighlight(sortedOptions, doesSearch ? value : '');
+$: sortedOptions = doesSearch
+  ? applySearchSort(value, parsedOptions)
+  : parsedOptions;
+$: searchedOptions = utils.applySearchHighlight(
+  sortedOptions,
+  doesSearch ? value : ''
+);
 
 let open = false;
 let navigationIndex = -1;
@@ -81,10 +85,14 @@ const handleInput = (event: Event) => {
 const handleKeyUp = (event: KeyboardEvent) => {
   setKeyboardControl(true);
   switch (event.key.toLowerCase()) {
-    case 'enter': return handleEnter();
-    case 'arrowup': return handleNavigate(-1);
-    case 'arrowdown': return handleNavigate(+1);
-    case 'escape': return handleEscape();
+    case 'enter':
+      return handleEnter();
+    case 'arrowup':
+      return handleNavigate(-1);
+    case 'arrowdown':
+      return handleNavigate(+1);
+    case 'escape':
+      return handleEscape();
   }
 };
 
@@ -92,7 +100,7 @@ const handleEnter = () => {
   if (navigationIndex > -1) {
     value = sortedOptions[navigationIndex]!;
   } else {
-    const result = sortedOptions.find(item => item.toLowerCase() === value);
+    const result = sortedOptions.find((item) => item.toLowerCase() === value);
 
     if (result) {
       value = result;
@@ -121,16 +129,14 @@ const handleNavigate = (direction: number) => {
 };
 
 const handleOptionSelect = (target: string, event: Event) => {
-  const { checked } = (event.target as HTMLInputElement);
+  const { checked } = event.target as HTMLInputElement;
   if (value === target) {
     event.preventDefault();
     open = false;
     return;
   }
 
-  value = checked
-    ? target
-    : '';
+  value = checked ? target : '';
 
   open = false;
   dispatch('input', { value });
@@ -189,7 +195,6 @@ $: {
     value = '';
   }
 }
-
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -200,148 +205,169 @@ $: {
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
   })}
-  tabindex='-1'
+  tabindex="-1"
   on:focusin={handleFocus}
   on:focusout={handleFocusOut}
   on:mousemove={() => setKeyboardControl(false)}
 >
-  <div class='flex items-center gap-1.5'>
+  <div class="flex items-center gap-1.5">
     {#if label}
-      <p class={cx('text-xs capitalize', {
-        'text-disabled-fg': isDisabled || isReadonly,
-        'inline whitespace-nowrap': labelposition === 'left',
-      })}>
+      <p
+        class={cx('text-xs capitalize', {
+          'text-disabled-fg': isDisabled || isReadonly,
+          'inline whitespace-nowrap': labelposition === 'left',
+        })}
+      >
         {label}
       </p>
     {/if}
 
     {#if tooltip}
       <v-tooltip text={tooltip}>
-        <div class={cx({
-          'icon-info-outline': state === 'info',
-          'icon-error-outline text-warning-fg': state === 'warn',
-          'icon-error-outline text-danger-fg': state === 'error',
-        })} />
+        <div
+          class={cx({
+            'icon-info-outline': state === 'info',
+            'icon-error-outline text-warning-fg': state === 'warn',
+            'icon-error-outline text-danger-fg': state === 'error',
+          })}
+        />
       </v-tooltip>
     {/if}
   </div>
 
-  <v-dropdown
-    match
-    open={open ? '' : undefined}
-  >
+  <v-dropdown match open={open ? '' : undefined}>
     <div
-      slot='target'
+      slot="target"
       class={cx('w-full border  bg-white', {
         'border-gray-9': !isDisabled && !isReadonly,
         'border-disabled-bg !bg-disabled-bg': isDisabled || isReadonly,
       })}
     >
-      <div class='flex'>
+      <div class="flex">
         <input
           bind:this={input}
-          placeholder={placeholder}
-          value={value}
+          {placeholder}
+          {value}
           aria-disabled={isDisabled ? true : undefined}
-          readonly={(isDisabled || isReadonly) ? true : undefined}
-          type='text'
-          class={cx('py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none', {
-            'text-disabled-fg': isDisabled || isReadonly,
-          })}
+          readonly={isDisabled || isReadonly ? true : undefined}
+          type="text"
+          class={cx(
+            'py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none',
+            {
+              'text-disabled-fg': isDisabled || isReadonly,
+            }
+          )}
           on:input|preventDefault={handleInput}
           on:keyup|stopPropagation|preventDefault={handleKeyUp}
-        >
+        />
         <button
-          tabindex='-1'
-          aria-label='Open dropdown'
-          class={cx('py-1.5 px-1 grid place-content-center transition-transform duration-200', { 
-            'rotate-180': open,
-            'text-disabled-fg': isDisabled || isReadonly,
-          })}
+          tabindex="-1"
+          aria-label="Open dropdown"
+          class={cx(
+            'py-1.5 px-1 grid place-content-center transition-transform duration-200',
+            {
+              'rotate-180': open,
+              'text-disabled-fg': isDisabled || isReadonly,
+            }
+          )}
           on:click={handleIconClick}
           on:focusin|stopPropagation
         >
-          <v-icon class='flex' name='chevron-down' />
+          <v-icon class="flex" name="chevron-down" />
         </button>
       </div>
     </div>
 
-    <div 
-      slot='content'
-      class='mt-1 border border-gray-9 bg-white drop-shadow-md'
-    >
     <div
-      bind:this={optionsContainer}
-      class='options-container overflow-y-auto'
+      slot="content"
+      class="mt-1 border border-gray-9 bg-white drop-shadow-md"
     >
-      {#if sortedOptions.length > 0}
-        <div
-          class='flex max-h-36 flex-col '
-          on:mouseleave={clearNavigationIndex}
-        >
-          {#each searchedOptions as { search, option }, index (option)}
-            <label
-              class={cx('flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1.5 text-xs', {
-                'bg-slate-200': navigationIndex === index,
-                'text-gray-500': hasPrefix,
-              })}
-              on:mouseenter={() => handleOptionMouseEnter(index)}
-            >
-              <input
-                tabindex="-1"
-                type='checkbox'
-                class='bg-black outline-none hidden'
-                checked={utils.shouldBeChecked(value, Array.isArray(option) ? option.join('') : option)}
-                on:change={handleOptionSelect.bind(null, Array.isArray(option) ? option.join('') : option)}
-                on:input|stopPropagation
-                on:focus|preventDefault|stopPropagation
+      <div
+        bind:this={optionsContainer}
+        class="options-container overflow-y-auto"
+      >
+        {#if sortedOptions.length > 0}
+          <div
+            class="flex max-h-36 flex-col "
+            on:mouseleave={clearNavigationIndex}
+          >
+            {#each searchedOptions as { search, option }, index (option)}
+              <label
+                class={cx(
+                  'flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1.5 text-xs',
+                  {
+                    'bg-slate-200': navigationIndex === index,
+                    'text-gray-500': hasPrefix,
+                  }
+                )}
+                on:mouseenter={() => handleOptionMouseEnter(index)}
               >
+                <input
+                  tabindex="-1"
+                  type="checkbox"
+                  class="bg-black outline-none hidden"
+                  checked={utils.shouldBeChecked(
+                    value,
+                    Array.isArray(option) ? option.join('') : option
+                  )}
+                  on:change={handleOptionSelect.bind(
+                    null,
+                    Array.isArray(option) ? option.join('') : option
+                  )}
+                  on:input|stopPropagation
+                  on:focus|preventDefault|stopPropagation
+                />
 
-              {#if search}
-                <span class='flex w-full gap-2 text-ellipsis whitespace-nowrap'>
-                  {#each splitOptionOnWord(option) as word, wordIndex}
-                    <span class={cx('inline-block', {
-                      'w-5 text-gray-800': hasPrefix && wordIndex === 0,
-                    })}>
-                      {#each [...word] as token}
-                        <span class={cx({
-                          'bg-yellow-100': token !== ' ' && typeof search[1] === 'string' && search[1].includes(token),
-                        })}>{token}</span>
-                      {/each}
+                {#if search}
+                  <span
+                    class="flex w-full gap-2 text-ellipsis whitespace-nowrap"
+                  >
+                    {#each splitOptionOnWord(option) as word, wordIndex}
+                      <span
+                        class={cx('inline-block', {
+                          'w-5 text-gray-800': hasPrefix && wordIndex === 0,
+                        })}
+                      >
+                        {#each [...word] as token}
+                          <span
+                            class={cx({
+                              'bg-yellow-100':
+                                token !== ' ' &&
+                                typeof search[1] === 'string' &&
+                                search[1].includes(token),
+                            })}>{token}</span
+                          >
+                        {/each}
+                      </span>
+                    {/each}
+                  </span>
+                {:else if hasPrefix}
+                  {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
+                    <span
+                      class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
+                    >
+                      {optionPart}
                     </span>
                   {/each}
-                </span>
-
-              {:else if hasPrefix}
-
-                {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
-                  <span
-                    class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
-                  >
-                    { optionPart }
-                  </span>
-                {/each}
-
-              {:else}
-                { option }
-              {/if}
-            </label>
-          {/each}
-        </div>
-
-      {:else}
-        <div class='flex py-1.5 px-2.5 justify-center text-xs'>
-          No matching results
-        </div>
-      {/if}
-    </div>
+                {:else}
+                  {option}
+                {/if}
+              </label>
+            {/each}
+          </div>
+        {:else}
+          <div class="flex py-1.5 px-2.5 justify-center text-xs">
+            No matching results
+          </div>
+        {/if}
+      </div>
       {#if hasButton}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <v-select-button
-        buttontext={buttontext}
-        buttonicon={buttonicon}
-        on:click={handleButtonClick}
-      />
+          {buttontext}
+          {buttonicon}
+          on:click={handleButtonClick}
+        />
       {/if}
     </div>
   </v-dropdown>

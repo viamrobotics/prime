@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta
   title='Elements/Button'
@@ -10,19 +10,25 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs'
   argTypes={{
     label: {
       description: 'Text displayed to users',
-      table: { defaultValue: { summary: '' } }
+      table: { defaultValue: { summary: '' } },
     },
     variant: {
       description: 'The communicated action type of the button',
       control: 'select',
-      options: ['primary', 'inverse-primary', 'success', 'danger', 'outline-danger'],
-      table: { defaultValue: { summary: 'primary' } }
+      options: [
+        'primary',
+        'inverse-primary',
+        'success',
+        'danger',
+        'outline-danger',
+      ],
+      table: { defaultValue: { summary: 'primary' } },
     },
     type: {
       description: 'The type attribute for the button',
       control: 'select',
-      options: [ 'button', 'submit', 'reset'],
-      table: { defaultValue: { summary: 'button' } }
+      options: ['button', 'submit', 'reset'],
+      table: { defaultValue: { summary: 'button' } },
     },
   }}
 />
@@ -51,7 +57,7 @@ For user triggered actions
     name='Inverse Primary'
     args={{
       label: 'RUN',
-      variant: 'inverse-primary'
+      variant: 'inverse-primary',
     }}
   >
     {({ label, variant }) => `

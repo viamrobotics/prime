@@ -1,108 +1,118 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs'
-import gpioOptions from './assets/gpio-options'
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import gpioOptions from './assets/gpio-options';
 
 <Meta
   title='Elements/Select/Multi-Select'
   parameters={{
     actions: {
-      handles: ['input', 'button-click', 'search', 'clear-all-click', 'enter-press', 'open', 'close'],
+      handles: [
+        'input',
+        'button-click',
+        'search',
+        'clear-all-click',
+        'enter-press',
+        'open',
+        'close',
+      ],
     },
   }}
   argTypes={{
     label: {
       description: 'The label of the multiselect',
-      table: { 
+      table: {
         defaultValue: { summary: '' },
-        type: { summary: 'string' }
+        type: { summary: 'string' },
       },
-      control: 'text'
+      control: 'text',
     },
     options: {
-      description: 'The list of options that can be selected from, separated by commas',
-      table: { 
+      description:
+        'The list of options that can be selected from, separated by commas',
+      table: {
         defaultValue: { summary: '' },
-        type: { summary: 'string' }
+        type: { summary: 'string' },
       },
-      control: 'text'
+      control: 'text',
     },
     value: {
       description: 'Options that are selected',
-      table: { 
+      table: {
         defaultValue: { summary: '' },
-        type: { summary: 'string' }
+        type: { summary: 'string' },
       },
-      control: 'text'
+      control: 'text',
     },
     placeholder: {
       description: 'The placeholder value in input',
-      table: { 
+      table: {
         defaultValue: { summary: '' },
-        type: { summary: 'string' }
+        type: { summary: 'string' },
       },
-      control: 'text'
+      control: 'text',
     },
-    showpill: { 
+    showpill: {
       description: 'The option to not show pills representing selected values',
-      table: { 
+      table: {
         defaultValue: { summary: 'true' },
-        type: { summary: 'boolean' }
+        type: { summary: 'boolean' },
       },
-      control: { type: 'boolean' }
+      control: { type: 'boolean' },
     },
     clearable: {
       description: 'Option to have "Clear all" button to deselect all options',
       table: {
         defaultValue: { summary: 'true' },
-        type: { summary: 'boolean' }
+        type: { summary: 'boolean' },
       },
-      control: { type: 'boolean' }
+      control: { type: 'boolean' },
     },
     withbutton: {
       description: 'Whether a button exists at the bottom to conduct an action',
-      table: { 
+      table: {
         defaultValue: { summary: 'false' },
-        type: { summary: 'boolean' }
+        type: { summary: 'boolean' },
       },
-      control: { type: 'boolean' }
+      control: { type: 'boolean' },
     },
     buttontext: {
       description: 'Text on the button',
-      table: { 
+      table: {
         defaultValue: { summary: 'ENTER' },
-        type: { summary: 'string' }
+        type: { summary: 'string' },
       },
-      control: 'text'
+      control: 'text',
     },
     buttonicon: {
       description: 'Icon on the button, can use any from v-icon',
-      table: { 
+      table: {
         defaultValue: { summary: '' },
-        type: { summary: 'string' }
+        type: { summary: 'string' },
       },
-      control: 'text'
+      control: 'text',
     },
     sortoption: {
-      description: 'how we want the values to be searched and sorted inside the component',
-      table: { 
+      description:
+        'how we want the values to be searched and sorted inside the component',
+      table: {
         defaultValue: { summary: 'default' },
-        type: { summary: 'string'}
+        type: { summary: 'string' },
       },
       options: ['default', 'reduce', 'off'],
       control: { type: 'radio' },
-      type: 'text'
+      type: 'text',
     },
     heading: {
       description: 'Subheading inside the dropdown to describe the information',
-      table: { 
+      table: {
         defaultValue: { summary: '' },
-        type: { summary: 'string'}
+        type: { summary: 'string' },
       },
-      control: 'text'
+      control: 'text',
     },
     'on:input': {
       description: 'Event fired when an option is selected',
-      table: { 
-        type: { summary: 'object' }
+      table: {
+        type: { summary: 'object' },
       },
     },
     'on:button-click': {
@@ -110,7 +120,7 @@ import gpioOptions from './assets/gpio-options'
     },
     'on:search': {
       description: 'Event fired when the search input is changed',
-      table: { 
+      table: {
         type: { summary: 'string' },
       },
     },
@@ -124,11 +134,11 @@ import gpioOptions from './assets/gpio-options'
       description: 'Event fired when dropdown closes',
     },
     'on:clear-all-click': {
-      description: 'Event fired when "Clear All" is pressed and values are cleared',
+      description:
+        'Event fired when "Clear All" is pressed and values are cleared',
     },
   }}
 />
-
 
 # Multi-Select
 
@@ -138,11 +148,11 @@ Dropdown that allows the user to select multiple choices.
   <Story
     name='Default'
     args={{
-      label: "Default Multi-select",
+      label: 'Default Multi-select',
       options: 'happy, sad, angry',
     }}
   >
-    {({label, options}) => `
+    {({ label, options }) => `
       <v-multiselect
         label='${label}'
         options='${options}'
@@ -153,12 +163,12 @@ Dropdown that allows the user to select multiple choices.
 
 <Canvas>
   <Story
-    name="With Value and Placeholder"
+    name='With Value and Placeholder'
     args={{
-      label: "With Value and Placeholder",
-      options: "Option 1, Option 2, Option 3",
-      value: "Option 1, Option 3",
-      placeholder: "Some placeholder..."
+      label: 'With Value and Placeholder',
+      options: 'Option 1, Option 2, Option 3',
+      value: 'Option 1, Option 3',
+      placeholder: 'Some placeholder...',
     }}
   >
     {({ label, options, value, placeholder }) => `
@@ -171,7 +181,6 @@ Dropdown that allows the user to select multiple choices.
     `}
   </Story>
 </Canvas>
-
 
 <Canvas>
   <Story
@@ -202,10 +211,10 @@ Dropdown that allows the user to select multiple choices.
     args={{
       label: 'With Heading',
       options: 'a1, a2, a3, a4',
-      heading: 'A Values'
+      heading: 'A Values',
     }}
   >
-    {({ label, options, heading}) => `
+    {({ label, options, heading }) => `
       <v-multiselect
         label='${label}'
         options='${options}'
@@ -245,7 +254,7 @@ Dropdown that allows the user to select multiple choices.
       label: 'Your options',
       options: 'Option 1, Option 2, Option 3',
       readonly: 'true',
-      value: 'Option 1, Option 2'
+      value: 'Option 1, Option 2',
     }}
   >
     {({ label, options, readonly, value }) => `
@@ -258,7 +267,6 @@ Dropdown that allows the user to select multiple choices.
     `}
   </Story>
 </Canvas>
-
 
 <Canvas>
   <Story
@@ -314,7 +322,7 @@ Dropdown that allows the user to select multiple choices.
       showpill: 'false',
     }}
   >
-    {({ label, options, value, showpill  }) => `
+    {({ label, options, value, showpill }) => `
       <v-multiselect
         label='${label}'
         options='${options}'

@@ -29,10 +29,7 @@ const handleRemove = (event: MouseEvent | KeyboardEvent) => {
     return;
   }
 
-  if (
-    event instanceof KeyboardEvent &&
-    !checkKeyboardEvent(event, ['Enter'])
-  ) {
+  if (event instanceof KeyboardEvent && !checkKeyboardEvent(event, ['Enter'])) {
     return;
   }
 
@@ -41,21 +38,22 @@ const handleRemove = (event: MouseEvent | KeyboardEvent) => {
 </script>
 
 <div
-class={cx(
-  'flex items-center max-w-fit gap-1 rounded-xl bg-bg-3 py-0.5 px-2 text-[10px] hover:bg-gray-3',
-  {
-    'bg-disabled-bg text-disabled-fg cursor-not-allowed': isDisabled || isReadonly,
-  }
-)}
-aria-disabled={isDisabled}
-aria-readonly={isReadonly}
+  class={cx(
+    'flex items-center max-w-fit gap-1 rounded-xl bg-bg-3 py-0.5 px-2 text-[10px] hover:bg-gray-3',
+    {
+      'bg-disabled-bg text-disabled-fg cursor-not-allowed':
+        isDisabled || isReadonly,
+    }
+  )}
+  aria-disabled={isDisabled}
+  aria-readonly={isReadonly}
 >
-<span>
-  {value}
-</span>
-{#if isRemovable}
-  <button on:click={handleRemove} on:keydown={handleRemove}>
-    <v-icon name="x" />
-  </button>
-{/if}
+  <span>
+    {value}
+  </span>
+  {#if isRemovable}
+    <button on:click={handleRemove} on:keydown={handleRemove}>
+      <v-icon name="x" />
+    </button>
+  {/if}
 </div>

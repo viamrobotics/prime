@@ -35,3 +35,41 @@ More detailed docs exist on [the storybook](https://www.viam.com/prime).
 Linked below are some articles that provide knowledge for how to best build reusable, generic web components.
 
 - [Custom Elements Best Practices](https://web.dev/custom-elements-best-practices/)
+
+## Development tasks
+
+To verify that static assets build correctly:
+
+```shell
+npm run build-storybook
+```
+
+To run tests locally, you must first install the `playground` development dependencies and playwright. From there, you can run tests
+
+```shell
+# set up playground
+cd playground
+npm install
+cd ..
+npx playwright install --with-deps
+
+# run tests, with optional debugging
+npm run test
+npm run test-dev
+```
+
+You can typecheck and lint using:
+
+```shell
+# check types, a11y, and other component quality
+npm run check
+
+# autoformat code and documentation
+npm run format
+
+# check formatting without writing files
+npm run format-check
+
+# lint for stylistic and correctness issues
+npm run lint
+```

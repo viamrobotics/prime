@@ -1,6 +1,6 @@
-<svelte:options immutable tag='v-list-box' />
+<svelte:options immutable tag="v-list-box" />
 
-<script lang='ts'>
+<script lang="ts">
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // disabled to pass untyped object to cx library in template
 
@@ -13,9 +13,9 @@ import { htmlToBoolean } from '../lib/boolean';
 
 export let disabled: string;
 export let left = '';
-export let right = ''; 
-export let leftlabel = ''; 
-export let rightlabel = ''; 
+export let right = '';
+export let leftlabel = '';
+export let rightlabel = '';
 export let height = '200px';
 export let suffix = '';
 
@@ -24,15 +24,15 @@ const dispatch = dispatcher();
 type ListBoxSide = 'left' | 'right';
 
 type ListBoxOption = {
-  value: string
-  selected: boolean
-  suffix?: string
-}
+  value: string;
+  selected: boolean;
+  suffix?: string;
+};
 
 type Options = {
-  left: ListBoxOption[]
-  right: ListBoxOption[]
-}
+  left: ListBoxOption[];
+  right: ListBoxOption[];
+};
 
 const LEFT = 'left';
 const RIGHT = 'right';
@@ -43,7 +43,6 @@ let displaySuffix = htmlToBoolean(suffix, 'suffix');
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: displaySuffix = htmlToBoolean(suffix, 'suffix');
-
 
 const generateOption = (initial: string): ListBoxOption => {
   if (displaySuffix) {
@@ -59,29 +58,30 @@ let options = {
   right: right ? right.split(',').map((val) => generateOption(val)) : [],
 };
 
-
 // when new values are added, we want to update the state of options to include those values
 const addNewData = () => {
   const allValues = new Set([
-    ...options.left.map(opt => opt.value),
-    ...options.right.map(opt => opt.value),
+    ...options.left.map((opt) => opt.value),
+    ...options.right.map((opt) => opt.value),
   ]);
-  const newLeftOptions = left 
-    ? left.split(',')
-      .map((val) => generateOption(val))
-      .filter((opt) => !allValues.has(opt.value))
+  const newLeftOptions = left
+    ? left
+        .split(',')
+        .map((val) => generateOption(val))
+        .filter((opt) => !allValues.has(opt.value))
     : [];
-  const newRightOptions = right 
-    ? right.split(',')
-      .map((val) => generateOption(val))
-      .filter((opt) => !allValues.has(opt.value))
+  const newRightOptions = right
+    ? right
+        .split(',')
+        .map((val) => generateOption(val))
+        .filter((opt) => !allValues.has(opt.value))
     : [];
 
   const newOptions = {
     left: [...options.left, ...newLeftOptions],
     right: [...options.right, ...newRightOptions],
   };
-  
+
   options = newOptions;
 };
 
@@ -108,7 +108,7 @@ const handleMoveClick = (target: ListBoxSide) => {
     left: [],
     right: [],
   };
-  
+
   for (const option of options[source]) {
     if (option.selected) {
       newOptions[target].push({ ...option, selected: false });
@@ -121,29 +121,42 @@ const handleMoveClick = (target: ListBoxSide) => {
   options[target] = [...options[target], ...newOptions[target]];
   options = { ...options };
 
-  // copy object to avoid any potential pass-by-reference issues 
-  dispatch('move', {  
+  // copy object to avoid any potential pass-by-reference issues
+  dispatch('move', {
     options: JSON.parse(JSON.stringify(options)) as Options,
   });
 };
-
 </script>
+
 <div
-  class={cx('w-full grid grid-cols-[1fr_32px_1fr] gap-8 items-center p-2', { '!text-black/50': isDisabled })}
+  class={cx('w-full grid grid-cols-[1fr_32px_1fr] gap-8 items-center p-2', {
+    '!text-black/50': isDisabled,
+  })}
 >
-  <div class="w-full flex flex-col gap-2 self-stretch" style={`height: ${height};`}>
-    <span class="text-xs text-text/subtle-1">{ leftlabel }</span>
-    <div class="border border-borders/border-2 grow p-2 bg-white flex flex-col overflow-auto">
-      {#if options.left.length > 0 }
-       {#each options.left as option}
+  <div
+    class="w-full flex flex-col gap-2 self-stretch"
+    style={`height: ${height};`}
+  >
+    <span class="text-xs text-text/subtle-1">{leftlabel}</span>
+    <div
+      class="border border-borders/border-2 grow p-2 bg-white flex flex-col overflow-auto"
+    >
+      {#if options.left.length > 0}
+        {#each options.left as option}
           <button
-            class={cx('flex items-center px-2 py text-sm', { 'bg-focus/highlight': option.selected })}
+            class={cx('flex items-center px-2 py text-sm', {
+              'bg-focus/highlight': option.selected,
+            })}
             on:click={() => handleOptionClick(option, LEFT)}
-          > 
-            <input type='checkbox' checked={option.selected} disabled={isDisabled}/>       
-            <span class="px-4">{ option.value }</span>
+          >
+            <input
+              type="checkbox"
+              checked={option.selected}
+              disabled={isDisabled}
+            />
+            <span class="px-4">{option.value}</span>
             {#if displaySuffix && option.suffix}
-              <span class="text-text/subtle-2" >{option.suffix}</span>
+              <span class="text-text/subtle-2">{option.suffix}</span>
             {/if}
           </button>
         {/each}
@@ -154,46 +167,55 @@ const handleMoveClick = (target: ListBoxSide) => {
   </div>
   <div class="flex flex-col gap-4">
     <button
-      class={cx('rotate-90 border border-black h-8 w-8 flex items-center justify-center cursor-pointer hover:scale-105 bg-white',
+      class={cx(
+        'rotate-90 border border-black h-8 w-8 flex items-center justify-center cursor-pointer hover:scale-105 bg-white',
         { 'border-black/50': isDisabled }
       )}
       data-testid="move-right"
       on:click={() => handleMoveClick(RIGHT)}
-      >
-      <i
-        class="icon-arrow-up"
-      />
+    >
+      <i class="icon-arrow-up" />
     </button>
     <button
-    class={cx('-rotate-90 border border-black h-8 w-8 flex items-center justify-center cursor-pointer hover:scale-105 bg-white',
+      class={cx(
+        '-rotate-90 border border-black h-8 w-8 flex items-center justify-center cursor-pointer hover:scale-105 bg-white',
         { 'border-black/50': isDisabled }
       )}
       on:click={() => handleMoveClick(LEFT)}
       data-testid="move-left"
     >
-      <i
-        class="icon-arrow-up"
-      />
+      <i class="icon-arrow-up" />
     </button>
   </div>
-  <div class="w-full flex flex-col gap-2 self-stretch" style={`height: ${height};`}>
-    <span class="text-xs text-text/subtle-1">{ rightlabel }</span>
-    <div class="border border-borders/border-2 grow p-2 bg-white flex flex-col overflow-auto"> 
-      {#if options.right.length > 0 }
+  <div
+    class="w-full flex flex-col gap-2 self-stretch"
+    style={`height: ${height};`}
+  >
+    <span class="text-xs text-text/subtle-1">{rightlabel}</span>
+    <div
+      class="border border-borders/border-2 grow p-2 bg-white flex flex-col overflow-auto"
+    >
+      {#if options.right.length > 0}
         {#each options.right as option}
           <button
-            class={cx('flex items-center px-2 py text-sm', { 'bg-focus/highlight': option.selected })}
+            class={cx('flex items-center px-2 py text-sm', {
+              'bg-focus/highlight': option.selected,
+            })}
             on:click={() => handleOptionClick(option, RIGHT)}
           >
-            <input type='checkbox' checked={option.selected} disabled={isDisabled}/>       
-            <span class="px-4">{ option.value }</span>
+            <input
+              type="checkbox"
+              checked={option.selected}
+              disabled={isDisabled}
+            />
+            <span class="px-4">{option.value}</span>
             {#if displaySuffix && option.suffix}
-              <span class="text-text/subtle-2" >{option.suffix}</span>
+              <span class="text-text/subtle-2">{option.suffix}</span>
             {/if}
           </button>
         {/each}
       {:else}
-        <slot name="right-empty"/> 
+        <slot name="right-empty" />
       {/if}
     </div>
   </div>

@@ -1,4 +1,4 @@
-const plugin = require('tailwindcss/plugin')
+const plugin = require('tailwindcss/plugin');
 
 module.exports = {
   content: ['./index.html', './src/**/*.{ts,vue,svelte}'],
@@ -11,7 +11,7 @@ module.exports = {
         'text-subtle-2': '#7a7c80',
         'text-disabled': '#9c9ca4',
         'text-link': '#0066cc',
-        'black': '#131414',
+        black: '#131414',
         'gray-9': '#282829',
         'gray-8': '#4e4f52',
         'gray-7': '#7a7c80',
@@ -39,11 +39,11 @@ module.exports = {
         'text-highlight': '#e2f1fd',
       },
       boxShadow: {
-        'solid4': '4px 4px 0px #000',
-      }
+        solid4: '4px 4px 0px #000',
+      },
     },
   },
   variants: {
     extend: {},
   },
-}
+};

@@ -1,263 +1,345 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEvent, waitForCustomEventWithParam } from './lib/helper.ts';
+import {
+  waitForCustomEvent,
+  waitForCustomEventWithParam,
+} from './lib/helper.ts';
 
-test.beforeEach(async ({page}) => {
-    await page.goto('/multi-select-test.html')
-})
+test.beforeEach(async ({ page }) => {
+  await page.goto('/multi-select-test.html');
+});
 
-test('Given a default multiselect, shows options, labels, sets pills and fires events correctly after selecting and clearing options', async ({page}) => {
-    const multiselect = page.getByTestId('basic-multiselect')
-    await expect(multiselect).toBeVisible()
+test('Given a default multiselect, shows options, labels, sets pills and fires events correctly after selecting and clearing options', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('basic-multiselect');
+  await expect(multiselect).toBeVisible();
 
-    // label is visible
-    await expect(page.getByText('Default Multi-select').first()).toBeVisible()
+  // label is visible
+  await expect(page.getByText('Default Multi-select').first()).toBeVisible();
 
-    //placeholder is visible
-    await expect(multiselect.locator('input').first()).toHaveAttribute('placeholder', 'Emotions')
+  //placeholder is visible
+  await expect(multiselect.locator('input').first()).toHaveAttribute(
+    'placeholder',
+    'Emotions'
+  );
 
-    // dont expect the options to be rendered until a click on input
-    const optionsContainer = multiselect.locator('.options-container').first()
-    await expect(optionsContainer).not.toBeVisible()
+  // dont expect the options to be rendered until a click on input
+  const optionsContainer = multiselect.locator('.options-container').first();
+  await expect(optionsContainer).not.toBeVisible();
 
-    await multiselect.click()
-    await expect(optionsContainer).toBeVisible()
+  await multiselect.click();
+  await expect(optionsContainer).toBeVisible();
 
-    expect(await optionsContainer.locator('label').all()).toHaveLength(3)
+  expect(await optionsContainer.locator('label').all()).toHaveLength(3);
 
-    await expect(optionsContainer).toHaveText(/happy/)
-    await expect(optionsContainer).toHaveText(/sad/)
-    await expect(optionsContainer).toHaveText(/angry/)
+  await expect(optionsContainer).toHaveText(/happy/);
+  await expect(optionsContainer).toHaveText(/sad/);
+  await expect(optionsContainer).toHaveText(/angry/);
 
-    const eventfired = waitForCustomEventWithParam(page, 'input', 'happy')
-    // click on the first option
-    await optionsContainer.locator('label', {hasText: 'happy'}).click()
-    
-    // make sure that an event is fired
-    expect(eventfired).toBeTruthy()
+  const eventfired = waitForCustomEventWithParam(page, 'input', 'happy');
+  // click on the first option
+  await optionsContainer.locator('label', { hasText: 'happy' }).click();
 
-    // check that the textbox is checked
-    await expect(optionsContainer.locator('label', {hasText: 'happy'}).first().locator('input')).toBeChecked()
+  // make sure that an event is fired
+  expect(eventfired).toBeTruthy();
 
-    // click second option
-    await optionsContainer.locator('label', {hasText: 'sad'}).click()
-    await expect(optionsContainer.locator('label', {hasText: 'sad'}).first().locator('input')).toBeChecked()
+  // check that the textbox is checked
+  await expect(
+    optionsContainer
+      .locator('label', { hasText: 'happy' })
+      .first()
+      .locator('input')
+  ).toBeChecked();
 
-    // close the dropdown
-    await page.keyboard.press('Escape')
+  // click second option
+  await optionsContainer.locator('label', { hasText: 'sad' }).click();
+  await expect(
+    optionsContainer
+      .locator('label', { hasText: 'sad' })
+      .first()
+      .locator('input')
+  ).toBeChecked();
 
-    // press clear all 
-    const clearAllEvent = waitForCustomEvent(page, 'clear-all-click')
-    await multiselect.click()
-    await expect(optionsContainer).toBeVisible()
-    await optionsContainer.locator('button', {hasText: 'Clear all'}).click()
-    await page.keyboard.press('Escape')
-    expect(clearAllEvent).toBeTruthy()
-    expect(await multiselect.locator('v-pill').all()).toHaveLength(0)
+  // close the dropdown
+  await page.keyboard.press('Escape');
 
-})
+  // press clear all
+  const clearAllEvent = waitForCustomEvent(page, 'clear-all-click');
+  await multiselect.click();
+  await expect(optionsContainer).toBeVisible();
+  await optionsContainer.locator('button', { hasText: 'Clear all' }).click();
+  await page.keyboard.press('Escape');
+  expect(clearAllEvent).toBeTruthy();
+  expect(await multiselect.locator('v-pill').all()).toHaveLength(0);
+});
 
-test('Given a multi-select with values, they are rendered as pills', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-values')
-    await expect(multiselect).toBeVisible()
-    expect(await multiselect.locator('v-pill').all()).toHaveLength(2)
+test('Given a multi-select with values, they are rendered as pills', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-values');
+  await expect(multiselect).toBeVisible();
+  expect(await multiselect.locator('v-pill').all()).toHaveLength(2);
 
-    await expect(multiselect.locator('v-pill', {hasText: 'happy'}).first()).toBeVisible()
-    await expect(multiselect.locator('v-pill', {hasText: 'sad'}).first()).toBeVisible()
+  await expect(
+    multiselect.locator('v-pill', { hasText: 'happy' }).first()
+  ).toBeVisible();
+  await expect(
+    multiselect.locator('v-pill', { hasText: 'sad' }).first()
+  ).toBeVisible();
 
-    await multiselect.click()
-    const optionsContainer = multiselect.locator('.options-container').first()
-    await expect(optionsContainer).toBeVisible()
+  await multiselect.click();
+  const optionsContainer = multiselect.locator('.options-container').first();
+  await expect(optionsContainer).toBeVisible();
 
-    await expect(optionsContainer.locator('label', {hasText: 'happy'}).first().locator('input')).toBeChecked()
-    await expect(optionsContainer.locator('label', {hasText: 'sad'}).first().locator('input')).toBeChecked()
+  await expect(
+    optionsContainer
+      .locator('label', { hasText: 'happy' })
+      .first()
+      .locator('input')
+  ).toBeChecked();
+  await expect(
+    optionsContainer
+      .locator('label', { hasText: 'sad' })
+      .first()
+      .locator('input')
+  ).toBeChecked();
 
-    await page.keyboard.press('Escape')
+  await page.keyboard.press('Escape');
 
-    // check that the pills are visible
-    expect(await multiselect.locator('v-pill').all()).toHaveLength(2)
+  // check that the pills are visible
+  expect(await multiselect.locator('v-pill').all()).toHaveLength(2);
 
-    // delete a pill
-    const pillToDelete = multiselect.locator('v-pill').first()
-    await expect(pillToDelete).toBeVisible()
-    const button = pillToDelete.getByRole('button').first()
-    await expect(button).toBeVisible()
-    await button.click()
-    expect(await multiselect.locator('v-pill').all()).toHaveLength(1)
+  // delete a pill
+  const pillToDelete = multiselect.locator('v-pill').first();
+  await expect(pillToDelete).toBeVisible();
+  const button = pillToDelete.getByRole('button').first();
+  await expect(button).toBeVisible();
+  await button.click();
+  expect(await multiselect.locator('v-pill').all()).toHaveLength(1);
+});
 
-})
+test('Given a multi-select with button, there is a button at the bottom', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-with-button');
+  await expect(multiselect).toBeVisible();
+  await multiselect.click();
+  await expect(multiselect.locator('v-select-button').first()).toBeVisible();
+  await expect(multiselect.locator('v-select-button').first()).toHaveText(
+    /TAKE PHOTO/
+  );
+  const icon = multiselect
+    .locator('v-select-button')
+    .first()
+    .locator('v-icon')
+    .first();
+  await expect(icon.locator('i')).toHaveClass(/icon-camera/);
 
-test('Given a multi-select with button, there is a button at the bottom', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-with-button')
-    await expect(multiselect).toBeVisible()
-    await multiselect.click()
-    await expect(multiselect.locator('v-select-button').first()).toBeVisible()
-    await expect(multiselect.locator('v-select-button').first()).toHaveText(/TAKE PHOTO/)
-    const icon = multiselect.locator('v-select-button').first().locator('v-icon').first()
-    await expect(icon.locator('i')).toHaveClass(/icon-camera/)
-    
-    const buttonClickevent = waitForCustomEvent(page, 'button-click')
-    await multiselect.locator('v-select-button').first().click()
-    expect(buttonClickevent).toBeTruthy()
+  const buttonClickevent = waitForCustomEvent(page, 'button-click');
+  await multiselect.locator('v-select-button').first().click();
+  expect(buttonClickevent).toBeTruthy();
+});
 
-})
+test('Given a multi-select with a header, there is a header in the options list', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-header');
+  await expect(multiselect).toBeVisible();
+  await multiselect.click();
+  const optionsContainer = multiselect.locator('.options-container').first();
+  await expect(
+    optionsContainer.locator('span', { hasText: 'Emotions' })
+  ).toBeVisible();
+});
 
-test('Given a multi-select with a header, there is a header in the options list', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-header')
-    await expect(multiselect).toBeVisible()
-    await multiselect.click()
-    const optionsContainer = multiselect.locator('.options-container').first()
-    await expect(optionsContainer.locator('span', {hasText: 'Emotions'})).toBeVisible()
-})
+test('Given a disabled multi-select, the element is not editable', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-disabled');
+  await expect(multiselect).toBeVisible();
 
-test('Given a disabled multi-select, the element is not editable', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-disabled')
-    await expect(multiselect).toBeVisible()
+  await multiselect.click();
+  expect(multiselect.locator('.options-container').first()).not.toBeVisible();
+  await expect(multiselect.locator('input').first()).toBeDisabled();
+});
 
-    await multiselect.click()
-    expect(multiselect.locator('.options-container').first()).not.toBeVisible()
-    await expect(multiselect.locator('input').first()).toBeDisabled()
-})
+test('Given a readonly multi-select, the element is not editable', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-readonly');
+  await expect(multiselect).toBeVisible();
+  await multiselect.click();
+  await expect(
+    multiselect.locator('.options-container').first()
+  ).not.toBeVisible();
+  // only exists if readonly is true
+  await expect(multiselect.locator('input').first()).toHaveAttribute(
+    'readonly',
+    ''
+  );
+});
 
-test('Given a readonly multi-select, the element is not editable', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-readonly')
-    await expect(multiselect).toBeVisible()
-    await multiselect.click()
-    await expect(multiselect.locator('.options-container').first()).not.toBeVisible()
-    // only exists if readonly is true
-    await expect(multiselect.locator('input').first()).toHaveAttribute('readonly', '')
-})
+test('Given a clearable=false state, the multi-select does not have the clear all option', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-not-clearable');
+  await expect(multiselect).toBeVisible();
+  await multiselect.click();
+  await expect(multiselect.locator('.options-container').first()).toBeVisible();
+  await expect(
+    multiselect
+      .locator('.options-container')
+      .first()
+      .locator('button', { hasText: 'Clear all' })
+  ).not.toBeVisible();
+});
 
-test('Given a clearable=false state, the multi-select does not have the clear all option', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-not-clearable')
-    await expect(multiselect).toBeVisible()
-    await multiselect.click()
-    await expect(multiselect.locator('.options-container').first()).toBeVisible()
-    await expect(multiselect.locator('.options-container').first().locator('button', {hasText: 'Clear all'})).not.toBeVisible()
-})
+test('Given a tooltip and state=info, the select should show an info icon with a tooltip', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-info-tooltip');
+  await expect(multiselect).toBeVisible();
+  await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
+  await expect(
+    multiselect.locator('v-tooltip').first().locator('div').first()
+  ).toHaveClass(/icon-info-outline/);
+  await multiselect.locator('v-tooltip').first().hover();
+  await expect(multiselect.getByText(/info tip/)).toBeVisible();
+});
 
-test('Given a tooltip and state=info, the select should show an info icon with a tooltip', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-info-tooltip')
-    await expect(multiselect).toBeVisible()
-    await expect(multiselect.locator('v-tooltip').first()).toBeVisible()
-    await expect(multiselect.locator('v-tooltip').first().locator('div').first()).toHaveClass(/icon-info-outline/)
-    await multiselect.locator('v-tooltip').first().hover()
-    await expect(multiselect.getByText(/info tip/)).toBeVisible()
-})
+test('Given a tooltip and state=warn the select should show a warn icon with tooltip', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-warn-tooltip');
+  await expect(multiselect).toBeVisible();
+  await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
+  await expect(
+    multiselect.locator('v-tooltip').first().locator('div').first()
+  ).toHaveClass(/text-warning-fg/);
+  await multiselect.locator('v-tooltip').first().hover();
+  await expect(multiselect.getByText(/warn tip/)).toBeVisible();
+});
 
-test('Given a tooltip and state=warn the select should show a warn icon with tooltip', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-warn-tooltip')
-    await expect(multiselect).toBeVisible()
-    await expect(multiselect.locator('v-tooltip').first()).toBeVisible()
-    await expect(multiselect.locator('v-tooltip').first().locator('div').first()).toHaveClass(/text-warning-fg/)
-    await multiselect.locator('v-tooltip').first().hover()
-    await expect(multiselect.getByText(/warn tip/)).toBeVisible()
-})
+test('Given a tooltip and state=error the select should show a error icon with tooltip', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-error-tooltip');
+  await expect(multiselect).toBeVisible();
+  await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
+  await expect(
+    multiselect.locator('v-tooltip').first().locator('div').first()
+  ).toHaveClass(/text-danger-fg/);
+  await multiselect.locator('v-tooltip').first().hover();
+  await expect(multiselect.getByText(/error tip/)).toBeVisible();
+});
 
-test('Given a tooltip and state=error the select should show a error icon with tooltip', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-error-tooltip')
-    await expect(multiselect).toBeVisible()
-    await expect(multiselect.locator('v-tooltip').first()).toBeVisible()
-    await expect(multiselect.locator('v-tooltip').first().locator('div').first()).toHaveClass(/text-danger-fg/)
-    await multiselect.locator('v-tooltip').first().hover()
-    await expect(multiselect.getByText(/error tip/)).toBeVisible()
-})
+test('Setting showpill=false should stop pills being rendered', async ({
+  page,
+}) => {
+  const multiselect = page.getByTestId('multiselect-showpill');
+  await expect(multiselect).toBeVisible();
 
-test('Setting showpill=false should stop pills being rendered', async ({page}) => {
-    const multiselect = page.getByTestId('multiselect-showpill')
-    await expect(multiselect).toBeVisible()
+  await multiselect.click();
 
-    await multiselect.click()
+  const optionsContainer = multiselect.locator('.options-container').first();
+  await expect(optionsContainer).toBeVisible();
 
-    const optionsContainer = multiselect.locator('.options-container').first()
-    await expect(optionsContainer).toBeVisible()
+  await expect(
+    optionsContainer
+      .locator('label', { hasText: 'happy' })
+      .first()
+      .locator('input')
+  ).toBeChecked();
+  await expect(
+    optionsContainer
+      .locator('label', { hasText: 'sad' })
+      .first()
+      .locator('input')
+  ).toBeChecked();
 
-    await expect(optionsContainer.locator('label', {hasText: 'happy'}).first().locator('input')).toBeChecked()
-    await expect(optionsContainer.locator('label', {hasText: 'sad'}).first().locator('input')).toBeChecked()
+  // checked options not showing as pills
+  expect(await multiselect.locator('v-pill').all()).toHaveLength(0);
+});
 
-    // checked options not showing as pills
-    expect(await multiselect.locator('v-pill').all()).toHaveLength(0)
-})
+test('Test sort options for container', async ({ page }) => {
+  // Default sort fuzzy matches but
+  let multiselect = page.getByTestId('basic-multiselect');
+  await expect(multiselect).toBeVisible();
 
-test('Test sort options for container', async ({page}) => {
-    // Default sort fuzzy matches but 
-    let multiselect = page.getByTestId('basic-multiselect')
-    await expect(multiselect).toBeVisible()
-    
-    let input = multiselect.locator('input').first()
+  let input = multiselect.locator('input').first();
 
-    await input.focus()
+  await input.focus();
 
-    let optionsContainer = multiselect.locator('.options-container').first()
-    await expect(optionsContainer).toBeVisible()
+  let optionsContainer = multiselect.locator('.options-container').first();
+  await expect(optionsContainer).toBeVisible();
 
-    await expect(optionsContainer.locator('label').first()).toHaveText('happy')
-    await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad')
-    await expect(optionsContainer.locator('label').last()).toHaveText('angry')
-    
-    // check that an event is fired
-    const event = waitForCustomEventWithParam(page, 'input', 'sa')
-    await input.type('sa')
-    expect(event).toBeTruthy()
+  await expect(optionsContainer.locator('label').first()).toHaveText('happy');
+  await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad');
+  await expect(optionsContainer.locator('label').last()).toHaveText('angry');
 
-    await expect(optionsContainer.locator('label').first()).toHaveText('sad')
-    await expect(optionsContainer.locator('label').nth(1)).toHaveText('happy')
-    await expect(optionsContainer.locator('label').last()).toHaveText('angry')
+  // check that an event is fired
+  const event = waitForCustomEventWithParam(page, 'input', 'sa');
+  await input.type('sa');
+  expect(event).toBeTruthy();
 
-    // turning sorting off
-    
-    multiselect = page.getByTestId('multiselect-sort-off')
-    await expect(multiselect).toBeVisible()
+  await expect(optionsContainer.locator('label').first()).toHaveText('sad');
+  await expect(optionsContainer.locator('label').nth(1)).toHaveText('happy');
+  await expect(optionsContainer.locator('label').last()).toHaveText('angry');
 
-    input = multiselect.locator('input').first()
-    await input.focus()
+  // turning sorting off
 
-    optionsContainer = multiselect.locator('.options-container').first()
-    await expect(optionsContainer).toBeVisible()
+  multiselect = page.getByTestId('multiselect-sort-off');
+  await expect(multiselect).toBeVisible();
 
-    await expect(optionsContainer.locator('label').first()).toHaveText('happy')
-    await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad')
-    await expect(optionsContainer.locator('label').last()).toHaveText('angry')
+  input = multiselect.locator('input').first();
+  await input.focus();
 
-    await input.type('sa')
+  optionsContainer = multiselect.locator('.options-container').first();
+  await expect(optionsContainer).toBeVisible();
 
-    await expect(optionsContainer.locator('label').first()).toHaveText('happy')
-    await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad')
-    await expect(optionsContainer.locator('label').last()).toHaveText('angry')
+  await expect(optionsContainer.locator('label').first()).toHaveText('happy');
+  await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad');
+  await expect(optionsContainer.locator('label').last()).toHaveText('angry');
 
-    // reduce sort search
+  await input.type('sa');
 
-    multiselect = page.getByTestId('multiselect-reduce')
-    await expect(multiselect).toBeVisible()
+  await expect(optionsContainer.locator('label').first()).toHaveText('happy');
+  await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad');
+  await expect(optionsContainer.locator('label').last()).toHaveText('angry');
 
-    input = multiselect.locator('input').first()
-    await input.focus()
+  // reduce sort search
 
-    optionsContainer = multiselect.locator('.options-container').first()
-    await expect(optionsContainer).toBeVisible()
+  multiselect = page.getByTestId('multiselect-reduce');
+  await expect(multiselect).toBeVisible();
 
-    expect(await optionsContainer.locator('label').all()).toHaveLength(3)
+  input = multiselect.locator('input').first();
+  await input.focus();
 
-    await input.type('sa')
-    expect(await optionsContainer.locator('label').all()).toHaveLength(1)
+  optionsContainer = multiselect.locator('.options-container').first();
+  await expect(optionsContainer).toBeVisible();
 
-})
+  expect(await optionsContainer.locator('label').all()).toHaveLength(3);
 
-test('opening and closing dropdown fires events', async ({page}) => {
-    const multiselect = page.getByTestId('basic-multiselect')
-    await expect(multiselect).toBeVisible()
+  await input.type('sa');
+  expect(await optionsContainer.locator('label').all()).toHaveLength(1);
+});
 
-    const openEvent = waitForCustomEvent(page, 'open')
-    await multiselect.click()
+test('opening and closing dropdown fires events', async ({ page }) => {
+  const multiselect = page.getByTestId('basic-multiselect');
+  await expect(multiselect).toBeVisible();
 
-    const optionsContainer = multiselect.locator('.options-container').first()
-    await expect(optionsContainer).toBeVisible()
+  const openEvent = waitForCustomEvent(page, 'open');
+  await multiselect.click();
 
-    expect(openEvent).toBeTruthy()
+  const optionsContainer = multiselect.locator('.options-container').first();
+  await expect(optionsContainer).toBeVisible();
 
-    const closeEvent = waitForCustomEvent(page, 'close')
-    const closeDropdown = multiselect.getByRole('button').first()
-    await expect(closeDropdown).toBeVisible()
-    await closeDropdown.click()
-    await expect(optionsContainer).not.toBeVisible()
-    expect(closeEvent).toBeTruthy()
-})
+  expect(openEvent).toBeTruthy();
+
+  const closeEvent = waitForCustomEvent(page, 'close');
+  const closeDropdown = multiselect.getByRole('button').first();
+  await expect(closeDropdown).toBeVisible();
+  await closeDropdown.click();
+  await expect(optionsContainer).not.toBeVisible();
+  expect(closeEvent).toBeTruthy();
+});
