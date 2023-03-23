@@ -35,10 +35,6 @@ jobs:
         uses: ./.github/actions/setup
         with:
           node-version: 16
-      - name: Install playground deps
-        run: |
-          cd playground
-          npm ci --audit=false
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
