@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const { theme } = require('../tailwind.config.cjs');
 
