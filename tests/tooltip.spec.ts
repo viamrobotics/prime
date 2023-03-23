@@ -13,28 +13,63 @@ test('Confirms tooltip text is visible upon hover', async ({ page }) => {
 });
 
 test('Confirms tooltip text is above text to hover if location attribute is specified as "top"', async ({ page }) => {
-  const textLocatedBelow = await page.locator('p:near(:text("This is the top test"))').textContent()
-  expect(textLocatedBelow).toBe('Top Test')
+  const text = page.locator('p:near(:text("This is the top test"))')
+  const tooltip = page.getByRole('tooltip', { name: 'This is the top test'})
+  const wordToHover = page.getByText('Top Test').first()
+
+  const textLocation = await text.evaluate(element => element.getBoundingClientRect());
+  wordToHover.hover()
+  const tooltipLocation = await tooltip.evaluate(element => element.getBoundingClientRect());
+  
+  expect(tooltipLocation.y).toBeLessThan(textLocation.y)
 });
 
 test('Confirms tooltip text is below text to hover if location attribute is specified as "bottom"', async ({ page }) => {
-  const textLocatedAbove = await page.locator('p:near(:text("This is the bottom test"))').textContent()
-  expect(textLocatedAbove).toBe('Bottom Test')
+  const text = page.locator('p:near(:text("This is the bottom test"))')
+  const tooltip = page.getByRole('tooltip', { name: 'This is the bottom test'})
+  const wordToHover = page.getByText('Bottom Test').first()
+
+  const textLocation = await text.evaluate(element => element.getBoundingClientRect());
+  wordToHover.hover()
+  const tooltipLocation = await tooltip.evaluate(element => element.getBoundingClientRect());
+
+  expect(tooltipLocation.y).toBeGreaterThan(textLocation.y)  
 });
 
 test('Confirms tooltip text is right of text to hover if location attribute is specified as "right"', async ({ page }) => {
-  const textLocatedLeft = await page.locator('p:near(:text("This is the right test"))').textContent()
-  expect(textLocatedLeft).toBe('Right Test')
+  const text = page.locator('p:near(:text("This is the right test"))')
+  const tooltip = page.getByRole('tooltip', { name: 'This is the right test'})
+  const wordToHover = page.getByText('Right Test').first()
+
+  const textLocation = await text.evaluate(element => element.getBoundingClientRect());
+  wordToHover.hover()
+  const tooltipLocation = await tooltip.evaluate(element => element.getBoundingClientRect());
+
+  expect(tooltipLocation.x).toBeGreaterThan(textLocation.x)
 });
 
 test('Confirms tooltip text is left of text to hover if location attribute is specified as "left"', async ({ page }) => {
-  const textLocatedRight = await page.locator('p:near(:text("This is the left test"))').textContent()
-  expect(textLocatedRight).toBe('Left Test')
+  const text = page.locator('p:near(:text("This is the left test"))')
+  const tooltip = page.getByRole('tooltip', { name: 'This is the left test'})
+  const wordToHover = page.getByText('Left Test').first()
+
+  const textLocation = await text.evaluate(node => node.getBoundingClientRect());
+  wordToHover.hover()
+  const tooltipLocation = await tooltip.evaluate(node => node.getBoundingClientRect());
+
+  expect(tooltipLocation.x).toBeLessThan(textLocation.x)
 });
 
 test('Confirms tooltip text is above text to hover if no location attribute is specified', async ({ page }) => {
-  const textLocatedRight = await page.locator('p:near(:text("This text should display above"))').textContent()
-  expect(textLocatedRight).toBe('Def Test')
+  const text = page.locator('p:near(:text("This text should display above"))')
+  const tooltip = page.getByRole('tooltip', { name: 'This text should display above'})
+  const wordToHover = page.getByText('Def Test').first()
+
+  const textLocation = await text.evaluate(node => node.getBoundingClientRect());
+  wordToHover.hover()
+  const tooltipLocation = await tooltip.evaluate(node => node.getBoundingClientRect());
+
+  expect(tooltipLocation.y).toBeLessThan(textLocation.y)
 });
 
 
