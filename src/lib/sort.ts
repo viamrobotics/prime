@@ -1,4 +1,6 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable unicorn/prefer-regexp-test */
+
 export const addSpecialCharacterEscapes = (value: string) => {
   // This function takes a value and adds backslashes for special chars
   // so that it doesn't treat it as a special character in a

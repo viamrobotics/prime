@@ -1,7 +1,10 @@
-import { preprocess } from '../svelte.config.js';
+import svelteConfig from '../svelte.config.js';
 import { mergeConfig } from 'vite';
 
-export default {
+/**
+ * @type { import('@storybook/html-vite').StorybookConfig & { svelteOptions: import('@sveltejs/vite-plugin-svelte').SvelteOptions}}
+ */
+const config = {
   stories: [
     '../src/stories/docs/introduction.stories.mdx',
     '../src/stories/**/*.stories.mdx',
@@ -14,7 +17,7 @@ export default {
     '@storybook/addon-a11y',
   ],
   svelteOptions: {
-    preprocess,
+    preprocess: svelteConfig.preprocess,
     compilerOptions: {
       customElement: true,
     },
@@ -29,7 +32,11 @@ export default {
     options: {},
   },
   features: {
+    // @ts-expect-error: this option may have been removed
+    // TODO(mc, 2023-03-23): remove if able after upgrading to v7 rc or stable
     modernInlineRender: true,
     storyStoreV7: true,
   },
 };
+
+export default config;

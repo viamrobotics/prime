@@ -5,6 +5,8 @@
     "bradlc.vscode-tailwindcss",
     "svelte.svelte-vscode",
     "unifiedjs.vscode-mdx",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "vue.volar",
+    "vue.vscode-typescript-vue-plugin"
   ]
 }

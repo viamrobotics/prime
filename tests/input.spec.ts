@@ -4,7 +4,7 @@ import {
   getCustomEventParam,
   waitForCustomEventTimeout,
   waitForCustomEventWithParam,
-} from './lib/helper.ts';
+} from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/input-test.html');

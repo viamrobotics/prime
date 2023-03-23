@@ -4,7 +4,7 @@ import {
   waitForCustomEventTimeout,
   waitForCustomEventWithParam,
   getCustomEventParam,
-} from './lib/helper.ts';
+} from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/switch-test.html');

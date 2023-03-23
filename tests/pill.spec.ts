@@ -1,5 +1,5 @@
-import { test, expect, Page } from '@playwright/test';
-import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.ts';
+import { test, expect, type Page } from '@playwright/test';
+import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/pill-test.html');

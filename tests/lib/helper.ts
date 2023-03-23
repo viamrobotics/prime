@@ -1,7 +1,7 @@
-import { expect, Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import config from '../../tailwind.config.cjs';
 
-export const hexToRGB = (color?: string) => {
+export const hexToRGB = (color: string) => {
   const hex = config.theme.extend.colors[color];
 
   if (!hex) {
@@ -12,11 +12,13 @@ export const hexToRGB = (color?: string) => {
   let h = hex.slice(hex.startsWith('#') ? 1 : 0);
   if (h.length === 3) h = [...h].map((x) => x + x).join('');
   else if (h.length === 8) alpha = true;
-  h = Number.parseInt(h, 16);
-  return `rgb${alpha ? 'a' : ''}(${h >>> (alpha ? 24 : 16)}, ${
-    (h & (alpha ? 0x00_ff_00_00 : 0x00_ff_00)) >>> (alpha ? 16 : 8)
-  }, ${(h & (alpha ? 0x00_00_ff_00 : 0x00_00_ff)) >>> (alpha ? 8 : 0)}${
-    alpha ? `, ${h & 0x00_00_00_ff}` : ''
+
+  const parsedHex = Number.parseInt(h, 16);
+
+  return `rgb${alpha ? 'a' : ''}(${parsedHex >>> (alpha ? 24 : 16)}, ${
+    (parsedHex & (alpha ? 0x00_ff_00_00 : 0x00_ff_00)) >>> (alpha ? 16 : 8)
+  }, ${(parsedHex & (alpha ? 0x00_00_ff_00 : 0x00_00_ff)) >>> (alpha ? 8 : 0)}${
+    alpha ? `, ${parsedHex & 0x00_00_00_ff}` : ''
   })`;
 };
 
@@ -34,7 +36,7 @@ export const waitForCustomEvent = async (
 };
 
 export const delay = async (time: number) => {
-  return new Promise((resolve) => setTimeout(resolve, time));
+  await new Promise((resolve) => setTimeout(resolve, time));
 };
 
 export const waitForCustomEventTimeout = async (
@@ -65,15 +67,19 @@ export const waitForCustomEventWithParam = async (
 ) => {
   return page.evaluate(
     (eventInfo) => {
-      function listener(event) {
+      function listener(event: CustomEvent) {
         const dispatchedEvent = {
           [eventInfo.eventName]: {
             [eventInfo.paramName]: event.detail[eventInfo.paramName],
           },
         };
-        window['__testingCustomEvents'] = dispatchedEvent;
+
+        // @ts-expect-error: testing code
+        // TODO(mc, 2023-03-23): see if tests can be refactored to only use public APIs
+        window.__testingCustomEvents = dispatchedEvent;
       }
       return new Promise((resolve) => {
+        // @ts-expect-error: testing code
         window.addEventListener(eventInfo.eventName, listener, { once: true });
         resolve(eventInfo.eventName + ' event called!');
       });

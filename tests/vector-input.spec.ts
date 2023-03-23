@@ -3,7 +3,7 @@ import {
   waitForCustomEvent,
   waitForCustomEventWithParam,
   getCustomEventParam,
-} from './lib/helper.ts';
+} from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/vector-input-test.html');

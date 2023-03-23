@@ -5,7 +5,7 @@ import {
   getCustomEventParam,
   waitForCustomEventTimeout,
   hexToRGB,
-} from './lib/helper.ts';
+} from './lib/helper.js';
 
 const customMin = -50;
 const customMax = 50;
@@ -152,6 +152,7 @@ test('Restricts slider value to intervals of size step', async ({ page }) => {
   });
   await expect(isInputEventDispatched).toBeTruthy();
   await expect(
+    // @ts-expect-error: getCustomEventParam is not strictly typed
     Math.abs((await getCustomEventParam(page, 'input', 'value')) % 25)
   ).toBe(0);
 });

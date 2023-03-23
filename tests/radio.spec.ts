@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.ts';
+import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/radio-test.html');

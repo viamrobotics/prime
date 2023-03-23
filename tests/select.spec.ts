@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import {
   getCustomEventParam,
   waitForCustomEventWithParam,
-} from './lib/helper.ts';
+} from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/select-test.html');
