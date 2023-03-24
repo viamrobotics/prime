@@ -223,7 +223,7 @@ test('Render a minimap if the minimap attribute is set to true', async ({
   page,
 }) => {
   const editor = page.getByTestId('code-editor-minimap');
-  const width = parseInt(
+  const width = Number.parseInt(
     (await editor
       .locator('.minimap-decorations-layer')
       .getAttribute('width')) ?? '0'
@@ -235,7 +235,7 @@ test('If a minimap attribute is not set, the it should not render one', async ({
   page,
 }) => {
   const editor = page.getByTestId('code-editor-json-valid');
-  const width = parseInt(
+  const width = Number.parseInt(
     (await editor
       .locator('.minimap-decorations-layer')
       .getAttribute('width')) ?? '0'
