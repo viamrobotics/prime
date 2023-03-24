@@ -158,7 +158,9 @@ test('Given a disabled multi-select, the element is not editable', async ({
   await expect(multiselect).toBeVisible();
 
   await multiselect.click();
-  expect(multiselect.locator('.options-container').first()).not.toBeVisible();
+  await expect(
+    multiselect.locator('.options-container').first()
+  ).not.toBeVisible();
   await expect(multiselect.locator('input').first()).toBeDisabled();
 });
 

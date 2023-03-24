@@ -77,7 +77,7 @@ test('If a select component has disabled=True the element should be disabled', a
   await input.focus();
   await input.type('new option');
   // options do not load and the actual one isn't visible
-  expect(select.locator('.options-container').first()).not.toBeVisible();
+  await expect(select.locator('.options-container').first()).not.toBeVisible();
   expect(await input.inputValue()).toEqual('');
 });
 
@@ -89,7 +89,7 @@ test('If the select component has readonly value, then it should be readonly', a
   await input.focus();
   await input.type('new option');
   // options do not load and the actual one isn't visible
-  expect(select.locator('.options-container').first()).not.toBeVisible();
+  await expect(select.locator('.options-container').first()).not.toBeVisible();
   expect(await input.inputValue()).toEqual('');
 });
 
