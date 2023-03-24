@@ -1,6 +1,12 @@
 import { expect, Page } from '@playwright/test';
 import config from '../../tailwind.config.cjs';
 
+// Convert from '<number>px' to actual number
+// ex. '3.14px' --> 3.14
+export const pxStringToNumber = (pxString: string) => {
+  return Number(pxString.substring(0, pxString.indexOf('px')));
+};
+
 export const hexToRGB = (color?: string) => {
   const hex = config.theme.extend.colors[color];
 
