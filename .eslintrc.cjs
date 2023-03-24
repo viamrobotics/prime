@@ -44,7 +44,6 @@ module.exports = {
       rules: {
         // TODO(mc, 2023-03-23): the following warnings should be fixed
         // removing them from this override will default them back to `error`
-        radix: 'warn',
         'require-await': 'warn',
       },
     },
