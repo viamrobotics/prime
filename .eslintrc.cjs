@@ -44,13 +44,6 @@ module.exports = {
       rules: {
         // TODO(mc, 2023-03-23): the following warnings should be fixed
         // removing them from this override will default them back to `error`
-        '@typescript-eslint/no-unsafe-call': 'warn',
-        '@typescript-eslint/no-unsafe-argument': 'warn',
-        '@typescript-eslint/no-unsafe-member-access': 'warn',
-        '@typescript-eslint/no-unsafe-return': 'warn',
-        '@typescript-eslint/restrict-plus-operands': 'warn',
-        '@typescript-eslint/restrict-template-expressions': 'warn',
-        'prefer-arrow/prefer-arrow-functions': 'warn',
         'unicorn/better-regex': 'warn',
         'unicorn/no-await-expression-member': 'warn',
         'unicorn/no-for-loop': 'warn',
