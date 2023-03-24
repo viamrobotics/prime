@@ -170,8 +170,8 @@ module.exports = {
     'import/export': 'error',
     'import/extensions': [
       'error',
-      'ignorePackages',
-      { svelte: 'always', ts: 'never' },
+      'never',
+      { svelte: 'always', json: 'always' },
     ],
     // Do not currently work with eslint-plugin-svelte
     'import/first': 'off',
@@ -187,6 +187,7 @@ module.exports = {
     },
     'import/resolver': {
       typescript: {
+        extensions: ['.js', '.ts', '.svelte'],
         // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
         alwaysTryTypes: true,
         project: [
