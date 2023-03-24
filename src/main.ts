@@ -14,12 +14,12 @@ if (customElements.get('v-badge')) {
 
   import('./elements/badge.svelte');
   import('./elements/breadcrumbs.svelte');
-  import('./elements/button/button.svelte');
+  import('./elements/button/button.js');
   import('./elements/code-editor.svelte');
   import('./elements/collapse.svelte');
   import('./elements/dropdown.svelte');
   import('./elements/icon.svelte');
-  import('./elements/input/input.svelte');
+  import('./elements/input/input.js');
   import('./elements/list-box.svelte');
   import('./elements/modal.svelte');
   import('./elements/notify.svelte');
