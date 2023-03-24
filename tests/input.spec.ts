@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Given type text, renders text input', async ({ page }) => {
-  const inputText = await page.getByTestId('input-text');
+  const inputText = page.getByTestId('input-text');
   await expect(inputText).toBeVisible();
   await expect(inputText.locator('input').first()).toHaveAttribute(
     'type',
@@ -15,7 +15,7 @@ test('Given type text, renders text input', async ({ page }) => {
 });
 
 test('Given no type, renders text input', async ({ page }) => {
-  const inputDefault = await page.getByTestId('input-default');
+  const inputDefault = page.getByTestId('input-default');
   await expect(inputDefault).toBeVisible();
   await expect(inputDefault.locator('input').first()).toHaveAttribute(
     'type',
@@ -26,13 +26,13 @@ test('Given no type, renders text input', async ({ page }) => {
 test('Given value attribute, initializes with given value as input value', async ({
   page,
 }) => {
-  const inputText = await page.getByTestId('input-text');
+  const inputText = page.getByTestId('input-text');
   await expect(inputText).toBeVisible();
   await expect(inputText.locator('input').first()).toHaveValue('value');
 });
 
 test('Displays "*" next to the label if required', async ({ page }) => {
-  const inputRequired = await page.getByTestId('input-required');
+  const inputRequired = page.getByTestId('input-required');
   await expect(inputRequired).toBeVisible();
   await expect(inputRequired.locator('input[required]').first()).toBeVisible();
   const asterisk = await inputRequired.getByText('>:)').evaluate((e1) => {
@@ -48,37 +48,37 @@ test('Displays "*" next to the label if required', async ({ page }) => {
 });
 
 test('Displays label on top of input by default', async ({ page }) => {
-  const inputDefault = await page.getByTestId('input-default');
+  const inputDefault = page.getByTestId('input-default');
   await expect(inputDefault.getByText('default')).toBeVisible();
   await expect(
-    await inputDefault.locator("input:below(:text('default'))").first()
+    inputDefault.locator("input:below(:text('default'))").first()
   ).toBeVisible();
 });
 
 test('Displays label on top of input with labelposition top', async ({
   page,
 }) => {
-  const inputLabelTop = await page.getByTestId('input-label-top');
+  const inputLabelTop = page.getByTestId('input-label-top');
   await expect(inputLabelTop.getByText(':D')).toBeVisible();
   await expect(
-    await inputLabelTop.locator("input:below(:text(':D'))").first()
+    inputLabelTop.locator("input:below(:text(':D'))").first()
   ).toBeVisible();
 });
 
 test('Displays label to left of input with labelposition left', async ({
   page,
 }) => {
-  const inputLabelLeft = await page.getByTestId('input-label-left');
+  const inputLabelLeft = page.getByTestId('input-label-left');
   await expect(inputLabelLeft.getByText('D:')).toBeVisible();
   await expect(
-    await inputLabelLeft.locator("input:right-of(:text('D:'))").first()
+    inputLabelLeft.locator("input:right-of(:text('D:'))").first()
   ).toBeVisible();
 });
 
 test('Given type number, initializes with given number value', async ({
   page,
 }) => {
-  const inputNumber = await page.getByTestId('input-number');
+  const inputNumber = page.getByTestId('input-number');
   await expect(inputNumber).toBeVisible();
   await expect(inputNumber.locator('input').first()).toHaveValue('3.14159');
 });
@@ -86,8 +86,8 @@ test('Given type number, initializes with given number value', async ({
 test('Given type number, only allows number-related characters ([0-9eE+-.]) to be input', async ({
   page,
 }) => {
-  const inputNumber = await page.getByTestId('input-number');
-  const input = await inputNumber.locator('input').first();
+  const inputNumber = page.getByTestId('input-number');
+  const input = inputNumber.locator('input').first();
 
   await input.fill('NaN!!!');
   await expect(input).toHaveValue('');
@@ -111,8 +111,8 @@ test('Given type number, only allows number-related characters ([0-9eE+-.]) to b
 test('Given type number, displays error state if number if invalid on blur', async ({
   page,
 }) => {
-  const inputNumber = await page.getByTestId('input-number');
-  const input = await inputNumber.locator('input').first();
+  const inputNumber = page.getByTestId('input-number');
+  const input = inputNumber.locator('input').first();
 
   await input.fill('eeeEEE');
   await input.blur();
@@ -123,28 +123,28 @@ test('Given type number, responds to up and down keys according to step value', 
   page,
 }) => {
   // default step 1
-  const inputNumber = await page.getByTestId('input-number');
-  const inputBoxNumber = await inputNumber.locator('input').first();
+  const inputNumber = page.getByTestId('input-number');
+  const inputBoxNumber = inputNumber.locator('input').first();
   await inputBoxNumber.fill('0');
   await inputBoxNumber.press('ArrowUp');
-  await expect(Number.parseFloat(await inputBoxNumber.inputValue())).toBe(1);
+  expect(Number.parseFloat(await inputBoxNumber.inputValue())).toBe(1);
   await inputBoxNumber.press('ArrowDown');
-  await expect(Number.parseFloat(await inputBoxNumber.inputValue())).toBe(0);
+  expect(Number.parseFloat(await inputBoxNumber.inputValue())).toBe(0);
 
-  const inputStep = await page.getByTestId('input-step');
-  const inputBoxStep = await inputStep.locator('input').first();
+  const inputStep = page.getByTestId('input-step');
+  const inputBoxStep = inputStep.locator('input').first();
   await inputBoxStep.press('ArrowUp');
-  await expect(Number.parseFloat(await inputBoxStep.inputValue())).toBe(0.5);
+  expect(Number.parseFloat(await inputBoxStep.inputValue())).toBe(0.5);
   await inputBoxStep.press('ArrowDown');
-  await expect(Number.parseFloat(await inputBoxStep.inputValue())).toBe(0);
+  expect(Number.parseFloat(await inputBoxStep.inputValue())).toBe(0);
 });
 
 test('Given type number, limits input to range within max and min values with slider', async ({
   page,
 }) => {
-  const inputSlider = await page.getByTestId('input-slider');
-  const input = await inputSlider.locator('input').first();
-  const slider = await inputSlider.locator('div.cursor-pointer').first();
+  const inputSlider = page.getByTestId('input-slider');
+  const input = inputSlider.locator('input').first();
+  const slider = inputSlider.locator('div.cursor-pointer').first();
   await slider.dragTo(slider, {
     targetPosition: { x: 200, y: 0 },
     force: true,
@@ -157,20 +157,20 @@ test('Given type number, limits input to range within max and min values with sl
     targetPosition: { x: 1000, y: 0 },
     force: true,
   });
-  await expect(Number.parseFloat(await input.inputValue())).toBe(50);
+  expect(Number.parseFloat(await input.inputValue())).toBe(50);
 
   // test min
   await slider.dragTo(slider, {
     targetPosition: { x: -1000, y: 0 },
     force: true,
   });
-  await expect(Number.parseFloat(await input.inputValue())).toBe(-50);
+  expect(Number.parseFloat(await input.inputValue())).toBe(-50);
 });
 
 test('Given type number and no step value, defaults step to 1', async ({
   page,
 }) => {
-  const inputNumber = await page.getByTestId('input-number');
+  const inputNumber = page.getByTestId('input-number');
   await expect(inputNumber).toBeVisible();
   await expect(inputNumber.locator('input').first()).toHaveJSProperty(
     'step',
@@ -181,7 +181,7 @@ test('Given type number and no step value, defaults step to 1', async ({
 test('Given type integer, renders number input and initializes with given value', async ({
   page,
 }) => {
-  const inputInteger = await page.getByTestId('input-integer');
+  const inputInteger = page.getByTestId('input-integer');
   await expect(inputInteger).toBeVisible();
   await expect(inputInteger.locator('input').first()).toHaveAttribute(
     'type',
@@ -193,14 +193,14 @@ test('Given type integer, renders number input and initializes with given value'
 test('Given type integer, responds to up and down keys and slider with integers according to step value', async ({
   page,
 }) => {
-  const inputInteger = await page.getByTestId('input-integer');
-  const input = await inputInteger.locator('input').first();
+  const inputInteger = page.getByTestId('input-integer');
+  const input = inputInteger.locator('input').first();
   await input.press('ArrowUp');
   expect(await input.inputValue()).toBe('30');
   await input.press('ArrowDown');
   expect(await input.inputValue()).toBe('20');
 
-  const slider = await inputInteger.locator('div.cursor-pointer').first();
+  const slider = inputInteger.locator('div.cursor-pointer').first();
   await slider.dragTo(slider, {
     targetPosition: { x: 500, y: 0 },
     force: true,
@@ -210,7 +210,7 @@ test('Given type integer, responds to up and down keys and slider with integers 
 });
 
 test('Displays placeholder', async ({ page }) => {
-  const inputPlaceholder = await page.getByTestId('input-placeholder');
+  const inputPlaceholder = page.getByTestId('input-placeholder');
   await expect(inputPlaceholder).toBeVisible();
   await expect(inputPlaceholder.locator('input').first()).toHaveAttribute(
     'placeholder',
@@ -219,7 +219,7 @@ test('Displays placeholder', async ({ page }) => {
 });
 
 test('Given type date, renders date input', async ({ page }) => {
-  const inputDate = await page.getByTestId('input-date');
+  const inputDate = page.getByTestId('input-date');
   await expect(inputDate).toBeVisible();
   await expect(inputDate.locator('input').first()).toHaveAttribute(
     'type',
@@ -228,7 +228,7 @@ test('Given type date, renders date input', async ({ page }) => {
 });
 
 test('Given type time, renders time input', async ({ page }) => {
-  const inputTime = await page.getByTestId('input-time');
+  const inputTime = page.getByTestId('input-time');
   await expect(inputTime).toBeVisible();
   await expect(inputTime.locator('input').first()).toHaveAttribute(
     'type',
@@ -239,7 +239,7 @@ test('Given type time, renders time input', async ({ page }) => {
 test('Given type datetime-local, renders datetime-local input', async ({
   page,
 }) => {
-  const inputDatetime = await page.getByTestId('input-datetimelocal');
+  const inputDatetime = page.getByTestId('input-datetimelocal');
   await expect(inputDatetime).toBeVisible();
   await expect(inputDatetime.locator('input').first()).toHaveAttribute(
     'type',
@@ -248,7 +248,7 @@ test('Given type datetime-local, renders datetime-local input', async ({
 });
 
 test('Given type email, renders email input', async ({ page }) => {
-  const inputEmail = await page.getByTestId('input-email');
+  const inputEmail = page.getByTestId('input-email');
   await expect(inputEmail).toBeVisible();
   await expect(inputEmail.locator('input').first()).toHaveAttribute(
     'type',
@@ -257,10 +257,10 @@ test('Given type email, renders email input', async ({ page }) => {
 });
 
 test('Renders without label if not given a label', async ({ page }) => {
-  const inputText = await page.getByTestId('input-text');
-  await expect(
-    await inputText.locator(':above(input)').first().textContent()
-  ).toBe(' ');
+  const inputText = page.getByTestId('input-text');
+  expect(await inputText.locator(':above(input)').first().textContent()).toBe(
+    ' '
+  );
 });
 
 test('Given attribute tooltip with no state, render info icon above the input', async ({

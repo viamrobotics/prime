@@ -44,7 +44,6 @@ module.exports = {
       rules: {
         // TODO(mc, 2023-03-23): the following warnings should be fixed
         // removing them from this override will default them back to `error`
-        '@typescript-eslint/await-thenable': 'warn',
         '@typescript-eslint/dot-notation': 'warn',
         '@typescript-eslint/no-floating-promises': 'warn',
         '@typescript-eslint/no-unsafe-assignment': 'warn',

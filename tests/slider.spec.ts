@@ -45,7 +45,7 @@ test('Displays start and and end values', async ({ page }) => {
   ).toHaveCSS('left', String(endPercentage * box.width) + 'px');
 
   // check that slider labels are not visible until on hover
-  await expect(await sliderMinMax.locator('.floating').count()).toBe(2);
+  expect(await sliderMinMax.locator('.floating').count()).toBe(2);
 
   let startLabelOpacity = await sliderMinMax
     .locator('.floating')
@@ -113,7 +113,7 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
   await expect(sliderStep).toBeVisible();
   const axisTicks = await sliderStep.locator('span.bg-gray-6').all();
   const numTicks = (customMax - customMin) / step - 1;
-  await expect(axisTicks.length).toBe(numTicks);
+  expect(axisTicks.length).toBe(numTicks);
 
   // check positioning of each tick
   const box = await sliderStep.boundingBox();
@@ -126,8 +126,8 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
 });
 
 test('Restricts slider value to intervals of size step', async ({ page }) => {
-  const sliderStep = await page.getByTestId('slider-step');
-  const slider = await sliderStep.getByRole('slider');
+  const sliderStep = page.getByTestId('slider-step');
+  const slider = sliderStep.getByRole('slider');
   const inputEvent = waitForCustomEvent(page, 'input');
 
   await expect(sliderStep).toBeVisible();
@@ -176,7 +176,7 @@ test('Dispatches "input" event with value when user drags slider to value', asyn
 
   const slider = sliderValue.getByRole('slider');
   const inputEvent = waitForCustomEvent(page, 'input');
-  await slider.dragTo(await sliderValue.locator('span.bg-gray-6').first()); // slide to first tick, value -45
+  await slider.dragTo(sliderValue.locator('span.bg-gray-6').first()); // slide to first tick, value -45
   await expect(inputEvent.detail()).resolves.toMatchObject({ value: -45 });
 });
 
@@ -188,11 +188,11 @@ test('Given disabled attribute as true, displays slider as disabled and prevents
   const startBox = await slider.boundingBox();
   await expect(sliderDisabled).toBeVisible();
   const inputEvent = waitForCustomEvent(page, 'input');
-  await slider.dragTo(await sliderDisabled.locator('span.bg-gray-6').first()); // try to slide
+  await slider.dragTo(sliderDisabled.locator('span.bg-gray-6').first()); // try to slide
   const endBox = await slider.boundingBox();
   // make sure slider did not move
-  await expect(endBox.x).toBe(startBox.x);
-  await expect(endBox.y).toBe(startBox.y);
+  expect(endBox.x).toBe(startBox.x);
+  expect(endBox.y).toBe(startBox.y);
   await expect(inputEvent.didNotOccur()).resolves.toBe(true);
 
   await expect(sliderDisabled.getByText('0', { exact: true })).toHaveCSS(
@@ -217,11 +217,11 @@ test('Given readonly attribute as true, displays slider as readonly and prevents
   const startBox = await slider.boundingBox();
   await expect(sliderReadonly).toBeVisible();
   const inputEvent = waitForCustomEvent(page, 'input');
-  await slider.dragTo(await sliderReadonly.locator('span.bg-gray-6').first()); // try to slide
+  await slider.dragTo(sliderReadonly.locator('span.bg-gray-6').first()); // try to slide
   const endBox = await slider.boundingBox();
   // make sure slider did not move
-  await expect(endBox.x).toBe(startBox.x);
-  await expect(endBox.y).toBe(startBox.y);
+  expect(endBox.x).toBe(startBox.x);
+  expect(endBox.y).toBe(startBox.y);
   await expect(inputEvent.didNotOccur()).resolves.toBe(true);
 
   await expect(sliderReadonly.getByText('0', { exact: true })).toHaveCSS(
@@ -247,7 +247,7 @@ test('Given no attributes, renders slider with { min: 0, max: 100, value: 50, st
   await expect(sliderDefault.getByText('100', { exact: true })).toBeVisible();
 
   // check step: 1 by sliding from 50 to 49
-  const slider = await sliderDefault.getByRole('slider');
+  const slider = sliderDefault.getByRole('slider');
   const inputEvent = waitForCustomEvent(page, 'input');
   await expect(slider).toBeVisible();
   const box = await slider.boundingBox();

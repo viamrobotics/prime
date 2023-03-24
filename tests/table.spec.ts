@@ -18,7 +18,7 @@ test('Renders headers with appropriate styling', async ({ page }) => {
   for (let i = 0; i < ths.length; i++) {
     await expect(ths[i]).toHaveCSS('color', 'rgb(82, 82, 82)');
   }
-  await expect(await tableAuto.locator('thead')).toHaveCSS(
+  await expect(tableAuto.locator('thead')).toHaveCSS(
     'border-color',
     hexToRGB('black')
   );
@@ -32,11 +32,11 @@ test('Renders success row with appropriate styling', async ({ page }) => {
   await expect(successRow.getByText('short2')).toBeVisible();
   await expect(successRow.getByText('333-333-3333')).toBeVisible();
 
-  await expect(await successRow.locator('tr')).toHaveCSS(
+  await expect(successRow.locator('tr')).toHaveCSS(
     'background-color',
     'rgb(236, 253, 245)'
   );
-  await expect(await successRow.locator('tr')).toHaveCSS(
+  await expect(successRow.locator('tr')).toHaveCSS(
     'border-color',
     'rgb(209, 250, 229)'
   );
@@ -54,11 +54,11 @@ test('Renders disabled row with appropriate styling', async ({ page }) => {
   await expect(disabledRow.getByText('short3')).toBeVisible();
   await expect(disabledRow.getByText('444-444-4444')).toBeVisible();
 
-  await expect(await disabledRow.locator('tr')).toHaveCSS(
+  await expect(disabledRow.locator('tr')).toHaveCSS(
     'background-color',
     'rgb(249, 250, 251)'
   );
-  await expect(await disabledRow.locator('tr')).toHaveCSS(
+  await expect(disabledRow.locator('tr')).toHaveCSS(
     'border-color',
     'rgb(229, 231, 235)'
   );
@@ -76,11 +76,11 @@ test('Renders error row with appropriate styling', async ({ page }) => {
   await expect(errorRow.getByText('short4')).toBeVisible();
   await expect(errorRow.getByText('555-555-5555')).toBeVisible();
 
-  await expect(await errorRow.locator('tr')).toHaveCSS(
+  await expect(errorRow.locator('tr')).toHaveCSS(
     'background-color',
     'rgb(254, 242, 242)'
   );
-  await expect(await errorRow.locator('tr')).toHaveCSS(
+  await expect(errorRow.locator('tr')).toHaveCSS(
     'border-color',
     'rgb(254, 226, 226)'
   );
@@ -99,11 +99,11 @@ test('Renders auto row with appropriate styling', async ({ page }) => {
   await expect(autoRow.getByText('222-222-2222')).toBeVisible();
 
   // no background color
-  await expect(await autoRow.locator('tr')).toHaveCSS(
+  await expect(autoRow.locator('tr')).toHaveCSS(
     'background-color',
     'rgba(0, 0, 0, 0)'
   );
-  await expect(await autoRow.locator('tr')).toHaveCSS(
+  await expect(autoRow.locator('tr')).toHaveCSS(
     'border-color',
     'rgb(229, 231, 235)'
   );
@@ -116,9 +116,9 @@ test('Renders auto row with appropriate styling', async ({ page }) => {
 test('Uses fixed table layout when v-table attribute variant has value fixed', async ({
   page,
 }) => {
-  const fixedTable = await page.getByTestId('table-fixed');
+  const fixedTable = page.getByTestId('table-fixed');
   await expect(fixedTable).toBeVisible();
-  await expect(await fixedTable.locator('table').first()).toHaveCSS(
+  await expect(fixedTable.locator('table').first()).toHaveCSS(
     'table-layout',
     'fixed'
   );
@@ -127,13 +127,14 @@ test('Uses fixed table layout when v-table attribute variant has value fixed', a
 test('Displays columns with widths set by cols attribute', async ({ page }) => {
   const widths = [5, 15, 20, 25, 35];
 
-  const autoTable = await page.getByTestId('table-auto');
+  const autoTable = page.getByTestId('table-auto');
   await expect(autoTable.locator('table')).toBeVisible();
-  const autoCols = await (await autoTable.locator('table'))
+  const autoCols = await autoTable
+    .locator('table')
     .first()
     .locator('col')
     .all();
-  await expect(autoCols.length).toBe(widths.length);
+  expect(autoCols.length).toBe(widths.length);
 
   const autoTableBox = await autoTable.locator('table').first().boundingBox();
   // assess column width with th because col is not visible on all browsers
@@ -142,19 +143,20 @@ test('Displays columns with widths set by cols attribute', async ({ page }) => {
     let width = await autoThs[i].evaluate((e) => {
       return getComputedStyle(e).width;
     });
-    await expect(Number(width.substring(0, width.indexOf('px')))).toBeCloseTo(
+    expect(Number(width.substring(0, width.indexOf('px')))).toBeCloseTo(
       (widths[i] * autoTableBox.width) / 100,
       1
     );
   }
 
-  const fixedTable = await page.getByTestId('table-fixed');
+  const fixedTable = page.getByTestId('table-fixed');
   await expect(fixedTable.locator('table')).toBeVisible();
-  const fixedCols = await (await fixedTable.locator('table'))
+  const fixedCols = await fixedTable
+    .locator('table')
     .first()
     .locator('col')
     .all();
-  await expect(fixedCols.length).toBe(widths.length);
+  expect(fixedCols.length).toBe(widths.length);
 
   const fixedTableBox = await fixedTable.locator('table').first().boundingBox();
   // assess column width with th because col is not visible on all browsers
@@ -163,7 +165,7 @@ test('Displays columns with widths set by cols attribute', async ({ page }) => {
     let width = await fixedThs[i].evaluate((e) => {
       return getComputedStyle(e).width;
     });
-    await expect(Number(width.substring(0, width.indexOf('px')))).toBeCloseTo(
+    expect(Number(width.substring(0, width.indexOf('px')))).toBeCloseTo(
       (widths[i] * fixedTableBox.width) / 100,
       1
     );
