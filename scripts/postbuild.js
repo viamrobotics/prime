@@ -42,7 +42,6 @@ const main = async () => {
   rename('dist/style.css', 'dist/prime.css');
 
   // Add Typescript definitions to the library directory
-  // TODO(mc, 2023-03-23): this file is empty, this won't work
   copy('src/prime.d.ts', 'dist/prime.d.ts');
 
   // Add icon resources
