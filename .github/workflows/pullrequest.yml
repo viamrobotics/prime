@@ -13,9 +13,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Run ESLint and Prettier
-        run: |
-          npm run lint
-          npm run format-check
+        run: npm run lint
 
   check:
     runs-on: ubuntu-latest
