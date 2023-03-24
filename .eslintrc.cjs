@@ -44,7 +44,6 @@ module.exports = {
       rules: {
         // TODO(mc, 2023-03-23): the following warnings should be fixed
         // removing them from this override will default them back to `error`
-        'unicorn/better-regex': 'warn',
         'unicorn/no-await-expression-member': 'warn',
         'unicorn/no-for-loop': 'warn',
         'unicorn/prefer-number-properties': 'warn',
