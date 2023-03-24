@@ -205,8 +205,10 @@ test('Given type integer, responds to up and down keys and slider with integers 
     targetPosition: { x: 500, y: 0 },
     force: true,
   });
-  expect((await input.inputValue()).includes('.')).toBe(false);
-  expect(Number.parseInt(await input.inputValue()) % 10).toBe(0);
+  const inputValue = await input.inputValue();
+
+  expect(inputValue.includes('.')).toBe(false);
+  expect(Number.parseInt(inputValue) % 10).toBe(0);
 });
 
 test('Displays placeholder', async ({ page }) => {
