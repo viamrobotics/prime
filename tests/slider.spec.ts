@@ -34,7 +34,7 @@ test('Displays start and and end values', async ({ page }) => {
   const startPercentage = (customStart - customMin) / (customMax - customMin);
   await expect(
     sliderMinMax.getByRole('slider').filter({ hasText: String(customStart) })
-  ).toHaveCSS('left', String(startPercentage * box.width) + 'px');
+  ).toHaveCSS('left', `${startPercentage * box.width}px`);
 
   await expect(
     sliderMinMax.getByText(String(customEnd), { exact: true })
@@ -42,7 +42,7 @@ test('Displays start and and end values', async ({ page }) => {
   const endPercentage = (customEnd - customMin) / (customMax - customMin);
   await expect(
     sliderMinMax.getByRole('slider').filter({ hasText: String(customEnd) })
-  ).toHaveCSS('left', String(endPercentage * box.width) + 'px');
+  ).toHaveCSS('left', `${endPercentage * box.width}px`);
 
   // check that slider labels are not visible until on hover
   expect(await sliderMinMax.locator('.floating').count()).toBe(2);
@@ -102,7 +102,7 @@ test('Starts slider placement at value', async ({ page }) => {
   const valuePercentage = (value - customMin) / (customMax - customMin);
   await expect(sliderValue.getByRole('slider')).toHaveCSS(
     'left',
-    String(box.width * valuePercentage) + 'px'
+    `${box.width * valuePercentage}px`
   );
 });
 
@@ -120,7 +120,7 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
   for (let i = 0; i < numTicks; i++) {
     await expect(axisTicks[i]).toHaveCSS(
       'left',
-      String(((i + 1) / (numTicks + 1)) * box.width) + 'px'
+      `${((i + 1) / (numTicks + 1)) * box.width}px`
     );
   }
 });
@@ -162,10 +162,10 @@ test('Renders unit suffix with min and max values', async ({ page }) => {
   const sliderSuffix = page.getByTestId('slider-suffix');
   await expect(sliderSuffix).toBeVisible();
   await expect(
-    sliderSuffix.getByText(String(customMin) + ' units', { exact: true })
+    sliderSuffix.getByText(`${customMin} units`, { exact: true })
   ).toBeVisible();
   await expect(
-    sliderSuffix.getByText(String(customMax) + ' units', { exact: true })
+    sliderSuffix.getByText(`${customMax} units`, { exact: true })
   ).toBeVisible();
 });
 
