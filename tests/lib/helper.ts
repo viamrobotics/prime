@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import config from '../../tailwind.config.cjs';
 
 export const hexToRGB = (color?: string) => {
@@ -20,76 +20,82 @@ export const hexToRGB = (color?: string) => {
   })`;
 };
 
+export interface CustomEventPayload {
+  detail: unknown;
+}
+
 export const waitForCustomEvent = async (
   page: Page,
-  customEventName: string
-) => {
+  eventName: string,
+  waitFor: number = 2000
+): Promise<CustomEventPayload> => {
   return page.evaluate(
-    (eventName) =>
-      new Promise((callback) =>
-        window.addEventListener(eventName, callback, { once: true })
-      ),
-    customEventName
+    ({ eventName, waitFor }) => {
+      return new Promise((resolve, reject) => {
+        let timeoutRef: number | undefined;
+
+        const handleEvent = (event: CustomEvent<unknown>) => {
+          cleanup();
+          resolve({ detail: event.detail });
+        };
+
+        const handleTimeout = () => {
+          cleanup();
+          reject(new Error(`Waited ${waitFor} ms for "${eventName}" event`));
+        };
+
+        const cleanup = () => {
+          window.clearTimeout(timeoutRef);
+          window.removeEventListener(eventName, handleEvent);
+        };
+
+        window.addEventListener(eventName, handleEvent, { once: true });
+        timeoutRef = window.setTimeout(handleTimeout, waitFor);
+      });
+    },
+    { eventName, waitFor }
+  );
+};
+
+export const expectNoEvent = async (
+  page: Page,
+  eventName: string,
+  waitFor: number = 500
+): Promise<void> => {
+  return page.evaluate(
+    ({ eventName, waitFor }) => {
+      return new Promise((resolve, reject) => {
+        let timeoutRef: number | undefined;
+
+        const handleEvent = (event: CustomEvent<unknown>) => {
+          const payload = JSON.stringify(event.detail);
+
+          cleanup();
+          reject(
+            new Error(
+              `Did not expect "${eventName}" event for ${waitFor} ms, but got ${payload}`
+            )
+          );
+        };
+
+        const handleTimeout = () => {
+          cleanup();
+          resolve();
+        };
+
+        const cleanup = () => {
+          window.clearTimeout(timeoutRef);
+          window.removeEventListener(eventName, handleEvent);
+        };
+
+        window.addEventListener(eventName, handleEvent, { once: true });
+        timeoutRef = window.setTimeout(handleTimeout, waitFor);
+      });
+    },
+    { eventName, waitFor }
   );
 };
 
 export const delay = async (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
-};
-
-export const waitForCustomEventTimeout = async (
-  page: Page,
-  customEventName: string
-) => {
-  const value = await Promise.race([
-    page.evaluate(
-      (eventName) =>
-        new Promise((callback) =>
-          window.addEventListener(eventName, callback, { once: true })
-        ),
-      customEventName
-    ),
-    new Promise((resolve) => {
-      setTimeout(resolve, 500, 'timeout');
-    }),
-  ]);
-
-  expect(value).toBe('timeout');
-};
-
-// This function adds an event listener for eventName and puts the value of paramName on the window
-export const waitForCustomEventWithParam = async (
-  page: Page,
-  eventName: string,
-  paramName: string
-) => {
-  return page.evaluate(
-    (eventInfo) => {
-      function listener(event) {
-        const dispatchedEvent = {
-          [eventInfo.eventName]: {
-            [eventInfo.paramName]: event.detail[eventInfo.paramName],
-          },
-        };
-        window['__testingCustomEvents'] = dispatchedEvent;
-      }
-      return new Promise((resolve) => {
-        window.addEventListener(eventInfo.eventName, listener, { once: true });
-        resolve(eventInfo.eventName + ' event called!');
-      });
-    },
-    { eventName, paramName }
-  );
-};
-
-// This function retrieves the dispatched event's parameter value, as set by waitForCustomEventWithParam()
-// Call this only after setting up an event listener with waitForCustomEventWithParam()
-export const getCustomEventParam = async (
-  page: Page,
-  eventName: string,
-  paramName: string
-) => {
-  return page.evaluate(
-    `window.__testingCustomEvents.${eventName}.${paramName}`
-  );
 };

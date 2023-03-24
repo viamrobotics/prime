@@ -1,10 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  hexToRGB,
-  getCustomEventParam,
-  waitForCustomEventTimeout,
-  waitForCustomEventWithParam,
-} from './lib/helper.ts';
+import { hexToRGB, waitForCustomEvent, expectNoEvent } from './lib/helper.ts';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/input-test.html');
@@ -347,34 +342,30 @@ test('With error state, displays message below input box in red', async ({
 test('Given type number, only dispatches valid and new number values', async ({
   page,
 }) => {
-  const inputNumber = await page.getByTestId('input-number');
-  const input = await inputNumber.locator('input').first();
+  const inputNumber = page.getByTestId('input-number');
+  const input = inputNumber.locator('input').first();
 
-  const noInputEvent1 = await waitForCustomEventTimeout(page, 'input');
-  await input.fill('NaN');
-  await noInputEvent1;
+  // TODO(mc, 2023-03-24): `NaN` is a valid number input in JS
+  // Figure out a better test case or remove
+  // const noInputEvent1 = expectNoEvent(page, 'input', 500);
+  // await input.fill('NaN');
+  // await noInputEvent1;
 
-  const isInputEventEmitted = await waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const inputEvent = waitForCustomEvent(page, 'input');
   await input.fill('1');
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('1');
+  await expect(inputEvent).resolves.toEqual({ detail: { value: '1' } });
 
-  const noInputEvent2 = await waitForCustomEventTimeout(page, 'input');
+  const noInputEvent2 = expectNoEvent(page, 'input');
   await input.type('.');
   await noInputEvent2;
 });
 
 test('Fires input event with value on input', async ({ page }) => {
   const input = page.getByTestId('input-default').locator('input').first();
-  const isInputEventEmitted = await waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const isInputEventEmitted = waitForCustomEvent(page, 'input');
+
   await input.fill('asdfJKL;123');
-  expect(isInputEventEmitted).toBeTruthy();
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('asdfJKL;123');
+  await expect(isInputEventEmitted).resolves.toEqual({
+    detail: { value: 'asdfJKL;123' },
+  });
 });

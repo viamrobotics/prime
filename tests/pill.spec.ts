@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.ts';
+import { waitForCustomEvent, expectNoEvent } from './lib/helper.ts';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/pill-test.html');
@@ -100,11 +100,11 @@ test('Confirms default pill is clickable', async ({ page }) => {
 
   const clickDefault = waitForCustomEvent(page, 'remove');
   await testDefault.getByRole('button').click();
-  expect(clickDefault).toBeTruthy();
+  await clickDefault;
 });
 
 test('Confirms disbled pill is not clickable', async ({ page }) => {
-  const clickDisabled = waitForCustomEventTimeout(page, 'remove');
+  const clickDisabled = expectNoEvent(page, 'remove');
   await page
     .getByTestId('pill-disabled-true')
     .getByRole('button')
@@ -113,7 +113,7 @@ test('Confirms disbled pill is not clickable', async ({ page }) => {
 });
 
 test('Confirms readonly pill is not clickable', async ({ page }) => {
-  const clickReadOnly = waitForCustomEventTimeout(page, 'remove');
+  const clickReadOnly = expectNoEvent(page, 'remove');
   await page
     .getByTestId('pill-readonly-true')
     .getByRole('button')
@@ -128,13 +128,13 @@ test('Confirms keydown enter is effective on the default pill', async ({
 
   const keyDownDefault = waitForCustomEvent(page, 'remove');
   await testDefault.getByRole('button').press('Enter');
-  expect(keyDownDefault).toBeTruthy();
+  await keyDownDefault;
 });
 
 test('Confirms keydown enter is not effective on the disabled pill', async ({
   page,
 }) => {
-  const keyDownDisabled = waitForCustomEventTimeout(page, 'remove');
+  const keyDownDisabled = expectNoEvent(page, 'remove');
   await page
     .getByTestId('pill-disabled-true')
     .getByRole('button')
@@ -145,7 +145,7 @@ test('Confirms keydown enter is not effective on the disabled pill', async ({
 test('Confirms keydown enter is effective on the readonly pill', async ({
   page,
 }) => {
-  const keyDownReadOnly = waitForCustomEventTimeout(page, 'remove');
+  const keyDownReadOnly = expectNoEvent(page, 'remove');
   await page
     .getByTestId('pill-readonly-true')
     .getByRole('button')

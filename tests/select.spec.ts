@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  getCustomEventParam,
-  waitForCustomEventWithParam,
-} from './lib/helper.ts';
+import { waitForCustomEvent } from './lib/helper.ts';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/select-test.html');
@@ -31,12 +28,9 @@ test('Given an options attribute, on select the options should be visible and cl
   await expect(optionsContainer).toHaveText(/three/);
 
   // selecting a value should emit an input event + render that as the input
-  const oneSelected = waitForCustomEventWithParam(page, 'input', 'value');
+  const oneSelected = waitForCustomEvent(page, 'input');
   await optionsContainer.locator('label').first().click();
-  expect(oneSelected).toBeTruthy();
-
-  // show the selcted value in the input
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('one');
+  await expect(oneSelected).resolves.toEqual({ detail: { value: 'one' } });
 });
 
 test('Clicking on the select component renders options', async ({ page }) => {
