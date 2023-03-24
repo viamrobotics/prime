@@ -15,8 +15,8 @@ test('Renders headers with appropriate styling', async ({ page }) => {
   await expect(tableAuto.getByText('Phone')).toBeVisible();
 
   const ths = await tableAuto.locator('th').all();
-  for (let i = 0; i < ths.length; i++) {
-    await expect(ths[i]).toHaveCSS('color', 'rgb(82, 82, 82)');
+  for (const header of ths) {
+    await expect(header).toHaveCSS('color', 'rgb(82, 82, 82)');
   }
   await expect(tableAuto.locator('thead')).toHaveCSS(
     'border-color',
@@ -41,8 +41,8 @@ test('Renders success row with appropriate styling', async ({ page }) => {
     'rgb(209, 250, 229)'
   );
   const tds = await successRow.locator('td').all();
-  for (let i = 0; i < tds.length; i++) {
-    await expect(tds[i]).toHaveCSS('color', 'rgb(4, 120, 87)');
+  for (const dataCell of tds) {
+    await expect(dataCell).toHaveCSS('color', 'rgb(4, 120, 87)');
   }
 });
 
@@ -63,8 +63,8 @@ test('Renders disabled row with appropriate styling', async ({ page }) => {
     'rgb(229, 231, 235)'
   );
   const tds = await disabledRow.locator('td').all();
-  for (let i = 0; i < tds.length; i++) {
-    await expect(tds[i]).toHaveCSS('color', 'rgb(107, 114, 128)');
+  for (const dataCell of tds) {
+    await expect(dataCell).toHaveCSS('color', 'rgb(107, 114, 128)');
   }
 });
 
@@ -85,8 +85,8 @@ test('Renders error row with appropriate styling', async ({ page }) => {
     'rgb(254, 226, 226)'
   );
   const tds = await errorRow.locator('td').all();
-  for (let i = 0; i < tds.length; i++) {
-    await expect(tds[i]).toHaveCSS('color', 'rgb(239, 68, 68)');
+  for (const dataCell of tds) {
+    await expect(dataCell).toHaveCSS('color', 'rgb(239, 68, 68)');
   }
 });
 
@@ -108,8 +108,8 @@ test('Renders auto row with appropriate styling', async ({ page }) => {
     'rgb(229, 231, 235)'
   );
   const tds = await autoRow.locator('td').all();
-  for (let i = 0; i < tds.length; i++) {
-    await expect(tds[i]).toHaveCSS('color', 'rgb(0, 0, 0)');
+  for (const dataCell of tds) {
+    await expect(dataCell).toHaveCSS('color', 'rgb(0, 0, 0)');
   }
 });
 
