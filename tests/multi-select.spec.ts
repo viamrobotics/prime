@@ -343,3 +343,33 @@ test('opening and closing dropdown fires events', async ({ page }) => {
   await expect(optionsContainer).not.toBeVisible();
   expect(closeEvent).toBeTruthy();
 });
+
+test('When a dropdown is open, confirm the first result is in focus such that a user can press enter and select that first item', async ({ page }) => {
+  const multiselect = page.getByTestId('default-multiselect-first');
+  await expect(multiselect).toBeVisible();
+
+  await multiselect.click();
+
+  const optionsContainer = multiselect.locator('.options-container').first();
+  await expect(optionsContainer).toBeVisible();
+
+  // confirm first option background is gray
+  await expect(
+    page
+      .getByTestId('default-multiselect-first')
+      .locator('v-dropdown')
+      .getByText('First Option')
+  ).toHaveClass(/bg-slate-200/);
+
+  // press enter
+  await page.keyboard.press('Enter');
+
+  // confirm first option selected
+  expect(await multiselect.locator('v-pill').all()).toHaveLength(1);
+  await expect(
+    optionsContainer
+      .locator('label', { hasText: 'First Option' })
+      .first()
+      .locator('input')
+  ).toBeChecked();
+});

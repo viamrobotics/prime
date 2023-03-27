@@ -236,7 +236,7 @@ test('On pressing enter over an option, that option should be selected', async (
   expect(await input.inputValue()).toEqual('two');
 });
 
-test('When a dropdown is open, confirm the first option is focused and that option is selected when the user presses enter', async ({
+test('When a dropdown is open, confirm the first result is in focus such that a user can press enter and select that first item', async ({
   page,
 }) => {
   const select = page.getByTestId('default-select-first');
@@ -251,7 +251,12 @@ test('When a dropdown is open, confirm the first option is focused and that opti
 
   expect(await input.inputValue()).toEqual('');
   // confirm first option background is gray
-  await expect(page.getByTestId('default-select-first').locator('v-dropdown').getByText('First Option')).toHaveClass(/bg-slate-200/)
+  await expect(
+    page
+      .getByTestId('default-select-first')
+      .locator('v-dropdown')
+      .getByText('First Option')
+  ).toHaveClass(/bg-slate-200/);
 
   // press enter
   await page.keyboard.press('Enter');
