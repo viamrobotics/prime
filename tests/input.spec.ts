@@ -348,22 +348,22 @@ test('Given type number, only dispatches valid and new number values', async ({
   // fires an event after clearing initial value from value property
   const blankInputEvent = waitForCustomEvent(page, 'input');
   await input.fill('invalid Ch@rs!');
-  expect(await input.inputValue()).toBe('')
+  expect(await input.inputValue()).toBe('');
   await expect(blankInputEvent.detail()).resolves.toEqual({ value: '' });
 
   const noInputEvent1 = waitForCustomEvent(page, 'input');
   await input.type('ee more invalid chars');
-  expect(await input.inputValue()).toBe('eee')
+  expect(await input.inputValue()).toBe('eee');
   await expect(noInputEvent1.didNotOccur()).resolves.toBe(true);
 
   const validInputEvent = waitForCustomEvent(page, 'input');
   await input.fill('1');
-  expect(await input.inputValue()).toBe('1')
+  expect(await input.inputValue()).toBe('1');
   await expect(validInputEvent.detail()).resolves.toEqual({ value: '1' });
 
   const noInputEvent2 = waitForCustomEvent(page, 'input');
   await input.type('.');
-  expect(await input.inputValue()).toBe('1.')
+  expect(await input.inputValue()).toBe('1.');
   await expect(noInputEvent2.didNotOccur()).resolves.toBe(true);
 });
 
