@@ -214,7 +214,7 @@ test('Given a tooltip and state=warn the select should show a warn icon with too
   await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
   await expect(
     multiselect.locator('v-tooltip').first().locator('div').first()
-  ).toHaveClass(/text-warning-fg/);
+  ).toHaveClass(/text-warning-bright/);
   await multiselect.locator('v-tooltip').first().hover();
   await expect(multiselect.getByText(/warn tip/)).toBeVisible();
 });

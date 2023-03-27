@@ -261,7 +261,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
         <div
           class={cx({
             'icon-info-outline text-gray-6': state === 'info',
-            'icon-error-outline text-warning-fg': state === 'warn',
+            'icon-error-outline text-warning-bright': state === 'warn',
             'icon-error-outline text-danger-fg': state === 'error',
           })}
         />
@@ -288,7 +288,10 @@ const handleNumberDragDown = async (event: PointerEvent) => {
         'bg-white border-gray-8': !isDisabled && !isInvalidNumericInput,
         'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg':
           isDisabled || isDragging || isReadonly,
-        'border-danger-fg border': state === 'error' || isInvalidNumericInput,
+        'border-danger-fg border -outline-offset-1 outline-[1.5px] outline-danger-fg':
+          state === 'error' || isInvalidNumericInput,
+        'border-warning-bright -outline-offset-1 outline-[1.5px] outline-warning-bright':
+          state === 'warn',
       }
     )}
     step={insertStepAttribute ? step : null}
@@ -330,6 +333,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     <span
       class={cx('text-xs', {
         'text-red-600': state === 'error',
+        'text-warning-bright': state === 'warn',
       })}
     >
       {message}

@@ -286,7 +286,7 @@ test('Given attribute tooltip with warn state, render warn icon above the input'
 }) => {
   const inputWarnTooltip = page.getByTestId('input-tooltip-warn');
   await expect(inputWarnTooltip.locator('v-tooltip > div').first()).toHaveClass(
-    /icon-error-outline text-warning-fg/
+    /icon-error-outline text-warning-bright/
   );
 });
 

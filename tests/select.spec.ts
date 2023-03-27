@@ -145,7 +145,7 @@ test('Given warn state and tooltip value, there should be a warn tooltip next to
 }) => {
   const select = page.getByTestId('select-warn-tooltip');
   const tooltip = select.locator('label > div > v-tooltip').first();
-  await expect(tooltip.locator('.text-warning-fg')).toBeVisible();
+  await expect(tooltip.locator('.text-warning-bright')).toBeVisible();
 
   // text is not visible
   await expect(tooltip.getByText('warn tip').first()).not.toBeVisible();

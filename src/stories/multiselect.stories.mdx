@@ -391,3 +391,49 @@ Dropdown that allows the user to select multiple choices.
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Error'
+    args={{
+      label: `Board`,
+      value: '',
+      state: 'error',
+      options: 'hello, hi, yo, halo',
+      message: 'Something went wrong.',
+    }}
+  >
+    {({ label, tooltip, value, options, state, message }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        state='${state}'
+        message='${message}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Warning'
+    args={{
+      label: `Board`,
+      value: '',
+      state: 'warn',
+      options: 'hello, hi, yo, halo',
+      tooltip: 'Uh oh',
+    }}
+  >
+    {({ label, options, value, state, tooltip }) => `
+      <v-multiselect
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        tooltip='${tooltip}'
+        state='${state}'
+      />
+    `}
+  </Story>
+</Canvas>
