@@ -44,7 +44,7 @@ test('Confirms selected radio button updates on click', async ({ page }) => {
   // Confirm Click Changes Selected to Opt 2
   const opt2Selected = waitForCustomEvent(page, 'input');
   await opt2.click();
-  await opt2Selected;
+  await opt2Selected.detail();
 
   await expect(opt1).toHaveClass(/bg-white/);
   await expect(opt2).toHaveClass(/bg-gray-9/);
@@ -75,7 +75,7 @@ test('Confirms selected radio button updates on keydown enter', async ({
   await opt6.focus();
   // Hit Enter
   await page.keyboard.press('Enter');
-  await opt6Selected;
+  await opt6Selected.detail();
 
   await expect(opt4).toHaveClass(/bg-white/);
   await expect(opt5).toHaveClass(/bg-white/);
