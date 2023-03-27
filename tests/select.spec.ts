@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEvent } from './lib/helper.ts';
+import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/select-test.html');
@@ -30,7 +30,7 @@ test('Given an options attribute, on select the options should be visible and cl
   // selecting a value should emit an input event + render that as the input
   const oneSelected = waitForCustomEvent(page, 'input');
   await optionsContainer.locator('label').first().click();
-  await expect(oneSelected).resolves.toEqual({ detail: { value: 'one' } });
+  await expect(oneSelected.detail()).resolves.toEqual({ value: 'one' });
 });
 
 test('Clicking on the select component renders options', async ({ page }) => {

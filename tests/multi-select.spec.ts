@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEvent } from './lib/helper.ts';
+import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/multi-select-test.html');
@@ -38,7 +38,7 @@ test('Given a default multiselect, shows options, labels, sets pills and fires e
   await optionsContainer.locator('label', { hasText: 'happy' }).click();
 
   // make sure that an event is fired
-  await expect(event).resolves.toMatchObject({ detail: { value: 'happy' } });
+  await expect(event.detail()).resolves.toMatchObject({ value: 'happy' });
 
   // check that the textbox is checked
   await expect(
@@ -67,7 +67,7 @@ test('Given a default multiselect, shows options, labels, sets pills and fires e
   await expect(optionsContainer).toBeVisible();
   await optionsContainer.locator('button', { hasText: 'Clear all' }).click();
   await page.keyboard.press('Escape');
-  await clearAllEvent;
+  await clearAllEvent.detail();
 
   expect(await multiselect.locator('v-pill').all()).toHaveLength(0);
 });
@@ -134,9 +134,9 @@ test('Given a multi-select with button, there is a button at the bottom', async 
     .first();
   await expect(icon.locator('i')).toHaveClass(/icon-camera/);
 
-  const buttonClickevent = waitForCustomEvent(page, 'button-click');
+  const buttonClickEvent = waitForCustomEvent(page, 'button-click');
   await multiselect.locator('v-select-button').first().click();
-  await buttonClickevent;
+  await buttonClickEvent.detail();
 });
 
 test('Given a multi-select with a header, there is a header in the options list', async ({
@@ -280,7 +280,7 @@ test('Test sort options for container', async ({ page }) => {
   // const event = waitForCustomEvent(page, 'input');
   await input.type('sa');
   // check that an event is fired
-  // await event;
+  // await event.detail();
 
   await expect(optionsContainer.locator('label').first()).toHaveText('sad');
   await expect(optionsContainer.locator('label').nth(1)).toHaveText('happy');
@@ -333,12 +333,12 @@ test('opening and closing dropdown fires events', async ({ page }) => {
 
   const optionsContainer = multiselect.locator('.options-container').first();
   await expect(optionsContainer).toBeVisible();
-  await openEvent;
+  await openEvent.detail();
 
   const closeEvent = waitForCustomEvent(page, 'close');
   const closeDropdown = multiselect.getByRole('button').first();
   await expect(closeDropdown).toBeVisible();
   await closeDropdown.click();
   await expect(optionsContainer).not.toBeVisible();
-  await closeEvent;
+  await closeEvent.detail();
 });

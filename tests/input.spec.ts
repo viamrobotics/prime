@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { hexToRGB, waitForCustomEvent, expectNoEvent } from './lib/helper.ts';
+import { hexToRGB, waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/input-test.html');
@@ -347,17 +347,17 @@ test('Given type number, only dispatches valid and new number values', async ({
 
   // TODO(mc, 2023-03-24): `NaN` is a valid number input in JS
   // Figure out a better test case or remove
-  // const noInputEvent1 = expectNoEvent(page, 'input', 500);
+  // const noInputEvent1 = waitForCustomEvent(page, 'input');
   // await input.fill('NaN');
-  // await noInputEvent1;
+  // await expect(noInputEvent1.didNotOccur()).resolves.toBe(true));
 
   const inputEvent = waitForCustomEvent(page, 'input');
   await input.fill('1');
-  await expect(inputEvent).resolves.toEqual({ detail: { value: '1' } });
+  await expect(inputEvent.detail()).resolves.toEqual({ value: '1' });
 
-  const noInputEvent2 = expectNoEvent(page, 'input');
+  const noInputEvent2 = waitForCustomEvent(page, 'input');
   await input.type('.');
-  await noInputEvent2;
+  await expect(noInputEvent2.didNotOccur()).resolves.toBe(true);
 });
 
 test('Fires input event with value on input', async ({ page }) => {
@@ -365,7 +365,7 @@ test('Fires input event with value on input', async ({ page }) => {
   const isInputEventEmitted = waitForCustomEvent(page, 'input');
 
   await input.fill('asdfJKL;123');
-  await expect(isInputEventEmitted).resolves.toEqual({
-    detail: { value: 'asdfJKL;123' },
+  await expect(isInputEventEmitted.detail()).resolves.toEqual({
+    value: 'asdfJKL;123',
   });
 });
