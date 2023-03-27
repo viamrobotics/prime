@@ -344,7 +344,9 @@ test('opening and closing dropdown fires events', async ({ page }) => {
   expect(closeEvent).toBeTruthy();
 });
 
-test('When a dropdown is open, confirm the first result is in focus such that a user can press enter and select that first item', async ({ page }) => {
+test('When a dropdown is open, confirm the first result is in focus such that a user can press enter and select that first item', async ({
+  page,
+}) => {
   const multiselect = page.getByTestId('default-multiselect-first');
   await expect(multiselect).toBeVisible();
 
