@@ -177,6 +177,7 @@ const handleFocus = () => {
 
   open = true;
   input.focus();
+  navigationIndex = 0;
 };
 
 const handleFocusOut = (event: FocusEvent) => {
