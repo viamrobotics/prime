@@ -245,6 +245,30 @@ For a dropdown that allows the user to select a single option
   </Story>
 </Canvas>
 
+
+<Canvas>
+  <Story
+    name='Error'
+    args={{
+      label: `Board`,
+      value: '',
+      state: 'error',
+      message: 'Something went wrong.',
+      options: 'Option 1, Option 2, Option 3',
+    }}
+  >
+    {({ label, message, value, options, state }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        message='${message}'
+        
+        state='${state}'
+      />
+    `}
+  </Story>
+</Canvas>
+
 <Canvas>
   <Story
     name='With prefix'
