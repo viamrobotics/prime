@@ -370,3 +370,44 @@ Used for all text single-line user inputs.
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Error'
+    args={{
+      label: `Board`,
+      value: '',
+      state: 'error',
+    }}
+  >
+    {({ label, tooltip, value, disabled, state }) => `
+      <v-input
+        label='${label}'
+        value='${value}'
+        state='${state}'
+        message='Something went wrong.'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Warning'
+    args={{
+      label: `Board`,
+      value: '',
+      state: 'warn',
+      tooltip: 'Uh oh',
+    }}
+  >
+    {({ label, value, disabled, state, tooltip }) => `
+      <v-input
+        label='${label}'
+        value='${value}'
+        state='${state}'
+        tooltip='Something went wrong.'
+      />
+    `}
+  </Story>
+</Canvas>

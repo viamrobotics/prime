@@ -19,7 +19,7 @@ addStyles();
     'bg-white': background === 'white',
     'bg-bg-2': background === 'gray',
     'border-danger-fg': variant === 'error',
-    'border-warning-fg': variant === 'warning',
+    'border-warning-bright': variant === 'warning',
     'border-success-fg': variant === 'success',
     'border-info-fg': variant === 'info',
   })}
@@ -38,7 +38,7 @@ addStyles();
       height="14"
       viewBox="0 0 15 15"
       fill="none"
-      class="mt-1 fill-warning-fg"
+      class="mt-1 fill-warning-bright"
     >
       <path
         d="M8 2.99333L13.02 11.6667H2.98L8 2.99333ZM8 0.333328L0.666672 13H15.3333L8 0.333328ZM8.66667 9.66666H7.33334V11H8.66667V9.66666ZM8.66667 5.66666H7.33334V8.33333H8.66667V5.66666Z"
