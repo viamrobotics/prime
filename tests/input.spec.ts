@@ -345,18 +345,25 @@ test('Given type number, only dispatches valid and new number values', async ({
   const inputNumber = page.getByTestId('input-number');
   const input = inputNumber.locator('input').first();
 
-  // TODO(mc, 2023-03-24): `NaN` is a valid number input in JS
-  // Figure out a better test case or remove
-  // const noInputEvent1 = waitForCustomEvent(page, 'input');
-  // await input.fill('NaN');
-  // await expect(noInputEvent1.didNotOccur()).resolves.toBe(true));
+  // fires an event after clearing initial value from value property
+  const blankInputEvent = waitForCustomEvent(page, 'input');
+  await input.fill('invalid Ch@rs!');
+  expect(await input.inputValue()).toBe('');
+  await expect(blankInputEvent.detail()).resolves.toEqual({ value: '' });
 
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const noInputEvent1 = waitForCustomEvent(page, 'input');
+  await input.type('ee more invalid chars');
+  expect(await input.inputValue()).toBe('eee');
+  await expect(noInputEvent1.didNotOccur()).resolves.toBe(true);
+
+  const validInputEvent = waitForCustomEvent(page, 'input');
   await input.fill('1');
-  await expect(inputEvent.detail()).resolves.toEqual({ value: '1' });
+  expect(await input.inputValue()).toBe('1');
+  await expect(validInputEvent.detail()).resolves.toEqual({ value: '1' });
 
   const noInputEvent2 = waitForCustomEvent(page, 'input');
   await input.type('.');
+  expect(await input.inputValue()).toBe('1.');
   await expect(noInputEvent2.didNotOccur()).resolves.toBe(true);
 });
 

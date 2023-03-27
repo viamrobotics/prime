@@ -276,11 +276,9 @@ test('Test sort options for container', async ({ page }) => {
   await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad');
   await expect(optionsContainer.locator('label').last()).toHaveText('angry');
 
-  // TODO(mc, 2023-03-24): an event is not fired, figure out what's going on here
-  // const event = waitForCustomEvent(page, 'input');
-  await input.type('sa');
-  // check that an event is fired
-  // await event.detail();
+  const searchEvent = waitForCustomEvent(page, 'search');
+  await input.type('s');
+  await expect(searchEvent.detail()).resolves.toEqual({ term: 's' });
 
   await expect(optionsContainer.locator('label').first()).toHaveText('sad');
   await expect(optionsContainer.locator('label').nth(1)).toHaveText('happy');
