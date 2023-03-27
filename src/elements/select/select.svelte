@@ -240,9 +240,12 @@ $: {
     <div
       slot="target"
       class={cx('w-full border bg-white', {
-        'border-gray-9': !isDisabled && !isReadonly && state !== 'error' && state !== 'warn',
-        'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg': state === 'error',
-          'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright': state === 'warn',
+        'border-gray-9':
+          !isDisabled && !isReadonly && state !== 'error' && state !== 'warn',
+        'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
+          state === 'error',
+        'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
+          state === 'warn',
         'border-disabled-bg !bg-disabled-bg': isDisabled || isReadonly,
       })}
     >

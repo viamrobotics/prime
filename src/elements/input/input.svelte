@@ -288,8 +288,10 @@ const handleNumberDragDown = async (event: PointerEvent) => {
         'bg-white border-gray-8': !isDisabled && !isInvalidNumericInput,
         'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg':
           isDisabled || isDragging || isReadonly,
-        'border-danger-fg border -outline-offset-1 outline-[1.5px] outline-danger-fg': state === 'error' || isInvalidNumericInput,
-        'border-warning-bright -outline-offset-1 outline-[1.5px] outline-warning-bright': state === 'warn',
+        'border-danger-fg border -outline-offset-1 outline-[1.5px] outline-danger-fg':
+          state === 'error' || isInvalidNumericInput,
+        'border-warning-bright -outline-offset-1 outline-[1.5px] outline-warning-bright':
+          state === 'warn',
       }
     )}
     step={insertStepAttribute ? step : null}

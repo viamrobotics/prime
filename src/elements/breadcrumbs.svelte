@@ -12,7 +12,9 @@ let parsedCrumbs: string[];
 $: parsedCrumbs = crumbs.split(',').map((str) => str.trim());
 </script>
 
-<div class="inline-flex gap-3 -ml-1 px-4 border border-border-2 bg-bg-2 rounded-full">
+<div
+  class="inline-flex gap-3 -ml-1 px-4 border border-border-2 bg-bg-2 rounded-full"
+>
   {#each parsedCrumbs as crumb, index (crumb)}
     <small class="py1">
       {crumb}
