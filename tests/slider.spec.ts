@@ -91,7 +91,6 @@ test('Starts slider at minimum value', async ({ page }) => {
 test('Ends slider at maximum value', async ({ page }) => {
   const sliderMax = page.getByTestId('slider-max');
   await expect(sliderMax).toBeVisible();
-  const box = await sliderMax.boundingBox();
   await expect(sliderMax.locator('span.bg-gray-9')).toHaveCSS('right', '0px');
 });
 
@@ -250,7 +249,6 @@ test('Given no attributes, renders slider with { min: 0, max: 100, value: 50, st
   const slider = sliderDefault.getByRole('slider');
   const inputEvent = waitForCustomEvent(page, 'input');
   await expect(slider).toBeVisible();
-  const box = await slider.boundingBox();
   await slider.dragTo(slider, { targetPosition: { x: -5, y: 0 } });
   await expect(inputEvent.detail()).resolves.toMatchObject({ value: 49 });
 });

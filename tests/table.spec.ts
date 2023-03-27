@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { delay, hexToRGB } from './lib/helper.js';
+import { hexToRGB } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/table-test.html');

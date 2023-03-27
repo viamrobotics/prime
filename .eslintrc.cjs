@@ -40,14 +40,6 @@ module.exports = {
       },
     },
     {
-      files: ['tests/**/*'],
-      rules: {
-        // TODO(mc, 2023-03-23): the following warnings should be fixed
-        // removing them from this override will default them back to `error`
-        'require-await': 'warn',
-      },
-    },
-    {
       files: ['.*.cjs', '**/*.cjs'],
       parserOptions: {
         sourceType: 'script',
