@@ -142,7 +142,7 @@ test('Displays columns with widths set by cols attribute', async ({ page }) => {
     let width = await autoThs[i].evaluate((e) => {
       return getComputedStyle(e).width;
     });
-    await expect(Number.parseFloat(width)).toBeCloseTo(
+    expect(Number.parseFloat(width)).toBeCloseTo(
       (widths[i] * autoTableBox.width) / 100,
       1
     );
@@ -163,7 +163,7 @@ test('Displays columns with widths set by cols attribute', async ({ page }) => {
     let width = await fixedThs[i].evaluate((e) => {
       return getComputedStyle(e).width;
     });
-    await expect(Number.parseFloat(width)).toBeCloseTo(
+    expect(Number.parseFloat(width)).toBeCloseTo(
       (widths[i] * fixedTableBox.width) / 100,
       1
     );

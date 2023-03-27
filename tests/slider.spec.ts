@@ -38,13 +38,11 @@ test('Displays start and and end values', async ({ page }) => {
     sliderMinMax.getByText(String(customStart), { exact: true })
   ).toBeVisible();
   const startPercentage = (customStart - customMin) / (customMax - customMin);
-  let startLabelPos = await sliderMinMax
+  const startLabelPos = await sliderMinMax
     .getByRole('slider')
     .filter({ hasText: String(customStart) })
-    .evaluate((e) => {
-      return getComputedStyle(e).left;
-    });
-  await expect(Number.parseFloat(startLabelPos)).toBeCloseTo(
+    .evaluate((e) => getComputedStyle(e).left);
+  expect(Number.parseFloat(startLabelPos)).toBeCloseTo(
     startPercentage * box.width,
     1
   );
@@ -54,13 +52,13 @@ test('Displays start and and end values', async ({ page }) => {
   ).toBeVisible();
 
   const endPercentage = (customEnd - customMin) / (customMax - customMin);
-  let endLabelPos = await sliderMinMax
+  const endLabelPos = await sliderMinMax
     .getByRole('slider')
     .filter({ hasText: String(customEnd) })
     .evaluate((e) => {
       return getComputedStyle(e).left;
     });
-  await expect(Number.parseFloat(endLabelPos)).toBeCloseTo(
+  expect(Number.parseFloat(endLabelPos)).toBeCloseTo(
     endPercentage * box.width,
     1
   );
@@ -121,10 +119,10 @@ test('Starts slider placement at value', async ({ page }) => {
   await expect(sliderValue).toBeVisible();
   const box = await sliderValue.boundingBox();
   const valuePercentage = (value - customMin) / (customMax - customMin);
-  let sliderPos = await sliderValue.getByRole('slider').evaluate((e) => {
+  const sliderPos = await sliderValue.getByRole('slider').evaluate((e) => {
     return getComputedStyle(e).left;
   });
-  await expect(Number.parseFloat(sliderPos)).toBeCloseTo(
+  expect(Number.parseFloat(sliderPos)).toBeCloseTo(
     box.width * valuePercentage,
     1
   );
@@ -142,10 +140,10 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
   // check positioning of each tick
   const box = await sliderStep.boundingBox();
   for (let i = 0; i < numTicks; i++) {
-    let tickPos = await axisTicks[i].evaluate((e) => {
+    const tickPos = await axisTicks[i].evaluate((e) => {
       return getComputedStyle(e).left;
     });
-    await expect(Number.parseFloat(tickPos)).toBeCloseTo(
+    expect(Number.parseFloat(tickPos)).toBeCloseTo(
       ((i + 1) / (numTicks + 1)) * box.width,
       1
     );
