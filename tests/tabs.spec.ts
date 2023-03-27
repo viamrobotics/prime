@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEvent } from './lib/helper.ts';
+import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/tabs-test.html');
@@ -65,7 +65,7 @@ test('Confirms that selected tab updates upon click', async ({ page }) => {
   // Check That New Selected Tab is Correct (Tab 3)
   const tab3Selected = waitForCustomEvent(page, 'input');
   await tab3.click();
-  expect(tab3Selected).toBeTruthy();
+  await tab3Selected.detail();
 
   // Check That New Selected Tab Has Correct Background Color of White (Tab 3)
   await expect(tab1).not.toHaveClass(/bg-white/);
@@ -96,7 +96,7 @@ test('Confirms that on focus keydown, tab selection updates', async ({
   await page.keyboard.press('Enter');
 
   // Check That New Selected Tab is Tab Y
-  expect(tabYSelected).toBeTruthy();
+  await tabYSelected.detail();
 
   await expect(tabX).not.toHaveClass(/bg-white/);
   await expect(tabY).toHaveClass(/bg-white/);

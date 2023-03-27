@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.ts';
+import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/radio-test.html');
@@ -44,7 +44,7 @@ test('Confirms selected radio button updates on click', async ({ page }) => {
   // Confirm Click Changes Selected to Opt 2
   const opt2Selected = waitForCustomEvent(page, 'input');
   await opt2.click();
-  await expect(opt2Selected).toBeTruthy();
+  await opt2Selected.detail();
 
   await expect(opt1).toHaveClass(/bg-white/);
   await expect(opt2).toHaveClass(/bg-gray-9/);
@@ -75,7 +75,7 @@ test('Confirms selected radio button updates on keydown enter', async ({
   await opt6.focus();
   // Hit Enter
   await page.keyboard.press('Enter');
-  await expect(opt6Selected).toBeTruthy();
+  await opt6Selected.detail();
 
   await expect(opt4).toHaveClass(/bg-white/);
   await expect(opt5).toHaveClass(/bg-white/);
@@ -192,15 +192,15 @@ test('Renders radio element in readonly state if readonly attribute is true', as
   const readonly2 = page.getByRole('button', { name: 'Readonly 2' });
   await expect(readonly2).toBeVisible();
 
-  const readonly2Selected = waitForCustomEventTimeout(page, 'input');
+  const readonly2Selected = waitForCustomEvent(page, 'input');
   await readonly2.press('Enter');
-  await readonly2Selected;
+  await expect(readonly2Selected.didNotOccur()).resolves.toBe(true);
 
   // Readonly Keydown
   const readonly5 = page.getByRole('button', { name: 'Readonly 5' });
   await expect(readonly5).toBeVisible();
 
-  const readonly5Selected = waitForCustomEventTimeout(page, 'input');
+  const readonly5Selected = waitForCustomEvent(page, 'input');
   await readonly5.press('Enter');
-  await readonly5Selected;
+  await expect(readonly5Selected.didNotOccur()).resolves.toBe(true);
 });
