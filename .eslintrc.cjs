@@ -102,8 +102,7 @@ module.exports = {
     'unicorn/custom-error-definition': 'error',
     'unicorn/import-index': 'error',
     'unicorn/import-style': 'error',
-    // TODO(mc, 2023-03-23): fix errors in playground and set to error
-    'unicorn/prefer-string-replace-all': 'warn',
+    'unicorn/prefer-string-replace-all': 'error',
     'unicorn/string-content': 'error',
 
     // @TODO: switch to error once safari supports these:
