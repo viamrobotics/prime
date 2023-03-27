@@ -56,10 +56,10 @@ test('Renders notify with warning style if the variant is set to warning', async
   );
   await expect(
     page.getByTestId('notify-variant-warning').locator('div')
-  ).toHaveClass(/border-warning-fg/);
+  ).toHaveClass(/border-warning-bright/);
   await expect(
     page.getByTestId('notify-variant-warning').locator('svg')
-  ).toHaveClass(/fill-warning-fg/);
+  ).toHaveClass(/fill-warning-bright/);
 });
 
 test('Renders notify with success style if the variant is set to success', async ({

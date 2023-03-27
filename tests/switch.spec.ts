@@ -1,10 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  hexToRGB,
-  waitForCustomEventTimeout,
-  waitForCustomEventWithParam,
-  getCustomEventParam,
-} from './lib/helper.js';
+import { hexToRGB, waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/switch-test.html');
@@ -39,55 +34,36 @@ test('Renders appropriately according to value attribute', async ({ page }) => {
 });
 
 test('Responds to click from on to off', async ({ page }) => {
-  const isInputEventEmitted = waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const inputEvent = waitForCustomEvent(page, 'input');
   const switchOn = page.getByTestId('switch-on');
+
   await switchOn.locator('label').click();
   await expect(switchOn.locator('input')).toHaveValue('off');
-  await expect(isInputEventEmitted).toBeTruthy();
-  await expect(await getCustomEventParam(page, 'input', 'value')).toBe(false); // test emitted value from input event
+  await expect(inputEvent.detail()).resolves.toEqual({ value: false });
 });
 
 test('Responds to click from off to on', async ({ page }) => {
-  const isInputEventEmitted = waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const inputEvent = waitForCustomEvent(page, 'input');
   const switchOff = page.getByTestId('switch-off');
   await switchOff.locator('label').click();
   await expect(switchOff.locator('input')).toHaveValue('on');
-  await expect(isInputEventEmitted).toBeTruthy();
-  await expect(await getCustomEventParam(page, 'input', 'value')).toBe(true); // test emitted value from input event
+  await expect(inputEvent.detail()).resolves.toEqual({ value: true });
 });
 
 test('Responds to keydown "enter" from on to off', async ({ page }) => {
-  const isInputEventEmitted = waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const inputEvent = waitForCustomEvent(page, 'input');
   const switchOn = page.getByTestId('switch-on');
   await switchOn.locator('label').press('Enter');
   await expect(switchOn.locator('input')).toHaveValue('off');
-  await expect(isInputEventEmitted).toBeTruthy();
-  await expect(await getCustomEventParam(page, 'input', 'value')).toBe(false); // test emitted value from input event
+  await expect(inputEvent.detail()).resolves.toEqual({ value: false });
 });
 
 test('Responds to keydown "enter" from off to on', async ({ page }) => {
-  const isInputEventEmitted = waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const inputEvent = waitForCustomEvent(page, 'input');
   const switchOff = page.getByTestId('switch-off');
   await switchOff.locator('label').press('Enter');
   await expect(switchOff.locator('input')).toHaveValue('on');
-  await expect(isInputEventEmitted).toBeTruthy();
-  await expect(await getCustomEventParam(page, 'input', 'value')).toBe(true); // test emitted value from input event
+  await expect(inputEvent.detail()).resolves.toEqual({ value: true });
 });
 
 test('Renders label on top of switch by default', async ({ page }) => {
@@ -163,10 +139,10 @@ test('Renders as disabled', async ({ page }) => {
 
 test('Precludes value change if disabled', async ({ page }) => {
   const switchDisabledOff = page.getByTestId('switch-disabled-off');
-  const isInputEventEmitted = waitForCustomEventTimeout(page, 'input');
+  const inputEvent = waitForCustomEvent(page, 'input');
   await switchDisabledOff.locator('label').click({ force: true });
   await expect(switchDisabledOff.locator('input')).toHaveValue('off');
-  await isInputEventEmitted;
+  await expect(inputEvent.didNotOccur()).resolves.toBe(true);
 });
 
 test('Renders as read only', async ({ page }) => {
@@ -204,10 +180,10 @@ test('Renders as read only', async ({ page }) => {
 
 test('Precludes value change if read only', async ({ page }) => {
   const switchReadOnlyOff = page.getByTestId('switch-readonly-off');
-  const isInputEventEmitted = waitForCustomEventTimeout(page, 'input');
+  const inputEvent = waitForCustomEvent(page, 'input');
   await switchReadOnlyOff.locator('label').click({ force: true });
   await expect(switchReadOnlyOff.locator('input')).toHaveValue('off');
-  await isInputEventEmitted;
+  await expect(inputEvent.didNotOccur()).resolves.toBe(true);
 });
 
 test('Displays tooltip in correct position given tooltip attribute', async ({

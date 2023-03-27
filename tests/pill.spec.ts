@@ -1,5 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
-import { waitForCustomEvent, waitForCustomEventTimeout } from './lib/helper.js';
+import { test, expect } from '@playwright/test';
+import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/pill-test.html');
@@ -98,27 +98,27 @@ test('Renders a normal pill if a disabled attribute of false has been specified'
 test('Confirms default pill is clickable', async ({ page }) => {
   const testDefault = page.getByTestId('pill-default');
 
-  const clickDefault = waitForCustomEvent(page, 'remove');
+  const removeEvent = waitForCustomEvent(page, 'remove');
   await testDefault.getByRole('button').click();
-  expect(clickDefault).toBeTruthy();
+  await removeEvent.detail();
 });
 
 test('Confirms disbled pill is not clickable', async ({ page }) => {
-  const clickDisabled = waitForCustomEventTimeout(page, 'remove');
+  const removeEvent = waitForCustomEvent(page, 'remove');
   await page
     .getByTestId('pill-disabled-true')
     .getByRole('button')
     .press('Enter');
-  await clickDisabled;
+  await expect(removeEvent.didNotOccur()).resolves.toBe(true);
 });
 
 test('Confirms readonly pill is not clickable', async ({ page }) => {
-  const clickReadOnly = waitForCustomEventTimeout(page, 'remove');
+  const removeEvent = waitForCustomEvent(page, 'remove');
   await page
     .getByTestId('pill-readonly-true')
     .getByRole('button')
     .press('Enter');
-  await clickReadOnly;
+  await expect(removeEvent.didNotOccur()).resolves.toBe(true);
 });
 
 test('Confirms keydown enter is effective on the default pill', async ({
@@ -126,29 +126,29 @@ test('Confirms keydown enter is effective on the default pill', async ({
 }) => {
   const testDefault = page.getByTestId('pill-default');
 
-  const keyDownDefault = waitForCustomEvent(page, 'remove');
+  const removeEvent = waitForCustomEvent(page, 'remove');
   await testDefault.getByRole('button').press('Enter');
-  expect(keyDownDefault).toBeTruthy();
+  await removeEvent.detail();
 });
 
 test('Confirms keydown enter is not effective on the disabled pill', async ({
   page,
 }) => {
-  const keyDownDisabled = waitForCustomEventTimeout(page, 'remove');
+  const removeEvent = waitForCustomEvent(page, 'remove');
   await page
     .getByTestId('pill-disabled-true')
     .getByRole('button')
     .press('Enter');
-  await keyDownDisabled;
+  await expect(removeEvent.didNotOccur()).resolves.toBe(true);
 });
 
 test('Confirms keydown enter is effective on the readonly pill', async ({
   page,
 }) => {
-  const keyDownReadOnly = waitForCustomEventTimeout(page, 'remove');
+  const removeEvent = waitForCustomEvent(page, 'remove');
   await page
     .getByTestId('pill-readonly-true')
     .getByRole('button')
     .press('Enter');
-  await keyDownReadOnly;
+  await expect(removeEvent.didNotOccur()).resolves.toBe(true);
 });

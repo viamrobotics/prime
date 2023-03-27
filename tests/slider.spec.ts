@@ -1,11 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  delay,
-  waitForCustomEventWithParam,
-  getCustomEventParam,
-  waitForCustomEventTimeout,
-  hexToRGB,
-} from './lib/helper.js';
+import { delay, waitForCustomEvent, hexToRGB } from './lib/helper.js';
 
 const customMin = -50;
 const customMax = 50;
@@ -134,11 +128,8 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
 test('Restricts slider value to intervals of size step', async ({ page }) => {
   const sliderStep = await page.getByTestId('slider-step');
   const slider = await sliderStep.getByRole('slider');
-  const isInputEventDispatched = await waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const inputEvent = waitForCustomEvent(page, 'input');
+
   await expect(sliderStep).toBeVisible();
   const axisBox = await sliderStep.boundingBox();
   // slide a random amount, ensuring slide is large enough to change value
@@ -150,11 +141,10 @@ test('Restricts slider value to intervals of size step', async ({ page }) => {
     targetPosition: { x: randomSlide, y: 0 },
     force: true,
   });
-  await expect(isInputEventDispatched).toBeTruthy();
-  await expect(
-    // @ts-expect-error: getCustomEventParam is not strictly typed
-    Math.abs((await getCustomEventParam(page, 'input', 'value')) % 25)
-  ).toBe(0);
+
+  const inputEventPayload = (await inputEvent.detail()) as { value: number };
+
+  expect(Math.abs(inputEventPayload.value) % 25).toBe(0);
 });
 
 test('Renders label above slider', async ({ page }) => {
@@ -185,14 +175,9 @@ test('Dispatches "input" event with value when user drags slider to value', asyn
   const sliderValue = page.getByTestId('slider-value');
 
   const slider = sliderValue.getByRole('slider');
-  const isInputEventDispatched = await waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const inputEvent = waitForCustomEvent(page, 'input');
   await slider.dragTo(await sliderValue.locator('span.bg-gray-6').first()); // slide to first tick, value -45
-  await expect(isInputEventDispatched).toBeTruthy();
-  await expect(await getCustomEventParam(page, 'input', 'value')).toBe(-45);
+  await expect(inputEvent.detail()).resolves.toMatchObject({ value: -45 });
 });
 
 test('Given disabled attribute as true, displays slider as disabled and prevents interaction', async ({
@@ -202,13 +187,13 @@ test('Given disabled attribute as true, displays slider as disabled and prevents
   const slider = sliderDisabled.getByRole('slider');
   const startBox = await slider.boundingBox();
   await expect(sliderDisabled).toBeVisible();
-  const isInputEventDispatched = await waitForCustomEventTimeout(page, 'input');
+  const inputEvent = waitForCustomEvent(page, 'input');
   await slider.dragTo(await sliderDisabled.locator('span.bg-gray-6').first()); // try to slide
   const endBox = await slider.boundingBox();
   // make sure slider did not move
   await expect(endBox.x).toBe(startBox.x);
   await expect(endBox.y).toBe(startBox.y);
-  await isInputEventDispatched;
+  await expect(inputEvent.didNotOccur()).resolves.toBe(true);
 
   await expect(sliderDisabled.getByText('0', { exact: true })).toHaveCSS(
     'color',
@@ -231,13 +216,13 @@ test('Given readonly attribute as true, displays slider as readonly and prevents
   const slider = sliderReadonly.getByRole('slider');
   const startBox = await slider.boundingBox();
   await expect(sliderReadonly).toBeVisible();
-  const isInputEventDispatched = await waitForCustomEventTimeout(page, 'input');
+  const inputEvent = waitForCustomEvent(page, 'input');
   await slider.dragTo(await sliderReadonly.locator('span.bg-gray-6').first()); // try to slide
   const endBox = await slider.boundingBox();
   // make sure slider did not move
   await expect(endBox.x).toBe(startBox.x);
   await expect(endBox.y).toBe(startBox.y);
-  await isInputEventDispatched;
+  await expect(inputEvent.didNotOccur()).resolves.toBe(true);
 
   await expect(sliderReadonly.getByText('0', { exact: true })).toHaveCSS(
     'color',
@@ -263,13 +248,9 @@ test('Given no attributes, renders slider with { min: 0, max: 100, value: 50, st
 
   // check step: 1 by sliding from 50 to 49
   const slider = await sliderDefault.getByRole('slider');
-  const isInputEventDispatched = await waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const inputEvent = waitForCustomEvent(page, 'input');
   await expect(slider).toBeVisible();
   const box = await slider.boundingBox();
   await slider.dragTo(slider, { targetPosition: { x: -5, y: 0 } });
-  await expect(await getCustomEventParam(page, 'input', 'value')).toBe(49);
+  await expect(inputEvent.detail()).resolves.toMatchObject({ value: 49 });
 });
