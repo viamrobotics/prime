@@ -134,7 +134,7 @@ test('Radio tooltips are rendered as warn icon when state attribute is set to wa
     .getByTestId('radio-tooltip-warn-test')
     .locator('v-tooltip div')
     .first();
-  await expect(tooltipWarn).toHaveClass(/icon-error-outline text-warning-fg/);
+  await expect(tooltipWarn).toHaveClass(/icon-error-outline text-warning-bright/);
 });
 
 test('Radio tooltips are rendered as warn icon when state attribute is set to error', async ({
