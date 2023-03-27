@@ -5,7 +5,6 @@ import {
   getCustomEventParam,
   waitForCustomEventTimeout,
   hexToRGB,
-  pxStringToNumber,
 } from './lib/helper.ts';
 
 const customMin = -50;
@@ -45,7 +44,7 @@ test('Displays start and and end values', async ({ page }) => {
     .evaluate((e) => {
       return getComputedStyle(e).left;
     });
-  await expect(pxStringToNumber(startLabelPos)).toBeCloseTo(
+  await expect(Number.parseFloat(startLabelPos)).toBeCloseTo(
     startPercentage * box.width,
     1
   );
@@ -61,7 +60,7 @@ test('Displays start and and end values', async ({ page }) => {
     .evaluate((e) => {
       return getComputedStyle(e).left;
     });
-  await expect(pxStringToNumber(endLabelPos)).toBeCloseTo(
+  await expect(Number.parseFloat(endLabelPos)).toBeCloseTo(
     endPercentage * box.width,
     1
   );
@@ -125,7 +124,7 @@ test('Starts slider placement at value', async ({ page }) => {
   let sliderPos = await sliderValue.getByRole('slider').evaluate((e) => {
     return getComputedStyle(e).left;
   });
-  await expect(pxStringToNumber(sliderPos)).toBeCloseTo(
+  await expect(Number.parseFloat(sliderPos)).toBeCloseTo(
     box.width * valuePercentage,
     1
   );
@@ -146,7 +145,7 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
     let tickPos = await axisTicks[i].evaluate((e) => {
       return getComputedStyle(e).left;
     });
-    await expect(pxStringToNumber(tickPos)).toBeCloseTo(
+    await expect(Number.parseFloat(tickPos)).toBeCloseTo(
       ((i + 1) / (numTicks + 1)) * box.width,
       1
     );
