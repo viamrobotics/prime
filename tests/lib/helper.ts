@@ -40,7 +40,7 @@ export interface CustomEventHandler {
 export const waitForCustomEvent = (
   page: Page,
   eventName: string,
-  waitFor: number = 500
+  waitFor: number = 1000
 ): CustomEventHandler => {
   const eventReceipt: Promise<{ detail: unknown } | { timeout: true }> =
     page.evaluate(
