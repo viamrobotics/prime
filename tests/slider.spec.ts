@@ -27,11 +27,12 @@ test('Displays min and max values', async ({ page }) => {
 test('Displays start and and end values', async ({ page }) => {
   const sliderMinMax = page.getByTestId('slider-min-max');
   await expect(sliderMinMax).toBeVisible();
-  const box = await sliderMinMax.boundingBox();
+  const box = (await sliderMinMax.boundingBox())!;
   await expect(
     sliderMinMax.getByText(String(customStart), { exact: true })
   ).toBeVisible();
   const startPercentage = (customStart - customMin) / (customMax - customMin);
+
   await expect(
     sliderMinMax.getByRole('slider').filter({ hasText: String(customStart) })
   ).toHaveCSS('left', `${startPercentage * box.width}px`);
@@ -97,7 +98,7 @@ test('Ends slider at maximum value', async ({ page }) => {
 test('Starts slider placement at value', async ({ page }) => {
   const sliderValue = page.getByTestId('slider-value');
   await expect(sliderValue).toBeVisible();
-  const box = await sliderValue.boundingBox();
+  const box = (await sliderValue.boundingBox())!;
   const valuePercentage = (value - customMin) / (customMax - customMin);
   await expect(sliderValue.getByRole('slider')).toHaveCSS(
     'left',
@@ -115,9 +116,10 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
   expect(axisTicks.length).toBe(numTicks);
 
   // check positioning of each tick
-  const box = await sliderStep.boundingBox();
-  for (let i = 0; i < numTicks; i++) {
-    await expect(axisTicks[i]).toHaveCSS(
+  const box = (await sliderStep.boundingBox())!;
+
+  for (const [i, tick] of axisTicks.entries()) {
+    await expect(tick).toHaveCSS(
       'left',
       `${((i + 1) / (numTicks + 1)) * box.width}px`
     );
@@ -130,7 +132,7 @@ test('Restricts slider value to intervals of size step', async ({ page }) => {
   const inputEvent = waitForCustomEvent(page, 'input');
 
   await expect(sliderStep).toBeVisible();
-  const axisBox = await sliderStep.boundingBox();
+  const axisBox = (await sliderStep.boundingBox())!;
   // slide a random amount, ensuring slide is large enough to change value
   const randomSlide =
     -1 *
@@ -184,11 +186,11 @@ test('Given disabled attribute as true, displays slider as disabled and prevents
 }) => {
   const sliderDisabled = page.getByTestId('slider-disabled');
   const slider = sliderDisabled.getByRole('slider');
-  const startBox = await slider.boundingBox();
+  const startBox = (await slider.boundingBox())!;
   await expect(sliderDisabled).toBeVisible();
   const inputEvent = waitForCustomEvent(page, 'input');
   await slider.dragTo(sliderDisabled.locator('span.bg-gray-6').first()); // try to slide
-  const endBox = await slider.boundingBox();
+  const endBox = (await slider.boundingBox())!;
   // make sure slider did not move
   expect(endBox.x).toBe(startBox.x);
   expect(endBox.y).toBe(startBox.y);
@@ -213,11 +215,14 @@ test('Given readonly attribute as true, displays slider as readonly and prevents
 }) => {
   const sliderReadonly = page.getByTestId('slider-readonly');
   const slider = sliderReadonly.getByRole('slider');
-  const startBox = await slider.boundingBox();
+
   await expect(sliderReadonly).toBeVisible();
+  const startBox = (await slider.boundingBox())!;
+
   const inputEvent = waitForCustomEvent(page, 'input');
   await slider.dragTo(sliderReadonly.locator('span.bg-gray-6').first()); // try to slide
-  const endBox = await slider.boundingBox();
+  const endBox = (await slider.boundingBox())!;
+
   // make sure slider did not move
   expect(endBox.x).toBe(startBox.x);
   expect(endBox.y).toBe(startBox.y);

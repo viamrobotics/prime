@@ -136,15 +136,20 @@ test('Displays columns with widths set by cols attribute', async ({ page }) => {
     .all();
   expect(autoCols.length).toBe(widths.length);
 
-  const autoTableBox = await autoTable.locator('table').first().boundingBox();
+  const autoTableBox = (await autoTable
+    .locator('table')
+    .first()
+    .boundingBox())!;
+
   // assess column width with th because col is not visible on all browsers
   const autoThs = await autoTable.locator('th').all();
+
   for (let i = 0; i < autoCols.length; i++) {
-    const width = await autoThs[i].evaluate((e) => {
+    const width = await autoThs[i]!.evaluate((e) => {
       return getComputedStyle(e).width;
     });
     expect(Number(width.slice(0, width.indexOf('px')))).toBeCloseTo(
-      (widths[i] * autoTableBox.width) / 100,
+      (widths[i]! * autoTableBox.width) / 100,
       1
     );
   }
@@ -158,15 +163,20 @@ test('Displays columns with widths set by cols attribute', async ({ page }) => {
     .all();
   expect(fixedCols.length).toBe(widths.length);
 
-  const fixedTableBox = await fixedTable.locator('table').first().boundingBox();
+  const fixedTableBox = (await fixedTable
+    .locator('table')
+    .first()
+    .boundingBox())!;
+
   // assess column width with th because col is not visible on all browsers
   const fixedThs = await fixedTable.locator('th').all();
+
   for (let i = 0; i < fixedCols.length; i++) {
-    const width = await fixedThs[i].evaluate((e) => {
+    const width = await fixedThs[i]!.evaluate((e) => {
       return getComputedStyle(e).width;
     });
     expect(Number(width.slice(0, width.indexOf('px')))).toBeCloseTo(
-      (widths[i] * fixedTableBox.width) / 100,
+      (widths[i]! * fixedTableBox.width) / 100,
       1
     );
   }
