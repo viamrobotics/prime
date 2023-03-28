@@ -1,7 +1,7 @@
+import path from 'node:path';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import sveltePreprocess from 'svelte-preprocess';
 import { defineConfig } from 'vite';
-import path from 'node:path';
 
 const preprocess = sveltePreprocess();
 
@@ -21,6 +21,7 @@ export default defineConfig({
     target: 'esnext',
     assetsInlineLimit: 0,
     lib: {
+      // eslint-disable-next-line unicorn/prefer-module
       entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'Prime',
       fileName: (format) => `prime.${format}.js`,

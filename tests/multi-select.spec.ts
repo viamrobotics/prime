@@ -14,7 +14,7 @@ test('Given a default multiselect, shows options, labels, sets pills and fires e
   // label is visible
   await expect(page.getByText('Default Multi-select').first()).toBeVisible();
 
-  //placeholder is visible
+  // placeholder is visible
   await expect(multiselect.locator('input').first()).toHaveAttribute(
     'placeholder',
     'Emotions'

@@ -1,7 +1,7 @@
-import { type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import config from '../../tailwind.config.cjs';
 
-export const hexToRGB = (color?: string) => {
+export const hexToRGB = (color: string) => {
   const hex = config.theme.extend.colors[color];
 
   if (!hex) {
@@ -12,11 +12,13 @@ export const hexToRGB = (color?: string) => {
   let h = hex.slice(hex.startsWith('#') ? 1 : 0);
   if (h.length === 3) h = [...h].map((x) => x + x).join('');
   else if (h.length === 8) alpha = true;
-  h = Number.parseInt(h, 16);
-  return `rgb${alpha ? 'a' : ''}(${h >>> (alpha ? 24 : 16)}, ${
-    (h & (alpha ? 0x00_ff_00_00 : 0x00_ff_00)) >>> (alpha ? 16 : 8)
-  }, ${(h & (alpha ? 0x00_00_ff_00 : 0x00_00_ff)) >>> (alpha ? 8 : 0)}${
-    alpha ? `, ${h & 0x00_00_00_ff}` : ''
+
+  const parsedHex = Number.parseInt(h, 16);
+
+  return `rgb${alpha ? 'a' : ''}(${parsedHex >>> (alpha ? 24 : 16)}, ${
+    (parsedHex & (alpha ? 0x00_ff_00_00 : 0x00_ff_00)) >>> (alpha ? 16 : 8)
+  }, ${(parsedHex & (alpha ? 0x00_00_ff_00 : 0x00_00_ff)) >>> (alpha ? 8 : 0)}${
+    alpha ? `, ${parsedHex & 0x00_00_00_ff}` : ''
   })`;
 };
 
@@ -40,19 +42,17 @@ export interface CustomEventHandler {
 export const waitForCustomEvent = (
   page: Page,
   eventName: string,
-  waitFor: number = 1000
+  waitFor = 1000
 ): CustomEventHandler => {
   const eventReceipt: Promise<{ detail: unknown } | { timeout: true }> =
     page.evaluate(
       ({ eventName, waitFor }) => {
         return new Promise((resolve) => {
-          let timeoutRef: number | undefined;
-
-          const handleEvent = (event: CustomEvent<unknown>) => {
+          const handleEvent = (event: Event) => {
             cleanup();
             // `Event`s are not serializable across the `evaluate` boundary
             // Send the detail object explicitly, because it's what we care about
-            resolve({ detail: event.detail });
+            resolve({ detail: (event as CustomEvent<unknown>).detail });
           };
 
           const handleTimeout = () => {
@@ -67,8 +67,8 @@ export const waitForCustomEvent = (
             window.removeEventListener(eventName, handleEvent);
           };
 
+          const timeoutRef = window.setTimeout(handleTimeout, waitFor);
           window.addEventListener(eventName, handleEvent, { once: true });
-          timeoutRef = window.setTimeout(handleTimeout, waitFor);
         });
       },
       { eventName, waitFor }
@@ -102,5 +102,5 @@ export const waitForCustomEvent = (
 };
 
 export const delay = async (time: number) => {
-  return new Promise((resolve) => setTimeout(resolve, time));
+  await new Promise((resolve) => setTimeout(resolve, time));
 };

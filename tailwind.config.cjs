@@ -1,4 +1,4 @@
-const plugin = require('tailwindcss/plugin');
+'use strict';
 
 module.exports = {
   content: ['./index.html', './src/**/*.{ts,vue,svelte}'],

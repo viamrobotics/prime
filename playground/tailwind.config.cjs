@@ -1,4 +1,5 @@
-const plugin = require('tailwindcss/plugin');
+'use strict';
+
 const { theme } = require('../tailwind.config.cjs');
 
 module.exports = {

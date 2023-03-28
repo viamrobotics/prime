@@ -1,0 +1,20 @@
+{
+  "extends": "../etc/tsconfig.base.json",
+  "compilerOptions": {
+    "types": [
+      "vite/client",
+      "vue/macros-global",
+      "monaco-editor/monaco",
+      "svelte"
+    ],
+
+    /* TODO(mc, 2023-03-23): this setting must be disabled or else the monaco editor won't load.
+     * This seems iffy, since the default svelte config sets this to true. Investigate.
+     */
+    "preserveValueImports": false,
+
+    /* TODO(mc, 2023-03-23): remove override and fix issues */
+    "noUnusedLocals": false
+  },
+  "include": ["./src/**/*"]
+}

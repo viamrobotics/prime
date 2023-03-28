@@ -142,7 +142,7 @@ test('Restricts slider value to intervals of size step', async ({ page }) => {
     force: true,
   });
 
-  const inputEventPayload = await inputEvent.detail();
+  const inputEventPayload = (await inputEvent.detail()) as { value: number };
 
   expect(Math.abs(inputEventPayload.value) % 25).toBe(0);
 });

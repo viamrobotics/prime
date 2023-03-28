@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {

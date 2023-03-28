@@ -16,5 +16,7 @@ runs:
         cache: npm
 
     - name: 'Install development dependencies'
-      run: npm ci --audit=false
       shell: bash
+      run: |
+        npm ci --audit=false
+        npm --prefix=playground ci --audit=false

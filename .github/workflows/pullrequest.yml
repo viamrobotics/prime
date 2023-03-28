@@ -13,9 +13,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Run ESLint and Prettier
-        run: |
-          npm run lint
-          npm run format-check
+        run: npm run lint
 
   check:
     runs-on: ubuntu-latest
@@ -35,10 +33,6 @@ jobs:
         uses: ./.github/actions/setup
         with:
           node-version: 16
-      - name: Install playground deps
-        run: |
-          cd playground
-          npm ci --audit=false
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
