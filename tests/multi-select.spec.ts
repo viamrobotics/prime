@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  waitForCustomEvent,
-  waitForCustomEventWithParam,
-} from './lib/helper.ts';
+import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/multi-select-test.html');
@@ -36,12 +33,12 @@ test('Given a default multiselect, shows options, labels, sets pills and fires e
   await expect(optionsContainer).toHaveText(/sad/);
   await expect(optionsContainer).toHaveText(/angry/);
 
-  const eventfired = waitForCustomEventWithParam(page, 'input', 'happy');
+  const event = waitForCustomEvent(page, 'input');
   // click on the first option
   await optionsContainer.locator('label', { hasText: 'happy' }).click();
 
   // make sure that an event is fired
-  expect(eventfired).toBeTruthy();
+  await expect(event.detail()).resolves.toMatchObject({ value: 'happy' });
 
   // check that the textbox is checked
   await expect(
@@ -65,11 +62,13 @@ test('Given a default multiselect, shows options, labels, sets pills and fires e
 
   // press clear all
   const clearAllEvent = waitForCustomEvent(page, 'clear-all-click');
+
   await multiselect.click();
   await expect(optionsContainer).toBeVisible();
   await optionsContainer.locator('button', { hasText: 'Clear all' }).click();
   await page.keyboard.press('Escape');
-  expect(clearAllEvent).toBeTruthy();
+  await clearAllEvent.detail();
+
   expect(await multiselect.locator('v-pill').all()).toHaveLength(0);
 });
 
@@ -135,9 +134,9 @@ test('Given a multi-select with button, there is a button at the bottom', async 
     .first();
   await expect(icon.locator('i')).toHaveClass(/icon-camera/);
 
-  const buttonClickevent = waitForCustomEvent(page, 'button-click');
+  const buttonClickEvent = waitForCustomEvent(page, 'button-click');
   await multiselect.locator('v-select-button').first().click();
-  expect(buttonClickevent).toBeTruthy();
+  await buttonClickEvent.detail();
 });
 
 test('Given a multi-select with a header, there is a header in the options list', async ({
@@ -215,7 +214,7 @@ test('Given a tooltip and state=warn the select should show a warn icon with too
   await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
   await expect(
     multiselect.locator('v-tooltip').first().locator('div').first()
-  ).toHaveClass(/text-warning-fg/);
+  ).toHaveClass(/text-warning-bright/);
   await multiselect.locator('v-tooltip').first().hover();
   await expect(multiselect.getByText(/warn tip/)).toBeVisible();
 });
@@ -277,10 +276,9 @@ test('Test sort options for container', async ({ page }) => {
   await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad');
   await expect(optionsContainer.locator('label').last()).toHaveText('angry');
 
-  // check that an event is fired
-  const event = waitForCustomEventWithParam(page, 'input', 'sa');
-  await input.type('sa');
-  expect(event).toBeTruthy();
+  const searchEvent = waitForCustomEvent(page, 'search');
+  await input.type('s');
+  await expect(searchEvent.detail()).resolves.toEqual({ term: 's' });
 
   await expect(optionsContainer.locator('label').first()).toHaveText('sad');
   await expect(optionsContainer.locator('label').nth(1)).toHaveText('happy');
@@ -333,15 +331,14 @@ test('opening and closing dropdown fires events', async ({ page }) => {
 
   const optionsContainer = multiselect.locator('.options-container').first();
   await expect(optionsContainer).toBeVisible();
-
-  expect(openEvent).toBeTruthy();
+  await openEvent.detail();
 
   const closeEvent = waitForCustomEvent(page, 'close');
   const closeDropdown = multiselect.getByRole('button').first();
   await expect(closeDropdown).toBeVisible();
   await closeDropdown.click();
   await expect(optionsContainer).not.toBeVisible();
-  expect(closeEvent).toBeTruthy();
+  await closeEvent.detail();
 });
 
 test('When a dropdown is open, confirm the first result is in focus such that a user can press enter and select that first item', async ({
