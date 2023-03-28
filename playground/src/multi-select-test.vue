@@ -14,6 +14,14 @@
         </section>
         <section style="width: 400px; margin-top: 30px">
             <v-multiselect
+                data-testid="default-multiselect-first"
+                label='Default Multi-select First Option'
+                options='First Option, Second Option, Third Option'
+                placeholder="Options"
+            />
+        </section>
+        <section style="width: 400px; margin-top: 30px">
+            <v-multiselect
                 data-testid="multiselect-values"
                 label='Multi-select with Values'
                 options='happy,sad, angry'
