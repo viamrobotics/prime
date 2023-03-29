@@ -5,7 +5,11 @@ import { mergeConfig } from 'vite';
  * @type { import('@storybook/html-vite').StorybookConfig & { svelteOptions: import('@sveltejs/vite-plugin-svelte').SvelteOptions}}
  */
 const config = {
-  stories: ['../src/stories/docs/introduction.md', '../src/stories/**/*.mdx'],
+  stories: [
+    '../src/stories/docs/introduction.stories.mdx', 
+    '../src/stories/docs/**/*.mdx', 
+    '../src/stories/**/*.mdx'
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
