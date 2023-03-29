@@ -83,9 +83,9 @@ npm run test <test-name> # for <test-name>.spec.ts
 
 `PRIME` supports the following browsers:
 
-| ![Chrome][] | ![Firefox][] | ![Edge][] | ![Safari][] |
-| ----------- | ------------ | --------- | ----------- |
-| Latest ✔    | Latest ✔     | Latest ✔  | Latest ✔    |
+| ![Chrome][chrome] | ![Firefox][firefox] | ![Edge][edge] | ![Safari][safari] |
+| ----------------- | ------------------- | ------------- | ----------------- |
+| Latest ✔          | Latest ✔            | Latest ✔      | Latest ✔          |
 
 [chrome]: https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png
 [firefox]: https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png
