@@ -14,6 +14,6 @@ const preview = {
       },
     },
     inlineStories: true,
-  }
+  },
 };
 export default preview;

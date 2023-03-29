@@ -6,9 +6,9 @@ import { mergeConfig } from 'vite';
  */
 const config = {
   stories: [
-    '../src/stories/docs/introduction.stories.mdx', 
-    '../src/stories/docs/**/*.mdx', 
-    '../src/stories/**/*.mdx'
+    '../src/stories/docs/introduction.stories.mdx',
+    '../src/stories/docs/**/*.mdx',
+    '../src/stories/**/*.mdx',
   ],
   addons: [
     '@storybook/addon-links',
