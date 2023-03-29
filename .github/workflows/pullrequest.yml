@@ -24,6 +24,17 @@ jobs:
       - name: Run Check
         run: npm run check
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install 🔧
+        uses: ./.github/actions/setup
+      - name: Build 🏗️
+        run: |
+          npm run build-storybook
+          npm run build
+
   test:
     timeout-minutes: 20
     runs-on: ubuntu-latest
