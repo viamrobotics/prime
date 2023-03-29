@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { minify } from 'terser';
 import pkg from '../package.json' assert { type: 'json' };
-import { rename, copy, write, read } from './util';
+import { rename, copy, write, read } from './util.js';
 
 const { version } = pkg;
 
