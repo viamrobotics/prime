@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <!--suppress HtmlUnknownTarget -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Storybook</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>
-      window.CONFIG_TYPE = 'PRODUCTION';
-      window.LOGLEVEL = 'info';
-      window.FRAMEWORK_OPTIONS = {};
-      window.CHANNEL_OPTIONS = {};
-      window.FEATURES = {"warnOnLegacyHierarchySeparator":true,"buildStoriesJson":false,"storyStoreV7":true,"breakingChangesV7":true,"interactionsDebugger":false,"argTypeTargetsV7":true,"modernInlineRender":true};
-      window.STORIES = [{"titlePrefix":"","directory":"./src/stories/docs","files":"introduction.stories.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories\\/docs\\/introduction\\.stories\\.mdx)$"},{"titlePrefix":"","directory":"./src/stories","files":"**/*.stories.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\/|\\/|$)(?!\\.)(?=.)[^/]*?\\.stories\\.mdx)$"}];
-      window.DOCS_OPTIONS = {"docsMode":true,"enabled":true,"defaultName":"Docs","docsPage":true};
-      window.SERVER_CHANNEL_URL = undefined;
-      
-      // We do this so that "module && module.hot" etc. in Storybook source code
-      // doesn't fail (it will simply be disabled)
-      window.module = undefined;
-      </script>
-    <base target="_parent" />
+
+<head>
+  <meta charset="utf-8" />
+  <title>Storybook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="prefetch" href="./sb-common-assets/nunito-sans-regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="prefetch" href="./sb-common-assets/nunito-sans-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="prefetch" href="./sb-common-assets/nunito-sans-bold.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="prefetch" href="./sb-common-assets/nunito-sans-bold-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="./sb-common-assets/fonts.css" />
+
+  <script>
+    window.CONFIG_TYPE = 'PRODUCTION';
+    window.LOGLEVEL = 'info';
+    window.FRAMEWORK_OPTIONS = {};
+    window.CHANNEL_OPTIONS = {};
+    window.FEATURES = {"warnOnLegacyHierarchySeparator":true,"buildStoriesJson":false,"storyStoreV7":true,"breakingChangesV7":true,"argTypeTargetsV7":true,"legacyDecoratorFileOrder":false,"modernInlineRender":true};
+    window.STORIES = [{"titlePrefix":"","directory":"./src/stories/docs","files":"introduction.stories.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories\\/docs\\/introduction\\.stories\\.mdx)$"},{"titlePrefix":"","directory":"./src/stories/docs","files":"**/*.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories\\/docs(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\/|\\/|$)(?!\\.)(?=.)[^/]*?\\.mdx)$"},{"titlePrefix":"","directory":"./src/stories","files":"**/*.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\/|\\/|$)(?!\\.)(?=.)[^/]*?\\.mdx)$"}];
+    window.DOCS_OPTIONS = {"docsMode":true,"defaultName":"Docs","autodocs":true};
+    window.SERVER_CHANNEL_URL = undefined;
+
+    // We do this so that "module && module.hot" etc. in Storybook source code
+    // doesn't fail (it will simply be disabled)
+    window.module = undefined;
+  </script>
+  <base target="_parent" />
 
 <style>
   /* While we aren't showing the main block yet, but still preparing, we want everything the user
@@ -347,26 +355,6 @@
     // eslint-disable-next-line no-console
     console.warn('unable to connect to top frame for connecting dev tools');
   }
-
-  window.onerror = function onerror(message, source, line, column, err) {
-    if (window.CONFIG_TYPE !== 'DEVELOPMENT') return;
-    // eslint-disable-next-line no-var, vars-on-top
-    var xhr = new window.XMLHttpRequest();
-    xhr.open('POST', '/runtime-error');
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.send(
-      JSON.stringify({
-        /* eslint-disable object-shorthand */
-        message: message,
-        source: source,
-        line: line,
-        column: column,
-        error: err && { message: err.message, name: err.name, stack: err.stack },
-        origin: 'preview',
-        /* eslint-enable object-shorthand */
-      })
-    );
-  };
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -399,11 +387,12 @@
 
 </script>
 
-    <script type="module" crossorigin src="/assets/iframe-10abe9e6.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/preload-helper-101896b7.js">
-  </head>
-  <body>
-    <div class="sb-preparing-story sb-wrapper">
+  <script type="module" crossorigin src="/assets/iframe-0b935fa4.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/preload-helper-101896b7.js">
+</head>
+
+<body>
+  <div class="sb-preparing-story sb-wrapper">
   <div class="sb-loader"></div>
 </div>
 
@@ -491,9 +480,10 @@
   <pre class="sb-errordisplay_code"><code id="error-stack"></code></pre>
 </div>
 
-    <div id="storybook-root"></div>
-    <div id="storybook-docs"></div>
-    
-    
-  </body>
+  <div id="storybook-root"></div>
+  <div id="storybook-docs"></div>
+  
+  
+</body>
+
 </html>
