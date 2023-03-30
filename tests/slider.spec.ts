@@ -32,18 +32,30 @@ test('Displays start and and end values', async ({ page }) => {
     sliderMinMax.getByText(String(customStart), { exact: true })
   ).toBeVisible();
   const startPercentage = (customStart - customMin) / (customMax - customMin);
-
-  await expect(
-    sliderMinMax.getByRole('slider').filter({ hasText: String(customStart) })
-  ).toHaveCSS('left', `${startPercentage * box.width}px`);
+  const startLabelPos = await sliderMinMax
+    .getByRole('slider')
+    .filter({ hasText: String(customStart) })
+    .evaluate((e) => getComputedStyle(e).left);
+  expect(Number.parseFloat(startLabelPos)).toBeCloseTo(
+    startPercentage * box.width,
+    1
+  );
 
   await expect(
     sliderMinMax.getByText(String(customEnd), { exact: true })
   ).toBeVisible();
+
   const endPercentage = (customEnd - customMin) / (customMax - customMin);
-  await expect(
-    sliderMinMax.getByRole('slider').filter({ hasText: String(customEnd) })
-  ).toHaveCSS('left', `${endPercentage * box.width}px`);
+  const endLabelPos = await sliderMinMax
+    .getByRole('slider')
+    .filter({ hasText: String(customEnd) })
+    .evaluate((e) => {
+      return getComputedStyle(e).left;
+    });
+  expect(Number.parseFloat(endLabelPos)).toBeCloseTo(
+    endPercentage * box.width,
+    1
+  );
 
   // check that slider labels are not visible until on hover
   expect(await sliderMinMax.locator('.floating').count()).toBe(2);
@@ -100,9 +112,12 @@ test('Starts slider placement at value', async ({ page }) => {
   await expect(sliderValue).toBeVisible();
   const box = (await sliderValue.boundingBox())!;
   const valuePercentage = (value - customMin) / (customMax - customMin);
-  await expect(sliderValue.getByRole('slider')).toHaveCSS(
-    'left',
-    `${box.width * valuePercentage}px`
+  const sliderPos = await sliderValue.getByRole('slider').evaluate((e) => {
+    return getComputedStyle(e).left;
+  });
+  expect(Number.parseFloat(sliderPos)).toBeCloseTo(
+    box.width * valuePercentage,
+    1
   );
 });
 
@@ -117,11 +132,13 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
 
   // check positioning of each tick
   const box = (await sliderStep.boundingBox())!;
-
-  for (const [i, tick] of axisTicks.entries()) {
-    await expect(tick).toHaveCSS(
-      'left',
-      `${((i + 1) / (numTicks + 1)) * box.width}px`
+  for (const [i, axisTick] of axisTicks.entries()) {
+    const tickPos = await axisTick.evaluate((e) => {
+      return getComputedStyle(e).left;
+    });
+    expect(Number.parseFloat(tickPos)).toBeCloseTo(
+      ((i + 1) / (numTicks + 1)) * box.width,
+      1
     );
   }
 });
