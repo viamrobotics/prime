@@ -42,15 +42,14 @@ To verify that static assets build correctly:
 
 ```shell
 npm run build-storybook
+npm run build
 ```
 
 To run tests locally, you must first install the `playground` development dependencies and playwright. From there, you can run tests
 
 ```shell
 # set up playground
-cd playground
-npm install
-cd ..
+npm --prefix=playground install
 npx playwright install --with-deps
 
 # run tests, with optional debugging
@@ -64,12 +63,9 @@ You can typecheck and lint using:
 # check types, a11y, and other component quality
 npm run check
 
-# autoformat code and documentation
+# autoformat code and other files
 npm run format
 
-# check formatting without writing files
-npm run format-check
-
-# lint for stylistic and correctness issues
+# lint for formatting and correctness issues
 npm run lint
 ```

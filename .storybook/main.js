@@ -1,10 +1,14 @@
-import { preprocess } from '../svelte.config.js';
+import svelteConfig from '../svelte.config.js';
 import { mergeConfig } from 'vite';
 
-export default {
+/**
+ * @type { import('@storybook/html-vite').StorybookConfig & { svelteOptions: import('@sveltejs/vite-plugin-svelte').SvelteOptions}}
+ */
+const config = {
   stories: [
     '../src/stories/docs/introduction.stories.mdx',
-    '../src/stories/**/*.stories.mdx',
+    '../src/stories/docs/**/*.mdx',
+    '../src/stories/**/*.mdx',
   ],
   addons: [
     '@storybook/addon-links',
@@ -12,9 +16,10 @@ export default {
     '@storybook/addon-interactions',
     '@storybook/addon-docs',
     '@storybook/addon-a11y',
+    '@storybook/addon-mdx-gfm',
   ],
   svelteOptions: {
-    preprocess,
+    preprocess: svelteConfig.preprocess,
     compilerOptions: {
       customElement: true,
     },
@@ -29,7 +34,13 @@ export default {
     options: {},
   },
   features: {
+    // @ts-expect-error: this option may have been removed
+    // TODO(mc, 2023-03-23): remove if able after upgrading to v7 rc or stable
     modernInlineRender: true,
     storyStoreV7: true,
   },
+  docs: {
+    autodocs: true,
+  },
 };
+export default config;

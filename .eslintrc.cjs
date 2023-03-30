@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   root: true,
   env: {
@@ -8,7 +10,12 @@ module.exports = {
   parserOptions: {
     tsConfigRootDir: __dirname,
     extraFileExtensions: ['.svelte'],
-    project: ['./tsconfig.json'],
+    project: [
+      './tsconfig.json',
+      './tsconfig.node.json',
+      './tests/tsconfig.json',
+      './playground/tsconfig.json',
+    ],
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
@@ -24,12 +31,60 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['*.svelte'],
+      files: ['**/*.svelte'],
       processor: 'svelte3/svelte3',
       settings: {
         'svelte3/compiler-options': {
           customElement: true,
         },
+      },
+    },
+    {
+      files: ['tests/**/*'],
+      rules: {
+        // TODO(mc, 2023-03-23): the following warnings should be fixed
+        // removing them from this override will default them back to `error`
+        '@typescript-eslint/await-thenable': 'warn',
+        '@typescript-eslint/dot-notation': 'warn',
+        '@typescript-eslint/no-floating-promises': 'warn',
+        '@typescript-eslint/no-unsafe-assignment': 'warn',
+        '@typescript-eslint/no-unsafe-call': 'warn',
+        '@typescript-eslint/no-unsafe-argument': 'warn',
+        '@typescript-eslint/no-unsafe-member-access': 'warn',
+        '@typescript-eslint/no-unsafe-return': 'warn',
+        '@typescript-eslint/restrict-plus-operands': 'warn',
+        '@typescript-eslint/restrict-template-expressions': 'warn',
+        'prefer-arrow/prefer-arrow-functions': 'warn',
+        'unicorn/better-regex': 'warn',
+        'unicorn/no-await-expression-member': 'warn',
+        'unicorn/no-for-loop': 'warn',
+        'unicorn/prefer-number-properties': 'warn',
+        'unicorn/prefer-string-slice': 'warn',
+        'prefer-const': 'warn',
+        'prefer-template': 'warn',
+        radix: 'warn',
+        'require-await': 'warn',
+      },
+    },
+    {
+      files: ['.*.cjs', '**/*.cjs'],
+      parserOptions: {
+        sourceType: 'script',
+      },
+      env: {
+        node: true,
+      },
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
+    {
+      files: ['.*.js', '*.js', 'scripts/**/*.js'],
+      env: {
+        node: true,
+      },
+      rules: {
+        'import/extensions': ['error', 'ignorePackages'],
       },
     },
   ],
@@ -49,29 +104,16 @@ module.exports = {
   rules: {
     // Eslint rules
     'array-callback-return': 'error',
-    'dot-notation': 'error',
-    eqeqeq: [
-      'error',
-      'always',
-      {
-        null: 'always',
-      },
-    ],
+    eqeqeq: ['error', 'always', { null: 'always' }],
     'no-caller': 'error',
     'no-param-reassign': 'error',
     'no-return-await': 'error',
     'no-unreachable-loop': 'error',
     'no-unsafe-optional-chaining': 'error',
     'nonblock-statement-body-position': 'error',
-    'one-var': [
-      'error',
-      {
-        let: 'never',
-        const: 'never',
-      },
-    ],
+    'one-var': ['error', { let: 'never', const: 'never' }],
     'require-atomic-updates': 'error',
-    'spaced-comment': 'error',
+    'spaced-comment': ['error', 'always', { markers: ['/'] }],
     radix: 'error',
     'require-await': 'error',
     strict: 'error',
@@ -81,7 +123,6 @@ module.exports = {
     'prefer-arrow-callback': 'error',
     'prefer-const': 'error',
     'prefer-template': 'error',
-    'require-await': 'error',
     'prefer-arrow/prefer-arrow-functions': [
       'error',
       {
@@ -97,7 +138,8 @@ module.exports = {
     'unicorn/custom-error-definition': 'error',
     'unicorn/import-index': 'error',
     'unicorn/import-style': 'error',
-    'unicorn/prefer-string-replace-all': 'error',
+    // TODO(mc, 2023-03-23): fix errors in playground and set to error
+    'unicorn/prefer-string-replace-all': 'warn',
     'unicorn/string-content': 'error',
 
     // @TODO: switch to error once safari supports these:
@@ -118,6 +160,7 @@ module.exports = {
     // Typescript
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/dot-notation': 'error',
 
     // Sonar
     'sonarjs/no-duplicate-string': 'off',
@@ -137,9 +180,7 @@ module.exports = {
     'import/extensions': [
       'error',
       'never',
-      {
-        svelte: 'always',
-      },
+      { svelte: 'always', json: 'always' },
     ],
     // Do not currently work with eslint-plugin-svelte
     'import/first': 'off',
@@ -158,10 +199,14 @@ module.exports = {
         extensions: ['.js', '.ts', '.svelte'],
         // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
         alwaysTryTypes: true,
-        project: './tsconfig.json',
+        project: [
+          './tsconfig.json',
+          './tsconfig.node.json',
+          './tests/tsconfig.json',
+          './playground/tsconfig.json',
+        ],
       },
     },
     'svelte3/typescript': () => require('typescript'),
   },
-  ignorePatterns: ['**/cypress/**', '**/node_modules/**', '*.json'],
 };

@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  getCustomEventParam,
-  waitForCustomEventWithParam,
-} from './lib/helper.ts';
+import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/select-test.html');
@@ -31,12 +28,9 @@ test('Given an options attribute, on select the options should be visible and cl
   await expect(optionsContainer).toHaveText(/three/);
 
   // selecting a value should emit an input event + render that as the input
-  const oneSelected = waitForCustomEventWithParam(page, 'input', 'value');
+  const oneSelected = waitForCustomEvent(page, 'input');
   await optionsContainer.locator('label').first().click();
-  expect(oneSelected).toBeTruthy();
-
-  // show the selcted value in the input
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('one');
+  await expect(oneSelected.detail()).resolves.toEqual({ value: 'one' });
 });
 
 test('Clicking on the select component renders options', async ({ page }) => {
@@ -151,7 +145,7 @@ test('Given warn state and tooltip value, there should be a warn tooltip next to
 }) => {
   const select = page.getByTestId('select-warn-tooltip');
   const tooltip = select.locator('label > div > v-tooltip').first();
-  await expect(tooltip.locator('.text-warning-fg')).toBeVisible();
+  await expect(tooltip.locator('.text-warning-bright')).toBeVisible();
 
   // text is not visible
   await expect(tooltip.getByText('warn tip').first()).not.toBeVisible();
@@ -233,5 +227,34 @@ test('On pressing enter over an option, that option should be selected', async (
   await page.keyboard.press('Enter');
 
   // show the selcted value in the input
-  expect(await input.inputValue()).toEqual('one');
+  expect(await input.inputValue()).toEqual('two');
+});
+
+test('When a dropdown is open, confirm the first result is in focus such that a user can press enter and select that first item', async ({
+  page,
+}) => {
+  const select = page.getByTestId('default-select-first');
+  await expect(select).toBeVisible();
+
+  const optionsContainer = select.locator('.options-container').first();
+
+  // click on the input
+  const input = select.locator('input').first();
+  await input.focus();
+  await expect(optionsContainer).toBeVisible();
+
+  expect(await input.inputValue()).toEqual('');
+  // confirm first option background is gray
+  await expect(
+    page
+      .getByTestId('default-select-first')
+      .locator('v-dropdown')
+      .getByText('First Option')
+  ).toHaveClass(/bg-slate-200/);
+
+  // press enter
+  await page.keyboard.press('Enter');
+
+  // show the selcted value in the input
+  expect(await input.inputValue()).toEqual('First Option');
 });

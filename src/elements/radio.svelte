@@ -56,7 +56,7 @@ const handleClick = (value: string) => {
         <div
           class={cx({
             'icon-info-outline': state === 'info',
-            'icon-error-outline text-warning-fg': state === 'warn',
+            'icon-error-outline text-warning-bright': state === 'warn',
             'icon-error-outline text-danger-fg': state === 'error',
           })}
         />

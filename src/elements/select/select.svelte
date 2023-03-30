@@ -26,6 +26,7 @@ export let withbutton = 'false';
 export let buttontext = 'ENTER';
 export let buttonicon = '';
 export let sortoption: utils.SortOptions = 'default';
+export let message = '';
 
 const dispatch = dispatcher();
 
@@ -157,6 +158,7 @@ const handleFocus = () => {
 
   open = true;
   input.focus();
+  navigationIndex = 0;
 };
 
 const handleFocusOut = (event: FocusEvent) => {
@@ -227,7 +229,7 @@ $: {
         <div
           class={cx({
             'icon-info-outline': state === 'info',
-            'icon-error-outline text-warning-fg': state === 'warn',
+            'icon-error-outline text-warning-bright': state === 'warn',
             'icon-error-outline text-danger-fg': state === 'error',
           })}
         />
@@ -238,8 +240,13 @@ $: {
   <v-dropdown match open={open ? '' : undefined}>
     <div
       slot="target"
-      class={cx('w-full border  bg-white', {
-        'border-gray-9': !isDisabled && !isReadonly,
+      class={cx('w-full border bg-white', {
+        'border-gray-9':
+          !isDisabled && !isReadonly && state !== 'error' && state !== 'warn',
+        'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
+          state === 'error',
+        'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
+          state === 'warn',
         'border-disabled-bg !bg-disabled-bg': isDisabled || isReadonly,
       })}
     >
@@ -288,7 +295,7 @@ $: {
       >
         {#if sortedOptions.length > 0}
           <div
-            class="flex max-h-36 flex-col "
+            class="flex max-h-36 flex-col"
             on:mouseleave={clearNavigationIndex}
           >
             {#each searchedOptions as { search, option }, index (option)}
@@ -371,6 +378,17 @@ $: {
       {/if}
     </div>
   </v-dropdown>
+
+  {#if message}
+    <span
+      class={cx('text-xs', {
+        'text-red-600': state === 'error',
+        'text-warning-bright': state === 'warn',
+      })}
+    >
+      {message}
+    </span>
+  {/if}
 </label>
 
 <style>

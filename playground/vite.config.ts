@@ -1,5 +1,5 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
-import { fileURLToPath } from 'url';
 import vue from '@vitejs/plugin-vue';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import sveltePreprocess from 'svelte-preprocess';
@@ -29,8 +29,8 @@ export default defineConfig({
     assetsInlineLimit: 0,
     rollupOptions: {
       input: {
-        index: fileURLToPath(new URL('./index.html', import.meta.url)),
-        test: fileURLToPath(new URL('./test.html', import.meta.url)),
+        index: fileURLToPath(new URL('index.html', import.meta.url)),
+        test: fileURLToPath(new URL('test.html', import.meta.url)),
       },
     },
   },

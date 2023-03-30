@@ -28,6 +28,7 @@ export let buttonicon = '';
 export let sortoption: utils.SortOptions = 'default';
 export let heading = '';
 export let searchterm = '';
+export let message = '';
 
 const dispatch = dispatcher();
 
@@ -177,6 +178,7 @@ const handleFocus = () => {
 
   open = true;
   input.focus();
+  navigationIndex = 0;
 };
 
 const handleFocusOut = (event: FocusEvent) => {
@@ -286,7 +288,7 @@ $: {
           <div
             class={cx({
               'icon-info-outline': state === 'info',
-              'icon-error-outline text-warning-fg': state === 'warn',
+              'icon-error-outline text-warning-bright': state === 'warn',
               'icon-error-outline text-danger-fg': state === 'error',
             })}
           />
@@ -298,7 +300,12 @@ $: {
       <div
         slot="target"
         class={cx('w-full border bg-white', {
-          'border-gray-8': !isDisabled || isReadonly,
+          'border-gray-8':
+            !isDisabled && !isReadonly && state !== 'error' && state !== 'warn',
+          'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
+            state === 'error',
+          'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
+            state === 'warn',
           'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg':
             isDisabled || isReadonly,
         })}
@@ -467,6 +474,17 @@ $: {
         />
       {/each}
     </div>
+  {/if}
+
+  {#if message}
+    <span
+      class={cx('text-xs', {
+        'text-red-600': state === 'error',
+        'text-warning-bright': state === 'warn',
+      })}
+    >
+      {message}
+    </span>
   {/if}
 </div>
 

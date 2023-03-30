@@ -1,10 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  hexToRGB,
-  getCustomEventParam,
-  waitForCustomEventTimeout,
-  waitForCustomEventWithParam,
-} from './lib/helper.ts';
+import { hexToRGB, waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/input-test.html');
@@ -291,7 +286,7 @@ test('Given attribute tooltip with warn state, render warn icon above the input'
 }) => {
   const inputWarnTooltip = page.getByTestId('input-tooltip-warn');
   await expect(inputWarnTooltip.locator('v-tooltip > div').first()).toHaveClass(
-    /icon-error-outline text-warning-fg/
+    /icon-error-outline text-warning-bright/
   );
 });
 
@@ -347,34 +342,37 @@ test('With error state, displays message below input box in red', async ({
 test('Given type number, only dispatches valid and new number values', async ({
   page,
 }) => {
-  const inputNumber = await page.getByTestId('input-number');
-  const input = await inputNumber.locator('input').first();
+  const inputNumber = page.getByTestId('input-number');
+  const input = inputNumber.locator('input').first();
 
-  const noInputEvent1 = await waitForCustomEventTimeout(page, 'input');
-  await input.fill('NaN');
-  await noInputEvent1;
+  // fires an event after clearing initial value from value property
+  const blankInputEvent = waitForCustomEvent(page, 'input');
+  await input.fill('invalid Ch@rs!');
+  expect(await input.inputValue()).toBe('');
+  await expect(blankInputEvent.detail()).resolves.toEqual({ value: '' });
 
-  const isInputEventEmitted = await waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const noInputEvent1 = waitForCustomEvent(page, 'input');
+  await input.type('ee more invalid chars');
+  expect(await input.inputValue()).toBe('eee');
+  await expect(noInputEvent1.didNotOccur()).resolves.toBe(true);
+
+  const validInputEvent = waitForCustomEvent(page, 'input');
   await input.fill('1');
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('1');
+  expect(await input.inputValue()).toBe('1');
+  await expect(validInputEvent.detail()).resolves.toEqual({ value: '1' });
 
-  const noInputEvent2 = await waitForCustomEventTimeout(page, 'input');
+  const noInputEvent2 = waitForCustomEvent(page, 'input');
   await input.type('.');
-  await noInputEvent2;
+  expect(await input.inputValue()).toBe('1.');
+  await expect(noInputEvent2.didNotOccur()).resolves.toBe(true);
 });
 
 test('Fires input event with value on input', async ({ page }) => {
   const input = page.getByTestId('input-default').locator('input').first();
-  const isInputEventEmitted = await waitForCustomEventWithParam(
-    page,
-    'input',
-    'value'
-  );
+  const isInputEventEmitted = waitForCustomEvent(page, 'input');
+
   await input.fill('asdfJKL;123');
-  expect(isInputEventEmitted).toBeTruthy();
-  expect(await getCustomEventParam(page, 'input', 'value')).toBe('asdfJKL;123');
+  await expect(isInputEventEmitted.detail()).resolves.toEqual({
+    value: 'asdfJKL;123',
+  });
 });

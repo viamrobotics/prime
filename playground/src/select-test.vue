@@ -7,6 +7,9 @@
         <section style="width: 400px;">
             <v-select data-testid="basic-select" label="Default Select" options="one, two, three" placeholder="All" />
         </section>
+        <section style="width: 400px;">
+            <v-select data-testid="default-select-first" label="Default Select First Option" options="First Option, Second Option, Third Option" placeholder="Options" />
+        </section>
         <section style="width: 400px; margin-top: 30px">
             <v-select 
                 data-testid="select-with-button" 
