@@ -70,9 +70,12 @@ const handleParentClick = (event: PointerEvent) => {
       {
         'inline-flex items-center justify-center gap-1.5 py-1.5 px-3 text-xs border':
           variant !== 'icon',
-        'bg-bg-2 border-border-1 hover:bg-bg-3 hover:border-border-2': variant === 'primary',
-        'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black': variant === 'inverse-primary',
-        'bg-danger-fg text-white border-danger-fg hover:bg-[#aa2a2b]': variant === 'danger',
+        'bg-bg-2 border-border-1 hover:bg-bg-3 hover:border-border-2':
+          variant === 'primary',
+        'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black':
+          variant === 'inverse-primary',
+        'bg-danger-fg text-white border-danger-fg hover:bg-[#aa2a2b]':
+          variant === 'danger',
         'bg-success-fg border-success-fg text-white': variant === 'success',
         'bg-danger-bg border-danger-border text-danger-fg hover:bg-[#f5dfdc]':
           variant === 'outline-danger',
