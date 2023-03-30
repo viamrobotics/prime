@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { delay, hexToRGB } from './lib/helper.js';
+import { hexToRGB } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/table-test.html');
@@ -142,7 +142,7 @@ test('Displays columns with widths set by cols attribute', async ({ page }) => {
     let width = await autoThs[i].evaluate((e) => {
       return getComputedStyle(e).width;
     });
-    await expect(Number(width.substring(0, width.indexOf('px')))).toBeCloseTo(
+    expect(Number.parseFloat(width)).toBeCloseTo(
       (widths[i] * autoTableBox.width) / 100,
       1
     );
@@ -163,7 +163,7 @@ test('Displays columns with widths set by cols attribute', async ({ page }) => {
     let width = await fixedThs[i].evaluate((e) => {
       return getComputedStyle(e).width;
     });
-    await expect(Number(width.substring(0, width.indexOf('px')))).toBeCloseTo(
+    expect(Number.parseFloat(width)).toBeCloseTo(
       (widths[i] * fixedTableBox.width) / 100,
       1
     );
