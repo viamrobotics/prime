@@ -238,9 +238,9 @@ const handleNumberDragDown = async (event: PointerEvent) => {
 </script>
 
 <label
-  class={cx('relative flex gap-1 w-full', {
-    'flex-col': labelposition === 'top',
-    'items-center': labelposition === 'left',
+  class={cx('relative flex w-full', {
+    'flex-col gap-1': labelposition === 'top',
+    'items-center gap-2': labelposition === 'left',
   })}
 >
   <div class="flex items-center gap-1.5">
@@ -285,7 +285,8 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       {
         'pl-2.5': isNumeric === false,
         'pl-3': isNumeric,
-        'bg-white border-gray-8': !isDisabled && !isInvalidNumericInput,
+        'bg-white border-border-1 hover:border-border-2 focus:border-gray-9':
+          !isDisabled && !isInvalidNumericInput,
         'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg':
           isDisabled || isDragging || isReadonly,
         'border-danger-fg border -outline-offset-1 outline-[1.5px] outline-danger-fg':
