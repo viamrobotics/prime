@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { json } from 'body-parser';
-import { diff } from 'semver';
-
 const javascriptString = `function getComponents(){
 
 }`
@@ -10,21 +7,21 @@ const typescriptString = `function get(value: string) {
 }`
 
 const minimapString = `{
-    "test": [], 
-    "test1": [], 
-    "test2": [], 
-    "test3": [], 
-    "test4": [], 
+    "test": [],
+    "test1": [],
+    "test2": [],
+    "test3": [],
+    "test4": [],
     "test5": []
 }
 `
 
 const diffString = `{
-    "test": [], 
-    "test1": [], 
-    "test2": [], 
-    "test3": [], 
-    "test4": [], 
+    "test": [],
+    "test1": [],
+    "test2": [],
+    "test3": [],
+    "test4": [],
 }
 `
 
@@ -37,7 +34,7 @@ const schema = JSON.stringify({
       required: ['token', 'host'],
       properties: {
         hello: {
-            type: 'integer', 
+            type: 'integer',
             description: 'integer'
         }
       },

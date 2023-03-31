@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+const constants = {
+  BORDER_PRIMARY: /border-border-1/,
+  BG_PRIMARY: /bg-bg-2/,
+};
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/button-test.html');
 });
@@ -15,8 +20,12 @@ test('Renders a button in the style of the primary variant if no variant is spec
 }) => {
   const defaultButton = page.getByTestId('default-primary');
   await expect(defaultButton.locator('button')).toBeVisible();
-  await expect(defaultButton.locator('button')).toHaveClass(/bg-white/);
-  await expect(defaultButton.locator('button')).toHaveClass(/border-gray-9/);
+  await expect(defaultButton.locator('button')).toHaveClass(
+    constants.BG_PRIMARY
+  );
+  await expect(defaultButton.locator('button')).toHaveClass(
+    constants.BORDER_PRIMARY
+  );
 });
 
 test('Renders a button in the style of the primary variant if variant is specified as primary', async ({
@@ -24,8 +33,12 @@ test('Renders a button in the style of the primary variant if variant is specifi
 }) => {
   const primaryButton = page.getByTestId('primary');
   await expect(primaryButton.locator('button')).toBeVisible();
-  await expect(primaryButton.locator('button')).toHaveClass(/bg-white/);
-  await expect(primaryButton.locator('button')).toHaveClass(/border-gray-9/);
+  await expect(primaryButton.locator('button')).toHaveClass(
+    constants.BG_PRIMARY
+  );
+  await expect(primaryButton.locator('button')).toHaveClass(
+    constants.BORDER_PRIMARY
+  );
 });
 
 test('Renders a button in the style of inverse primary if the variant is specified as inverse primary', async ({
@@ -79,7 +92,7 @@ test('Renders a button in the style of outline danger if the variant is specifie
     /bg-danger-bg/
   );
   await expect(outlineDangerButton.locator('button')).toHaveClass(
-    /border-danger-bg/
+    /border-danger-border/
   );
   await expect(outlineDangerButton.locator('button')).toHaveClass(
     /text-danger-fg/
@@ -116,7 +129,6 @@ test('Renders an icon within the button/next to the label if an icon attribute i
   await expect(iconWithinButton).toBeVisible();
   await expect(iconWithinButton).toContainText('Label');
   await expect(iconWithinButton.locator('i')).toHaveClass(/icon-refresh/);
-  await expect(iconWithinButton).toHaveClass(/border-gray-9/);
 });
 
 test('Renders the button as an icon if an icon attribute is specified and the button variant is icon', async ({
@@ -126,7 +138,7 @@ test('Renders the button as an icon if an icon attribute is specified and the bu
   await expect(iconAsButton).toBeVisible();
   await expect(iconAsButton).not.toContainText('Icon As Button');
   await expect(iconAsButton.locator('i')).toHaveClass(/icon-refresh/);
-  await expect(iconAsButton).not.toHaveClass(/border-gray-9/);
+  await expect(iconAsButton).not.toHaveClass(/border-border-1/);
 });
 
 test('Tests that the button is clickable if not disabled', async ({ page }) => {
