@@ -297,19 +297,7 @@ $: {
     </div>
 
     <v-dropdown match open={open ? '' : undefined} class="relative">
-      <div
-        slot="target"
-        class={cx('w-full border bg-white', {
-          'border-gray-8':
-            !isDisabled && !isReadonly && state !== 'error' && state !== 'warn',
-          'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
-            state === 'error',
-          'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
-            state === 'warn',
-          'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg':
-            isDisabled || isReadonly,
-        })}
-      >
+      <div slot="target" class="w-full">
         <div class="flex">
           <input
             bind:this={input}
@@ -318,7 +306,22 @@ $: {
             readonly={isDisabled || isReadonly ? true : undefined}
             aria-disabled={isDisabled ? true : undefined}
             type="text"
-            class="py-1.5 pl-2.5 pr-1 grow text-xs border-0 outline-none bg-transparent appearance-none"
+            class={cx(
+              'py-1.5 pl-2.5 pr-1 grow text-xs outline-none appearance-none w-full border bg-white',
+              {
+                'border-border-1 hover:border-border-2 focus:border-gray-9':
+                  !isDisabled &&
+                  !isReadonly &&
+                  state !== 'error' &&
+                  state !== 'warn',
+                'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
+                  state === 'error',
+                'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
+                  state === 'warn',
+                'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg':
+                  isDisabled || isReadonly,
+              }
+            )}
             on:input|preventDefault={handleInput}
             on:keyup|stopPropagation|preventDefault={handleKeyUp}
           />
@@ -326,6 +329,7 @@ $: {
             tabindex="-1"
             aria-label="Open dropdown"
             class={cx(
+              'absolute top-0 right-1 h-[29px]',
               'py-1.5 px-1 grid place-content-center transition-transform duration-200',
               {
                 'rotate-180': open,
@@ -345,7 +349,7 @@ $: {
         <div
           slot="content"
           class={cx(
-            'absolute top-7 left-0 w-full border border-black bg-white drop-shadow-md',
+            'absolute mt-1 left-0 w-full border border-black bg-white drop-shadow-md',
             {
               hidden: !open,
             }

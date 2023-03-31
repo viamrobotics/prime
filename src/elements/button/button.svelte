@@ -66,17 +66,20 @@ const handleParentClick = (event: PointerEvent) => {
     aria-disabled={isDisabled ? true : undefined}
     {title}
     class={cx(
-      'will-change-transform hover:scale-105 motion-safe:transition-transform',
+      'will-change-transform active:scale-95 motion-safe:transition-transform',
       {
-        'inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs border':
+        'inline-flex items-center justify-center gap-1.5 py-1.5 px-3 text-xs border':
           variant !== 'icon',
-        'bg-white border-gray-9': variant === 'primary',
-        'bg-gray-9 border-gray-9 text-white': variant === 'inverse-primary',
-        'bg-danger-fg text-white border-danger-fg': variant === 'danger',
+        'bg-bg-2 border-border-1 hover:bg-bg-3 hover:border-border-2':
+          variant === 'primary',
+        'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black':
+          variant === 'inverse-primary',
+        'bg-danger-fg text-white border-danger-fg hover:bg-[#aa2a2b]':
+          variant === 'danger',
         'bg-success-fg border-success-fg text-white': variant === 'success',
-        'bg-danger-bg border-danger-bg text-danger-fg':
+        'bg-danger-bg border-danger-border text-danger-fg hover:bg-[#f5dfdc]':
           variant === 'outline-danger',
-        '!bg-disabled-bg border-disabled-bg text-disabled-fg pointer-events-none select-none':
+        '!bg-disabled-bg !border-disabled-bg text-disabled-fg pointer-events-none select-none':
           isDisabled,
       }
     )}

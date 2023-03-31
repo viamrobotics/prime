@@ -67,18 +67,16 @@ const handleClick = (value: string) => {
   <div class="flex flex-nowrap">
     {#each parsedOptions as option}
       <button
-        class={cx(
-          'whitespace-nowrap capitalize border-y border-l last:border-r border-gray-9 px-2 py-1 text-xs',
-          {
-            'bg-white': option !== selected,
-            'bg-gray-9 text-white font-bold':
-              option === selected && !isReadonly,
-            'bg-disabled-fg text-white font-bold':
-              option === selected && isReadonly,
-            'border-disabled-fg text-disabled-fg': isReadonly,
-            'cursor-not-allowed pointer-events-none': isReadonly,
-          }
-        )}
+        class={cx('whitespace-nowrap capitalize border px-3 py-1 text-xs', {
+          'bg-bg-3 border-border-1 text-text-subtle-1':
+            option !== selected && !isReadonly,
+          'bg-bg-2 border-gray-6 text-default font-bold':
+            option === selected && !isReadonly,
+          'bg-bg-2 border-border-2 text-disabled-fg font-bold':
+            option === selected && isReadonly,
+          'bg-disabled-bg border-border-1 text-disabled-fg cursor-not-allowed pointer-events-none':
+            isReadonly,
+        })}
         on:click={() => handleClick(option)}
       >
         {#if option === selected}

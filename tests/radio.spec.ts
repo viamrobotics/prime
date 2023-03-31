@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { waitForCustomEvent } from './lib/helper.js';
 
+const constants = {
+  BG_UNSELECTED: /bg-bg-3/,
+  BG_SELECTED: /bg-bg-2/,
+};
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/radio-test.html');
 });
@@ -31,9 +36,9 @@ test('Confirms selected attribute value renders as selected radio button', async
   const opt3 = page.getByRole('button', { name: 'Opt 3' });
 
   // Confirm Selected Value - Opt 3
-  await expect(opt1).toHaveClass(/bg-white/);
-  await expect(opt2).toHaveClass(/bg-white/);
-  await expect(opt3).toHaveClass(/bg-gray-9/);
+  await expect(opt1).toHaveClass(constants.BG_UNSELECTED);
+  await expect(opt2).toHaveClass(constants.BG_UNSELECTED);
+  await expect(opt3).toHaveClass(constants.BG_SELECTED);
 });
 
 test('Confirms selected radio button updates on click', async ({ page }) => {
@@ -46,9 +51,9 @@ test('Confirms selected radio button updates on click', async ({ page }) => {
   await opt2.click();
   await opt2Selected.detail();
 
-  await expect(opt1).toHaveClass(/bg-white/);
-  await expect(opt2).toHaveClass(/bg-gray-9/);
-  await expect(opt3).toHaveClass(/bg-white/);
+  await expect(opt1).toHaveClass(constants.BG_UNSELECTED);
+  await expect(opt2).toHaveClass(constants.BG_SELECTED);
+  await expect(opt3).toHaveClass(constants.BG_UNSELECTED);
 });
 
 test('Confirms selected radio button updates on keydown enter', async ({
@@ -66,9 +71,9 @@ test('Confirms selected radio button updates on keydown enter', async ({
   await expect(opt5).toBeVisible();
   await expect(opt6).toBeVisible();
 
-  await expect(opt4).toHaveClass(/bg-white/);
-  await expect(opt5).toHaveClass(/bg-gray-9/);
-  await expect(opt6).toHaveClass(/bg-white/);
+  await expect(opt4).toHaveClass(constants.BG_UNSELECTED);
+  await expect(opt5).toHaveClass(constants.BG_SELECTED);
+  await expect(opt6).toHaveClass(constants.BG_UNSELECTED);
 
   // Focus on Opt 6 - Keydown Test
   const opt6Selected = waitForCustomEvent(page, 'input');
@@ -77,9 +82,9 @@ test('Confirms selected radio button updates on keydown enter', async ({
   await page.keyboard.press('Enter');
   await opt6Selected.detail();
 
-  await expect(opt4).toHaveClass(/bg-white/);
-  await expect(opt5).toHaveClass(/bg-white/);
-  await expect(opt6).toHaveClass(/bg-gray-9/);
+  await expect(opt4).toHaveClass(constants.BG_UNSELECTED);
+  await expect(opt5).toHaveClass(constants.BG_UNSELECTED);
+  await expect(opt6).toHaveClass(constants.BG_SELECTED);
 });
 
 test('Confirms the radio element default behavior renders label to the top of the radio buttons', async ({
