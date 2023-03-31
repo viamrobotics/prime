@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const constants = {
   BORDER_PRIMARY: /border-border-1/,
   BG_PRIMARY: /bg-bg-2/,
-}
+};
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/button-test.html');
@@ -20,8 +20,12 @@ test('Renders a button in the style of the primary variant if no variant is spec
 }) => {
   const defaultButton = page.getByTestId('default-primary');
   await expect(defaultButton.locator('button')).toBeVisible();
-  await expect(defaultButton.locator('button')).toHaveClass(constants.BG_PRIMARY);
-  await expect(defaultButton.locator('button')).toHaveClass(constants.BORDER_PRIMARY);
+  await expect(defaultButton.locator('button')).toHaveClass(
+    constants.BG_PRIMARY
+  );
+  await expect(defaultButton.locator('button')).toHaveClass(
+    constants.BORDER_PRIMARY
+  );
 });
 
 test('Renders a button in the style of the primary variant if variant is specified as primary', async ({
@@ -29,8 +33,12 @@ test('Renders a button in the style of the primary variant if variant is specifi
 }) => {
   const primaryButton = page.getByTestId('primary');
   await expect(primaryButton.locator('button')).toBeVisible();
-  await expect(primaryButton.locator('button')).toHaveClass(constants.BG_PRIMARY);
-  await expect(primaryButton.locator('button')).toHaveClass(constants.BORDER_PRIMARY);
+  await expect(primaryButton.locator('button')).toHaveClass(
+    constants.BG_PRIMARY
+  );
+  await expect(primaryButton.locator('button')).toHaveClass(
+    constants.BORDER_PRIMARY
+  );
 });
 
 test('Renders a button in the style of inverse primary if the variant is specified as inverse primary', async ({
