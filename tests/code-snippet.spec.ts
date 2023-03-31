@@ -17,5 +17,12 @@ test('Renders the default vs-code theme if none is provided', async ({
   page,
 }) => {
   const snippet = page.getByTestId('code-snippet-dafault');
-  await expect(snippet).toHaveClass(/vs/);
+  await expect(snippet).toHaveAttribute('theme', 'vs');
+});
+
+test('Renders the dark vs-code theme if vsc-dark-plus is provided', async ({
+  page,
+}) => {
+  const snippet = page.getByTestId('code-snippet-dark');
+  await expect(snippet).toHaveAttribute('theme', 'vsc-dark-plus');
 });
