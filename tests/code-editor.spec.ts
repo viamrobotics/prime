@@ -223,24 +223,22 @@ test('Render a minimap if the minimap attribute is set to true', async ({
   page,
 }) => {
   const editor = page.getByTestId('code-editor-minimap');
-  const width = parseInt(
-    (await editor
-      .locator('.minimap-decorations-layer')
-      .getAttribute('width')) ?? '0'
-  );
-  expect(width).toBeGreaterThan(0);
+  const width = (await editor
+    .locator('.minimap-decorations-layer')
+    .getAttribute('width'))!;
+
+  expect(Number.parseInt(width, 10)).toBeGreaterThan(0);
 });
 
 test('If a minimap attribute is not set, the it should not render one', async ({
   page,
 }) => {
   const editor = page.getByTestId('code-editor-json-valid');
-  const width = parseInt(
-    (await editor
-      .locator('.minimap-decorations-layer')
-      .getAttribute('width')) ?? '0'
-  );
-  expect(width).toEqual(0);
+  const width = (await editor
+    .locator('.minimap-decorations-layer')
+    .getAttribute('width'))!;
+
+  expect(Number.parseInt(width, 10)).toEqual(0);
 });
 
 test('Render a diff code editor if there is a previous attribute and variant diff', async ({
