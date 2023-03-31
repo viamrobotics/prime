@@ -119,6 +119,8 @@ module.exports = {
     'unicorn/prefer-at': 'off',
     // https://caniuse.com/?search=object.hasOwn
     'unicorn/prefer-object-has-own': 'off',
+    // This is producing some less readable regex.
+    'unicorn/better-regex': 'off',
 
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/filename-case': 'off',
