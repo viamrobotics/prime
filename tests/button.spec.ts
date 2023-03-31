@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 const constants = {
+  // eslint-disable-next-line unicorn/better-regex
   BORDER_PRIMARY: /border-border-1/,
   BG_PRIMARY: /bg-bg-2/,
 };
