@@ -40,33 +40,6 @@ module.exports = {
       },
     },
     {
-      files: ['tests/**/*'],
-      rules: {
-        // TODO(mc, 2023-03-23): the following warnings should be fixed
-        // removing them from this override will default them back to `error`
-        '@typescript-eslint/await-thenable': 'warn',
-        '@typescript-eslint/dot-notation': 'warn',
-        '@typescript-eslint/no-floating-promises': 'warn',
-        '@typescript-eslint/no-unsafe-assignment': 'warn',
-        '@typescript-eslint/no-unsafe-call': 'warn',
-        '@typescript-eslint/no-unsafe-argument': 'warn',
-        '@typescript-eslint/no-unsafe-member-access': 'warn',
-        '@typescript-eslint/no-unsafe-return': 'warn',
-        '@typescript-eslint/restrict-plus-operands': 'warn',
-        '@typescript-eslint/restrict-template-expressions': 'warn',
-        'prefer-arrow/prefer-arrow-functions': 'warn',
-        'unicorn/better-regex': 'warn',
-        'unicorn/no-await-expression-member': 'warn',
-        'unicorn/no-for-loop': 'warn',
-        'unicorn/prefer-number-properties': 'warn',
-        'unicorn/prefer-string-slice': 'warn',
-        'prefer-const': 'warn',
-        'prefer-template': 'warn',
-        radix: 'warn',
-        'require-await': 'warn',
-      },
-    },
-    {
       files: ['.*.cjs', '**/*.cjs'],
       parserOptions: {
         sourceType: 'script',
@@ -138,8 +111,7 @@ module.exports = {
     'unicorn/custom-error-definition': 'error',
     'unicorn/import-index': 'error',
     'unicorn/import-style': 'error',
-    // TODO(mc, 2023-03-23): fix errors in playground and set to error
-    'unicorn/prefer-string-replace-all': 'warn',
+    'unicorn/prefer-string-replace-all': 'error',
     'unicorn/string-content': 'error',
 
     // @TODO: switch to error once safari supports these:
