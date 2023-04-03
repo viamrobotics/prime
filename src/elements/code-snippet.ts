@@ -1,6 +1,6 @@
 import pkg from '../../package.json';
 
-const version = pkg.devDependencies['prismjs'].replace('^', '');
+const version = pkg.devDependencies.prismjs.replace('^', '');
 const cdn = (src: string) =>
   `https://cdnjs.cloudflare.com/ajax/libs/prism/${version}/${src}`;
 
