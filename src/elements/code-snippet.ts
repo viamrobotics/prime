@@ -29,6 +29,8 @@ const html = (language: string, theme: string) => `
 <pre class="code-snippet"><code class="language-${language}"></code></pre>
 `;
 
+let code:HTMLElement;
+let language = '';
 export class VCode extends HTMLElement {
   observer!: MutationObserver;
 
@@ -48,15 +50,17 @@ export class VCode extends HTMLElement {
   }
 
   render = () => {
-    const language = this.getAttribute('language') ?? '';
+    language = this.getAttribute('language') ?? '';
     const theme = this.getAttribute('theme') ?? 'vs';
     this.shadowRoot!.innerHTML = html(language, theme);
-    const code = this.shadowRoot!.querySelector('code')!;
+    code = this.shadowRoot!.querySelector('code')!;
     code.textContent = `\n${(this.textContent ?? '').trim()}\n`;
-    highlight(code, language).catch(() =>
-      setTimeout(highlight, 2000, code, language)
-    );
+    highlight(code, language);
   };
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  setTimeout(highlight, 2000, code, language)
+});
 
 customElements.define('v-code-snippet', VCode);
