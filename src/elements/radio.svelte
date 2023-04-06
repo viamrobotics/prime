@@ -43,7 +43,7 @@ const handleClick = (value: string) => {
   <div class="flex items-center gap-1.5">
     {#if label}
       <p
-        class={cx('text-xs', {
+        class={cx('text-xs text-text-subtle-1', {
           'text-black/50': isReadonly,
         })}
       >
@@ -70,9 +70,9 @@ const handleClick = (value: string) => {
         class={cx('whitespace-nowrap capitalize border px-3 py-1 text-xs', {
           'bg-bg-3 border-border-1 text-text-subtle-1':
             option !== selected && !isReadonly,
-          'bg-bg-2 border-gray-6 text-default font-bold':
+          'bg-bg-2 border-gray-6 text-default font-semibold':
             option === selected && !isReadonly,
-          'bg-bg-2 border-border-2 text-disabled-fg font-bold':
+          'bg-bg-2 border-border-2 text-disabled-fg font-semibold':
             option === selected && isReadonly,
           'bg-disabled-bg border-border-1 text-disabled-fg cursor-not-allowed pointer-events-none':
             isReadonly,

@@ -215,7 +215,8 @@ $: {
   <div class="flex items-center gap-1.5">
     {#if label}
       <p
-        class={cx('text-xs capitalize', {
+        class={cx('text-xs', {
+          'text-text-subtle-1': !isDisabled && !isReadonly,
           'text-disabled-fg': isDisabled || isReadonly,
           'inline whitespace-nowrap': labelposition === 'left',
         })}
@@ -280,7 +281,13 @@ $: {
           on:click={handleIconClick}
           on:focusin|stopPropagation
         >
-          <v-icon class="flex" name="chevron-down" />
+          <v-icon
+            class={cx('flex', {
+              'text-disabled-fg': isDisabled,
+              'text-gray-6': !isDisabled,
+            })}
+            name="chevron-down"
+          />
         </button>
       </div>
     </div>

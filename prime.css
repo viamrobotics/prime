@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 *, input, button {
-  font-family: 'Space Mono', monospace;
+  font-family: inherit;
 }
 
 :host {
