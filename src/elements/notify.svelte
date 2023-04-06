@@ -21,16 +21,19 @@ addStyles();
   })}
 >
   <div
-    class={cx('absolute top-0 left-0 w-[3px] h-[calc(100%+2px)] -mt-px -ml-px', {
-      'bg-danger-fg': variant === 'error',
-      'bg-warning-bright': variant === 'warning',
-      'bg-success-fg': variant === 'success',
-      'bg-info-fg': variant === 'info',
-    })}
+    class={cx(
+      'absolute top-0 left-0 w-[3px] h-[calc(100%+2px)] -mt-px -ml-px',
+      {
+        'bg-danger-fg': variant === 'error',
+        'bg-warning-bright': variant === 'warning',
+        'bg-success-fg': variant === 'success',
+        'bg-info-fg': variant === 'info',
+      }
+    )}
   />
 
-  <div class='flex items-center justify-between w-full gap-2 py-2 px-3'>
-    <div class='flex gap-2'>
+  <div class="flex items-center justify-between w-full gap-2 py-2 px-3">
+    <div class="flex gap-2">
       {#if variant === 'error'}
         <v-icon class="mt-0.5 text-danger-fg" name="error-outline" />
       {:else if variant === 'info'}
@@ -54,7 +57,9 @@ addStyles();
       {/if}
 
       <figure>
-        <figcaption class="text-sm font-medium text-text-default">{title}</figcaption>
+        <figcaption class="text-sm font-medium text-text-default">
+          {title}
+        </figcaption>
 
         {#if message}
           <p class="text-sm text-text-subtle-1">{message}</p>
@@ -64,8 +69,6 @@ addStyles();
       </figure>
     </div>
 
-    <slot name='action' />
+    <slot name="action" />
   </div>
-
-  
 </div>
