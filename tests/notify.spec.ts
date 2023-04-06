@@ -15,7 +15,9 @@ test('Renders notify element with appropriate title text, message text, if those
 test('Renders notify with default style if no variant is specified', async ({
   page,
 }) => {
-  await expect(page.getByTestId('notify-default').locator('.bg-info-fg')).toBeVisible();
+  await expect(
+    page.getByTestId('notify-default').locator('.bg-info-fg')
+  ).toBeVisible();
   await expect(
     page.getByTestId('notify-default').locator('v-icon')
   ).toHaveClass(/text-info-fg/);
