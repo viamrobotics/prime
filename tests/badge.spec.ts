@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 
 test('Renders the correct text', async ({ page }) => {
   await expect(page.getByText('Inactive')).toBeVisible();
-})
+});
 
 test('Renders a gray badge if the variant is specified as gray', async ({
   page,
