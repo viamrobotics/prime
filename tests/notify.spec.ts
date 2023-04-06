@@ -15,30 +15,19 @@ test('Renders notify element with appropriate title text, message text, if those
 test('Renders notify with default style if no variant is specified', async ({
   page,
 }) => {
-  await expect(page.getByTestId('notify-default').locator('div')).toHaveClass(
-    /border-info-fg/
-  );
+  await expect(page.getByTestId('notify-default').locator('.bg-info-fg')).toBeVisible();
   await expect(
     page.getByTestId('notify-default').locator('v-icon')
   ).toHaveClass(/text-info-fg/);
-  await expect(page.getByTestId('notify-default').locator('div')).toHaveClass(
-    /bg-bg-2/
-  );
 });
 
 test('Renders notify with error style if the variant is set to error', async ({
   page,
 }) => {
   await expect(page.getByTestId('notify-variant-error')).toBeVisible();
-  await expect(page.getByTestId('notify-variant-error')).toHaveText(
-    /title text/
-  );
-  await expect(page.getByTestId('notify-variant-error')).toHaveText(
-    /message text/
-  );
   await expect(
-    page.getByTestId('notify-variant-error').locator('div')
-  ).toHaveClass(/border-danger-fg/);
+    page.getByTestId('notify-variant-error').locator('.bg-danger-fg')
+  ).toBeVisible();
   await expect(
     page.getByTestId('notify-variant-error').locator('v-icon')
   ).toHaveClass(/text-danger-fg/);
@@ -48,15 +37,9 @@ test('Renders notify with warning style if the variant is set to warning', async
   page,
 }) => {
   await expect(page.getByTestId('notify-variant-warning')).toBeVisible();
-  await expect(page.getByTestId('notify-variant-warning')).toHaveText(
-    /title text/
-  );
-  await expect(page.getByTestId('notify-variant-warning')).toHaveText(
-    /message text/
-  );
   await expect(
-    page.getByTestId('notify-variant-warning').locator('div')
-  ).toHaveClass(/border-warning-bright/);
+    page.getByTestId('notify-variant-warning').locator('.bg-warning-bright')
+  ).toBeVisible();
   await expect(
     page.getByTestId('notify-variant-warning').locator('svg')
   ).toHaveClass(/fill-warning-bright/);
@@ -66,15 +49,9 @@ test('Renders notify with success style if the variant is set to success', async
   page,
 }) => {
   await expect(page.getByTestId('notify-variant-success')).toBeVisible();
-  await expect(page.getByTestId('notify-variant-success')).toHaveText(
-    /title text/
-  );
-  await expect(page.getByTestId('notify-variant-success')).toHaveText(
-    /message text/
-  );
   await expect(
-    page.getByTestId('notify-variant-success').locator('div')
-  ).toHaveClass(/border-success-fg/);
+    page.getByTestId('notify-variant-success').locator('.bg-success-fg')
+  ).toBeVisible();
   await expect(
     page.getByTestId('notify-variant-success').locator('v-icon')
   ).toHaveClass(/text-success-fg/);
@@ -84,15 +61,9 @@ test('Renders notify with info style if the variant is set to info', async ({
   page,
 }) => {
   await expect(page.getByTestId('notify-variant-info')).toBeVisible();
-  await expect(page.getByTestId('notify-variant-info')).toHaveText(
-    /title text/
-  );
-  await expect(page.getByTestId('notify-variant-info')).toHaveText(
-    /message text/
-  );
   await expect(
-    page.getByTestId('notify-variant-info').locator('div')
-  ).toHaveClass(/border-info-fg/);
+    page.getByTestId('notify-variant-info').locator('.bg-info-fg')
+  ).toBeVisible();
   await expect(
     page.getByTestId('notify-variant-info').locator('v-icon')
   ).toHaveClass(/text-info-fg/);
@@ -102,30 +73,18 @@ test('Renders notify with gray background if the background attribute is set to 
   page,
 }) => {
   await expect(page.getByTestId('notify-background-gray')).toBeVisible();
-  await expect(page.getByTestId('notify-background-gray')).toHaveText(
-    /title text/
-  );
-  await expect(page.getByTestId('notify-background-gray')).toHaveText(
-    /message text/
-  );
   await expect(
-    page.getByTestId('notify-background-gray').locator('div')
-  ).toHaveClass(/bg-bg-2/);
+    page.getByTestId('notify-background-gray').locator('.bg-bg-3')
+  ).toBeVisible();
 });
 
 test('Renders notify with white background if the background attribute is set to white', async ({
   page,
 }) => {
   await expect(page.getByTestId('notify-background-white')).toBeVisible();
-  await expect(page.getByTestId('notify-background-white')).toHaveText(
-    /title text/
-  );
-  await expect(page.getByTestId('notify-background-white')).toHaveText(
-    /message text/
-  );
   await expect(
-    page.getByTestId('notify-background-white').locator('div')
-  ).toHaveClass(/bg-white/);
+    page.getByTestId('notify-background-white').locator('.bg-white')
+  ).toBeVisible();
 });
 
 test('Renders notify slot text', async ({ page }) => {
