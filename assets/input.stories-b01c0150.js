@@ -55,7 +55,7 @@ import{M as C,C as i,S as u}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
         value='${s}'
       />
     `})}),`
-`,l.exports.jsx(i,{children:l.exports.jsx(u,{name:"Time",args:{type:"time",label:"Lunch Time",placeholder:"00:00:00",value:"12:52:48"},children:({type:e,label:r,placeholder:o,value:s})=>`
+`,l.exports.jsx(i,{children:l.exports.jsx(u,{name:"Time",args:{type:"time",label:"Lunch time",placeholder:"00:00:00",value:"12:52:48"},children:({type:e,label:r,placeholder:o,value:s})=>`
       <v-input
         type='${e}'
         label='${r}'
@@ -278,7 +278,7 @@ import{M as C,C as i,S as u}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
         placeholder='${a}'
         value='${p}'
       />
-    `;x.storyName="Time";x.args={type:"time",label:"Lunch Time",placeholder:"00:00:00",value:"12:52:48"};x.parameters={storySource:{source:`({
+    `;x.storyName="Time";x.args={type:"time",label:"Lunch time",placeholder:"00:00:00",value:"12:52:48"};x.parameters={storySource:{source:`({
   type,
   label,
   placeholder,
@@ -479,4 +479,4 @@ import{M as C,C as i,S as u}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
         tooltip='Something went wrong.'
       />
     \``}};const c={title:"Elements/Input",parameters:{actions:{handles:["input"]}},argTypes:{type:{description:"The input type",control:"select",options:["text","email","number","date","time","datetime-local"],table:{defaultValue:{summary:"text"}}},label:{description:"The input label",table:{defaultValue:{summary:""}}},placeholder:{description:"The input placeholder text",table:{defaultValue:{summary:""}}},value:{description:"The starting input value",table:{defaultValue:{summary:""}}},step:{description:"For number inputs, the increment step",control:"number",table:{defaultValue:{summary:1}}},labelposition:{description:"The label position",control:{type:"select"},options:["top","left"],table:{defaultValue:{summary:"top"}}},"on:input":{description:"Event fired whenever the input changes"}},tags:["mdx"],includeStories:["text","required","number","numberWithSlider","integer","date","time","datetimeLocal","noLabel","leftLabel","leftLabelWithNumber","tooltip","readonly","disabled","message","error","warning"]};c.parameters=c.parameters||{};c.parameters.docs={...c.parameters.docs||{},page:D};const ee=["text","required","number","numberWithSlider","integer","date","time","datetimeLocal","noLabel","leftLabel","leftLabelWithNumber","tooltip","readonly","disabled","message","error","warning"];export{ee as __namedExportsOrder,y as date,g as datetimeLocal,c as default,L as disabled,E as error,h as integer,j as leftLabel,w as leftLabelWithNumber,T as message,f as noLabel,$ as number,v as numberWithSlider,N as readonly,m as required,b as text,x as time,S as tooltip,V as warning};
-//# sourceMappingURL=input.stories-5e936882.js.map
+//# sourceMappingURL=input.stories-b01c0150.js.map

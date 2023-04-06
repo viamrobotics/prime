@@ -5,7 +5,7 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
       <v-collapse
         title='${n}'
       >
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>${r}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${r}</div>
       </v-collapse>
     `})}),`
 `,e.exports.jsx(a,{children:e.exports.jsx(l,{name:"Header slot",args:{title:"Motor 1",content:"Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen."},children:({title:n,content:r})=>`
@@ -13,7 +13,7 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
         title='${n}'
       >
         <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>${r}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${r}</div>
       </v-collapse>
     `})}),`
 `,e.exports.jsx(a,{children:e.exports.jsx(l,{name:"Title slot",args:{title:"Motor 1",content:"Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen."},children:({title:n,content:r})=>`
@@ -22,7 +22,7 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
       >
         <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
         <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>${r}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${r}</div>
       </v-collapse>
     `})}),`
 `,e.exports.jsx(a,{children:e.exports.jsx(l,{name:"No Background and No Border",args:{title:"Motor 1",content:"Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen."},children:({title:n,content:r})=>`
@@ -38,7 +38,7 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
       <v-collapse
         title='${t}'
       >
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>${o}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${o}</div>
       </v-collapse>
     `;i.storyName="Collapse";i.args={title:"Motor 1",content:"Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen."};i.parameters={storySource:{source:`({
   title,
@@ -47,14 +47,14 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
       <v-collapse
         title='\${title}'
       >
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>\${content}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>\${content}</div>
       </v-collapse>
     \``}};const d=({title:t,content:o})=>`
       <v-collapse
         title='${t}'
       >
         <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>${o}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${o}</div>
       </v-collapse>
     `;d.storyName="Header slot";d.args={title:"Motor 1",content:"Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen."};d.parameters={storySource:{source:`({
   title,
@@ -64,7 +64,7 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
         title='\${title}'
       >
         <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>\${content}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>\${content}</div>
       </v-collapse>
     \``}};const c=({title:t,content:o})=>`
       <v-collapse
@@ -72,7 +72,7 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
       >
         <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
         <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>${o}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${o}</div>
       </v-collapse>
     `;c.storyName="Title slot";c.args={title:"Motor 1",content:"Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen."};c.parameters={storySource:{source:`({
   title,
@@ -83,7 +83,7 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
       >
         <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
         <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid; border-top: none;'>\${content}</div>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>\${content}</div>
       </v-collapse>
     \``}};const p=({title:t,content:o})=>`
       <v-collapse
@@ -107,4 +107,4 @@ import{M as m,C as a,S as l}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4
         <div style='font-size: 12px; padding: 1rem'>\${content}</div>
       </v-collapse>
     \``}};const s={title:"Elements/Collapse",parameters:{actions:{handles:["toggle"]}},argTypes:{variant:{options:["default",""],control:{type:"select"},description:"These are the options. The default variant adds a black border and white background",table:{defaultValue:{summary:"default"}}},title:{description:"This is the title",table:{defaultValue:{summary:""}}},content:{description:"This is the content",control:"text",table:{defaultValue:{summary:""}}},"on:toggle":{description:"Event fired when an option is selected"}},tags:["mdx"],includeStories:["collapse","headerSlot","titleSlot","noBackgroundAndNoBorder"]};s.parameters=s.parameters||{};s.parameters.docs={...s.parameters.docs||{},page:g};const V=["collapse","headerSlot","titleSlot","noBackgroundAndNoBorder"];export{V as __namedExportsOrder,i as collapse,s as default,d as headerSlot,p as noBackgroundAndNoBorder,c as titleSlot};
-//# sourceMappingURL=collapse.stories-1cb9ece1.js.map
+//# sourceMappingURL=collapse.stories-8df8eaa2.js.map
