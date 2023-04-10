@@ -7,7 +7,8 @@ import { mergeConfig } from 'vite';
 const config = {
   stories: [
     '../src/stories/docs/introduction.stories.mdx',
-    '../src/stories/**/*.stories.mdx',
+    '../src/stories/docs/**/*.mdx',
+    '../src/stories/**/*.mdx',
   ],
   addons: [
     '@storybook/addon-links',
@@ -15,6 +16,7 @@ const config = {
     '@storybook/addon-interactions',
     '@storybook/addon-docs',
     '@storybook/addon-a11y',
+    '@storybook/addon-mdx-gfm',
   ],
   svelteOptions: {
     preprocess: svelteConfig.preprocess,
@@ -37,6 +39,8 @@ const config = {
     modernInlineRender: true,
     storyStoreV7: true,
   },
+  docs: {
+    autodocs: true,
+  },
 };
-
 export default config;

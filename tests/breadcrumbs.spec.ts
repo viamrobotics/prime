@@ -10,6 +10,6 @@ test('Renders breadcrumbs with the list of values specified in crumbs attribute 
   const breadcrumbs = page.getByText('Chocolate Chip Oatmeal Raisin');
   await expect(breadcrumbs).toBeVisible();
   await expect(breadcrumbs).toHaveText('Chocolate Chip Oatmeal Raisin');
-  await expect(page.getByText(/Chocolate Chip/i)).toBeVisible();
-  await expect(page.getByText(/Oatmeal Raisin/i)).toBeVisible();
+  await expect(page.getByText(/chocolate chip/i)).toBeVisible();
+  await expect(page.getByText(/oatmeal raisin/i)).toBeVisible();
 });

@@ -215,7 +215,8 @@ $: {
   <div class="flex items-center gap-1.5">
     {#if label}
       <p
-        class={cx('text-xs capitalize', {
+        class={cx('text-xs', {
+          'text-text-subtle-1': !isDisabled && !isReadonly,
           'text-disabled-fg': isDisabled || isReadonly,
           'inline whitespace-nowrap': labelposition === 'left',
         })}
@@ -238,18 +239,7 @@ $: {
   </div>
 
   <v-dropdown match open={open ? '' : undefined}>
-    <div
-      slot="target"
-      class={cx('w-full border bg-white', {
-        'border-gray-9':
-          !isDisabled && !isReadonly && state !== 'error' && state !== 'warn',
-        'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
-          state === 'error',
-        'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
-          state === 'warn',
-        'border-disabled-bg !bg-disabled-bg': isDisabled || isReadonly,
-      })}
-    >
+    <div slot="target" class="w-full">
       <div class="flex">
         <input
           bind:this={input}
@@ -259,9 +249,19 @@ $: {
           readonly={isDisabled || isReadonly ? true : undefined}
           type="text"
           class={cx(
-            'py-1.5 pl-2.5 pr-1 grow text-xs border-0 bg-transparent outline-none appearance-none',
+            'py-1.5 pl-2.5 pr-1 grow text-xs outline-none appearance-none w-full border bg-white',
             {
-              'text-disabled-fg': isDisabled || isReadonly,
+              'border-border-1 hover:border-border-2 focus:border-gray-9':
+                !isDisabled &&
+                !isReadonly &&
+                state !== 'error' &&
+                state !== 'warn',
+              'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
+                state === 'error',
+              'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
+                state === 'warn',
+              'border-disabled-bg !bg-disabled-bg text-disabled-fg':
+                isDisabled || isReadonly,
             }
           )}
           on:input|preventDefault={handleInput}
@@ -271,6 +271,7 @@ $: {
           tabindex="-1"
           aria-label="Open dropdown"
           class={cx(
+            'absolute top-0 right-1 h-[29px]',
             'py-1.5 px-1 grid place-content-center transition-transform duration-200',
             {
               'rotate-180': open,
@@ -280,7 +281,13 @@ $: {
           on:click={handleIconClick}
           on:focusin|stopPropagation
         >
-          <v-icon class="flex" name="chevron-down" />
+          <v-icon
+            class={cx('flex', {
+              'text-disabled-fg': isDisabled,
+              'text-gray-6': !isDisabled,
+            })}
+            name="chevron-down"
+          />
         </button>
       </div>
     </div>

@@ -23,7 +23,7 @@ test('Confirms tooltip text is above text to hover if location attribute is spec
   const textLocation = await text.evaluate((element) =>
     element.getBoundingClientRect()
   );
-  wordToHover.hover();
+  await wordToHover.hover();
   const tooltipLocation = await tooltip.evaluate((element) =>
     element.getBoundingClientRect()
   );
@@ -43,7 +43,7 @@ test('Confirms tooltip text is below text to hover if location attribute is spec
   const textLocation = await text.evaluate((element) =>
     element.getBoundingClientRect()
   );
-  wordToHover.hover();
+  await wordToHover.hover();
   const tooltipLocation = await tooltip.evaluate((element) =>
     element.getBoundingClientRect()
   );
@@ -61,7 +61,7 @@ test('Confirms tooltip text is right of text to hover if location attribute is s
   const textLocation = await text.evaluate((element) =>
     element.getBoundingClientRect()
   );
-  wordToHover.hover();
+  await wordToHover.hover();
   const tooltipLocation = await tooltip.evaluate((element) =>
     element.getBoundingClientRect()
   );
@@ -79,7 +79,7 @@ test('Confirms tooltip text is left of text to hover if location attribute is sp
   const textLocation = await text.evaluate((element) =>
     element.getBoundingClientRect()
   );
-  wordToHover.hover();
+  await wordToHover.hover();
   const tooltipLocation = await tooltip.evaluate((element) =>
     element.getBoundingClientRect()
   );
@@ -99,7 +99,7 @@ test('Confirms tooltip text is above text to hover if no location attribute is s
   const textLocation = await text.evaluate((element) =>
     element.getBoundingClientRect()
   );
-  wordToHover.hover();
+  await wordToHover.hover();
   const tooltipLocation = await tooltip.evaluate((element) =>
     element.getBoundingClientRect()
   );
