@@ -18,7 +18,7 @@ addStyles();
     'text-warning-fg bg-warning-bg': variant === 'orange',
     'text-danger-fg bg-danger-bg': variant === 'red',
     'text-text-default bg-disabled-bg': variant === 'gray',
-    'text-info-fg bg-info-bg': variant === 'blue'
+    'text-info-fg bg-info-bg': variant === 'blue',
   })}
 >
   {label}
