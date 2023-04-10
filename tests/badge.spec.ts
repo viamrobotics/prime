@@ -60,3 +60,11 @@ test('Renders a red badge if the variant is specified as red', async ({
   await expect(redBadge).toHaveCSS('background-color', hexToRGB('danger-bg'));
   await expect(redBadge).toHaveCSS('color', hexToRGB('danger-fg'));
 });
+
+test('Renders a blue badge if the variant is specified as blue', async ({
+  page,
+}) => {
+  const blueBadge = page.getByText('Info');
+  await expect(blueBadge).toHaveCSS('background-color', hexToRGB('info-bg'));
+  await expect(blueBadge).toHaveCSS('color', hexToRGB('info-fg'));
+});
