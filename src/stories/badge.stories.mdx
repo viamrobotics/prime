@@ -6,7 +6,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
     variant: {
       description: 'The badge color',
       control: { type: 'select' },
-      options: ['gray', 'green', 'orange', 'red'],
+      options: ['gray', 'green', 'orange', 'red', 'blue'],
       table: { defaultValue: { summary: 'gray' } },
     },
     label: {
@@ -77,6 +77,23 @@ To display status of something
     args={{
       variant: 'red',
       label: 'Unhealthy',
+    }}
+  >
+    {({ label, variant }) => `
+      <v-badge
+        variant='${variant}'
+        label='${label}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Info'
+    args={{
+      variant: 'blue',
+      label: 'Info',
     }}
   >
     {({ label, variant }) => `

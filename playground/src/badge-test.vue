@@ -29,6 +29,11 @@
       label='Unhealthy'
     />
 
+    <v-badge
+      variant='blue'
+      label='Info'
+    />
+
 
   </main>
 </template>
