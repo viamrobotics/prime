@@ -13,7 +13,7 @@ addStyles();
 </script>
 
 <small
-  class={cx('inline-block rounded-full px-3 py-0.5 text-xs', {
+  class={cx('inline-block rounded-full px-3 py-0.5 text-xs border', {
     'text-success-fg bg-success-bg border-success-border': variant === 'green',
     'text-warning-fg bg-warning-bg border-warning-border': variant === 'orange',
     'text-danger-fg bg-danger-bg border-danger-border': variant === 'red',
