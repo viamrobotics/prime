@@ -201,7 +201,13 @@ Notify message of type info, success, warning, or error
 <Canvas>
   <Story name='Slot'>
     {() => `
-      <v-notify>Slot example</v-notify>
+      <v-notify
+        variant='info'
+        title='This is the title.'
+        message='This is the message.'
+      >
+        <v-button slot='action' variant='inverse-primary' label='Click here'></v-button>
+      </v-notify>
     `}
   </Story>
 </Canvas>

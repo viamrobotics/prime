@@ -246,8 +246,9 @@ const handleNumberDragDown = async (event: PointerEvent) => {
   <div class="flex items-center gap-1.5">
     {#if label}
       <p
-        class={cx('text-xs capitalize', {
+        class={cx('text-xs', {
           'inline whitespace-nowrap': labelposition === 'left',
+          'text-text-subtle-1': !isDisabled,
           'text-text-disabled-fg pointer-events-none': isDisabled,
           'after:text-danger-fg after:content-["*"] after:ml-1': isRequired,
         })}

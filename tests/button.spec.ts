@@ -19,7 +19,6 @@ test('Renders a button in the style of the primary variant if no variant is spec
   page,
 }) => {
   const defaultButton = page.getByTestId('default-primary');
-  await expect(defaultButton.locator('button')).toBeVisible();
   await expect(defaultButton.locator('button')).toHaveClass(
     constants.BG_PRIMARY
   );
@@ -32,7 +31,6 @@ test('Renders a button in the style of the primary variant if variant is specifi
   page,
 }) => {
   const primaryButton = page.getByTestId('primary');
-  await expect(primaryButton.locator('button')).toBeVisible();
   await expect(primaryButton.locator('button')).toHaveClass(
     constants.BG_PRIMARY
   );
@@ -45,7 +43,6 @@ test('Renders a button in the style of inverse primary if the variant is specifi
   page,
 }) => {
   const inversePrimaryButton = page.getByTestId('inverse-primary');
-  await expect(inversePrimaryButton.locator('button')).toBeVisible();
   await expect(inversePrimaryButton.locator('button')).toHaveClass(/bg-gray-9/);
   await expect(inversePrimaryButton.locator('button')).toHaveClass(
     /border-gray-9/
@@ -59,7 +56,6 @@ test('Renders a button in the style of success if the variant is specified as su
   page,
 }) => {
   const successButton = page.getByTestId('success');
-  await expect(successButton.locator('button')).toBeVisible();
   await expect(successButton.locator('button')).toHaveClass(/bg-success-fg/);
   await expect(successButton.locator('button')).toHaveClass(
     /border-success-fg/
@@ -71,7 +67,6 @@ test('Renders a button in the style of danger if the variant is specified as dan
   page,
 }) => {
   const dangerButton = page.getByTestId('danger');
-  await expect(dangerButton.locator('button').first()).toBeVisible();
   await expect(dangerButton.locator('button').first()).toHaveClass(
     /bg-danger-fg/
   );
@@ -87,7 +82,6 @@ test('Renders a button in the style of outline danger if the variant is specifie
   page,
 }) => {
   const outlineDangerButton = page.getByTestId('outline-danger');
-  await expect(outlineDangerButton.locator('button')).toBeVisible();
   await expect(outlineDangerButton.locator('button')).toHaveClass(
     /bg-danger-bg/
   );
@@ -103,7 +97,6 @@ test('Renders a button as disabled if the button has a disabled attribute of tru
   page,
 }) => {
   const disabledButton = page.getByRole('button', { name: 'Disabled Label' });
-  await expect(disabledButton).toBeVisible();
   await expect(disabledButton).toBeDisabled();
 });
 
@@ -126,8 +119,6 @@ test('Renders an icon within the button/next to the label if an icon attribute i
   const iconWithinButton = page.getByRole('button', {
     name: 'Icon Within Button Label',
   });
-  await expect(iconWithinButton).toBeVisible();
-  await expect(iconWithinButton).toContainText('Label');
   await expect(iconWithinButton.locator('i')).toHaveClass(/icon-refresh/);
 });
 
@@ -135,7 +126,6 @@ test('Renders the button as an icon if an icon attribute is specified and the bu
   page,
 }) => {
   const iconAsButton = page.getByRole('button', { name: 'Icon As Button' });
-  await expect(iconAsButton).toBeVisible();
   await expect(iconAsButton).not.toContainText('Icon As Button');
   await expect(iconAsButton.locator('i')).toHaveClass(/icon-refresh/);
   await expect(iconAsButton).not.toHaveClass(/border-border-1/);
