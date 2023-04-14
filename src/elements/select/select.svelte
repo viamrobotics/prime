@@ -306,11 +306,11 @@ $: {
             class="flex max-h-36 flex-col"
             on:mouseleave={clearNavigationIndex}
           >
-          {#if heading}
-            <span class="flex text-xs text-gray-500 pl-2 pt-2 flex-wrap">
-              {heading}
-            </span>
-          {/if}
+            {#if heading}
+              <span class="flex text-xs text-gray-500 pl-2 pt-2 flex-wrap">
+                {heading}
+              </span>
+            {/if}
             {#each searchedOptions as { search, option }, index (option)}
               <label
                 class={cx(
