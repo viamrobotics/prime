@@ -106,7 +106,7 @@ const handleEnter = () => {
 
     if (result) {
       value = result;
-      dispatch('select', { value });
+      dispatch('change', { value });
     } else {
       value = '';
     }
@@ -144,7 +144,7 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   open = false;
   dispatch('input', { value });
-  dispatch('select', { value });
+  dispatch('change', { value });
 };
 
 const clearNavigationIndex = () => {
