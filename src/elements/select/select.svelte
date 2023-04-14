@@ -310,7 +310,7 @@ $: {
             on:mouseleave={clearNavigationIndex}
           >
             {#if heading}
-              <span class="flex text-xs text-gray-500 pl-2 pt-2 flex-wrap">
+              <span class="flex text-xs text-gray-500 pl-2 py-2 flex-wrap">
                 {heading}
               </span>
             {/if}

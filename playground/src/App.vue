@@ -134,6 +134,7 @@ let selectInput = $ref("")
       label="Test Select"
       state="'info'"
       class="my-6"
+      heading="heading"
       @select="handleSelect"
     />  
 
