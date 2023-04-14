@@ -13,6 +13,7 @@ import { dispatcher } from '../lib/dispatch';
 export let language: string;
 export let code: string;
 export let theme: 'vs' | 'vsc-dark-plus' = 'vs';
+export let showbutton = 'true';
 
 const dispatch = dispatcher();
 
@@ -69,13 +70,15 @@ $: void highlight(element);
     bind:this={element}
     class="language-{language} font-mono">{code}</code
   >
-  <v-button
-    class="absolute top-2 right-2 !text-black !font-sans"
-    on:click={copyToClipboard}
-    on:keyup={copyToClipboard}
-    label="Copy"
-    icon="copy"
-  />
+  {#if showbutton === 'true'}
+    <v-button
+      class="absolute top-2 right-2 !text-black !font-sans"
+      on:click={copyToClipboard}
+      on:keyup={copyToClipboard}
+      label="Copy"
+      icon="copy"
+    />
+  {/if}
 </pre>
 
 <link

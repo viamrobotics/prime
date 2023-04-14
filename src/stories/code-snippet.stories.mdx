@@ -40,6 +40,12 @@ import jsonCodeExampleSrc from './assets/json-code-example';
       options: ['vs', 'vsc-dark-plus'],
       table: { defaultValue: { summary: 'vs' } },
     },
+    showbutton: {
+      description: 'Determines if the snippet should include a copy button',
+      control: { type: 'select' },
+      options: ['true', 'false'],
+      table: { defaultValue: { summary: 'false' } },
+    },
   }}
 />
 
@@ -75,12 +81,13 @@ import jsonCodeExampleSrc from './assets/json-code-example';
       theme: 'vsc-dark-plus',
     }}
   >
-    {({ value, language, theme }) => `
+    {({ value, language, theme, showbutton }) => `
     <div style='margin: auto; max-width: 600px; height: 400px;'>
       <v-code-snippet 
         language='${language}'
         theme='${theme}'
         code='${value}'
+        showbutton='${showbutton}'
       />
     </div>
     `}
