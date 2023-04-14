@@ -1,40 +1,50 @@
 <svelte:options immutable tag="v-code-snippet" />
 
-<script context='module' lang='ts'>
-
+<script context="module" lang="ts">
 const loadedLanguages: Record<string, boolean> = {};
-
 </script>
 
-<script lang='ts'>
-
-import { addStyles } from '../lib'
+<script lang="ts">
+import { addStyles } from '../lib';
 import pkg from '../../package.json';
 
-export let language: string
-export let code: string
-export let theme: 'vs' | 'vsc-dark-plus' = 'vs'
+import { dispatcher } from '../lib/dispatch';
 
-let element: HTMLElement
+export let language: string;
+export let code: string;
+export let theme: 'vs' | 'vsc-dark-plus' = 'vs';
 
-addStyles()
+const dispatch = dispatcher();
+
+let element: HTMLElement;
+
+addStyles();
 
 const version = pkg.devDependencies.prismjs.replace('^', '');
 
 const cdn = (src: string) =>
   `https://cdnjs.cloudflare.com/ajax/libs/prism/${version}/${src}`;
 
-const script = (src: string) => new Promise((resolve, reject) => {
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = src;
-  script.addEventListener('load', resolve);
-  script.addEventListener('error', reject);
-  document.head.append(script);
-})
+const script = (src: string) =>
+  new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = src;
+    script.addEventListener('load', resolve);
+    script.addEventListener('error', reject);
+    document.head.append(script);
+  });
 
-const highlight = async () => {
-  console.log(1)
+const copyToClipboard = async () => {
+  try {
+    await navigator.clipboard.writeText(code);
+    dispatch('copy', { value: 'Successfully copied snippet to the clipboard' });
+  } catch {
+    dispatch('copy', { value: ':( Failed to copy snippet to the clipboard' });
+  }
+};
+
+const highlight = async (element: Element) => {
   const { Prism } = window as { Prism: typeof import('prismjs') };
 
   if (!Prism) {
@@ -47,17 +57,26 @@ const highlight = async () => {
     loadedLanguages[language] = true;
   }
 
-  window.Prism.highlightElement(element);
+  if (element !== undefined) {
+    window.Prism.highlightElement(element);
+  }
 };
 
-$: highlight()
-
+$: void highlight(element);
 </script>
 
-<div>
-  <pre class='m-0 p-0'><code bind:this={element} class='language-{language} font-mono'>{code}</code></pre>
-  <v-button label='Copy' icon='copy' />
-</div>
+<pre class="relative !border-none !m-0 !pr-24 !pb-0"><code
+    bind:this={element}
+    class="language-{language} font-mono">{code}</code
+  >
+  <v-button
+    class="absolute top-2 right-2 !text-black !font-sans"
+    on:click={copyToClipboard}
+    on:keyup={copyToClipboard}
+    label="Copy"
+    icon="copy"
+  />
+</pre>
 
 <link
   rel="stylesheet"

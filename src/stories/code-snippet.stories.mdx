@@ -12,6 +12,7 @@ import jsonCodeExampleSrc from './assets/json-code-example';
         'resize',
         'update-markers',
         'update-model',
+        'copy',
       ],
     },
   }}
@@ -22,7 +23,14 @@ import jsonCodeExampleSrc from './assets/json-code-example';
     },
     language: {
       control: { type: 'select' },
-      options: ['json', 'javascript', 'typescript', 'python', 'go', 'shell'],
+      options: [
+        'json',
+        'javascript',
+        'typescript',
+        'python',
+        'go',
+        'powershell',
+      ],
       description: 'The language to use for syntax highlighting',
       table: { defaultValue: { summary: 'json' } },
     },
@@ -43,11 +51,32 @@ import jsonCodeExampleSrc from './assets/json-code-example';
     args={{
       language: 'json',
       value: jsonCodeExampleSrc,
-      theme: 'vs'
+      theme: 'vs',
     }}
   >
     {({ value, language, theme }) => `
-    <div style='width: 400px; height: 400px;'>
+    <div style='margin: auto; max-width: 600px; height: 400px;'>
+      <v-code-snippet 
+        language='${language}'
+        theme='${theme}'
+        code='${value}'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Code Snippet Dark'
+    args={{
+      language: 'json',
+      value: jsonCodeExampleSrc,
+      theme: 'vsc-dark-plus',
+    }}
+  >
+    {({ value, language, theme }) => `
+    <div style='margin: auto; max-width: 600px; height: 400px;'>
       <v-code-snippet 
         language='${language}'
         theme='${theme}'
