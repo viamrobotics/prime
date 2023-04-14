@@ -106,12 +106,14 @@ const handleEnter = () => {
 
     if (result) {
       value = result;
+      dispatch('select', { value });
+    } else {
+      value = '';
     }
   }
   if (open) {
     input.blur();
   }
-  dispatch('input', { value });
 };
 
 const handleNavigate = (direction: number) => {
@@ -142,6 +144,7 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   open = false;
   dispatch('input', { value });
+  dispatch('select', { value });
 };
 
 const clearNavigationIndex = () => {

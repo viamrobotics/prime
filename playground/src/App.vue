@@ -18,6 +18,10 @@ const handleInput = (event: CustomEvent) => {
   value = event.detail.value
 }
 
+const handleSelect = (event: CustomEvent) => {
+  console.log('select', event);
+}
+
 let lazyValue = $ref('')
 
 setTimeout(() => {
@@ -130,6 +134,7 @@ let selectInput = $ref("")
       label="Test Select"
       state="'info'"
       class="my-6"
+      @select="handleSelect"
     />  
 
     </section>
