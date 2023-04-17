@@ -16,6 +16,7 @@ if (customElements.get('v-badge')) {
   import('./elements/breadcrumbs.svelte');
   import('./elements/button/button');
   import('./elements/code-editor.svelte');
+  import('./elements/code-snippet.svelte');
   import('./elements/collapse.svelte');
   import('./elements/dropdown.svelte');
   import('./elements/icon.svelte');
