@@ -1,0 +1,1 @@
+{"version":3,"file":"json-code-example-4ee47be0.js","sources":["../../src/stories/assets/json-code-example.js"],"sourcesContent":["export default JSON.stringify(\n  {\n    name: 'Garfield',\n    age: 25,\n    loves_lasagna: true,\n  },\n  null,\n  2\n);\n"],"names":["jsonCodeExampleSrc"],"mappings":"AAAA,MAAeA,EAAA,KAAK,UAClB,CACE,KAAM,WACN,IAAK,GACL,cAAe,EAChB,EACD,KACA,CACF"}

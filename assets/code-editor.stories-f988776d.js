@@ -1,4 +1,4 @@
-import{M as O,C as h,S as u}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4NKYYJA-96bb58e6.js";import{j as t}from"./jsx-runtime-c27a426b.js";import{u as b}from"./index-0e5a60ed.js";import"./preload-helper-101896b7.js";import"./index-c4c77e71.js";import"./_commonjsHelpers-725317a4.js";import"./chunk-7KVP4ZAY-c250f305.js";import"./chunk-FD4M6EBV-8d27da22.js";import"./chunk-NNAAFZ4U-67fa674f.js";import"./index-52e7183d.js";import"./index-d475d2ea.js";import"./memoizerific-cab73ecf.js";import"./chunk-GWAJ4KRU-d69fdc61.js";import"./index-deb16bc8.js";import"./chunk-RDJSMFWU-7060e855.js";import"./index-10d4cb7f.js";import"./_getTag-25edba2d.js";import"./index-aeece16e.js";import"./index-356e4a49.js";const c=JSON.stringify({name:"Bob",age:400,favorite_food:"pizza"},null,2),M=`
+import{M as O,C as h,S as u}from"./chunk-PCJTTTQV-c7fe23c0.js";import"./chunk-R4NKYYJA-96bb58e6.js";import{j as c}from"./json-code-example-4ee47be0.js";import{j as t}from"./jsx-runtime-c27a426b.js";import{u as b}from"./index-0e5a60ed.js";import"./preload-helper-101896b7.js";import"./index-c4c77e71.js";import"./_commonjsHelpers-725317a4.js";import"./chunk-7KVP4ZAY-c250f305.js";import"./chunk-FD4M6EBV-8d27da22.js";import"./chunk-NNAAFZ4U-67fa674f.js";import"./index-52e7183d.js";import"./index-d475d2ea.js";import"./memoizerific-cab73ecf.js";import"./chunk-GWAJ4KRU-d69fdc61.js";import"./index-deb16bc8.js";import"./chunk-RDJSMFWU-7060e855.js";import"./index-10d4cb7f.js";import"./_getTag-25edba2d.js";import"./index-aeece16e.js";import"./index-356e4a49.js";const M=`
 function doSomething(thing) { 
   console.log(thing) 
 }
@@ -9,7 +9,7 @@ function doSomething(thing: string): void {
 `.trim(),V=`
 def do_something(thing):
     print(thing)    
-`.trim(),N=`
+`.trim(),T=`
 package main
 
 import "fmt"
@@ -17,7 +17,7 @@ import "fmt"
 func DoSomething(thing string) {
 	fmt.Println(thing)
 }
-`.trim(),T=`
+`.trim(),N=`
 #!/bin/sh
 echo "Hello world"
 `.trim(),D=`
@@ -35,7 +35,7 @@ echo "Hello world"
   "favorite_food": "salad",
   "status": "healthy"
 }
-`.trim();function k(i={}){const{wrapper:r}=Object.assign({},b(),i.components);return r?t.exports.jsx(r,{...i,children:t.exports.jsx(s,{})}):s();function s(){const o=Object.assign({h1:"h1",p:"p",code:"code"},b(),i.components);return t.exports.jsxs(t.exports.Fragment,{children:[t.exports.jsx(O,{title:"Elements/Code Editor",parameters:{actions:{handles:["blur","destroy","input","resize","update-markers","update-model"]}},argTypes:{value:{description:"The content for the editor",table:{defaultValue:{summary:""}}},variant:{description:"The type of editor to display",control:{type:"select"},options:["default","diff"],table:{defaultValue:{summary:"default"}}},language:{control:{type:"select"},options:["json","javascript","typescript","python","go","shell"],description:"The language to use for syntax highlighting",table:{defaultValue:{summary:"json"}}},theme:{description:"The `monaco` theme to use",control:{type:"select"},options:["vs","vs-dark"],table:{defaultValue:{summary:"vs"}}},readonly:{description:"Determines if the editor should be readonly or editable",control:{type:"select"},options:["true","false"],table:{defaultValue:{summary:"false"}}},minimap:{description:"Determines if the editor should render the minimap",control:{type:"select"},options:["true","false"],table:{defaultValue:{summary:"false"}}},schema:{description:"When defined, is used to create the model URI passed to `window.monaco.editor.createModel`",control:{type:"text"},table:{defaultValue:{summary:""}}}}}),`
+`.trim();function R(i={}){const{wrapper:r}=Object.assign({},b(),i.components);return r?t.exports.jsx(r,{...i,children:t.exports.jsx(s,{})}):s();function s(){const o=Object.assign({h1:"h1",p:"p",code:"code"},b(),i.components);return t.exports.jsxs(t.exports.Fragment,{children:[t.exports.jsx(O,{title:"Elements/Code Editor",parameters:{actions:{handles:["blur","destroy","input","resize","update-markers","update-model"]}},argTypes:{value:{description:"The content for the editor",table:{defaultValue:{summary:""}}},variant:{description:"The type of editor to display",control:{type:"select"},options:["default","diff"],table:{defaultValue:{summary:"default"}}},language:{control:{type:"select"},options:["json","javascript","typescript","python","go","shell"],description:"The language to use for syntax highlighting",table:{defaultValue:{summary:"json"}}},theme:{description:"The `monaco` theme to use",control:{type:"select"},options:["vs","vs-dark"],table:{defaultValue:{summary:"vs"}}},readonly:{description:"Determines if the editor should be readonly or editable",control:{type:"select"},options:["true","false"],table:{defaultValue:{summary:"false"}}},minimap:{description:"Determines if the editor should render the minimap",control:{type:"select"},options:["true","false"],table:{defaultValue:{summary:"false"}}},schema:{description:"When defined, is used to create the model URI passed to `window.monaco.editor.createModel`",control:{type:"text"},table:{defaultValue:{summary:""}}}}}),`
 `,t.exports.jsx(o.h1,{children:"Code Editor"}),`
 `,t.exports.jsxs(o.p,{children:["Uses ",t.exports.jsx(o.code,{children:"monaco"})," for syntax-highlighting."]}),`
 `,t.exports.jsx(h,{children:t.exports.jsx(u,{name:"JSON editor",args:{language:"json",value:c},children:({value:e,previous:a,language:n,theme:l,readonly:d,minimap:m,schema:p})=>`
@@ -88,7 +88,7 @@ echo "Hello world"
       />
     </div>
     `})}),`
-`,t.exports.jsx(h,{children:t.exports.jsx(u,{name:"Go editor",args:{language:"go",value:N},children:({value:e,language:a,theme:n,readonly:l,minimap:d,schema:m})=>`
+`,t.exports.jsx(h,{children:t.exports.jsx(u,{name:"Go editor",args:{language:"go",value:T},children:({value:e,language:a,theme:n,readonly:l,minimap:d,schema:m})=>`
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${e}'
@@ -100,7 +100,7 @@ echo "Hello world"
       />
     </div>
     `})}),`
-`,t.exports.jsx(h,{children:t.exports.jsx(u,{name:"Shell editor",args:{language:"shell",value:T},children:({value:e,language:a,theme:n,readonly:l,minimap:d,schema:m})=>`
+`,t.exports.jsx(h,{children:t.exports.jsx(u,{name:"Shell editor",args:{language:"shell",value:N},children:({value:e,language:a,theme:n,readonly:l,minimap:d,schema:m})=>`
     <div style='width: 400px; height: 400px;'>
       <v-code-editor 
         value='${e}'
@@ -138,7 +138,7 @@ echo "Hello world"
       />
     </div>
     `})}),`
-`,t.exports.jsx(h,{children:t.exports.jsx(u,{name:"Diff editor",args:{variant:"diff",language:"json",value:_,previous:D},children:({variant:e,value:a,previous:n,language:l,theme:d,readonly:m,minimap:p,schema:z})=>`
+`,t.exports.jsx(h,{children:t.exports.jsx(u,{name:"Diff editor",args:{variant:"diff",language:"json",value:_,previous:D},children:({variant:e,value:a,previous:n,language:l,theme:d,readonly:m,minimap:p,schema:k})=>`
     <div style='width: auto; height: 400px;'>
       <v-code-editor
         variant='${e}'
@@ -148,7 +148,7 @@ echo "Hello world"
         theme='${d}'
         readonly='${m}'
         minimap='${p}'
-        schema='${z??""}'
+        schema='${k??""}'
       />
     </div>
     `})})]})}}const v=({value:i,previous:r,language:s,theme:o,readonly:e,minimap:a,schema:n})=>`
@@ -284,7 +284,7 @@ echo "Hello world"
         schema='${a??""}'
       />
     </div>
-    `;f.storyName="Go editor";f.args={language:"go",value:N};f.parameters={storySource:{source:`({
+    `;f.storyName="Go editor";f.args={language:"go",value:T};f.parameters={storySource:{source:`({
   value,
   language,
   theme,
@@ -313,7 +313,7 @@ echo "Hello world"
         schema='${a??""}'
       />
     </div>
-    `;j.storyName="Shell editor";j.args={language:"shell",value:T};j.parameters={storySource:{source:`({
+    `;j.storyName="Shell editor";j.args={language:"shell",value:N};j.parameters={storySource:{source:`({
   value,
   language,
   theme,
@@ -430,5 +430,5 @@ echo "Hello world"
         schema='\${schema ?? ""}'
       />
     </div>
-    \``}};const g={title:"Elements/Code Editor",parameters:{actions:{handles:["blur","destroy","input","resize","update-markers","update-model"]}},argTypes:{value:{description:"The content for the editor",table:{defaultValue:{summary:""}}},variant:{description:"The type of editor to display",control:{type:"select"},options:["default","diff"],table:{defaultValue:{summary:"default"}}},language:{control:{type:"select"},options:["json","javascript","typescript","python","go","shell"],description:"The language to use for syntax highlighting",table:{defaultValue:{summary:"json"}}},theme:{description:"The `monaco` theme to use",control:{type:"select"},options:["vs","vs-dark"],table:{defaultValue:{summary:"vs"}}},readonly:{description:"Determines if the editor should be readonly or editable",control:{type:"select"},options:["true","false"],table:{defaultValue:{summary:"false"}}},minimap:{description:"Determines if the editor should render the minimap",control:{type:"select"},options:["true","false"],table:{defaultValue:{summary:"false"}}},schema:{description:"When defined, is used to create the model URI passed to `window.monaco.editor.createModel`",control:{type:"text"},table:{defaultValue:{summary:""}}}},tags:["mdx"],includeStories:["jsonEditor","javaScriptEditor","typeScriptEditor","pythonEditor","goEditor","shellEditor","readonlyEditor","miniMap","diffEditor"]};g.parameters=g.parameters||{};g.parameters.docs={...g.parameters.docs||{},page:k};const ne=["jsonEditor","javaScriptEditor","typeScriptEditor","pythonEditor","goEditor","shellEditor","readonlyEditor","miniMap","diffEditor"];export{ne as __namedExportsOrder,g as default,w as diffEditor,f as goEditor,$ as javaScriptEditor,v as jsonEditor,E as miniMap,x as pythonEditor,S as readonlyEditor,j as shellEditor,y as typeScriptEditor};
-//# sourceMappingURL=code-editor.stories-32a2d134.js.map
+    \``}};const g={title:"Elements/Code Editor",parameters:{actions:{handles:["blur","destroy","input","resize","update-markers","update-model"]}},argTypes:{value:{description:"The content for the editor",table:{defaultValue:{summary:""}}},variant:{description:"The type of editor to display",control:{type:"select"},options:["default","diff"],table:{defaultValue:{summary:"default"}}},language:{control:{type:"select"},options:["json","javascript","typescript","python","go","shell"],description:"The language to use for syntax highlighting",table:{defaultValue:{summary:"json"}}},theme:{description:"The `monaco` theme to use",control:{type:"select"},options:["vs","vs-dark"],table:{defaultValue:{summary:"vs"}}},readonly:{description:"Determines if the editor should be readonly or editable",control:{type:"select"},options:["true","false"],table:{defaultValue:{summary:"false"}}},minimap:{description:"Determines if the editor should render the minimap",control:{type:"select"},options:["true","false"],table:{defaultValue:{summary:"false"}}},schema:{description:"When defined, is used to create the model URI passed to `window.monaco.editor.createModel`",control:{type:"text"},table:{defaultValue:{summary:""}}}},tags:["mdx"],includeStories:["jsonEditor","javaScriptEditor","typeScriptEditor","pythonEditor","goEditor","shellEditor","readonlyEditor","miniMap","diffEditor"]};g.parameters=g.parameters||{};g.parameters.docs={...g.parameters.docs||{},page:R};const te=["jsonEditor","javaScriptEditor","typeScriptEditor","pythonEditor","goEditor","shellEditor","readonlyEditor","miniMap","diffEditor"];export{te as __namedExportsOrder,g as default,w as diffEditor,f as goEditor,$ as javaScriptEditor,v as jsonEditor,E as miniMap,x as pythonEditor,S as readonlyEditor,j as shellEditor,y as typeScriptEditor};
+//# sourceMappingURL=code-editor.stories-f988776d.js.map
