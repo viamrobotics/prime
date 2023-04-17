@@ -294,14 +294,11 @@ test('Heading is displayed when a string a entered for heading field', async ({
   // click on the dropdown arrow
   await select.getByRole('button', { name: 'Open dropdown' }).click();
 
-  // make sure the heading is visible 
+  // make sure the heading is visible
   await expect(select.getByText('heading title')).toHaveClass(/text-gray-500/);
-
 });
 
-test('Dispatches change event when option is selected', async ({
-  page,
-}) => {
+test('Dispatches change event when option is selected', async ({ page }) => {
   const select = page.getByTestId('default-select-first');
   await expect(select).toBeVisible();
   const optionsContainer = select.locator('.options-container').first();
@@ -313,5 +310,7 @@ test('Dispatches change event when option is selected', async ({
   const valueChanged = waitForCustomEvent(page, 'change');
   await select.getByText('Second Option').click();
 
-  await expect(valueChanged.detail()).resolves.toEqual({ value: 'Second Option' });
+  await expect(valueChanged.detail()).resolves.toEqual({
+    value: 'Second Option',
+  });
 });
