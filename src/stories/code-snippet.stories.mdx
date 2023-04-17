@@ -81,13 +81,12 @@ import jsonCodeExampleSrc from './assets/json-code-example';
       theme: 'vsc-dark-plus',
     }}
   >
-    {({ value, language, theme, showbutton }) => `
+    {({ value, language, theme }) => `
     <div style='margin: auto; max-width: 600px; height: 400px;'>
       <v-code-snippet 
         language='${language}'
         theme='${theme}'
         code='${value}'
-        showbutton='${showbutton}'
       />
     </div>
     `}
