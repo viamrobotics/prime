@@ -87,5 +87,13 @@
                 sortoption="reduce"
             />
         </section>
+        <section style="width: 400px; margin-top: 30px">
+            <v-select
+                data-testid="select-with-heading"
+                label="Select With Heading"
+                heading="heading title"
+                options="one, two, three"
+            />
+        </section>
     </main>
 </template>

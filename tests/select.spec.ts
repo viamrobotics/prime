@@ -206,7 +206,7 @@ test('When there is a reduce sort option, the elements should reduce on matching
   );
 });
 
-test('On pressing enter over an option, that option should be selected', async ({
+test('On pressing enter over an option, that option should be selected, change event emitted', async ({
   page,
 }) => {
   const select = page.getByTestId('basic-select');
@@ -222,12 +222,15 @@ test('On pressing enter over an option, that option should be selected', async (
   expect(await input.inputValue()).toEqual('');
   // press down over an option
   await page.keyboard.press('ArrowDown');
+  // const valueChanged = waitForCustomEvent(page, 'change');
 
   // press enter
   await page.keyboard.press('Enter');
 
-  // show the selcted value in the input
+  // show the selected value in the input
   expect(await input.inputValue()).toEqual('two');
+
+  // await expect(valueChanged.detail()).resolves.toEqual({ value: 'two' });
 });
 
 test('When a dropdown is open, confirm the first result is in focus such that a user can press enter and select that first item', async ({
@@ -257,4 +260,58 @@ test('When a dropdown is open, confirm the first result is in focus such that a 
 
   // show the selcted value in the input
   expect(await input.inputValue()).toEqual('First Option');
+});
+
+test('When user types in an input and pressed Enter, but does not match any results, input empties and nothing is selected', async ({
+  page,
+}) => {
+  const select = page.getByTestId('default-select-first');
+  await expect(select).toBeVisible();
+  const optionsContainer = select.locator('.options-container').first();
+
+  // click on the input
+  const input = select.locator('input').first();
+  await input.focus();
+  await expect(optionsContainer).toBeVisible();
+  expect(await input.inputValue()).toEqual('');
+
+  // fill value doesn't match any options
+  await input.fill('test');
+
+  // press enter
+  await page.keyboard.press('Enter');
+
+  // expect the input value to clear
+  expect(await input.inputValue()).toEqual('');
+});
+
+test('Heading is displayed when a string a entered for heading field', async ({
+  page,
+}) => {
+  const select = page.getByTestId('select-with-heading');
+  await expect(select).toBeVisible();
+
+  // click on the dropdown arrow
+  await select.getByRole('button', { name: 'Open dropdown' }).click();
+
+  // make sure the heading is visible 
+  await expect(select.getByText('heading title')).toHaveClass(/text-gray-500/);
+
+});
+
+test('Dispatches change event when option is selected', async ({
+  page,
+}) => {
+  const select = page.getByTestId('default-select-first');
+  await expect(select).toBeVisible();
+  const optionsContainer = select.locator('.options-container').first();
+
+  await select.click();
+  await expect(optionsContainer).toBeVisible();
+
+  // select an option
+  const valueChanged = waitForCustomEvent(page, 'change');
+  await select.getByText('Second Option').click();
+
+  await expect(valueChanged.detail()).resolves.toEqual({ value: 'Second Option' });
 });

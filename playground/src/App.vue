@@ -19,7 +19,7 @@ const handleInput = (event: CustomEvent) => {
 }
 
 const handleSelect = (event: CustomEvent) => {
-  console.log('select', event);
+  console.log('change', event.detail.value);
 }
 
 let lazyValue = $ref('')
@@ -135,7 +135,7 @@ let selectInput = $ref("")
       state="'info'"
       class="my-6"
       heading="heading"
-      @select="handleSelect"
+      @change="handleSelect"
     />  
 
     </section>
