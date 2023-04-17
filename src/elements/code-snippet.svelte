@@ -66,7 +66,9 @@ const highlight = async (element: Element) => {
 $: void highlight(element);
 </script>
 
-<pre class="relative !border-none !m-0 !pr-24 !pb-0"><code
+<pre
+  class="relative !border-none !m-0 !pr-24 !pb-0
+    {theme === 'vsc-dark-plus' ? '!bg-gray-9' : '!bg-bg-2'} "><code
     bind:this={element}
     class="language-{language} font-mono">{code}</code
   >
