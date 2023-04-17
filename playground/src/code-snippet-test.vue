@@ -1,30 +1,40 @@
 <template>
   <main>
-    <div style='width: 400px; height: 200px;'>
+    <div style="width: 400px; height: 200px;">
       <v-code-snippet
-        data-testid='code-snippet-render'
+        data-testid="code-snippet-render"
         value='{"component": "JSON"}'
-        language='json'
+        language="json"
       >
         ${value}
       </v-code-snippet>
     </div>
-    <div style='width: 400px; height: 200px;'>
+    <div style="width: 400px; height: 200px;">
       <v-code-snippet
-        data-testid='code-snippet-dafault'
+        data-testid="code-snippet-dafault"
         value='{"component": "JSON"}'
-        language='json'
-        theme='vs'
+        language="json"
+        theme="vs"
       >
         ${value}
       </v-code-snippet>
     </div>
-    <div style='width: 400px; height: 200px;'>
+    <div style="width: 400px; height: 200px;">
       <v-code-snippet
-        data-testid='code-snippet-dark'
+        data-testid="code-snippet-dark"
         value='{"component": "JSON"}'
-        language='json'
-        theme='vsc-dark-plus'
+        language="json"
+        theme="vsc-dark-plus"
+      >
+        ${value}
+      </v-code-snippet>
+    </div>
+    <div style="width: 400px; height: 200px;">
+      <v-code-snippet
+        data-testid="code-snippet-hide-button"
+        value='{"component": "JSON"}'
+        language="json"
+        showbutton="false"
       >
         ${value}
       </v-code-snippet>

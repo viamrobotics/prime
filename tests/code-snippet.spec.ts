@@ -26,3 +26,10 @@ test('Renders the dark vs-code theme if vsc-dark-plus is provided', async ({
   const snippet = page.getByTestId('code-snippet-dark');
   await expect(snippet).toHaveAttribute('theme', 'vsc-dark-plus');
 });
+
+test('Hides the copy button if showbutton attribute is false', async ({
+  page,
+}) => {
+  const snippet = page.getByTestId('code-snippet-hide-button');
+  await expect(snippet).toHaveAttribute('showbutton', 'false');
+});

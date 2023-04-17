@@ -93,3 +93,24 @@ import jsonCodeExampleSrc from './assets/json-code-example';
     `}
   </Story>
 </Canvas>
+
+<Canvas>
+  <Story
+    name='Hide Copy Button'
+    args={{
+      language: 'json',
+      value: jsonCodeExampleSrc,
+      showbutton: 'false',
+    }}
+  >
+    {({ value, language, theme, showbutton }) => `
+    <div style='margin: auto; max-width: 600px; height: 400px;'>
+      <v-code-snippet 
+        language='${language}'
+        code='${value}'
+        showbutton='${showbutton}'
+      />
+    </div>
+    `}
+  </Story>
+</Canvas>
