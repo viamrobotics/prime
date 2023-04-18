@@ -114,6 +114,8 @@ const handleEnter = () => {
   if (open) {
     input.blur();
   }
+
+  dispatch('input', { value });
 };
 
 const handleNavigate = (direction: number) => {
