@@ -128,6 +128,7 @@ module.exports = {
     'no-plusplus': 'warn',
     'no-promise-executor-return': 'warn',
     'no-useless-concat': 'warn',
+    'no-void': 'warn',
     'require-unicode-regexp': 'warn',
     'sonarjs/no-duplicate-string': 'warn',
     '@typescript-eslint/no-shadow': 'warn',
