@@ -115,7 +115,6 @@ const handleEnter = () => {
     value = sortedOptions[navigationIndex]!;
     dispatch('change', { value });
   } else {
-    console.log('handle enter pressed');
     const result = sortedOptions.find((item) => item.toLowerCase() === value);
 
     if (result) {
