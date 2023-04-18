@@ -14,8 +14,8 @@ const handleRotate = (event: CustomEvent) => {
 }
 
 const handleInput = (event: CustomEvent) => {
-  console.log(event)
   value = event.detail.value
+  console.log('input:', value)
 }
 
 const handleSelect = (event: CustomEvent) => {

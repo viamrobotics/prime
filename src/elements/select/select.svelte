@@ -101,7 +101,9 @@ const handleKeyUp = (event: KeyboardEvent) => {
 const handleEnter = () => {
   if (navigationIndex > -1) {
     value = sortedOptions[navigationIndex]!;
+    dispatch('change', { value });
   } else {
+    console.log('handle enter pressed');
     const result = sortedOptions.find((item) => item.toLowerCase() === value);
 
     if (result) {
