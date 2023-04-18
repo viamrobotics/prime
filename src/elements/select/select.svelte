@@ -57,7 +57,7 @@ $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: sortedOptions = doesSearch
   ? applySearchSort(value, parsedOptions)
-  : parsedOptions;
+  : reduceEmptyOptions(parsedOptions);
 $: searchedOptions = utils.applySearchHighlight(
   sortedOptions,
   doesSearch ? value : ''
@@ -71,8 +71,20 @@ const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
 
+const reduceEmptyOptions = (options: string[]) => {
+  if (options[0] === '' && options.length === 1) {
+    return [];
+  }
+  return options;
+};
+
 const applySearchSort = (term: string, options: string[]) => {
   dispatch('search', { term });
+
+  if (reduceEmptyOptions(options).length === 0) {
+    return [];
+  }
+  
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
