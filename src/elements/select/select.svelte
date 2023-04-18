@@ -120,8 +120,6 @@ const handleEnter = () => {
     if (result) {
       value = result;
       dispatch('change', { value });
-    } else {
-      value = '';
     }
   }
   if (open) {

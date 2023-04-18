@@ -265,28 +265,6 @@ test('When a dropdown is open, confirm the first result is in focus such that a 
   expect(await input.inputValue()).toEqual('First Option');
 });
 
-test('When user types in an input and pressed Enter, but does not match any results, input empties and nothing is selected', async ({
-  page,
-}) => {
-  const select = page.getByTestId('default-select-first');
-  await expect(select).toBeVisible();
-  const optionsContainer = select.locator('.options-container').first();
-
-  // click on the input
-  const input = select.locator('input').first();
-  await input.focus();
-  await expect(optionsContainer).toBeVisible();
-  expect(await input.inputValue()).toEqual('');
-
-  // fill value doesn't match any options
-  await input.fill('test');
-
-  // press enter
-  await page.keyboard.press('Enter');
-
-  // expect the input value to clear
-  expect(await input.inputValue()).toEqual('');
-});
 
 test('Heading is displayed when a string a entered for heading field', async ({
   page,

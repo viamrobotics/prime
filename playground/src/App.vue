@@ -135,6 +135,7 @@ let selectInput = $ref("")
       state="'info'"
       class="my-6"
       heading="heading"
+      exact="true"
       @change="handleSelect"
     />  
 
