@@ -1,8 +1,11 @@
+'use strict';
+
+const baseConfig = require('@viamrobotics/prettier-config');
+
 module.exports = {
-  plugins: ['prettier-plugin-svelte'],
-  singleQuote: true,
+  ...baseConfig,
   // TODO(mc, 2023-03-22): eslint-plugin-svelte does not respect single-quote for HTML
   // https://github.com/sveltejs/prettier-plugin-svelte/issues/253
-  jsxSingleQuote: true,
+  plugins: ['prettier-plugin-svelte'],
   svelteIndentScriptAndStyle: false,
 };
