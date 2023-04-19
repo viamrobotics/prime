@@ -265,7 +265,6 @@ test('When a dropdown is open, confirm the first result is in focus such that a 
   expect(await input.inputValue()).toEqual('First Option');
 });
 
-
 test('Heading is displayed when a string a entered for heading field', async ({
   page,
 }) => {
