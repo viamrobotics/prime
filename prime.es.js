@@ -1452,7 +1452,7 @@ customElements.define("v-code-editor", Gr);
 const po = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Gr
-}, Symbol.toStringTag, { value: "Module" })), wo = "@viamrobotics/prime", yo = "0.1.10", _o = "Apache-2.0", vo = "module", ko = [
+}, Symbol.toStringTag, { value: "Module" })), wo = "@viamrobotics/prime", yo = "0.1.11", _o = "Apache-2.0", vo = "module", ko = [
   "dist"
 ], xo = "./dist/prime.umd.js", Eo = "./dist/prime.es.js", So = {
   ".": {
