@@ -1452,7 +1452,7 @@ customElements.define("v-code-editor", Gr);
 const po = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Gr
-}, Symbol.toStringTag, { value: "Module" })), wo = "@viamrobotics/prime", yo = "0.1.11", _o = "Apache-2.0", vo = "module", ko = [
+}, Symbol.toStringTag, { value: "Module" })), wo = "@viamrobotics/prime", yo = "0.1.12", _o = "Apache-2.0", vo = "module", ko = [
   "dist"
 ], xo = "./dist/prime.umd.js", Eo = "./dist/prime.es.js", So = {
   ".": {
@@ -3945,10 +3945,10 @@ function Sl(t, e, n) {
   }, Ve = (W, N) => {
     const { checked: ue } = N.target;
     if (i === W) {
-      N.preventDefault(), n(11, q = !1);
+      k("change", { value: i }), N.preventDefault(), n(11, q = !1);
       return;
     }
-    n(0, i = ue ? W : ""), n(11, q = !1), k("input", { value: i }), k("change", { value: i });
+    n(0, i = ue ? W : ""), n(11, q = !1), k("change", { value: i }), k("input", { value: i });
   }, De = () => {
     n(20, te = -1);
   }, He = () => {
