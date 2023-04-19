@@ -71,6 +71,11 @@ import gpioOptions from './assets/gpio-options';
       control: { type: 'radio' },
       type: 'text',
     },
+    heading: {
+      description: 'a heading that will be displayed inside of the select',
+      table: { defaultValue: { summary: '' } },
+      type: 'text',
+    },
     'on:input': {
       description: 'Event fired when an option is selected',
     },
@@ -79,6 +84,9 @@ import gpioOptions from './assets/gpio-options';
     },
     'on:search': {
       description: 'Event fired when the search input is changed',
+    },
+    'on:change': {
+      description: 'Event fired when an option is selected',
     },
   }}
 />
@@ -284,6 +292,27 @@ For a dropdown that allows the user to select a single option
         options='${options}'
         placeholder='${placeholder}'
         prefix='${prefix}'
+      />
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With heading'
+    args={{
+      label: 'With heading',
+      options: 'Option 1, Option 2, Option 3',
+      heading: 'Test',
+      value: 'Option 3',
+    }}
+  >
+    {({ label, options, value, heading }) => `
+      <v-select
+        label='${label}'
+        options='${options}'
+        value='${value}'
+        heading='${heading}'
       />
     `}
   </Story>

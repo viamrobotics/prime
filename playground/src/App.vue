@@ -14,8 +14,12 @@ const handleRotate = (event: CustomEvent) => {
 }
 
 const handleInput = (event: CustomEvent) => {
-  console.log(event)
   value = event.detail.value
+  console.log('input:', value)
+}
+
+const handleSelect = (event: CustomEvent) => {
+  console.log('change', event.detail.value);
 }
 
 let lazyValue = $ref('')
@@ -130,6 +134,9 @@ let selectInput = $ref("")
       label="Test Select"
       state="'info'"
       class="my-6"
+      heading="heading"
+      exact="true"
+      @change="handleSelect"
     />  
 
     </section>
