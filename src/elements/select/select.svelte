@@ -148,6 +148,7 @@ const handleNavigate = (direction: number) => {
 const handleOptionSelect = (target: string, event: Event) => {
   const { checked } = event.target as HTMLInputElement;
   if (value === target) {
+    dispatch('change', { value });
     event.preventDefault();
     open = false;
     return;
@@ -156,8 +157,8 @@ const handleOptionSelect = (target: string, event: Event) => {
   value = checked ? target : '';
 
   open = false;
-  dispatch('input', { value });
   dispatch('change', { value });
+  dispatch('input', { value });
 };
 
 const clearNavigationIndex = () => {
