@@ -27,6 +27,7 @@ export let buttontext = 'ENTER';
 export let buttonicon = '';
 export let sortoption: utils.SortOptions = 'default';
 export let message = '';
+export let heading = '';
 
 const dispatch = dispatcher();
 
@@ -56,7 +57,7 @@ $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: sortedOptions = doesSearch
   ? applySearchSort(value, parsedOptions)
-  : parsedOptions;
+  : reduceEmptyOptions(parsedOptions);
 $: searchedOptions = utils.applySearchHighlight(
   sortedOptions,
   doesSearch ? value : ''
@@ -70,8 +71,20 @@ const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
 
+const reduceEmptyOptions = (options: string[]) => {
+  if (options[0] === '' && options.length === 1) {
+    return [];
+  }
+  return options;
+};
+
 const applySearchSort = (term: string, options: string[]) => {
   dispatch('search', { term });
+
+  if (reduceEmptyOptions(options).length === 0) {
+    return [];
+  }
+
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
@@ -100,16 +113,19 @@ const handleKeyUp = (event: KeyboardEvent) => {
 const handleEnter = () => {
   if (navigationIndex > -1) {
     value = sortedOptions[navigationIndex]!;
+    dispatch('change', { value });
   } else {
     const result = sortedOptions.find((item) => item.toLowerCase() === value);
 
     if (result) {
       value = result;
+      dispatch('change', { value });
     }
   }
   if (open) {
     input.blur();
   }
+
   dispatch('input', { value });
 };
 
@@ -141,6 +157,7 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   open = false;
   dispatch('input', { value });
+  dispatch('change', { value });
 };
 
 const clearNavigationIndex = () => {
@@ -305,6 +322,11 @@ $: {
             class="flex max-h-36 flex-col"
             on:mouseleave={clearNavigationIndex}
           >
+            {#if heading}
+              <span class="flex text-xs text-gray-500 pl-2 py-2 flex-wrap">
+                {heading}
+              </span>
+            {/if}
             {#each searchedOptions as { search, option }, index (option)}
               <label
                 class={cx(

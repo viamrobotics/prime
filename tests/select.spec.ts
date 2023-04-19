@@ -206,13 +206,15 @@ test('When there is a reduce sort option, the elements should reduce on matching
   );
 });
 
-test('On pressing enter over an option, that option should be selected', async ({
+test('On pressing enter over an option, that option should be selected, change and input events emitted', async ({
   page,
 }) => {
   const select = page.getByTestId('basic-select');
   await expect(select).toBeVisible();
 
   const optionsContainer = select.locator('.options-container').first();
+  const valueChanged = waitForCustomEvent(page, 'change');
+  const inputEvent = waitForCustomEvent(page, 'input');
 
   // click on the input
   const input = select.locator('input').first();
@@ -226,7 +228,11 @@ test('On pressing enter over an option, that option should be selected', async (
   // press enter
   await page.keyboard.press('Enter');
 
-  // show the selcted value in the input
+  // both input and change events should be emitted
+  await expect(valueChanged.detail()).resolves.toEqual({ value: 'two' });
+  await expect(inputEvent.detail()).resolves.toEqual({ value: 'two' });
+
+  // show the selected value in the input
   expect(await input.inputValue()).toEqual('two');
 });
 
@@ -257,4 +263,34 @@ test('When a dropdown is open, confirm the first result is in focus such that a 
 
   // show the selcted value in the input
   expect(await input.inputValue()).toEqual('First Option');
+});
+
+test('Heading is displayed when a string a entered for heading field', async ({
+  page,
+}) => {
+  const select = page.getByTestId('select-with-heading');
+  await expect(select).toBeVisible();
+
+  // click on the dropdown arrow
+  await select.getByRole('button', { name: 'Open dropdown' }).click();
+
+  // make sure the heading is visible
+  await expect(select.getByText('heading title')).toHaveClass(/text-gray-500/);
+});
+
+test('Dispatches change event when option is selected', async ({ page }) => {
+  const select = page.getByTestId('default-select-first');
+  await expect(select).toBeVisible();
+  const optionsContainer = select.locator('.options-container').first();
+
+  await select.click();
+  await expect(optionsContainer).toBeVisible();
+
+  // select an option
+  const valueChanged = waitForCustomEvent(page, 'change');
+  await select.getByText('Second Option').click();
+
+  await expect(valueChanged.detail()).resolves.toEqual({
+    value: 'Second Option',
+  });
 });
