@@ -19,9 +19,7 @@
   "repository": "git://github.com/viamrobotics/prime.git",
   "scripts": {
     "start": "vite --host",
-    "build": "concurrently -g npm:build-*",
-    "build-lib": "vite build --mode production",
-    "build-theme": "tsc ./tailwind.config.ts --outDir dist",
+    "build": "vite build --mode production",
     "postbuild": "node ./scripts/postbuild",
     "serve": "vite preview --host",
     "check": "concurrently -g npm:check-*",
