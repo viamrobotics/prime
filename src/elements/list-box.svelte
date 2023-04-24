@@ -47,7 +47,7 @@ $: displaySuffix = htmlToBoolean(suffix, 'suffix');
 const generateOption = (initial: string): ListBoxOption => {
   if (displaySuffix) {
     const split = initial.split(' ');
-    return { value: split[0] || '', suffix: split[1], selected: false };
+    return { value: split[0] ?? '', suffix: split[1] ?? '', selected: false };
   }
 
   return { value: initial, selected: false };

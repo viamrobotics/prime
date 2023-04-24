@@ -48,7 +48,7 @@ let doesSearch: boolean;
 let parsedOptions: string[];
 let parsedSelected: string[];
 let sortedOptions: string[];
-let searchedOptions: { option: string; search?: string[] }[];
+let searchedOptions: { option: string; search?: string[] | undefined }[];
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isReadonly = htmlToBoolean(readonly, 'readonly');

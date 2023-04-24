@@ -215,15 +215,15 @@ test('Given disabled attribute as true, displays slider as disabled and prevents
 
   await expect(sliderDisabled.getByText('0', { exact: true })).toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(sliderDisabled.getByText('100', { exact: true })).toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(sliderDisabled.getByText('disabled', { exact: true })).toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
 });
 

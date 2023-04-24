@@ -19,7 +19,7 @@ test('Renders appropriately according to value attribute', async ({ page }) => {
   await expect(switchOff.locator('input')).toHaveValue('off');
   await expect(switchOff.getByRole('switch').locator('div').first()).toHaveCSS(
     'background-color',
-    hexToRGB('gray-6')
+    hexToRGB('colors', 'gray-6')
   );
 
   // value='on' applied
@@ -29,7 +29,7 @@ test('Renders appropriately according to value attribute', async ({ page }) => {
   await expect(switchOn.locator('input')).toHaveValue('on');
   await expect(switchOn.getByRole('switch').locator('div').first()).toHaveCSS(
     'background-color',
-    hexToRGB('success-dark')
+    hexToRGB('colors', 'success-dark')
   );
 });
 
@@ -109,15 +109,15 @@ test('Renders as disabled', async ({ page }) => {
   await expect(switchDisabledOff.locator('input')).toBeDisabled();
   await expect(switchDisabledOff.getByText('disabled')).toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(switchDisabledOff.getByText('off')).toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(
     switchDisabledOff.getByRole('switch').locator('div').first()
-  ).toHaveCSS('background-color', hexToRGB('gray-4'));
+  ).toHaveCSS('background-color', hexToRGB('colors', 'gray-4'));
 
   const switchDisabledOn = page.getByTestId('switch-disabled-on');
   await expect(switchDisabledOn).toBeVisible();
@@ -126,15 +126,15 @@ test('Renders as disabled', async ({ page }) => {
   await expect(switchDisabledOn.locator('input')).toBeDisabled();
   await expect(switchDisabledOn.getByText('disabled')).toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(switchDisabledOn.getByText('on')).toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(
     switchDisabledOn.getByRole('switch').locator('div').first()
-  ).toHaveCSS('background-color', hexToRGB('gray-4'));
+  ).toHaveCSS('background-color', hexToRGB('colors', 'gray-4'));
 });
 
 test('Precludes value change if disabled', async ({ page }) => {
@@ -151,15 +151,15 @@ test('Renders as read only', async ({ page }) => {
   await expect(switchReadOnlyOff.locator('input')).not.toBeEditable();
   await expect(switchReadOnlyOff.getByText('read only')).not.toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(switchReadOnlyOff.getByText('off')).not.toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(
     switchReadOnlyOff.getByRole('switch').locator('div').first()
-  ).toHaveCSS('background-color', hexToRGB('gray-4'));
+  ).toHaveCSS('background-color', hexToRGB('colors', 'gray-4'));
 
   const switchReadOnlyOn = page.getByTestId('switch-readonly-on');
   await expect(switchReadOnlyOn).toBeVisible();
@@ -167,15 +167,15 @@ test('Renders as read only', async ({ page }) => {
   await expect(switchReadOnlyOn.locator('input')).not.toBeEditable();
   await expect(switchReadOnlyOn.getByText('read only')).not.toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(switchReadOnlyOn.getByText('on', { exact: true })).not.toHaveCSS(
     'color',
-    hexToRGB('text-disabled')
+    hexToRGB('textColor', 'disabled')
   );
   await expect(
     switchReadOnlyOn.getByRole('switch').locator('div').first()
-  ).toHaveCSS('background-color', hexToRGB('gray-4'));
+  ).toHaveCSS('background-color', hexToRGB('colors', 'gray-4'));
 });
 
 test('Precludes value change if read only', async ({ page }) => {

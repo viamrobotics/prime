@@ -3,5 +3,6 @@
   "compilerOptions": {
     "types": ["svelte", "vite/client", "monaco-editor/monaco"]
   },
+  "exclude": ["./prime/**/*", "./.storybook/workers/**/*"],
   "include": ["./src/**/*", "./.storybook/**/*"]
 }

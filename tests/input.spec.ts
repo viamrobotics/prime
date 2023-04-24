@@ -44,7 +44,7 @@ test('Displays "*" next to the label if required', async ({ page }) => {
     };
   });
   expect(asterisk.content).toContain('*');
-  expect(asterisk.color).toBe(hexToRGB('danger-dark'));
+  expect(asterisk.color).toBe(hexToRGB('colors', 'danger-dark'));
 });
 
 test('Displays label on top of input by default', async ({ page }) => {
@@ -116,7 +116,7 @@ test('Given type number, displays error state if number if invalid on blur', asy
 
   await input.fill('eeeEEE');
   await input.blur();
-  await expect(input).toHaveCSS('border-color', hexToRGB('danger-dark'));
+  await expect(input).toHaveCSS('border-color', hexToRGB('colors', 'danger-dark'));
 });
 
 test('Given type number, responds to up and down keys according to step value', async ({

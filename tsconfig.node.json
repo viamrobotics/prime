@@ -3,5 +3,6 @@
   "compilerOptions": {
     "types": ["node"]
   },
+  "exclude": ["./vite.config.ts"],
   "include": ["./*", "./.*", "./playground/*", "./scripts/*"]
 }
