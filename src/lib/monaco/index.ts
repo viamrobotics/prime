@@ -3,7 +3,7 @@ import type { Schema, SubSchema } from './types';
 
 export const monacoURL = `https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/${MonacoVersion}`;
 
-const schemas: monaco.languages.json.DiagnosticsOptions['schemas'] = []
+const schemas: monaco.languages.json.DiagnosticsOptions['schemas'] = [];
 
 // Monaco doesn't understand our schema $ref paths, which look like:
 // #/definitions/SomeAttr

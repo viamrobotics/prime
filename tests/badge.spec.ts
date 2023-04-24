@@ -13,7 +13,10 @@ test('Renders a gray badge if the variant is specified as gray', async ({
   page,
 }) => {
   const grayBadge = page.getByText('Inactive');
-  await expect(grayBadge).toHaveCSS('background-color', hexToRGB('colors', 'disabled-light'));
+  await expect(grayBadge).toHaveCSS(
+    'background-color',
+    hexToRGB('colors', 'disabled-light')
+  );
   await expect(grayBadge).toHaveCSS('color', hexToRGB('textColor', 'default'));
 });
 
@@ -25,7 +28,10 @@ test('Renders a gray badge if the variant is not specified', async ({
     'background-color',
     hexToRGB('colors', 'disabled-light')
   );
-  await expect(defaultBadge).toHaveCSS('color', hexToRGB('textColor', 'default'));
+  await expect(defaultBadge).toHaveCSS(
+    'color',
+    hexToRGB('textColor', 'default')
+  );
 });
 
 test('Renders a green badge if the variant is specified as green', async ({
@@ -36,7 +42,10 @@ test('Renders a green badge if the variant is specified as green', async ({
     'background-color',
     hexToRGB('colors', 'success-light')
   );
-  await expect(greenBadge).toHaveCSS('color', hexToRGB('colors', 'success-dark'));
+  await expect(greenBadge).toHaveCSS(
+    'color',
+    hexToRGB('colors', 'success-dark')
+  );
 });
 
 test('Renders an orange badge if the variant is specified as orange', async ({
@@ -47,7 +56,10 @@ test('Renders an orange badge if the variant is specified as orange', async ({
     'background-color',
     hexToRGB('colors', 'warning-light')
   );
-  await expect(orangeBadge).toHaveCSS('color', hexToRGB('colors', 'warning-dark'));
+  await expect(orangeBadge).toHaveCSS(
+    'color',
+    hexToRGB('colors', 'warning-dark')
+  );
 });
 
 test('Renders a red badge if the variant is specified as red', async ({
@@ -65,6 +77,9 @@ test('Renders a blue badge if the variant is specified as blue', async ({
   page,
 }) => {
   const blueBadge = page.getByText('Info');
-  await expect(blueBadge).toHaveCSS('background-color', hexToRGB('colors', 'info-light'));
+  await expect(blueBadge).toHaveCSS(
+    'background-color',
+    hexToRGB('colors', 'info-light')
+  );
   await expect(blueBadge).toHaveCSS('color', hexToRGB('colors', 'info-dark'));
 });
