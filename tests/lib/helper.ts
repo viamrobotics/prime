@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
-import { theme } from '../../theme';
+// eslint-disable-next-line import/extensions
+import { theme } from '../../theme.js';
 
 export const hexToRGB = (color: keyof typeof theme.extend.colors) => {
   const hex = theme.extend.colors[color];
