@@ -62,7 +62,7 @@ const main = async () => {
   copy('dist/prime.css', `dist/prime@${version}.css`);
   copy('dist/icons.woff2', `dist/icons@${version}.woff2`);
 
-  copy('theme.js', 'dist/theme.js')
+  copy('theme.js', 'dist/theme.js');
 
   // Update paths for versioned resources
   {

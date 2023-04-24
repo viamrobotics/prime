@@ -52,4 +52,4 @@ export const theme = {
       'disabled-light': '#f2f2f4',
     },
   },
-}
+};
