@@ -54,7 +54,7 @@ export const theme = {
       'disabled-light': '#f2f2f4',
     },
   },
-};
+} as const;
 
 export default {
   content: ['./index.html', './src/**/*.{ts,vue,svelte}'],

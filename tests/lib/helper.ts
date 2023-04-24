@@ -1,8 +1,8 @@
 import type { Page } from '@playwright/test';
-import config from '../../tailwind.config.cjs';
+import { theme } from '../../tailwind.config';
 
-export const hexToRGB = (color: string) => {
-  const hex = config.theme.extend.colors[color];
+export const hexToRGB = (color: keyof typeof theme.extend.colors) => {
+  const hex = theme.extend.colors[color];
 
   if (!hex) {
     throw new Error(`hex not found for color: ${color}`);

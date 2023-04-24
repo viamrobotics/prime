@@ -79,7 +79,8 @@ const handleClick = () => {
         {
           'bg-gray-4 border-gray-4': isDisabled || isReadonly,
           'bg-gray-6 border-gray-6': !on && !(isDisabled || isReadonly),
-          'bg-success-dark border-success-dark': on && !(isDisabled || isReadonly),
+          'bg-success-dark border-success-dark':
+            on && !(isDisabled || isReadonly),
           'text-disabled-dark': isDisabled,
         }
       )}

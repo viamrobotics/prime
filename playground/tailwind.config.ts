@@ -1,11 +1,10 @@
-'use strict';
+import { Config } from 'tailwindcss';
+import { theme } from '../tailwind.config';
 
-const { theme } = require('../tailwind.config.cjs');
-
-module.exports = {
+export default {
   content: ['./index.html', './src/**/*.{ts,vue}', '../src/**/*.{ts,svelte}'],
   theme,
   variants: {
     extend: {},
   },
-};
+} satisfies Config;

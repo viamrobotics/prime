@@ -14,7 +14,8 @@ addStyles();
 
 <small
   class={cx('inline-block rounded-full px-3 py-0.5 text-xs border', {
-    'text-success-dark bg-success-light border-success-medium': variant === 'green',
+    'text-success-dark bg-success-light border-success-medium':
+      variant === 'green',
     'text-warning-dark bg-warning-light border-warning-medium':
       variant === 'orange',
     'text-danger-dark bg-danger-light border-danger-medium': variant === 'red',

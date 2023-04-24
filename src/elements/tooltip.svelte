@@ -8,7 +8,6 @@ import { addStyles } from '../lib/index';
 
 export let text = '';
 export let location: Locations = 'top';
-export let minwidth: number | string = '12rem';
 export let state: 'visible' | 'invisible' = 'invisible';
 
 let container: HTMLElement;
