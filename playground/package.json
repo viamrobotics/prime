@@ -5,7 +5,7 @@
     "start": "vite --host --open",
     "build": "vite build --mode production",
     "preview": "vite preview --host",
-    "check": "vue-tsc"
+    "check": "vue-tsc --noEmit"
   },
   "devDependencies": {
     "tailwindcss": "^3.2.4",
