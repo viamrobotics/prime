@@ -28,7 +28,6 @@ export default defineConfig({
     },
 
     rollupOptions: {
-      // @ts-expect-error This is incorrectly typed
       output: {
         inlineDynamicImports: true,
         manualChunks: undefined,
