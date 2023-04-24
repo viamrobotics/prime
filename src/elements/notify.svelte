@@ -1,7 +1,7 @@
 <svelte:options immutable tag="v-notify" />
 
 <script lang="ts">
-type Variants = 'error' | 'warning' | 'success' | 'info';
+type Variants = 'danger' | 'warning' | 'success' | 'info';
 
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
@@ -9,37 +9,36 @@ import { addStyles } from '../lib/index';
 export let title = '';
 export let message = '';
 export let variant: Variants = 'info';
-export let background: 'gray' | 'white' = 'gray';
 
 addStyles();
 </script>
 
 <div
-  class={cx('relative flex border border-border-2', {
-    'bg-white': background === 'white',
-    'bg-bg-3': background === 'gray',
+  class={cx('relative flex border', {
+    'bg-medium border-medium': variant !== 'danger',
+    'bg-danger-light border-danger-medium': variant === 'danger',
   })}
 >
   <div
     class={cx(
       'absolute top-0 left-0 w-[3px] h-[calc(100%+2px)] -mt-px -ml-px',
       {
-        'bg-danger-fg': variant === 'error',
+        'bg-danger-dark': variant === 'danger',
         'bg-warning-bright': variant === 'warning',
-        'bg-success-fg': variant === 'success',
-        'bg-info-fg': variant === 'info',
+        'bg-success-dark': variant === 'success',
+        'bg-info-dark': variant === 'info',
       }
     )}
   />
 
   <div class="flex items-center justify-between w-full gap-2 py-2 px-3">
     <div class="flex gap-2">
-      {#if variant === 'error'}
-        <v-icon class="mt-0.5 text-danger-fg" name="error-outline" />
+      {#if variant === 'danger'}
+        <v-icon class="mt-0.5 text-danger-dark" name="error-outline" />
       {:else if variant === 'info'}
-        <v-icon class="mt-0.5 text-info-fg" name="info-outline" />
+        <v-icon class="mt-0.5 text-info-dark" name="info-outline" />
       {:else if variant === 'success'}
-        <v-icon class="mt-0.5 text-success-fg" name="checkmark" />
+        <v-icon class="mt-0.5 text-success-dark" name="checkmark" />
       {/if}
 
       {#if variant === 'warning'}
@@ -57,12 +56,12 @@ addStyles();
       {/if}
 
       <figure>
-        <figcaption class="text-sm font-medium text-text-default">
+        <figcaption class="text-sm font-medium text-default">
           {title}
         </figcaption>
 
         {#if message}
-          <p class="text-sm text-text-subtle-1">{message}</p>
+          <p class="text-sm text-subtle-1">{message}</p>
         {/if}
 
         <slot />

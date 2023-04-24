@@ -45,7 +45,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
   on:keyup|stopPropagation|preventDefault={handleClose}
 >
   <div
-    class="w-[400px] relative border border-gray-9 bg-white m-2 p-4 max-w-lg shadow-solid4"
+    class="w-[400px] relative border border-gray-9 bg-white m-2 p-4 max-w-lg shadow-sm"
     on:click|stopPropagation
     on:keyup|stopPropagation
   >

@@ -13,7 +13,7 @@ $: parsedCrumbs = crumbs.split(',').map((str) => str.trim());
 </script>
 
 <div
-  class="inline-flex gap-3 -ml-1 px-4 border border-border-2 bg-bg-2 text-text-default rounded-full"
+  class="inline-flex gap-3 -ml-1 px-4 border border-medium bg-light text-default rounded-full"
 >
   {#each parsedCrumbs as crumb, index (crumb)}
     <small class="py1">
@@ -22,10 +22,10 @@ $: parsedCrumbs = crumbs.split(',').map((str) => str.trim());
     {#if index !== parsedCrumbs.length - 1}
       <div>
         <div
-          class="w-px h-[60%] border-l border-border-2 -rotate-[30deg] -mt-px"
+          class="w-px h-[60%] border-l border-medium -rotate-[30deg] -mt-px"
         />
         <div
-          class="w-px h-[60%] border-l border-border-2 rotate-[30deg] -mt-0.5"
+          class="w-px h-[60%] border-l border-medium rotate-[30deg] -mt-0.5"
         />
       </div>
     {/if}

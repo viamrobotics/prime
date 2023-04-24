@@ -29,11 +29,50 @@ Used to display text box when hovering over an element.
     }}
   >
     {({ text, location }) => `
-    <div style="width: 100%; height: 200px; display: flex; align-items: center; justify-content:center">
-        <v-tooltip text='${text}' location="${location}">
-          <p>Hover here</p>
-        </v-tooltip>
-    <div>
+<div style="width: 100%; height: 200px; display: flex; align-items: center; justify-content:center">
+  <v-tooltip text='${text}' location="${location}">
+    <p>Hover here</p>
+  </v-tooltip>
+<div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With HTML content'
+    args={{
+      text: 'Test information for the tooltip',
+      location: 'top',
+    }}
+  >
+    {({ text, location }) => `
+<div style="width: 100%; height: 200px; display: flex; align-items: center; justify-content:center">
+  <v-tooltip text='${text}' location="${location}">
+    <p>Hover here</p>
+    <span slot="text">For more information, see our guide to <a href="">roles & permissions.</a></span>
+  </v-tooltip>
+<div>
+    `}
+  </Story>
+</Canvas>
+
+
+<Canvas>
+  <Story
+    name='Icon'
+    args={{
+      text: 'Revoke',
+      location: 'top',
+    }}
+  >
+    {({ text, location }) => `
+<div style="width: 100%; height: 200px; display: flex; align-items: center; justify-content:center">
+  <v-tooltip text='${text}' location="${location}">
+    <v-icon slot='icon' name='checkmark'></v-icon>
+    <v-icon name='trash'></v-icon'>
+  </v-tooltip>
+<div>
     `}
   </Story>
 </Canvas>

@@ -29,7 +29,7 @@ test('Renders appropriately according to value attribute', async ({ page }) => {
   await expect(switchOn.locator('input')).toHaveValue('on');
   await expect(switchOn.getByRole('switch').locator('div').first()).toHaveCSS(
     'background-color',
-    hexToRGB('success-fg')
+    hexToRGB('success-dark')
   );
 });
 

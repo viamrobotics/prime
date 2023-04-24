@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 const constants = {
-  BORDER_PRIMARY: /border-border-1/,
-  BG_PRIMARY: /bg-bg-2/,
+  BORDER_PRIMARY: /border-light/,
+  BG_PRIMARY: /bg-light/,
 };
 
 test.beforeEach(async ({ page }) => {
@@ -56,9 +56,9 @@ test('Renders a button in the style of success if the variant is specified as su
   page,
 }) => {
   const successButton = page.getByTestId('success');
-  await expect(successButton.locator('button')).toHaveClass(/bg-success-fg/);
+  await expect(successButton.locator('button')).toHaveClass(/bg-success-dark/);
   await expect(successButton.locator('button')).toHaveClass(
-    /border-success-fg/
+    /border-success-dark/
   );
   await expect(successButton.locator('button')).toHaveClass(/text-white/);
 });
@@ -68,10 +68,10 @@ test('Renders a button in the style of danger if the variant is specified as dan
 }) => {
   const dangerButton = page.getByTestId('danger');
   await expect(dangerButton.locator('button').first()).toHaveClass(
-    /bg-danger-fg/
+    /bg-danger-dark/
   );
   await expect(dangerButton.locator('button').first()).toHaveClass(
-    /border-danger-fg/
+    /border-danger-dark/
   );
   await expect(dangerButton.locator('button').first()).toHaveClass(
     /text-white/
@@ -83,13 +83,13 @@ test('Renders a button in the style of outline danger if the variant is specifie
 }) => {
   const outlineDangerButton = page.getByTestId('outline-danger');
   await expect(outlineDangerButton.locator('button')).toHaveClass(
-    /bg-danger-bg/
+    /bg-danger-light/
   );
   await expect(outlineDangerButton.locator('button')).toHaveClass(
-    /border-danger-border/
+    /border-danger-medium/
   );
   await expect(outlineDangerButton.locator('button')).toHaveClass(
-    /text-danger-fg/
+    /text-danger-dark/
   );
 });
 
@@ -128,7 +128,7 @@ test('Renders the button as an icon if an icon attribute is specified and the bu
   const iconAsButton = page.getByRole('button', { name: 'Icon As Button' });
   await expect(iconAsButton).not.toContainText('Icon As Button');
   await expect(iconAsButton.locator('i')).toHaveClass(/icon-refresh/);
-  await expect(iconAsButton).not.toHaveClass(/border-border-1/);
+  await expect(iconAsButton).not.toHaveClass(/border-light/);
 });
 
 test('Tests that the button is clickable if not disabled', async ({ page }) => {

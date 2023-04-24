@@ -44,7 +44,7 @@ test('Displays "*" next to the label if required', async ({ page }) => {
     };
   });
   expect(asterisk.content).toContain('*');
-  expect(asterisk.color).toBe(hexToRGB('danger-fg'));
+  expect(asterisk.color).toBe(hexToRGB('danger-dark'));
 });
 
 test('Displays label on top of input by default', async ({ page }) => {
@@ -116,7 +116,7 @@ test('Given type number, displays error state if number if invalid on blur', asy
 
   await input.fill('eeeEEE');
   await input.blur();
-  await expect(input).toHaveCSS('border-color', hexToRGB('danger-fg'));
+  await expect(input).toHaveCSS('border-color', hexToRGB('danger-dark'));
 });
 
 test('Given type number, responds to up and down keys according to step value', async ({
@@ -298,7 +298,7 @@ test('Given attribute tooltip with error state, render error icon above the inpu
   const inputErrorTooltip = page.getByTestId('input-tooltip-error');
   await expect(
     inputErrorTooltip.locator('v-tooltip > div').first()
-  ).toHaveClass(/icon-error-outline text-danger-fg/);
+  ).toHaveClass(/icon-error-outline text-danger-dark/);
 });
 
 test('Given a readonly attribute, renders readonly input', async ({ page }) => {
@@ -316,7 +316,7 @@ test('Given a disabled attribute, renders disabled input', async ({ page }) => {
   await expect(inputDisabled).toBeVisible();
   await expect(inputDisabled.locator('input').first()).toBeDisabled();
   await expect(inputDisabled.locator('input').first()).toHaveClass(
-    /bg-disabled-bg text-disabled-fg border-disabled-bg/
+    /bg-disabled-light text-disabled-dark border-disabled-light/
   );
 });
 

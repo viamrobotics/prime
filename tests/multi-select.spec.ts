@@ -229,7 +229,7 @@ test('Given a tooltip and state=error the select should show a error icon with t
   await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
   await expect(
     multiselect.locator('v-tooltip').first().locator('div').first()
-  ).toHaveClass(/text-danger-fg/);
+  ).toHaveClass(/text-danger-dark/);
   await multiselect.locator('v-tooltip').first().hover();
   await expect(multiselect.getByText(/error tip/)).toBeVisible();
 });

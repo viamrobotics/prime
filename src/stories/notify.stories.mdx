@@ -10,7 +10,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
   argTypes={{
     variant: {
       control: { type: 'select' },
-      options: ['error', 'warning', 'success', 'info'],
+      options: ['danger', 'warning', 'success', 'info'],
       description: 'Notification type',
       table: { defaultValue: { summary: 'info' } },
     },
@@ -21,12 +21,6 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
     message: {
       description: 'Message',
       table: { defaultValue: { summary: '' } },
-    },
-    background: {
-      description: 'The background color',
-      control: { type: 'select' },
-      options: ['gray', 'white'],
-      table: { defaultValue: { summary: 'gray' } },
     },
   }}
 />
@@ -45,11 +39,11 @@ Notify message of type info, success, warning, or error
     }}
   >
     {({ title, message, variant }) => `
-      <v-notify
-        variant='${variant}'
-        title='${title}'
-        message='${message}'
-      />
+<v-notify
+  variant='${variant}'
+  title='${title}'
+  message='${message}'
+/>
     `}
   </Story>
 </Canvas>
@@ -64,11 +58,11 @@ Notify message of type info, success, warning, or error
     }}
   >
     {({ title, message, variant }) => `
-      <v-notify
-        variant='${variant}'
-        title='${title}'
-        message='${message}'
-      />
+<v-notify
+  variant='${variant}'
+  title='${title}'
+  message='${message}'
+/>
     `}
   </Story>
 </Canvas>
@@ -83,30 +77,30 @@ Notify message of type info, success, warning, or error
     }}
   >
     {({ title, message, variant }) => `
-      <v-notify
-        variant='${variant}'
-        title='${title}'
-        message='${message}'
-      />
+<v-notify
+  variant='${variant}'
+  title='${title}'
+  message='${message}'
+/>
     `}
   </Story>
 </Canvas>
 
 <Canvas>
   <Story
-    name='error'
+    name='danger'
     args={{
-      variant: 'error',
+      variant: 'danger',
       title: 'This is the title.',
       message: 'This is the message.',
     }}
   >
     {({ title, message, variant }) => `
-      <v-notify
-        variant='${variant}'
-        title='${title}'
-        message='${message}'
-      />
+<v-notify
+  variant='${variant}'
+  title='${title}'
+  message='${message}'
+/>
     `}
   </Story>
 </Canvas>
@@ -120,10 +114,10 @@ Notify message of type info, success, warning, or error
     }}
   >
     {({ title, variant }) => `
-      <v-notify
-        variant='${variant}'
-        title='${title}'
-      />
+<v-notify
+  variant='${variant}'
+  title='${title}'
+/>
     `}
   </Story>
 </Canvas>
@@ -137,10 +131,10 @@ Notify message of type info, success, warning, or error
     }}
   >
     {({ title, message, variant }) => `
-      <v-notify
-        variant='${variant}'
-        title='${title}'
-      />
+<v-notify
+  variant='${variant}'
+  title='${title}'
+/>
     `}
   </Story>
 </Canvas>
@@ -154,46 +148,27 @@ Notify message of type info, success, warning, or error
     }}
   >
     {({ title, variant }) => `
-      <v-notify
-        variant='${variant}'
-        title='${title}'
-      />
+<v-notify
+  variant='${variant}'
+  title='${title}'
+/>
     `}
   </Story>
 </Canvas>
 
 <Canvas>
   <Story
-    name='no message error'
+    name='no message danger'
     args={{
-      variant: 'error',
+      variant: 'danger',
       title: 'This is the title.',
     }}
   >
     {({ title, variant }) => `
-      <v-notify
-        title='${title}'
-        variant='${variant}'
-      />
-    `}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
-    name='White background'
-    args={{
-      variant: 'error',
-      title: 'This is the title.',
-      background: 'white',
-    }}
-  >
-    {({ title, variant, background }) => `
-      <v-notify
-        title='${title}'
-        variant='${variant}'
-        background='${background}'
-      />
+<v-notify
+  title='${title}'
+  variant='${variant}'
+/>
     `}
   </Story>
 </Canvas>
@@ -201,13 +176,13 @@ Notify message of type info, success, warning, or error
 <Canvas>
   <Story name='Slot'>
     {() => `
-      <v-notify
-        variant='info'
-        title='This is the title.'
-        message='This is the message.'
-      >
-        <v-button slot='action' variant='inverse-primary' label='Click here'></v-button>
-      </v-notify>
+<v-notify
+  variant='info'
+  title='This is the title.'
+  message='This is the message.'
+>
+  <v-button slot='action' variant='inverse-primary' label='Click here'></v-button>
+</v-notify>
     `}
   </Story>
 </Canvas>
