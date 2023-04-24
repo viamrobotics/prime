@@ -18,7 +18,7 @@
     window.LOGLEVEL = 'info';
     window.FRAMEWORK_OPTIONS = {};
     window.CHANNEL_OPTIONS = {};
-    window.FEATURES = {"warnOnLegacyHierarchySeparator":true,"buildStoriesJson":false,"storyStoreV7":true,"breakingChangesV7":true,"argTypeTargetsV7":true,"legacyDecoratorFileOrder":false,"modernInlineRender":true};
+    window.FEATURES = {"warnOnLegacyHierarchySeparator":true,"buildStoriesJson":false,"storyStoreV7":true,"argTypeTargetsV7":true,"legacyDecoratorFileOrder":false,"modernInlineRender":true};
     window.STORIES = [{"titlePrefix":"","directory":"./src/stories/docs","files":"introduction.stories.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories\\/docs\\/introduction\\.stories\\.mdx)$"},{"titlePrefix":"","directory":"./src/stories/docs","files":"**/*.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories\\/docs(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\/|\\/|$)(?!\\.)(?=.)[^/]*?\\.mdx)$"},{"titlePrefix":"","directory":"./src/stories","files":"**/*.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\/|\\/|$)(?!\\.)(?=.)[^/]*?\\.mdx)$"}];
     window.DOCS_OPTIONS = {"docsMode":true,"defaultName":"Docs","autodocs":true};
     window.SERVER_CHANNEL_URL = undefined;
@@ -26,6 +26,7 @@
     // We do this so that "module && module.hot" etc. in Storybook source code
     // doesn't fail (it will simply be disabled)
     window.module = undefined;
+    window.global = window;
   </script>
   <base target="_parent" />
 
@@ -387,8 +388,7 @@
 
 </script>
 
-  <script type="module" crossorigin src="/assets/iframe-b218c4bb.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/preload-helper-101896b7.js">
+  <script type="module" crossorigin src="/assets/iframe-3e97d2e3.js"></script>
 </head>
 
 <body>
