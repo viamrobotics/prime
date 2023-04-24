@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { theme } from '../../tailwind.config';
+import { theme } from '../../theme';
 
 export const hexToRGB = (color: keyof typeof theme.extend.colors) => {
   const hex = theme.extend.colors[color];
