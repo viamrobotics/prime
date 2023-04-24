@@ -19,7 +19,6 @@ export default defineConfig({
         },
       },
     }),
-    // @ts-expect-error This is incorrectly typed
     svelte({
       compilerOptions: { customElement: true },
       preprocess: sveltePreprocess(),
