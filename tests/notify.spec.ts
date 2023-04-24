@@ -23,15 +23,15 @@ test('Renders notify with default style if no variant is specified', async ({
   ).toHaveClass(/text-info-dark/);
 });
 
-test('Renders notify with error style if the variant is set to error', async ({
+test('Renders notify with danger style if the variant is set to danger', async ({
   page,
 }) => {
-  await expect(page.getByTestId('notify-variant-error')).toBeVisible();
+  await expect(page.getByTestId('notify-variant-danger')).toBeVisible();
   await expect(
-    page.getByTestId('notify-variant-error').locator('.bg-danger-dark')
+    page.getByTestId('notify-variant-danger').locator('.bg-danger-dark')
   ).toBeVisible();
   await expect(
-    page.getByTestId('notify-variant-error').locator('v-icon')
+    page.getByTestId('notify-variant-danger').locator('v-icon')
   ).toHaveClass(/text-danger-dark/);
 });
 
@@ -69,24 +69,6 @@ test('Renders notify with info style if the variant is set to info', async ({
   await expect(
     page.getByTestId('notify-variant-info').locator('v-icon')
   ).toHaveClass(/text-info-dark/);
-});
-
-test('Renders notify with gray background if the background attribute is set to gray', async ({
-  page,
-}) => {
-  await expect(page.getByTestId('notify-background-gray')).toBeVisible();
-  await expect(
-    page.getByTestId('notify-background-gray').locator('.bg-medium')
-  ).toBeVisible();
-});
-
-test('Renders notify with white background if the background attribute is set to white', async ({
-  page,
-}) => {
-  await expect(page.getByTestId('notify-background-white')).toBeVisible();
-  await expect(
-    page.getByTestId('notify-background-white').locator('.bg-white')
-  ).toBeVisible();
 });
 
 test('Renders notify slot text', async ({ page }) => {
