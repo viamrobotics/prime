@@ -41,7 +41,7 @@ const handleClick = () => {
   class={cx('flex gap-1 w-fit', {
     'flex-col justify-start': labelposition === 'top',
     'items-center': labelposition === 'left',
-    'text-disabled-fg': isDisabled,
+    'text-disabled-dark': isDisabled,
   })}
 >
   <div class="flex items-center gap-1.5">
@@ -79,8 +79,9 @@ const handleClick = () => {
         {
           'bg-gray-4 border-gray-4': isDisabled || isReadonly,
           'bg-gray-6 border-gray-6': !on && !(isDisabled || isReadonly),
-          'bg-success-fg border-success-fg': on && !(isDisabled || isReadonly),
-          'text-disabled-fg': isDisabled,
+          'bg-success-dark border-success-dark':
+            on && !(isDisabled || isReadonly),
+          'text-disabled-dark': isDisabled,
         }
       )}
     >

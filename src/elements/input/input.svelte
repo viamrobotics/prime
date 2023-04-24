@@ -248,9 +248,9 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       <p
         class={cx('text-xs', {
           'inline whitespace-nowrap': labelposition === 'left',
-          'text-text-subtle-1': !isDisabled,
-          'text-text-disabled-fg pointer-events-none': isDisabled,
-          'after:text-danger-fg after:content-["*"] after:ml-1': isRequired,
+          'text-subtle-1': !isDisabled,
+          'text-disabled-dark pointer-events-none': isDisabled,
+          'after:text-danger-dark after:content-["*"] after:ml-1': isRequired,
         })}
       >
         {label}
@@ -263,7 +263,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
           class={cx({
             'icon-info-outline text-gray-6': state === 'info',
             'icon-error-outline text-warning-bright': state === 'warn',
-            'icon-error-outline text-danger-fg': state === 'error',
+            'icon-error-outline text-danger-dark': state === 'error',
           })}
         />
       </v-tooltip>
@@ -286,11 +286,11 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       {
         'pl-2.5': isNumeric === false,
         'pl-3': isNumeric,
-        'bg-white border-border-1 hover:border-border-2 focus:border-gray-9':
+        'bg-white border-light hover:border-medium focus:border-gray-9':
           !isDisabled && !isInvalidNumericInput,
-        'pointer-events-none bg-disabled-bg text-disabled-fg border-disabled-bg':
+        'pointer-events-none bg-disabled-light text-disabled-dark border-disabled-light':
           isDisabled || isDragging || isReadonly,
-        'border-danger-fg border -outline-offset-1 outline-[1.5px] outline-danger-fg':
+        'border-danger-dark border -outline-offset-1 outline-[1.5px] outline-danger-dark':
           state === 'error' || isInvalidNumericInput,
         'border-warning-bright -outline-offset-1 outline-[1.5px] outline-warning-bright':
           state === 'warn',
@@ -323,7 +323,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
               minwidth="auto"
               text={value}
             >
-              <div class="h-2 w-2 bg-gray-800 rounded-full " />
+              <div class="h-2 w-2 bg-gray-800 rounded-full" />
             </v-tooltip>
           </div>
         </div>

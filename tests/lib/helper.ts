@@ -1,11 +1,23 @@
 import type { Page } from '@playwright/test';
-import config from '../../tailwind.config.cjs';
+// eslint-disable-next-line import/extensions
+import { theme } from '../../theme.js';
 
-export const hexToRGB = (color: string) => {
-  const hex = config.theme.extend.colors[color];
+type Key =
+  | keyof typeof theme.extend.backgroundColor
+  | keyof typeof theme.extend.borderColor
+  | keyof typeof theme.extend.boxShadow
+  | keyof typeof theme.extend.colors
+  | keyof typeof theme.extend.fill
+  | keyof typeof theme.extend.textColor;
+
+export const hexToRGB = (section: keyof typeof theme.extend, key: Key) => {
+  const extend = theme.extend as Record<string, unknown>;
+  const hex = (extend[section] as Record<string, Record<string, string>>)[
+    key
+  ] as unknown as string;
 
   if (!hex) {
-    throw new Error(`hex not found for color: ${color}`);
+    throw new Error(`hex not found for ${section}: ${key}`);
   }
 
   let alpha = false;

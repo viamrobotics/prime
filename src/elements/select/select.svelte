@@ -45,7 +45,7 @@ let isReduceSort: boolean;
 let doesSearch: boolean;
 let parsedOptions: string[];
 let sortedOptions: string[];
-let searchedOptions: { option: string; search?: string[] }[];
+let searchedOptions: { option: string; search?: string[] | undefined }[];
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
@@ -234,8 +234,8 @@ $: {
     {#if label}
       <p
         class={cx('text-xs', {
-          'text-text-subtle-1': !isDisabled && !isReadonly,
-          'text-disabled-fg': isDisabled || isReadonly,
+          'text-subtle-1': !isDisabled && !isReadonly,
+          'text-disabled-dark': isDisabled || isReadonly,
           'inline whitespace-nowrap': labelposition === 'left',
         })}
       >
@@ -249,7 +249,7 @@ $: {
           class={cx({
             'icon-info-outline': state === 'info',
             'icon-error-outline text-warning-bright': state === 'warn',
-            'icon-error-outline text-danger-fg': state === 'error',
+            'icon-error-outline text-danger-dark': state === 'error',
           })}
         />
       </v-tooltip>
@@ -269,16 +269,16 @@ $: {
           class={cx(
             'py-1.5 pl-2.5 pr-1 grow text-xs outline-none appearance-none w-full border bg-white',
             {
-              'border-border-1 hover:border-border-2 focus:border-gray-9':
+              'border-light hover:border-medium focus:border-gray-9':
                 !isDisabled &&
                 !isReadonly &&
                 state !== 'error' &&
                 state !== 'warn',
-              'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
+              'border-danger-dark -outline-offset-1 outline-[2px] outline-danger-dark':
                 state === 'error',
               'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
                 state === 'warn',
-              'border-disabled-bg !bg-disabled-bg text-disabled-fg':
+              'border-disabled-light !bg-disabled-light text-disabled-dark':
                 isDisabled || isReadonly,
             }
           )}
@@ -293,7 +293,7 @@ $: {
             'py-1.5 px-1 grid place-content-center transition-transform duration-200',
             {
               'rotate-180': open,
-              'text-disabled-fg': isDisabled || isReadonly,
+              'text-disabled-dark': isDisabled || isReadonly,
             }
           )}
           on:click={handleIconClick}
@@ -301,7 +301,7 @@ $: {
         >
           <v-icon
             class={cx('flex', {
-              'text-disabled-fg': isDisabled,
+              'text-disabled-dark': isDisabled,
               'text-gray-6': !isDisabled,
             })}
             name="chevron-down"

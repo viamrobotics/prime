@@ -50,11 +50,5 @@ export interface SubSchema {
   type: string;
 }
 
-export interface MonacoSchema {
-  readonly uri: string;
-  readonly fileMatch?: string[] | undefined;
-  readonly schema?: unknown;
-}
-
 export type MonacoSupportedThemes = 'vs' | 'vs-dark';
 export type MonacoMarker = monaco.editor.IMarker;

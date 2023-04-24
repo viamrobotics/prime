@@ -159,7 +159,7 @@ test('Given error state and tooltip value, there should be an error tooltip next
 }) => {
   const select = page.getByTestId('select-error-tooltip');
   const tooltip = select.locator('label > div > v-tooltip').first();
-  await expect(tooltip.locator('.text-danger-fg')).toBeVisible();
+  await expect(tooltip.locator('.text-danger-dark')).toBeVisible();
 
   // text is not visible
   await expect(tooltip.getByText('error tip').first()).not.toBeVisible();

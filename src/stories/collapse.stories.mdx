@@ -44,11 +44,11 @@ Toggles visibility of content
     }}
   >
     {({ title, content }) => `
-      <v-collapse
-        title='${title}'
-      >
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${content}</div>
-      </v-collapse>
+<v-collapse
+  title='${title}'
+>
+  <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${content}</div>
+</v-collapse>
     `}
   </Story>
 </Canvas>
@@ -63,12 +63,12 @@ Toggles visibility of content
     }}
   >
     {({ title, content }) => `
-      <v-collapse
-        title='${title}'
-      >
-        <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${content}</div>
-      </v-collapse>
+<v-collapse
+  title='${title}'
+>
+  <v-badge slot='header' label='Inactive'></v-badge>
+  <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${content}</div>
+</v-collapse>
     `}
   </Story>
 </Canvas>
@@ -83,13 +83,13 @@ Toggles visibility of content
     }}
   >
     {({ title, content }) => `
-      <v-collapse
-        title='${title}'
-      >
-        <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
-        <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${content}</div>
-      </v-collapse>
+<v-collapse
+  title='${title}'
+>
+  <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
+  <v-badge slot='header' label='Inactive'></v-badge>
+  <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${content}</div>
+</v-collapse>
     `}
   </Story>
 </Canvas>
@@ -104,14 +104,14 @@ Toggles visibility of content
     }}
   >
     {({ title, content }) => `
-      <v-collapse
-        title='${title}'
-        variant=''
-      >
-        <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
-        <v-badge slot='header' label='Inactive'></v-badge>
-        <div style='font-size: 12px; padding: 1rem'>${content}</div>
-      </v-collapse>
+<v-collapse
+  title='${title}'
+  variant=''
+>
+  <v-breadcrumbs slot='title' crumbs='Robot,Motor'></v-breadcrumbs>
+  <v-badge slot='header' label='Inactive'></v-badge>
+  <div style='font-size: 12px; padding: 1rem'>${content}</div>
+</v-collapse>
     `}
   </Story>
 </Canvas>

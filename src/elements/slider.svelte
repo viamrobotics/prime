@@ -449,7 +449,7 @@ const onChange = () => {
   {#if label}
     <p
       class={cn('text-xs capitalize', {
-        'text-disabled-fg': isDisabled,
+        'text-disabled-dark': isDisabled,
       })}
     >
       {label}
@@ -461,7 +461,7 @@ const onChange = () => {
     class={cn(
       'slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-gray-6',
       {
-        'bg-disabled-bg text-disabled-fg': isDisabled,
+        'bg-disabled-light text-disabled-dark': isDisabled,
       }
     )}
     class:range
@@ -502,7 +502,7 @@ const onChange = () => {
           class={cn(
             'absolute left-0 bottom-1 block rounded-full h-full w-full border border-gray-9 bg-white',
             {
-              'border-disabled-fg': isDisabled || isReadonly,
+              'border-disabled-dark': isDisabled || isReadonly,
             }
           )}
         />
@@ -513,8 +513,8 @@ const onChange = () => {
             'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-gray-9 bg-white text-xs',
             {
               '-translate-y-1.5': !focus || activeHandle !== index,
-              'border-disabled-fg': isDisabled || isReadonly,
-              'text-disabled-fg': isDisabled || isReadonly,
+              'border-disabled-dark': isDisabled || isReadonly,
+              'text-disabled-dark': isDisabled || isReadonly,
             }
           )}
         >
@@ -532,7 +532,7 @@ const onChange = () => {
         class={cn(
           'absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-gray-9',
           {
-            'bg-disabled-bg': isDisabled || isReadonly,
+            'bg-disabled-light': isDisabled || isReadonly,
           }
         )}
         style="left: {rangeStart($springPositions)}%; right: {rangeEnd(
@@ -557,7 +557,7 @@ const onChange = () => {
               class={cn(
                 'absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-gray-6',
                 {
-                  'bg-disabled-bg': isDisabled || isReadonly,
+                  'bg-disabled-light': isDisabled || isReadonly,
                 }
               )}
               style="left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;"

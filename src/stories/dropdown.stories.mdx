@@ -48,17 +48,17 @@ Gives target element the ability to open a dropdown below itself
     }}
   >
     {({ content, match, open, controlled, target }) => `
-      <div style="padding: 50px 0px">
-        <v-dropdown ${match ? 'match' : ''} ${open ? 'open' : ''}>
-          <v-button label="${target}" slot="target"></v-button>
-          <div 
-            slot="content"
-            style="background-color: black; color: white; padding: 10px;"
-          >
-            ${content}
-          </div>
-        </v-dropdown>
-      </div>
+<div style="padding: 50px 0px">
+  <v-dropdown ${match ? 'match' : ''} ${open ? 'open' : ''}>
+    <v-button label="${target}" slot="target"></v-button>
+    <div 
+      slot="content"
+      style="background-color: black; color: white; padding: 10px;"
+    >
+      ${content}
+    </div>
+  </v-dropdown>
+</div>
     `}
   </Story>
 </Canvas>

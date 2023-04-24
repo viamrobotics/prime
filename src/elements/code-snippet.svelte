@@ -68,7 +68,7 @@ $: void highlight(element);
 
 <pre
   class="relative !border-none !m-0 !pr-24 !pb-0
-    {theme === 'vsc-dark-plus' ? '!bg-gray-9' : '!bg-bg-2'} "><code
+    {theme === 'vsc-dark-plus' ? '!bg-gray-9' : '!bg-light'} "><code
     bind:this={element}
     class="language-{language} font-mono">{code}</code
   >
