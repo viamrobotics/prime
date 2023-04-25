@@ -56,7 +56,7 @@ addStyles();
       {/if}
 
       <figure>
-        <figcaption class="text-sm font-medium text-default">
+        <figcaption class="text-sm font-bold text-default">
           {title}
         </figcaption>
 
