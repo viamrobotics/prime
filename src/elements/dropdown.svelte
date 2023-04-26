@@ -24,7 +24,7 @@ const toggleDropdown = () => {
 };
 </script>
 
-<div class="relative inline-block w-full">
+<div class="relative flex w-full">
   <div
     class="inline-block w-full"
     on:click={toggleDropdown}
@@ -33,9 +33,10 @@ const toggleDropdown = () => {
     <slot name="target" />
   </div>
   <div
-    class={cx('absolute z-40', {
+    class={cx('absolute z-40 w-full', {
       'left-0': isMatch,
       'right-0': isMatch,
+      'top-full': isMatch,
       'overflow-hidden': isMatch,
       invisible: !isOpen,
     })}
