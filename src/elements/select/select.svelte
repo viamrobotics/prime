@@ -288,7 +288,6 @@ $: {
               'text-disabled-dark': isDisabled || isReadonly,
             }
           )}
-          
         >
           <v-icon
             class={cx('flex', {
