@@ -186,14 +186,6 @@ const handleFocusOut = (event: FocusEvent) => {
   }
 };
 
-const handleIconClick = () => {
-  if (open) {
-    open = false;
-  } else {
-    input.focus();
-  }
-};
-
 const handleOptionMouseEnter = (index: number) => {
   if (keyboardControlling) {
     return;
@@ -296,8 +288,6 @@ $: {
               'text-disabled-dark': isDisabled || isReadonly,
             }
           )}
-          on:click={handleIconClick}
-          on:focusin|stopPropagation
         >
           <v-icon
             class={cx('flex', {

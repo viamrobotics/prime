@@ -188,14 +188,6 @@ const handleFocusOut = (event: FocusEvent) => {
   }
 };
 
-const handleIconClick = () => {
-  if (open) {
-    open = false;
-  } else {
-    input.focus();
-  }
-};
-
 const handlePillClick = (target: string) => {
   if (!isReadonly) {
     const newValue = parsedSelected.filter((item: string) => item !== target);
@@ -337,8 +329,6 @@ $: {
                 'text-disabled-dark': isDisabled || isReadonly,
               }
             )}
-            on:click={handleIconClick}
-            on:focusin|stopPropagation
           >
             <v-icon
               class={cx('flex', {
