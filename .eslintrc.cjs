@@ -125,6 +125,7 @@ module.exports = {
     'no-else-return': 'warn',
     'no-implicit-coercion': 'warn',
     'no-multi-assign': 'warn',
+    'no-nested-ternary': 'warn',
     'no-plusplus': 'warn',
     'no-promise-executor-return': 'warn',
     'no-useless-concat': 'warn',
