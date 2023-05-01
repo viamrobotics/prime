@@ -21,13 +21,13 @@ const handleClick = (option: string) => {
 };
 </script>
 
-<div class="w-full flex bg-bg-3 border-b border-b-border-2">
+<div class="w-full flex bg-medium border-b border-b-border-2">
   {#each parsedTabs as tab, index (tab)}
     <button
-      class={cx('px-4 py-1 text-sm first:ml-4 ', {
-        'bg-white border border-x-border-2 border-t-border-2 border-b-white font-semibold -mb-px text-text-default':
+      class={cx('px-4 py-1 text-sm first:ml-4 capitalize', {
+        'bg-white border border-x-border-2 border-t-border-2 border-b-white font-semibold -mb-px text-default':
           tab === selected,
-        'text-text-subtle-1': tab !== selected,
+        'text-subtle-1': tab !== selected,
         'border-l border-l-gray-300': selectedIndex > index,
         'border-r border-r-gray-300': selectedIndex < index,
       })}

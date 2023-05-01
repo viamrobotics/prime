@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import { waitForCustomEvent } from './lib/helper.js';
 
 const constants = {
-  BG_UNSELECTED: /bg-bg-3/,
-  BG_SELECTED: /bg-bg-2/,
+  BG_UNSELECTED: /bg-medium/,
+  BG_SELECTED: /bg-light/,
 };
 
 test.beforeEach(async ({ page }) => {
@@ -152,7 +152,7 @@ test('Radio tooltips are rendered as warn icon when state attribute is set to er
     .getByTestId('radio-tooltip-error-test')
     .locator('v-tooltip div')
     .first();
-  await expect(tooltipError).toHaveClass(/icon-error-outline text-danger-fg/);
+  await expect(tooltipError).toHaveClass(/icon-error-outline text-danger-dark/);
 });
 
 test('Radio tooltips are rendered as info icon when state attribute is set to info', async ({

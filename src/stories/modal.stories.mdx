@@ -55,21 +55,21 @@ Creates a modal overlay
     }}
   >
     {({ title, message, variant, buttonText, open }) => `
-      <div style="height: 16rem">
-        <v-modal
-          ${open ? 'open' : ''}
-          title='${title}'
-          message='${message}'
-          onclose='this.removeAttribute("open")'
-        >
-          <v-button
-            class='ml-4'
-            variant='${variant}'
-            label='${buttonText}'
-            slot='action'
-          />
-        </v-modal>
-      </div>
+<div style="height: 16rem">
+  <v-modal
+    ${open ? 'open' : ''}
+    title='${title}'
+    message='${message}'
+    onclose='this.removeAttribute("open")'
+  >
+    <v-button
+      class='ml-4'
+      variant='${variant}'
+      label='${buttonText}'
+      slot='action'
+    />
+  </v-modal>
+</div>
     `}
   </Story>
 </Canvas>

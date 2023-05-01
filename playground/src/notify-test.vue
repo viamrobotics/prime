@@ -10,10 +10,10 @@
       message='message text'
     />
     <v-notify 
-      data-testid="notify-variant-error" 
+      data-testid="notify-variant-danger" 
       title='title text' 
       message='message text' 
-      variant="error"
+      variant="danger"
     />
     <v-notify 
       data-testid="notify-variant-warning" 
@@ -34,23 +34,11 @@
       variant="info"
     />
     <v-notify 
-      data-testid="notify-background-gray" 
-      title='title text' 
-      message='message text' 
-      background="gray"
-    />
-    <v-notify
-      data-testid="notify-background-white" 
-      title='title text' 
-      message='message text' 
-      background="white"
-    />
-    <v-notify 
       data-testid="notify-slot" 
       title='title text' 
       message="message text"
     >
-        slot text
+      slot text
     </v-notify>
   </main>
 </template>

@@ -27,6 +27,7 @@ export let buttontext = 'ENTER';
 export let buttonicon = '';
 export let sortoption: utils.SortOptions = 'default';
 export let message = '';
+export let heading = '';
 
 const dispatch = dispatcher();
 
@@ -44,7 +45,7 @@ let isReduceSort: boolean;
 let doesSearch: boolean;
 let parsedOptions: string[];
 let sortedOptions: string[];
-let searchedOptions: { option: string; search?: string[] }[];
+let searchedOptions: { option: string; search?: string[] | undefined }[];
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
@@ -56,7 +57,7 @@ $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: sortedOptions = doesSearch
   ? applySearchSort(value, parsedOptions)
-  : parsedOptions;
+  : reduceEmptyOptions(parsedOptions);
 $: searchedOptions = utils.applySearchHighlight(
   sortedOptions,
   doesSearch ? value : ''
@@ -70,8 +71,20 @@ const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
 
+const reduceEmptyOptions = (options: string[]) => {
+  if (options[0] === '' && options.length === 1) {
+    return [];
+  }
+  return options;
+};
+
 const applySearchSort = (term: string, options: string[]) => {
   dispatch('search', { term });
+
+  if (reduceEmptyOptions(options).length === 0) {
+    return [];
+  }
+
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
@@ -100,16 +113,19 @@ const handleKeyUp = (event: KeyboardEvent) => {
 const handleEnter = () => {
   if (navigationIndex > -1) {
     value = sortedOptions[navigationIndex]!;
+    dispatch('change', { value });
   } else {
     const result = sortedOptions.find((item) => item.toLowerCase() === value);
 
     if (result) {
       value = result;
+      dispatch('change', { value });
     }
   }
   if (open) {
     input.blur();
   }
+
   dispatch('input', { value });
 };
 
@@ -132,6 +148,7 @@ const handleNavigate = (direction: number) => {
 const handleOptionSelect = (target: string, event: Event) => {
   const { checked } = event.target as HTMLInputElement;
   if (value === target) {
+    dispatch('change', { value });
     event.preventDefault();
     open = false;
     return;
@@ -140,6 +157,7 @@ const handleOptionSelect = (target: string, event: Event) => {
   value = checked ? target : '';
 
   open = false;
+  dispatch('change', { value });
   dispatch('input', { value });
 };
 
@@ -165,14 +183,6 @@ const handleFocusOut = (event: FocusEvent) => {
   if (!root.contains(event.relatedTarget as Node)) {
     open = false;
     navigationIndex = -1;
-  }
-};
-
-const handleIconClick = () => {
-  if (open) {
-    open = false;
-  } else {
-    input.focus();
   }
 };
 
@@ -216,8 +226,8 @@ $: {
     {#if label}
       <p
         class={cx('text-xs', {
-          'text-text-subtle-1': !isDisabled && !isReadonly,
-          'text-disabled-fg': isDisabled || isReadonly,
+          'text-subtle-1': !isDisabled && !isReadonly,
+          'text-disabled-dark': isDisabled || isReadonly,
           'inline whitespace-nowrap': labelposition === 'left',
         })}
       >
@@ -231,7 +241,7 @@ $: {
           class={cx({
             'icon-info-outline': state === 'info',
             'icon-error-outline text-warning-bright': state === 'warn',
-            'icon-error-outline text-danger-fg': state === 'error',
+            'icon-error-outline text-danger-dark': state === 'error',
           })}
         />
       </v-tooltip>
@@ -251,16 +261,16 @@ $: {
           class={cx(
             'py-1.5 pl-2.5 pr-1 grow text-xs outline-none appearance-none w-full border bg-white',
             {
-              'border-border-1 hover:border-border-2 focus:border-gray-9':
+              'border-light hover:border-medium focus:border-gray-9':
                 !isDisabled &&
                 !isReadonly &&
                 state !== 'error' &&
                 state !== 'warn',
-              'border-danger-fg -outline-offset-1 outline-[2px] outline-danger-fg':
+              'border-danger-dark -outline-offset-1 outline-[2px] outline-danger-dark':
                 state === 'error',
               'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
                 state === 'warn',
-              'border-disabled-bg !bg-disabled-bg text-disabled-fg':
+              'border-disabled-light !bg-disabled-light text-disabled-dark':
                 isDisabled || isReadonly,
             }
           )}
@@ -275,15 +285,13 @@ $: {
             'py-1.5 px-1 grid place-content-center transition-transform duration-200',
             {
               'rotate-180': open,
-              'text-disabled-fg': isDisabled || isReadonly,
+              'text-disabled-dark': isDisabled || isReadonly,
             }
           )}
-          on:click={handleIconClick}
-          on:focusin|stopPropagation
         >
           <v-icon
             class={cx('flex', {
-              'text-disabled-fg': isDisabled,
+              'text-disabled-dark': isDisabled,
               'text-gray-6': !isDisabled,
             })}
             name="chevron-down"
@@ -305,6 +313,11 @@ $: {
             class="flex max-h-36 flex-col"
             on:mouseleave={clearNavigationIndex}
           >
+            {#if heading}
+              <span class="flex text-xs text-gray-500 pl-2 py-2 flex-wrap">
+                {heading}
+              </span>
+            {/if}
             {#each searchedOptions as { search, option }, index (option)}
               <label
                 class={cx(

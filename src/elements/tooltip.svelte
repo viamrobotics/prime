@@ -8,7 +8,6 @@ import { addStyles } from '../lib/index';
 
 export let text = '';
 export let location: Locations = 'top';
-export let minwidth: number | string = '12rem';
 export let state: 'visible' | 'invisible' = 'invisible';
 
 let container: HTMLElement;
@@ -110,16 +109,17 @@ addStyles();
       border
       border-gray-9
       z-[1000]
+      w-max
+      max-w-[250px]
+      flex items-center gap-1
     `}
-    style="
-      transform: translate({x}px, {y}px);
-      min-width: {minwidth};
-    "
+    style="transform: translate({x}px, {y}px);"
   >
     <div
       bind:this={arrowElement}
       class="absolute triangle border-b-gray-9 w-0 h-0"
     />
+    <slot name="icon" />
     {text}
     <slot name="text" />
   </div>

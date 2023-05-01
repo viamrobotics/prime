@@ -20,7 +20,7 @@ test('Renders headers with appropriate styling', async ({ page }) => {
   }
   await expect(tableAuto.locator('thead')).toHaveCSS(
     'border-color',
-    hexToRGB('black')
+    hexToRGB('colors', 'black')
   );
 });
 

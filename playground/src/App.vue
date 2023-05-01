@@ -14,8 +14,12 @@ const handleRotate = (event: CustomEvent) => {
 }
 
 const handleInput = (event: CustomEvent) => {
-  console.log(event)
   value = event.detail.value
+  console.log('input:', value)
+}
+
+const handleSelect = (event: CustomEvent) => {
+  console.log('change', event.detail.value);
 }
 
 let lazyValue = $ref('')
@@ -123,14 +127,40 @@ let selectInput = $ref("")
       buttonicon="x"
       heading="heading title"
     />
-    <section>
+    <section class="flex items-end gap-2 my-6">
       <v-select
-      options="test1, test2, test3, test3[]"
-      v-model="selectInput"
-      label="Test Select"
-      state="'info'"
-      class="my-6"
-    />  
+        options="test1, test2, test3, test3[]"
+        v-model="selectInput"
+        label="Test Select"
+        state="'info'"
+        heading="heading"
+        exact="true"
+        @change="handleSelect"
+      />  
+
+      <v-multiselect
+        options="test1, test2, test3, test3[]"
+        v-model="selectInput"
+        label="Test Select"
+        state="'info'"
+        heading="heading"
+        exact="true"
+        @change="handleSelect"
+      />  
+
+      <v-select
+        options="test1, test2, test3, test3[]"
+        v-model="selectInput"
+        label="Test Select"
+        state="'info'"
+        heading="heading"
+        exact="true"
+        @change="handleSelect"
+      />  
+
+      <v-radio options="option 1, option 2" />
+
+      <v-button label="Hi" />
 
     </section>
     <v-collapse class="p-3" title='Hello world?'>

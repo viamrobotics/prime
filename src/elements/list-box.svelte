@@ -47,7 +47,7 @@ $: displaySuffix = htmlToBoolean(suffix, 'suffix');
 const generateOption = (initial: string): ListBoxOption => {
   if (displaySuffix) {
     const split = initial.split(' ');
-    return { value: split[0] || '', suffix: split[1], selected: false };
+    return { value: split[0] ?? '', suffix: split[1] ?? '', selected: false };
   }
 
   return { value: initial, selected: false };
@@ -137,9 +137,9 @@ const handleMoveClick = (target: ListBoxSide) => {
     class="w-full flex flex-col gap-2 self-stretch"
     style={`height: ${height};`}
   >
-    <span class="text-xs text-text/subtle-1">{leftlabel}</span>
+    <span class="text-xs text-subtle-1">{leftlabel}</span>
     <div
-      class="border border-borders/border-2 grow p-2 bg-white flex flex-col overflow-auto"
+      class="border border-medium grow p-2 bg-white flex flex-col overflow-auto"
     >
       {#if options.left.length > 0}
         {#each options.left as option}
@@ -156,7 +156,7 @@ const handleMoveClick = (target: ListBoxSide) => {
             />
             <span class="px-4">{option.value}</span>
             {#if displaySuffix && option.suffix}
-              <span class="text-text/subtle-2">{option.suffix}</span>
+              <span class="text-subtle-2">{option.suffix}</span>
             {/if}
           </button>
         {/each}
@@ -191,9 +191,9 @@ const handleMoveClick = (target: ListBoxSide) => {
     class="w-full flex flex-col gap-2 self-stretch"
     style={`height: ${height};`}
   >
-    <span class="text-xs text-text/subtle-1">{rightlabel}</span>
+    <span class="text-xs text-subtle-2">{rightlabel}</span>
     <div
-      class="border border-borders/border-2 grow p-2 bg-white flex flex-col overflow-auto"
+      class="border border-medium grow p-2 bg-white flex flex-col overflow-auto"
     >
       {#if options.right.length > 0}
         {#each options.right as option}
@@ -210,7 +210,7 @@ const handleMoveClick = (target: ListBoxSide) => {
             />
             <span class="px-4">{option.value}</span>
             {#if displaySuffix && option.suffix}
-              <span class="text-text/subtle-2">{option.suffix}</span>
+              <span class="text-subtle-2">{option.suffix}</span>
             {/if}
           </button>
         {/each}
