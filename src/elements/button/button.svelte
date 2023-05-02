@@ -66,7 +66,7 @@ const handleParentClick = (event: PointerEvent) => {
     aria-disabled={isDisabled ? true : undefined}
     {title}
     class={cx(
-      'will-change-transform active:scale-95 motion-safe:transition-transform',
+      'active:scale-95 motion-safe:transition-transform',
       {
         'inline-flex items-center justify-center gap-1.5 py-1.5 px-3 text-xs border':
           variant !== 'icon',
