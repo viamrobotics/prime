@@ -14,22 +14,24 @@ addStyles();
 </script>
 
 <div
-  class={cx('relative flex border', {
+  class={cx('flex border', {
     'bg-medium border-medium': variant !== 'danger',
     'bg-danger-light border-danger-medium': variant === 'danger',
   })}
 >
-  <div
-    class={cx(
-      'absolute top-0 left-0 w-[3px] h-[calc(100%+2px)] -mt-px -ml-px',
-      {
-        'bg-danger-dark': variant === 'danger',
-        'bg-warning-bright': variant === 'warning',
-        'bg-success-dark': variant === 'success',
-        'bg-info-dark': variant === 'info',
-      }
-    )}
-  />
+  <div class="flex-col">
+    <div
+      class={cx(
+        'w-[3px] h-[calc(100%+2px)] -mt-px -ml-px',
+        {
+          'bg-danger-dark': variant === 'danger',
+          'bg-warning-bright': variant === 'warning',
+          'bg-success-dark': variant === 'success',
+          'bg-info-dark': variant === 'info',
+        }
+      )}
+    />
+  </div>
 
   <div class="flex items-center justify-between w-full gap-2 py-2 px-3">
     <div class="flex gap-2">
