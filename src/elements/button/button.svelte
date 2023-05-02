@@ -65,24 +65,21 @@ const handleParentClick = (event: PointerEvent) => {
     aria-label={variant === 'icon' ? label : undefined}
     aria-disabled={isDisabled ? true : undefined}
     {title}
-    class={cx(
-      'active:scale-95 motion-safe:transition-transform',
-      {
-        'inline-flex items-center justify-center gap-1.5 py-1.5 px-3 text-xs border':
-          variant !== 'icon',
-        'bg-light border-light hover:bg-medium hover:border-medium':
-          variant === 'primary',
-        'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black':
-          variant === 'inverse-primary',
-        'bg-danger-dark text-white border-danger-dark hover:bg-[#aa2a2b]':
-          variant === 'danger',
-        'bg-success-dark border-success-dark text-white': variant === 'success',
-        'bg-danger-light border-danger-medium text-danger-dark hover:bg-[#f5dfdc]':
-          variant === 'outline-danger',
-        '!bg-disabled-light !border-disabled-light text-disabled-dark pointer-events-none select-none':
-          isDisabled,
-      }
-    )}
+    class={cx('active:scale-95 motion-safe:transition-transform', {
+      'inline-flex items-center justify-center gap-1.5 py-1.5 px-3 text-xs border':
+        variant !== 'icon',
+      'bg-light border-light hover:bg-medium hover:border-medium':
+        variant === 'primary',
+      'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black':
+        variant === 'inverse-primary',
+      'bg-danger-dark text-white border-danger-dark hover:bg-[#aa2a2b]':
+        variant === 'danger',
+      'bg-success-dark border-success-dark text-white': variant === 'success',
+      'bg-danger-light border-danger-medium text-danger-dark hover:bg-[#f5dfdc]':
+        variant === 'outline-danger',
+      '!bg-disabled-light !border-disabled-light text-disabled-dark pointer-events-none select-none':
+        isDisabled,
+    })}
     style={isDisabled ? '-webkit-user-select: none' : ''}
     on:click={handleClick}
   >
