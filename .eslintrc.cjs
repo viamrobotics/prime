@@ -4,9 +4,7 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    es6: true,
   },
-  parser: '@typescript-eslint/parser',
   parserOptions: {
     tsConfigRootDir: __dirname,
     extraFileExtensions: ['.svelte'],
@@ -16,158 +14,23 @@ module.exports = {
       './tests/tsconfig.json',
       './playground/tsconfig.json',
     ],
-    ecmaVersion: 'latest',
-    sourceType: 'module',
   },
-  plugins: [
-    'svelte3',
-    '@typescript-eslint',
-    'unicorn',
-    'import',
-    'jsx-a11y',
-    'sonarjs',
-    'prefer-arrow',
-    'tailwindcss',
-  ],
-  overrides: [
-    {
-      files: ['**/*.svelte'],
-      processor: 'svelte3/svelte3',
-      settings: {
-        'svelte3/compiler-options': {
-          customElement: true,
-        },
-      },
-    },
-    {
-      files: ['.*.cjs', '**/*.cjs'],
-      parserOptions: {
-        sourceType: 'script',
-      },
-      env: {
-        node: true,
-      },
-      rules: {
-        '@typescript-eslint/no-var-requires': 'off',
-      },
-    },
-    {
-      files: ['.*.js', '*.js', 'scripts/**/*.js'],
-      env: {
-        node: true,
-      },
-      rules: {
-        'import/extensions': ['error', 'ignorePackages'],
-      },
-    },
-  ],
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:import/recommended',
-    'plugin:import/typescript',
-    'plugin:unicorn/recommended',
+    /*
+     * TODO(mc, 2023-04-18): pretty sure jsx-a11y and tailwindcss plugins
+     * are not compatible with svelt3 plugin; investigate and maybe remove
+     */
     'plugin:jsx-a11y/recommended',
-    'plugin:sonarjs/recommended',
     'plugin:tailwindcss/recommended',
     'plugin:storybook/recommended',
-    'prettier',
+    '@viamrobotics/eslint-config',
   ],
-  rules: {
-    // Eslint rules
-    'array-callback-return': 'error',
-    eqeqeq: ['error', 'always', { null: 'always' }],
-    'no-caller': 'error',
-    'no-param-reassign': 'error',
-    'no-return-await': 'error',
-    'no-unreachable-loop': 'error',
-    'no-unsafe-optional-chaining': 'error',
-    'nonblock-statement-body-position': 'error',
-    'one-var': ['error', { let: 'never', const: 'never' }],
-    'require-atomic-updates': 'error',
-    'spaced-comment': ['error', 'always', { markers: ['/'] }],
-    radix: 'error',
-    'require-await': 'error',
-    strict: 'error',
-    yoda: 'error',
-    'no-var': 'error',
-    'object-shorthand': ['error', 'properties'],
-    'prefer-arrow-callback': 'error',
-    'prefer-const': 'error',
-    'prefer-template': 'error',
-    'prefer-arrow/prefer-arrow-functions': [
-      'error',
-      {
-        disallowPrototype: true,
-        singleReturnOnly: false,
-        classPropertiesAllowed: false,
-      },
-    ],
-    // Unicorn rules
-    'unicorn/switch-case-braces': 'off',
-    'unicorn/no-unsafe-regex': 'error',
-    'unicorn/no-unused-properties': 'error',
-    'unicorn/custom-error-definition': 'error',
-    'unicorn/import-index': 'error',
-    'unicorn/import-style': 'error',
-    'unicorn/prefer-string-replace-all': 'error',
-    'unicorn/string-content': 'error',
-
-    // @TODO: switch to error once safari supports these:
-    // https://caniuse.com/?search=array.prototype.at
-    'unicorn/prefer-at': 'off',
-    // https://caniuse.com/?search=object.hasOwn
-    'unicorn/prefer-object-has-own': 'off',
-    // This is producing some less readable regex.
-    'unicorn/better-regex': 'off',
-
-    'unicorn/prevent-abbreviations': 'off',
-    'unicorn/filename-case': 'off',
-    'unicorn/no-null': 'off',
-    'unicorn/consistent-destructuring': 'off',
-    'unicorn/prefer-top-level-await': 'off',
-
-    // Tailwind
-    'tailwindcss/no-custom-classname': 'off',
-
-    // Typescript
-    '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/dot-notation': 'error',
-
-    // Sonar
-    'sonarjs/no-duplicate-string': 'off',
-    'sonarjs/cognitive-complexity': ['error', 18],
-
-    // Import
-    'import/no-unresolved': 'error',
-    'import/named': 'off',
-    'import/default': 'error',
-    'import/namespace': 'error',
-    'import/no-absolute-path': 'error',
-    'import/no-webpack-loader-syntax': 'error',
-    'import/no-self-import': 'error',
-    'import/no-cycle': 'error',
-    'import/no-useless-path-segments': 'error',
-    'import/export': 'error',
-    'import/extensions': [
-      'error',
-      'never',
-      { svelte: 'always', json: 'always' },
-    ],
-    // Do not currently work with eslint-plugin-svelte
-    'import/first': 'off',
-    'import/order': 'error',
-
-    // Svelte
-    'svelte3/missing-custom-element-compile-options': 'off',
-    'missing-custom-element-compile-options': 'off',
-  },
+  plugins: ['svelte3', 'prefer-arrow'],
   settings: {
     'svelte3/compiler-options': {
       customElement: false,
     },
+    'svelte3/typescript': true,
     'import/resolver': {
       typescript: {
         extensions: ['.js', '.ts', '.svelte'],
@@ -181,6 +44,95 @@ module.exports = {
         ],
       },
     },
-    'svelte3/typescript': () => require('typescript'),
+  },
+  overrides: [
+    {
+      files: ['**/*.svelte'],
+      processor: 'svelte3/svelte3',
+      settings: {
+        'svelte3/compiler-options': {
+          customElement: true,
+        },
+      },
+    },
+    {
+      files: ['.*.@(cjs|js)', '*.@(cjs|js)', 'scripts/**/*', 'tests/**/*'],
+      env: {
+        node: true,
+      },
+    },
+    {
+      files: ['.*.cjs', '**/*.cjs'],
+      parserOptions: {
+        sourceType: 'script',
+      },
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
+    {
+      files: ['.*.js', '*.js', 'scripts/**/*.js'],
+      rules: {
+        'import/extensions': ['error', 'ignorePackages'],
+      },
+    },
+    {
+      files: ['tests/**/*'],
+      rules: {
+        'multiline-comment-style': 'off',
+        'no-await-in-loop': 'off',
+        'sonarjs/no-duplicate-string': 'off',
+        'unicorn/better-regex': 'off',
+      },
+    },
+  ],
+
+  rules: {
+    'prefer-arrow/prefer-arrow-functions': [
+      'error',
+      {
+        disallowPrototype: true,
+        singleReturnOnly: false,
+        classPropertiesAllowed: false,
+      },
+    ],
+
+    // TODO(mc, 2023-04-18): remove temporary overrides
+    camelcase: 'warn',
+    curly: 'warn',
+    'id-length': [
+      'warn',
+      {
+        exceptions: [
+          '_',
+          'x',
+          'y',
+          'z',
+          'w',
+          'r',
+          'i',
+          'j',
+          'k',
+          'l',
+          'h',
+          'a',
+          'b',
+        ],
+      },
+    ],
+    'line-comment-position': 'warn',
+    'multiline-comment-style': 'warn',
+    'no-else-return': 'warn',
+    'no-implicit-coercion': 'warn',
+    'no-multi-assign': 'warn',
+    'no-nested-ternary': 'warn',
+    'no-plusplus': 'warn',
+    'no-promise-executor-return': 'warn',
+    'no-useless-concat': 'warn',
+    'no-void': 'warn',
+    'require-unicode-regexp': 'warn',
+    'sonarjs/no-duplicate-string': 'warn',
+    '@typescript-eslint/no-shadow': 'warn',
+    'unicorn/switch-case-braces': 'warn',
   },
 };

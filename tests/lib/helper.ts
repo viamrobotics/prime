@@ -27,11 +27,13 @@ export const hexToRGB = (section: keyof typeof theme.extend, key: Key) => {
 
   const parsedHex = Number.parseInt(h, 16);
 
+  /* eslint-disable no-bitwise */
   return `rgb${alpha ? 'a' : ''}(${parsedHex >>> (alpha ? 24 : 16)}, ${
     (parsedHex & (alpha ? 0x00_ff_00_00 : 0x00_ff_00)) >>> (alpha ? 16 : 8)
   }, ${(parsedHex & (alpha ? 0x00_00_ff_00 : 0x00_00_ff)) >>> (alpha ? 8 : 0)}${
     alpha ? `, ${parsedHex & 0x00_00_00_ff}` : ''
   })`;
+  /* eslint-enable */
 };
 
 export interface CustomEventHandler {

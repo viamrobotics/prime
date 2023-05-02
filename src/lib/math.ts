@@ -32,6 +32,7 @@ export const hashCode = (str: string) => {
 
   for (let index = 0; index < str.length; index += 1) {
     chr = str.codePointAt(index)!;
+    // eslint-disable-next-line no-bitwise
     hash = (hash << 5) - hash + chr;
     hash = Math.trunc(hash); // Convert to 32bit integer
   }
