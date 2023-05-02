@@ -21,15 +21,12 @@ addStyles();
 >
   <div class="flex-col">
     <div
-      class={cx(
-        'w-[3px] h-[calc(100%+2px)] -mt-px -ml-px',
-        {
-          'bg-danger-dark': variant === 'danger',
-          'bg-warning-bright': variant === 'warning',
-          'bg-success-dark': variant === 'success',
-          'bg-info-dark': variant === 'info',
-        }
-      )}
+      class={cx('w-[3px] h-[calc(100%+2px)] -mt-px -ml-px', {
+        'bg-danger-dark': variant === 'danger',
+        'bg-warning-bright': variant === 'warning',
+        'bg-success-dark': variant === 'success',
+        'bg-info-dark': variant === 'info',
+      })}
     />
   </div>
 
