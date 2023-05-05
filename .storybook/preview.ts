@@ -1,3 +1,5 @@
+import '../src/main.ts';
+
 const preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -16,4 +18,5 @@ const preview = {
     inlineStories: true,
   },
 };
+
 export default preview;
