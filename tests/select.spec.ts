@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/select-test.html');
+  await page.goto('/playground/select-test.html');
 });
 
 test('Given an options attribute, on select the options should be visible and clicking an option should update the input', async ({

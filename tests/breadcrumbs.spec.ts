@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/breadcrumb-test.html');
+  await page.goto('/playground/breadcrumb-test.html');
 });
 
 test('Renders breadcrumbs with the list of values specified in crumbs attribute as pills', async ({

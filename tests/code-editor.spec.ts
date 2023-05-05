@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/code-editor-test.html');
+  await page.goto('/playground/code-editor-test.html');
 });
 
 test('Renders JSON code editor correctly', async ({ page }) => {

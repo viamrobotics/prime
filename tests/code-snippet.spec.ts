@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/code-snippet-test.html');
+  await page.goto('/playground/code-snippet-test.html');
 });
 
 test('Renders JSON code snippet correctly', async ({ page }) => {

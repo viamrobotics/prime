@@ -7,7 +7,7 @@ const constants = {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/radio-test.html');
+  await page.goto('/playground/radio-test.html');
 });
 
 test('Renders options as radio buttons', async ({ page }) => {

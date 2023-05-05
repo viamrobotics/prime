@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('Renders appropriately according to open attribute', async ({ page }) => {
-  await page.goto('/modal-test.html');
+  await page.goto('/playground/modal-test.html');
 
   // No "open" attribute applied
   await expect(page.getByTestId('modal-default')).toBeHidden();
@@ -15,7 +15,7 @@ test('Renders appropriately according to open attribute', async ({ page }) => {
 });
 
 test('Renders title and message', async ({ page }) => {
-  await page.goto('/modal-test.html');
+  await page.goto('/playground/modal-test.html');
 
   // title renders on open modal
   const modalOpen = page.getByTestId('modal-open');
@@ -30,7 +30,7 @@ test('Renders title and message', async ({ page }) => {
 });
 
 test('Hides when overlay behind the modal is clicked', async ({ page }) => {
-  await page.goto('/modal-test.html');
+  await page.goto('/playground/modal-test.html');
 
   // Click Overlay
   await page.locator('#overlay').click({ force: true });
@@ -40,7 +40,7 @@ test('Hides when overlay behind the modal is clicked', async ({ page }) => {
 test('Hides when overlay behind the modal is focused and "Enter" key is pressed', async ({
   page,
 }) => {
-  await page.goto('/modal-test.html');
+  await page.goto('/playground/modal-test.html');
 
   // Keydown Overlay
   await page.locator('#overlay').press('Enter');
@@ -48,7 +48,7 @@ test('Hides when overlay behind the modal is focused and "Enter" key is pressed'
 });
 
 test('Hides when "x" close icon is pressed', async ({ page }) => {
-  await page.goto('/modal-test.html');
+  await page.goto('/playground/modal-test.html');
 
   // Click close icon
   await page.getByRole('button', { name: 'x' }).click();
@@ -58,7 +58,7 @@ test('Hides when "x" close icon is pressed', async ({ page }) => {
 test('Hides when "x" close icon is focused and "Enter" key is pressed', async ({
   page,
 }) => {
-  await page.goto('/modal-test.html');
+  await page.goto('/playground/modal-test.html');
 
   // Keydown close icon
   await page.getByRole('button', { name: 'x' }).press('Enter');
@@ -66,7 +66,7 @@ test('Hides when "x" close icon is focused and "Enter" key is pressed', async ({
 });
 
 test('Renders child element in modal body', async ({ page }) => {
-  await page.goto('/modal-test.html');
+  await page.goto('/playground/modal-test.html');
 
   // Slot
   const modalOpen = page.getByTestId('modal-open');

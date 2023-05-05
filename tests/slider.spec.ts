@@ -9,7 +9,7 @@ const value = 15;
 const step = 25;
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/slider-test.html');
+  await page.goto('/playground/slider-test.html');
 });
 
 test('Displays min and max values', async ({ page }) => {

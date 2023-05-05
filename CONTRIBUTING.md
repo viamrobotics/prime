@@ -11,17 +11,17 @@ npm install
 npm run storybook
 ```
 
+More detailed docs exist on [the storybook](https://www.viam.com/prime).
+
 ## Playground
 
-To use the Vue playground
+To use the component playground, run:
 
 ```bash
 npm start
 ```
 
-Then navigate to [http://localhost:5173/playground/index.html](http://localhost:5173/playground/index.html)
-
-More detailed docs exist on [the storybook](https://www.viam.com/prime).
+The playground will open in your browser automatically. End-to-end tests run against the playground.
 
 ## Creating a component
 
@@ -45,18 +45,6 @@ npm run build-storybook
 npm run build
 ```
 
-To run tests locally, you must first install the `playground` development dependencies and playwright. From there, you can run tests
-
-```shell
-# set up playground
-npm --prefix=playground install
-npx playwright install --with-deps
-
-# run tests, with optional debugging
-npm run test
-npm run test-dev
-```
-
 You can typecheck and lint using:
 
 ```shell
@@ -69,3 +57,25 @@ npm run format
 # lint for formatting and correctness issues
 npm run lint
 ```
+
+### Tests
+
+To run tests locally:
+
+```shell
+# set up playground
+npx playwright install --with-deps
+
+# run tests, with optional debugging
+npm run test
+npm run test-dev
+```
+
+When adding a test, look for the following files:
+
+- `tests/${component}.spec.ts`
+- `playground/${component}-test.html`
+
+If any of the files do not exist, create them by copying an already existing test.
+
+New component functionality should always be accompanied by new tests for that functionality. Add tests by adding new instances of the component to the `.html` file and querying the page via playright in the `.spec.ts` file.

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/pill-test.html');
+  await page.goto('/playground/pill-test.html');
 });
 
 test('Renders text within the pill if a value attribute is specified', async ({

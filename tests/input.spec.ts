@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { hexToRGB, waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/input-test.html');
+  await page.goto('/playground/input-test.html');
 });
 
 test('Given type text, renders text input', async ({ page }) => {

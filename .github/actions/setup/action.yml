@@ -17,6 +17,4 @@ runs:
 
     - name: 'Install development dependencies'
       shell: bash
-      run: |
-        npm ci --audit=false
-        npm --prefix=playground ci --audit=false
+      run: npm ci --audit=false

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/list-box-test.html');
+  await page.goto('/playground/list-box-test.html');
 });
 
 test('Renders left options and can move them to the right', async ({
