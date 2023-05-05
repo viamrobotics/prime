@@ -50,5 +50,6 @@ export default defineConfig({
     open: '/playground/',
     base: '/playground/',
     port: 5174,
+    host: true,
   },
 });

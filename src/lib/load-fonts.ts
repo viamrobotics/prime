@@ -1,10 +1,12 @@
 import { base, query } from './config';
 
 export const loadFonts = async () => {
-  const font = new FontFace(
-    'icons',
-    base ? `url("${base}/icons.woff2${query}")` : `url("/icons.woff2${query}")`
-  );
+  const pathname =
+    base === '' || base.endsWith('/')
+      ? `${base}icons.woff2`
+      : `${base}/icons.woff2`;
+  const font = new FontFace('icons', `url(${pathname}${query})`);
+
   await font.load();
   document.fonts.add(font);
 };
