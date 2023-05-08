@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { hexToRGB } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/badge-test.html');
+  await page.goto('/playground/badge-test.html');
 });
 
 test('Renders the correct text', async ({ page }) => {

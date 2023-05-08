@@ -36,6 +36,6 @@ jobs:
             .nojekyll
 
       - name: Publish 🚀
-        uses: JS-DevTools/npm-publish@0f451a94170d1699fd50710966d48fb26194d939
+        uses: JS-DevTools/npm-publish@541aa6b21b4a1e9990c95a92c21adc16b35e9551
         with:
           token: ${{ secrets.NPM_TOKEN }}

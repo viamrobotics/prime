@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { hexToRGB } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/table-test.html');
+  await page.goto('/playground/table-test.html');
 });
 
 test('Renders headers with appropriate styling', async ({ page }) => {

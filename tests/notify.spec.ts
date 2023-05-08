@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/notify-test.html');
+  await page.goto('/playground/notify-test.html');
 });
 
 test('Renders notify element with appropriate title text, message text, if those attributes are specified', async ({

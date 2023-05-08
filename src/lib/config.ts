@@ -1,5 +1,5 @@
 export const {
-  base = '',
+  base = '/',
   query = '',
   workers = {},
 } = (

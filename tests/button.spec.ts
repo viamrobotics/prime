@@ -6,7 +6,7 @@ const constants = {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/button-test.html');
+  await page.goto('/playground/button-test.html');
 });
 
 test('Renders label attribute as text within the button', async ({ page }) => {

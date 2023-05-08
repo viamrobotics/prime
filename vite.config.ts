@@ -1,5 +1,7 @@
 import path from 'node:path';
+
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import vue from '@vitejs/plugin-vue';
 import sveltePreprocess from 'svelte-preprocess';
 import { defineConfig } from 'vite';
 
@@ -15,6 +17,16 @@ export default defineConfig({
     svelte({
       compilerOptions: { customElement: true },
       preprocess,
+    }),
+    // TODO(mc, 2023-05-05): remove vue as a dev dependency from prime
+    vue({
+      reactivityTransform: true,
+      template: {
+        compilerOptions: {
+          // treat all tags with a dash as custom elements
+          isCustomElement: (tag) => tag.includes('-'),
+        },
+      },
     }),
   ],
   build: {
@@ -33,5 +45,11 @@ export default defineConfig({
         manualChunks: undefined,
       },
     },
+  },
+  server: {
+    open: '/playground/',
+    base: '/playground/',
+    port: 5174,
+    host: true,
   },
 });

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/collapse-test.html');
+  await page.goto('/playground/collapse-test.html');
 });
 
 test('Confirms main title displays in collapse element if title attribute has been specified', async ({

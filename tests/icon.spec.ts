@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/icon-test.html');
+  await page.goto('/playground/icon-test.html');
 });
 
 test('Renders an icon if name attribute is specified as a valid v-icon', async ({

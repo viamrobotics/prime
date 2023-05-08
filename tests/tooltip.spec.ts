@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/tooltip-test.html');
+  await page.goto('/playground/tooltip-test.html');
 });
 
 // TO DO: Fix this tooltip hover test

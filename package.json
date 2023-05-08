@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.1.16",
+  "version": "0.2.0",
   "license": "Apache-2.0",
   "type": "module",
   "files": [
@@ -18,7 +18,7 @@
   "homepage": "http://viamrobotics.github.io/prime",
   "repository": "git://github.com/viamrobotics/prime.git",
   "scripts": {
-    "start": "vite --host",
+    "start": "vite dev",
     "build": "vite build --mode production",
     "postbuild": "node ./scripts/postbuild",
     "serve": "vite preview --host",
@@ -26,7 +26,7 @@
     "check-src": "svelte-check --tsconfig ./tsconfig.json",
     "check-node": "tsc --noEmit --project ./tsconfig.node.json",
     "check-tests": "tsc  --noEmit --project ./tests/tsconfig.json",
-    "check-playground": "npm --prefix ./playground run check",
+    "check-playground": "vue-tsc --project playground/tsconfig.json",
     "lint": "concurrently -g npm:lint-*",
     "lint-eslint": "eslint --quiet \"./**/*.@(js|cjs|ts|svelte)\"",
     "lint-format": "npm run format-base -- --check",
@@ -88,6 +88,8 @@
     "terser": "^5.17.1",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4",
-    "vite": "4.3.1"
+    "vite": "4.3.1",
+    "vue": "^3.2.45",
+    "vue-tsc": "^1.2.0"
   }
 }

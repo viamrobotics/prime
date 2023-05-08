@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/tabs-test.html');
+  await page.goto('/playground/tabs-test.html');
 });
 
 test('Renders a list of values specified by the tabs attribute as tabs', async ({

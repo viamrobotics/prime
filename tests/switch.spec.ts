@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { hexToRGB, waitForCustomEvent } from './lib/helper.js';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/switch-test.html');
+  await page.goto('/playground/switch-test.html');
 });
 
 test('Renders appropriately according to value attribute', async ({ page }) => {
