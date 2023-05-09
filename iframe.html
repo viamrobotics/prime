@@ -18,7 +18,7 @@
     window.LOGLEVEL = 'info';
     window.FRAMEWORK_OPTIONS = {};
     window.CHANNEL_OPTIONS = {};
-    window.FEATURES = {"warnOnLegacyHierarchySeparator":true,"buildStoriesJson":false,"storyStoreV7":true,"argTypeTargetsV7":true,"legacyDecoratorFileOrder":false,"modernInlineRender":true};
+    window.FEATURES = {"warnOnLegacyHierarchySeparator":true,"buildStoriesJson":false,"storyStoreV7":true,"argTypeTargetsV7":true,"legacyDecoratorFileOrder":false};
     window.STORIES = [{"titlePrefix":"","directory":"./src/stories/docs","files":"introduction.stories.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories\\/docs\\/introduction\\.stories\\.mdx)$"},{"titlePrefix":"","directory":"./src/stories/docs","files":"**/*.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories\\/docs(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\/|\\/|$)(?!\\.)(?=.)[^/]*?\\.mdx)$"},{"titlePrefix":"","directory":"./src/stories","files":"**/*.mdx","importPathMatcher":"^\\.[\\\\/](?:src\\/stories(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\/|\\/|$)(?!\\.)(?=.)[^/]*?\\.mdx)$"}];
     window.DOCS_OPTIONS = {"docsMode":true,"defaultName":"Docs","autodocs":true};
     window.SERVER_CHANNEL_URL = undefined;
@@ -357,11 +357,14 @@
     console.warn('unable to connect to top frame for connecting dev tools');
   }
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex" />
 
-<script type="module" src="prime.es.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+  rel="stylesheet"
+/>
 
 <style>
   * {
@@ -378,17 +381,14 @@
 </style>
 
 <script>
-  window.global = window;
-
   window.PRIME_CONFIG = {
     workers: {
-      monaco: '/workers'
-    }
-  }
-
+      monaco: '/workers',
+    },
+  };
 </script>
 
-  <script type="module" crossorigin src="/assets/iframe-643cdfa4.js"></script>
+  <script type="module" crossorigin src="./assets/iframe-7b1e4bad.js"></script>
 </head>
 
 <body>

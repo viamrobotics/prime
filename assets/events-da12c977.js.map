@@ -1,0 +1,1 @@
+{"version":3,"file":"events-da12c977.js","sources":["../../src/lib/events.ts"],"sourcesContent":["export const checkKeyboardEvent = (event: KeyboardEvent, keys: string[]) =>\n  keys.includes(event.key);\n"],"names":["checkKeyboardEvent","event","keys"],"mappings":"AAAO,MAAMA,EAAqB,CAACC,EAAsBC,IACvDA,EAAK,SAASD,EAAM,GAAG"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"boolean-1ceedbab.js","sources":["../../src/lib/boolean.ts"],"sourcesContent":["export const htmlToBoolean = (value: string | undefined, key: string) => {\n  return value === '' || value === 'true' || value === key;\n};\n"],"names":["htmlToBoolean","value","key"],"mappings":"AAAa,MAAAA,EAAgB,CAACC,EAA2BC,IAChDD,IAAU,IAAMA,IAAU,QAAUA,IAAUC"}
