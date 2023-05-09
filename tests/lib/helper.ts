@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 // eslint-disable-next-line import/extensions
-import { theme } from '../../theme.js';
+import { theme } from '../../public/theme.js';
 
 type Key =
   | keyof typeof theme.extend.backgroundColor

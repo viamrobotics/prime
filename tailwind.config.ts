@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss';
-import { theme } from './theme';
+import { theme } from './public/theme.js';
 
-export { theme } from './theme';
+export { theme } from './public/theme.js';
 
 export default {
   content: ['./index.html', './src/**/*.{ts,vue,svelte}'],

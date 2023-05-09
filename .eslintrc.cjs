@@ -8,12 +8,7 @@ module.exports = {
   parserOptions: {
     tsConfigRootDir: __dirname,
     extraFileExtensions: ['.svelte'],
-    project: [
-      './tsconfig.json',
-      './tsconfig.node.json',
-      './tests/tsconfig.json',
-      './playground/tsconfig.json',
-    ],
+    project: ['./tsconfig.json', './playground/tsconfig.json'],
   },
   extends: [
     /*
@@ -73,6 +68,7 @@ module.exports = {
     {
       files: ['.*.js', '*.js', 'scripts/**/*.js'],
       rules: {
+        'no-console': 'off',
         'import/extensions': ['error', 'ignorePackages'],
       },
     },

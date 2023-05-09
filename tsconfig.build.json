@@ -1,0 +1,11 @@
+{
+  "extends": "@viamrobotics/typescript-config/base.json",
+  "compilerOptions": {
+    "types": ["svelte", "vite/client", "monaco-editor/monaco"],
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["./src/**/*"]
+}

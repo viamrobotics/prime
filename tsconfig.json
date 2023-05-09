@@ -1,8 +1,16 @@
 {
-  "extends": "./etc/tsconfig.base.json",
+  "extends": "@viamrobotics/typescript-config/base.json",
   "compilerOptions": {
-    "types": ["svelte", "vite/client", "monaco-editor/monaco"]
+    "types": ["node", "svelte", "vite/client", "monaco-editor/monaco"],
+    "noEmit": true
   },
-  "exclude": ["./prime/**/*", "./.storybook/workers/**/*"],
-  "include": ["./src/**/*", "./.storybook/**/*"]
+  "include": [
+    ".*",
+    "*",
+    ".storybook/**/*",
+    "public/**/*",
+    "scripts/**/*",
+    "src/**/*",
+    "tests/**/*"
+  ]
 }
