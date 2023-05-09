@@ -57,7 +57,7 @@ jobs:
           retention-days: 30
 
   deploy-npm:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [check, build, test]
     runs-on: ubuntu-latest
     steps:
@@ -76,7 +76,7 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
 
   deploy-pages:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [check, build, test]
     runs-on: ubuntu-latest
     permissions:
