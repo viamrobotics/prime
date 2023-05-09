@@ -32,9 +32,6 @@ const config: StorybookConfig = {
     name: '@storybook/html-vite',
     options: {},
   },
-  features: {
-    storyStoreV7: true,
-  },
   docs: {
     autodocs: true,
   },
