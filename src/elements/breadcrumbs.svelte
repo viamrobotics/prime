@@ -16,7 +16,7 @@ $: parsedCrumbs = crumbs.split(',').map((str) => str.trim());
   class="inline-flex gap-2.5 px-3 py-px border border-medium bg-light text-default rounded-full"
 >
   {#each parsedCrumbs as crumb, index (crumb)}
-    <small class='text-xs'>
+    <small class="text-xs">
       {crumb}
     </small>
     {#if index !== parsedCrumbs.length - 1}

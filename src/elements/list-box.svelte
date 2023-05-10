@@ -161,10 +161,9 @@ const handleMoveClick = (target: ListBoxSide) => {
           </button>
         {/each}
       {:else}
-        <div class='text-sm'>
+        <div class="text-sm">
           <slot name="left-empty" />
         </div>
-        
       {/if}
     </div>
   </div>
@@ -218,10 +217,9 @@ const handleMoveClick = (target: ListBoxSide) => {
           </button>
         {/each}
       {:else}
-        <div class='text-sm'>
+        <div class="text-sm">
           <slot name="right-empty" />
         </div>
-        
       {/if}
     </div>
   </div>

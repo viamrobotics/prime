@@ -43,7 +43,7 @@ const handleClick = () => {
 >
   <div class="flex items-center gap-1.5">
     {#if label}
-      <p class='w-fit text-xs'>
+      <p class="w-fit text-xs">
         {label}
       </p>
     {/if}
