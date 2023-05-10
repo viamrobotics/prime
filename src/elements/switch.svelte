@@ -12,7 +12,6 @@ export let value: 'on' | 'off' = 'off';
 export let variant: 'annotated' | 'default' = 'default';
 export let disabled: string;
 export let readonly: string;
-export let labelposition: 'left' | 'top' = 'top';
 export let tooltip = '';
 
 const dispatch = dispatcher();
@@ -38,19 +37,13 @@ const handleClick = () => {
 </script>
 
 <label
-  class={cx('flex gap-1 w-fit', {
-    'flex-col justify-start': labelposition === 'top',
-    'items-center': labelposition === 'left',
+  class={cx('flex gap-1 w-fit flex-col justify-start', {
     'text-disabled-dark': isDisabled,
   })}
 >
   <div class="flex items-center gap-1.5">
     {#if label}
-      <p
-        class={cx('w-fit text-xs capitalize', {
-          'whitespace-nowrap': labelposition === 'left',
-        })}
-      >
+      <p class='w-fit text-xs'>
         {label}
       </p>
     {/if}
@@ -65,7 +58,7 @@ const handleClick = () => {
   <button
     on:click={handleClick}
     type="button"
-    class={cx('flex gap-1.5 items-center', {
+    class={cx('flex gap-2 items-center', {
       'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
     })}
     role="switch"
@@ -108,7 +101,7 @@ const handleClick = () => {
     </div>
 
     {#if variant === 'annotated'}
-      <p class="capitalize text-xs">{value}</p>
+      <p class="text-sm">{value}</p>
     {/if}
   </button>
 </label>

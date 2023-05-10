@@ -137,7 +137,7 @@ const handleMoveClick = (target: ListBoxSide) => {
     class="w-full flex flex-col gap-2 self-stretch"
     style={`height: ${height};`}
   >
-    <span class="text-xs text-subtle-1">{leftlabel}</span>
+    <span class="text-sm text-subtle-1">{leftlabel}</span>
     <div
       class="border border-medium grow p-2 bg-white flex flex-col overflow-auto"
     >
@@ -161,7 +161,10 @@ const handleMoveClick = (target: ListBoxSide) => {
           </button>
         {/each}
       {:else}
-        <slot name="left-empty" />
+        <div class='text-sm'>
+          <slot name="left-empty" />
+        </div>
+        
       {/if}
     </div>
   </div>
@@ -191,7 +194,7 @@ const handleMoveClick = (target: ListBoxSide) => {
     class="w-full flex flex-col gap-2 self-stretch"
     style={`height: ${height};`}
   >
-    <span class="text-xs text-subtle-2">{rightlabel}</span>
+    <span class="text-sm text-subtle-2">{rightlabel}</span>
     <div
       class="border border-medium grow p-2 bg-white flex flex-col overflow-auto"
     >
@@ -215,7 +218,10 @@ const handleMoveClick = (target: ListBoxSide) => {
           </button>
         {/each}
       {:else}
-        <slot name="right-empty" />
+        <div class='text-sm'>
+          <slot name="right-empty" />
+        </div>
+        
       {/if}
     </div>
   </div>

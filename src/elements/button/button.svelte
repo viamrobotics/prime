@@ -8,6 +8,7 @@
 type Variants =
   | 'primary'
   | 'inverse-primary'
+  | 'ghost'
   | 'danger'
   | 'outline-danger'
   | 'success'
@@ -65,17 +66,22 @@ const handleParentClick = (event: PointerEvent) => {
     aria-label={variant === 'icon' ? label : undefined}
     aria-disabled={isDisabled ? true : undefined}
     {title}
-    class={cx('active:scale-95 motion-safe:transition-transform', {
-      'inline-flex items-center justify-center gap-1.5 py-1.5 px-3 text-xs border':
+    class={cx({
+      'h-[30px] w-[30px]': variant === 'icon',
+      'px-4': !icon,
+      'pl-3 pr-4': icon,
+      'inline-flex items-center justify-center gap-1.5 py-1 text-sm border':
         variant !== 'icon',
-      'bg-light border-light hover:bg-medium hover:border-medium':
+      'bg-light border-light hover:bg-medium hover:border-medium active:bg-gray-2':
         variant === 'primary',
-      'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black':
+      'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black active:bg-[#000]':
         variant === 'inverse-primary',
-      'bg-danger-dark text-white border-danger-dark hover:bg-[#aa2a2b]':
+      'border-transparent hover:bg-[rgba(0,0,0,0.04)] active:bg-[rgba(0,0,0,0.08)] active-border-[rgba(0,0,0,0.08)]':
+        variant === 'ghost' || variant === 'icon',
+      'bg-danger-dark text-white border-danger-dark hover:bg-[#aa2a2b] active:bg-[#9e2728]':
         variant === 'danger',
       'bg-success-dark border-success-dark text-white': variant === 'success',
-      'bg-danger-light border-danger-medium text-danger-dark hover:bg-[#f5dfdc]':
+      'bg-danger-light border-danger-medium text-danger-dark hover:bg-[#f5dfdc] active:bg-[#f6d7d3]':
         variant === 'outline-danger',
       '!bg-disabled-light !border-disabled-light text-disabled-dark pointer-events-none select-none':
         isDisabled,
