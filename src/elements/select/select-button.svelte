@@ -11,10 +11,10 @@ addStyles();
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-  class="flex cursor-pointer hover:bg-gray-200 items-center p-2 border-t-[1px] border-t-gray-200"
+  class="flex cursor-pointer hover:bg-light items-center px-2 py-1 border-t-[1px] border-light"
 >
   {#if buttonicon}
     <v-icon name={buttonicon} />
   {/if}
-  <span class="text-xs pl-2">{buttontext}</span>
+  <span class="text-sm pl-2">{buttontext}</span>
 </div>

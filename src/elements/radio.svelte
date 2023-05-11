@@ -67,7 +67,7 @@ const handleClick = (value: string) => {
   <div class="flex flex-nowrap">
     {#each parsedOptions as option}
       <button
-        class={cx('whitespace-nowrap capitalize border px-3 py-1.5 text-xs', {
+        class={cx('whitespace-nowrap border px-4 py-1 text-sm', {
           'bg-medium border-light text-subtle-1':
             option !== selected && !isReadonly,
           'bg-light border-gray-6 text-default font-semibold':
@@ -79,14 +79,7 @@ const handleClick = (value: string) => {
         })}
         on:click={() => handleClick(option)}
       >
-        {#if option === selected}
-          <div class="flex">
-            <v-icon class="mr-1" name="checkmark" size="base" />
-            {option}
-          </div>
-        {:else}
-          {option}
-        {/if}
+        {option}
       </button>
     {/each}
   </div>

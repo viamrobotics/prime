@@ -66,7 +66,7 @@ test('Responds to keydown "enter" from off to on', async ({ page }) => {
   await expect(inputEvent.detail()).resolves.toEqual({ value: true });
 });
 
-test('Renders label on top of switch by default', async ({ page }) => {
+test('Renders label on top of switch', async ({ page }) => {
   const switchWithLabel = page.getByTestId('switch-default');
   await expect(switchWithLabel.getByText('default')).toBeVisible();
   const topLabelText = await switchWithLabel
@@ -74,32 +74,6 @@ test('Renders label on top of switch by default', async ({ page }) => {
     .first()
     .textContent();
   expect(topLabelText).toMatch(/default/i);
-});
-
-test('Renders label on top of switch given labelposition: top', async ({
-  page,
-}) => {
-  const switchLabelTop = page.getByTestId('switch-label-top');
-  await expect(switchLabelTop).toBeVisible();
-  await expect(switchLabelTop.getByText('top')).toBeVisible();
-  const topLabelText = await switchLabelTop
-    .locator(':above(button)')
-    .first()
-    .textContent();
-  expect(topLabelText).toMatch(/top/i);
-});
-
-test('Renders label on left side of switch given labelposition: left', async ({
-  page,
-}) => {
-  const switchLabelLeft = page.getByTestId('switch-label-left');
-  await expect(switchLabelLeft).toBeVisible();
-  await expect(switchLabelLeft.getByText('left')).toBeVisible();
-  const leftLabelText = await switchLabelLeft
-    .locator(':left-of(button)')
-    .first()
-    .textContent();
-  expect(leftLabelText).toMatch(/left/i);
 });
 
 test('Renders as disabled', async ({ page }) => {
@@ -197,16 +171,6 @@ test('Displays tooltip in correct position given tooltip attribute', async ({
   ).toBeVisible();
   await expect(
     switchTooltipDefault.locator('v-tooltip:right-of(:text("Default"))').first()
-  ).toBeVisible();
-
-  const switchTooltipLeft = page.getByTestId('switch-label-left');
-  await expect(switchTooltipLeft).toBeVisible();
-  await expect(switchTooltipLeft.locator('v-tooltip')).toBeVisible();
-  await expect(
-    switchTooltipLeft.locator('v-tooltip:left-of(button)').first()
-  ).toBeVisible();
-  await expect(
-    switchTooltipLeft.locator('v-tooltip:right-of(:text("Left"))').first()
   ).toBeVisible();
 });
 

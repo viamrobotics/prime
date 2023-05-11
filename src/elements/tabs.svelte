@@ -24,7 +24,7 @@ const handleClick = (option: string) => {
 <div class="w-full flex bg-medium border-b border-b-border-2">
   {#each parsedTabs as tab, index (tab)}
     <button
-      class={cx('px-4 py-1 text-sm first:ml-4 capitalize', {
+      class={cx('px-4 py-1 text-sm first:ml-6', {
         'bg-white border border-x-border-2 border-t-border-2 border-b-white font-semibold -mb-px text-default':
           tab === selected,
         'text-subtle-1': tab !== selected,

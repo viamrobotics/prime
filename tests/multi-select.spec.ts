@@ -361,7 +361,7 @@ test('When a dropdown is open, confirm the first result is in focus such that a 
       .getByTestId('default-multiselect-first')
       .locator('v-dropdown')
       .getByText('First Option')
-  ).toHaveClass(/bg-slate-200/);
+  ).toHaveClass(/bg-light/);
 
   // press enter
   await page.keyboard.press('Enter');
