@@ -448,7 +448,7 @@ const onChange = () => {
 <label class="flex flex-col gap-2">
   {#if label}
     <p
-      class={cn('text-xs capitalize', {
+      class={cn('text-xs', {
         'text-disabled-dark': isDisabled,
       })}
     >

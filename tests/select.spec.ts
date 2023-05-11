@@ -256,7 +256,7 @@ test('When a dropdown is open, confirm the first result is in focus such that a 
       .getByTestId('default-select-first')
       .locator('v-dropdown')
       .getByText('First Option')
-  ).toHaveClass(/bg-slate-200/);
+  ).toHaveClass(/bg-light/);
 
   // press enter
   await page.keyboard.press('Enter');
@@ -275,7 +275,7 @@ test('Heading is displayed when a string a entered for heading field', async ({
   await select.getByRole('button', { name: 'Open dropdown' }).click();
 
   // make sure the heading is visible
-  await expect(select.getByText('heading title')).toHaveClass(/text-gray-500/);
+  await expect(select.getByText('heading title')).toHaveClass(/text-default/);
 });
 
 test('Dispatches change event when option is selected', async ({ page }) => {

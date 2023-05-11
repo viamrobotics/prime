@@ -50,7 +50,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
     on:keyup|stopPropagation
   >
     <button
-      class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-gray-500 hover:text-gray-9"
+      class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-default hover:text-gray-9"
       aria-label="Cancel"
       on:click={handleClose}
     >

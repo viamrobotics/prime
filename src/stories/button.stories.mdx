@@ -71,6 +71,23 @@ For user triggered actions
 
 <Canvas>
   <Story
+    name='Ghost'
+    args={{
+      label: 'Walk',
+      variant: 'ghost',
+    }}
+  >
+    {({ label, variant }) => `
+<v-button
+  label='${label}'
+  variant="${variant}"
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
     name='Success'
     args={{
       label: 'Success',
@@ -203,6 +220,26 @@ For user triggered actions
   >
     {({ icon, variant, label }) => `
 <v-button
+  icon='${icon}'
+  label='${label}'
+  variant='${variant}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Color icon variant'
+    args={{
+      icon: 'trash',
+      variant: 'icon',
+      label: 'Delete component',
+    }}
+  >
+    {({ icon, variant, label }) => `
+<v-button
+  class='text-danger-dark'
   icon='${icon}'
   label='${label}'
   variant='${variant}'

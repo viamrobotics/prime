@@ -16,7 +16,7 @@ test('Renders headers with appropriate styling', async ({ page }) => {
 
   const ths = await tableAuto.locator('th').all();
   for (const header of ths) {
-    await expect(header).toHaveCSS('color', 'rgb(82, 82, 82)');
+    await expect(header).toHaveCSS('color', 'rgb(40, 40, 41)');
   }
   await expect(tableAuto.locator('thead')).toHaveCSS(
     'border-color',
