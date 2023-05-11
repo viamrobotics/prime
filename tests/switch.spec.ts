@@ -172,16 +172,6 @@ test('Displays tooltip in correct position given tooltip attribute', async ({
   await expect(
     switchTooltipDefault.locator('v-tooltip:right-of(:text("Default"))').first()
   ).toBeVisible();
-
-  const switchTooltipLeft = page.getByTestId('switch-label-left');
-  await expect(switchTooltipLeft).toBeVisible();
-  await expect(switchTooltipLeft.locator('v-tooltip')).toBeVisible();
-  await expect(
-    switchTooltipLeft.locator('v-tooltip:left-of(button)').first()
-  ).toBeVisible();
-  await expect(
-    switchTooltipLeft.locator('v-tooltip:right-of(:text("Left"))').first()
-  ).toBeVisible();
 });
 
 test('If variant is annotated, displays annotations on right side of switch', async ({

@@ -68,8 +68,8 @@ const handleParentClick = (event: PointerEvent) => {
     {title}
     class={cx({
       'h-[30px] w-[30px]': variant === 'icon',
-      'px-4': !icon,
-      'pl-3 pr-4': icon,
+      'px-4': !icon || variant === 'icon',
+      'pl-3 pr-4': icon && variant !== 'icon',
       'inline-flex items-center justify-center gap-1.5 py-1 text-sm border':
         variant !== 'icon',
       'bg-light border-light hover:bg-medium hover:border-medium active:bg-gray-2':

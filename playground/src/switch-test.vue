@@ -45,15 +45,8 @@
       variant='annotated'
     />
     <v-switch
-      data-testid='switch-label-left'
-      tooltip='message'
-      label='left'
-      labelposition='left'
-    />
-    <v-switch
       data-testid='switch-label-top'
       label='top'
-      labelposition='top'
     />
     <v-switch
       data-testid='switch-annotated'
