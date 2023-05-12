@@ -41,21 +41,17 @@ Linked below are some articles that provide knowledge for how to best build reus
 To verify that static assets build correctly:
 
 ```shell
-npm run build-storybook
 npm run build
 ```
 
 You can typecheck and lint using:
 
 ```shell
-# check types, a11y, and other component quality
+# check linting, types, a11y, and other component quality
 npm run check
 
 # autoformat code and other files
 npm run format
-
-# lint for formatting and correctness issues
-npm run lint
 ```
 
 ### Tests
