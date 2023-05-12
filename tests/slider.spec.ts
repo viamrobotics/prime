@@ -35,7 +35,7 @@ test('Displays start and and end values', async ({ page }) => {
   const startLabelPos = await sliderMinMax
     .getByRole('slider')
     .filter({ hasText: String(customStart) })
-    .evaluate((e) => getComputedStyle(e).left);
+    .evaluate((element) => getComputedStyle(element).left);
   expect(Number.parseFloat(startLabelPos)).toBeCloseTo(
     startPercentage * box.width,
     1
@@ -49,9 +49,7 @@ test('Displays start and and end values', async ({ page }) => {
   const endLabelPos = await sliderMinMax
     .getByRole('slider')
     .filter({ hasText: String(customEnd) })
-    .evaluate((e) => {
-      return getComputedStyle(e).left;
-    });
+    .evaluate((element) => getComputedStyle(element).left);
   expect(Number.parseFloat(endLabelPos)).toBeCloseTo(
     endPercentage * box.width,
     1
@@ -63,42 +61,37 @@ test('Displays start and and end values', async ({ page }) => {
   let startLabelOpacity = await sliderMinMax
     .locator('.floating')
     .first()
-    .evaluate((e) => {
-      return getComputedStyle(e).opacity;
-    });
+    .evaluate((element) => getComputedStyle(element).opacity);
   expect(startLabelOpacity).toBe('0');
   await sliderMinMax.getByRole('slider').first().hover();
-  await delay(250); // wait for opacity transition
+  // wait for opacity transition
+  await delay(250);
   startLabelOpacity = await sliderMinMax
     .locator('.floating')
     .first()
-    .evaluate((e) => {
-      return getComputedStyle(e).opacity;
-    });
+    .evaluate((element) => getComputedStyle(element).opacity);
   expect(startLabelOpacity).toBe('1');
 
   let endLabelOpacity = await sliderMinMax
     .locator('.floating')
     .nth(1)
-    .evaluate((e) => {
-      return getComputedStyle(e).opacity;
-    });
+    .evaluate((element) => getComputedStyle(element).opacity);
   expect(endLabelOpacity).toBe('0');
   await sliderMinMax.getByRole('slider').nth(1).hover();
-  await delay(250); // wait for opacity transition
+  // wait for opacity transition
+  await delay(250);
   endLabelOpacity = await sliderMinMax
     .locator('.floating')
     .nth(1)
-    .evaluate((e) => {
-      return getComputedStyle(e).opacity;
-    });
+    .evaluate((element) => getComputedStyle(element).opacity);
   expect(endLabelOpacity).toBe('1');
 });
 
 test('Starts slider at minimum value', async ({ page }) => {
   const sliderMin = page.getByTestId('slider-min');
   await expect(sliderMin).toBeVisible();
-  await expect(sliderMin.locator('span.bg-gray-9')).toHaveCSS('left', '0px'); // bg-gray-9 is color of slider line
+  // bg-gray-9 is color of slider line
+  await expect(sliderMin.locator('span.bg-gray-9')).toHaveCSS('left', '0px');
 });
 
 test('Ends slider at maximum value', async ({ page }) => {
@@ -112,9 +105,9 @@ test('Starts slider placement at value', async ({ page }) => {
   await expect(sliderValue).toBeVisible();
   const box = (await sliderValue.boundingBox())!;
   const valuePercentage = (value - customMin) / (customMax - customMin);
-  const sliderPos = await sliderValue.getByRole('slider').evaluate((e) => {
-    return getComputedStyle(e).left;
-  });
+  const sliderPos = await sliderValue
+    .getByRole('slider')
+    .evaluate((element) => getComputedStyle(element).left);
   expect(Number.parseFloat(sliderPos)).toBeCloseTo(
     box.width * valuePercentage,
     1
@@ -133,8 +126,8 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
   // check positioning of each tick
   const box = (await sliderStep.boundingBox())!;
   for (const [i, axisTick] of axisTicks.entries()) {
-    const tickPos = await axisTick.evaluate((e) => {
-      return getComputedStyle(e).left;
+    const tickPos = await axisTick.evaluate((element) => {
+      return getComputedStyle(element).left;
     });
     expect(Number.parseFloat(tickPos)).toBeCloseTo(
       ((i + 1) / (numTicks + 1)) * box.width,
@@ -194,7 +187,9 @@ test('Dispatches "input" event with value when user drags slider to value', asyn
 
   const slider = sliderValue.getByRole('slider');
   const inputEvent = waitForCustomEvent(page, 'input');
-  await slider.dragTo(sliderValue.locator('span.bg-gray-6').first()); // slide to first tick, value -45
+
+  // slide to first tick, value -45
+  await slider.dragTo(sliderValue.locator('span.bg-gray-6').first());
   await expect(inputEvent.detail()).resolves.toMatchObject({ value: -45 });
 });
 
@@ -206,7 +201,8 @@ test('Given disabled attribute as true, displays slider as disabled and prevents
   const startBox = (await slider.boundingBox())!;
   await expect(sliderDisabled).toBeVisible();
   const inputEvent = waitForCustomEvent(page, 'input');
-  await slider.dragTo(sliderDisabled.locator('span.bg-gray-6').first()); // try to slide
+  // try to slide
+  await slider.dragTo(sliderDisabled.locator('span.bg-gray-6').first());
   const endBox = (await slider.boundingBox())!;
   // make sure slider did not move
   expect(endBox.x).toBe(startBox.x);
@@ -237,7 +233,8 @@ test('Given readonly attribute as true, displays slider as readonly and prevents
   const startBox = (await slider.boundingBox())!;
 
   const inputEvent = waitForCustomEvent(page, 'input');
-  await slider.dragTo(sliderReadonly.locator('span.bg-gray-6').first()); // try to slide
+  // try to slide
+  await slider.dragTo(sliderReadonly.locator('span.bg-gray-6').first());
   const endBox = (await slider.boundingBox())!;
 
   // make sure slider did not move

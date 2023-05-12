@@ -41,9 +41,9 @@ test('Confirms selected value is correct if selected attribute is specified', as
   await expect(selectedTestTabs).toHaveAttribute('selected', 'Tab 2');
 
   // Check Selected Tab Has Correct Background Color of White (Tab 2)
-  await expect(tab1).not.toHaveClass(/bg-white/);
-  await expect(tab2).toHaveClass(/bg-white/);
-  await expect(tab3).not.toHaveClass(/bg-white/);
+  await expect(tab1).not.toHaveClass(/bg-white/u);
+  await expect(tab2).toHaveClass(/bg-white/u);
+  await expect(tab3).not.toHaveClass(/bg-white/u);
 });
 
 test('Confirms that selected tab updates upon click', async ({ page }) => {
@@ -57,9 +57,9 @@ test('Confirms that selected tab updates upon click', async ({ page }) => {
   await expect(selectedTestTabs).toHaveAttribute('selected', 'Tab 2');
 
   // Check Selected Tab Has Correct Background Color of White (Tab 2)
-  await expect(tab1).not.toHaveClass(/bg-white/);
-  await expect(tab2).toHaveClass(/bg-white/);
-  await expect(tab3).not.toHaveClass(/bg-white/);
+  await expect(tab1).not.toHaveClass(/bg-white/u);
+  await expect(tab2).toHaveClass(/bg-white/u);
+  await expect(tab3).not.toHaveClass(/bg-white/u);
 
   // Click on Tab 3
   // Check That New Selected Tab is Correct (Tab 3)
@@ -68,9 +68,9 @@ test('Confirms that selected tab updates upon click', async ({ page }) => {
   await tab3Selected.detail();
 
   // Check That New Selected Tab Has Correct Background Color of White (Tab 3)
-  await expect(tab1).not.toHaveClass(/bg-white/);
-  await expect(tab2).not.toHaveClass(/bg-white/);
-  await expect(tab3).toHaveClass(/bg-white/);
+  await expect(tab1).not.toHaveClass(/bg-white/u);
+  await expect(tab2).not.toHaveClass(/bg-white/u);
+  await expect(tab3).toHaveClass(/bg-white/u);
 });
 
 test('Confirms that on focus keydown, tab selection updates', async ({
@@ -85,9 +85,9 @@ test('Confirms that on focus keydown, tab selection updates', async ({
   const tabY = page.getByRole('button', { name: 'Tab Y' });
   const tabZ = page.getByRole('button', { name: 'Tab Z' });
 
-  await expect(tabX).not.toHaveClass(/bg-white/);
-  await expect(tabY).not.toHaveClass(/bg-white/);
-  await expect(tabZ).toHaveClass(/bg-white/);
+  await expect(tabX).not.toHaveClass(/bg-white/u);
+  await expect(tabY).not.toHaveClass(/bg-white/u);
+  await expect(tabZ).toHaveClass(/bg-white/u);
 
   // Focus on Tab Y
   const tabYSelected = waitForCustomEvent(page, 'input');
@@ -98,7 +98,7 @@ test('Confirms that on focus keydown, tab selection updates', async ({
   // Check That New Selected Tab is Tab Y
   await tabYSelected.detail();
 
-  await expect(tabX).not.toHaveClass(/bg-white/);
-  await expect(tabY).toHaveClass(/bg-white/);
-  await expect(tabZ).not.toHaveClass(/bg-white/);
+  await expect(tabX).not.toHaveClass(/bg-white/u);
+  await expect(tabY).toHaveClass(/bg-white/u);
+  await expect(tabZ).not.toHaveClass(/bg-white/u);
 });
