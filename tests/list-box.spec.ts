@@ -7,25 +7,25 @@ test.beforeEach(async ({ page }) => {
 test('Renders left options and can move them to the right', async ({
   page,
 }) => {
-  const leftOption = page.getByText(/pikachu/i);
+  const leftOption = page.getByText(/pikachu/iu);
   await expect(leftOption).toBeVisible();
   await leftOption.click();
 
-  const rightButton = page.getByTestId(/move-right/i);
+  const rightButton = page.getByTestId(/move-right/iu);
   await rightButton.click();
 
-  const movedOption = page.getByText(/pikachu/i);
+  const movedOption = page.getByText(/pikachu/iu);
   await expect(movedOption).toBeVisible();
 });
 
 test('Renders left options and does not move when move left button is clicked', async ({
   page,
 }) => {
-  const leftOption = page.getByText(/pikachu/i);
+  const leftOption = page.getByText(/pikachu/iu);
   await expect(leftOption).toBeVisible();
   await leftOption.click();
 
-  const leftButton = page.getByTestId(/move-left/i);
+  const leftButton = page.getByTestId(/move-left/iu);
   await leftButton.click();
 
   await expect(leftOption).toBeVisible();
@@ -34,25 +34,25 @@ test('Renders left options and does not move when move left button is clicked', 
 test('Renders right options and can move them to the left', async ({
   page,
 }) => {
-  const rightOption = page.getByText(/butterfree/i);
+  const rightOption = page.getByText(/butterfree/iu);
   await expect(rightOption).toBeVisible();
   await rightOption.click();
 
-  const leftButton = page.getByTestId(/move-right/i);
+  const leftButton = page.getByTestId(/move-right/iu);
   await leftButton.click();
 
-  const movedOption = page.getByText(/butterfree/i);
+  const movedOption = page.getByText(/butterfree/iu);
   await expect(movedOption).toBeVisible();
 });
 
 test('Renders right options and does not move when move right button is clicked', async ({
   page,
 }) => {
-  const rightOption = page.getByText(/butterfree/i);
+  const rightOption = page.getByText(/butterfree/iu);
   await expect(rightOption).toBeVisible();
   await rightOption.click();
 
-  const rightButton = page.getByTestId(/move-right/i);
+  const rightButton = page.getByTestId(/move-right/iu);
   await rightButton.click();
 
   await expect(rightOption).toBeVisible();
@@ -61,10 +61,10 @@ test('Renders right options and does not move when move right button is clicked'
 test('Only selected options move in the specified direction', async ({
   page,
 }) => {
-  const leftOption1 = page.getByText(/charmander/i);
-  const leftOption2 = page.getByText(/pikachu/i);
-  const leftOption3 = page.getByText(/venusaur/i);
-  const rightOption = page.getByText(/butterfree/i);
+  const leftOption1 = page.getByText(/charmander/iu);
+  const leftOption2 = page.getByText(/pikachu/iu);
+  const leftOption3 = page.getByText(/venusaur/iu);
+  const rightOption = page.getByText(/butterfree/iu);
 
   await expect(leftOption1).toBeVisible();
   await expect(leftOption2).toBeVisible();
@@ -73,7 +73,7 @@ test('Only selected options move in the specified direction', async ({
 
   await leftOption2.click();
 
-  const rightButton = page.getByTestId(/move-right/i);
+  const rightButton = page.getByTestId(/move-right/iu);
   await rightButton.click();
 
   await expect(leftOption1).toBeVisible();
@@ -82,27 +82,27 @@ test('Only selected options move in the specified direction', async ({
 });
 
 test('Displays the left empty state', async ({ page }) => {
-  await page.getByText(/charmander/i).click();
-  await page.getByText(/pikachu/i).click();
-  await page.getByText(/venusaur/i).click();
+  await page.getByText(/charmander/iu).click();
+  await page.getByText(/pikachu/iu).click();
+  await page.getByText(/venusaur/iu).click();
 
-  const rightButton = page.getByTestId(/move-right/i);
+  const rightButton = page.getByTestId(/move-right/iu);
   await rightButton.click();
 
-  const leftEmpty = page.getByText(/your roster is empty/i);
+  const leftEmpty = page.getByText(/your roster is empty/iu);
   await expect(leftEmpty).toBeVisible();
 });
 
 test('Displays the right empty state', async ({ page }) => {
-  await page.getByText(/nidoqueen/i).click();
-  await page.getByText(/butterfree/i).click();
-  await page.getByText(/ditto/i).click();
-  await page.getByText(/gyardos/i).click();
-  await page.getByText(/machamp/i).click();
+  await page.getByText(/nidoqueen/iu).click();
+  await page.getByText(/butterfree/iu).click();
+  await page.getByText(/ditto/iu).click();
+  await page.getByText(/gyardos/iu).click();
+  await page.getByText(/machamp/iu).click();
 
-  const leftButton = page.getByTestId(/move-left/i);
+  const leftButton = page.getByTestId(/move-left/iu);
   await leftButton.click();
 
-  const rightEmpty = page.getByText(/this box is empty/i);
+  const rightEmpty = page.getByText(/this box is empty/iu);
   await expect(rightEmpty).toBeVisible();
 });

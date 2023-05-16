@@ -22,8 +22,11 @@ export const hexToRGB = (section: keyof typeof theme.extend, key: Key) => {
 
   let alpha = false;
   let h = hex.slice(hex.startsWith('#') ? 1 : 0);
-  if (h.length === 3) h = [...h].map((x) => x + x).join('');
-  else if (h.length === 8) alpha = true;
+  if (h.length === 3) {
+    h = [...h].map((x) => x + x).join('');
+  } else if (h.length === 8) {
+    alpha = true;
+  }
 
   const parsedHex = Number.parseInt(h, 16);
 
@@ -60,7 +63,7 @@ export const waitForCustomEvent = (
 ): CustomEventHandler => {
   const eventReceipt: Promise<{ detail: unknown } | { timeout: true }> =
     page.evaluate(
-      ({ eventName, waitFor }) => {
+      (inputs) => {
         return new Promise((resolve) => {
           const handleEvent = (event: Event) => {
             cleanup();
@@ -78,11 +81,13 @@ export const waitForCustomEvent = (
 
           const cleanup = () => {
             window.clearTimeout(timeoutRef);
-            window.removeEventListener(eventName, handleEvent);
+            window.removeEventListener(inputs.eventName, handleEvent);
           };
 
-          const timeoutRef = window.setTimeout(handleTimeout, waitFor);
-          window.addEventListener(eventName, handleEvent, { once: true });
+          const timeoutRef = window.setTimeout(handleTimeout, inputs.waitFor);
+          window.addEventListener(inputs.eventName, handleEvent, {
+            once: true,
+          });
         });
       },
       { eventName, waitFor }
@@ -116,5 +121,7 @@ export const waitForCustomEvent = (
 };
 
 export const delay = async (time: number) => {
-  await new Promise((resolve) => setTimeout(resolve, time));
+  await new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
 };

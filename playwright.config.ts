@@ -24,7 +24,7 @@ const config: PlaywrightTestConfig = {
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env['CI'],
+  forbidOnly: Boolean(process.env['CI']),
   /* Retry on CI only */
   retries: process.env['CI'] ? 1 : 0,
   /* Opt out of parallel tests on CI. */
@@ -52,12 +52,14 @@ const config: PlaywrightTestConfig = {
       },
     },
 
-    // {
-    //   name: 'firefox',
-    //   use: {
-    //     ...devices['Desktop Firefox'],
-    //   },
-    // },
+    /*
+     * {
+     *   name: 'firefox',
+     *   use: {
+     *     ...devices['Desktop Firefox'],
+     *   },
+     * },
+     */
 
     {
       name: 'webkit',
@@ -67,32 +69,36 @@ const config: PlaywrightTestConfig = {
     },
 
     /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: {
-    //     ...devices['Pixel 5'],
-    //   },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: {
-    //     ...devices['iPhone 12'],
-    //   },
-    // },
+    /*
+     * {
+     *   name: 'Mobile Chrome',
+     *   use: {
+     *     ...devices['Pixel 5'],
+     *   },
+     * },
+     * {
+     *   name: 'Mobile Safari',
+     *   use: {
+     *     ...devices['iPhone 12'],
+     *   },
+     * },
+     */
 
     /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: {
-    //     channel: 'msedge',
-    //   },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: {
-    //     channel: 'chrome',
-    //   },
-    // },
+    /*
+     * {
+     *   name: 'Microsoft Edge',
+     *   use: {
+     *     channel: 'msedge',
+     *   },
+     * },
+     * {
+     *   name: 'Google Chrome',
+     *   use: {
+     *     channel: 'chrome',
+     *   },
+     * },
+     */
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */

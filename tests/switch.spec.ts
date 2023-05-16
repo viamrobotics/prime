@@ -73,7 +73,7 @@ test('Renders label on top of switch', async ({ page }) => {
     .locator(':above(button)')
     .first()
     .textContent();
-  expect(topLabelText).toMatch(/default/i);
+  expect(topLabelText).toMatch(/default/iu);
 });
 
 test('Renders as disabled', async ({ page }) => {

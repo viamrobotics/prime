@@ -153,7 +153,7 @@ test('Given type number, limits input to range within max and min values with sl
     force: true,
   });
   expect(Number.parseFloat(await input.inputValue())).toBeGreaterThan(0);
-  expect(Number.parseFloat(await input.inputValue())).toBeLessThan(50); // don't slide to max yet
+  expect(Number.parseFloat(await input.inputValue())).toBeLessThan(50);
 
   // test max
   await slider.dragTo(slider, {
@@ -273,7 +273,7 @@ test('Given attribute tooltip with no state, render info icon above the input', 
 }) => {
   const inputTooltip = page.getByTestId('input-tooltip-default');
   await expect(inputTooltip.locator('v-tooltip > div').first()).toHaveClass(
-    /icon-info-outline/
+    /icon-info-outline/u
   );
 });
 
@@ -282,7 +282,7 @@ test('Given attribute tooltip with info state, render info icon above the input'
 }) => {
   const inputInfoTooltip = page.getByTestId('input-tooltip-info');
   await expect(inputInfoTooltip.locator('v-tooltip > div').first()).toHaveClass(
-    /icon-info-outline/
+    /icon-info-outline/u
   );
 });
 
@@ -291,7 +291,7 @@ test('Given attribute tooltip with warn state, render warn icon above the input'
 }) => {
   const inputWarnTooltip = page.getByTestId('input-tooltip-warn');
   await expect(inputWarnTooltip.locator('v-tooltip > div').first()).toHaveClass(
-    /icon-error-outline text-warning-bright/
+    /icon-error-outline text-warning-bright/u
   );
 });
 
@@ -301,7 +301,7 @@ test('Given attribute tooltip with error state, render error icon above the inpu
   const inputErrorTooltip = page.getByTestId('input-tooltip-error');
   await expect(
     inputErrorTooltip.locator('v-tooltip > div').first()
-  ).toHaveClass(/icon-error-outline text-danger-dark/);
+  ).toHaveClass(/icon-error-outline text-danger-dark/u);
 });
 
 test('Given a readonly attribute, renders readonly input', async ({ page }) => {
@@ -319,7 +319,7 @@ test('Given a disabled attribute, renders disabled input', async ({ page }) => {
   await expect(inputDisabled).toBeVisible();
   await expect(inputDisabled.locator('input').first()).toBeDisabled();
   await expect(inputDisabled.locator('input').first()).toHaveClass(
-    /bg-disabled-light text-disabled-dark border-disabled-light/
+    /bg-disabled-light text-disabled-dark border-disabled-light/u
   );
 });
 
@@ -337,7 +337,7 @@ test('With error state, displays message below input box in red', async ({
 }) => {
   const inputMessageError = page.getByTestId('input-message-error');
   await expect(inputMessageError.getByText('fell off the cliiimb')).toHaveClass(
-    /text-red-600/
+    /text-red-600/u
   );
   await expect(
     inputMessageError.locator('input:above(:text("fell off the cliiimb"))')

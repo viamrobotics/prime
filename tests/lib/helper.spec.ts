@@ -19,7 +19,7 @@ test('Rejects with an error if custom event does not happen', async ({
   const eventHandler = waitForCustomEvent(page, 'custom', 10);
 
   await expect(eventHandler.detail()).rejects.toThrow(
-    /"custom" did not occur/i
+    /"custom" did not occur/iu
   );
 });
 
@@ -42,6 +42,6 @@ test('Rejects with an error if event occurs and timeout expected', async ({
   });
 
   await expect(eventHandler.didNotOccur()).rejects.toThrow(
-    /"custom" .+ occurred/i
+    /"custom" .+ occurred/iu
   );
 });

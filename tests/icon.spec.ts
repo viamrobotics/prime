@@ -20,7 +20,7 @@ test('Renders and icon as extra small if size attribute is specified as xs', asy
   page,
 }) => {
   await expect(page.getByTestId('icon-size-xs').locator('i')).toHaveClass(
-    /text-xs/
+    /text-xs/u
   );
 });
 
@@ -28,7 +28,7 @@ test('Renders and icon as small if size attribute is specified as sm', async ({
   page,
 }) => {
   await expect(page.getByTestId('icon-size-sm').locator('i')).toHaveClass(
-    /text-sm/
+    /text-sm/u
   );
 });
 
@@ -36,7 +36,7 @@ test('Renders and icon as the base size if size attribute is specified as base',
   page,
 }) => {
   await expect(page.getByTestId('icon-size-base').locator('i')).toHaveClass(
-    /text-base/
+    /text-base/u
   );
 });
 
@@ -44,7 +44,7 @@ test('Renders and icon as the large size if size attribute is specified as lg', 
   page,
 }) => {
   await expect(page.getByTestId('icon-size-lg').locator('i')).toHaveClass(
-    /text-lg/
+    /text-lg/u
   );
 });
 
@@ -52,7 +52,7 @@ test('Renders and icon as the extra large size if size attribute is specified as
   page,
 }) => {
   await expect(page.getByTestId('icon-size-xl').locator('i')).toHaveClass(
-    /text-xl/
+    /text-xl/u
   );
 });
 
@@ -60,7 +60,7 @@ test('Renders and icon as the 2xl size if size attribute is specified as 2xl', a
   page,
 }) => {
   await expect(page.getByTestId('icon-size-2xl').locator('i')).toHaveClass(
-    /text-2xl/
+    /text-2xl/u
   );
 });
 
@@ -68,7 +68,7 @@ test('Renders and icon as the 3xl size if size attribute is specified as 3xl', a
   page,
 }) => {
   await expect(page.getByTestId('icon-size-3xl').locator('i')).toHaveClass(
-    /text-3xl/
+    /text-3xl/u
   );
 });
 
@@ -76,6 +76,6 @@ test('Renders and icon as the 4xl size if size attribute is specified as 4xl', a
   page,
 }) => {
   await expect(page.getByTestId('icon-size-4xl').locator('i')).toHaveClass(
-    /text-4xl/
+    /text-4xl/u
   );
 });

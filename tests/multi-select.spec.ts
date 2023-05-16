@@ -30,9 +30,9 @@ test.skip('Given a default multiselect, shows options, labels, sets pills and fi
 
   expect(await optionsContainer.locator('label').all()).toHaveLength(3);
 
-  await expect(optionsContainer).toHaveText(/happy/);
-  await expect(optionsContainer).toHaveText(/sad/);
-  await expect(optionsContainer).toHaveText(/angry/);
+  await expect(optionsContainer).toHaveText(/happy/u);
+  await expect(optionsContainer).toHaveText(/sad/u);
+  await expect(optionsContainer).toHaveText(/angry/u);
 
   const event = waitForCustomEvent(page, 'input');
   // click on the first option
@@ -126,14 +126,14 @@ test('Given a multi-select with button, there is a button at the bottom', async 
   await multiselect.click();
   await expect(multiselect.locator('v-select-button').first()).toBeVisible();
   await expect(multiselect.locator('v-select-button').first()).toHaveText(
-    /TAKE PHOTO/
+    /TAKE PHOTO/u
   );
   const icon = multiselect
     .locator('v-select-button')
     .first()
     .locator('v-icon')
     .first();
-  await expect(icon.locator('i')).toHaveClass(/icon-camera/);
+  await expect(icon.locator('i')).toHaveClass(/icon-camera/u);
 
   const buttonClickEvent = waitForCustomEvent(page, 'button-click');
   await multiselect.locator('v-select-button').first().click();
@@ -204,9 +204,9 @@ test('Given a tooltip and state=info, the select should show an info icon with a
   await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
   await expect(
     multiselect.locator('v-tooltip').first().locator('div').first()
-  ).toHaveClass(/icon-info-outline/);
+  ).toHaveClass(/icon-info-outline/u);
   await multiselect.locator('v-tooltip').first().hover();
-  await expect(multiselect.getByText(/info tip/)).toBeVisible();
+  await expect(multiselect.getByText(/info tip/u)).toBeVisible();
 });
 
 test('Given a tooltip and state=warn the select should show a warn icon with tooltip', async ({
@@ -217,9 +217,9 @@ test('Given a tooltip and state=warn the select should show a warn icon with too
   await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
   await expect(
     multiselect.locator('v-tooltip').first().locator('div').first()
-  ).toHaveClass(/text-warning-bright/);
+  ).toHaveClass(/text-warning-bright/u);
   await multiselect.locator('v-tooltip').first().hover();
-  await expect(multiselect.getByText(/warn tip/)).toBeVisible();
+  await expect(multiselect.getByText(/warn tip/u)).toBeVisible();
 });
 
 test('Given a tooltip and state=error the select should show a error icon with tooltip', async ({
@@ -230,9 +230,9 @@ test('Given a tooltip and state=error the select should show a error icon with t
   await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
   await expect(
     multiselect.locator('v-tooltip').first().locator('div').first()
-  ).toHaveClass(/text-danger-dark/);
+  ).toHaveClass(/text-danger-dark/u);
   await multiselect.locator('v-tooltip').first().hover();
-  await expect(multiselect.getByText(/error tip/)).toBeVisible();
+  await expect(multiselect.getByText(/error tip/u)).toBeVisible();
 });
 
 test('Setting showpill=false should stop pills being rendered', async ({
@@ -361,7 +361,7 @@ test('When a dropdown is open, confirm the first result is in focus such that a 
       .getByTestId('default-multiselect-first')
       .locator('v-dropdown')
       .getByText('First Option')
-  ).toHaveClass(/bg-light/);
+  ).toHaveClass(/bg-light/u);
 
   // press enter
   await page.keyboard.press('Enter');

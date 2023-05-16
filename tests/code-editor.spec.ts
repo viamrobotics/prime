@@ -13,10 +13,10 @@ test('Renders JSON code editor correctly', async ({ page }) => {
   );
   const monacoContainer = validJSONEditor.locator('div').first();
   await expect(monacoContainer).toHaveAttribute('data-mode-id', 'json');
-  const componentSpan = monacoContainer.getByText('component'); // refers to key
-  await expect(componentSpan).toHaveClass(/mtk4/);
+  const componentSpan = monacoContainer.getByText('component');
+  await expect(componentSpan).toHaveClass(/mtk4/u);
   const jsonSPAN = monacoContainer.getByText('JSON');
-  await expect(jsonSPAN).toHaveClass(/mtk5/);
+  await expect(jsonSPAN).toHaveClass(/mtk5/u);
 });
 
 // Value: JSON invalid
@@ -38,14 +38,14 @@ test('Renders Javascript code editor that is valid', async ({ page }) => {
   await expect(validJavascriptEditor).toHaveAttribute('language', 'javascript');
   await expect(validJavascriptEditor).toHaveAttribute(
     'value',
-    'function getComponents(){' + '\n\n' + '}'
+    'function getComponents(){\n\n}'
   );
   const validJSONContainer = validJavascriptEditor.locator('div').first();
   await expect(validJSONContainer).toHaveAttribute(
     'data-mode-id',
     'javascript'
   );
-  await expect(validJSONContainer.getByText('function')).toHaveClass(/mtk8/); // valid
+  await expect(validJSONContainer.getByText('function')).toHaveClass(/mtk8/u);
 });
 
 // invalid javascript
@@ -75,11 +75,13 @@ test('Renders typescript code editor that is valid', async ({ page }) => {
   await expect(validTypescriptEditor).toHaveAttribute('language', 'typescript');
   await expect(validTypescriptEditor).toHaveAttribute(
     'value',
-    'function get(value: string) {' + '\n\n' + '}'
+    'function get(value: string) {\n\n}'
   );
   const validEditor = validTypescriptEditor.locator('div').first();
   await expect(validEditor).toHaveAttribute('data-mode-id', 'typescript');
-  await expect(validTypescriptEditor.getByText('function')).toHaveClass(/mtk8/); // valid
+  await expect(validTypescriptEditor.getByText('function')).toHaveClass(
+    /mtk8/u
+  );
 });
 
 // invalid typescript
@@ -94,7 +96,7 @@ test('Renders typescript code editor that is invalid', async ({ page }) => {
   await expect(invalidTypescriptEditor).toHaveAttribute('value', 'def help()');
   const invalidEditor = invalidTypescriptEditor.locator('div').first();
   await expect(invalidEditor).toHaveAttribute('data-mode-id', 'typescript');
-  await expect(invalidEditor.getByText('def help')).toHaveClass(/mtk1/);
+  await expect(invalidEditor.getByText('def help')).toHaveClass(/mtk1/u);
 });
 
 // valid python
@@ -104,8 +106,8 @@ test('Renders python editor that is valid', async ({ page }) => {
   await expect(validPythonEditor).toHaveAttribute('value', 'def help()');
   const validEditor = validPythonEditor.locator('div').first();
   await expect(validEditor).toHaveAttribute('data-mode-id', 'python');
-  await expect(validEditor.getByText('def')).toHaveClass(/mtk8/); // valid python syntax
-  await expect(validEditor.getByText('help')).toHaveClass(/mtk8/);
+  await expect(validEditor.getByText('def')).toHaveClass(/mtk8/u);
+  await expect(validEditor.getByText('help')).toHaveClass(/mtk8/u);
 });
 
 // invalid python
@@ -126,7 +128,7 @@ test('Renders a golang editor that is valid', async ({ page }) => {
   await expect(editor).toHaveAttribute('value', 'func (s *Custom) help(x int)');
   const editorContainer = editor.locator('div').first();
   await expect(editorContainer).toHaveAttribute('data-mode-id', 'go');
-  await expect(editorContainer.getByText('func')).toHaveClass(/mtk8/); // valid
+  await expect(editorContainer.getByText('func')).toHaveClass(/mtk8/u);
 });
 
 test('Renders a golang editor that is invalid', async ({ page }) => {
@@ -143,7 +145,7 @@ test('Renders a shell editor that is valid', async ({ page }) => {
   await expect(editor).toHaveAttribute('value', 'echo test');
   const editorContainer = editor.locator('div').first();
   await expect(editorContainer).toHaveAttribute('data-mode-id', 'shell');
-  await expect(editorContainer.getByText('echo')).toHaveClass(/mtk22/); // valid for shell
+  await expect(editorContainer.getByText('echo')).toHaveClass(/mtk22/u);
 });
 
 test('Renders a shell editor that is invalid', async ({ page }) => {
@@ -159,7 +161,7 @@ test('Renders the default vs-code theme if none is provided', async ({
 }) => {
   const editor = page.getByTestId('code-editor-json-valid');
   const monacoEditor = editor.locator('.monaco-editor').first();
-  await expect(monacoEditor).toHaveClass(/vs/);
+  await expect(monacoEditor).toHaveClass(/vs/u);
 });
 
 test('Renders the vs theme if set on the vs-code-editor element', async ({
@@ -167,7 +169,7 @@ test('Renders the vs theme if set on the vs-code-editor element', async ({
 }) => {
   const editor = page.getByTestId('code-editor-vs');
   const monacoEditor = editor.locator('.monaco-editor').first();
-  await expect(monacoEditor).toHaveClass(/vs/);
+  await expect(monacoEditor).toHaveClass(/vs/u);
 });
 
 test('Renders the vs-dark theme if set on the vs-code-editor element', async ({
@@ -175,7 +177,7 @@ test('Renders the vs-dark theme if set on the vs-code-editor element', async ({
 }) => {
   const editor = page.getByTestId('code-editor-vs-dark');
   const monacoEditor = editor.locator('.monaco-editor').first();
-  await expect(monacoEditor).toHaveClass(/vs-dark/);
+  await expect(monacoEditor).toHaveClass(/vs-dark/u);
 });
 
 test('If a readonly attribute is not set, the editor should be editable', async ({
@@ -186,7 +188,8 @@ test('If a readonly attribute is not set, the editor should be editable', async 
   const textarea = validJSONEditor.locator('textarea');
 
   // clears the input -- this was the only way to do it without hanging
-  for (let i = 0; i < originalString.length; i++) {
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of
+  for (let i = 0; i < originalString.length; i += 1) {
     await textarea.clear();
   }
   await textarea.fill('{"remote": "test"}');
@@ -216,7 +219,7 @@ test('If a readonly attribute is set, then the editor should be not editable', a
 
   // expect the text on the editor to not actually change
   await textarea.fill('hello');
-  await expect(editor).not.toContainText(/hello/);
+  await expect(editor).not.toContainText(/hello/u);
 });
 
 test('Render a minimap if the minimap attribute is set to true', async ({
@@ -246,7 +249,7 @@ test('Render a diff code editor if there is a previous attribute and variant dif
 }) => {
   const editor = page.getByTestId('code-editor-diff');
   const diffEditor = editor.locator('.monaco-diff-editor');
-  await expect(diffEditor).toHaveClass(/side-by-side/);
+  await expect(diffEditor).toHaveClass(/side-by-side/u);
   await expect(diffEditor).toBeVisible();
 
   // default renders in JSON

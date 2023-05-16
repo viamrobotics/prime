@@ -11,7 +11,8 @@ test('Renders appropriately according to open attribute', async ({ page }) => {
 
   // open="true" attribute applied
   const modalOpen = page.getByTestId('modal-open');
-  await expect(modalOpen.locator('div').first()).toBeVisible(); // v-modal has 0-size, check first element with size
+  // v-modal has 0-size, check first element with size
+  await expect(modalOpen.locator('div').first()).toBeVisible();
 });
 
 test('Renders title and message', async ({ page }) => {

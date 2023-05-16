@@ -23,9 +23,9 @@ test('Given an options attribute, on select the options should be visible and cl
   // within the optionsContainer there should be 3 different options
   expect(await optionsContainer.locator('label').all()).toHaveLength(3);
 
-  await expect(optionsContainer).toHaveText(/one/);
-  await expect(optionsContainer).toHaveText(/two/);
-  await expect(optionsContainer).toHaveText(/three/);
+  await expect(optionsContainer).toHaveText(/one/u);
+  await expect(optionsContainer).toHaveText(/two/u);
+  await expect(optionsContainer).toHaveText(/three/u);
 
   // selecting a value should emit an input event + render that as the input
   const oneSelected = waitForCustomEvent(page, 'input');
@@ -66,7 +66,7 @@ test('Setting withbutton to true, with a button text and icon, the text and icon
   const button = select.locator('v-select-button');
   await expect(button).toBeVisible();
   await expect(button).toHaveText('Add new option');
-  await expect(button.locator('v-icon > i')).toHaveClass(/icon-add/);
+  await expect(button.locator('v-icon > i')).toHaveClass(/icon-add/u);
 });
 
 test('If a select component has disabled=True the element should be disabled', async ({
@@ -256,7 +256,7 @@ test('When a dropdown is open, confirm the first result is in focus such that a 
       .getByTestId('default-select-first')
       .locator('v-dropdown')
       .getByText('First Option')
-  ).toHaveClass(/bg-light/);
+  ).toHaveClass(/bg-light/u);
 
   // press enter
   await page.keyboard.press('Enter');
@@ -275,7 +275,7 @@ test('Heading is displayed when a string a entered for heading field', async ({
   await select.getByRole('button', { name: 'Open dropdown' }).click();
 
   // make sure the heading is visible
-  await expect(select.getByText('heading title')).toHaveClass(/text-default/);
+  await expect(select.getByText('heading title')).toHaveClass(/text-default/u);
 });
 
 test('Dispatches change event when option is selected', async ({ page }) => {
