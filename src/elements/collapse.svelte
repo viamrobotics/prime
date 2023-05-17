@@ -35,7 +35,7 @@ const handleClick = (event: Event) => {
     class="{cx(
       'w-full py-2 px-4 flex flex-reverse items-center justify-between text-default cursor-pointer',
       {
-        'border border-medium bg-white': variant === 'default',
+        'border border-light bg-white': variant === 'default',
       }
     )},"
     on:click={handleClick}
