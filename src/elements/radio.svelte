@@ -67,7 +67,7 @@ const handleClick = (value: string) => {
   <div class="flex flex-nowrap">
     {#each parsedOptions as option}
       <button
-        class={cx('whitespace-nowrap border px-4 py-1 text-sm', {
+        class={cx('whitespace-nowrap border px-3 py-1.5 text-xs', {
           'bg-medium border-light text-subtle-1':
             option !== selected && !isReadonly,
           'bg-light border-gray-6 text-default font-semibold':
