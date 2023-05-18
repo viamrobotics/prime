@@ -282,7 +282,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     aria-disabled={isDisabled ? true : undefined}
     bind:this={input}
     class={cx(
-      'w-full py-1 pr-2 leading-tight text-sm h-[30px] border outline-none appearance-none',
+      'w-full py-1.5 px-2 leading-tight text-xs h-[30px] border outline-none appearance-none',
       {
         'pl-2.5': isNumeric === false,
         'pl-3': isNumeric,

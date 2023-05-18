@@ -300,7 +300,7 @@ $: {
             aria-disabled={isDisabled ? true : undefined}
             type="text"
             class={cx(
-              'py-1 pl-2.5 pr-1 grow text-sm outline-none appearance-none w-full border bg-white',
+              'py-1.5 pl-2 pr-1 grow text-xs outline-none appearance-none w-full border bg-white',
               {
                 'border-light hover:border-medium focus:border-gray-9':
                   !isDisabled &&
@@ -359,14 +359,14 @@ $: {
                 on:mouseleave={clearNavigationIndex}
               >
                 {#if heading}
-                  <span class="flex text-sm text-default pl-2 py-1 flex-wrap">
+                  <span class="flex text-xs text-default pl-1.5 py-1 flex-wrap">
                     {heading}
                   </span>
                 {/if}
                 {#each searchedOptions as { search, option }, index (option)}
                   <label
                     class={cx(
-                      'flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1 text-sm',
+                      'flex w-full gap-2 text-ellipsis whitespace-nowrap px-2 py-1 text-xs',
                       {
                         'bg-light': navigationIndex === index,
                         'text-default': hasPrefix,
@@ -430,7 +430,7 @@ $: {
                 {/each}
                 {#if canClearAll}
                   <button
-                    class="w-full px-2 py-1 hover:bg-light text-sm text-left"
+                    class="w-full px-2 py-1 hover:bg-light text-xs text-left"
                     on:mouseenter={clearNavigationIndex}
                     on:click={handleClearAll}
                   >
@@ -439,7 +439,7 @@ $: {
                 {/if}
               </div>
             {:else}
-              <div class="flex py-1 px-2.5 justify-center text-sm">
+              <div class="flex py-1 px-2.5 justify-center text-xs">
                 No matching results
               </div>
             {/if}
