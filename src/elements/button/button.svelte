@@ -66,7 +66,7 @@ const handleParentClick = (event: PointerEvent) => {
     aria-label={variant === 'icon' ? label : undefined}
     aria-disabled={isDisabled ? true : undefined}
     {title}
-    class={cx({
+    class={cx('whitespace-nowrap', {
       'h-[30px] w-[30px]': variant === 'icon',
       'px-4': !icon || variant === 'icon',
       'pl-3 pr-4': icon && variant !== 'icon',

@@ -39,7 +39,7 @@ const handleRemove = (event: MouseEvent | KeyboardEvent) => {
 
 <div
   class={cx(
-    'flex items-center max-w-fit gap-1 rounded-xl bg-medium py-0.5 px-2 text-[10px] hover:bg-gray-3',
+    'whitespace-nowrap flex items-center max-w-fit gap-1 rounded-xl bg-medium py-0.5 px-2 text-[10px] hover:bg-gray-3',
     {
       'bg-disabled-light text-disabled-dark cursor-not-allowed':
         isDisabled || isReadonly,
