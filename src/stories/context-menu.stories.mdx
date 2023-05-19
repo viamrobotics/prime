@@ -1,0 +1,120 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+
+<Meta
+  title='Elements/Context menu'
+  argTypes={{
+    variant: {
+      description: 'The item color',
+      control: { type: 'select' },
+      options: ['primary', 'danger'],
+      table: { defaultValue: { summary: 'primary' } },
+    },
+    labels: {
+      description: 'The item labels',
+      control: { type: 'input' },
+    },
+    icon: {
+      description: 'The item icon',
+      control: { teyp: 'input' },
+      table: { defaultValue: { summary: '' } },
+    },
+  }}
+/>
+
+# Context menu
+
+To display options for some context. Usually made visible on click (especially right click) and in conjunction with floating-ui.
+
+<Canvas>
+  <Story
+    name='One item'
+    args={{
+      label: 'item 1',
+    }}
+  >
+    {({ label }) => `
+<v-context-menu>
+  <v-context-menu-item 
+    label='${label}'
+    @select="handleSelect"
+  />
+</v-context-menu>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Items with icon'
+    args={{
+      labels: ['item 1', 'item 2'],
+      icon: 'send',
+    }}
+  >
+    {({ labels, icon }) => `
+<v-context-menu>
+    <v-context-menu-item 
+      label='${labels[0]}'
+      icon='${icon}'
+    >
+    </v-context-menu-item>
+    <v-context-menu-item 
+      label='${labels[1]}'
+    >
+    </v-context-menu-item>
+</v-context-menu>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Items with divider'
+    args={{
+      labels: ['item 1', 'item 2'],
+      icon: 'send',
+    }}
+  >
+    {({ labels, icon }) => `
+<v-context-menu>
+    <v-context-menu-item 
+      label='${labels[0]}'
+      icon='${icon}'
+    >
+    </v-context-menu-item>
+    <v-context-menu-item divider></v-context-menu-item>
+    <v-context-menu-item 
+      label='${labels[1]}'
+    >
+    </v-context-menu-item>
+</v-context-menu>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger variant'
+    args={{
+      labels: ['item 1', 'item 2'],
+      variant: 'danger',
+      icon: 'x',
+    }}
+  >
+    {({ labels, variant, icon }) => `
+<v-context-menu>
+    <v-context-menu-item 
+      label='${labels[0]}'
+    >
+    </v-context-menu-item>
+    <v-context-menu-item divider></v-context-menu-item>
+    <v-context-menu-item 
+      label='${labels[1]}'
+      variant='${variant}'
+      icon='${icon}'
+    >
+    </v-context-menu-item>
+</v-context-menu>
+    `}
+  </Story>
+</Canvas>
