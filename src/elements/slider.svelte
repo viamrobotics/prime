@@ -509,7 +509,7 @@ const onChange = () => {
 
         <span
           class={cn(
-            'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2',
+            'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2 select-none',
             'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-gray-9 bg-white text-xs',
             {
               '-translate-y-1.5': !focus || activeHandle !== index,
