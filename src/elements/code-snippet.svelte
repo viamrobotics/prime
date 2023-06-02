@@ -1,6 +1,7 @@
 <svelte:options immutable tag="v-code-snippet" />
 
 <script context="module" lang="ts">
+import { onMount } from 'svelte';
 const loadedLanguages: Record<string, boolean> = {};
 </script>
 
@@ -28,12 +29,12 @@ const cdn = (src: string) =>
 
 const script = (src: string) =>
   new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = src;
-    script.addEventListener('load', resolve);
-    script.addEventListener('error', reject);
-    document.head.append(script);
+    const el = document.createElement('script');
+    el.async = true;
+    el.src = src;
+    el.addEventListener('load', resolve);
+    el.addEventListener('error', reject);
+    document.head.append(el);
   });
 
 const copyToClipboard = async () => {
@@ -62,12 +63,13 @@ const highlight = async (element: Element) => {
     window.Prism.highlightElement(element);
   }
 };
-
-$: void highlight(element);
+onMount(async () => {
+  await highlight(element);
+});
 </script>
 
 <pre
-  class="relative !border-none !m-0 !pr-24 !pb-0
+  class="relative !border-none !m-0 !pt-3 !pr-24 !pb-0
     {theme === 'vsc-dark-plus' ? '!bg-gray-9' : '!bg-light'} "><code
     bind:this={element}
     class="language-{language} font-mono">{code}</code
