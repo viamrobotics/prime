@@ -1,16 +1,36 @@
 <script setup lang="ts">
+import jsonCodeExampleSrc from '../../src/stories/assets/json-code-example';
 
+let selectedTab = $ref('Tab 1');
+
+const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
+  console.log(event.detail.value);
+  selectedTab = event.detail.value;
+};
 </script>
 
 <template>
-  <main class="m-3">
+  <main class="flex flex-col gap-8 m-3">
 
     <!-- Selected Value -->
-    <v-tabs
-      data-testid="tabs-selected-test"
-      tabs="Tab 1, Tab 2, Tab 3"
-      selected="Tab 2"
-    />
+    <div>
+      <v-tabs
+        data-testid="tabs-selected-test"
+        tabs="Tab 1, Tab 2, Tab 3"
+        :selected="selectedTab"
+        @input="handleTabSelect"
+      />
+      <div class="p-4">
+        <div v-if="selectedTab === 'Tab 1'" >
+          <v-code-snippet 
+            language='json'
+            theme='vs'
+            :code=jsonCodeExampleSrc
+          />
+        </div>
+        <p v-else>{{ selectedTab }}</p>
+      </div>
+    </div>
 
     <!-- Focus KeyDown Test -->
     <v-tabs
