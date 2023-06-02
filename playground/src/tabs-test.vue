@@ -4,7 +4,6 @@ import jsonCodeExampleSrc from '../../src/stories/assets/json-code-example';
 let selectedTab = $ref('Tab 2');
 
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
-  console.log(event.detail.value);
   selectedTab = event.detail.value;
 };
 </script>
