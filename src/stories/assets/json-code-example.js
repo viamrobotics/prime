@@ -1,1 +1,9 @@
-export default JSON.stringify({ name: 'Garfield' });
+export default JSON.stringify(
+  {
+    name: 'Garfield',
+    age: 25,
+    loves_lasagna: true,
+  },
+  null,
+  2
+);
