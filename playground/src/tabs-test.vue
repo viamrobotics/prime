@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import jsonCodeExampleSrc from '../../src/stories/assets/json-code-example';
 
-let selectedTab = $ref('Tab 1');
+let selectedTab = $ref('Tab 2');
 
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
   console.log(event.detail.value);
