@@ -51,7 +51,6 @@ const copyToClipboard = async () => {
 
   window.setTimeout(() => {
     label = 'Copy'
-    return false;
   }, 2000);
 };
 
