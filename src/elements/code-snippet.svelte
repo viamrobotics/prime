@@ -16,6 +16,23 @@ export let code: string;
 export let theme: 'vs' | 'vsc-dark-plus' = 'vs';
 export let showbutton = 'true';
 
+let success = true;
+let notifying = false;
+
+$: label = 'Copy';
+
+// const label = () => {
+//   if (!notifying) {
+//     return props.text;
+//   }
+
+//   if (success) {
+//     return 'Success!';
+//   }
+
+//   return 'Failed';
+// };
+
 const dispatch = dispatcher();
 
 let element: HTMLElement;
@@ -40,10 +57,22 @@ const script = (src: string) =>
 const copyToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(code);
+    success = true;
+    label = 'Success!';
     dispatch('copy', { value: 'Successfully copied snippet to the clipboard' });
   } catch {
+    success = false;
+    label = 'Failed.';
     dispatch('copy', { value: ':( Failed to copy snippet to the clipboard' });
   }
+
+  window.setTimeout(() => {
+    notifying = false;
+    label = 'Copy';
+    return false;
+  }, 2000);
+
+  notifying = true;
 };
 
 const highlight = async (element: Element) => {
@@ -79,7 +108,7 @@ onMount(async () => {
       class="absolute top-2 right-2 !text-black !font-sans"
       on:click={copyToClipboard}
       on:keyup={copyToClipboard}
-      label="Copy"
+      {label}
       icon="copy"
     />
   {/if}
