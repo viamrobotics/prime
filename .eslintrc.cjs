@@ -49,6 +49,10 @@ module.exports = {
           customElement: true,
         },
       },
+      rules: {
+        // this rule doesn't play nicely with passing values to svelte props
+        'sonarjs/no-ignored-return': 'off',
+      },
     },
     {
       files: ['.*.@(cjs|js)', '*.@(cjs|js)', 'scripts/**/*', 'tests/**/*'],
@@ -92,43 +96,5 @@ module.exports = {
         classPropertiesAllowed: false,
       },
     ],
-
-    // TODO(mc, 2023-04-18): remove temporary overrides
-    camelcase: 'warn',
-    curly: 'warn',
-    'id-length': [
-      'warn',
-      {
-        exceptions: [
-          '_',
-          'x',
-          'y',
-          'z',
-          'w',
-          'r',
-          'i',
-          'j',
-          'k',
-          'l',
-          'h',
-          'a',
-          'b',
-        ],
-      },
-    ],
-    'line-comment-position': 'warn',
-    'multiline-comment-style': 'warn',
-    'no-else-return': 'warn',
-    'no-implicit-coercion': 'warn',
-    'no-multi-assign': 'warn',
-    'no-nested-ternary': 'warn',
-    'no-plusplus': 'warn',
-    'no-promise-executor-return': 'warn',
-    'no-useless-concat': 'warn',
-    'no-void': 'warn',
-    'require-unicode-regexp': 'warn',
-    'sonarjs/no-duplicate-string': 'warn',
-    '@typescript-eslint/no-shadow': 'warn',
-    'unicorn/switch-case-braces': 'warn',
   },
 };

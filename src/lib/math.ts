@@ -1,11 +1,11 @@
 export const clamp = (val: number, minVal: number, maxVal: number): number => {
-  return val <= minVal ? minVal : val >= maxVal ? maxVal : val;
+  return Math.max(minVal, Math.min(maxVal, val));
 };
 
 /**
  * take in a value, and then calculate that value's percentage
  * of the overall range (min-max)
- **/
+ */
 export const percentOf = (
   val: number,
   min: number,
@@ -17,9 +17,8 @@ export const percentOf = (
     return 0;
   } else if (perc >= 100) {
     return 100;
-  } else {
-    return Number.parseFloat(perc.toFixed(precision));
   }
+  return Number.parseFloat(perc.toFixed(precision));
 };
 
 export const hashCode = (str: string) => {
@@ -34,7 +33,8 @@ export const hashCode = (str: string) => {
     chr = str.codePointAt(index)!;
     // eslint-disable-next-line no-bitwise
     hash = (hash << 5) - hash + chr;
-    hash = Math.trunc(hash); // Convert to 32bit integer
+    // Convert to 32bit integer
+    hash = Math.trunc(hash);
   }
 
   return hash;

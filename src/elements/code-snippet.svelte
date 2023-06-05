@@ -18,7 +18,7 @@ export let showbutton = 'true';
 
 const dispatch = dispatcher();
 
-let element: HTMLElement;
+let element: HTMLElement | undefined;
 
 addStyles();
 
@@ -46,7 +46,7 @@ const copyToClipboard = async () => {
   }
 };
 
-const highlight = async (element: Element) => {
+const highlight = async () => {
   const { Prism } = window as { Prism: typeof import('prismjs') };
 
   if (!Prism) {
@@ -64,7 +64,7 @@ const highlight = async (element: Element) => {
   }
 };
 onMount(async () => {
-  await highlight(element);
+  await highlight();
 });
 </script>
 

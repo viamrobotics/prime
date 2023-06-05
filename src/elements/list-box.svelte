@@ -23,16 +23,16 @@ const dispatch = dispatcher();
 
 type ListBoxSide = 'left' | 'right';
 
-type ListBoxOption = {
+interface ListBoxOption {
   value: string;
   selected: boolean;
   suffix?: string;
-};
+}
 
-type Options = {
+interface Options {
   left: ListBoxOption[];
   right: ListBoxOption[];
-};
+}
 
 const LEFT = 'left';
 const RIGHT = 'right';
@@ -89,7 +89,9 @@ afterUpdate(addNewData);
 addStyles();
 
 const handleOptionClick = (option: ListBoxOption, side: ListBoxSide) => {
-  if (isDisabled) return;
+  if (isDisabled) {
+    return;
+  }
 
   option.selected = !option.selected;
   options = { ...options };
@@ -100,7 +102,9 @@ const handleOptionClick = (option: ListBoxOption, side: ListBoxSide) => {
 };
 
 const handleMoveClick = (target: ListBoxSide) => {
-  if (isDisabled) return;
+  if (isDisabled) {
+    return;
+  }
 
   const source = target === LEFT ? RIGHT : LEFT;
 

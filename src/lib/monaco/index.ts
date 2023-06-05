@@ -5,9 +5,11 @@ export const monacoURL = `https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/$
 
 const schemas: monaco.languages.json.DiagnosticsOptions['schemas'] = [];
 
-// Monaco doesn't understand our schema $ref paths, which look like:
-// #/definitions/SomeAttr
-// For now we're just transforming them into refs that monaco can understand.
+/*
+ * Monaco doesn't understand our schema $ref paths, which look like:
+ * #/definitions/SomeAttr
+ * For now we're just transforming them into refs that monaco can understand.
+ */
 const makeRefUri = (id: string, key: string) => {
   return `http://definitions/${id}-${key}.json`;
 };
@@ -20,7 +22,7 @@ const updateRefs = (
 ): Record<string, string> => {
   for (const property of Object.values(definition.properties ?? [])) {
     if (property.type === 'array' && property.items?.type) {
-      property.description = `"array" of type "${property.items?.type}"`;
+      property.description = `"array" of type "${property.items.type}"`;
     } else if (property.type === 'array') {
       property.description = '"array" of type "object"';
     } else {

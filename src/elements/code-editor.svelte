@@ -42,8 +42,8 @@ $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: hasMinimap = htmlToBoolean(minimap, 'minimap');
 
 let container: HTMLDivElement;
-let diffEditor: Monaco.editor.IStandaloneDiffEditor;
-let editor: Monaco.editor.IStandaloneCodeEditor;
+let diffEditor: Monaco.editor.IStandaloneDiffEditor | undefined;
+let editor: Monaco.editor.IStandaloneCodeEditor | undefined;
 let resizeObserver: ResizeObserver;
 
 const link = document.createElement('link');
@@ -85,7 +85,7 @@ const setDiffModel = () => {
   lastModel?.modified.dispose();
   lastModel?.original.dispose();
 
-  diffEditor.setModel({
+  diffEditor?.setModel({
     original: window.monaco.editor.createModel(previous, 'json'),
     modified: window.monaco.editor.createModel(value, 'json'),
   });
@@ -135,18 +135,19 @@ const init = (monaco: typeof Monaco) => {
     return initDiff();
   }
 
-  editor = monaco.editor.create(container, opts());
+  const monacoEditor = monaco.editor.create(container, opts());
+  editor = monacoEditor;
 
-  editor.onDidChangeModelContent(() => {
-    dispatch('input', { value: editor?.getValue() });
+  monacoEditor.onDidChangeModelContent(() => {
+    dispatch('input', { value: monacoEditor.getValue() });
   });
 
-  editor.onDidBlurEditorWidget(() => {
-    dispatch('blur', { value: editor?.getValue() });
+  monacoEditor.onDidBlurEditorWidget(() => {
+    dispatch('blur', { value: monacoEditor.getValue() });
     emitMarkers();
   });
 
-  editor.layout();
+  monacoEditor.layout();
   setModel();
   emitMarkers();
 };
@@ -197,15 +198,15 @@ $: {
   } else if (editor) {
     setModel();
 
-    const currentValue: string = editor?.getValue() ?? '';
+    const currentValue: string = editor.getValue() ?? '';
 
     if (value !== undefined) {
       const originalFormatted = removeNewlineWhitespace(value);
       const updatedFormatted = removeNewlineWhitespace(currentValue);
 
       if (updatedFormatted !== originalFormatted) {
-        editor?.setValue(value);
-        editor?.layout();
+        editor.setValue(value);
+        editor.layout();
       }
     }
 

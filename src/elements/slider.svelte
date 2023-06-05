@@ -67,14 +67,18 @@ let activeHandle = -1;
 let previousValue: number;
 let sliderDimensions: DOMRect;
 
-// copy the initial values in to a spring function which
-// will update every time the values array is modified
+/*
+ * copy the initial values in to a spring function which
+ * will update every time the values array is modified
+ */
 
 let springPositions: Spring<number[]>;
 
 $: {
-  // trim the range so it remains as a min/max (only 2 handles)
-  // and also align the handles to the steps
+  /*
+   * trim the range so it remains as a min/max (only 2 handles)
+   * and also align the handles to the steps
+   */
   startValue = alignValueToStep(startValue, minNum, maxNum);
 
   let arr = [startValue];
@@ -86,20 +90,26 @@ $: {
 
   arr = trimRange(arr);
 
-  // check if the valueLength (length of values[]) has changed,
-  // because if so we need to re-seed the spring function with the
-  // new values array.
+  /*
+   * check if the valueLength (length of values[]) has changed,
+   * because if so we need to re-seed the spring function with the
+   * new values array.
+   */
   if (valueLength === arr.length) {
-    // update the value of the spring function for animated handles
-    // whenever the values has updated
+    /*
+     * update the value of the spring function for animated handles
+     * whenever the values has updated
+     */
     springPositions
-      .set(arr.map((v) => percentOf(v, minNum, maxNum, 2)))
+      .set(arr.map((val) => percentOf(val, minNum, maxNum, 2)))
       .catch((error) => console.error(error));
   } else {
-    // set the initial spring values when the slider initialises,
-    // or when values array length has changed
+    /*
+     * set the initial spring values when the slider initialises,
+     * or when values array length has changed
+     */
     springPositions = spring(
-      arr.map((v) => percentOf(v, minNum, maxNum, 2)),
+      arr.map((val) => percentOf(val, minNum, maxNum, 2)),
       springValues
     );
   }
@@ -121,7 +131,8 @@ onMount(() => {
 /**
  * align the value with the steps so that it
  * always sits on the closest (above/below) step
- **/
+ *
+ */
 const alignValueToStep = (
   val: number,
   minVal: number,
@@ -134,9 +145,11 @@ const alignValueToStep = (
     return maxVal;
   }
 
-  // find the middle-point between steps
-  // and see if the value is closer to the
-  // next step, or previous step
+  /*
+   * find the middle-point between steps
+   * and see if the value is closer to the
+   * next step, or previous step
+   */
   const remainder = (val - minVal) % stepNum;
   let aligned = val - remainder;
   if (Math.abs(remainder) * 2 >= stepNum) {
@@ -144,9 +157,11 @@ const alignValueToStep = (
   }
   // make sure the value is within acceptable limits
   aligned = clamp(aligned, minVal, maxVal);
-  // make sure the returned value is set to the precision desired
-  // this is also because javascript often returns weird floats
-  // when dealing with odd numbers and percentages
+  /*
+   * make sure the returned value is set to the precision desired
+   * this is also because javascript often returns weird floats
+   * when dealing with odd numbers and percentages
+   */
 
   return Number.parseFloat(aligned.toFixed(2));
 };
@@ -154,7 +169,7 @@ const alignValueToStep = (
 /**
  * normalise a mouse or touch event to return the
  * client (x/y) object for that event
- **/
+ */
 const normalisedClient = (
   event: MouseEvent | TouchEvent
 ): MouseEvent | Touch => {
@@ -165,11 +180,11 @@ const normalisedClient = (
 
 /**
  * check if an element is a handle on the slider
- **/
+ */
 const targetIsHandle = (el: HTMLElement): boolean => {
   const handles = [...slider.querySelectorAll('.handle')];
   const isHandle = handles.includes(el);
-  const isChild = handles.some((e) => e.contains(el));
+  const isChild = handles.some((handle) => handle.contains(el));
   return isHandle || isChild;
 };
 
@@ -178,15 +193,14 @@ const targetIsHandle = (el: HTMLElement): boolean => {
  * for 'range' is 'min', 'max', or truthy. This is because we
  * do not want more than one handle for a min/max range, and we do
  * not want more than two handles for a true range.
- **/
+ */
 const trimRange = (arr: number[]): number[] => {
   if (range === 'min' || range === 'max') {
     return arr.slice(0, 1);
   } else if (range) {
     return arr.slice(0, 2);
-  } else {
-    return arr;
   }
+  return arr;
 };
 
 const getSliderDimensions = () => {
@@ -195,7 +209,7 @@ const getSliderDimensions = () => {
 
 /**
  * helper to return closest handle to user interaction
- **/
+ */
 const getClosestHandle = (clientPos: Touch | MouseEvent): number => {
   // calculate the interaction position, percent and value
   const handlePos = clientPos.clientX - sliderDimensions.left;
@@ -204,9 +218,11 @@ const getClosestHandle = (clientPos: Touch | MouseEvent): number => {
 
   let closest = 0;
 
-  // if we have a range, and the handles are at the same
-  // position, we want a simple check if the interaction
-  // value is greater than return the second handle
+  /*
+   * if we have a range, and the handles are at the same
+   * position, we want a simple check if the interaction
+   * value is greater than return the second handle
+   */
   if (range && startValue === endValue) {
     return handleVal > endValue ? 1 : 0;
   } else if (range) {
@@ -225,7 +241,7 @@ const getClosestHandle = (clientPos: Touch | MouseEvent): number => {
  * it to a value on the range, and then send that value
  * through to the moveHandle() method to set the active
  * handle's position
- **/
+ */
 const handleInteract = (clientPos: { clientX: number; clientY: number }) => {
   // calculate the interaction position, percent and value
   const handlePos = clientPos.clientX - sliderDimensions.left;
@@ -238,13 +254,15 @@ const handleInteract = (clientPos: { clientX: number; clientY: number }) => {
 
 /**
  * move a handle to a specific value, respecting the clamp/align rules
- **/
-const moveHandle = (i: number, value: number): number => {
+ */
+const moveHandle = (i: number, nextValue: number): number => {
   let index = i;
 
-  // align & clamp the value so we're not doing extra
-  // calculation on an out-of-range value down below
-  const alignedValue = alignValueToStep(value, minNum, maxNum);
+  /*
+   * align & clamp the value so we're not doing extra
+   * calculation on an out-of-range value down below
+   */
+  const alignedValue = alignValueToStep(nextValue, minNum, maxNum);
 
   // use the active handle if handle index is not provided
   if (index === undefined) {
@@ -269,8 +287,10 @@ const moveHandle = (i: number, value: number): number => {
     endValue = alignedValue;
   }
 
-  // fire the change event when the handle moves,
-  // and store the previous value for the next time
+  /*
+   * fire the change event when the handle moves,
+   * and store the previous value for the next time
+   */
   if (previousValue !== alignedValue) {
     onChange();
     previousValue = alignedValue;
@@ -287,28 +307,27 @@ const moveHandle = (i: number, value: number): number => {
 
 /**
  * helper to find the beginning range value for use with css style
- **/
+ */
 const rangeStart = (arr: number[]): number => {
   return range === 'min' ? 0 : arr[0]!;
 };
 
 /**
  * helper to find the ending range value for use with css style
- **/
+ */
 const rangeEnd = (arr: number[]): number => {
   if (range === 'max') {
     return 0;
   } else if (range === 'min') {
     return 100 - arr[0]!;
-  } else {
-    return 100 - arr[1]!;
   }
+  return 100 - arr[1]!;
 };
 
 /**
  * when the user has unfocussed (blurred) from the
  * slider, deactivate all handles
- **/
+ */
 const handleSliderBlur = () => {
   if (keyboardActive) {
     focus = false;
@@ -320,7 +339,7 @@ const handleSliderBlur = () => {
 /**
  * when the user focusses the handle of a slider
  * set it to be active
- **/
+ */
 const handleSliderFocus = (index: number) => {
   if (!isDisabled) {
     activeHandle = index;
@@ -332,13 +351,15 @@ const handleSliderFocus = (index: number) => {
  * function to run when the user touches
  * down on the slider element anywhere
  * @param {event} e the event from browser
- **/
-const sliderInteractStart = (e: MouseEvent | TouchEvent) => {
-  if (isDisabled || isReadonly) return;
+ */
+const sliderInteractStart = (event: MouseEvent | TouchEvent) => {
+  if (isDisabled || isReadonly) {
+    return;
+  }
 
   getSliderDimensions();
-  const el = e.target as HTMLElement;
-  const clientPos = normalisedClient(e);
+  const el = event.target as HTMLElement;
+  const clientPos = normalisedClient(event);
 
   // set the closest handle as active
   focus = true;
@@ -351,9 +372,11 @@ const sliderInteractStart = (e: MouseEvent | TouchEvent) => {
     maxNum
   );
 
-  // for touch devices we want the handle to instantly
-  // move to the position touched for more responsive feeling
-  if (e.type === 'touchstart' && !el.matches('.pipVal')) {
+  /*
+   * for touch devices we want the handle to instantly
+   * move to the position touched for more responsive feeling
+   */
+  if (event.type === 'touchstart' && !el.matches('.pipVal')) {
     handleInteract(clientPos);
   }
 };
@@ -365,11 +388,15 @@ const sliderInteractEnd = () => {
 /**
  * unfocus the slider if the user clicked off of
  * it, somewhere else on the screen
- **/
-const bodyInteractStart = (e: MouseEvent | TouchEvent) => {
+ */
+const bodyInteractStart = (event: MouseEvent | TouchEvent) => {
   keyboardActive = false;
 
-  if (focus && e.target !== slider && !slider.contains(e.target as Node)) {
+  if (
+    focus &&
+    event.target !== slider &&
+    !slider.contains(event.target as Node)
+  ) {
     focus = false;
   }
 };
@@ -378,34 +405,40 @@ const bodyInteractStart = (e: MouseEvent | TouchEvent) => {
  * send the clientX through to handle the interaction
  * whenever the user moves acros screen while active
  * @param {event} e the event from browser
- **/
-const bodyInteract = (e: MouseEvent | TouchEvent) => {
-  if (isDisabled || isReadonly || !handleActivated) return;
+ */
+const bodyInteract = (event: MouseEvent | TouchEvent) => {
+  if (isDisabled || isReadonly || !handleActivated) {
+    return;
+  }
 
   focus = true;
-  handleInteract(normalisedClient(e));
+  handleInteract(normalisedClient(event));
 };
 
 /**
  * if user triggers mouseup on the body while
  * a handle is active (without moving) then we
  * trigger an interact event there
- **/
-const bodyMouseUp = (e: MouseEvent) => {
+ */
+const bodyMouseUp = (event: MouseEvent) => {
   if (!(isDisabled || isReadonly)) {
-    const el = e.target as HTMLElement;
-    // this only works if a handle is active, which can
-    // only happen if there was sliderInteractStart triggered
-    // on the slider, already
+    const el = event.target as HTMLElement;
+    /*
+     * this only works if a handle is active, which can
+     * only happen if there was sliderInteractStart triggered
+     * on the slider, already
+     */
     if (
       (handleActivated && el && el === slider) ||
       slider.contains(el as Node)
     ) {
       focus = true;
-      // don't trigger interact if the target is a handle (no need) or
-      // if the target is a label (we want to move to that value from rangePips)
+      /*
+       * don't trigger interact if the target is a handle (no need) or
+       * if the target is a label (we want to move to that value from rangePips)
+       */
       if (!targetIsHandle(el) && !el.matches('.pipVal')) {
-        handleInteract(normalisedClient(e));
+        handleInteract(normalisedClient(event));
       }
     }
   }
@@ -416,29 +449,35 @@ const bodyMouseUp = (e: MouseEvent) => {
 /**
  * if user triggers touchend on the body then we
  * defocus the slider completely
- **/
+ */
 const bodyTouchEnd = () => {
   handleActivated = false;
   handlePressed = false;
 };
 
-const bodyKeyDown = (e: KeyboardEvent) => {
-  if (isDisabled || isReadonly) return;
+const bodyKeyDown = (event: KeyboardEvent) => {
+  if (isDisabled || isReadonly) {
+    return;
+  }
 
-  if (e.target === slider || slider.contains(e.target as Node)) {
+  if (event.target === slider || slider.contains(event.target as Node)) {
     keyboardActive = true;
   }
 };
 
 const onChange = () => {
-  if (isDisabled || isReadonly) return;
+  if (isDisabled || isReadonly) {
+    return;
+  }
 
   dispatch('input', {
     activeHandle,
     previousValue,
     value: activeHandle === 0 ? startValue : endValue,
     values: endValue
-      ? [startValue, endValue].map((v) => alignValueToStep(v, minNum, maxNum))
+      ? [startValue, endValue].map((val) =>
+          alignValueToStep(val, minNum, maxNum)
+        )
       : undefined,
   });
 };
@@ -486,10 +525,10 @@ const onChange = () => {
         index
           ? 3
           : 2}"
-        aria-valuemin={range === true && index === 1 ? startValue : minNum}
-        aria-valuemax={range === true && index === 0 ? endValue : maxNum}
+        aria-valuemin={range && index === 1 ? startValue : minNum}
+        aria-valuemax={range && index === 0 ? endValue : maxNum}
         aria-valuenow={value}
-        aria-valuetext={value?.toString()}
+        aria-valuetext={value.toString()}
         aria-orientation="horizontal"
         aria-disabled={isDisabled ? true : undefined}
         tabindex={disabled ? -1 : 0}

@@ -2,7 +2,7 @@ export default JSON.stringify(
   {
     name: 'Garfield',
     age: 25,
-    loves_lasagna: true,
+    lovesLasagna: true,
   },
   null,
   2

@@ -108,10 +108,8 @@ const handleInput = () => {
     prevNumberValue = value;
 
     // only allow number-related characters to be typed
-    value = input.value = input.value.replaceAll(
-      new RegExp(/[^\d+.e-]/i, 'g'),
-      ''
-    );
+    input.value = input.value.replaceAll(/[^\d+.e-]/giu, '');
+    value = input.value;
 
     // only set and send value if valid, and different from previous value
     if (
@@ -121,7 +119,7 @@ const handleInput = () => {
       return;
     }
   } else {
-    input.value = value = input.value;
+    value = input.value;
   }
   internals.setFormValue(value);
   dispatch('input', { value });
@@ -131,9 +129,9 @@ const handleBlur = () => {
   isInvalidNumericInput = Number.isNaN(Number(input.value));
 };
 
-const getDecimals = (value = '') => {
+const getDecimals = (val = '') => {
   return Math.max(
-    value.includes('.') ? value.length - value.indexOf('.') - 1 : 0,
+    val.includes('.') ? val.length - val.indexOf('.') - 1 : 0,
     stepDecimalDigits
   );
 };
@@ -175,9 +173,10 @@ const handleNumberDragMove = (event: PointerEvent) => {
     type === 'integer'
       ? Number.parseInt(deltaString, 10)
       : Number.parseFloat(deltaString);
-  value = input.value = (startValue + delta * stepNumber).toFixed(
+  input.value = (startValue + delta * stepNumber).toFixed(
     getDecimals(input.value)
   );
+  value = input.value;
 
   const valueNum = Number.parseFloat(value);
 
@@ -284,7 +283,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
     class={cx(
       'w-full py-1.5 px-2 leading-tight text-xs h-[30px] border outline-none appearance-none',
       {
-        'pl-2.5': isNumeric === false,
+        'pl-2.5': !isNumeric,
         'pl-3': isNumeric,
         'bg-white border-light hover:border-medium focus:border-gray-9':
           !isDisabled && !isInvalidNumericInput,

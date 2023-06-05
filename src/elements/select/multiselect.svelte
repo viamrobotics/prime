@@ -77,19 +77,19 @@ const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
 };
 
-const reduceEmptyOptions = (options: string[]) => {
-  if (options[0] === '' && options.length === 1) {
+const reduceEmptyOptions = (inputOptions: string[]) => {
+  if (inputOptions[0] === '' && inputOptions.length === 1) {
     return [];
   }
-  return options;
+  return inputOptions;
 };
 
-const applySearchSort = (term: string, options: string[]) => {
-  if (reduceEmptyOptions(options).length === 0) {
+const applySearchSort = (term: string, inputOptions: string[]) => {
+  if (reduceEmptyOptions(inputOptions).length === 0) {
     return [];
   }
 
-  return term ? searchSort(options, term, isReduceSort) : options;
+  return term ? searchSort(inputOptions, term, isReduceSort) : inputOptions;
 };
 
 const handleInput = (event: Event) => {
@@ -105,14 +105,18 @@ const handleKeyUp = (event: KeyboardEvent) => {
   setKeyboardControl(true);
 
   switch (event.key.toLowerCase()) {
-    case 'enter':
+    case 'enter': {
       return handleEnter();
-    case 'arrowup':
+    }
+    case 'arrowup': {
       return handleNavigate(-1);
-    case 'arrowdown':
+    }
+    case 'arrowdown': {
       return handleNavigate(+1);
-    case 'escape':
+    }
+    case 'escape': {
       return handleEscape();
+    }
   }
 };
 
@@ -158,7 +162,7 @@ const handleNavigate = (direction: number) => {
 
   const element = optionsContainer.children[0]!.children[navigationIndex]!;
 
-  if (utils.isElementInScrollView(element) === false) {
+  if (!utils.isElementInScrollView(element)) {
     element.scrollIntoView();
   }
 };

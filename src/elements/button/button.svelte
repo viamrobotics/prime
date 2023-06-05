@@ -1,10 +1,6 @@
 <svelte:options immutable tag="v-button-internal" />
 
 <script lang="ts">
-// Added temporarily because <svelte:element> does not recognize "text" as a valid prop
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 type Variants =
   | 'primary'
   | 'inverse-primary'
@@ -35,10 +31,8 @@ let isDisabled: boolean;
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 
 // @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
-const component = get_current_component() as HTMLElement & {
-  internals: ElementInternals;
-};
-const internals = component.attachInternals();
+const component = get_current_component() as HTMLElement;
+const internals: ElementInternals = component.attachInternals();
 
 const handleClick = () => {
   const { form } = internals;

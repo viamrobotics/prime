@@ -1,15 +1,13 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable unicorn/prefer-regexp-test */
 
+/*
+ * Escape special characters so a string can be used in a RegEx constructor.
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping
+ */
 export const addSpecialCharacterEscapes = (value: string) => {
-  // This function takes a value and adds backslashes for special chars
-  // so that it doesn't treat it as a special character in a
-  let newValue = '';
-
-  for (const element of value) {
-    newValue += /[^\dA-Za-z]/.test(element) ? `\\${element}` : element;
-  }
-  return newValue;
+  return value.replaceAll(/[.*+?^${}()|[\]\\]/gu, '\\$&');
 };
 
 export const searchSort = (
@@ -20,15 +18,15 @@ export const searchSort = (
   const results: Record<string, string[]> = {};
   const termCopy = addSpecialCharacterEscapes(searchTerm);
 
-  const initialCharacterMatch = new RegExp(`^${termCopy}`, 'i');
-  const anyMatch = new RegExp(termCopy, 'gi');
+  const initialCharacterMatch = new RegExp(`^${termCopy}`, 'iu');
+  const anyMatch = new RegExp(termCopy, 'giu');
 
   for (const datum of data) {
     let index = -1;
     const words = datum.split(' ');
 
     // eslint-disable-next-line unicorn/no-for-loop
-    for (let i = 0; i < words.length; i++) {
+    for (let i = 0; i < words.length; i += 1) {
       const word = words[i]!;
 
       if (word.match(initialCharacterMatch)) {

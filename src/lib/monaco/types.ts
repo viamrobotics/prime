@@ -14,9 +14,7 @@ export interface Schema {
   definitions: Definition;
 }
 
-export interface Definition {
-  [key: string]: SubSchema;
-}
+export type Definition = Record<string, SubSchema>;
 
 type DataTypes =
   | 'array'
@@ -33,15 +31,16 @@ export interface Item {
   type?: DataTypes;
 }
 
-export interface Property {
-  [key: string]: {
+export type Property = Record<
+  string,
+  {
     description?: string;
     type?: string;
     items?: Item;
     patternProperties?: object;
     $ref?: string;
-  };
-}
+  }
+>;
 
 export interface SubSchema {
   additionalProperties?: boolean;

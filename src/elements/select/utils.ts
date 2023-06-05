@@ -16,7 +16,7 @@ export const isElementInScrollView = (element: Element) => {
 };
 
 export const shouldBeChecked = (value: string, option: string) => {
-  const values = value.split(',').map((v) => v.trim());
+  const values = value.split(',').map((val) => val.trim());
   return values.includes(option);
 };
 
@@ -31,7 +31,7 @@ export const applySearchHighlight = (options: string[], value: string) => {
   const valueCopy = addSpecialCharacterEscapes(value);
 
   for (const option of options) {
-    const match = option.match(new RegExp(valueCopy, 'i'));
+    const match = option.match(new RegExp(valueCopy, 'iu'));
 
     if (match?.index === undefined) {
       noMatches.push({
