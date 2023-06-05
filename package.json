@@ -57,7 +57,7 @@
     "@types/prismjs": "^1.26.0",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
-    "@viamrobotics/eslint-config": "^0.0.4",
+    "@viamrobotics/eslint-config": "^0.0.5",
     "@viamrobotics/prettier-config": "^0.0.1",
     "@viamrobotics/typescript-config": "^0.0.3",
     "@vitejs/plugin-vue": "^4.1.0",
