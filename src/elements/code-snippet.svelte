@@ -21,18 +21,6 @@ let notifying = false;
 
 $: label = 'Copy';
 
-// const label = () => {
-//   if (!notifying) {
-//     return props.text;
-//   }
-
-//   if (success) {
-//     return 'Success!';
-//   }
-
-//   return 'Failed';
-// };
-
 const dispatch = dispatcher();
 
 let element: HTMLElement;
