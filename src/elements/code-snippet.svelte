@@ -42,15 +42,15 @@ const script = (src: string) =>
 const copyToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(code);
-    label = 'Success!'
+    label = 'Success!';
     dispatch('copy', { value: 'Successfully copied snippet to the clipboard' });
   } catch {
-    label = 'Failed.'
+    label = 'Failed.';
     dispatch('copy', { value: ':( Failed to copy snippet to the clipboard' });
   }
 
   window.setTimeout(() => {
-    label = 'Copy'
+    label = 'Copy';
   }, 2000);
 };
 
@@ -87,7 +87,7 @@ onMount(async () => {
       class="absolute top-2 right-2 !text-black !font-sans"
       on:click={copyToClipboard}
       on:keyup={copyToClipboard}
-      label="{label}"
+      {label}
       icon="copy"
     />
   {/if}
