@@ -69,6 +69,10 @@ const highlight = async (element: Element) => {
 
   if (element !== undefined) {
     window.Prism.highlightElement(element);
+    element.setAttribute(
+      'style',
+      'font-family: Menlo, Monaco, "Courier New", monospace'
+    );
   }
 };
 onMount(async () => {
