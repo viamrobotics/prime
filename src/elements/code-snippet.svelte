@@ -103,11 +103,3 @@ onMount(async () => {
   referrerpolicy="no-referrer"
   href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-{theme}.min.css"
 />
-
-<style>
-code[class*='language-'],
-pre[class*='language-'],
-pre[class*='language-'] code[class*='language-'] {
-  font-family: cursive;
-}
-</style>
