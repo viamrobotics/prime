@@ -69,6 +69,10 @@ const highlight = async (element: Element) => {
 
   if (element !== undefined) {
     window.Prism.highlightElement(element);
+    element.setAttribute(
+      'style',
+      'font-family: Menlo, Monaco, "Courier New", monospace'
+    );
   }
 };
 onMount(async () => {
@@ -99,3 +103,11 @@ onMount(async () => {
   referrerpolicy="no-referrer"
   href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-{theme}.min.css"
 />
+
+<style>
+code[class*='language-'],
+pre[class*='language-'],
+pre[class*='language-'] code[class*='language-'] {
+  font-family: cursive;
+}
+</style>
