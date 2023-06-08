@@ -7,3 +7,5 @@ interface HTMLElement {
     newValue: string
   ): void;
 }
+
+declare module '@zerodevx/svelte-toast/dist'

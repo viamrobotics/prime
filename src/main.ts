@@ -7,6 +7,8 @@ import '../prime.css';
 import 'element-internals-polyfill';
 import { loadFonts } from './lib';
 
+export { notify } from './lib/notify';
+
 if (customElements.get('v-badge')) {
   console.warn('WARNING: Multiple instances of PRIME being imported.');
 } else {
@@ -44,3 +46,4 @@ if (customElements.get('v-badge')) {
   import('./elements/table/tr.svelte');
   import('./elements/vector-input.svelte');
 }
+

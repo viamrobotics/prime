@@ -15,7 +15,9 @@ addStyles();
 
 <div
   class={cx('flex border', {
-    'bg-medium border-medium': variant !== 'danger',
+    'bg-info-light border-info-medium': variant === 'info',
+    'bg-warning-light border-warning-medium': variant === 'warning',
+    'bg-success-light border-success-medium': variant === 'success',
     'bg-danger-light border-danger-medium': variant === 'danger',
   })}
 >
@@ -54,7 +56,7 @@ addStyles();
         </svg>
       {/if}
 
-      <figure>
+      <figure class='flex flex-col gap-1'>
         <figcaption class="text-sm font-medium text-default">
           {title}
         </figcaption>
