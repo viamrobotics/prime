@@ -84,12 +84,10 @@ $: void highlight(element);
 </script>
 
 <pre
-class={cx('relative !border-none !m-0 !pt-3 !pr-24 !pb-0', {
-  '!bg-gray-9':
-    theme === 'vsc-dark-plus',
-  '!bg-light':
-    theme === 'vs',
-})}><code bind:this={element} class="language-{language} font-mono"
+  class={cx('relative !border-none !m-0 !pt-3 !pr-24 !pb-0', {
+    '!bg-gray-9': theme === 'vsc-dark-plus',
+    '!bg-light': theme === 'vs',
+  })}><code bind:this={element} class="language-{language} font-mono"
     >{code}</code
   >
   {#if showbutton === 'true'}
