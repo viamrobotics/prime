@@ -56,7 +56,7 @@ addStyles();
         </svg>
       {/if}
 
-      <figure class='flex flex-col gap-1'>
+      <figure class="flex flex-col gap-1">
         <figcaption class="text-sm font-medium text-default">
           {title}
         </figcaption>

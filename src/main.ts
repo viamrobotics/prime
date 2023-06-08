@@ -46,4 +46,3 @@ if (customElements.get('v-badge')) {
   import('./elements/table/tr.svelte');
   import('./elements/vector-input.svelte');
 }
-

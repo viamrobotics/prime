@@ -8,4 +8,4 @@ interface HTMLElement {
   ): void;
 }
 
-declare module '@zerodevx/svelte-toast/dist'
+declare module '@zerodevx/svelte-toast/dist';
