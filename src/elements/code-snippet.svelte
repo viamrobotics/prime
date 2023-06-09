@@ -6,14 +6,16 @@ const loadedLanguages: Record<string, boolean> = {};
 </script>
 
 <script lang="ts">
+import cx from 'classnames';
 import { addStyles } from '../lib';
 import pkg from '../../package.json';
-
 import { dispatcher } from '../lib/dispatch';
+
+type Themes = 'vs' | 'vsc-dark-plus';
 
 export let language: string;
 export let code: string;
-export let theme: 'vs' | 'vsc-dark-plus' = 'vs';
+export let theme: Themes;
 export let showbutton = 'true';
 
 $: label = 'Copy';
@@ -54,8 +56,8 @@ const copyToClipboard = async () => {
   }, 2000);
 };
 
-const highlight = async (element: Element) => {
-  const { Prism } = window as { Prism: typeof import('prismjs') };
+const highlight = async (codeSnippet: Element) => {
+  const { Prism } = window as { Prism: undefined | typeof import('prismjs') };
 
   if (!Prism) {
     await script(cdn('prism.min.js'));
@@ -67,24 +69,26 @@ const highlight = async (element: Element) => {
     loadedLanguages[language] = true;
   }
 
-  if (element !== undefined) {
-    window.Prism.highlightElement(element);
-    element.setAttribute(
-      'style',
-      'font-family: Menlo, Monaco, "Courier New", monospace'
-    );
-  }
+  window.Prism.highlightElement(codeSnippet);
+  element.setAttribute(
+    'style',
+    'font-family: Menlo, Monaco, "Courier New", monospace'
+  );
 };
 onMount(async () => {
   await highlight(element);
 });
+
+// eslint-disable-next-line no-void
+$: void highlight(element);
 </script>
 
 <pre
-  class="relative !border-none !m-0 !pt-3 !pr-24 !pb-0
-    {theme === 'vsc-dark-plus' ? '!bg-gray-9' : '!bg-light'} "><code
-    bind:this={element}
-    class="language-{language} font-mono">{code}</code
+  class={cx('relative !border-none !m-0 !pt-3 !pr-24 !pb-0', {
+    '!bg-gray-9': theme === 'vsc-dark-plus',
+    '!bg-light': theme === 'vs',
+  })}><code bind:this={element} class="language-{language} font-mono"
+    >{code}</code
   >
   {#if showbutton === 'true'}
     <v-button
