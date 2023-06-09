@@ -26,14 +26,14 @@ const render = () => {
   container.className = 'flex gap-2';
 
   const variants = [
-    { method: 'info', title: 'This is an info.', message: '' },
-    { method: 'warn', title: 'This is a warning.', message: '' },
+    { method: 'info', title: 'This is an info', message: '' },
+    { method: 'warn', title: 'This is a warning', message: '' },
     {
       method: 'danger',
-      title: 'This is an error.',
+      title: 'This is an error',
       message: 'Something bad happened',
     },
-    { method: 'success', title: 'This is a success.', message: '' },
+    { method: 'success', title: 'This is a success', message: '' },
   ] as const;
 
   for (const { method, title, message } of variants) {
