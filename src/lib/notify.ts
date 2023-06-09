@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { SvelteToast, toast } from '@zerodevx/svelte-toast/dist';
 
-const app = new SvelteToast({
+export const toastApp = new SvelteToast({
   target: document.body,
   options: {
     duration: 1000,
@@ -28,13 +28,13 @@ const createText = (
   text?: string,
   action?: string
 ) => {
+  const actionHTML = action
+    ? `<v-button variant='inverse-primary' label='${action}'></v-button>`
+    : ''
+
   return `
     <v-notify variant='${variant}' title='${title}' message='${text ?? ''}'>
-      ${
-        action
-          ? `<v-button variant='inverse-primary' label='${action}'></v-button>`
-          : ''
-      }
+      ${actionHTML}
     </v-notify>
   `;
 };
