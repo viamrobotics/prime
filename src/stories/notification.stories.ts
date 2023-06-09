@@ -10,10 +10,10 @@ const meta: Meta = {
         code: `
 import { notify } from '@viamrobotics/prime;
 
-notify.info('This is an info.')
-notify.warn('This is a warning.')
-notify.danger('This is an error.')
-notify.success('This is a success.')
+notify.info('This is an info')
+notify.warn('This is a warning')
+notify.danger('This is an error', 'Something bad happened.')
+notify.success('This is a success')
 
     `.trim(),
       },
@@ -31,7 +31,7 @@ const render = () => {
     {
       method: 'danger',
       title: 'This is an error',
-      message: 'Something bad happened',
+      message: 'Something bad happened.',
     },
     { method: 'success', title: 'This is a success', message: '' },
   ] as const;
