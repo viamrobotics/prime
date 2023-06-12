@@ -1,0 +1,82 @@
+<script lang='ts'>
+  import { onMount, onDestroy } from 'svelte'
+  import { tweened } from 'svelte/motion'
+  import { linear } from 'svelte/easing'
+  import { toast } from './stores'
+  import { type SvelteToastOptions, defaults } from './stores'
+
+  export let item: SvelteToastOptions
+
+  let next = item.initial!
+  let prev = next
+  let paused = false
+
+  const progress = tweened(item.initial, { duration: item.duration ?? defaults.duration!, easing: linear })
+  
+  const close = () => toast.pop(item.id!)
+  
+  const autoclose = () => ($progress === 1 || $progress === 0) && close()
+  
+  const pause = () => {
+    if (!paused && $progress !== next) {
+      progress.set($progress, { duration: 0 })
+      paused = true
+    }
+  }
+  
+  const resume = () => {
+    if (paused) {
+      const d = item.duration!
+      const duration = d - d * (($progress - prev) / (next - prev))
+      progress.set(next, { duration }).then(autoclose)
+      paused = false
+    }
+  }
+
+  const handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') close()
+  }
+  
+  $: if (next !== item.next) {
+    next = item.next!
+    prev = $progress
+    paused = false
+    progress.set(next).then(autoclose)
+  }
+
+  const handleVisibilityChange = () => (document.hidden ? pause() : resume())
+
+  onMount(() => {
+    console.log('here')
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    handleVisibilityChange()
+  })
+  
+  onDestroy(() => {
+    item.onpop?.(item.id!)
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+  })
+</script>
+
+<v-notify
+  class="relative w-[360px] mb-2 pointer-events-auto"
+  class:pe={item.pausable}
+  on:mouseenter={() => item.pausable && pause()}
+  on:mouseleave={resume}
+  variant={item.variant ?? 'info'}
+  title={item.title}
+  message={item.message}
+  progress={$progress}
+>
+  {#if item.dismissable}
+    <v-button
+      role='button'
+      slot='action'
+      variant='icon'
+      icon='x'
+      tabindex="0"
+      on:click={close}
+      on:keydown={handleKeydown}
+    />
+  {/if}
+</v-notify>

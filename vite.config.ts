@@ -11,7 +11,15 @@ export default defineConfig({
   },
   assetsInclude: ['fonts'],
   plugins: [
-    svelte(),
+    svelte({
+      extensions: ['.svelte'],
+      compilerOptions: { customElement: true },
+    }),
+    // TODO(mp, 2023-06-12): svelte 3 web components are all or nothing, remove when migrating to svelte 4
+    svelte({
+      extensions: ['.component'],
+      compilerOptions: { customElement: false },
+    }),
     // TODO(mc, 2023-05-05): remove vue as a dev dependency from prime
     vue({
       reactivityTransform: true,

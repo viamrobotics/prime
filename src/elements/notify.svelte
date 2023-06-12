@@ -9,19 +9,23 @@ import { addStyles } from '../lib/index';
 export let title = '';
 export let message = '';
 export let variant: Variants = 'info';
+export let progress = 1;
 
 addStyles();
 </script>
 
 <div
   class={cx('flex border', {
-    'bg-medium border-medium': variant !== 'danger',
+    'bg-info-light border-info-medium': variant === 'info',
+    'bg-warning-light border-warning-medium': variant === 'warning',
+    'bg-success-light border-success-medium': variant === 'success',
     'bg-danger-light border-danger-medium': variant === 'danger',
   })}
 >
   <div class="flex-col">
     <div
-      class={cx('w-[3px] h-[calc(100%+2px)] -mt-px -ml-px', {
+      style="transform: scale(1, {progress})"
+      class={cx('w-[3px] h-[calc(100%+2px)] origin-bottom -mt-px -ml-px', {
         'bg-danger-dark': variant === 'danger',
         'bg-warning-bright': variant === 'warning',
         'bg-success-dark': variant === 'success',
@@ -54,7 +58,7 @@ addStyles();
         </svg>
       {/if}
 
-      <figure>
+      <figure class="flex flex-col gap-1">
         <figcaption class="text-sm font-medium text-default">
           {title}
         </figcaption>
