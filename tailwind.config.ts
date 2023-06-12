@@ -4,7 +4,7 @@ import { theme } from './public/theme.js';
 export { theme } from './public/theme.js';
 
 export default {
-  content: ['./index.html', './src/**/*.{ts,vue,svelte}'],
+  content: ['./index.html', './src/**/*.{ts,vue,svelte,component}'],
   theme,
   variants: {
     extend: {},

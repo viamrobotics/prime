@@ -8,4 +8,8 @@ interface HTMLElement {
   ): void;
 }
 
-declare module '@zerodevx/svelte-toast/dist';
+declare module '*.component' {
+  import { SvelteComponent } from 'svelte';
+  const component: typeof SvelteComponent;
+  export default component;
+}

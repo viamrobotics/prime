@@ -1,0 +1,28 @@
+<script lang='ts'>
+  import { fade, fly } from 'svelte/transition'
+  import { flip } from 'svelte/animate'
+  import { type SvelteToastOptions, toast } from './stores'
+  import Toast from './item.component'
+  
+  export let options: Partial<SvelteToastOptions> = {}
+
+  export let target = 'default'
+  
+  let items: SvelteToastOptions[] = []
+  
+  $: toast.init(target, options)
+
+  $: items = $toast.filter((item) => item.target === target)
+</script>
+
+<ul class="fixed m-0 p-0 top-6 right-6 bottom-auto left-auto pointer-events-none z-[9999]">
+  {#each items as item (item.id)}
+    <li
+      in:fly={item.intro}
+      out:fade
+      animate:flip={{ duration: 200 }}
+    >
+      <Toast {item} />
+    </li>
+  {/each}
+</ul>
