@@ -80,13 +80,11 @@ onMount(async () => {
 });
 
 $: {
-  console.log(`${code}`);
   code = code;
 
   highlight(element).catch(error => {
     // Handle the error here
-    console.log('adfs');
-    console.warn(error);
+    console.error(error);
   });
 }
 
