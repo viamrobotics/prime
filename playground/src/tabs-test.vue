@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import jsonCodeExampleSrc from '../../src/stories/assets/json-code-example';
+import example from '../../src/stories/assets/json-code-example';
 
-let selectedTab = $ref('Tab 2');
-
+let selectedTab = $ref('Tab 1');
+let jsonCodeExampleSrc = $ref(example);
+setTimeout(() => {
+  jsonCodeExampleSrc = `
+  {
+    name: 'Micheal',
+    age: 27,
+    loves_lasagna: verytrue,
+  }
+  `;
+}, 2000);
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
   selectedTab = event.detail.value;
 };
@@ -26,6 +35,8 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
             theme='vs'
             :code=jsonCodeExampleSrc
           />
+
+          {{ jsonCodeExampleSrc }}
         </div>
         <p v-else>{{ selectedTab }}</p>
       </div>

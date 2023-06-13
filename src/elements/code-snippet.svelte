@@ -69,7 +69,7 @@ const highlight = async (codeSnippet: Element) => {
     loadedLanguages[language] = true;
   }
 
-  window.Prism.highlightElement(codeSnippet);
+  window.Prism.highlightElement(codeSnippet, true);
   element.setAttribute(
     'style',
     'font-family: Menlo, Monaco, "Courier New", monospace'
@@ -79,8 +79,17 @@ onMount(async () => {
   await highlight(element);
 });
 
-// eslint-disable-next-line no-void
-$: void highlight(element);
+$: {
+  console.log(`${code}`);
+  code = code;
+
+  highlight(element).catch(error => {
+    // Handle the error here
+    console.log('adfs');
+    console.warn(error);
+  });
+}
+
 </script>
 
 <pre
