@@ -19,7 +19,6 @@ export let theme: Themes;
 export let showbutton = 'true';
 
 $: label = 'Copy';
-$: code = code;
 
 const dispatch = dispatcher();
 
@@ -84,7 +83,7 @@ onMount(async () => {
 $: {
   if (element) {
     element.innerHTML = code;
-    // eslint-diable-next-line no-void
+    // eslint-disable-next-line no-void
     void highlight();
   }
 }
