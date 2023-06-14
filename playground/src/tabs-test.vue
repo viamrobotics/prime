@@ -1,8 +1,19 @@
 <script setup lang="ts">
-import jsonCodeExampleSrc from '../../src/stories/assets/json-code-example';
+import example from '../../src/stories/assets/json-code-example';
 
 let selectedTab = $ref('Tab 2');
-
+let jsonCodeExampleSrc = $ref(example);
+setTimeout(() => {
+  jsonCodeExampleSrc = JSON.stringify(
+    {
+      name: 'Jason',
+      age: 50,
+      loves_lasagna: true,
+    },
+    null,
+    2
+  );
+  }, 2000);
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
   selectedTab = event.detail.value;
 };
@@ -20,7 +31,7 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
         @input="handleTabSelect"
       />
       <div class="p-4">
-        <div v-if="selectedTab === 'Tab 1'" >
+        <div v-if="selectedTab === 'Tab 2'" >
           <v-code-snippet 
             language='json'
             theme='vs'

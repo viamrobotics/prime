@@ -56,31 +56,37 @@ const copyToClipboard = async () => {
   }, 2000);
 };
 
-const highlight = async (codeSnippet: Element) => {
+const highlight = async () => {
   const { Prism } = window as { Prism: undefined | typeof import('prismjs') };
 
   if (!Prism) {
     await script(cdn('prism.min.js'));
   }
 
-  if (!loadedLanguages[language]) {
+  if (!loadedLanguages[language] && language) {
     await script(cdn(`components/prism-${language}.min.js`));
     // eslint-disable-next-line require-atomic-updates
     loadedLanguages[language] = true;
   }
 
-  window.Prism.highlightElement(codeSnippet);
+  window.Prism.highlightElement(element);
+
   element.setAttribute(
     'style',
     'font-family: Menlo, Monaco, "Courier New", monospace'
   );
 };
 onMount(async () => {
-  await highlight(element);
+  await highlight();
 });
 
-// eslint-disable-next-line no-void
-$: void highlight(element);
+$: {
+  if (element) {
+    element.innerHTML = code;
+    // eslint-disable-next-line no-void
+    void highlight();
+  }
+}
 </script>
 
 <pre
