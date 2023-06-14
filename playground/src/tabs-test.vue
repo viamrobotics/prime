@@ -37,8 +37,6 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
             theme='vs'
             :code=jsonCodeExampleSrc
           />
-
-          {{ jsonCodeExampleSrc }}
         </div>
         <p v-else>{{ selectedTab }}</p>
       </div>

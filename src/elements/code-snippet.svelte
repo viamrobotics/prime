@@ -82,9 +82,11 @@ onMount(async () => {
 });
 
 $: {
-  element.innerHTML = code;
-  // eslint-disable-next-line no-void
-  void highlight();
+  if (element) {
+    element.innerHTML = code;
+    // eslint-diable-next-line no-void
+    void highlight();
+  }
 }
 </script>
 
