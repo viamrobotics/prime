@@ -19,6 +19,7 @@ export let theme: Themes;
 export let showbutton = 'true';
 
 $: label = 'Copy';
+$: code = code;
 
 const dispatch = dispatcher();
 
@@ -56,7 +57,7 @@ const copyToClipboard = async () => {
   }, 2000);
 };
 
-const highlight = async (codeSnippet: Element) => {
+const highlight = async () => {
   const { Prism } = window as { Prism: undefined | typeof import('prismjs') };
 
   if (!Prism) {
@@ -69,25 +70,22 @@ const highlight = async (codeSnippet: Element) => {
     loadedLanguages[language] = true;
   }
 
-  window.Prism.highlightElement(codeSnippet, true);
+  window.Prism.highlightElement(element);
+
   element.setAttribute(
     'style',
     'font-family: Menlo, Monaco, "Courier New", monospace'
   );
 };
 onMount(async () => {
-  await highlight(element);
+  await highlight();
 });
 
 $: {
-  code = code;
-
-  highlight(element).catch(error => {
-    // Handle the error here
-    console.error(error);
-  });
+  element.innerHTML = code;
+  // eslint-disable-next-line no-void
+  void highlight();
 }
-
 </script>
 
 <pre

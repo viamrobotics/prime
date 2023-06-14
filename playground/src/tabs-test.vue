@@ -4,14 +4,16 @@ import example from '../../src/stories/assets/json-code-example';
 let selectedTab = $ref('Tab 1');
 let jsonCodeExampleSrc = $ref(example);
 setTimeout(() => {
-  jsonCodeExampleSrc = `
-  {
-    name: 'Micheal',
-    age: 27,
-    loves_lasagna: verytrue,
-  }
-  `;
-}, 2000);
+  jsonCodeExampleSrc = JSON.stringify(
+    {
+      name: 'Jason',
+      age: 50,
+      loves_lasagna: true,
+    },
+    null,
+    2
+  );
+  }, 2000);
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
   selectedTab = event.detail.value;
 };
