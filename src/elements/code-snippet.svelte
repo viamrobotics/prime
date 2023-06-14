@@ -63,7 +63,7 @@ const highlight = async () => {
     await script(cdn('prism.min.js'));
   }
 
-  if (!loadedLanguages[language]) {
+  if (!loadedLanguages[language] && language) {
     await script(cdn(`components/prism-${language}.min.js`));
     // eslint-disable-next-line require-atomic-updates
     loadedLanguages[language] = true;
