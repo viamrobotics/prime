@@ -5,11 +5,7 @@ let selectedTab = $ref('Tab 2');
 let jsonCodeExampleSrc = $ref(example);
 setTimeout(() => {
   jsonCodeExampleSrc = JSON.stringify(
-    {
-      name: 'Jason',
-      age: 50,
-      loves_lasagna: true,
-    },
+    'Secret: 7zmvldd8swsob2dcbh7y3r16ogvhnqg7bwonn6pmx9wxikg8" "http://localhost:8080/api/json1/config?id=6071ec36-31c4-4b5c-bc97-88df4933f2b0&client=true" -o /etc/viam.json',
     null,
     2
   );

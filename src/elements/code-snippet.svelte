@@ -89,23 +89,25 @@ $: {
 }
 </script>
 
-<pre
-  class={cx('relative !border-none !m-0 !pt-3 !pr-24 !pb-0', {
-    '!bg-gray-9': theme === 'vsc-dark-plus',
-    '!bg-light': theme === 'vs',
-  })}><code bind:this={element} class="language-{language} font-mono"
-    >{code}</code
-  >
+<div class={cx('flex gap-x-4 p-2', {
+      '!bg-gray-9': theme === 'vsc-dark-plus',
+      '!bg-light': theme === 'vs',
+    })}>
+
+  <pre
+    class="flex-1 !bg-inherit !border-none !m-0 !p-0 !pt-2 !pl-2"><code bind:this={element} class="language-{language} font-mono"
+      >{code}</code></pre>
+
   {#if showbutton === 'true'}
     <v-button
-      class="absolute top-2 right-2 !text-black !font-sans"
+      class="!text-black !font-sans"
       on:click={copyToClipboard}
       on:keyup={copyToClipboard}
       {label}
       icon="copy"
     />
   {/if}
-</pre>
+</div>
 
 <link
   rel="stylesheet"
