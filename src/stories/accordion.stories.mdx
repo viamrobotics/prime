@@ -46,7 +46,7 @@ Toggles visibility of content in an accordion style menu
     }}
   >
     {({ sections }) => `
-      <v-accordion {sections} />
+      <v-accordion sections='${JSON.stringify(sections)}' />
     `}
   </Story>
 </Canvas>
