@@ -8,57 +8,67 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
     },
   }}
   argTypes={{
+    variant: {
+      options: ['default', ''],
+      control: { type: 'select' },
+      description:
+        'These are the options. The default variant adds a black border and white background',
+      table: { defaultValue: { summary: 'default' } },
+    },
     title: {
       description: 'This is the title',
       table: { defaultValue: { summary: '' } },
     },
-    open: {
-      description: 'Initial state of the accordion',
-      table: { defaultValue: { summary: false } },
+    content: {
+      description: 'This is the content',
+      control: 'text',
+      table: { defaultValue: { summary: '' } },
     },
     'on:toggle': {
-      description: 'Event fired when the accordion is toggled',
+      description: 'Event fired when an option is selected',
     },
   }}
 />
 
 # Accordion
 
-Toggles visibility of content
+Toggles visibility of content in an accordion style menu
 
 <Canvas>
   <Story
     name='Accordion'
     args={{
-      title: 'Section 1',
-      open: false,
+      sections: [
+        { title: 'Section 1', content: 'Content 1' },
+        { title: 'Section 2', content: 'Content 2' },
+        { title: 'Section 3', content: 'Content 3', open: 'true' },
+      ],
     }}
   >
-    {({ title }) => `
-<v-accordion title='${title}'>
-  <div>
-    Section 1 content
-  </div>
-</v-accordion>
+    {({ sections }) => `
+      <v-accordion {sections} />
     `}
   </Story>
 </Canvas>
 
 <Canvas>
   <Story
-    name='Accordion with Slots'
+    name='Header slot'
     args={{
-      title: 'Section 2',
-      open: true,
+      title: 'Motor 1',
+      content:
+        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
     }}
   >
-    {({ title }) => `
-<v-accordion title='${title}'>
-  <div slot="title">Custom Title</div>
-  <div>
-    Section 2 content
-  </div>
-</v-accordion>
+    {({ title, content }) => `
+<v-collapse
+  title='${title}'
+>
+  <v-badge slot='header' label='Inactive'></v-badge>
+  <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>${content}</div>
+</v-collapse>
     `}
   </Story>
 </Canvas>
+
+

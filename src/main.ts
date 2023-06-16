@@ -12,6 +12,7 @@ if (customElements.get('v-badge')) {
 } else {
   loadFonts().catch((error) => console.error(error));
 
+  import('./elements/accordion.svelte');
   import('./elements/badge.svelte');
   import('./elements/breadcrumbs.svelte');
   import('./elements/button/button');
