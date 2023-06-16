@@ -31,7 +31,7 @@
 <div class="relative w-full" on:keydown={(event) => handleKeyDown(event, -1)}>
   {#each sectionsArr as section, index}
     <div
-      class="p-4 flex items-center justify-between text-default cursor-pointer accordion-header"
+      class="p-4 flex items-center justify-between text-default cursor-pointer"
       on:click={() => toggleSection(index)}
       on:keydown={(event) => handleKeyDown(event, index)}
     >
@@ -54,7 +54,7 @@
     </div>
 
     <div
-      class="text-black transition-all duration-500 accordion-content"
+      class="text-black transition-all duration-500"
       class:visible={openSections[index]}
     >
       <slot name="content">{section.content}</slot>
