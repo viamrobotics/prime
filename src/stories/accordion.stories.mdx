@@ -1,0 +1,64 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+
+<Meta
+  title='Elements/Accordion'
+  parameters={{
+    actions: {
+      handles: ['toggle'],
+    },
+  }}
+  argTypes={{
+    title: {
+      description: 'This is the title',
+      table: { defaultValue: { summary: '' } },
+    },
+    open: {
+      description: 'Initial state of the accordion',
+      table: { defaultValue: { summary: false } },
+    },
+    'on:toggle': {
+      description: 'Event fired when the accordion is toggled',
+    },
+  }}
+/>
+
+# Accordion
+
+Toggles visibility of content
+
+<Canvas>
+  <Story
+    name='Accordion'
+    args={{
+      title: 'Section 1',
+      open: false,
+    }}
+  >
+    {({ title }) => `
+<v-accordion title='${title}'>
+  <div>
+    Section 1 content
+  </div>
+</v-accordion>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Accordion with Slots'
+    args={{
+      title: 'Section 2',
+      open: true,
+    }}
+  >
+    {({ title }) => `
+<v-accordion title='${title}'>
+  <div slot="title">Custom Title</div>
+  <div>
+    Section 2 content
+  </div>
+</v-accordion>
+    `}
+  </Story>
+</Canvas>
