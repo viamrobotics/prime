@@ -43,10 +43,7 @@ const handleClick = () => {
 >
   <div class="flex items-center gap-1.5">
     {#if label}
-      <button
-        class="w-fit text-xs"
-        on:click={handleClick}>{label}</button
-      >
+      <button class="w-fit text-xs" on:click={handleClick}>{label}</button>
     {/if}
 
     {#if tooltip}
