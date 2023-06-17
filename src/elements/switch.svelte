@@ -45,8 +45,7 @@ const handleClick = () => {
     {#if label}
       <button
         class="w-fit text-xs"
-        on:click={label ? handleClick : null}
-        on:keydown={label ? handleClick : null}>{label}</button
+        on:click={handleClick}>{label}</button
       >
     {/if}
 
@@ -59,7 +58,6 @@ const handleClick = () => {
 
   <button
     on:click={handleClick}
-    on:keydown={handleClick}
     type="button"
     class={cx('flex gap-2 items-center', {
       'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
