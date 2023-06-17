@@ -45,9 +45,9 @@ const handleClick = () => {
     {#if label}
       <button
         class="w-fit text-xs"
-        on:click={(label) ? handleClick : null}
-        on:keydown={(label) ? handleClick : null}
-      >{label}</button>
+        on:click={label ? handleClick : null}
+        on:keydown={label ? handleClick : null}>{label}</button
+      >
     {/if}
 
     {#if tooltip}
