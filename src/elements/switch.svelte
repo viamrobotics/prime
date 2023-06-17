@@ -43,9 +43,11 @@ const handleClick = () => {
 >
   <div class="flex items-center gap-1.5">
     {#if label}
-      <p class="w-fit text-xs">
-        {label}
-      </p>
+      <button
+        class="w-fit text-xs"
+        on:click={(label) ? handleClick : null}
+        on:keydown={(label) ? handleClick : null}
+      >{label}</button>
     {/if}
 
     {#if tooltip}
@@ -57,6 +59,7 @@ const handleClick = () => {
 
   <button
     on:click={handleClick}
+    on:keydown={handleClick}
     type="button"
     class={cx('flex gap-2 items-center', {
       'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
