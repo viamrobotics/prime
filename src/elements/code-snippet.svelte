@@ -76,13 +76,29 @@ const highlight = async () => {
     'font-family: Menlo, Monaco, "Courier New", monospace'
   );
 };
+
+const formatCode = (input: string): string => {
+  const htmlEntities: Record<string, string> = {
+    '<': '&lt;',
+    '>': '&gt',
+    '/': '&#47;',
+  };
+
+  let formattedCode = input;
+  for (const [key, value] of Object.entries(htmlEntities)) {
+    formattedCode = formattedCode.replaceAll(key, value);
+  }
+
+  return formattedCode;
+};
+
 onMount(async () => {
   await highlight();
 });
 
 $: {
   if (element) {
-    element.innerHTML = code;
+    element.innerHTML = formatCode(code);
     // eslint-disable-next-line no-void
     void highlight();
   }
