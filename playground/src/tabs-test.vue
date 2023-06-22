@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import example from '../../src/stories/assets/json-code-example';
+import example from '../../src/stories/assets/cpp-code-example';
 
 let selectedTab = $ref('Tab 2');
 let jsonCodeExampleSrc = $ref(example);
@@ -9,7 +9,7 @@ setTimeout(() => {
     null,
     2
   );
-  }, 2000);
+  }, 4000);
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
   selectedTab = event.detail.value;
 };
