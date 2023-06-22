@@ -7,18 +7,18 @@ Please follow these instructions for contributing to `PRIME`.
 To run the `Storybook` page locally, pull down the project and run:
 
 ```bash
-npm install
-npm run storybook
+pnpm install
+pnpm run storybook
 ```
 
-More detailed docs exist on [the storybook](https://www.viam.com/prime).
+More detailed docs exist on [the storybook](https://prime.viam.com).
 
 ## Playground
 
 To use the component playground, run:
 
 ```bash
-npm start
+pnpm start
 ```
 
 The playground will open in your browser automatically. End-to-end tests run against the playground.
@@ -41,17 +41,17 @@ Linked below are some articles that provide knowledge for how to best build reus
 To verify that static assets build correctly:
 
 ```shell
-npm run build
+pnpm run build
 ```
 
 You can typecheck and lint using:
 
 ```shell
 # check linting, types, a11y, and other component quality
-npm run check
+pnpm run check
 
 # autoformat code and other files
-npm run format
+pnpm run format
 ```
 
 ### Tests
@@ -63,8 +63,8 @@ To run tests locally:
 npx playwright install --with-deps
 
 # run tests, with optional debugging
-npm run test
-npm run test-dev
+pnpm run test
+pnpm run test-dev
 ```
 
 When adding a test, look for the following files:

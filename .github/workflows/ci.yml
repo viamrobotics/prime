@@ -16,7 +16,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Run lints and checks
-        run: npm run check
+        run: pnpm run check
 
   build:
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Build 🏗️
-        run: npm run build
+        run: pnpm run build
       - name: Upload npm artifacts
         uses: actions/upload-artifact@v3
         with:
