@@ -48,15 +48,15 @@ All elements are prefixed with `v-`. This stands for Viam, the cool company wher
 To use the playground, go to the `playground` directory, and:
 
 ```bash
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 
 Or to run in production mode:
 
 ```bash
-npm run build
-npm run serve
+pnpm run build
+pnpm run serve
 ```
 
 ## Linting / Testing
@@ -64,19 +64,19 @@ npm run serve
 To lint and typecheck:
 
 ```bash
-npm run lint
-npm run check
+pnpm run lint
+pnpm run check
 ```
 
 To test:
 
 ```bash
-npm run test-dev # to test with the playwright debug UI
+pnpm run test-dev # to test with the playwright debug UI
 # or
-npm run test # to test in headless mode
+pnpm run test # to test in headless mode
 
 # to run specific tests
-npm run test <test-name> # for <test-name>.spec.ts
+pnpm run test <test-name> # for <test-name>.spec.ts
 ```
 
 ### Browser Compatibility
