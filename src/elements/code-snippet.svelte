@@ -15,7 +15,7 @@ type Themes = 'vs' | 'vsc-dark-plus';
 
 export let language: string;
 export let code: string;
-export let theme: Themes;
+export let theme: Themes = 'vs';
 export let showbutton = 'true';
 
 $: label = 'Copy';
@@ -86,7 +86,9 @@ const formatCode = (input: string): string => {
 
   let formattedCode = input;
   for (const [key, value] of Object.entries(htmlEntities)) {
-    formattedCode = formattedCode.replaceAll(key, value);
+    if (formattedCode) {
+      formattedCode = formattedCode.replaceAll(key, value);
+    }
   }
 
   return formattedCode;
@@ -97,7 +99,7 @@ onMount(async () => {
 });
 
 $: {
-  if (element) {
+  if (element && code) {
     element.innerHTML = formatCode(code);
     // eslint-disable-next-line no-void
     void highlight();
@@ -127,9 +129,11 @@ $: {
   {/if}
 </div>
 
-<link
-  rel="stylesheet"
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-  href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-{theme}.min.css"
-/>
+{#if theme}
+  <link
+    rel="stylesheet"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-{theme}.min.css"
+  />
+{/if}
