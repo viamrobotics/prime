@@ -1,3 +1,4 @@
+<!-- Use native modal once supported https://caniuse.com/?search=popover -->
 <svelte:options immutable tag="v-modal" />
 
 <script lang="ts">
@@ -34,7 +35,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
 -->
 <div
   class={cx(
-    'z-50 bg-gray-2 bg-opacity-25 w-full h-full fixed top-0 left-0 flex justify-center items-center',
+    'z-50 bg-black bg-opacity-40 w-full h-full fixed top-0 left-0 flex justify-center items-center',
     {
       invisible: !isOpen,
     }
@@ -45,31 +46,32 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
   on:keyup|stopPropagation|preventDefault={handleClose}
 >
   <div
-    class="w-[400px] relative border border-gray-9 bg-white m-2 p-4 max-w-lg shadow-sm"
+    class="w-[480px] relative border border-medium bg-white p-6 max-w-lg shadow-sm"
     on:click|stopPropagation
     on:keyup|stopPropagation
   >
-    <button
-      class="absolute right-0 top-0 p-3 hover:scale-110 transition-transform text-default hover:text-gray-9"
-      aria-label="Cancel"
+    <v-button
+      class="absolute right-4 top-4 text-gray-6"
+      icon="x"
+      label="Delete component"
+      variant="icon"
       on:click={handleClose}
-    >
-      <v-icon name="x" size="2xl" />
-    </button>
-
-    <figure>
-      <figcaption class="mb-2 pr-12 text-2xl font-bold">
+      on:keydown={handleClose}
+    />
+    <figure class="min-h-[400px] flex flex-col gap-2">
+      <figcaption class="pr-12 text-lg font-semibold">
         {title}
       </figcaption>
 
       {#if message}
-        <p class="mb-8 text-base">{message}</p>
+        <p class="text-sm text-subtle-1">{message}</p>
       {/if}
 
-      <slot />
+      <div class="flex flex-grow"><slot /></div>
 
-      <div class="flex flex-row-reverse">
-        <slot name="action" />
+      <div class="flex justify-end gap-2">
+        <slot name="secondary" />
+        <slot name="primary" />
       </div>
     </figure>
   </div>

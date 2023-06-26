@@ -47,10 +47,10 @@ Creates a modal overlay
   <Story
     name='Confirmation'
     args={{
-      title: 'Delete Confirmation!',
+      title: 'Delete confirmation',
       message: 'Are you sure you want to delete this?',
-      buttonText: 'DELETE',
-      variant: 'danger',
+      buttonText: 'Delete',
+      variant: 'inverse-primary',
       open: true,
     }}
   >
@@ -63,11 +63,14 @@ Creates a modal overlay
     onclose='this.removeAttribute("open")'
   >
     <v-button
-      class='ml-4'
       variant='${variant}'
       label='${buttonText}'
-      slot='action'
-    />
+      slot='primary'
+    ></v-button>
+    <v-button
+      label='Cancel'
+      slot='secondary'
+    ></v-button>
   </v-modal>
 </div>
     `}
