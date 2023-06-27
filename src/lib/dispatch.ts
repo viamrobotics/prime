@@ -1,14 +1,7 @@
-import { get_current_component } from 'svelte/internal';
+import { createEventDispatcher } from 'svelte';
 
 export const dispatcher = () => {
-  const element = get_current_component() as HTMLElement;
+  const dispatch = createEventDispatcher();
 
-  return (name: string, detail?: object) =>
-    element.dispatchEvent(
-      new CustomEvent(name, {
-        composed: true,
-        bubbles: true,
-        detail,
-      })
-    );
+  return (name: string, detail?: object) => dispatch(name, detail ?? {});
 };

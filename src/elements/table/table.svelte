@@ -1,14 +1,11 @@
-<svelte:options immutable tag="v-table" />
+<svelte:options immutable />
 
 <script lang="ts">
 import cx from 'classnames';
-import { addStyles } from '../../lib/index';
 
 export let variant = '';
 export let cols = '';
 export let style = '';
-
-addStyles();
 
 const colSizes = cols.split(',').map((col) => col.trim());
 </script>

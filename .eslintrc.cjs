@@ -20,12 +20,8 @@ module.exports = {
     'plugin:storybook/recommended',
     '@viamrobotics/eslint-config',
   ],
-  plugins: ['svelte3', 'prefer-arrow'],
+  plugins: ['prefer-arrow'],
   settings: {
-    'svelte3/compiler-options': {
-      customElement: false,
-    },
-    'svelte3/typescript': true,
     'import/resolver': {
       typescript: {
         extensions: ['.js', '.ts', '.svelte'],
@@ -43,11 +39,14 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.svelte'],
-      processor: 'svelte3/svelte3',
+      parser: 'svelte-eslint-parser',
       settings: {
-        'svelte3/compiler-options': {
+        'svelte/compiler-options': {
           customElement: true,
         },
+      },
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
       },
     },
     {

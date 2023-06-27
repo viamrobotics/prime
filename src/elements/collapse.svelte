@@ -1,10 +1,9 @@
-<svelte:options immutable tag="v-collapse" />
+<svelte:options immutable />
 
 <script lang="ts">
 type Variants = 'default' | 'minimal';
 
 import cx from 'classnames';
-import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 import { htmlToBoolean } from '../lib/boolean';
 
@@ -13,8 +12,6 @@ export let open = 'false';
 export let variant: Variants = 'default';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 let isOpen: boolean;
 

@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/playground/select-test.html');
 });
 
-test('Given an options attribute, on select the options should be visible and clicking an option should update the input', async ({
+test('Given an options attribute, on select the options should be visible', async ({
   page,
 }) => {
   const select = page.getByTestId('basic-select');
@@ -26,6 +26,12 @@ test('Given an options attribute, on select the options should be visible and cl
   await expect(optionsContainer).toHaveText(/one/u);
   await expect(optionsContainer).toHaveText(/two/u);
   await expect(optionsContainer).toHaveText(/three/u);
+});
+
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Clicking on an option should select it', async ({ page }) => {
+  const select = page.getByTestId('basic-select');
+  const optionsContainer = select.locator('.options-container').first();
 
   // selecting a value should emit an input event + render that as the input
   const oneSelected = waitForCustomEvent(select, 'input');

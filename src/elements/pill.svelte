@@ -1,11 +1,10 @@
-<svelte:options immutable tag="v-pill" />
+<svelte:options immutable />
 
 <script lang="ts">
 import cx from 'classnames';
 
 import { htmlToBoolean } from '../lib/boolean';
 import { dispatcher } from '../lib/dispatch';
-import { addStyles } from '../lib/index';
 
 export let value = '';
 export let removable = 'true';
@@ -13,7 +12,6 @@ export let readonly: string;
 export let disabled: string;
 
 const dispatch = dispatcher();
-addStyles();
 
 let isReadonly: boolean;
 let isDisabled: boolean;

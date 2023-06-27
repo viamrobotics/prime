@@ -1,9 +1,7 @@
-<!-- Use native modal once supported https://caniuse.com/?search=popover -->
-<svelte:options immutable tag="v-modal" />
+<svelte:options immutable />
 
 <script lang="ts">
 import cx from 'classnames';
-import { addStyles } from '../lib/index';
 import { htmlToBoolean } from '../lib/boolean';
 import { dispatcher } from '../lib/dispatch';
 import { checkKeyboardEvent } from '../lib/events';
@@ -13,8 +11,6 @@ export let message = '';
 export let open = 'false';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 let isOpen: boolean;
 

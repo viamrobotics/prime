@@ -1,17 +1,14 @@
-<svelte:options immutable tag="v-notify" />
+<svelte:options immutable />
 
 <script lang="ts">
 type Variants = 'danger' | 'warning' | 'success' | 'info';
 
 import cx from 'classnames';
-import { addStyles } from '../lib/index';
 
 export let title = '';
 export let message = '';
 export let variant: Variants = 'info';
 export let progress = 1;
-
-addStyles();
 </script>
 
 <div

@@ -1,10 +1,9 @@
-<svelte:options immutable tag="v-tooltip" />
+<svelte:options immutable />
 
 <script lang="ts">
 type Locations = 'top' | 'bottom' | 'right' | 'left';
 
 import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
-import { addStyles } from '../lib/index';
 
 export let text = '';
 export let location: Locations = 'top';
@@ -24,7 +23,7 @@ $: {
 let x = 0;
 let y = 0;
 
-export const recalculateStyle = async () => {
+export let recalculateStyle = async () => {
   if (!container) {
     return;
   }
@@ -81,8 +80,6 @@ const handleMouseLeave = () => {
 
   invisible = true;
 };
-
-addStyles();
 </script>
 
 <div
@@ -129,6 +126,6 @@ addStyles();
 .triangle {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid;
+  border-bottom-width: 6px;
 }
 </style>

@@ -1,4 +1,4 @@
-<svelte:options immutable tag="v-select" />
+<svelte:options immutable />
 
 <script lang="ts">
 type LabelPosition = 'top' | 'left';
@@ -7,7 +7,6 @@ type LabelPosition = 'top' | 'left';
 import cx from 'classnames';
 import { searchSort } from '../../lib/sort';
 import { htmlToBoolean } from '../../lib/boolean';
-import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
 import * as utils from './utils';
 
@@ -30,8 +29,6 @@ export let message = '';
 export let heading = '';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 let root: HTMLElement;
 let input: HTMLInputElement;

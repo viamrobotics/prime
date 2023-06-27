@@ -1,4 +1,4 @@
-<svelte:options immutable tag="v-list-box" />
+<svelte:options immutable />
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -8,7 +8,6 @@ import cx from 'classnames';
 import { afterUpdate } from 'svelte';
 
 import { dispatcher } from '../lib/dispatch';
-import { addStyles } from '../lib/index';
 import { htmlToBoolean } from '../lib/boolean';
 
 export let disabled: string;
@@ -86,7 +85,6 @@ const addNewData = () => {
 };
 
 afterUpdate(addNewData);
-addStyles();
 
 const handleOptionClick = (option: ListBoxOption, side: ListBoxSide) => {
   if (isDisabled) return;

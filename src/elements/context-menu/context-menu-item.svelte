@@ -1,13 +1,10 @@
-<svelte:options immutable tag="v-context-menu-item" />
+<svelte:options immutable />
 
 <script lang="ts">
 import cx from 'classnames';
-import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 export let icon: string;
 export let variant: 'primary' | 'danger' = 'primary';
