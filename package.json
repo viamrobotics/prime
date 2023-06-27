@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "license": "Apache-2.0",
   "type": "module",
   "files": [
@@ -34,7 +34,6 @@
     "check-lint": "eslint --quiet \"./**/*.@(js|cjs|ts|svelte)\"",
     "check-format": "pnpm run _prettier --check",
     "format": "pnpm run _prettier --write",
-    "preinstall": "npx only-allow pnpm",
     "_prettier": "prettier \"./**/*.@(js|cjs|ts|svelte|md|mdx|yml|json)\"",
     "test": "playwright test",
     "test-dev": "playwright test --debug",
