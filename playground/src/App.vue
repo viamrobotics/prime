@@ -31,14 +31,17 @@ setTimeout(() => {
 let leftOptions = $ref("one,two,three,ten")
 let rightOptions = $ref("four,five,six,eight,nine")
 let selectInput = $ref("")
+
+const inputToFocus = $ref<HTMLElement>();
+
 </script>
 
 <template>
   <div class="my-10">
     <v-button 
       variant="success"
-      disabled="false"
-      label="testing"/>
+      label="focus input component"
+      @click="inputToFocus!.focus()"/>
     <v-button 
       variant="success"
       disabled="true"
@@ -61,8 +64,10 @@ let selectInput = $ref("")
       :value="lazyValue"
     />
     <v-input
+      ref="inputToFocus"
+      placeholder="focus me!"
       class="w-full"
-      type="time"
+      type="text"
     />
   </div>
 
