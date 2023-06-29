@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 // eslint-disable-next-line import/extensions
 import { theme } from '../../public/theme.js';
 
@@ -57,13 +57,13 @@ export interface CustomEventHandler {
  *   and `didNotOccur()` will reject.
  */
 export const waitForCustomEvent = (
-  page: Page,
+  locator: Locator,
   eventName: string,
   waitFor = 1000
 ): CustomEventHandler => {
   const eventReceipt: Promise<{ detail: unknown } | { timeout: true }> =
-    page.evaluate(
-      (inputs) => {
+    locator.evaluate(
+      (element, inputs) => {
         return new Promise((resolve) => {
           const handleEvent = (event: Event) => {
             cleanup();
@@ -81,11 +81,11 @@ export const waitForCustomEvent = (
 
           const cleanup = () => {
             window.clearTimeout(timeoutRef);
-            window.removeEventListener(inputs.eventName, handleEvent);
+            element.removeEventListener(inputs.eventName, handleEvent);
           };
 
           const timeoutRef = window.setTimeout(handleTimeout, inputs.waitFor);
-          window.addEventListener(inputs.eventName, handleEvent, {
+          element.addEventListener(inputs.eventName, handleEvent, {
             once: true,
           });
         });

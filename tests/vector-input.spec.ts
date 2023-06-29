@@ -140,19 +140,19 @@ test('When inputs are updated, events fire', async ({ page }) => {
   await expect(vectorInputOnInput).toBeVisible();
 
   const xInput = vectorInputOnInput.locator('input').nth(0);
-  const xInputEvent = waitForCustomEvent(page, 'input');
+  const xInputEvent = waitForCustomEvent(vectorInputOnInput, 'input');
   await xInput.focus();
   await xInput.press('ArrowUp');
   await expect(xInputEvent.detail()).resolves.toEqual({ value: [1] });
 
   const yInput = vectorInputOnInput.locator('input').nth(1);
-  const yInputEvent = waitForCustomEvent(page, 'input');
+  const yInputEvent = waitForCustomEvent(vectorInputOnInput, 'input');
   await yInput.focus();
   await yInput.press('ArrowUp');
   await expect(yInputEvent.detail()).resolves.toEqual({ value: [1, 1] });
 
   const zInput = vectorInputOnInput.locator('input').nth(2);
-  const zInputEvent = waitForCustomEvent(page, 'input');
+  const zInputEvent = waitForCustomEvent(vectorInputOnInput, 'input');
   await zInput.focus();
   await zInput.press('ArrowUp');
   await expect(zInputEvent.detail()).resolves.toEqual({ value: [1, 1, 1] });

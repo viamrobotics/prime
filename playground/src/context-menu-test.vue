@@ -20,14 +20,17 @@ const handleSelect = (event: any) => {
       data-testid="context-menu-default"
     >
       <v-context-menu-item
+        data-testid="context-menu-item-1"
         label="label 1"
       />
       <v-context-menu-separator />
       <v-context-menu-item
+        data-testid="context-menu-item-2"
         label="label 2"
         variant="primary"
       />
       <v-context-menu-item
+        data-testid="context-menu-item-3"
         icon="trash"
         label="label 3"
       />

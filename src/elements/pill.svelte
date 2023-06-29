@@ -5,7 +5,6 @@ import cx from 'classnames';
 
 import { htmlToBoolean } from '../lib/boolean';
 import { dispatcher } from '../lib/dispatch';
-import { checkKeyboardEvent } from '../lib/events';
 import { addStyles } from '../lib/index';
 
 export let value = '';
@@ -24,12 +23,8 @@ $: isRemovable = htmlToBoolean(removable, 'removable');
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 
-const handleRemove = (event: MouseEvent | KeyboardEvent) => {
+const handleRemove = () => {
   if (isDisabled || isReadonly) {
-    return;
-  }
-
-  if (event instanceof KeyboardEvent && !checkKeyboardEvent(event, ['Enter'])) {
     return;
   }
 
@@ -52,7 +47,7 @@ const handleRemove = (event: MouseEvent | KeyboardEvent) => {
     {value}
   </span>
   {#if isRemovable}
-    <button on:click={handleRemove} on:keydown={handleRemove}>
+    <button on:click={handleRemove}>
       <v-icon name="x" />
     </button>
   {/if}

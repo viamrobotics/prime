@@ -34,7 +34,7 @@ test.skip('Given a default multiselect, shows options, labels, sets pills and fi
   await expect(optionsContainer).toHaveText(/sad/u);
   await expect(optionsContainer).toHaveText(/angry/u);
 
-  const event = waitForCustomEvent(page, 'input');
+  const event = waitForCustomEvent(multiselect, 'input');
   // click on the first option
   await optionsContainer.locator('label', { hasText: 'happy' }).click();
 
@@ -62,7 +62,7 @@ test.skip('Given a default multiselect, shows options, labels, sets pills and fi
   await page.keyboard.press('Escape');
 
   // press clear all
-  const clearAllEvent = waitForCustomEvent(page, 'clear-all-click');
+  const clearAllEvent = waitForCustomEvent(multiselect, 'clear-all-click');
 
   await multiselect.click();
   await expect(optionsContainer).toBeVisible();
@@ -135,7 +135,7 @@ test('Given a multi-select with button, there is a button at the bottom', async 
     .first();
   await expect(icon.locator('i')).toHaveClass(/icon-camera/u);
 
-  const buttonClickEvent = waitForCustomEvent(page, 'button-click');
+  const buttonClickEvent = waitForCustomEvent(multiselect, 'button-click');
   await multiselect.locator('v-select-button').first().click();
   await buttonClickEvent.detail();
 });
@@ -279,8 +279,8 @@ test('Test sort options for container', async ({ page }) => {
   await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad');
   await expect(optionsContainer.locator('label').last()).toHaveText('angry');
 
-  const searchEvent = waitForCustomEvent(page, 'search');
-  await input.type('s');
+  const searchEvent = waitForCustomEvent(multiselect, 'search');
+  await input.fill('s');
   await expect(searchEvent.detail()).resolves.toEqual({ term: 's' });
 
   await expect(optionsContainer.locator('label').first()).toHaveText('sad');
@@ -302,7 +302,7 @@ test('Test sort options for container', async ({ page }) => {
   await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad');
   await expect(optionsContainer.locator('label').last()).toHaveText('angry');
 
-  await input.type('sa');
+  await input.fill('sa');
 
   await expect(optionsContainer.locator('label').first()).toHaveText('happy');
   await expect(optionsContainer.locator('label').nth(1)).toHaveText('sad');
@@ -321,7 +321,7 @@ test('Test sort options for container', async ({ page }) => {
 
   expect(await optionsContainer.locator('label').all()).toHaveLength(3);
 
-  await input.type('sa');
+  await input.fill('sa');
   expect(await optionsContainer.locator('label').all()).toHaveLength(1);
 });
 
@@ -329,14 +329,14 @@ test.skip('opening and closing dropdown fires events', async ({ page }) => {
   const multiselect = page.getByTestId('basic-multiselect');
   await expect(multiselect).toBeVisible();
 
-  const openEvent = waitForCustomEvent(page, 'open');
+  const openEvent = waitForCustomEvent(multiselect, 'open');
   await multiselect.click();
 
   const optionsContainer = multiselect.locator('.options-container').first();
   await expect(optionsContainer).toBeVisible();
   await openEvent.detail();
 
-  const closeEvent = waitForCustomEvent(page, 'close');
+  const closeEvent = waitForCustomEvent(multiselect, 'close');
   const closeDropdown = multiselect.getByRole('button').first();
   await expect(closeDropdown).toBeVisible();
   await closeDropdown.click();

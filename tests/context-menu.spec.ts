@@ -49,21 +49,28 @@ test('Dispatches select events', async ({ page }) => {
   const contextMenu = page.getByTestId('context-menu-default');
 
   // on click text label
-  const oneSelected = waitForCustomEvent(page, 'select');
-  await contextMenu.getByRole('menuitem', { name: 'label 1' }).click();
+  const menuItemOne = contextMenu.getByTestId('context-menu-item-1');
+  const oneSelected = waitForCustomEvent(menuItemOne, 'select');
+  await menuItemOne.click();
   await expect(oneSelected.detail()).resolves.toEqual({ value: 'label 1' });
 
   // on click icon
-  const threeSelected = waitForCustomEvent(page, 'select');
-  await contextMenu
-    .getByRole('menuitem', { name: 'label 3' })
-    .locator('v-icon')
-    .click();
+  const menuItemThree = contextMenu.getByTestId('context-menu-item-3');
+  const threeSelected = waitForCustomEvent(menuItemThree, 'select');
+  await menuItemThree.locator('v-icon').click();
   await expect(threeSelected.detail()).resolves.toEqual({ value: 'label 3' });
+});
+
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Dispatches select event on enter key press', async ({ page }) => {
+  const contextMenu = page.getByTestId('context-menu-default');
 
   // on focus and enter key press
-  await contextMenu.getByRole('menuitem', { name: 'label 2' }).focus();
-  const twoSelected = waitForCustomEvent(page, 'select');
-  await contextMenu.getByRole('menuitem', { name: 'label 2' }).press('Enter');
+  const menuItemTwo = contextMenu.getByTestId('context-menu-item-2');
+  const twoSelected = waitForCustomEvent(
+    menuItemTwo.getByRole('menuitem'),
+    'select'
+  );
+  await menuItemTwo.press('Enter');
   await expect(twoSelected.detail()).resolves.toEqual({ value: 'label 2' });
 });

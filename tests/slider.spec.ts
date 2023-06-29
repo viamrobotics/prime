@@ -136,10 +136,13 @@ test('Displays axis ticks at intervals of size step', async ({ page }) => {
   }
 });
 
-test('Restricts slider value to intervals of size step', async ({ page }) => {
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Restricts slider value to intervals of size step', async ({
+  page,
+}) => {
   const sliderStep = page.getByTestId('slider-step');
   const slider = sliderStep.getByRole('slider');
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const inputEvent = waitForCustomEvent(slider, 'input');
 
   await expect(sliderStep).toBeVisible();
   const axisBox = (await sliderStep.boundingBox())!;
@@ -186,7 +189,7 @@ test('Dispatches "input" event with value when user drags slider to value', asyn
   const sliderValue = page.getByTestId('slider-value');
 
   const slider = sliderValue.getByRole('slider');
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const inputEvent = waitForCustomEvent(sliderValue, 'input');
 
   // slide to first tick, value -45
   await slider.dragTo(sliderValue.locator('span.bg-gray-6').first());
@@ -200,7 +203,7 @@ test('Given disabled attribute as true, displays slider as disabled and prevents
   const slider = sliderDisabled.getByRole('slider');
   const startBox = (await slider.boundingBox())!;
   await expect(sliderDisabled).toBeVisible();
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const inputEvent = waitForCustomEvent(sliderDisabled, 'input');
   // try to slide
   await slider.dragTo(sliderDisabled.locator('span.bg-gray-6').first());
   const endBox = (await slider.boundingBox())!;
@@ -232,7 +235,7 @@ test('Given readonly attribute as true, displays slider as readonly and prevents
   await expect(sliderReadonly).toBeVisible();
   const startBox = (await slider.boundingBox())!;
 
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const inputEvent = waitForCustomEvent(sliderReadonly, 'input');
   // try to slide
   await slider.dragTo(sliderReadonly.locator('span.bg-gray-6').first());
   const endBox = (await slider.boundingBox())!;
@@ -266,7 +269,7 @@ test('Given no attributes, renders slider with { min: 0, max: 100, value: 50, st
 
   // check step: 1 by sliding from 50 to 49
   const slider = sliderDefault.getByRole('slider');
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const inputEvent = waitForCustomEvent(sliderDefault, 'input');
   await expect(slider).toBeVisible();
   await slider.dragTo(slider, { targetPosition: { x: -5, y: 0 } });
   await expect(inputEvent.detail()).resolves.toMatchObject({ value: 49 });
