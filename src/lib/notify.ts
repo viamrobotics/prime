@@ -1,8 +1,6 @@
 import { ToastContainer, toast } from '../elements/notification';
 
-export default new ToastContainer({
-  target: document.body,
-});
+export default new ToastContainer({ target: document.body });
 
 const info = (title: string, message?: string) => {
   toast.push({ title, message });
