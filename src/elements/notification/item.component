@@ -6,13 +6,27 @@
   import { type SvelteToastOptions, defaults } from './stores'
 
   export let item: SvelteToastOptions
+  export let reset: number
 
   let next = item.initial!
   let prev = next
   let paused = false
+  let lastReset: number
 
-  const progress = tweened(item.initial, { duration: item.duration ?? defaults.duration!, easing: linear })
-  
+  const progress = tweened(item.initial, { duration: item.duration ?? defaults.duration!, easing: linear });
+
+  $: if (reset !== lastReset) {
+    ;(async () => {
+      await progress.set(item.initial, { duration: 100 })
+      paused = true
+      resume()
+      lastReset = reset;
+    })()
+    
+  }
+
+  $: if ($progress === 0) autoclose();
+
   const close = () => toast.pop(item.id!)
   
   const autoclose = () => ($progress === 1 || $progress === 0) && close()
@@ -28,8 +42,8 @@
     if (paused) {
       const d = item.duration!
       const duration = d - d * (($progress - prev) / (next - prev))
-      progress.set(next, { duration }).then(autoclose)
       paused = false
+      progress.set(next, { duration })
     }
   }
 
@@ -41,13 +55,12 @@
     next = item.next!
     prev = $progress
     paused = false
-    progress.set(next).then(autoclose)
+    progress.set(next)
   }
 
   const handleVisibilityChange = () => (document.hidden ? pause() : resume())
 
   onMount(() => {
-    console.log('here')
     document.addEventListener('visibilitychange', handleVisibilityChange)
     handleVisibilityChange()
   })
