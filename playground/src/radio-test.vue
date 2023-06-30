@@ -100,6 +100,7 @@
 
     <!-- Readonly, Click Readonly -->
     <v-radio
+      data-testid="radio-readonly-click-test"
       options='Readonly 1, Readonly 2, Readonly 3'
       selected='Readonly 3'
       readonly='true'
@@ -107,6 +108,7 @@
 
     <!-- Keydown Readonly -->
     <v-radio
+      data-testid="radio-readonly-keydown-test"
       options='Readonly 4, Readonly 5, Readonly 6'
       selected='Readonly 6'
       readonly='true'

@@ -47,7 +47,10 @@ test('Confirms selected radio button updates on click', async ({ page }) => {
   const opt3 = page.getByRole('button', { name: 'Opt 3' });
 
   // Confirm Click Changes Selected to Opt 2
-  const opt2Selected = waitForCustomEvent(page, 'input');
+  const opt2Selected = waitForCustomEvent(
+    page.getByTestId('radio-selected-test'),
+    'input'
+  );
   await opt2.click();
   await opt2Selected.detail();
 
@@ -56,7 +59,8 @@ test('Confirms selected radio button updates on click', async ({ page }) => {
   await expect(opt3).toHaveClass(constants.BG_UNSELECTED);
 });
 
-test('Confirms selected radio button updates on keydown enter', async ({
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Confirms selected radio button updates on keydown enter', async ({
   page,
 }) => {
   // Check that Keydown Changes Value
@@ -76,7 +80,7 @@ test('Confirms selected radio button updates on keydown enter', async ({
   await expect(opt6).toHaveClass(constants.BG_UNSELECTED);
 
   // Focus on Opt 6 - Keydown Test
-  const opt6Selected = waitForCustomEvent(page, 'input');
+  const opt6Selected = waitForCustomEvent(radioKeydown, 'input');
   await opt6.focus();
   // Hit Enter
   await page.keyboard.press('Enter');
@@ -199,7 +203,10 @@ test('Renders radio element in readonly state if readonly attribute is true', as
   const readonly2 = page.getByRole('button', { name: 'Readonly 2' });
   await expect(readonly2).toBeVisible();
 
-  const readonly2Selected = waitForCustomEvent(page, 'input');
+  const readonly2Selected = waitForCustomEvent(
+    page.getByTestId('radio-readonly-click-test'),
+    'input'
+  );
   await readonly2.press('Enter');
   await expect(readonly2Selected.didNotOccur()).resolves.toBe(true);
 
@@ -207,7 +214,10 @@ test('Renders radio element in readonly state if readonly attribute is true', as
   const readonly5 = page.getByRole('button', { name: 'Readonly 5' });
   await expect(readonly5).toBeVisible();
 
-  const readonly5Selected = waitForCustomEvent(page, 'input');
+  const readonly5Selected = waitForCustomEvent(
+    page.getByTestId('radio-readonly-keydown-test'),
+    'input'
+  );
   await readonly5.press('Enter');
   await expect(readonly5Selected.didNotOccur()).resolves.toBe(true);
 });

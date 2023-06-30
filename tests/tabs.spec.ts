@@ -63,7 +63,7 @@ test('Confirms that selected tab updates upon click', async ({ page }) => {
 
   // Click on Tab 3
   // Check That New Selected Tab is Correct (Tab 3)
-  const tab3Selected = waitForCustomEvent(page, 'input');
+  const tab3Selected = waitForCustomEvent(selectedTestTabs, 'input');
   await tab3.click();
   await tab3Selected.detail();
 
@@ -73,7 +73,8 @@ test('Confirms that selected tab updates upon click', async ({ page }) => {
   await expect(tab3).toHaveClass(/bg-white/u);
 });
 
-test('Confirms that on focus keydown, tab selection updates', async ({
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Confirms that on focus keydown, tab selection updates', async ({
   page,
 }) => {
   // Focus, Keydown Test
@@ -90,7 +91,7 @@ test('Confirms that on focus keydown, tab selection updates', async ({
   await expect(tabZ).toHaveClass(/bg-white/u);
 
   // Focus on Tab Y
-  const tabYSelected = waitForCustomEvent(page, 'input');
+  const tabYSelected = waitForCustomEvent(keyEnterTestTabs, 'input');
   await tabY.focus();
   // Hit Enter
   await page.keyboard.press('Enter');

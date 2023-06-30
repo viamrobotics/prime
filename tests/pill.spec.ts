@@ -98,57 +98,49 @@ test('Renders a normal pill if a disabled attribute of false has been specified'
 test('Confirms default pill is clickable', async ({ page }) => {
   const testDefault = page.getByTestId('pill-default');
 
-  const removeEvent = waitForCustomEvent(page, 'remove');
+  const removeEvent = waitForCustomEvent(testDefault, 'remove');
   await testDefault.getByRole('button').click();
   await removeEvent.detail();
 });
 
 test('Confirms disbled pill is not clickable', async ({ page }) => {
-  const removeEvent = waitForCustomEvent(page, 'remove');
-  await page
-    .getByTestId('pill-disabled-true')
-    .getByRole('button')
-    .press('Enter');
+  const pillDisabledTrue = page.getByTestId('pill-disabled-true');
+  const removeEvent = waitForCustomEvent(pillDisabledTrue, 'remove');
+  await pillDisabledTrue.getByRole('button').press('Enter');
   await expect(removeEvent.didNotOccur()).resolves.toBe(true);
 });
 
 test('Confirms readonly pill is not clickable', async ({ page }) => {
-  const removeEvent = waitForCustomEvent(page, 'remove');
-  await page
-    .getByTestId('pill-readonly-true')
-    .getByRole('button')
-    .press('Enter');
+  const pillReadonlyTrue = page.getByTestId('pill-readonly-true');
+  const removeEvent = waitForCustomEvent(pillReadonlyTrue, 'remove');
+  await pillReadonlyTrue.getByRole('button').press('Enter');
   await expect(removeEvent.didNotOccur()).resolves.toBe(true);
 });
 
-test('Confirms keydown enter is effective on the default pill', async ({
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Confirms keydown enter is effective on the default pill', async ({
   page,
 }) => {
-  const testDefault = page.getByTestId('pill-default');
-
-  const removeEvent = waitForCustomEvent(page, 'remove');
-  await testDefault.getByRole('button').press('Enter');
+  const pillDefault = page.getByTestId('pill-default');
+  const removeEvent = waitForCustomEvent(pillDefault, 'remove');
+  await pillDefault.press('Enter');
   await removeEvent.detail();
 });
 
 test('Confirms keydown enter is not effective on the disabled pill', async ({
   page,
 }) => {
-  const removeEvent = waitForCustomEvent(page, 'remove');
-  await page
-    .getByTestId('pill-disabled-true')
-    .getByRole('button')
-    .press('Enter');
+  const pillDisabledTrue = page.getByTestId('pill-disabled-true');
+  const removeEvent = waitForCustomEvent(pillDisabledTrue, 'remove');
+  await pillDisabledTrue.getByRole('button').press('Enter');
   await expect(removeEvent.didNotOccur()).resolves.toBe(true);
 });
 
 test('Confirms keydown enter is effective on the readonly pill', async ({
   page,
 }) => {
-  const removeEvent = waitForCustomEvent(page, 'remove');
-  await page
-    .getByTestId('pill-readonly-true')
-    .getByRole('button')
-    .press('Enter');
+  const pillReadonlyTrue = page.getByTestId('pill-readonly-true');
+  const removeEvent = waitForCustomEvent(pillReadonlyTrue, 'remove');
+  await pillReadonlyTrue.getByRole('button').press('Enter');
   await expect(removeEvent.didNotOccur()).resolves.toBe(true);
 });

@@ -28,7 +28,7 @@ test('Given an options attribute, on select the options should be visible and cl
   await expect(optionsContainer).toHaveText(/three/u);
 
   // selecting a value should emit an input event + render that as the input
-  const oneSelected = waitForCustomEvent(page, 'input');
+  const oneSelected = waitForCustomEvent(select, 'input');
   await optionsContainer.locator('label').first().click();
   await expect(oneSelected.detail()).resolves.toEqual({ value: 'one' });
 });
@@ -213,8 +213,8 @@ test('On pressing enter over an option, that option should be selected, change a
   await expect(select).toBeVisible();
 
   const optionsContainer = select.locator('.options-container').first();
-  const valueChanged = waitForCustomEvent(page, 'change');
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const valueChanged = waitForCustomEvent(select, 'change');
+  const inputEvent = waitForCustomEvent(select, 'input');
 
   // click on the input
   const input = select.locator('input').first();
@@ -287,7 +287,7 @@ test('Dispatches change event when option is selected', async ({ page }) => {
   await expect(optionsContainer).toBeVisible();
 
   // select an option
-  const valueChanged = waitForCustomEvent(page, 'change');
+  const valueChanged = waitForCustomEvent(select, 'change');
   await select.getByText('Second Option').click();
 
   await expect(valueChanged.detail()).resolves.toEqual({

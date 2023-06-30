@@ -34,8 +34,8 @@ test('Renders appropriately according to value attribute', async ({ page }) => {
 });
 
 test('Responds to click from on to off', async ({ page }) => {
-  const inputEvent = waitForCustomEvent(page, 'input');
   const switchOn = page.getByTestId('switch-on');
+  const inputEvent = waitForCustomEvent(switchOn, 'input');
 
   await switchOn.locator('label').click();
   await expect(switchOn.locator('input')).toHaveValue('off');
@@ -43,24 +43,26 @@ test('Responds to click from on to off', async ({ page }) => {
 });
 
 test('Responds to click from off to on', async ({ page }) => {
-  const inputEvent = waitForCustomEvent(page, 'input');
   const switchOff = page.getByTestId('switch-off');
+  const inputEvent = waitForCustomEvent(switchOff, 'input');
   await switchOff.locator('label').click();
   await expect(switchOff.locator('input')).toHaveValue('on');
   await expect(inputEvent.detail()).resolves.toEqual({ value: true });
 });
 
-test('Responds to keydown "enter" from on to off', async ({ page }) => {
-  const inputEvent = waitForCustomEvent(page, 'input');
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Responds to keydown "enter" from on to off', async ({ page }) => {
   const switchOn = page.getByTestId('switch-on');
+  const inputEvent = waitForCustomEvent(switchOn, 'input');
   await switchOn.locator('label').press('Enter');
   await expect(switchOn.locator('input')).toHaveValue('off');
   await expect(inputEvent.detail()).resolves.toEqual({ value: false });
 });
 
-test('Responds to keydown "enter" from off to on', async ({ page }) => {
-  const inputEvent = waitForCustomEvent(page, 'input');
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Responds to keydown "enter" from off to on', async ({ page }) => {
   const switchOff = page.getByTestId('switch-off');
+  const inputEvent = waitForCustomEvent(switchOff, 'input');
   await switchOff.locator('label').press('Enter');
   await expect(switchOff.locator('input')).toHaveValue('on');
   await expect(inputEvent.detail()).resolves.toEqual({ value: true });
@@ -113,7 +115,7 @@ test('Renders as disabled', async ({ page }) => {
 
 test('Precludes value change if disabled', async ({ page }) => {
   const switchDisabledOff = page.getByTestId('switch-disabled-off');
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const inputEvent = waitForCustomEvent(switchDisabledOff, 'input');
   await switchDisabledOff.locator('label').click({ force: true });
   await expect(switchDisabledOff.locator('input')).toHaveValue('off');
   await expect(inputEvent.didNotOccur()).resolves.toBe(true);
@@ -154,7 +156,7 @@ test('Renders as read only', async ({ page }) => {
 
 test('Precludes value change if read only', async ({ page }) => {
   const switchReadOnlyOff = page.getByTestId('switch-readonly-off');
-  const inputEvent = waitForCustomEvent(page, 'input');
+  const inputEvent = waitForCustomEvent(switchReadOnlyOff, 'input');
   await switchReadOnlyOff.locator('label').click({ force: true });
   await expect(switchReadOnlyOff.locator('input')).toHaveValue('off');
   await expect(inputEvent.didNotOccur()).resolves.toBe(true);

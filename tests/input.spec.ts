@@ -351,30 +351,31 @@ test('Given type number, only dispatches valid and new number values', async ({
   const input = inputNumber.locator('input').first();
 
   // fires an event after clearing initial value from value property
-  const blankInputEvent = waitForCustomEvent(page, 'input');
+  const blankInputEvent = waitForCustomEvent(inputNumber, 'input');
   await input.fill('invalid Ch@rs!');
   expect(await input.inputValue()).toBe('');
   await expect(blankInputEvent.detail()).resolves.toEqual({ value: '' });
 
-  const noInputEvent1 = waitForCustomEvent(page, 'input');
+  const noInputEvent1 = waitForCustomEvent(inputNumber, 'input');
   await input.type('ee more invalid chars');
   expect(await input.inputValue()).toBe('eee');
   await expect(noInputEvent1.didNotOccur()).resolves.toBe(true);
 
-  const validInputEvent = waitForCustomEvent(page, 'input');
+  const validInputEvent = waitForCustomEvent(inputNumber, 'input');
   await input.fill('1');
   expect(await input.inputValue()).toBe('1');
   await expect(validInputEvent.detail()).resolves.toEqual({ value: '1' });
 
-  const noInputEvent2 = waitForCustomEvent(page, 'input');
+  const noInputEvent2 = waitForCustomEvent(inputNumber, 'input');
   await input.type('.');
   expect(await input.inputValue()).toBe('1.');
   await expect(noInputEvent2.didNotOccur()).resolves.toBe(true);
 });
 
 test('Fires input event with value on input', async ({ page }) => {
-  const input = page.getByTestId('input-default').locator('input').first();
-  const isInputEventEmitted = waitForCustomEvent(page, 'input');
+  const inputDefault = page.getByTestId('input-default');
+  const input = inputDefault.locator('input').first();
+  const isInputEventEmitted = waitForCustomEvent(inputDefault, 'input');
 
   await input.fill('asdfJKL;123');
   await expect(isInputEventEmitted.detail()).resolves.toEqual({
