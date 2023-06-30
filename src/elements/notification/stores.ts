@@ -28,7 +28,7 @@ export interface SvelteToastOptions {
   intro?: FlyParams;
   // callback that runs on toast dismiss
   onpop?: (id: number) => void;
-  reset?: number
+  reset?: number;
 }
 
 type PartialOptions = Partial<SvelteToastOptions>;
@@ -89,7 +89,9 @@ const createToast = () => {
     };
 
     update((value) => {
-      const match = value.find(item => item.title === entry.title && item.message === entry.message)
+      const match = value.find(
+        (item) => item.title === entry.title && item.message === entry.message
+      );
 
       if (match) {
         value.splice(value.indexOf(match), 1);
