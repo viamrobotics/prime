@@ -71,9 +71,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
         <p class="text-sm text-subtle-1">{message}</p>
       {/if}
 
-      <slot />
-
-      <div class="flex flex-grow"></div>
+      <div class="flex flex-grow"><slot /></div>
 
       <div class="flex justify-end gap-2 mt-6">
         <slot name="secondary" />
