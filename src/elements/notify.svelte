@@ -5,11 +5,14 @@ type Variants = 'danger' | 'warning' | 'success' | 'info';
 
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
+import { createEventDispatcher } from 'svelte/internal';
 
 export let title = '';
 export let message = '';
 export let variant: Variants = 'info';
 export let progress = 1;
+
+const dispatch = createEventDispatcher<{ close: undefined }>()
 
 addStyles();
 </script>
@@ -22,7 +25,15 @@ addStyles();
     'bg-danger-light border-danger-medium': variant === 'danger',
   })}
 >
-  <div class="flex-col">
+  <div class="relative flex-col">
+    <div
+      class={cx('absolute top-0 left-0 w-[3px] h-[calc(100%+2px)] origin-bottom -mt-px -ml-px', {
+        'bg-[#df9a9b]': variant === 'danger',
+        'bg-[#eed59f]': variant === 'warning',
+        'bg-[#9ebe9f]': variant === 'success',
+        'bg-[#80b3e5]': variant === 'info',
+      })}
+    />
     <div
       style="transform: scale(1, {progress})"
       class={cx('w-[3px] h-[calc(100%+2px)] origin-bottom -mt-px -ml-px', {
@@ -34,8 +45,8 @@ addStyles();
     />
   </div>
 
-  <div class="flex items-center justify-between w-full gap-2 py-2 px-3">
-    <div class="flex gap-2">
+  <div class="flex items-center justify-between w-full gap-2 p-3 relative">
+    <div class="flex gap-3">
       {#if variant === 'danger'}
         <v-icon class="mt-0.5 text-danger-dark" name="error-outline" />
       {:else if variant === 'info'}
@@ -58,19 +69,33 @@ addStyles();
         </svg>
       {/if}
 
-      <figure class="flex flex-col gap-1">
+      <figure class="flex flex-col">
         <figcaption class="text-sm font-medium text-default">
           {title}
         </figcaption>
 
-        {#if message}
-          <p class="text-sm text-subtle-1">{message}</p>
-        {/if}
-
-        <slot />
+        <div class='flex flex-col gap-3'>
+          {#if message}
+            <p class="text-sm text-subtle-1">{message}</p>
+          {/if}
+          
+          <slot />
+          
+          {#if $$slots.action}
+            <div class='pt-1 pb-2'>
+              <slot name="action" />
+            </div>
+          {/if}
+        </div>
+        
       </figure>
-    </div>
 
-    <slot name="action" />
+      <v-button
+        variant='icon'
+        icon='x'
+        class='absolute right-1 top-1 text-gray-7'
+        on:click={() => dispatch('close')}
+      />
+    </div>
   </div>
 </div>

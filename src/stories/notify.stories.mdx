@@ -4,7 +4,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
   title='Elements/Notify'
   parameters={{
     actions: {
-      handles: ['toggle'],
+      handles: ['close'],
     },
   }}
   argTypes={{
@@ -34,7 +34,7 @@ Notify message of type info, success, warning, or error
     name='info'
     args={{
       variant: 'info',
-      title: 'This is the title.',
+      title: 'This is the title',
       message: 'This is the message.',
     }}
   >
@@ -53,7 +53,7 @@ Notify message of type info, success, warning, or error
     name='success'
     args={{
       variant: 'success',
-      title: 'This is the title.',
+      title: 'This is the title',
       message: 'This is the message.',
     }}
   >
@@ -72,7 +72,7 @@ Notify message of type info, success, warning, or error
     name='warning'
     args={{
       variant: 'warning',
-      title: 'This is the title.',
+      title: 'This is the title',
       message: 'This is the message.',
     }}
   >
@@ -91,7 +91,7 @@ Notify message of type info, success, warning, or error
     name='danger'
     args={{
       variant: 'danger',
-      title: 'This is the title.',
+      title: 'This is the title',
       message: 'This is the message.',
     }}
   >
@@ -110,7 +110,7 @@ Notify message of type info, success, warning, or error
     name='no message info'
     args={{
       variant: 'info',
-      title: 'This is the title.',
+      title: 'This is the title',
     }}
   >
     {({ title, variant }) => `
@@ -127,7 +127,7 @@ Notify message of type info, success, warning, or error
     name='no message success'
     args={{
       variant: 'success',
-      title: 'This is the title.',
+      title: 'This is the title',
     }}
   >
     {({ title, message, variant }) => `
@@ -144,7 +144,7 @@ Notify message of type info, success, warning, or error
     name='no message warning'
     args={{
       variant: 'warning',
-      title: 'This is the title.',
+      title: 'This is the title',
     }}
   >
     {({ title, variant }) => `
@@ -161,7 +161,7 @@ Notify message of type info, success, warning, or error
     name='no message danger'
     args={{
       variant: 'danger',
-      title: 'This is the title.',
+      title: 'This is the title',
     }}
   >
     {({ title, variant }) => `
@@ -178,11 +178,23 @@ Notify message of type info, success, warning, or error
     {() => `
 <v-notify
   variant='info'
-  title='This is the title.'
-  message='This is the message.'
+  title='You have an incoming life update'
+  message='LifeOS has been upgraded to a new version that includes great new things such as friends and family and you will not be alone anymore.'
 >
   <v-button slot='action' variant='inverse-primary' label='Click here'></v-button>
 </v-notify>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name='Slot 2'>
+    {() => `
+      <v-notify variant="info" title="No logs yet." message="Make sure you have set up your part.">
+        <a class='text-sm text-default font-medium hover:underline' href="">
+          Set up
+        </a>
+      </v-notify>
     `}
   </Story>
 </Canvas>
