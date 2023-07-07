@@ -12,7 +12,7 @@ export let title = '';
 export let message = '';
 export let variant: Variants = 'info';
 export let progress = 1;
-export let exitable = 'false'
+export let exitable = 'false';
 
 $: isExitable = htmlToBoolean(exitable, 'exitable');
 
@@ -31,12 +31,15 @@ addStyles();
 >
   <div class="relative flex-col">
     <div
-      class={cx('absolute top-0 left-0 w-[3px] h-[calc(100%+2px)] origin-bottom -mt-px -ml-px', {
-        'bg-[#df9a9b]': variant === 'danger',
-        'bg-[#eed59f]': variant === 'warning',
-        'bg-[#9ebe9f]': variant === 'success',
-        'bg-[#80b3e5]': variant === 'info',
-      })}
+      class={cx(
+        'absolute top-0 left-0 w-[3px] h-[calc(100%+2px)] origin-bottom -mt-px -ml-px',
+        {
+          'bg-[#df9a9b]': variant === 'danger',
+          'bg-[#eed59f]': variant === 'warning',
+          'bg-[#9ebe9f]': variant === 'success',
+          'bg-[#80b3e5]': variant === 'info',
+        }
+      )}
     />
     <div
       style="transform: scale(1, {progress})"
@@ -78,27 +81,26 @@ addStyles();
           {title}
         </figcaption>
 
-        <div class='flex flex-col gap-3'>
+        <div class="flex flex-col gap-3">
           {#if message}
             <p class="text-sm text-subtle-1">{message}</p>
           {/if}
-          
+
           <slot />
-          
+
           {#if $$slots.action}
-            <div class='pt-1 pb-2'>
+            <div class="pt-1 pb-2">
               <slot name="action" />
             </div>
           {/if}
         </div>
-        
       </figure>
 
       {#if isExitable}
         <v-button
-          variant='icon'
-          icon='x'
-          class='absolute right-1 top-1 text-gray-7'
+          variant="icon"
+          icon="x"
+          class="absolute right-1 top-1 text-gray-7"
           on:click={() => dispatch('close')}
         />
       {/if}
