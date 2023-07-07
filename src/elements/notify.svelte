@@ -5,14 +5,18 @@ type Variants = 'danger' | 'warning' | 'success' | 'info';
 
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
-import { createEventDispatcher } from 'svelte/internal';
+import { dispatcher } from '../lib/dispatch';
+import { htmlToBoolean } from '../lib/boolean';
 
 export let title = '';
 export let message = '';
 export let variant: Variants = 'info';
 export let progress = 1;
+export let exitable = 'false'
 
-const dispatch = createEventDispatcher<{ close: undefined }>()
+$: isExitable = htmlToBoolean(exitable, 'exitable');
+
+const dispatch = dispatcher();
 
 addStyles();
 </script>
@@ -90,12 +94,14 @@ addStyles();
         
       </figure>
 
-      <v-button
-        variant='icon'
-        icon='x'
-        class='absolute right-1 top-1 text-gray-7'
-        on:click={() => dispatch('close')}
-      />
+      {#if isExitable}
+        <v-button
+          variant='icon'
+          icon='x'
+          class='absolute right-1 top-1 text-gray-7'
+          on:click={() => dispatch('close')}
+        />
+      {/if}
     </div>
   </div>
 </div>
