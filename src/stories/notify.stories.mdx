@@ -190,11 +190,25 @@ Notify message of type info, success, warning, or error
 <Canvas>
   <Story name='Slot 2'>
     {() => `
-      <v-notify variant="info" title="No logs yet." message="Make sure you have set up your part.">
+      <v-notify variant="info" title="No logs yet" message="Make sure you have set up your part.">
         <a class='text-sm text-default font-medium hover:underline' href="">
           Set up
         </a>
       </v-notify>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name='Exitable'>
+    {() => `
+      <v-notify
+        exitable
+        variant="danger"
+        title="The roof is on fire"
+        message="Water is required to prevent further burning."
+        onclose="alert('close')"
+      ></v-notify>
     `}
   </Story>
 </Canvas>
