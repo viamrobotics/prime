@@ -45,7 +45,8 @@ test('Renders style variants', async ({ page }) => {
   );
 });
 
-test('Dispatches select events', async ({ page }) => {
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Dispatches select events', async ({ page }) => {
   const contextMenu = page.getByTestId('context-menu-default');
 
   // on click text label

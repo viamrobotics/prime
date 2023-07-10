@@ -183,7 +183,8 @@ test('Renders unit suffix with min and max values', async ({ page }) => {
   ).toBeVisible();
 });
 
-test('Dispatches "input" event with value when user drags slider to value', async ({
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Dispatches "input" event with value when user drags slider to value', async ({
   page,
 }) => {
   const sliderValue = page.getByTestId('slider-value');
