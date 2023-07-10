@@ -11,6 +11,7 @@ import { checkKeyboardEvent } from '../lib/events';
 export let title = '';
 export let message = '';
 export let open = 'false';
+export let variant: 'small' | '' = '';
 
 const dispatch = dispatcher();
 
@@ -46,7 +47,10 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
   on:keyup|stopPropagation|preventDefault={handleClose}
 >
   <div
-    class="w-[480px] relative border border-medium bg-white p-6 max-w-lg shadow-sm"
+    class={cx('relative border border-medium bg-white p-6 max-w-lg shadow-sm', {
+      'w-[480px] min-h-[400px] max-h-[600px]': variant === '',
+      'w-[400px] max-h-[320px]': variant === 'small',
+    })}
     on:click|stopPropagation
     on:keyup|stopPropagation
   >
@@ -58,7 +62,9 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
       on:click={handleClose}
       on:keydown={handleClose}
     />
-    <figure class="min-h-[400px] flex flex-col gap-2">
+    <figure
+      class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
+    >
       <figcaption class="pr-12 text-lg font-semibold">
         {title}
       </figcaption>
@@ -69,7 +75,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
 
       <div class="flex flex-grow"><slot /></div>
 
-      <div class="flex justify-end gap-2">
+      <div class="flex justify-end gap-2 mt-6">
         <slot name="secondary" />
         <slot name="primary" />
       </div>
