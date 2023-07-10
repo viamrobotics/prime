@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "license": "Apache-2.0",
   "type": "module",
   "files": [
@@ -95,5 +95,9 @@
     "vite": "4.3.1",
     "vue": "^3.2.45",
     "vue-tsc": "^1.2.0"
+  },
+  "dependencies": {
+    "@mdi/js": "^7.2.96",
+    "mdi-svelte-ts": "^1.0.0"
   }
 }
