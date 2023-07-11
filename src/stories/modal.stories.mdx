@@ -45,7 +45,7 @@ Creates a modal overlay
 
 <Canvas>
   <Story
-    name='Confirmation'
+    name='Default'
     args={{
       title: 'Delete confirmation',
       message: 'Are you sure you want to delete this?',
@@ -58,6 +58,41 @@ Creates a modal overlay
 <div style="height: 16rem">
   <v-modal
     ${open ? 'open' : ''}
+    title='${title}'
+    message='${message}'
+    onclose='this.removeAttribute("open")'
+  >
+    <v-button
+      variant='${variant}'
+      label='${buttonText}'
+      slot='primary'
+    ></v-button>
+    <v-button
+      label='Cancel'
+      slot='secondary'
+    ></v-button>
+  </v-modal>
+</div>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Small'
+    args={{
+      title: 'Delete confirmation',
+      message: 'Are you sure you want to delete this?',
+      buttonText: 'Delete',
+      variant: 'inverse-primary',
+      open: true,
+    }}
+  >
+    {({ title, message, variant, buttonText, open }) => `
+<div style="height: 16rem">
+  <v-modal
+    ${open ? 'open' : ''}
+    variant='small'
     title='${title}'
     message='${message}'
     onclose='this.removeAttribute("open")'
