@@ -1,7 +1,6 @@
-<svelte:options immutable tag="v-vector-input" />
+<svelte:options immutable />
 
 <script lang="ts">
-import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 
 export let label = '';
@@ -12,8 +11,6 @@ export let value = '';
 export let placeholders = ['x', 'y', 'z', 'w'];
 
 const dispatch = dispatcher();
-
-addStyles();
 
 let valueArray: (number | undefined)[];
 

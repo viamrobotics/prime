@@ -1,12 +1,8 @@
-<svelte:options immutable tag="v-select-button" />
+<svelte:options immutable />
 
 <script lang="ts">
-import { addStyles } from '../../lib/index';
-
 export let buttontext = 'ENTER';
 export let buttonicon = '';
-
-addStyles();
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

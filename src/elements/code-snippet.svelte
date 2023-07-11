@@ -1,4 +1,4 @@
-<svelte:options immutable tag="v-code-snippet" />
+<svelte:options immutable />
 
 <script context="module" lang="ts">
 import { onMount } from 'svelte';
@@ -7,7 +7,6 @@ const loadedLanguages: Record<string, boolean> = {};
 
 <script lang="ts">
 import cx from 'classnames';
-import { addStyles } from '../lib';
 import pkg from '../../package.json';
 import { dispatcher } from '../lib/dispatch';
 
@@ -23,8 +22,6 @@ $: label = 'Copy';
 const dispatch = dispatcher();
 
 let element: HTMLElement;
-
-addStyles();
 
 const version = pkg.devDependencies.prismjs.replace('^', '');
 

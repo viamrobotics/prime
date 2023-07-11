@@ -1,11 +1,7 @@
-<svelte:options immutable tag="v-thead" />
+<svelte:options immutable />
 
 <script lang="ts">
-import { addStyles } from '../../lib/index';
-
 export let style = '';
-
-addStyles();
 </script>
 
 <thead {style} class="border-b border-black">

@@ -1,11 +1,7 @@
-<svelte:options immutable tag="v-breadcrumbs" />
+<svelte:options immutable />
 
 <script lang="ts">
-import { addStyles } from '../lib/index';
-
 export let crumbs = '';
-
-addStyles();
 
 let parsedCrumbs: string[];
 

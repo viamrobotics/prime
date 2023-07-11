@@ -1,9 +1,8 @@
-<svelte:options immutable tag="v-switch" />
+<svelte:options immutable />
 
 <script lang="ts">
 import cx from 'classnames';
 import { htmlToBoolean } from '../lib/boolean';
-import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 
 export let label = '';
@@ -15,8 +14,6 @@ export let readonly: string;
 export let tooltip = '';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 let input: HTMLInputElement;
 let on: boolean;

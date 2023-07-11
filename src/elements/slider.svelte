@@ -1,4 +1,4 @@
-<svelte:options tag="v-slider" />
+<svelte:options />
 
 <script lang="ts">
 import { onMount } from 'svelte';
@@ -6,12 +6,11 @@ import { spring } from 'svelte/motion';
 import type { Spring } from 'svelte/motion';
 import cn from 'classnames';
 import { clamp, percentOf } from '../lib/math';
-import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 import { htmlToBoolean } from '../lib/boolean';
 
 export let slider: HTMLElement;
-export let range: string | boolean = false;
+export let range: 'min' | 'max' | 'range' | '' = '';
 export let min: string;
 export let max: string;
 export let step: string;
@@ -27,8 +26,6 @@ export let label = '';
 export let suffix = '';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 const springValues = { stiffness: 0.1, damping: 0.4 };
 
@@ -55,7 +52,6 @@ $: startValue =
     ? Number.parseFloat(start || value)
     : (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) / 2;
 $: endValue = end ? Number.parseFloat(end) : undefined;
-$: range = typeof range === 'string' ? range : end !== undefined;
 
 // state management
 let valueLength = 0;
@@ -486,8 +482,8 @@ const onChange = () => {
         index
           ? 3
           : 2}"
-        aria-valuemin={range === true && index === 1 ? startValue : minNum}
-        aria-valuemax={range === true && index === 0 ? endValue : maxNum}
+        aria-valuemin={range === 'range' && index === 1 ? startValue : minNum}
+        aria-valuemax={range === 'range' && index === 0 ? endValue : maxNum}
         aria-valuenow={value}
         aria-valuetext={value?.toString()}
         aria-orientation="horizontal"

@@ -1,11 +1,7 @@
-<svelte:options immutable tag="v-td" />
+<svelte:options immutable />
 
 <script lang="ts">
-import { addStyles } from '../../lib/index';
-
 export let style = '';
-
-addStyles();
 </script>
 
 <td {style} part="table-cell" class="p-2 overflow-hidden">

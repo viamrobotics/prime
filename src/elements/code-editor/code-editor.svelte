@@ -1,24 +1,23 @@
-<svelte:options immutable tag="v-code-editor" />
+<svelte:options immutable />
 
 <script lang="ts">
 import { onMount, onDestroy } from 'svelte';
-import { get_current_component } from 'svelte/internal';
 
-import { addStyles, removeNewlineWhitespace, monacoURL } from '../lib/index';
+import { removeNewlineWhitespace } from '../../lib/index';
 
-import { dispatcher } from '../lib/dispatch';
+import { dispatcher } from '../../lib/dispatch';
 
 import type {
   MonacoSupportedLanguages,
   MonacoSupportedThemes,
   Monaco,
   Schema,
-} from '../lib/monaco/types';
+} from '../../lib/monaco/types';
 
-import { loadMonaco } from '../lib/monaco/loader';
-import { monacoUtils } from '../lib/monaco';
-import { htmlToBoolean } from '../lib/boolean';
-import { hashCode } from '../lib/math';
+import { loadMonaco } from '../../lib/monaco/loader';
+import { monacoUtils } from '../../lib/monaco';
+import { htmlToBoolean } from '../../lib/boolean';
+import { hashCode } from '../../lib/math';
 
 export let value = '';
 export let previous = '';
@@ -30,8 +29,6 @@ export let schema = '';
 export let variant: 'default' | 'diff' = 'default';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 let isReadonly: boolean;
 let hasMinimap: boolean;
@@ -45,15 +42,6 @@ let container: HTMLDivElement;
 let diffEditor: Monaco.editor.IStandaloneDiffEditor;
 let editor: Monaco.editor.IStandaloneCodeEditor;
 let resizeObserver: ResizeObserver;
-
-const link = document.createElement('link');
-link.rel = 'stylesheet';
-link.href = `${monacoURL}/min/vs/editor/editor.main.min.css`;
-
-const component = get_current_component() as HTMLElement & {
-  shadowRoot: ShadowRoot;
-};
-component.shadowRoot.append(link);
 
 const setModel = () => {
   if (!editor) {

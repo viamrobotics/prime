@@ -1,10 +1,9 @@
-<svelte:options immutable tag="v-radio" />
+<svelte:options immutable />
 
 <script lang="ts">
 type LabelPosition = 'top' | 'left';
 
 import cx from 'classnames';
-import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 import { htmlToBoolean } from '../lib/boolean';
 
@@ -17,8 +16,6 @@ export let state: 'info' | 'warn' | 'error' = 'info';
 export let readonly: string;
 
 const dispatch = dispatcher();
-
-addStyles();
 
 let parsedOptions: string[];
 let isReadonly: boolean;

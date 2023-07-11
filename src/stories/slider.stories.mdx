@@ -69,6 +69,7 @@ For user triggered actions
   <Story
     name='Range'
     args={{
+      range: 'range',
       min: 0,
       max: 100,
       start: 10,
@@ -76,8 +77,9 @@ For user triggered actions
       step: 10,
     }}
   >
-    {({ min, max, step, start, end }) => `
+    {({ range, min, max, step, start, end }) => `
 <v-slider
+  range='${range}'
   min='${min}'
   max='${max}'
   step='${step}'

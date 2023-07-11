@@ -1,16 +1,13 @@
-<svelte:options immutable tag="v-tabs" />
+<svelte:options immutable />
 
 <script lang="ts">
 import cx from 'classnames';
-import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 
 export let tabs = '';
 export let selected = '';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 $: parsedTabs = tabs.split(',').map((str) => str.trim());
 $: selectedIndex = parsedTabs.indexOf(selected);

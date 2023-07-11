@@ -95,7 +95,8 @@ test('Renders a normal pill if a disabled attribute of false has been specified'
   ).not.toHaveAttribute('aria-readonly', 'true');
 });
 
-test('Confirms default pill is clickable', async ({ page }) => {
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Confirms default pill is clickable', async ({ page }) => {
   const testDefault = page.getByTestId('pill-default');
 
   const removeEvent = waitForCustomEvent(testDefault, 'remove');

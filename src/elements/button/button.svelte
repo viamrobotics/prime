@@ -1,4 +1,4 @@
-<svelte:options immutable tag="v-button-internal" />
+<svelte:options immutable />
 
 <script lang="ts">
 // Added temporarily because <svelte:element> does not recognize "text" as a valid prop
@@ -15,9 +15,7 @@ type Variants =
   | 'icon';
 
 import cx from 'classnames';
-import { get_current_component } from 'svelte/internal';
 import { htmlToBoolean } from '../../lib/boolean';
-import { addStyles } from '../../lib/index';
 
 export let disabled = 'false';
 export let type: 'button' | 'submit' | 'reset' = 'button';
@@ -28,17 +26,12 @@ export let icon = '';
 export let size = 'base';
 export let tooltip = '';
 
-addStyles();
+// https://github.com/sveltejs/svelte/issues/7596
+export let internals: ElementInternals;
 
 let isDisabled: boolean;
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
-
-// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
-const component = get_current_component() as HTMLElement & {
-  internals: ElementInternals;
-};
-const internals = component.attachInternals();
 
 const handleClick = () => {
   const { form } = internals;

@@ -33,7 +33,8 @@ test('Renders appropriately according to value attribute', async ({ page }) => {
   );
 });
 
-test('Responds to click from on to off', async ({ page }) => {
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Responds to click from on to off', async ({ page }) => {
   const switchOn = page.getByTestId('switch-on');
   const inputEvent = waitForCustomEvent(switchOn, 'input');
 
@@ -42,7 +43,8 @@ test('Responds to click from on to off', async ({ page }) => {
   await expect(inputEvent.detail()).resolves.toEqual({ value: false });
 });
 
-test('Responds to click from off to on', async ({ page }) => {
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Responds to click from off to on', async ({ page }) => {
   const switchOff = page.getByTestId('switch-off');
   const inputEvent = waitForCustomEvent(switchOff, 'input');
   await switchOff.locator('label').click();

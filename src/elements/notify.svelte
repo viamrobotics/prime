@@ -1,10 +1,9 @@
-<svelte:options immutable tag="v-notify" />
+<svelte:options immutable />
 
 <script lang="ts">
 type Variants = 'danger' | 'warning' | 'success' | 'info';
 
 import cx from 'classnames';
-import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 import { htmlToBoolean } from '../lib/boolean';
 
@@ -17,8 +16,6 @@ export let exitable = 'false';
 $: isExitable = htmlToBoolean(exitable, 'exitable');
 
 const dispatch = dispatcher();
-
-addStyles();
 </script>
 
 <div

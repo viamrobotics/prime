@@ -1,12 +1,8 @@
-<svelte:options immutable tag="v-tr" />
+<svelte:options immutable />
 
 <script lang="ts">
-import { addStyles } from '../../lib/index';
-
-export const variant = '';
+export let variant = '';
 export let style = '';
-
-addStyles();
 </script>
 
 <svelte:head>
