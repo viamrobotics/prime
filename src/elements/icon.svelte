@@ -43,70 +43,84 @@ import {
   mdiTrashCanOutline,
   mdiCog,
   mdiFilterOutline,
+  mdiGithub,
+  mdiFileDownloadOutline,
+  mdiCheckCircle,
+  mdiAlertCircle,
+  mdiCreditCardOutline,
+  mdiAccountMultiple,
 } from '@mdi/js';
 
 import cx from 'classnames';
 import { addStyles } from '../lib/index';
 
 export let name = '';
-export let size: Size = 'base';
+const sizes: Record<Size, string> = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  base: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+  '2xl': 'text-2xl',
+  '3xl': 'text-3xl',
+  '4xl': 'text-4xl'
+}
+
+export const size = 'base';
 
 const paths: Record<string, string> = {
-  'camera-outline': mdiCameraOutline,
-  'video-outline': mdiVideoOutline,
-  'alert-circle-outline': mdiAlertCircleOutline,
-  'alert-outline': mdiAlertOutline,
   cancel: mdiCancel,
-  'broadcast-off': mdiBroadcastOff,
   plus: mdiPlus,
   close: mdiClose,
-  'content-copy': mdiContentCopy,
   minus: mdiMinus,
   send: mdiSend,
   undo: mdiUndo,
   broadcast: mdiBroadcast,
   download: mdiDownload,
+  menu: mdiMenu,
+  check: mdiCheck,
+  cog: mdiCog,
+  logout: mdiLogout,
+  twitter: mdiTwitter,
+  github: mdiGithub,
+  refresh: mdiRefresh,
+  instagram: mdiInstagram,
+  linkedin: mdiLinkedin,
+  'camera-outline': mdiCameraOutline,
+  'video-outline': mdiVideoOutline,
+  'alert-circle-outline': mdiAlertCircleOutline,
+  'alert-outline': mdiAlertOutline,
+  'broadcast-off': mdiBroadcastOff,
+  'content-copy': mdiContentCopy,
   'image-filter-center-focus': mdiImageFilterCenterFocus,
   'arrow-expand-all': mdiArrowExpandAll,
   'chevron-down': mdiChevronDown,
-  menu: mdiMenu,
   'dots-horizontal': mdiDotsHorizontal,
   'arrow-up': mdiArrowUp,
-  check: mdiCheck,
   'open-in-new': mdiOpenInNew,
-  cog: mdiCog,
   'help-circle-outline': mdiHelpCircleOutline,
   'camera-flip-outline': mdiCameraFlipOutline,
   'filter-outline': mdiFilterOutline,
   'arrow-top-right-bottom-left': mdiArrowTopRightBottomLeft,
-  refresh: mdiRefresh,
   'information-outline': mdiInformationOutline,
   'pause-circle-outline': mdiPauseCircleOutline,
   'play-circle-outline': mdiPlayCircleOutline,
-  logout: mdiLogout,
-  instagram: mdiInstagram,
   'content-save-outline': mdiContentSaveOutline,
   'pencil-outline': mdiPencilOutline,
   'stop-circle-outline': mdiStopCircleOutline,
-  twitter: mdiTwitter,
-  linkedin: mdiLinkedin,
   'trash-can-outline': mdiTrashCanOutline,
+  'file-download-outline': mdiFileDownloadOutline,
+  'check-circle': mdiCheckCircle,
+  'alert-circle': mdiAlertCircle,
+  'credit-card-outline': mdiCreditCardOutline,
+  'account-multiple-outline': mdiAccountMultiple,
 };
 
 addStyles();
 </script>
 
 <svg
-  class={cx(`w-4 h-4`, {
-    'text-xs': size === 'xs',
-    'text-sm': size === 'sm',
-    'text-base': size === 'base',
-    'text-lg': size === 'lg',
-    'text-xl': size === 'xl',
-    'text-2xl': size === '2xl',
-    'text-3xl': size === '3xl',
-    'text-4xl': size === '4xl',
-  })}
+  class={cx(`w-4 h-4`, sizes[size])}
   viewBox="0 0 24 24"
   aria-labelledby={paths[name]}
   role="img"
