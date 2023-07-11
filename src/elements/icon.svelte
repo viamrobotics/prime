@@ -51,80 +51,74 @@ import {
   mdiAccountMultiple,
 } from '@mdi/js';
 
-import cx from 'classnames';
 import { addStyles } from '../lib/index';
 
 export let name = '';
 const sizes: Record<Size, string> = {
-  xs: 'text-xs',
-  sm: 'text-sm',
-  base: 'text-base',
-  lg: 'text-lg',
-  xl: 'text-xl',
-  '2xl': 'text-2xl',
-  '3xl': 'text-3xl',
-  '4xl': 'text-4xl'
-}
+  xs: 'w-3 h-3',
+  sm: 'w-3.5 h-3.5',
+  base: 'w-4 h-4',
+  lg: 'w-4.5 h-4.5',
+  xl: 'w-5 h-5',
+  '2xl': 'w-6 h-6',
+  '3xl': 'w-7 h-7',
+  '4xl': 'w-8 h-8',
+};
 
-export const size = 'base';
+export let size = 'base';
 
 const paths: Record<string, string> = {
-  cancel: mdiCancel,
-  plus: mdiPlus,
-  close: mdiClose,
-  minus: mdiMinus,
-  send: mdiSend,
-  undo: mdiUndo,
   broadcast: mdiBroadcast,
-  download: mdiDownload,
-  menu: mdiMenu,
+  cancel: mdiCancel,
   check: mdiCheck,
+  close: mdiClose,
   cog: mdiCog,
-  logout: mdiLogout,
-  twitter: mdiTwitter,
-  github: mdiGithub,
-  refresh: mdiRefresh,
+  download: mdiDownload,
   instagram: mdiInstagram,
   linkedin: mdiLinkedin,
-  'camera-outline': mdiCameraOutline,
-  'video-outline': mdiVideoOutline,
+  logout: mdiLogout,
+  github: mdiGithub,
+  menu: mdiMenu,
+  minus: mdiMinus,
+  plus: mdiPlus,
+  refresh: mdiRefresh,
+  send: mdiSend,
+  twitter: mdiTwitter,
+  undo: mdiUndo,
+  'account-multiple-outline': mdiAccountMultiple,
+  'alert-circle': mdiAlertCircle,
   'alert-circle-outline': mdiAlertCircleOutline,
   'alert-outline': mdiAlertOutline,
-  'broadcast-off': mdiBroadcastOff,
-  'content-copy': mdiContentCopy,
-  'image-filter-center-focus': mdiImageFilterCenterFocus,
   'arrow-expand-all': mdiArrowExpandAll,
-  'chevron-down': mdiChevronDown,
-  'dots-horizontal': mdiDotsHorizontal,
-  'arrow-up': mdiArrowUp,
-  'open-in-new': mdiOpenInNew,
-  'help-circle-outline': mdiHelpCircleOutline,
-  'camera-flip-outline': mdiCameraFlipOutline,
-  'filter-outline': mdiFilterOutline,
   'arrow-top-right-bottom-left': mdiArrowTopRightBottomLeft,
-  'information-outline': mdiInformationOutline,
-  'pause-circle-outline': mdiPauseCircleOutline,
-  'play-circle-outline': mdiPlayCircleOutline,
+  'arrow-up': mdiArrowUp,
+  'broadcast-off': mdiBroadcastOff,
+  'camera-flip-outline': mdiCameraFlipOutline,
+  'camera-outline': mdiCameraOutline,
+  'check-circle': mdiCheckCircle,
+  'chevron-down': mdiChevronDown,
+  'content-copy': mdiContentCopy,
   'content-save-outline': mdiContentSaveOutline,
+  'credit-card-outline': mdiCreditCardOutline,
+  'dots-horizontal': mdiDotsHorizontal,
+  'file-download-outline': mdiFileDownloadOutline,
+  'filter-outline': mdiFilterOutline,
+  'help-circle-outline': mdiHelpCircleOutline,
+  'image-filter-center-focus': mdiImageFilterCenterFocus,
+  'information-outline': mdiInformationOutline,
+  'open-in-new': mdiOpenInNew,
+  'pause-circle-outline': mdiPauseCircleOutline,
   'pencil-outline': mdiPencilOutline,
+  'play-circle-outline': mdiPlayCircleOutline,
   'stop-circle-outline': mdiStopCircleOutline,
   'trash-can-outline': mdiTrashCanOutline,
-  'file-download-outline': mdiFileDownloadOutline,
-  'check-circle': mdiCheckCircle,
-  'alert-circle': mdiAlertCircle,
-  'credit-card-outline': mdiCreditCardOutline,
-  'account-multiple-outline': mdiAccountMultiple,
+  'video-outline': mdiVideoOutline,
 };
 
 addStyles();
 </script>
 
-<svg
-  class={cx(`w-4 h-4`, sizes[size])}
-  viewBox="0 0 24 24"
-  aria-labelledby={paths[name]}
-  role="img"
->
-  <title id={paths[name]}>${paths[name]?.replace('-', ' ')} icon</title>
+<svg class={sizes[size]} viewBox="0 0 24 24" aria-labelledby="name" role="img">
+  <title id={name}>{`${name} icon`}</title>
   <path d={paths[name]} />
 </svg>
