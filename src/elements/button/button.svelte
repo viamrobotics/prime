@@ -23,7 +23,6 @@ export let variant: Variants = 'primary';
 export let label = '';
 export let title = '';
 export let icon = '';
-export let size = 'base';
 export let tooltip = '';
 
 // https://github.com/sveltejs/svelte/issues/7596
@@ -49,6 +48,7 @@ const handleParentClick = (event: PointerEvent) => {
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <svelte:element
   this={tooltip ? 'v-tooltip' : 'span'}
   text={tooltip}
@@ -83,7 +83,17 @@ const handleParentClick = (event: PointerEvent) => {
     on:click={handleClick}
   >
     {#if icon}
-      <i aria-hidden="true" class="icon-{icon} text-{size}" />
+      <v-icon
+        name={icon}
+        class={cx('whitespace-nowrap', {
+          'fill-white':
+            variant === 'inverse-primary' ||
+            variant === 'danger' ||
+            variant === 'success',
+          'fill-danger-dark': variant === 'outline-danger',
+          'fill-disabled-dark': isDisabled,
+        })}
+      />
     {/if}
 
     {#if variant !== 'icon'}

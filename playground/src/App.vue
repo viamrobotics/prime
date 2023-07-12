@@ -117,7 +117,7 @@ const inputToFocus = $ref<HTMLElement>();
       </button>
 
       <section :key="i" v-for="i in [0, 1, 2, 3, 4, 5]">
-        <v-icon name="trash" />
+        <v-icon name="trash-can-outline" />
       </section>
     </div>
 

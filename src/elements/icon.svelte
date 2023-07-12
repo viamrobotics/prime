@@ -51,7 +51,7 @@ import {
   mdiAccountMultiple,
 } from '@mdi/js';
 
-import { addStyles } from '../lib/index';
+import cx from 'classnames';
 
 export let name = '';
 const sizes: Record<Size, string> = {
@@ -116,18 +116,19 @@ const paths: Record<string, string> = {
 };
 
 const hasNameProperty = Object.hasOwn(paths, name);
-
-addStyles();
 </script>
 
 <svg
-  class="{sizes[size]} {hasNameProperty ? 'block' : 'hidden'}"
+  class={cx(sizes[size], {
+    'inline-block': hasNameProperty,
+    hidden: !hasNameProperty,
+  })}
   viewBox="0 0 24 24"
   aria-labelledby="name"
   role="img"
 >
-{#if sizes[size]}
-<title id={name}>{`${name} icon`}</title>
-<path d={paths[name]} />
-{/if}
+  {#if sizes[size]}
+    <title id={name}>{`${name} icon`}</title>
+    <path d={paths[name]} />
+  {/if}
 </svg>

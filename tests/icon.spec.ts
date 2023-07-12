@@ -13,7 +13,9 @@ test('Renders an icon if name attribute is specified as a valid v-icon', async (
 test('Does not render an icon if name attribute is specified as an invalid v-icon', async ({
   page,
 }) => {
-  await expect(page.getByTestId('icon-default-invalid').locator('svg')).toBeHidden();
+  await expect(
+    page.getByTestId('icon-default-invalid').locator('svg')
+  ).toBeHidden();
 });
 
 test('Renders and icon as extra small if size attribute is specified as xs', async ({

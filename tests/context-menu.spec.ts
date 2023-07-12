@@ -18,7 +18,9 @@ test('Renders labels, dividers, and icons', async ({ page }) => {
     contextMenu.getByRole('menuitem', { name: 'label 3' }).locator('i')
   ).toBeVisible();
   await expect(
-    contextMenu.locator('i.icon-trash:left-of(:text("label 3"))').first()
+    contextMenu
+      .locator('svg.trash-can-outline:left-of(:text("label 3"))')
+      .first()
   ).toBeVisible();
 });
 
