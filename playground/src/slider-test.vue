@@ -7,6 +7,7 @@
   <main>
     <v-slider
       data-testid="slider-min-max"
+      range="range"
       min="-50"
       max="50"
       start="-20"

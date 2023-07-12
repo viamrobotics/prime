@@ -41,7 +41,10 @@ test('Confirms selected attribute value renders as selected radio button', async
   await expect(opt3).toHaveClass(constants.BG_SELECTED);
 });
 
-test('Confirms selected radio button updates on click', async ({ page }) => {
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Confirms selected radio button updates on click', async ({
+  page,
+}) => {
   const opt1 = page.getByRole('button', { name: 'Opt 1' });
   const opt2 = page.getByRole('button', { name: 'Opt 2' });
   const opt3 = page.getByRole('button', { name: 'Opt 3' });

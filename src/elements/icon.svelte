@@ -1,4 +1,4 @@
-<svelte:options immutable tag="v-icon" />
+<svelte:options immutable />
 
 <script lang="ts">
 type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';

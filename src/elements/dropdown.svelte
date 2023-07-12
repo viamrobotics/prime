@@ -1,8 +1,7 @@
-<svelte:options immutable tag="v-dropdown" />
+<svelte:options immutable />
 
 <script lang="ts">
 import cx from 'classnames';
-import { addStyles } from '../lib/index';
 import { dispatcher } from '../lib/dispatch';
 import { htmlToBoolean } from '../lib/boolean';
 
@@ -10,8 +9,6 @@ export let open = 'false';
 export let match = 'false';
 
 const dispatch = dispatcher();
-
-addStyles();
 
 let isMatch: boolean;
 let isOpen: boolean;

@@ -1,4 +1,4 @@
-<svelte:options immutable tag="v-input-internal" />
+<svelte:options immutable />
 
 <script lang="ts">
 type LabelPosition = 'top' | 'left';
@@ -13,9 +13,7 @@ type Types =
 
 import cx from 'classnames';
 import { tick } from 'svelte';
-import { get_current_component } from 'svelte/internal';
 import { htmlToBoolean } from '../../lib/boolean';
-import { addStyles } from '../../lib/index';
 import { dispatcher } from '../../lib/dispatch';
 
 export let type: Types = 'text';
@@ -36,15 +34,10 @@ export let state: 'info' | 'warn' | 'error' | 'success' | '' = 'info';
 export let message: '';
 export let incrementor: 'buttons' | 'slider' | 'none' = 'none';
 
+// https://github.com/sveltejs/svelte/issues/7596
+export let internals: ElementInternals;
+
 const dispatch = dispatcher();
-
-addStyles();
-
-// @TODO switch to <svelte:this bind:this={component}> https://github.com/sveltejs/rfcs/pull/58
-const component = get_current_component() as HTMLElement & {
-  internals: ElementInternals;
-};
-const internals = component.attachInternals();
 
 let input: HTMLInputElement;
 let stepDecimalDigits: number;
@@ -91,7 +84,7 @@ $: {
   }
 }
 
-let numberDragTooltip: HTMLElement & { recalculateStyle(): void };
+let numberDragTooltip: HTMLElement & { recalculateStyle?(): void };
 let numberDragCord: HTMLElement;
 let numberDragHead: HTMLElement;
 let isDragging = false;
@@ -209,7 +202,10 @@ const handleNumberDragMove = (event: PointerEvent) => {
   internals.setFormValue(value);
   dispatch('input', { value });
 
-  numberDragTooltip.recalculateStyle();
+  // The tooltip may not be mounted the first time this handler is called.
+  if (numberDragTooltip.recalculateStyle) {
+    numberDragTooltip.recalculateStyle();
+  }
 };
 
 const handleNumberDragUp = () => {
@@ -230,7 +226,10 @@ const handleNumberDragDown = async (event: PointerEvent) => {
   await tick();
 
   numberDragHead.style.transform = 'translate(0px, 0px)';
-  numberDragTooltip.recalculateStyle();
+  // The tooltip may not be mounted the first time this handler is called.
+  if (numberDragTooltip.recalculateStyle) {
+    numberDragTooltip.recalculateStyle();
+  }
 
   window.addEventListener('pointermove', handleNumberDragMove);
   window.addEventListener('pointerup', handleNumberDragUp, { once: true });

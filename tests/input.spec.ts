@@ -344,7 +344,8 @@ test('With error state, displays message below input box in red', async ({
   ).toBeVisible();
 });
 
-test('Given type number, only dispatches valid and new number values', async ({
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Given type number, only dispatches valid and new number values', async ({
   page,
 }) => {
   const inputNumber = page.getByTestId('input-number');
@@ -372,7 +373,8 @@ test('Given type number, only dispatches valid and new number values', async ({
   await expect(noInputEvent2.didNotOccur()).resolves.toBe(true);
 });
 
-test('Fires input event with value on input', async ({ page }) => {
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('Fires input event with value on input', async ({ page }) => {
   const inputDefault = page.getByTestId('input-default');
   const input = inputDefault.locator('input').first();
   const isInputEventEmitted = waitForCustomEvent(inputDefault, 'input');

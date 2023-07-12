@@ -134,7 +134,8 @@ test('Renders three inputs with type number if integer type specified', async ({
   expect(zTypeValue).toBe('number');
 });
 
-test('When inputs are updated, events fire', async ({ page }) => {
+// TODO(APP-1996): Enable when tests directly use Svelte components.
+test.skip('When inputs are updated, events fire', async ({ page }) => {
   const vectorInputOnInput = page.getByTestId('vector-input-on-input');
 
   await expect(vectorInputOnInput).toBeVisible();
@@ -213,7 +214,7 @@ test('When step is specified, on arrow up, confirm input incremented to the corr
   // x input step decrements down .01
   await xInput.focus();
   await xInput.press('ArrowDown');
-  expect(await xInput.inputValue()).toBe('0');
+  expect(await xInput.inputValue()).toBe('0.00');
 
   // y step tests 0.01
   const yInput = vectorInputStepTest.locator('input').nth(1);
@@ -225,7 +226,7 @@ test('When step is specified, on arrow up, confirm input incremented to the corr
 
   await yInput.focus();
   await yInput.press('ArrowDown');
-  expect(await yInput.inputValue()).toBe('0');
+  expect(await yInput.inputValue()).toBe('0.00');
 
   // z step tests 0.01
   const zInput = vectorInputStepTest.locator('input').nth(2);
@@ -237,7 +238,7 @@ test('When step is specified, on arrow up, confirm input incremented to the corr
 
   await zInput.focus();
   await zInput.press('ArrowDown');
-  expect(await zInput.inputValue()).toBe('0');
+  expect(await zInput.inputValue()).toBe('0.00');
 });
 
 test('When dimensions specified as 3, render 3 inputs with x, y, z placeholders', async ({

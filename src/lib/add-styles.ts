@@ -1,4 +1,3 @@
-import { get_current_component } from 'svelte/internal';
 import css from '../../prime.css?inline';
 
 let sheet: CSSStyleSheet & { replaceSync(x: string): void };
@@ -13,9 +12,7 @@ try {
   fallback = true;
 }
 
-export const addStyles = () => {
-  const element = get_current_component() as HTMLElement;
-
+export const addStyles = (element: HTMLElement) => {
   if (fallback) {
     const style = document.createElement('style');
     style.innerHTML = css;

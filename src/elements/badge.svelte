@@ -1,15 +1,12 @@
-<svelte:options immutable tag="v-badge" />
+<svelte:options immutable />
 
 <script lang="ts">
 type Variants = 'green' | 'orange' | 'red' | 'gray' | 'blue';
 
 import cx from 'classnames';
-import { addStyles } from '../lib/index';
 
 export let label = '';
 export let variant: Variants = 'gray';
-
-addStyles();
 </script>
 
 <small
