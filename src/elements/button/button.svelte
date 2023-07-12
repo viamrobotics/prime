@@ -85,7 +85,7 @@ const handleParentClick = (event: PointerEvent) => {
     {#if icon}
       <v-icon
         name={icon}
-        class={cx('whitespace-nowrap', {
+        class={cx({
           'fill-white':
             variant === 'inverse-primary' ||
             variant === 'danger' ||
