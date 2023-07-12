@@ -54,6 +54,14 @@ import {
 import cx from 'classnames';
 
 export let name = '';
+
+export let fill = '';
+const fillColor: Record<string, string> = {
+  reversed: '#FFF',
+  'outline-danger': '#be3536',
+  disabled: '#9c9ca4',
+};
+
 const sizes: Record<Size, string> = {
   xs: 'w-3 h-3',
   sm: 'w-3.5 h-3.5',
@@ -129,6 +137,6 @@ const hasNameProperty = Object.hasOwn(paths, name);
 >
   {#if sizes[size]}
     <title id={name}>{`${name} icon`}</title>
-    <path d={paths[name]} />
+    <path d={paths[name]} fill={fillColor[fill]} />
   {/if}
 </svg>

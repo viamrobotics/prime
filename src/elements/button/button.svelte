@@ -45,6 +45,25 @@ const handleClick = () => {
 const handleParentClick = (event: PointerEvent) => {
   event.stopImmediatePropagation();
 };
+
+let fill = '';
+
+switch (variant) {
+  case 'inverse-primary':
+  case 'danger':
+  case 'success': {
+    fill = 'reversed';
+    break;
+  }
+  case 'outline-danger': {
+    fill = 'outline-danger';
+    break;
+  }
+}
+
+if (isDisabled) {
+  fill = 'disabled';
+}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -83,17 +102,7 @@ const handleParentClick = (event: PointerEvent) => {
     on:click={handleClick}
   >
     {#if icon}
-      <v-icon
-        name={icon}
-        class={cx({
-          'fill-white':
-            variant === 'inverse-primary' ||
-            variant === 'danger' ||
-            variant === 'success',
-          'fill-danger-dark': variant === 'outline-danger',
-          'fill-disabled-dark': isDisabled,
-        })}
-      />
+      <v-icon name={icon} {fill} />
     {/if}
 
     {#if variant !== 'icon'}
