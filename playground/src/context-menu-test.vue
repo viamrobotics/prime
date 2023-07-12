@@ -35,7 +35,7 @@ const handleSelect = (event: any) => {
         label="label 3"
       />
       <v-context-menu-item
-        icon="x"
+        icon="close"
         label="danger"
         variant="danger"
       />
@@ -66,7 +66,7 @@ const handleSelect = (event: any) => {
         @select="handleSelect"
       />
       <v-context-menu-item 
-        icon="x"
+        icon="close"
         label="label"
         variant="danger"
         @select="handleSelect"

@@ -129,7 +129,7 @@ const inputToFocus = $ref<HTMLElement>();
       sortoption="reduce"
       withbutton="true"
       buttontext="hello"
-      buttonicon="x"
+      buttonicon="close"
       heading="heading title"
     />
     <section class="flex items-end gap-2 my-6">

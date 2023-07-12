@@ -96,7 +96,7 @@ const dispatch = dispatcher();
       {#if isExitable}
         <v-button
           variant="icon"
-          icon="x"
+          icon="close"
           class="absolute right-1 top-1 text-gray-7"
           on:click={() => dispatch('close')}
         />
