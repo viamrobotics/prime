@@ -65,7 +65,7 @@ const sizes: Record<Size, string> = {
   '4xl': 'w-8 h-8',
 };
 
-export let size = 'base';
+export let size: Size = 'base';
 
 const paths: Record<string, string> = {
   broadcast: mdiBroadcast,
@@ -115,10 +115,19 @@ const paths: Record<string, string> = {
   'video-outline': mdiVideoOutline,
 };
 
+const hasNameProperty = Object.hasOwn(paths, name);
+
 addStyles();
 </script>
 
-<svg class={sizes[size]} viewBox="0 0 24 24" aria-labelledby="name" role="img">
-  <title id={name}>{`${name} icon`}</title>
-  <path d={paths[name]} />
+<svg
+  class="{sizes[size]} {hasNameProperty ? 'block' : 'hidden'}"
+  viewBox="0 0 24 24"
+  aria-labelledby="name"
+  role="img"
+>
+{#if sizes[size]}
+<title id={name}>{`${name} icon`}</title>
+<path d={paths[name]} />
+{/if}
 </svg>
