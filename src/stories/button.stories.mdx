@@ -139,6 +139,26 @@ For user triggered actions
 
 <Canvas>
   <Story
+    name='Danger (outline with icon)'
+    args={{
+      icon: 'trash-can-outline',
+      variant: 'outline-danger',
+      label: 'Delete component',
+    }}
+  >
+    {({ icon, variant, label }) => `
+<v-button
+  class='text-danger-dark'
+  icon='${icon}'
+  label='${label}'
+  variant='${variant}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
     name='Disabled'
     args={{
       disabled: 'true',
@@ -230,18 +250,15 @@ For user triggered actions
 
 <Canvas>
   <Story
-    name='Color icon variant'
+    name='Icon danger variant'
     args={{
       icon: 'trash-can-outline',
-      variant: 'outline-danger',
-      label: 'Delete component',
+      variant: 'icon-danger',
     }}
   >
     {({ icon, variant, label }) => `
 <v-button
-  class='text-danger-dark'
   icon='${icon}'
-  label='${label}'
   variant='${variant}'
 />
     `}
