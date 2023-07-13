@@ -21,14 +21,12 @@ const handleSelect = () => {
   class="flex flex-row px-2 py-1.5 hover:bg-light w-full text-left"
   on:click={handleSelect}
 >
-  {#if icon}
-    <v-icon
-      name={icon}
-      class={cx('p-1', {
-        'text-gray-6': variant === 'primary',
-        'text-danger-dark': variant === 'danger',
-      })}
-    />
+  {#if icon && variant === 'primary'}
+    <v-icon name={icon} />
+  {/if}
+
+  {#if icon && variant === 'danger'}
+    <v-icon name={icon} fill="danger" />
   {/if}
 
   <p

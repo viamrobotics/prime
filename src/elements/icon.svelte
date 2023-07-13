@@ -58,8 +58,9 @@ export let name = '';
 export let fill = '';
 const fillColor: Record<string, string> = {
   reversed: '#FFF',
-  'outline-danger': '#be3536',
-  disabled: '#9c9ca4',
+  warn: '#ddab3f',
+  danger: '#be3536',
+  disabled: '#d7d7d9',
 };
 
 const sizes: Record<Size, string> = {
