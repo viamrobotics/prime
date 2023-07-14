@@ -4,14 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  '@mdi/js':
-    specifier: ^7.2.96
-    version: 7.2.96
-  mdi-svelte-ts:
-    specifier: ^1.0.0
-    version: 1.0.0
-
 devDependencies:
   '@floating-ui/dom':
     specifier: ^1.2.6
@@ -19,6 +11,9 @@ devDependencies:
   '@floating-ui/vue':
     specifier: ^1.0.0
     version: 1.0.0(vue@3.2.47)
+  '@mdi/js':
+    specifier: ^7.2.96
+    version: 7.2.96
   '@playwright/test':
     specifier: ^1.32.3
     version: 1.32.3
@@ -124,6 +119,9 @@ devDependencies:
   eslint-plugin-unicorn:
     specifier: ^46.0.0
     version: 46.0.0(eslint@8.39.0)
+  mdi-svelte-ts:
+    specifier: ^1.0.0
+    version: 1.0.0
   monaco-editor:
     specifier: ^0.37.1
     version: 0.37.1
@@ -1883,7 +1881,7 @@ packages:
 
   /@mdi/js@7.2.96:
     resolution: {integrity: sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==}
-    dev: false
+    dev: true
 
   /@mdx-js/react@2.2.1(react@18.2.0):
     resolution: {integrity: sha512-YdXcMcEnqZhzql98RNrqYo9cEhTTesBiCclEtoiQUbJwx87q9453GTapYU6kJ8ZZ2ek1Vp25SiAXEFy5O/eAPw==}
@@ -5440,7 +5438,7 @@ packages:
   /fuse.js@6.6.2:
     resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
     engines: {node: '>=10'}
-    dev: false
+    dev: true
 
   /gauge@3.0.2:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
@@ -6615,7 +6613,7 @@ packages:
     resolution: {integrity: sha512-3t7bgdSmwtmGiWHLQb7CZWo+pHikvHeZJ7JHsAE3Oh/E34AwIndrEWVxIAIdOSYCykg12HWU+aLRdvPyzLOSYQ==}
     dependencies:
       fuse.js: 6.6.2
-    dev: false
+    dev: true
 
   /mdn-data@2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}

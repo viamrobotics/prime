@@ -44,6 +44,8 @@
   "devDependencies": {
     "@floating-ui/dom": "^1.2.6",
     "@floating-ui/vue": "^1.0.0",
+    "@mdi/js": "^7.2.96",
+    "mdi-svelte-ts": "^1.0.0",
     "@playwright/test": "^1.32.3",
     "@storybook/addon-a11y": "^7.0.7",
     "@storybook/addon-actions": "^7.0.7",
@@ -95,9 +97,5 @@
     "vite": "4.3.1",
     "vue": "^3.2.45",
     "vue-tsc": "^1.2.0"
-  },
-  "dependencies": {
-    "@mdi/js": "^7.2.96",
-    "mdi-svelte-ts": "^1.0.0"
   }
 }
