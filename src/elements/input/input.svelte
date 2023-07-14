@@ -260,11 +260,18 @@ const handleNumberDragDown = async (event: PointerEvent) => {
       <v-tooltip text={tooltip}>
         <div
           class={cx({
-            'icon-info-outline text-gray-6': state === 'info',
-            'icon-error-outline text-warning-bright': state === 'warn',
-            'icon-error-outline text-danger-dark': state === 'error',
+            'text-gray-6': state === 'info',
+            'text-warning-bright': state === 'warn',
+            'text-danger-dark': state === 'error',
           })}
-        />
+        >
+          <v-icon
+            name={cx({
+              'information-outline': state === 'info',
+              'alert-circle-outline': state === 'warn' || state === 'error',
+            })}
+          />
+        </div>
       </v-tooltip>
     {/if}
   </div>

@@ -8,10 +8,16 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
       table: { defaultValue: { summary: '' } },
     },
     size: {
-      description: 'The badge status',
+      description: 'The icon status',
       control: { type: 'select' },
       options: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'],
       table: { defaultValue: { summary: 'base' } },
+    },
+    fill: {
+      description: 'The icon color',
+      control: { type: 'select' },
+      options: ['danger-dark', 'danger-light'],
+      table: { defaultValue: { summary: 'danger-dark' } },
     },
   }}
 />
@@ -22,14 +28,16 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
   <Story
     name='Icon'
     args={{
-      name: 'camera-outline',
+      name: 'alert-circle',
       size: '4xl',
+      fill: 'danger-dark',
     }}
   >
-    {({ name, size }) => `
+    {({ name, size, fill }) => `
       <v-icon
         name='${name}'
         size='${size}'
+        fill='${fill}'
       />
     `}
   </Story>

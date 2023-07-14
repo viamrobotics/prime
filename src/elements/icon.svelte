@@ -52,16 +52,12 @@ import {
 } from '@mdi/js';
 
 import cx from 'classnames';
+import { theme } from '../../prime/theme';
 
 export let name = '';
 
 export let fill = '';
-const fillColor: Record<string, string> = {
-  reversed: '#FFF',
-  warn: '#ddab3f',
-  danger: '#be3536',
-  disabled: '#d7d7d9',
-};
+const fillColor: Record<string, string> = theme.extend.colors;
 
 const sizes: Record<Size, string> = {
   xs: 'w-3 h-3',
