@@ -32,8 +32,10 @@ const handleRemove = () => {
 
 <div
   class={cx(
-    'whitespace-nowrap flex items-center max-w-fit gap-1 rounded-xl bg-medium py-0.5 px-2 text-[10px] hover:bg-gray-3',
+    'whitespace-nowrap flex items-center max-w-fit text-xs gap-0.5 rounded bg-gray-3 py-0.5',
     {
+      'pl-2 pr-1.5': isRemovable,
+      'px-2': !isRemovable,
       'bg-disabled-light text-disabled-dark cursor-not-allowed':
         isDisabled || isReadonly,
     }
@@ -45,8 +47,8 @@ const handleRemove = () => {
     {value}
   </span>
   {#if isRemovable}
-    <button on:click={handleRemove}>
-      <v-icon name="x" />
+    <button class='-m-0.5 p-1 group' on:click={handleRemove}>
+      <v-icon size='text-xs' name="x" class='text-gray-6 group-hover:text-gray-9' />
     </button>
   {/if}
 </div>
