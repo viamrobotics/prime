@@ -25,7 +25,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Build 🏗️
-        run: pnpm run build
+        run: pnpm -C packages/legacy build
       - name: Upload npm artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -34,7 +34,7 @@ jobs:
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
-          path: prime
+          path: packages/legacy/prime
 
   test:
     timeout-minutes: 20
@@ -53,7 +53,7 @@ jobs:
         if: ${{ always() }}
         with:
           name: playwright-report
-          path: playwright-report/
+          path: packages/legacy/playwright-report/
           retention-days: 30
 
   deploy-npm:
@@ -70,7 +70,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: npm-dist
-          path: dist
+          path: packages/legacy/dist
       - name: Publish 🚀
         uses: JS-DevTools/npm-publish@541aa6b21b4a1e9990c95a92c21adc16b35e9551
         with:

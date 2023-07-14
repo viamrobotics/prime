@@ -1,4 +1,4 @@
-# Contributing to P.R.I.M.E
+# Contributing to `@viamrobotics/prime`
 
 Please follow these instructions for contributing to `PRIME`.
 
@@ -8,7 +8,7 @@ To run the `Storybook` page locally, pull down the project and run:
 
 ```bash
 pnpm install
-pnpm run storybook
+pnpm -C packages/legacy storybook
 ```
 
 More detailed docs exist on [the storybook](https://prime.viam.com).
@@ -18,7 +18,7 @@ More detailed docs exist on [the storybook](https://prime.viam.com).
 To use the component playground, run:
 
 ```bash
-pnpm start
+pnpm -C packages/legacy start
 ```
 
 The playground will open in your browser automatically. End-to-end tests run against the playground.
@@ -41,17 +41,17 @@ Linked below are some articles that provide knowledge for how to best build reus
 To verify that static assets build correctly:
 
 ```shell
-pnpm run build
+pnpm -C packages/legacy build
 ```
 
 You can typecheck and lint using:
 
 ```shell
 # check linting, types, a11y, and other component quality
-pnpm run check
+pnpm -C packages/legacy check
 
 # autoformat code and other files
-pnpm run format
+pnpm -C packages/legacy format
 ```
 
 ### Tests
@@ -63,8 +63,8 @@ To run tests locally:
 npx playwright install --with-deps
 
 # run tests, with optional debugging
-pnpm run test
-pnpm run test-dev
+pnpm -C packages/legacy test
+pnpm -C packages/legacy test-dev
 ```
 
 When adding a test, look for the following files:

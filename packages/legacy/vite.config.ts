@@ -54,4 +54,5 @@ export default defineConfig({
     port: 5174,
     host: true,
   },
+  publicDir: path.resolve(__dirname, '../../public'),
 });

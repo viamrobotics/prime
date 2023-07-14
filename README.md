@@ -1,89 +1,38 @@
 # P.R.I.M.E.
 
-Pretty Rad Interactive Modular Elements.
+Pretty Rad Interactive Modular Elements
 
-Made with ❤️ at Viam.
+Made with ❤️ at Viam
 
-## Getting started
+A collection of UI elements.
 
-PRIME is a collection of atomic UI elements, designed to "just work" in any HTML-based environment, regardless of framework or lack thereof. It is a web component library.
+## Packages
 
-## Installation
+[`@viamrobotics/prime`][legacy] - Legacy web components
 
-The PRIME NPM package contains the following necessary exports for usage:
+[`@viamrobotics/prime-primitives`][primitives] - Simple components; styled HTML replacements. Exported as Svelte components and web components for use without a framework.
 
-- `prime.es.js` or `prime.umd.js` - JS that defines custom elements. ES modules are recommended over UMD.
-- `prime.css` - stylesheet shared by all elements.
+[`@viamrobotics/prime-core`][core] - More complex components without dependencies. Exported as Svelte components.
 
-If using ES modules, import Prime's JS file into your code:
+[`@viamrobotics/prime-blocks`][blocks] - Large blocks of UI that often have dependencies like [Threlte][]. Exported as Svelte components.
 
-```ts
-import '@viamrobotics/prime';
-```
+[legacy]: https://github.com/viamrobotics/prime/tree/main/packages/legacy
+[primitives]: https://github.com/viamrobotics/prime/tree/main/packages/primitives
+[core]: https://github.com/viamrobotics/prime/tree/main/packages/core
+[blocks]: https://github.com/viamrobotics/prime/tree/main/packages/blocks
+[threlte]: https://threlte.xyz
 
-You must host `prime.css` in a static file server. This is every prime element loads it as a shared stylesheet.
+## Contributing
 
-If you are not hosting `prime.css` at the root directory of your domain, you will need to add a PRIME_CONFIG global variable before loading the JS file:
+Please see the [contribution guide][].
 
-```html
-<script type="module">
-  window.PRIME_CONFIG = {
-    base: '/path/to/static/folder',
-    query: '?v=someCacheBustingHashIfNeeded',
-  };
-</script>
-```
-
-If the necessary `.css` and `.js` files have been added, then no additional imports are needed!
-You can immediately start adding PRIME elements to your app, since prime elements are simply custom HTML elements:
-
-```html
-<v-button label="Hello world!" />
-```
-
-All elements are prefixed with `v-`. This stands for Viam, the cool company where these elements are made.
-
-## Playground
-
-To use the playground, run the following from the main directory:
-
-```bash
-pnpm install
-pnpm start
-```
-
-Or to run in production mode:
-
-```bash
-pnpm run build
-pnpm run serve
-```
-
-## Linting / Testing
-
-To lint and typecheck:
-
-```bash
-pnpm run lint
-pnpm run check
-```
-
-To test:
-
-```bash
-pnpm run test-dev # to test with the playwright debug UI
-# or
-pnpm run test # to test in headless mode
-
-# to run specific tests
-pnpm run test <test-name> # for <test-name>.spec.ts
-```
+[contribution guide]: ./CONTRIBUTING.md
 
 ### Browser Compatibility
 
 `PRIME` supports the following browsers:
 
-| ![Chrome][chrome] | ![Firefox][firefox] | ![Edge][edge] | ![Safari][safari] |
+| ![Chrome][] | ![Firefox][] | ![Edge][] | ![Safari][] |
 | ----------------- | ------------------- | ------------- | ----------------- |
 | Latest ✔          | Latest ✔            | Latest ✔      | Latest ✔          |
 
