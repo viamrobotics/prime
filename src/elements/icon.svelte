@@ -136,8 +136,6 @@ const hasNameProperty = Object.hasOwn(paths, name);
   aria-labelledby="name"
   role="img"
 >
-  {#if sizes[size]}
-    <title id={name}>{`${name} icon`}</title>
-    <path d={paths[name]} fill={fillColor[fill]} />
-  {/if}
+  <title id={name}>{`${name} icon`}</title>
+  <path d={paths[name]} fill={fillColor[fill]} />
 </svg>

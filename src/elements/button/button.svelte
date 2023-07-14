@@ -49,22 +49,24 @@ const handleParentClick = (event: PointerEvent) => {
 
 let fill = '';
 
-switch (variant) {
-  case 'inverse-primary':
-  case 'danger':
-  case 'success': {
-    fill = 'reversed';
-    break;
+$: {
+  switch (variant) {
+    case 'inverse-primary':
+    case 'danger':
+    case 'success': {
+      fill = 'reversed';
+      break;
+    }
+    case 'outline-danger':
+    case 'icon-danger': {
+      fill = 'danger';
+      break;
+    }
   }
-  case 'outline-danger':
-  case 'icon-danger': {
-    fill = 'outline-danger';
-    break;
-  }
-}
 
-if (isDisabled) {
-  fill = 'disabled';
+  if (isDisabled) {
+    fill = 'disabled';
+  }
 }
 </script>
 
