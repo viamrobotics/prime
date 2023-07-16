@@ -22,11 +22,11 @@ const handleSelect = () => {
   on:click={handleSelect}
 >
   {#if icon && variant === 'primary'}
-    <v-icon name={icon} />
+    <v-icon name={icon} fill="gray-6" />
   {/if}
 
   {#if icon && variant === 'danger'}
-    <v-icon name={icon} fill="danger" />
+    <v-icon name={icon} fill="danger-dark" />
   {/if}
 
   <p

@@ -26,6 +26,8 @@ export let label: string;
 export let value = '';
 export let step = '1';
 export let name: string;
+export let fill: string;
+export let icon: string;
 export let min = '-Infinity';
 export let max = '+Infinity';
 export let labelposition: LabelPosition = 'top';
@@ -234,6 +236,25 @@ const handleNumberDragDown = async (event: PointerEvent) => {
   window.addEventListener('pointermove', handleNumberDragMove);
   window.addEventListener('pointerup', handleNumberDragUp, { once: true });
 };
+
+$: {
+  switch (state) {
+    case 'info':
+      fill = 'gray-6';
+      icon = 'information-outline';
+      break;
+    case 'warn':
+      fill = 'warning-bright';
+      icon = 'alert-outline';
+      break;
+    case 'error':
+      fill = 'danger-dark';
+      icon = 'alert-circle-outline';
+      break;
+    default:
+      fill = '';
+  }
+}
 </script>
 
 <label
@@ -265,12 +286,7 @@ const handleNumberDragDown = async (event: PointerEvent) => {
             'text-danger-dark': state === 'error',
           })}
         >
-          <v-icon
-            name={cx({
-              'information-outline': state === 'info',
-              'alert-circle-outline': state === 'warn' || state === 'error',
-            })}
-          />
+          <v-icon {fill} name={icon} />
         </div>
       </v-tooltip>
     {/if}
