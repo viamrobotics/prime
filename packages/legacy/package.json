@@ -37,6 +37,7 @@
     "_prettier": "prettier \"./**/*.@(js|cjs|ts|svelte|md|mdx|yml|json)\"",
     "test": "playwright test",
     "test-dev": "playwright test --debug",
+    "playwright-install": "playwright install",
     "storybook": "storybook dev -p 6006",
     "storybook-docs": "storybook dev --docs --no-manager-cache",
     "build-storybook": "storybook build --docs -o prime"

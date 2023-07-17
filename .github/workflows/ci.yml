@@ -46,7 +46,7 @@ jobs:
         with:
           node-version: 16
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: pnpm -C packages/legacy playwright-install --with-deps
       - name: Run Playwright tests
         run: pnpm -C packages/legacy test
       - uses: actions/upload-artifact@v3
