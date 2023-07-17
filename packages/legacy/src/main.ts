@@ -1,4 +1,4 @@
-import '../../../public/prime.css';
+import '../public/prime.css';
 /**
  * @TODO remove once safari support is widespread enough (~90-95% total support)
  * See: https://caniuse.com/mdn-api_elementinternals
