@@ -16,7 +16,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Run lints and checks
-        run: pnpm run check
+        run: pnpm -C packages/legacy check
 
   build:
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: pnpm -C packages/legacy playwright test
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
