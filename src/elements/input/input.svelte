@@ -245,14 +245,12 @@ $: {
       break;
     case 'warn':
       fill = 'warning-bright';
-      icon = 'alert-outline';
+      icon = 'alert-circle-outline';
       break;
     case 'error':
       fill = 'danger-dark';
       icon = 'alert-circle-outline';
       break;
-    default:
-      fill = '';
   }
 }
 </script>

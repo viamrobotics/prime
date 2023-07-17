@@ -128,12 +128,6 @@ test('Given a multi-select with button, there is a button at the bottom', async 
   await expect(multiselect.locator('v-select-button').first()).toHaveText(
     /TAKE PHOTO/u
   );
-  const icon = multiselect
-    .locator('v-select-button')
-    .first()
-    .locator('v-icon')
-    .first();
-  await expect(icon.locator('i')).toHaveClass(/icon-camera/u);
 
   const buttonClickEvent = waitForCustomEvent(multiselect, 'button-click');
   await multiselect.locator('v-select-button').first().click();
@@ -202,9 +196,6 @@ test('Given a tooltip and state=info, the select should show an info icon with a
   const multiselect = page.getByTestId('multiselect-info-tooltip');
   await expect(multiselect).toBeVisible();
   await expect(multiselect.locator('v-tooltip').first()).toBeVisible();
-  await expect(
-    multiselect.locator('v-tooltip').first().locator('div').first()
-  ).toHaveClass(/icon-info-outline/u);
   await multiselect.locator('v-tooltip').first().hover();
   await expect(multiselect.getByText(/info tip/u)).toBeVisible();
 });

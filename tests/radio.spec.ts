@@ -133,9 +133,9 @@ test('Default behavior for radio tooltips renders them as info icons', async ({
   // Tooltip Default
   const tooltipDef = page
     .getByTestId('radio-tooltip-def-test')
-    .locator('v-tooltip div')
+    .locator('v-icon title')
     .first();
-  await expect(tooltipDef).toHaveClass(/icon-info-outline/u);
+  await expect(tooltipDef).toHaveId(/information-outline/u);
 });
 
 test('Radio tooltips are rendered as warn icon when state attribute is set to warn', async ({
@@ -146,9 +146,7 @@ test('Radio tooltips are rendered as warn icon when state attribute is set to wa
     .getByTestId('radio-tooltip-warn-test')
     .locator('v-tooltip div')
     .first();
-  await expect(tooltipWarn).toHaveClass(
-    /icon-error-outline text-warning-bright/u
-  );
+  await expect(tooltipWarn).toHaveClass(/text-warning-bright/u);
 });
 
 test('Radio tooltips are rendered as warn icon when state attribute is set to error', async ({
@@ -159,9 +157,7 @@ test('Radio tooltips are rendered as warn icon when state attribute is set to er
     .getByTestId('radio-tooltip-error-test')
     .locator('v-tooltip div')
     .first();
-  await expect(tooltipError).toHaveClass(
-    /icon-error-outline text-danger-dark/u
-  );
+  await expect(tooltipError).toHaveClass(/text-danger-dark/u);
 });
 
 test('Radio tooltips are rendered as info icon when state attribute is set to info', async ({
@@ -170,9 +166,9 @@ test('Radio tooltips are rendered as info icon when state attribute is set to in
   // Tooltip Info
   const tooltipInfo = page
     .getByTestId('radio-tooltip-info-test')
-    .locator('v-tooltip div')
+    .locator('v-tooltip v-icon title')
     .first();
-  await expect(tooltipInfo).toHaveClass(/icon-info-outline/u);
+  await expect(tooltipInfo).toHaveId(/information-outline/u);
 });
 
 test('Radio tooltip is rendered to the left of the label when label position attribute is specified as left', async ({
@@ -180,9 +176,9 @@ test('Radio tooltip is rendered to the left of the label when label position att
 }) => {
   // Tooltip Left
   const tooltipLeft = page
-    .locator("div.icon-info-outline:left-of(:text('Tool 10'))")
+    .locator("title#information-outline:left-of(:text('Tool 10'))")
     .first();
-  await expect(tooltipLeft).toHaveClass(/icon-info-outline/u);
+  await expect(tooltipLeft).toHaveId(/information-outline/u);
 });
 
 test('Radio tooltip text is visable upon hover', async ({ page }) => {

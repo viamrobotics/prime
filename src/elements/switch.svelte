@@ -45,7 +45,7 @@ const handleClick = () => {
 
     {#if tooltip}
       <v-tooltip text={tooltip}>
-        <div class="icon-info-outline text-black" />
+        <v-icon class="-mt-0.5" name="information-outline" />
       </v-tooltip>
     {/if}
   </div>

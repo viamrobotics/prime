@@ -60,7 +60,6 @@ $: {
     case 'outline-danger':
     case 'icon-danger': {
       fill = 'danger-dark';
-      console.log(fill);
       break;
     }
   }

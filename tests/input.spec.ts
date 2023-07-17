@@ -271,18 +271,20 @@ test('Renders without label if not given a label', async ({ page }) => {
 test('Given attribute tooltip with no state, render info icon above the input', async ({
   page,
 }) => {
-  const inputTooltip = page.getByTestId('input-tooltip-default');
-  await expect(inputTooltip.locator('v-tooltip > div').first()).toHaveClass(
-    /icon-info-outline/u
-  );
+  const inputTooltip = page
+    .getByTestId('input-tooltip-default')
+    .locator('v-icon');
+  await expect(inputTooltip.locator('title')).toHaveId(/information-outline/u);
 });
 
 test('Given attribute tooltip with info state, render info icon above the input', async ({
   page,
 }) => {
-  const inputInfoTooltip = page.getByTestId('input-tooltip-info');
-  await expect(inputInfoTooltip.locator('v-tooltip > div').first()).toHaveClass(
-    /icon-info-outline/u
+  const inputInfoTooltip = page
+    .getByTestId('input-tooltip-info')
+    .locator('v-icon');
+  await expect(inputInfoTooltip.locator('title')).toHaveId(
+    /information-outline/u
   );
 });
 
@@ -291,7 +293,7 @@ test('Given attribute tooltip with warn state, render warn icon above the input'
 }) => {
   const inputWarnTooltip = page.getByTestId('input-tooltip-warn');
   await expect(inputWarnTooltip.locator('v-tooltip > div').first()).toHaveClass(
-    /icon-error-outline text-warning-bright/u
+    /text-warning-bright/u
   );
 });
 
@@ -301,7 +303,7 @@ test('Given attribute tooltip with error state, render error icon above the inpu
   const inputErrorTooltip = page.getByTestId('input-tooltip-error');
   await expect(
     inputErrorTooltip.locator('v-tooltip > div').first()
-  ).toHaveClass(/icon-error-outline text-danger-dark/u);
+  ).toHaveClass(/text-danger-dark/u);
 });
 
 test('Given a readonly attribute, renders readonly input', async ({ page }) => {

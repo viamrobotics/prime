@@ -15,6 +15,40 @@ export let exitable = 'false';
 
 $: isExitable = htmlToBoolean(exitable, 'exitable');
 
+let fill = '';
+let icon = '';
+
+$: {
+  if (open) {
+    dispatch('open');
+  } else {
+    dispatch('close');
+  }
+
+  switch (variant) {
+    case 'warning': {
+      fill = 'warning-dark';
+      icon = 'information-outline';
+      break;
+    }
+    case 'info': {
+      fill = 'info-dark';
+      icon = 'information-outline';
+      break;
+    }
+    case 'success': {
+      fill = 'success-dark';
+      icon = 'alert-circle';
+      break;
+    }
+    case 'danger': {
+      fill = 'danger-dark';
+      icon = 'alert-circle';
+      break;
+    }
+  }
+}
+
 const dispatch = dispatcher();
 </script>
 
@@ -49,14 +83,14 @@ const dispatch = dispatcher();
     />
   </div>
 
-  <div class="flex items-center justify-between w-full gap-2 p-3 relative">
+  <div class="flex justify-between w-full gap-2 p-3 relative">
     <div class="flex gap-3">
       {#if variant === 'danger'}
-        <v-icon class="mt-0.5 text-danger-dark" name="error-outline" />
+        <v-icon class="-mt-0.5" fill="danger-dark" name="alert-outline" />
       {:else if variant === 'info'}
-        <v-icon class="mt-0.5 text-info-dark" name="info-outline" />
+        <v-icon class="-mt-0.5" fill="info-dark" name="information-outline" />
       {:else if variant === 'success'}
-        <v-icon class="mt-0.5 text-success-dark" name="checkmark" />
+        <v-icon class="-mt-0.5" fill="success-dark" name="check" />
       {/if}
 
       {#if variant === 'warning'}
