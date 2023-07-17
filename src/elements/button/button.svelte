@@ -47,7 +47,7 @@ const handleParentClick = (event: PointerEvent) => {
   event.stopImmediatePropagation();
 };
 
-let fill = '';
+let fill = 'danger';
 
 $: {
   switch (variant) {
@@ -59,7 +59,8 @@ $: {
     }
     case 'outline-danger':
     case 'icon-danger': {
-      fill = 'danger';
+      fill = 'danger-dark';
+      console.log(fill);
       break;
     }
   }

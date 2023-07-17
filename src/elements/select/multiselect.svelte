@@ -237,11 +237,32 @@ const splitOptionOnWord = (option: string) => {
   return option.split(' ');
 };
 
+let fill = isDisabled ? 'disabled-dark' : 'gray-4';
+let icon = '';
+
 $: {
   if (open) {
     dispatch('open');
   } else {
     dispatch('close');
+  }
+
+  switch (state) {
+    case 'warn': {
+      fill = 'warning-dark';
+      icon = 'information-outline';
+      break;
+    }
+    case 'info': {
+      fill = 'gray-4';
+      icon = 'information-outline';
+      break;
+    }
+    case 'error': {
+      fill = 'danger-dark';
+      icon = 'alert-circle';
+      break;
+    }
   }
 }
 </script>
@@ -281,7 +302,9 @@ $: {
               'icon-error-outline text-warning-bright': state === 'warn',
               'icon-error-outline text-danger-dark': state === 'error',
             })}
-          />
+          >
+            <v-icon {fill} name={icon} />
+          </div>
         </v-tooltip>
       {/if}
     </div>

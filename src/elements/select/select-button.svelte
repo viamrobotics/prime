@@ -10,7 +10,7 @@ export let buttonicon = '';
   class="flex cursor-pointer hover:bg-light items-center px-2 py-1 border-t-[1px] border-light"
 >
   {#if buttonicon}
-    <v-icon name={buttonicon} />
+    <v-icon class="-mt-0.5" name={buttonicon} />
   {/if}
-  <span class="text-sm pl-2">{buttontext}</span>
+  <span class="text-sm pl-1.5">{buttontext}</span>
 </div>
