@@ -15,40 +15,6 @@ export let exitable = 'false';
 
 $: isExitable = htmlToBoolean(exitable, 'exitable');
 
-let fill = '';
-let icon = '';
-
-$: {
-  if (open) {
-    dispatch('open');
-  } else {
-    dispatch('close');
-  }
-
-  switch (variant) {
-    case 'warning': {
-      fill = 'warning-dark';
-      icon = 'information-outline';
-      break;
-    }
-    case 'info': {
-      fill = 'info-dark';
-      icon = 'information-outline';
-      break;
-    }
-    case 'success': {
-      fill = 'success-dark';
-      icon = 'alert-circle';
-      break;
-    }
-    case 'danger': {
-      fill = 'danger-dark';
-      icon = 'alert-circle';
-      break;
-    }
-  }
-}
-
 const dispatch = dispatcher();
 </script>
 
