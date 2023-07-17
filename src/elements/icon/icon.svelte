@@ -5,7 +5,7 @@ type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
 import cx from 'classnames';
 import { theme } from '../../../prime/theme';
-import { paths } from './icons'
+import { paths } from './icons';
 export let name = '';
 
 export let fill = '';
