@@ -48,7 +48,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: pnpm -C packages/legacy playwright test
+        run: pnpm -C packages/legacy test
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
