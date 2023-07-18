@@ -21,12 +21,12 @@ $: isRemovable = htmlToBoolean(removable, 'removable');
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 
-const handleRemove = () => {
+const handleRemove = (event: Event) => {
   if (isDisabled || isReadonly) {
     return;
   }
 
-  dispatch('remove', { value });
+  dispatch(event, 'remove', { value });
 };
 </script>
 

@@ -64,7 +64,7 @@ const setModel = () => {
     model = window.monaco.editor.createModel(value, language);
   }
 
-  dispatch('update-model', { model });
+  dispatch({ target: container }, 'update-model', { model });
   editor.setModel(model);
 };
 
@@ -126,11 +126,11 @@ const init = (monaco: typeof Monaco) => {
   editor = monaco.editor.create(container, opts());
 
   editor.onDidChangeModelContent(() => {
-    dispatch('input', { value: editor?.getValue() });
+    dispatch({ target: container }, 'input', { value: editor?.getValue() });
   });
 
   editor.onDidBlurEditorWidget(() => {
-    dispatch('blur', { value: editor?.getValue() });
+    dispatch({ target: container }, 'blur', { value: editor?.getValue() });
     emitMarkers();
   });
 
@@ -146,7 +146,7 @@ const emitMarkers = () => {
     return marker.resource.authority === `${id}.json`;
   });
 
-  dispatch('markers', { markers: ownedMarkers });
+  dispatch({ target: container }, 'markers', { markers: ownedMarkers });
 };
 
 const handleResize = () => {
@@ -175,7 +175,7 @@ onDestroy(() => {
 
   resizeObserver.disconnect();
 
-  dispatch('destroy');
+  dispatch({ target: container }, 'destroy');
 });
 
 $: {

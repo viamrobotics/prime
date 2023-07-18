@@ -12,9 +12,9 @@ const dispatch = dispatcher();
 $: parsedTabs = tabs.split(',').map((str) => str.trim());
 $: selectedIndex = parsedTabs.indexOf(selected);
 
-const handleClick = (option: string) => {
+const handleClick = (option: string, event: Event) => {
   selected = option;
-  dispatch('input', { value: selected });
+  dispatch(event, 'input', { value: selected });
 };
 </script>
 

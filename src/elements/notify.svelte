@@ -16,6 +16,10 @@ export let exitable = 'false';
 $: isExitable = htmlToBoolean(exitable, 'exitable');
 
 const dispatch = dispatcher();
+
+const handleClose = (event: Event) => {
+  dispatch(event, 'close');
+};
 </script>
 
 <div
@@ -98,7 +102,7 @@ const dispatch = dispatcher();
           variant="icon"
           icon="close"
           class="absolute right-1 top-1 text-gray-7"
-          on:click={() => dispatch('close')}
+          on:click={handleClose}
         />
       {/if}
     </div>

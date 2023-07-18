@@ -24,27 +24,30 @@ let isReadonly: boolean;
 $: parsedOptions = options.split(',').map((str) => str.trim());
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 
-const handleClick = (value: string) => {
+const handleClick = (value: string, event: Event) => {
   if (!isReadonly) {
     selected = value;
-    dispatch('input', { value });
+    dispatch(event, 'input', { value });
   }
 };
 
 $: {
   switch (state) {
-    case 'info':
+    case 'info': {
       fill = 'gray-6';
       icon = 'information-outline';
       break;
-    case 'warn':
+    }
+    case 'warn': {
       fill = 'warning-bright';
       icon = 'alert-circle-outline';
       break;
-    case 'error':
+    }
+    case 'error': {
       fill = 'danger-dark';
       icon = 'alert-circle-outline';
       break;
+    }
   }
 }
 </script>
@@ -94,7 +97,7 @@ $: {
           'bg-disabled-light border-light text-disabled-dark cursor-not-allowed pointer-events-none':
             isReadonly,
         })}
-        on:click={() => handleClick(option)}
+        on:click={(event) => handleClick(option, event)}
       >
         {option}
       </button>

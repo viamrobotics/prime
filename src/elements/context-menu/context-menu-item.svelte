@@ -10,8 +10,8 @@ export let icon: string;
 export let variant: 'primary' | 'danger' = 'primary';
 export let label: string;
 
-const handleSelect = () => {
-  dispatch('select', { value: label });
+const handleSelect = (event: Event) => {
+  dispatch(event, 'select', { value: label });
 };
 </script>
 

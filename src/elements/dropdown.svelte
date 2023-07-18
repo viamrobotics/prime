@@ -16,8 +16,8 @@ let isOpen: boolean;
 $: isMatch = htmlToBoolean(match, 'match');
 $: isOpen = htmlToBoolean(open, 'open');
 
-const toggleDropdown = () => {
-  dispatch('toggle', { open: !isOpen });
+const toggleDropdown = (event: Event) => {
+  dispatch(event, 'toggle', { open: !isOpen });
 };
 </script>
 

@@ -95,7 +95,7 @@ const handleInput = (event: Event) => {
   event.stopImmediatePropagation();
 
   searchterm = input.value.trim();
-  dispatch('search', { term: searchterm });
+  dispatch(event, 'search', { term: searchterm });
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
@@ -103,7 +103,7 @@ const handleKeyUp = (event: KeyboardEvent) => {
 
   switch (event.key.toLowerCase()) {
     case 'enter':
-      return handleEnter();
+      return handleEnter(event);
     case 'arrowup':
       return handleNavigate(-1);
     case 'arrowdown':
@@ -113,33 +113,37 @@ const handleKeyUp = (event: KeyboardEvent) => {
   }
 };
 
-const handleEnter = () => {
+const handleEnter = (event: Event) => {
   if (navigationIndex === -1) {
     // if user hits enter when focused on the search input
     const match = sortedOptions.find(
       (opt) => opt.toLowerCase() === searchterm.toLowerCase()
     );
     if (match) {
-      handleChange(match);
+      handleChange(match, event);
     } else {
-      dispatch('enter-press', { options: sortedOptions });
+      dispatch(event, 'enter-press', { options: sortedOptions });
     }
   } else {
     // if the user has used arrow keys to navigate options, enter should add/remove item
     const option = sortedOptions[navigationIndex]!;
-    handleChange(option);
+    handleChange(option, event);
   }
 };
 
-const handleChange = (changedOption: string) => {
+const handleChange = (changedOption: string, event: Event) => {
   if (parsedSelected.includes(changedOption)) {
     const newValue = parsedSelected.filter((item) => item !== changedOption);
     value = newValue.toString();
-    dispatch('input', { value, values: newValue, removed: changedOption });
+    dispatch(event, 'input', {
+      value,
+      values: newValue,
+      removed: changedOption,
+    });
   } else {
     const newValue = [...parsedSelected, changedOption];
     value = newValue.toString();
-    dispatch('input', { value, values: newValue, added: changedOption });
+    dispatch(event, 'input', { value, values: newValue, added: changedOption });
   }
   input.focus();
 };
@@ -168,7 +172,7 @@ const handleEscape = () => {
   input.blur();
 };
 
-const handleFocus = () => {
+const handleFocus = (event: Event) => {
   if (open || isDisabled || isReadonly) {
     return;
   }
@@ -176,21 +180,25 @@ const handleFocus = () => {
   open = true;
   input.focus();
   navigationIndex = 0;
+  dispatch(event, 'open');
 };
 
 const handleFocusOut = (event: FocusEvent) => {
   if (!root.contains(event.relatedTarget as Node)) {
     open = false;
     navigationIndex = -1;
+    dispatch(event, 'closed');
   }
 };
 
 const handlePillClick = (target: string) => {
-  if (!isReadonly) {
-    const newValue = parsedSelected.filter((item: string) => item !== target);
-    value = newValue.toString();
-    dispatch('input', { value, values: newValue, removed: target });
-  }
+  return (event: Event) => {
+    if (!isReadonly) {
+      const newValue = parsedSelected.filter((item: string) => item !== target);
+      value = newValue.toString();
+      dispatch(event, 'input', { value, values: newValue, removed: target });
+    }
+  };
 };
 
 const handleOptionMouseEnter = (index: number) => {
@@ -216,21 +224,21 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   input.focus();
   if (checked) {
-    dispatch('input', { value, values: newValue, added: target });
+    dispatch(event, 'input', { value, values: newValue, added: target });
   } else {
-    dispatch('input', { value, values: newValue, removed: target });
+    dispatch(event, 'input', { value, values: newValue, removed: target });
   }
 };
 
-const handleClearAll = () => {
+const handleClearAll = (event: Event) => {
   optionsContainer.scrollTop = 0;
   value = '';
-  dispatch('input', { value: '', values: [] });
-  dispatch('clear-all-click');
+  dispatch(event, 'input', { value: '', values: [] });
+  dispatch(event, 'clear-all-click');
 };
 
-const handleButtonClick = () => {
-  dispatch('button-click');
+const handleButtonClick = (event: Event) => {
+  dispatch(event, 'button-click');
 };
 
 const splitOptionOnWord = (option: string) => {
@@ -241,12 +249,6 @@ let fill = isDisabled ? 'disabled-dark' : 'gray-4';
 let icon = '';
 
 $: {
-  if (open) {
-    dispatch('open');
-  } else {
-    dispatch('close');
-  }
-
   switch (state) {
     case 'warn': {
       fill = 'warning-dark';
@@ -335,7 +337,7 @@ $: {
               }
             )}
             on:input|preventDefault={handleInput}
-            on:keyup|stopPropagation|preventDefault={handleKeyUp}
+            on:keyup|preventDefault={handleKeyUp}
           />
           <button
             tabindex="-1"
@@ -484,7 +486,7 @@ $: {
     >
       {#each parsedSelected as option (option)}
         <v-pill
-          on:remove={() => handlePillClick(option)}
+          on:remove={handlePillClick(option)}
           value={option}
           {readonly}
           {disabled}

@@ -24,11 +24,11 @@ $: on = value === 'on';
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
 $: isReadonly = htmlToBoolean(readonly, 'readonly');
 
-const handleClick = () => {
+const handleClick = (event: Event) => {
   if (!(isDisabled || isReadonly)) {
     value = on ? 'off' : 'on';
     input.checked = value === 'on';
-    dispatch('input', { value: input.checked });
+    dispatch(event, 'input', { value: input.checked });
   }
 };
 </script>

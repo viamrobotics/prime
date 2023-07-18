@@ -426,10 +426,10 @@ const bodyKeyDown = (e: KeyboardEvent) => {
   }
 };
 
-const onChange = () => {
+const onChange = (event: Event) => {
   if (isDisabled || isReadonly) return;
 
-  dispatch('input', {
+  dispatch(event, 'input', {
     activeHandle,
     previousValue,
     value: activeHandle === 0 ? startValue : endValue,
