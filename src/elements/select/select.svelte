@@ -52,7 +52,6 @@ $: hasButton = htmlToBoolean(withbutton, 'withbutton');
 $: isReduceSort = sortoption === 'reduce';
 $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
-
 $: sortedOptions = doesSearch
   ? applySearchSort(value, parsedOptions)
   : reduceEmptyOptions(parsedOptions);
@@ -77,7 +76,9 @@ const reduceEmptyOptions = (options: string[]) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
-  dispatch({ target: root }, 'search', { term });
+  if (root) {
+    dispatch({target: root}, 'search', { term });
+  }
 
   if (reduceEmptyOptions(options).length === 0) {
     return [];
@@ -91,14 +92,16 @@ const handleInput = (event: Event) => {
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
   value = input.value.trim();
-  dispatch(event, 'input', { value });
+  if (root) {
+    dispatch({target: root}, 'input', { value });
+  }
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
   setKeyboardControl(true);
   switch (event.key.toLowerCase()) {
     case 'enter': {
-      return handleEnter(event);
+      return handleEnter();
     }
     case 'arrowup': {
       return handleNavigate(-1);
@@ -112,23 +115,29 @@ const handleKeyUp = (event: KeyboardEvent) => {
   }
 };
 
-const handleEnter = (event: Event) => {
+const handleEnter = () => {
   if (navigationIndex > -1) {
     value = sortedOptions[navigationIndex]!;
-    dispatch(event, 'change', { value });
+    if (root) {
+      dispatch({target: root}, 'change', { value });
+    }
   } else {
     const result = sortedOptions.find((item) => item.toLowerCase() === value);
 
     if (result) {
       value = result;
-      dispatch(event, 'change', { value });
+      if (root) {
+        dispatch({target: root}, 'change', { value });
+      }
     }
   }
   if (open) {
     input.blur();
   }
 
-  dispatch(event, 'input', { value });
+  if (root) {
+    dispatch({target: root}, 'input', { value });
+  }
 };
 
 const handleNavigate = (direction: number) => {
@@ -150,7 +159,9 @@ const handleNavigate = (direction: number) => {
 const handleOptionSelect = (target: string, event: Event) => {
   const { checked } = event.target as HTMLInputElement;
   if (value === target) {
-    dispatch(event, 'change', { value });
+    if (root) {
+      dispatch({target: root}, 'change', { value });
+    }
     event.preventDefault();
     open = false;
     return;
@@ -159,8 +170,10 @@ const handleOptionSelect = (target: string, event: Event) => {
   value = checked ? target : '';
 
   open = false;
-  dispatch(event, 'change', { value });
-  dispatch(event, 'input', { value });
+  if (root) {
+    dispatch({target: root}, 'change', { value });
+    dispatch({target: root}, 'input', { value });
+  }
 };
 
 const clearNavigationIndex = () => {
@@ -196,8 +209,10 @@ const handleOptionMouseEnter = (index: number) => {
   navigationIndex = index;
 };
 
-const handleButtonClick = (event: Event) => {
-  dispatch(event, 'button-click');
+const handleButtonClick = () => {
+  if (root) {
+    dispatch({target: root}, 'button-click');
+  }
 };
 
 const splitOptionOnWord = (option: string) => {
@@ -299,7 +314,7 @@ $: {
             }
           )}
           on:input|preventDefault={handleInput}
-          on:keyup|preventDefault={handleKeyUp}
+          on:keyup|stopPropagation|preventDefault={handleKeyUp}
         />
         <button
           tabindex="-1"
