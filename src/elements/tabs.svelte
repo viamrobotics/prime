@@ -12,9 +12,9 @@ const dispatch = dispatcher();
 $: parsedTabs = tabs.split(',').map((str) => str.trim());
 $: selectedIndex = parsedTabs.indexOf(selected);
 
-const handleClick = (option: string) => {
+const handleClick = (option: string, event: Event) => {
   selected = option;
-  dispatch('input', { value: selected });
+  dispatch(event, 'input', { value: selected });
 };
 </script>
 
@@ -28,7 +28,7 @@ const handleClick = (option: string) => {
         'border-l border-l-gray-300': selectedIndex > index,
         'border-r border-r-gray-300': selectedIndex < index,
       })}
-      on:click={() => handleClick(tab)}
+      on:click={(event) => handleClick(tab, event)}
     >
       <div
         class={cx({

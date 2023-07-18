@@ -23,7 +23,7 @@ const handleClick = (event: Event) => {
   }
 
   isOpen = !isOpen;
-  dispatch('toggle', { isOpen });
+  dispatch(event, 'toggle', { isOpen });
 };
 </script>
 
@@ -36,7 +36,7 @@ const handleClick = (event: Event) => {
       }
     )},"
     on:click={handleClick}
-    on:keyup|stopPropagation|preventDefault={handleClick}
+    on:keyup|preventDefault={handleClick}
   >
     <div class="flex flex-wrap gap-x-3 gap-y-1 items-center">
       {#if title}

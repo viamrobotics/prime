@@ -34,7 +34,7 @@ const handleInput = (index: number) => {
 
     valueArray[index] = Number.parseFloat(event.detail.value || '0');
     value = valueArray.join(',');
-    dispatch('input', { value: valueArray });
+    dispatch(event, 'input', { value: valueArray });
   };
 };
 

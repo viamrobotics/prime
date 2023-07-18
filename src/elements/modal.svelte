@@ -22,7 +22,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
     return;
   }
 
-  dispatch('close');
+  dispatch(event, 'close');
 };
 </script>
 
@@ -40,7 +40,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
   tabindex="0"
   aria-label={`${title}`}
   on:click={handleClose}
-  on:keyup|stopPropagation|preventDefault={handleClose}
+  on:keyup|preventDefault={handleClose}
 >
   <div
     class={cx('relative border border-medium bg-white p-6 max-w-lg shadow-sm', {

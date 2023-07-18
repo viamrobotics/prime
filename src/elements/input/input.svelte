@@ -94,7 +94,7 @@ let startX = 0;
 let startValue = 0;
 let prevNumberValue = value;
 
-const handleInput = () => {
+const handleInput = (event: Event) => {
   if (value === input.value) {
     return;
   }
@@ -119,7 +119,7 @@ const handleInput = () => {
     input.value = value = input.value;
   }
   internals.setFormValue(value);
-  dispatch('input', { value });
+  dispatch(event, 'input', { value });
 };
 
 const handleBlur = () => {
@@ -158,7 +158,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 
   internals.setFormValue(value);
 
-  dispatch('input', { value });
+  dispatch(event, 'input', { value });
 };
 
 const handleNumberDragMove = (event: PointerEvent) => {
@@ -202,7 +202,7 @@ const handleNumberDragMove = (event: PointerEvent) => {
   }
 
   internals.setFormValue(value);
-  dispatch('input', { value });
+  dispatch(event, 'input', { value });
 
   // The tooltip may not be mounted the first time this handler is called.
   if (numberDragTooltip.recalculateStyle) {

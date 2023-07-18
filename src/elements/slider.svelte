@@ -222,20 +222,23 @@ const getClosestHandle = (clientPos: Touch | MouseEvent): number => {
  * through to the moveHandle() method to set the active
  * handle's position
  **/
-const handleInteract = (clientPos: { clientX: number; clientY: number }) => {
+const handleInteract = (
+  clientPos: { clientX: number; clientY: number },
+  event: Event
+) => {
   // calculate the interaction position, percent and value
   const handlePos = clientPos.clientX - sliderDimensions.left;
   const handlePercent = (handlePos / sliderDimensions.width) * 100;
   const handleVal = ((maxNum - minNum) / 100) * handlePercent + minNum;
 
   // move handle to the value
-  moveHandle(activeHandle, handleVal);
+  moveHandle(activeHandle, handleVal, event);
 };
 
 /**
  * move a handle to a specific value, respecting the clamp/align rules
  **/
-const moveHandle = (i: number, value: number): number => {
+const moveHandle = (i: number, value: number, event: Event): number => {
   let index = i;
 
   // align & clamp the value so we're not doing extra
@@ -268,7 +271,7 @@ const moveHandle = (i: number, value: number): number => {
   // fire the change event when the handle moves,
   // and store the previous value for the next time
   if (previousValue !== alignedValue) {
-    onChange();
+    onChange(event);
     previousValue = alignedValue;
   }
 
@@ -350,7 +353,7 @@ const sliderInteractStart = (e: MouseEvent | TouchEvent) => {
   // for touch devices we want the handle to instantly
   // move to the position touched for more responsive feeling
   if (e.type === 'touchstart' && !el.matches('.pipVal')) {
-    handleInteract(clientPos);
+    handleInteract(clientPos, e);
   }
 };
 
@@ -379,7 +382,7 @@ const bodyInteract = (e: MouseEvent | TouchEvent) => {
   if (isDisabled || isReadonly || !handleActivated) return;
 
   focus = true;
-  handleInteract(normalisedClient(e));
+  handleInteract(normalisedClient(e), e);
 };
 
 /**
@@ -401,7 +404,7 @@ const bodyMouseUp = (e: MouseEvent) => {
       // don't trigger interact if the target is a handle (no need) or
       // if the target is a label (we want to move to that value from rangePips)
       if (!targetIsHandle(el) && !el.matches('.pipVal')) {
-        handleInteract(normalisedClient(e));
+        handleInteract(normalisedClient(e), e);
       }
     }
   }
@@ -426,10 +429,10 @@ const bodyKeyDown = (e: KeyboardEvent) => {
   }
 };
 
-const onChange = () => {
+const onChange = (event: Event) => {
   if (isDisabled || isReadonly) return;
 
-  dispatch('input', {
+  dispatch(event, 'input', {
     activeHandle,
     previousValue,
     value: activeHandle === 0 ? startValue : endValue,

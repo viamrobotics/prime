@@ -76,7 +76,9 @@ const reduceEmptyOptions = (options: string[]) => {
 };
 
 const applySearchSort = (term: string, options: string[]) => {
-  dispatch('search', { term });
+  if (root) {
+    dispatch({ target: root }, 'search', { term });
+  }
 
   if (reduceEmptyOptions(options).length === 0) {
     return [];
@@ -90,40 +92,52 @@ const handleInput = (event: Event) => {
   optionsContainer.scrollTop = 0;
   event.stopImmediatePropagation();
   value = input.value.trim();
-  dispatch('input', { value });
+  if (root) {
+    dispatch({ target: root }, 'input', { value });
+  }
 };
 
 const handleKeyUp = (event: KeyboardEvent) => {
   setKeyboardControl(true);
   switch (event.key.toLowerCase()) {
-    case 'enter':
+    case 'enter': {
       return handleEnter();
-    case 'arrowup':
+    }
+    case 'arrowup': {
       return handleNavigate(-1);
-    case 'arrowdown':
+    }
+    case 'arrowdown': {
       return handleNavigate(+1);
-    case 'escape':
+    }
+    case 'escape': {
       return handleEscape();
+    }
   }
 };
 
 const handleEnter = () => {
   if (navigationIndex > -1) {
     value = sortedOptions[navigationIndex]!;
-    dispatch('change', { value });
+    if (root) {
+      dispatch({ target: root }, 'change', { value });
+    }
   } else {
     const result = sortedOptions.find((item) => item.toLowerCase() === value);
 
     if (result) {
       value = result;
-      dispatch('change', { value });
+      if (root) {
+        dispatch({ target: root }, 'change', { value });
+      }
     }
   }
   if (open) {
     input.blur();
   }
 
-  dispatch('input', { value });
+  if (root) {
+    dispatch({ target: root }, 'input', { value });
+  }
 };
 
 const handleNavigate = (direction: number) => {
@@ -137,7 +151,7 @@ const handleNavigate = (direction: number) => {
 
   const element = optionsContainer.children[0]!.children[navigationIndex]!;
 
-  if (utils.isElementInScrollView(element) === false) {
+  if (!utils.isElementInScrollView(element)) {
     element.scrollIntoView();
   }
 };
@@ -145,7 +159,9 @@ const handleNavigate = (direction: number) => {
 const handleOptionSelect = (target: string, event: Event) => {
   const { checked } = event.target as HTMLInputElement;
   if (value === target) {
-    dispatch('change', { value });
+    if (root) {
+      dispatch({ target: root }, 'change', { value });
+    }
     event.preventDefault();
     open = false;
     return;
@@ -154,8 +170,10 @@ const handleOptionSelect = (target: string, event: Event) => {
   value = checked ? target : '';
 
   open = false;
-  dispatch('change', { value });
-  dispatch('input', { value });
+  if (root) {
+    dispatch({ target: root }, 'change', { value });
+    dispatch({ target: root }, 'input', { value });
+  }
 };
 
 const clearNavigationIndex = () => {
@@ -192,7 +210,9 @@ const handleOptionMouseEnter = (index: number) => {
 };
 
 const handleButtonClick = () => {
-  dispatch('button-click');
+  if (root) {
+    dispatch({ target: root }, 'button-click');
+  }
 };
 
 const splitOptionOnWord = (option: string) => {
@@ -203,7 +223,7 @@ let fill = isDisabled ? 'disabled-dark' : 'gray-4';
 let icon = '';
 
 $: {
-  if (!open && isExact && parsedOptions.includes(value) === false) {
+  if (!open && isExact && !parsedOptions.includes(value)) {
     value = '';
   }
 

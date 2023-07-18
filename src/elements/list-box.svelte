@@ -86,18 +86,22 @@ const addNewData = () => {
 
 afterUpdate(addNewData);
 
-const handleOptionClick = (option: ListBoxOption, side: ListBoxSide) => {
+const handleOptionClick = (
+  option: ListBoxOption,
+  side: ListBoxSide,
+  event: Event
+) => {
   if (isDisabled) return;
 
   option.selected = !option.selected;
   options = { ...options };
 
-  dispatch('option-click', {
+  dispatch(event, 'option-click', {
     target: { ...option, side },
   });
 };
 
-const handleMoveClick = (target: ListBoxSide) => {
+const handleMoveClick = (target: ListBoxSide, event: Event) => {
   if (isDisabled) return;
 
   const source = target === LEFT ? RIGHT : LEFT;
@@ -120,7 +124,7 @@ const handleMoveClick = (target: ListBoxSide) => {
   options = { ...options };
 
   // copy object to avoid any potential pass-by-reference issues
-  dispatch('move', {
+  dispatch(event, 'move', {
     options: JSON.parse(JSON.stringify(options)) as Options,
   });
 };
@@ -145,7 +149,7 @@ const handleMoveClick = (target: ListBoxSide) => {
             class={cx('flex items-center px-2 py text-sm', {
               'bg-focus/highlight': option.selected,
             })}
-            on:click={() => handleOptionClick(option, LEFT)}
+            on:click={(event) => handleOptionClick(option, LEFT, event)}
           >
             <input
               type="checkbox"
@@ -172,7 +176,7 @@ const handleMoveClick = (target: ListBoxSide) => {
         { 'border-black/50': isDisabled }
       )}
       data-testid="move-right"
-      on:click={() => handleMoveClick(RIGHT)}
+      on:click={(event) => handleMoveClick(RIGHT, event)}
     >
       <v-icon class="relative bottom-0.5" name="arrow-up" />
     </button>
@@ -181,7 +185,7 @@ const handleMoveClick = (target: ListBoxSide) => {
         '-rotate-90 border border-black h-8 w-8 flex items-center justify-center cursor-pointer hover:scale-105 bg-white',
         { 'border-black/50': isDisabled }
       )}
-      on:click={() => handleMoveClick(LEFT)}
+      on:click={(event) => handleMoveClick(LEFT, event)}
       data-testid="move-left"
     >
       <v-icon class="relative bottom-0.5" name="arrow-up" />
@@ -201,7 +205,7 @@ const handleMoveClick = (target: ListBoxSide) => {
             class={cx('flex items-center px-2 py text-sm', {
               'bg-focus/highlight': option.selected,
             })}
-            on:click={() => handleOptionClick(option, RIGHT)}
+            on:click={(event) => handleOptionClick(option, RIGHT, event)}
           >
             <input
               type="checkbox"

@@ -38,14 +38,18 @@ const script = (src: string) =>
     document.head.append(el);
   });
 
-const copyToClipboard = async () => {
+const copyToClipboard = async (event: Event) => {
   try {
     await navigator.clipboard.writeText(code);
     label = 'Success!';
-    dispatch('copy', { value: 'Successfully copied snippet to the clipboard' });
+    dispatch(event, 'copy', {
+      value: 'Successfully copied snippet to the clipboard',
+    });
   } catch {
     label = 'Failed.';
-    dispatch('copy', { value: ':( Failed to copy snippet to the clipboard' });
+    dispatch(event, 'copy', {
+      value: ':( Failed to copy snippet to the clipboard',
+    });
   }
 
   window.setTimeout(() => {
