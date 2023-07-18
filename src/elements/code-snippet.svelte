@@ -105,12 +105,12 @@ $: {
 </script>
 
 <div
-  class={cx('flex gap-x-4 p-2', {
+  class={cx('flex gap-x-4 p-1.5', {
     '!bg-gray-9': theme === 'vsc-dark-plus',
     '!bg-light': theme === 'vs',
   })}
 >
-  <pre class="flex-1 !bg-inherit !border-none !m-0 !p-0 !pt-2 !pl-2"><code
+  <pre class="flex-1 !bg-inherit !border-none !m-0 !p-0 !pt-1.5 !pl-2"><code
       bind:this={element}
       class="language-{language} font-mono">{code}</code
     ></pre>
