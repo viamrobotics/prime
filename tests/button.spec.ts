@@ -121,7 +121,7 @@ test('Renders an icon within the button/next to the label if an icon attribute i
   const iconWithinButton = page.getByRole('button', {
     name: 'Icon Within Button Label',
   });
-  await expect(iconWithinButton.locator('i')).toHaveClass(/icon-refresh/u);
+  await expect(iconWithinButton.locator('title')).toHaveId(/refresh/u);
 });
 
 test('Renders the button as an icon if an icon attribute is specified and the button variant is icon', async ({
@@ -129,7 +129,7 @@ test('Renders the button as an icon if an icon attribute is specified and the bu
 }) => {
   const iconAsButton = page.getByRole('button', { name: 'Icon As Button' });
   await expect(iconAsButton).not.toContainText('Icon As Button');
-  await expect(iconAsButton.locator('i')).toHaveClass(/icon-refresh/u);
+  await expect(iconAsButton.locator('title')).toHaveId(/refresh/u);
   await expect(iconAsButton).not.toHaveClass(/border-light/u);
 });
 

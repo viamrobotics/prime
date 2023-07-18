@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "Apache-2.0",
   "type": "module",
   "files": [
@@ -44,6 +44,8 @@
   "devDependencies": {
     "@floating-ui/dom": "^1.2.6",
     "@floating-ui/vue": "^1.0.0",
+    "@mdi/js": "^7.2.96",
+    "mdi-svelte-ts": "^1.0.0",
     "@playwright/test": "^1.32.3",
     "@storybook/addon-a11y": "^7.0.7",
     "@storybook/addon-actions": "^7.0.7",

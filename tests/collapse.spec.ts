@@ -41,8 +41,8 @@ test('Collapse renders open with chevron in closed position if open attribute sp
   await expect(openCollapse).toBeVisible();
 
   await expect(openCollapse).toHaveJSProperty('open', 'true');
-  await expect(openCollapse.locator('i')).toHaveClass(/icon-chevron-down/u);
-  await expect(openCollapse.locator('i')).toBeVisible();
+  await expect(openCollapse.locator('title')).toHaveId(/chevron-down/u);
+  await expect(openCollapse.locator('svg')).toBeVisible();
   await expect(openCollapse.locator('v-icon')).toHaveClass(/rotate-180/u);
 });
 
@@ -51,15 +51,15 @@ test('Collapse renders closed with chevron in closed position if open attribute 
 }) => {
   // no "open" property, default display closed
   const collapse = page.getByTestId('collapse-default');
-  await expect(collapse.locator('i')).toHaveClass(/icon-chevron-down/u);
-  await expect(collapse.locator('i')).toBeVisible();
+  await expect(collapse.locator('title')).toHaveId(/chevron-down/u);
+  await expect(collapse.locator('svg')).toBeVisible();
   await expect(collapse.locator('v-icon')).toHaveClass(/rotate-0/u);
 
   // "open" property "false" has been applied
   const closedCollapse = page.getByTestId('collapse-closed');
   await expect(closedCollapse).toBeVisible();
-  await expect(closedCollapse.locator('i')).toHaveClass(/icon-chevron-down/u);
-  await expect(closedCollapse.locator('i')).toBeVisible();
+  await expect(closedCollapse.locator('title')).toHaveId(/chevron-down/u);
+  await expect(closedCollapse.locator('svg')).toBeVisible();
   await expect(closedCollapse.locator('v-icon')).toHaveClass(/rotate-0/u);
 });
 
@@ -76,16 +76,16 @@ test('If collapse is in closed position, confirm it opens after click and vice v
   await collapse.click();
   await expect(expand).toBeVisible();
   await expect(expand).toHaveText(expandText);
-  await expect(collapse.locator('i')).toHaveClass(/icon-chevron-down/u);
-  await expect(collapse.locator('i')).toBeVisible();
+  await expect(collapse.locator('title')).toHaveId(/chevron-down/u);
+  await expect(collapse.locator('svg')).toBeVisible();
   await expect(collapse.locator('v-icon')).toHaveClass(/rotate-180/u);
 
   // If open, after click, collapse should close (and hide child)
   await expect(expand).toBeVisible();
   await collapse.click();
   await expect(expand).toBeHidden();
-  await expect(collapse.locator('i')).toHaveClass(/icon-chevron-down/u);
-  await expect(collapse.locator('i')).toBeVisible();
+  await expect(collapse.locator('title')).toHaveId(/chevron-down/u);
+  await expect(collapse.locator('svg')).toBeVisible();
   await expect(collapse.locator('v-icon')).toHaveClass(/rotate-0/u);
 });
 

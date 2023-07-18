@@ -19,8 +19,8 @@ test('Renders notify with default style if no variant is specified', async ({
     page.getByTestId('notify-default').locator('.bg-info-dark')
   ).toBeVisible();
   await expect(
-    page.getByTestId('notify-default').locator('v-icon')
-  ).toHaveClass(/text-info-dark/u);
+    page.getByTestId('notify-default').locator('v-icon title')
+  ).toHaveId(/information-outline/u);
 });
 
 test('Renders notify with danger style if the variant is set to danger', async ({
@@ -31,8 +31,8 @@ test('Renders notify with danger style if the variant is set to danger', async (
     page.getByTestId('notify-variant-danger').locator('.bg-danger-dark')
   ).toBeVisible();
   await expect(
-    page.getByTestId('notify-variant-danger').locator('v-icon')
-  ).toHaveClass(/text-danger-dark/u);
+    page.getByTestId('notify-variant-danger').locator('v-icon title')
+  ).toHaveId(/alert-outline/u);
 });
 
 test('Renders notify with warning style if the variant is set to warning', async ({
@@ -55,8 +55,8 @@ test('Renders notify with success style if the variant is set to success', async
     page.getByTestId('notify-variant-success').locator('.bg-success-dark')
   ).toBeVisible();
   await expect(
-    page.getByTestId('notify-variant-success').locator('v-icon')
-  ).toHaveClass(/text-success-dark/u);
+    page.getByTestId('notify-variant-success').locator('v-icon title')
+  ).toHaveId(/check/u);
 });
 
 test('Renders notify with info style if the variant is set to info', async ({
@@ -67,8 +67,8 @@ test('Renders notify with info style if the variant is set to info', async ({
     page.getByTestId('notify-variant-info').locator('.bg-info-dark')
   ).toBeVisible();
   await expect(
-    page.getByTestId('notify-variant-info').locator('v-icon')
-  ).toHaveClass(/text-info-dark/u);
+    page.getByTestId('notify-variant-info').locator('v-icon title')
+  ).toHaveId(/information-outline/u);
 });
 
 test('Renders notify slot text', async ({ page }) => {

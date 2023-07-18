@@ -46,7 +46,7 @@ const handleRemove = () => {
   </span>
   {#if isRemovable}
     <button on:click={handleRemove}>
-      <v-icon name="x" />
+      <v-icon name="close" />
     </button>
   {/if}
 </div>

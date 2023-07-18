@@ -35,7 +35,7 @@ const main = async () => {
     ),
     'v-collapse': await import('./elements/collapse.svelte'),
     'v-dropdown': await import('./elements/dropdown.svelte'),
-    'v-icon': await import('./elements/icon.svelte'),
+    'v-icon': await import('./elements/icon/icon.svelte'),
     'v-list-box': await import('./elements/list-box.svelte'),
     'v-modal': await import('./elements/modal.svelte'),
     'v-notify': await import('./elements/notify.svelte'),

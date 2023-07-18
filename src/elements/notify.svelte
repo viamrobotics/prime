@@ -49,14 +49,14 @@ const dispatch = dispatcher();
     />
   </div>
 
-  <div class="flex items-center justify-between w-full gap-2 p-3 relative">
+  <div class="flex justify-between w-full gap-2 p-3 relative">
     <div class="flex gap-3">
       {#if variant === 'danger'}
-        <v-icon class="mt-0.5 text-danger-dark" name="error-outline" />
+        <v-icon class="-mt-0.5" fill="danger-dark" name="alert-outline" />
       {:else if variant === 'info'}
-        <v-icon class="mt-0.5 text-info-dark" name="info-outline" />
+        <v-icon class="-mt-0.5" fill="info-dark" name="information-outline" />
       {:else if variant === 'success'}
-        <v-icon class="mt-0.5 text-success-dark" name="checkmark" />
+        <v-icon class="-mt-0.5" fill="success-dark" name="check" />
       {/if}
 
       {#if variant === 'warning'}
@@ -96,7 +96,7 @@ const dispatch = dispatcher();
       {#if isExitable}
         <v-button
           variant="icon"
-          icon="x"
+          icon="close"
           class="absolute right-1 top-1 text-gray-7"
           on:click={() => dispatch('close')}
         />

@@ -6,7 +6,7 @@
     <main class="m-3">
         <v-icon 
             data-testid="icon-default-valid" 
-            name='camera' 
+            name='camera-outline' 
         />
         <v-icon 
             data-testid="icon-default-invalid" 
@@ -14,42 +14,42 @@
         />
         <v-icon 
             data-testid="icon-size-xs" 
-            name='camera' 
+            name='camera-outline' 
             size='xs' 
         />
         <v-icon 
             data-testid="icon-size-sm" 
-            name='camera' 
+            name='camera-outline' 
             size='sm' 
         />
         <v-icon 
             data-testid="icon-size-base" 
-            name='camera' 
+            name='camera-outline' 
             size='base' 
         />
         <v-icon 
             data-testid="icon-size-lg" 
-            name='camera' 
+            name='camera-outline' 
             size='lg' 
         />
         <v-icon 
             data-testid="icon-size-xl" 
-            name='camera' 
+            name='camera-outline' 
             size='xl' 
         />
         <v-icon 
             data-testid="icon-size-2xl" 
-            name='camera' 
+            name='camera-outline' 
             size='2xl' 
         />
         <v-icon 
             data-testid="icon-size-3xl" 
-            name='camera' 
+            name='camera-outline' 
             size='3xl' 
         />
         <v-icon 
             data-testid="icon-size-4xl" 
-            name='camera' 
+            name='camera-outline' 
             size='4xl' 
         />
     </main>

@@ -31,11 +31,11 @@ const handleSelect = (event: any) => {
       />
       <v-context-menu-item
         data-testid="context-menu-item-3"
-        icon="trash"
+        icon="trash-can-outline"
         label="label 3"
       />
       <v-context-menu-item
-        icon="x"
+        icon="close"
         label="danger"
         variant="danger"
       />
@@ -66,7 +66,7 @@ const handleSelect = (event: any) => {
         @select="handleSelect"
       />
       <v-context-menu-item 
-        icon="x"
+        icon="close"
         label="label"
         variant="danger"
         @select="handleSelect"

@@ -52,7 +52,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
   >
     <v-button
       class="absolute right-4 top-4 text-gray-6"
-      icon="x"
+      icon="close"
       label="Delete component"
       variant="icon"
       on:click={handleClose}

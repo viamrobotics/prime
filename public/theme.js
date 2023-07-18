@@ -14,6 +14,8 @@ export const theme = {
     fill: {
       'subtle-1': '#4e4f52',
       'subtle-2': '#7a7c80',
+      'danger-dark': '#be3536',
+      'disabled-dark': '#9c9ca4',
     },
     borderColor: {
       light: '#e4e4e6',

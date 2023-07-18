@@ -1,4 +1,5 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { paths } from '../elements/icon/icons';
 
 <Meta
   title='Elements/Icon'
@@ -8,10 +9,16 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
       table: { defaultValue: { summary: '' } },
     },
     size: {
-      description: 'The badge status',
+      description: 'The icon size',
       control: { type: 'select' },
       options: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'],
       table: { defaultValue: { summary: 'base' } },
+    },
+    fill: {
+      description: 'The icon color',
+      control: { type: 'select' },
+      options: ['danger-dark', 'danger-light'],
+      table: { defaultValue: { summary: 'danger-dark' } },
     },
   }}
 />
@@ -22,15 +29,18 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
   <Story
     name='Icon'
     args={{
-      name: 'camera',
-      size: 'base',
+      name: 'alert-circle',
+      size: '4xl',
+      fill: 'danger-dark',
     }}
   >
-    {({ name, size }) => `
+    {({ name, size, fill }) => `
       <v-icon
         name='${name}'
         size='${size}'
+        fill='${fill}'
       />
+      ${paths}
     `}
   </Story>
 </Canvas>
@@ -38,46 +48,52 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
 <Canvas>
   <Story name='All'>
     {() => `
-<v-icon name='video-camera'></v-icon>
-<v-icon name='error-outline'></v-icon>
-<v-icon name='warning'></v-icon>
-<v-icon name='naught'></v-icon>
-<v-icon name='disconnected'></v-icon>
-<v-icon name='add'></v-icon>
-<v-icon name='x'></v-icon>
-<v-icon name='copy'></v-icon>
-<v-icon name='remove'></v-icon>
-<v-icon name='send'></v-icon>
-<v-icon name='undo'></v-icon>
-<v-icon name='connected'></v-icon>
-<v-icon name='download'></v-icon>
-<v-icon name='camera'></v-icon>
-<v-icon name='center'></v-icon>
-<v-icon name='zoom-out'></v-icon>
-<v-icon name='chevron-down'></v-icon>
-<v-icon name='menu'></v-icon>
-<v-icon name='more'></v-icon>
-<v-icon name='arrow-up'></v-icon>
-<v-icon name='checkmark'></v-icon>
-<v-icon name='pop-out'></v-icon>
-<v-icon name='settings'></v-icon>
-<v-icon name='help-outline'></v-icon>
-<v-icon name='refresh-camera'></v-icon>
-<v-icon name='filter'></v-icon>
-<v-icon name='open-full'></v-icon>
-<v-icon name='refresh'></v-icon>
-<v-icon name='info-outline'></v-icon>
-<v-icon name='pause-circle-filled'></v-icon>
-<v-icon name='play-circle-filled'></v-icon>
-<v-icon name='logout'></v-icon>
-<v-icon name='instagram'></v-icon>
-<v-icon name='social-medium'></v-icon>
-<v-icon name='save'></v-icon>
-<v-icon name='edit'></v-icon>
-<v-icon name='stop-circle'></v-icon>
-<v-icon name='twitter'></v-icon>
-<v-icon name='linkedin'></v-icon>
-<v-icon name='trash'></v-icon>
+<div class="flex flex-wrap gap-4">
+  <v-icon name='alert-circle'></v-icon>
+  <v-icon name='alert-circle-outline'></v-icon>
+  <v-icon name='alert-outline'></v-icon>
+  <v-icon name='arrow-expand-all'></v-icon>
+  <v-icon name='arrow-top-right-bottom-left'></v-icon>
+  <v-icon name='arrow-up'></v-icon>
+  <v-icon name='broadcast'></v-icon>
+  <v-icon name='broadcast-off'></v-icon>
+  <v-icon name='camera-flip-outline'></v-icon>
+  <v-icon name='camera-outline'></v-icon>
+  <v-icon name='cancel'></v-icon>
+  <v-icon name='check'></v-icon>
+  <v-icon name='check-circle'></v-icon>
+  <v-icon name='chevron-down'></v-icon>
+  <v-icon name='close'></v-icon>
+  <v-icon name='cog'></v-icon>
+  <v-icon name='content-copy'></v-icon>
+  <v-icon name='content-save-outline'></v-icon>
+  <v-icon name='credit-card-outline'></v-icon>
+  <v-icon name='dots-horizontal'></v-icon>
+  <v-icon name='download'></v-icon>
+  <v-icon name='file-download-outline'></v-icon>
+  <v-icon name='filter-outline'></v-icon>
+  <v-icon name='github'></v-icon>
+  <v-icon name='help-circle-outline'></v-icon>
+  <v-icon name='image-filter-center-focus'></v-icon>
+  <v-icon name='information-outline'></v-icon>
+  <v-icon name='instagram'></v-icon>
+  <v-icon name='linkedin'></v-icon>
+  <v-icon name='logout'></v-icon>
+  <v-icon name='menu'></v-icon>
+  <v-icon name='minus'></v-icon>
+  <v-icon name='open-in-new'></v-icon>
+  <v-icon name='pause-circle-outline'></v-icon>
+  <v-icon name='pencil-outline'></v-icon>
+  <v-icon name='play-circle-outline'></v-icon>
+  <v-icon name='plus'></v-icon>
+  <v-icon name='refresh'></v-icon>
+  <v-icon name='send'></v-icon>
+  <v-icon name='stop-circle-outline'></v-icon>
+  <v-icon name='trash-can-outline'></v-icon>
+  <v-icon name='twitter'></v-icon>
+  <v-icon name='undo'></v-icon>
+  <v-icon name='video-outline'></v-icon>
+</div>
     `}
   </Story>
 </Canvas>

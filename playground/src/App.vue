@@ -117,7 +117,7 @@ const inputToFocus = $ref<HTMLElement>();
       </button>
 
       <section :key="i" v-for="i in [0, 1, 2, 3, 4, 5]">
-        <v-icon name="trash" />
+        <v-icon name="trash-can-outline" />
       </section>
     </div>
 
@@ -129,7 +129,7 @@ const inputToFocus = $ref<HTMLElement>();
       sortoption="reduce"
       withbutton="true"
       buttontext="hello"
-      buttonicon="x"
+      buttonicon="close"
       heading="heading title"
     />
     <section class="flex items-end gap-2 my-6">

@@ -14,6 +14,8 @@ export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' = 'info';
 export let readonly: string;
+export let fill: string;
+export let icon: string;
 
 const dispatch = dispatcher();
 
@@ -28,6 +30,23 @@ const handleClick = (value: string) => {
     dispatch('input', { value });
   }
 };
+
+$: {
+  switch (state) {
+    case 'info':
+      fill = 'gray-6';
+      icon = 'information-outline';
+      break;
+    case 'warn':
+      fill = 'warning-bright';
+      icon = 'alert-circle-outline';
+      break;
+    case 'error':
+      fill = 'danger-dark';
+      icon = 'alert-circle-outline';
+      break;
+  }
+}
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -52,11 +71,12 @@ const handleClick = (value: string) => {
       <v-tooltip text={tooltip}>
         <div
           class={cx({
-            'icon-info-outline': state === 'info',
-            'icon-error-outline text-warning-bright': state === 'warn',
-            'icon-error-outline text-danger-dark': state === 'error',
+            'text-warning-bright': state === 'warn',
+            'text-danger-dark': state === 'error',
           })}
-        />
+        >
+          <v-icon {fill} name={icon} />
+        </div>
       </v-tooltip>
     {/if}
   </div>
