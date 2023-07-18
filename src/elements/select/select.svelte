@@ -77,7 +77,7 @@ const reduceEmptyOptions = (options: string[]) => {
 
 const applySearchSort = (term: string, options: string[]) => {
   if (root) {
-    dispatch({target: root}, 'search', { term });
+    dispatch({ target: root }, 'search', { term });
   }
 
   if (reduceEmptyOptions(options).length === 0) {
@@ -93,7 +93,7 @@ const handleInput = (event: Event) => {
   event.stopImmediatePropagation();
   value = input.value.trim();
   if (root) {
-    dispatch({target: root}, 'input', { value });
+    dispatch({ target: root }, 'input', { value });
   }
 };
 
@@ -119,7 +119,7 @@ const handleEnter = () => {
   if (navigationIndex > -1) {
     value = sortedOptions[navigationIndex]!;
     if (root) {
-      dispatch({target: root}, 'change', { value });
+      dispatch({ target: root }, 'change', { value });
     }
   } else {
     const result = sortedOptions.find((item) => item.toLowerCase() === value);
@@ -127,7 +127,7 @@ const handleEnter = () => {
     if (result) {
       value = result;
       if (root) {
-        dispatch({target: root}, 'change', { value });
+        dispatch({ target: root }, 'change', { value });
       }
     }
   }
@@ -136,7 +136,7 @@ const handleEnter = () => {
   }
 
   if (root) {
-    dispatch({target: root}, 'input', { value });
+    dispatch({ target: root }, 'input', { value });
   }
 };
 
@@ -160,7 +160,7 @@ const handleOptionSelect = (target: string, event: Event) => {
   const { checked } = event.target as HTMLInputElement;
   if (value === target) {
     if (root) {
-      dispatch({target: root}, 'change', { value });
+      dispatch({ target: root }, 'change', { value });
     }
     event.preventDefault();
     open = false;
@@ -171,8 +171,8 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   open = false;
   if (root) {
-    dispatch({target: root}, 'change', { value });
-    dispatch({target: root}, 'input', { value });
+    dispatch({ target: root }, 'change', { value });
+    dispatch({ target: root }, 'input', { value });
   }
 };
 
@@ -211,7 +211,7 @@ const handleOptionMouseEnter = (index: number) => {
 
 const handleButtonClick = () => {
   if (root) {
-    dispatch({target: root}, 'button-click');
+    dispatch({ target: root }, 'button-click');
   }
 };
 
