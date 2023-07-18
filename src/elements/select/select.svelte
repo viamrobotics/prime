@@ -52,6 +52,7 @@ $: hasButton = htmlToBoolean(withbutton, 'withbutton');
 $: isReduceSort = sortoption === 'reduce';
 $: doesSearch = sortoption !== 'off';
 $: parsedOptions = options.split(',').map((str) => str.trim());
+
 $: sortedOptions = doesSearch
   ? applySearchSort(value, parsedOptions)
   : reduceEmptyOptions(parsedOptions);
@@ -75,8 +76,8 @@ const reduceEmptyOptions = (options: string[]) => {
   return options;
 };
 
-const applySearchSort = (term: string, options: string[], event: Event) => {
-  dispatch(event, 'search', { term });
+const applySearchSort = (term: string, options: string[]) => {
+  dispatch({ target: root }, 'search', { term });
 
   if (reduceEmptyOptions(options).length === 0) {
     return [];
@@ -96,14 +97,18 @@ const handleInput = (event: Event) => {
 const handleKeyUp = (event: KeyboardEvent) => {
   setKeyboardControl(true);
   switch (event.key.toLowerCase()) {
-    case 'enter':
-      return handleEnter();
-    case 'arrowup':
+    case 'enter': {
+      return handleEnter(event);
+    }
+    case 'arrowup': {
       return handleNavigate(-1);
-    case 'arrowdown':
+    }
+    case 'arrowdown': {
       return handleNavigate(+1);
-    case 'escape':
+    }
+    case 'escape': {
       return handleEscape();
+    }
   }
 };
 
@@ -137,7 +142,7 @@ const handleNavigate = (direction: number) => {
 
   const element = optionsContainer.children[0]!.children[navigationIndex]!;
 
-  if (utils.isElementInScrollView(element) === false) {
+  if (!utils.isElementInScrollView(element)) {
     element.scrollIntoView();
   }
 };
@@ -203,7 +208,7 @@ let fill = isDisabled ? 'disabled-dark' : 'gray-4';
 let icon = '';
 
 $: {
-  if (!open && isExact && parsedOptions.includes(value) === false) {
+  if (!open && isExact && !parsedOptions.includes(value)) {
     value = '';
   }
 

@@ -28,7 +28,7 @@ const handleClick = (option: string, event: Event) => {
         'border-l border-l-gray-300': selectedIndex > index,
         'border-r border-r-gray-300': selectedIndex < index,
       })}
-      on:click={() => handleClick(tab)}
+      on:click={(event) => handleClick(tab, event)}
     >
       <div
         class={cx({
