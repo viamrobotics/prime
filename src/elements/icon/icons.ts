@@ -64,7 +64,7 @@ export const paths: Record<string, string> = {
   send: mdiSend,
   twitter: mdiTwitter,
   undo: mdiUndo,
-  'account-multiple-outline': mdiAccountMultiple,
+  'account-multiple': mdiAccountMultiple,
   'alert-circle': mdiAlertCircle,
   'alert-circle-outline': mdiAlertCircleOutline,
   'alert-outline': mdiAlertOutline,
