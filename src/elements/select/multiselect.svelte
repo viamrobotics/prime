@@ -407,8 +407,7 @@ $: {
                         null,
                         Array.isArray(option) ? option.join('') : option
                       )}
-                      on:input|stopPropagation
-                      on:focus|preventDefault|stopPropagation
+                      on:focus|preventDefault
                     />
 
                     {#if search}
