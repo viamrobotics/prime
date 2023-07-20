@@ -47,6 +47,8 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
       'w-[480px] min-h-[400px] max-h-[600px]': variant === '',
       'w-[400px] max-h-[320px]': variant === 'small',
     })}
+    on:click|stopPropagation
+    on:keyup|stopPropagation
   >
     <v-button
       class="absolute right-4 top-4 text-gray-6"
