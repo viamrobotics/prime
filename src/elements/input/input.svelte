@@ -286,8 +286,10 @@ const handleNumberDragDown = async (event: PointerEvent) => {
         'pl-2.5': isNumeric === false,
         'pl-3': isNumeric,
         'bg-white border-light hover:border-medium focus:border-gray-9':
-          !isDisabled && !isInvalidNumericInput,
-        'pointer-events-none bg-disabled-light text-disabled-dark border-disabled-light':
+          !isDisabled && !isInvalidNumericInput && !isReadonly,
+        'text-disabled-dark':
+          isDisabled || isDragging,
+        'pointer-events-none bg-disabled-light border-disabled-light':
           isDisabled || isDragging || isReadonly,
         'border-danger-dark border -outline-offset-1 outline-[1.5px] outline-danger-dark':
           state === 'error' || isInvalidNumericInput,
