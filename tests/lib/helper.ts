@@ -7,7 +7,6 @@ type Key =
   | keyof typeof theme.extend.borderColor
   | keyof typeof theme.extend.boxShadow
   | keyof typeof theme.extend.colors
-  | keyof typeof theme.extend.fill
   | keyof typeof theme.extend.textColor;
 
 export const hexToRGB = (section: keyof typeof theme.extend, key: Key) => {
