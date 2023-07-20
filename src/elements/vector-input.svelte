@@ -30,8 +30,6 @@ $: {
 
 const handleInput = (index: number) => {
   return (event: CustomEvent<{ value: string }>) => {
-    event.stopPropagation();
-
     valueArray[index] = Number.parseFloat(event.detail.value || '0');
     value = valueArray.join(',');
     dispatch(event, 'input', { value: valueArray });

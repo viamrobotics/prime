@@ -314,7 +314,7 @@ $: {
             }
           )}
           on:input|preventDefault={handleInput}
-          on:keyup|stopPropagation|preventDefault={handleKeyUp}
+          on:keyup|preventDefault={handleKeyUp}
         />
         <button
           tabindex="-1"
@@ -380,8 +380,7 @@ $: {
                     null,
                     Array.isArray(option) ? option.join('') : option
                   )}
-                  on:input|stopPropagation
-                  on:focus|preventDefault|stopPropagation
+                  on:focus|preventDefault
                 />
 
                 {#if search}
