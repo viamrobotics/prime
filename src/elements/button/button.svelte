@@ -25,7 +25,7 @@ export let label = '';
 export let title = '';
 export let icon = '';
 export let tooltip = '';
-export let width: 'full' | 'default' = 'default'; // width full does not work with icons
+export let width: 'full' | 'default' = 'default';
 
 // https://github.com/sveltejs/svelte/issues/7596
 export let internals: ElementInternals;
@@ -106,6 +106,7 @@ $: {
         variant === 'outline-danger',
       '!bg-disabled-light !border-disabled-light text-disabled-dark pointer-events-none select-none':
         isDisabled,
+      'mx-auto': true,
     })}
     style={isDisabled ? '-webkit-user-select: none' : ''}
     on:click={handleClick}
@@ -115,7 +116,7 @@ $: {
     {/if}
 
     {#if variant !== 'icon' && variant !== 'icon-danger'}
-      <span class="mx-auto">
+      <span>
         {label}
       </span>
     {/if}
