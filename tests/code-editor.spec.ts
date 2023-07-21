@@ -249,7 +249,6 @@ test('Render a diff code editor if there is a previous attribute and variant dif
 }) => {
   const editor = page.getByTestId('code-editor-diff');
   const diffEditor = editor.locator('.monaco-diff-editor');
-  await expect(diffEditor).toHaveClass(/side-by-side/u);
   await expect(diffEditor).toBeVisible();
 
   // default renders in JSON

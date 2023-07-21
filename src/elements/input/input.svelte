@@ -239,18 +239,21 @@ const handleNumberDragDown = async (event: PointerEvent) => {
 
 $: {
   switch (state) {
-    case 'info':
+    case 'info': {
       fill = 'gray-6';
       icon = 'information-outline';
       break;
-    case 'warn':
+    }
+    case 'warn': {
       fill = 'warning-bright';
       icon = 'alert-circle-outline';
       break;
-    case 'error':
+    }
+    case 'error': {
       fill = 'danger-dark';
       icon = 'alert-circle-outline';
       break;
+    }
   }
 }
 </script>
@@ -304,7 +307,7 @@ $: {
     class={cx(
       'w-full py-1.5 px-2 leading-tight text-xs h-[30px] border outline-none appearance-none',
       {
-        'pl-2.5': isNumeric === false,
+        'pl-2.5': !isNumeric,
         'pl-3': isNumeric,
         'bg-white border-light hover:border-medium focus:border-gray-9':
           !isDisabled && !isInvalidNumericInput,
@@ -317,7 +320,7 @@ $: {
       }
     )}
     step={insertStepAttribute ? step : null}
-    on:input|preventDefault|stopPropagation={handleInput}
+    on:input|preventDefault={handleInput}
     on:keydown={isNumeric ? handleKeydown : undefined}
     on:blur={isNumeric ? handleBlur : undefined}
   />

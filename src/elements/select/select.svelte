@@ -314,7 +314,7 @@ $: {
             }
           )}
           on:input|preventDefault={handleInput}
-          on:keyup|stopPropagation|preventDefault={handleKeyUp}
+          on:keyup|preventDefault={handleKeyUp}
         />
         <button
           tabindex="-1"

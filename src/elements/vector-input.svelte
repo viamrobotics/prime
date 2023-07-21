@@ -10,6 +10,8 @@ export let type: 'integer' | 'number' = 'number';
 export let value = '';
 export let placeholders = ['x', 'y', 'z', 'w'];
 
+let container: HTMLDivElement;
+
 const dispatch = dispatcher();
 
 let valueArray: (number | undefined)[];
@@ -30,9 +32,11 @@ $: {
 
 const handleInput = (index: number) => {
   return (event: CustomEvent<{ value: string }>) => {
+    event.preventDefault();
+
     valueArray[index] = Number.parseFloat(event.detail.value || '0');
     value = valueArray.join(',');
-    dispatch(event, 'input', { value: valueArray });
+    dispatch({ target: container }, 'input', { value: valueArray });
   };
 };
 
