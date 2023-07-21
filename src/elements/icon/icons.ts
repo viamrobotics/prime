@@ -44,6 +44,10 @@ import {
   mdiAlertCircle,
   mdiCreditCardOutline,
   mdiAccountMultiple,
+  mdiArrowExpandLeft,
+  mdiArrowExpandRight,
+  mdiArrowCollapseLeft,
+  mdiArrowCollapseRight,
 } from '@mdi/js';
 
 export const paths: Record<string, string> = {
@@ -68,7 +72,11 @@ export const paths: Record<string, string> = {
   'alert-circle': mdiAlertCircle,
   'alert-circle-outline': mdiAlertCircleOutline,
   'alert-outline': mdiAlertOutline,
+  'arrow-collapse-left': mdiArrowCollapseLeft,
+  'arrow-collapse-right': mdiArrowCollapseRight,
   'arrow-expand-all': mdiArrowExpandAll,
+  'arrow-expand-left': mdiArrowExpandLeft,
+  'arrow-expand-right': mdiArrowExpandRight,
   'arrow-top-right-bottom-left': mdiArrowTopRightBottomLeft,
   'arrow-up': mdiArrowUp,
   'broadcast-off': mdiBroadcastOff,
