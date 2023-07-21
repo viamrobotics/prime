@@ -25,6 +25,7 @@ export let label = '';
 export let title = '';
 export let icon = '';
 export let tooltip = '';
+export let width: 'full' | 'default' = 'default'; // width full does not work with icons
 
 // https://github.com/sveltejs/svelte/issues/7596
 export let internals: ElementInternals;
@@ -32,6 +33,7 @@ export let internals: ElementInternals;
 let isDisabled: boolean;
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
+$: display = width === 'full' ? 'block' : 'inline-block';
 
 const handleClick = () => {
   const { form } = internals;
@@ -85,6 +87,7 @@ $: {
     aria-disabled={isDisabled ? true : undefined}
     {title}
     class={cx('whitespace-nowrap', {
+      'w-full': width === 'full',
       'h-[30px] w-[30px]': variant === 'icon' || variant === 'icon-danger',
       'px-3': !icon && variant !== 'icon',
       'pl-2 pr-3': icon && variant !== 'icon',
@@ -121,6 +124,7 @@ $: {
 
 <style>
 :host {
-  display: inline-block !important;
+  --button-display: {display};
+  display: var(--button-display) !important;
 }
 </style>
