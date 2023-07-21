@@ -46,13 +46,6 @@ const inputToFocus = $ref<HTMLElement>();
       variant="success"
       disabled="true"
       label="testing 2"/>
-    <div class="w-full">
-      <v-button 
-        width="full"
-        label="testing 2"
-        icon="arrow"
-      />
-    </div>
     <h1>LIST BOX</h1>
     <v-list-box
       leftlabel="Available models"
