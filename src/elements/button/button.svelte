@@ -47,14 +47,14 @@ const handleParentClick = (event: PointerEvent) => {
   event.stopImmediatePropagation();
 };
 
-let fill = 'danger';
+let fill = 'black';
 
 $: {
   switch (variant) {
     case 'inverse-primary':
     case 'danger':
     case 'success': {
-      fill = 'reversed';
+      fill = 'white';
       break;
     }
     case 'outline-danger':
