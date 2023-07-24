@@ -45,7 +45,7 @@ All elements are prefixed with `v-`. This stands for Viam, the cool company wher
 
 ## Playground
 
-To use the playground, go to the `playground` directory, and:
+To use the playground, run the following from the main directory:
 
 ```bash
 pnpm install

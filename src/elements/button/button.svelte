@@ -126,6 +126,6 @@ $: {
 <style>
 :host {
   --button-display: {display};
-  display: var(--button-display) !important;
+  display: var(--button-display);
 }
 </style>
