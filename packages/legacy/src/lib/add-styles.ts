@@ -1,4 +1,4 @@
-import css from '../../public/prime.css?inline';
+import css from '../../prime.css?inline';
 
 let sheet: CSSStyleSheet & { replaceSync(x: string): void };
 let fallback = false;
