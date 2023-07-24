@@ -10,23 +10,14 @@ A collection of UI elements.
 
 [`@viamrobotics/prime`][legacy] - Legacy web components
 
-[`@viamrobotics/prime-primitives`][primitives] - Simple components; styled HTML replacements. Exported as Svelte components and web components for use without a framework.
-
-[`@viamrobotics/prime-core`][core] - More complex components without dependencies. Exported as Svelte components.
+[`@viamrobotics/prime-core`][core] - Core components. Exported as Svelte components.
 
 [`@viamrobotics/prime-blocks`][blocks] - Large blocks of UI that often have dependencies like [Threlte][]. Exported as Svelte components.
 
 [legacy]: https://github.com/viamrobotics/prime/tree/main/packages/legacy
-[primitives]: https://github.com/viamrobotics/prime/tree/main/packages/primitives
 [core]: https://github.com/viamrobotics/prime/tree/main/packages/core
 [blocks]: https://github.com/viamrobotics/prime/tree/main/packages/blocks
 [threlte]: https://threlte.xyz
-
-## Contributing
-
-Please see the [contribution guide][].
-
-[contribution guide]: ./CONTRIBUTING.md
 
 ### Browser Compatibility
 
