@@ -151,7 +151,7 @@ test('Given warn state and tooltip value, there should be a warn tooltip next to
 }) => {
   const select = page.getByTestId('select-warn-tooltip');
   const tooltip = select.locator('label > div > v-tooltip').first();
-  await expect(tooltip.locator('.text-warning-bright')).toBeVisible();
+  await expect(tooltip).toBeVisible();
 
   // text is not visible
   await expect(tooltip.getByText('warn tip').first()).not.toBeVisible();
@@ -165,7 +165,7 @@ test('Given error state and tooltip value, there should be an error tooltip next
 }) => {
   const select = page.getByTestId('select-error-tooltip');
   const tooltip = select.locator('label > div > v-tooltip').first();
-  await expect(tooltip.locator('.text-danger-dark')).toBeVisible();
+  await expect(tooltip).toBeVisible();
 
   // text is not visible
   await expect(tooltip.getByText('error tip').first()).not.toBeVisible();

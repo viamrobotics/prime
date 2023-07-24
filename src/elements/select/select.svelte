@@ -275,14 +275,7 @@ $: {
 
     {#if tooltip}
       <v-tooltip text={tooltip}>
-        <div
-          class={cx({
-            'text-warning-bright': state === 'warn',
-            'text-danger-dark': state === 'error',
-          })}
-        >
-          <v-icon {fill} name={icon} />
-        </div>
+        <v-icon {fill} name={icon} />
       </v-tooltip>
     {/if}
   </div>
