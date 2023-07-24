@@ -48,6 +48,7 @@ import {
   mdiArrowExpandRight,
   mdiArrowCollapseLeft,
   mdiArrowCollapseRight,
+  mdiContentDuplicate,
 } from '@mdi/js';
 
 export const paths: Record<string, string> = {
@@ -85,6 +86,7 @@ export const paths: Record<string, string> = {
   'check-circle': mdiCheckCircle,
   'chevron-down': mdiChevronDown,
   'content-copy': mdiContentCopy,
+  'content-duplicate': mdiContentDuplicate,
   'content-save-outline': mdiContentSaveOutline,
   'credit-card-outline': mdiCreditCardOutline,
   'dots-horizontal': mdiDotsHorizontal,
