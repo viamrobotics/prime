@@ -27,9 +27,9 @@ export let size: Size = 'base';
 const hasNameProperty = Object.hasOwn(paths, name);
 </script>
 
-<div class="leading-3">
+<p class="leading-3">
   <svg
-    class={cx(`${sizes[size]}`, {
+    class={cx(`leading-3 ${sizes[size]}`, {
       'inline-block': hasNameProperty,
       hidden: !hasNameProperty,
     })}
@@ -40,4 +40,4 @@ const hasNameProperty = Object.hasOwn(paths, name);
     <title id={name}>{`${name} icon`}</title>
     <path d={paths[name]} fill={fillColor[fill]} />
   </svg>
-</div>
+</p>
