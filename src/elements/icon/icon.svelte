@@ -29,7 +29,7 @@ const hasNameProperty = Object.hasOwn(paths, name);
 
 <p class="leading-3">
   <svg
-    class={cx(`leading-3 ${sizes[size]}`, {
+    class={cx(`${sizes[size]}`, {
       'inline-block': hasNameProperty,
       hidden: !hasNameProperty,
     })}
