@@ -41,11 +41,17 @@ const inputToFocus = $ref<HTMLElement>();
     <v-button 
       variant="success"
       label="focus input component"
-      @click="inputToFocus!.focus()"/>
+      @click="inputToFocus!.focus()"
+    />
     <v-button 
       variant="success"
       disabled="true"
-      label="testing 2"/>
+      label="testing 2"
+    />
+    <v-button 
+    label="testing 3"
+    width="full"
+    />
     <h1>LIST BOX</h1>
     <v-list-box
       leftlabel="Available models"
@@ -164,10 +170,10 @@ const inputToFocus = $ref<HTMLElement>();
       />  
 
       <v-radio options="option 1, option 2" />
-
       <v-button label="Hi" />
 
     </section>
+    <v-radio options="option 1, option 2" width="full"/>
     <v-collapse class="p-3" title='Hello world?'>
       Hello world
     </v-collapse>

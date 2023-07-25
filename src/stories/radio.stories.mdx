@@ -39,6 +39,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
       options: ['info', 'warn', 'error'],
       type: 'text',
     },
+    width: {
+      description: 'Sets the width of the radio',
+      options: ['default', 'full'],
+      table: { defaultValue: { summary: 'default' } },
+    },
     'on:input': {
       description: 'Event fired when an option is selected',
     },
@@ -134,6 +139,25 @@ For user triggered actions
   options='${options}'
   selected='${selected}'
   readonly='${readonly}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Full width radio'
+    args={{
+      options: 'Opt 1, Opt 2, Opt 3',
+      selected: 'Opt 1',
+      width: 'full',
+    }}
+  >
+    {({ options, selected, width }) => `
+<v-radio
+  options='${options}'
+  selected='${selected}'
+  width='${width}'
 />
     `}
   </Story>

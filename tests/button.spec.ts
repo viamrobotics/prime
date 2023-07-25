@@ -138,3 +138,8 @@ test('Tests that the button is clickable if not disabled', async ({ page }) => {
   await clickMeButton.isEnabled();
   await clickMeButton.click();
 });
+
+test('Test that button has w-full if width defined full', async ({ page }) => {
+  const fullButton = page.getByTestId('full-button');
+  await expect(fullButton.locator('button')).toHaveClass(/w-full/u);
+});

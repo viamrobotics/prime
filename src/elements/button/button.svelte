@@ -25,6 +25,7 @@ export let label = '';
 export let title = '';
 export let icon = '';
 export let tooltip = '';
+export let width: 'full' | 'default' = 'default';
 
 // https://github.com/sveltejs/svelte/issues/7596
 export let internals: ElementInternals;
@@ -32,6 +33,7 @@ export let internals: ElementInternals;
 let isDisabled: boolean;
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
+$: display = width === 'full' ? 'block' : 'inline-block';
 
 const handleClick = () => {
   const { form } = internals;
@@ -85,6 +87,7 @@ $: {
     aria-disabled={isDisabled ? true : undefined}
     {title}
     class={cx('whitespace-nowrap', {
+      'w-full': width === 'full',
       'h-[30px] w-[30px]': variant === 'icon' || variant === 'icon-danger',
       'px-3': !icon && variant !== 'icon' && variant !== 'icon-danger',
       'pl-2 pr-3': icon && variant !== 'icon' && variant !== 'icon-danger',
@@ -103,6 +106,7 @@ $: {
         variant === 'outline-danger',
       '!bg-disabled-light !border-disabled-light text-disabled-dark pointer-events-none select-none':
         isDisabled,
+      'mx-auto': true,
     })}
     style={isDisabled ? '-webkit-user-select: none' : ''}
     on:click={handleClick}
@@ -112,7 +116,7 @@ $: {
     {/if}
 
     {#if variant !== 'icon' && variant !== 'icon-danger'}
-      <span class="mx-auto">
+      <span>
         {label}
       </span>
     {/if}
@@ -121,6 +125,7 @@ $: {
 
 <style>
 :host {
-  display: inline-block !important;
+  --button-display: {display};
+  display: var(--button-display);
 }
 </style>
