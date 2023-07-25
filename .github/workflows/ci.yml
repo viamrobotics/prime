@@ -16,7 +16,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Run lints and checks
-        run: pnpm run check
+        run: pnpm -C packages/legacy check
 
   build:
     runs-on: ubuntu-latest
@@ -25,16 +25,16 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Build 🏗️
-        run: pnpm run build
+        run: pnpm -C packages/legacy build
       - name: Upload npm artifacts
         uses: actions/upload-artifact@v3
         with:
           name: npm-dist
-          path: dist
+          path: packages/legacy/dist
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
-          path: prime
+          path: packages/legacy/prime
 
   test:
     timeout-minutes: 20
@@ -46,14 +46,14 @@ jobs:
         with:
           node-version: 16
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: pnpm -C packages/legacy playwright-install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: pnpm -C packages/legacy test
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: playwright-report
-          path: playwright-report/
+          path: packages/legacy/playwright-report/
           retention-days: 30
 
   deploy-npm:
@@ -70,11 +70,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: npm-dist
-          path: dist
+          path: packages/legacy/dist
       - name: Publish 🚀
-        uses: JS-DevTools/npm-publish@541aa6b21b4a1e9990c95a92c21adc16b35e9551
+        uses: JS-DevTools/npm-publish@5a85faf05d2ade2d5b6682bfe5359915d5159c6c # v2.2.1
         with:
           token: ${{ secrets.NPM_TOKEN }}
+          package: packages/legacy
 
   deploy-pages:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
