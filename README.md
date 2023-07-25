@@ -39,19 +39,6 @@ pnpm -C packages/legacy playwright-install
 pnpm -r test
 ```
 
-### Browser Compatibility
-
-`PRIME` supports the following browsers:
-
-| ![Chrome][] | ![Firefox][] | ![Edge][] | ![Safari][] |
-| ----------------- | ------------------- | ------------- | ----------------- |
-| Latest ✔          | Latest ✔            | Latest ✔      | Latest ✔          |
-
-[chrome]: https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png
-[firefox]: https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png
-[edge]: https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png
-[safari]: https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png
-
 ## License
 
 Copyright 2021-2023 Viam Inc.

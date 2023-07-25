@@ -1,0 +1,16 @@
+{
+  "extends": "@viamrobotics/typescript-config/base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": [
+    ".eslintrc.cjs",
+    ".prettierrc.cjs",
+    "postcss.config.js",
+    "tailwind.config.ts",
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.svelte"
+  ]
+}
