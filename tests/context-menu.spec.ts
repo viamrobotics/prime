@@ -30,7 +30,7 @@ test('Renders style variants', async ({ page }) => {
 
   // variant=danger
   await expect(
-    contextMenu.getByRole('menuitem', { name: 'danger' }).locator('p')
+    contextMenu.getByRole('menuitem', { name: 'danger' }).locator('p').first()
   ).toHaveClass(/text-danger-dark/u);
   await expect(contextMenu.getByText('danger')).toHaveClass(
     /text-danger-dark/u
