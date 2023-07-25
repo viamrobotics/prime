@@ -4,18 +4,20 @@
   "license": "Apache-2.0",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "theme.js"
   ],
   "main": "./dist/prime.umd.cjs",
   "module": "./dist/prime.js",
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "import": "./dist/prime.js",
       "require": "./dist/prime.umd.cjs"
     },
     "./theme": {
-      "import": "./dist/theme.js"
+      "import": "./theme.js"
     },
     "./prime.css": "./dist/prime.css"
   },

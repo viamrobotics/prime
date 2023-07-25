@@ -1,8 +1,0 @@
-.github
-.vscode
-node_modules
-
-packages/legacy
-!packages/legacy/dist
-
-public

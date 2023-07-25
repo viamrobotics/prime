@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: npm-dist
-          path: dist
+          path: packages/legacy/dist
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
@@ -72,9 +72,10 @@ jobs:
           name: npm-dist
           path: packages/legacy/dist
       - name: Publish 🚀
-        uses: JS-DevTools/npm-publish@541aa6b21b4a1e9990c95a92c21adc16b35e9551
+        uses: JS-DevTools/npm-publish@5a85faf05d2ade2d5b6682bfe5359915d5159c6c # v2.2.1
         with:
           token: ${{ secrets.NPM_TOKEN }}
+          package: packages/legacy
 
   deploy-pages:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
