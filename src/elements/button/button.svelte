@@ -49,14 +49,14 @@ const handleParentClick = (event: PointerEvent) => {
   event.stopImmediatePropagation();
 };
 
-let fill = 'danger';
+let fill = 'black';
 
 $: {
   switch (variant) {
     case 'inverse-primary':
     case 'danger':
     case 'success': {
-      fill = 'reversed';
+      fill = 'white';
       break;
     }
     case 'outline-danger':
@@ -89,10 +89,10 @@ $: {
     class={cx('whitespace-nowrap', {
       'w-full': width === 'full',
       'h-[30px] w-[30px]': variant === 'icon' || variant === 'icon-danger',
-      'px-3': !icon && variant !== 'icon',
-      'pl-2 pr-3': icon && variant !== 'icon',
+      'px-3': !icon && variant !== 'icon' && variant !== 'icon-danger',
+      'pl-2 pr-3': icon && variant !== 'icon' && variant !== 'icon-danger',
       'inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs border':
-        variant !== 'icon',
+        variant !== 'icon' && variant !== 'icon-danger',
       'bg-light border-light hover:bg-medium hover:border-medium active:bg-gray-2':
         variant === 'primary',
       'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black active:bg-[#000]':
