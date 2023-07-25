@@ -19,6 +19,26 @@ A collection of UI elements.
 [blocks]: https://github.com/viamrobotics/prime/tree/main/packages/blocks
 [threlte]: https://threlte.xyz
 
+## Building
+
+```bash
+pnpm -r build
+```
+
+## Linting
+
+```bash
+pnpm -r check
+pnpm -r format
+```
+
+## Testing
+
+```bash
+pnpm -C packages/legacy playwright-install
+pnpm -r test
+```
+
 ### Browser Compatibility
 
 `PRIME` supports the following browsers:

@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+input,
+button {
+  font-family: inherit;
+}
+
+:host {
+  display: block;
+}
+
+:host([hidden]) {
+  display: none;
+}

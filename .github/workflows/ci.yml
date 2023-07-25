@@ -16,7 +16,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Run lints and checks
-        run: pnpm -C packages/legacy check
+        run: pnpm -r check
 
   build:
     runs-on: ubuntu-latest
@@ -25,12 +25,17 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Build 🏗️
-        run: pnpm -C packages/legacy build
-      - name: Upload npm artifacts
+        run: pnpm -r build
+      - name: Upload npm @viamrobotics/prime artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: npm-dist
+          name: npm-legacy-dist
           path: packages/legacy/dist
+      - name: Upload npm @viamrobotics/prime-core artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm-core-dist
+          path: packages/core/dist
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
@@ -47,8 +52,8 @@ jobs:
           node-version: 16
       - name: Install Playwright Browsers
         run: pnpm -C packages/legacy playwright-install --with-deps
-      - name: Run Playwright tests
-        run: pnpm -C packages/legacy test
+      - name: Run tests
+        run: pnpm -r test
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
@@ -66,17 +71,27 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Download npm artifacts
+      - name: Download @viamrobotics/prime npm artifacts
         uses: actions/download-artifact@v3
         with:
-          name: npm-dist
+          name: npm-legacy-dist
           path: packages/legacy/dist
-      - name: Publish 🚀
+      - name: Publish @viamrobotics/prime 🚀
         uses: JS-DevTools/npm-publish@5a85faf05d2ade2d5b6682bfe5359915d5159c6c # v2.2.1
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: packages/legacy
-
+      - name: Download @viamrobotics/prime-core npm artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: npm-core-dist
+          path: packages/core/dist
+      - name: Publish @viamrobotics/prime-core 🚀
+        uses: JS-DevTools/npm-publish@5a85faf05d2ade2d5b6682bfe5359915d5159c6c # v2.2.1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: packages/core
+  
   deploy-pages:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [check, build, test]
