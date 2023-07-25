@@ -16,6 +16,7 @@ export let state: 'info' | 'warn' | 'error' = 'info';
 export let readonly: string;
 export let fill: string;
 export let icon: string;
+export let width: 'full' | 'default' = 'default';
 
 const dispatch = dispatcher();
 
@@ -96,6 +97,7 @@ $: {
             option === selected && isReadonly,
           'bg-disabled-light border-light text-disabled-dark cursor-not-allowed pointer-events-none':
             isReadonly,
+          'w-full': width === 'full',
         })}
         on:click={(event) => handleClick(option, event)}
       >

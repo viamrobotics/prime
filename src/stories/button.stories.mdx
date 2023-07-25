@@ -30,6 +30,11 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
       options: ['button', 'submit', 'reset'],
       table: { defaultValue: { summary: 'button' } },
     },
+    width: {
+      description: 'Sets the width of the button',
+      options: ['default', 'full'],
+      table: { defaultValue: { summary: 'default' } },
+    },
   }}
 />
 
@@ -260,6 +265,42 @@ For user triggered actions
 <v-button
   icon='${icon}'
   variant='${variant}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Full width button'
+    args={{
+      width: 'full',
+      label: 'hello',
+    }}
+  >
+    {({ width, label }) => `
+<v-button
+  label='${label}'
+  width='${width}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Full width button with icon'
+    args={{
+      width: 'full',
+      label: 'hello',
+      icon: 'trash-can-outline',
+    }}
+  >
+    {({ width, label, icon }) => `
+<v-button
+  label='${label}'
+  width='${width}'
+  icon='${icon}'
 />
     `}
   </Story>

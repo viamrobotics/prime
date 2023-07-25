@@ -88,5 +88,11 @@
       label="Click Me"
     />
 
+    <v-button
+      data-testid="full-button"
+      label="Button"
+      width="full"
+    />
+
   </main>
 </template>
