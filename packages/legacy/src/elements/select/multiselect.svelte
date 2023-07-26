@@ -251,20 +251,24 @@ let icon = '';
 $: {
   switch (state) {
     case 'warn': {
-      fill = 'warning-dark';
-      icon = 'information-outline';
+      fill = 'warning-bright';
+      icon = 'alert-circle-outline';
       break;
     }
     case 'info': {
-      fill = 'gray-4';
+      fill = 'gray-6';
       icon = 'information-outline';
       break;
     }
     case 'error': {
       fill = 'danger-dark';
-      icon = 'alert-circle';
+      icon = 'alert-circle-outline';
       break;
     }
+  }
+
+  if (isDisabled) {
+    fill = 'disabled-dark';
   }
 }
 </script>
@@ -332,7 +336,7 @@ $: {
                   state === 'error',
                 'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
                   state === 'warn',
-                'pointer-events-none bg-disabled-light text-disabled-dark border-disabled-light':
+                'pointer-events-none !bg-disabled-light text-disabled-dark border-disabled-light':
                   isDisabled || isReadonly,
               }
             )}
@@ -351,13 +355,7 @@ $: {
               }
             )}
           >
-            <v-icon
-              class={cx('flex', {
-                'text-disabled-dark': isDisabled,
-                'text-gray-6': !isDisabled,
-              })}
-              name="chevron-down"
-            />
+            <v-icon {fill} name="chevron-down" />
           </button>
         </div>
 

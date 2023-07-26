@@ -229,20 +229,24 @@ $: {
 
   switch (state) {
     case 'warn': {
-      fill = 'warning-dark';
-      icon = 'information-outline';
+      fill = 'warning-bright';
+      icon = 'alert-circle-outline';
       break;
     }
     case 'info': {
-      fill = 'gray-4';
+      fill = 'gray-6';
       icon = 'information-outline';
       break;
     }
     case 'error': {
       fill = 'danger-dark';
-      icon = 'alert-circle';
+      icon = 'alert-circle-outline';
       break;
     }
+  }
+
+  if (isDisabled) {
+    fill = 'disabled-dark';
   }
 }
 </script>
@@ -321,13 +325,7 @@ $: {
             }
           )}
         >
-          <v-icon
-            class={cx('flex', {
-              'text-disabled-dark': isDisabled,
-              'text-gray-6': !isDisabled,
-            })}
-            name="chevron-down"
-          />
+          <v-icon {fill} name="chevron-down" />
         </button>
       </div>
     </div>

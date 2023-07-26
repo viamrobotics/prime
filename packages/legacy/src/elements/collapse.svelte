@@ -55,7 +55,6 @@ const handleClick = (event: Event) => {
           'rotate-180': isOpen,
         })}
         name="chevron-down"
-        size="2xl"
       />
     </div>
   </div>
