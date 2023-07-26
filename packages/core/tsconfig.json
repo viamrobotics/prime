@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "@viamrobotics/typescript-config/base.json",
+    "./.svelte-kit/tsconfig.json"
+  ],
+  "compilerOptions": {
+    "types": ["svelte", "vite/client", "vitest"],
+    "noEmit": true
+  }
+}

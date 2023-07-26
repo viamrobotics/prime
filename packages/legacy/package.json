@@ -4,8 +4,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "files": [
-    "dist",
-    "theme.js"
+    "dist"
   ],
   "main": "./dist/prime.umd.cjs",
   "module": "./dist/prime.js",
@@ -15,9 +14,6 @@
       "types": "./dist/main.d.ts",
       "import": "./dist/prime.js",
       "require": "./dist/prime.umd.cjs"
-    },
-    "./theme": {
-      "import": "./theme.js"
     },
     "./prime.css": "./dist/prime.css"
   },
@@ -67,6 +63,7 @@
     "@typescript-eslint/parser": "^5.59.0",
     "@viamrobotics/eslint-config": "^0.0.4",
     "@viamrobotics/prettier-config": "^0.0.1",
+    "@viamrobotics/prime-core": "workspace:../core",
     "@viamrobotics/typescript-config": "^0.0.3",
     "@vitejs/plugin-vue": "^4.1.0",
     "classnames": "^2.3.2",

@@ -12,6 +12,7 @@ dist
 prime
 *.local
 .storybook/workers
+.svelte-kit
 
 # Editor directories and files
 .vscode/*

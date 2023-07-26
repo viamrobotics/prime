@@ -1,6 +1,5 @@
 import type { Locator } from '@playwright/test';
-// eslint-disable-next-line import/extensions
-import { theme } from '../../theme.js';
+import { theme } from '@viamrobotics/prime-core/theme';
 
 type Key =
   | keyof typeof theme.extend.backgroundColor
