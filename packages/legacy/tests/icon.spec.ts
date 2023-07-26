@@ -46,7 +46,7 @@ test('Renders and icon as the large size if size attribute is specified as lg', 
   page,
 }) => {
   await expect(page.getByTestId('icon-size-lg').locator('svg')).toHaveClass(
-    /w-4.5 h-4.5/u
+    /w-5 h-5/u
   );
 });
 
@@ -54,7 +54,7 @@ test('Renders and icon as the extra large size if size attribute is specified as
   page,
 }) => {
   await expect(page.getByTestId('icon-size-xl').locator('svg')).toHaveClass(
-    /w-5 h-5/u
+    /w-6 h-6/u
   );
 });
 
@@ -62,7 +62,7 @@ test('Renders and icon as the 2xl size if size attribute is specified as 2xl', a
   page,
 }) => {
   await expect(page.getByTestId('icon-size-2xl').locator('svg')).toHaveClass(
-    /w-6 h-6/u
+    /w-7 h-7/u
   );
 });
 
@@ -70,7 +70,7 @@ test('Renders and icon as the 3xl size if size attribute is specified as 3xl', a
   page,
 }) => {
   await expect(page.getByTestId('icon-size-3xl').locator('svg')).toHaveClass(
-    /w-7 h-7/u
+    /w-8 h-8/u
   );
 });
 
@@ -78,6 +78,6 @@ test('Renders and icon as the 4xl size if size attribute is specified as 4xl', a
   page,
 }) => {
   await expect(page.getByTestId('icon-size-4xl').locator('svg')).toHaveClass(
-    /w-8 h-8/u
+    /w-9 h-9/u
   );
 });
