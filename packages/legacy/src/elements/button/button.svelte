@@ -49,7 +49,7 @@ const handleParentClick = (event: PointerEvent) => {
   event.stopImmediatePropagation();
 };
 
-let fill = 'black';
+let fill = 'gray-6';
 
 $: {
   switch (variant) {
