@@ -47,6 +47,9 @@ You can now use the components in your app:
 />
 ```
 
+[tailwind]: https://tailwindcss.com/
+[sveltekit]: https://kit.svelte.dev/
+
 ## Playground
 
 The playground can be used during development but is not used outside of the package.

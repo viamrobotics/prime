@@ -1,16 +1,19 @@
 {
   "name": "@viamrobotics/prime-core",
   "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && npm run package",
+    "build": "vite build && pnpm run package",
     "preview": "vite preview",
     "package": "svelte-kit sync && svelte-package && publint",
-    "prepublishOnly": "npm run package",
+    "prepublishOnly": "pnpm run package",
     "check": "concurrently -g pnpm:check-*",
     "check-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check-lint": "prettier --check . && eslint .",
-    "format": "prettier --write .",
+    "check-lint": "prettier --plugin-search-dir . --check . && eslint .",
+    "format": "prettier --plugin-search-dir . --write .",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -19,18 +22,16 @@
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
     },
-    "./prime.css": "./src/prime.css",
-    "./theme.js": "./src/theme.js"
+    "./*": "./src/*"
   },
   "files": [
     "dist",
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*",
-    "src/prime.css",
-    "src/theme.js"
+    "src"
   ],
   "peerDependencies": {
-    "svelte": "^4.0.0"
+    "svelte": ">=4.0.0 <5"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.1.0",
@@ -40,7 +41,7 @@
     "@testing-library/dom": "^9.3.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/svelte": "^4.0.3",
-    "@types/testing-library__jest-dom": "^5.14.8",
+    "@types/testing-library__jest-dom": "^5.14.9",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "@viamrobotics/eslint-config": "^0.1.0",
@@ -56,7 +57,7 @@
     "jsdom": "^22.1.0",
     "postcss": "^8.4.27",
     "prettier": "^2.8.8",
-    "prettier-plugin-svelte": "^2.8.8",
+    "prettier-plugin-svelte": "^2.10.1",
     "prettier-plugin-tailwindcss": "^0.4.1",
     "publint": "^0.1.16",
     "svelte": "^4.1.1",

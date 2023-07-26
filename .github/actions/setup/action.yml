@@ -5,6 +5,8 @@ inputs:
   node-version:
     description: 'Node.js version to install'
     default: '18'
+  registry-url:
+    description: Registry to configure for publish
 
 runs:
   using: 'composite'
@@ -15,6 +17,7 @@ runs:
       uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
       with:
         node-version: ${{ inputs.node-version }}
+        registry-url: ${{ inputs.registry-url }}
         cache: pnpm
 
     - name: 'Install dependencies'

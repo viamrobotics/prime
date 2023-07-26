@@ -1,11 +1,8 @@
-import '@testing-library/jest-dom';
-import { describe, it, expect, afterEach } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/svelte';
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/svelte';
 import Badge from './badge.svelte';
 
 describe('Badge', () => {
-  afterEach(() => cleanup());
-
   it('Renders the correct text', () => {
     render(Badge, { variant: 'gray', label: 'Inactive' });
     expect(screen.getByText('Inactive')).toBeInTheDocument();

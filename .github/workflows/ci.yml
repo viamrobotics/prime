@@ -16,7 +16,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Run lints and checks
-        run: pnpm -r check
+        run: pnpm -r --aggregate-output check
 
   build:
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
       - name: Install 🔧
         uses: ./.github/actions/setup
       - name: Build 🏗️
-        run: pnpm -r build
+        run: pnpm -r --aggregate-output build
       - name: Upload npm @viamrobotics/prime artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -53,7 +53,7 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm -C packages/legacy playwright-install --with-deps
       - name: Run tests
-        run: pnpm -r test
+        run: pnpm -r --aggregate-output test
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
@@ -67,30 +67,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: 'Install Node.js'
-        uses: actions/setup-node@v3
+      - name: Install 🔧
+        uses: ./.github/actions/setup
         with:
-          node-version: 18
+          node-version: 16
+          registry-url: https://registry.npmjs.org
       - name: Download @viamrobotics/prime npm artifacts
         uses: actions/download-artifact@v3
         with:
           name: npm-legacy-dist
           path: packages/legacy/dist
-      - name: Publish @viamrobotics/prime 🚀
-        uses: JS-DevTools/npm-publish@5a85faf05d2ade2d5b6682bfe5359915d5159c6c # v2.2.1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: packages/legacy
       - name: Download @viamrobotics/prime-core npm artifacts
         uses: actions/download-artifact@v3
         with:
           name: npm-core-dist
-          path: packages/core/dist
-      - name: Publish @viamrobotics/prime-core 🚀
-        uses: JS-DevTools/npm-publish@5a85faf05d2ade2d5b6682bfe5359915d5159c6c # v2.2.1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: packages/core
+          path: packages/core/dist        
+      - name: Publish 🚀
+        run: pnpm publish -r
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   
   deploy-pages:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
