@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { theme } from './src/theme.js';
+import { theme } from './theme';
 
 export default {
   content: ['./src/**/*.{ts,svelte}'],

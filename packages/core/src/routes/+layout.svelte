@@ -1,5 +1,5 @@
 <script>
-import '../prime.css';
+import '../../prime.css';
 </script>
 
 <slot />

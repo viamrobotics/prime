@@ -15,7 +15,7 @@ pnpm add --save-dev @viamrobotics/prime-core
 Install [Tailwind][]. In the `tailwind.config.js`, add the components to the content and include the theme:
 
 ```js
-import { theme } from '@viamrobotics/prime-core/theme.js';
+import { theme } from '@viamrobotics/prime-core/theme';
 
 /** @type {import('tailwindcss').Config} */
 export default {

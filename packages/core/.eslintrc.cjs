@@ -1,12 +1,11 @@
 'use strict';
 
-const path = require('node:path');
-
 module.exports = {
   root: true,
   extends: ['@viamrobotics/eslint-config/svelte'],
   parserOptions: {
-    project: [path.join(__dirname, './tsconfig.json')],
+    project: ['./tsconfig.json'],
+    tsconfigRootDir: __dirname,
   },
   env: {
     browser: true,

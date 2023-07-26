@@ -22,13 +22,15 @@
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
     },
-    "./*": "./src/*"
+    "./theme": "./theme.ts",
+    "./prime.css": "./prime.css"
   },
   "files": [
     "dist",
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*",
-    "src"
+    "theme.ts",
+    "prime.css"
   ],
   "peerDependencies": {
     "svelte": ">=4.0.0 <5"

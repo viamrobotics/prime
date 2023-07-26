@@ -178,6 +178,9 @@ importers:
       '@viamrobotics/prettier-config':
         specifier: ^0.0.1
         version: 0.0.1(prettier@2.8.8)
+      '@viamrobotics/prime-core':
+        specifier: workspace:../core
+        version: link:../core
       '@viamrobotics/typescript-config':
         specifier: ^0.0.3
         version: 0.0.3(typescript@5.1.6)

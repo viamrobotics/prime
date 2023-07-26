@@ -1,7 +1,7 @@
 {
   "extends": "@viamrobotics/typescript-config/base.json",
   "compilerOptions": {
-    "types": ["node", "svelte", "vite/client", "monaco-editor/monaco"],
+    "types": ["svelte", "vite/client", "monaco-editor/monaco"],
     "noEmit": true
   },
   "include": [

@@ -23,6 +23,7 @@ const config = {
           '../postcss.config.js',
           '../svelte.config.js',
           '../tailwind.config.ts',
+          '../theme.ts',
         ],
       }),
     },

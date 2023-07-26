@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('node:path');
+
 module.exports = {
   root: true,
   env: {
@@ -8,7 +10,10 @@ module.exports = {
   parserOptions: {
     tsConfigRootDir: __dirname,
     extraFileExtensions: ['.svelte'],
-    project: ['./tsconfig.json', './playground/tsconfig.json'],
+    project: [
+      path.join(__dirname, './tsconfig.json'),
+      path.join(__dirname, './playground/tsconfig.json'),
+    ],
   },
   extends: [
     /*
