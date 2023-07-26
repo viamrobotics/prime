@@ -2,7 +2,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [sveltekit()],  
+  plugins: [sveltekit()],
   server: {
     fs: {
       allow: ['prime.css'],
