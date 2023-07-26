@@ -38,7 +38,7 @@ You can now use the components in your app:
 
 ```html
 <script lang="ts">
-  import Badge from '@viamrobotics/prime-core/badge.svelte';
+  import { Badge } from '@viamrobotics/prime-core';
 </script>
 
 <Badge
