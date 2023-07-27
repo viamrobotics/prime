@@ -1,12 +1,29 @@
+<!--
+  @component
+  
+  The badge is often used to display status information.
+
+  ```svelte
+  <Badge
+    variant='green'
+    label='Active'
+  />
+  ```
+-->
 <svelte:options immutable />
 
 <script lang="ts">
-type Variants = 'green' | 'orange' | 'red' | 'gray' | 'blue';
-
 import cx from 'classnames';
 
+/**
+ * The badge text.
+ */
 export let label = '';
-export let variant: Variants = 'gray';
+
+/**
+ * The color theme of the badge.
+ */
+export let variant: 'green' | 'orange' | 'red' | 'gray' | 'blue' = 'gray';
 </script>
 
 <small
