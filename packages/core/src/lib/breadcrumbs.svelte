@@ -1,7 +1,19 @@
+<!--
+@component
+  
+A navigation aid that helps users understand the relationships between parents and children.
+
+```svelte
+<Breadcrumbs crumbs={['Dessert', 'Cookie']} />
+```
+-->
 <svelte:options immutable />
 
 <script lang="ts">
-export let crumbs: string[];
+/**
+ * A list of each part.
+ */
+export let crumbs: [string, ...string[]];
 </script>
 
 <div
