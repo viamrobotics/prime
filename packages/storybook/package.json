@@ -1,5 +1,6 @@
 {
   "name": "@viamrobotics/prime-storybook",
+  "private": true,
   "version": "0.0.1",
   "packageManager": "pnpm@8.6.3",
   "scripts": {
