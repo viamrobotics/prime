@@ -1,0 +1,256 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Button } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Button'
+  parameters={{
+    actions: {
+      handles: ['click'],
+    },
+  }}
+  argTypes={{
+    label: {
+      description: 'Text displayed to users',
+      table: { defaultValue: { summary: '' } },
+    },
+    variant: {
+      description: 'The communicated action type of the button',
+      control: 'select',
+      options: [
+        'primary',
+        'inverse-primary',
+        'success',
+        'danger',
+        'outline-danger',
+      ],
+      table: { defaultValue: { summary: 'primary' } },
+    },
+    type: {
+      description: 'The type attribute for the button',
+      control: 'select',
+      options: ['button', 'submit', 'reset'],
+      table: { defaultValue: { summary: 'button' } },
+    },
+    width: {
+      description: 'Sets the width of the button',
+      options: ['default', 'full'],
+      table: { defaultValue: { summary: 'default' } },
+    },
+  }}
+/>
+
+# Button
+
+For user triggered actions
+
+<Canvas>
+  <Story
+    name='Primary'
+    args={{
+      label: 'Run',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Inverse Primary'
+    args={{
+      label: 'Run',
+      variant: 'inverse-primary',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Ghost'
+    args={{
+      label: 'Walk',
+      variant: 'ghost',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Success'
+    args={{
+      label: 'Success',
+      variant: 'success',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger'
+    args={{
+      label: 'Stop',
+      variant: 'danger',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger (outline)'
+    args={{
+      label: 'Slow down',
+      variant: 'outline-danger',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger (outline with icon)'
+    args={{
+      icon: 'trash-can-outline',
+      variant: 'outline-danger',
+      label: 'Delete component',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Disabled'
+    args={{
+      disabled: 'true',
+      label: 'Run',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With title'
+    args={{
+      label: 'Run',
+      title: 'Run this command',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With icon'
+    args={{
+      label: 'Refresh',
+      icon: 'refresh',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Icon variant'
+    args={{
+      icon: 'trash-can-outline',
+      variant: 'icon',
+      label: 'Delete component',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Icon danger variant'
+    args={{
+      icon: 'trash-can-outline',
+      variant: 'icon-danger',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Full width button'
+    args={{
+      width: 'full',
+      label: 'hello',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Full width button with icon'
+    args={{
+      width: 'full',
+      label: 'hello',
+      icon: 'trash-can-outline',
+    }}
+  >
+    {(props) => ({
+      Component: Button,
+      props,
+    })}
+  </Story>
+</Canvas>
