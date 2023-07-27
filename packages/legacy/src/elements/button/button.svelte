@@ -89,10 +89,11 @@ const handleParentClick = (event: PointerEvent) => {
     {#if icon}
       <v-icon
         class={cx({
-          'text-gray-600': variant === 'icon',
+          'text-gray-400': variant === 'primary',
         })}
         name={icon}
       />
+      { variant }
     {/if}
 
     {#if variant !== 'icon'}
