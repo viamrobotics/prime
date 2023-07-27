@@ -125,7 +125,7 @@ $: {
       on:click={copyToClipboard}
       on:keyup={copyToClipboard}
       {label}
-      icon="copy"
+      icon="content-copy"
     />
   {/if}
 </div>
