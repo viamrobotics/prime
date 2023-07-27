@@ -1,5 +1,6 @@
 <script lang="ts">
 import Badge from '$lib/badge.svelte';
+import Breadcrumbs from '$lib/breadcrumbs.svelte';
 </script>
 
 <!-- Badge -->
@@ -23,3 +24,6 @@ import Badge from '$lib/badge.svelte';
   variant="blue"
   label="Info"
 />
+
+<!-- Breadcrumbs -->
+<Breadcrumbs crumbs={['Chocolate Chip', 'Oatmeal Raisin']} />
