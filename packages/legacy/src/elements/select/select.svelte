@@ -273,9 +273,9 @@ $: {
       <v-tooltip text={tooltip}>
         <v-icon
           class={cx('text-xs', {
-            'text-warning-bright': (state === 'warn'),
-            'text-gray-400': (state === 'info'),
-            'text-danger-dark': (state === 'error'),
+            'text-warning-bright': state === 'warn',
+            'text-gray-400': state === 'info',
+            'text-danger-dark': state === 'error',
           })}
           name={icon}
         />
