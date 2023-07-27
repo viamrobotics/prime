@@ -93,7 +93,6 @@ const handleParentClick = (event: PointerEvent) => {
         })}
         name={icon}
       />
-      { variant }
     {/if}
 
     {#if variant !== 'icon'}
