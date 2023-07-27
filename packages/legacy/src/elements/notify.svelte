@@ -56,25 +56,15 @@ const handleClose = (event: Event) => {
   <div class="flex justify-between w-full gap-2 p-3 relative">
     <div class="flex gap-3">
       {#if variant === 'danger'}
-        <v-icon class="-mt-0.5" fill="danger-dark" name="alert-outline" />
+        <v-icon class="-mt-0.5 text-danger-dark" name="alert-outline" />
       {:else if variant === 'info'}
-        <v-icon class="-mt-0.5" fill="info-dark" name="information-outline" />
+        <v-icon class="-mt-0.5 text-info-dark" name="information-outline" />
       {:else if variant === 'success'}
-        <v-icon class="-mt-0.5" fill="success-dark" name="check" />
+        <v-icon class="-mt-0.5 text-success-dark" name="check" />
       {/if}
 
       {#if variant === 'warning'}
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 15 15"
-          fill="none"
-          class="mt-1 fill-warning-bright"
-        >
-          <path
-            d="M8 2.99L13.02 11.677H2.98L8 2.99ZM8 0.3328L0.67 13H15.33L8 0.333328ZM8.66667 9.67H7.33334V11H8.66667V9.66666ZM8.66667 5.66666H7.33334V8.33333H8.66667V5.66666Z"
-          />
-        </svg>
+        <v-icon class="mt-1 text-warning-bright" name="alert-outline" />
       {/if}
 
       <figure class="flex flex-col">

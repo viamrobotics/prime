@@ -12,8 +12,7 @@ type Variants =
   | 'danger'
   | 'outline-danger'
   | 'success'
-  | 'icon'
-  | 'icon-danger';
+  | 'icon';
 
 import cx from 'classnames';
 import { htmlToBoolean } from '../../lib/boolean';
@@ -48,28 +47,6 @@ const handleClick = () => {
 const handleParentClick = (event: PointerEvent) => {
   event.stopImmediatePropagation();
 };
-
-let fill = 'gray-6';
-
-$: {
-  switch (variant) {
-    case 'inverse-primary':
-    case 'danger':
-    case 'success': {
-      fill = 'white';
-      break;
-    }
-    case 'outline-danger':
-    case 'icon-danger': {
-      fill = 'danger-dark';
-      break;
-    }
-  }
-
-  if (isDisabled) {
-    fill = 'disabled';
-  }
-}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -81,24 +58,22 @@ $: {
 >
   <button
     {type}
-    aria-label={variant === 'icon' || variant === 'icon-danger'
-      ? label
-      : undefined}
+    aria-label={variant === 'icon' ? label : undefined}
     aria-disabled={isDisabled ? true : undefined}
     {title}
     class={cx('whitespace-nowrap', {
       'w-full': width === 'full',
-      'h-[30px] w-[30px]': variant === 'icon' || variant === 'icon-danger',
-      'px-3': !icon && variant !== 'icon' && variant !== 'icon-danger',
-      'pl-2 pr-3': icon && variant !== 'icon' && variant !== 'icon-danger',
+      'h-[30px] w-[30px]': variant === 'icon',
+      'px-3': !icon && variant !== 'icon',
+      'pl-2 pr-3': icon && variant !== 'icon',
       'inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs border':
-        variant !== 'icon' && variant !== 'icon-danger',
+        variant !== 'icon',
       'bg-light border-light hover:bg-medium hover:border-medium active:bg-gray-2':
         variant === 'primary',
       'bg-gray-9 border-gray-9 text-white hover:bg-black hover:border-black active:bg-[#000]':
         variant === 'inverse-primary',
       'border-transparent hover:bg-[rgba(0,0,0,0.04)] active:bg-[rgba(0,0,0,0.08)] active-border-[rgba(0,0,0,0.08)]':
-        variant === 'ghost' || variant === 'icon' || variant === 'icon-danger',
+        variant === 'ghost' || variant === 'icon',
       'bg-danger-dark text-white border-danger-dark hover:bg-[#aa2a2b] active:bg-[#9e2728]':
         variant === 'danger',
       'bg-success-dark border-success-dark text-white': variant === 'success',
@@ -112,10 +87,15 @@ $: {
     on:click={handleClick}
   >
     {#if icon}
-      <v-icon name={icon} {fill} />
+      <v-icon
+        class={cx({
+          'text-gray-600': variant === 'icon',
+        })}
+        name={icon}
+      />
     {/if}
 
-    {#if variant !== 'icon' && variant !== 'icon-danger'}
+    {#if variant !== 'icon'}
       <span>
         {label}
       </span>

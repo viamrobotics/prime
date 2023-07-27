@@ -245,30 +245,19 @@ const splitOptionOnWord = (option: string) => {
   return option.split(' ');
 };
 
-let fill = isDisabled ? 'disabled-dark' : 'gray-4';
 let icon = '';
 
 $: {
   switch (state) {
-    case 'warn': {
-      fill = 'warning-bright';
+    case 'warn':
+    case 'error': {
       icon = 'alert-circle-outline';
       break;
     }
     case 'info': {
-      fill = 'gray-6';
       icon = 'information-outline';
       break;
     }
-    case 'error': {
-      fill = 'danger-dark';
-      icon = 'alert-circle-outline';
-      break;
-    }
-  }
-
-  if (isDisabled) {
-    fill = 'disabled-dark';
   }
 }
 </script>
@@ -308,7 +297,7 @@ $: {
               'text-danger-dark': state === 'error',
             })}
           >
-            <v-icon {fill} name={icon} />
+            <v-icon name={icon} />
           </div>
         </v-tooltip>
       {/if}
@@ -355,7 +344,12 @@ $: {
               }
             )}
           >
-            <v-icon {fill} name="chevron-down" />
+            <v-icon
+              class={cx({
+                'text-gray-600': !isDisabled && !isReadonly,
+              })}
+              name="chevron-down"
+            />
           </button>
         </div>
 

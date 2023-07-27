@@ -4,12 +4,8 @@
 type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
 import cx from 'classnames';
-import { theme } from '@viamrobotics/prime-core/theme';
 import { paths } from './icons';
 export let name = '';
-
-export let fill = '';
-const fillColor: Record<string, string> = theme.extend.colors;
 
 const sizes: Record<Size, string> = {
   xs: 'w-3 h-3',
@@ -29,7 +25,7 @@ const hasNameProperty = Object.hasOwn(paths, name);
 
 <p class="leading-3">
   <svg
-    class={cx(`${sizes[size]}`, {
+    class={cx(` ${sizes[size]}`, {
       'inline-block': hasNameProperty,
       hidden: !hasNameProperty,
     })}
@@ -38,6 +34,6 @@ const hasNameProperty = Object.hasOwn(paths, name);
     role="img"
   >
     <title id={name}>{`${name} icon`}</title>
-    <path d={paths[name]} fill={fillColor[fill]} />
+    <path d={paths[name]} fill="currentColor" />
   </svg>
 </p>

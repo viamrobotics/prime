@@ -14,12 +14,6 @@ import { paths } from '../elements/icon/icons';
       options: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'],
       table: { defaultValue: { summary: 'base' } },
     },
-    fill: {
-      description: 'The icon color',
-      control: { type: 'select' },
-      options: ['danger-dark', 'danger-light'],
-      table: { defaultValue: { summary: 'danger-dark' } },
-    },
   }}
 />
 
@@ -29,16 +23,15 @@ import { paths } from '../elements/icon/icons';
   <Story
     name='Icon'
     args={{
-      name: 'check-circle',
+      name: 'broadcast',
       size: '4xl',
-      fill: 'success-dark',
     }}
   >
-    {({ name, size, fill }) => `
+    {({ name, size }) => `
       <v-icon
         name='${name}'
         size='${size}'
-        fill='${fill}'
+        style='color: #16a34a'
       />
     `}
   </Story>
