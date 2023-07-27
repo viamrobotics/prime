@@ -6,7 +6,6 @@ const config: StorybookConfig = {
     '../src/stories/docs/introduction.stories.mdx',
     '../src/stories/docs/**/*.mdx',
     '../src/stories/**/*.stories.mdx',
-    '../src/stories/**/*.stories.ts',
   ],
   addons: [
     '@storybook/addon-links',
@@ -14,11 +13,6 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     {
       name: '@storybook/addon-styling',
-      options: {
-        postCss: {
-          implementation: require('postcss'),
-        },
-      },
     },
     {
       name: '@storybook/addon-essentials',

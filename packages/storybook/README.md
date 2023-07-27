@@ -7,6 +7,14 @@ This package uses [Storybook][] to demonstrate P.R.I.M.E. component usage. The p
 
 ## Running
 
+First, build the other packages for use in storybook:
+
+```
+pnpm -r build
+```
+
+Then run the storybook:
+
 ```
 pnpm -C packages/storybook storybook
 ```
@@ -16,6 +24,6 @@ pnpm -C packages/storybook storybook
 To lint and typecheck:
 
 ```bash
-pnpm -C packages/core check
-pnpm -C packages/core format
+pnpm -C packages/storybook check
+pnpm -C packages/storybook format
 ```
