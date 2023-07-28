@@ -63,7 +63,7 @@ export let width: 'full' | 'default' = 'default';
     'border-success-dark bg-success-dark text-white': variant === 'success',
     'border-danger-medium bg-danger-light text-danger-dark hover:bg-[#f5dfdc] active:bg-[#f6d7d3]':
       variant === 'outline-danger',
-    '!border-disabled-light !bg-disabled-light text-disabled-dark pointer-events-none select-none':
+    'pointer-events-none select-none !border-disabled-light !bg-disabled-light text-disabled-dark':
       disabled,
   })}
   style={disabled ? '-webkit-user-select: none' : ''}
