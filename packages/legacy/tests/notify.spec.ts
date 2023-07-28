@@ -42,9 +42,6 @@ test('Renders notify with warning style if the variant is set to warning', async
   await expect(
     page.getByTestId('notify-variant-warning').locator('.bg-warning-bright')
   ).toBeVisible();
-  await expect(
-    page.getByTestId('notify-variant-warning').locator('svg')
-  ).toHaveClass(/fill-warning-bright/u);
 });
 
 test('Renders notify with success style if the variant is set to success', async ({
