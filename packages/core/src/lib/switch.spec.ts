@@ -16,7 +16,8 @@ describe('Switch', () => {
     expect(screen.queryByRole('tooltip')).toBeNull();
   });
 
-  it('Renders with label and tooltip', () => {
+  // TODO(APP-2290), (APP-2304): Tooltips above icons won't work until tooltip/icons are migrated.
+  it.skip('Renders with label and tooltip', () => {
     render(Switch, { label: 'Switch Label', tooltip: 'Switch tooltip' });
 
     // Check if the switch label is displayed
@@ -52,14 +53,14 @@ describe('Switch', () => {
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
   });
 
-  it('Renders annotated switch', () => {
+  it('Renders annotated switch', async () => {
     render(Switch, { variant: 'annotated' });
 
     // Check if the 'on' or 'off' value is displayed next to the switch
     expect(screen.getByText('off')).toBeVisible();
 
     // Click the switch to turn it on
-    fireEvent.click(screen.getByRole('switch'));
+    await fireEvent.click(screen.getByRole('switch'));
 
     // Check if the value changes when the switch is clicked
     expect(screen.getByText('on')).toBeVisible();

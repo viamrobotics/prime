@@ -67,16 +67,8 @@ let buttonClickedTimes = 0;
 
 <Switch
   value="off"
-  variant="labeled"
   disabled="true"
   label="disabled"
-/>
-
-<Switch
-  value="off"
-  variant="labeled"
-  tooltip="This is the tooltip message."
-  label="Switch Label"
 />
 
 <Switch

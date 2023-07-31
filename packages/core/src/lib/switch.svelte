@@ -21,6 +21,9 @@ import { dispatcher } from './dispatch';
  * The switch label text.
  */
 export let label = '';
+/**
+ * The name of the icon next to the switch label.
+ */
 export let name = '';
 /**
  * Shows if the switch is 'on' or 'off'.
@@ -40,8 +43,9 @@ export let disabled: string;
 export let readonly: string;
 /**
  * Shows the message of the tooltip.
+ * TODO(APP-2290): Tooltips above icons won't work until icons are migrated.
  */
-export let tooltip = '';
+// export let tooltip = '';
 
 const dispatch = dispatcher();
 
@@ -76,14 +80,15 @@ const handleClick = (event: Event) => {
       >
     {/if}
 
-    {#if tooltip}
+    <!-- * TODO(APP-2290), (APP-2304): Can't specify icon for tooltip until tooltip/icons are migrated. -->
+    <!-- {#if tooltip}
       <v-tooltip text={tooltip}>
         <v-icon
           class="-mt-0.5"
           name="information-outline"
         />
       </v-tooltip>
-    {/if}
+    {/if} -->
   </div>
 
   <button
