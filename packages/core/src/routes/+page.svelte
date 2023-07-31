@@ -1,8 +1,14 @@
 <script lang="ts">
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
+<<<<<<< HEAD
 import Switch from '$lib/switch.svelte';
 
+=======
+import Button from '$lib/button.svelte';
+
+let buttonClickedTimes = 0;
+>>>>>>> main
 </script>
 
 <!-- Badge -->
@@ -64,4 +70,23 @@ import Switch from '$lib/switch.svelte';
   variant='annotated'
   readonly='true'
   label='readonly'
+/>
+<!-- Button -->
+<Button
+  variant="success"
+  label="Console log"
+  on:click={() => {
+    buttonClickedTimes += 1;
+    // eslint:disable-next-line no-console
+    console.log(`button clicked ${buttonClickedTimes} times!`);
+  }}
+/>
+<Button
+  variant="success"
+  disabled
+  label="testing 2"
+/>
+<Button
+  label="testing 3"
+  width="full"
 />
