@@ -58,7 +58,7 @@ const copyToClipboard = async (event: Event) => {
 
   window.setTimeout(() => {
     label = 'Copy';
-    icon = 'content-coopy';
+    icon = 'content-copy';
   }, 2000);
 };
 
