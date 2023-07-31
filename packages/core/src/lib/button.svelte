@@ -45,13 +45,14 @@ export let width: 'full' | 'default' = 'default';
   aria-disabled={disabled}
   {disabled}
   {title}
-  class={cx('whitespace-nowrap', 'mx-auto', {
-    'w-full': width === 'full',
+  class={cx('whitespace-nowrap mx-auto', {
+    'flex w-full': width === 'full',
+    'inline-flex': width !== 'full' && variant !== 'icon',
     'h-[30px] w-[30px] text-gray-6 hover:text-gray-7 active:text-gray-8':
       variant === 'icon',
     'px-3': !icon && variant !== 'icon',
     'pl-2 pr-3': icon && variant !== 'icon',
-    'inline-flex items-center justify-center gap-1.5 border px-3 py-1.5 text-xs':
+    'items-center justify-center gap-1.5 border px-3 py-1.5 text-xs':
       variant !== 'icon',
     'border-light bg-light hover:border-medium hover:bg-medium active:bg-gray-2':
       variant === 'primary',
@@ -89,10 +90,3 @@ export let width: 'full' | 'default' = 'default';
     </span>
   {/if}
 </button>
-
-<style>
-:host {
-  --button-display: {display};
-  display: var(--button-display);
-}
-</style>
