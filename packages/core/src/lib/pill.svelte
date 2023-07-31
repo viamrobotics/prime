@@ -52,7 +52,7 @@ const handleRemove = () => {
     {value}
   </span>
   {#if !readonly}
-    <button on:click={handleRemove}>
+<button aria-label="Remove {value}" on:click={handleRemove}>
       <!--  TODO(APP-2290): Use an icon once migrated. -->
       <!-- <Icon name="close" /> -->
       <!-- For now, just an "x" -->
