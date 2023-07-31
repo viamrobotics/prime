@@ -47,6 +47,7 @@ const inputToFocus = $ref<HTMLElement>();
         exact="true"
         @input="handleSelect"
       />  
+    <v-button variant="icon" icon="close" label="hi there" />
     <v-button 
       variant="success"
       label="focus input component"
