@@ -90,7 +90,6 @@ const applySearchSort = (term: string, options: string[]) => {
 const handleInput = (event: Event) => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
-  event.stopImmediatePropagation();
   value = input.value.trim();
   if (root) {
     dispatch({ target: root }, 'input', { value });
@@ -371,6 +370,7 @@ $: {
                     value,
                     Array.isArray(option) ? option.join('') : option
                   )}
+                  on:input|stopPropagation
                   on:change={handleOptionSelect.bind(
                     null,
                     Array.isArray(option) ? option.join('') : option

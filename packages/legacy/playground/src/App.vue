@@ -19,7 +19,7 @@ const handleInput = (event: CustomEvent) => {
 }
 
 const handleSelect = (event: CustomEvent) => {
-  console.log('change', event.detail.value);
+  console.log('change', event);
 }
 
 let lazyValue = $ref('')
@@ -38,6 +38,15 @@ const inputToFocus = $ref<HTMLElement>();
 
 <template>
   <div class="my-10">
+    <v-select
+        options="test1, test2, test3, test3[]"
+        v-model="selectInput"
+        label="Test Select"
+        state="'info'"
+        heading="heading"
+        exact="true"
+        @input="handleSelect"
+      />  
     <v-button 
       variant="success"
       label="focus input component"
@@ -139,15 +148,6 @@ const inputToFocus = $ref<HTMLElement>();
       heading="heading title"
     />
     <section class="flex items-end gap-2 my-6">
-      <v-select
-        options="test1, test2, test3, test3[]"
-        v-model="selectInput"
-        label="Test Select"
-        state="'info'"
-        heading="heading"
-        exact="true"
-        @change="handleSelect"
-      />  
 
       <v-multiselect
         options="test1, test2, test3, test3[]"
