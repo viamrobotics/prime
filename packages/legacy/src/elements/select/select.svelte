@@ -93,7 +93,7 @@ const handleInput = (event: Event) => {
   event.stopImmediatePropagation();
   value = input.value.trim();
   if (event) {
-    dispatch(event, 'search', { value });
+    dispatch(event, 'input', { value });
   }
 };
 
