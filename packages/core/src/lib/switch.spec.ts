@@ -60,9 +60,8 @@ describe('Switch', () => {
 
     // Click the switch to turn it on
     fireEvent.click(screen.getByRole('switch'));
-    
+
     // Check if the value changes when the switch is clicked
     expect(screen.getByText('on')).toBeVisible();
   });
 });
-

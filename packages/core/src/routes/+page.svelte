@@ -53,37 +53,35 @@ let buttonClickedTimes = 0;
 />
 
 <!-- Switch -->
+<Switch value="off" />
+
 <Switch
-  value='off'
+  value="off"
+  variant="annotated"
 />
 
 <Switch
-  value='off'
-  variant='annotated'
+  value="off"
+  label="Lunchtime"
 />
 
 <Switch
-  value='off'
-  label='Lunchtime'
+  value="off"
+  variant="labeled"
+  disabled="true"
+  label="disabled"
 />
 
 <Switch
-  value='off'
-  variant='labeled'
-  disabled='true'
-  label='disabled'
+  value="off"
+  variant="labeled"
+  tooltip="This is the tooltip message."
+  label="Switch Label"
 />
 
 <Switch
-  value='off'
-  variant='labeled'
-  tooltip='This is the tooltip message.'
-  label='Switch Label'
-/>
-
-<Switch
-  value='on'
-  variant='annotated'
-  readonly='true'
-  label='readonly'
+  value="on"
+  variant="annotated"
+  readonly="true"
+  label="readonly"
 />
