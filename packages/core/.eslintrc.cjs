@@ -11,4 +11,7 @@ module.exports = {
     browser: true,
     node: true,
   },
+  rules: {
+    'sonarjs/no-duplicate-string': 'off',
+  },
 };
