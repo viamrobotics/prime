@@ -56,15 +56,15 @@ const handleClose = (event: Event) => {
   <div class="flex justify-between w-full gap-2 p-3 relative">
     <div class="flex gap-3">
       {#if variant === 'danger'}
-        <v-icon class="text-danger-dark" name="alert-outline" />
+        <v-icon size="lg" class="text-danger-dark" name="alert-circle" />
       {:else if variant === 'info'}
-        <v-icon class="text-info-dark" name="information-outline" />
+        <v-icon size="lg" class="text-info-dark" name="information" />
       {:else if variant === 'success'}
-        <v-icon class="text-success-dark" name="check" />
+        <v-icon size="lg" class="text-success-dark" name="check-circle" />
       {/if}
 
       {#if variant === 'warning'}
-        <v-icon class="text-warning-bright" name="alert-outline" />
+        <v-icon size="lg" class="text-warning-bright" name="alert" />
       {/if}
 
       <figure class="flex flex-col">

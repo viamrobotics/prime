@@ -31,7 +31,7 @@ const handleSelect = (event: Event) => {
 
   <p
     id={label}
-    class={cx('font-normal', {
+    class={cx('text-sm', {
       'text-default': variant === 'primary',
       'text-danger-dark': variant === 'danger',
     })}

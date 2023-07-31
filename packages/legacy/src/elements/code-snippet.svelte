@@ -18,10 +18,13 @@ export let theme: Themes = 'vs';
 export let showbutton = 'true';
 
 $: label = 'Copy';
+$: icon = 'content-copy';
+$: isDisabled = false;
 
 const dispatch = dispatcher();
 
 let element: HTMLElement;
+let disabled = isDisabled;
 
 const version = pkg.devDependencies.prismjs.replace('^', '');
 
@@ -41,7 +44,8 @@ const script = (src: string) =>
 const copyToClipboard = async (event: Event) => {
   try {
     await navigator.clipboard.writeText(code);
-    label = 'Success!';
+    label = 'Copied';
+    icon = 'check';
     dispatch(event, 'copy', {
       value: 'Successfully copied snippet to the clipboard',
     });
@@ -54,6 +58,7 @@ const copyToClipboard = async (event: Event) => {
 
   window.setTimeout(() => {
     label = 'Copy';
+    icon = 'content-coopy';
   }, 2000);
 };
 
@@ -120,12 +125,14 @@ $: {
     ></pre>
 
   {#if showbutton === 'true'}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <v-button
       class="!text-black !font-sans"
       on:click={copyToClipboard}
       on:keyup={copyToClipboard}
       {label}
-      icon="content-copy"
+      {icon}
+      {disabled}
     />
   {/if}
 </div>
