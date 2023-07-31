@@ -1,6 +1,8 @@
 <script lang="ts">
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
+import Switch from '$lib/switch.svelte';
+
 </script>
 
 <!-- Badge -->
@@ -27,3 +29,39 @@ import Breadcrumbs from '$lib/breadcrumbs.svelte';
 
 <!-- Breadcrumbs -->
 <Breadcrumbs crumbs={['Chocolate Chip', 'Oatmeal Raisin']} />
+
+<!-- Switch -->
+<Switch
+  value='off'
+/>
+
+<Switch
+  value='off'
+  variant='annotated'
+/>
+
+<Switch
+  value='off'
+  label='Lunchtime'
+/>
+
+<Switch
+  value='off'
+  variant='labeled'
+  disabled='true'
+  label='disabled'
+/>
+
+<Switch
+  value='off'
+  variant='labeled'
+  tooltip='This is the tooltip message.'
+  label='Switch Label'
+/>
+
+<Switch
+  value='on'
+  variant='annotated'
+  readonly='true'
+  label='readonly'
+/>
