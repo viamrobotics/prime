@@ -25,7 +25,7 @@ export let disabled = false;
 
 const dispatch = createEventDispatcher<{
   /** When the pill is removed. */
-  remove: { value: string }
+  remove: { value: string };
 }>();
 
 const handleRemove = () => {
