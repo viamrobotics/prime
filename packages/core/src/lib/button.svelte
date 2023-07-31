@@ -45,7 +45,7 @@ export let width: 'full' | 'default' = 'default';
   aria-disabled={disabled}
   {disabled}
   {title}
-  class={cx('whitespace-nowrap mx-auto', {
+  class={cx('mx-auto whitespace-nowrap', {
     'flex w-full': width === 'full',
     'inline-flex': width !== 'full' && variant !== 'icon',
     'h-[30px] w-[30px] text-gray-6 hover:text-gray-7 active:text-gray-8':
