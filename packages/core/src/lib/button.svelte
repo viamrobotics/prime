@@ -47,7 +47,8 @@ export let width: 'full' | 'default' = 'default';
   {title}
   class={cx('whitespace-nowrap', 'mx-auto', {
     'w-full': width === 'full',
-    'h-[30px] w-[30px]': variant === 'icon',
+    'text-gray-6 hover:text-gray-7 active:text-gray-8 h-[30px] w-[30px]':
+        variant === 'icon',
     'px-3': !icon && variant !== 'icon',
     'pl-2 pr-3': icon && variant !== 'icon',
     'inline-flex items-center justify-center gap-1.5 border px-3 py-1.5 text-xs':
@@ -75,7 +76,8 @@ export let width: 'full' | 'default' = 'default';
     <Icon
       name={icon}
       class={cx({
-        'text-gray-400': variant === 'primary',
+        'text-gray-6': variant === 'primary',
+        'text-gray-4': isDisabled,
       })}
     />
   {/if}
