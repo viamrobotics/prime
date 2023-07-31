@@ -26,7 +26,6 @@ export let label: string;
 export let value = '';
 export let step = '1';
 export let name: string;
-export let fill: string;
 export let icon: string;
 export let min = '-Infinity';
 export let max = '+Infinity';
@@ -240,17 +239,11 @@ const handleNumberDragDown = async (event: PointerEvent) => {
 $: {
   switch (state) {
     case 'info': {
-      fill = 'gray-6';
       icon = 'information-outline';
       break;
     }
-    case 'warn': {
-      fill = 'warning-bright';
-      icon = 'alert-circle-outline';
-      break;
-    }
+    case 'warn':
     case 'error': {
-      fill = 'danger-dark';
       icon = 'alert-circle-outline';
       break;
     }
@@ -287,7 +280,7 @@ $: {
             'text-danger-dark': state === 'error',
           })}
         >
-          <v-icon {fill} name={icon} />
+          <v-icon name={icon} />
         </div>
       </v-tooltip>
     {/if}
