@@ -63,7 +63,8 @@ const handleParentClick = (event: PointerEvent) => {
     {title}
     class={cx('whitespace-nowrap', {
       'w-full': width === 'full',
-      'text-gray-6 hover:text-gray-7 active:text-gray-8 h-[30px] w-[30px]': variant === 'icon',
+      'text-gray-6 hover:text-gray-7 active:text-gray-8 h-[30px] w-[30px]':
+        variant === 'icon',
       'px-3': !icon && variant !== 'icon',
       'pl-2 pr-3': icon && variant !== 'icon',
       'inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs border':
