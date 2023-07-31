@@ -87,7 +87,7 @@ const applySearchSort = (term: string, options: string[]) => {
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
-const handleInput = (event: Event) => {
+const handleInput = () => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
   value = input.value.trim();
