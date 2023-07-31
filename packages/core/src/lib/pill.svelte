@@ -23,7 +23,10 @@ export let readonly = false;
 /** Whether or not the pill is disabled. */
 export let disabled = false;
 
-const dispatch = createEventDispatcher<{ remove: { value: string } }>();
+const dispatch = createEventDispatcher<{
+  /** When the pill is removed. */
+  remove: { value: string }
+}>();
 
 const handleRemove = () => {
   if (disabled || readonly) {
