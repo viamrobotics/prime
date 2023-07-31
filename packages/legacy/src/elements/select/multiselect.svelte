@@ -347,7 +347,7 @@ $: {
           >
             <v-icon
               class={cx({
-                'text-gray-600': !isDisabled && !isReadonly,
+                'text-gray-6': !isDisabled && !isReadonly,
               })}
               name="chevron-down"
             />
@@ -396,6 +396,7 @@ $: {
                         value,
                         Array.isArray(option) ? option.join('') : option
                       )}
+                      on:input|stopPropagation
                       on:change={handleOptionSelect.bind(
                         null,
                         Array.isArray(option) ? option.join('') : option

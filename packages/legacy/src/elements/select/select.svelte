@@ -87,10 +87,9 @@ const applySearchSort = (term: string, options: string[]) => {
   return term ? searchSort(options, term, isReduceSort) : options;
 };
 
-const handleInput = (event: Event) => {
+const handleInput = () => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
-  event.stopImmediatePropagation();
   value = input.value.trim();
   if (root) {
     dispatch({ target: root }, 'input', { value });
@@ -326,7 +325,7 @@ $: {
         >
           <v-icon
             class={cx({
-              'text-gray-600': !isDisabled && !isReadonly,
+              'text-gray-6': !isDisabled && !isReadonly,
             })}
             name="chevron-down"
           />
@@ -371,6 +370,7 @@ $: {
                     value,
                     Array.isArray(option) ? option.join('') : option
                   )}
+                  on:input|stopPropagation
                   on:change={handleOptionSelect.bind(
                     null,
                     Array.isArray(option) ? option.join('') : option

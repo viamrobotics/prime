@@ -32,7 +32,6 @@ export let internals: ElementInternals;
 let isDisabled: boolean;
 
 $: isDisabled = htmlToBoolean(disabled, 'disabled');
-$: display = width === 'full' ? 'block' : 'inline-block';
 
 const handleClick = () => {
   const { form } = internals;
@@ -62,8 +61,10 @@ const handleParentClick = (event: PointerEvent) => {
     aria-disabled={isDisabled ? true : undefined}
     {title}
     class={cx('whitespace-nowrap', {
-      'w-full': width === 'full',
-      'h-[30px] w-[30px]': variant === 'icon',
+      'flex w-full': width === 'full',
+      'inline-flex': width !== 'full' && variant !== 'icon',
+      'text-gray-6 hover:text-gray-7 active:text-gray-8 h-[30px] w-[30px]':
+        variant === 'icon',
       'px-3': !icon && variant !== 'icon',
       'pl-2 pr-3': icon && variant !== 'icon',
       'inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs border':
@@ -89,7 +90,8 @@ const handleParentClick = (event: PointerEvent) => {
     {#if icon}
       <v-icon
         class={cx({
-          'text-gray-400': variant === 'primary',
+          'text-gray-6': variant === 'primary',
+          'text-gray-4': isDisabled,
         })}
         name={icon}
       />
@@ -102,10 +104,3 @@ const handleParentClick = (event: PointerEvent) => {
     {/if}
   </button>
 </svelte:element>
-
-<style>
-:host {
-  --button-display: {display};
-  display: var(--button-display);
-}
-</style>

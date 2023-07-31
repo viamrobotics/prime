@@ -34,7 +34,7 @@ const handleClick = (event: Event) => {
 </script>
 
 <label
-  class={cx('flex gap-1 w-fit flex-col justify-start', {
+  class={cx('flex gap-1 w-fit flex-col justify-start text-default', {
     'text-disabled-dark': isDisabled,
   })}
 >
@@ -45,7 +45,7 @@ const handleClick = (event: Event) => {
 
     {#if tooltip}
       <v-tooltip text={tooltip}>
-        <v-icon class="-mt-0.5" name="information-outline" />
+        <v-icon class="text-gray-6 -mt-0.5" name="information-outline" />
       </v-tooltip>
     {/if}
   </div>

@@ -1,4 +1,5 @@
 import {
+  mdiAlert,
   mdiCameraOutline,
   mdiVideoOutline,
   mdiAlertCircleOutline,
@@ -8,6 +9,7 @@ import {
   mdiPlus,
   mdiClose,
   mdiContentCopy,
+  mdiInformation,
   mdiMinus,
   mdiSend,
   mdiUndo,
@@ -52,12 +54,14 @@ import {
 } from '@mdi/js';
 
 export const paths: Record<string, string> = {
+  alert: mdiAlert,
   broadcast: mdiBroadcast,
   cancel: mdiCancel,
   check: mdiCheck,
   close: mdiClose,
   cog: mdiCog,
   download: mdiDownload,
+  information: mdiInformation,
   instagram: mdiInstagram,
   linkedin: mdiLinkedin,
   logout: mdiLogout,
