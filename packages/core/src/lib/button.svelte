@@ -47,8 +47,8 @@ export let width: 'full' | 'default' = 'default';
   {title}
   class={cx('whitespace-nowrap', 'mx-auto', {
     'w-full': width === 'full',
-    'text-gray-6 hover:text-gray-7 active:text-gray-8 h-[30px] w-[30px]':
-        variant === 'icon',
+    'h-[30px] w-[30px] text-gray-6 hover:text-gray-7 active:text-gray-8':
+      variant === 'icon',
     'px-3': !icon && variant !== 'icon',
     'pl-2 pr-3': icon && variant !== 'icon',
     'inline-flex items-center justify-center gap-1.5 border px-3 py-1.5 text-xs':
