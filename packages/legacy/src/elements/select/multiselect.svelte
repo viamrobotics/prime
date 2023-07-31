@@ -347,7 +347,7 @@ $: {
           >
             <v-icon
               class={cx({
-                'text-gray-600': !isDisabled && !isReadonly,
+                'text-gray-6': !isDisabled && !isReadonly,
               })}
               name="chevron-down"
             />
