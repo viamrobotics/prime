@@ -15,8 +15,8 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import { htmlToBoolean } from '../lib/boolean';
-import { dispatcher } from '../lib/dispatch';
+import { htmlToBoolean } from './boolean';
+import { dispatcher } from './dispatch';
 
 /**
  * The switch label text.
