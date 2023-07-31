@@ -396,6 +396,7 @@ $: {
                         value,
                         Array.isArray(option) ? option.join('') : option
                       )}
+                      on:input|stopPropagation
                       on:change={handleOptionSelect.bind(
                         null,
                         Array.isArray(option) ? option.join('') : option
