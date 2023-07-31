@@ -24,7 +24,7 @@ $: isDisabled = false;
 const dispatch = dispatcher();
 
 let element: HTMLElement;
-let disabled = isDisabled;
+const disabled = isDisabled;
 
 const version = pkg.devDependencies.prismjs.replace('^', '');
 
