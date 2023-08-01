@@ -26,7 +26,6 @@ $: isReadonly = htmlToBoolean(readonly, 'readonly');
 
 const handleClick = (event: Event) => {
   if (!(isDisabled || isReadonly)) {
-    console.log(event);
     value = on ? 'off' : 'on';
     input.checked = value === 'on';
     dispatch(event, 'input', { value: input.checked });
