@@ -1,58 +1,65 @@
-# create-svelte
+# `@viamrobotics/prime-core`
 
-Everything you need to build a Svelte library, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## Getting started
 
-Read more about creating a library [in the docs](https://kit.svelte.dev/docs/packaging).
+`@viamrobotics/prime-blocks` is a collection of Svelte components that host more complex behaviors than `prime-core`. These components may be able to do many things, but are able to be self-contained to a single component with the intention of being dropped into any environment easily. If `prime-core` is on the atoms / molecules side of atomic design then `prime-blocks` is on the organisms side.
 
-## Creating a project
+## Installation
 
-If you're seeing this, you've probably already done this step. Congrats!
+Add PRIME core using your package manager of choice:
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+```
+pnpm add --save-dev @viamrobotics/prime-core
 ```
 
-## Developing
+Additionally, `@viamrobotics/prime-core` must be installed, and all of its installation steps must be followed.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Import the stylesheet. If you are using [SvelteKit][https://kit.svelte.dev/], you can do this in `src/routes/+layout.svelte`.
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```js
+import '@viamrobotics/prime-blocks/prime.css';
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+You can now use the components in your app:
 
-## Building
+```html
+<script lang="ts">
+  import { SlamMap } from '@viamrobotics/prime-core';
+</script>
 
-To build your library:
-
-```bash
-npm run package
+<SlamMap {cloud} />
 ```
 
-To create a production version of your showcase app:
+[tailwind]: https://tailwindcss.com/
+[sveltekit]: https://kit.svelte.dev/
+
+## Playground
+
+The playground can be used during development but is not used outside of the package.
 
 ```bash
-npm run build
+pnpm install
+pnpm -C packages/blocks dev
 ```
 
-You can preview the production build with `npm run preview`.
+## Linting
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
+To lint and typecheck:
 
 ```bash
-npm publish
+pnpm -C packages/core check        # check svelte and lint
+pnpm -C packages/core check-svelte # check svelte only
+pnpm -C packages/core check-lint   # check lint only with prettier and eslint
+pnpm -C packages/core format       # format with prettier
 ```
+
+## Testing
+
+To test with [vitest][https://vitest.dev/]:
+
+```bash
+pnpm -C packages/core test        # run once
+pnpm -C packages/core test:watch  # watch tests
+```
+
+[vitest]: https://vitest.dev/
