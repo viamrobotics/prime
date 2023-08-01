@@ -98,6 +98,7 @@ const handleClick = (event: Event) => {
         type="checkbox"
         checked={on}
         bind:this={input}
+        on:input|stopPropagation
       />
     </div>
 
