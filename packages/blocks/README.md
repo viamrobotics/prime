@@ -1,4 +1,4 @@
-# `@viamrobotics/prime-core`
+# `@viamrobotics/prime-blocks`
 
 ## Getting started
 
@@ -6,10 +6,10 @@
 
 ## Installation
 
-Add PRIME core using your package manager of choice:
+Add PRIME blocks using your package manager of choice:
 
 ```
-pnpm add --save-dev @viamrobotics/prime-core
+pnpm add --save-dev @viamrobotics/prime-blocks
 ```
 
 Additionally, `@viamrobotics/prime-core` must be installed, and all of its installation steps must be followed.
