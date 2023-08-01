@@ -2,6 +2,7 @@
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
+import Pill from '$lib/pill.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -49,4 +50,17 @@ let buttonClickedTimes = 0;
 <Button
   label="testing 3"
   width="full"
+/>
+
+<!-- Pill -->
+
+<Pill />
+<Pill value="Foo" />
+<Pill
+  readonly
+  value="Bar"
+/>
+<Pill
+  disabled
+  value="Baz"
 />
