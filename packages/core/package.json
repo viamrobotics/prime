@@ -36,6 +36,7 @@
     "svelte": ">=4.0.0 <5"
   },
   "devDependencies": {
+    "@floating-ui/dom": "^1.2.6",
     "@sveltejs/adapter-auto": "^2.1.0",
     "@sveltejs/kit": "^1.22.4",
     "@sveltejs/package": "^2.2.0",

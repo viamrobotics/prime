@@ -1,0 +1,52 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import PlainText from './plain-text.svelte';
+import RichHTML from './rich-html.svelte';
+
+<Meta
+  title='Elements/Tooltip'
+  argTypes={{
+    location: {
+      description: 'The desired location for the tooltip',
+      control: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+      table: { defaultValue: { summary: 'top' } },
+    },
+    state: {
+      description: 'The visibility of the tooltip',
+      control: 'select',
+      options: ['invisible', 'visible'],
+      table: { defaultValue: { summary: 'primary' } },
+    },
+  }}
+/>
+
+# Tooltip
+
+For providing users additional context
+
+<Canvas>
+  <Story name='Plain Text'>
+    {(props) => ({
+      Component: PlainText,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name='Rich HTML'>
+    {(props) => ({
+      Component: RichHTML,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+{/* TODO (APP-2290): Add this when Icon is added */}
+{/* <Canvas> */}
+{/* <Story name='With Icon'> */}
+{/* {() => ({ */}
+{/* Component: WithIcon, */}
+{/* })} */}
+{/* </Story> */}
+{/* </Canvas> */}

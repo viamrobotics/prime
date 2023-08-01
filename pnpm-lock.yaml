@@ -115,6 +115,9 @@ importers:
 
   packages/core:
     devDependencies:
+      '@floating-ui/dom':
+        specifier: ^1.2.6
+        version: 1.5.1
       '@sveltejs/adapter-auto':
         specifier: ^2.1.0
         version: 2.1.0(@sveltejs/kit@1.22.4)
