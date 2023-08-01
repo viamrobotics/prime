@@ -36,6 +36,11 @@ jobs:
         with:
           name: npm-core-dist
           path: packages/core/dist
+      - name: Upload npm @viamrobotics/prime-blocks artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm-blocks-dist
+          path: packages/blocks/dist
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
@@ -81,7 +86,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: npm-core-dist
-          path: packages/core/dist        
+          path: packages/core/dist
+      - name: Download @viamrobotics/prime-blocks npm artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: npm-blocks-dist
+          path: packages/blocks/dist
       - name: Publish 🚀
         run: pnpm publish -r
         env:
