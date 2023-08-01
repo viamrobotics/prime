@@ -5,7 +5,7 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "vite dev",
+    "start": "vite dev",
     "build": "vite build && pnpm run package",
     "preview": "vite preview",
     "package": "svelte-kit sync && svelte-package && publint",
