@@ -46,6 +46,9 @@ importers:
       '@viamrobotics/prettier-config':
         specifier: ^0.1.0
         version: 0.1.0(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
+      '@viamrobotics/prime-core':
+        specifier: workspace:*
+        version: link:../core
       '@viamrobotics/typescript-config':
         specifier: ^0.0.3
         version: 0.0.3(typescript@5.1.6)

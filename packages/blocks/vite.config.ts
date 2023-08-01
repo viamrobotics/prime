@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [sveltekit()],
   server: {
     fs: {
-      allow: ['prime-blocks.css'],
+      allow: ['prime.css'],
     },
   },
   test: {

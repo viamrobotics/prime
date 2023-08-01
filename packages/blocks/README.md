@@ -24,7 +24,7 @@ You can now use the components in your app:
 
 ```html
 <script lang="ts">
-  import { SlamMap } from '@viamrobotics/prime-core';
+  import { SlamMap } from '@viamrobotics/prime-blocks';
 </script>
 
 <SlamMap {cloud} />
@@ -47,10 +47,10 @@ pnpm -C packages/blocks dev
 To lint and typecheck:
 
 ```bash
-pnpm -C packages/core check        # check svelte and lint
-pnpm -C packages/core check-svelte # check svelte only
-pnpm -C packages/core check-lint   # check lint only with prettier and eslint
-pnpm -C packages/core format       # format with prettier
+pnpm -C packages/blocks check        # check svelte and lint
+pnpm -C packages/blocks check-svelte # check svelte only
+pnpm -C packages/blocks check-lint   # check lint only with prettier and eslint
+pnpm -C packages/blocks format       # format with prettier
 ```
 
 ## Testing
@@ -58,8 +58,8 @@ pnpm -C packages/core format       # format with prettier
 To test with [vitest][https://vitest.dev/]:
 
 ```bash
-pnpm -C packages/core test        # run once
-pnpm -C packages/core test:watch  # watch tests
+pnpm -C packages/blocks test        # run once
+pnpm -C packages/blocks test:watch  # watch tests
 ```
 
 [vitest]: https://vitest.dev/
