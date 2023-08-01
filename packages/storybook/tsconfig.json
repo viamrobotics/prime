@@ -8,6 +8,7 @@
     ".eslintrc.cjs",
     ".prettierrc.cjs",
     "postcss.config.js",
+    "svelte.config.js",
     "tailwind.config.ts",
     "src/**/*.js",
     "src/**/*.ts",
