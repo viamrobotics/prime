@@ -61,7 +61,7 @@ export const waitForCustomEvent = (
 ): CustomEventHandler => {
   const eventReceipt: Promise<{ detail: unknown } | { timeout: true }> =
     locator.evaluate(
-      (element, inputs) => {
+      async (element, inputs) => {
         return new Promise((resolve) => {
           const handleEvent = (event: Event) => {
             cleanup();
