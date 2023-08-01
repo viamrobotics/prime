@@ -38,7 +38,7 @@ let buttonClickedTimes = 0;
   label="Console log"
   on:click={() => {
     buttonClickedTimes += 1;
-    // eslint:disable-next-line no-console
+    // eslint-disable-next-line no-console
     console.log(`button clicked ${buttonClickedTimes} times!`);
   }}
 />
