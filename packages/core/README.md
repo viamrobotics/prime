@@ -12,7 +12,7 @@ Add PRIME core using your package manager of choice:
 pnpm add --save-dev @viamrobotics/prime-core
 ```
 
-Install [Tailwind][]. In the `tailwind.config.js`, add the components to the content and include the theme:
+Install [Tailwind][https://tailwindcss.com/]. In the `tailwind.config.js`, add the components to the content and include the theme:
 
 ```js
 import { theme } from '@viamrobotics/prime-core/theme';
@@ -28,7 +28,7 @@ export default {
 };
 ```
 
-Import the stylesheet. If you are using [SvelteKit][], you can do this in `src/routes/+layout.svelte`.
+Import the stylesheet. If you are using [SvelteKit][https://kit.svelte.dev/], you can do this in `src/routes/+layout.svelte`.
 
 ```js
 import '@viamrobotics/prime-core/prime.css';
@@ -72,7 +72,7 @@ pnpm -C packages/core format       # format with prettier
 
 ## Testing
 
-To test with [vitest][]:
+To test with [vitest][https://vitest.dev/]:
 
 ```bash
 pnpm -C packages/core test        # run once
