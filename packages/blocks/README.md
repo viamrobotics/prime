@@ -14,7 +14,7 @@ pnpm add --save-dev @viamrobotics/prime-blocks
 
 Additionally, `@viamrobotics/prime-core` must be installed, and all of its installation steps must be followed.
 
-Import the stylesheet. If you are using [SvelteKit][https://kit.svelte.dev/], you can do this in `src/routes/+layout.svelte`.
+Import the stylesheet. If you are using [SvelteKit][], you can do this in `src/routes/+layout.svelte`.
 
 ```js
 import '@viamrobotics/prime-blocks/prime.css';
@@ -30,7 +30,6 @@ You can now use the components in your app:
 <SlamMap {cloud} />
 ```
 
-[tailwind]: https://tailwindcss.com/
 [sveltekit]: https://kit.svelte.dev/
 
 ## Playground
@@ -55,7 +54,7 @@ pnpm -C packages/blocks format       # format with prettier
 
 ## Testing
 
-To test with [vitest][https://vitest.dev/]:
+To test with [vitest][]:
 
 ```bash
 pnpm -C packages/blocks test        # run once
