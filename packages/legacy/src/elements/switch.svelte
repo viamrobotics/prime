@@ -40,12 +40,18 @@ const handleClick = (event: Event) => {
 >
   <div class="flex items-center gap-1.5">
     {#if label}
-      <button class="w-fit text-xs" on:click={handleClick}>{label}</button>
+      <button
+        class="w-fit text-xs"
+        on:click={handleClick}>{label}</button
+      >
     {/if}
 
     {#if tooltip}
       <v-tooltip text={tooltip}>
-        <v-icon class="text-gray-6 -mt-0.5" name="information-outline" />
+        <v-icon
+          class="text-gray-6 -mt-0.5"
+          name="information-outline"
+        />
       </v-tooltip>
     {/if}
   </div>
