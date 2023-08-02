@@ -11,6 +11,7 @@ For user triggered actions.
 
 <script lang="ts">
 import cx from 'classnames';
+import { createEventDispatcher } from 'svelte';
 
 /** Whether or not the button accepts clicks. */
 export let disabled = false;
