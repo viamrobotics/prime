@@ -5,7 +5,6 @@ import Button from '$lib/button.svelte';
 import Pill from '$lib/pill.svelte';
 import Switch from '$lib/switch.svelte';
 
-
 let buttonClickedTimes = 0;
 </script>
 

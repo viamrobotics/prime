@@ -1,4 +1,5 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Switch } from '@viamrobotics/prime-core';
 
 <Meta
   title='Elements/Switch'
@@ -35,9 +36,6 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
       control: 'select',
       options: ['true', 'false'],
       table: { defaultValue: { summary: 'false' } },
-    },
-    tooltip: {
-      description: 'The tooltip message.',
     },
     'on:input': {
       description: 'Event fired when input value changes.',
@@ -103,7 +101,6 @@ Used to handle binary input.
     name='Disabled'
     args={{
       value: 'off',
-      variant: 'labeled',
       disabled: 'true',
       label: 'disabled',
     }}
@@ -113,27 +110,6 @@ Used to handle binary input.
   value='${value}'
   variant='${variant}'
   disabled='${disabled}'
-  label='${label}'
-/>
-    `}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
-    name='Tooltip'
-    args={{
-      value: 'off',
-      variant: 'labeled',
-      label: 'Switch Label',
-      tooltip: 'This is the tooltip message.',
-    }}
-  >
-    {({ value, variant, tooltip, label }) => `
-<v-switch
-  value='${value}'
-  variant='${variant}'
-  tooltip='${tooltip}'
   label='${label}'
 />
     `}
