@@ -44,7 +44,7 @@
     "@floating-ui/dom": "^1.5.1",
     "@floating-ui/vue": "^1.0.2",
     "@mdi/js": "^7.2.96",
-    "@playwright/test": "^1.36.2",
+    "@playwright/test": "^1.32.3",
     "@storybook/addon-a11y": "^7.2.0",
     "@storybook/addon-actions": "^7.2.0",
     "@storybook/addon-docs": "^7.2.0",
