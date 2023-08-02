@@ -36,7 +36,7 @@
     "svelte": ">=4.0.0 <5"
   },
   "devDependencies": {
-    "@floating-ui/dom": "^1.2.6",
+    "@floating-ui/dom": "^1.5.1",
     "@sveltejs/adapter-auto": "^2.1.0",
     "@sveltejs/kit": "^1.22.4",
     "@sveltejs/package": "^2.2.0",
@@ -47,9 +47,9 @@
     "@types/testing-library__jest-dom": "^5.14.9",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
-    "@viamrobotics/eslint-config": "^0.1.0",
-    "@viamrobotics/prettier-config": "^0.1.0",
-    "@viamrobotics/typescript-config": "^0.0.3",
+    "@viamrobotics/eslint-config": "^0.1.1",
+    "@viamrobotics/prettier-config": "^0.1.1",
+    "@viamrobotics/typescript-config": "^0.0.4",
     "autoprefixer": "^10.4.14",
     "classnames": "^2.3.2",
     "concurrently": "^8.2.0",

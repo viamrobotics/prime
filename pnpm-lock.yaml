@@ -41,17 +41,17 @@ importers:
         specifier: ^6.2.1
         version: 6.2.1(eslint@8.46.0)(typescript@5.1.6)
       '@viamrobotics/eslint-config':
-        specifier: ^0.1.0
-        version: 0.1.0(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0)
+        specifier: ^0.1.1
+        version: 0.1.1(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0)
       '@viamrobotics/prettier-config':
-        specifier: ^0.1.0
-        version: 0.1.0(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
+        specifier: ^0.1.1
+        version: 0.1.1(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
       '@viamrobotics/prime-core':
         specifier: workspace:*
         version: link:../core
       '@viamrobotics/typescript-config':
-        specifier: ^0.0.3
-        version: 0.0.3(typescript@5.1.6)
+        specifier: ^0.0.4
+        version: 0.0.4(typescript@5.1.6)
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
@@ -116,7 +116,7 @@ importers:
   packages/core:
     devDependencies:
       '@floating-ui/dom':
-        specifier: ^1.2.6
+        specifier: ^1.5.1
         version: 1.5.1
       '@sveltejs/adapter-auto':
         specifier: ^2.1.0
@@ -149,14 +149,14 @@ importers:
         specifier: ^6.2.1
         version: 6.2.1(eslint@8.46.0)(typescript@5.1.6)
       '@viamrobotics/eslint-config':
-        specifier: ^0.1.0
-        version: 0.1.0(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0)
+        specifier: ^0.1.1
+        version: 0.1.1(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0)
       '@viamrobotics/prettier-config':
-        specifier: ^0.1.0
-        version: 0.1.0(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
+        specifier: ^0.1.1
+        version: 0.1.1(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
       '@viamrobotics/typescript-config':
-        specifier: ^0.0.3
-        version: 0.0.3(typescript@5.1.6)
+        specifier: ^0.0.4
+        version: 0.0.4(typescript@5.1.6)
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
@@ -284,17 +284,17 @@ importers:
         specifier: ^6.2.1
         version: 6.2.1(eslint@8.46.0)(typescript@5.1.6)
       '@viamrobotics/eslint-config':
-        specifier: ^0.1.0
-        version: 0.1.0(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0)
+        specifier: ^0.1.1
+        version: 0.1.1(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0)
       '@viamrobotics/prettier-config':
-        specifier: ^0.1.0
-        version: 0.1.0(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
+        specifier: ^0.1.1
+        version: 0.1.1(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
       '@viamrobotics/prime-core':
         specifier: workspace:../core
         version: link:../core
       '@viamrobotics/typescript-config':
-        specifier: ^0.0.3
-        version: 0.0.3(typescript@5.1.6)
+        specifier: ^0.0.4
+        version: 0.0.4(typescript@5.1.6)
       '@vitejs/plugin-vue':
         specifier: ^4.2.3
         version: 4.2.3(vite@4.4.8)(vue@3.3.4)
@@ -452,17 +452,17 @@ importers:
         specifier: ^6.2.1
         version: 6.2.1(eslint@8.46.0)(typescript@5.1.6)
       '@viamrobotics/eslint-config':
-        specifier: ^0.1.0
-        version: 0.1.0(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0)
+        specifier: ^0.1.1
+        version: 0.1.1(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0)
       '@viamrobotics/prettier-config':
-        specifier: ^0.1.0
-        version: 0.1.0(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
+        specifier: ^0.1.1
+        version: 0.1.1(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
       '@viamrobotics/prime-core':
         specifier: workspace:../core
         version: link:../core
       '@viamrobotics/typescript-config':
-        specifier: ^0.0.3
-        version: 0.0.3(typescript@5.1.6)
+        specifier: ^0.0.4
+        version: 0.0.4(typescript@5.1.6)
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
@@ -4596,8 +4596,8 @@ packages:
       eslint-visitor-keys: 3.4.2
     dev: true
 
-  /@viamrobotics/eslint-config@0.1.0(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0):
-    resolution: {integrity: sha512-ufIBCaJvcHX8THsQR/rq/dVr9ehThJvVh4+ekydgCjns+3yrBJOTHSTkwenfVxyPY1iTV9ynASvRk2fsBmZhGQ==}
+  /@viamrobotics/eslint-config@0.1.1(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0):
+    resolution: {integrity: sha512-rNpYCNn2psmI1Mnl0yxRM205ahzHESLKsCQijYI7NWjjicdTO8zV1M553dSqFztCvZloB3zMZSGBKpVj+o8WyQ==}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': '>=5 <6'
       '@typescript-eslint/parser': '>=5 <6'
@@ -4623,8 +4623,8 @@ packages:
       eslint-plugin-unicorn: 46.0.0(eslint@8.46.0)
     dev: true
 
-  /@viamrobotics/eslint-config@0.1.0(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0):
-    resolution: {integrity: sha512-ufIBCaJvcHX8THsQR/rq/dVr9ehThJvVh4+ekydgCjns+3yrBJOTHSTkwenfVxyPY1iTV9ynASvRk2fsBmZhGQ==}
+  /@viamrobotics/eslint-config@0.1.1(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0):
+    resolution: {integrity: sha512-rNpYCNn2psmI1Mnl0yxRM205ahzHESLKsCQijYI7NWjjicdTO8zV1M553dSqFztCvZloB3zMZSGBKpVj+o8WyQ==}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': '>=5 <6'
       '@typescript-eslint/parser': '>=5 <6'
@@ -4650,8 +4650,8 @@ packages:
       eslint-plugin-unicorn: 48.0.1(eslint@8.46.0)
     dev: true
 
-  /@viamrobotics/prettier-config@0.1.0(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0):
-    resolution: {integrity: sha512-XO5darPNRTP+i7RK+oCgHkeP6lVcpX66XtpsmFvbD0S8Zn2j4YumA9TFE3ofg7POv5DPl78E1tzCK5KJGHFbSA==}
+  /@viamrobotics/prettier-config@0.1.1(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0):
+    resolution: {integrity: sha512-uktj9tiWPfLgO1JTrW/3Wadou2rPWqzcjGcpGr195DnTvRp3Rcw+VGxrQ8gg+V4Rg81qFKwRrSUAieVxsziDGQ==}
     peerDependencies:
       prettier: '>=2 <3'
       prettier-plugin-svelte: '>=2 <3'
@@ -4667,8 +4667,8 @@ packages:
       prettier-plugin-tailwindcss: 0.4.1(prettier-plugin-svelte@3.0.3)(prettier@3.0.0)
     dev: true
 
-  /@viamrobotics/typescript-config@0.0.3(typescript@5.1.6):
-    resolution: {integrity: sha512-SEsauLS3OYbrK3k+eMMgouh2BQyi4Nk6yUCbn0aPNHPzSD+MszT+mKsdeAscrcnnjfWFR9cFQ6aadr0d753+3w==}
+  /@viamrobotics/typescript-config@0.0.4(typescript@5.1.6):
+    resolution: {integrity: sha512-WJE6gpiu7KdvMe6nXEbyqmVTOzRUrj0BufISTtPLHCviGsehOyTWT/BuY7Eu91PVa187ML44QXMdFe2xlUlNyA==}
     peerDependencies:
       typescript: '>=5 <6'
     dependencies:
