@@ -16,16 +16,22 @@ describe('Switch', () => {
     expect(screen.queryByRole('tooltip')).toBeNull();
   });
 
-  // TODO(APP-2290), (APP-2304): Tooltips above icons won't work until tooltip/icons are migrated.
-  it.skip('Renders with label and tooltip', () => {
-    render(Switch, { label: 'Switch Label', tooltip: 'Switch tooltip' });
+  /*
+   * TODO(APP-2290), (APP-2304): Tooltips above icons won't work until tooltip/icons are migrated.
+   * it.skip('Renders with label and tooltip', () => {
+   *   render(Switch, { label: 'Switch Label', tooltip: 'Switch tooltip' });
+   */
 
-    // Check if the switch label is displayed
-    expect(screen.getByRole('button')).toHaveTextContent('Switch Label');
+  /*
+   *   // Check if the switch label is displayed
+   *   expect(screen.getByRole('button')).toHaveTextContent('Switch Label');
+   */
 
-    // Check if the tooltip is present
-    expect(screen.getByRole('tooltip')).toHaveTextContent('Switch tooltip');
-  });
+  /*
+   *   // Check if the tooltip is present
+   *   expect(screen.getByRole('tooltip')).toHaveTextContent('Switch tooltip');
+   * });
+   */
 
   it('Switches on and off when clicked', async () => {
     render(Switch);
@@ -43,7 +49,7 @@ describe('Switch', () => {
   });
 
   it('Does not switch when disabled or readonly', async () => {
-    render(Switch, { disabled: 'true', readonly: 'true' });
+    render(Switch, { disabled: true, readonly: true });
 
     // Initial state should be off
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'false');

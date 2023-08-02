@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import { htmlToBoolean } from './boolean';
 import { dispatcher } from './dispatch';
 
 /**
@@ -36,11 +35,11 @@ export let variant: 'annotated' | 'default' = 'default';
 /**
  * Shows if the switch is disabled (if the disabled style of the switch is displayed).
  */
-export let disabled: string;
+export let disabled = false;
 /**
  * Shows if the switch is readonly (if the readonly style of the switch is displayed).
  */
-export let readonly: string;
+export let readonly = false;
 /**
  * Shows the message of the tooltip.
  * TODO(APP-2290): Tooltips above icons won't work until icons are migrated.
@@ -55,8 +54,8 @@ let isDisabled: boolean;
 let isReadonly: boolean;
 
 $: on = value === 'on';
-$: isDisabled = htmlToBoolean(disabled, 'disabled');
-$: isReadonly = htmlToBoolean(readonly, 'readonly');
+$: isDisabled = disabled;
+$: isReadonly = readonly;
 
 const handleClick = (event: Event) => {
   if (!(isDisabled || isReadonly)) {

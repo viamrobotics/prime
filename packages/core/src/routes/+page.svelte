@@ -69,14 +69,14 @@ let buttonClickedTimes = 0;
 
 <Switch
   value="off"
-  disabled="true"
+  disabled
   label="disabled"
 />
 
 <Switch
   value="on"
   variant="annotated"
-  readonly="true"
+  readonly
   label="readonly"
 />
 
