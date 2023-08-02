@@ -14,6 +14,7 @@
 
 <script lang="ts">
 import cx from 'classnames';
+import { createEventDispatcher } from 'svelte';
 
 /**
  * The switch label text.
@@ -47,7 +48,7 @@ export let readonly = false;
 
 const dispatch = createEventDispatcher<{
   /** When the switch is clicked. */
-  remove: { value: string };
+  input: { value: boolean };
 }>();
 
 let input: HTMLInputElement;
@@ -59,7 +60,7 @@ $: on = value === 'on';
 $: isDisabled = disabled;
 $: isReadonly = readonly;
 
-const handleClick = (event: Event) => {
+const handleClick = () => {
   if (!(isDisabled || isReadonly)) {
     value = on ? 'off' : 'on';
     input.checked = value === 'on';
