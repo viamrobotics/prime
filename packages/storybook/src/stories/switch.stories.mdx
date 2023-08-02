@@ -54,11 +54,10 @@ Used to handle binary input.
       value: 'off',
     }}
   >
-    {({ value }) => `
-<v-switch
-  value='${value}'
-/>
-    `}
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
   </Story>
 </Canvas>
 
@@ -70,12 +69,10 @@ Used to handle binary input.
       variant: 'annotated',
     }}
   >
-    {({ value, variant }) => `
-<v-switch
-  value='${value}'
-  variant='${variant}'
-/>
-    `}
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
   </Story>
 </Canvas>
 
@@ -87,12 +84,10 @@ Used to handle binary input.
       label: 'Lunchtime',
     }}
   >
-    {({ value, label }) => `
-<v-switch
-  value='${value}'
-  label='${label}'
-/>
-    `}
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
   </Story>
 </Canvas>
 
@@ -105,14 +100,10 @@ Used to handle binary input.
       label: 'disabled',
     }}
   >
-    {({ value, variant, disabled, label }) => `
-<v-switch
-  value='${value}'
-  variant='${variant}'
-  disabled='${disabled}'
-  label='${label}'
-/>
-    `}
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
   </Story>
 </Canvas>
 
@@ -126,13 +117,9 @@ Used to handle binary input.
       label: 'readonly',
     }}
   >
-    {({ value, variant, readonly, label }) => `
-<v-switch
-  value='${value}'
-  variant='${variant}'
-  readonly='${readonly}'
-  label='${label}'
-/>
-    `}
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
   </Story>
 </Canvas>
