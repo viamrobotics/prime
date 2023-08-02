@@ -4,6 +4,7 @@ import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
 import Pill from '$lib/pill.svelte';
 import Switch from '$lib/switch.svelte';
+import Tooltip from '$lib/tooltip.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -39,7 +40,7 @@ let buttonClickedTimes = 0;
   label="Console log"
   on:click={() => {
     buttonClickedTimes += 1;
-    // eslint:disable-next-line no-console
+    // eslint-disable-next-line no-console
     console.log(`button clicked ${buttonClickedTimes} times!`);
   }}
 />
@@ -90,3 +91,44 @@ let buttonClickedTimes = 0;
   disabled
   value="Baz"
 />
+
+<!-- Tooltip -->
+<Tooltip>
+  This element has a top tooltip.
+  <!-- TODO (APP-2290): Uncomment this when Icon is added -->
+  <!-- <Icon
+    slot="icon"
+    name="information-outline"
+  /> -->
+  <div slot="text">This is the tooltip text!</div>
+</Tooltip>
+
+<Tooltip location="left">
+  This element has a left tooltip.
+  <!-- TODO (APP-2290): Uncomment this when Icon is added -->
+  <!-- <Icon
+    slot="icon"
+    name="information-outline"
+  /> -->
+  <div slot="text">This is the tooltip text!</div>
+</Tooltip>
+
+<Tooltip location="right">
+  This element has a right tooltip.
+  <!-- TODO (APP-2290): Uncomment this when Icon is added -->
+  <!-- <Icon
+    slot="icon"
+    name="information-outline"
+  /> -->
+  <div slot="text">This is the tooltip text!</div>
+</Tooltip>
+
+<Tooltip location="bottom">
+  This element has a bottom tooltip.
+  <!-- TODO (APP-2290): Uncomment this when Icon is added -->
+  <!-- <Icon
+    slot="icon"
+    name="information-outline"
+  /> -->
+  <div slot="text">This is the tooltip text!</div>
+</Tooltip>
