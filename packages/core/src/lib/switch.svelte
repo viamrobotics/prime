@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import { dispatcher } from './dispatch';
 
 /**
  * The switch label text.
@@ -46,7 +45,10 @@ export let readonly = false;
  */
 // export let tooltip = '';
 
-const dispatch = dispatcher();
+const dispatch = createEventDispatcher<{
+  /** When the switch is clicked. */
+  remove: { value: string };
+}>();
 
 let input: HTMLInputElement;
 let on: boolean;
@@ -61,7 +63,7 @@ const handleClick = (event: Event) => {
   if (!(isDisabled || isReadonly)) {
     value = on ? 'off' : 'on';
     input.checked = value === 'on';
-    dispatch(event, 'input', { value: input.checked });
+    dispatch('input', { value: input.checked });
   }
 };
 </script>
