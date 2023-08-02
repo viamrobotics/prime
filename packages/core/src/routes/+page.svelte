@@ -58,6 +58,7 @@ let buttonClickedTimes = 0;
 <Label
   >Name:
   <input
+    slot="input"
     name="name"
     class="border border-black"
   />
@@ -66,6 +67,7 @@ let buttonClickedTimes = 0;
 <Label required>
   Name:
   <input
+    slot="input"
     name="name"
     class="border border-black"
     required
@@ -75,6 +77,7 @@ let buttonClickedTimes = 0;
 <Label disabled>
   Name:
   <input
+    slot="input"
     name="name"
     class="border border-black"
     disabled

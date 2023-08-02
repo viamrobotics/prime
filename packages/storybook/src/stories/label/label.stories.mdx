@@ -4,6 +4,12 @@ import WithInput from './with-input.svelte';
 <Meta
   title='Elements/Label'
   argTypes={{
+    position: {
+      description: 'The desired position for the label relative to its input',
+      control: 'select',
+      options: ['top', 'left'],
+      table: { defaultValue: { summary: 'top' } },
+    },
     disabled: {
       description: 'Whether to render the label as disabled or not',
       control: { type: 'boolean' },
