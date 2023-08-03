@@ -60,54 +60,39 @@ let buttonClickedTimes = 0;
     />
   </div>
 
-<<<<<<< HEAD
   <div class="flex gap-4">
-    <!-- Pill -->
-    <Pill />
-    <Pill value="Foo" />
-    <Pill
-      readonly
-      value="Bar"
+    <!-- Label -->
+    <Label
+    >Name:
+    <input
+      slot="input"
+      name="name"
+      class="border border-black"
     />
-    <Pill
+    </Label>
+
+    <Label required>
+    Name:
+    <input
+      slot="input"
+      name="name"
+      class="border border-black"
+      required
+    />
+    </Label>
+
+    <Label disabled>
+    Name:
+    <input
+      slot="input"
+      name="name"
+      class="border border-black"
       disabled
-      value="Baz"
     />
+    </Label>
   </div>
-=======
-<!-- Label -->
-<Label
-  >Name:
-  <input
-    slot="input"
-    name="name"
-    class="border border-black"
-  />
-</Label>
-
-<Label required>
-  Name:
-  <input
-    slot="input"
-    name="name"
-    class="border border-black"
-    required
-  />
-</Label>
-
-<Label disabled>
-  Name:
-  <input
-    slot="input"
-    name="name"
-    class="border border-black"
-    disabled
-  />
-</Label>
 
 <!-- Pill -->
->>>>>>> origin/main
-
   <div>
     <!-- Tooltip -->
     <Tooltip>
