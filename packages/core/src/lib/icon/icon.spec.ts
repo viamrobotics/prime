@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import Icon from './icon/icon.svelte';
+import Icon from './icon.svelte';
 
 describe('Icon', () => {
   it('Renders an icon', () => {
