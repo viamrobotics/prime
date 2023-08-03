@@ -3,6 +3,7 @@ import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
 import Icon from '$lib/icon/icon.svelte';
+import Label from '$lib/label.svelte';
 import Pill from '$lib/pill.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 
@@ -59,6 +60,7 @@ let buttonClickedTimes = 0;
     />
   </div>
 
+<<<<<<< HEAD
   <div class="flex gap-4">
     <!-- Pill -->
     <Pill />
@@ -72,6 +74,39 @@ let buttonClickedTimes = 0;
       value="Baz"
     />
   </div>
+=======
+<!-- Label -->
+<Label
+  >Name:
+  <input
+    slot="input"
+    name="name"
+    class="border border-black"
+  />
+</Label>
+
+<Label required>
+  Name:
+  <input
+    slot="input"
+    name="name"
+    class="border border-black"
+    required
+  />
+</Label>
+
+<Label disabled>
+  Name:
+  <input
+    slot="input"
+    name="name"
+    class="border border-black"
+    disabled
+  />
+</Label>
+
+<!-- Pill -->
+>>>>>>> origin/main
 
   <div>
     <!-- Tooltip -->
