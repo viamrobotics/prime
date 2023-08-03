@@ -10,15 +10,24 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
-import Label from './label.svelte';
+import Label, { type LabelPosition } from './label.svelte';
 
+export let position: LabelPosition = 'top';
 export let disabled = false;
 export let required = false;
 </script>
 
 <Label
+  {position}
   {disabled}
   {required}
 >
   Name:
+  <input
+    slot="input"
+    name="name"
+    placeholder="Enter your name"
+    {disabled}
+    {required}
+  />
 </Label>
