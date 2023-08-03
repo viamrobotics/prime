@@ -1,3 +1,12 @@
+<!--
+@component
+  
+A component that renders SVG icons from the @mdi/js package
+```svelte
+<Icon crumbs={['Dessert', 'Cookie']} />
+```
+-->
+
 <svelte:options immutable />
 
 <script lang="ts">

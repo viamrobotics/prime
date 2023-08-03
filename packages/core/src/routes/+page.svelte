@@ -9,7 +9,7 @@ import Tooltip from '$lib/tooltip.svelte';
 let buttonClickedTimes = 0;
 </script>
 
-<div class="container mx-auto my-4 flex flex-col gap-8">
+<div class="container mx-auto my-4 p-4 flex flex-col gap-8">
   <div>
     <!-- Badge -->
     <Badge
@@ -118,40 +118,60 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <!-- Icons -->
-    <Icon
-    name='invalidmoose' 
-    />
-    <Icon
-    name='cog' 
-    size='xs' 
-    />
-    <Icon
-    name='cog' 
-    size='sm' 
-    />
-    <Icon
-    name='cog' 
-    size='base' 
-    />
-    <Icon
-    name='cog' 
-    size='lg' 
-    />
-    <Icon
-    name='cog' 
-    size='xl' 
-    />
-    <Icon
-    name='cog' 
-    size='2xl' 
-    />
-    <Icon
-    name='cog' 
-    size='3xl' 
-    />
-    <Icon
-    name='cog' 
-    size='4xl' 
-    />
+    <p class='text-danger-dark'>
+      <Icon
+      name='cog' 
+      size='xs' 
+      />
+    </p>
+    
+    <p class='text-warning-bright'>
+      <Icon
+      name='cog' 
+      size='sm' 
+      />
+    </p>
+
+    <p class='text-danger-dark'>
+      <Icon
+      name='cog' 
+      size='base' 
+      />
+    </p>
+    
+    <p class='text-warning-bright'>
+      <Icon
+      name='cog' 
+      size='lg' 
+      />
+    </p>
+    
+    <p class='text-danger-dark'>
+      <Icon
+      name='cog' 
+      size='xl' 
+      />
+    </p>
+    
+    <p class='text-warning-bright'>
+      <Icon
+      name='cog' 
+      size='2xl' 
+      />
+    </p>
+    
+    <p class='text-danger-dark'>
+      <Icon
+      name='cog' 
+      size='3xl' 
+      />
+    </p>
+    
+    <p class='text-warning-bright'>
+      <Icon
+      name='cog' 
+      size='4xl' 
+      />
+    </p>
   </div>
 </div>
