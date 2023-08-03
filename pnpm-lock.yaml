@@ -9,14 +9,13 @@ importers:
   .: {}
 
   packages/core:
-    dependencies:
-      '@mdi/js':
-        specifier: ^7.2.96
-        version: 7.2.96
     devDependencies:
       '@floating-ui/dom':
         specifier: ^1.2.6
         version: 1.2.7
+      '@mdi/js':
+        specifier: ^7.2.96
+        version: 7.2.96
       '@sveltejs/adapter-auto':
         specifier: ^2.1.0
         version: 2.1.0(@sveltejs/kit@1.22.3)
@@ -3355,6 +3354,7 @@ packages:
 
   /@mdi/js@7.2.96:
     resolution: {integrity: sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==}
+    dev: true
 
   /@mdx-js/react@2.2.1(react@18.2.0):
     resolution: {integrity: sha512-YdXcMcEnqZhzql98RNrqYo9cEhTTesBiCclEtoiQUbJwx87q9453GTapYU6kJ8ZZ2ek1Vp25SiAXEFy5O/eAPw==}

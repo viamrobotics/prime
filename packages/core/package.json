@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.2.6",
+    "@mdi/js": "^7.2.96",
     "@sveltejs/adapter-auto": "^2.1.0",
     "@sveltejs/kit": "^1.22.3",
     "@sveltejs/package": "^2.2.0",
@@ -73,8 +74,5 @@
   },
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "type": "module",
-  "dependencies": {
-    "@mdi/js": "^7.2.96"
-  }
+  "type": "module"
 }
