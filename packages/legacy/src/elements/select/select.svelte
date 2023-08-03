@@ -271,7 +271,7 @@ $: {
     {#if tooltip}
       <v-tooltip text={tooltip}>
         <v-icon
-          class={cx('gextext-xs', {
+          class={cx('text-xs', {
             'text-warning-bright': state === 'warn',
             'text-danger-dark': state === 'error',
             'text-gray-6': state !== 'warn' && state !== 'error',

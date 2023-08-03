@@ -28,7 +28,7 @@ export let name = '';
 /**
  * Boolean to verify that name exists.
  */
- const hasNameProperty = Object.hasOwn(paths, name);
+const hasNameProperty = Object.hasOwn(paths, name);
 
 /**
  * The TailwindCSS sizes map.
