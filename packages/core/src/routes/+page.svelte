@@ -3,6 +3,7 @@ import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
 import Pill from '$lib/pill.svelte';
+import Radio from '$lib/radio.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 
 let buttonClickedTimes = 0;
@@ -64,6 +65,40 @@ let buttonClickedTimes = 0;
 <Pill
   disabled
   value="Baz"
+/>
+
+<!-- Radio -->
+<Radio
+  options={['Opt 1', 'Opt 2', 'Opt 3']}
+  selected="Opt 1"
+/>
+
+<Radio
+  label="These are your options"
+  labelposition="top"
+  options={['Opt 1', 'Opt 2']}
+  selected="Opt 1"
+/>
+
+<Radio
+  label="Your options"
+  labelposition="top"
+  selected="Option 1"
+  options={['Opt 1', 'Opt 2', 'Opt 3']}
+  tooltip="Warning: these options may not be your only options."
+  state="warn"
+/>
+
+<Radio
+  options={['Opt 1', 'Opt 2', 'Opt 3']}
+  selected="Opt 1"
+  readonly="{true}"
+/>
+
+<Radio
+  options={['Opt 1', 'Opt 2', 'Opt 3']}
+  selected="Opt 1"
+  width="full"
 />
 
 <!-- Tooltip -->
