@@ -3,18 +3,28 @@
   
 A component that renders SVG icons from the @mdi/js package
 ```svelte
-<Icon crumbs={['Dessert', 'Cookie']} />
+  <Icon
+    name='camera-outline'
+    size='xl' 
+  />
 ```
 -->
 <svelte:options immutable />
 
 <script lang="ts">
-type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-
 import cx from 'classnames';
 import { paths } from './icons';
+
+type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
+/**
+ * The name of the icon.
+ */
 export let name = '';
 
+/**
+ * The TailwindCSS sizes map.
+ */
 const sizes: Record<Size, string> = {
   xs: 'w-3 h-3',
   sm: 'w-3.5 h-3.5',
@@ -26,8 +36,14 @@ const sizes: Record<Size, string> = {
   '4xl': 'w-9 h-9',
 };
 
+/**
+ * The size of the icon.
+ */
 export let size: Size = 'base';
 
+/**
+ * Boolean to verify that name exists.
+ */
 const hasNameProperty = Object.hasOwn(paths, name);
 </script>
 

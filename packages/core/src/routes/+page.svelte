@@ -41,7 +41,7 @@ let buttonClickedTimes = 0;
     <!-- Button -->
     <Button
       variant="success"
-      label="Console log"
+      label="Click me"
       on:click={() => {
         buttonClickedTimes += 1;
         // eslint-disable-next-line no-console
