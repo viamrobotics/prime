@@ -2,6 +2,7 @@
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
+import Label from '$lib/label.svelte';
 import Pill from '$lib/pill.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 
@@ -52,6 +53,33 @@ let buttonClickedTimes = 0;
   label="testing 3"
   width="full"
 />
+
+<!-- Label -->
+<Label
+  >Name:
+  <input
+    name="name"
+    class="border border-black"
+  />
+</Label>
+
+<Label required>
+  Name:
+  <input
+    name="name"
+    class="border border-black"
+    required
+  />
+</Label>
+
+<Label disabled>
+  Name:
+  <input
+    name="name"
+    class="border border-black"
+    disabled
+  />
+</Label>
 
 <!-- Pill -->
 
