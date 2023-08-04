@@ -49,7 +49,7 @@ export let readonly: boolean = false;
 /**
  * The icon on the radio button.
  */
- export let icon: string;
+ let icon: string;
 /**
  * The width of the radio button.  Specifically, if width is 100% or if its the default.
  */
