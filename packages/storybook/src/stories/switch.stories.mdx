@@ -11,8 +11,7 @@ import { Switch } from '@viamrobotics/prime-core';
   argTypes={{
     enabled: {
       description: 'Whether or not the switch is on.',
-      control: 'select',
-      options: ['true', 'false'],
+      control: 'boolean',
       table: { defaultValue: { summary: 'false' } },
     },
     label: {
@@ -27,8 +26,7 @@ import { Switch } from '@viamrobotics/prime-core';
     },
     disabled: {
       description: 'Whether the input is disabled',
-      control: 'select',
-      options: ['true', 'false'],
+      control: 'boolean',
       table: { defaultValue: { summary: 'false' } },
     },
     'on:input': {
@@ -45,7 +43,7 @@ Used to handle binary input.
   <Story
     name='Default'
     args={{
-      enabled: 'false',
+      enabled: false,
     }}
   >
     {(props) => ({
@@ -59,7 +57,7 @@ Used to handle binary input.
   <Story
     name='Annotated'
     args={{
-      enabled: 'false',
+      enabled: false,
       variant: 'annotated',
     }}
   >
@@ -74,7 +72,7 @@ Used to handle binary input.
   <Story
     name='With label'
     args={{
-      enabled: 'false',
+      enabled: false,
       label: 'Lunchtime',
     }}
   >
@@ -89,8 +87,8 @@ Used to handle binary input.
   <Story
     name='Disabled'
     args={{
-      enabled: 'false',
-      disabled: 'true',
+      enabled: false,
+      disabled: true,
       label: 'disabled',
     }}
   >
@@ -105,9 +103,9 @@ Used to handle binary input.
   <Story
     name='Readonly'
     args={{
-      enabled: 'true',
+      enabled: true,
       variant: 'annotated',
-      readonly: 'true',
+      readonly: true,
       label: 'readonly',
     }}
   >
