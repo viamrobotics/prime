@@ -55,26 +55,26 @@ let buttonClickedTimes = 0;
 />
 
 <!-- Switch -->
-<Switch value="off" />
+<Switch enabled={false} />
 
 <Switch
-  value="off"
+  enabled={false}
   variant="annotated"
 />
 
 <Switch
-  value="off"
+  enabled={false}
   label="Lunchtime"
 />
 
 <Switch
-  value="off"
+  enabled={false}
   disabled
   label="disabled"
 />
 
 <Switch
-  value="on"
+  enabled={true}
   variant="annotated"
   readonly
   label="readonly"

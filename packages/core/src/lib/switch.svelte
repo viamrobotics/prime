@@ -5,7 +5,7 @@
 
   ```svelte
   <Switch
-    value='off'
+    enabled='false'
     label='Switch Label'
   />
   ```
@@ -27,7 +27,7 @@ export let name = '';
 /**
  * Shows if the switch is 'on' or 'off'.
  */
-export let value: 'on' | 'off' = 'off';
+export let enabled = false;
 /**
  * Shows if the switch is annotated (if the text of 'on' or 'off' is displayed next to the switch).
  */
@@ -52,26 +52,19 @@ const dispatch = createEventDispatcher<{
 }>();
 
 let input: HTMLInputElement;
-let on: boolean;
-let isDisabled: boolean;
-let isReadonly: boolean;
-
-$: on = value === 'on';
-$: isDisabled = disabled;
-$: isReadonly = readonly;
 
 const handleClick = () => {
-  if (!(isDisabled || isReadonly)) {
-    value = on ? 'off' : 'on';
-    input.checked = value === 'on';
-    dispatch('input', { value: input.checked });
+  if (!(disabled || readonly)) {
+    enabled = !enabled;
+    input.checked = enabled;
+    dispatch('input', { value: enabled });
   }
 };
 </script>
 
 <label
   class={cx('flex w-fit flex-col justify-start gap-1', {
-    'text-disabled-dark': isDisabled,
+    'text-disabled-dark': disabled,
   })}
 >
   <div class="flex items-center gap-1.5">
@@ -97,22 +90,22 @@ const handleClick = () => {
     on:click={handleClick}
     type="button"
     class={cx('flex items-center gap-2', {
-      'pointer-events-none cursor-not-allowed': isDisabled || isReadonly,
+      'pointer-events-none cursor-not-allowed': disabled || readonly,
     })}
     role="switch"
     aria-label={label}
-    aria-disabled={isDisabled}
-    aria-checked={on ? 'true' : 'false'}
+    aria-disabled={disabled}
+    aria-checked={enabled ? 'true' : 'false'}
   >
     <div
       class={cx(
         'relative inline-flex h-5 w-11 flex-shrink-0 cursor-pointer border duration-200 ease-in-out focus:outline-none motion-safe:transition-colors',
         {
-          'border-gray-4 bg-gray-4': isDisabled || isReadonly,
-          'border-gray-6 bg-gray-6': !on && !(isDisabled || isReadonly),
+          'border-gray-4 bg-gray-4': disabled || readonly,
+          'border-gray-6 bg-gray-6': !enabled && !(disabled || readonly),
           'border-success-dark bg-success-dark':
-            on && !(isDisabled || isReadonly),
-          'text-disabled-dark': isDisabled,
+            enabled && !(disabled || readonly),
+          'text-disabled-dark': disabled,
         }
       )}
     >
@@ -120,26 +113,25 @@ const handleClick = () => {
         class={cx(
           'pointer-events-none relative ml-px mt-px inline-block h-4 w-4 transform bg-white ring-0 duration-200 ease-in-out motion-safe:transition-transform',
           {
-            'border-gray-4': isDisabled || isReadonly,
+            'border-gray-4': disabled || readonly,
           }
         )}
-        class:translate-x-0={!on}
-        class:translate-x-6={on}
+        class:translate-x-0={!enabled}
+        class:translate-x-6={enabled}
       />
       <input
         {name}
-        {value}
-        disabled={isDisabled}
-        readonly={isReadonly}
+        {disabled}
+        {readonly}
         class="hidden"
         type="checkbox"
-        checked={on}
+        checked={enabled}
         bind:this={input}
       />
     </div>
 
     {#if variant === 'annotated'}
-      <p class="text-sm">{value}</p>
+      <p class="text-sm">{enabled ? 'on' : 'off'}</p>
     {/if}
   </button>
 </label>
