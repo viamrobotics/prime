@@ -2,6 +2,7 @@
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
+import Label from '$lib/label.svelte';
 import Pill from '$lib/pill.svelte';
 import Switch from '$lib/switch.svelte';
 import Tooltip from '$lib/tooltip.svelte';
@@ -54,9 +55,37 @@ let buttonClickedTimes = 0;
   width="full"
 />
 
-<!-- Switch -->
-<Switch enabled={false} />
+<!-- Label -->
+<Label
+  >Name:
+  <input
+    slot="input"
+    name="name"
+    class="border border-black"
+  />
+</Label>
 
+<Label required>
+  Name:
+  <input
+    slot="input"
+    name="name"
+    class="border border-black"
+    required
+  />
+</Label>
+
+<Label disabled>
+  Name:
+  <input
+    slot="input"
+    name="name"
+    class="border border-black"
+    disabled
+  />
+</Label>
+
+<!-- Switch -->
 <Switch
   enabled={false}
   variant="annotated"

@@ -18,6 +18,11 @@ let isOpen: boolean;
 $: isOpen = htmlToBoolean(open, 'open');
 
 const handleClose = (event: MouseEvent | KeyboardEvent) => {
+  // Close only if background is clicked (not the modal itself)
+  if (event instanceof MouseEvent && event.target !== event.currentTarget) {
+    return;
+  }
+
   if (event instanceof KeyboardEvent && !checkKeyboardEvent(event, ['Enter'])) {
     return;
   }
