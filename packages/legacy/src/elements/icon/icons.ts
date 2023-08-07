@@ -51,6 +51,9 @@ import {
   mdiArrowCollapseLeft,
   mdiArrowCollapseRight,
   mdiContentDuplicate,
+  mdiAccountGroupOutline,
+  mdiDomain,
+  mdiRobotOutline,
 } from '@mdi/js';
 
 export const paths: Record<string, string> = {
@@ -60,6 +63,7 @@ export const paths: Record<string, string> = {
   check: mdiCheck,
   close: mdiClose,
   cog: mdiCog,
+  domain: mdiDomain,
   download: mdiDownload,
   information: mdiInformation,
   instagram: mdiInstagram,
@@ -73,6 +77,7 @@ export const paths: Record<string, string> = {
   send: mdiSend,
   twitter: mdiTwitter,
   undo: mdiUndo,
+  'account-group-outline': mdiAccountGroupOutline,
   'account-multiple': mdiAccountMultiple,
   'alert-circle': mdiAlertCircle,
   'alert-circle-outline': mdiAlertCircleOutline,
@@ -103,6 +108,7 @@ export const paths: Record<string, string> = {
   'pause-circle-outline': mdiPauseCircleOutline,
   'pencil-outline': mdiPencilOutline,
   'play-circle-outline': mdiPlayCircleOutline,
+  'robot-outline': mdiRobotOutline,
   'stop-circle-outline': mdiStopCircleOutline,
   'trash-can-outline': mdiTrashCanOutline,
   'video-outline': mdiVideoOutline,
