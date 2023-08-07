@@ -206,5 +206,18 @@ let buttonClickedTimes = 0;
         size="4xl"
       />
     </p>
+
+    <Icon
+      name="package-closed"
+      size="4xl"
+    />
+    <Icon
+      name="lock"
+      size="4xl"
+    />
+    <Icon
+      name="public"
+      size="4xl"
+    />
   </div>
 </div>
