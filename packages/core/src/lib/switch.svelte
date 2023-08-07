@@ -5,7 +5,7 @@
 
   ```svelte
   <Switch
-    enabled='false'
+    on='false'
     label='Switch Label'
   />
   ```
@@ -27,7 +27,7 @@ export let name = '';
 /**
  * Shows if the switch is 'on' or 'off'.
  */
-export let enabled = false;
+export let on = false;
 /**
  * Shows if the switch is annotated (if the text of 'on' or 'off' is displayed next to the switch).
  */
@@ -55,9 +55,9 @@ let input: HTMLInputElement;
 
 const handleClick = () => {
   if (!(disabled || readonly)) {
-    enabled = !enabled;
-    input.checked = enabled;
-    dispatch('input', { value: enabled });
+    on = !on;
+    input.checked = on;
+    dispatch('input', { value: on });
   }
 };
 </script>
@@ -95,16 +95,15 @@ const handleClick = () => {
     role="switch"
     aria-label={label}
     aria-disabled={disabled}
-    aria-checked={enabled ? 'true' : 'false'}
+    aria-checked={on ? 'true' : 'false'}
   >
     <div
       class={cx(
         'relative inline-flex h-5 w-11 flex-shrink-0 cursor-pointer border duration-200 ease-in-out focus:outline-none motion-safe:transition-colors',
         {
           'border-gray-4 bg-gray-4': disabled || readonly,
-          'border-gray-6 bg-gray-6': !enabled && !(disabled || readonly),
-          'border-success-dark bg-success-dark':
-            enabled && !(disabled || readonly),
+          'border-gray-6 bg-gray-6': !on && !(disabled || readonly),
+          'border-success-dark bg-success-dark': on && !(disabled || readonly),
           'text-disabled-dark': disabled,
         }
       )}
@@ -116,8 +115,8 @@ const handleClick = () => {
             'border-gray-4': disabled || readonly,
           }
         )}
-        class:translate-x-0={!enabled}
-        class:translate-x-6={enabled}
+        class:translate-x-0={!on}
+        class:translate-x-6={on}
       />
       <input
         {name}
@@ -125,13 +124,13 @@ const handleClick = () => {
         {readonly}
         class="hidden"
         type="checkbox"
-        checked={enabled}
+        checked={on}
         bind:this={input}
       />
     </div>
 
     {#if variant === 'annotated'}
-      <p class="text-sm">{enabled ? 'on' : 'off'}</p>
+      <p class="text-sm">{on ? 'on' : 'off'}</p>
     {/if}
   </button>
 </label>
