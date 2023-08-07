@@ -5,7 +5,7 @@ A graphical control element that allows the user to choose only one of a predefi
 
 ```svelte
 <v-radio
-  options="[Opt 1, Opt 2, Opt 3]"
+  options="['Opt 1', 'Opt 2', 'Opt 3']"
   selected="Opt 1"
 />
 ```
@@ -56,7 +56,7 @@ export let readonly: boolean = false;
 export let width: 'full' | 'default' = 'default';
 
 const dispatch = createEventDispatcher<{
-  /** When an option on the radio is clicked. */
+  /** When an option on the radio is selected. */
   input: { value: string };
 }>();
 
@@ -87,7 +87,6 @@ $: {
 }
 </script>
 
-<!-- svelte-ignore a11y-label-has-associated-control -->
 <label
   class={cx('flex gap-1', {
     'flex-col': labelposition === 'top',
@@ -122,6 +121,7 @@ $: {
   <div class="flex flex-nowrap">
     {#each options as option}
       <button
+        aria-label="Select {option}"
         class={cx('whitespace-nowrap border px-3 py-1.5 text-xs', {
           'border-light bg-medium text-subtle-1':
             option !== selected && !isReadonly,
