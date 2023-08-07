@@ -92,7 +92,7 @@ let buttonClickedTimes = 0;
 <Radio
   options={['Opt 1', 'Opt 2', 'Opt 3']}
   selected="Opt 1"
-  readonly="{true}"
+  readonly={true}
 />
 
 <Radio

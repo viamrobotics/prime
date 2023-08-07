@@ -49,7 +49,7 @@ export let readonly: boolean = false;
 /**
  * The icon on the radio button.
  */
- let icon: string;
+let icon: string;
 /**
  * The width of the radio button.  Specifically, if width is 100% or if its the default.
  */
@@ -60,10 +60,8 @@ const dispatch = createEventDispatcher<{
   input: { value: string };
 }>();
 
-let isReadonly: boolean = readonly;
-
 const handleClick = (value: string) => {
-  if (!isReadonly) {
+  if (!readonly) {
     selected = value;
     dispatch('input', { value });
   }
@@ -97,7 +95,7 @@ $: {
     {#if label}
       <p
         class={cx('text-xs text-subtle-1', {
-          'text-black/50': isReadonly,
+          'text-black/50': readonly,
         })}
       >
         {label}
@@ -124,13 +122,13 @@ $: {
         aria-label="Select {option}"
         class={cx('whitespace-nowrap border px-3 py-1.5 text-xs', {
           'border-light bg-medium text-subtle-1':
-            option !== selected && !isReadonly,
+            option !== selected && !readonly,
           'border-gray-6 bg-light font-semibold text-default':
-            option === selected && !isReadonly,
+            option === selected && !readonly,
           'border-medium bg-light font-semibold text-disabled-dark':
-            option === selected && isReadonly,
+            option === selected && readonly,
           'pointer-events-none cursor-not-allowed border-light bg-disabled-light text-disabled-dark':
-            isReadonly,
+            readonly,
           'w-full': width === 'full',
         })}
         on:click={() => handleClick(option)}
