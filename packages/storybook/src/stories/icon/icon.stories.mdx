@@ -1,0 +1,85 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Icon } from '@viamrobotics/prime-core';
+import WithStyles from './with-styles.svelte';
+import AllIcons from './all-icons.svelte';
+
+<Meta
+  title='Elements/Icon'
+  argTypes={{
+    name: {
+      description: 'The icon name',
+      table: { defaultValue: { summary: 'check-circle' } },
+      control: 'text',
+    },
+    size: {
+      description: 'The icon size',
+      control: { type: 'select' },
+      options: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'],
+      table: { defaultValue: { summary: 'base' } },
+    },
+    style: {
+      description: 'The icon style',
+      control: { type: 'select' },
+      options: ['color:red', 'color:blue'],
+      table: { defaultValue: { summary: 'color:red' } },
+    },
+  }}
+/>
+
+# Icon
+
+For displaying a list of items
+
+<Canvas>
+  <Story
+    name='Checkmark at default size'
+    args={{
+      name: 'check-circle',
+    }}
+  >
+    {(props) => ({
+      Component: Icon,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Circle checkmark icon at 2xl size'
+    args={{
+      name: 'check-circle',
+      size: '2xl',
+    }}
+  >
+    {(props) => ({
+      Component: Icon,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Green circle checkmark icon at 4xl size'
+    args={{
+      name: 'check-circle',
+      size: '4xl',
+      style: 'color: #3d7d3f',
+    }}
+  >
+    {(props) => ({
+      Component: WithStyles,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name='All Icons'>
+    {(props) => ({
+      Component: AllIcons,
+      props,
+    })}
+  </Story>
+</Canvas>
