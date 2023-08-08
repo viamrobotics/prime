@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/svelte';
+import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import Radio from './radio.svelte';
 
 describe('Radio', () => {
@@ -55,32 +55,39 @@ describe('Radio', () => {
     expect(screen.getByText('Test Label')).toBeVisible();
   });
 
-  it('Displays tooltip when specified', () => {
+  it('Displays tooltip when specified', async () => {
     render(Radio, { tooltip: 'Tooltip Text' });
-    // How to mimic hover behavior??  Look at how Devin's doing it in the PR he merged for tooltip.
-    // Also need to update this to use the migrated tooltip.
-    expect(screen.getByText('Tooltip Text')).toBeVisible();
+    const target = screen.getByRole('button')
+    await fireEvent.mouseEnter(target);
+    await waitFor(() => {
+      expect(screen.getByText('Tooltip Text')).toBeVisible();
+    })
   });
 
   it('Applies correct icon for info state', () => {
-    render(Radio, { state: 'info' });
-    expect(
-      screen.getByRole('img', { name: 'information-outline' })
-    ).toBeVisible();
+    render(Radio, { state: 'info', tooltip: 'For your information' });
+    const iconButton = screen.getByRole('button');
+    expect(iconButton).toBeVisible();
+    const svg = screen.getByRole('img', { name: 'information-outline icon' });
+    expect(svg).toBeVisible();
+    const pathElem = svg.querySelector('path');
+    expect(pathElem).toHaveAttribute('fill', 'currentColor'); 
+});
+
+  it('Applies correct color for warn state', () => {
+    render(Radio, { state: 'warn', tooltip: 'Strong warning' });
+    const icon = screen.getByRole('button');
+    expect(icon.firstChild).toHaveClass('text-warning-bright');
+    const svg = screen.getByRole('img', { name: 'alert-circle-outline icon' });
+    expect(svg).toBeVisible();
   });
 
-  it('Applies correct icon for warn state', () => {
-    render(Radio, { state: 'warn' });
-    expect(
-      screen.getByRole('img', { name: 'alert-circle-outline' })
-    ).toBeVisible();
-  });
-
-  it('Applies correct icon for error state', () => {
-    render(Radio, { state: 'error' });
-    expect(
-      screen.getByRole('img', { name: 'alert-circle-outline' })
-    ).toBeVisible();
+  it('Applies correct color for error state', () => {
+    render(Radio, { state: 'error', tooltip: 'Ahhhhh error!' });
+    const icon = screen.getByRole('button');
+    expect(icon.firstChild).toHaveClass('text-danger-dark');
+    const svg = screen.getByRole('img', { name: 'alert-circle-outline icon' });
+    expect(svg).toBeVisible();
   });
 
   it('Renders with full width if specified', () => {
