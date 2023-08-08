@@ -4,6 +4,7 @@ import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
 import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
+import Notify from '$lib/notify.svelte';
 import Pill from '$lib/pill.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 
@@ -221,3 +222,36 @@ let buttonClickedTimes = 0;
     />
   </div>
 </div>
+<Pill />
+<Pill value="Foo" />
+<Pill
+  readonly
+  value="Bar"
+/>
+<Pill
+  disabled
+  value="Baz"
+/>
+
+<Notify
+  variant='info'
+  title='This is the info title'
+  message='This is the message.'
+/>
+<Notify
+  variant='success'
+  title='This is the success title'
+  message='This is the message.'
+/>
+
+<Notify
+  variant='warning'
+  title='This is the warning title'
+  message='This is the message.'
+/>
+
+<Notify
+  variant='danger'
+  title='This is the danger title'
+  message='This is the message.'
+/>
