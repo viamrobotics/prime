@@ -47,7 +47,7 @@ export let state: 'info' | 'warn' | 'error' = 'info';
 /**
  * Whether or not the radio is readonly.
  */
-export let readonly: boolean = false;
+export let readonly = false;
 /**
  * The icon on the radio button.
  */
