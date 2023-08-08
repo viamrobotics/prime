@@ -10,55 +10,57 @@ import { Radio } from '@viamrobotics/prime-core';
   }}
   argTypes={{
     options: {
-      description: 'The list of options',
-      table: { defaultValue: { summary: '' } },
+      description: 'The list of options available for selection.',
+      table: { defaultValue: { summary: '[]' } },
     },
     selected: {
-      description: 'The selected option',
+      description: 'The currently selected option.',
       table: { defaultValue: { summary: '' } },
     },
     label: {
-      description: 'An optional label',
+      description:
+        'An optional label to describe the purpose of the radio options.',
       table: { defaultValue: { summary: '' } },
     },
     labelposition: {
-      description: 'The position for the optional label',
+      description: 'Position of the optional label.',
       table: { defaultValue: { summary: 'top' } },
       control: { type: 'radio' },
       options: ['top', 'left'],
-      type: 'text',
     },
     readonly: {
-      description: 'If the radio is readonly',
+      description: 'Determines if the radio options are read-only.',
       table: { defaultValue: { summary: 'false' } },
       control: { type: 'boolean' },
     },
     tooltip: {
-      description: 'An optional tooltip',
+      description: 'An optional tooltip message.',
       table: { defaultValue: { summary: '' } },
     },
     state: {
       description:
-        'The state for the optional tooltip (determines the icon type)',
+        'The state of the tooltip, which determines the type of icon displayed.',
       table: { defaultValue: { summary: 'info' } },
       control: { type: 'radio' },
       options: ['info', 'warn', 'error'],
-      type: 'text',
     },
     width: {
-      description: 'Sets the width of the radio',
-      options: ['default', 'full'],
+      description:
+        'The width of the radio options, either default width or full width.',
       table: { defaultValue: { summary: 'default' } },
+      control: { type: 'radio' },
+      options: ['default', 'full'],
     },
     'on:input': {
-      description: 'Event fired when an option is selected',
+      description: 'Event triggered when a radio option is selected.',
+      table: { type: 'action', disable: true },
     },
   }}
 />
 
 # Radio
 
-For user triggered actions
+A set of options where the user can select only one.
 
 <Canvas>
   <Story
