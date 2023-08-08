@@ -221,11 +221,19 @@ const handleOptionSelect = (target: string, event: Event) => {
 
   value = newValue.toString();
   input.focus();
-  
+
   if (checked) {
-    dispatch({ target: root }, 'input', { value, values: newValue, added: target });
+    dispatch({ target: root }, 'input', {
+      value,
+      values: newValue,
+      added: target,
+    });
   } else {
-    dispatch({ target: root }, 'input', { value, values: newValue, removed: target });
+    dispatch({ target: root }, 'input', {
+      value,
+      values: newValue,
+      removed: target,
+    });
   }
 };
 
