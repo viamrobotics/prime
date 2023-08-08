@@ -8,6 +8,9 @@ import 'element-internals-polyfill';
 import { SvelteComponent } from 'svelte';
 import { addStyles, loadFonts } from './lib';
 
+// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error, @typescript-eslint/ban-ts-comment
+// @ts-ignore
+export { version } from '../package.json';
 export { notify } from './lib/notify';
 
 /*

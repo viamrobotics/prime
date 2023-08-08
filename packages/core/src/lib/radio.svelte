@@ -13,6 +13,8 @@ A graphical control element that allows the user to choose only one of a predefi
 <svelte:options immutable />
 
 <script lang="ts">
+import { Tooltip, Icon } from '$lib';
+
 type LabelPosition = 'top' | 'left';
 
 import cx from 'classnames';
@@ -103,17 +105,22 @@ $: {
     {/if}
 
     {#if tooltip}
-      <v-tooltip text={tooltip}>
-        <div
-          class={cx({
-            'text-warning-bright': state === 'warn',
-            'text-danger-dark': state === 'error',
-          })}
-        >
-          <v-icon name={icon} />
-        </div>
-      </v-tooltip>
-    {/if}
+    <Tooltip>
+      <div 
+        class={cx({
+          'text-warning-bright': state === 'warn',
+          'text-danger-dark': state === 'error',
+        })}
+      >
+        <Icon
+          name={icon} 
+        />
+      </div>
+      <div slot="text">
+        {tooltip}
+      </div>
+    </Tooltip>
+  {/if}
   </div>
 
   <div class="flex flex-nowrap">
