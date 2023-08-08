@@ -8,6 +8,7 @@ import 'element-internals-polyfill';
 import { SvelteComponent } from 'svelte';
 import { addStyles, loadFonts } from './lib';
 
+export { version } from '../package.json';
 export { notify } from './lib/notify';
 
 /*
