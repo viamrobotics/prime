@@ -57,11 +57,11 @@ describe('Radio', () => {
 
   it('Displays tooltip when specified', async () => {
     render(Radio, { tooltip: 'Tooltip Text' });
-    const target = screen.getByRole('button')
+    const target = screen.getByRole('button');
     await fireEvent.mouseEnter(target);
     await waitFor(() => {
       expect(screen.getByText('Tooltip Text')).toBeVisible();
-    })
+    });
   });
 
   it('Applies correct icon for info state', () => {
@@ -71,8 +71,8 @@ describe('Radio', () => {
     const svg = screen.getByRole('img', { name: 'information-outline icon' });
     expect(svg).toBeVisible();
     const pathElem = svg.querySelector('path');
-    expect(pathElem).toHaveAttribute('fill', 'currentColor'); 
-});
+    expect(pathElem).toHaveAttribute('fill', 'currentColor');
+  });
 
   it('Applies correct color for warn state', () => {
     render(Radio, { state: 'warn', tooltip: 'Strong warning' });

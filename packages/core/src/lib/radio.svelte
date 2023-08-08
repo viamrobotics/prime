@@ -105,22 +105,20 @@ $: {
     {/if}
 
     {#if tooltip}
-    <Tooltip>
-      <div 
-        class={cx({
-          'text-warning-bright': state === 'warn',
-          'text-danger-dark': state === 'error',
-        })}
-      >
-        <Icon
-          name={icon} 
-        />
-      </div>
-      <div slot="text">
-        {tooltip}
-      </div>
-    </Tooltip>
-  {/if}
+      <Tooltip>
+        <div
+          class={cx({
+            'text-warning-bright': state === 'warn',
+            'text-danger-dark': state === 'error',
+          })}
+        >
+          <Icon name={icon} />
+        </div>
+        <div slot="text">
+          {tooltip}
+        </div>
+      </Tooltip>
+    {/if}
   </div>
 
   <div class="flex flex-nowrap">

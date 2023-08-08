@@ -86,15 +86,15 @@ let buttonClickedTimes = 0;
       />
     </Label>
 
-<!-- Tooltip -->
-<Tooltip>
-  This element has a top tooltip.
-  <Icon
-    slot="icon"
-    name="information-outline"
-  />
-  <div slot="text">This is the tooltip text!</div>
-</Tooltip>
+    <!-- Tooltip -->
+    <Tooltip>
+      This element has a top tooltip.
+      <Icon
+        slot="icon"
+        name="information-outline"
+      />
+      <div slot="text">This is the tooltip text!</div>
+    </Tooltip>
     <Label required>
       Name:
       <input
@@ -229,37 +229,37 @@ let buttonClickedTimes = 0;
 
   <div class="flex flex-col gap-4">
     <!-- Radio -->
-<Radio
-options={['Opt 1', 'Opt 2', 'Opt 3']}
-selected="Opt 1"
-/>
+    <Radio
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+    />
 
-<Radio
-label="These are your options"
-labelposition="top"
-options={['Opt 1', 'Opt 2']}
-selected="Opt 1"
-/>
+    <Radio
+      label="These are your options"
+      labelposition="top"
+      options={['Opt 1', 'Opt 2']}
+      selected="Opt 1"
+    />
 
-<Radio
-label="Your options"
-labelposition="top"
-selected="Option 1"
-options={['Opt 1', 'Opt 2', 'Opt 3']}
-tooltip="Warning: these options may not be your only options."
-state="warn"
-/>
+    <Radio
+      label="Your options"
+      labelposition="top"
+      selected="Option 1"
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      tooltip="Warning: these options may not be your only options."
+      state="warn"
+    />
 
-<Radio
-options={['Opt 1', 'Opt 2', 'Opt 3']}
-selected="Opt 1"
-readonly={true}
-/>
+    <Radio
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      readonly={true}
+    />
 
-<Radio
-options={['Opt 1', 'Opt 2', 'Opt 3']}
-selected="Opt 1"
-width="full"
-/>
+    <Radio
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      width="full"
+    />
   </div>
 </div>
