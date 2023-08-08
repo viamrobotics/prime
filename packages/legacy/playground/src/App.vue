@@ -19,7 +19,7 @@ const handleInput = (event: CustomEvent) => {
 }
 
 const handleSelect = (event: CustomEvent) => {
-  console.log('change', event);
+  console.log(event.type, event);
 }
 
 let lazyValue = $ref('')
@@ -46,7 +46,15 @@ const inputToFocus = $ref<HTMLElement>();
         heading="heading"
         exact="true"
         @input="handleSelect"
-      />  
+      /> 
+      <v-multiselect
+        label='With value and placeholder'
+        options='Option 1, Option 2, Option 3'
+        value='Option 1, Option 3'
+        placeholder='Some placeholder...'
+        @input="handleSelect"
+        @search="handleSelect"
+      /> 
     <v-button variant="icon" icon="close" label="hi there" />
     <v-button 
       variant="success"
@@ -79,11 +87,12 @@ const inputToFocus = $ref<HTMLElement>();
       type="date"
       :value="lazyValue"
     />
-    <v-input
+  <v-input
       ref="inputToFocus"
       placeholder="focus me!"
       class="w-full"
-      type="text"
+      type="number"
+      @input="handleInput"
     />
   </div>
 
@@ -161,13 +170,14 @@ const inputToFocus = $ref<HTMLElement>();
       />  
 
       <v-select
-        options="test1, test2, test3, test3[]"
+        options="test1, test2, test3, test3[], Multi select option, Multi label classification"
         v-model="selectInput"
         label="Test Select"
         state="'info'"
         heading="heading"
         exact="true"
         @change="handleSelect"
+        @input="handleInput"
       />  
 
       <v-radio options="option 1, option 2" />

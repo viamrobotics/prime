@@ -92,7 +92,6 @@ const applySearchSort = (term: string, options: string[]) => {
 const handleInput = (event: Event) => {
   navigationIndex = -1;
   optionsContainer.scrollTop = 0;
-  event.stopImmediatePropagation();
 
   searchterm = input.value.trim();
   dispatch(event, 'search', { term: searchterm });
@@ -221,12 +220,12 @@ const handleOptionSelect = (target: string, event: Event) => {
     : parsedSelected.filter((item: string) => item !== target);
 
   value = newValue.toString();
-
   input.focus();
+  
   if (checked) {
-    dispatch(event, 'input', { value, values: newValue, added: target });
+    dispatch({ target: root }, 'input', { value, values: newValue, added: target });
   } else {
-    dispatch(event, 'input', { value, values: newValue, removed: target });
+    dispatch({ target: root }, 'input', { value, values: newValue, removed: target });
   }
 };
 
@@ -396,8 +395,7 @@ $: {
                         value,
                         Array.isArray(option) ? option.join('') : option
                       )}
-                      on:input|stopPropagation
-                      on:change={handleOptionSelect.bind(
+                      on:input|stopPropagation={handleOptionSelect.bind(
                         null,
                         Array.isArray(option) ? option.join('') : option
                       )}
