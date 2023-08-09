@@ -16,6 +16,7 @@ const dispatch = dispatcher();
 let isOpen: boolean;
 
 $: isOpen = htmlToBoolean(open, 'open');
+$: document.body.classList.toggle('overflow-hidden', isOpen);
 
 const handleClose = (event: MouseEvent | KeyboardEvent) => {
   // Close only if background is clicked (not the modal itself)
