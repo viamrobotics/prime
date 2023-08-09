@@ -1,1 +1,4 @@
-export declare const htmlToBoolean: (value: string | undefined, key: string) => boolean;
+export declare const htmlToBoolean: (
+  value: string | undefined,
+  key: string
+) => boolean;

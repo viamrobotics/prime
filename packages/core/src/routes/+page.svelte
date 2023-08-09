@@ -234,24 +234,24 @@ let buttonClickedTimes = 0;
 />
 
 <Notify
-  variant='info'
-  title='This is the info title'
-  message='This is the message.'
+  variant="info"
+  title="This is the info title"
+  message="This is the message."
 />
 <Notify
-  variant='success'
-  title='This is the success title'
-  message='This is the message.'
-/>
-
-<Notify
-  variant='warning'
-  title='This is the warning title'
-  message='This is the message.'
+  variant="success"
+  title="This is the success title"
+  message="This is the message."
 />
 
 <Notify
-  variant='danger'
-  title='This is the danger title'
-  message='This is the message.'
+  variant="warning"
+  title="This is the warning title"
+  message="This is the message."
+/>
+
+<Notify
+  variant="danger"
+  title="This is the danger title"
+  message="This is the message."
 />

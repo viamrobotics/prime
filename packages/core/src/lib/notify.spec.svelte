@@ -10,15 +10,13 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 
- <script lang="ts">
-import Notify from './notify.svelte'
-
-
- </script>
+<script lang="ts">
+import Notify from './notify.svelte';
+</script>
 
 <Notify
-      title='title text' 
-      message="message text"
-    >
-      slot text
+  title="title text"
+  message="message text"
+>
+  slot text
 </Notify>
