@@ -5,6 +5,7 @@ import Button from '$lib/button.svelte';
 import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
 import Pill from '$lib/pill.svelte';
+import Radio from '$lib/radio.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 
 let buttonClickedTimes = 0;
@@ -85,6 +86,15 @@ let buttonClickedTimes = 0;
       />
     </Label>
 
+    <!-- Tooltip -->
+    <Tooltip>
+      This element has a top tooltip.
+      <Icon
+        slot="icon"
+        name="information-outline"
+      />
+      <div slot="text">This is the tooltip text!</div>
+    </Tooltip>
     <Label required>
       Name:
       <input
@@ -110,41 +120,37 @@ let buttonClickedTimes = 0;
     <!-- Tooltip -->
     <Tooltip>
       This element has a top tooltip.
-      <!-- TODO (APP-2290): Uncomment this when Icon is added -->
-      <!-- <Icon
+      <Icon
         slot="icon"
         name="information-outline"
-      /> -->
+      />
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
 
     <Tooltip location="left">
       This element has a left tooltip.
-      <!-- TODO (APP-2290): Uncomment this when Icon is added -->
-      <!-- <Icon
+      <Icon
         slot="icon"
         name="information-outline"
-      /> -->
+      />
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
 
     <Tooltip location="right">
       This element has a right tooltip.
-      <!-- TODO (APP-2290): Uncomment this when Icon is added -->
-      <!-- <Icon
+      <Icon
         slot="icon"
         name="information-outline"
-      /> -->
+      />
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
 
     <Tooltip location="bottom">
       This element has a bottom tooltip.
-      <!-- TODO (APP-2290): Uncomment this when Icon is added -->
-      <!-- <Icon
+      <Icon
         slot="icon"
         name="information-outline"
-      /> -->
+      />
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
   </div>
@@ -218,6 +224,42 @@ let buttonClickedTimes = 0;
     <Icon
       name="public"
       size="4xl"
+    />
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <!-- Radio -->
+    <Radio
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+    />
+
+    <Radio
+      label="These are your options"
+      labelposition="top"
+      options={['Opt 1', 'Opt 2']}
+      selected="Opt 1"
+    />
+
+    <Radio
+      label="Your options"
+      labelposition="top"
+      selected="Option 1"
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      tooltip="Warning: these options may not be your only options."
+      state="warn"
+    />
+
+    <Radio
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      readonly={true}
+    />
+
+    <Radio
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      width="full"
     />
   </div>
 </div>
