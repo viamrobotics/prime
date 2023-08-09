@@ -121,7 +121,7 @@ $: {
 
 <button
   bind:this={container}
-  class="inline-block cursor-default"
+  class="flex cursor-default items-center"
   aria-describedby="tooltip"
   on:mouseenter={show}
   on:mouseleave={hide}
@@ -129,7 +129,6 @@ $: {
   on:blur={hide}
 >
   <slot />
-  <slot name="icon" />
 </button>
 
 <div
