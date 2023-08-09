@@ -1,0 +1,144 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Switch } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Switch'
+  parameters={{
+    actions: {
+      handles: ['input'],
+    },
+  }}
+  argTypes={{
+    on: {
+      description: 'Whether or not the switch is on.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    label: {
+      description: 'The switch label.',
+      table: { defaultValue: { summary: '' } },
+    },
+    variant: {
+      description: 'Whether or not the switch is annotated.',
+      control: 'select',
+      options: ['default', 'annotated'],
+      table: { defaultValue: { summary: 'default' } },
+    },
+    disabled: {
+      description: 'Whether or not the switch is disabled.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    tooltip: {
+      description: 'The message of the tooltip.',
+      control: 'text',
+      table: { defaultValue: { summary: '' } },
+    },
+    readonly: {
+      description: 'Whether or not the input is read-only.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    'on:input': {
+      description: 'Event fired when input value changes.',
+    },
+  }}
+/>
+
+# Switch
+
+Used to handle binary input.
+
+<Canvas>
+  <Story
+    name='Default'
+    args={{
+      on: false,
+    }}
+  >
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Annotated'
+    args={{
+      on: false,
+      variant: 'annotated',
+    }}
+  >
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With label'
+    args={{
+      on: false,
+      label: 'Lunchtime',
+    }}
+  >
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Disabled'
+    args={{
+      on: false,
+      disabled: true,
+      label: 'disabled',
+    }}
+  >
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With Tooltip and Icon'
+    args={{
+      on: false,
+      tooltip: 'I am a tooltip',
+      label: 'Tooltip and Icon',
+      name: 'information-outline',
+    }}
+  >
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      on: true,
+      variant: 'annotated',
+      readonly: true,
+      label: 'readonly',
+    }}
+  >
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
+  </Story>
+</Canvas>
