@@ -21,7 +21,7 @@ describe('Notify', () => {
       message: 'This is the message.',
     });
     expect(container.querySelector('.bg-info-dark')).toBeVisible();
-    expect(container.querySelector('v-icon')).toHaveClass('text-info-dark');
+    expect(container.querySelector('.text-info-dark')).toBeVisible();
   });
 });
 
@@ -33,7 +33,7 @@ describe('Notify', () => {
       variant: 'danger',
     });
     expect(container.querySelector('.bg-danger-dark')).toBeVisible();
-    expect(container.querySelector('v-icon')).toHaveClass('text-danger-dark');
+    expect(container.querySelector('.text-danger-dark')).toBeVisible();
   });
 });
 
@@ -45,9 +45,7 @@ describe('Notify', () => {
       variant: 'warning',
     });
     expect(container.querySelector('.bg-warning-bright')).toBeVisible();
-    expect(container.querySelector('v-icon')).toHaveClass(
-      'text-warning-bright'
-    );
+    expect(container.querySelector('.text-warning-bright')).toBeVisible();
   });
 });
 
@@ -59,7 +57,7 @@ describe('Notify', () => {
       variant: 'success',
     });
     expect(container.querySelector('.bg-success-dark')).toBeVisible();
-    expect(container.querySelector('v-icon')).toHaveClass('text-success-dark');
+    expect(container.querySelector('.text-success-dark')).toBeVisible();
   });
 });
 
@@ -71,7 +69,7 @@ describe('Notify', () => {
       variant: 'info',
     });
     expect(container.querySelector('.bg-info-dark')).toBeVisible();
-    expect(container.querySelector('v-icon')).toHaveClass('text-info-dark');
+    expect(container.querySelector('.text-info-dark')).toBeVisible();
   });
 });
 
