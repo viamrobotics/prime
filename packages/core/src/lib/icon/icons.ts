@@ -1,5 +1,9 @@
 import * as MDI from '@mdi/js';
 
+/**
+ * Keys should match MDI name
+ * e.g. 'account-multiple' for MDI.mdiAccountMultiple
+ */
 export const paths: Record<string, string> = {
   'account-multiple': MDI.mdiAccountMultiple,
   'alert-circle-outline': MDI.mdiAlertCircleOutline,
