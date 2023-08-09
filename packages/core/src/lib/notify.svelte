@@ -6,6 +6,7 @@ type Variants = 'danger' | 'warning' | 'success' | 'info';
 import cx from 'classnames';
 import { htmlToBoolean } from '../helper/boolean';
 import { createEventDispatcher } from 'svelte';
+import { Button, Icon } from '$lib';
 
 export let title = '';
 export let message = '';
@@ -56,31 +57,35 @@ const handleClose = (event: Event) => {
   <div class="relative flex w-full justify-between gap-2 p-3">
     <div class="flex gap-3">
       {#if variant === 'danger'}
-        <v-icon
-          size="lg"
-          class="text-danger-dark"
-          name="alert-circle"
-        />
+        <div class="text-danger-dark">
+          <Icon
+            size="lg"
+            name="alert-circle"
+          />
+        </div>
       {:else if variant === 'info'}
-        <v-icon
-          size="lg"
-          class="text-info-dark"
-          name="information"
-        />
+        <div class="text-info-dark">
+          <Icon
+            size="lg"
+            name="information"
+          />
+        </div>
       {:else if variant === 'success'}
-        <v-icon
-          size="lg"
-          class="text-success-dark"
-          name="check-circle"
-        />
+        <div class="text-success-dark">
+          <Icon
+            size="lg"
+            name="check-circle"
+          />
+        </div>
       {/if}
 
       {#if variant === 'warning'}
-        <v-icon
-          size="lg"
-          class="text-warning-bright"
-          name="alert"
-        />
+        <div class="text-warning-bright">
+          <Icon
+            size="lg"
+            name="alert"
+          />
+        </div>
       {/if}
 
       <figure class="flex flex-col">
@@ -104,16 +109,19 @@ const handleClose = (event: Event) => {
       </figure>
 
       {#if isExitable}
-        <v-button
-          role="notify"
-          variant="icon"
-          icon="close"
+        <div
           class="absolute right-1 top-1 text-gray-7"
-          on:click={handleClose}
-          on:keydown={handleClose}
-          on:keyup={handleClose}
-          on:keypress={handleClose}
-        />
+          role="notify"
+        >
+          <Button
+            variant="icon"
+            icon="close"
+            on:click={handleClose}
+            on:keydown={handleClose}
+            on:keyup={handleClose}
+            on:keypress={handleClose}
+          />
+        </div>
       {/if}
     </div>
   </div>
