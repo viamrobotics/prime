@@ -109,6 +109,7 @@ const handleClose = (event: Event) => {
       </figure>
 
       {#if isExitable}
+        <!-- svelte-ignore a11y-unknown-role -->
         <div
           class="absolute right-1 top-1 text-gray-7"
           role="notify"
