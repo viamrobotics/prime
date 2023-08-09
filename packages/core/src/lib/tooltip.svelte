@@ -37,23 +37,28 @@ export let location: TooltipLocation = 'top';
  */
 export let state: TooltipState = 'invisible';
 
-let container: HTMLElement;
-let tooltip: HTMLElement;
-let arrowElement: HTMLElement;
+let container: HTMLElement | undefined;
+let tooltip: HTMLElement | undefined;
+let arrowElement: HTMLElement | undefined;
 
 let invisible = true;
 
 let x = 0;
 let y = 0;
+let arrowCss = '';
 
 export let recalculateStyle = async () => {
+  if (container === undefined || tooltip === undefined) {
+    return;
+  }
+
   const position = await computePosition(container, tooltip, {
     placement: location,
     middleware: [
       offset(7),
       flip(),
       shift({ padding: 5 }),
-      arrow({ element: arrowElement }),
+      arrowElement ? arrow({ element: arrowElement }) : undefined,
     ],
   });
 
@@ -68,8 +73,7 @@ export let recalculateStyle = async () => {
   const arrowX = position.middlewareData.arrow?.x ?? 0;
   const arrowY = position.middlewareData.arrow?.y ?? 0;
 
-  /* eslint-disable-next-line require-atomic-updates */
-  arrowElement.style.cssText =
+  arrowCss =
     staticSide === 'right' || staticSide === 'left'
       ? `
       top: ${arrowY}px;
@@ -89,8 +93,8 @@ export let recalculateStyle = async () => {
 };
 
 const show = async () => {
-  await recalculateStyle();
   invisible = false;
+  await recalculateStyle();
 };
 
 const hide = () => {
@@ -107,11 +111,17 @@ $: {
   /* eslint-disable-next-line no-console */
   recalculateStyle().catch(console.error);
 }
+
+$: {
+  if (arrowElement !== undefined) {
+    arrowElement.style.cssText = arrowCss;
+  }
+}
 </script>
 
 <button
   bind:this={container}
-  class="inline-block cursor-default"
+  class="flex cursor-default items-center"
   aria-describedby="tooltip"
   on:mouseenter={show}
   on:mouseleave={hide}
@@ -134,6 +144,7 @@ $: {
     class="absolute h-0 w-0 border-b-[6px] border-l-[6px] border-r-[6px] border-b-gray-9 border-l-transparent border-r-transparent"
   />
 
-  <slot name="icon" />
-  <slot name="text" />
+  {#if !invisible}
+    <slot name="text" />
+  {/if}
 </div>

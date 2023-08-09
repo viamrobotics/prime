@@ -1,12 +1,33 @@
+<!--
+@component
+  
+A component that renders SVG icons from the @mdi/js package
+```svelte
+  <Icon
+    name='camera-outline'
+    size='xl' 
+  />
+```
+-->
 <svelte:options immutable />
 
 <script lang="ts">
-type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-
 import cx from 'classnames';
 import { paths } from './icons';
+
+type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
+/**
+ * The size of the icon.
+ */
+export let size: Size = 'base';
+
+/**
+ * The name of the icon.
+ */
 export let name = '';
 
+const hasNameProperty = Object.hasOwn(paths, name);
 const sizes: Record<Size, string> = {
   xs: 'w-3 h-3',
   sm: 'w-3.5 h-3.5',
@@ -17,10 +38,6 @@ const sizes: Record<Size, string> = {
   '3xl': 'w-8 h-8',
   '4xl': 'w-9 h-9',
 };
-
-export let size: Size = 'base';
-
-const hasNameProperty = Object.hasOwn(paths, name);
 </script>
 
 <p class="leading-3">

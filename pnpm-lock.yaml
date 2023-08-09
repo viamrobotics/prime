@@ -114,6 +114,13 @@ importers:
         version: 0.33.0(jsdom@22.1.0)
 
   packages/core:
+    dependencies:
+      '@mdi/js':
+        specifier: ^7.2.96
+        version: 7.2.96
+      classnames:
+        specifier: ^2.3.2
+        version: 2.3.2
     devDependencies:
       '@floating-ui/dom':
         specifier: ^1.5.1
@@ -160,17 +167,14 @@ importers:
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
-      classnames:
-        specifier: ^2.3.2
-        version: 2.3.2
       concurrently:
-        specifier: ^8.2.0
+        specifier: ^8.0.1
         version: 8.2.0
       eslint:
-        specifier: ^8.46.0
+        specifier: ^8.45.0
         version: 8.46.0
       eslint-config-prettier:
-        specifier: ^8.9.0
+        specifier: ^8.8.0
         version: 8.9.0(eslint@8.46.0)
       eslint-plugin-svelte:
         specifier: ^2.32.4
@@ -2329,7 +2333,6 @@ packages:
 
   /@mdi/js@7.2.96:
     resolution: {integrity: sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==}
-    dev: true
 
   /@mdx-js/react@2.2.1(react@18.2.0):
     resolution: {integrity: sha512-YdXcMcEnqZhzql98RNrqYo9cEhTTesBiCclEtoiQUbJwx87q9453GTapYU6kJ8ZZ2ek1Vp25SiAXEFy5O/eAPw==}
@@ -4585,7 +4588,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       '@typescript-eslint/types': 5.59.0
-      eslint-visitor-keys: 3.4.1
+      eslint-visitor-keys: 3.4.2
     dev: true
 
   /@typescript-eslint/visitor-keys@6.2.1:
@@ -4793,7 +4796,7 @@ packages:
       '@vue/compiler-dom': 3.3.4
       '@vue/reactivity': 3.3.4
       '@vue/shared': 3.3.4
-      minimatch: 9.0.0
+      minimatch: 9.0.3
       muggle-string: 0.3.1
       typescript: 5.1.6
       vue-template-compiler: 2.7.14
@@ -5636,7 +5639,6 @@ packages:
 
   /classnames@2.3.2:
     resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
-    dev: true
 
   /clean-regexp@1.0.0:
     resolution: {integrity: sha512-GfisEZEJvzKrmGWkvfhgzcz/BllN1USeqD2V6tg14OAOgaCD2Z/PUEuxnAZ/nPvmaHRG7a8y77p1T/IRQ4D1Hw==}
@@ -6783,11 +6785,6 @@ packages:
   /eslint-visitor-keys@2.1.0:
     resolution: {integrity: sha512-0rSmRBzXgDzIsD6mGdJgevzgezI534Cer5L/vyMX0kHzT/jiB43jRhd9YUlMGYLQy2zprNmoT8qasCGtY+QaKw==}
     engines: {node: '>=10'}
-    dev: true
-
-  /eslint-visitor-keys@3.4.1:
-    resolution: {integrity: sha512-pZnmmLwYzf+kWaM/Qgrvpen51upAktaaiI01nsJD/Yr3lMOdNtq0cxkrrg16w64VtisN6okbs7Q8AfGqj4c9fA==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
   /eslint-visitor-keys@3.4.2:
@@ -9060,13 +9057,6 @@ packages:
   /minimatch@5.1.6:
     resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
     engines: {node: '>=10'}
-    dependencies:
-      brace-expansion: 2.0.1
-    dev: true
-
-  /minimatch@9.0.0:
-    resolution: {integrity: sha512-0jJj8AvgKqWN05mrwuqi8QYKx1WmYSUoKSxu5Qhs9prezTz10sxAHGNZe9J9cqIJzta8DWsleh2KaVaLl6Ru2w==}
-    engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
     dev: true
