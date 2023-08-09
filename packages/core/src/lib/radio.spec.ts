@@ -37,7 +37,9 @@ describe('Radio', () => {
     await fireEvent.click(screen.getByText('Option2'));
     expect(onInput).toHaveBeenCalledOnce();
     await fireEvent.click(screen.getByText('Option2'));
-    expect(onInput).toHaveBeenCalledWith(expect.objectContaining({detail: {value: 'Option2'}}));
+    expect(onInput).toHaveBeenCalledWith(
+      expect.objectContaining({ detail: { value: 'Option2' } })
+    );
   });
 
   it('Prevents option click if readonly', async () => {
