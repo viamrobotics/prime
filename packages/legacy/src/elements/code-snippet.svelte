@@ -1,9 +1,6 @@
 <svelte:options immutable />
 
-<script
-  context="module"
-  lang="ts"
->
+<script context="module" lang="ts">
 import { onMount } from 'svelte';
 const loadedLanguages: Record<string, boolean> = {};
 </script>

@@ -282,14 +282,8 @@ $: {
     {/if}
   </div>
 
-  <v-dropdown
-    match
-    open={open ? '' : undefined}
-  >
-    <div
-      slot="target"
-      class="w-full"
-    >
+  <v-dropdown match open={open ? '' : undefined}>
+    <div slot="target" class="w-full">
       <div class="flex">
         <input
           bind:this={input}

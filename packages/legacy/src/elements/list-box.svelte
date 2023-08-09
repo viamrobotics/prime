@@ -178,10 +178,7 @@ const handleMoveClick = (target: ListBoxSide, event: Event) => {
       data-testid="move-right"
       on:click={(event) => handleMoveClick(RIGHT, event)}
     >
-      <v-icon
-        class="relative bottom-0.5"
-        name="arrow-up"
-      />
+      <v-icon class="relative bottom-0.5" name="arrow-up" />
     </button>
     <button
       class={cx(
@@ -191,10 +188,7 @@ const handleMoveClick = (target: ListBoxSide, event: Event) => {
       on:click={(event) => handleMoveClick(LEFT, event)}
       data-testid="move-left"
     >
-      <v-icon
-        class="relative bottom-0.25"
-        name="arrow-up"
-      />
+      <v-icon class="relative bottom-0.25" name="arrow-up" />
     </button>
   </div>
   <div

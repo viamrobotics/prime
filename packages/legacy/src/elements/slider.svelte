@@ -540,11 +540,7 @@ const onChange = (event: Event) => {
       />
     {/if}
 
-    <div
-      class="absolute h-2 left-0 right-0"
-      class:disabled
-      class:focus
-    >
+    <div class="absolute h-2 left-0 right-0" class:disabled class:focus>
       <small class="absolute bottom-full left-0 mb-3 whitespace-nowrap text-xs">
         {minNum}
 
