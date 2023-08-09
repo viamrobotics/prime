@@ -6,7 +6,6 @@ describe('Tooltip', () => {
   it('Renders the target element without the tooltip', () => {
     render(Tooltip);
     expect(screen.getByText('This element has a tooltip.')).toBeInTheDocument();
-    expect(screen.getByRole('img')).toHaveClass('information-outline');
     expect(screen.getByRole('tooltip')).toHaveClass('invisible');
   });
 

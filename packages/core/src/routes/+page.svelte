@@ -4,9 +4,11 @@ import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
 import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
+import Input from '$lib/input/input.svelte';
 import Pill from '$lib/pill.svelte';
 import Radio from '$lib/radio.svelte';
 import Tooltip from '$lib/tooltip.svelte';
+import TextInput from '$lib/input/text-input.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -76,81 +78,146 @@ let buttonClickedTimes = 0;
   </div>
 
   <div class="flex gap-4">
+    <!-- Input -->
+
+    <Input
+      name="name"
+      placeholder="Enter your name"
+    />
+
+    <Input
+      name="name"
+      value="Phillip J. Fry"
+      readonly
+    />
+
+    <Input
+      name="name"
+      value="Phillip J. Fry"
+      disabled
+    />
+
+    <Input
+      name="name"
+      placeholder="Enter your name"
+      required
+    />
+
+    <Input
+      name="name"
+      placeholder="Enter your name (autocomplete)"
+      autocomplete="on"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Text Input -->
+
+    <TextInput
+      name="name"
+      placeholder="Enter your name"
+    />
+
+    <TextInput
+      type="email"
+      name="email"
+      placeholder="Enter your email"
+    />
+
+    <TextInput
+      type="password"
+      name="password"
+      placeholder="Enter your password"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Numeric Input -->
+
+    <Input
+      type="number"
+      name="number"
+      placeholder="Enter a number"
+    />
+
+    <Input
+      type="integer"
+      name="integer"
+      placeholder="Enter an integer"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Datetime Input -->
+
+    <Input
+      type="time"
+      name="time"
+      placeholder="Enter a time"
+    />
+
+    <Input
+      type="date"
+      name="date"
+      placeholder="Enter a date"
+    />
+
+    <Input
+      type="datetime-local"
+      name="datetime-local"
+      placeholder="Enter a date and time"
+    />
+  </div>
+
+  <div class="flex gap-4">
     <!-- Label -->
     <Label
       >Name:
-      <input
+      <Input
         slot="input"
         name="name"
-        class="border border-black"
       />
     </Label>
 
-    <!-- Tooltip -->
-    <Tooltip>
-      This element has a top tooltip.
-      <Icon
-        slot="icon"
-        name="information-outline"
-      />
-      <div slot="text">This is the tooltip text!</div>
-    </Tooltip>
     <Label required>
       Name:
-      <input
+      <Input
         slot="input"
         name="name"
-        class="border border-black"
         required
       />
     </Label>
 
     <Label disabled>
       Name:
-      <input
+      <Input
         slot="input"
         name="name"
-        class="border border-black"
         disabled
       />
     </Label>
   </div>
 
-  <div>
+  <div class="flex gap-4">
     <!-- Tooltip -->
     <Tooltip>
       This element has a top tooltip.
-      <Icon
-        slot="icon"
-        name="information-outline"
-      />
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
 
     <Tooltip location="left">
       This element has a left tooltip.
-      <Icon
-        slot="icon"
-        name="information-outline"
-      />
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
 
     <Tooltip location="right">
       This element has a right tooltip.
-      <Icon
-        slot="icon"
-        name="information-outline"
-      />
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
 
     <Tooltip location="bottom">
-      This element has a bottom tooltip.
-      <Icon
-        slot="icon"
-        name="information-outline"
-      />
+      This element has a bottom tooltip and an icon!
+      <span class="ml-0.5"> <Icon name="information-outline" /></span>
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
   </div>
