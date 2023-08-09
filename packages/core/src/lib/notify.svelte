@@ -4,7 +4,6 @@
 type Variants = 'danger' | 'warning' | 'success' | 'info';
 
 import cx from 'classnames';
-import { htmlToBoolean } from '../helper/boolean';
 import { createEventDispatcher } from 'svelte';
 import { Button, Icon } from '$lib';
 
@@ -13,6 +12,10 @@ export let message = '';
 export let variant: Variants = 'info';
 export let progress = 1;
 export let exitable = 'false';
+
+export const htmlToBoolean = (value: string | undefined, key: string) => {
+  return value === '' || value === 'true' || value === key;
+};
 
 $: isExitable = htmlToBoolean(exitable, 'exitable');
 
