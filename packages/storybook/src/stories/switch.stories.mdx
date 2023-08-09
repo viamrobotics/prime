@@ -15,17 +15,27 @@ import { Switch } from '@viamrobotics/prime-core';
       table: { defaultValue: { summary: 'false' } },
     },
     label: {
-      description: 'The input label',
+      description: 'The switch label.',
       table: { defaultValue: { summary: '' } },
     },
     variant: {
-      description: 'The displayed style of the switch',
+      description: 'Whether or not the switch is annotated.',
       control: 'select',
       options: ['default', 'annotated'],
       table: { defaultValue: { summary: 'default' } },
     },
     disabled: {
-      description: 'Whether the input is disabled',
+      description: 'Whether or not the switch is disabled.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    tooltip: {
+      description: 'The message of the tooltip.',
+      control: 'text',
+      table: { defaultValue: { summary: '' } },
+    },
+    readonly: {
+      description: 'Whether or not the input is read-only.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } },
     },
@@ -90,6 +100,23 @@ Used to handle binary input.
       on: false,
       disabled: true,
       label: 'disabled',
+    }}
+  >
+    {(props) => ({
+      Component: Switch,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With Tooltip and Icon'
+    args={{
+      on: false,
+      tooltip: 'I am a tooltip',
+      label: 'Tooltip and Icon',
+      name: 'information-outline',
     }}
   >
     {(props) => ({

@@ -189,30 +189,6 @@ let buttonClickedTimes = 0;
       />
     </Label>
 
-    <!-- Switch -->
-    <Switch
-      on
-      variant="annotated"
-    />
-
-    <Switch
-      on
-      label="Lunchtime"
-    />
-
-    <Switch
-      on
-      disabled
-      label="disabled"
-    />
-
-    <Switch
-      on
-      variant="annotated"
-      readonly
-      label="readonly"
-    />
-
     <!-- Pill -->
     <Pill />
     <Pill value="Foo" />
@@ -363,6 +339,39 @@ let buttonClickedTimes = 0;
       options={['Opt 1', 'Opt 2', 'Opt 3']}
       selected="Opt 1"
       width="full"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Switch -->
+    <Switch
+      on
+      variant="annotated"
+    />
+
+    <Switch
+      on
+      label="Lunchtime"
+    />
+
+    <Switch
+      on
+      variant="annotated"
+      tooltip="I'm a tooltip message"
+      label="Switch Label"
+    />
+
+    <Switch
+      on
+      disabled
+      label="disabled"
+    />
+
+    <Switch
+      on
+      variant="annotated"
+      readonly
+      label="readonly"
     />
   </div>
 </div>

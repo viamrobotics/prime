@@ -13,6 +13,7 @@
 <svelte:options immutable />
 
 <script lang="ts">
+import { Icon, Tooltip } from '$lib';
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
 
@@ -20,10 +21,6 @@ import { createEventDispatcher } from 'svelte';
  * The switch label text.
  */
 export let label = '';
-/**
- * The name of the icon next to the switch label.
- */
-export let name = '';
 /**
  * Shows if the switch is 'on' or 'off'.
  */
@@ -42,9 +39,8 @@ export let disabled = false;
 export let readonly = false;
 /**
  * Shows the message of the tooltip.
- * TODO(APP-2290): Tooltips above icons won't work until icons are migrated.
  */
-// export let tooltip = '';
+export let tooltip = '';
 
 const dispatch = createEventDispatcher<{
   /** When the switch is clicked. */
@@ -75,15 +71,16 @@ const handleClick = () => {
       >
     {/if}
 
-    <!-- * TODO(APP-2290), (APP-2304): Can't specify icon for tooltip until tooltip/icons are migrated. -->
-    <!-- {#if tooltip}
-      <v-tooltip text={tooltip}>
-        <v-icon
-          class="-mt-0.5"
-          name="information-outline"
-        />
-      </v-tooltip>
-    {/if} -->
+    {#if tooltip}
+      <Tooltip>
+        <div class="-mt-0.5">
+          <Icon name="information-outline" />
+        </div>
+        <div slot="text">
+          {tooltip}
+        </div>
+      </Tooltip>
+    {/if}
   </div>
 
   <button
@@ -119,7 +116,6 @@ const handleClick = () => {
         class:translate-x-6={on}
       />
       <input
-        {name}
         {disabled}
         {readonly}
         class="hidden"
