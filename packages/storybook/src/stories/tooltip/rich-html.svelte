@@ -1,5 +1,6 @@
 <script lang="ts">
 import {
+  Icon,
   Tooltip,
   type TooltipLocation,
   type TooltipState,
@@ -14,11 +15,7 @@ export let state: TooltipState = 'invisible';
   {state}
 >
   <p>This <b>element</b> has a <em>tooltip</em>.</p>
-  <span
-    slot="icon"
-    role="img"
-    class="information-outline"
-  />
+  <Icon name="information-outline" />
   <p slot="text">
     This is the <b class="underline"> tooltip text! </b>
   </p>

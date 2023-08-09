@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime-core",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "publishConfig": {
     "access": "public"
   },
@@ -35,9 +35,12 @@
   "peerDependencies": {
     "svelte": ">=4.0.0 <5"
   },
+  "dependencies": {
+    "@mdi/js": "^7.2.96",
+    "classnames": "^2.3.2"
+  },
   "devDependencies": {
     "@floating-ui/dom": "^1.2.6",
-    "@mdi/js": "^7.2.96",
     "@sveltejs/adapter-auto": "^2.1.0",
     "@sveltejs/kit": "^1.22.3",
     "@sveltejs/package": "^2.2.0",
@@ -52,7 +55,6 @@
     "@viamrobotics/prettier-config": "^0.1.0",
     "@viamrobotics/typescript-config": "^0.0.3",
     "autoprefixer": "^10.4.14",
-    "classnames": "^2.3.2",
     "concurrently": "^8.0.1",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",

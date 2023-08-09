@@ -21,10 +21,5 @@ export let state: 'invisible' | 'visible' = 'invisible';
   {state}
 >
   <p>This element has a tooltip.</p>
-  <span
-    slot="icon"
-    role="img"
-    class="information-outline"
-  />
   <p slot="text">This is the tooltip text!</p>
 </Tooltip>

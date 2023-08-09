@@ -9,13 +9,17 @@ importers:
   .: {}
 
   packages/core:
+    dependencies:
+      '@mdi/js':
+        specifier: ^7.2.96
+        version: 7.2.96
+      classnames:
+        specifier: ^2.3.2
+        version: 2.3.2
     devDependencies:
       '@floating-ui/dom':
         specifier: ^1.2.6
         version: 1.2.7
-      '@mdi/js':
-        specifier: ^7.2.96
-        version: 7.2.96
       '@sveltejs/adapter-auto':
         specifier: ^2.1.0
         version: 2.1.0(@sveltejs/kit@1.22.3)
@@ -58,9 +62,6 @@ importers:
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
-      classnames:
-        specifier: ^2.3.2
-        version: 2.3.2
       concurrently:
         specifier: ^8.0.1
         version: 8.0.1
@@ -3354,7 +3355,6 @@ packages:
 
   /@mdi/js@7.2.96:
     resolution: {integrity: sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==}
-    dev: true
 
   /@mdx-js/react@2.2.1(react@18.2.0):
     resolution: {integrity: sha512-YdXcMcEnqZhzql98RNrqYo9cEhTTesBiCclEtoiQUbJwx87q9453GTapYU6kJ8ZZ2ek1Vp25SiAXEFy5O/eAPw==}
@@ -7233,7 +7233,6 @@ packages:
 
   /classnames@2.3.2:
     resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
-    dev: true
 
   /clean-regexp@1.0.0:
     resolution: {integrity: sha512-GfisEZEJvzKrmGWkvfhgzcz/BllN1USeqD2V6tg14OAOgaCD2Z/PUEuxnAZ/nPvmaHRG7a8y77p1T/IRQ4D1Hw==}

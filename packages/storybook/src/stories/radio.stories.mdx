@@ -1,0 +1,146 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Radio } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Radio'
+  parameters={{
+    actions: {
+      handles: ['input'],
+    },
+  }}
+  argTypes={{
+    options: {
+      description: 'The list of options available for selection.',
+      table: { defaultValue: { summary: '[]' } },
+    },
+    selected: {
+      description: 'The currently selected option.',
+      table: { defaultValue: { summary: '' } },
+    },
+    label: {
+      description:
+        'An optional label to describe the purpose of the radio options.',
+      table: { defaultValue: { summary: '' } },
+    },
+    labelposition: {
+      description: 'Position of the optional label.',
+      table: { defaultValue: { summary: 'top' } },
+      control: { type: 'radio' },
+      options: ['top', 'left'],
+    },
+    readonly: {
+      description: 'Determines if the radio options are read-only.',
+      table: { defaultValue: { summary: 'false' } },
+      control: { type: 'boolean' },
+    },
+    tooltip: {
+      description: 'An optional tooltip message.',
+      table: { defaultValue: { summary: '' } },
+    },
+    state: {
+      description:
+        'The state of the tooltip, which determines the type of icon displayed.',
+      table: { defaultValue: { summary: 'info' } },
+      control: { type: 'radio' },
+      options: ['info', 'warn', 'error'],
+    },
+    width: {
+      description:
+        'The width of the radio options, either default width or full width.',
+      table: { defaultValue: { summary: 'default' } },
+      control: { type: 'radio' },
+      options: ['default', 'full'],
+    },
+    'on:input': {
+      description: 'Event triggered when a radio option is selected.',
+      table: { type: 'action', disable: true },
+    },
+  }}
+/>
+
+# Radio
+
+A set of options where the user can select only one.
+
+<Canvas>
+  <Story
+    name='Radio'
+    args={{
+      options: ['Opt 1', 'Opt 2', 'Opt 3'],
+      selected: 'Opt 1',
+    }}
+  >
+    {(props) => ({
+      Component: Radio,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With label'
+    args={{
+      label: 'These are your options',
+      labelposition: 'top',
+      options: ['Opt 1', 'Opt 2'],
+      selected: 'Opt 1',
+    }}
+  >
+    {(props) => ({
+      Component: Radio,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Tooltip and state'
+    args={{
+      label: 'Your options',
+      labelposition: 'top',
+      options: ['Option 1', 'Option 2', 'Option 3'],
+      selected: 'Option 1',
+      tooltip: 'Warning: these options may not be your only options.',
+      state: 'warn',
+    }}
+  >
+    {(props) => ({
+      Component: Radio,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      options: ['Opt 1', 'Opt 2', 'Opt 3'],
+      selected: 'Opt 1',
+      readonly: true,
+    }}
+  >
+    {(props) => ({
+      Component: Radio,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Full width radio'
+    args={{
+      options: ['Opt 1', 'Opt 2', 'Opt 3'],
+      selected: 'Opt 1',
+      width: 'full',
+    }}
+  >
+    {(props) => ({
+      Component: Radio,
+      props,
+    })}
+  </Story>
+</Canvas>
