@@ -80,7 +80,8 @@ const handleParentClick = (event: PointerEvent) => {
       'bg-success-dark border-success-dark text-white': variant === 'success',
       'bg-danger-light border-danger-medium text-danger-dark hover:bg-[#f5dfdc] active:bg-[#f6d7d3]':
         variant === 'outline-danger',
-      '!bg-disabled-light !border-disabled-light': isDisabled && variant !== 'icon',
+      '!bg-disabled-light !border-disabled-light':
+        isDisabled && variant !== 'icon',
       'text-disabled-dark pointer-events-none select-none': isDisabled,
       'mx-auto': true,
     })}
