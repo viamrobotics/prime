@@ -6,6 +6,7 @@ import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
 import Input from '$lib/input/input.svelte';
 import Pill from '$lib/pill.svelte';
+import Switch from '$lib/switch.svelte';
 import Radio from '$lib/radio.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 import TextInput from '$lib/input/text-input.svelte';
@@ -188,6 +189,17 @@ let buttonClickedTimes = 0;
       />
     </Label>
 
+    <!-- Pill -->
+    <Pill />
+    <Pill value="Foo" />
+    <Pill
+      readonly
+      value="Bar"
+    />
+    <Pill
+      disabled
+      value="Baz"
+    />
     <Label disabled>
       Name:
       <Input
@@ -327,6 +339,39 @@ let buttonClickedTimes = 0;
       options={['Opt 1', 'Opt 2', 'Opt 3']}
       selected="Opt 1"
       width="full"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Switch -->
+    <Switch
+      on
+      variant="annotated"
+    />
+
+    <Switch
+      on
+      label="Lunchtime"
+    />
+
+    <Switch
+      on
+      variant="annotated"
+      tooltip="I'm a tooltip message"
+      label="Switch Label"
+    />
+
+    <Switch
+      on
+      disabled
+      label="disabled"
+    />
+
+    <Switch
+      on
+      variant="annotated"
+      readonly
+      label="readonly"
     />
   </div>
 </div>
