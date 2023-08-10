@@ -1,0 +1,107 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import {
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from '@viamrobotics/prime-core';
+import ContextMenu from './context-menu.svelte';
+
+<Meta
+  title='Elements/Context menu'
+  argTypes={{
+    variant: {
+      description: 'The item color',
+      control: { type: 'select' },
+      options: ['primary', 'danger'],
+      table: { defaultValue: { summary: 'primary' } },
+    },
+    label: {
+      description: 'The item labels',
+      control: { type: 'input' },
+    },
+    icon: {
+      description: 'The item icon',
+      control: { type: 'input' },
+      table: { defaultValue: { summary: '' } },
+    },
+  }}
+/>
+
+# Context menu
+
+To display options for some context. Usually made visible on click (especially right click) and in conjunction with floating-ui.
+
+<Canvas>
+  <Story
+    name='Item'
+    args={{
+      label: 'just a label',
+    }}
+  >
+    {(props) => ({
+      Component: ContextMenuItem,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Item with icon'
+    args={{
+      label: 'with icon!',
+      icon: 'trash-can-outline',
+    }}
+  >
+    {(props) => ({
+      Component: ContextMenuItem,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Primary variant (default)'
+    args={{
+      label: '~ primary ~',
+      variant: 'primary',
+    }}
+  >
+    {(props) => ({
+      Component: ContextMenuItem,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger variant (dangerous)'
+    args={{
+      label: '!! DANGER !!',
+      variant: 'danger',
+      icon: 'close',
+    }}
+  >
+    {(props) => ({
+      Component: ContextMenuItem,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name='Separator'>
+    {() => ({
+      Component: ContextMenuSeparator,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name='Full context menu'>
+    {() => ({
+      Component: ContextMenu,
+    })}
+  </Story>
+</Canvas>
