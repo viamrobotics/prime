@@ -11,13 +11,9 @@ export let title = '';
 export let message = '';
 export let variant: Variants = 'info';
 export let progress = 1;
-export let exitable = 'false';
+export let exitable = false;
 
-export const htmlToBoolean = (value: string | undefined, key: string) => {
-  return value === '' || value === 'true' || value === key;
-};
-
-$: isExitable = htmlToBoolean(exitable, 'exitable');
+$: isExitable = exitable;
 
 const dispatch = createEventDispatcher();
 
@@ -112,10 +108,9 @@ const handleClose = (event: Event) => {
       </figure>
 
       {#if isExitable}
-        <!-- svelte-ignore a11y-unknown-role -->
         <div
           class="absolute right-1 top-1 text-gray-7"
-          role="notify"
+          role="alert"
         >
           <Button
             variant="icon"
