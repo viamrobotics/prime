@@ -294,11 +294,11 @@ let buttonClickedTimes = 0;
 
     <div class="text-yellow-800">
       <Icon
-        name="package-closed"
+        name="package-variant-closed"
         size="4xl"
       />
     </div>
-    <div class="hover:animate-spin text-gray-500">
+    <div class="text-gray-500 hover:animate-spin">
       <Icon
         name="lock"
         size="4xl"
@@ -306,7 +306,7 @@ let buttonClickedTimes = 0;
     </div>
     <div class="text-blue-300">
       <Icon
-        name="public"
+        name="earth"
         size="4xl"
       />
     </div>

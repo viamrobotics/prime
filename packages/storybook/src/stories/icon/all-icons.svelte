@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Icon } from '@viamrobotics/prime-core';
+import { Icon, Tooltip } from '@viamrobotics/prime-core';
 import { paths } from '../../../../core/src/lib/icon/icons';
 
 type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
@@ -11,9 +11,14 @@ export let size: Size;
 
 <div class="flex flex-wrap gap-8">
   {#each pathsKeys as name}
-  <Icon
-    {name}
-    {size}
-  />
-  {/each}  
+    <Tooltip>
+      <Icon
+        {name}
+        {size}
+      />
+      <p slot="text">
+        {name}
+      </p>
+    </Tooltip>
+  {/each}
 </div>
