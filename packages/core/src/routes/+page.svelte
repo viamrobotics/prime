@@ -2,6 +2,9 @@
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
+import ContextMenu from '$lib/context-menu/context-menu.svelte';
+import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
+import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
 import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
 import Input from '$lib/input/input.svelte';
@@ -380,4 +383,22 @@ let buttonClickedTimes = 0;
       label="readonly"
     />
   </div>
+  <!-- Context menu -->
+  <ContextMenu>
+    <ContextMenuItem label="label 1" />
+    <ContextMenuSeparator />
+    <ContextMenuItem
+      label="label 2"
+      variant="primary"
+    />
+    <ContextMenuItem
+      icon="trash-can-outline"
+      label="label 3"
+    />
+    <ContextMenuItem
+      icon="close"
+      label="danger"
+      variant="danger"
+    />
+  </ContextMenu>
 </div>

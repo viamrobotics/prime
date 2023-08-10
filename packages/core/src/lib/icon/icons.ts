@@ -60,4 +60,7 @@ export const paths: Record<string, string> = {
   twitter: MDI.mdiTwitter,
   undo: MDI.mdiUndo,
   'video-outline': MDI.mdiVideoOutline,
+  'account-group-outline': MDI.mdiAccountGroupOutline,
+  'robot-outline': MDI.mdiRobotOutline,
+  domain: MDI.mdiDomain,
 };
