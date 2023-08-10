@@ -7,13 +7,21 @@ import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
 import { Button, Icon } from '$lib';
 
+/** The name of the notification you want to alert users about*/
 export let title = '';
+/** The specific details about your notifications*/
 export let message = '';
+/** The severity of the notification you want to show users*/
 export let variant: Variants = 'info';
+/** The scaling applied on the y access of the page*/
 export let progress = 1;
+/** If true a user can close out of the notification. If false they cannot*/
 export let exitable = false;
 
-const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher<{
+  /** when the notification close button is pressed*/
+  close: {}
+}>();
 
 const handleClose = (event: Event) => {
   dispatch('close', event);
