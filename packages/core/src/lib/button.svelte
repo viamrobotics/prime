@@ -53,7 +53,7 @@ export let width: 'full' | 'default' = 'default';
       width !== 'full' && variant !== 'icon' && variant !== 'icon-danger',
     'h-[30px] w-[30px] text-gray-6 hover:text-gray-7 active:text-gray-8':
       variant === 'icon',
-    'h-[30px] w-[30px] text-gray-6 hover:text-danger-dark active:text-gray-8':
+    'h-[30px] w-[30px] text-gray-6 hover:text-danger-dark active:text-danger-dark':
       variant === 'icon-danger',
     'px-3': !icon && variant !== 'icon' && variant !== 'icon-danger',
     'pl-2 pr-3': icon && variant !== 'icon' && variant !== 'icon-danger',

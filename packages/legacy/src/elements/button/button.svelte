@@ -69,7 +69,7 @@ const handleParentClick = (event: PointerEvent) => {
         width !== 'full' && variant !== 'icon' && variant !== 'icon-danger',
       'text-gray-6 hover:text-gray-7 active:text-gray-8 h-[30px] w-[30px]':
         variant === 'icon',
-      'text-gray-6 hover:text-danger-dark active:text-gray-8 h-[30px] w-[30px]':
+      'text-gray-6 hover:text-danger-dark active:text-danger-dark h-[30px] w-[30px]':
         variant === 'icon-danger',
       'px-3': !icon && variant !== 'icon',
       'pl-2 pr-3': icon && variant !== 'icon',

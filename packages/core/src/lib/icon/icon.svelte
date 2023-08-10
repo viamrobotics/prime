@@ -40,20 +40,18 @@ const sizes: Record<Size, string> = {
 };
 </script>
 
-<p class="leading-3">
-  <svg
-    class={cx(sizes[size], {
-      'inline-block': hasNameProperty,
-      hidden: !hasNameProperty,
-    })}
-    viewBox="0 0 24 24"
-    aria-labelledby="name"
-    role="img"
-  >
-    <title id={name}>{`${name} icon`}</title>
-    <path
-      d={paths[name]}
-      fill="currentColor"
-    />
-  </svg>
-</p>
+<svg
+  class={cx('flex', sizes[size], {
+    'inline-block': hasNameProperty,
+    hidden: !hasNameProperty,
+  })}
+  viewBox="0 0 24 24"
+  aria-labelledby="name"
+  role="img"
+>
+  <title id={name}>{`${name} icon`}</title>
+  <path
+    d={paths[name]}
+    fill="currentColor"
+  />
+</svg>
