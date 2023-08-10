@@ -5,6 +5,7 @@ export { default as Icon } from './icon/icon.svelte';
 export { default as Label } from './label.svelte';
 export { default as Notify } from './notify.svelte';
 export { default as Pill } from './pill.svelte';
+export { default as Switch } from './switch.svelte';
 export { default as Radio } from './radio.svelte';
 
 export {
