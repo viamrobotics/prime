@@ -1,0 +1,47 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { TextInput } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Input/Text Input'
+  argTypes={{
+    value: {
+      description: "The input's value",
+      table: { defaultValue: { summary: '' } },
+    },
+    readonly: {
+      description: 'If the input should be readonly but operable',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    disabled: {
+      description: 'If the input should be readonly and inoperable',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    state: {
+      description: 'The state of the input',
+      control: { type: 'select' },
+      options: ['info', 'warn', 'error', 'none'],
+      table: { defaultValue: { summary: 'none' } },
+    },
+    type: {
+      description: 'The type of text input',
+      control: { type: 'select' },
+      options: ['text', 'email', 'password'],
+      table: { defaultValue: { summary: 'text' } },
+    },
+  }}
+/>
+
+# Text Input
+
+A user input for text values. This is ideal for text, email, and password fields.
+
+<Canvas>
+  <Story name='TextInput'>
+    {(props) => ({
+      Component: TextInput,
+      props,
+    })}
+  </Story>
+</Canvas>
