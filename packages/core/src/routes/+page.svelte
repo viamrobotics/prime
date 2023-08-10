@@ -295,18 +295,24 @@ let buttonClickedTimes = 0;
       />
     </p>
 
-    <Icon
-      name="package-closed"
-      size="4xl"
-    />
-    <Icon
-      name="lock"
-      size="4xl"
-    />
-    <Icon
-      name="public"
-      size="4xl"
-    />
+    <div class="text-yellow-800">
+      <Icon
+        name="package-variant-closed"
+        size="4xl"
+      />
+    </div>
+    <div class="text-gray-500 hover:animate-spin">
+      <Icon
+        name="lock"
+        size="4xl"
+      />
+    </div>
+    <div class="text-blue-300">
+      <Icon
+        name="earth"
+        size="4xl"
+      />
+    </div>
   </div>
 
   <div class="flex flex-col gap-4">
