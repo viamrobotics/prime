@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import ContextMenuItem from './context-menu-item.svelte';
 import ContextMenuSeparator from './context-menu-separator.svelte';
+import ContextMenu from './context-menu.spec.svelte';
 
 describe('Context menu', () => {
   it('Renders context menu item', () => {
@@ -49,5 +50,12 @@ describe('Context menu', () => {
 
     await fireEvent.click(screen.getByRole('img', { name: 'arrow-up icon' }));
     expect(onSelect).toHaveBeenCalledTimes(3);
+  });
+
+  it('Renders context menu slots', () => {
+    render(ContextMenu);
+    expect(screen.getByText('hello')).toBeVisible();
+    expect(screen.getByRole('img', { name: 'plus icon' })).toBeVisible();
+    expect(screen.getByRole('separator')).toBeVisible();
   });
 });
