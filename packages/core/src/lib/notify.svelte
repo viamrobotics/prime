@@ -13,8 +13,6 @@ export let variant: Variants = 'info';
 export let progress = 1;
 export let exitable = false;
 
-$: isExitable = exitable;
-
 const dispatch = createEventDispatcher();
 
 const handleClose = (event: Event) => {
@@ -107,7 +105,7 @@ const handleClose = (event: Event) => {
         </div>
       </figure>
 
-      {#if isExitable}
+      {#if exitable}
         <div
           class="absolute right-1 top-1 text-gray-7"
           role="alert"
