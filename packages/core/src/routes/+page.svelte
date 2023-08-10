@@ -2,6 +2,9 @@
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button.svelte';
+import ContextMenu from '$lib/context-menu/context-menu.svelte';
+import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
+import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
 import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
 import Notify from '$lib/notify.svelte';
@@ -293,18 +296,24 @@ let buttonClickedTimes = 0;
       />
     </p>
 
-    <Icon
-      name="package-closed"
-      size="4xl"
-    />
-    <Icon
-      name="lock"
-      size="4xl"
-    />
-    <Icon
-      name="public"
-      size="4xl"
-    />
+    <div class="text-yellow-800">
+      <Icon
+        name="package-variant-closed"
+        size="4xl"
+      />
+    </div>
+    <div class="text-gray-500 hover:animate-spin">
+      <Icon
+        name="lock"
+        size="4xl"
+      />
+    </div>
+    <div class="text-blue-300">
+      <Icon
+        name="earth"
+        size="4xl"
+      />
+    </div>
   </div>
 
   <div class="flex flex-col gap-4">
@@ -375,6 +384,24 @@ let buttonClickedTimes = 0;
       label="readonly"
     />
   </div>
+  <!-- Context menu -->
+  <ContextMenu>
+    <ContextMenuItem label="label 1" />
+    <ContextMenuSeparator />
+    <ContextMenuItem
+      label="label 2"
+      variant="primary"
+    />
+    <ContextMenuItem
+      icon="trash-can-outline"
+      label="label 3"
+    />
+    <ContextMenuItem
+      icon="close"
+      label="danger"
+      variant="danger"
+    />
+  </ContextMenu>
 </div>
 <Pill />
 <Pill value="Foo" />
