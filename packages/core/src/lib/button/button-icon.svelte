@@ -22,7 +22,7 @@ export let type: 'button' | 'submit' | 'reset' = 'button';
 /** The communicated action type to the user. */
 export let variant: 'primary' | 'danger' = 'primary';
 
-/** The text displayed. */
+/** aria-label text for accessibility */
 export let label = '';
 
 /** The text that appears in a native popup box on hover. */
