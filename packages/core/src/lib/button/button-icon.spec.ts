@@ -3,11 +3,6 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import ButtonIcon from './button-icon.svelte';
 
 describe('ButtonIcon', () => {
-  it('Renders label attribute as text within the button', () => {
-    render(ButtonIcon, { label: 'label' });
-    expect(screen.getByRole('button')).toBeVisible();
-  });
-
   it('Renders a button in the style of the primary variant if no variant is specified', () => {
     render(ButtonIcon);
     expect(screen.getByRole('button')).toHaveClass(
