@@ -311,12 +311,10 @@ let buttonClickedTimes = 0;
       />
     </p>
 
-    <div>
-      <Icon
-        name="package-variant-closed"
-        size="4xl"
-      />
-    </div>
+    <Icon
+      name="package-variant-closed"
+      size="4xl"
+    />
     <div class="hover:animate-spin">
       <Icon
         name="lock"
