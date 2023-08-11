@@ -73,6 +73,8 @@ export let width: 'full' | 'default' = 'default';
           variant === 'outline-danger',
       }
     )}
+    style={disabled ? '-webkit-user-select: none' : ''}
+    on:click
   >
     {#if icon}
       <span
