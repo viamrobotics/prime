@@ -1,7 +1,8 @@
 <script lang="ts">
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
-import Button from '$lib/button.svelte';
+import Button from '$lib/button/button.svelte';
+import ButtonIcon from '$lib/button/button-icon.svelte';
 import ContextMenu from '$lib/context-menu/context-menu.svelte';
 import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
 import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
@@ -64,6 +65,21 @@ let buttonClickedTimes = 0;
     <Button
       label="testing 3"
       width="full"
+    />
+  </div>
+
+  <div class="flex-start gap-4">
+    <!-- ButtonIcon -->
+    <ButtonIcon icon="close" />
+    <ButtonIcon
+      icon="close"
+      variant="danger"
+      label="Click me"
+      on:click={() => {
+        buttonClickedTimes += 1;
+        // eslint-disable-next-line no-console
+        console.log(`button clicked ${buttonClickedTimes} times!`);
+      }}
     />
   </div>
 
@@ -295,24 +311,22 @@ let buttonClickedTimes = 0;
       />
     </p>
 
-    <div class="text-yellow-800">
+    <div>
       <Icon
         name="package-variant-closed"
         size="4xl"
       />
     </div>
-    <div class="text-gray-500 hover:animate-spin">
+    <div class="hover:animate-spin">
       <Icon
         name="lock"
         size="4xl"
       />
     </div>
-    <div class="text-blue-300">
-      <Icon
-        name="earth"
-        size="4xl"
-      />
-    </div>
+    <Icon
+      name="earth"
+      size="4xl"
+    />
   </div>
 
   <div class="flex flex-col gap-4">

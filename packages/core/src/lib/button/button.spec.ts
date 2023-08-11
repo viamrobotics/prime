@@ -54,20 +54,6 @@ describe('Button', () => {
     );
   });
 
-  // TODO(APP-2290): Allow the user to specify an icon once migrated.
-  it.skip('Renders an icon within the button if an icon attribute is specified', () => {
-    render(Button, { icon: 'refresh' });
-    expect(screen.getByText('refresh')).toBeVisible();
-  });
-
-  // TODO(APP-2290): Allow the user to specify an icon once migrated.
-  it.skip('Renders the button as an icon if an icon attribute is specified and the button variant is icon', () => {
-    render(Button, { variant: 'icon', icon: 'refresh', label: 'Label' });
-    expect(screen.queryByText('Label')).toBeNull();
-    expect(screen.getByText('refresh')).toBeVisible();
-    expect(screen.getByRole('button')).not.toHaveClass('border-light');
-  });
-
   it('Renders a clickable button', async () => {
     const { component } = render(Button);
     const onClick = vi.fn();
