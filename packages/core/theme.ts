@@ -16,9 +16,9 @@ export const theme = {
       medium: '#d7d7d9',
     },
     backgroundColor: {
-      extralight: '#FBFBFC',
-      light: '#f7F7F8',
-      medium: '#f1F1F4',
+      extralight: '#fbfbfc',
+      light: '#f7f7f8',
+      medium: '#f1f1f4',
     },
     colors: {
       black: '#131414',
@@ -47,6 +47,9 @@ export const theme = {
       'info-medium': '#b6d1f4',
       'disabled-dark': '#9c9ca4',
       'disabled-light': '#f2f2f4',
+    },
+    transitionProperty: {
+      'expand-vertical': 'max-height,visibility',
     },
   },
 };
