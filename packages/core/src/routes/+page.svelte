@@ -1,11 +1,16 @@
 <script lang="ts">
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
-import Button from '$lib/button.svelte';
+import Button from '$lib/button/button.svelte';
+import ButtonIcon from '$lib/button/button-icon.svelte';
+import ContextMenu from '$lib/context-menu/context-menu.svelte';
+import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
+import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
 import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
 import Input from '$lib/input/input.svelte';
 import Pill from '$lib/pill.svelte';
+import Switch from '$lib/switch.svelte';
 import Radio from '$lib/radio.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 import TextInput from '$lib/input/text-input.svelte';
@@ -60,6 +65,21 @@ let buttonClickedTimes = 0;
     <Button
       label="testing 3"
       width="full"
+    />
+  </div>
+
+  <div class="flex-start gap-4">
+    <!-- ButtonIcon -->
+    <ButtonIcon icon="close" />
+    <ButtonIcon
+      icon="close"
+      variant="danger"
+      label="Click me"
+      on:click={() => {
+        buttonClickedTimes += 1;
+        // eslint-disable-next-line no-console
+        console.log(`button clicked ${buttonClickedTimes} times!`);
+      }}
     />
   </div>
 
@@ -188,6 +208,17 @@ let buttonClickedTimes = 0;
       />
     </Label>
 
+    <!-- Pill -->
+    <Pill />
+    <Pill value="Foo" />
+    <Pill
+      readonly
+      value="Bar"
+    />
+    <Pill
+      disabled
+      value="Baz"
+    />
     <Label disabled>
       Name:
       <Input
@@ -281,15 +312,17 @@ let buttonClickedTimes = 0;
     </p>
 
     <Icon
-      name="package-closed"
+      name="package-variant-closed"
       size="4xl"
     />
+    <div class="hover:animate-spin">
+      <Icon
+        name="lock"
+        size="4xl"
+      />
+    </div>
     <Icon
-      name="lock"
-      size="4xl"
-    />
-    <Icon
-      name="public"
+      name="earth"
       size="4xl"
     />
   </div>
@@ -329,4 +362,55 @@ let buttonClickedTimes = 0;
       width="full"
     />
   </div>
+
+  <div class="flex gap-4">
+    <!-- Switch -->
+    <Switch
+      on
+      variant="annotated"
+    />
+
+    <Switch
+      on
+      label="Lunchtime"
+    />
+
+    <Switch
+      on
+      variant="annotated"
+      tooltip="I'm a tooltip message"
+      label="Switch Label"
+    />
+
+    <Switch
+      on
+      disabled
+      label="disabled"
+    />
+
+    <Switch
+      on
+      variant="annotated"
+      readonly
+      label="readonly"
+    />
+  </div>
+  <!-- Context menu -->
+  <ContextMenu>
+    <ContextMenuItem label="label 1" />
+    <ContextMenuSeparator />
+    <ContextMenuItem
+      label="label 2"
+      variant="primary"
+    />
+    <ContextMenuItem
+      icon="trash-can-outline"
+      label="label 3"
+    />
+    <ContextMenuItem
+      icon="close"
+      label="danger"
+      variant="danger"
+    />
+  </ContextMenu>
 </div>

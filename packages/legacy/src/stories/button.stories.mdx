@@ -255,6 +255,25 @@ For user triggered actions
 
 <Canvas>
   <Story
+    name='Icon danger variant'
+    args={{
+      icon: 'trash-can-outline',
+      variant: 'icon-danger',
+      label: 'Delete component',
+    }}
+  >
+    {({ icon, variant, label }) => `
+<v-button
+  icon='${icon}'
+  label='${label}'
+  variant='${variant}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
     name='Full width button'
     args={{
       width: 'full',
