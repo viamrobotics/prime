@@ -73,7 +73,7 @@ module.exports = {
       files: ['.*.js', '*.js', 'scripts/**/*.js'],
       rules: {
         'no-console': 'off',
-        'import/extensions': ['error', 'ignorePackages'],
+        'import/extensions': 'off',
       },
     },
     {

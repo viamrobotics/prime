@@ -31,7 +31,7 @@ const version = pkg.devDependencies.prismjs.replace('^', '');
 const cdn = (src: string) =>
   `https://cdnjs.cloudflare.com/ajax/libs/prism/${version}/${src}`;
 
-const script = (src: string) =>
+const script = async (src: string) =>
   new Promise((resolve, reject) => {
     const el = document.createElement('script');
     el.async = true;

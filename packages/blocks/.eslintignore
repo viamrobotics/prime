@@ -1,0 +1,5 @@
+/build
+/.svelte-kit
+/package
+dist
+.eslintrc.cjs
