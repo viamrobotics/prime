@@ -119,7 +119,7 @@ const handleClose = (event: Event) => {
           role="alert"
         >
           <Button
-            variant="icon"
+            variant='ghost'
             icon="close"
             on:click={handleClose}
             on:keydown={handleClose}
