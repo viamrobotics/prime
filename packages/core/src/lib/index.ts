@@ -1,6 +1,7 @@
 export { default as Badge } from './badge.svelte';
 export { default as Breadcrumbs } from './breadcrumbs.svelte';
-export { default as Button } from './button.svelte';
+export { default as Button } from './button/button.svelte';
+export { default as ButtonIcon } from './button/button-icon.svelte';
 export { default as Icon } from './icon/icon.svelte';
 export { default as Label } from './label.svelte';
 export { default as Notify } from './notify.svelte';
