@@ -76,7 +76,12 @@ For displaying a list of items
 </Canvas>
 
 <Canvas>
-  <Story name='All Icons'>
+  <Story
+    name='All Icons'
+    args={{
+      size: 'lg',
+    }}
+  >
     {(props) => ({
       Component: AllIcons,
       props,

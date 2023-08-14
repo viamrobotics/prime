@@ -1,5 +1,9 @@
 import * as MDI from '@mdi/js';
 
+/**
+ * Keys should match MDI name
+ * e.g. 'account-multiple' for MDI.mdiAccountMultiple
+ */
 export const paths: Record<string, string> = {
   'account-multiple': MDI.mdiAccountMultiple,
   'alert-circle-outline': MDI.mdiAlertCircleOutline,
@@ -43,12 +47,12 @@ export const paths: Record<string, string> = {
   menu: MDI.mdiMenu,
   minus: MDI.mdiMinus,
   'open-in-new': MDI.mdiOpenInNew,
-  'package-closed': MDI.mdiPackageVariantClosed,
+  'package-variant-closed': MDI.mdiPackageVariantClosed,
   'pause-circle-outline': MDI.mdiPauseCircleOutline,
   'pencil-outline': MDI.mdiPencilOutline,
   'play-circle-outline': MDI.mdiPlayCircleOutline,
   plus: MDI.mdiPlus,
-  public: MDI.mdiEarth,
+  earth: MDI.mdiEarth,
   refresh: MDI.mdiRefresh,
   send: MDI.mdiSend,
   'stop-circle-outline': MDI.mdiStopCircleOutline,
