@@ -213,7 +213,10 @@ test('Renders radio element in readonly state if readonly attribute is true', as
   await expect(readonly2Selected.didNotOccur()).resolves.toBe(true);
 
   // Readonly Keydown
-  const readonly5 = page.getByRole('button', { name: 'Readonly 5', exact: true });
+  const readonly5 = page.getByRole('button', {
+    name: 'Readonly 5',
+    exact: true,
+  });
   await expect(readonly5).toBeVisible();
 
   const readonly5Selected = waitForCustomEvent(
