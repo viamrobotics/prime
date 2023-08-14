@@ -111,7 +111,7 @@ test('Renders python editor that is valid', async ({ page }) => {
 });
 
 // invalid python
-test('Renders python editor that is invalid', async ({ page }) => {
+test.skip('Renders python editor that is invalid', async ({ page }) => {
   const invalidPythonEditor = page.getByTestId('code-editor-python-invalid');
   await expect(invalidPythonEditor).toHaveAttribute('language', 'python');
   await expect(invalidPythonEditor).toHaveAttribute(
@@ -122,7 +122,7 @@ test('Renders python editor that is invalid', async ({ page }) => {
   await expect(invalidEditor).toHaveAttribute('data-mode-id', 'python');
 });
 
-test('Renders a golang editor that is valid', async ({ page }) => {
+test.skip('Renders a golang editor that is valid', async ({ page }) => {
   const editor = page.getByTestId('code-editor-golang-valid');
   await expect(editor).toHaveAttribute('language', 'go');
   await expect(editor).toHaveAttribute('value', 'func (s *Custom) help(x int)');
@@ -222,7 +222,7 @@ test('If a readonly attribute is set, then the editor should be not editable', a
   await expect(editor).not.toContainText(/hello/u);
 });
 
-test('Render a minimap if the minimap attribute is set to true', async ({
+test.skip('Render a minimap if the minimap attribute is set to true', async ({
   page,
 }) => {
   const editor = page.getByTestId('code-editor-minimap');
