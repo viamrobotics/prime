@@ -1,0 +1,43 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Tabs } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Tabs'
+  parameters={{
+    actions: {
+      handles: ['input'],
+    },
+  }}
+  argTypes={{
+    tabs: {
+      description: 'The list of tabs',
+      table: { defaultValue: { summary: '[]' } },
+    },
+    selected: {
+      description: 'The selected tab',
+      table: { defaultValue: { summary: '' } },
+    },
+    'on:input': {
+      description: 'Event fired when tab is selected',
+    },
+  }}
+/>
+
+# Tabs
+
+A clickable element that allows the user to navigate to another page or area.
+
+<Canvas>
+  <Story
+    name='Tabs'
+    args={{
+      tabs: ['Tab 1', 'Tab 2', 'Tab 3'],
+      selected: 'Tab 1',
+    }}
+  >
+    {(props) => ({
+      Component: Tabs,
+      props,
+    })}
+  </Story>
+</Canvas>
