@@ -150,14 +150,14 @@ importers:
         specifier: ^5.14.9
         version: 5.14.9
       '@typescript-eslint/eslint-plugin':
-        specifier: ^6.2.1
-        version: 6.2.1(@typescript-eslint/parser@6.2.1)(eslint@8.46.0)(typescript@5.1.6)
+        specifier: ^5.45.0
+        version: 5.59.0(@typescript-eslint/parser@5.59.0)(eslint@8.46.0)(typescript@5.1.6)
       '@typescript-eslint/parser':
-        specifier: ^6.2.1
-        version: 6.2.1(eslint@8.46.0)(typescript@5.1.6)
+        specifier: ^5.45.0
+        version: 5.59.0(eslint@8.46.0)(typescript@5.1.6)
       '@viamrobotics/eslint-config':
         specifier: ^0.1.1
-        version: 0.1.1(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0)
+        version: 0.1.1(@typescript-eslint/eslint-plugin@5.59.0)(@typescript-eslint/parser@5.59.0)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0)
       '@viamrobotics/prettier-config':
         specifier: ^0.1.1
         version: 0.1.1(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.0)
@@ -4558,10 +4558,6 @@ packages:
       pretty-format: 29.6.1
     dev: true
 
-  /@types/json-schema@7.0.11:
-    resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
-    dev: true
-
   /@types/json-schema@7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
     dev: true
@@ -4649,10 +4645,6 @@ packages:
 
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
-    dev: true
-
-  /@types/semver@7.3.13:
-    resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
     dev: true
 
   /@types/semver@7.5.0:
@@ -4910,8 +4902,8 @@ packages:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.46.0)
-      '@types/json-schema': 7.0.11
-      '@types/semver': 7.3.13
+      '@types/json-schema': 7.0.12
+      '@types/semver': 7.5.0
       '@typescript-eslint/scope-manager': 5.59.0
       '@typescript-eslint/types': 5.59.0
       '@typescript-eslint/typescript-estree': 5.59.0(typescript@5.1.6)
@@ -4978,6 +4970,33 @@ packages:
       eslint-plugin-import: 2.28.0(@typescript-eslint/parser@5.59.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.46.0)
       eslint-plugin-sonarjs: 0.20.0(eslint@8.46.0)
       eslint-plugin-unicorn: 48.0.1(eslint@8.46.0)
+    dev: true
+
+  /@viamrobotics/eslint-config@0.1.1(@typescript-eslint/eslint-plugin@5.59.0)(@typescript-eslint/parser@5.59.0)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0):
+    resolution: {integrity: sha512-rNpYCNn2psmI1Mnl0yxRM205ahzHESLKsCQijYI7NWjjicdTO8zV1M553dSqFztCvZloB3zMZSGBKpVj+o8WyQ==}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': '>=5 <6'
+      '@typescript-eslint/parser': '>=5 <6'
+      eslint: '>=8 <9'
+      eslint-config-prettier: '>=8 <9'
+      eslint-plugin-sonarjs: '>=0.19 <0.20'
+      eslint-plugin-svelte: '>=2 <3'
+      eslint-plugin-tailwindcss: '>=3 <4'
+      eslint-plugin-unicorn: '>=46 <47'
+    peerDependenciesMeta:
+      eslint-plugin-svelte:
+        optional: true
+      eslint-plugin-tailwindcss:
+        optional: true
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 5.59.0(@typescript-eslint/parser@5.59.0)(eslint@8.46.0)(typescript@5.1.6)
+      '@typescript-eslint/parser': 5.59.0(eslint@8.46.0)(typescript@5.1.6)
+      eslint: 8.46.0
+      eslint-config-prettier: 8.9.0(eslint@8.46.0)
+      eslint-plugin-sonarjs: 0.19.0(eslint@8.46.0)
+      eslint-plugin-svelte: 2.32.4(eslint@8.46.0)(svelte@4.1.2)
+      eslint-plugin-tailwindcss: 3.13.0(tailwindcss@3.3.3)
+      eslint-plugin-unicorn: 46.0.0(eslint@8.46.0)
     dev: true
 
   /@viamrobotics/eslint-config@0.1.1(@typescript-eslint/eslint-plugin@6.2.1)(@typescript-eslint/parser@6.2.1)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.19.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@46.0.0)(eslint@8.46.0):
