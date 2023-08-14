@@ -20,7 +20,7 @@ export let exitable = false;
 
 const dispatch = createEventDispatcher<{
   /** when the notification close button is pressed*/
-  close: {}
+  close: object;
 }>();
 
 const handleClose = (event: Event) => {
@@ -119,7 +119,7 @@ const handleClose = (event: Event) => {
           role="alert"
         >
           <Button
-            variant='ghost'
+            variant="ghost"
             icon="close"
             on:click={handleClose}
             on:keydown={handleClose}

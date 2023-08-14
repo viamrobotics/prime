@@ -13,7 +13,6 @@ describe('Notify', () => {
     expect(screen.getByText('This is the message.')).toBeVisible();
   });
 
-
   it('Renders notify with default style if no variant is specified', () => {
     const { container } = render(Notify, {
       title: 'This is the title',
@@ -22,7 +21,6 @@ describe('Notify', () => {
     expect(container.querySelector('.bg-info-dark')).toBeVisible();
     expect(container.querySelector('.text-info-dark')).toBeVisible();
   });
-
 
   it('Renders notify with danger style if the variant is set to danger', () => {
     const { container } = render(Notify, {
@@ -34,7 +32,6 @@ describe('Notify', () => {
     expect(container.querySelector('.text-danger-dark')).toBeVisible();
   });
 
-
   it('Renders notify with warning style if the variant is set to warning', () => {
     const { container } = render(Notify, {
       title: 'This is the title',
@@ -44,7 +41,6 @@ describe('Notify', () => {
     expect(container.querySelector('.bg-warning-bright')).toBeVisible();
     expect(container.querySelector('.text-warning-bright')).toBeVisible();
   });
-
 
   it('Renders notify with success style if the variant is set to success', () => {
     const { container } = render(Notify, {
@@ -56,7 +52,6 @@ describe('Notify', () => {
     expect(container.querySelector('.text-success-dark')).toBeVisible();
   });
 
-
   it('Renders notify with info style if the variant is set to info', () => {
     const { container } = render(Notify, {
       title: 'This is the title',
@@ -66,7 +61,6 @@ describe('Notify', () => {
     expect(container.querySelector('.bg-info-dark')).toBeVisible();
     expect(container.querySelector('.text-info-dark')).toBeVisible();
   });
-
 
   it('Renders notify slot text', () => {
     render(NotifySlot);
