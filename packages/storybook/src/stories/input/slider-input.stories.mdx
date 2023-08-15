@@ -1,0 +1,66 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { SliderInput } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Input/Slider Input'
+  argTypes={{
+    value: {
+      description: "The input's value",
+      control: { type: 'number' },
+      table: { defaultValue: { summary: undefined } },
+    },
+    readonly: {
+      description: 'If the input should be readonly but operable',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    disabled: {
+      description: 'If the input should be readonly and inoperable',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    state: {
+      description: 'The state of the input',
+      control: { type: 'select' },
+      options: ['info', 'warn', 'error', 'none'],
+      table: { defaultValue: { summary: 'none' } },
+    },
+    type: {
+      description: 'The type of slider input',
+      control: { type: 'select' },
+      options: ['number', 'integer'],
+      table: { defaultValue: { summary: 'number' } },
+    },
+    step: {
+      description:
+        'The amount to increment/decrement when using the up/down arrows',
+      control: { type: 'number' },
+      table: { defaultValue: { summary: 1 } },
+    },
+    min: {
+      description: 'The minimum allowed value, if any',
+      control: { type: 'number' },
+      table: { defaultValue: { summary: 1 } },
+    },
+    max: {
+      description: 'The maximum allowed value, if any',
+      control: { type: 'number' },
+      table: { defaultValue: { summary: 1 } },
+    },
+  }}
+/>
+
+# Slider Input
+
+A user input for numeric values that allows easy adjustments with a slider.
+This is ideal for number and integer fields you expect the user to tweak often,
+and the value can be incremented/decremented using the up/down arrow keys.
+
+<Canvas>
+  <Story name='SliderInput'>
+    {(props) => ({
+      Component: SliderInput,
+      props,
+    })}
+  </Story>
+</Canvas>
