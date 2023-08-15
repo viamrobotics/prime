@@ -11,7 +11,10 @@ describe('Context menu', () => {
   });
 
   it('Renders context menu item with icon', () => {
-    const { container } = render(ContextMenuItem, { label: 'primary', icon: 'close' });
+    const { container } = render(ContextMenuItem, {
+      label: 'primary',
+      icon: 'close',
+    });
     expect(container.querySelector('svg')).toBeVisible();
   });
 
