@@ -1,5 +1,6 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { Collapse } from '@viamrobotics/prime-core';
+import CollapseSlot from './collapse.spec.svelte';
 
 <Meta
   title='Elements/Collapse'
@@ -46,13 +47,14 @@ Toggles visibility of content
     args={{
       title: 'Motor 1',
       content:
-        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+        'Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
     }}
   >
-    {(props) => ({
-      Component: Collapse,
+      {(props) => ({
+      Component: CollapseSlot,
       props,
     })}
+
   </Story>
 </Canvas>
 
@@ -62,7 +64,7 @@ Toggles visibility of content
     args={{
       title: 'Motor 1',
       content:
-        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+        'Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
     }}
   >
     {(props) => ({
@@ -78,7 +80,7 @@ Toggles visibility of content
     args={{
       title: 'Motor 1',
       content:
-        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+        'Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
     }}
   >
     {(props) => ({
@@ -94,7 +96,7 @@ Toggles visibility of content
     args={{
       title: 'Motor 1',
       content:
-        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+        'Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
     }}
   >
     {(props) => ({

@@ -40,7 +40,7 @@ const dispatch = createEventDispatcher();
 
 const handleClick = () => {
   open = !open;
-  dispatch('toggle', { isOpen: !open });
+  dispatch('toggle', { isOpen: open });
 };
 </script>
 
