@@ -57,7 +57,7 @@ describe('Input', () => {
     expect(svg?.parentElement).toHaveClass('text-info-dark');
   });
 
-  it.skip('Renders the input in the warn state', () => {
+  it('Renders the input in the warn state', () => {
     const { container } = render(Input, {
       placeholder: 'Enter your name',
       state: 'warn',
@@ -68,7 +68,7 @@ describe('Input', () => {
     expect(svg?.parentElement).toHaveClass('text-warning-bright');
   });
 
-  it.skip('Renders the input in the error state', () => {
+  it('Renders the input in the error state', () => {
     const { container } = render(Input, {
       placeholder: 'Enter your name',
       state: 'error',
