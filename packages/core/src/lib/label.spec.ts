@@ -40,4 +40,9 @@ describe('Label', () => {
       'name'
     );
   });
+
+  it('Renders the detail', () => {
+    render(Label, { detail: 'detail' });
+    expect(screen.getByText('detail')).toHaveClass('text-disabled');
+  });
 });

@@ -15,6 +15,8 @@ import Switch from '$lib/switch.svelte';
 import Radio from '$lib/radio.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 import TextInput from '$lib/input/text-input.svelte';
+import NumericInput from '$lib/input/numeric-input.svelte';
+import SliderInput from '$lib/input/slider-input.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -141,27 +143,33 @@ let buttonClickedTimes = 0;
     />
 
     <Input
-      name="name"
-      value="Phillip J. Fry"
+      name="readonly"
+      value="Readonly Input"
       readonly
     />
 
     <Input
-      name="name"
-      value="Phillip J. Fry"
+      name="disabled"
+      value="Disabled Input"
       disabled
     />
+  </div>
 
+  <div class="flex gap-4">
     <Input
-      name="name"
-      placeholder="Enter your name"
-      required
+      name="info"
+      value="Info State"
+      state="info"
     />
-
     <Input
-      name="name"
-      placeholder="Enter your name (autocomplete)"
-      autocomplete="on"
+      name="warn"
+      value="Warn State"
+      state="warn"
+    />
+    <Input
+      name="error"
+      value="Error State"
+      state="error"
     />
   </div>
 
@@ -189,16 +197,22 @@ let buttonClickedTimes = 0;
   <div class="flex gap-4">
     <!-- Numeric Input -->
 
-    <Input
-      type="number"
+    <NumericInput
       name="number"
       placeholder="Enter a number"
     />
 
-    <Input
+    <NumericInput
       type="integer"
       name="integer"
       placeholder="Enter an integer"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
     />
   </div>
 
@@ -226,8 +240,8 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <!-- Label -->
-    <Label
-      >Name:
+    <Label>
+      Default
       <Input
         slot="input"
         name="name"
@@ -235,7 +249,7 @@ let buttonClickedTimes = 0;
     </Label>
 
     <Label required>
-      Name:
+      Required
       <Input
         slot="input"
         name="name"
@@ -243,23 +257,20 @@ let buttonClickedTimes = 0;
       />
     </Label>
 
-    <!-- Pill -->
-    <Pill />
-    <Pill value="Foo" />
-    <Pill
-      readonly
-      value="Bar"
-    />
-    <Pill
-      disabled
-      value="Baz"
-    />
     <Label disabled>
-      Name:
+      Disabled
       <Input
         slot="input"
         name="name"
         disabled
+      />
+    </Label>
+
+    <Label detail="(detail)">
+      With Detail
+      <Input
+        slot="input"
+        name="name"
       />
     </Label>
   </div>
