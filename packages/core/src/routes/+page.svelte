@@ -3,6 +3,7 @@ import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button/button.svelte';
 import ButtonIcon from '$lib/button/button-icon.svelte';
+import Collapse from '$lib/collapse.svelte';
 import ContextMenu from '$lib/context-menu/context-menu.svelte';
 import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
 import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
@@ -81,6 +82,40 @@ let buttonClickedTimes = 0;
         console.log(`button clicked ${buttonClickedTimes} times!`);
       }}
     />
+  </div>
+
+
+  <div class="flex gap-4">
+    <!-- Collapse -->
+    <Collapse
+      title='Motor 1'
+    >
+      <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
+    </Collapse>
+
+    <Collapse
+      title='Motor 1'
+    >
+      <Badge slot='header' label='Inactive'></Badge>
+      <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
+    </Collapse>
+
+      <Collapse
+        title='Motor 1'
+      >
+        <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
+        <Badge slot='header' label='Inactive'></Badge>
+        <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
+      </Collapse>
+
+      <Collapse
+        title='Motor 1'
+        variant="minimal"
+      >
+        <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
+        <Badge slot='header' label='Inactive'></Badge>
+        <div style='font-size: 12px; padding: 1rem'>Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
+      </Collapse>
   </div>
 
   <div class="flex gap-4">
