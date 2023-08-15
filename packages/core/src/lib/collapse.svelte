@@ -14,6 +14,7 @@ export let variant: Variants = 'default';
 const dispatch = createEventDispatcher();
 
 const handleClick = () => {
+  open = !open;
   dispatch('toggle', { isOpen: !open });
 };
 </script>
