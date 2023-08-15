@@ -1,0 +1,56 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { NumericInput } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Input/Numeric Input'
+  parameters={{ docs: { page: null } }}
+  argTypes={{
+    value: {
+      description: "The input's value",
+      control: { type: 'number' },
+      table: { defaultValue: { summary: undefined } },
+    },
+    readonly: {
+      description: 'If the input should be readonly but operable',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    disabled: {
+      description: 'If the input should be readonly and inoperable',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    state: {
+      description: 'The state of the input',
+      control: { type: 'select' },
+      options: ['info', 'warn', 'error', 'none'],
+      table: { defaultValue: { summary: 'none' } },
+    },
+    type: {
+      description: 'The type of numeric input',
+      control: { type: 'select' },
+      options: ['number', 'integer'],
+      table: { defaultValue: { summary: 'number' } },
+    },
+    value: {
+      description:
+        'The amount to increment/decrement when using the up/down arrows',
+      control: { type: 'number' },
+      table: { defaultValue: { summary: 1 } },
+    },
+  }}
+/>
+
+# Numeric Input
+
+A user input for numeric values. This is ideal for number and integer fields.
+The value can be incremented/decremented using the up/down arrow keys.
+
+<Canvas>
+  <Story name='NumericInput'>
+    {(props) => ({
+      Component: NumericInput,
+      props,
+    })}
+  </Story>
+</Canvas>
