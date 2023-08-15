@@ -37,13 +37,15 @@ describe('Collapse', () => {
     const onToggle = vi.fn();
     component.$on('toggle', onToggle);
     await fireEvent.click(screen.getByText('Number 1'));
-    const contentDiv = screen.getByText("One is the loneliest number."); 
+    const contentDiv = screen.getByText('One is the loneliest number.');
     expect(contentDiv).not.toHaveClass('hidden');
   });
 
   it('Hides content slot correctly when closed', () => {
     render(CollapseSlot);
-    const contentDiv = screen.getByText("Two can be as bad as one, its the loneliest number since the number one."); 
+    const contentDiv = screen.getByText(
+      'Two can be as bad as one, its the loneliest number since the number one.'
+    );
     expect(contentDiv).not.toHaveClass('hidden');
   });
 });
