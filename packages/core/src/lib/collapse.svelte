@@ -1,3 +1,19 @@
+<!--
+@component
+  
+A graphical control element that allows the user to choose only one of a predefined set of mutually exclusive options.
+
+```svelte
+    <Collapse
+      title='Motor 1'
+      variant="minimal"
+    >
+      <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
+      <Badge slot='header' label='Inactive'></Badge>
+      <div style='font-size: 12px; padding: 1rem'>Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
+    </Collapse>
+```
+-->
 <svelte:options immutable />
 
 <script lang="ts">
@@ -7,8 +23,17 @@ import { Icon } from '$lib';
 
 type Variants = 'default' | 'minimal';
 
+/**
+ * The title for the collapse component.
+ */
 export let title = '';
+/**
+ * Whether the collapse is in the open position.
+ */
 export let open = false;
+/**
+ * The variant of the collapse component.
+ */
 export let variant: Variants = 'default';
 
 const dispatch = createEventDispatcher();
