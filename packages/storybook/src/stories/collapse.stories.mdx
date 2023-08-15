@@ -1,0 +1,139 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Collapse } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Collapse'
+  parameters={{
+    actions: {
+      handles: ['on:toggle'],
+    },
+  }}
+  argTypes={{
+    variant: {
+      options: ['default', 'minimal'],
+      control: { type: 'select' },
+      description:
+        'These are the options. The default variant adds a black border and white background',
+      table: { defaultValue: { summary: 'default' } },
+    },
+    title: {
+      description: 'This is the title',
+      table: { defaultValue: { summary: '' } },
+    },
+    open: {
+      description: 'Boolean indicating if the content is visible',
+      control: 'boolean',
+      table: { defaultValue: { summary: false } },
+    },
+    content: {
+      description: 'This is the content',
+      control: 'text',
+      table: { defaultValue: { summary: '' } },
+    },
+    'on:toggle': {
+      description: 'Event fired when the content visibility is toggled',
+    },
+  }}
+/>
+
+# Collapse
+
+Toggles visibility of content
+
+<Canvas>
+  <Story
+    name='Collapse'
+    args={{
+      title: 'Motor 1',
+      content:
+        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+    }}
+  >
+    {(props) => ({
+      Component: Collapse,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Header slot'
+    args={{
+      title: 'Motor 1',
+      content:
+        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+    }}
+  >
+    {(props) => ({
+      Component: Collapse,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Title slot'
+    args={{
+      title: 'Motor 1',
+      content:
+        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+    }}
+  >
+    {(props) => ({
+      Component: Collapse,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='No Background and No Border'
+    args={{
+      title: 'Motor 1',
+      content:
+        'Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.',
+    }}
+  >
+    {(props) => ({
+      Component: Collapse,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Minimal Variant'
+    args={{
+      title: 'Motor 1',
+      content:
+        'Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.',
+      variant: 'minimal',
+    }}
+  >
+    {(props) => ({
+      Component: Collapse,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Initially Open'
+    args={{
+      title: 'Motor 1',
+      open: true,
+      content:
+        'Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.',
+    }}
+  >
+    {(props) => ({
+      Component: Collapse,
+      props,
+    })}
+  </Story>
+</Canvas>

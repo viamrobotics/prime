@@ -9,18 +9,18 @@ describe('Collapse', () => {
     expect(screen.getByText('I am a collapse component')).toBeVisible();
   });
 
-  it('Renders the contents of badge correctly', () => {
+  it('Renders the contents of header slot correctly', () => {
     render(CollapseSlot);
     expect(screen.getByText('Inactive')).toBeVisible();
   });
 
-  it('Renders the contents of breadcrumbs correctly', () => {
+  it('Renders the contents of title slot correctly', () => {
     render(CollapseSlot);
     expect(screen.getByText('Hi')).toBeVisible();
     expect(screen.getByText('Hello')).toBeVisible();
   });
 
-  it('Renders the correct icon rotation on open', async () => {
+  it('Renders the correct icon rotation on open', () => {
     render(Collapse, { open: true });
     const iconDiv = screen.getByRole('img').parentElement;
     expect(iconDiv).toHaveClass('rotate-180');
