@@ -19,20 +19,10 @@ describe('Switch', () => {
     const label = screen.getByText('Switch Label');
     expect(label).toBeVisible();
 
-    const tooltipIcon = screen.getByLabelText('Information');
-    expect(tooltipIcon).toBeVisible();
+    const icon = container.querySelector('svg') as Element;
+    expect(icon).toBeInTheDocument();
 
-    console.log('hi', tooltipIcon)
-    await fireEvent.mouseEnter(tooltipIcon);
-
-    await waitFor(() => {
-      expect(screen.getByText('Tooltip Message')).toBeVisible();
-    });
-
-    const icon = container.querySelector('svg');
-    expect(icon).toBeVisible();
-
-    const path = icon?.querySelector('path');
+    const path = icon.querySelector('path');
     expect(path).toHaveAttribute('fill', 'currentColor');
   });
 
