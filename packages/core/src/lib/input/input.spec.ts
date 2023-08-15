@@ -47,26 +47,35 @@ describe('Input', () => {
   });
 
   it('Renders the input in the info state', () => {
-    const { container } = render(Input, { placeholder: 'Enter your name', state: 'info' });
-    const svg = container.querySelector('svg')
-  
-    expect(svg).toBeInTheDocument()
-    expect(svg?.parentElement).toHaveClass('text-info-dark')
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'info',
+    });
+    const svg = container.querySelector('svg');
+
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-info-dark');
   });
 
   it.skip('Renders the input in the warn state', () => {
-    const { container } = render(Input, { placeholder: 'Enter your name', state: 'warn' });
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'warn',
+    });
     const svg = container.querySelector('svg');
 
-    expect(svg).toBeInTheDocument()
-    expect(svg?.parentElement).toHaveClass('text-warning-bright')
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-warning-bright');
   });
 
   it.skip('Renders the input in the error state', () => {
-    const { container } = render(Input, { placeholder: 'Enter your name', state: 'error' });
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'error',
+    });
     const svg = container.querySelector('svg');
 
-    expect(svg).toBeInTheDocument()
-    expect(svg?.parentElement).toHaveClass('text-danger-dark')
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-danger-dark');
   });
 });
