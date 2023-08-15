@@ -1,5 +1,12 @@
 export const theme = {
   extend: {
+    fontFamily: {
+      'space-grotesk':
+        "'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif",
+      'roboto-mono':
+        "'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace",
+      'public-sans': "'Public Sans Variable', 'Public Sans', sans-serif",
+    },
     boxShadow: {
       sm: '0 4px 32px rgba(0, 0, 0, 0.06)',
     },
