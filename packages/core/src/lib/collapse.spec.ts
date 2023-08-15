@@ -9,6 +9,17 @@ describe('Collapse', () => {
     expect(screen.getByText('I am a collapse component')).toBeVisible();
   });
 
+  it('Renders the contents of badge correctly', () => {
+    render(CollapseSlot);
+    expect(screen.getByText('Inactive')).toBeVisible();
+  });
+
+  it('Renders the contents of breadcrumbs correctly', () => {
+    render(CollapseSlot);
+    expect(screen.getByText('Hi')).toBeVisible();
+    expect(screen.getByText('Hello')).toBeVisible();
+  });
+
   it('Handles the toggle onClick event', async () => {
     const { component } = render(CollapseSlot);
     const onToggle = vi.fn();
