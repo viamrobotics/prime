@@ -1,10 +1,11 @@
 {
   "name": "@viamrobotics/prime-core",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
+    "prepare": "svelte-kit sync",
     "dev": "vite dev",
     "build": "vite build && pnpm run package",
     "preview": "vite preview",
