@@ -31,7 +31,16 @@
     "prime.css"
   ],
   "peerDependencies": {
-    "svelte": ">=4.0.0 <5"
+    "@threlte/core": ">=6",
+    "@threlte/extras": ">=5",
+    "@viamrobotics/prime": ">=0.5",
+    "svelte": ">=4 <5",
+    "tailwindcss": ">=3",
+    "three": ">=0.150",
+    "trzy": ">=0.3.11"
+  },
+  "dependencies": {
+    "maplibre-gl": "^3.3.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.1.0",
@@ -41,18 +50,22 @@
     "@testing-library/dom": "^9.3.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/svelte": "^4.0.3",
+    "@threlte/core": "^6.0.3",
+    "@threlte/extras": "^5.2.0",
     "@types/testing-library__jest-dom": "^5.14.9",
+    "@types/three": "^0.155.0",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
-    "@viamrobotics/eslint-config": "^0.1.1",
-    "@viamrobotics/prettier-config": "^0.1.1",
+    "@viamrobotics/eslint-config": "^0.1.2",
+    "@viamrobotics/prettier-config": "^0.1.2",
+    "@viamrobotics/prime": "workspace:*",
     "@viamrobotics/prime-core": "workspace:*",
     "@viamrobotics/typescript-config": "^0.0.4",
     "autoprefixer": "^10.4.14",
     "classnames": "^2.3.2",
     "concurrently": "^8.2.0",
     "eslint": "^8.46.0",
-    "eslint-config-prettier": "^8.9.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-svelte": "^2.32.4",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "jsdom": "^22.1.0",
@@ -64,6 +77,8 @@
     "svelte": "^4.1.2",
     "svelte-check": "^3.4.6",
     "tailwindcss": "^3.3.3",
+    "three": "^0.155.0",
+    "trzy": "^0.3.12",
     "tslib": "^2.6.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.8",
