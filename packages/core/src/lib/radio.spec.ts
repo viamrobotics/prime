@@ -70,40 +70,49 @@ describe('Radio', () => {
   });
 
   it('Applies correct icon for info state', () => {
-    const { container } = render(Radio, { state: 'info', tooltip: 'For your information' });
+    const { container } = render(Radio, {
+      state: 'info',
+      tooltip: 'For your information',
+    });
     const iconButton = screen.getByRole('button');
     expect(iconButton).toBeVisible();
 
-    const svg = container.querySelector('svg')
-    expect(svg).toBeVisible()
+    const svg = container.querySelector('svg');
+    expect(svg).toBeVisible();
 
-    const path = svg?.querySelector('path')
-    expect(path).toHaveAttribute('d', MDI.mdiInformationOutline)
+    const path = svg?.querySelector('path');
+    expect(path).toHaveAttribute('d', MDI.mdiInformationOutline);
     expect(path).toHaveAttribute('fill', 'currentColor');
   });
 
   it('Applies correct color for warn state', () => {
-    const { container } = render(Radio, { state: 'warn', tooltip: 'Strong warning' });
+    const { container } = render(Radio, {
+      state: 'warn',
+      tooltip: 'Strong warning',
+    });
     const icon = screen.getByRole('button');
     expect(icon.firstChild).toHaveClass('text-warning-bright');
 
-    const svg = container.querySelector('svg')
-    expect(svg).toBeVisible()
+    const svg = container.querySelector('svg');
+    expect(svg).toBeVisible();
 
-    const path = svg?.querySelector('path')
-    expect(path).toHaveAttribute('d', MDI.mdiAlertCircleOutline)
+    const path = svg?.querySelector('path');
+    expect(path).toHaveAttribute('d', MDI.mdiAlertCircleOutline);
   });
 
   it('Applies correct color for error state', () => {
-    const { container } = render(Radio, { state: 'error', tooltip: 'Ahhhhh error!' });
+    const { container } = render(Radio, {
+      state: 'error',
+      tooltip: 'Ahhhhh error!',
+    });
     const icon = screen.getByRole('button');
     expect(icon.firstChild).toHaveClass('text-danger-dark');
 
-    const svg = container.querySelector('svg')
-    expect(svg).toBeVisible()
+    const svg = container.querySelector('svg');
+    expect(svg).toBeVisible();
 
-    const path = svg?.querySelector('path')
-    expect(path).toHaveAttribute('d', MDI.mdiAlertCircleOutline)
+    const path = svg?.querySelector('path');
+    expect(path).toHaveAttribute('d', MDI.mdiAlertCircleOutline);
   });
 
   it('Renders with full width if specified', () => {
