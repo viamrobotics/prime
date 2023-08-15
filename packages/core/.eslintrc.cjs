@@ -13,5 +13,8 @@ module.exports = {
   },
   rules: {
     'sonarjs/no-duplicate-string': 'off',
+    // @todo(mp): move to js-config
+    'no-undef-init': 'off',
+    'unicorn/no-useless-undefined': 'off',
   },
 };

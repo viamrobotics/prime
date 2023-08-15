@@ -47,6 +47,7 @@ const dispatch = createEventDispatcher<{
 }>();
 
 let numberDragTooltip: Tooltip;
+let input: HTMLInputElement;
 let numberDragCord: HTMLDivElement;
 let numberDragHead: HTMLDivElement;
 let isDragging = false;
@@ -67,7 +68,7 @@ const handlePointerMove = (event: PointerEvent) => {
     isNumber ? stepDecimalDigits : 0
   );
 
-  const inputValue = (event.target as HTMLInputElement).value;
+  const inputValue = input.value;
   const delta = parseNumericInputValue(deltaString, type);
   const next = parseNumericInputValue(
     (startValue + delta * step).toFixed(getDecimals(inputValue)),
@@ -84,7 +85,7 @@ const handlePointerMove = (event: PointerEvent) => {
     return;
   }
 
-  if (next > startValue) {
+  if (next >= startValue) {
     const dx = x - startX;
     numberDragHead.style.transform = `translate(${dx}px, 0px)`;
     numberDragCord.style.cssText = `width: ${dx}px;`;
@@ -97,8 +98,10 @@ const handlePointerMove = (event: PointerEvent) => {
     `;
   }
 
-  value = next;
-  dispatch('input', value);
+  if (value !== next) {
+    value = next;
+    dispatch('input', value);
+  }
 
   /**
    * TODO: Determine why this is being interpreted as an `any` type by the
@@ -110,17 +113,16 @@ const handlePointerMove = (event: PointerEvent) => {
 
 const handlePointerUp = () => {
   isDragging = false;
-  window.removeEventListener('pointermove', handlePointerMove);
+  document.body.classList.remove('!cursor-ew-resize')
 };
 
 const handlePointerDown = async (event: PointerEvent) => {
-  event.preventDefault();
-  event.stopPropagation();
-
   startX = event.clientX;
   value ||= 0;
   startValue = value;
   isDragging = true;
+
+  input.focus();
 
   await tick();
 
@@ -132,29 +134,33 @@ const handlePointerDown = async (event: PointerEvent) => {
    */
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   numberDragTooltip.recalculateStyle();
-
-  window.addEventListener('pointermove', handlePointerMove);
-  window.addEventListener('pointerup', handlePointerUp, { once: true });
 };
 </script>
+
+<svelte:window
+  on:pointermove={isDragging ? handlePointerMove : undefined}
+  on:pointerup={isDragging ? handlePointerUp : undefined}
+/>
 
 <div class="relative w-full">
   <NumericInput
     {type}
     {step}
     {...$$restProps}
+    style='padding-left: 0.75rem;'
     bind:value
+    bind:input={input}
     on:input
     on:keydown
   />
   <div
-    class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-pointer bg-gray-400 hover:bg-gray-700"
-    on:pointerdown={handlePointerDown}
+    class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700"
+    on:pointerdown|preventDefault|stopPropagation={handlePointerDown}
   >
     {#if isDragging}
       <div
         bind:this={numberDragCord}
-        class="pointer-events-none mt-[calc(13px)] h-px bg-gray-400"
+        class="pointer-events-none mt-[calc(13px)] h-px bg-gray-400 z-100"
       />
       <div
         bind:this={numberDragHead}

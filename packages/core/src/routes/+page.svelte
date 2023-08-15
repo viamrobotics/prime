@@ -165,6 +165,7 @@ let buttonClickedTimes = 0;
     <NumericInput
       name="number"
       placeholder="Enter a number"
+      on:input={(event) => console.log(event)}
     />
 
     <NumericInput
@@ -178,6 +179,19 @@ let buttonClickedTimes = 0;
     <SliderInput
       placeholder="Slide to select a number"
       name="slider"
+      on:input={(event) => console.log(event)}
+    />
+
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
+      on:input={(event) => console.log(event)}
+    />
+
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
+      on:input={(event) => console.log(event)}
     />
   </div>
 

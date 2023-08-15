@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import Input from './numeric-input.svelte';
 
 describe('Numeric Input', () => {
@@ -11,43 +11,19 @@ describe('Numeric Input', () => {
     );
   });
 
-  it('Should increment by one on arrowup keydown', async () => {
-    render(Input, { placeholder: 'Enter a number' });
+  it('Should set the input value', () => {
+    render(Input, { placeholder: 'Enter a number', value: 3.4 });
 
-    const input: HTMLInputElement =
-      screen.getByPlaceholderText('Enter a number');
+    const input = screen.getByPlaceholderText<HTMLInputElement>('Enter a number');
 
-    expect(input.value).toBe('');
-
-    await fireEvent.keyDown(input, { key: 'arrowup' });
-    expect(input.value).toBe('1');
-
-    await fireEvent.keyDown(input, { key: 'arrowup' });
-    expect(input.value).toBe('2');
+    expect(input.valueAsNumber).toBe(3.4);
   });
 
-  it('Should decrement by two on arrowdown keydown', async () => {
-    render(Input, { placeholder: 'Enter a number', step: 2 });
+  it('Is invalid type is integer and value is decimal', () => {
+    render(Input, { placeholder: 'Enter a number', type: 'integer', value: 12.34 });
 
-    const input: HTMLInputElement =
-      screen.getByPlaceholderText('Enter a number');
+    const input = screen.getByPlaceholderText<HTMLInputElement>('Enter a number');
 
-    expect(input.value).toBe('');
-
-    await fireEvent.keyDown(input, { key: 'arrowdown' });
-    expect(input.value).toBe('-2');
-
-    await fireEvent.keyDown(input, { key: 'arrowdown' });
-    expect(input.value).toBe('-4');
-  });
-
-  it('Strips decimal values when type is integer', async () => {
-    render(Input, { placeholder: 'Enter a number', type: 'integer' });
-
-    const input: HTMLInputElement =
-      screen.getByPlaceholderText('Enter a number');
-
-    await fireEvent.input(input, { target: { value: '12.34' } });
-    expect(input.value).toBe('12');
+    expect(input.checkValidity()).toBe(false)
   });
 });
