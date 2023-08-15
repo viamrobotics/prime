@@ -16,6 +16,7 @@ describe('Numeric Input', () => {
 
     const input = screen.getByPlaceholderText<HTMLInputElement>('Enter a number');
 
+    // valueAsNumber should be used to retrieve input type=number values
     expect(input.valueAsNumber).toBe(3.4);
   });
 

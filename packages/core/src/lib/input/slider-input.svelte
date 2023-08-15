@@ -113,7 +113,6 @@ const handlePointerMove = (event: PointerEvent) => {
 
 const handlePointerUp = () => {
   isDragging = false;
-  document.body.classList.remove('!cursor-ew-resize')
 };
 
 const handlePointerDown = async (event: PointerEvent) => {
