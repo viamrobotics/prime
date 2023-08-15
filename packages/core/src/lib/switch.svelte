@@ -73,7 +73,7 @@ const handleClick = () => {
 
     {#if tooltip}
       <Tooltip>
-        <div class="-mt-0.5">
+        <div aria-label="Information" class="-mt-0.5">
           <Icon name="information-outline" />
         </div>
         <div slot="text">

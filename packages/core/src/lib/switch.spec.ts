@@ -11,7 +11,7 @@ describe('Switch', () => {
   });
 
   it('Renders with label and tooltip', async () => {
-    render(Switch, {
+    const { container } = render(Switch, {
       label: 'Switch Label',
       tooltip: 'Tooltip Message',
     });
@@ -19,21 +19,20 @@ describe('Switch', () => {
     const label = screen.getByText('Switch Label');
     expect(label).toBeVisible();
 
-    const tooltipIcon = screen.getByRole('button', {
-      name: 'information-outline icon',
-    });
+    const tooltipIcon = screen.getByLabelText('Information');
     expect(tooltipIcon).toBeVisible();
 
+    console.log('hi', tooltipIcon)
     await fireEvent.mouseEnter(tooltipIcon);
 
     await waitFor(() => {
       expect(screen.getByText('Tooltip Message')).toBeVisible();
     });
 
-    const icon = screen.getByRole('img', { name: /information-outline/u });
+    const icon = container.querySelector('svg');
     expect(icon).toBeVisible();
 
-    const path = icon.querySelector('path');
+    const path = icon?.querySelector('path');
     expect(path).toHaveAttribute('fill', 'currentColor');
   });
 

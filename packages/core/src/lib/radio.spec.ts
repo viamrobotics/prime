@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import Radio from './radio.svelte';
+import * as MDI from '@mdi/js';
 
 describe('Radio', () => {
   it('Renders radio options correctly', () => {
@@ -69,29 +70,40 @@ describe('Radio', () => {
   });
 
   it('Applies correct icon for info state', () => {
-    render(Radio, { state: 'info', tooltip: 'For your information' });
+    const { container } = render(Radio, { state: 'info', tooltip: 'For your information' });
     const iconButton = screen.getByRole('button');
     expect(iconButton).toBeVisible();
-    const svg = screen.getByRole('img', { name: 'information-outline icon' });
-    expect(svg).toBeVisible();
-    const pathElem = svg.querySelector('path');
-    expect(pathElem).toHaveAttribute('fill', 'currentColor');
+
+    const svg = container.querySelector('svg')
+    expect(svg).toBeVisible()
+
+    const path = svg?.querySelector('path')
+    expect(path).toHaveAttribute('d', MDI.mdiInformationOutline)
+    expect(path).toHaveAttribute('fill', 'currentColor');
   });
 
   it('Applies correct color for warn state', () => {
-    render(Radio, { state: 'warn', tooltip: 'Strong warning' });
+    const { container } = render(Radio, { state: 'warn', tooltip: 'Strong warning' });
     const icon = screen.getByRole('button');
     expect(icon.firstChild).toHaveClass('text-warning-bright');
-    const svg = screen.getByRole('img', { name: 'alert-circle-outline icon' });
-    expect(svg).toBeVisible();
+
+    const svg = container.querySelector('svg')
+    expect(svg).toBeVisible()
+
+    const path = svg?.querySelector('path')
+    expect(path).toHaveAttribute('d', MDI.mdiAlertCircleOutline)
   });
 
   it('Applies correct color for error state', () => {
-    render(Radio, { state: 'error', tooltip: 'Ahhhhh error!' });
+    const { container } = render(Radio, { state: 'error', tooltip: 'Ahhhhh error!' });
     const icon = screen.getByRole('button');
     expect(icon.firstChild).toHaveClass('text-danger-dark');
-    const svg = screen.getByRole('img', { name: 'alert-circle-outline icon' });
-    expect(svg).toBeVisible();
+
+    const svg = container.querySelector('svg')
+    expect(svg).toBeVisible()
+
+    const path = svg?.querySelector('path')
+    expect(path).toHaveAttribute('d', MDI.mdiAlertCircleOutline)
   });
 
   it('Renders with full width if specified', () => {
