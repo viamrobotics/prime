@@ -93,10 +93,10 @@ jobs:
           name: npm-blocks-dist
           path: packages/blocks/dist
       - name: Publish 🚀
-        run: pnpm publish -r
+        run: pnpm publish -r --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-  
+
   deploy-pages:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [check, build, test]

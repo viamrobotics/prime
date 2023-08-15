@@ -1,15 +1,15 @@
 {
   "name": "@viamrobotics/prime-core",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
+    "prepare": "svelte-kit sync",
     "dev": "vite dev",
     "build": "vite build && pnpm run package",
     "preview": "vite preview",
     "package": "svelte-kit sync && svelte-package && publint",
-    "prepublishOnly": "pnpm run package",
     "check": "concurrently -g pnpm:check-*",
     "check-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check-lint": "prettier --plugin-search-dir . --check . && eslint .",
