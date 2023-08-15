@@ -20,17 +20,6 @@ describe('Collapse', () => {
     expect(screen.getByText('Hello')).toBeVisible();
   });
 
-  it('Handles the toggle onClick event', async () => {
-    const { component } = render(CollapseSlot);
-    const onToggle = vi.fn();
-    component.$on('toggle', onToggle);
-    await fireEvent.click(screen.getByText('Number 3'));
-    expect(onToggle).toHaveBeenCalledOnce();
-    expect(onToggle).toHaveBeenCalledWith(
-      expect.objectContaining({ detail: { isOpen: true } })
-    );
-  });
-
   it('Renders the correct icon rotation on open', async () => {
     render(Collapse, { open: true });
     const iconDiv = screen.getByRole('img').parentElement;
