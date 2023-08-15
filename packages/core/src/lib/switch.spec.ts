@@ -10,7 +10,7 @@ describe('Switch', () => {
     expect(screen.queryByRole('tooltip')).toBeNull();
   });
 
-  it('Renders with label and tooltip', async () => {
+  it('Renders with label and tooltip', () => {
     const { container } = render(Switch, {
       label: 'Switch Label',
       tooltip: 'Tooltip Message',
