@@ -37,6 +37,7 @@ export let state: InputState = 'none';
 
 /** The HTML input element. */
 export let input: HTMLInputElement = undefined!;
+// Assert this element will be defined by the time it is used by the parent.
 
 $: isInfo = state === 'info';
 $: isWarn = state === 'warn';
