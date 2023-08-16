@@ -51,10 +51,10 @@ importers:
         specifier: ^6.2.1
         version: 6.4.0(eslint@8.47.0)(typescript@5.1.6)
       '@viamrobotics/eslint-config':
-        specifier: ^0.1.2
+        specifier: ^0.1.1
         version: 0.1.2(@typescript-eslint/eslint-plugin@6.4.0)(@typescript-eslint/parser@6.4.0)(eslint-config-prettier@9.0.0)(eslint-plugin-sonarjs@0.20.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.47.0)
       '@viamrobotics/prettier-config':
-        specifier: ^0.1.2
+        specifier: ^0.1.1
         version: 0.1.2(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.2)
       '@viamrobotics/prime-core':
         specifier: workspace:*
