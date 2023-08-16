@@ -43,9 +43,9 @@ describe('Collapse', () => {
 
   it('Hides content slot correctly when closed', () => {
     render(CollapseSlot);
-    const contentDiv = screen.getByText(
+    const contentDiv = screen.queryByText(
       'Two can be as bad as one, its the loneliest number since the number one.'
     );
-    expect(contentDiv).not.toHaveClass('hidden');
+    expect(contentDiv).not.toBeInTheDocument();
   });
 });

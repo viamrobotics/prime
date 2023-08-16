@@ -54,7 +54,7 @@ const handleClick = () => {
       {
         'border border-light bg-white': variant === 'default',
       }
-    )},"
+    )}"
     on:click={handleClick}
     on:keyup|preventDefault={handleClick}
   >
@@ -83,12 +83,13 @@ const handleClick = () => {
     </div>
   </div>
 
-  <div
-    class={cx('text-black transition-all duration-500', {
-      'bg-white': variant === 'default',
-      hidden: !open,
-    })}
-  >
-    <slot />
-  </div>
+  {#if open}
+    <div
+      class={cx('text-black transition-all duration-500', {
+        'bg-white': variant === 'default',
+      })}
+    >
+      <slot />
+    </div>
+  {/if}
 </div>
