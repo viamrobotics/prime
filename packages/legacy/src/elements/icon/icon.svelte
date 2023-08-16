@@ -33,5 +33,8 @@ const hasNameProperty = Object.hasOwn(paths, name);
   role="img"
 >
   <title id={name}>{`${name} icon`}</title>
-  <path d={paths[name]} fill="currentColor" />
+  <path
+    d={paths[name]}
+    fill="currentColor"
+  />
 </svg>

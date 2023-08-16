@@ -4,7 +4,10 @@
 export let style = '';
 </script>
 
-<thead {style} class="border-b border-black">
+<thead
+  {style}
+  class="border-b border-black"
+>
   <slot />
 </thead>
 
