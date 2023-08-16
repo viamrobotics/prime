@@ -24,7 +24,7 @@ const hasNameProperty = Object.hasOwn(paths, name);
 </script>
 
 <svg
-  class={cx('flex', sizes[size], {
+  class={cx(sizes[size], {
     'inline-block': hasNameProperty,
     hidden: !hasNameProperty,
   })}
