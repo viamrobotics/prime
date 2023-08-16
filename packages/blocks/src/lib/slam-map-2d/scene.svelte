@@ -1,6 +1,6 @@
 <script lang='ts'>
 
-import type * as THREE from 'three';
+import * as THREE from 'three';
 import { T, createRawEventDispatcher, extend, useThrelte } from '@threlte/core';
 import { MapControls } from 'three/examples/jsm/controls/MapControls';
 import Helpers from './helpers.svelte';
@@ -12,8 +12,7 @@ import BaseMarker from '$lib/assets/images/base-marker.txt?raw';
 
 export let helpers: boolean;
 export let pointcloud: Uint8Array | undefined;
-export let basePosition: THREE.Vector2;
-export let baseRotation: number;
+export let basePose: { x: number; y: number; theta: number } | undefined = undefined;
 export let destination: THREE.Vector2 | undefined;
 export let motionPath: string | undefined;
 
@@ -118,23 +117,24 @@ $: updateZoom($camera as THREE.OrthographicCamera);
 <Marker
   name='Base marker'
   url={BaseMarker}
-  position.x={basePosition.x}
-  position.y={basePosition.y}
+  visible={basePose !== undefined}
+  position.x={basePose?.x}
+  position.y={basePose?.y}
   scale.x={markerScale}
   scale.y={markerScale}
-  rotation={baseRotation}
+  rotation={THREE.MathUtils.degToRad((basePose?.theta ?? 0) - 90)}
 />
 
-  <Marker
-    name='Destination marker'
-    visible={destination !== undefined}
-    url={DestMarker}
-    position.x={destination?.x}
-    position.y={destination?.y}
-    scale.x={markerScale}
-    scale.y={markerScale}
-    center.x={0.5}
-    center.y={0.05}
-  />
+<Marker
+  name='Destination marker'
+  visible={destination !== undefined}
+  url={DestMarker}
+  position.x={destination?.x}
+  position.y={destination?.y}
+  scale.x={markerScale}
+  scale.y={markerScale}
+  center.x={0.5}
+  center.y={0.05}
+/>
 
 <MotionPath path={motionPath} />
