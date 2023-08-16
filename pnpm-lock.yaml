@@ -52,7 +52,7 @@ importers:
         version: 6.4.0(eslint@8.46.0)(typescript@5.1.6)
       '@viamrobotics/eslint-config':
         specifier: ^0.1.1
-        version: 0.1.2(@typescript-eslint/eslint-plugin@6.4.0)(@typescript-eslint/parser@6.4.0)(eslint-config-prettier@9.0.0)(eslint-plugin-sonarjs@0.20.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0)
+        version: 0.1.2(@typescript-eslint/eslint-plugin@6.4.0)(@typescript-eslint/parser@6.4.0)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.20.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0)
       '@viamrobotics/prettier-config':
         specifier: ^0.1.1
         version: 0.1.2(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.4.1)(prettier@3.0.2)
@@ -75,8 +75,8 @@ importers:
         specifier: 8.46.0
         version: 8.46.0
       eslint-config-prettier:
-        specifier: ^9.0.0
-        version: 9.0.0(eslint@8.46.0)
+        specifier: ^8.9.0
+        version: 8.9.0(eslint@8.46.0)
       eslint-plugin-svelte:
         specifier: ^2.32.4
         version: 2.32.4(eslint@8.46.0)(svelte@4.1.2)
@@ -5210,7 +5210,7 @@ packages:
       eslint-plugin-unicorn: 46.0.0(eslint@8.46.0)
     dev: true
 
-  /@viamrobotics/eslint-config@0.1.2(@typescript-eslint/eslint-plugin@6.4.0)(@typescript-eslint/parser@6.4.0)(eslint-config-prettier@9.0.0)(eslint-plugin-sonarjs@0.20.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0):
+  /@viamrobotics/eslint-config@0.1.2(@typescript-eslint/eslint-plugin@6.4.0)(@typescript-eslint/parser@6.4.0)(eslint-config-prettier@8.9.0)(eslint-plugin-sonarjs@0.20.0)(eslint-plugin-svelte@2.32.4)(eslint-plugin-tailwindcss@3.13.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0):
     resolution: {integrity: sha512-JfuaF4YDdy3kQB7SLfVYcvH2ZVQ2kcFGtXVMsdT/BBvPqaRYkBV6JFOzZrvOWR79l9AFo3GuuO6cArBLxFw+KQ==}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': '>=6 <7'
@@ -5230,7 +5230,7 @@ packages:
       '@typescript-eslint/eslint-plugin': 6.4.0(@typescript-eslint/parser@6.4.0)(eslint@8.46.0)(typescript@5.1.6)
       '@typescript-eslint/parser': 6.4.0(eslint@8.46.0)(typescript@5.1.6)
       eslint: 8.46.0
-      eslint-config-prettier: 9.0.0(eslint@8.46.0)
+      eslint-config-prettier: 8.9.0(eslint@8.46.0)
       eslint-plugin-sonarjs: 0.20.0(eslint@8.46.0)
       eslint-plugin-svelte: 2.32.4(eslint@8.46.0)(svelte@4.1.2)
       eslint-plugin-tailwindcss: 3.13.0(tailwindcss@3.3.3)
