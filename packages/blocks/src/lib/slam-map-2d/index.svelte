@@ -4,6 +4,16 @@
   The pointcloud exists on the xy axis, with the camera set at z=1.
   Has the ability to also render other environmental features,
   such as the pose of a base and / or a motion plan.
+
+  ```svelte
+  <SlamMap2d
+    pointcloud={new Uint8Array()} // An arraybuffer representing a PCD file.
+    pose={{ x: number, y: number, z: number }} // An optional pose of a robot.
+    destination={{ x: number, y: number }} // An optional user-specificed robot destination.
+    helpers={true | false} // Whether or not scene helpers should be rendered. Default true.
+    motionPath={'0.1,0.2\n0.3,0.4\n'} // An optional motion path.
+  />
+  ```
 -->
 <script lang="ts">
 
