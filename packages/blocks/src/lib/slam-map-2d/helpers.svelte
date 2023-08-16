@@ -21,7 +21,7 @@ extend({
 <T.GridHelper
   renderOrder={renderOrder.grid}
   color='#ddd'
-  on:create={({ ref }) => ref.rotateX(Math.PI / 2)}
+  rotation.x={Math.PI / 2}
 />
 
 <T.AxesHelper
@@ -34,5 +34,5 @@ extend({
   renderOrder={renderOrder.axes}
   width={0.2}
   length={10_000}
-  on:create={({ ref }) => ref.rotateZ(Math.PI)}
+  rotation.z={Math.PI}
 />

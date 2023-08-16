@@ -71,8 +71,9 @@ const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
 
     updateZoom();
   }
-
 };
+
+const handleCameraCreate = ({ ref }: { ref: THREE.OrthographicCamera}) => ref.lookAt(0, 0, 0)
 
 $: markerScale = baseSpriteSize / zoom;
 $: pointSize = zoom * defaultPointSize * window.devicePixelRatio;
@@ -88,7 +89,7 @@ $: updateZoom($camera as THREE.OrthographicCamera);
   position.y={cameraY}
   position.z={1}
   zoom={10}
-  on:create={({ ref }) => ref.lookAt(0, 0, 0)}
+  on:create={handleCameraCreate}
   let:ref
 >
   <T.MapControls

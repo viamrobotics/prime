@@ -20,6 +20,10 @@ export let name: string;
 export let url: string;
 export let rotation = 0;
 
+const handleSpriteCreate = ({ ref }: { ref: THREE.SpriteMaterial }) => {
+  ref.color.set('#ff0047')
+}
+
 </script>
 
 <T.Sprite
@@ -31,7 +35,7 @@ export let rotation = 0;
     map={textureLoader.load(url)}
     sizeAttenuation={false}
     {rotation}
-    on:create={({ ref }) => ref.color.set('#ff0047')}
+    on:create={handleSpriteCreate}
   />
 </T.Sprite>
 

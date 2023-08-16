@@ -118,6 +118,10 @@ const update = (cloud: Uint8Array) => {
   dispatch('update', { center, radius });
 };
 
+const handleIntersectionPlaneCreate = ({ ref }: { ref: THREE.Mesh }) => {
+  raycaster.objects = [ref]
+}
+
 $: if (material) {
   material.size = size;
 }
@@ -147,7 +151,7 @@ raycaster.addEventListener('click', (event: THREE.Event) => {
   name='Intersection plane'
   position.x={center.x}
   position.y={center.y}
-  on:create={({ ref }) => (raycaster.objects = [ref])}
+  on:create={handleIntersectionPlaneCreate}
 >
   <T.PlaneGeometry args={[radius * 2, radius * 2, 1, 1]} />
   <T.MeshDiscardMaterial />
