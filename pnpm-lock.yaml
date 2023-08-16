@@ -72,17 +72,23 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0
       eslint:
-        specifier: 8.46.0
+        specifier: ^8.46.0
         version: 8.46.0
       eslint-config-prettier:
         specifier: ^8.9.0
         version: 8.9.0(eslint@8.46.0)
+      eslint-plugin-sonarjs:
+        specifier: ^0.20.0
+        version: 0.20.0(eslint@8.46.0)
       eslint-plugin-svelte:
         specifier: ^2.32.4
         version: 2.32.4(eslint@8.46.0)(svelte@4.1.2)
       eslint-plugin-tailwindcss:
         specifier: ^3.13.0
         version: 3.13.0(tailwindcss@3.3.3)
+      eslint-plugin-unicorn:
+        specifier: ^48.0.1
+        version: 48.0.1(eslint@8.46.0)
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
