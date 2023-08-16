@@ -1,7 +1,6 @@
 <svelte:options immutable />
 
 <script lang="ts">
-
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
 import { Button, Icon } from '$lib';
@@ -19,11 +18,11 @@ export let exitable = false;
 
 const dispatch = createEventDispatcher<{
   /** when the notification close button is pressed*/
-  close: Record<string,never>;
+  close: Record<string, never>;
 }>();
 
 const handleClose = () => {
-  dispatch('close',{});
+  dispatch('close', {});
 };
 </script>
 

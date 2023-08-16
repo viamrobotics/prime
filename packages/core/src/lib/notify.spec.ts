@@ -70,13 +70,13 @@ describe('Notify', () => {
   });
   it('Renders notify with info style if the variant is set to info', async () => {
     const { component } = render(Notify, {
-      exitable:true,
+      exitable: true,
       title: 'This is the title',
       message: 'This is the message.',
       variant: 'info',
     });
     const onClose = vi.fn();
-    component.$on('close',onClose);
+    component.$on('close', onClose);
     await fireEvent.click(screen.getByRole('button'));
     expect(onClose).toHaveBeenCalledOnce();
   });

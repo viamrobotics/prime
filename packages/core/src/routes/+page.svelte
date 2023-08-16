@@ -388,10 +388,10 @@ let buttonClickedTimes = 0;
       selected="Tab 2"
     />
 
-  <Tabs
-    tabs={['Tab 1', 'Tab 2']}
-    selected="Tab 2"
-  />
+    <Tabs
+      tabs={['Tab 1', 'Tab 2']}
+      selected="Tab 2"
+    />
   </div>
 
   <div class="flex gap-4">
@@ -458,41 +458,40 @@ let buttonClickedTimes = 0;
 
 <div>
   <Notify
-  variant="info"
-  title="This is the info title"
-  message="This is the message."
-/>
-<Notify
-  variant="success"
-  title="This is the success title"
-  message="This is the message."
-/>
+    variant="info"
+    title="This is the info title"
+    message="This is the message."
+  />
+  <Notify
+    variant="success"
+    title="This is the success title"
+    message="This is the message."
+  />
 
-<Notify
-  variant="warning"
-  title="This is the warning title"
-  message="This is the message."
-/>
+  <Notify
+    variant="warning"
+    title="This is the warning title"
+    message="This is the message."
+  />
 
-<Notify
-  variant="danger"
-  title="This is the danger title"
-  message="This is the message."
-/>
-<Notify
-  exitable={true}
-  variant="danger"
-  title="This is the danger title"
-  message="This is the message."
-/>
-<Notify
-  exitable={true}
-  variant="danger"
-  title="This is the danger title"
-  message="This is the message."
-  on:close={() => {
-    alert('close');
-  }}
-/>
+  <Notify
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+  />
+  <Notify
+    exitable={true}
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+  />
+  <Notify
+    exitable={true}
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+    on:close={() => {
+      alert('close');
+    }}
+  />
 </div>
-
