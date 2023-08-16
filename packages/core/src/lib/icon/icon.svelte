@@ -40,16 +40,19 @@ const sizes: Record<Size, string> = {
 };
 </script>
 
+<!--
+  Accessibility approach for icon svgs taken from:
+  https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+-->
 <svg
   class={cx('flex', sizes[size], {
     'inline-block': hasNameProperty,
     hidden: !hasNameProperty,
   })}
   viewBox="0 0 24 24"
-  aria-labelledby="name"
-  role="img"
+  aria-hidden="true"
+  focusable="false"
 >
-  <title id={name}>{`${name} icon`}</title>
   <path
     d={paths[name]}
     fill="currentColor"

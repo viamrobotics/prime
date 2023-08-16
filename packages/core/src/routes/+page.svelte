@@ -12,6 +12,7 @@ import Input from '$lib/input/input.svelte';
 import Pill from '$lib/pill.svelte';
 import Switch from '$lib/switch.svelte';
 import Radio from '$lib/radio.svelte';
+import Tabs from '$lib/tabs.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 import TextInput from '$lib/input/text-input.svelte';
 import NumericInput from '$lib/input/numeric-input.svelte';
@@ -175,6 +176,16 @@ let buttonClickedTimes = 0;
   </div>
 
   <div class="flex gap-4">
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
+    />
+
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
+    />
+
     <SliderInput
       placeholder="Slide to select a number"
       name="slider"
@@ -372,6 +383,24 @@ let buttonClickedTimes = 0;
       selected="Opt 1"
       width="full"
     />
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Tabs -->
+    <Tabs
+      tabs={['Tab 1', 'Tab 2', 'Tab 3']}
+      selected="Tab 1"
+    />
+
+    <Tabs
+      tabs={['Tab 1', 'Tab 2', 'Tab 3']}
+      selected="Tab 2"
+    />
+
+  <Tabs
+    tabs={['Tab 1', 'Tab 2']}
+    selected="Tab 2"
+  />
   </div>
 
   <div class="flex gap-4">
