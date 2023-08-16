@@ -4,7 +4,7 @@
 A graphical control element that allows the user to choose only one of a predefined set of mutually exclusive options.
 
 ```svelte
-<v-radio
+<Radio
   options="['Opt 1', 'Opt 2', 'Opt 3']"
   selected="Opt 1"
 />
