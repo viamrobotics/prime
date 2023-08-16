@@ -181,6 +181,16 @@ let buttonClickedTimes = 0;
       placeholder="Slide to select a number"
       name="slider"
     />
+
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
+    />
+
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
+    />
   </div>
 
   <div class="flex gap-4">

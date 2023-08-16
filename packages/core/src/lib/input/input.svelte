@@ -24,7 +24,7 @@ export type InputState = 'info' | 'warn' | 'error' | 'none';
 import Icon from '$lib/icon/icon.svelte';
 import cx from 'classnames';
 
-export let value = '';
+export let value: string | number | undefined = '';
 
 /** Whether or not the input should be rendered as readonly and be operable. */
 export let readonly = false;
@@ -35,31 +35,21 @@ export let disabled = false;
 /** The state of the input (info, warn, error, success), if any. */
 export let state: InputState = 'none';
 
+/** The HTML input element. */
+export let input: HTMLInputElement = undefined!;
+// Assert this element will be defined by the time it is used by the parent.
+
 $: isInfo = state === 'info';
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
 
-let icon = '';
-$: {
-  switch (state) {
-    case 'info': {
-      icon = 'information';
-      break;
-    }
-    case 'warn': {
-      icon = 'alert';
-      break;
-    }
-    case 'error': {
-      icon = 'alert-circle';
-      break;
-    }
-    default: {
-      icon = '';
-      break;
-    }
-  }
-}
+$: icon = {
+  info: 'information',
+  warn: 'alert',
+  error: 'alert-circle',
+  none: '',
+}[state]
+
 </script>
 
 <div class="relative w-full">
@@ -83,6 +73,7 @@ $: {
       }
     )}
     bind:value
+    bind:this={input}
     on:input
     on:keydown
   />
