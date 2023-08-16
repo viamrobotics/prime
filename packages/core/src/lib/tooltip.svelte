@@ -12,7 +12,10 @@
   </Tooltip>
   ```
 -->
-<svelte:options immutable />
+<svelte:options
+  immutable
+  accessors
+/>
 
 <script
   lang="ts"
@@ -47,7 +50,7 @@ let x = 0;
 let y = 0;
 let arrowCss = '';
 
-export let recalculateStyle = async () => {
+export const recalculateStyle = async () => {
   if (container === undefined || tooltip === undefined) {
     return;
   }

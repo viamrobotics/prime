@@ -28,6 +28,4 @@ export let type: TextInputTypes = 'text';
   {type}
   on:input
   on:keydown
-  on:focus
-  on:blur
 />
