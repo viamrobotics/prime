@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { describe, it, expect, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/svelte';
 import Notify from './notify.svelte';
 import NotifySlot from './notify.spec.svelte';
 
@@ -67,5 +67,17 @@ describe('Notify', () => {
     expect(screen.getByText('title text')).toBeVisible();
     expect(screen.getByText('message text')).toBeVisible();
     expect(screen.getByText('slot text')).toBeVisible();
+  });
+  it('Renders notify with info style if the variant is set to info', async () => {
+    const { component } = render(Notify, {
+      exitable:true,
+      title: 'This is the title',
+      message: 'This is the message.',
+      variant: 'info',
+    });
+    const onClose = vi.fn();
+    component.$on('close',onClose);
+    await fireEvent.click(screen.getByRole('button'));
+    expect(onClose).toHaveBeenCalledOnce();
   });
 });

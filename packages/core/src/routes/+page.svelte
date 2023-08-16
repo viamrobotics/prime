@@ -485,5 +485,14 @@ let buttonClickedTimes = 0;
   title="This is the danger title"
   message="This is the message."
 />
+<Notify
+  exitable={true}
+  variant="danger"
+  title="This is the danger title"
+  message="This is the message."
+  on:close={() => {
+    alert('close');
+  }}
+/>
 </div>
 

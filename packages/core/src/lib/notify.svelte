@@ -19,11 +19,11 @@ export let exitable = false;
 
 const dispatch = createEventDispatcher<{
   /** when the notification close button is pressed*/
-  close: object;
+  close: Record<string,never>;
 }>();
 
-const handleClose = (event: Event) => {
-  dispatch('close', event);
+const handleClose = () => {
+  dispatch('close',{});
 };
 </script>
 
