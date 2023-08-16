@@ -29,7 +29,7 @@ export let value: number | undefined = undefined;
 export let step = 1;
 
 /** The HTML input element. */
-export let input: HTMLInputElement = undefined!
+export let input: HTMLInputElement | undefined = undefined;
 
 $: isNumber = type === 'number';
 $: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';

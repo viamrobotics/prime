@@ -47,7 +47,7 @@ const dispatch = createEventDispatcher<{
 }>();
 
 let numberDragTooltip: Tooltip;
-let input: HTMLInputElement;
+let input: HTMLInputElement | undefined;
 let numberDragCord: HTMLDivElement;
 let numberDragHead: HTMLDivElement;
 let isDragging = false;
@@ -68,7 +68,7 @@ const handlePointerMove = (event: PointerEvent) => {
     isNumber ? stepDecimalDigits : 0
   );
 
-  const inputValue = input.value;
+  const inputValue = input!.value;
   const delta = parseNumericInputValue(deltaString, type);
   const next = parseNumericInputValue(
     (startValue + delta * step).toFixed(getDecimals(inputValue)),
@@ -121,7 +121,7 @@ const handlePointerDown = async (event: PointerEvent) => {
   startValue = value;
   isDragging = true;
 
-  input.focus();
+  input!.focus();
 
   await tick();
 
