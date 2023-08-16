@@ -17,6 +17,7 @@
 -->
 <script lang="ts">
 
+import type * as THREE from 'three';
 import { createEventDispatcher } from 'svelte';
 import { Canvas } from '@threlte/core';
 
