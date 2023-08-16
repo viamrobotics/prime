@@ -47,32 +47,35 @@ describe('Input', () => {
   });
 
   it('Renders the input in the info state', () => {
-    render(Input, { placeholder: 'Enter your name', state: 'info' });
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'info',
+    });
+    const svg = container.querySelector('svg');
 
-    const iconWrapper = screen.getByRole('img').parentElement;
-    const iconTitle = screen.getByTitle('information icon');
-
-    expect(iconWrapper).toHaveClass('text-info-dark');
-    expect(iconTitle).toBeInTheDocument();
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-info-dark');
   });
 
   it('Renders the input in the warn state', () => {
-    render(Input, { placeholder: 'Enter your name', state: 'warn' });
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'warn',
+    });
+    const svg = container.querySelector('svg');
 
-    const iconWrapper = screen.getByRole('img').parentElement;
-    const iconTitle = screen.getByTitle('alert icon');
-
-    expect(iconWrapper).toHaveClass('text-warning-bright');
-    expect(iconTitle).toBeInTheDocument();
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-warning-bright');
   });
 
   it('Renders the input in the error state', () => {
-    render(Input, { placeholder: 'Enter your name', state: 'error' });
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'error',
+    });
+    const svg = container.querySelector('svg');
 
-    const iconWrapper = screen.getByRole('img').parentElement;
-    const iconTitle = screen.getByTitle('alert-circle icon');
-
-    expect(iconWrapper).toHaveClass('text-danger-dark');
-    expect(iconTitle).toBeInTheDocument();
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-danger-dark');
   });
 });

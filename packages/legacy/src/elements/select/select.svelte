@@ -223,6 +223,10 @@ let icon = '';
 $: {
   if (!open && isExact && !parsedOptions.includes(value)) {
     value = '';
+    if (root) {
+      dispatch({ target: root }, 'change', { value });
+      dispatch({ target: root }, 'input', { value });
+    }
   }
 
   switch (state) {

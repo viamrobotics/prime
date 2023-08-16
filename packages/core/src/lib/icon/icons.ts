@@ -15,6 +15,8 @@ export const paths: Record<string, string> = {
   'arrow-expand-all': MDI.mdiArrowExpandAll,
   'arrow-expand-left': MDI.mdiArrowExpandLeft,
   'arrow-expand-right': MDI.mdiArrowExpandRight,
+  'arrow-left': MDI.mdiArrowLeft,
+  'arrow-right': MDI.mdiArrowRight,
   'arrow-top-right-bottom-left': MDI.mdiArrowTopRightBottomLeft,
   'arrow-up': MDI.mdiArrowUp,
   'broadcast-off': MDI.mdiBroadcastOff,

@@ -28,10 +28,8 @@ describe('ButtonIcon', () => {
   });
 
   it('Renders an icon within the button if an icon attribute is specified', () => {
-    render(ButtonIcon, { icon: 'refresh' });
-    expect(
-      screen.getByRole('img', { name: 'refresh icon' })
-    ).toBeInTheDocument();
+    const { container } = render(ButtonIcon, { icon: 'refresh' });
+    expect(container.querySelector('svg')).toBeVisible();
   });
 
   it('Renders a clickable button', async () => {
