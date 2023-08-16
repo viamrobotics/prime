@@ -456,7 +456,8 @@ let buttonClickedTimes = 0;
   value="Baz"
 />
 
-<Notify
+<div>
+  <Notify
   variant="info"
   title="This is the info title"
   message="This is the message."
@@ -484,3 +485,5 @@ let buttonClickedTimes = 0;
   title="This is the danger title"
   message="This is the message."
 />
+</div>
+

@@ -1,7 +1,6 @@
 <svelte:options immutable />
 
 <script lang="ts">
-type Variants = 'danger' | 'warning' | 'success' | 'info';
 
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
@@ -12,7 +11,7 @@ export let title = '';
 /** The specific details about your notifications*/
 export let message = '';
 /** The severity of the notification you want to show users*/
-export let variant: Variants = 'info';
+export let variant: 'danger' | 'warning' | 'success' | 'info' = 'info';
 /** The scaling applied on the y access of the page*/
 export let progress = 1;
 /** If true a user can close out of the notification. If false they cannot*/
