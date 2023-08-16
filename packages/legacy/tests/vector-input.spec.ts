@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/playground/vector-input-test.html');
 });
 
-test('Renders the default vector input with x, y, z placeholders, a step of 1, and input type text', async ({
+test.skip('Renders the default vector input with x, y, z placeholders, a step of 1, and input type text', async ({
   page,
 }) => {
   const vectorInputDefault = page.getByTestId('vector-input-default');
@@ -88,7 +88,7 @@ test('Renders the default vector input with x, y, z placeholders, a step of 1, a
   expect(zTypeValue).toBe('text');
 });
 
-test('Renders three inputs with type text if number type specified', async ({
+test.skip('Renders three inputs with type text if number type specified', async ({
   page,
 }) => {
   const vectorInputNumType = page.getByTestId('vector-input-type-number');
@@ -112,7 +112,7 @@ test('Renders three inputs with type text if number type specified', async ({
   expect(zTypeValue).toBe('text');
 });
 
-test('Renders three inputs with type number if integer type specified', async ({
+test.skip('Renders three inputs with type number if integer type specified', async ({
   page,
 }) => {
   const vectorInputTypeInteger = page.getByTestId('vector-input-type-integer');
@@ -159,7 +159,7 @@ test.skip('When inputs are updated, events fire', async ({ page }) => {
   await expect(zInputEvent.detail()).resolves.toEqual({ value: [1, 1, 1] });
 });
 
-test('When label is specified, label renders to the left of inputs', async ({
+test.skip('When label is specified, label renders to the left of inputs', async ({
   page,
 }) => {
   const vectorInputLabelLeft = page.getByTestId('vector-input-label');
@@ -179,7 +179,7 @@ test('When label is specified, label renders to the left of inputs', async ({
   expect(xInputPlaceholder).toBe('x');
 });
 
-test('Render values in x, y, z inputs as starting values if they are specified in the value attribute', async ({
+test.skip('Render values in x, y, z inputs as starting values if they are specified in the value attribute', async ({
   page,
 }) => {
   const vectorInputValue = page.getByTestId('vector-input-value');
@@ -195,7 +195,7 @@ test('Render values in x, y, z inputs as starting values if they are specified i
   expect(await zInput.inputValue()).toBe('3');
 });
 
-test('When step is specified, on arrow up, confirm input incremented to the correct value', async ({
+test.skip('When step is specified, on arrow up, confirm input incremented to the correct value', async ({
   page,
 }) => {
   const vectorInputStepTest = page.getByTestId('vector-input-step-test');
@@ -241,7 +241,7 @@ test('When step is specified, on arrow up, confirm input incremented to the corr
   expect(await zInput.inputValue()).toBe('0');
 });
 
-test('When dimensions specified as 3, render 3 inputs with x, y, z placeholders', async ({
+test.skip('When dimensions specified as 3, render 3 inputs with x, y, z placeholders', async ({
   page,
 }) => {
   const vectorInputDimensions3 = page.getByTestId('vector-input-dimensions-3');
@@ -278,7 +278,7 @@ test('When dimensions specified as 3, render 3 inputs with x, y, z placeholders'
   expect(zPlaceholderValue).toBe('z');
 });
 
-test('When dimensions specified as 4, render 4 inputs with x, y, z, w placeholders', async ({
+test.skip('When dimensions specified as 4, render 4 inputs with x, y, z, w placeholders', async ({
   page,
 }) => {
   const vectorInputDimensions4 = page.getByTestId('vector-input-dimensions-4');

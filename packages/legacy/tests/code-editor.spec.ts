@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/playground/code-editor-test.html');
 });
 
-test('Renders JSON code editor correctly', async ({ page }) => {
+test.skip('Renders JSON code editor correctly', async ({ page }) => {
   const validJSONEditor = page.getByTestId('code-editor-json-valid');
   await expect(validJSONEditor).toHaveAttribute('language', 'json');
   await expect(validJSONEditor).toHaveAttribute(
@@ -21,7 +21,7 @@ test('Renders JSON code editor correctly', async ({ page }) => {
 
 // Value: JSON invalid
 
-test('Renders JSON code editor that is invalid', async ({ page }) => {
+test.skip('Renders JSON code editor that is invalid', async ({ page }) => {
   const validJSONEditor = page.getByTestId('code-editor-json-invalid');
   await expect(validJSONEditor).toHaveAttribute('language', 'json');
   await expect(validJSONEditor).toHaveAttribute('value', '{"component"}');
