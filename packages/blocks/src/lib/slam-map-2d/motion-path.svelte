@@ -12,7 +12,7 @@ import { T, extend } from '@threlte/core';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
-import { renderOrder } from './constants';
+import { renderOrder } from './render-order';
 
 extend({ Line2, LineMaterial });
 
@@ -34,6 +34,9 @@ const updatePath = (pathstr?: string) => {
     if (xString !== undefined && yString !== undefined) {
       const x = Number.parseFloat(xString) / 1000;
       const y = Number.parseFloat(yString) / 1000;
+      if (Number.isNaN(x) || Number.isNaN(y)) {
+        continue;
+      }
       points.push(x, y, 0);
     }
   }

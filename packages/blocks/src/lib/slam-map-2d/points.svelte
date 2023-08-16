@@ -11,8 +11,9 @@ import * as THREE from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader';
 import { T, useThrelte, createRawEventDispatcher, extend } from '@threlte/core';
 import { MeshDiscardMaterial, MouseRaycaster } from 'trzy';
-import { renderOrder } from './constants';
-import { onMount } from 'svelte';
+import { renderOrder } from './render-order';
+import { onDestroy, onMount } from 'svelte';
+import { mapColorAttributeGrayscale } from './color-map';
 
 extend({ MeshDiscardMaterial });
 
@@ -49,44 +50,6 @@ const raycaster = new MouseRaycaster({
   recursive: false,
 });
 
-/*
- * this color map is greyscale. The color map is being used map probability values of a PCD
- * into different color buckets provided by the color map.
- * generated with: https://grayscale.design/app
- */
- const colorMapGrey = [
-   [240, 240, 240],
-   [220, 220, 220],
-   [200, 200, 200],
-   [190, 190, 190],
-   [170, 170, 170],
-   [150, 150, 150],
-   [40, 40, 40],
-   [20, 20, 20],
-   [10, 10, 10],
-   [0, 0, 0],
- ].map(([red, green, blue]) =>
-   new THREE.Vector3(red, green, blue).multiplyScalar(1 / 255));
-
-/*
- * Find the desired color bucket for a given probability. This assumes the probability will be a value from 0 to 100
- * ticket to add testing: https://viam.atlassian.net/browse/RSDK-2606
- */
-const probToColorMapBucket = (probability: number, numBuckets: number): number => {
-  const prob = Math.max(Math.min(100, probability * 255), 0);
-  return Math.floor((numBuckets - 1) * prob / 100);
-};
-
-/*
- * Map the color of a pixel to a color bucket value.
- * probability represents the probability value normalized by the size of a byte(255) to be between 0 to 1.
- * ticket to add testing: https://viam.atlassian.net/browse/RSDK-2606
- */
-const colorBuckets = (probability: number): THREE.Vector3 => {
-  const bucket = probToColorMapBucket(probability, colorMapGrey.length);
-  return colorMapGrey[bucket]!;
-};
-
 const update = (cloud: Uint8Array) => {
   points = loader.parse(cloud.buffer);
   material = points.material as THREE.PointsMaterial;
@@ -101,18 +64,10 @@ const update = (cloud: Uint8Array) => {
     center = boundingSphere.center;
   }
 
-  const colors = points.geometry.attributes.color;
-  // if the PCD has a color attribute defined, convert those colors using the colorMap
-  if (colors instanceof THREE.BufferAttribute) {
-    for (let i = 0; i < colors.count; i += 1) {
+  const { color } = points.geometry.attributes;
 
-      /*
-       * Probability is currently assumed to be held in the rgb field of the PCD map, on a scale of 0 to 100.
-       * ticket to look into this further https://viam.atlassian.net/browse/RSDK-2605
-       */
-      const colorMapPoint = colorBuckets(colors.getZ(i) * 10);
-      colors.setXYZ(i, colorMapPoint.x, colorMapPoint.y, colorMapPoint.z);
-    }
+  if (color instanceof THREE.BufferAttribute) {
+    mapColorAttributeGrayscale(color)
   }
 
   dispatch('update', { center, radius });
@@ -120,6 +75,13 @@ const update = (cloud: Uint8Array) => {
 
 const handleIntersectionPlaneCreate = ({ ref }: { ref: THREE.Mesh }) => {
   raycaster.objects = [ref]
+}
+
+const handleIntersectionPlaneClick = (event: THREE.Event) => {
+  const [intersection] = event.intersections as THREE.Intersection[];
+  if (intersection && intersection.point) {
+    dispatch('click', intersection.point);
+  }
 }
 
 $: if (material) {
@@ -130,13 +92,13 @@ $: if (pointcloud) {
 }
 $: raycaster.camera = camera.current as THREE.OrthographicCamera;
 
-onMount(() => dispatch('update', { center, radius }));
+onMount(() => {
+  dispatch('update', { center, radius });
+  raycaster.addEventListener('click', handleIntersectionPlaneClick);
+});
 
-raycaster.addEventListener('click', (event: THREE.Event) => {
-  const [intersection] = event.intersections as THREE.Intersection[];
-  if (intersection && intersection.point) {
-    dispatch('click', intersection.point);
-  }
+onDestroy(() => {
+  raycaster.removeEventListener('click', handleIntersectionPlaneClick);
 });
 
 </script>

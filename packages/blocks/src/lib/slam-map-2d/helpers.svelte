@@ -7,7 +7,7 @@
 
 import { T, extend } from '@threlte/core';
 import { AxesHelper, GridHelper } from 'trzy';
-import { renderOrder } from './constants';
+import { renderOrder } from './render-order';
 
 extend({
   // trzy.AxesHelper uses thick lines so that axes are more clearly displayed, and is dynamically resizable.

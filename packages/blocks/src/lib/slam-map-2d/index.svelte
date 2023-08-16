@@ -20,7 +20,6 @@
 import type * as THREE from 'three';
 import { createEventDispatcher } from 'svelte';
 import { Canvas } from '@threlte/core';
-
 import Legend from './legend.svelte';
 import Scene from './scene.svelte';
 

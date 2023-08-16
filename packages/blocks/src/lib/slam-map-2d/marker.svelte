@@ -14,7 +14,7 @@ const textureLoader = new THREE.TextureLoader();
 <script lang='ts'>
 
 import { T } from '@threlte/core';
-import { renderOrder } from './constants';
+import { renderOrder } from './render-order';
 
 export let name: string;
 export let url: string;
