@@ -45,10 +45,10 @@ importers:
         specifier: ^0.155.0
         version: 0.155.0
       '@typescript-eslint/eslint-plugin':
-        specifier: ^6.4.0
+        specifier: ^6.2.1
         version: 6.4.0(@typescript-eslint/parser@6.4.0)(eslint@8.47.0)(typescript@5.1.6)
       '@typescript-eslint/parser':
-        specifier: ^6.4.0
+        specifier: ^6.2.1
         version: 6.4.0(eslint@8.47.0)(typescript@5.1.6)
       '@viamrobotics/eslint-config':
         specifier: ^0.1.2
@@ -5147,7 +5147,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       '@typescript-eslint/types': 5.59.0
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /@typescript-eslint/visitor-keys@6.2.1:
@@ -5155,7 +5155,7 @@ packages:
     engines: {node: ^16.0.0 || >=18.0.0}
     dependencies:
       '@typescript-eslint/types': 6.2.1
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /@typescript-eslint/visitor-keys@6.4.0:
@@ -5163,7 +5163,7 @@ packages:
     engines: {node: ^16.0.0 || >=18.0.0}
     dependencies:
       '@typescript-eslint/types': 6.4.0
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /@viamrobotics/eslint-config@0.0.4(@typescript-eslint/eslint-plugin@5.59.0)(@typescript-eslint/parser@5.59.0)(eslint-config-prettier@9.0.0)(eslint-import-resolver-typescript@3.6.0)(eslint-plugin-import@2.28.0)(eslint-plugin-sonarjs@0.20.0)(eslint-plugin-unicorn@48.0.1)(eslint@8.46.0):
@@ -7566,7 +7566,7 @@ packages:
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
       eslint-utils: 3.0.0(eslint@8.4.1)
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
       espree: 9.6.1
       esquery: 1.5.0
       esutils: 2.0.3
@@ -7699,7 +7699,7 @@ packages:
     dependencies:
       acorn: 8.9.0
       acorn-jsx: 5.3.2(acorn@8.9.0)
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /espree@9.6.1:
@@ -7708,7 +7708,7 @@ packages:
     dependencies:
       acorn: 8.9.0
       acorn-jsx: 5.3.2(acorn@8.9.0)
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /esprima@4.0.1:
@@ -11931,7 +11931,7 @@ packages:
         optional: true
     dependencies:
       eslint-scope: 7.2.2
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
       espree: 9.6.1
       postcss: 8.4.27
       postcss-scss: 4.0.6(postcss@8.4.27)
