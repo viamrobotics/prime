@@ -4,7 +4,7 @@ module.exports = {
   root: true,
   extends: ['@viamrobotics/eslint-config/svelte'],
   parserOptions: {
-    project: ['./tsconfig.json'],
+    project: './tsconfig.json',
     tsconfigRootDir: __dirname,
   },
   env: {
@@ -12,6 +12,15 @@ module.exports = {
     node: true,
   },
   rules: {
+    // @todo(mp APP-2482): move to js-config
     'sonarjs/no-duplicate-string': 'off',
+    'no-undef-init': 'off',
+    'unicorn/no-useless-undefined': 'off',
+
+    // @todo(mp APP-2482): diagnose why these aren't working correctly
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
   },
 };
