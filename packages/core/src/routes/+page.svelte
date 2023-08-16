@@ -500,8 +500,5 @@ let buttonClickedTimes = 0;
     variant="danger"
     title="This is the danger title"
     message="This is the message."
-    on:close={() => {
-      console.log('Close');
-    }}
   />
 </div>
