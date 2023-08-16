@@ -1,3 +1,11 @@
+<!--
+@component
+  
+A clickable item within a context menu that triggers some action.
+```svelte
+<ContextMenuItem icon="plus" variant="danger" label="click me!" />
+```
+-->
 <svelte:options immutable />
 
 <script
