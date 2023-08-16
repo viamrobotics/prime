@@ -491,7 +491,7 @@ let buttonClickedTimes = 0;
     title="This is the danger title"
     message="This is the message."
     on:close={() => {
-      alert('close');
+      console.log('Close');
     }}
   />
 </div>
