@@ -8,6 +8,7 @@ import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
 import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
 import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
+import Notify from '$lib/notify.svelte';
 import Input from '$lib/input/input.svelte';
 import Pill from '$lib/pill.svelte';
 import Switch from '$lib/switch.svelte';
@@ -397,10 +398,10 @@ let buttonClickedTimes = 0;
       selected="Tab 2"
     />
 
-  <Tabs
-    tabs={['Tab 1', 'Tab 2']}
-    selected="Tab 2"
-  />
+    <Tabs
+      tabs={['Tab 1', 'Tab 2']}
+      selected="Tab 2"
+    />
   </div>
 
   <div class="flex gap-4">
@@ -453,4 +454,54 @@ let buttonClickedTimes = 0;
       variant="danger"
     />
   </ContextMenu>
+</div>
+<Pill />
+<Pill value="Foo" />
+<Pill
+  readonly
+  value="Bar"
+/>
+<Pill
+  disabled
+  value="Baz"
+/>
+
+<div>
+  <Notify
+    variant="info"
+    title="This is the info title"
+    message="This is the message."
+  />
+  <Notify
+    variant="success"
+    title="This is the success title"
+    message="This is the message."
+  />
+
+  <Notify
+    variant="warning"
+    title="This is the warning title"
+    message="This is the message."
+  />
+
+  <Notify
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+  />
+  <Notify
+    exitable={true}
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+  />
+  <Notify
+    exitable={true}
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+    on:close={() => {
+      console.log('Close');
+    }}
+  />
 </div>
