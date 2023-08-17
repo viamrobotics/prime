@@ -39,7 +39,6 @@ import Breadcrumbs from './breadcrumbs.svelte';
 
     <Collapse
       title='Nummber 4'
-      variant="minimal"
     >
       <Breadcrumbs slot='title' crumbs={['Howdy', 'Hey']}></Breadcrumbs>
       <Badge slot='header' label='Busy'></Badge>
