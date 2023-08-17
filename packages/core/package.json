@@ -17,6 +17,7 @@
     "test": "svelte-kit sync && vitest run",
     "test:watch": "vitest"
   },
+  "module": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

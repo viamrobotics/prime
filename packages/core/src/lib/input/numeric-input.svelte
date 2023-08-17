@@ -4,7 +4,7 @@
 For numeric user inputs.
 
 ```svelte
-<NumericInput type="integer"  on:input={onInput} />
+<NumericInput type="integer" on:input={onInput} />
 ```
 -->
 <svelte:options immutable />
@@ -14,7 +14,7 @@ import Input from './input.svelte';
 import type { NumericInputTypes } from './utils';
 
 /** The input type */
-export let type: NumericInputTypes = 'number';
+export let type: NumericInputTypes | undefined = 'number';
 
 /**
  * The value of the input, if any.

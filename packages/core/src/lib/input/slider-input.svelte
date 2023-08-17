@@ -20,7 +20,7 @@ import {
 } from './utils';
 
 /** The input type */
-export let type: NumericInputTypes = 'number';
+export let type: NumericInputTypes | undefined = 'number';
 
 /**
  * The value of the input, if any.
@@ -41,13 +41,15 @@ export let min = Number.NEGATIVE_INFINITY;
 /** The maximum allowed value, if any. */
 export let max = Number.POSITIVE_INFINITY;
 
+/** The HTML input element. */
+export let input: HTMLInputElement | undefined;
+
 const dispatch = createEventDispatcher<{
   input: number;
   keydown: number;
 }>();
 
 let numberDragTooltip: Tooltip;
-let input: HTMLInputElement | undefined;
 let numberDragCord: HTMLDivElement;
 let numberDragHead: HTMLDivElement;
 let isDragging = false;

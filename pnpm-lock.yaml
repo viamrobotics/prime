@@ -13,6 +13,9 @@ importers:
       '@threlte/extras':
         specifier: '>=5'
         version: 5.2.0(svelte@4.2.0)(three@0.155.0)
+      '@viamrobotics/three':
+        specifier: ^0.0.2
+        version: 0.0.2(three@0.155.0)
       maplibre-gl:
         specifier: ^3.3.0
         version: 3.3.0
@@ -39,8 +42,8 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3(svelte@4.2.0)
       '@threlte/core':
-        specifier: ^6.0.4
-        version: 6.0.4(svelte@4.2.0)(three@0.155.0)
+        specifier: ^6.0.6
+        version: 6.0.6(svelte@4.2.0)(three@0.155.0)
       '@types/testing-library__jest-dom':
         specifier: ^5.14.9
         version: 5.14.9
@@ -60,7 +63,7 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2(prettier-plugin-svelte@3.0.3)(prettier-plugin-tailwindcss@0.5.3)(prettier@3.0.2)
       '@viamrobotics/prime-core':
-        specifier: workspace:*
+        specifier: workspace:../core
         version: link:../core
       '@viamrobotics/typescript-config':
         specifier: ^0.0.4
@@ -4539,8 +4542,8 @@ packages:
       '@testing-library/dom': 9.3.1
     dev: true
 
-  /@threlte/core@6.0.4(svelte@4.2.0)(three@0.155.0):
-    resolution: {integrity: sha512-M4uUoFMyR9VqsbpQTW24xGEk3oMR3rg8AJ9hZi2/Hsthd5dIqlyKzuL46YOiE9xzucn1xbjc9YVQp9/npN2cJg==}
+  /@threlte/core@6.0.6(svelte@4.2.0)(three@0.155.0):
+    resolution: {integrity: sha512-nB1MgGc/3vXmsbrgPVK9m9lTrFx5EdPB368oagzZZxzmqLD60aEmbRzF9JfyWtU59HP7KBLWC3Z8pXb883a4Sg==}
     peerDependencies:
       svelte: '>=4'
       three: '>=0.133'
@@ -5153,6 +5156,14 @@ packages:
       prettier-plugin-svelte: 3.0.3(prettier@3.0.2)(svelte@4.1.2)
       prettier-plugin-tailwindcss: 0.5.3(prettier-plugin-svelte@3.0.3)(prettier@3.0.2)
     dev: true
+
+  /@viamrobotics/three@0.0.2(three@0.155.0):
+    resolution: {integrity: sha512-pRRwtVfY1kcaymwSs+o3Lpc9RBvWOGwhb5RPlbYgYK994N3oHSWwWG1PpBeuBGkwqM6hLCcTRVp8+SLQOHy+Ag==}
+    peerDependencies:
+      three: '*'
+    dependencies:
+      three: 0.155.0
+    dev: false
 
   /@viamrobotics/typescript-config@0.0.4(typescript@5.1.6):
     resolution: {integrity: sha512-WJE6gpiu7KdvMe6nXEbyqmVTOzRUrj0BufISTtPLHCviGsehOyTWT/BuY7Eu91PVa187ML44QXMdFe2xlUlNyA==}

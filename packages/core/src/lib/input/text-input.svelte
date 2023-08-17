@@ -20,7 +20,7 @@ export type TextInputTypes = 'text' | 'email' | 'password';
 import Input from './input.svelte';
 
 /** The input type */
-export let type: TextInputTypes = 'text';
+export let type: TextInputTypes | undefined = 'text';
 </script>
 
 <Input
