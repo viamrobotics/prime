@@ -1,29 +1,21 @@
 <script lang='ts'>
 
-import { NavigationClient, type ServiceError } from '@viamrobotics/sdk';
-import { notify } from '@viamrobotics/prime';
-import { useRobotClient } from '@/hooks/robot-client';
-import { waypoints, flyToMap } from '../../stores';
-import { rcLogConditionally } from '@/lib/log';
+import { createEventDispatcher } from 'svelte';
+import { waypoints } from '../../stores';
+import { flyToMap } from '../../lib/fly-to-map';
 
-export let name: string;
+type Events = {
+  'delete-waypoint': string
+}
 
-const { robotClient } = useRobotClient();
-const navClient = new NavigationClient($robotClient, name, { requestLogger: rcLogConditionally });
-
-const handleRemoveWaypoint = async (id: string) => {
-  try {
-    $waypoints = $waypoints.filter((item) => item.id !== id);
-    await navClient.removeWayPoint(id);
-  } catch (error) {
-    notify.danger((error as ServiceError).message);
-  }
-};
+const dispatch = createEventDispatcher<Events>();
 
 </script>
 
 {#if $waypoints.length === 0}
-  <li class='text-xs text-subtle-2 font-sans py-2'>Click to add a waypoint.</li>
+  <li class='text-xs text-subtle-2 font-sans py-2'>
+    Click to add a waypoint.
+  </li>
 {/if}
 
 {#each $waypoints as waypoint, index (waypoint.id)}
@@ -45,7 +37,7 @@ const handleRemoveWaypoint = async (id: string) => {
         variant='icon'
         aria-label="Remove waypoint {index}"
         icon='trash-can-outline'
-        on:click={() => handleRemoveWaypoint(waypoint.id)}
+        on:click={() => dispatch('delete-waypoint', waypoint.id)}
       />
     </div>
   </li>

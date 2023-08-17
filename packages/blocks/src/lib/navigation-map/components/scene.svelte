@@ -2,8 +2,8 @@
 
 import * as THREE from 'three';
 import { T, useThrelte } from '@threlte/core';
-import { obstacles, view } from '../stores';
-import Obstacle from './obstacle.svelte';
+import { view, obstacles } from '../stores';
+import ObstacleGeometries from './obstacle.svelte';
 
 const { renderer } = useThrelte();
 const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.1);
@@ -22,5 +22,5 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 {/if}
 
 {#each $obstacles as obstacle (obstacle.name)}
-  <Obstacle {obstacle} />
+  <ObstacleGeometries {obstacle} />
 {/each}

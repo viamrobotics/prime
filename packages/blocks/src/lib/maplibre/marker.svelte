@@ -2,7 +2,7 @@
 
 import { onDestroy } from 'svelte';
 import { type LngLatLike, Marker } from 'maplibre-gl';
-import { map } from '../stores';
+import { useMapLibre } from './hooks';
 
 export let lngLat: LngLatLike;
 export let scale = 1;
@@ -12,11 +12,13 @@ export let color = '#ff0047';
 const marker = new Marker({ scale, color });
 marker.getElement().style.zIndex = '1';
 
-$: {
-  marker.setLngLat(lngLat);
+$: marker.setLngLat(lngLat);
 
-  if ($map && visible) {
-    marker.addTo($map);
+$: {
+  const { map } = useMapLibre()
+    console.log(map)
+  if (map && visible) {
+    marker.addTo(map);
   }
 }
 

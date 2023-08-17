@@ -3,16 +3,19 @@
 import type * as THREE from 'three';
 import VectorInput from '../vector-input.svelte';
 import { OrientationVector } from '@viamrobotics/three';
+import { createEventDispatcher } from 'svelte';
 
 export let quaternion: THREE.Quaternion;
 export let view: '2D' | '3D' = '2D';
+
+const dispatch = createEventDispatcher<{ input: number }>()
 
 const ov = new OrientationVector();
 
 $: ov.setFromQuaternion(quaternion);
 
 const handleOrientationInput = (event: CustomEvent) => {
-  console.log(event);
+  dispatch('input', event.detail[0])
 };
 
 </script>

@@ -1,4 +1,4 @@
-import type { LngLat } from '@/api/navigation';
+import type { LngLat } from '$lib';
 
 export const calculateBoundingBox = (
   radius: number,

@@ -49,7 +49,7 @@ const dispatch = createEventDispatcher<Events>();
 </script>
 
 <div class="relative w-full h-full">
-  <Canvas useLegacyLights={false}>
+  <Canvas>
     <Scene
       {helpers}
       {pointcloud}

@@ -1,9 +1,8 @@
 
 <script lang='ts'>
 
-import * as THREE from 'three';
 import { T } from '@threlte/core';
-import type { Obstacle } from '@/api/navigation';
+import type { Obstacle } from '$lib';
 import { view, hovered } from '../stores';
 
 export let obstacle: Obstacle;

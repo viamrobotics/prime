@@ -1,11 +1,11 @@
 <script lang='ts'>
 
-import { onMount, createEventDispatcher } from 'svelte';
-import { Map, NavigationControl, type LngLatLike } from 'maplibre-gl';
-import { style } from './style';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
-/** A reference to the maplibre Map. */
-export let map: Map | undefined = undefined;
+import { onMount, createEventDispatcher, setContext } from 'svelte';
+import { writable } from 'svelte/store';
+import { Map, NavigationControl, type LngLatLike, LngLat } from 'maplibre-gl';
+import { style } from './style';
 
 /** The minimum camera pitch. */
 export let minPitch = 0;
@@ -34,8 +34,19 @@ type Events = {
 }
 
 const dispatch = createEventDispatcher<Events>();
+const mapStore = writable<Map | undefined>(undefined)
+const centerStore = writable<LngLat>(new LngLat(0, 0))
+const sizeStore = writable({ width: 0, height: 0 })
+const zoomStore = writable(0)
 
+setContext('map', mapStore)
+setContext('center', centerStore)
+setContext('size', sizeStore)
+setContext('zoom', zoomStore)
+
+let map: Map | undefined
 let container: HTMLElement;
+let created = false;
 
 onMount(() => {
   map = new Map({
@@ -48,21 +59,39 @@ onMount(() => {
     maxPitch,
   });
 
+  mapStore.set(map)
+
   const nav = new NavigationControl({ showZoom: false });
   map.addControl(nav, 'top-right');
 
-  const handleMove = () => dispatch('move', map!);
-  const handleResize = () => dispatch('resize', map!);
-  const handleCreate = () => dispatch('create', map!);
+  const handleMove = () => {
+    centerStore.set(map!.getCenter());
+    zoomStore.set(map!.getZoom())
+    dispatch('move', map!);
+  }
+
+  const handleResize = () => {
+    dispatch('resize', map!);
+    const size = map!.getCanvas();
+    sizeStore.set({
+      width: size.clientWidth,
+      height: size.clientHeight,
+    })
+  }
+
+  const handleCreate = async () => {
+    created = true;
+    dispatch('create', map!);
+  }
 
   map.on('move', handleMove);
   map.on('resize', handleResize);
   map.on('style.load', handleCreate);
 
   return () => {
-    map?.off('move', handleMove);
-    map?.off('resize', handleResize);
-    map?.off('style.load', handleCreate);
+    map!.off('move', handleMove);
+    map!.off('resize', handleResize);
+    map!.off('style.load', handleCreate);
   };
 });
 
@@ -71,7 +100,11 @@ $: map?.setMaxPitch(maxPitch);
 
 </script>
 
+{#if created}
+  <slot />
+{/if}
+
 <div
   bind:this={container}
-  class="relative w-full h-full"
+  class="relative w-full h-full {$$restProps.class ?? ''}"
 />

@@ -1,6 +1,6 @@
 <script lang='ts'>
 import { createEventDispatcher } from 'svelte';
-import type { Geometry } from '@/api/navigation';
+import type { Geometry } from '$lib';
 import VectorInput from '../vector-input.svelte';
 import { createGeometry } from '../../lib/geometry';
 

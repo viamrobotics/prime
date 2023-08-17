@@ -11,7 +11,7 @@ computeBoundingPlugin();
 </script>
 
 <div class='absolute top-0 right-0 pointer-events-none'>
-  <Canvas useLegacyLights={false}>
+  <Canvas>
     <Scene />
   </Canvas>
 </div>

@@ -1,38 +1,29 @@
 <script lang='ts'>
 
+import { Button } from '@viamrobotics/prime-core';
+import { type LngLat, type Geometry, useMapLibre } from '$lib';
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
-import { obstacles, write, hovered, mapCenter, boundingRadius, map } from '../../stores';
-import { createObstacle } from '../../lib/obstacle';
-import type { Geometry, LngLat } from '@/api/navigation';
+import { write, hovered, boundingRadius, obstacles } from '../../stores';
 import { calculateBoundingBox } from '../../lib/bounding-box';
+import { createEventDispatcher } from 'svelte';
+
+type Events = {
+  'create-obstacle': { lngLat: LngLat }
+  'delete-obstacle': { name: string }
+  'move-obstacle': { name: string; lngLat: LngLat }
+  'change-obstacle-geometry': { name: string; geometry: Geometry }
+};
+
+const dispatch = createEventDispatcher<Events>();
+
+const { map, mapCenter } = useMapLibre()
 
 const handleSelect = (selection: { name: string; location: LngLat }) => {
   const zoom = boundingRadius[selection.name]!;
   const bb = calculateBoundingBox(zoom, selection.location);
-  map.current?.fitBounds(bb, { duration: 800, curve: 0.1 });
-};
-
-const handleAddObstacle = () => {
-  $obstacles = [
-    createObstacle(`Obstacle ${$obstacles.length + 1}`, $mapCenter),
-    ...$obstacles,
-  ];
-};
-
-const handleLngLatInput = (index: number, event: CustomEvent<LngLat>) => {
-  $obstacles[index]!.location = event.detail;
-};
-
-const handleDeleteObstacle = (index: number) => {
-  $obstacles = $obstacles.filter((_, i) => i !== index);
-};
-
-const handleGeometryInput = (index: number, geoIndex: number) => {
-  return (event: CustomEvent<Geometry>) => {
-    $obstacles[index]!.geometries[geoIndex] = event.detail;
-  };
+  map.fitBounds(bb, { duration: 800, curve: 0.1 });
 };
 
 </script>
@@ -48,36 +39,37 @@ const handleGeometryInput = (index: number, geoIndex: number) => {
 {/if}
 
 {#if $write}
-  <v-button
-    class='my-4'
-    icon='plus'
-    label='Add'
-    on:click={handleAddObstacle}
-  />
+  <div class='my-4'>
+    <Button
+      icon='plus'
+      label='Add'
+      on:click={() => dispatch('create-obstacle', { lngLat: $mapCenter })}
+    />
+  </div>
 {/if}
 
-{#each $obstacles as { name: obstacleName, location, geometries }, index (index)}
+{#each $obstacles as { name, location, geometries }, index (index)}
   {#if $write}
     <li class='group mb-8 pl-2 border-l border-l-medium'>
       <div class='flex items-end gap-1.5 pb-2'>
-        <v-input class='w-full' label='Name' value={obstacleName} />
+        <v-input class='w-full' label='Name' value={name} />
         <v-button
           class='sm:invisible group-hover:visible text-subtle-1'
           variant='icon'
           icon='trash-can-outline'
-          on:click={() => handleDeleteObstacle(index)}
+          on:click={() => dispatch('delete-obstacle', { name })}
         />
       </div>
       <LnglatInput
         lng={location.lng}
         lat={location.lat}
-        on:input={(event) => handleLngLatInput(index, event)}>
+        on:input={(event) => dispatch('move-obstacle', { name, lngLat: event.detail })}>
         <v-button
           class='sm:invisible group-hover:visible text-subtle-1'
           variant='icon'
           icon='image-filter-center-focus'
           aria-label="Focus"
-          on:click={() => handleSelect({ name: obstacleName, location })}
+          on:click={() => handleSelect({ name, location })}
         />
 
       </LnglatInput>
@@ -85,7 +77,7 @@ const handleGeometryInput = (index: number, geoIndex: number) => {
       {#each geometries as geometry, geoIndex (geoIndex)}
         <GeometryInputs
           {geometry}
-          on:input={handleGeometryInput(index, geoIndex)}
+          on:input={(event) => dispatch('change-obstacle-geometry', { name, geometry: event.detail })}
         />
         <OrientationInput quaternion={geometry.pose.quaternion} />
       {/each}
@@ -94,10 +86,10 @@ const handleGeometryInput = (index: number, geoIndex: number) => {
   {:else}
     <li
       class='group border-b border-b-medium last:border-b-0 py-3 leading-[1]'
-      on:mouseenter={() => ($hovered = obstacleName)}
+      on:mouseenter={() => ($hovered = name)}
     >
       <div class='flex justify-between items-center gap-1.5'>
-        <small>{obstacleName}</small>
+        <small>{name}</small>
         <div class='flex items-center gap-1.5'>
           <small class='text-subtle-2 opacity-60 group-hover:opacity-100'>
             ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
@@ -106,8 +98,8 @@ const handleGeometryInput = (index: number, geoIndex: number) => {
             class='sm:invisible group-hover:visible text-subtle-1'
             variant='icon'
             icon='image-filter-center-focus'
-            aria-label="Focus {obstacleName}"
-            on:click={() => handleSelect({ name: obstacleName, location })}
+            aria-label="Focus {name}"
+            on:click={() => handleSelect({ name, location })}
           />
         </div>
       </div>

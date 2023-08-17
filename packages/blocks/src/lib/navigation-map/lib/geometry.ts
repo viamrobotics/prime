@@ -3,8 +3,8 @@ import type {
   BoxGeometry,
   CapsuleGeometry,
   SphereGeometry,
-} from '@/api/navigation';
-import type { Shapes } from './types';
+  Shapes,
+} from '$lib';
 import { ViamObject3D } from '@viamrobotics/three';
 
 export const defaultSize = 5;

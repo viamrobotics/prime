@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { injectPlugin, useFrame, useRender, useThrelte } from '@threlte/core';
-import { MercatorCoordinate, type LngLat, LngLatBounds } from 'maplibre-gl';
+import { MercatorCoordinate, LngLatBounds, type LngLat, type Map } from 'maplibre-gl';
 import { AxesHelper } from 'trzy';
-import { map, cameraMatrix, mapSize } from '../stores';
+import { cameraMatrix } from '../stores';
 import { onDestroy } from 'svelte';
+import { useMapLibre, useMapLibreEvent } from '$lib/maplibre/hooks';
 
 const { clamp } = THREE.MathUtils;
 
@@ -31,8 +32,8 @@ const objects: {
   lngLat: LngLat;
 }[] = [];
 
-const setFrameloops = () => {
-  const bounds = map.current!.getBounds();
+const setFrameloops = (map: Map) => {
+  const bounds = map.getBounds();
   const sw = bounds.getSouthWest();
   const ne = bounds.getNorthEast();
 
@@ -57,10 +58,11 @@ const setFrameloops = () => {
 const initialize = () => {
   initialized = true;
 
-  map.current!.on('move', setFrameloops);
-  setFrameloops();
-
   const { renderer, scene, camera } = useThrelte();
+  const { map, mapSize } = useMapLibre();
+  
+  useMapLibreEvent('move', () => setFrameloops(map))
+  setFrameloops(map);
 
   renderer.autoClear = false;
 
@@ -89,7 +91,6 @@ const initialize = () => {
 const deinitialize = () => {
   initialized = false;
 
-  map.current!.off('move', setFrameloops);
   scenes.splice(0, scenes.length);
   objects.splice(0, objects.length);
 };
