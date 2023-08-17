@@ -3,10 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/svelte';
 import Collapse from './collapse.svelte';
 import CollapseSlot from './collapse.spec.svelte';
 
-
 describe('Collapse', () => {
   it('Renders the title correctly', () => {
-    const { container } = render(Collapse, { title: 'I am a collapse component' });
+    const { container } = render(Collapse, {
+      title: 'I am a collapse component',
+    });
     expect(container).toHaveTextContent('I am a collapse component');
   });
 
