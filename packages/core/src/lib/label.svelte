@@ -30,6 +30,9 @@ export let required = false;
 
 /** Whether or not the label should render as disabled */
 export let disabled = false;
+
+/** Additional detail text to render after the default slot. */
+export let detail = '';
 </script>
 
 <label
@@ -47,6 +50,9 @@ export let disabled = false;
     })}
   >
     <slot />
+    {#if detail !== ''}
+      <span class={cx('text-disabled', { 'ml-1': !required })}>{detail}</span>
+    {/if}
   </span>
 
   <slot name="input" />

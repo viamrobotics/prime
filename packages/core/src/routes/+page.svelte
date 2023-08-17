@@ -8,12 +8,16 @@ import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
 import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
 import Icon from '$lib/icon/icon.svelte';
 import Label from '$lib/label.svelte';
+import Notify from '$lib/notify.svelte';
 import Input from '$lib/input/input.svelte';
 import Pill from '$lib/pill.svelte';
 import Switch from '$lib/switch.svelte';
 import Radio from '$lib/radio.svelte';
+import Tabs from '$lib/tabs.svelte';
 import Tooltip from '$lib/tooltip.svelte';
 import TextInput from '$lib/input/text-input.svelte';
+import NumericInput from '$lib/input/numeric-input.svelte';
+import SliderInput from '$lib/input/slider-input.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -106,27 +110,33 @@ let buttonClickedTimes = 0;
     />
 
     <Input
-      name="name"
-      value="Phillip J. Fry"
+      name="readonly"
+      value="Readonly Input"
       readonly
     />
 
     <Input
-      name="name"
-      value="Phillip J. Fry"
+      name="disabled"
+      value="Disabled Input"
       disabled
     />
+  </div>
 
+  <div class="flex gap-4">
     <Input
-      name="name"
-      placeholder="Enter your name"
-      required
+      name="info"
+      value="Info State"
+      state="info"
     />
-
     <Input
-      name="name"
-      placeholder="Enter your name (autocomplete)"
-      autocomplete="on"
+      name="warn"
+      value="Warn State"
+      state="warn"
+    />
+    <Input
+      name="error"
+      value="Error State"
+      state="error"
     />
   </div>
 
@@ -154,16 +164,32 @@ let buttonClickedTimes = 0;
   <div class="flex gap-4">
     <!-- Numeric Input -->
 
-    <Input
-      type="number"
+    <NumericInput
       name="number"
       placeholder="Enter a number"
     />
 
-    <Input
+    <NumericInput
       type="integer"
       name="integer"
       placeholder="Enter an integer"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
+    />
+
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
+    />
+
+    <SliderInput
+      placeholder="Slide to select a number"
+      name="slider"
     />
   </div>
 
@@ -191,8 +217,8 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <!-- Label -->
-    <Label
-      >Name:
+    <Label>
+      Default
       <Input
         slot="input"
         name="name"
@@ -200,7 +226,7 @@ let buttonClickedTimes = 0;
     </Label>
 
     <Label required>
-      Name:
+      Required
       <Input
         slot="input"
         name="name"
@@ -208,23 +234,20 @@ let buttonClickedTimes = 0;
       />
     </Label>
 
-    <!-- Pill -->
-    <Pill />
-    <Pill value="Foo" />
-    <Pill
-      readonly
-      value="Bar"
-    />
-    <Pill
-      disabled
-      value="Baz"
-    />
     <Label disabled>
-      Name:
+      Disabled
       <Input
         slot="input"
         name="name"
         disabled
+      />
+    </Label>
+
+    <Label detail="(detail)">
+      With Detail
+      <Input
+        slot="input"
+        name="name"
       />
     </Label>
   </div>
@@ -364,6 +387,24 @@ let buttonClickedTimes = 0;
   </div>
 
   <div class="flex gap-4">
+    <!-- Tabs -->
+    <Tabs
+      tabs={['Tab 1', 'Tab 2', 'Tab 3']}
+      selected="Tab 1"
+    />
+
+    <Tabs
+      tabs={['Tab 1', 'Tab 2', 'Tab 3']}
+      selected="Tab 2"
+    />
+
+    <Tabs
+      tabs={['Tab 1', 'Tab 2']}
+      selected="Tab 2"
+    />
+  </div>
+
+  <div class="flex gap-4">
     <!-- Switch -->
     <Switch
       on
@@ -413,4 +454,51 @@ let buttonClickedTimes = 0;
       variant="danger"
     />
   </ContextMenu>
+</div>
+<Pill />
+<Pill value="Foo" />
+<Pill
+  readonly
+  value="Bar"
+/>
+<Pill
+  disabled
+  value="Baz"
+/>
+
+<div>
+  <Notify
+    variant="info"
+    title="This is the info title"
+    message="This is the message."
+  />
+  <Notify
+    variant="success"
+    title="This is the success title"
+    message="This is the message."
+  />
+
+  <Notify
+    variant="warning"
+    title="This is the warning title"
+    message="This is the message."
+  />
+
+  <Notify
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+  />
+  <Notify
+    exitable={true}
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+  />
+  <Notify
+    exitable={true}
+    variant="danger"
+    title="This is the danger title"
+    message="This is the message."
+  />
 </div>

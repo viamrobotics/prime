@@ -15,12 +15,14 @@ import Label, { type LabelPosition } from './label.svelte';
 export let position: LabelPosition = 'top';
 export let disabled = false;
 export let required = false;
+export let detail = '';
 </script>
 
 <Label
   {position}
   {disabled}
   {required}
+  {detail}
 >
   Name:
   <input

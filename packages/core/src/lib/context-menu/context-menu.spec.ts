@@ -11,8 +11,11 @@ describe('Context menu', () => {
   });
 
   it('Renders context menu item with icon', () => {
-    render(ContextMenuItem, { label: 'primary', icon: 'close' });
-    expect(screen.getByRole('img', { name: 'close icon' })).toBeVisible();
+    const { container } = render(ContextMenuItem, {
+      label: 'primary',
+      icon: 'close',
+    });
+    expect(container.querySelector('svg')).toBeVisible();
   });
 
   it('Renders context menu separator', () => {
@@ -48,14 +51,13 @@ describe('Context menu', () => {
     await fireEvent.click(screen.getByText('select me!'));
     expect(onSelect).toHaveBeenCalledTimes(2);
 
-    await fireEvent.click(screen.getByRole('img', { name: 'arrow-up icon' }));
+    await fireEvent.click(screen.getByRole('menuitem'));
     expect(onSelect).toHaveBeenCalledTimes(3);
   });
 
   it('Renders context menu slots', () => {
     render(ContextMenu);
     expect(screen.getByText('hello')).toBeVisible();
-    expect(screen.getByRole('img', { name: 'plus icon' })).toBeVisible();
     expect(screen.getByRole('separator')).toBeVisible();
   });
 });

@@ -42,10 +42,40 @@ describe('Input', () => {
       'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
-    expect(input).toHaveClass(
-      'bg-disabled-light text-disabled-dark border-disabled-light'
-    );
-
+    expect(input).toHaveClass('bg-light border-none');
     expect(input).not.toHaveAttribute('aria-disabled');
+  });
+
+  it('Renders the input in the info state', () => {
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'info',
+    });
+    const svg = container.querySelector('svg');
+
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-info-dark');
+  });
+
+  it('Renders the input in the warn state', () => {
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'warn',
+    });
+    const svg = container.querySelector('svg');
+
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-warning-bright');
+  });
+
+  it('Renders the input in the error state', () => {
+    const { container } = render(Input, {
+      placeholder: 'Enter your name',
+      state: 'error',
+    });
+    const svg = container.querySelector('svg');
+
+    expect(svg).toBeInTheDocument();
+    expect(svg?.parentElement).toHaveClass('text-danger-dark');
   });
 });

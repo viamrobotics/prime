@@ -223,6 +223,10 @@ let icon = '';
 $: {
   if (!open && isExact && !parsedOptions.includes(value)) {
     value = '';
+    if (root) {
+      dispatch({ target: root }, 'change', { value });
+      dispatch({ target: root }, 'input', { value });
+    }
   }
 
   switch (state) {
@@ -282,8 +286,14 @@ $: {
     {/if}
   </div>
 
-  <v-dropdown match open={open ? '' : undefined}>
-    <div slot="target" class="w-full">
+  <v-dropdown
+    match
+    open={open ? '' : undefined}
+  >
+    <div
+      slot="target"
+      class="w-full"
+    >
       <div class="flex">
         <input
           bind:this={input}

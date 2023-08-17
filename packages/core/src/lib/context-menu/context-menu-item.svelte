@@ -10,7 +10,7 @@ export type ContextMenuItemVariant = 'primary' | 'danger';
 <script lang="ts">
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
-import { default as Icon } from '$lib/icon/icon.svelte';
+import Icon from '$lib/icon/icon.svelte';
 
 const dispatch = createEventDispatcher<{
   /** Fires when selected with the label */
