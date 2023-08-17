@@ -1,9 +1,8 @@
 <script lang='ts'>
 
-import { onMount } from 'svelte';
-import { Map, NavigationControl } from 'maplibre-gl';
+import type { Map } from 'maplibre-gl';
 import { map, mapZoom, mapCenter, view, mapSize, cameraMatrix } from '../stores';
-import { style } from '../style';
+import MapLibre from '$lib/maplibre/index.svelte';
 import ObstacleLayer from './obstacle-layer.svelte';
 import Waypoints from './waypoints.svelte';
 import RobotMarker from './robot-marker.svelte';
@@ -17,69 +16,56 @@ const handleViewSelect = (event: CustomEvent) => {
   $view = event.detail.value;
 };
 
-onMount(() => {
-  const mapInstance = new Map({
-    container: 'navigation-map',
-    style,
-    center: [0, 0],
-    zoom: 9,
-    antialias: true,
-    minPitch,
-    maxPitch: minPitch,
+const handleMove = (currentMap: Map) => {
+  mapCenter.set(currentMap.getCenter());
+  mapZoom.set(currentMap.getZoom() / currentMap.getMaxZoom());
+};
+
+const handleResize = (currentMap: Map) => {
+  mapSize.update((value) => {
+    const { clientWidth, clientHeight } = currentMap.getCanvas();
+    value.width = clientWidth;
+    value.height = clientHeight;
+    return value;
   });
-  $map = mapInstance;
+};
 
-  const handleMove = () => {
-    mapCenter.set(mapInstance.getCenter());
-    mapZoom.set(mapInstance.getZoom() / mapInstance.getMaxZoom());
-  };
+const handleMapCreate = (currentMap: Map) => {
+  $map = currentMap;
 
-  const handleResize = () => {
-    mapSize.update((value) => {
-      const { clientWidth, clientHeight } = mapInstance.getCanvas();
-      value.width = clientWidth;
-      value.height = clientHeight;
-      return value;
-    });
-  };
-
-  const nav = new NavigationControl({ showZoom: false });
-  mapInstance.addControl(nav, 'top-right');
-  mapInstance.on('move', handleMove);
-  mapInstance.on('resize', handleResize);
-
-  mapInstance.on('style.load', () => {
-    mapInstance.addLayer({
-      id: 'obstacle-layer',
-      type: 'custom',
-      renderingMode: '3d',
-      render (_ctx, viewProjectionMatrix) {
-        cameraMatrix.fromArray(viewProjectionMatrix);
-        mapInstance.triggerRepaint();
-      },
-    });
+  currentMap.addLayer({
+    id: 'obstacle-layer',
+    type: 'custom',
+    renderingMode: '3d',
+    render (_ctx, viewProjectionMatrix) {
+      cameraMatrix.fromArray(viewProjectionMatrix);
+      currentMap.triggerRepaint();
+    },
   });
 
-  handleMove();
-  handleResize();
+  handleMove(currentMap);
+  handleResize(currentMap);
 
   return () => {
-    if (mapInstance.getLayer('obstacle-layer')) {
-      mapInstance.removeLayer('obstacle-layer');
+    if (currentMap.getLayer('obstacle-layer')) {
+      currentMap.removeLayer('obstacle-layer');
     }
   };
-});
+};
 
 $: {
   $map?.setMinPitch(minPitch);
-  $map?.setMaxPitch($view === '3D' ? maxPitch : minPitch);
+  $map?.setMaxPitch();
 }
 
 </script>
 
-<div
-  id='navigation-map'
-  class="-mr-4 h-[450px] sm:h-[550px] w-full"
+<MapLibre
+  {minPitch}
+  maxPitch={$view === '3D' ? maxPitch : minPitch}
+  on:create={(event) => handleMapCreate(event.detail)}
+  on:move={(event) => handleMove(event.detail)}
+  on:resize={(event) => handleResize(event.detail)}
 />
 
 {#if localStorage.getItem('debug_3d')}
