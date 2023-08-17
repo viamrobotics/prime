@@ -6,11 +6,10 @@ An element that Toggles visibility of content.
 ```svelte
     <Collapse
       title='Motor 1'
-      variant="minimal"
     >
       <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
       <Badge slot='header' label='Inactive'></Badge>
-      <div style='font-size: 12px; padding: 1rem'>Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
+      <div "text-sm p-4 border border-t-0 border-light">Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
     </Collapse>
 ```
 -->
@@ -21,8 +20,6 @@ import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
 import { Icon } from '$lib';
 
-type Variants = 'default' | 'minimal';
-
 /**
  * The title for the collapse component.
  */
@@ -31,16 +28,17 @@ export let title = '';
  * Whether the collapse is in the open position.
  */
 export let open = false;
-/**
- * The variant of the collapse component.
- */
-export let variant: Variants = 'default';
 
-const dispatch = createEventDispatcher();
+type Events = {
+  /** Fires when the collapse is toggled */
+  toggle: boolean 
+}
+
+const dispatch = createEventDispatcher<Events>();
 
 const handleClick = () => {
   open = !open;
-  dispatch('toggle', { isOpen: open });
+  dispatch('toggle', open);
 };
 </script>
 
@@ -49,12 +47,7 @@ const handleClick = () => {
     role="button"
     aria-label="Toggle Content"
     tabindex="0"
-    class="{cx(
-      'w-full py-2 px-4 flex flex-reverse items-center justify-between text-default cursor-pointer',
-      {
-        'border border-light bg-white': variant === 'default',
-      }
-    )}"
+    class="w-full py-2 px-4 flex items-center justify-between text-default cursor-pointer border border-light bg-white"
     on:click={handleClick}
     on:keyup|preventDefault={handleClick}
   >
@@ -84,12 +77,6 @@ const handleClick = () => {
   </div>
 
   {#if open}
-    <div
-      class={cx('text-black transition-all duration-500', {
-        'bg-white': variant === 'default',
-      })}
-    >
       <slot />
-    </div>
   {/if}
 </div>

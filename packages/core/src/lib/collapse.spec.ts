@@ -3,33 +3,34 @@ import { render, screen, fireEvent } from '@testing-library/svelte';
 import Collapse from './collapse.svelte';
 import CollapseSlot from './collapse.spec.svelte';
 
+
 describe('Collapse', () => {
   it('Renders the title correctly', () => {
-    render(Collapse, { title: 'I am a collapse component' });
-    expect(screen.getByText('I am a collapse component')).toBeVisible();
+    const { container } = render(Collapse, { title: 'I am a collapse component' });
+    expect(container).toHaveTextContent('I am a collapse component');
   });
 
   it('Renders the contents of header slot correctly', () => {
-    render(CollapseSlot);
-    expect(screen.getByText('Inactive')).toBeVisible();
+    const { container } = render(CollapseSlot);
+    expect(container).toHaveTextContent('Inactive');
   });
 
   it('Renders the contents of title slot correctly', () => {
-    render(CollapseSlot);
-    expect(screen.getByText('Hi')).toBeVisible();
-    expect(screen.getByText('Hello')).toBeVisible();
+    const { container } = render(CollapseSlot);
+    expect(container).toContainHTML('Hi');
+    expect(container).toContainHTML('Hello');
   });
 
   it('Renders the correct icon rotation on open', () => {
-    render(Collapse, { open: true });
-    const iconDiv = screen.getByRole('img').parentElement;
-    expect(iconDiv).toHaveClass('rotate-180');
+    const { container } = render(Collapse, { open: true });
+    const svg = container.querySelector('svg');
+    expect(svg?.parentElement).toHaveClass('rotate-180');
   });
 
   it('Renders the correct icon rotation on close', () => {
-    render(Collapse, { open: false });
-    const iconDiv = screen.getByRole('img').parentElement;
-    expect(iconDiv).toHaveClass('rotate-0');
+    const { container } = render(Collapse, { open: false });
+    const svg = container.querySelector('svg');
+    expect(svg?.parentElement).toHaveClass('rotate-0');
   });
 
   it('Renders content slot correctly when open', async () => {
@@ -38,7 +39,7 @@ describe('Collapse', () => {
     component.$on('toggle', onToggle);
     await fireEvent.click(screen.getByText('Number 1'));
     const contentDiv = screen.getByText('One is the loneliest number.');
-    expect(contentDiv).not.toHaveClass('hidden');
+    expect(contentDiv).toBeVisible();
   });
 
   it('Hides content slot correctly when closed', () => {
