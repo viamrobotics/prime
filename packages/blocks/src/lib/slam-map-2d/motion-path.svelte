@@ -14,19 +14,16 @@ import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { renderOrder } from './render-order';
 
-extend({ Line2, LineMaterial });
+extend({ Line2, LineMaterial, LineGeometry });
 
 export let path: string | undefined;
-
-let geometry: LineGeometry = new LineGeometry();
 
 const updatePath = (pathstr?: string) => {
   if (pathstr === undefined) {
     return;
   }
 
-  geometry = new LineGeometry();
-
+  const lineGeometry = new LineGeometry();
   const points: number[] = [];
 
   for (const xy of pathstr.split('\n')) {
@@ -42,14 +39,21 @@ const updatePath = (pathstr?: string) => {
   }
 
   const vertices = new Float32Array(points);
-  geometry.setPositions(vertices);
+  lineGeometry.setPositions(vertices);
+
+  return lineGeometry;
 };
 
-$: updatePath(path);
+let geometry: LineGeometry | undefined;
+
+$: {
+  geometry?.dispose();
+  geometry = updatePath(path);
+}
 
 </script>
 
-{#if path}
+{#if geometry}
   <T.Line2 renderOrder={renderOrder.motionPath}>
     <T.LineMaterial
       color='#FF0047'
