@@ -33,7 +33,6 @@ export let input: HTMLInputElement | undefined = undefined;
 
 $: isNumber = type === 'number';
 $: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
-
 </script>
 
 <Input
@@ -42,6 +41,6 @@ $: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
   {step}
   {...$$restProps}
   bind:value
-  bind:input={input}
+  bind:input
   on:input
 />

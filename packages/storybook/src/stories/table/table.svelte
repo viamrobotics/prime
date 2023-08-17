@@ -4,11 +4,11 @@
 >
 import {
   Table,
-  THead,
-  TH,
-  TBody,
-  TR,
-  TD,
+  TableHeader,
+  TableHeaderCell,
+  TableBody,
+  TableRow,
+  TableCell,
   type TableVariant,
 } from '@viamrobotics/prime-core';
 
@@ -20,48 +20,48 @@ export let cols: string[] = [];
   {variant}
   {cols}
 >
-  <THead>
-    <TH><input type="checkbox" /></TH>
-    <TH>Name</TH>
-    <TH>Address</TH>
-    <TH>Overlylongunbrokenheader</TH>
-    <TH>Phone</TH>
-  </THead>
-  <TBody style="text-align:center">
-    <TR>
-      <TD><input type="checkbox" /></TD>
-      <TD>John Connor</TD>
-      <TD>42 Terminal Ave</TD>
-      <TD>Someunbrokenlongtextthingamajig</TD>
-      <TD>555-555-5555</TD>
-    </TR>
-    <TR>
-      <TD><input type="checkbox" /></TD>
-      <TD>P Sherman</TD>
-      <TD>42 Wallaby Way</TD>
-      <TD>x</TD>
-      <TD>555-555-5555</TD>
-    </TR>
-    <TR variant="success">
-      <TD><input type="checkbox" /></TD>
-      <TD>John Connor</TD>
-      <TD>42 Terminal Ave</TD>
-      <TD>Someunbrokenlongtextthingamajig</TD>
-      <TD>555-555-5555</TD>
-    </TR>
-    <TR variant="disabled">
-      <TD><input type="checkbox" /></TD>
-      <TD>John Connor</TD>
-      <TD>42 Terminal Ave</TD>
-      <TD>Someunbrokenlongtextthingamajig</TD>
-      <TD>555-555-5555</TD>
-    </TR>
-    <TR variant="error">
-      <TD><input type="checkbox" /></TD>
-      <TD>John Connor</TD>
-      <TD>42 Terminal Ave</TD>
-      <TD>Someunbrokenlongtextthingamajig</TD>
-      <TD>555-555-5555</TD>
-    </TR>
-  </TBody>
+  <TableHeader>
+    <TableHeaderCell><input type="checkbox" /></TableHeaderCell>
+    <TableHeaderCell>Name</TableHeaderCell>
+    <TableHeaderCell>Address</TableHeaderCell>
+    <TableHeaderCell>Overlylongunbrokenheader</TableHeaderCell>
+    <TableHeaderCell>Phone</TableHeaderCell>
+  </TableHeader>
+  <TableBody style="text-align:center">
+    <TableRow>
+      <TableCell><input type="checkbox" /></TableCell>
+      <TableCell>John Connor</TableCell>
+      <TableCell>42 Terminal Ave</TableCell>
+      <TableCell>Someunbrokenlongtextthingamajig</TableCell>
+      <TableCell>555-555-5555</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><input type="checkbox" /></TableCell>
+      <TableCell>P Sherman</TableCell>
+      <TableCell>42 Wallaby Way</TableCell>
+      <TableCell>x</TableCell>
+      <TableCell>555-555-5555</TableCell>
+    </TableRow>
+    <TableRow variant="success">
+      <TableCell><input type="checkbox" /></TableCell>
+      <TableCell>John Connor</TableCell>
+      <TableCell>42 Terminal Ave</TableCell>
+      <TableCell>Someunbrokenlongtextthingamajig</TableCell>
+      <TableCell>555-555-5555</TableCell>
+    </TableRow>
+    <TableRow variant="disabled">
+      <TableCell><input type="checkbox" /></TableCell>
+      <TableCell>John Connor</TableCell>
+      <TableCell>42 Terminal Ave</TableCell>
+      <TableCell>Someunbrokenlongtextthingamajig</TableCell>
+      <TableCell>555-555-5555</TableCell>
+    </TableRow>
+    <TableRow variant="error">
+      <TableCell><input type="checkbox" /></TableCell>
+      <TableCell>John Connor</TableCell>
+      <TableCell>42 Terminal Ave</TableCell>
+      <TableCell>Someunbrokenlongtextthingamajig</TableCell>
+      <TableCell>555-555-5555</TableCell>
+    </TableRow>
+  </TableBody>
 </Table>

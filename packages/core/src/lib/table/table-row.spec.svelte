@@ -10,10 +10,10 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
-import TR from './tr.svelte';
-import TD from './td.svelte';
+import TableRow from './table-row.svelte';
+import TableCell from './table-cell.svelte';
 </script>
 
-<TR>
-  <TD>data</TD>
-</TR>
+<TableRow>
+  <TableCell>data</TableCell>
+</TableRow>

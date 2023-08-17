@@ -20,11 +20,11 @@ import TextInput from '$lib/input/text-input.svelte';
 import NumericInput from '$lib/input/numeric-input.svelte';
 import SliderInput from '$lib/input/slider-input.svelte';
 import Table from '$lib/table/table.svelte';
-import TBody from '$lib/table/tbody.svelte';
-import TD from '$lib/table/td.svelte';
-import TH from '$lib/table/th.svelte';
-import THead from '$lib/table/thead.svelte';
-import TR from '$lib/table/tr.svelte';
+import TableBody from '$lib/table/table-body.svelte';
+import TableCell from '$lib/table/table-cell.svelte';
+import TableHeaderCell from '$lib/table/table-header-cell.svelte';
+import TableHeader from '$lib/table/table-header.svelte';
+import TableRow from '$lib/table/table-row.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -488,28 +488,28 @@ let buttonClickedTimes = 0;
 
   <!-- Table -->
   <Table cols={['30%', '70%']}>
-    <THead>
-      <TH>Header</TH>
-      <TH>Another header</TH>
-    </THead>
-    <TBody style="text-align:center">
-      <TR>
-        <TD>stuff</TD>
-        <TD>stuffs</TD>
-      </TR>
-      <TR variant="success">
-        <TD>stuff</TD>
-        <TD>stuffs</TD>
-      </TR>
-      <TR variant="error">
-        <TD>stuff</TD>
-        <TD>stuffs</TD>
-      </TR>
-      <TR variant="disabled">
-        <TD>stuff</TD>
-        <TD>stuffs</TD>
-      </TR>
-    </TBody>
+    <TableHeader>
+      <TableHeaderCell>Header</TableHeaderCell>
+      <TableHeaderCell>Another header</TableHeaderCell>
+    </TableHeader>
+    <TableBody style="text-align:center">
+      <TableRow>
+        <TableCell>stuff</TableCell>
+        <TableCell>stuffs</TableCell>
+      </TableRow>
+      <TableRow variant="success">
+        <TableCell>stuff</TableCell>
+        <TableCell>stuffs</TableCell>
+      </TableRow>
+      <TableRow variant="error">
+        <TableCell>stuff</TableCell>
+        <TableCell>stuffs</TableCell>
+      </TableRow>
+      <TableRow variant="disabled">
+        <TableCell>stuff</TableCell>
+        <TableCell>stuffs</TableCell>
+      </TableRow>
+    </TableBody>
   </Table>
 </div>
 <Pill />

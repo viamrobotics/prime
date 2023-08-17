@@ -11,19 +11,19 @@
  -->
 <script lang="ts">
 import Table from './table.svelte';
-import TBody from './tbody.svelte';
-import TR from './tr.svelte';
-import TD from './td.svelte';
+import TableBody from './table-body.svelte';
+import TableRow from './table-row.svelte';
+import TableCell from './table-cell.svelte';
 
 export let cols: string[] = [];
 </script>
 
 <Table {cols}>
-  <TBody>
-    <TR>
-      <TD>stuff</TD>
-      <TD>stuffs</TD>
-      <TD>stufffss</TD>
-    </TR>
-  </TBody>
+  <TableBody>
+    <TableRow>
+      <TableCell>stuff</TableCell>
+      <TableCell>stuffs</TableCell>
+      <TableCell>stufffss</TableCell>
+    </TableRow>
+  </TableBody>
 </Table>

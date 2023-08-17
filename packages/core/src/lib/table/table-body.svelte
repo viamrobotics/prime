@@ -1,11 +1,10 @@
 <!--
 @component
   
-A table header.
+A table body.
 ```svelte
 <Table>
-  <THead>
-  </THead>
+  <TableBody></TableBody>
 </Table>
 ```
 -->
@@ -13,19 +12,16 @@ A table header.
 
 <script lang="ts">
 /**
- * Custom table header style
+ * Custom table body style
  * @example
  * style="border-collapse"
  */
 export let style = '';
 </script>
 
-<thead
-  {style}
-  class="border-b border-black"
->
+<tbody {style}>
   <slot />
-</thead>
+</tbody>
 
 <style>
 :host {

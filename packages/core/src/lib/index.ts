@@ -31,8 +31,8 @@ export {
 } from './input/text-input.svelte';
 
 export { default as Table } from './table/table.svelte';
-export { default as THead } from './table/thead.svelte';
-export { default as TBody } from './table/tbody.svelte';
-export { default as TD } from './table/td.svelte';
-export { default as TH } from './table/th.svelte';
-export { default as TR } from './table/tr.svelte';
+export { default as TableHeader } from './table/table-header.svelte';
+export { default as TableHeaderCell } from './table/table-header-cell.svelte';
+export { default as TableBody } from './table/table-body.svelte';
+export { default as TableRow } from './table/table-row.svelte';
+export { default as TableCell } from './table/table-cell.svelte';

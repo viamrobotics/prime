@@ -4,9 +4,9 @@
 A table row.
 ```svelte
 <Table>
-  <TBody>
-    <TR></TR>
-  </TBody>
+  <TableBody>
+    <TableRow></TableRow>
+  </TableBody>
 </Table>
 ```
 -->

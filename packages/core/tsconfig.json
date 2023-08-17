@@ -5,6 +5,6 @@
   ],
   "compilerOptions": {
     "types": ["svelte", "vite/client", "vitest"],
-    "noEmit": true,
+    "noEmit": true
   }
 }

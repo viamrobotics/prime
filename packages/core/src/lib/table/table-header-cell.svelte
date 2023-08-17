@@ -4,9 +4,9 @@
 A table header cell.
 ```svelte
 <Table>
-  <THead>
-    <TH></TH>
-  </THead>
+  <TableHeader>
+    <TableHeaderCell></TableHeaderCell>
+  </TableHeader>
 </Table>
 ```
 -->
