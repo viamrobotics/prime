@@ -45,7 +45,7 @@ const sizes: Record<Size, string> = {
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
 <svg
-  class={cx('flex', sizes[size], {
+  class={cx(sizes[size], {
     'inline-block': hasNameProperty,
     hidden: !hasNameProperty,
   })}

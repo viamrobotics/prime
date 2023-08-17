@@ -4,7 +4,11 @@
 export let style = '';
 </script>
 
-<td {style} part="table-cell" class="p-2 overflow-hidden">
+<td
+  {style}
+  part="table-cell"
+  class="p-2 overflow-hidden"
+>
   <slot />
 </td>
 
