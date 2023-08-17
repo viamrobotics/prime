@@ -19,14 +19,14 @@ import Breadcrumbs from './breadcrumbs.svelte';
   <Collapse
     title='Number 1'
   >
-    <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>One is the loneliest number.</div>
+    <div class="text-sm p-4 border border-t-0 border-light">One is the loneliest number.</div>
   </Collapse>
 
   <Collapse
     title='Number 2'
   >
     <Badge slot='header' label='Inactive'></Badge>
-    <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>Two can be as bad as one, its the loneliest number since the number one.</div>
+    <div class="text-sm p-4 border border-t-0 border-light">Two can be as bad as one, its the loneliest number since the number one.</div>
   </Collapse>
 
     <Collapse
@@ -34,7 +34,7 @@ import Breadcrumbs from './breadcrumbs.svelte';
     >
       <Breadcrumbs slot='title' crumbs={['Hi', 'Hello']}></Breadcrumbs>
       <Badge slot='header' label='Active'></Badge>
-      <div style='font-size: 12px; padding: 1rem; border: 1px solid #e4e4e6; border-top: none;'>Three is company.</div>
+      <div class="text-sm p-4 border border-t-0 border-light">Three is company.</div>
     </Collapse>
 
     <Collapse
@@ -42,6 +42,6 @@ import Breadcrumbs from './breadcrumbs.svelte';
     >
       <Breadcrumbs slot='title' crumbs={['Howdy', 'Hey']}></Breadcrumbs>
       <Badge slot='header' label='Busy'></Badge>
-      <div style='font-size: 12px; padding: 1rem'>I am number 4.</div>
+      <div class="text-sm p-4 border border-t-0 border-light">I am number 4.</div>
     </Collapse>
 </div>
