@@ -4,7 +4,10 @@
 export let style = '';
 </script>
 
-<th {style} class="p-2 text-default font-normal overflow-hidden">
+<th
+  {style}
+  class="p-2 text-default font-normal overflow-hidden"
+>
   <slot />
 </th>
 

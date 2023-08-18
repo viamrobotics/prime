@@ -25,7 +25,10 @@ export let style = '';
   </style>
 </svelte:head>
 
-<tr {style} class="border-b">
+<tr
+  {style}
+  class="border-b"
+>
   <slot />
 </tr>
 

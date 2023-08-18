@@ -24,7 +24,7 @@ const hasNameProperty = Object.hasOwn(paths, name);
 </script>
 
 <svg
-  class={cx('flex', sizes[size], {
+  class={cx(sizes[size], {
     'inline-block': hasNameProperty,
     hidden: !hasNameProperty,
   })}
@@ -33,5 +33,8 @@ const hasNameProperty = Object.hasOwn(paths, name);
   role="img"
 >
   <title id={name}>{`${name} icon`}</title>
-  <path d={paths[name]} fill="currentColor" />
+  <path
+    d={paths[name]}
+    fill="currentColor"
+  />
 </svg>

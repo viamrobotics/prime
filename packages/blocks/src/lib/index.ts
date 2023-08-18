@@ -1,2 +1,1 @@
-// Reexport your entry components here
-export {};
+export { default as SlamMap2D } from './slam-map-2d/index.svelte';
