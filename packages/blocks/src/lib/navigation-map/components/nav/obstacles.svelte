@@ -8,6 +8,7 @@ import OrientationInput from '../input/orientation.svelte';
 import { write, hovered, boundingRadius, obstacles } from '../../stores';
 import { calculateBoundingBox } from '../../lib/bounding-box';
 import { createEventDispatcher } from 'svelte';
+import Geometry from '../input/geometry.svelte';
 
 type Events = {
   'create-obstacle': { lngLat: LngLat }
@@ -25,6 +26,14 @@ const handleSelect = (selection: { name: string; location: LngLat }) => {
   const bb = calculateBoundingBox(zoom, selection.location);
   map.fitBounds(bb, { duration: 800, curve: 0.1 });
 };
+
+const handleGeometryInput = (name: string) => (event: CustomEvent<Geometry>) => {
+  dispatch('change-obstacle-geometry', { name, geometry: event.detail })
+}
+
+const handleLngLatInput = (name: string) => (event: CustomEvent<LngLat>) => {
+  dispatch('move-obstacle', { name, lngLat: event.detail })
+}
 
 </script>
 
@@ -65,7 +74,7 @@ const handleSelect = (selection: { name: string; location: LngLat }) => {
       <LnglatInput
         lng={location.lng}
         lat={location.lat}
-        on:input={(event) => dispatch('move-obstacle', { name, lngLat: event.detail })}>
+        on:input={handleLngLatInput(name)}>
         <IconButton
           icon='image-filter-center-focus'
           label='Focus'
@@ -76,7 +85,7 @@ const handleSelect = (selection: { name: string; location: LngLat }) => {
       {#each geometries as geometry, geoIndex (geoIndex)}
         <GeometryInputs
           {geometry}
-          on:input={(event) => dispatch('change-obstacle-geometry', { name, geometry: event.detail })}
+          on:input={handleGeometryInput(name)}
         />
         <OrientationInput quaternion={geometry.pose.quaternion} />
       {/each}

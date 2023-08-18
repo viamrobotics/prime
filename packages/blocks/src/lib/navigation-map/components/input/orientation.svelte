@@ -14,8 +14,8 @@ const ov = new OrientationVector();
 
 $: ov.setFromQuaternion(quaternion);
 
-const handleOrientationInput = (event: CustomEvent) => {
-  dispatch('input', event.detail[0])
+const handleOrientationInput = (event: CustomEvent<number[]>) => {
+  dispatch('input', event.detail[0]!)
 };
 
 </script>

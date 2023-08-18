@@ -1,15 +1,21 @@
 
 <script lang='ts'>
 
+import type * as THREE from 'three';
 import { T } from '@threlte/core';
-import type { Obstacle } from '$lib';
+import type { Obstacle, Geometry } from '$lib';
 import { view, hovered } from '../stores';
 
 export let obstacle: Obstacle;
 
+const handleMeshCreate = (geometry: Geometry) => ({ ref }: { ref: THREE.Mesh }) => {
+  ref.rotation.y = geometry.pose.orientationVector.th;
+}
+
 let material: THREE.MeshPhongMaterial;
 
 $: material?.color.set($hovered === obstacle.name ? '#FFD400' : '#FF7D80');
+
 
 </script>
 
@@ -18,9 +24,7 @@ $: material?.color.set($hovered === obstacle.name ? '#FFD400' : '#FF7D80');
     name={obstacle.name}
     obstacle={obstacle.name}
     lnglat={obstacle.location}
-    on:create={({ ref }) => {
-      ref.rotation.y = geometry.pose.orientationVector.th;
-    }}
+    on:create={handleMeshCreate(geometry)}
   >
     {#if geometry.type === 'box'}
       {#if $view === '3D'}

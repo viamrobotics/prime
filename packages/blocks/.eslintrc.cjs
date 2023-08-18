@@ -13,6 +13,7 @@ module.exports = {
   },
   rules: {
     // @todo(mp APP-2482): move to js-config
+    'sonarjs/no-empty-collection': 'off',
     'sonarjs/no-duplicate-string': 'off',
     'no-undef-init': 'off',
     'unicorn/no-useless-undefined': 'off',

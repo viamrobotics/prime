@@ -36,7 +36,7 @@ export let zoom = 9;
  * @default { lng: -73.984421, lat: 40.7718116 }
  * The Viam Robotics office.
  */
-export let center: LngLat = { lng: -73.984421, lat: 40.7718116 };
+export let center: LngLat = { lng: -73.984_421, lat: 40.771_811_6 };
 
 type Events = {
   /** Fired after the map has been created. */
@@ -85,7 +85,6 @@ onMount(() => {
   }
 
   const handleResize = () => {
-    console.log('resize')
     dispatch('resize', map!);
     const size = map!.getCanvas();
     sizeStore.set({
@@ -94,7 +93,7 @@ onMount(() => {
     })
   }
 
-  const handleCreate = async () => {
+  const handleCreate = () => {
     created = true;
     const size = map!.getCanvas();
     sizeStore.set({ width: size.clientWidth, height: size.clientHeight })

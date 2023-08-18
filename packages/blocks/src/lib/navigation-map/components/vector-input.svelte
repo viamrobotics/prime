@@ -10,12 +10,18 @@ export let type: 'integer' | 'number' = 'number';
 export let values: number[] = [];
 export let step = 1;
 
+const inputs: HTMLInputElement[] = []
+
 const dispatch = createEventDispatcher<{ input: number[] }>();
 
 const handleInput = (index: number) => {
-  return (event: CustomEvent) => {
-    values[index] = Number.parseFloat(event.detail.value);
-    dispatch('input', values);
+  return () => {
+    const value = inputs[index]?.valueAsNumber
+
+    if (value !== undefined) {
+      values[index] = value;
+      dispatch('input', values);
+    }
   };
 };
 
@@ -27,6 +33,7 @@ const handleInput = (index: number) => {
       {label}
       <SliderInput
         slot='input'
+        bind:input={inputs[index]}
         {type}
         {step}
         placeholder={placeholders[index]}

@@ -87,7 +87,6 @@ const initialize = () => {
   });
 
   const unsub = mapSize.subscribe((value) => {
-    console.log(value);
     renderer.setSize(value.width, value.height);
   });
 

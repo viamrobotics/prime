@@ -2,7 +2,7 @@
 
 import { Radio } from '@viamrobotics/prime-core'
 import { createEventDispatcher } from 'svelte';
-import type { Geometry } from '$lib';
+import type { Geometry, Shapes } from '$lib';
 import VectorInput from '../vector-input.svelte';
 import { createGeometry } from '../../lib/geometry';
 
@@ -10,8 +10,8 @@ export let geometry: Geometry;
 
 const dispatch = createEventDispatcher<{ input: Geometry }>();
 
-const handleShapeSelect = (event: CustomEvent) => {
-  const nextType = event.detail.value.toLowerCase();
+const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
+  const nextType = event.detail.value.toLowerCase() as Shapes;
   dispatch('input', createGeometry(nextType));
 };
 

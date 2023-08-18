@@ -1,9 +1,13 @@
 <script lang='ts'>
 
-import { useMapLibre } from '$lib';
+import { useMapLibre, type LngLat } from '$lib';
 import LngLatInput from '../components/input/lnglat.svelte';
 
 const { map, mapCenter } = useMapLibre();
+
+const handleInput = (event: CustomEvent<LngLat>) => {
+  map.jumpTo({ center: event.detail })
+}
 
 </script>
 
@@ -11,6 +15,6 @@ const { map, mapCenter } = useMapLibre();
   <LngLatInput
     lng={$mapCenter.lng}
     lat={$mapCenter.lat}
-    on:input={(event) => map.jumpTo({ center: event.detail })}
+    on:input={handleInput}
   />
 </div>

@@ -5,9 +5,8 @@ import { tab, hovered } from '../../stores';
 import ObstaclesTab from './obstacles.svelte';
 import WaypointsTab from './waypoints.svelte';
 
-const handleTabSelect = (event: CustomEvent) => {
-  console.log(event.detail)
-  $tab = event.detail.value;
+const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
+  $tab = event.detail.value as 'Obstacles' | 'Waypoints';
 };
 
 </script>

@@ -30,7 +30,11 @@ marker.getElement().style.zIndex = '1';
 
 $: marker.setLngLat(lngLat);
 
-$: visible ? marker.addTo(map) : marker.remove()
+$: if (visible) {
+  marker.addTo(map)
+} else {
+  marker.remove()
+}
 
 onDestroy(() => marker.remove());
 

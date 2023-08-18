@@ -15,11 +15,13 @@ export let robotLngLat: LngLat | undefined = undefined;
 const minPitch = 0;
 const maxPitch = 60;
 
-const handleViewSelect = (event: CustomEvent) => {
-  $view = event.detail.value;
+const handleViewSelect = (event: CustomEvent<{ value: string }>) => {
+  $view = event.detail.value as '2D' | '3D';
 };
 
-const handleMapCreate = (currentMap: Map) => {
+const handleMapCreate = (event: CustomEvent<Map>) => {
+  const currentMap = event.detail
+
   currentMap.addLayer({
     id: 'obstacle-layer',
     type: 'custom',
@@ -43,7 +45,7 @@ const handleMapCreate = (currentMap: Map) => {
   class='grow w-auto'
   {minPitch}
   maxPitch={$view === '3D' ? maxPitch : minPitch}
-  on:create={(event) => handleMapCreate(event.detail)}
+  on:create={handleMapCreate}
 >
   <Nav
     on:delete-waypoint
@@ -58,7 +60,7 @@ const handleMapCreate = (currentMap: Map) => {
   <CenterInputs />
 </MapLibre>
 
-{#if true || localStorage.getItem('debug_3d')}
+{#if localStorage.getItem('debug_3d')}
   <div class='absolute bottom-12 right-3'>
     <Radio
       options={['2D', '3D']}
