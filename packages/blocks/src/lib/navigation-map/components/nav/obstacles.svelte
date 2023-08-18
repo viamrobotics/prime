@@ -8,7 +8,6 @@ import OrientationInput from '../input/orientation.svelte';
 import { write, hovered, boundingRadius, obstacles } from '../../stores';
 import { calculateBoundingBox } from '../../lib/bounding-box';
 import { createEventDispatcher } from 'svelte';
-import Geometry from '../input/geometry.svelte';
 
 type Events = {
   'create-obstacle': { lngLat: LngLat }
