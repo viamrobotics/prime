@@ -1,7 +1,4 @@
-<script
-  lang="ts"
-  context="module"
->
+<script lang="ts">
 import {
   ContextMenu,
   ContextMenuItem,
