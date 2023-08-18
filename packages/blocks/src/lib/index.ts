@@ -1,4 +1,3 @@
-
 export { default as MapLibre } from './maplibre/index.svelte';
 export { default as MapLibreMarker } from './maplibre/marker.svelte';
 export { useMapLibre, useMapLibreEvent } from './maplibre/hooks';

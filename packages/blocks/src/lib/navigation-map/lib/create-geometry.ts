@@ -1,4 +1,10 @@
-import type { Geometry, BoxGeometry, CapsuleGeometry, SphereGeometry, Shapes } from '$lib';
+import type {
+  Geometry,
+  BoxGeometry,
+  CapsuleGeometry,
+  SphereGeometry,
+  Shapes,
+} from '$lib';
 import { ViamObject3D } from '@viamrobotics/three';
 
 export const defaultSize = 5;

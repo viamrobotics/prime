@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 import { injectPlugin, useFrame, useRender, useThrelte } from '@threlte/core';
-import { MercatorCoordinate, LngLatBounds, type LngLat, type Map } from 'maplibre-gl';
+import {
+  MercatorCoordinate,
+  LngLatBounds,
+  type LngLat,
+  type Map,
+} from 'maplibre-gl';
 import { AxesHelper } from 'trzy';
 import { cameraMatrix } from '../stores';
 import { onDestroy } from 'svelte';
@@ -60,8 +65,8 @@ const initialize = () => {
 
   const { renderer, scene, camera } = useThrelte();
   const { map, mapSize } = useMapLibre();
-  
-  useMapLibreEvent('move', () => setFrameloops(map))
+
+  useMapLibreEvent('move', () => setFrameloops(map));
   setFrameloops(map);
 
   renderer.autoClear = false;
@@ -82,7 +87,7 @@ const initialize = () => {
   });
 
   const unsub = mapSize.subscribe((value) => {
-    console.log(value)
+    console.log(value);
     renderer.setSize(value.width, value.height);
   });
 
