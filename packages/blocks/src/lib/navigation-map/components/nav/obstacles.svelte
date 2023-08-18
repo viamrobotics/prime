@@ -1,6 +1,6 @@
 <script lang='ts'>
 
-import { Button } from '@viamrobotics/prime-core';
+import { Button, IconButton, Label, TextInput } from '@viamrobotics/prime-core';
 import { type LngLat, type Geometry, useMapLibre } from '$lib';
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
@@ -52,10 +52,12 @@ const handleSelect = (selection: { name: string; location: LngLat }) => {
   {#if $write}
     <li class='group mb-8 pl-2 border-l border-l-medium'>
       <div class='flex items-end gap-1.5 pb-2'>
-        <v-input class='w-full' label='Name' value={name} />
-        <v-button
-          class='sm:invisible group-hover:visible text-subtle-1'
-          variant='icon'
+        <Label>
+          Name
+          <TextInput slot='input' class='w-full' value={name} />
+        </Label>
+
+        <IconButton
           icon='trash-can-outline'
           on:click={() => dispatch('delete-obstacle', { name })}
         />
@@ -64,14 +66,11 @@ const handleSelect = (selection: { name: string; location: LngLat }) => {
         lng={location.lng}
         lat={location.lat}
         on:input={(event) => dispatch('move-obstacle', { name, lngLat: event.detail })}>
-        <v-button
-          class='sm:invisible group-hover:visible text-subtle-1'
-          variant='icon'
+        <IconButton
           icon='image-filter-center-focus'
-          aria-label="Focus"
+          label='Focus'
           on:click={() => handleSelect({ name, location })}
         />
-
       </LnglatInput>
 
       {#each geometries as geometry, geoIndex (geoIndex)}
@@ -94,24 +93,22 @@ const handleSelect = (selection: { name: string; location: LngLat }) => {
           <small class='text-subtle-2 opacity-60 group-hover:opacity-100'>
             ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
           </small>
-          <v-button
-            class='sm:invisible group-hover:visible text-subtle-1'
-            variant='icon'
+          <IconButton
             icon='image-filter-center-focus'
-            aria-label="Focus {name}"
+            label="Focus {name}"
             on:click={() => handleSelect({ name, location })}
           />
         </div>
       </div>
       {#each geometries as geometry}
         <small class='text-subtle-2'>
-            {#if geometry.type === 'box'}
-              Length: {geometry.length}m, Width: {geometry.width}m, Height: {geometry.height}m
-            {:else if geometry.type === 'sphere'}
-              Radius: {geometry.radius}m
-            {:else if geometry.type === 'capsule'}
-              Radius: {geometry.radius}m, Length: { geometry.length}m
-            {/if}
+          {#if geometry.type === 'box'}
+            Length: {geometry.length}m, Width: {geometry.width}m, Height: {geometry.height}m
+          {:else if geometry.type === 'sphere'}
+            Radius: {geometry.radius}m
+          {:else if geometry.type === 'capsule'}
+            Radius: {geometry.radius}m, Length: { geometry.length}m
+          {/if}
         </small>
 
         {#if geometry.pose.orientationVector.th !== 0}

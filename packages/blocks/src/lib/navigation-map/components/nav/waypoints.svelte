@@ -1,14 +1,17 @@
 <script lang='ts'>
 
+import { IconButton } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import { waypoints } from '../../stores';
 import { flyToMap } from '../../lib/fly-to-map';
+import { useMapLibre } from '$lib/maplibre/hooks';
 
 type Events = {
   'delete-waypoint': string
 }
 
 const dispatch = createEventDispatcher<Events>();
+const { map } = useMapLibre();
 
 </script>
 
@@ -25,17 +28,13 @@ const dispatch = createEventDispatcher<Events>();
       ({waypoint.lng.toFixed(4)}, {waypoint.lat.toFixed(4)})
     </small>
     <div class='flex items-center gap-1.5'>
-      <v-button
-        class='sm:invisible group-hover:visible text-subtle-1'
-        variant='icon'
+      <IconButton
         icon='image-filter-center-focus'
-        aria-label="Focus waypoint {index}"
-        on:click={() => flyToMap(waypoint)}
+        label="Focus waypoint {index}"
+        on:click={() => flyToMap(map, waypoint)}
       />
-      <v-button
-        class='sm:invisible group-hover:visible text-subtle-2'
-        variant='icon'
-        aria-label="Remove waypoint {index}"
+      <IconButton
+        label="Remove waypoint {index}"
         icon='trash-can-outline'
         on:click={() => dispatch('delete-waypoint', waypoint.id)}
       />

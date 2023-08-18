@@ -40,15 +40,21 @@ const handleMapCreate = (currentMap: Map) => {
 </script>
 
 <MapLibre
-  class='grow'
+  class='grow w-auto'
   {minPitch}
   maxPitch={$view === '3D' ? maxPitch : minPitch}
   on:create={(event) => handleMapCreate(event.detail)}
 >
-  <Nav />
+  <Nav
+    on:delete-waypoint
+    on:create-obstacle
+    on:delete-obstacle
+    on:move-obstacle
+    on:change-obstacle-geometry
+  />
   <RobotMarker lngLat={robotLngLat} />
   <Waypoints />
-  <ObstacleLayer />
+  <ObstacleLayer slot='layer' />
   <CenterInputs />
 </MapLibre>
 

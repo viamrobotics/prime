@@ -6,12 +6,13 @@ import ObstaclesTab from './obstacles.svelte';
 import WaypointsTab from './waypoints.svelte';
 
 const handleTabSelect = (event: CustomEvent) => {
+  console.log(event.detail)
   $tab = event.detail.value;
 };
 
 </script>
 
-<nav class='w-full sm:w-80'>
+<nav class='w-full h-full sm:w-80'>
   <Tabs
     tabs={['Waypoints', 'Obstacles']}
     selected={$tab}
@@ -20,12 +21,19 @@ const handleTabSelect = (event: CustomEvent) => {
 
   <ul
     on:mouseleave={() => ($hovered = null)}
-    class='px-4 py-2 max-h-64 sm:max-h-[520px] overflow-y-scroll'
+    class='px-4 py-2 h-[calc(100%-30px)] overflow-y-scroll'
   >
     {#if $tab === 'Waypoints'}
-      <WaypointsTab />
+      <WaypointsTab
+        on:delete-waypoint
+      />
     {:else if $tab === 'Obstacles'}
-      <ObstaclesTab />
+      <ObstaclesTab
+        on:create-obstacle
+        on:delete-obstacle
+        on:move-obstacle
+        on:change-obstacle-geometry
+      />
     {/if}
   </ul>
 </nav>

@@ -1,11 +1,25 @@
+<!--
+  @component
+
+  Creates a maplibre-gl map that will fill its parent.
+
+  Children will mount once the map is fully loaded.
+
+  ```svelte
+    <MapLibre>
+      <MapLibreMarker lngLat={{ lng: 0, lat: 0 }} />
+    </MapLibre>
+  ```
+-->
 <script lang='ts'>
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { onMount, createEventDispatcher, setContext } from 'svelte';
 import { writable } from 'svelte/store';
-import { Map, NavigationControl, type LngLatLike, LngLat } from 'maplibre-gl';
+import { Map, NavigationControl } from 'maplibre-gl';
 import { style } from './style';
+import type { LngLat } from '$lib';
 
 /** The minimum camera pitch. */
 export let minPitch = 0;
@@ -19,10 +33,10 @@ export let zoom = 9;
 /**
  * The initial map center.
  * 
- * @default [-73.984421, 40.7718116]
+ * @default { lng: -73.984421, lat: 40.7718116 }
  * The Viam Robotics office.
  */
-export let center: LngLatLike = [-73.984421, 40.7718116];
+export let center: LngLat = { lng: -73.984421, lat: 40.7718116 };
 
 type Events = {
   /** Fired after the map has been created. */
@@ -35,9 +49,9 @@ type Events = {
 
 const dispatch = createEventDispatcher<Events>();
 const mapStore = writable<Map | undefined>(undefined)
-const centerStore = writable<LngLat>(new LngLat(0, 0))
+const centerStore = writable<LngLat>(center)
 const sizeStore = writable({ width: 0, height: 0 })
-const zoomStore = writable(0)
+const zoomStore = writable(zoom)
 
 setContext('map', mapStore)
 setContext('center', centerStore)
@@ -71,6 +85,7 @@ onMount(() => {
   }
 
   const handleResize = () => {
+    console.log('resize')
     dispatch('resize', map!);
     const size = map!.getCanvas();
     sizeStore.set({
@@ -81,6 +96,8 @@ onMount(() => {
 
   const handleCreate = async () => {
     created = true;
+    const size = map!.getCanvas();
+    sizeStore.set({ width: size.clientWidth, height: size.clientHeight })
     dispatch('create', map!);
   }
 
@@ -104,7 +121,10 @@ $: map?.setMaxPitch(maxPitch);
   <slot />
 {/if}
 
-<div
-  bind:this={container}
-  class="relative w-full h-full {$$restProps.class ?? ''}"
-/>
+<div class='relative w-full h-full {$$restProps.class ?? ''}'>
+  <div
+    bind:this={container}
+    class="relative w-full h-full"
+  />
+  <slot name='layer' />
+</div>

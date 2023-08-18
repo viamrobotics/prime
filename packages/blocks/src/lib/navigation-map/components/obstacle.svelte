@@ -7,7 +7,7 @@ import { view, hovered } from '../stores';
 
 export let obstacle: Obstacle;
 
-let material: THREE.MeshPhongMaterial | undefined;
+let material: THREE.MeshPhongMaterial;
 
 $: material?.color.set($hovered === obstacle.name ? '#FFD400' : '#FF7D80');
 

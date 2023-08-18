@@ -1,4 +1,6 @@
 <script lang='ts'>
+
+import { Radio } from '@viamrobotics/prime-core'
 import { createEventDispatcher } from 'svelte';
 import type { Geometry } from '$lib';
 import VectorInput from '../vector-input.svelte';
@@ -54,9 +56,9 @@ const shapeMap = { box: 'Box', sphere: 'Sphere', capsule: 'Capsule' };
 </script>
 
 <div class='flex flex-col gap-2 my-2'>
-  <v-radio
+  <Radio
     label='Shape'
-    options="Box, Sphere, Capsule"
+    options={['Box', 'Sphere', 'Capsule']}
     selected={shapeMap[geometry.type]}
     on:input={handleShapeSelect}
   />

@@ -82,6 +82,7 @@ const initialize = () => {
   });
 
   const unsub = mapSize.subscribe((value) => {
+    console.log(value)
     renderer.setSize(value.width, value.height);
   });
 
@@ -141,9 +142,7 @@ export const renderPlugin = () =>
     updateModelMatrix(currentProps.lnglat);
 
     const { start, stop } = useFrame(
-      () => {
-        matrix.copy(cameraMatrix).multiply(modelMatrix);
-      },
+      () => matrix.copy(cameraMatrix).multiply(modelMatrix),
       { order: 1 }
     );
 

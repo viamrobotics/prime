@@ -42,7 +42,7 @@ export let min = Number.NEGATIVE_INFINITY;
 export let max = Number.POSITIVE_INFINITY;
 
 /** The HTML input element. */
-export let input: HTMLInputElement | undefined;
+export let input: HTMLInputElement | undefined = undefined;
 
 const dispatch = createEventDispatcher<{
   input: number;
