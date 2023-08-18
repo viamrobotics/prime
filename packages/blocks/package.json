@@ -35,7 +35,7 @@
     "@viamrobotics/prime-core": ">=0.0.10",
     "svelte": ">=4 <5",
     "tailwindcss": ">=3",
-    "three": ">=0.155",
+    "three": ">=0.150",
     "trzy": ">=0.3.11"
   },
   "dependencies": {
