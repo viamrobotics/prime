@@ -9,15 +9,6 @@ on:
       - main
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install 🔧
-        uses: ./.github/actions/setup
-      - name: Run lints and checks
-        run: pnpm -r --aggregate-output check
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +36,15 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           path: packages/legacy/prime
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install 🔧
+        uses: ./.github/actions/setup
+      - name: Run lints and checks
+        run: pnpm -r --aggregate-output check
 
   test:
     timeout-minutes: 20
