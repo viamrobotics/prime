@@ -11,6 +11,9 @@
     </MapLibre>
   ```
 -->
+
+<svelte:options immutable />
+
 <script lang='ts'>
 
 import 'maplibre-gl/dist/maplibre-gl.css';
