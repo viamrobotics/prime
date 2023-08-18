@@ -13,8 +13,9 @@ A table body.
 <script lang="ts">
 /**
  * Custom table body style
- * @example
- * style="border-collapse"
+ * ```
+ * <TableBody style="text-align:center">
+ * ```
  */
 export let style = '';
 </script>

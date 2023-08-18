@@ -14,8 +14,9 @@ A table header.
 <script lang="ts">
 /**
  * Custom table header style
- * @example
- * style="border-collapse"
+ * ```
+ * <TableHeader style="text-align:center">
+ * ```
  */
 export let style = '';
 </script>

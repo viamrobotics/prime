@@ -15,8 +15,9 @@ A table header cell.
 <script lang="ts">
 /**
  * Custom table header cell style
- * @example
- * style="border-collapse"
+ * ```
+ * <TableHeaderCell style="text-align:center">
+ * ```
  */
 export let style = '';
 </script>

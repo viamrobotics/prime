@@ -26,8 +26,9 @@ export let variant: TableRowVariant = '';
 
 /**
  * Custom table row style
- * @example
- * style="border-collapse"
+ * ```
+ * <TableRow style="text-align:center">
+ * ```
  */
 export let style = '';
 </script>

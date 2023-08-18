@@ -25,8 +25,9 @@ export let variant: TableVariant = 'auto';
 
 /**
  * Column width sizes
- * @example
- * cols={["10%", "30%", "60%"]}
+ * ```
+ * <Table cols={["10%", "30%", "60%"]}>
+ * ```
  */
 export let cols: string[] = [];
 

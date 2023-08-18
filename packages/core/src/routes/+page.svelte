@@ -487,14 +487,14 @@ let buttonClickedTimes = 0;
   </ContextMenu>
 
   <!-- Table -->
-  <Table cols={['30%', '70%']}>
+  <Table cols={['10%', '90%']}>
     <TableHeader>
-      <TableHeaderCell>Header</TableHeaderCell>
+      <TableHeaderCell>headerheaderheader (mario underwater theme)</TableHeaderCell>
       <TableHeaderCell>Another header</TableHeaderCell>
     </TableHeader>
     <TableBody style="text-align:center">
       <TableRow>
-        <TableCell>stuff</TableCell>
+        <TableCell>the mitochondria is the powerhouse of the tablecell</TableCell>
         <TableCell>stuffs</TableCell>
       </TableRow>
       <TableRow variant="success">

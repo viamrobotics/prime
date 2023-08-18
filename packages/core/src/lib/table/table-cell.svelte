@@ -14,9 +14,10 @@ A table body.
 
 <script lang="ts">
 /**
- * Custom table data cell style
- * @example
- * style="border-collapse"
+ * Custom table cell style
+ * ```
+ * <TableCell style="text-align:center">
+ * ```
  */
 export let style = '';
 </script>
