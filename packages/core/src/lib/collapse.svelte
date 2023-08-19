@@ -9,7 +9,7 @@ An element that Toggles visibility of content.
     >
       <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
       <Badge slot='header' label='Inactive'></Badge>
-      <div "text-sm p-4 border border-t-0 border-light">Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
+      <div slot='content' "text-sm p-4 border border-t-0 border-light">Motor one was concieved and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Superviser Wallace Breen.</div>
     </Collapse>
 ```
 -->
@@ -77,6 +77,6 @@ const handleClick = () => {
   </div>
 
   {#if open}
-      <slot />
+      <slot name="content"/>
   {/if}
 </div>

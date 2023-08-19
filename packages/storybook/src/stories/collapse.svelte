@@ -9,5 +9,5 @@
 <Collapse open={open} title={title}>
   <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
   <Badge slot='header' label='Inactive'></Badge>
-  <div class="text-sm p-4 border border-t-0 border-light">{content}</div>
+  <div slot='content' class="text-sm p-4 border border-t-0 border-light">{content}</div>
 </Collapse>

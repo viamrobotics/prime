@@ -91,24 +91,24 @@ let buttonClickedTimes = 0;
   <div class="flex gap-4">
     <!-- Collapse -->
     <Collapse title='Motor 1'>
-      <div class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
     </Collapse>
   
     <Collapse title='Motor 1'>
       <Badge slot='header' label='Inactive'></Badge>
-      <div class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
-    </Collapse>
-  
-    <Collapse title='Motor 1'>
-      <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
-      <Badge slot='header' label='Inactive'></Badge>
-      <div class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
     </Collapse>
   
     <Collapse title='Motor 1'>
       <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
       <Badge slot='header' label='Inactive'></Badge>
-      <div class="text-sm p-4">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+    </Collapse>
+  
+    <Collapse title='Motor 1'>
+      <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
+      <Badge slot='header' label='Inactive'></Badge>
+      <div slot='content' class="text-sm p-4">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
     </Collapse>
   </div>
 
