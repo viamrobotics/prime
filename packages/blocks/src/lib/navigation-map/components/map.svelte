@@ -41,31 +41,33 @@ const handleMapCreate = (event: CustomEvent<Map>) => {
 
 </script>
 
-<MapLibre
-  class='grow w-auto'
-  {minPitch}
-  maxPitch={$view === '3D' ? maxPitch : minPitch}
-  on:create={handleMapCreate}
->
-  <Nav
-    on:delete-waypoint
-    on:create-obstacle
-    on:delete-obstacle
-    on:move-obstacle
-    on:change-obstacle-geometry
-  />
-  <RobotMarker lngLat={robotLngLat} />
-  <Waypoints />
-  <ObstacleLayer slot='layer' />
-  <CenterInputs />
-</MapLibre>
-
-{#if localStorage.getItem('debug_3d')}
-  <div class='absolute bottom-12 right-3'>
-    <Radio
-      options={['2D', '3D']}
-      selected={$view}
-      on:input={handleViewSelect}
+<div class='w-full h-full sm:flex items-stretch'>
+  <MapLibre
+    class='relative grow'
+    {minPitch}
+    maxPitch={$view === '3D' ? maxPitch : minPitch}
+    on:create={handleMapCreate}
+  >
+    <Nav
+      on:delete-waypoint
+      on:create-obstacle
+      on:delete-obstacle
+      on:move-obstacle
+      on:change-obstacle-geometry
     />
-  </div>
-{/if}
+    <RobotMarker lngLat={robotLngLat} />
+    <Waypoints />
+    <ObstacleLayer slot='layer' />
+    <CenterInputs />
+
+    {#if localStorage.getItem('prime_debug_3d')}
+      <div class='absolute bottom-12 right-3'>
+        <Radio
+          options={['2D', '3D']}
+          selected={$view}
+          on:input={handleViewSelect}
+        />
+      </div>
+    {/if}
+  </MapLibre>
+</div>

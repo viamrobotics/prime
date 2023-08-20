@@ -41,7 +41,7 @@ export let icon = '';
   {disabled}
   {title}
   class={cx(
-    'mx-auto inline-flex h-8 w-8 items-center justify-center whitespace-nowrap ' +
+    'mx-auto inline-flex h-[30px] w-[30px] items-center justify-center whitespace-nowrap ' +
       'text-gray-6 hover:border-medium hover:bg-medium active:bg-gray-2',
     {
       'pointer-events-none select-none text-disabled-dark': disabled,

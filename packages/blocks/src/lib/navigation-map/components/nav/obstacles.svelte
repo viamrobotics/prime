@@ -62,23 +62,28 @@ const handleLngLatInput = (name: string) => (event: CustomEvent<LngLat>) => {
       <div class='flex items-end gap-1.5 pb-2'>
         <Label>
           Name
-          <TextInput slot='input' class='w-full' value={name} />
+          <TextInput slot='input' value={name} />
         </Label>
 
-        <IconButton
-          icon='trash-can-outline'
-          on:click={() => dispatch('delete-obstacle', { name })}
-        />
+        <div class='grow'>
+          <IconButton
+            icon='trash-can-outline'
+            on:click={() => dispatch('delete-obstacle', { name })}
+          />
+        </div>
       </div>
       <LnglatInput
         lng={location.lng}
         lat={location.lat}
         on:input={handleLngLatInput(name)}>
-        <IconButton
-          icon='image-filter-center-focus'
-          label='Focus'
-          on:click={() => handleSelect({ name, location })}
-        />
+        <div class='grow'>
+          <IconButton
+            icon='image-filter-center-focus'
+            label='Focus'
+            on:click={() => handleSelect({ name, location })}
+          />
+        </div>
+        
       </LnglatInput>
 
       {#each geometries as geometry, geoIndex (geoIndex)}

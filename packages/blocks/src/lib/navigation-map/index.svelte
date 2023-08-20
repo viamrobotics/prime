@@ -39,13 +39,11 @@ $: $writeStore = mode === 'configure';
 
 </script>
 
-<div class='w-full h-full sm:flex items-stretch'>
-  <Map
-    on:click
-    on:delete-waypoint
-    on:create-obstacle
-    on:delete-obstacle
-    on:move-obstacle
-    on:change-obstacle-geometry
-  />
-</div>
+<Map
+  on:click
+  on:delete-waypoint
+  on:create-obstacle
+  on:delete-obstacle
+  on:move-obstacle
+  on:change-obstacle-geometry
+/>

@@ -13,11 +13,11 @@ const fetchPointcloud = async () => {
 
 </script>
 
-<div class='flex flex-col gap-6 py-6'>
+<div class='m-auto max-w-6xl flex flex-col gap-6 py-6'>
   <NavigationMap />
 
   <div class='px-12'>
-    <div class='relative w-full h-[400px] border border-gray-200'>
+    <div class='relative w-full border border-gray-200 aspect-video'>
       {#await fetchPointcloud() then pointcloud}
         <SlamMap2D
           {pointcloud}
@@ -26,9 +26,9 @@ const fetchPointcloud = async () => {
       {/await}
     </div>
   </div>
-  
-  <div class="px-12 pt-0">
-    <div class='relative w-full h-[400px] border border-gray-200'>
+
+  <div class='px-12'>
+    <div class="relative w-full pt-0 border border-gray-200 aspect-video">
       <MapLibre />
     </div>
   </div>

@@ -25,7 +25,7 @@ let lngInput: HTMLInputElement
     incrementor={readonly ? undefined : 'slider'}
     value={lat}
     step={1}
-    class='w-full'
+    class='grow'
     on:input={() => dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
     {readonly}
   />
@@ -37,7 +37,7 @@ let lngInput: HTMLInputElement
     incrementor={readonly ? undefined : 'slider'}
     value={lng}
     step={1}
-    class='w-full'
+    class='grow'
     on:input={() => dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
     {readonly}
   />

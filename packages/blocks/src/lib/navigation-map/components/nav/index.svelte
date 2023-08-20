@@ -11,7 +11,7 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
 
 </script>
 
-<nav class='w-full h-full sm:w-80'>
+<nav class='sm:h-full sm:w-[350px]'>
   <Tabs
     tabs={['Waypoints', 'Obstacles']}
     selected={$tab}
@@ -20,7 +20,7 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
 
   <ul
     on:mouseleave={() => ($hovered = null)}
-    class='px-4 py-2 h-[calc(100%-30px)] overflow-y-scroll'
+    class='px-4 py-2 sm:h-[calc(100%-30px)] overflow-y-scroll'
   >
     {#if $tab === 'Waypoints'}
       <WaypointsTab

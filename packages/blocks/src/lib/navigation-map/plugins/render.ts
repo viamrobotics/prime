@@ -64,7 +64,7 @@ const initialize = () => {
   initialized = true;
 
   const { renderer, scene, camera } = useThrelte();
-  const { map, mapSize } = useMapLibre();
+  const { map } = useMapLibre();
 
   useMapLibreEvent('move', () => setFrameloops(map));
   setFrameloops(map);
@@ -85,12 +85,6 @@ const initialize = () => {
       world.remove(ref);
     }
   });
-
-  const unsub = mapSize.subscribe((value) => {
-    renderer.setSize(value.width, value.height);
-  });
-
-  onDestroy(() => unsub());
 };
 
 const deinitialize = () => {
