@@ -1,4 +1,5 @@
 <script lang='ts'>
+/* eslint-disable no-console */
 
 import { NavigationMap, type CapsuleGeometry, type SphereGeometry, type BoxGeometry } from '$lib';
 import { ViamObject3D } from '@viamrobotics/three';

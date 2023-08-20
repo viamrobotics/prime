@@ -18,7 +18,7 @@
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { onMount, createEventDispatcher, setContext, onDestroy, tick } from 'svelte';
+import { onMount, createEventDispatcher, setContext, onDestroy } from 'svelte';
 import { writable } from 'svelte/store';
 import { Map, NavigationControl } from 'maplibre-gl';
 import { style } from './style';
@@ -73,13 +73,12 @@ const setMapSize = () => {
   })
 };
 
-const handleCreate = async () => {
+const handleCreate = () => {
   created = true;
   dispatch('create', map!);
 
   // Resize the map after any slots have been rendered.
-  await tick()
-  map!.resize()
+  requestAnimationFrame(() => map!.resize())
 };
 
 const handleMove = () => {
