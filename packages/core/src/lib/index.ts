@@ -29,3 +29,10 @@ export {
   default as TextInput,
   type TextInputTypes,
 } from './input/text-input.svelte';
+
+export { default as Table } from './table/table.svelte';
+export { default as TableHeader } from './table/table-header.svelte';
+export { default as TableHeaderCell } from './table/table-header-cell.svelte';
+export { default as TableBody } from './table/table-body.svelte';
+export { default as TableRow } from './table/table-row.svelte';
+export { default as TableCell } from './table/table-cell.svelte';

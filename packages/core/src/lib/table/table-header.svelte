@@ -1,0 +1,35 @@
+<!--
+@component
+  
+A table header.
+```svelte
+<Table>
+  <TableHeader>
+  </TableHeader>
+</Table>
+```
+-->
+<svelte:options immutable />
+
+<script lang="ts">
+/**
+ * Custom table header style
+ * ```
+ * <TableHeader style="text-align:center">
+ * ```
+ */
+export let style = '';
+</script>
+
+<thead
+  {style}
+  class="border-b border-black"
+>
+  <slot />
+</thead>
+
+<style>
+:host {
+  display: contents !important;
+}
+</style>

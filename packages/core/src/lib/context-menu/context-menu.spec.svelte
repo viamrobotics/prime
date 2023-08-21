@@ -1,7 +1,7 @@
 <!-- 
   @component
 
-  This component allows us to render a Tooltip with its slotted
+  This component allows us to render a Context Menu with its slotted
   children, due to limitations with rendering slots using
   `@testing-library`.
 

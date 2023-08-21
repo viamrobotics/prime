@@ -146,9 +146,9 @@ const handlePointerDown = async (event: PointerEvent) => {
     {type}
     {step}
     {...$$restProps}
-    style='padding-left: 0.75rem;'
+    style="padding-left: 0.75rem;"
     bind:value
-    bind:input={input}
+    bind:input
     on:input
     on:keydown
   />
@@ -159,7 +159,7 @@ const handlePointerDown = async (event: PointerEvent) => {
     {#if isDragging}
       <div
         bind:this={numberDragCord}
-        class="pointer-events-none mt-[calc(13px)] h-px bg-gray-400 z-100"
+        class="z-100 pointer-events-none mt-[calc(13px)] h-px bg-gray-400"
       />
       <div
         bind:this={numberDragHead}

@@ -48,8 +48,7 @@ $: icon = {
   warn: 'alert',
   error: 'alert-circle',
   none: '',
-}[state]
-
+}[state];
 </script>
 
 <div class="relative w-full">
