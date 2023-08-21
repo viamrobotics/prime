@@ -3,6 +3,7 @@ import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button/button.svelte';
 import ButtonIcon from '$lib/button/button-icon.svelte';
+import Collapse from '$lib/collapse.svelte';
 import ContextMenu from '$lib/context-menu/context-menu.svelte';
 import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
 import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
@@ -85,6 +86,30 @@ let buttonClickedTimes = 0;
         console.log(`button clicked ${buttonClickedTimes} times!`);
       }}
     />
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Collapse -->
+    <Collapse title='Motor 1'>
+      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+    </Collapse>
+  
+    <Collapse title='Motor 1'>
+      <Badge slot='header' label='Inactive'></Badge>
+      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+    </Collapse>
+  
+    <Collapse title='Motor 1'>
+      <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
+      <Badge slot='header' label='Inactive'></Badge>
+      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+    </Collapse>
+  
+    <Collapse title='Motor 1'>
+      <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
+      <Badge slot='header' label='Inactive'></Badge>
+      <div slot='content' class="text-sm p-4">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+    </Collapse>
   </div>
 
   <div class="flex gap-4">
