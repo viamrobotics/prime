@@ -1,29 +1,35 @@
 <script lang='ts'>
 
-import type * as THREE from 'three';
-import VectorInput from '../vector-input.svelte';
-import { OrientationVector } from '@viamrobotics/three';
+import { createEventDispatcher } from 'svelte';
+import { SliderInput, Label } from '@viamrobotics/prime-core';
 
-export let quaternion: THREE.Quaternion;
-export let view: '2D' | '3D' = '2D';
+export let th: number;
 
-const ov = new OrientationVector();
+const dispatch = createEventDispatcher<{ input: number }>();
 
-$: ov.setFromQuaternion(quaternion);
+let input: HTMLInputElement;
+
+const handleInput = () => {
+  const value = input.valueAsNumber
+
+  console.log(value)
+
+  if (!Number.isNaN(value)) {
+    dispatch('input', value);
+  }
+};
 
 </script>
 
-{#if view === '2D'}
-  <VectorInput
-    labels={['th']}
-    values={[ov.th]}
-    step={0.1}
-    on:input
+<Label>
+  Rotation
+  <SliderInput
+    bind:input={input}
+    value={th}
+    placholder={0}
+    on:blur={handleInput}
+    on:slide={handleInput}
+    on:keydown={(event) => event.key === 'Enter' && handleInput()}
   />
-{:else if view === '3D'}
-  <VectorInput
-    labels={['x', 'y', 'z', 'w']}
-    values={[quaternion.x, quaternion.y, quaternion.z, quaternion.w]}
-    on:input
-  />
-{/if}
+</Label>
+

@@ -69,6 +69,8 @@ const obstacles = [
   }
 ]
 
+console.log(obstacles[0]?.geometries[0]?.pose)
+
 </script>
 
 <div class="px-12">
@@ -80,10 +82,9 @@ const obstacles = [
       {obstacles}
       {waypoints}
       on:click={(event) => console.log('click', event)}
-      on:create-obstacle={(event) => console.log('create-obstacle', event)}
-      on:delete-obstacle={(event) => console.log('delete-obstacle', event)}
-      on:change-obstacle-geometry={(event) => console.log('change-obstacle-geometry', event)}
+      on:add-waypoint={(event) => console.log('add-waypoint', event)}
       on:delete-waypoint={(event) => console.log('delete-waypoint', event)}
+      on:update-obstacles={(event) => console.log('update-obstacles', event)}
     />
   </div>
 </div>

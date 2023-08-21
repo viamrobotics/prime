@@ -1,9 +1,13 @@
 <script lang='ts'>
 
+import { createEventDispatcher } from 'svelte';
 import { Tabs } from '@viamrobotics/prime-core';
+import type { Obstacle } from '$lib';
 import { tab, tabs, hovered } from '../../stores';
 import ObstaclesTab from './obstacles.svelte';
 import WaypointsTab from './waypoints.svelte';
+
+const dispatch = createEventDispatcher<{ 'update-obstacles': Obstacle[] }>();
 
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
   $tab = event.detail.value as 'Obstacles' | 'Waypoints';
@@ -29,9 +33,7 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
       />
     {:else if $tab === 'Obstacles'}
       <ObstaclesTab
-        on:create-obstacle
-        on:delete-obstacle
-        on:update-obstacle
+        on:update={(event) => dispatch('update-obstacles', event.detail)}
       />
     {/if}
   </ul>

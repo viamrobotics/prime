@@ -1,58 +1,54 @@
 
 <script lang='ts'>
 
-import type * as THREE from 'three';
+import * as THREE from 'three';
 import { T } from '@threlte/core';
-import type { Obstacle, Geometry } from '$lib';
+import type { Obstacle } from '$lib';
 import { view, hovered } from '../stores';
 
 export let obstacle: Obstacle;
 
-const handleMeshCreate = (geometry: Geometry) => ({ ref }: { ref: THREE.Mesh }) => {
-  ref.rotation.y = geometry.pose.orientationVector.th;
-}
-
 let material: THREE.MeshPhongMaterial;
 
+$: name = obstacle.name;
 $: material?.color.set($hovered === obstacle.name ? '#FFD400' : '#FF7D80');
-
 
 </script>
 
 {#each obstacle.geometries as geometry, index (index)}
   <T.Mesh
-    name={obstacle.name}
-    obstacle={obstacle.name}
+    name={name}
+    obstacle={name}
     lnglat={obstacle.location}
-    on:create={handleMeshCreate(geometry)}
+    rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
   >
     {#if geometry.type === 'box'}
       {#if $view === '3D'}
         <T.BoxGeometry
-          computeBounding={obstacle.name}
+          computeBounding={name}
           args={[geometry.length, geometry.width, geometry.height]}
         />
       {:else}
         <T.PlaneGeometry
-          computeBounding={obstacle.name}
+          computeBounding={name}
           args={[geometry.length, geometry.width]}
         />
       {/if}
     {:else if geometry.type === 'sphere'}
       {#if $view === '3D'}
         <T.SphereGeometry
-          computeBounding={obstacle.name}
+          computeBounding={name}
           args={[geometry.radius]}
         />
       {:else}
         <T.CircleGeometry
-          computeBounding={obstacle.name}
+          computeBounding={name}
           args={[geometry.radius]}
         />
       {/if}
     {:else if geometry.type === 'capsule'}
       <T.CapsuleGeometry
-        computeBounding={obstacle.name}
+        computeBounding={name}
         args={[geometry.radius, geometry.length, 16, 32]}
       />
     {/if}

@@ -41,9 +41,9 @@ const handleGeometryInput = (name: string, geoIndex: number) => (event: CustomEv
   dispatch('update', $obstacles);
 };
 
-const handleOrientationInput = (name: string, geoIndex: number) => (event: CustomEvent<number[]>) => {
+const handleOrientationInput = (name: string, geoIndex: number) => (event: CustomEvent<number>) => {
   const index = $obstacles.findIndex((obstacle) => obstacle.name === name);
-  $obstacles[index]!.geometries[geoIndex]!.pose.rotation.y = event.detail[0]!;
+  $obstacles[index]!.geometries[geoIndex]!.pose.orientationVector.th = event.detail;
   dispatch('update', $obstacles);
 }
 
@@ -104,9 +104,10 @@ useMapLibreEvent('click', (event) => {
           on:input={handleGeometryInput(name, geoIndex)}
         />
         <OrientationInput
-          quaternion={geometry.pose.quaternion}
+          th={geometry.pose.orientationVector.th}
           on:input={handleOrientationInput(name, geoIndex)}
         />
+        
       {/each}
     </li>
 

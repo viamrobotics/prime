@@ -27,7 +27,7 @@ let cursor = 0;
 
 export const scenes: {
   ref: THREE.Mesh;
-  matrix: THREE.Matrix4
+  matrix: THREE.Matrix4;
 }[] = [];
 
 const objects: {
@@ -62,7 +62,6 @@ export const setFrameloops = (map: Map) => {
 
 export interface Props {
   lnglat?: LngLat;
-  altitude?: number;
 }
 
 export const renderPlugin = () =>
@@ -83,8 +82,8 @@ export const renderPlugin = () =>
     const sceneObj = { ref: currentRef, matrix };
     scenes.push(sceneObj);
 
-    const updateModelMatrix = (lngLat: LngLat, altitude?: number) => {
-      const mercator = MercatorCoordinate.fromLngLat(lngLat, altitude);
+    const updateModelMatrix = (lngLat: LngLat) => {
+      const mercator = MercatorCoordinate.fromLngLat(lngLat);
       const scaleScalar = mercator.meterInMercatorCoordinateUnits();
       scale.set(scaleScalar, -scaleScalar, scaleScalar);
 
@@ -115,7 +114,12 @@ export const renderPlugin = () =>
 
     cursor += 1;
 
-    objects.push({ id: cursor, lngLat: currentProps.lnglat, start, stop });
+    objects.push({
+      id: cursor,
+      lngLat: currentProps.lnglat,
+      start,
+      stop
+    });
 
     const id = cursor;
 
@@ -125,15 +129,15 @@ export const renderPlugin = () =>
         sceneObj.ref = nextRef;
 
         if (currentProps.lnglat) {
-          updateModelMatrix(currentProps.lnglat, currentProps.altitude);
+          updateModelMatrix(currentProps.lnglat);
         }
 
         return () => {
           stop();
-          const index = objects.findIndex((object) => object.id === id)
+          const index = objects.findIndex((object) => object.id === id);
           objects.splice(index, 1);
           scenes.splice(scenes.indexOf(sceneObj), 1);
-        }
+        };
       },
       onPropsChange(nextProps) {
         currentProps = nextProps;
@@ -146,8 +150,8 @@ export const renderPlugin = () =>
         lngLat.lng = currentProps.lnglat.lng;
         lngLat.lat = currentProps.lnglat.lat;
 
-        updateModelMatrix(currentProps.lnglat, currentProps.altitude);
+        updateModelMatrix(currentProps.lnglat);
       },
-      pluginProps: ['lnglat', 'altitude'],
+      pluginProps: ['lnglat'],
     };
   });

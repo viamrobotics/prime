@@ -49,10 +49,9 @@ const handleMapCreate = (event: CustomEvent<Map>) => {
     on:create={handleMapCreate}
   >
     <Nav
+      on:add-obstacle
       on:delete-waypoint
-      on:create-obstacle
-      on:delete-obstacle
-      on:update-obstacle
+      on:update-obstacles
     />
     <RobotMarker lngLat={robotLngLat} />
     <Waypoints />

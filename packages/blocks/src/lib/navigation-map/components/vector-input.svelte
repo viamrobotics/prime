@@ -15,14 +15,18 @@ const inputs: HTMLInputElement[] = [];
 const dispatch = createEventDispatcher<{ input: number[] }>();
 
 const handleInput = (index: number) => {
-  return () => {
-    const value = inputs[index]?.valueAsNumber
+  const value = inputs[index]?.valueAsNumber
 
-    if (value !== undefined) {
-      values[index] = value;
-      dispatch('input', values);
-    }
-  };
+  if (value !== undefined && !Number.isNaN(value)) {
+    values[index] = value;
+    dispatch('input', values);
+  }
+};
+
+const handleKeydown = (event: KeyboardEvent, index: number) => {
+  if (event.key === 'Enter') {
+    handleInput(index);
+  }
 };
 
 </script>
@@ -41,7 +45,9 @@ const handleInput = (index: number) => {
         readonly={readonly ? 'readonly' : undefined}
         value={values[index]}
         incrementor={readonly ? '' : 'slider'}
-        on:input={handleInput(index)}
+        on:blur={() => handleInput(index)}
+        on:slide={() => handleInput(index)}
+        on:keydown={(event) => handleKeydown(event, index)}
       />
     </Label>
   {/each}

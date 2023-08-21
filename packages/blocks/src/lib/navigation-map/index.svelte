@@ -55,5 +55,5 @@ $: $writeStore = mode === 'configure';
   on:click
   on:add-waypoint
   on:delete-waypoint
-  on:update-obstacle
+  on:update-obstacles
 />

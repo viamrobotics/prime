@@ -1,4 +1,8 @@
-export const createName = (existingNames: string[], template: string, index: number) => {
+export const createName = (
+  existingNames: string[],
+  template: string,
+  index: number
+) => {
   let i = index;
   let name = `${template}-${i}`;
 
@@ -6,6 +10,6 @@ export const createName = (existingNames: string[], template: string, index: num
     i += 1;
     name = `${template}-${i}`;
   }
-  
+
   return name;
 };

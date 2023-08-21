@@ -44,10 +44,13 @@ export let max = Number.POSITIVE_INFINITY;
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
 
-const dispatch = createEventDispatcher<{
+type Events = {
   input: number;
+  slide: number;
   keydown: number;
-}>();
+}
+
+const dispatch = createEventDispatcher<Events>();
 
 let numberDragTooltip: Tooltip;
 let numberDragCord: HTMLDivElement;
@@ -58,8 +61,8 @@ let startValue = 0;
 
 let stepDecimalDigits = 0;
 $: {
-  const decimal = step % 1;
-  stepDecimalDigits = decimal === 0 ? 0 : `${decimal}`.length;
+  const [_integer, decimal = ''] = String(step).split('')
+  stepDecimalDigits = decimal.length;
 }
 
 $: isNumber = type === 'number';
@@ -103,6 +106,7 @@ const handlePointerMove = (event: PointerEvent) => {
   if (value !== next) {
     value = next;
     dispatch('input', value);
+    dispatch('slide', value);
   }
 
   /**
@@ -153,6 +157,7 @@ const handlePointerDown = async (event: PointerEvent) => {
     bind:input={input}
     on:input
     on:keydown
+    on:blur
   />
   <div
     class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700"

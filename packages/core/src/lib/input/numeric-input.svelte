@@ -44,4 +44,6 @@ $: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
   bind:value
   bind:input={input}
   on:input
+  on:blur
+  on:keydown
 />

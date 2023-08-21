@@ -76,6 +76,7 @@ $: icon = {
     bind:this={input}
     on:input
     on:keydown
+    on:blur
   />
 
   {#if icon !== ''}
