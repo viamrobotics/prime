@@ -61,7 +61,7 @@ let startValue = 0;
 
 let stepDecimalDigits = 0;
 $: {
-  const [_integer, decimal = ''] = String(step).split('')
+  const [, decimal = ''] = String(step).split('.')
   stepDecimalDigits = decimal.length;
 }
 
