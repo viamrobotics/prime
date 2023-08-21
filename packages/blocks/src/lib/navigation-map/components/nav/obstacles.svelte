@@ -1,24 +1,23 @@
 <script lang='ts'>
 
-import { Button, IconButton, Label, TextInput } from '@viamrobotics/prime-core';
-import { type LngLat, type Geometry, useMapLibre } from '$lib';
+import { IconButton, Label, TextInput } from '@viamrobotics/prime-core';
+import { type LngLat, type Geometry, useMapLibre, type Obstacle, useMapLibreEvent } from '$lib';
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
 import { write, hovered, boundingRadius, obstacles } from '../../stores';
 import { calculateBoundingBox } from '../../lib/bounding-box';
 import { createEventDispatcher } from 'svelte';
+import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
+import { createName } from '$lib/navigation-map/lib/create-name';
 
 type Events = {
-  'create-obstacle': { lngLat: LngLat }
-  'delete-obstacle': { name: string }
-  'move-obstacle': { name: string; lngLat: LngLat }
-  'change-obstacle-geometry': { name: string; geometry: Geometry }
+  update: Obstacle[]
 };
 
 const dispatch = createEventDispatcher<Events>();
 
-const { map, mapCenter } = useMapLibre()
+const { map } = useMapLibre();
 
 const handleSelect = (selection: { name: string; location: LngLat }) => {
   const zoom = boundingRadius[selection.name]!;
@@ -26,56 +25,69 @@ const handleSelect = (selection: { name: string; location: LngLat }) => {
   map.fitBounds(bb, { duration: 800, curve: 0.1 });
 };
 
-const handleGeometryInput = (name: string) => (event: CustomEvent<Geometry>) => {
-  dispatch('change-obstacle-geometry', { name, geometry: event.detail })
+const handleLngLatInput = (name: string) => (event: CustomEvent<LngLat>) => {
+  const index = $obstacles.findIndex((obstacle) => obstacle.name === name);
+  $obstacles[index]!.location = event.detail;
+  dispatch('update', $obstacles);
+};
+
+const handleDeleteObstacle = (name: string) => () => {
+  $obstacles = $obstacles.filter((obstacle) => obstacle.name !== name);
+};
+
+const handleGeometryInput = (name: string, geoIndex: number) => (event: CustomEvent<Geometry>) => {
+  const index = $obstacles.findIndex((obstacle) => obstacle.name === name);
+  $obstacles[index]!.geometries[geoIndex] = event.detail;
+  dispatch('update', $obstacles);
+};
+
+const handleOrientationInput = (name: string, geoIndex: number) => (event: CustomEvent<number[]>) => {
+  const index = $obstacles.findIndex((obstacle) => obstacle.name === name);
+  $obstacles[index]!.geometries[geoIndex]!.pose.rotation.y = event.detail[0]!;
+  dispatch('update', $obstacles);
 }
 
-const handleLngLatInput = (name: string) => (event: CustomEvent<LngLat>) => {
-  dispatch('move-obstacle', { name, lngLat: event.detail })
-}
+useMapLibreEvent('click', (event) => {
+  const names = $obstacles.map((obstacle) => obstacle.name);
+  const name = createName(names, 'obstacle', $obstacles.length);
+  $obstacles = [createObstacle(name, event.lngLat), ...$obstacles];
+  dispatch('update', $obstacles);
+})
 
 </script>
 
 {#if $obstacles.length === 0}
   <li class='text-xs text-subtle-2 font-sans py-2'>
     {#if write}
-      Click to add an obstacle.
+      Click on the map to add an obstacle.
     {:else}
-      Add a static obstacle in your robot's config.
+      Add static obstacles in your navigation service config.
     {/if}
   </li>
-{/if}
-
-{#if $write}
-  <div class='my-4'>
-    <Button
-      icon='plus'
-      label='Add'
-      on:click={() => dispatch('create-obstacle', { lngLat: $mapCenter })}
-    />
-  </div>
 {/if}
 
 {#each $obstacles as { name, location, geometries }, index (index)}
   {#if $write}
     <li class='group mb-8 pl-2 border-l border-l-medium'>
       <div class='flex items-end gap-1.5 pb-2'>
+        <!-- @todo(mp) obstacle API doesn't yet allow custom names. -->
         <Label>
           Name
-          <TextInput slot='input' value={name} />
+          <TextInput slot='input' readonly value={name} />
         </Label>
 
         <div class='grow'>
           <IconButton
             icon='trash-can-outline'
-            on:click={() => dispatch('delete-obstacle', { name })}
+            on:click={handleDeleteObstacle(name)}
           />
         </div>
       </div>
       <LnglatInput
         lng={location.lng}
         lat={location.lat}
-        on:input={handleLngLatInput(name)}>
+        on:input={handleLngLatInput(name)}
+      >
         <div class='grow'>
           <IconButton
             icon='image-filter-center-focus'
@@ -89,9 +101,12 @@ const handleLngLatInput = (name: string) => (event: CustomEvent<LngLat>) => {
       {#each geometries as geometry, geoIndex (geoIndex)}
         <GeometryInputs
           {geometry}
-          on:input={handleGeometryInput(name)}
+          on:input={handleGeometryInput(name, geoIndex)}
         />
-        <OrientationInput quaternion={geometry.pose.quaternion} />
+        <OrientationInput
+          quaternion={geometry.pose.quaternion}
+          on:input={handleOrientationInput(name, geoIndex)}
+        />
       {/each}
     </li>
 

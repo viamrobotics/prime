@@ -10,7 +10,7 @@ export let type: 'integer' | 'number' = 'number';
 export let values: number[] = [];
 export let step = 1;
 
-const inputs: HTMLInputElement[] = []
+const inputs: HTMLInputElement[] = [];
 
 const dispatch = createEventDispatcher<{ input: number[] }>();
 

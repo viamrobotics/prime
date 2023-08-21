@@ -11,6 +11,9 @@ export const obstacles = currentWritable<Obstacle[]>([]);
 /** The currently selected tab. */
 export const tab = writable<'Obstacles' | 'Waypoints'>('Waypoints');
 
+/** The visible set of tabs. */
+export const tabs = writable<string[]>(['Obstacles', 'Waypoints']);
+
 /** If we're looking at obstacles in a 2d top-down or 3d orbiting view */
 export const view = currentWritable<'2D' | '3D'>('2D');
 

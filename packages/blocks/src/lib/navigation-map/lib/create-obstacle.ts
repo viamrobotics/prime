@@ -1,5 +1,4 @@
-import { LngLat } from 'maplibre-gl';
-import type { Obstacle, Shapes } from '$lib';
+import type { Obstacle, Shapes, LngLat } from '$lib';
 import { createGeometry } from './geometry';
 
 export const createObstacle = (
@@ -9,7 +8,7 @@ export const createObstacle = (
 ): Obstacle => {
   return {
     name,
-    location: new LngLat(lngLat.lng, lngLat.lat),
+    location: { lng: lngLat.lng, lat: lngLat.lat },
     geometries: [createGeometry(type)],
   };
 };

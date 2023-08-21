@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { injectPlugin, useFrame, useRender, useThrelte } from '@threlte/core';
+import { injectPlugin, useFrame, useThrelte } from '@threlte/core';
 import {
   MercatorCoordinate,
   LngLatBounds,
@@ -8,13 +8,11 @@ import {
 } from 'maplibre-gl';
 import { AxesHelper } from 'trzy';
 import { cameraMatrix } from '../stores';
-import { onDestroy } from 'svelte';
-import { useMapLibre, useMapLibreEvent } from '$lib/maplibre/hooks';
 
 const { clamp } = THREE.MathUtils;
 
-const world = new THREE.Group();
-const axes = new AxesHelper(1, 0.1);
+export const world = new THREE.Group();
+export const axes = new AxesHelper(1, 0.1);
 const rotation = new THREE.Euler();
 const rotationMatrix = new THREE.Matrix4();
 const scale = new THREE.Vector3();
@@ -25,11 +23,13 @@ world.rotateX(-Math.PI / 2);
 world.rotateZ(Math.PI / 2);
 world.add(axes);
 
-let initialized = false;
-let counter = 0;
 let cursor = 0;
 
-const scenes: { ref: THREE.Mesh; matrix: THREE.Matrix4 }[] = [];
+export const scenes: {
+  ref: THREE.Mesh;
+  matrix: THREE.Matrix4
+}[] = [];
+
 const objects: {
   id: number;
   start: () => void;
@@ -37,7 +37,7 @@ const objects: {
   lngLat: LngLat;
 }[] = [];
 
-const setFrameloops = (map: Map) => {
+export const setFrameloops = (map: Map) => {
   const bounds = map.getBounds();
   const sw = bounds.getSouthWest();
   const ne = bounds.getNorthEast();
@@ -60,40 +60,6 @@ const setFrameloops = (map: Map) => {
   }
 };
 
-const initialize = () => {
-  initialized = true;
-
-  const { renderer, scene, camera } = useThrelte();
-  const { map } = useMapLibre();
-
-  useMapLibreEvent('move', () => setFrameloops(map));
-  setFrameloops(map);
-
-  renderer.autoClear = false;
-
-  scene.add(world);
-
-  useRender(() => {
-    renderer.clear();
-
-    for (const { ref, matrix } of scenes) {
-      camera.current.projectionMatrix = matrix;
-      axes.length = (ref.geometry.boundingSphere?.radius ?? 0) * 2;
-
-      world.add(ref);
-      renderer.render(scene, camera.current);
-      world.remove(ref);
-    }
-  });
-};
-
-const deinitialize = () => {
-  initialized = false;
-
-  scenes.splice(0, scenes.length);
-  objects.splice(0, objects.length);
-};
-
 export interface Props {
   lnglat?: LngLat;
   altitude?: number;
@@ -109,10 +75,6 @@ export const renderPlugin = () =>
       currentProps.lnglat === undefined
     ) {
       return;
-    }
-
-    if (!initialized) {
-      initialize();
     }
 
     const matrix = new THREE.Matrix4();
@@ -152,24 +114,10 @@ export const renderPlugin = () =>
     scene.remove(currentRef);
 
     cursor += 1;
-    counter += 1;
 
     objects.push({ id: cursor, lngLat: currentProps.lnglat, start, stop });
 
     const id = cursor;
-
-    onDestroy(() => {
-      stop();
-      objects.splice(
-        objects.findIndex((object) => object.id === id),
-        1
-      );
-      scenes.splice(scenes.indexOf(sceneObj), 1);
-      counter -= 1;
-      if (counter === 0) {
-        deinitialize();
-      }
-    });
 
     return {
       onRefChange(nextRef: THREE.Mesh) {
@@ -178,6 +126,13 @@ export const renderPlugin = () =>
 
         if (currentProps.lnglat) {
           updateModelMatrix(currentProps.lnglat, currentProps.altitude);
+        }
+
+        return () => {
+          stop();
+          const index = objects.findIndex((object) => object.id === id)
+          objects.splice(index, 1);
+          scenes.splice(scenes.indexOf(sceneObj), 1);
         }
       },
       onPropsChange(nextProps) {

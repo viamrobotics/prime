@@ -4,20 +4,34 @@ import { IconButton } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import { waypoints } from '../../stores';
 import { flyToMap } from '../../lib/fly-to-map';
-import { useMapLibre } from '$lib/maplibre/hooks';
+import { useMapLibre, type LngLat, useMapLibreEvent } from '$lib';
 
 type Events = {
+  'add-waypoint': LngLat
   'delete-waypoint': string
 }
 
 const dispatch = createEventDispatcher<Events>();
 const { map } = useMapLibre();
 
+const handleDeleteWaypoint = (id: string) => {
+  $waypoints = $waypoints.filter((waypoint) => waypoint.id !== id);
+  dispatch('delete-waypoint', id);
+}
+
+useMapLibreEvent('click', (event) => {
+  $waypoints = [...$waypoints, {
+    id: crypto.randomUUID(),
+    lng: event.lngLat.lng,
+    lat: event.lngLat.lat,
+  }]
+})
+
 </script>
 
 {#if $waypoints.length === 0}
   <li class='text-xs text-subtle-2 font-sans py-2'>
-    Click to add a waypoint.
+    Click on the map to add a waypoint.
   </li>
 {/if}
 
@@ -36,7 +50,7 @@ const { map } = useMapLibre();
       <IconButton
         label="Remove waypoint {index}"
         icon='trash-can-outline'
-        on:click={() => dispatch('delete-waypoint', waypoint.id)}
+        on:click={() => handleDeleteWaypoint(waypoint.id)}
       />
     </div>
   </li>

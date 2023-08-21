@@ -75,12 +75,15 @@ const obstacles = [
   <div class='relative w-full h-[800px] sm:h-auto sm:aspect-video border border-gray-200'>
     <NavigationMap
       mode='configure'
+      tab='Obstacles'
+      tabs={['Obstacles', 'Waypoints']}
       {obstacles}
       {waypoints}
       on:click={(event) => console.log('click', event)}
       on:create-obstacle={(event) => console.log('create-obstacle', event)}
       on:delete-obstacle={(event) => console.log('delete-obstacle', event)}
       on:change-obstacle-geometry={(event) => console.log('change-obstacle-geometry', event)}
+      on:delete-waypoint={(event) => console.log('delete-waypoint', event)}
     />
   </div>
 </div>
