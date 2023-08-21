@@ -96,25 +96,64 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <!-- Collapse -->
-    <Collapse title='Motor 1'>
-      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+    <Collapse title="Motor 1">
+      <div
+        slot="content"
+        class="border border-t-0 border-light p-4 text-sm"
+      >
+        Motor one was conceived and executed at Bell Labs in 1972 under the
+        guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+      </div>
     </Collapse>
-  
-    <Collapse title='Motor 1'>
-      <Badge slot='header' label='Inactive'></Badge>
-      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+
+    <Collapse title="Motor 1">
+      <Badge
+        slot="header"
+        label="Inactive"
+      />
+      <div
+        slot="content"
+        class="border border-t-0 border-light p-4 text-sm"
+      >
+        Motor one was conceived and executed at Bell Labs in 1972 under the
+        guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+      </div>
     </Collapse>
-  
-    <Collapse title='Motor 1'>
-      <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
-      <Badge slot='header' label='Inactive'></Badge>
-      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+
+    <Collapse title="Motor 1">
+      <Breadcrumbs
+        slot="title"
+        crumbs={['Robot', 'Motor']}
+      />
+      <Badge
+        slot="header"
+        label="Inactive"
+      />
+      <div
+        slot="content"
+        class="border border-t-0 border-light p-4 text-sm"
+      >
+        Motor one was conceived and executed at Bell Labs in 1972 under the
+        guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+      </div>
     </Collapse>
-  
-    <Collapse title='Motor 1'>
-      <Breadcrumbs slot='title' crumbs={['Robot', 'Motor']}></Breadcrumbs>
-      <Badge slot='header' label='Inactive'></Badge>
-      <div slot='content' class="text-sm p-4">Motor one was conceived and executed at Bell Labs in 1972 under the guidance of lead director Dennis Richie and Supervisor Wallace Breen.</div>
+
+    <Collapse title="Motor 1">
+      <Breadcrumbs
+        slot="title"
+        crumbs={['Robot', 'Motor']}
+      />
+      <Badge
+        slot="header"
+        label="Inactive"
+      />
+      <div
+        slot="content"
+        class="p-4 text-sm"
+      >
+        Motor one was conceived and executed at Bell Labs in 1972 under the
+        guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+      </div>
     </Collapse>
   </div>
 
@@ -489,12 +528,16 @@ let buttonClickedTimes = 0;
   <!-- Table -->
   <Table cols={['10%', '90%']}>
     <TableHeader>
-      <TableHeaderCell>headerheaderheader (mario underwater theme)</TableHeaderCell>
+      <TableHeaderCell
+        >headerheaderheader (mario underwater theme)</TableHeaderCell
+      >
       <TableHeaderCell>Another header</TableHeaderCell>
     </TableHeader>
     <TableBody style="text-align:center">
       <TableRow>
-        <TableCell>the mitochondria is the powerhouse of the tablecell</TableCell>
+        <TableCell
+          >the mitochondria is the powerhouse of the tablecell</TableCell
+        >
         <TableCell>stuffs</TableCell>
       </TableRow>
       <TableRow variant="success">

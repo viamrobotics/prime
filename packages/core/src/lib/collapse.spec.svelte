@@ -10,38 +10,65 @@
 
 <script lang="ts">
 import Collapse from './collapse.svelte';
-import Badge from './badge.svelte'
+import Badge from './badge.svelte';
 import Breadcrumbs from './breadcrumbs.svelte';
 </script>
 
 <div class="flex gap-4">
   <!-- Collapse -->
-  <Collapse
-    title='Number 1'
-  >
-    <div slot='content' class="text-sm p-4 border border-t-0 border-light">One is the loneliest number.</div>
+  <Collapse title="Number 1">
+    <div
+      slot="content"
+      class="border border-t-0 border-light p-4 text-sm"
+    >
+      One is the loneliest number.
+    </div>
   </Collapse>
 
-  <Collapse
-    title='Number 2'
-  >
-    <Badge slot='header' label='Inactive'></Badge>
-    <div slot='content' class="text-sm p-4 border border-t-0 border-light">Two can be as bad as one, its the loneliest number since the number one.</div>
+  <Collapse title="Number 2">
+    <Badge
+      slot="header"
+      label="Inactive"
+    />
+    <div
+      slot="content"
+      class="border border-t-0 border-light p-4 text-sm"
+    >
+      Two can be as bad as one, its the loneliest number since the number one.
+    </div>
   </Collapse>
 
-    <Collapse
-      title='Number 3'
+  <Collapse title="Number 3">
+    <Breadcrumbs
+      slot="title"
+      crumbs={['Hi', 'Hello']}
+    />
+    <Badge
+      slot="header"
+      label="Active"
+    />
+    <div
+      slot="content"
+      class="border border-t-0 border-light p-4 text-sm"
     >
-      <Breadcrumbs slot='title' crumbs={['Hi', 'Hello']}></Breadcrumbs>
-      <Badge slot='header' label='Active'></Badge>
-      <div slot='content' class="text-sm p-4 border border-t-0 border-light">Three is company.</div>
-    </Collapse>
+      Three is company.
+    </div>
+  </Collapse>
 
-    <Collapse
-      title='Number 4'
+  <Collapse title="Number 4">
+    <Breadcrumbs
+      slot="title"
+      crumbs={['Howdy', 'Hey']}
+    />
+    <Badge
+      slot="header"
+      label="Busy"
+    />
+    <div
+      slot="content"
+      class="border border-t-0 border-light p-4 text-sm"
     >
-      <Breadcrumbs slot='title' crumbs={['Howdy', 'Hey']}></Breadcrumbs>
-      <Badge slot='header' label='Busy'></Badge>
-      <div slot='content' class="text-sm p-4 border border-t-0 border-light">I am number 4.</div>
-    </Collapse>
+      I am number 4.
+    </div>
+  </Collapse>
 </div>
