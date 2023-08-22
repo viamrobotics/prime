@@ -2,7 +2,7 @@
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button/button.svelte';
-import ButtonIcon from '$lib/button/button-icon.svelte';
+import IconButton from '$lib/button/icon-button.svelte';
 import Collapse from '$lib/collapse.svelte';
 import ContextMenu from '$lib/context-menu/context-menu.svelte';
 import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
@@ -59,103 +59,118 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <!-- Button -->
-    <Button
-      variant="success"
-      label="Click me"
-      on:click={() => {
-        buttonClickedTimes += 1;
-        // eslint-disable-next-line no-console
-        console.log(`button clicked ${buttonClickedTimes} times!`);
-      }}
-    />
-    <Button
-      variant="success"
-      disabled
-      label="testing 2"
-    />
-    <Button
-      label="testing 3"
-      width="full"
-    />
+    <Button on:click={() => (buttonClickedTimes += 1)}>
+      Clicked {buttonClickedTimes} times!
+    </Button>
   </div>
 
+  <div class="flex gap-4">
+    <Button>Primary</Button>
+    <Button
+      disabled
+      on:click={() => {
+        // eslint-disable-next-line no-console
+        console.log('Uh oh, should not be called!');
+      }}
+    >
+      Disabled
+    </Button>
+
+    <Button variant="dark">Dark</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="success">Success</Button>
+    <Button variant="danger">Danger</Button>
+    <Button variant="outline-danger">Outline Danger</Button>
+  </div>
+
+  <Button width="full">Full Width</Button>
+
   <div class="flex-start gap-4">
-    <!-- ButtonIcon -->
-    <ButtonIcon icon="close" />
-    <ButtonIcon
+    <!-- IconButton -->
+    <IconButton
+      label="close"
+      icon="close"
+    />
+    <IconButton
       icon="close"
       variant="danger"
       label="Click me"
       on:click={() => {
-        buttonClickedTimes += 1;
         // eslint-disable-next-line no-console
-        console.log(`button clicked ${buttonClickedTimes} times!`);
+        console.log('closed!');
+      }}
+    />
+    <IconButton
+      icon="close"
+      label="Click me"
+      disabled
+      on:click={() => {
+        // eslint-disable-next-line no-console
+        console.log('Uh oh, should not be called!');
       }}
     />
   </div>
 
-  <div class="flex gap-4">
-    <!-- Collapse -->
-    <Collapse title="Motor 1">
-      <div
-        slot="content"
-        class="border border-t-0 border-light p-4 text-sm"
-      >
-        Motor one was conceived and executed at Bell Labs in 1972 under the
-        guidance of lead director Dennis Richie and Supervisor Wallace Breen.
-      </div>
-    </Collapse>
+  <!-- Collapse -->
+  <Collapse title="Motor 1">
+    <div
+      slot="content"
+      class="border-light border border-t-0 p-4 text-sm"
+    >
+      Motor one was conceived and executed at Bell Labs in 1972 under the
+      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+    </div>
+  </Collapse>
 
-    <Collapse title="Motor 1">
-      <Badge
-        slot="header"
-        label="Inactive"
-      />
-      <div
-        slot="content"
-        class="border border-t-0 border-light p-4 text-sm"
-      >
-        Motor one was conceived and executed at Bell Labs in 1972 under the
-        guidance of lead director Dennis Richie and Supervisor Wallace Breen.
-      </div>
-    </Collapse>
+  <Collapse title="Motor 1">
+    <Badge
+      slot="header"
+      label="Inactive"
+    />
+    <div
+      slot="content"
+      class="border-light border border-t-0 p-4 text-sm"
+    >
+      Motor one was conceived and executed at Bell Labs in 1972 under the
+      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+    </div>
+  </Collapse>
 
-    <Collapse title="Motor 1">
-      <Breadcrumbs
-        slot="title"
-        crumbs={['Robot', 'Motor']}
-      />
-      <Badge
-        slot="header"
-        label="Inactive"
-      />
-      <div
-        slot="content"
-        class="border border-t-0 border-light p-4 text-sm"
-      >
-        Motor one was conceived and executed at Bell Labs in 1972 under the
-        guidance of lead director Dennis Richie and Supervisor Wallace Breen.
-      </div>
-    </Collapse>
+  <Collapse title="Motor 1">
+    <Breadcrumbs
+      slot="title"
+      crumbs={['Robot', 'Motor']}
+    />
+    <Badge
+      slot="header"
+      label="Inactive"
+    />
+    <div
+      slot="content"
+      class="border-light border border-t-0 p-4 text-sm"
+    >
+      Motor one was conceived and executed at Bell Labs in 1972 under the
+      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+    </div>
+  </Collapse>
 
-    <Collapse title="Motor 1">
-      <Breadcrumbs
-        slot="title"
-        crumbs={['Robot', 'Motor']}
-      />
-      <Badge
-        slot="header"
-        label="Inactive"
-      />
-      <div
-        slot="content"
-        class="p-4 text-sm"
-      >
-        Motor one was conceived and executed at Bell Labs in 1972 under the
-        guidance of lead director Dennis Richie and Supervisor Wallace Breen.
-      </div>
-    </Collapse>
-  </div>
+  <Collapse title="Motor 1">
+    <Breadcrumbs
+      slot="title"
+      crumbs={['Robot', 'Motor']}
+    />
+    <Badge
+      slot="header"
+      label="Inactive"
+    />
+    <div
+      slot="content"
+      class="p-4 text-sm"
+    >
+      Motor one was conceived and executed at Bell Labs in 1972 under the
+      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+    </div>
+  </Collapse>
 
   <div class="flex gap-4">
     <!-- Pill -->

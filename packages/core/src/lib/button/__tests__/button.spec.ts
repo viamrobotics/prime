@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
-import Button from './button.svelte';
+import { Button } from '$lib';
 
 describe('Button', () => {
   it('Renders label attribute as text within the button', () => {
-    render(Button, { label: 'label' });
+    render(Button);
     expect(screen.getByRole('button')).toBeVisible();
   });
 
@@ -18,8 +18,8 @@ describe('Button', () => {
     expect(screen.getByRole('button')).toHaveClass('border-light', 'bg-light');
   });
 
-  it('Renders a button in the style of inverse primary if the variant is specified as inverse primary', () => {
-    render(Button, { variant: 'inverse-primary' });
+  it('Renders a button in the style of dark if the variant is specified as dark', () => {
+    render(Button, { variant: 'dark' });
     expect(screen.getByRole('button')).toHaveClass(
       'border-gray-9',
       'bg-gray-9',
@@ -62,9 +62,12 @@ describe('Button', () => {
     expect(onClick).toHaveBeenCalledOnce();
   });
 
-  it('Renders a disabled button', () => {
-    render(Button, { disabled: true });
-    expect(screen.getByRole('button')).toBeDisabled();
+  it('Renders a disabled button', async () => {
+    const { component } = render(Button, { disabled: true });
+    const onClick = vi.fn();
+    component.$on('click', onClick);
+    await fireEvent.click(screen.getByRole('button'));
+    expect(onClick).not.toHaveBeenCalled();
   });
 
   it('Renders a full width button', () => {

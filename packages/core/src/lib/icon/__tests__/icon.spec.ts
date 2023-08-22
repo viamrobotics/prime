@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
-import Icon from './icon.svelte';
+import { Icon } from '$lib';
 
 describe('Icon', () => {
   it('Renders an icon', () => {

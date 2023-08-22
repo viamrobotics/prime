@@ -22,14 +22,7 @@ import {
 /** The input type */
 export let type: NumericInputTypes = 'number';
 
-/**
- * The value of the input, if any.
- *
- * TODO: Discuss disabling these rules for svelte components, otherwise
- * these props are treatef as required and force users to add value={undefined}
- * when no initial value is set.
- */
-// eslint-disable-next-line no-undef-init,unicorn/no-useless-undefined
+/** The value of the input, if any. */
 export let value: number | undefined = undefined;
 
 /** The amount to increment/decrement when sliding. */

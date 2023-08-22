@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
-import Notify from './notify.svelte';
+import { Notify } from '$lib';
 import NotifySlot from './notify.spec.svelte';
 
 describe('Notify', () => {

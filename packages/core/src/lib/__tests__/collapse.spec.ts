@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
-import Collapse from './collapse.svelte';
+import { Collapse } from '$lib';
 import CollapseSlot from './collapse.spec.svelte';
 
 describe('Collapse', () => {

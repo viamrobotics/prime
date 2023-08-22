@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
-import Pill from './pill.svelte';
+import { Pill } from '$lib';
 
 describe('Pill', () => {
   it('Renders text within the pill if a value attribute is specified', () => {

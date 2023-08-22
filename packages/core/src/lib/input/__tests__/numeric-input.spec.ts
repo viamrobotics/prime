@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import Input from './numeric-input.svelte';
+import { NumericInput } from '$lib';
 
 describe('Numeric Input', () => {
   it('Renders the input', () => {
-    render(Input, { placeholder: 'Enter a number' });
+    render(NumericInput, { placeholder: 'Enter a number' });
     expect(screen.getByPlaceholderText('Enter a number')).toHaveAttribute(
       'type',
       'number'
@@ -12,7 +12,7 @@ describe('Numeric Input', () => {
   });
 
   it('Should set the input value', () => {
-    render(Input, { placeholder: 'Enter a number', value: 3.4 });
+    render(NumericInput, { placeholder: 'Enter a number', value: 3.4 });
 
     const input =
       screen.getByPlaceholderText<HTMLInputElement>('Enter a number');
@@ -22,7 +22,7 @@ describe('Numeric Input', () => {
   });
 
   it('Is invalid type is integer and value is decimal', () => {
-    render(Input, {
+    render(NumericInput, {
       placeholder: 'Enter a number',
       type: 'integer',
       value: 12.34,

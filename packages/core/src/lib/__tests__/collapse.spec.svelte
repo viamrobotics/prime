@@ -9,9 +9,7 @@
  -->
 
 <script lang="ts">
-import Collapse from './collapse.svelte';
-import Badge from './badge.svelte';
-import Breadcrumbs from './breadcrumbs.svelte';
+import { Collapse, Badge, Breadcrumbs } from '$lib';
 </script>
 
 <div class="flex gap-4">

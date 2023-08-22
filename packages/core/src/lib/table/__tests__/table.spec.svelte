@@ -10,10 +10,7 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
-import Table from './table.svelte';
-import TableBody from './table-body.svelte';
-import TableRow from './table-row.svelte';
-import TableCell from './table-cell.svelte';
+import { Table, TableBody, TableRow, TableCell } from '$lib';
 
 export let cols: string[] = [];
 </script>
