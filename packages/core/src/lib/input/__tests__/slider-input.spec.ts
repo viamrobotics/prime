@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
-import Input from './slider-input.svelte';
+import { SliderInput } from '$lib';
 
 describe('Slider Input', () => {
   it('Renders the input', () => {
-    render(Input, { placeholder: 'Enter a number' });
+    render(SliderInput, { placeholder: 'Enter a number' });
     expect(screen.getByPlaceholderText('Enter a number')).toHaveAttribute(
       'type',
       'number'
@@ -12,7 +12,7 @@ describe('Slider Input', () => {
   });
 
   it('It should not allow sliding below min', async () => {
-    render(Input, { placeholder: 'Enter a number', min: 0 });
+    render(SliderInput, { placeholder: 'Enter a number', min: 0 });
 
     const input: HTMLInputElement =
       screen.getByPlaceholderText('Enter a number');
@@ -33,7 +33,7 @@ describe('Slider Input', () => {
   });
 
   it('It should not allow sliding above max', async () => {
-    render(Input, { placeholder: 'Enter a number', max: 50 });
+    render(SliderInput, { placeholder: 'Enter a number', max: 50 });
 
     const input: HTMLInputElement =
       screen.getByPlaceholderText('Enter a number');
@@ -55,7 +55,7 @@ describe('Slider Input', () => {
   });
 
   it('It slide in increments of step', async () => {
-    render(Input, { placeholder: 'Enter a number', step: 10 });
+    render(SliderInput, { placeholder: 'Enter a number', step: 10 });
 
     const input: HTMLInputElement =
       screen.getByPlaceholderText('Enter a number');

@@ -1,8 +1,8 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
-import { Button } from '@viamrobotics/prime-core';
+import Button from './button.svelte';
 
 <Meta
-  title='Elements/Button'
+  title='Elements/Button/Button'
   parameters={{
     actions: {
       handles: ['click'],
@@ -16,13 +16,7 @@ import { Button } from '@viamrobotics/prime-core';
     variant: {
       description: 'The communicated action type of the button',
       control: 'select',
-      options: [
-        'primary',
-        'inverse-primary',
-        'success',
-        'danger',
-        'outline-danger',
-      ],
+      options: ['primary', 'dark', 'success', 'danger', 'outline-danger'],
       table: { defaultValue: { summary: 'primary' } },
     },
     type: {
@@ -59,10 +53,10 @@ For user triggered actions
 
 <Canvas>
   <Story
-    name='Inverse Primary'
+    name='Dark'
     args={{
       label: 'Run',
-      variant: 'inverse-primary',
+      variant: 'dark',
     }}
   >
     {(props) => ({
@@ -200,21 +194,6 @@ For user triggered actions
       icon: 'trash-can-outline',
       variant: 'icon',
       label: 'Delete component',
-    }}
-  >
-    {(props) => ({
-      Component: Button,
-      props,
-    })}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
-    name='Icon danger variant'
-    args={{
-      icon: 'trash-can-outline',
-      variant: 'icon-danger',
     }}
   >
     {(props) => ({

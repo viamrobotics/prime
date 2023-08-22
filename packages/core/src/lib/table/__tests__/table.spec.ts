@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import Table from './table.svelte';
+import { Table } from '$lib';
 import TableWith3Cols from './table.spec.svelte';
 
 describe('Table', () => {

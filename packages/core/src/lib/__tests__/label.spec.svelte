@@ -10,7 +10,7 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
-import Label, { type LabelPosition } from './label.svelte';
+import { Label, type LabelPosition } from '$lib';
 
 export let position: LabelPosition = 'top';
 export let disabled = false;

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
-import Tabs from './tabs.svelte';
+import { Tabs } from '$lib';
 
 describe('Tabs', () => {
   it('Renders tabs correctly', () => {

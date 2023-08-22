@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import Badge from './badge.svelte';
+import { Badge } from '$lib';
 
 describe('Badge', () => {
   it('Renders the correct text', () => {

@@ -10,6 +10,7 @@ For user triggered actions.
 <svelte:options immutable />
 
 <script lang="ts">
+import { createEventDispatcher } from 'svelte';
 import cx from 'classnames';
 import { Icon } from '$lib';
 
@@ -22,14 +23,11 @@ export let type: 'button' | 'submit' | 'reset' = 'button';
 /** The communicated action type to the user. */
 export let variant:
   | 'primary'
-  | 'inverse-primary'
+  | 'dark'
   | 'ghost'
   | 'danger'
   | 'outline-danger'
   | 'success' = 'primary';
-
-/** The text displayed. */
-export let label = '';
 
 /** The text that appears in a popup box when mouse is over the element. */
 export let title = '';
@@ -41,37 +39,52 @@ export let icon = '';
 
 /** The width of the button. */
 export let width: 'full' | 'default' = 'default';
+
+/** Additional CSS classes to pass to the button. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
+
+const dispatch = createEventDispatcher<{ click: undefined }>();
+
+const onClick = () => {
+  if (disabled) {
+    return;
+  }
+
+  dispatch('click');
+};
 </script>
 
 <button
   {type}
-  aria-disabled={disabled}
-  {disabled}
   {title}
+  aria-disabled={disabled}
   class={cx(
-    'mx-auto inline-flex items-center justify-center gap-1.5 whitespace-nowrap border py-1.5 text-xs',
+    'inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap border py-1.5 text-xs',
     {
-      'pointer-events-none select-none !border-disabled-light !bg-disabled-light text-disabled-dark':
-        disabled,
       'flex w-full': width === 'full',
       'inline-flex': width !== 'full',
       'px-3': !icon,
       'pl-2 pr-3': icon,
+      '!border-disabled-light !bg-disabled-light text-disabled-dark cursor-not-allowed':
+        disabled,
       'border-light bg-light hover:border-medium hover:bg-medium active:bg-gray-2':
-        variant === 'primary',
+        variant === 'primary' && !disabled,
       'border-gray-9 bg-gray-9 text-white hover:border-black hover:bg-black active:bg-[#000]':
-        variant === 'inverse-primary',
+        variant === 'dark' && !disabled,
       'active-border-[rgba(0,0,0,0.08)] border-transparent hover:bg-[rgba(0,0,0,0.04)] active:bg-[rgba(0,0,0,0.08)]':
-        variant === 'ghost',
+        variant === 'ghost' && !disabled,
       'border-danger-dark bg-danger-dark text-white hover:bg-[#aa2a2b] active:bg-[#9e2728]':
-        variant === 'danger',
-      'border-success-dark bg-success-dark text-white': variant === 'success',
+        variant === 'danger' && !disabled,
+      'border-success-dark bg-success-dark text-white':
+        variant === 'success' && !disabled,
       'border-danger-medium bg-danger-light text-danger-dark hover:bg-[#f5dfdc] active:bg-[#f6d7d3]':
-        variant === 'outline-danger',
-    }
+        variant === 'outline-danger' && !disabled,
+    },
+    extraClasses
   )}
-  style={disabled ? '-webkit-user-select: none' : ''}
-  on:click
+  {...$$restProps}
+  on:click={onClick}
 >
   {#if icon}
     <span
@@ -85,6 +98,6 @@ export let width: 'full' | 'default' = 'default';
   {/if}
 
   <span>
-    {label}
+    <slot />
   </span>
 </button>
