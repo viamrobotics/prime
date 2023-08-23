@@ -25,6 +25,7 @@ import TableCell from '$lib/table/table-cell.svelte';
 import TableHeaderCell from '$lib/table/table-header-cell.svelte';
 import TableHeader from '$lib/table/table-header.svelte';
 import TableRow from '$lib/table/table-row.svelte';
+import Select from '$lib/select/select.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -298,6 +299,47 @@ let buttonClickedTimes = 0;
       name="datetime-local"
       placeholder="Enter a date and time"
     />
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Select -->
+    <Select>
+      <option>This thing</option>
+      <option>That thing</option>
+      <option>The other thing</option>
+      <optgroup label="The other things">
+        <option>This other thing</option>
+        <option>That other thing</option>
+        <option>The other other thing</option>
+      </optgroup>
+    </Select>
+
+    <Select disabled>
+      <option selected>Disabled select</option>
+      <option>That thing</option>
+      <option>The other thing</option>
+    </Select>
+  </div>
+
+  <div class="flex gap-4">
+    <!-- Select -->
+    <Select state="info">
+      <option selected>Info state</option>
+      <option>That thing</option>
+      <option>The other thing</option>
+    </Select>
+
+    <Select state="warn">
+      <option selected>Warn state</option>
+      <option>That thing</option>
+      <option>The other thing</option>
+    </Select>
+
+    <Select state="error">
+      <option selected>Error state</option>
+      <option>That thing</option>
+      <option>The other thing</option>
+    </Select>
   </div>
 
   <div class="flex gap-4">

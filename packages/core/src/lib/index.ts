@@ -39,3 +39,4 @@ export { default as TableHeaderCell } from './table/table-header-cell.svelte';
 export { default as TableBody } from './table/table-body.svelte';
 export { default as TableRow } from './table/table-row.svelte';
 export { default as TableCell } from './table/table-cell.svelte';
+export { default as Select } from './select/select.svelte';
