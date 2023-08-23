@@ -19,6 +19,7 @@ import Tooltip from '$lib/tooltip.svelte';
 import TextInput from '$lib/input/text-input.svelte';
 import NumericInput from '$lib/input/numeric-input.svelte';
 import SliderInput from '$lib/input/slider-input.svelte';
+import VectorInput from '$lib/vector-input.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -461,6 +462,18 @@ let buttonClickedTimes = 0;
       label="readonly"
     />
   </div>
+
+  <div class="flex gap-4">
+    <!-- Vector Input -->
+    <VectorInput
+      type='number'
+      label='Position'
+      placeholder='0'
+      value=''
+      step='0.1'
+    />
+  </div>
+  
   <!-- Context menu -->
   <ContextMenu>
     <ContextMenuItem label="label 1" />
