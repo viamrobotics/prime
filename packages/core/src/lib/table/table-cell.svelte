@@ -13,19 +13,17 @@ A table body.
 <svelte:options immutable />
 
 <script lang="ts">
-/**
- * Custom table cell style
- * ```
- * <TableCell style="text-align:center">
- * ```
- */
-export let style = '';
+import cx from 'classnames';
+
+/** Additional CSS classes to pass to the button. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <td
-  {style}
   part="table-cell"
-  class="overflow-hidden p-2"
+  class={cx('overflow-hidden p-2', extraClasses)}
+  {...$$restProps}
 >
   <slot />
 </td>

@@ -1,5 +1,6 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { IconButton } from '@viamrobotics/prime-core';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Button/IconButton'
@@ -35,6 +36,7 @@ import { IconButton } from '@viamrobotics/prime-core';
       description: 'The title to apply for the button',
       table: { defaultValue: { summary: '' } },
     },
+    cx,
   }}
 />
 

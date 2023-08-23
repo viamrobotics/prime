@@ -1,5 +1,6 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import Button from './button.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Button/Button'
@@ -30,6 +31,12 @@ import Button from './button.svelte';
       options: ['default', 'full'],
       table: { defaultValue: { summary: 'default' } },
     },
+    value: {
+      description: "The input's value",
+      control: { type: 'text' },
+      table: { defaultValue: { summary: '' } },
+    },
+    cx,
   }}
 />
 

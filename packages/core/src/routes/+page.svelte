@@ -548,7 +548,7 @@ let buttonClickedTimes = 0;
       >
       <TableHeaderCell>Another header</TableHeaderCell>
     </TableHeader>
-    <TableBody style="text-align:center">
+    <TableBody cx="text-center">
       <TableRow>
         <TableCell
           >the mitochondria is the powerhouse of the tablecell</TableCell
