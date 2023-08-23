@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import Breadcrumbs from './breadcrumbs.svelte';
+import { Breadcrumbs } from '$lib';
 
 describe('Breadcrumbs', () => {
   it('Renders breadcrumbs with the list of values specified in crumbs attribute as pills', () => {

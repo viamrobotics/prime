@@ -22,14 +22,7 @@ import {
 /** The input type */
 export let type: NumericInputTypes | undefined = 'number';
 
-/**
- * The value of the input, if any.
- *
- * TODO: Discuss disabling these rules for svelte components, otherwise
- * these props are treatef as required and force users to add value={undefined}
- * when no initial value is set.
- */
-// eslint-disable-next-line no-undef-init,unicorn/no-useless-undefined
+/** The value of the input, if any. */
 export let value: number | undefined = undefined;
 
 /** The amount to increment/decrement when sliding. */
@@ -152,9 +145,9 @@ const handlePointerDown = async (event: PointerEvent) => {
     {type}
     {step}
     {...$$restProps}
-    style='padding-left: 0.75rem;'
+    style="padding-left: 0.75rem;"
     bind:value
-    bind:input={input}
+    bind:input
     on:input
     on:keydown
     on:blur
@@ -166,7 +159,7 @@ const handlePointerDown = async (event: PointerEvent) => {
     {#if isDragging}
       <div
         bind:this={numberDragCord}
-        class="pointer-events-none mt-[calc(13px)] h-px bg-gray-400 z-100"
+        class="z-100 pointer-events-none mt-[calc(13px)] h-px bg-gray-400"
       />
       <div
         bind:this={numberDragHead}

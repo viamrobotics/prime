@@ -2,7 +2,8 @@
 import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button/button.svelte';
-import ButtonIcon from '$lib/button/button-icon.svelte';
+import IconButton from '$lib/button/icon-button.svelte';
+import Collapse from '$lib/collapse.svelte';
 import ContextMenu from '$lib/context-menu/context-menu.svelte';
 import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
 import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
@@ -18,6 +19,12 @@ import Tooltip from '$lib/tooltip.svelte';
 import TextInput from '$lib/input/text-input.svelte';
 import NumericInput from '$lib/input/numeric-input.svelte';
 import SliderInput from '$lib/input/slider-input.svelte';
+import Table from '$lib/table/table.svelte';
+import TableBody from '$lib/table/table-body.svelte';
+import TableCell from '$lib/table/table-cell.svelte';
+import TableHeaderCell from '$lib/table/table-header-cell.svelte';
+import TableHeader from '$lib/table/table-header.svelte';
+import TableRow from '$lib/table/table-row.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -52,40 +59,118 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <!-- Button -->
-    <Button
-      variant="success"
-      label="Click me"
-      on:click={() => {
-        buttonClickedTimes += 1;
-        // eslint-disable-next-line no-console
-        console.log(`button clicked ${buttonClickedTimes} times!`);
-      }}
-    />
-    <Button
-      variant="success"
-      disabled
-      label="testing 2"
-    />
-    <Button
-      label="testing 3"
-      width="full"
-    />
+    <Button on:click={() => (buttonClickedTimes += 1)}>
+      Clicked {buttonClickedTimes} times!
+    </Button>
   </div>
 
+  <div class="flex gap-4">
+    <Button>Primary</Button>
+    <Button
+      disabled
+      on:click={() => {
+        // eslint-disable-next-line no-console
+        console.log('Uh oh, should not be called!');
+      }}
+    >
+      Disabled
+    </Button>
+
+    <Button variant="dark">Dark</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="success">Success</Button>
+    <Button variant="danger">Danger</Button>
+    <Button variant="outline-danger">Outline Danger</Button>
+  </div>
+
+  <Button width="full">Full Width</Button>
+
   <div class="flex-start gap-4">
-    <!-- ButtonIcon -->
-    <ButtonIcon icon="close" />
-    <ButtonIcon
+    <!-- IconButton -->
+    <IconButton
+      label="close"
+      icon="close"
+    />
+    <IconButton
       icon="close"
       variant="danger"
       label="Click me"
       on:click={() => {
-        buttonClickedTimes += 1;
         // eslint-disable-next-line no-console
-        console.log(`button clicked ${buttonClickedTimes} times!`);
+        console.log('closed!');
+      }}
+    />
+    <IconButton
+      icon="close"
+      label="Click me"
+      disabled
+      on:click={() => {
+        // eslint-disable-next-line no-console
+        console.log('Uh oh, should not be called!');
       }}
     />
   </div>
+
+  <!-- Collapse -->
+  <Collapse title="Motor 1">
+    <div
+      slot="content"
+      class="border-light border border-t-0 p-4 text-sm"
+    >
+      Motor one was conceived and executed at Bell Labs in 1972 under the
+      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+    </div>
+  </Collapse>
+
+  <Collapse title="Motor 1">
+    <Badge
+      slot="header"
+      label="Inactive"
+    />
+    <div
+      slot="content"
+      class="border-light border border-t-0 p-4 text-sm"
+    >
+      Motor one was conceived and executed at Bell Labs in 1972 under the
+      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+    </div>
+  </Collapse>
+
+  <Collapse title="Motor 1">
+    <Breadcrumbs
+      slot="title"
+      crumbs={['Robot', 'Motor']}
+    />
+    <Badge
+      slot="header"
+      label="Inactive"
+    />
+    <div
+      slot="content"
+      class="border-light border border-t-0 p-4 text-sm"
+    >
+      Motor one was conceived and executed at Bell Labs in 1972 under the
+      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+    </div>
+  </Collapse>
+
+  <Collapse title="Motor 1">
+    <Breadcrumbs
+      slot="title"
+      crumbs={['Robot', 'Motor']}
+    />
+    <Badge
+      slot="header"
+      label="Inactive"
+    />
+    <div
+      slot="content"
+      class="p-4 text-sm"
+    >
+      Motor one was conceived and executed at Bell Labs in 1972 under the
+      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
+    </div>
+  </Collapse>
 
   <div class="flex gap-4">
     <!-- Pill -->
@@ -454,6 +539,36 @@ let buttonClickedTimes = 0;
       variant="danger"
     />
   </ContextMenu>
+
+  <!-- Table -->
+  <Table cols={['10%', '90%']}>
+    <TableHeader>
+      <TableHeaderCell
+        >headerheaderheader (mario underwater theme)</TableHeaderCell
+      >
+      <TableHeaderCell>Another header</TableHeaderCell>
+    </TableHeader>
+    <TableBody style="text-align:center">
+      <TableRow>
+        <TableCell
+          >the mitochondria is the powerhouse of the tablecell</TableCell
+        >
+        <TableCell>stuffs</TableCell>
+      </TableRow>
+      <TableRow variant="success">
+        <TableCell>stuff</TableCell>
+        <TableCell>stuffs</TableCell>
+      </TableRow>
+      <TableRow variant="error">
+        <TableCell>stuff</TableCell>
+        <TableCell>stuffs</TableCell>
+      </TableRow>
+      <TableRow variant="disabled">
+        <TableCell>stuff</TableCell>
+        <TableCell>stuffs</TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
 </div>
 <Pill />
 <Pill value="Foo" />

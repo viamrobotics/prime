@@ -12,8 +12,6 @@ let input: HTMLInputElement;
 const handleInput = () => {
   const value = input.valueAsNumber
 
-  console.log(value)
-
   if (!Number.isNaN(value)) {
     dispatch('input', value);
   }

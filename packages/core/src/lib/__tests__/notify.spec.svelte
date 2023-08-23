@@ -11,7 +11,7 @@
  -->
 
 <script lang="ts">
-import Notify from './notify.svelte';
+import { Notify } from '$lib';
 </script>
 
 <Notify

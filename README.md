@@ -22,21 +22,21 @@ A collection of UI elements.
 ## Building
 
 ```bash
-pnpm -r build
+pnpm build
 ```
 
 ## Linting
 
 ```bash
-pnpm -r check
-pnpm -r format
+pnpm check
+pnpm format
 ```
 
 ## Testing
 
 ```bash
 pnpm -C packages/legacy playwright-install
-pnpm -r test
+pnpm test
 ```
 
 ## License
@@ -44,3 +44,4 @@ pnpm -r test
 Copyright 2021-2023 Viam Inc.
 
 Apache 2.0 - See [LICENSE](https://github.com/viamrobotics/prime/blob/main/LICENSE) file
+

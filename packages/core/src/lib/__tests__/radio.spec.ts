@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
-import Radio from './radio.svelte';
+import { Radio } from '$lib';
 import * as MDI from '@mdi/js';
 
 describe('Radio', () => {

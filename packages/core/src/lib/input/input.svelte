@@ -48,7 +48,7 @@ $: icon = {
   warn: 'alert',
   error: 'alert-circle',
   none: '',
-}[state ?? 'none']
+}[state ?? 'none'];
 
 </script>
 

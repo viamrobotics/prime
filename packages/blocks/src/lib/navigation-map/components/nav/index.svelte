@@ -13,6 +13,10 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
   $tab = event.detail.value as 'Obstacles' | 'Waypoints';
 };
 
+const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
+  dispatch('update-obstacles', event.detail)
+}
+
 </script>
 
 <nav class='sm:h-full sm:w-[350px]'>
@@ -33,7 +37,7 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
       />
     {:else if $tab === 'Obstacles'}
       <ObstaclesTab
-        on:update={(event) => dispatch('update-obstacles', event.detail)}
+        on:update={handleUpdateObstacle}
       />
     {/if}
   </ul>

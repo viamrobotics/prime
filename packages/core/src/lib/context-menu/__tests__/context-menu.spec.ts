@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
-import ContextMenuItem from './context-menu-item.svelte';
-import ContextMenuSeparator from './context-menu-separator.svelte';
+import { ContextMenuItem, ContextMenuSeparator } from '$lib';
 import ContextMenu from './context-menu.spec.svelte';
 
 describe('Context menu', () => {

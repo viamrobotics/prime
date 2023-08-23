@@ -1,7 +1,7 @@
 <!-- 
   @component
 
-  This component allows us to render a Tooltip with its slotted
+  This component allows us to render a Context Menu with its slotted
   children, due to limitations with rendering slots using
   `@testing-library`.
 
@@ -10,9 +10,7 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
-import ContextMenu from './context-menu.svelte';
-import ContextMenuItem from './context-menu-item.svelte';
-import ContextMenuSeparator from './context-menu-separator.svelte';
+import { ContextMenu, ContextMenuItem, ContextMenuSeparator } from '$lib';
 </script>
 
 <ContextMenu>
