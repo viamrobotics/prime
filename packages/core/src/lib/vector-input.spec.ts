@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, fireEvent} from '@testing-library/svelte';
-import VectorInput from "./vector-input.svelte";
+import { describe, it, expect, vi } from 'vitest';
+import { render, fireEvent } from '@testing-library/svelte';
+import VectorInput from './vector-input.svelte';
 
 describe('VectorInput', () => {
   it('Renders the VectorInput label and placeholders', () => {
@@ -24,9 +24,15 @@ describe('VectorInput', () => {
     });
 
     const inputPlaceholders = getAllByPlaceholderText(/[x-z]/iu);
-    await fireEvent.input(inputPlaceholders[0] as HTMLInputElement, { target: { value: '1' } });
-    await fireEvent.input(inputPlaceholders[1] as HTMLInputElement, { target: { value: '2' } });
-    await fireEvent.input(inputPlaceholders[2] as HTMLInputElement, { target: { value: '3' } });
+    await fireEvent.input(inputPlaceholders[0] as HTMLInputElement, {
+      target: { value: '1' },
+    });
+    await fireEvent.input(inputPlaceholders[1] as HTMLInputElement, {
+      target: { value: '2' },
+    });
+    await fireEvent.input(inputPlaceholders[2] as HTMLInputElement, {
+      target: { value: '3' },
+    });
 
     expect(inputPlaceholders[0]).toHaveValue(1);
     expect(inputPlaceholders[1]).toHaveValue(2);
@@ -42,9 +48,15 @@ describe('VectorInput', () => {
     component.$on('input', onInput);
 
     const inputPlaceholders = getAllByPlaceholderText(/[x-z]/iu);
-    await fireEvent.input(inputPlaceholders[0] as HTMLInputElement, { target: { value: '1' } });
-    await fireEvent.input(inputPlaceholders[1] as HTMLInputElement, { target: { value: '2' } });
-    await fireEvent.input(inputPlaceholders[2] as HTMLInputElement, { target: { value: '3' } });
+    await fireEvent.input(inputPlaceholders[0] as HTMLInputElement, {
+      target: { value: '1' },
+    });
+    await fireEvent.input(inputPlaceholders[1] as HTMLInputElement, {
+      target: { value: '2' },
+    });
+    await fireEvent.input(inputPlaceholders[2] as HTMLInputElement, {
+      target: { value: '3' },
+    });
 
     expect(onInput).toHaveBeenCalled();
     expect(onInput).toHaveBeenCalledWith(
