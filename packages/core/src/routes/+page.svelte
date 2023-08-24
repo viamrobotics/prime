@@ -366,6 +366,19 @@ let buttonClickedTimes = 0;
       placeholder="Select an option"
       disabled
     />
+    <SearchableSelect
+      options={[
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'So',
+        'Many',
+        'More',
+        'Options',
+      ]}
+      placeholder="Select an option"
+      sortoption="reduce"
+    />
   </div>
 
   <div class="flex gap-4">

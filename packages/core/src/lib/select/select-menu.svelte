@@ -9,7 +9,7 @@ import { Icon } from '$lib';
 
 export let open = false;
 export let element: HTMLUListElement;
-export let button: { text: string; icon?: string } | undefined = undefined;
+export let button: { text: string; icon: string } | undefined = undefined;
 export let heading = '';
 </script>
 
@@ -36,21 +36,21 @@ export let heading = '';
   </ul>
   {#if button !== undefined}
     <button
+      type="button"
       class="hover:bg-light border-light flex h-[30px] w-full items-center border-t px-2 py-1 text-xs"
     >
-      {#if button.icon}
-        <Icon
-          name={button.icon}
-          size="sm"
-        />
-      {/if}
+      <Icon
+        name={button.icon}
+        size="sm"
+      />
 
-      <span class="pl-1.5"> {button.text}</span>
+      <span class="pl-1.5">{button.text}</span>
     </button>
   {/if}
 </div>
 
 <style>
+/* TODO: Move these do tailwind classes */
 .select-menu::-webkit-scrollbar {
   width: 6px;
 }

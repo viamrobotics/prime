@@ -1,26 +1,24 @@
 <svelte:options immutable />
 
 <script lang="ts">
-import cx from 'classnames';
-import {
-  applySearchHighlight,
-  clickedOutside,
-  isElementInScrollView,
-  matchAndSortEntries,
-  type SearchMatch,
-  type SortOptions,
-} from './utils';
 import { createEventDispatcher } from 'svelte';
+import cx from 'classnames';
 import Icon from '$lib/icon/icon.svelte';
 import SelectMenu from './select-menu.svelte';
 import type { SelectState } from './select.svelte';
+import { clickedOutside, isOptionInScrollView } from './dom-utils';
+import {
+  type SortOptions,
+  type SearchResult,
+  getSearchResults,
+} from './search';
 
 export let options: string[] = [];
 export let value: string | undefined = undefined;
 export let disabled = false;
 export let exact = false;
 export let state: SelectState = 'none';
-export let button: { text: string; icon?: string } | undefined = undefined;
+export let button: { text: string; icon: string } | undefined = undefined;
 export let sortoption: SortOptions = 'default';
 export let heading = '';
 
@@ -32,20 +30,17 @@ const dispatch = createEventDispatcher<{
 }>();
 
 let wrapper: Element;
-let input: HTMLInputElement;
 let menu: HTMLUListElement;
 
 let open = false;
 let navigationIndex = -1;
 let keyboardControlling = false;
-let sortedOptions = options;
-let searchedOptions: SearchMatch[] = [];
+let searchedOptions: SearchResult[] = [];
 
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
-$: isReduceSort = sortoption === 'reduce';
-$: doesSearch = sortoption !== 'off';
-$: searchTerm = value ?? '';
+$: shouldReduce = sortoption === 'reduce';
+$: shouldSort = sortoption !== 'off';
 
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
@@ -85,13 +80,15 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
 const handleEnter = () => {
   if (navigationIndex > -1) {
-    value = sortedOptions[navigationIndex]!;
+    value = searchedOptions[navigationIndex]!.option;
     dispatch('change', value);
   } else {
-    const result = sortedOptions.find((item) => item.toLowerCase() === value);
+    const result = searchedOptions.find(
+      ({ option }) => option.toLowerCase() === value
+    );
 
     if (result) {
-      value = result;
+      value = result.option;
       dispatch('change', value);
     }
   }
@@ -107,14 +104,14 @@ const handleNavigate = (direction: number) => {
   navigationIndex += direction;
 
   if (navigationIndex < 0) {
-    navigationIndex = sortedOptions.length - 1;
-  } else if (navigationIndex >= sortedOptions.length) {
+    navigationIndex = searchedOptions.length - 1;
+  } else if (navigationIndex >= searchedOptions.length) {
     navigationIndex = 0;
   }
 
   const element = menu.children[navigationIndex]!;
 
-  if (!isElementInScrollView(element)) {
+  if (!isOptionInScrollView(element)) {
     element.scrollIntoView();
   }
 
@@ -158,17 +155,16 @@ const handleMouseLeave = () => (navigationIndex = -1);
 const handleButtonClick = () => dispatch('buttonclick');
 
 $: {
-  if (doesSearch && options.length > 0 && searchTerm) {
-    dispatch('search', searchTerm);
-    sortedOptions = matchAndSortEntries(options, searchTerm, isReduceSort);
+  if (!shouldSort || options.length === 0 || !value) {
+    // Do not apply any sorting or highlighting
+    searchedOptions = options.map((option) => ({
+      option,
+      highlight: undefined,
+    }));
   } else {
-    sortedOptions = options;
+    searchedOptions = getSearchResults(options, value, shouldReduce);
+    dispatch('search', value);
   }
-
-  searchedOptions = applySearchHighlight(
-    sortedOptions,
-    doesSearch ? searchTerm : ''
-  );
 }
 
 $: {
@@ -187,8 +183,10 @@ $: {
 >
   <div class="flex w-full">
     <input
-      bind:this={input}
       bind:value
+      role="combobox"
+      aria-controls=""
+      aria-expanded={open ? true : undefined}
       readonly={disabled ? true : undefined}
       aria-disabled={disabled ? true : undefined}
       type="text"
@@ -228,8 +226,8 @@ $: {
     on:mouseleave={handleMouseLeave}
     {open}
   >
-    {#if sortedOptions.length > 0}
-      {#each searchedOptions as { search, option }, index (option)}
+    {#if searchedOptions.length > 0}
+      {#each searchedOptions as { highlight, option }, index (option)}
         <li role="presentation">
           <button
             role="menuitem"
@@ -244,12 +242,12 @@ $: {
             on:keydown={handleKeyDown}
             on:click|preventDefault={() => handleSelect(option)}
           >
-            {#if search !== undefined}
+            {#if searchedOptions !== undefined}
               <span class="flex w-full text-ellipsis whitespace-nowrap">
                 {#each [...option] as token}
                   <span
                     class={cx('inline-block', {
-                      'bg-yellow-100': search[1]?.includes(token),
+                      'bg-yellow-100': highlight?.[1].includes(token),
                     })}
                   >
                     {#if token === ' '}
