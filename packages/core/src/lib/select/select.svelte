@@ -13,10 +13,19 @@ For selecting from a list of options.
 -->
 <svelte:options immutable />
 
+<script
+  lang="ts"
+  context="module"
+>
+export type SelectState = 'error' | 'warn' | 'none';
+</script>
+
 <script lang="ts">
 import cx from 'classnames';
-import type { InputState } from '$lib/input/input.svelte';
-import Icon from '$lib/icon/icon.svelte';
+import { Icon } from '$lib';
+import { createEventDispatcher } from 'svelte';
+
+const dispatch = createEventDispatcher();
 
 /** The selected option value, if any */
 export let value: string | undefined = undefined;
@@ -25,9 +34,35 @@ export let value: string | undefined = undefined;
 export let disabled = false;
 
 /** The state of the select (info, warn, error, success), if any. */
-export let state: InputState = 'none';
+export let state: SelectState = 'none';
 
-$: isInfo = state === 'info';
+const onInput = (event: Event) => {
+  if (disabled) {
+    event.preventDefault();
+    return;
+  }
+
+  dispatch('input', event);
+};
+
+const onMouseDown = (event: MouseEvent) => {
+  if (disabled) {
+    event.preventDefault();
+    return;
+  }
+
+  dispatch('mousedown', event);
+};
+
+const onKeyDown = (event: KeyboardEvent) => {
+  if (disabled && event.key.toLowerCase() !== 'tab') {
+    event.preventDefault();
+    return;
+  }
+
+  dispatch('keydown', event);
+};
+
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
 </script>
@@ -40,26 +75,28 @@ $: isError = state === 'error';
     class={cx(
       'peer h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
       {
-        'border-light bg-white hover:border-gray-6 focus:border-gray-9':
-          !disabled && !isError,
-        'pointer-events-none border-disabled-light bg-disabled-light text-disabled-dark':
+        'border-light hover:border-gray-6 focus:border-gray-9 bg-white':
+          !disabled && !isError && !isWarn,
+        'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed':
           disabled,
-        'border-light hover:border-medium focus:border-gray-9 ':
-          !disabled && !isError,
-        'border-info-dark focus:outline-[1.5px] focus:-outline-offset-1 focus:outline-info-dark':
-          isInfo,
-        'border-warning-bright focus:outline-[1.5px] focus:-outline-offset-1 focus:outline-warning-bright':
+        'border-warning-bright hover:outline-warning-bright focus:outline-warning-bright hover:outline-[1.5px] hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
           isWarn,
-        'border-danger-dark focus:outline-[1.5px] focus:-outline-offset-1 focus:outline-danger-dark':
+        'border-danger-dark hover:outline-danger-dark focus:outline-danger-dark hover:outline-[1.5px hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
           isError,
       }
     )}
     {...$$restProps}
-    on:input
+    on:input={onInput}
+    on:mousedown={onMouseDown}
+    on:keydown={onKeyDown}
   >
     <slot />
   </select>
-  <span class="absolute right-2 text-gray-6 transition peer-active:rotate-180">
+  <span
+    class={cx('text-gray-6 absolute right-2 transition', {
+      'peer-active:rotate-180': !disabled,
+    })}
+  >
     <Icon name="chevron-down" />
   </span>
 </div>

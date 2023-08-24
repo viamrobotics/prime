@@ -26,13 +26,15 @@ import TableHeaderCell from '$lib/table/table-header-cell.svelte';
 import TableHeader from '$lib/table/table-header.svelte';
 import TableRow from '$lib/table/table-row.svelte';
 import Select from '$lib/select/select.svelte';
+import SearchableSelect from '$lib/select/searchable-select.svelte';
 
 let buttonClickedTimes = 0;
 </script>
 
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
+  <!-- Badge -->
+  <h1>Badge</h1>
   <div>
-    <!-- Badge -->
     <Badge
       variant="gray"
       label="Inactive"
@@ -56,10 +58,13 @@ let buttonClickedTimes = 0;
   </div>
 
   <!-- Breadcrumbs -->
+  <h1>Breadcrumbs</h1>
   <Breadcrumbs crumbs={['Chocolate Chip', 'Oatmeal Raisin']} />
 
+  <!-- Button -->
+  <h1>Button</h1>
+
   <div class="flex gap-4">
-    <!-- Button -->
     <Button on:click={() => (buttonClickedTimes += 1)}>
       Clicked {buttonClickedTimes} times!
     </Button>
@@ -86,8 +91,10 @@ let buttonClickedTimes = 0;
 
   <Button width="full">Full Width</Button>
 
+  <!-- IconButton -->
+  <h1>IconButton</h1>
+
   <div class="flex-start gap-4">
-    <!-- IconButton -->
     <IconButton
       label="close"
       icon="close"
@@ -113,6 +120,8 @@ let buttonClickedTimes = 0;
   </div>
 
   <!-- Collapse -->
+  <h1>Collapse</h1>
+
   <Collapse title="Motor 1">
     <div
       slot="content"
@@ -173,8 +182,10 @@ let buttonClickedTimes = 0;
     </div>
   </Collapse>
 
+  <!-- Pill -->
+  <h1>Pill</h1>
+
   <div class="flex gap-4">
-    <!-- Pill -->
     <Pill />
     <Pill value="Foo" />
     <Pill
@@ -187,9 +198,10 @@ let buttonClickedTimes = 0;
     />
   </div>
 
-  <div class="flex gap-4">
-    <!-- Input -->
+  <!-- Input -->
+  <h1>Input</h1>
 
+  <div class="flex gap-4">
     <Input
       name="name"
       placeholder="Enter your name"
@@ -226,9 +238,10 @@ let buttonClickedTimes = 0;
     />
   </div>
 
-  <div class="flex gap-4">
-    <!-- Text Input -->
+  <!-- Text Input -->
+  <h1>Text Input</h1>
 
+  <div class="flex gap-4">
     <TextInput
       name="name"
       placeholder="Enter your name"
@@ -247,9 +260,9 @@ let buttonClickedTimes = 0;
     />
   </div>
 
+  <!-- Numeric Input -->
+  <h1>Numeric Input</h1>
   <div class="flex gap-4">
-    <!-- Numeric Input -->
-
     <NumericInput
       name="number"
       placeholder="Enter a number"
@@ -262,6 +275,8 @@ let buttonClickedTimes = 0;
     />
   </div>
 
+  <!-- Slider Input -->
+  <h1>Slider Input</h1>
   <div class="flex gap-4">
     <SliderInput
       placeholder="Slide to select a number"
@@ -279,9 +294,9 @@ let buttonClickedTimes = 0;
     />
   </div>
 
+  <!-- Datetime Input -->
+  <h1>Datetime Input</h1>
   <div class="flex gap-4">
-    <!-- Datetime Input -->
-
     <Input
       type="time"
       name="time"
@@ -301,8 +316,10 @@ let buttonClickedTimes = 0;
     />
   </div>
 
+  <!-- Select -->
+  <h1>Select</h1>
+
   <div class="flex gap-4">
-    <!-- Select -->
     <Select>
       <option>This thing</option>
       <option>That thing</option>
@@ -322,13 +339,6 @@ let buttonClickedTimes = 0;
   </div>
 
   <div class="flex gap-4">
-    <!-- Select -->
-    <Select state="info">
-      <option selected>Info state</option>
-      <option>That thing</option>
-      <option>The other thing</option>
-    </Select>
-
     <Select state="warn">
       <option selected>Warn state</option>
       <option>That thing</option>
@@ -342,8 +352,51 @@ let buttonClickedTimes = 0;
     </Select>
   </div>
 
+  <!-- Searchable Select -->
+  <h1>Searchable Select</h1>
+
   <div class="flex gap-4">
-    <!-- Label -->
+    <SearchableSelect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Select an option"
+    />
+    <SearchableSelect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      value="Option 2"
+      placeholder="Select an option"
+      disabled
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <SearchableSelect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Select an option"
+      state="warn"
+    />
+    <SearchableSelect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Select an option"
+      state="error"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <SearchableSelect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Select an option"
+      button={{ text: 'Other', icon: 'information-outline' }}
+    />
+    <SearchableSelect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Select an option"
+      heading="Some heading text"
+    />
+  </div>
+
+  <!-- Label -->
+  <h1>Label</h1>
+  <div class="flex gap-4">
     <Label>
       Default
       <Input
@@ -379,8 +432,9 @@ let buttonClickedTimes = 0;
     </Label>
   </div>
 
+  <!-- Tooltip -->
+  <h1>Tooltip</h1>
   <div class="flex gap-4">
-    <!-- Tooltip -->
     <Tooltip>
       This element has a top tooltip.
       <div slot="text">This is the tooltip text!</div>
@@ -403,8 +457,9 @@ let buttonClickedTimes = 0;
     </Tooltip>
   </div>
 
+  <!-- Icon -->
+  <h1>Icon</h1>
   <div class="flex gap-4">
-    <!-- Icons -->
     <p class="text-danger-dark">
       <Icon
         name="cog"
@@ -477,8 +532,10 @@ let buttonClickedTimes = 0;
     />
   </div>
 
+  <!-- Radio -->
+  <h1>Radio</h1>
+
   <div class="flex flex-col gap-4">
-    <!-- Radio -->
     <Radio
       options={['Opt 1', 'Opt 2', 'Opt 3']}
       selected="Opt 1"
@@ -513,8 +570,9 @@ let buttonClickedTimes = 0;
     />
   </div>
 
+  <!-- Tabs -->
+  <h1>Tabs</h1>
   <div class="flex gap-4">
-    <!-- Tabs -->
     <Tabs
       tabs={['Tab 1', 'Tab 2', 'Tab 3']}
       selected="Tab 1"
@@ -531,8 +589,9 @@ let buttonClickedTimes = 0;
     />
   </div>
 
+  <!-- Switch -->
+  <h1>Switch</h1>
   <div class="flex gap-4">
-    <!-- Switch -->
     <Switch
       on
       variant="annotated"
@@ -563,7 +622,9 @@ let buttonClickedTimes = 0;
       label="readonly"
     />
   </div>
-  <!-- Context menu -->
+
+  <!-- Context Menu -->
+  <h1>Context Menu</h1>
   <ContextMenu>
     <ContextMenuItem label="label 1" />
     <ContextMenuSeparator />
@@ -583,6 +644,7 @@ let buttonClickedTimes = 0;
   </ContextMenu>
 
   <!-- Table -->
+  <h1>Table</h1>
   <Table cols={['10%', '90%']}>
     <TableHeader>
       <TableHeaderCell
@@ -612,17 +674,9 @@ let buttonClickedTimes = 0;
     </TableBody>
   </Table>
 </div>
-<Pill />
-<Pill value="Foo" />
-<Pill
-  readonly
-  value="Bar"
-/>
-<Pill
-  disabled
-  value="Baz"
-/>
 
+<!-- Notify -->
+<h1>Notify</h1>
 <div>
   <Notify
     variant="info"

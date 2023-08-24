@@ -17,15 +17,15 @@ import { paths } from './icons';
 
 type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
-/**
- * The size of the icon.
- */
+/** The name of the icon. */
+export let name: string;
+
+/** The size of the icon. */
 export let size: Size = 'base';
 
-/**
- * The name of the icon.
- */
-export let name = '';
+/** Additional CSS classes to pass to the button. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 
 const hasNameProperty = Object.hasOwn(paths, name);
 const sizes: Record<Size, string> = {
@@ -45,10 +45,14 @@ const sizes: Record<Size, string> = {
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
 <svg
-  class={cx(sizes[size], {
-    'inline-block': hasNameProperty,
-    hidden: !hasNameProperty,
-  })}
+  class={cx(
+    sizes[size],
+    {
+      'inline-block': hasNameProperty,
+      hidden: !hasNameProperty,
+    },
+    extraClasses
+  )}
   viewBox="0 0 24 24"
   aria-hidden="true"
   focusable="false"
