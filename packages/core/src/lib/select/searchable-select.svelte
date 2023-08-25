@@ -115,7 +115,7 @@ const handleNavigate = (direction: number) => {
   const element = menu.children[navigationIndex]!;
 
   if (!isOptionInScrollView(element)) {
-    element.scrollIntoView();
+    element.scrollIntoView({ block: 'nearest' });
   }
 
   (element.children[0] as HTMLButtonElement).focus();
