@@ -46,6 +46,7 @@ export const paths: Record<string, string> = {
   linkedin: MDI.mdiLinkedin,
   lock: MDI.mdiLockOutline,
   logout: MDI.mdiLogout,
+  magnify: MDI.mdiMagnify,
   menu: MDI.mdiMenu,
   minus: MDI.mdiMinus,
   'open-in-new': MDI.mdiOpenInNew,
