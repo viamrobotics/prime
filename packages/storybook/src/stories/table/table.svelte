@@ -9,13 +9,15 @@ import {
   type TableVariant,
 } from '@viamrobotics/prime-core';
 
-export let variant: TableVariant = 'hi';
+export let variant: TableVariant = 'auto';
 export let cols: string[] = [];
+export let cx = '';
 </script>
 
 <Table
   {variant}
   {cols}
+  {cx}
 >
   <TableHeader>
     <TableHeaderCell><input type="checkbox" /></TableHeaderCell>
@@ -24,7 +26,7 @@ export let cols: string[] = [];
     <TableHeaderCell>Overlylongunbrokenheader</TableHeaderCell>
     <TableHeaderCell>Phone</TableHeaderCell>
   </TableHeader>
-  <TableBody style="text-align:center">
+  <TableBody cx="text-center">
     <TableRow>
       <TableCell><input type="checkbox" /></TableCell>
       <TableCell>John Connor</TableCell>
