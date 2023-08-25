@@ -65,7 +65,7 @@ export type SearchMatches = {
  * Returns the index of the word where the character with the passed index
  * occurs.
  */
-const getWordIndex = (option: string, index: number) => {
+export const getWordIndex = (option: string, index: number) => {
   const preceding = option.slice(0, index);
   return (preceding.match(/\s/gu) || []).length;
 };
@@ -74,16 +74,15 @@ const getWordIndex = (option: string, index: number) => {
  * Returns the passed option broken down into segments to apply highlighting
  * to the portion of the option that matches the passed search term.
  */
-const getSearchHighlight = (
+export const getSearchHighlight = (
   option: string,
   searchTerm: string,
   { index }: RegExpExecArray
 ): SearchHighlight | undefined => {
-  const matchIndex = index === 0 ? 0 : index + 1;
   return [
-    option.slice(0, matchIndex),
-    option.slice(matchIndex, matchIndex + searchTerm.length),
-    option.slice(matchIndex + searchTerm.length),
+    option.slice(0, index),
+    option.slice(index, index + searchTerm.length),
+    option.slice(index + searchTerm.length),
   ];
 };
 
@@ -94,7 +93,10 @@ const getSearchHighlight = (
  * - The index of the word in the option that matched
  * - `-1` for non-matches
  */
-const getSearchMatch = (option: string, searchTerm: string): SearchMatch => {
+export const getSearchMatch = (
+  option: string,
+  searchTerm: string
+): SearchMatch => {
   // Match on the initial character of any word in the option
   const initialCharacterMatch = new RegExp(
     `(^${searchTerm}|\\s${searchTerm})`,
@@ -136,7 +138,7 @@ const getSearchMatch = (option: string, searchTerm: string): SearchMatch => {
  * Checks each passed option if it matches with the passed search term, and
  * returns a prioritized map of the results.
  */
-const prioritizeMatches = (options: string[], searchTerm: string) => {
+export const prioritizeMatches = (options: string[], searchTerm: string) => {
   const results: SearchMatches = {
     '0': [],
     '-1': [],
@@ -157,7 +159,11 @@ const prioritizeMatches = (options: string[], searchTerm: string) => {
  * highlighting breakdown for the match. If reduce is true, options
  * with no match (-1 priority) will not be included in the results.
  */
-const getMatches = (options: string[], searchTerm: string, reduce: boolean) => {
+export const getSearchMatches = (
+  options: string[],
+  searchTerm: string,
+  reduce: boolean
+) => {
   const prioritized = prioritizeMatches(options, searchTerm);
   const results: SearchMatch[] = [];
 
@@ -173,16 +179,6 @@ const getMatches = (options: string[], searchTerm: string, reduce: boolean) => {
 
   return results;
 };
-
-/**
- * Sorts the passed results by the `highlight` segment of the result.
- */
-const sortByHighlight = (results: SearchMatch[]) =>
-  results.sort((a, b) => {
-    const aIndex = a.highlight?.[1] ?? -1;
-    const bIndex = b.highlight?.[1] ?? -1;
-    return aIndex < bIndex ? -1 : 1;
-  });
 
 /**
  * Searches against the passed options with the passed search term before
@@ -209,7 +205,7 @@ export const getSearchResults = (
   const matches: SearchMatch[] = [];
   const noMatches = [];
   const escaped = escapeRegExp(searchTerm);
-  const results = getMatches(options, escaped, reduce);
+  const results = getSearchMatches(options, escaped, reduce);
 
   for (const match of results) {
     if (match.highlight === undefined) {
@@ -220,6 +216,5 @@ export const getSearchResults = (
     matches.push(match);
   }
 
-  const sorted = sortByHighlight(matches);
-  return [...sorted, ...noMatches];
+  return [...matches, ...noMatches];
 };
