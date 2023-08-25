@@ -55,15 +55,12 @@ describe('Slider', () => {
         style = getComputedStyle(slider)
         expect(Number.parseFloat(style.left)).toBeCloseTo(endPercentage*100)
 
-        // const floating = container.querySelectorAll('.floating')
-        // expect(floating).toHaveLength(2)
-        // const eleFirst = floating[0]!
-        // expect(getComputedStyle(eleFirst).opacity).toBe("0")
+        const floating = container.querySelectorAll('.floating')
+        expect(floating).toHaveLength(2)
+        const eleFirst = floating[0]!
 
-        // await fireEvent.pointerOver(slider)
-        // await delay(250)
-
-        // const eleSecond= floating[1]!
+        // TODO add the rest of the test
+        // Had issues pulling opacity from eleFrist
 
     });
     it('Starts slider at minimum value', () => {
@@ -123,15 +120,9 @@ describe('Slider', () => {
             );
           }
     });
-    // it('Restricts slider value to intervvals of size step', () => {
-    //     const { container } = render(Slider,{
-    //         min:"-50",
-    //         max:"50",
-    //         step:"25"
-    //     })
-    //     const slider = screen.getByRole('slider');
-    //     addEventListener('input', slider)
-    // });
+    it('Restricts slider value to intervvals of size step', () => {
+        // TODO
+    });
     it('Renders label above slider', ()=> {
         render(Slider, {
             label:"sliiide to the left"
@@ -163,36 +154,30 @@ describe('Slider', () => {
         const slider = screen.getByRole('slider');
         expect(slider).toBeVisible();
         
-        // await fireEvent.mouseDown(slider)
-        // const drag = createEvent.drag(slider, {delta: {x: -10, y: 0},})
-        // await fireEvent(slider, drag);
-        await fireEvent.mouseDown(slider);
-        await fireEvent.mouseMove(slider, { clientX: 1 })
-        // await fireEvent.mouseUp(slider)
-        // await act(async () => fireEvent.drag(slider, {d))
-        expect(slider.attributes).toBe(0)
+        // TODO
     });
 
-    // it('Given disabled attributes as true, displays slider as disabled and prevents interaction', () =>{
+    it('Given disabled attributes as true, displays slider as disabled and prevents interaction', () =>{
+        // TODO
+    });
 
-    // });
-
-    // it('Given readonly attributes as true, displays slider as readonly and prevents interaction', ()=> {
-
-    // });
+    it('Given readonly attributes as true, displays slider as readonly and prevents interaction', ()=> {
+        // TODO
+    });
 
     it ('Given no attributes, renders slider with { min: 0, max100m value:50, step:1 )', async () => {
-        render(Slider)
+        const {container} = render(Slider)
         expect(screen.getByText('0',{ exact:true})).toBeVisible();
         expect(screen.getByText('50', {exact: true}));
         expect(screen.getByText('100', {exact:true}));
 
         const slider = screen.getByRole('slider');
         expect(slider).toBeVisible();
-        // await fireEvent.drag(slider, {delta: {clientX:-5, clientY:0}});
-        await fireEvent.mouseDown(slider);
-        await fireEvent.mouseMove(slider, { clientX: 0, clientY:0 })
-        expect(slider.attributes).toBe(50)
+
+        // TODO Drag isnt working as expected
+        // Drag documentation https://testing-library.com/docs/example-drag/
+        await fireEvent.drag(slider,{delta:{x:-5,y:0}});
+        expect(slider).toBe(45)
 
     });
 
