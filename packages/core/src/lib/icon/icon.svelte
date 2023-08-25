@@ -11,23 +11,11 @@ A component that renders SVG icons from the @mdi/js package
 -->
 <svelte:options immutable />
 
-<script lang="ts">
-import cx from 'classnames';
-import { paths } from './icons';
-
+<script
+  lang="ts"
+  context="module"
+>
 type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-
-/** The name of the icon. */
-export let name: string;
-
-/** The size of the icon. */
-export let size: Size = 'base';
-
-/** Additional CSS classes to pass to the button. */
-let extraClasses: cx.Argument = '';
-export { extraClasses as cx };
-
-const hasNameProperty = Object.hasOwn(paths, name);
 const sizes: Record<Size, string> = {
   xs: 'w-3 h-3',
   sm: 'w-3.5 h-3.5',
@@ -40,6 +28,23 @@ const sizes: Record<Size, string> = {
 };
 </script>
 
+<script lang="ts">
+import cx from 'classnames';
+import { paths } from './icons';
+
+/** The name of the icon. */
+export let name: string;
+
+/** The size of the icon. */
+export let size: Size = 'base';
+
+/** Additional CSS classes to pass to the button. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
+
+const hasNameProperty = Object.hasOwn(paths, name);
+</script>
+
 <!--
   Accessibility approach for icon svgs taken from:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
@@ -48,7 +53,6 @@ const sizes: Record<Size, string> = {
   class={cx(
     sizes[size],
     {
-      'inline-block': hasNameProperty,
       hidden: !hasNameProperty,
     },
     extraClasses

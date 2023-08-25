@@ -79,7 +79,7 @@ $: icon = {
   {#if icon !== ''}
     <Icon
       cx={[
-        'absolute right-2',
+        'absolute right-2 top-1.5',
         {
           'text-info-dark': isInfo,
           'text-warning-bright': isWarn,

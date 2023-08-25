@@ -93,7 +93,7 @@ $: isError = state === 'error';
     <slot />
   </select>
   <span
-    class={cx('text-gray-6 absolute right-2 transition', {
+    class={cx('text-gray-6 absolute right-2 top-1.5 transition', {
       'peer-active:rotate-180': !disabled,
     })}
   >
