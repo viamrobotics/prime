@@ -41,7 +41,7 @@ export let location: TooltipLocation = 'top';
  */
 export let state: TooltipState = 'invisible';
 
-const tooltipId = useUniqueId()('tooltip');
+const tooltipId = useUniqueId('tooltip');
 
 let container: HTMLElement | undefined;
 let tooltip: HTMLElement | undefined;

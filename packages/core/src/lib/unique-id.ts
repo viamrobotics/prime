@@ -1,41 +1,15 @@
-import { setContext, getContext } from 'svelte';
-import { readable, type Readable, get } from 'svelte/store';
-
-type GetCount = () => number;
-type UniqueIdStore = Readable<GetCount>;
-
-const CONTEXT_KEY = 'prime-core-uid';
+import { nanoid } from 'nanoid/non-secure';
 
 /**
- * Initialize a store to  track ID counts to ensure uniqueness
- *
- * ```ts
- * // +layout.svelte
- * import { initializeUniqueIdStore } from '$lib/unique-id';
- * initializeUniqueIdStore();
- * ```
- */
-export const initializeUniqueIdStore = () => {
-  let count = 0;
-  const uidStore: UniqueIdStore = readable(() => (count += 1));
-  setContext(CONTEXT_KEY, uidStore);
-};
-
-/**
- * Returns a generator function to create unique IDs with a prefix
+ * Returns a unique ID with an optional prefix
  *
  * ```ts
  * // some-component.svelte
  * import { useUniqueId } from './unique-id';
- *
- * const uniqueId = useUniqueId();
- * const first = uniqueId('first');     // returns first_1
- * const second = uniqueId('second');   // returns second_2
+ * const myId = uniqueId(); // returns 'uid_XXXXX`
+ * const myOtherId = uniqueId('other'); // returns 'other_XXXXX`
  * ```
  */
-export const useUniqueId = (): ((prefix: string) => string) => {
-  const uidStore = getContext<UniqueIdStore>(CONTEXT_KEY);
-  const getCount = get(uidStore);
-
-  return (prefix: string) => `${prefix}_${getCount()}`;
+export const useUniqueId = (prefix: string = 'uid'): string => {
+  return `${prefix}_${nanoid()}`;
 };

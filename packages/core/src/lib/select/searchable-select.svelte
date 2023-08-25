@@ -30,7 +30,7 @@ const dispatch = createEventDispatcher<{
   buttonclick: undefined;
 }>();
 
-const menuId = useUniqueId()('searchable-select');
+const menuId = useUniqueId('searchable-select');
 
 let wrapper: Element;
 let menu: HTMLUListElement;
