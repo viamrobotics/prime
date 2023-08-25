@@ -41,3 +41,5 @@ export { default as TableBody } from './table/table-body.svelte';
 export { default as TableRow } from './table/table-row.svelte';
 export { default as TableCell } from './table/table-cell.svelte';
 export { default as Select, type SelectState } from './select/select.svelte';
+
+export * from './unique-id';

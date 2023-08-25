@@ -39,7 +39,7 @@ describe('Select', () => {
     );
 
     expect(select).toHaveClass(
-      'bg-disabled-light text-disabled-dark border-disabled-light pointer-events-none'
+      'bg-disabled-light text-disabled-dark border-disabled-light cursor-not-allowed'
     );
 
     expect(select).toHaveAttribute('aria-disabled', 'true');
