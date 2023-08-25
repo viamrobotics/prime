@@ -27,6 +27,7 @@ export type TooltipState = 'visible' | 'invisible';
 
 <script lang="ts">
 import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
+import { useUniqueId } from './unique-id';
 
 /**
  * The desired location for the tooltip, may be computed to a different
@@ -39,6 +40,8 @@ export let location: TooltipLocation = 'top';
  * will only render on mouse enter and focus
  */
 export let state: TooltipState = 'invisible';
+
+const tooltipId = useUniqueId();
 
 let container: HTMLElement | undefined;
 let tooltip: HTMLElement | undefined;
@@ -125,7 +128,7 @@ $: {
 <button
   bind:this={container}
   class="flex cursor-default items-center"
-  aria-describedby="tooltip"
+  aria-describedby={tooltipId}
   on:mouseenter={show}
   on:mouseleave={hide}
   on:focus={show}
@@ -136,15 +139,15 @@ $: {
 
 <div
   bind:this={tooltip}
-  id="tooltip"
+  id={tooltipId}
   role="tooltip"
   class:invisible
-  class="absolute left-0 top-0 z-[1000] flex w-max max-w-[250px] items-center gap-1 border border-gray-9 bg-gray-9 px-2 py-1 text-left text-xs text-white"
+  class="border-gray-9 bg-gray-9 absolute left-0 top-0 z-[1000] flex w-max max-w-[250px] items-center gap-1 border px-2 py-1 text-left text-xs text-white"
   style="transform: translate({x}px, {y}px);"
 >
   <div
     bind:this={arrowElement}
-    class="absolute h-0 w-0 border-b-[6px] border-l-[6px] border-r-[6px] border-b-gray-9 border-l-transparent border-r-transparent"
+    class="border-b-gray-9 absolute h-0 w-0 border-b-[6px] border-l-[6px] border-r-[6px] border-l-transparent border-r-transparent"
   />
 
   {#if !invisible}

@@ -31,6 +31,7 @@ export let heading = '';
     class="select-menu flex max-h-36 flex-col overflow-y-auto"
     bind:this={element}
     on:mouseleave
+    {...$$restProps}
   >
     <slot />
   </ul>

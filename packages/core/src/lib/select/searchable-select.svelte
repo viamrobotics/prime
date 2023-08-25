@@ -12,6 +12,7 @@ import {
   getSearchResults,
   type SearchResult,
 } from './search';
+import { useUniqueId } from '$lib/unique-id';
 
 export let options: string[] = [];
 export let value: string | undefined = undefined;
@@ -28,6 +29,8 @@ const dispatch = createEventDispatcher<{
   search: string;
   buttonclick: undefined;
 }>();
+
+const menuId = useUniqueId();
 
 let wrapper: Element;
 let menu: HTMLUListElement;
@@ -182,11 +185,10 @@ $: {
   class="relative flex w-full"
 >
   <div class="flex w-full">
-    <!-- TODO: decide on how to handle generating IDs for aria-control -->
     <input
       bind:value
       role="combobox"
-      aria-controls=""
+      aria-controls={menuId}
       aria-expanded={open ? true : undefined}
       readonly={disabled ? true : undefined}
       aria-disabled={disabled ? true : undefined}
@@ -220,12 +222,13 @@ $: {
     />
   </div>
   <SelectMenu
+    {open}
+    id={menuId}
     bind:element={menu}
     bind:heading
     bind:button
     on:buttonclick={handleButtonClick}
     on:mouseleave={handleMouseLeave}
-    {open}
   >
     {#if searchedOptions.length > 0}
       {#each searchedOptions as { highlight, option }, index (option)}
