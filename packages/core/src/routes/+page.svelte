@@ -12,6 +12,7 @@ import Label from '$lib/label.svelte';
 import Notify from '$lib/notify.svelte';
 import Input from '$lib/input/input.svelte';
 import Pill from '$lib/pill.svelte';
+import Slider from '$lib/slider.svelte'
 import Switch from '$lib/switch.svelte';
 import Radio from '$lib/radio.svelte';
 import Tabs from '$lib/tabs.svelte';
@@ -658,4 +659,61 @@ let buttonClickedTimes = 0;
     title="This is the danger title"
     message="This is the message."
   />
+</div>
+
+<div>
+<Slider
+suffix="units"
+      min="-50"
+      max="50"
+/>
+
+<Slider
+  range='range'
+  min='0'
+  max='100'
+  step='10'
+  start='10'
+  end='90'
+/>
+
+<Slider
+  range='min'
+  max='100'
+  step='10'
+  value='30'
+/>
+
+<Slider
+  range='max'
+  max='100'
+  step='10'
+  value='70'
+/>
+
+<Slider
+  label='Soups eaten per day'
+  value='0'
+  min='0'
+  max='100'
+  step='10'
+  suffix='ml'
+/>
+
+<Slider
+  min='0'
+  max='100'
+  step='10'
+  disabled={true}
+/>
+
+<Slider
+  range='min'
+  max='100'
+  step='10'
+  value='30'
+  readonly={true}
+  label='readonly'
+/>
+
 </div>

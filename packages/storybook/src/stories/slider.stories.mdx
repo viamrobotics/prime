@@ -1,0 +1,244 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+
+<Meta
+  title='Elements/Slider'
+  parameters={{
+    actions: {
+      handles: ['input', 'click'],
+    },
+  }}
+  argTypes={{
+    min: {
+      description: 'The minimum value',
+      control: 'number',
+      table: { defaultValue: { summary: 0 } },
+    },
+    max: {
+      description: 'The maxiumum value',
+      control: 'number',
+      table: { defaultValue: { summary: 100 } },
+    },
+    step: {
+      description: 'An optional discrete step between values',
+      control: 'number',
+      table: { defaultValue: { summary: 1 } },
+    },
+    value: {
+      description: 'An optional starting value',
+      control: 'number',
+      table: { defaultValue: { summary: '(min + max) / 2' } },
+    },
+    label: {
+      description: 'An optional label',
+      table: { defaultValue: { summary: '' } },
+    },
+    suffix: {
+      description: 'An optional suffix',
+      table: { defaultValue: { summary: '' } },
+    },
+    'on:input': {
+      description: 'Event fired when an option is selected',
+    },
+  }}
+/>
+
+# Slider
+
+For user triggered actions
+
+<Canvas>
+  <Story
+    name='Slider'
+    args={{
+      min: 0,
+      max: 100,
+      step: 10,
+    }}
+  >
+    {({ min, max, step }) => `
+<v-slider
+  min='${min}'
+  max='${max}'
+  step='${step}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Range'
+    args={{
+      range: 'range',
+      min: 0,
+      max: 100,
+      start: 10,
+      end: 90,
+      step: 10,
+    }}
+  >
+    {({ range, min, max, step, start, end }) => `
+<v-slider
+  range='${range}'
+  min='${min}'
+  max='${max}'
+  step='${step}'
+  start='${start}'
+  end='${end}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Min range'
+    args={{
+      range: 'min',
+      min: 0,
+      max: 100,
+      value: 30,
+      step: 10,
+    }}
+  >
+    {({ range, min, max, step, value }) => `
+<v-slider
+  range='${range}'
+  max='${max}'
+  step='${step}'
+  value='${value}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Max range'
+    args={{
+      range: 'max',
+      min: 0,
+      max: 100,
+      value: 70,
+      step: 10,
+    }}
+  >
+    {({ range, min, max, step, value }) => `
+<v-slider
+  range='${range}'
+  max='${max}'
+  step='${step}'
+  value='${value}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With suffix'
+    args={{
+      min: 0,
+      max: 100,
+      step: 10,
+      suffix: 'ml',
+    }}
+  >
+    {({ min, max, step, suffix }) => `
+<v-slider
+  min='${min}'
+  max='${max}'
+  step='${step}'
+  suffix='${suffix}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With value'
+    args={{
+      min: 0,
+      max: 100,
+      step: 10,
+      value: 0,
+    }}
+  >
+    {({ value, min, max, step }) => `
+<v-slider
+  value='${value}'
+  min='${min}'
+  max='${max}'
+  step='${step}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='With label'
+    args={{
+      min: 0,
+      max: 100,
+      step: 10,
+      label: 'Soups eaten per day',
+    }}
+  >
+    {({ label, min, max, step }) => `
+<v-slider
+  label='${label}'
+  min='${min}'
+  max='${max}'
+  step='${step}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Disabled'
+    args={{
+      min: 0,
+      max: 100,
+      step: 10,
+      disabled: true,
+    }}
+  >
+    {({ min, max, step, disabled }) => `
+<v-slider
+  min='${min}'
+  max='${max}'
+  step='${step}'
+  disabled='${disabled}'
+/>
+    `}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Readonly'
+    args={{
+      range: 'min',
+      max: 100,
+      step: 10,
+      value: 30,
+      readonly: 'true',
+      label: 'readonly',
+    }}
+  >
+    {({ range, max, step, value, readonly, label }) => `
+<v-slider
+  range='${range}'
+  max='${max}'
+  step='${step}'
+  value='${value}'
+  readonly='${readonly}'
+  label='${label}'
+/>
+    `}
+  </Story>
+</Canvas>

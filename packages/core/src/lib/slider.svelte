@@ -1,0 +1,652 @@
+<svelte:options />
+
+<script lang="ts">
+import { createEventDispatcher, onMount } from 'svelte';
+import { spring } from 'svelte/motion';
+import type { Spring } from 'svelte/motion';
+import cn from 'classnames';
+
+export let slider: HTMLElement;
+export let range: 'min' | 'max' | 'range' | '' = '';
+export let min: string ='0';
+export let max: string = '100';
+export let step: string = '1';
+export let value: string = ((Number.parseFloat(min || '0') + Number.parseFloat(max || '100'))/2).toString();
+export let start: string = ((Number.parseFloat(min || '0') + Number.parseFloat(max || '100'))/2).toString();
+export let end: string | undefined =  undefined;
+export let disabled: boolean = false;
+export let readonly: boolean = false;
+export let discrete = true;
+
+// formatting props
+export let label = '';
+export let suffix = '';
+
+type events = {
+    activeHandle:number,
+    previousValue:number,
+    value: number | undefined,
+    values: number[] | undefined,
+};
+
+const dispatch = createEventDispatcher<{
+    input: events;
+}>();
+
+const springValues = { stiffness: 0.1, damping: 0.4 };
+
+let minNum: number;
+let maxNum: number;
+let stepNum: number;
+let startValue: number;
+let endValue: number | undefined;
+let pipStep: number;
+let pipCount: number;
+
+
+$: pipStep = (maxNum - minNum) / stepNum >= 100 ? (maxNum - minNum) / 20 : 1;
+$: pipCount = (maxNum - minNum) / stepNum;
+$: pipVal = (val: number): number => minNum + val * stepNum * pipStep;
+$: minNum = Number.parseFloat(min);
+$: maxNum = Number.parseFloat(max);
+$: stepNum = Number.parseFloat(step);
+$: startValue = (Number.parseFloat(start) == (Number.parseFloat(min) + Number.parseFloat(max))/2) ? 
+Number.parseFloat(value): Number.parseFloat(start);
+$: endValue = end ? Number.parseFloat(end) : undefined;
+
+// state management
+let valueLength = 0;
+let focus = false;
+let handleActivated = false;
+let handlePressed = false;
+let keyboardActive = false;
+let activeHandle = -1;
+let previousValue: number;
+let sliderDimensions: DOMRect;
+
+// copy the initial values in to a spring function which
+// will update every time the values array is modified
+
+let springPositions: Spring<number[]>;
+
+$: {
+  // trim the range so it remains as a min/max (only 2 handles)
+  // and also align the handles to the steps
+  startValue = alignValueToStep(startValue, minNum, maxNum);
+
+  let arr = [startValue];
+
+  if (endValue) {
+    endValue = alignValueToStep(endValue, minNum, maxNum);
+    arr.push(endValue);
+  }
+
+  arr = trimRange(arr);
+
+  // check if the valueLength (length of values[]) has changed,
+  // because if so we need to re-seed the spring function with the
+  // new values array.
+  if (valueLength === arr.length) {
+    // update the value of the spring function for animated handles
+    // whenever the values has updated
+    springPositions
+      .set(arr.map((v) => percentOf(v, minNum, maxNum, 2)))
+      .catch((error) => console.error(error));
+  } else {
+    // set the initial spring values when the slider initialises,
+    // or when values array length has changed
+    springPositions = spring(
+      arr.map((v) => percentOf(v, minNum, maxNum, 2)),
+      springValues
+    );
+  }
+  // set the valueLength for the next check
+  valueLength = arr.length;
+}
+
+// Validate parameters
+onMount(() => {
+  if ((maxNum - minNum) % stepNum !== 0) {
+    console.error(
+      `<v-slider> step (${step}) is not a multiple of the range (${
+        maxNum - minNum
+      })`
+    );
+  }
+});
+
+/**
+ * align the value with the steps so that it
+ * always sits on the closest (above/below) step
+ **/
+const alignValueToStep = (
+  val: number,
+  minVal: number,
+  maxVal: number
+): number => {
+  // sanity check for performance
+  if (val <= minVal) {
+    return minVal;
+  } else if (val >= maxVal) {
+    return maxVal;
+  }
+
+  // find the middle-point between steps
+  // and see if the value is closer to the
+  // next step, or previous step
+  const remainder = (val - minVal) % stepNum;
+  let aligned = val - remainder;
+  if (Math.abs(remainder) * 2 >= stepNum) {
+    aligned += remainder > 0 ? stepNum : -stepNum;
+  }
+  // make sure the value is within acceptable limits
+  aligned = clamp(aligned, minVal, maxVal);
+  // make sure the returned value is set to the precision desired
+  // this is also because javascript often returns weird floats
+  // when dealing with odd numbers and percentages
+
+  return Number.parseFloat(aligned.toFixed(2));
+};
+
+/**
+ * normalise a mouse or touch event to return the
+ * client (x/y) object for that event
+ **/
+const normalisedClient = (
+  event: MouseEvent | TouchEvent
+): MouseEvent | Touch => {
+  return event.type.includes('touch')
+    ? (event as TouchEvent).touches[0]!
+    : (event as MouseEvent);
+};
+
+/**
+ * check if an element is a handle on the slider
+ **/
+const targetIsHandle = (el: HTMLElement): boolean => {
+  const handles = [...slider.querySelectorAll('.handle')];
+  const isHandle = handles.includes(el);
+  const isChild = handles.some((e) => e.contains(el));
+  return isHandle || isChild;
+};
+
+/**
+ * trim the values array based on whether the property
+ * for 'range' is 'min', 'max', or truthy. This is because we
+ * do not want more than one handle for a min/max range, and we do
+ * not want more than two handles for a true range.
+ **/
+const trimRange = (arr: number[]): number[] => {
+  if (range === 'min' || range === 'max') {
+    return arr.slice(0, 1);
+  } else if (range) {
+    return arr.slice(0, 2);
+  } else {
+    return arr;
+  }
+};
+
+const getSliderDimensions = () => {
+  sliderDimensions = slider.getBoundingClientRect();
+};
+
+/**
+ * helper to return closest handle to user interaction
+ **/
+const getClosestHandle = (clientPos: Touch | MouseEvent): number => {
+  // calculate the interaction position, percent and value
+  const handlePos = clientPos.clientX - sliderDimensions.left;
+  const handlePercent = (handlePos / sliderDimensions.width) * 100;
+  const handleVal = ((maxNum - minNum) / 100) * handlePercent + minNum;
+
+  let closest = 0;
+
+  // if we have a range, and the handles are at the same
+  // position, we want a simple check if the interaction
+  // value is greater than return the second handle
+  if (range && startValue === endValue) {
+    return handleVal > endValue ? 1 : 0;
+  } else if (range) {
+    closest = [startValue, endValue!].indexOf(
+      [startValue, endValue!].sort(
+        (a, b) => Math.abs(handleVal - a) - Math.abs(handleVal - b)
+      )[0]!
+    );
+  }
+
+  return closest;
+};
+
+/**
+ * take the interaction position on the slider, convert
+ * it to a value on the range, and then send that value
+ * through to the moveHandle() method to set the active
+ * handle's position
+ **/
+const handleInteract = (
+  clientPos: { clientX: number; clientY: number },
+  event: Event
+) => {
+  // calculate the interaction position, percent and value
+  const handlePos = clientPos.clientX - sliderDimensions.left;
+  const handlePercent = (handlePos / sliderDimensions.width) * 100;
+  const handleVal = ((maxNum - minNum) / 100) * handlePercent + minNum;
+
+  // move handle to the value
+  moveHandle(activeHandle, handleVal, event);
+};
+
+/**
+ * move a handle to a specific value, respecting the clamp/align rules
+ **/
+const moveHandle = (i: number, value: number, _: Event): number => {
+  let index = i;
+
+  // align & clamp the value so we're not doing extra
+  // calculation on an out-of-range value down below
+  const alignedValue = alignValueToStep(value, minNum, maxNum);
+
+  // use the active handle if handle index is not provided
+  if (index === undefined) {
+    index = activeHandle;
+  }
+
+  // if this is a range slider perform special checks
+  if (range) {
+    if (index === 0 && alignedValue > endValue!) {
+      endValue = alignedValue;
+    } else if (index === 1 && alignedValue < startValue) {
+      startValue = alignedValue;
+    }
+  }
+
+  // if the value has changed, update it
+  if (index === 0 && startValue !== alignedValue) {
+    startValue = alignedValue;
+  }
+
+  if (index === 1 && endValue !== alignedValue) {
+    endValue = alignedValue;
+  }
+
+  // fire the change event when the handle moves,
+  // and store the previous value for the next time
+  if (previousValue !== alignedValue) {
+    onChange();
+    previousValue = alignedValue;
+  }
+
+  if (index === 0) {
+    start = startValue.toString();
+  } else if (index === 1) {
+    end = endValue!.toString();
+  }
+
+  return alignedValue;
+};
+
+/**
+ * helper to find the beginning range value for use with css style
+ **/
+const rangeStart = (arr: number[]): number => {
+  return range === 'min' ? 0 : arr[0]!;
+};
+
+/**
+ * helper to find the ending range value for use with css style
+ **/
+const rangeEnd = (arr: number[]): number => {
+  if (range === 'max') {
+    return 0;
+  } else if (range === 'min') {
+    return 100 - arr[0]!;
+  } else {
+    return 100 - arr[1]!;
+  }
+};
+
+/**
+ * when the user has unfocussed (blurred) from the
+ * slider, deactivate all handles
+ **/
+const handleSliderBlur = () => {
+  if (keyboardActive) {
+    focus = false;
+    handleActivated = false;
+    handlePressed = false;
+  }
+};
+
+/**
+ * when the user focusses the handle of a slider
+ * set it to be active
+ **/
+const handleSliderFocus = (index: number) => {
+  if (!disabled) {
+    activeHandle = index;
+    focus = true;
+  }
+};
+
+/**
+ * function to run when the user touches
+ * down on the slider element anywhere
+ * @param {event} e the event from browser
+ **/
+const sliderInteractStart = (e: MouseEvent | TouchEvent) => {
+  if (disabled || readonly) return;
+
+  getSliderDimensions();
+  const el = e.target as HTMLElement;
+  const clientPos = normalisedClient(e);
+
+  // set the closest handle as active
+  focus = true;
+  handleActivated = true;
+  handlePressed = true;
+  activeHandle = getClosestHandle(clientPos);
+  previousValue = alignValueToStep(
+    activeHandle === 0 ? startValue : endValue!,
+    minNum,
+    maxNum
+  );
+
+  // for touch devices we want the handle to instantly
+  // move to the position touched for more responsive feeling
+  if (e.type === 'touchstart' && !el.matches('.pipVal')) {
+    handleInteract(clientPos, e);
+  }
+};
+
+const sliderInteractEnd = () => {
+  handlePressed = false;
+};
+
+/**
+ * unfocus the slider if the user clicked off of
+ * it, somewhere else on the screen
+ **/
+const bodyInteractStart = (e: MouseEvent | TouchEvent) => {
+  keyboardActive = false;
+
+  if (focus && e.target !== slider && !slider.contains(e.target as Node)) {
+    focus = false;
+  }
+};
+
+/**
+ * send the clientX through to handle the interaction
+ * whenever the user moves acros screen while active
+ * @param {event} e the event from browser
+ **/
+const bodyInteract = (e: MouseEvent | TouchEvent) => {
+  if (disabled || readonly || !handleActivated) return;
+
+  focus = true;
+  handleInteract(normalisedClient(e), e);
+};
+
+/**
+ * if user triggers mouseup on the body while
+ * a handle is active (without moving) then we
+ * trigger an interact event there
+ **/
+const bodyMouseUp = (e: MouseEvent) => {
+  if (!(disabled || readonly)) {
+    const el = e.target as HTMLElement;
+    // this only works if a handle is active, which can
+    // only happen if there was sliderInteractStart triggered
+    // on the slider, already
+    if (
+      (handleActivated && el && el === slider) ||
+      slider.contains(el as Node)
+    ) {
+      focus = true;
+      // don't trigger interact if the target is a handle (no need) or
+      // if the target is a label (we want to move to that value from rangePips)
+      if (!targetIsHandle(el) && !el.matches('.pipVal')) {
+        handleInteract(normalisedClient(e), e);
+      }
+    }
+  }
+  handleActivated = false;
+  handlePressed = false;
+};
+
+/**
+ * if user triggers touchend on the body then we
+ * defocus the slider completely
+ **/
+const bodyTouchEnd = () => {
+  handleActivated = false;
+  handlePressed = false;
+};
+
+const bodyKeyDown = (e: KeyboardEvent) => {
+  if (disabled || readonly) return;
+
+  if (e.target === slider || slider.contains(e.target as Node)) {
+    keyboardActive = true;
+  }
+};
+
+const onChange = () => {
+  if (disabled || readonly) return;
+
+  dispatch( 'input', {
+    activeHandle,
+    previousValue,
+    value: activeHandle === 0 ? startValue : endValue,
+    values: endValue
+      ? [startValue, endValue].map((v) => alignValueToStep(v, minNum, maxNum))
+      : undefined,
+  });
+};
+
+export const clamp = (val: number, minVal: number, maxVal: number): number => {
+  return val <= minVal ? minVal : val >= maxVal ? maxVal : val;
+};
+
+/**
+ * take in a value, and then calculate that value's percentage
+ * of the overall range (min-max)
+ **/
+export const percentOf = (
+  val: number,
+  min: number,
+  max: number,
+  precision: number
+): number => {
+  const perc = ((val - min) / (max - min)) * 100;
+  if (Number.isNaN(perc) || perc <= 0) {
+    return 0;
+  } else if (perc >= 100) {
+    return 100;
+  } else {
+    return Number.parseFloat(perc.toFixed(precision));
+  }
+};
+
+export const hashCode = (str: string) => {
+  let hash = 0;
+  let chr = 0;
+
+  if (str.length === 0) {
+    return hash;
+  }
+
+  for (let index = 0; index < str.length; index += 1) {
+    chr = str.codePointAt(index)!;
+    // eslint-disable-next-line no-bitwise
+    hash = (hash << 5) - hash + chr;
+    hash = Math.trunc(hash); // Convert to 32bit integer
+  }
+
+  return hash;
+};
+
+</script>
+
+<!-- svelte-ignore a11y-label-has-associated-control -->
+<label class="flex flex-col gap-2">
+  {#if label}
+    <p
+      class={cn('text-xs', {
+        'text-disabled-dark': disabled,
+      })}
+    >
+      {label}
+    </p>
+  {/if}
+
+  <div
+    bind:this={slider}
+    class={cn(
+      'slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-gray-6',
+      {
+        'bg-disabled-light text-disabled-dark': disabled,
+      }
+    )}
+    class:range
+    class:focus
+    class:min={range === 'min'}
+    class:max={range === 'max'}
+    on:mousedown={sliderInteractStart}
+    on:mouseup={sliderInteractEnd}
+    on:touchstart|preventDefault={sliderInteractStart}
+    on:touchend|preventDefault={sliderInteractEnd}
+  >
+    {#each endValue ? [startValue, endValue] : [startValue] as value, index}
+      <span
+        role="slider"
+        class="range absolute block h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]"
+        class:active={focus && activeHandle === index}
+        class:press={handlePressed && activeHandle === index}
+        data-handle={index}
+        on:blur={handleSliderBlur}
+        on:focus={() => handleSliderFocus(index)}
+        style="left: {$springPositions[index]}%; z-index: {activeHandle ===
+        index
+          ? 3
+          : 2}"
+        aria-valuemin={range === 'range' && index === 1 ? startValue : minNum}
+        aria-valuemax={range === 'range' && index === 0 ? endValue : maxNum}
+        aria-valuenow={value}
+        aria-valuetext={value?.toString()}
+        aria-orientation="horizontal"
+        aria-disabled={disabled ? true : undefined}
+        tabindex={disabled ? -1 : 0}
+      >
+        <span
+          class="handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400"
+        />
+
+        <span
+          class={cn(
+            'absolute left-0 bottom-1 block rounded-full h-full w-full border border-gray-9 bg-white',
+            {
+              'border-disabled-dark': disabled || readonly,
+            }
+          )}
+        />
+
+        <span
+          class={cn(
+            'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2 select-none',
+            'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-gray-9 bg-white text-xs',
+            {
+              '-translate-y-1.5': !focus || activeHandle !== index,
+              'border-disabled-dark': disabled || readonly,
+              'text-disabled-dark': disabled || readonly,
+            }
+          )}
+        >
+          {value}
+
+          {#if suffix}
+            <span class="floating-suffix">{suffix}</span>
+          {/if}
+        </span>
+      </span>
+    {/each}
+
+    {#if range}
+      <span
+        class={cn(
+          'absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-gray-9',
+          {
+            'bg-disabled-light': disabled || readonly,
+          }
+        )}
+        style="left: {rangeStart($springPositions)}%; right: {rangeEnd(
+          $springPositions
+        )}%"
+      />
+    {/if}
+
+    <div
+      class="absolute h-2 left-0 right-0"
+      class:disabled
+      class:focus
+    >
+      <small class="absolute bottom-full left-0 mb-3 whitespace-nowrap text-xs">
+        {minNum}
+
+        {#if suffix}
+          <span>{suffix}</span>
+        {/if}
+      </small>
+
+      {#if discrete}
+        {#each Array.from({ length: pipCount + 1 }) as _, i}
+          {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
+            <span
+              class={cn(
+                'absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-gray-6',
+                {
+                  'bg-disabled-light': disabled || readonly,
+                }
+              )}
+              style="left: {percentOf(pipVal(i), minNum, maxNum, 2)}%;"
+            />
+          {/if}
+        {/each}
+      {/if}
+
+      <small
+        class="absolute bottom-full right-0 mb-3 whitespace-nowrap text-xs"
+      >
+        {maxNum}
+
+        {#if suffix}
+          <span>{suffix}</span>
+        {/if}
+      </small>
+    </div>
+  </div>
+</label>
+
+<svelte:window
+  on:mousedown={bodyInteractStart}
+  on:touchstart={bodyInteractStart}
+  on:mousemove={bodyInteract}
+  on:touchmove={bodyInteract}
+  on:mouseup={bodyMouseUp}
+  on:touchend={bodyTouchEnd}
+  on:keydown={bodyKeyDown}
+/>
+
+<style>
+.slider .range:hover .handle-bg {
+  transform: scale(1.5);
+}
+
+.slider .range.active .handle-bg {
+  transform: scale(2);
+}
+
+.slider .range.active .floating,
+.slider .range:hover .floating {
+  opacity: 1;
+}
+</style>
