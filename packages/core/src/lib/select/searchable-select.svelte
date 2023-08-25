@@ -9,8 +9,8 @@ import type { SelectState } from './select.svelte';
 import { clickedOutside, isOptionInScrollView } from './dom-utils';
 import {
   type SortOptions,
-  type SearchResult,
   getSearchResults,
+  type SearchResult,
 } from './search';
 
 export let options: string[] = [];

@@ -15,22 +15,17 @@ export type SearchHighlight = [
 ];
 
 /**
- * A search result with potential matches.
+ * A search result with highlighting for potential matches
  *
  * @export
- * @interface SearchMatch
+ * @interface SearchResult
  */
-export interface SearchMatch {
-  /**
-   * The sorting priority for the option.
-   */
-  priority: number;
-
+export interface SearchResult {
   /**
    * How the option should be highlighted.
    *
    * @type {(SearchHighlight | undefined)}
-   * @memberof SearchMatch
+   * @memberof SearchResult
    */
   highlight: SearchHighlight | undefined;
 
@@ -38,9 +33,22 @@ export interface SearchMatch {
    * The select option that had a potential match.
    *
    * @type {string}
-   * @memberof SearchMatch
+   * @memberof SearchResult
    */
   option: string;
+}
+
+/**
+ * A search result with a priority for sorting.
+ *
+ * @export
+ * @interface SearchMatch
+ */
+export interface SearchMatch extends SearchResult {
+  /**
+   * The sorting priority for the option.
+   */
+  priority: number;
 }
 
 /**
@@ -159,8 +167,8 @@ const getMatches = (options: string[], searchTerm: string, reduce: boolean) => {
       continue;
     }
 
-    const sorted = prioritized[priority] ?? [];
-    results.push(...sorted);
+    const matches = prioritized[priority] ?? [];
+    results.push(...matches);
   }
 
   return results;
@@ -183,13 +191,13 @@ const sortByHighlight = (results: SearchMatch[]) =>
  * @param options The select options to be searched and sorted
  * @param searchTerm The term to match against each of the `options`
  * @param reduce If true, will not return options that did not match the search term
- * @returns {SearchMatch[]} The search results
+ * @returns {SearchResult[]} The sorted search results
  */
 export const getSearchResults = (
   options: string[],
   searchTerm?: string,
   reduce: boolean = false
-): SearchMatch[] => {
+): SearchResult[] => {
   if (!searchTerm) {
     return options.map((option) => ({
       priority: -1,
