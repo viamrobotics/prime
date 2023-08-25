@@ -29,6 +29,7 @@ export let heading = '';
   <ul
     role="menu"
     class="select-menu flex max-h-36 flex-col overflow-y-auto"
+    tabindex="-1"
     bind:this={element}
     on:mouseleave
     {...$$restProps}
