@@ -182,6 +182,7 @@ $: {
   class="relative flex w-full"
 >
   <div class="flex w-full">
+    <!-- TODO: decide on how to handle generating IDs for aria-control -->
     <input
       bind:value
       role="combobox"
@@ -242,21 +243,11 @@ $: {
             on:keydown={handleKeyDown}
             on:click|preventDefault={() => handleSelect(option)}
           >
-            {#if searchedOptions !== undefined}
+            {#if highlight !== undefined}
               <span class="flex w-full text-ellipsis whitespace-nowrap">
-                {#each [...option] as token}
-                  <span
-                    class={cx('inline-block', {
-                      'bg-yellow-100': highlight?.[1].includes(token),
-                    })}
-                  >
-                    {#if token === ' '}
-                      &nbsp;
-                    {:else}
-                      {token}
-                    {/if}
-                  </span>
-                {/each}
+                <span class="whitespace-pre">{highlight[0]}</span>
+                <span class="whitespace-pre bg-yellow-100">{highlight[1]}</span>
+                <span class="whitespace-pre">{highlight[2]}</span>
               </span>
             {:else}
               {option}

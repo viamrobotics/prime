@@ -49,6 +49,22 @@ export type SearchMatches = {
 };
 
 /**
+ * Returns the index of the word where the character with the passed index
+ * occurs.
+ */
+const getWordIndex = (option: string, index: number) => {
+  let result = 0;
+
+  for (const token of option.slice(0, index)) {
+    if (token === ' ') {
+      result += 1;
+    }
+  }
+
+  return result;
+};
+
+/**
  * Checks the passed select option for a match with the passed search term,
  * and returns the match with a priority based on the result:
  * - `0` is any matches on the initial character of a word
@@ -56,25 +72,25 @@ export type SearchMatches = {
  * - `-1` for non-matches
  */
 const getMatchPriority = (option: string, searchTerm: string): number => {
-  const words = option.split(' ');
-
   // Match on the initial character of any word in the option
-  const initialCharacterMatch = new RegExp(`^${searchTerm}`, 'iu');
-  const anyMatch = new RegExp(searchTerm, 'giu');
+  const initialCharacterMatch = new RegExp(
+    `(^${searchTerm}|\\s${searchTerm})`,
+    'iu'
+  ).exec(option);
 
-  for (const [i, word] of words.entries()) {
-    if (initialCharacterMatch.test(word)) {
-      // Match on an initial character is highest priority
-      return 0;
-    }
+  const anyMatch = new RegExp(searchTerm, 'giu').exec(option);
 
-    if (anyMatch.test(word)) {
-      /*
-       * Matches on other characters are lower priority, so we add 1 to
-       * prioritize them below matching on an initial character.
-       */
-      return i + 1;
-    }
+  if (initialCharacterMatch !== null) {
+    // Match on an initial character is highest priority
+    return 0;
+  }
+
+  if (anyMatch !== null) {
+    /*
+     * Matches on other characters are lower priority, so we add 1 to
+     * prioritize them below matching on an initial character.
+     */
+    return getWordIndex(option, anyMatch.index) + 1;
   }
 
   // Don't prioritize if there are no matches
