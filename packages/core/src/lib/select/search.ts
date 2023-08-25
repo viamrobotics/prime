@@ -4,7 +4,7 @@ export type SortOptions = 'default' | 'reduce' | 'off';
 
 /**
  * A breakdown of how a search result should be highlighted. `before` is the
- * text preceeding the highlighted portion of the result, `highlight` is the
+ * text preceding the highlighted portion of the result, `highlight` is the
  * part of  the result that should be highlighted, and `after` is the text
  * succeeding the highlighted portion of the result.
  */
@@ -18,14 +18,19 @@ export type SearchHighlight = [
  * A search result with potential matches.
  *
  * @export
- * @interface SearchResult
+ * @interface SearchMatch
  */
-export interface SearchResult {
+export interface SearchMatch {
   /**
-   * How the option should be highlighted
+   * The sorting priority for the option.
+   */
+  priority: number;
+
+  /**
+   * How the option should be highlighted.
    *
    * @type {(SearchHighlight | undefined)}
-   * @memberof SearchResult
+   * @memberof SearchMatch
    */
   highlight: SearchHighlight | undefined;
 
@@ -33,7 +38,7 @@ export interface SearchResult {
    * The select option that had a potential match.
    *
    * @type {string}
-   * @memberof SearchResult
+   * @memberof SearchMatch
    */
   option: string;
 }
@@ -43,9 +48,9 @@ export interface SearchResult {
  * option.
  */
 export type SearchMatches = {
-  [priority: number]: string[];
-  0: string[];
-  '-1': string[];
+  [priority: number]: SearchMatch[];
+  0: SearchMatch[];
+  '-1': SearchMatch[];
 };
 
 /**
@@ -53,15 +58,25 @@ export type SearchMatches = {
  * occurs.
  */
 const getWordIndex = (option: string, index: number) => {
-  let result = 0;
+  const preceding = option.slice(0, index);
+  return (preceding.match(/\s/gu) || []).length;
+};
 
-  for (const token of option.slice(0, index)) {
-    if (token === ' ') {
-      result += 1;
-    }
-  }
-
-  return result;
+/**
+ * Returns the passed option broken down into segments to apply highlighting
+ * to the portion of the option that matches the passed search term.
+ */
+const getSearchHighlight = (
+  option: string,
+  searchTerm: string,
+  { index }: RegExpExecArray
+): SearchHighlight | undefined => {
+  const matchIndex = index === 0 ? 0 : index + 1;
+  return [
+    option.slice(0, matchIndex),
+    option.slice(matchIndex, matchIndex + searchTerm.length),
+    option.slice(matchIndex + searchTerm.length),
+  ];
 };
 
 /**
@@ -71,7 +86,7 @@ const getWordIndex = (option: string, index: number) => {
  * - The index of the word in the option that matched
  * - `-1` for non-matches
  */
-const getMatchPriority = (option: string, searchTerm: string): number => {
+const getSearchMatch = (option: string, searchTerm: string): SearchMatch => {
   // Match on the initial character of any word in the option
   const initialCharacterMatch = new RegExp(
     `(^${searchTerm}|\\s${searchTerm})`,
@@ -82,7 +97,11 @@ const getMatchPriority = (option: string, searchTerm: string): number => {
 
   if (initialCharacterMatch !== null) {
     // Match on an initial character is highest priority
-    return 0;
+    return {
+      priority: 0,
+      option,
+      highlight: getSearchHighlight(option, searchTerm, initialCharacterMatch),
+    };
   }
 
   if (anyMatch !== null) {
@@ -90,11 +109,19 @@ const getMatchPriority = (option: string, searchTerm: string): number => {
      * Matches on other characters are lower priority, so we add 1 to
      * prioritize them below matching on an initial character.
      */
-    return getWordIndex(option, anyMatch.index) + 1;
+    return {
+      priority: getWordIndex(option, anyMatch.index) + 1,
+      option,
+      highlight: getSearchHighlight(option, searchTerm, anyMatch),
+    };
   }
 
   // Don't prioritize if there are no matches
-  return -1;
+  return {
+    priority: -1,
+    option,
+    highlight: undefined,
+  };
 };
 
 /**
@@ -108,26 +135,23 @@ const prioritizeMatches = (options: string[], searchTerm: string) => {
   };
 
   for (const option of options) {
-    const priority = getMatchPriority(option, searchTerm);
-    results[priority] ||= [];
-    results[priority]!.push(option);
+    const match = getSearchMatch(option, searchTerm);
+    results[match.priority] ||= [];
+    results[match.priority]!.push(match);
   }
 
   return results;
 };
 
 /**
- * Prioritized the passed options based on where a potential match occured
- * with  the passed search term. If reduce is true, options with no match (-1
- * priority) will not be included in the results.
+ * Sorts the passed options based on where a potential match occured
+ * with the passed search term, and returns them along with their
+ * highlighting breakdown for the match. If reduce is true, options
+ * with no match (-1 priority) will not be included in the results.
  */
-const getPrioritizedOptions = (
-  options: string[],
-  searchTerm: string,
-  reduce: boolean
-) => {
+const getMatches = (options: string[], searchTerm: string, reduce: boolean) => {
   const prioritized = prioritizeMatches(options, searchTerm);
-  const results: string[] = [];
+  const results: SearchMatch[] = [];
 
   for (const key of Object.keys(prioritized)) {
     const priority = Number.parseInt(key, 10);
@@ -143,30 +167,9 @@ const getPrioritizedOptions = (
 };
 
 /**
- * Returns the passed option broken down into segments to apply highlighting
- * to the portion of the option that matches the passed search term.
- */
-const getSearchHighlight = (
-  option: string,
-  searchTerm: string
-): SearchHighlight | undefined => {
-  const match = option.match(new RegExp(searchTerm, 'iu'));
-
-  if (match === null || match.index === undefined) {
-    return undefined;
-  }
-
-  const { index } = match;
-  const beginning = option.slice(0, index);
-  const middle = option.slice(index, index + searchTerm.length);
-  const end = option.slice(index + searchTerm.length);
-  return [beginning, middle, end];
-};
-
-/**
  * Sorts the passed results by the `highlight` segment of the result.
  */
-const sortByHighlight = (results: SearchResult[]) =>
+const sortByHighlight = (results: SearchMatch[]) =>
   results.sort((a, b) => {
     const aIndex = a.highlight?.[1] ?? -1;
     const bIndex = b.highlight?.[1] ?? -1;
@@ -180,32 +183,33 @@ const sortByHighlight = (results: SearchResult[]) =>
  * @param options The select options to be searched and sorted
  * @param searchTerm The term to match against each of the `options`
  * @param reduce If true, will not return options that did not match the search term
- * @returns {SearchResult[]} The search results
+ * @returns {SearchMatch[]} The search results
  */
 export const getSearchResults = (
   options: string[],
   searchTerm?: string,
   reduce: boolean = false
-): SearchResult[] => {
+): SearchMatch[] => {
   if (!searchTerm) {
-    return options.map((option) => ({ highlight: undefined, option }));
+    return options.map((option) => ({
+      priority: -1,
+      highlight: undefined,
+      option,
+    }));
   }
 
-  const matches: SearchResult[] = [];
+  const matches: SearchMatch[] = [];
   const noMatches = [];
   const escaped = escapeRegExp(searchTerm);
-  const prioritized = getPrioritizedOptions(options, escaped, reduce);
+  const results = getMatches(options, escaped, reduce);
 
-  for (const option of prioritized) {
-    const highlight = getSearchHighlight(option, escaped);
-    const result = { highlight, option };
-
-    if (highlight === undefined) {
-      noMatches.push(result);
+  for (const match of results) {
+    if (match.highlight === undefined) {
+      noMatches.push(match);
       continue;
     }
 
-    matches.push(result);
+    matches.push(match);
   }
 
   const sorted = sortByHighlight(matches);

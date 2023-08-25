@@ -375,6 +375,7 @@ let buttonClickedTimes = 0;
         'Many',
         'More',
         'Options',
+        'With  A Whole Lot Of Spaces',
       ]}
       placeholder="Select an option"
       sortoption="reduce"
