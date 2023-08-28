@@ -77,6 +77,7 @@ const obstacles = [
       environment='configure'
       tab='Obstacles'
       tabs={['Obstacles', 'Waypoints']}
+      baseGeoPose={{ lng: -73.9700917950372, lat: 40.67399976829839 }}
       {obstacles}
       {waypoints}
       on:click={(event) => console.log('click', event)}

@@ -1,7 +1,7 @@
 <script lang='ts'>
 
 import { Radio } from '@viamrobotics/prime-core';
-import type { LngLat, Map } from 'maplibre-gl';
+import type { Map } from 'maplibre-gl';
 import { MapLibre } from '$lib';
 import { view, cameraMatrix } from '../stores';
 import ObstacleLayer from './obstacle-layer.svelte';
@@ -10,7 +10,7 @@ import CenterInputs from './center-inputs.svelte';
 import Nav from './nav/index.svelte';
 import Waypoints from './waypoints.svelte';
 
-export let robotLngLat: LngLat | undefined = undefined;
+export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
 
 const minPitch = 0;
 const maxPitch = 60;
@@ -53,7 +53,7 @@ const handleMapCreate = (event: CustomEvent<Map>) => {
       on:delete-waypoint
       on:update-obstacles
     />
-    <RobotMarker lngLat={robotLngLat} />
+    <RobotMarker lngLat={baseGeoPose} />
     <Waypoints />
     <ObstacleLayer slot='layer' />
     <CenterInputs />

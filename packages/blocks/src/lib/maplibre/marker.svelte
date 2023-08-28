@@ -7,7 +7,6 @@
     <MapLibreMarker
       lngLat={{ lng: 0, lat: 0 }}
       scale={1}
-      visible={true}
       color={'blue'}
     />
   ```
@@ -15,26 +14,27 @@
 <script lang='ts'>
 
 import { onDestroy } from 'svelte';
-import { type LngLatLike, Marker } from 'maplibre-gl';
+import { Marker } from 'maplibre-gl';
 import { useMapLibre } from './hooks';
+import type { LngLat } from '$lib';
 
-export let lngLat: LngLatLike;
+export let lngLat: LngLat;
 export let scale = 1;
-export let visible = true;
-export let color = '#ff0047';
+export let color: string = '';
 
 const { map } = useMapLibre()
 
-$: marker = new Marker({ scale, color });
-$: marker.getElement().style.zIndex = '1';
-$: marker.setLngLat(lngLat);
+let marker: Marker | undefined
 
-$: if (visible) {
+$: {
+  console.log(color)
+  marker?.remove();
+  marker = new Marker({ scale, color });
+  marker.getElement().style.zIndex = '1';
+  marker?.setLngLat(lngLat);
   marker.addTo(map)
-} else {
-  marker.remove()
 }
 
-onDestroy(() => marker.remove());
+onDestroy(() => marker?.remove());
 
 </script>

@@ -41,6 +41,8 @@ export let tab: 'Waypoints' | 'Obstacles' = 'Waypoints';
 /** The visible set of tabs */
 export let tabs = ['Waypoints', 'Obstacles'];
 
+export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
+
 $: $tabStore = tab;
 $: $tabsStore = tabs;
 $: $waypointsStore = waypoints;
@@ -50,6 +52,7 @@ $: $envStore = environment;
 </script>
 
 <Map
+  {baseGeoPose}
   on:click
   on:add-waypoint
   on:delete-waypoint

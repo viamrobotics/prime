@@ -1,15 +1,15 @@
 <script lang='ts'>
 
-import { MapLibreMarker } from '$lib';
-import type { LngLatLike } from 'maplibre-gl';
+import { theme } from '@viamrobotics/prime-core/theme';
+import { MapLibreMarker, type LngLat } from '$lib';
 
-export let lngLat: LngLatLike | undefined = undefined;
+export let lngLat: LngLat | undefined = undefined;
 
 </script>
 
 {#if lngLat}
   <MapLibreMarker
     {lngLat}
-    color='#01EF83'
+    color={theme.extend.colors['power-button']}
   />
 {/if}
