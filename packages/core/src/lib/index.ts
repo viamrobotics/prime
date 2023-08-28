@@ -33,7 +33,7 @@ export {
   type TextInputTypes,
 } from './input/text-input.svelte';
 
-export { default as Table } from './table/table.svelte';
+export { default as Table, type TableVariant } from './table/table.svelte';
 export { default as TableHeader } from './table/table-header.svelte';
 export { default as TableHeaderCell } from './table/table-header-cell.svelte';
 export { default as TableBody } from './table/table-body.svelte';

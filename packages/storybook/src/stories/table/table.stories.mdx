@@ -1,5 +1,6 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import Table from './table.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Table'
@@ -13,9 +14,10 @@ import Table from './table.svelte';
     cols: {
       description:
         'Can force columns into certain sizes. Use a list of strings, leaving an empty string if you wish to skip a column. Takes px and % values.',
-      control: { type: 'input' },
+      control: { type: 'object' },
       table: { defaultValue: { summary: [] } },
     },
+    cx,
   }}
 />
 
@@ -28,7 +30,8 @@ Used to tabular data.
     name='Table'
     args={{
       variant: 'auto',
-      cols: '10%, 10%, 60%, 10%, 10%',
+      cols: ['10%', '10%', '60%', '10%', '10%'],
+      cx: '',
     }}
   >
     {(props) => ({
