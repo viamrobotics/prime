@@ -2,6 +2,7 @@ export { default as Badge } from './badge.svelte';
 export { default as Breadcrumbs } from './breadcrumbs.svelte';
 export { default as Button } from './button/button.svelte';
 export { default as IconButton } from './button/icon-button.svelte';
+export { clickOutside } from './click-outside';
 export { default as Collapse } from './collapse.svelte';
 export { default as Icon } from './icon/icon.svelte';
 export { default as Label, type LabelPosition } from './label.svelte';
