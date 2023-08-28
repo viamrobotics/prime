@@ -18,8 +18,8 @@
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { onMount, createEventDispatcher, setContext, onDestroy } from 'svelte';
-import { writable } from 'svelte/store';
+import { onMount, createEventDispatcher, onDestroy } from 'svelte';
+import { provideMapContext } from './hooks';
 import { Map, NavigationControl } from 'maplibre-gl';
 import { style } from './style';
 import type { LngLat } from '$lib';
@@ -51,15 +51,7 @@ type Events = {
 }
 
 const dispatch = createEventDispatcher<Events>();
-const mapStore = writable<Map | undefined>(undefined);
-const centerStore = writable<LngLat>(center);
-const sizeStore = writable({ width: 0, height: 0 });
-const zoomStore = writable(zoom);
-
-setContext('map', mapStore);
-setContext('center', centerStore);
-setContext('size', sizeStore);
-setContext('zoom', zoomStore);
+const context = provideMapContext(center, zoom)
 
 let map: Map | undefined;
 let container: HTMLElement;
@@ -67,7 +59,7 @@ let created = false;
 
 const setMapSize = () => {
   const canvas = map!.getCanvas();
-  sizeStore.set({
+  context.size.set({
     width: canvas.clientWidth,
     height: canvas.clientHeight,
   })
@@ -82,15 +74,15 @@ const handleCreate = () => {
 };
 
 const handleMove = () => {
-  centerStore.set(map!.getCenter());
-  zoomStore.set(map!.getZoom());
+  context.center.set(map!.getCenter());
+  context.zoom.set(map!.getZoom());
   dispatch('move', map!);
 };
 
 const handleResize = () => {
   setMapSize();
-  centerStore.set(map!.getCenter());
-  zoomStore.set(map!.getZoom());
+  context.center.set(map!.getCenter());
+  context.zoom.set(map!.getZoom());
   dispatch('resize', map!);
 };
 
@@ -105,7 +97,7 @@ onMount(() => {
     maxPitch,
   });
 
-  mapStore.set(map);
+  context.map.set(map);
 
   const nav = new NavigationControl({ showZoom: false });
   map.addControl(nav, 'top-right');

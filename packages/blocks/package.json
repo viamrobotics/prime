@@ -33,13 +33,13 @@
     "@threlte/core": ">=6",
     "@threlte/extras": ">=5",
     "@viamrobotics/prime-core": ">=0.0.10",
+    "@viamrobotics/three": ">=0.0.2",
     "svelte": ">=4 <5",
     "tailwindcss": ">=3",
     "three": ">=0.150",
     "trzy": ">=0.3.11"
   },
   "dependencies": {
-    "@viamrobotics/three": "^0.0.2",
     "maplibre-gl": "^3.3.0"
   },
   "devDependencies": {
@@ -58,6 +58,7 @@
     "@viamrobotics/eslint-config": "^0.1.2",
     "@viamrobotics/prettier-config": "^0.1.2",
     "@viamrobotics/prime-core": "workspace:../core",
+    "@viamrobotics/three": "^0.0.2",
     "@viamrobotics/typescript-config": "^0.0.4",
     "autoprefixer": "^10.4.15",
     "classnames": "^2.3.2",

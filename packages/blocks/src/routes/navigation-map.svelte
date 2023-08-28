@@ -76,7 +76,7 @@ console.log(obstacles[0]?.geometries[0]?.pose)
 <div class="px-12">
   <div class='relative w-full h-[800px] sm:h-auto sm:aspect-video border border-gray-200'>
     <NavigationMap
-      mode='configure'
+      environment='configure'
       tab='Obstacles'
       tabs={['Obstacles', 'Waypoints']}
       {obstacles}
