@@ -81,7 +81,7 @@ $: icon = {
 
   {#if icon !== ''}
     <span
-      class={cx('absolute right-2 top-1.5', {
+      class={cx('absolute right-2', {
         'text-info-dark': isInfo,
         'text-warning-bright': isWarn,
         'text-danger-dark': isError,

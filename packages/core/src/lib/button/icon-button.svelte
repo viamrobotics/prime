@@ -56,7 +56,7 @@ const onClick = () => {
   aria-disabled={disabled}
   {title}
   class={cx(
-    'inline-flex h-8 w-8 select-none items-center justify-center whitespace-nowrap',
+    'inline-flex h-[30px] w-[30px] select-none items-center justify-center whitespace-nowrap',
     {
       'text-gray-6 hover:border-medium hover:bg-medium active:bg-gray-2':
         !disabled,

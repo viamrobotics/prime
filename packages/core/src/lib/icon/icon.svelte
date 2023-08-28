@@ -1,11 +1,11 @@
 <!--
 @component
-  
+
 A component that renders SVG icons from the @mdi/js package
 ```svelte
   <Icon
     name='camera-outline'
-    size='xl' 
+    size='xl'
   />
 ```
 -->

@@ -13,18 +13,16 @@ A table header cell.
 <svelte:options immutable />
 
 <script lang="ts">
-/**
- * Custom table header cell style
- * ```
- * <TableHeaderCell style="text-align:center">
- * ```
- */
-export let style = '';
+import cx from 'classnames';
+
+/** Additional CSS classes to pass to the button. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <th
-  {style}
-  class="overflow-hidden p-2 font-normal text-default"
+  class={cx('text-default overflow-hidden p-2 font-normal', extraClasses)}
+  {...$$restProps}
 >
   <slot />
 </th>

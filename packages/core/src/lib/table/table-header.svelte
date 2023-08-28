@@ -12,18 +12,16 @@ A table header.
 <svelte:options immutable />
 
 <script lang="ts">
-/**
- * Custom table header style
- * ```
- * <TableHeader style="text-align:center">
- * ```
- */
-export let style = '';
+import cx from 'classnames';
+
+/** Additional CSS classes to pass to the button. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <thead
-  {style}
-  class="border-b border-black"
+  class={cx('border-b border-black', extraClasses)}
+  {...$$restProps}
 >
   <slot />
 </thead>
