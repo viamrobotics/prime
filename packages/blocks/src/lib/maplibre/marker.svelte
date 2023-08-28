@@ -27,7 +27,6 @@ const { map } = useMapLibre()
 let marker: Marker | undefined
 
 $: {
-  console.log(color)
   marker?.remove();
   marker = new Marker({ scale, color });
   marker.getElement().style.zIndex = '1';
