@@ -21,8 +21,10 @@ module.exports = {
     {
       files: '*.svelte',
       rules: {
-        // TODO(mc, 2023-08-28): this rule is crashing with svelte actions
-        // investigate and fix once lint dependencies are updated
+        /*
+         * TODO(mc, 2023-08-28): this rule is crashing with svelte actions.
+         * Investigate and fix once lint dependencies are updated.
+         */
         'sonarjs/no-unused-collection': 'off',
       },
     },
