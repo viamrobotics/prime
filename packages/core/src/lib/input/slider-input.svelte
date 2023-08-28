@@ -135,7 +135,7 @@ const handlePointerDown = async (event: PointerEvent) => {
 };
 </script>
 
-<svelte:window
+<svelte:document
   on:pointermove={isDragging ? handlePointerMove : undefined}
   on:pointerup={isDragging ? handlePointerUp : undefined}
 />
@@ -153,7 +153,7 @@ const handlePointerDown = async (event: PointerEvent) => {
     on:blur
   />
   <div
-    class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700"
+    class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700 z-max"
     on:pointerdown|preventDefault|stopPropagation={handlePointerDown}
   >
     {#if isDragging}

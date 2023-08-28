@@ -87,7 +87,7 @@ $: {
 }
 </script>
 
-<label
+<div
   class={cx('flex gap-1', {
     'flex-col': labelposition === 'top',
     'flex-row': labelposition === 'left',
@@ -142,4 +142,4 @@ $: {
       </button>
     {/each}
   </div>
-</label>
+</div>

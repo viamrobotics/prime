@@ -44,7 +44,7 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
         placeholder={placeholders[index]}
         class='max-w-[5.5rem]'
         readonly={readonly ? 'readonly' : undefined}
-        value={values[index]}
+        value={values[label]}
         incrementor={readonly ? '' : 'slider'}
         on:blur={() => handleInput(label)}
         on:slide={() => handleInput(label)}

@@ -19,9 +19,10 @@ const handleInput = () => {
 
 </script>
 
-<Label>
+<Label position='top'>
   Rotation
   <SliderInput
+    slot='input'
     bind:input={input}
     value={th}
     placholder={0}

@@ -1,6 +1,6 @@
 export const theme = {
   zIndex: {
-    max: 1000,
+    max: '1000',
   },
   extend: {
     fontFamily: {
