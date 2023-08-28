@@ -15,34 +15,41 @@ const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
   dispatch('input', createGeometry(nextType));
 };
 
-const handleDimensionsInput = (event: CustomEvent<number[]>) => {
-  const [x, y, z] = event.detail;
-
+const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
   switch (geometry.type) {
     case 'box': {
-      if (x) {
-        geometry.length = x;
+      const length = event.detail['Length (m)'];
+      const width = event.detail['Width (m)'];
+      const height = event.detail['Height (m)'];
+
+      if (length !== undefined) {
+        geometry.length = length;
       }
-      if (y) {
-        geometry.width = y;
+      if (width !== undefined) {
+        geometry.width = width;
       }
-      if (z) {
-        geometry.height = z;
+      if (height !== undefined) {
+        geometry.height = height;
       }
       break;
     }
     case 'sphere': {
-      if (x) {
-        geometry.radius = x;
+      const radius = event.detail['Radius (m)'];
+
+      if (radius !== undefined) {
+        geometry.radius = radius;
       }
       break;
     }
     case 'capsule': {
-      if (x) {
-        geometry.radius = x;
+      const radius = event.detail['Radius (m)'];
+      const length = event.detail['Length (m)'];
+
+      if (radius !== undefined) {
+        geometry.radius = radius;
       }
-      if (y) {
-        geometry.length = y;
+      if (length !== undefined) {
+        geometry.length = length;
       }
       break;
     }
@@ -51,7 +58,11 @@ const handleDimensionsInput = (event: CustomEvent<number[]>) => {
   dispatch('input', geometry);
 };
 
-const shapeMap = { box: 'Box', sphere: 'Sphere', capsule: 'Capsule' };
+const shapeMap = {
+  box: 'Box',
+  sphere: 'Sphere',
+  capsule: 'Capsule'
+};
 
 </script>
 
@@ -66,19 +77,19 @@ const shapeMap = { box: 'Box', sphere: 'Sphere', capsule: 'Capsule' };
   {#if geometry.type === 'box'}
     <VectorInput
       labels={['Length (m)', 'Width (m)', 'Height (m)']}
-      values={[geometry.length, geometry.width, geometry.height]}
+      values={{ 'Length (m)': geometry.length, 'Width (m)': geometry.width, 'Height (m)': geometry.height }}
       on:input={handleDimensionsInput}
     />
   {:else if geometry.type === 'capsule'}
     <VectorInput
       labels={['Radius (m)', 'Length (m)']}
-      values={[geometry.radius, geometry.length]}
+      values={{ 'Radius (m)': geometry.radius, 'Length (m)': geometry.length }}
       on:input={handleDimensionsInput}
     />
   {:else if geometry.type === 'sphere'}
     <VectorInput
       labels={['Radius (m)']}
-      values={[geometry.radius]}
+      values={{ 'Radius (m)': geometry.radius }}
       on:input={handleDimensionsInput}
     />
   {/if}
