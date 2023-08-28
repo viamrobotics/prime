@@ -17,4 +17,14 @@ module.exports = {
     'no-undef-init': 'off',
     'unicorn/no-useless-undefined': 'off',
   },
+  overrides: [
+    {
+      files: '*.svelte',
+      rules: {
+        // TODO(mc, 2023-08-28): this rule is crashing with svelte actions
+        // investigate and fix once lint dependencies are updated
+        'sonarjs/no-unused-collection': 'off',
+      },
+    },
+  ],
 };
