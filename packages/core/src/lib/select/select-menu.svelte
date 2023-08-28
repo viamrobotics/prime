@@ -28,7 +28,7 @@ export let heading = '';
   {/if}
   <ul
     role="menu"
-    class="select-menu flex max-h-36 flex-col overflow-y-auto"
+    class="scrollbar-thin scrollbar-black scrollbar-w-1.5 scrollbar-track-transparent scrollbar-thumb-black scrollbar-thumb-border-0 scrollbar-thumb-border-transparent flex max-h-36 flex-col overflow-y-auto"
     tabindex="-1"
     bind:this={element}
     on:mouseleave
@@ -50,25 +50,3 @@ export let heading = '';
     </button>
   {/if}
 </div>
-
-<style>
-/* TODO: Move these do tailwind classes */
-.select-menu::-webkit-scrollbar {
-  width: 6px;
-}
-
-.select-menu::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.select-menu::-webkit-scrollbar-thumb {
-  background-color: black;
-  border-radius: 0;
-  border: 0 solid transparent;
-}
-
-.select-menu {
-  scrollbar-width: thin;
-  scrollbar-color: black transparent;
-}
-</style>
