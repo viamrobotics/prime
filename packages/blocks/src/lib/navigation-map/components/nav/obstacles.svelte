@@ -78,6 +78,7 @@ useMapLibreEvent('click', (event) => {
 
         <div class='grow'>
           <IconButton
+            label='Delete {name}'
             icon='trash-can-outline'
             on:click={handleDeleteObstacle(name)}
           />
@@ -90,8 +91,8 @@ useMapLibreEvent('click', (event) => {
       >
         <div class='grow'>
           <IconButton
+            label='Focus {name}'
             icon='image-filter-center-focus'
-            label='Focus'
             on:click={() => handleSelect({ name, location })}
           />
         </div>
