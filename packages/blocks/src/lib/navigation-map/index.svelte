@@ -18,7 +18,7 @@
 -->
 <script lang="ts">
 
-import { write as writeStore } from './stores';
+import { environment as envStore } from './stores';
 import Map from './components/map.svelte';
 import type { Waypoint, Obstacle } from './types';
 import {
@@ -28,8 +28,8 @@ import {
   tabs as tabsStore,
 } from './stores';
 
-/** The map mode. "debug" assumes the robot is on and connected. */
-export let mode: 'debug' | 'configure' = 'debug';
+/** The map environment. "debug" assumes the robot is on and connected. */
+export let environment: 'debug' | 'configure' = 'debug';
 
 /** The waypoints to render on the map. */
 export let waypoints: Waypoint[] = [];
@@ -43,11 +43,11 @@ export let tab: 'Waypoints' | 'Obstacles' = 'Waypoints';
 /** The visible set of tabs */
 export let tabs = ['Waypoints', 'Obstacles'];
 
-$: tabStore.set(tab);
-$: tabsStore.set(tabs);
-$: waypointsStore.set(waypoints);
-$: obstaclesStore.set(obstacles);
-$: $writeStore = mode === 'configure';
+$: $tabStore = tab;
+$: $tabsStore = tabs;
+$: $waypointsStore = waypoints;
+$: $obstaclesStore = obstacles;
+$: $envStore = environment;
 
 </script>
 

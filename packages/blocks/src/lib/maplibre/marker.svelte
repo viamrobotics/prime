@@ -25,9 +25,8 @@ export let color = '#ff0047';
 
 const { map } = useMapLibre()
 
-const marker = new Marker({ scale, color });
-marker.getElement().style.zIndex = '1';
-
+$: marker = new Marker({ scale, color });
+$: marker.getElement().style.zIndex = '1';
 $: marker.setLngLat(lngLat);
 
 $: if (visible) {

@@ -6,7 +6,7 @@ import LngLatInput from '../components/input/lnglat.svelte';
 const { map, mapCenter } = useMapLibre();
 
 const handleInput = (event: CustomEvent<LngLat>) => {
-  map.jumpTo({ center: event.detail })
+  map.jumpTo({ center: event.detail });
 }
 
 </script>

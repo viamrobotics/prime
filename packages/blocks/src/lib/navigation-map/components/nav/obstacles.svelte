@@ -5,7 +5,7 @@ import { type LngLat, type Geometry, useMapLibre, type Obstacle, useMapLibreEven
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
-import { write, hovered, boundingRadius, obstacles } from '../../stores';
+import { environment, hovered, boundingRadius, obstacles } from '../../stores';
 import { calculateBoundingBox } from '../../lib/bounding-box';
 import { createEventDispatcher } from 'svelte';
 import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
@@ -58,7 +58,7 @@ useMapLibreEvent('click', (event) => {
 
 {#if $obstacles.length === 0}
   <li class='text-xs text-subtle-2 font-sans py-2'>
-    {#if write}
+    {#if $environment === 'configure'}
       Click on the map to add an obstacle.
     {:else}
       Add static obstacles in your navigation service config.
@@ -67,7 +67,7 @@ useMapLibreEvent('click', (event) => {
 {/if}
 
 {#each $obstacles as { name, location, geometries }, index (index)}
-  {#if $write}
+  {#if $environment === 'configure'}
     <li class='group mb-8 pl-2 border-l border-l-medium'>
       <div class='flex items-end gap-1.5 pb-2'>
         <!-- @todo(mp) obstacle API doesn't yet allow custom names. -->
