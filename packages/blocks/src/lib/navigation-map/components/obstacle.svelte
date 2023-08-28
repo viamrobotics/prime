@@ -1,6 +1,7 @@
 
 <script lang='ts'>
 
+import { theme } from '@viamrobotics/prime-core/theme';
 import * as THREE from 'three';
 import { T } from '@threlte/core';
 import type { Obstacle } from '$lib';
@@ -11,7 +12,10 @@ export let obstacle: Obstacle;
 let material: THREE.MeshPhongMaterial;
 
 $: name = obstacle.name;
-$: material?.color.set($hovered === obstacle.name ? '#FFD400' : '#FF7D80');
+$: material?.color.set($hovered === obstacle.name
+  ? theme.extend.colors['solar-power']
+  : theme.extend.colors['power-wire']
+);
 
 </script>
 

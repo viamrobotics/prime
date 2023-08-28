@@ -5,9 +5,9 @@ import { NavigationMap, type CapsuleGeometry, type SphereGeometry, type BoxGeome
 import { ViamObject3D } from '@viamrobotics/three';
 
 const waypoints = [
-    { lng: -73.968_899_054_033_95, lat: 40.663_071_086_044, id: '0' },
-    { lng: -73.972_162_444_595_26, lat: 40.661_759_669_002_69, id: '1' },
-    { lng: -73.969_889_726_168_73, lat: 40.659_372_529_105_895, id: '2' },
+  { lng: -73.968_899_054_033_95, lat: 40.663_071_086_044, id: '0' },
+  { lng: -73.972_162_444_595_26, lat: 40.661_759_669_002_69, id: '1' },
+  { lng: -73.969_889_726_168_73, lat: 40.659_372_529_105_895, id: '2' },
 ]
 
 const obstacles = [
@@ -68,8 +68,6 @@ const obstacles = [
     ]
   }
 ]
-
-console.log(obstacles[0]?.geometries[0]?.pose)
 
 </script>
 

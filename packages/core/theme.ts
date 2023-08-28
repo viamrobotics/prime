@@ -54,6 +54,18 @@ export const theme = {
       'info-medium': '#b6d1f4',
       'disabled-dark': '#9c9ca4',
       'disabled-light': '#f2f2f4',
+
+      // Brand design colors
+      'power-wire': '#FF0047',
+      'pcb': '#00501F',
+      'power-button': '#00EF83',
+      'solar-power': '#FFD400',
+      'mars-rover': '#FF7D80',
+      'raspberry': '#9F0049',
+      'hologram': '#00E8E8',
+      'yoshimi': '#FF79FF',
+      'cyberpunk': '#A51AFF',
+      'hyperlink': '#0000EA',
     },
     transitionProperty: {
       'expand-vertical': 'max-height,visibility',

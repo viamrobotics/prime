@@ -10,9 +10,7 @@
       obstacles={Obstacle[]}
       on:click
       on:delete-waypoint
-      on:create-obstacle
-      on:delete-obstacle
-      on:update-obstacle
+      on:update-obstacles
     />
   ```
 -->
