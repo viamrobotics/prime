@@ -19,8 +19,8 @@ export let options: string[] = [];
 export let value: string | undefined = undefined;
 export let disabled = false;
 export let state: SelectState = 'none';
-export let button: { text: string; icon: string } | undefined = undefined;
 export let sort: SortOptions = 'default';
+export let button: { text: string; icon: string } | undefined = undefined;
 export let heading = '';
 
 const dispatch = createEventDispatcher<{
@@ -31,8 +31,6 @@ const dispatch = createEventDispatcher<{
 }>();
 
 const menuId = useUniqueId('searchable-select');
-
-let wrapper: Element;
 let menu: HTMLUListElement;
 
 let open = false;
@@ -166,7 +164,6 @@ $: {
 </script>
 
 <div
-  bind:this={wrapper}
   class="relative flex w-full"
   use:clickOutside={closeMenu}
 >
@@ -175,7 +172,7 @@ $: {
       bind:value
       role="combobox"
       aria-controls={menuId}
-      aria-expanded={open ? true : undefined}
+      aria-expanded={open}
       readonly={disabled ? true : undefined}
       aria-disabled={disabled ? true : undefined}
       type="text"

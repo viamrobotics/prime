@@ -19,7 +19,7 @@ import LabeledSelect from './labeled-select.svelte';
     state: {
       description: 'The state of the select',
       control: { type: 'select' },
-      options: ['info', 'warn', 'error', 'none'],
+      options: ['warn', 'error', 'none'],
       table: { defaultValue: { summary: 'none' } },
     },
   }}
@@ -42,7 +42,7 @@ of the native HTML `<select />` with our styles applied.
 ## Labels
 
 For accessibility, consider wrapping your `<Select />` in a `<Label />`. Make
-to pass it `slot="select"` to correctly slot it in.
+to pass it `slot="input"` to correctly slot it in.
 
 <Canvas>
   <Story name='Labeled Select'>
