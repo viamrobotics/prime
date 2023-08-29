@@ -2,7 +2,7 @@
 
 import { createEventDispatcher } from 'svelte';
 import { Tabs } from '@viamrobotics/prime-core';
-import type { Obstacle } from '$lib';
+import { NavigationTab, type NavigationTabType, type Obstacle } from '$lib';
 import { tab, tabs, hovered } from '../../stores';
 import ObstaclesTab from './obstacles.svelte';
 import WaypointsTab from './waypoints.svelte';
@@ -13,7 +13,7 @@ const dispatch = createEventDispatcher<{
 }>();
 
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
-  $tab = event.detail.value as 'Obstacles' | 'Waypoints';
+  $tab = event.detail.value as NavigationTabType;
 };
 
 const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
@@ -33,12 +33,12 @@ const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
     on:mouseleave={() => ($hovered = null)}
     class='px-4 py-2 sm:h-[calc(100%-30px)] overflow-y-scroll'
   >
-    {#if $tab === 'Waypoints'}
+    {#if $tab === NavigationTab.Waypoints}
       <WaypointsTab
         on:add-waypoint
         on:delete-waypoint
       />
-    {:else if $tab === 'Obstacles'}
+    {:else if $tab === NavigationTab.Obstacles}
       <ObstaclesTab
         on:update={handleUpdateObstacle}
       />

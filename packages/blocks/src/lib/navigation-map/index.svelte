@@ -18,7 +18,7 @@
 
 import { environment as envStore } from './stores';
 import Map from './components/map.svelte';
-import type { Waypoint, Obstacle } from './types';
+import { type Waypoint, type Obstacle, type NavigationTabType, NavigationTab } from './types';
 import {
   waypoints as waypointsStore,
   obstacles as obstaclesStore,
@@ -36,10 +36,10 @@ export let waypoints: Waypoint[] = [];
 export let obstacles: Obstacle[] = [];
 
 /** The initial tab to show */
-export let tab: 'Obstacles' | 'Waypoints' = 'Waypoints';
+export let tab: NavigationTabType = NavigationTab.Waypoints;
 
 /** The visible set of tabs */
-export let tabs = ['Waypoints', 'Obstacles'];
+export let tabs = [NavigationTab.Waypoints, NavigationTab.Obstacles];
 
 export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
 

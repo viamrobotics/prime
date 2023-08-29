@@ -4,6 +4,13 @@ type BaseGeometry = {
   pose: ViamObject3D;
 };
 
+export const NavigationTab = {
+  Waypoints: 'Waypoints',
+  Obstacles: 'Obstacles',
+} as const
+
+export type NavigationTabType = typeof NavigationTab[keyof typeof NavigationTab]
+
 export type Shapes = 'box' | 'sphere' | 'capsule';
 
 export type LngLat = { lng: number; lat: number };
