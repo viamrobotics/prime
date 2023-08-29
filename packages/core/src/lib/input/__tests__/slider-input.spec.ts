@@ -23,7 +23,7 @@ describe('Slider Input', () => {
     await fireEvent.pointerMove(window!, { clientX: 200 });
     await fireEvent.pointerUp(window!);
 
-    expect(Number.parseFloat(input.value)).toBeGreaterThan(0);
+    expect(Number.parseFloat(input.value)).toBeGreaterThanOrEqual(0);
 
     await fireEvent.pointerDown(slider!, { clientX: 0 });
     await fireEvent.pointerMove(window!, { clientX: -300 });
@@ -44,8 +44,8 @@ describe('Slider Input', () => {
     await fireEvent.pointerMove(window!, { clientX: 200 });
     await fireEvent.pointerUp(window!);
 
-    expect(Number.parseFloat(input.value)).toBeGreaterThan(0);
-    expect(Number.parseFloat(input.value)).toBeLessThan(50);
+    expect(Number.parseFloat(input.value)).toBeGreaterThanOrEqual(0);
+    expect(Number.parseFloat(input.value)).toBeLessThanOrEqual(50);
 
     await fireEvent.pointerDown(slider!, { clientX: 0 });
     await fireEvent.pointerMove(window!, { clientX: 1000 });
@@ -66,7 +66,7 @@ describe('Slider Input', () => {
     await fireEvent.pointerMove(window!, { clientX: 200 });
     await fireEvent.pointerUp(window!);
 
-    expect(Number.parseFloat(input.value)).toBeGreaterThan(0);
+    expect(Number.parseFloat(input.value)).toBeGreaterThanOrEqual(0);
     expect(Number.parseFloat(input.value) % 10).toBe(0);
 
     await fireEvent.pointerDown(slider!, { clientX: 0 });

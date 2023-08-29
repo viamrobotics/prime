@@ -118,7 +118,7 @@ export const renderPlugin = () =>
       id: cursor,
       lngLat: currentProps.lnglat,
       start,
-      stop
+      stop,
     });
 
     const id = cursor;

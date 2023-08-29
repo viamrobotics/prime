@@ -11,10 +11,10 @@ import type { LngLat } from '$lib';
 const mapContextKey = Symbol('prime-blocks-maplibre');
 
 interface MapContext {
-  map: Writable<Map>
-  center: Writable<LngLat>
-  size: Writable<{ width: number; height: number }>
-  zoom: Writable<number>
+  map: Writable<Map>;
+  center: Writable<LngLat>;
+  size: Writable<{ width: number; height: number }>;
+  zoom: Writable<number>;
 }
 
 export const provideMapContext = (center: LngLat, zoom: number) => {
@@ -23,12 +23,12 @@ export const provideMapContext = (center: LngLat, zoom: number) => {
     center: writable<LngLat>(center),
     size: writable({ width: 0, height: 0 }),
     zoom: writable(zoom),
-  }
+  };
 
-  setContext<MapContext>(mapContextKey, context)
+  setContext<MapContext>(mapContextKey, context);
 
-  return context
-}
+  return context;
+};
 
 /**
  * Provides context for a <MapLibre> instance. Must be called within a child of this component.

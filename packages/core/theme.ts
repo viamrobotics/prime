@@ -10,7 +10,7 @@ export const theme = {
         "'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace",
       'public-sans': "'Public Sans Variable', 'Public Sans', sans-serif",
     },
-    
+
     boxShadow: {
       sm: '0 4px 32px rgba(0, 0, 0, 0.06)',
     },
@@ -61,15 +61,15 @@ export const theme = {
 
       // Brand design colors
       'power-wire': '#FF0047',
-      'pcb': '#00501F',
+      pcb: '#00501F',
       'power-button': '#00EF83',
       'solar-power': '#FFD400',
       'mars-rover': '#FF7D80',
-      'raspberry': '#9F0049',
-      'hologram': '#00E8E8',
-      'yoshimi': '#FF79FF',
-      'cyberpunk': '#A51AFF',
-      'hyperlink': '#0000EA',
+      raspberry: '#9F0049',
+      hologram: '#00E8E8',
+      yoshimi: '#FF79FF',
+      cyberpunk: '#A51AFF',
+      hyperlink: '#0000EA',
     },
     transitionProperty: {
       'expand-vertical': 'max-height,visibility',

@@ -8,11 +8,10 @@ export const hovered = currentWritable<string | null>(null);
 export const waypoints = currentWritable<Waypoint[]>([]);
 export const obstacles = currentWritable<Obstacle[]>([]);
 
-export type Tabs = 'Obstacles' | 'Waypoints'
-export type Environments = 'debug' | 'configure'
+export type Environments = 'debug' | 'configure';
 
 /** The currently selected tab. */
-export const tab = writable<Tabs>('Waypoints');
+export const tab = writable<'Obstacles' | 'Waypoints'>('Waypoints');
 
 /** The visible set of tabs. */
 export const tabs = writable<string[]>(['Obstacles', 'Waypoints']);

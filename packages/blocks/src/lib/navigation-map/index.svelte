@@ -36,7 +36,7 @@ export let waypoints: Waypoint[] = [];
 export let obstacles: Obstacle[] = [];
 
 /** The initial tab to show */
-export let tab: 'Waypoints' | 'Obstacles' = 'Waypoints';
+export let tab: 'Obstacles' | 'Waypoints' = 'Waypoints';
 
 /** The visible set of tabs */
 export let tabs = ['Waypoints', 'Obstacles'];
