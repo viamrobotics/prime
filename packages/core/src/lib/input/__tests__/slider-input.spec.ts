@@ -19,8 +19,6 @@ describe('Slider Input', () => {
 
     const slider = screen.getByRole('button', { hidden: true });
 
-    console.log('hi', slider);
-
     await fireEvent.pointerDown(slider, { clientX: 0 });
     await fireEvent.pointerMove(document, { clientX: 200 });
     await fireEvent.pointerUp(document);
