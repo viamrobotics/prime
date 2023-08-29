@@ -24,7 +24,7 @@ describe('use:clickOutside', () => {
     expect(onClickOutside).toHaveBeenCalledOnce();
   });
 
-  it('should not trigger if clicked element if it gets removed from the DOM', async () => {
+  it('should not trigger if clicked element gets removed from the DOM', async () => {
     render(Subject, { onClickOutside });
 
     const user = userEvent.setup();

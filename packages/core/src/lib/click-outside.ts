@@ -43,14 +43,14 @@ export const clickOutside: Action<HTMLElement | undefined, () => unknown> = (
     }
   };
 
-  window.document.body.addEventListener('click', handleWindowClick);
+  window.document.addEventListener('click', handleWindowClick);
 
   return {
     update: (nextHandler: () => unknown) => {
       handleClickOutside = nextHandler;
     },
     destroy: () => {
-      window.document.body.removeEventListener('click', handleWindowClick);
+      window.document.removeEventListener('click', handleWindowClick);
     },
   };
 };
