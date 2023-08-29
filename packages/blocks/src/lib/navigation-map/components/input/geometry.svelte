@@ -16,20 +16,22 @@ const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
 };
 
 const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
-  switch (geometry.type) {
+  let nextGeometry = { ...geometry }
+
+  switch (nextGeometry.type) {
     case 'box': {
       const length = event.detail['Length (m)'];
       const width = event.detail['Width (m)'];
       const height = event.detail['Height (m)'];
 
       if (length !== undefined) {
-        geometry.length = length;
+        nextGeometry.length = length;
       }
       if (width !== undefined) {
-        geometry.width = width;
+        nextGeometry.width = width;
       }
       if (height !== undefined) {
-        geometry.height = height;
+        nextGeometry.height = height;
       }
       break;
     }
@@ -37,7 +39,7 @@ const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
       const radius = event.detail['Radius (m)'];
 
       if (radius !== undefined) {
-        geometry.radius = radius;
+        nextGeometry.radius = radius;
       }
       break;
     }
@@ -46,16 +48,16 @@ const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
       const length = event.detail['Length (m)'];
 
       if (radius !== undefined) {
-        geometry.radius = radius;
+        nextGeometry.radius = radius;
       }
       if (length !== undefined) {
-        geometry.length = length;
+        nextGeometry.length = length;
       }
       break;
     }
   }
 
-  dispatch('input', geometry);
+  dispatch('input', nextGeometry);
 };
 
 const shapeMap = {

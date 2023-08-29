@@ -68,7 +68,10 @@ useMapLibreEvent('click', (event) => {
 
 {#each $obstacles as { name, location, geometries }, index (index)}
   {#if $environment === 'configure'}
-    <li class='group mb-8 pl-2 border-l border-l-medium'>
+    <li
+      class='group mb-8 pl-2 border-l border-l-medium'
+      on:mouseenter={() => ($hovered = name)}
+    >
       <div class='flex items-end gap-1.5 pb-2'>
         <!-- @todo(mp) obstacle API doesn't yet allow custom names. -->
         <Label>
