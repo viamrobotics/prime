@@ -7,9 +7,10 @@ type BaseGeometry = {
 export const NavigationTab = {
   Waypoints: 'Waypoints',
   Obstacles: 'Obstacles',
-} as const
+} as const;
 
-export type NavigationTabType = typeof NavigationTab[keyof typeof NavigationTab]
+export type NavigationTabType =
+  (typeof NavigationTab)[keyof typeof NavigationTab];
 
 export type Shapes = 'box' | 'sphere' | 'capsule';
 
