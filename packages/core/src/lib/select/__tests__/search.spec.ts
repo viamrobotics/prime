@@ -95,7 +95,7 @@ describe('search', () => {
 
   describe('getSearchMatches', () => {
     it('should return an array of search matches sorted by their priority', () => {
-      const matches = getSearchMatches(options, 's', false);
+      const matches = getSearchMatches(options, 's');
 
       expect(matches[0]?.priority).toBe(0);
       expect(matches[1]?.priority).toBe(1);
@@ -105,7 +105,7 @@ describe('search', () => {
     });
 
     it('should return an array of search matches sorted by their priority without any non-matches', () => {
-      const matches = getSearchMatches(options, 's', true);
+      const matches = getSearchMatches(options, 's', 'reduce');
 
       expect(matches[0]?.priority).toBe(0);
       expect(matches[1]?.priority).toBe(1);
@@ -117,7 +117,7 @@ describe('search', () => {
 
   describe('getSearchResults', () => {
     it('should return an array of search results sorted by priority', () => {
-      const matches = getSearchResults(options, 's', false);
+      const matches = getSearchResults(options, 's');
 
       expect(matches[0]?.option).toBe('Something Else');
       expect(matches[1]?.option).toBe('First Option');
@@ -127,13 +127,23 @@ describe('search', () => {
     });
 
     it('should return an array of search results sorted by priority without any non-matches', () => {
-      const matches = getSearchResults(options, 's', true);
+      const matches = getSearchResults(options, 's', 'reduce');
 
       expect(matches[0]?.option).toBe('Something Else');
       expect(matches[1]?.option).toBe('First Option');
       expect(matches[2]?.option).toBe('With A Whole Lot Of Parts');
       expect(matches[3]).toBe(undefined);
       expect(matches[4]).toBe(undefined);
+    });
+
+    it('should return an array of search results with highlights but no sorting', () => {
+      const matches = getSearchResults(options, 's', 'off');
+
+      expect(matches[0]?.option).toBe(options[0]);
+      expect(matches[1]?.option).toBe(options[1]);
+      expect(matches[2]?.option).toBe(options[2]);
+      expect(matches[3]?.option).toBe(options[3]);
+      expect(matches[4]?.option).toBe(options[4]);
     });
   });
 });

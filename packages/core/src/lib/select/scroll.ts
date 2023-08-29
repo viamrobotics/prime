@@ -5,6 +5,3 @@ export const isOptionInScrollView = (option: Element) => {
 
   return bottom < parentRect.bottom && top > parentRect.top;
 };
-
-export const clickedOutside = (event: Event, inner: Element) =>
-  event.target !== null && !inner.contains(event.target as Node);

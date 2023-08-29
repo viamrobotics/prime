@@ -79,10 +79,11 @@ export const getSearchHighlight = (
   searchTerm: string,
   { index }: RegExpExecArray
 ): SearchHighlight | undefined => {
+  const { length } = searchTerm.replaceAll(/\\(?<escaped>.)/gu, '$1');
   return [
     option.slice(0, index),
-    option.slice(index, index + searchTerm.length),
-    option.slice(index + searchTerm.length),
+    option.slice(index, index + length),
+    option.slice(index + length),
   ];
 };
 
@@ -99,7 +100,7 @@ export const getSearchMatch = (
 ): SearchMatch => {
   // Match on the initial character of any word in the option
   const initialCharacterMatch = new RegExp(
-    `(^${searchTerm}|\\s${searchTerm})`,
+    `(^${searchTerm}|(?<=\\s)${searchTerm})`,
     'iu'
   ).exec(option);
 
@@ -154,18 +155,25 @@ export const prioritizeMatches = (options: string[], searchTerm: string) => {
 };
 
 /**
- * Sorts the passed options based on where a potential match occured
- * with the passed search term, and returns them along with their
- * highlighting breakdown for the match. If reduce is true, options
- * with no match (-1 priority) will not be included in the results.
+ * Sorts the passed options based on where a potential match occured with the
+ * passed search term, and returns them along with their highlighting breakdown
+ * for the match. If the passed sort option is `reduce`, options with no match
+ * (-1 priority) will not be included in the results.
  */
 export const getSearchMatches = (
   options: string[],
   searchTerm: string,
-  reduce: boolean
+  sort: SortOptions = 'default'
 ) => {
+  // Just highlight search matches and return an unsorted array
+  if (sort === 'off') {
+    return options.map((option) => getSearchMatch(option, searchTerm));
+  }
+
+  // Prioritize and sort results by how they matched
   const prioritized = prioritizeMatches(options, searchTerm);
   const results: SearchMatch[] = [];
+  const reduce = sort === 'reduce';
 
   for (const key of Object.keys(prioritized)) {
     const priority = Number.parseInt(key, 10);
@@ -186,13 +194,13 @@ export const getSearchMatches = (
  *
  * @param options The select options to be searched and sorted
  * @param searchTerm The term to match against each of the `options`
- * @param reduce If true, will not return options that did not match the search term
+ * @param sort If true, will not return options that did not match the search term
  * @returns {SearchResult[]} The sorted search results
  */
 export const getSearchResults = (
   options: string[],
   searchTerm?: string,
-  reduce: boolean = false
+  sort: SortOptions = 'default'
 ): SearchResult[] => {
   if (!searchTerm) {
     return options.map((option) => ({
@@ -205,10 +213,11 @@ export const getSearchResults = (
   const matches: SearchMatch[] = [];
   const noMatches = [];
   const escaped = escapeRegExp(searchTerm);
-  const results = getSearchMatches(options, escaped, reduce);
+  const results = getSearchMatches(options, escaped, sort);
 
   for (const match of results) {
-    if (match.highlight === undefined) {
+    // Unless sorting is off, push non-matches to the bottom
+    if (match.highlight === undefined && sort !== 'off') {
       noMatches.push(match);
       continue;
     }

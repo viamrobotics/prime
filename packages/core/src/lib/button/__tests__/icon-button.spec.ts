@@ -5,7 +5,7 @@ import { IconButton } from '$lib';
 describe('IconButton', () => {
   const common = { icon: 'close', label: 'close' };
   it('Renders a button in the style of the primary variant if no variant is specified', () => {
-    render(IconButton);
+    render(IconButton, common);
     expect(screen.getByRole('button')).toHaveClass(
       'text-gray-6',
       'hover:border-medium'

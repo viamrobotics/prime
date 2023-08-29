@@ -6,21 +6,21 @@ import cx from 'classnames';
 import Icon from '$lib/icon/icon.svelte';
 import SelectMenu from './select-menu.svelte';
 import type { SelectState } from './select.svelte';
-import { clickedOutside, isOptionInScrollView } from './dom-utils';
+import { isOptionInScrollView } from './scroll';
 import {
   type SortOptions,
   getSearchResults,
   type SearchResult,
 } from './search';
 import { useUniqueId } from '$lib/unique-id';
+import { clickOutside } from '$lib/click-outside';
 
 export let options: string[] = [];
 export let value: string | undefined = undefined;
 export let disabled = false;
-export let exact = false;
 export let state: SelectState = 'none';
 export let button: { text: string; icon: string } | undefined = undefined;
-export let sortoption: SortOptions = 'default';
+export let sort: SortOptions = 'default';
 export let heading = '';
 
 const dispatch = createEventDispatcher<{
@@ -42,8 +42,6 @@ let searchedOptions: SearchResult[] = [];
 
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
-$: shouldReduce = sortoption === 'reduce';
-$: shouldSort = sortoption !== 'off';
 
 const setKeyboardControl = (toggle: boolean) => {
   keyboardControlling = toggle;
@@ -148,30 +146,18 @@ const handleOptionFocus = (index: number) => {
   }
 };
 
-const handleClickOutside = (event: Event) => {
-  if (clickedOutside(event, wrapper)) {
-    closeMenu();
-  }
-};
-
 const handleMouseLeave = () => (navigationIndex = -1);
 const handleButtonClick = () => dispatch('buttonclick');
 
 $: {
-  if (!shouldSort || options.length === 0 || !value) {
-    // Do not apply any sorting or highlighting
-    searchedOptions = options.map((option) => ({
-      option,
-      highlight: undefined,
-    }));
-  } else {
-    searchedOptions = getSearchResults(options, value, shouldReduce);
+  searchedOptions = getSearchResults(options, value, sort);
+  if (options.length > 0 && value) {
     dispatch('search', value);
   }
 }
 
 $: {
-  if (!open && exact && value && !options.includes(value)) {
+  if (!open && value && !options.includes(value)) {
     value = undefined;
     dispatch('change', value);
     dispatch('input', value);
@@ -179,10 +165,10 @@ $: {
 }
 </script>
 
-<svelte:body on:click={handleClickOutside} />
 <div
   bind:this={wrapper}
   class="relative flex w-full"
+  use:clickOutside={closeMenu}
 >
   <div class="flex w-full">
     <input

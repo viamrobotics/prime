@@ -378,7 +378,7 @@ let buttonClickedTimes = 0;
         'With A Whole Lot Of Spaces',
       ]}
       placeholder="Select an option"
-      sortoption="reduce"
+      sort="reduce"
     />
   </div>
 
