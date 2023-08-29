@@ -3,9 +3,13 @@
 import { createEventDispatcher } from 'svelte';
 import { SliderInput, Label } from '@viamrobotics/prime-core';
 
+/** The orientation angle along the z-axis. */
 export let th: number;
 
-const dispatch = createEventDispatcher<{ input: number }>();
+const dispatch = createEventDispatcher<{
+  /** Fires when the orientation is edited. */
+  input: number
+}>();
 
 let input: HTMLInputElement;
 

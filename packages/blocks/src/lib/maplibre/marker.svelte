@@ -18,8 +18,13 @@ import { Marker } from 'maplibre-gl';
 import { useMapLibre } from './hooks';
 import type { LngLat } from '$lib';
 
+/** The Geo position of the marker. */
 export let lngLat: LngLat;
+
+/** The relative size of the marker. */
 export let scale = 1;
+
+/** The marker color. */
 export let color: string = '';
 
 const { map } = useMapLibre()

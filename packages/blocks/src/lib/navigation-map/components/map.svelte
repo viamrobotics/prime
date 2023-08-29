@@ -10,6 +10,7 @@ import CenterInputs from './center-inputs.svelte';
 import Nav from './nav/index.svelte';
 import Waypoints from './waypoints.svelte';
 
+/** The Geopose of a robot base. */
 export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
 
 const minPitch = 0;

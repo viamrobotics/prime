@@ -7,6 +7,7 @@ import { T } from '@threlte/core';
 import type { Obstacle } from '$lib';
 import { view, hovered } from '../stores';
 
+/** An obstacle to render. */
 export let obstacle: Obstacle;
 
 let material: THREE.MeshPhongMaterial;

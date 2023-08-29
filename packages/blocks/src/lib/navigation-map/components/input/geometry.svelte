@@ -6,9 +6,13 @@ import type { Geometry, Shapes } from '$lib';
 import VectorInput from '../vector-input.svelte';
 import { createGeometry } from '../../lib/geometry';
 
+/** The geometry to edit. */
 export let geometry: Geometry;
 
-const dispatch = createEventDispatcher<{ input: Geometry }>();
+const dispatch = createEventDispatcher<{
+  /** Fires when a geometry is edited. */
+  input: Geometry
+}>();
 
 const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
   const nextType = event.detail.value.toLowerCase() as Shapes;

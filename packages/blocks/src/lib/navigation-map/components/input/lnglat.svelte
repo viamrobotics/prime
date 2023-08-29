@@ -4,12 +4,22 @@ import { SliderInput } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import { LngLat } from 'maplibre-gl';
 
+/** The label for the Lat,Lng, pair. Defaults to Latitude, Longitude. */
 export let label: string | undefined = undefined;
+
+/** Whether the inputs are readonly. */
 export let readonly: boolean | undefined = undefined;
+
+/** The longitude value. */
 export let lng: number | undefined = undefined;
+
+/** The latitude value. */
 export let lat: number | undefined = undefined;
 
-const dispatch = createEventDispatcher<{ input: LngLat }>();
+const dispatch = createEventDispatcher<{
+  /** Fires when the latitude or longitude is edited. */
+  input: LngLat
+}>();
 
 let latInput: HTMLInputElement
 let lngInput: HTMLInputElement

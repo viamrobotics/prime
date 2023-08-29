@@ -7,7 +7,9 @@ import { flyToMap } from '../../lib/fly-to-map';
 import { useMapLibre, type LngLat, useMapLibreEvent } from '$lib';
 
 type Events = {
+  /** Fired when a waypoint is added. */
   'add-waypoint': LngLat
+  /** Fired when a waypoint is deleted. */
   'delete-waypoint': string
 }
 

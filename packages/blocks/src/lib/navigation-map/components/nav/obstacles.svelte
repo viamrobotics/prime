@@ -12,6 +12,7 @@ import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
 import { createName } from '$lib/navigation-map/lib/create-name';
 
 type Events = {
+  /** Fired when obstacles are created, destroyed, or edited. */
   update: Obstacle[]
 };
 

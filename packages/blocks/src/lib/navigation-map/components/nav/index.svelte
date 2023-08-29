@@ -7,7 +7,10 @@ import { tab, tabs, hovered } from '../../stores';
 import ObstaclesTab from './obstacles.svelte';
 import WaypointsTab from './waypoints.svelte';
 
-const dispatch = createEventDispatcher<{ 'update-obstacles': Obstacle[] }>();
+const dispatch = createEventDispatcher<{
+  /** Fired when obstacles are created, destroyed, or edited. */
+  'update-obstacles': Obstacle[]
+}>();
 
 const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
   $tab = event.detail.value as 'Obstacles' | 'Waypoints';
