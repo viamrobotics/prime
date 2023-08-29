@@ -49,9 +49,10 @@ const handleOrientationInput = (name: string, geoIndex: number) => (event: Custo
 }
 
 useMapLibreEvent('click', (event) => {
+  const location = event.lngLat;
   const names = $obstacles.map((obstacle) => obstacle.name);
   const name = createName(names, 'obstacle', $obstacles.length);
-  $obstacles = [createObstacle(name, event.lngLat), ...$obstacles];
+  $obstacles = [createObstacle(name, location), ...$obstacles];
   dispatch('update', $obstacles);
 })
 

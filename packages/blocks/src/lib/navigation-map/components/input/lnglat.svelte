@@ -36,7 +36,9 @@ let lngInput: HTMLInputElement
     value={lat}
     step={1}
     class='grow'
-    on:input={() => dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
+    on:blur={() => dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
+    on:slide={() => dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
+    on:keydown={(event) => event.key === 'Enter' && dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
     {readonly}
   />
   <SliderInput
@@ -48,7 +50,9 @@ let lngInput: HTMLInputElement
     value={lng}
     step={1}
     class='grow'
-    on:input={() => dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
+    on:blur={() => dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
+    on:slide={() => dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
+    on:keydown={(event) => event.key === 'Enter' && dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
     {readonly}
   />
   <slot />
