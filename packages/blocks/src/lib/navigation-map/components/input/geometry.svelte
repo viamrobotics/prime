@@ -20,7 +20,7 @@ const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
 };
 
 const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
-  let nextGeometry = { ...geometry }
+  const nextGeometry = { ...geometry }
 
   switch (nextGeometry.type) {
     case 'box': {

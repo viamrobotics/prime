@@ -38,8 +38,11 @@ export let max = Number.POSITIVE_INFINITY;
 export let input: HTMLInputElement | undefined = undefined;
 
 type Events = {
+  /** Fired when an input event occurs. */
   input: number;
+  /** Fired when the slider updates the value. */
   slide: number;
+  /** Fired after a keydown on the input. */
   keydown: number;
 }
 
@@ -152,7 +155,8 @@ const handlePointerDown = async (event: PointerEvent) => {
     on:keydown
     on:blur
   />
-  <div
+  <button
+    aria-hidden="true"
     class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700 z-max"
     on:pointerdown|preventDefault|stopPropagation={handlePointerDown}
   >
@@ -176,5 +180,5 @@ const handlePointerDown = async (event: PointerEvent) => {
         </div>
       </div>
     {/if}
-  </div>
+  </button>
 </div>

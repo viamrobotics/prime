@@ -17,44 +17,41 @@ describe('Slider Input', () => {
     const input: HTMLInputElement =
       screen.getByPlaceholderText('Enter a number');
 
-    const slider = input.parentElement?.nextElementSibling;
+    const slider = screen.getByRole('button', { hidden: true });
 
-    await fireEvent.pointerDown(slider!, { clientX: 0 });
-    await fireEvent.pointerMove(window!, { clientX: 200 });
-    await fireEvent.pointerUp(window!);
+    console.log('hi', slider)
 
-    expect(input.valueAsNumber).toBeGreaterThanOrEqual(0);
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: 200 });
+    await fireEvent.pointerUp(document);
 
-    await fireEvent.pointerDown(slider!, { clientX: 0 });
-    await fireEvent.pointerMove(window!, { clientX: -300 });
-    await fireEvent.pointerUp(window!);
+    expect(input.valueAsNumber).toBeGreaterThan(0);
+
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: -300 });
+    await fireEvent.pointerUp(document);
 
     expect(input.valueAsNumber).toBe(0);
   });
 
   it('It should not allow sliding above max', async () => {
-    const results = render(SliderInput, {
-      placeholder: 'Enter a number',
-      max: 50,
-    });
+    render(SliderInput, { placeholder: 'Enter a number', max: 50 });
 
     const input: HTMLInputElement =
       screen.getByPlaceholderText('Enter a number');
 
-    console.log(results.container);
+    const slider = screen.getByRole('button', { hidden: true });
 
-    const slider = input.parentElement?.nextElementSibling;
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: 200 });
+    await fireEvent.pointerUp(document);
 
-    await fireEvent.pointerDown(slider!, { clientX: 0 });
-    await fireEvent.pointerMove(window!, { clientX: 200 });
-    await fireEvent.pointerUp(window!);
-
-    expect(input.valueAsNumber).toBeGreaterThanOrEqual(0);
+    expect(input.valueAsNumber).toBeGreaterThan(0);
     expect(input.valueAsNumber).toBeLessThanOrEqual(50);
 
-    await fireEvent.pointerDown(slider!, { clientX: 0 });
-    await fireEvent.pointerMove(window!, { clientX: 1000 });
-    await fireEvent.pointerUp(window!);
+    await fireEvent.pointerDown(slider);
+    await fireEvent.pointerMove(document, { clientX: 1000 });
+    await fireEvent.pointerUp(document);
 
     expect(input.valueAsNumber).toBe(50);
   });
@@ -65,24 +62,24 @@ describe('Slider Input', () => {
     const input: HTMLInputElement =
       screen.getByPlaceholderText('Enter a number');
 
-    const slider = input.parentElement?.nextElementSibling;
+    const slider = screen.getByRole('button', { hidden: true });
 
-    await fireEvent.pointerDown(slider!, { clientX: 0 });
-    await fireEvent.pointerMove(window!, { clientX: 200 });
-    await fireEvent.pointerUp(window!);
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: 200 });
+    await fireEvent.pointerUp(document);
 
-    expect(input.valueAsNumber).toBeGreaterThanOrEqual(0);
+    expect(input.valueAsNumber).toBeGreaterThan(0);
     expect(input.valueAsNumber % 10).toBe(0);
 
-    await fireEvent.pointerDown(slider!, { clientX: 0 });
-    await fireEvent.pointerMove(window!, { clientX: 250 });
-    await fireEvent.pointerUp(window!);
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: 250 });
+    await fireEvent.pointerUp(document);
 
     expect(input.valueAsNumber % 10).toBe(0);
 
-    await fireEvent.pointerDown(slider!, { clientX: 0 });
-    await fireEvent.pointerMove(window!, { clientX: 383 });
-    await fireEvent.pointerUp(window!);
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: 383 });
+    await fireEvent.pointerUp(document);
 
     expect(input.valueAsNumber % 10).toBe(0);
   });
