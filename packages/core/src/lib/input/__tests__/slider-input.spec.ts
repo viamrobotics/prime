@@ -33,12 +33,15 @@ describe('Slider Input', () => {
   });
 
   it('It should not allow sliding above max', async () => {
-    const results = render(SliderInput, { placeholder: 'Enter a number', max: 50 });
+    const results = render(SliderInput, {
+      placeholder: 'Enter a number',
+      max: 50,
+    });
 
     const input: HTMLInputElement =
       screen.getByPlaceholderText('Enter a number');
 
-    console.log(results.container)
+    console.log(results.container);
 
     const slider = input.parentElement?.nextElementSibling;
 
