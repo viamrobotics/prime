@@ -8,4 +8,6 @@ export let onClickOutside: () => void;
 <div
   data-testid="subject"
   use:clickOutside={onClickOutside}
-/>
+>
+  <button data-testid="inside" />
+</div>
