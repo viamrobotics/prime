@@ -1,3 +1,5 @@
+import type { OptionalConfig } from 'tailwindcss/types/config';
+
 export const theme = {
   zIndex: {
     max: '1000',
@@ -75,4 +77,4 @@ export const theme = {
       'expand-vertical': 'max-height,visibility',
     },
   },
-};
+} satisfies OptionalConfig['theme'];

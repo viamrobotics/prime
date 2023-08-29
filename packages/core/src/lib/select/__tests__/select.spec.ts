@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
-import Select from './select.svelte';
+import Select from '../select.svelte';
 import SelectSpec from './select.spec.svelte';
 
 describe('Select', () => {
@@ -39,23 +39,10 @@ describe('Select', () => {
     );
 
     expect(select).toHaveClass(
-      'bg-disabled-light text-disabled-dark border-disabled-light pointer-events-none'
+      'bg-disabled-light text-disabled-dark border-disabled-light cursor-not-allowed'
     );
 
     expect(select).toHaveAttribute('aria-disabled', 'true');
-  });
-
-  it('Renders the select in the info state', () => {
-    render(Select, {
-      placeholder: 'Select an option',
-      state: 'info',
-    });
-
-    const select = screen.getByPlaceholderText('Select an option');
-
-    expect(select).toHaveClass(
-      'border-info-dark focus:outline-info-dark focus:outline-[1.5px] focus:-outline-offset-1'
-    );
   });
 
   it('Renders the select in the warn state', () => {

@@ -37,7 +37,6 @@ export let state: InputState | undefined = 'none';
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
-// Assert this element will be defined by the time it is used by the parent.
 
 $: isInfo = state === 'info';
 $: isWarn = state === 'warn';
@@ -61,14 +60,12 @@ $: icon = {
     class={cx(
       'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
       {
-        'border-light bg-white hover:border-gray-6 focus:border-gray-9':
+        'border-light hover:border-gray-6 focus:border-gray-9':
           !disabled && !readonly && !isError,
-        'border-none bg-light': readonly,
-        'pointer-events-none border-disabled-light bg-disabled-light text-disabled-dark':
+        'bg-light focus:border-gray-9 border-transparent': readonly,
+        'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed select-none':
           disabled,
-        'border-light hover:border-medium focus:border-gray-9 ':
-          !disabled && !isError,
-        'border-danger-dark focus:outline-[1.5px] focus:-outline-offset-1 focus:outline-danger-dark':
+        'border-danger-dark focus:outline-danger-dark focus:outline-[1.5px] focus:-outline-offset-1':
           isError,
       }
     )}
@@ -80,15 +77,17 @@ $: icon = {
   />
 
   {#if icon !== ''}
-    <span
-      class={cx('absolute right-2', {
-        'text-info-dark': isInfo,
-        'text-warning-bright': isWarn,
-        'text-danger-dark': isError,
-      })}
-    >
-      <Icon name={icon} />
-    </span>
+    <Icon
+      cx={[
+        'absolute right-2 top-1.5',
+        {
+          'text-info-dark': isInfo,
+          'text-warning-bright': isWarn,
+          'text-danger-dark': isError,
+        },
+      ]}
+      name={icon}
+    />
   {/if}
 </div>
 

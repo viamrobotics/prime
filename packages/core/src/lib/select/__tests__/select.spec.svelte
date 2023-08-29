@@ -10,12 +10,11 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
-import type { InputState } from '$lib/input/input.svelte';
-import Select from './select.svelte';
+import { Select, type SelectState } from '$lib';
 
 export let value: string | undefined = undefined;
 export let disabled = false;
-export let state: InputState = 'none';
+export let state: SelectState = 'none';
 </script>
 
 <Select
