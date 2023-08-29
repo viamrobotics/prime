@@ -6,7 +6,6 @@ import cx from 'classnames';
 import Icon from '$lib/icon/icon.svelte';
 import SelectMenu from './select-menu.svelte';
 import type { SelectState } from './select.svelte';
-import { isOptionInScrollView } from './scroll';
 import {
   type SortOptions,
   getSearchResults,
@@ -109,8 +108,10 @@ const handleNavigate = (direction: number) => {
   }
 
   const element = menu.children[navigationIndex]!;
+  const { top, bottom } = element.getBoundingClientRect();
+  const menuRect = menu.getBoundingClientRect();
 
-  if (!isOptionInScrollView(element)) {
+  if (bottom < menuRect.bottom && top > menuRect.top) {
     element.scrollIntoView({ block: 'nearest' });
   }
 
