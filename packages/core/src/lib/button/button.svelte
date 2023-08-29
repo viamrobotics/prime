@@ -44,7 +44,7 @@ export let width: 'full' | 'default' = 'default';
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-const dispatch = createEventDispatcher<{ click: undefined }>();
+const dispatch = createEventDispatcher<{ click: null }>();
 
 const onClick = () => {
   if (disabled) {

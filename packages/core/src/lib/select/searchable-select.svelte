@@ -33,7 +33,7 @@ const dispatch = createEventDispatcher<{
   search: string;
 
   /** When the optional `button` is clicked */
-  buttonclick: undefined;
+  buttonclick: null;
 }>();
 
 const menuId = useUniqueId('searchable-select');
