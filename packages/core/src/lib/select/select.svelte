@@ -47,7 +47,7 @@ export let state: SelectState = 'none';
 
 const onInput = (event: Event) => {
   if (disabled) {
-    event.preventDefault();
+    event.stopImmediatePropagation();
     return;
   }
 
@@ -56,7 +56,7 @@ const onInput = (event: Event) => {
 
 const onMouseDown = (event: MouseEvent) => {
   if (disabled) {
-    event.preventDefault();
+    event.stopImmediatePropagation();
     return;
   }
 
@@ -65,7 +65,7 @@ const onMouseDown = (event: MouseEvent) => {
 
 const onKeyDown = (event: KeyboardEvent) => {
   if (disabled && event.key.toLowerCase() !== 'tab') {
-    event.preventDefault();
+    event.stopImmediatePropagation();
     return;
   }
 
@@ -96,8 +96,11 @@ $: isError = state === 'error';
     )}
     {...$$restProps}
     on:input={onInput}
+    on:input
     on:mousedown={onMouseDown}
+    on:mousedown
     on:keydown={onKeyDown}
+    on:keydown
   >
     <slot />
   </select>
