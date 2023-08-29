@@ -48,7 +48,7 @@ const dispatch = createEventDispatcher<Events>();
 
 </script>
 
-<div class="relative w-full h-[400px]">
+<div class="relative w-full h-full">
   <Canvas useLegacyLights={false}>
     <Scene
       {helpers}

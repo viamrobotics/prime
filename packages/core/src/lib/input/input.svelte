@@ -27,13 +27,13 @@ import cx from 'classnames';
 export let value: string | number | undefined = '';
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly = false;
+export let readonly: boolean | undefined = false;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled = false;
+export let disabled: boolean | undefined = false;
 
 /** The state of the input (info, warn, error, success), if any. */
-export let state: InputState = 'none';
+export let state: InputState | undefined = 'none';
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
@@ -48,7 +48,8 @@ $: icon = {
   warn: 'alert',
   error: 'alert-circle',
   none: '',
-}[state];
+}[state ?? 'none'];
+
 </script>
 
 <div class="relative w-full">
@@ -75,6 +76,7 @@ $: icon = {
     bind:this={input}
     on:input
     on:keydown
+    on:blur
   />
 
   {#if icon !== ''}

@@ -20,7 +20,7 @@ import {
 } from './utils';
 
 /** The input type */
-export let type: NumericInputTypes = 'number';
+export let type: NumericInputTypes | undefined = 'number';
 
 /** The value of the input, if any. */
 export let value: number | undefined = undefined;
@@ -34,13 +34,21 @@ export let min = Number.NEGATIVE_INFINITY;
 /** The maximum allowed value, if any. */
 export let max = Number.POSITIVE_INFINITY;
 
-const dispatch = createEventDispatcher<{
+/** The HTML input element. */
+export let input: HTMLInputElement | undefined = undefined;
+
+type Events = {
+  /** Fired when an input event occurs. */
   input: number;
+  /** Fired when the slider updates the value. */
+  slide: number;
+  /** Fired after a keydown on the input. */
   keydown: number;
-}>();
+}
+
+const dispatch = createEventDispatcher<Events>();
 
 let numberDragTooltip: Tooltip;
-let input: HTMLInputElement | undefined;
 let numberDragCord: HTMLDivElement;
 let numberDragHead: HTMLDivElement;
 let isDragging = false;
@@ -49,8 +57,8 @@ let startValue = 0;
 
 let stepDecimalDigits = 0;
 $: {
-  const decimal = step % 1;
-  stepDecimalDigits = decimal === 0 ? 0 : `${decimal}`.length;
+  const [, decimal = ''] = String(step).split('.')
+  stepDecimalDigits = decimal.length;
 }
 
 $: isNumber = type === 'number';
@@ -94,6 +102,7 @@ const handlePointerMove = (event: PointerEvent) => {
   if (value !== next) {
     value = next;
     dispatch('input', value);
+    dispatch('slide', value);
   }
 
   /**
@@ -129,7 +138,7 @@ const handlePointerDown = async (event: PointerEvent) => {
 };
 </script>
 
-<svelte:window
+<svelte:document
   on:pointermove={isDragging ? handlePointerMove : undefined}
   on:pointerup={isDragging ? handlePointerUp : undefined}
 />
@@ -144,9 +153,11 @@ const handlePointerDown = async (event: PointerEvent) => {
     bind:input
     on:input
     on:keydown
+    on:blur
   />
-  <div
-    class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700"
+  <button
+    aria-hidden="true"
+    class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700 z-max"
     on:pointerdown|preventDefault|stopPropagation={handlePointerDown}
   >
     {#if isDragging}
@@ -169,5 +180,5 @@ const handlePointerDown = async (event: PointerEvent) => {
         </div>
       </div>
     {/if}
-  </div>
+  </button>
 </div>
