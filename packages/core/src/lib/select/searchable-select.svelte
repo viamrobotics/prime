@@ -23,9 +23,16 @@ export let button: { text: string; icon: string } | undefined = undefined;
 export let heading = '';
 
 const dispatch = createEventDispatcher<{
+  /** When the search input receives a value, emits the value */
   input: string | undefined;
+
+  /** When the search input value is changed, emits the value */
   change: string | undefined;
+
+  /** When the options are searched, emits the search term */
   search: string;
+
+  /** When the optional `button` is clicked */
   buttonclick: undefined;
 }>();
 

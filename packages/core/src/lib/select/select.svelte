@@ -25,7 +25,16 @@ import cx from 'classnames';
 import { Icon } from '$lib';
 import { createEventDispatcher } from 'svelte';
 
-const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher<{
+  /** When the value of the select changes .*/
+  input: Event;
+
+  /** When a pointing device button (usually a mouse) is pressed on the select. */
+  mousedown: MouseEvent;
+
+  /** When a key is pressed down while the select is focused. */
+  keydown: KeyboardEvent;
+}>();
 
 /** The selected option value, if any */
 export let value: string | undefined = undefined;

@@ -67,7 +67,7 @@ export type SearchMatches = {
  */
 export const getWordIndex = (option: string, index: number) => {
   const preceding = option.slice(0, index);
-  return (preceding.match(/\s/gu) || []).length;
+  return (preceding.match(/\s/gu) ?? []).length;
 };
 
 /**
@@ -78,7 +78,7 @@ export const getSearchHighlight = (
   option: string,
   searchTerm: string,
   { index }: RegExpExecArray
-): SearchHighlight | undefined => {
+): SearchHighlight => {
   const { length } = searchTerm.replaceAll(/\\(?<escaped>.)/gu, '$1');
   return [
     option.slice(0, index),
