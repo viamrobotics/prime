@@ -26,7 +26,7 @@ import type { Action } from 'svelte/action';
  * @param handler The callback to run
  * @returns The Svelte Action
  */
-export const clickOutside: Action<HTMLElement, () => unknown> = (
+export const clickOutside: Action<HTMLElement | undefined, () => unknown> = (
   node,
   handler
 ) => {
@@ -35,7 +35,8 @@ export const clickOutside: Action<HTMLElement, () => unknown> = (
   const handleWindowClick = (event: MouseEvent): void => {
     if (
       node &&
-      !node.contains(event.target as Element | null) &&
+      window.document.contains(event.target as Element) &&
+      !node.contains(event.target as Element) &&
       !event.defaultPrevented
     ) {
       handleClickOutside();
