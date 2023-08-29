@@ -17,6 +17,7 @@ describe('use:clickOutside', () => {
 
     await user.click(subject);
     await user.click(insideButton);
+
     expect(onClickOutside).not.toHaveBeenCalled();
 
     await user.click(outsideButton);
