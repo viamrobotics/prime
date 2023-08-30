@@ -14,7 +14,6 @@ For selecting from a list of options.
 
 <script lang="ts">
 import cx from 'classnames';
-import Icon from '$lib/icon/icon.svelte';
 import SelectMenu from './select-menu.svelte';
 import type { SelectState } from './select.svelte';
 import { type SortOptions, getSearchResults } from './search';
@@ -22,6 +21,7 @@ import { useUniqueId } from '$lib/unique-id';
 import { clickOutside } from '$lib/click-outside';
 import { selectControls } from './controls';
 import { createSearchableSelectDispatcher } from './dispatcher';
+import SelectInput from './select-input.svelte';
 
 export let options: string[] = [];
 export let value: string | undefined = undefined;
@@ -40,8 +40,6 @@ const menuId = useUniqueId('searchable-select');
 
 let menu: HTMLUListElement;
 
-$: isWarn = state === 'warn';
-$: isError = state === 'error';
 $: searchedOptions = getSearchResults(options, value, sort);
 
 const {
@@ -55,7 +53,8 @@ const {
   handleOptionFocus,
 } = selectControls();
 
-const handleInput = () => {
+const handleInput = (event: Event) => {
+  event.preventDefault();
   resetNavigationIndex();
   menu.scrollTop = 0;
   dispatch('search', value ?? '');
@@ -116,48 +115,20 @@ $: {
   class="relative flex h-fit w-full"
   use:clickOutside={close}
 >
-  <div class="flex w-full">
-    <input
-      bind:value
-      role="combobox"
-      aria-controls={menuId}
-      aria-expanded={$isOpen}
-      readonly={disabled ? true : undefined}
-      aria-disabled={disabled ? true : undefined}
-      type="text"
-      class={cx(
-        'h-[30px] w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none',
-        {
-          'border-light hover:border-gray-6 focus:border-gray-9 bg-white':
-            !disabled && !isError && !isWarn,
-          'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed':
-            disabled,
-          'border-warning-bright hover:outline-warning-bright focus:outline-warning-bright hover:outline-[1.5px] hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
-            isWarn,
-          'border-danger-dark hover:outline-danger-dark focus:outline-danger-dark hover:outline-[1.5px hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
-            isError,
-        }
-      )}
-      {...$$restProps}
-      on:input|preventDefault={handleInput}
-      on:keydown={handleKeyDown}
-      on:focus={() => handleFocus(disabled)}
-      on:mousemove={() => ($isKeyboardControlling = false)}
-    />
+  <SelectInput
+    bind:value
+    {menuId}
+    {disabled}
+    {state}
+    isOpen={$isOpen}
+    {...$$restProps}
+    on:input={handleInput}
+    on:keydown={handleKeyDown}
+    on:focus={() => handleFocus(disabled)}
+    on:mousemove={() => ($isKeyboardControlling = false)}
+    on:toggle={() => ($isOpen ? close() : handleFocus(disabled))}
+  />
 
-    <button
-      class="absolute right-2 top-1.5"
-      tabindex="-1"
-      aria-label="Toggle menu"
-      on:click={() => ($isOpen ? close() : handleFocus(disabled))}
-      on:keydown={handleKeyDown}
-    >
-      <Icon
-        name="chevron-down"
-        cx={['text-gray-6  transition', { 'rotate-180': $isOpen }]}
-      />
-    </button>
-  </div>
   {#if !disabled}
     <SelectMenu
       open={$isOpen}
@@ -203,5 +174,6 @@ $: {
           No matching results
         </li>
       {/if}
-    </SelectMenu>{/if}
+    </SelectMenu>
+  {/if}
 </div>

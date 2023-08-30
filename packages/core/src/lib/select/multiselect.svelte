@@ -16,7 +16,6 @@ For selecting multiple options from a list.
 import cx from 'classnames';
 
 import { clickOutside } from '$lib/click-outside';
-import Icon from '$lib/icon/icon.svelte';
 import { useUniqueId } from '$lib/unique-id';
 
 import SelectMenu from './select-menu.svelte';
@@ -26,6 +25,7 @@ import { getSearchResults, type SortOptions } from './search';
 import { selectControls } from './controls';
 import Pill from '$lib/pill.svelte';
 import { createSearchableSelectDispatcher } from './dispatcher';
+import SelectInput from './select-input.svelte';
 
 export let options: string[] = [];
 export let selected: string[] = [];
@@ -53,8 +53,6 @@ const menuId = useUniqueId('multiselect');
 
 let menu: HTMLUListElement;
 
-$: isWarn = state === 'warn';
-$: isError = state === 'error';
 $: searchedOptions = getSearchResults(options, value, sort);
 $: isChecked = (option: string) => selected.includes(option);
 
@@ -69,7 +67,8 @@ const {
   handleOptionFocus,
 } = selectControls();
 
-const handleInput = () => {
+const handleInput = (event: Event) => {
+  event.preventDefault();
   resetNavigationIndex();
   menu.scrollTop = 0;
   dispatch('search', value ?? '');
@@ -154,51 +153,19 @@ const handleButtonClick = () => dispatch('buttonclick');
   class="relative h-fit w-full"
   use:clickOutside={close}
 >
-  <div class="w-full">
-    <input
-      bind:value
-      role="combobox"
-      aria-controls={menuId}
-      aria-expanded={$isOpen}
-      readonly={disabled ? true : undefined}
-      aria-disabled={disabled ? true : undefined}
-      type="text"
-      class={cx(
-        'h-[30px] w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none',
-        {
-          'border-light hover:border-gray-6 focus:border-gray-9 bg-white':
-            !disabled && !isError && !isWarn,
-          'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed':
-            disabled,
-          'border-warning-bright hover:outline-warning-bright focus:outline-warning-bright hover:outline-[1.5px] hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
-            isWarn,
-          'border-danger-dark hover:outline-danger-dark focus:outline-danger-dark hover:outline-[1.5px hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
-            isError,
-        }
-      )}
-      {...$$restProps}
-      on:input|preventDefault={handleInput}
-      on:keydown={handleKeyDown}
-      on:focus={() => handleFocus(disabled)}
-      on:mousemove={() => ($isKeyboardControlling = false)}
-    />
-
-    <button
-      class="absolute right-2 top-1.5"
-      tabindex="-1"
-      aria-label="Toggle menu"
-      on:click={() => ($isOpen ? close() : handleFocus(disabled))}
-      on:keydown={handleKeyDown}
-    >
-      <Icon
-        name="chevron-down"
-        cx={[
-          'text-gray-6 transition cursor-pointer',
-          { 'rotate-180': $isOpen },
-        ]}
-      />
-    </button>
-  </div>
+  <SelectInput
+    bind:value
+    {menuId}
+    {disabled}
+    {state}
+    isOpen={$isOpen}
+    {...$$restProps}
+    on:input={handleInput}
+    on:keydown={handleKeyDown}
+    on:focus={() => handleFocus(disabled)}
+    on:mousemove={() => ($isKeyboardControlling = false)}
+    on:toggle={() => ($isOpen ? close() : handleFocus(disabled))}
+  />
 
   {#if selected.length > 0 && showPills}
     <div
