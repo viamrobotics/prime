@@ -1,7 +1,6 @@
 <script lang='ts'>
 
 import { createEventDispatcher } from 'svelte';
-import { Tabs } from '@viamrobotics/prime-core';
 import { NavigationTab, type Obstacle } from '$lib';
 import { tab, tabs, hovered } from '../../stores';
 import ObstaclesTab from './obstacles.svelte';
