@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { writable } from 'svelte/store';
 import { currentWritable } from '@threlte/core';
-import { type Waypoint, type Obstacle, NavigationTab } from './types';
+import { type Waypoint, type Obstacle, NavigationTab, type NavigationTabType } from './types';
 
 export const hovered = currentWritable<string | null>(null);
 
@@ -11,10 +11,10 @@ export const obstacles = currentWritable<Obstacle[]>([]);
 export type Environments = 'debug' | 'configure';
 
 /** The currently selected tab. */
-export const tab = writable<string>(NavigationTab.Waypoints);
+export const tab = writable<NavigationTabType>(NavigationTab.Waypoints);
 
 /** The visible set of tabs. */
-export const tabs = writable<string[]>([
+export const tabs = writable<NavigationTabType[]>([
   NavigationTab.Obstacles,
   NavigationTab.Waypoints,
 ]);

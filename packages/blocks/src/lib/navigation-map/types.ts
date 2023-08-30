@@ -7,6 +7,7 @@ type BaseGeometry = {
 export const NavigationTab = {
   Waypoints: 'Waypoints',
   Obstacles: 'Obstacles',
+  Attributes: 'Attributes',
 } as const;
 
 export type NavigationTabType =
