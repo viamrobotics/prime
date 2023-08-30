@@ -1,7 +1,12 @@
 import * as THREE from 'three';
 import { writable } from 'svelte/store';
 import { currentWritable } from '@threlte/core';
-import { type Waypoint, type Obstacle, NavigationTab, type NavigationTabType } from './types';
+import {
+  type Waypoint,
+  type Obstacle,
+  NavigationTab,
+  type NavigationTabType,
+} from './types';
 
 export const hovered = currentWritable<string | null>(null);
 
