@@ -35,6 +35,7 @@ export {
   type TextInputTypes,
 } from './input/text-input.svelte';
 
+export { default as Multiselect } from './select/multiselect.svelte';
 export { default as Select, type SelectState } from './select/select.svelte';
 export { default as SearchableSelect } from './select/searchable-select.svelte';
 export { type SortOptions } from './select/search';

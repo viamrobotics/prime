@@ -91,7 +91,7 @@ const handleClick = () => {
     })}
     role="switch"
     aria-label={label}
-    aria-disabled={disabled}
+    aria-disabled={disabled ? true : undefined}
     aria-checked={on ? 'true' : 'false'}
   >
     <div

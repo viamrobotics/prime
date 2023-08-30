@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
-import SearchableSelect from '../searchable-select.svelte';
+import Multiselect from '../multiselect.svelte';
 
-describe('SearchableSelect', () => {
+describe('Multiselect', () => {
   const options = [
     'First Option',
     'Option 2',
@@ -14,7 +14,7 @@ describe('SearchableSelect', () => {
   const common = { placeholder: 'Select an option', options };
 
   it('Renders the select input', () => {
-    render(SearchableSelect, common);
+    render(Multiselect, common);
 
     const select = screen.getByPlaceholderText('Select an option');
 
@@ -24,7 +24,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Renders the select as disabled', () => {
-    render(SearchableSelect, {
+    render(Multiselect, {
       ...common,
       disabled: true,
     });
@@ -39,7 +39,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Renders the select in the warn state', () => {
-    render(SearchableSelect, {
+    render(Multiselect, {
       ...common,
       state: 'warn',
     });
@@ -52,7 +52,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Renders the select in the error state', () => {
-    render(SearchableSelect, {
+    render(Multiselect, {
       ...common,
       state: 'error',
     });
@@ -65,7 +65,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Renders the select heading', () => {
-    render(SearchableSelect, {
+    render(Multiselect, {
       ...common,
       heading: 'Test Heading',
     });
@@ -78,7 +78,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Renders the select button', () => {
-    render(SearchableSelect, {
+    render(Multiselect, {
       ...common,
       button: { text: 'Test Button', icon: 'alert' },
     });
@@ -92,7 +92,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Sorts results with a match at the start of a word', async () => {
-    render(SearchableSelect, common);
+    render(Multiselect, common);
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
@@ -109,7 +109,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Sorts results with a match below matches at a start of the word', async () => {
-    render(SearchableSelect, common);
+    render(Multiselect, common);
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
@@ -126,7 +126,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Filters out options without a match when reduce is true', async () => {
-    render(SearchableSelect, { ...common, sort: 'reduce' });
+    render(Multiselect, { ...common, sort: 'reduce' });
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
@@ -140,7 +140,7 @@ describe('SearchableSelect', () => {
   });
 
   it('Just highlights but does not filter or sort when sort is off', async () => {
-    render(SearchableSelect, { ...common, sort: 'off' });
+    render(Multiselect, { ...common, sort: 'off' });
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
@@ -156,76 +156,86 @@ describe('SearchableSelect', () => {
   });
 
   it('Selects an option with click', async () => {
-    render(SearchableSelect, common);
+    render(Multiselect, common);
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
+    const menuItem = screen.getAllByRole(
+      'menuitemcheckbox'
+    )[2]! as HTMLInputElement;
 
     await fireEvent.focus(select);
-    await fireEvent.click(screen.getAllByRole('menuitem')[2]!);
+    await fireEvent.click(menuItem);
 
-    expect(select.value).toBe('C.) Option');
+    expect(menuItem.checked).toBe(true);
+    expect(screen.getByLabelText('Remove C.) Option')).toBeInTheDocument();
   });
 
   it('Navigates to and selects an option with enter', async () => {
-    render(SearchableSelect, common);
+    render(Multiselect, common);
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
+    const menuItem = screen.getAllByRole(
+      'menuitemcheckbox'
+    )[2]! as HTMLInputElement;
 
     await fireEvent.focus(select);
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'Enter' });
 
-    expect(select.value).toBe('C.) Option');
+    expect(menuItem.parentElement).toHaveClass('bg-light');
+
+    await fireEvent.keyDown(menuItem, { code: 'Enter' });
+
+    expect(menuItem.checked).toBe(true);
   });
 
   it('Navigates through the list', async () => {
-    render(SearchableSelect, common);
+    render(Multiselect, common);
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
-    const menuItems = screen.getAllByRole('menuitem');
+    const menuItems = screen.getAllByRole('menuitemcheckbox');
 
     await fireEvent.focus(select);
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
 
-    expect(menuItems[0]).toHaveClass('bg-light');
+    expect(menuItems[0]?.parentElement).toHaveClass('bg-light');
 
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
 
-    expect(menuItems[2]).toHaveClass('bg-light');
+    expect(menuItems[2]?.parentElement).toHaveClass('bg-light');
 
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
 
-    expect(menuItems[4]).toHaveClass('bg-light');
+    expect(menuItems[4]?.parentElement).toHaveClass('bg-light');
 
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
 
-    expect(menuItems[0]).toHaveClass('bg-light');
+    expect(menuItems[0]?.parentElement).toHaveClass('bg-light');
 
     await fireEvent.keyDown(select, { code: 'ArrowUp' });
 
-    expect(menuItems[4]).toHaveClass('bg-light');
+    expect(menuItems[4]?.parentElement).toHaveClass('bg-light');
 
     await fireEvent.keyDown(select, { code: 'ArrowUp' });
     await fireEvent.keyDown(select, { code: 'ArrowUp' });
-    await fireEvent.keyDown(select, { code: 'Enter' });
+    await fireEvent.keyDown(menuItems[2]!, { code: 'Enter' });
 
-    expect(select.value).toBe('C.) Option');
+    expect((menuItems[2] as HTMLInputElement).checked).toBe(true);
   });
 
   it('Closes the menu on escape', async () => {
-    render(SearchableSelect, common);
+    render(Multiselect, common);
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
-    const menuItems = screen.getAllByRole('menuitem');
+    const menuItems = screen.getAllByRole('menuitemcheckbox');
 
     expect(menu.parentElement).toHaveClass('invisible');
 
@@ -235,7 +245,7 @@ describe('SearchableSelect', () => {
 
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
 
-    expect(menuItems[0]).toHaveClass('bg-light');
+    expect(menuItems[0]?.parentElement).toHaveClass('bg-light');
 
     await fireEvent.keyDown(select, { code: 'Escape' });
 
@@ -243,12 +253,12 @@ describe('SearchableSelect', () => {
   });
 
   it('Closes the menu on tab', async () => {
-    render(SearchableSelect, common);
+    render(Multiselect, common);
 
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
-    const menuItems = screen.getAllByRole('menuitem');
+    const menuItems = screen.getAllByRole('menuitemcheckbox');
 
     expect(menu.parentElement).toHaveClass('invisible');
 
@@ -258,10 +268,99 @@ describe('SearchableSelect', () => {
 
     await fireEvent.keyDown(select, { code: 'ArrowDown' });
 
-    expect(menuItems[0]).toHaveClass('bg-light');
+    expect(menuItems[0]?.parentElement).toHaveClass('bg-light');
 
     await fireEvent.keyDown(select, { code: 'Tab' });
 
     expect(menu.parentElement).toHaveClass('invisible');
+  });
+
+  it('Clears selections when clear all is clicked', async () => {
+    render(Multiselect, { ...common, clearable: true });
+
+    const select: HTMLInputElement =
+      screen.getByPlaceholderText('Select an option');
+    const first = screen.getAllByRole(
+      'menuitemcheckbox'
+    )[0]! as HTMLInputElement;
+    const second = screen.getAllByRole(
+      'menuitemcheckbox'
+    )[1]! as HTMLInputElement;
+    const third = screen.getAllByRole(
+      'menuitemcheckbox'
+    )[2]! as HTMLInputElement;
+    const clear = screen.getByText('Clear all');
+
+    await fireEvent.focus(select);
+    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await fireEvent.keyDown(first, { code: 'Enter' });
+
+    expect(first.checked).toBe(true);
+
+    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await fireEvent.keyDown(second, { code: 'Enter' });
+
+    expect(second.checked).toBe(true);
+
+    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await fireEvent.keyDown(third, { code: 'Enter' });
+
+    expect(third.checked).toBe(true);
+
+    await fireEvent.click(clear);
+
+    expect(first.checked).toBe(false);
+    expect(second.checked).toBe(false);
+    expect(third.checked).toBe(false);
+  });
+
+  it('Should hide pills when showPills is false', async () => {
+    render(Multiselect, { ...common, showPills: false });
+
+    const select: HTMLInputElement =
+      screen.getByPlaceholderText('Select an option');
+    const menuItem = screen.getAllByRole(
+      'menuitemcheckbox'
+    )[2]! as HTMLInputElement;
+
+    await fireEvent.focus(select);
+    await fireEvent.click(menuItem);
+
+    expect(menuItem.checked).toBe(true);
+    expect(screen.queryByLabelText('Remove C.) Option')).toBeNull();
+  });
+
+  it('Should show pills as readonly when disabled', () => {
+    render(Multiselect, {
+      ...common,
+      selected: ['C.) Option'],
+      disabled: true,
+    });
+
+    expect(screen.queryByLabelText('Remove C.) Option')).toBeNull();
+    expect(screen.getByText('C.) Option')).toBeInTheDocument();
+  });
+
+  it('Removes an option with pill click', async () => {
+    render(Multiselect, common);
+
+    const select: HTMLInputElement =
+      screen.getByPlaceholderText('Select an option');
+    const menuItem = screen.getAllByRole(
+      'menuitemcheckbox'
+    )[2]! as HTMLInputElement;
+
+    await fireEvent.focus(select);
+    await fireEvent.click(menuItem);
+
+    expect(menuItem.checked).toBe(true);
+    expect(screen.getByLabelText('Remove C.) Option')).toBeInTheDocument();
+
+    await fireEvent.click(screen.getByLabelText('Remove C.) Option'));
+
+    expect(menuItem.checked).toBe(false);
+    expect(
+      screen.queryByLabelText('Remove C.) Option')
+    ).not.toBeInTheDocument();
   });
 });

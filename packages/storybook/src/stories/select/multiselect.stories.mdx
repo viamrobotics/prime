@@ -1,9 +1,9 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
-import { SearchableSelect } from '@viamrobotics/prime-core';
-import LabeledSelect from './labeled-searchable-select.svelte';
+import { Multiselect } from '@viamrobotics/prime-core';
+import LabeledSelect from './labeled-multiselect.svelte';
 
 <Meta
-  title='Elements/Select/SearchableSelect'
+  title='Elements/Select/Multiselect'
   argTypes={{
     value: {
       description: "The select's value",
@@ -48,16 +48,27 @@ import LabeledSelect from './labeled-searchable-select.svelte';
       control: { type: 'text' },
       table: { defaultValue: { summary: 'Search results' } },
     },
+    clearable: {
+      description:
+        'If the select should be clearable with the clear all button',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    showPills: {
+      description: 'If the select should show selected options as pills',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: true } },
+    },
   }}
 />
 
-# Searchable Select
+# Multiselect
 
-A user input for selecting from a list of options that can be filtered via text search.
+A user input for selecting multiple options from a list that can be filtered via text search.
 
 <Canvas>
   <Story
-    name='SearchableSelect'
+    name='Multiselect'
     args={{
       options: [
         'First Option',
@@ -69,7 +80,7 @@ A user input for selecting from a list of options that can be filtered via text 
     }}
   >
     {(props) => ({
-      Component: SearchableSelect,
+      Component: Multiselect,
       props,
     })}
   </Story>
@@ -77,7 +88,7 @@ A user input for selecting from a list of options that can be filtered via text 
 
 ## Labels
 
-For accessibility, consider wrapping your `<SearchableSelect />` in a `<Label />`. Make
+For accessibility, consider wrapping your `<Multiselect />` in a `<Label />`. Make
 to pass it `slot="input"` to correctly slot it in.
 
 <Canvas>

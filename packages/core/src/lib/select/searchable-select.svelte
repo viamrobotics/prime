@@ -1,18 +1,27 @@
+<!--
+@component
+  
+For selecting from a list of options.
+
+```svelte
+<SearchableSelect 
+  options={["Option 1", "Option 2", "Option 3"]} 
+  on:input={onSelect}
+/>
+```
+-->
 <svelte:options immutable />
 
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
 import cx from 'classnames';
 import Icon from '$lib/icon/icon.svelte';
 import SelectMenu from './select-menu.svelte';
 import type { SelectState } from './select.svelte';
-import {
-  type SortOptions,
-  getSearchResults,
-  type SearchResult,
-} from './search';
+import { type SortOptions, getSearchResults } from './search';
 import { useUniqueId } from '$lib/unique-id';
 import { clickOutside } from '$lib/click-outside';
+import { selectControls } from './controls';
+import { createSearchableSelectDispatcher } from './dispatcher';
 
 export let options: string[] = [];
 export let value: string | undefined = undefined;
@@ -22,71 +31,49 @@ export let sort: SortOptions = 'default';
 export let button: { text: string; icon: string } | undefined = undefined;
 export let heading = '';
 
-const dispatch = createEventDispatcher<{
-  /** When the search input receives a value, emits the value */
+const dispatch = createSearchableSelectDispatcher<{
+  /** When an option is selected, emit the value. */
   input: string | undefined;
-
-  /** When the search input value is changed, emits the value */
-  change: string | undefined;
-
-  /** When the options are searched, emits the search term */
-  search: string;
-
-  /** When the optional `button` is clicked */
-  buttonclick: null;
 }>();
 
 const menuId = useUniqueId('searchable-select');
-let menu: HTMLUListElement;
 
-let open = false;
-let navigationIndex = -1;
-let keyboardControlling = false;
-let searchedOptions: SearchResult[] = [];
+let menu: HTMLUListElement;
 
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
+$: searchedOptions = getSearchResults(options, value, sort);
 
-const setKeyboardControl = (toggle: boolean) => {
-  keyboardControlling = toggle;
-};
-
-const closeMenu = () => {
-  open = false;
-  navigationIndex = -1;
-};
+const {
+  isOpen,
+  isKeyboardControlling,
+  navigationIndex,
+  close,
+  resetNavigationIndex,
+  handleNavigation,
+  handleFocus,
+  handleOptionFocus,
+} = selectControls();
 
 const handleInput = () => {
-  navigationIndex = -1;
+  resetNavigationIndex();
   menu.scrollTop = 0;
-  dispatch('input', value);
+  dispatch('search', value ?? '');
 };
 
 const handleKeyDown = (event: KeyboardEvent) => {
-  setKeyboardControl(true);
-  switch (event.key.toLowerCase()) {
-    case 'enter': {
-      return handleEnter();
-    }
-    case 'arrowup': {
-      event.preventDefault();
-      return handleNavigate(-1);
-    }
-    case 'arrowdown': {
-      event.preventDefault();
-      return handleNavigate(+1);
-    }
-    case 'escape':
-    case 'tab': {
-      return closeMenu();
-    }
+  if (handleNavigation(event, menu, searchedOptions.length)) {
+    return;
+  }
+
+  if (event.code.toLowerCase() === 'enter') {
+    handleEnter();
   }
 };
 
 const handleEnter = () => {
-  if (navigationIndex > -1) {
-    value = searchedOptions[navigationIndex]!.option;
-    dispatch('change', value);
+  if ($navigationIndex > -1) {
+    value = searchedOptions[$navigationIndex]!.option;
   } else {
     const result = searchedOptions.find(
       ({ option }) => option.toLowerCase() === value
@@ -94,93 +81,47 @@ const handleEnter = () => {
 
     if (result) {
       value = result.option;
-      dispatch('change', value);
     }
   }
 
-  if (open) {
-    closeMenu();
+  if ($isOpen) {
+    close();
   }
 
   dispatch('input', value);
 };
 
-const handleNavigate = (direction: number) => {
-  navigationIndex += direction;
-
-  if (navigationIndex < 0) {
-    navigationIndex = searchedOptions.length - 1;
-  } else if (navigationIndex >= searchedOptions.length) {
-    navigationIndex = 0;
-  }
-
-  const element = menu.children[navigationIndex]!;
-  const { top, bottom } = element.getBoundingClientRect();
-  const menuRect = menu.getBoundingClientRect();
-
-  if (bottom < menuRect.bottom && top > menuRect.top) {
-    element.scrollIntoView({ block: 'nearest' });
-  }
-
-  (element.children[0] as HTMLButtonElement).focus();
-};
-
 const handleSelect = (option: string) => {
-  open = false;
+  close();
 
   if (value === option) {
     return;
   }
 
   value = option;
-
-  dispatch('change', value);
   dispatch('input', value);
 };
 
-const handleFocus = () => {
-  if (open || disabled) {
-    return;
-  }
-
-  open = true;
-};
-
-const handleOptionFocus = (index: number) => {
-  if (!keyboardControlling) {
-    navigationIndex = index;
-  }
-};
-
-const handleMouseLeave = () => (navigationIndex = -1);
 const handleButtonClick = () => dispatch('buttonclick');
 
 $: {
-  searchedOptions = getSearchResults(options, value, sort);
-  if (options.length > 0 && value) {
-    dispatch('search', value);
-  }
-}
-
-$: {
-  if (!open && value && !options.includes(value)) {
+  if (!$isOpen && value && !options.includes(value)) {
     value = undefined;
-    dispatch('change', value);
     dispatch('input', value);
   }
 }
 </script>
 
 <div
-  class="relative flex w-full"
-  use:clickOutside={closeMenu}
+  class="relative flex h-fit w-full"
+  use:clickOutside={close}
 >
   <div class="flex w-full">
     <input
       bind:value
       role="combobox"
       aria-controls={menuId}
-      aria-expanded={open}
+      aria-expanded={$isOpen}
       readonly={disabled ? true : undefined}
       aria-disabled={disabled ? true : undefined}
       type="text"
@@ -200,58 +141,67 @@ $: {
       {...$$restProps}
       on:input|preventDefault={handleInput}
       on:keydown={handleKeyDown}
-      on:focus={handleFocus}
-      on:mousemove={() => setKeyboardControl(false)}
+      on:focus={() => handleFocus(disabled)}
+      on:mousemove={() => ($isKeyboardControlling = false)}
     />
 
-    <Icon
-      name="chevron-down"
-      cx={[
-        'text-gray-6 absolute top-1.5 right-2 transition',
-        { 'rotate-180': open },
-      ]}
-    />
+    <button
+      class="absolute right-2 top-1.5"
+      tabindex="-1"
+      aria-label="Toggle menu"
+      on:click={() => ($isOpen ? close() : handleFocus(disabled))}
+      on:keydown={handleKeyDown}
+    >
+      <Icon
+        name="chevron-down"
+        cx={['text-gray-6  transition', { 'rotate-180': $isOpen }]}
+      />
+    </button>
   </div>
-  <SelectMenu
-    {open}
-    id={menuId}
-    bind:element={menu}
-    bind:heading
-    bind:button
-    on:buttonclick={handleButtonClick}
-    on:mouseleave={handleMouseLeave}
-  >
-    {#if searchedOptions.length > 0}
-      {#each searchedOptions as { highlight, option }, index (option)}
-        <li role="presentation">
-          <button
-            role="menuitem"
-            tabindex="-1"
-            class={cx(
-              'flex h-[30px] w-full items-center text-ellipsis whitespace-nowrap px-2 text-xs outline-none',
-              {
-                'bg-light': navigationIndex === index,
-              }
-            )}
-            on:mouseenter={() => handleOptionFocus(index)}
-            on:focus={() => handleOptionFocus(index)}
-            on:keydown={handleKeyDown}
-            on:click|preventDefault={() => handleSelect(option)}
-          >
-            {#if highlight !== undefined}
-              <span class="flex w-full text-ellipsis whitespace-nowrap">
-                <span class="whitespace-pre">{highlight[0]}</span>
-                <span class="whitespace-pre bg-yellow-100">{highlight[1]}</span>
-                <span class="whitespace-pre">{highlight[2]}</span>
-              </span>
-            {:else}
-              {option}
-            {/if}
-          </button>
+  {#if !disabled}
+    <SelectMenu
+      open={$isOpen}
+      id={menuId}
+      bind:element={menu}
+      bind:heading
+      bind:button
+      on:buttonclick={handleButtonClick}
+      on:mouseleave={resetNavigationIndex}
+    >
+      {#if searchedOptions.length > 0}
+        {#each searchedOptions as { highlight, option }, index (option)}
+          <li role="presentation">
+            <button
+              role="menuitem"
+              tabindex="-1"
+              class={cx(
+                'flex h-[30px] w-full items-center text-ellipsis whitespace-nowrap px-2 text-xs outline-none',
+                {
+                  'bg-light': $navigationIndex === index,
+                }
+              )}
+              on:mouseenter={() => handleOptionFocus(index)}
+              on:keydown={handleKeyDown}
+              on:click|preventDefault={() => handleSelect(option)}
+            >
+              {#if highlight !== undefined}
+                <span class="flex w-full text-ellipsis whitespace-nowrap">
+                  <span class="whitespace-pre">{highlight[0]}</span>
+                  <span class="whitespace-pre bg-yellow-100"
+                    >{highlight[1]}</span
+                  >
+                  <span class="whitespace-pre">{highlight[2]}</span>
+                </span>
+              {:else}
+                {option}
+              {/if}
+            </button>
+          </li>
+        {/each}
+      {:else}
+        <li class="flex justify-center px-2 py-1 text-xs">
+          No matching results
         </li>
-      {/each}
-    {:else}
-      <li class="flex justify-center px-2 py-1 text-xs">No matching results</li>
-    {/if}
-  </SelectMenu>
+      {/if}
+    </SelectMenu>{/if}
 </div>

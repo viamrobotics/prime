@@ -27,6 +27,7 @@ import TableHeader from '$lib/table/table-header.svelte';
 import TableRow from '$lib/table/table-row.svelte';
 import Select from '$lib/select/select.svelte';
 import SearchableSelect from '$lib/select/searchable-select.svelte';
+import Multiselect from '$lib/select/multiselect.svelte';
 
 let buttonClickedTimes = 0;
 </script>
@@ -320,7 +321,7 @@ let buttonClickedTimes = 0;
   <h1>Select</h1>
 
   <div class="flex gap-4">
-    <Select>
+    <Select on:input={(event) => console.log('Select input', event)}>
       <option>This thing</option>
       <option>That thing</option>
       <option>The other thing</option>
@@ -359,11 +360,11 @@ let buttonClickedTimes = 0;
     <SearchableSelect
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="Select an option"
+      on:input={(event) => console.log('SearchableSelect input', event)}
     />
     <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      value="Option 2"
-      placeholder="Select an option"
+      options={['First Option', 'Disabled select', 'C.) Option']}
+      value="Disabled select"
       disabled
     />
     <SearchableSelect
@@ -377,7 +378,7 @@ let buttonClickedTimes = 0;
         'Options',
         'With A Whole Lot Of Spaces',
       ]}
-      placeholder="Select an option"
+      placeholder="Reducing Select"
       sort="reduce"
     />
   </div>
@@ -385,12 +386,12 @@ let buttonClickedTimes = 0;
   <div class="flex gap-4">
     <SearchableSelect
       options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="Select an option"
+      placeholder="Warn state"
       state="warn"
     />
     <SearchableSelect
       options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="Select an option"
+      placeholder="Error state"
       state="error"
     />
   </div>
@@ -398,13 +399,73 @@ let buttonClickedTimes = 0;
   <div class="flex gap-4">
     <SearchableSelect
       options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="Select an option"
+      placeholder="With a button"
       button={{ text: 'Other', icon: 'information-outline' }}
     />
     <SearchableSelect
       options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="Select an option"
+      placeholder="With a heading"
       heading="Some heading text"
+    />
+  </div>
+
+  <!-- Multiselect -->
+  <h1>Multiselect</h1>
+  <div class="flex gap-4">
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Select an option"
+      on:input={(event) => console.log('Multiselect input', event)}
+    />
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      selected={['Option 2']}
+      placeholder="Disabled select"
+      disabled
+    />
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      selected={['Option 2']}
+      placeholder="Preselected option"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Warn state"
+      state="warn"
+    />
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Error state"
+      state="error"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="With a button"
+      button={{ text: 'Other', icon: 'information-outline' }}
+    />
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="With a heading"
+      heading="Some heading text"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Clearable"
+      clearable
+    />
+    <Multiselect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="No pills"
+      showPills={false}
     />
   </div>
 

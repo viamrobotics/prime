@@ -46,8 +46,8 @@ const handleRemove = () => {
         disabled || readonly,
     }
   )}
-  aria-disabled={disabled}
-  aria-readonly={readonly}
+  aria-disabled={disabled ? true : undefined}
+  aria-readonly={readonly ? true : undefined}
 >
   <span>
     {value}

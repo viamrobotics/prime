@@ -58,7 +58,7 @@ const onClick = () => {
 <button
   {type}
   {title}
-  aria-disabled={disabled}
+  aria-disabled={disabled ? true : undefined}
   class={cx(
     'inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap border py-1.5 text-xs',
     {
