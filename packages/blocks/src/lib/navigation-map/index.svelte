@@ -18,7 +18,7 @@
 
 import { environment as envStore } from './stores';
 import Map from './components/map.svelte';
-import { type Waypoint, type Obstacle, type NavigationTabType, NavigationTab } from './types';
+import { type Waypoint, type Obstacle, NavigationTab } from './types';
 import {
   waypoints as waypointsStore,
   obstacles as obstaclesStore,
@@ -36,10 +36,10 @@ export let waypoints: Waypoint[] = [];
 export let obstacles: Obstacle[] = [];
 
 /** The initial tab to show */
-export let tab: NavigationTabType = NavigationTab.Waypoints;
+export let tab: string = NavigationTab.Waypoints;
 
 /** The visible set of tabs */
-export let tabs = [NavigationTab.Waypoints, NavigationTab.Obstacles];
+export let tabs: string[] = [NavigationTab.Waypoints, NavigationTab.Obstacles];
 
 export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
 
@@ -57,4 +57,6 @@ $: $envStore = environment;
   on:add-waypoint
   on:delete-waypoint
   on:update-obstacles
-/>
+>
+  <slot name='tab' slot='tab' />
+</Map>

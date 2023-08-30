@@ -16,10 +16,10 @@ export const obstacles = currentWritable<Obstacle[]>([]);
 export type Environments = 'debug' | 'configure';
 
 /** The currently selected tab. */
-export const tab = writable<NavigationTabType>(NavigationTab.Waypoints);
+export const tab = writable<string>(NavigationTab.Waypoints);
 
 /** The visible set of tabs. */
-export const tabs = writable([
+export const tabs = writable<string[]>([
   NavigationTab.Obstacles,
   NavigationTab.Waypoints,
 ]);

@@ -28,6 +28,8 @@ useMapLibreEvent('move', () => {
 useFrame(() => {
   renderer.clear();
 
+  axes.visible = scenes.length > 0
+
   for (const { ref, matrix } of scenes) {
     camera.current.projectionMatrix = matrix;
     axes.length = (ref.geometry.boundingSphere?.radius ?? 0) * 2;
@@ -45,10 +47,10 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 
 </script>
 
-<T.AmbientLight intensity={flat ? 1.5 : 1} />
+<T.AmbientLight intensity={flat ? 2 : 1.5} />
 
 {#if !flat}
-  <T.DirectionalLight intensity={1} />
+  <T.DirectionalLight intensity={1.5} />
 {/if}
 
 {#each $obstacles as obstacle (obstacle.name)}
