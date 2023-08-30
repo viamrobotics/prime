@@ -150,22 +150,97 @@ const handleButtonClick = () => dispatch('buttonclick');
 </script>
 
 <div
-  class="relative h-fit w-full"
+  class="h-fit w-full"
   use:clickOutside={close}
 >
-  <SelectInput
-    bind:value
-    {menuId}
-    {disabled}
-    {state}
-    isOpen={$isOpen}
-    {...$$restProps}
-    on:input={handleInput}
-    on:keydown={handleKeyDown}
-    on:focus={() => handleFocus(disabled)}
-    on:mousemove={() => ($isKeyboardControlling = false)}
-    on:toggle={() => ($isOpen ? close() : handleFocus(disabled))}
-  />
+  <div class="relative">
+    <SelectInput
+      bind:value
+      {menuId}
+      {disabled}
+      {state}
+      isOpen={$isOpen}
+      {...$$restProps}
+      on:input={handleInput}
+      on:keydown={handleKeyDown}
+      on:focus={() => handleFocus(disabled)}
+      on:mousemove={() => ($isKeyboardControlling = false)}
+      on:toggle={() => ($isOpen ? close() : handleFocus(disabled))}
+    />
+
+    {#if !disabled}
+      <SelectMenu
+        open={$isOpen}
+        id={menuId}
+        bind:element={menu}
+        bind:heading
+        bind:button
+        on:buttonclick={handleButtonClick}
+        on:mouseleave={resetNavigationIndex}
+      >
+        {#if searchedOptions.length > 0}
+          {#each searchedOptions as { highlight, option }, index (option)}
+            <li role="presentation">
+              <label
+                class={cx('flex h-[30px] w-full items-center px-2', {
+                  'bg-light': $navigationIndex === index,
+                })}
+                on:mouseenter={() => handleOptionFocus(index)}
+              >
+                <input
+                  tabindex="-1"
+                  type="checkbox"
+                  class="outline-none"
+                  role="menuitemcheckbox"
+                  aria-checked={isChecked(option)}
+                  checked={isChecked(option)}
+                  on:input|stopPropagation={() => handleOptionSelect(option)}
+                  on:keydown={handleKeyDown}
+                />
+                <span class="text-ellipsis whitespace-nowrap pl-1.5 text-xs">
+                  {#if highlight !== undefined}
+                    <span class="flex w-full text-ellipsis whitespace-nowrap">
+                      <span class="whitespace-pre">{highlight[0]}</span>
+                      <span class="whitespace-pre bg-yellow-100"
+                        >{highlight[1]}</span
+                      >
+                      <span class="whitespace-pre">{highlight[2]}</span>
+                    </span>
+                  {:else}
+                    {option}
+                  {/if}
+                </span>
+              </label>
+            </li>
+          {/each}
+          {#if clearable}
+            <li role="presentation">
+              <button
+                type="button"
+                tabindex="-1"
+                role="menuitem"
+                class={cx(
+                  'flex h-[30px] w-full items-center px-2 text-xs outline-none',
+                  {
+                    'bg-light': $navigationIndex === searchedOptions.length,
+                  }
+                )}
+                on:click={handleClearAll}
+                on:mouseenter={() => handleOptionFocus(searchedOptions.length)}
+                on:keydown={(event) => handleKeyDown(event, true)}
+              >
+                <slot name="clear-text">Clear all</slot>
+              </button>
+            </li>
+          {/if}
+        {:else}
+          <li class="flex justify-center px-2 py-1 text-xs">
+            No matching results
+          </li>
+        {/if}
+      </SelectMenu>
+    {/if}
+  </div>
 
   {#if selected.length > 0 && showPills}
     <div
@@ -182,78 +257,5 @@ const handleButtonClick = () => dispatch('buttonclick');
         />
       {/each}
     </div>
-  {/if}
-
-  {#if !disabled}
-    <SelectMenu
-      open={$isOpen}
-      id={menuId}
-      bind:element={menu}
-      bind:heading
-      bind:button
-      on:buttonclick={handleButtonClick}
-      on:mouseleave={resetNavigationIndex}
-    >
-      {#if searchedOptions.length > 0}
-        {#each searchedOptions as { highlight, option }, index (option)}
-          <li role="presentation">
-            <label
-              class={cx('flex h-[30px] w-full items-center px-2', {
-                'bg-light': $navigationIndex === index,
-              })}
-              on:mouseenter={() => handleOptionFocus(index)}
-            >
-              <input
-                tabindex="-1"
-                type="checkbox"
-                class="outline-none"
-                role="menuitemcheckbox"
-                aria-checked={isChecked(option)}
-                checked={isChecked(option)}
-                on:input|stopPropagation={() => handleOptionSelect(option)}
-                on:keydown={handleKeyDown}
-              />
-              <span class="text-ellipsis whitespace-nowrap pl-1.5 text-xs">
-                {#if highlight !== undefined}
-                  <span class="flex w-full text-ellipsis whitespace-nowrap">
-                    <span class="whitespace-pre">{highlight[0]}</span>
-                    <span class="whitespace-pre bg-yellow-100"
-                      >{highlight[1]}</span
-                    >
-                    <span class="whitespace-pre">{highlight[2]}</span>
-                  </span>
-                {:else}
-                  {option}
-                {/if}
-              </span>
-            </label>
-          </li>
-        {/each}
-        {#if clearable}
-          <li role="presentation">
-            <button
-              type="button"
-              tabindex="-1"
-              role="menuitem"
-              class={cx(
-                'flex h-[30px] w-full items-center px-2 text-xs outline-none',
-                {
-                  'bg-light': $navigationIndex === searchedOptions.length,
-                }
-              )}
-              on:click={handleClearAll}
-              on:mouseenter={() => handleOptionFocus(searchedOptions.length)}
-              on:keydown={(event) => handleKeyDown(event, true)}
-            >
-              <slot name="clear-text">Clear all</slot>
-            </button>
-          </li>
-        {/if}
-      {:else}
-        <li class="flex justify-center px-2 py-1 text-xs">
-          No matching results
-        </li>
-      {/if}
-    </SelectMenu>
   {/if}
 </div>
