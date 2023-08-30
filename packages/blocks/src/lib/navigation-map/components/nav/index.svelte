@@ -27,7 +27,7 @@ const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
           class:border-black={selected}
           class:font-bold={selected}
           class:text-gray-600={!selected}
-          on:click={() => $tab = tabTitle}
+          on:click={() => { $tab = tabTitle }}
         >
           {tabTitle}
         </button>
