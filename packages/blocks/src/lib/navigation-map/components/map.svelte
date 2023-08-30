@@ -53,14 +53,16 @@ const handleMapCreate = (event: CustomEvent<Map>) => {
       on:add-obstacle
       on:delete-waypoint
       on:update-obstacles
-    />
+    >
+      <slot name='tab' slot='tab' />
+    </Nav>
     <RobotMarker lngLat={baseGeoPose} />
     <Waypoints />
     <ObstacleLayer slot='layer' />
     <CenterInputs />
 
     {#if localStorage.getItem('prime_debug_3d')}
-      <div class='absolute bottom-12 right-3'>
+      <div class='absolute bottom-12 right-3 z-max'>
         <Radio
           options={['2D', '3D']}
           selected={$view}

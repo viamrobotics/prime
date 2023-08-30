@@ -4,8 +4,8 @@ import { currentWritable } from '@threlte/core';
 import {
   type Waypoint,
   type Obstacle,
-  type NavigationTabType,
   NavigationTab,
+  type NavigationTabType,
 } from './types';
 
 export const hovered = currentWritable<string | null>(null);
@@ -19,7 +19,7 @@ export type Environments = 'debug' | 'configure';
 export const tab = writable<NavigationTabType>(NavigationTab.Waypoints);
 
 /** The visible set of tabs. */
-export const tabs = writable([
+export const tabs = writable<NavigationTabType[]>([
   NavigationTab.Obstacles,
   NavigationTab.Waypoints,
 ]);

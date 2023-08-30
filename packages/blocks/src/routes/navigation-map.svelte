@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 
 import { NavigationMap, type CapsuleGeometry, type SphereGeometry, type BoxGeometry } from '$lib';
+import { Label, SliderInput } from '@viamrobotics/prime-core';
 import { ViamObject3D } from '@viamrobotics/three';
 
 const waypoints = [
@@ -76,7 +77,7 @@ const obstacles = [
     <NavigationMap
       environment='configure'
       tab='Obstacles'
-      tabs={['Obstacles', 'Waypoints']}
+      tabs={['Attributes', 'Obstacles', 'Waypoints']}
       baseGeoPose={{ lng: -73.97, lat: 40.67 }}
       {obstacles}
       {waypoints}
@@ -84,6 +85,13 @@ const obstacles = [
       on:add-waypoint={(event) => console.log('add-waypoint', event)}
       on:delete-waypoint={(event) => console.log('delete-waypoint', event)}
       on:update-obstacles={(event) => console.log('update-obstacles', event)}
-    />
+    >
+      <div slot='tab'>
+        <Label>
+          Test
+          <SliderInput slot='input' />
+        </Label>
+      </div>
+    </NavigationMap>
   </div>
 </div>
