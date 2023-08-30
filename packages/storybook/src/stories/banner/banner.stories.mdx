@@ -1,0 +1,261 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Button } from '@viamrobotics/prime-core';
+import Banner from './banner.svelte';
+import BannerWithMessage from './banner-with-message.svelte';
+import BannerWithAction from './banner-with-action.svelte';
+import BannerKitchenSink from './banner-kitchen-sink.svelte';
+
+<Meta
+  title='Elements/Banner'
+  parameters={{
+    actions: {
+      handles: ['close'],
+    },
+  }}
+  argTypes={{
+    variant: {
+      control: { type: 'select' },
+      options: ['danger', 'warning', 'success', 'info'],
+      description: 'Notification type',
+      table: { defaultValue: { summary: 'info' } },
+    },
+    exitable: {
+      description: 'If the banner can be dismissed',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    progress: {
+      description: 'The progress to indicate on the side of the banner',
+      control: { type: 'number', min: 0, max: 1 },
+      table: { defaultValue: { summary: 1 } },
+    },
+  }}
+/>
+
+# Banner
+
+Banner message of type info, success, warning, or error
+
+<Canvas>
+  <Story
+    name='Info'
+    args={{
+      variant: 'info',
+    }}
+  >
+    {(props) => ({
+      Component: Banner,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Success'
+    args={{
+      variant: 'success',
+    }}
+  >
+    {(props) => ({
+      Component: Banner,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Warning'
+    args={{
+      variant: 'warning',
+    }}
+  >
+    {(props) => ({
+      Component: Banner,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger'
+    args={{
+      variant: 'danger',
+    }}
+  >
+    {(props) => ({
+      Component: Banner,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Info with message'
+    args={{
+      variant: 'info',
+    }}
+  >
+    {(props) => ({
+      Component: BannerWithMessage,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Success with message'
+    args={{
+      variant: 'success',
+    }}
+  >
+    {(props) => ({
+      Component: BannerWithMessage,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Warning with message'
+    args={{
+      variant: 'warning',
+    }}
+  >
+    {(props) => ({
+      Component: BannerWithMessage,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger with message'
+    args={{
+      variant: 'danger',
+    }}
+  >
+    {(props) => ({
+      Component: BannerWithMessage,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Info with action'
+    args={{
+      variant: 'info',
+    }}
+  >
+    {(props) => ({
+      Component: BannerWithAction,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Success with action'
+    args={{
+      variant: 'success',
+    }}
+  >
+    {(props) => ({
+      Component: BannerWithAction,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Warning with action'
+    args={{
+      variant: 'warning',
+    }}
+  >
+    {(props) => ({
+      Component: BannerWithAction,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger with action'
+    args={{
+      variant: 'danger',
+    }}
+  >
+    {(props) => ({
+      Component: BannerWithAction,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Info kitchen sink'
+    args={{
+      variant: 'info',
+    }}
+  >
+    {(props) => ({
+      Component: BannerKitchenSink,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Success kitchen sink'
+    args={{
+      variant: 'success',
+    }}
+  >
+    {(props) => ({
+      Component: BannerKitchenSink,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Warning kitchen sink'
+    args={{
+      variant: 'warning',
+    }}
+  >
+    {(props) => ({
+      Component: BannerKitchenSink,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Danger kitchen sink'
+    args={{
+      variant: 'danger',
+    }}
+  >
+    {(props) => ({
+      Component: BannerKitchenSink,
+      props,
+    })}
+  </Story>
+</Canvas>

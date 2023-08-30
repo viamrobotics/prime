@@ -1,4 +1,5 @@
 export { default as Badge } from './badge.svelte';
+export { default as Banner, type BannerVariant } from './banner.svelte';
 export { default as Breadcrumbs } from './breadcrumbs.svelte';
 export { default as Button } from './button/button.svelte';
 export { default as IconButton } from './button/icon-button.svelte';
@@ -6,7 +7,6 @@ export { clickOutside } from './click-outside';
 export { default as Collapse } from './collapse.svelte';
 export { default as Icon } from './icon/icon.svelte';
 export { default as Label, type LabelPosition } from './label.svelte';
-export { default as Notify } from './notify.svelte';
 export { default as Pill } from './pill.svelte';
 export { default as Switch } from './switch.svelte';
 export { default as Radio } from './radio.svelte';
@@ -34,6 +34,8 @@ export {
   default as TextInput,
   type TextInputTypes,
 } from './input/text-input.svelte';
+
+export { NotificationContainer, notify } from './notification';
 
 export { default as Multiselect } from './select/multiselect.svelte';
 export { default as Select, type SelectState } from './select/select.svelte';
