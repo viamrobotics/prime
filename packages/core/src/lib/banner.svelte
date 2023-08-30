@@ -15,7 +15,7 @@ import { Button, Icon } from '$lib';
 /** The severity of the notification you want to show users*/
 export let variant: BannerVariant;
 
-/** The scaling applied on the y access of the page*/
+/** The scaling applied on the y axis of the page*/
 export let progress = 1;
 
 /** If true a user can close out of the notification. If false they cannot*/
