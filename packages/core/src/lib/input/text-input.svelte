@@ -23,7 +23,7 @@ import Input from './input.svelte';
 export let type: TextInputTypes | undefined = 'text';
 
 /** The value of the input, if any. */
-export let value: number | undefined = undefined;
+export let value: string | undefined = undefined;
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
