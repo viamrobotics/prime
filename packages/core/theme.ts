@@ -76,5 +76,8 @@ export const theme = {
     transitionProperty: {
       'expand-vertical': 'max-height,visibility',
     },
+    zIndex: {
+      max: '1000',
+    },
   },
 } satisfies OptionalConfig['theme'];

@@ -60,6 +60,7 @@ const hasNameProperty = Object.hasOwn(paths, name);
   viewBox="0 0 24 24"
   aria-hidden="true"
   focusable="false"
+  {...$$restProps}
 >
   <path
     d={paths[name]}

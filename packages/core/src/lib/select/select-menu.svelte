@@ -15,7 +15,7 @@ export let heading = '';
 
 <div
   class={cx(
-    'border-gray-9 absolute left-0 right-0 top-full z-40 mt-1 w-full overflow-hidden border bg-white drop-shadow-md',
+    'border-gray-9 z-max absolute left-0 right-0 top-full z-40 mt-1 w-full overflow-hidden border bg-white drop-shadow-md',
     {
       invisible: !open,
     }

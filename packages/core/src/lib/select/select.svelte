@@ -4,7 +4,7 @@
 For selecting from a list of options.
 
 ```svelte
-<Select on:select={onSelect}>
+<Select on:input={onSelect}>
   <option>Option 1</option>
   <option>Option 2</option>
   <option>Option 3</option>

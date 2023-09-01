@@ -53,7 +53,7 @@ const onClick = () => {
 <button
   {type}
   aria-label={label}
-  aria-disabled={disabled}
+  aria-disabled={disabled ? true : undefined}
   {title}
   class={cx(
     'inline-flex h-[30px] w-[30px] select-none items-center justify-center whitespace-nowrap',
