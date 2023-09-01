@@ -15,8 +15,17 @@ A component that renders SVG icons from the @mdi/js package
   lang="ts"
   context="module"
 >
-type Size = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-const sizes: Record<Size, string> = {
+export type IconSize =
+  | 'xs'
+  | 'sm'
+  | 'base'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  | '3xl'
+  | '4xl';
+
+const ICON_SIZES: Readonly<Record<IconSize, string>> = {
   xs: 'w-3 h-3',
   sm: 'w-3.5 h-3.5',
   base: 'w-4 h-4',
@@ -36,7 +45,7 @@ import { paths, type IconName } from './icons';
 export let name: IconName;
 
 /** The size of the icon. */
-export let size: Size = 'base';
+export let size: IconSize = 'base';
 
 /** Additional CSS classes to pass to the svg. */
 let extraClasses: cx.Argument = '';
@@ -51,7 +60,7 @@ const hasNameProperty = Object.hasOwn(paths, name);
 -->
 <svg
   class={cx(
-    sizes[size],
+    ICON_SIZES[size],
     {
       hidden: !hasNameProperty,
     },

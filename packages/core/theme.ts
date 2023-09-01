@@ -2,33 +2,17 @@ import type { OptionalConfig } from 'tailwindcss/types/config';
 
 export const theme = {
   extend: {
-    fontFamily: {
-      'space-grotesk':
-        "'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif",
-      'roboto-mono':
-        "'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace",
-      'public-sans': "'Public Sans Variable', 'Public Sans', sans-serif",
-    },
-
-    boxShadow: {
-      sm: '0 4px 32px rgba(0, 0, 0, 0.06)',
-    },
-    textColor: {
-      heading: '#131414',
-      default: '#282829',
-      'subtle-1': '#4e4f52',
-      'subtle-2': '#7a7c80',
-      disabled: '#9c9ca4',
-      link: '#0066cc',
+    backgroundColor: {
+      extralight: '#fbfbfc',
+      light: '#f7f7f8',
+      medium: '#f1f1f4',
     },
     borderColor: {
       light: '#e4e4e6',
       medium: '#d7d7d9',
     },
-    backgroundColor: {
-      extralight: '#fbfbfc',
-      light: '#f7f7f8',
-      medium: '#f1f1f4',
+    boxShadow: {
+      sm: '0 4px 32px rgba(0, 0, 0, 0.06)',
     },
     colors: {
       black: '#131414',

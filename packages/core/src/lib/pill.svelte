@@ -17,10 +17,13 @@ import { createEventDispatcher } from 'svelte';
 
 /** The text in the pill. */
 export let value = '';
+
 /**
- * Whether or not the pill has the aria-readonly attribute. If not readonly, there is a button to remove the pill.
+ * Whether or not the pill has the aria-readonly attribute. If not readonly,
+ * there is a button to remove the pill.
  */
 export let readonly = false;
+
 /** Whether or not the pill is disabled. */
 export let disabled = false;
 

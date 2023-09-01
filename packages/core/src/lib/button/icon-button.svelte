@@ -48,7 +48,7 @@ $: handleDisabled = preventHandler(disabled);
   aria-disabled={disabled ? true : undefined}
   {title}
   class={cx(
-    'inline-flex h-7.5 w-7.5 select-none items-center justify-center whitespace-nowrap',
+    'h-7.5 w-7.5 inline-flex select-none items-center justify-center whitespace-nowrap',
     {
       'text-gray-6 hover:border-medium hover:bg-medium active:bg-gray-2':
         !disabled,

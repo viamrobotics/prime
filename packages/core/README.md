@@ -85,7 +85,7 @@ pnpm -C packages/core test:watch  # watch tests
 
 For easier readability, we try to use a standard ordering for component composition. These are not strict rules, but more a guideline to follow. Implementation specifics may force you to go outside this guideline.
 
-```html
+````html
 <!-- svelte options: https://svelte.dev/docs/special-elements#svelte-options -->
 <svelte:options immutable />
 
@@ -167,4 +167,4 @@ For easier readability, we try to use a standard ordering for component composit
 <style>
   /* custom styles */
 </style>
-```
+````
