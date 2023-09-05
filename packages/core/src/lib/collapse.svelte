@@ -31,8 +31,8 @@ export let open = false;
 
 type Events = {
   /** Fires when the collapse is toggled */
-  toggle: boolean 
-}
+  toggle: boolean;
+};
 
 const dispatch = createEventDispatcher<Events>();
 
@@ -47,11 +47,11 @@ const handleClick = () => {
     role="button"
     aria-label="Toggle Content"
     tabindex="0"
-    class="w-full py-2 px-4 flex items-center justify-between text-default cursor-pointer border border-light bg-white"
+    class="flex w-full cursor-pointer items-center justify-between border border-light bg-white px-4 py-2 text-default"
     on:click={handleClick}
     on:keyup|preventDefault={handleClick}
   >
-    <div class="flex flex-wrap gap-x-3 gap-y-1 items-center">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
       {#if title}
         <h2 class="m-0 text-sm">{title}</h2>
       {/if}
@@ -59,24 +59,21 @@ const handleClick = () => {
       <slot name="title" />
     </div>
 
-    <div class="h-full flex items-center gap-3">
+    <div class="flex h-full items-center gap-3">
       <slot name="header" />
 
       <div
-      class={cx(
-        'transition-transform duration-200',
-        {
+        class={cx('transition-transform duration-200', {
           'rotate-0': !open,
           'rotate-180': open,
-        }
-      )}
-    >
-      <Icon name="chevron-down" />
-    </div>
+        })}
+      >
+        <Icon name="chevron-down" />
+      </div>
     </div>
   </div>
 
   {#if open}
-      <slot name="content"/>
+    <slot name="content" />
   {/if}
 </div>

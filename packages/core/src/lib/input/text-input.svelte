@@ -20,12 +20,20 @@ export type TextInputTypes = 'text' | 'email' | 'password';
 import Input from './input.svelte';
 
 /** The input type */
-export let type: TextInputTypes = 'text';
+export let type: TextInputTypes | undefined = 'text';
+
+/** The value of the input, if any. */
+export let value: string | undefined = undefined;
+
+/** The HTML input element. */
+export let input: HTMLInputElement | undefined = undefined;
 </script>
 
 <Input
   {...$$restProps}
   {type}
+  bind:value={value}
+  bind:input={input}
   on:input
   on:keydown
 />

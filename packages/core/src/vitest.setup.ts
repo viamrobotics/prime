@@ -5,6 +5,14 @@ import matchers from '@testing-library/jest-dom/matchers';
 expect.extend(matchers);
 
 /**
+ * `Element.scrollIntoView` is not implemented/stubbed in `jsdom` so we stub it
+ * out here:
+ *
+ * https://github.com/jsdom/jsdom/issues/1695
+ */
+Element.prototype.scrollIntoView = () => {};
+
+/**
  * `PointerEvent` does not exist in `jsdom` so this polyfill is based off this
  * comment on the PR to add it:
  *

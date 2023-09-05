@@ -1,0 +1,114 @@
+<!--
+@component
+  
+For selecting from a list of options.
+
+```svelte
+<Select on:input={onSelect}>
+  <option>Option 1</option>
+  <option>Option 2</option>
+  <option>Option 3</option>
+</Select>
+```
+-->
+<svelte:options immutable />
+
+<script
+  lang="ts"
+  context="module"
+>
+export type SelectState = 'error' | 'warn' | 'none';
+</script>
+
+<script lang="ts">
+import cx from 'classnames';
+import { Icon } from '$lib';
+import { createEventDispatcher } from 'svelte';
+
+const dispatch = createEventDispatcher<{
+  /** When the value of the select changes .*/
+  input: Event;
+
+  /** When a pointing device button (usually a mouse) is pressed on the select. */
+  mousedown: MouseEvent;
+
+  /** When a key is pressed down while the select is focused. */
+  keydown: KeyboardEvent;
+}>();
+
+/** The selected option value, if any */
+export let value: string | undefined = undefined;
+
+/** Whether or not the select should be rendered as disabled and be non-operable. */
+export let disabled = false;
+
+/** The state of the select (info, warn, error, success), if any. */
+export let state: SelectState = 'none';
+
+const onInput = (event: Event) => {
+  if (disabled) {
+    event.stopImmediatePropagation();
+    return;
+  }
+
+  dispatch('input', event);
+};
+
+const onMouseDown = (event: MouseEvent) => {
+  if (disabled) {
+    event.stopImmediatePropagation();
+    return;
+  }
+
+  dispatch('mousedown', event);
+};
+
+const onKeyDown = (event: KeyboardEvent) => {
+  if (disabled && event.key.toLowerCase() !== 'tab') {
+    event.stopImmediatePropagation();
+    return;
+  }
+
+  dispatch('keydown', event);
+};
+
+$: isWarn = state === 'warn';
+$: isError = state === 'error';
+</script>
+
+<div class="relative w-full">
+  <select
+    bind:value
+    aria-disabled={disabled ? true : undefined}
+    aria-invalid={isError ? true : undefined}
+    class={cx(
+      'peer h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
+      {
+        'border-light hover:border-gray-6 focus:border-gray-9 bg-white':
+          !disabled && !isError && !isWarn,
+        'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed':
+          disabled,
+        'border-warning-bright hover:outline-warning-bright focus:outline-warning-bright hover:outline-[1.5px] hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
+          isWarn,
+        'border-danger-dark hover:outline-danger-dark focus:outline-danger-dark hover:outline-[1.5px hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
+          isError,
+      }
+    )}
+    {...$$restProps}
+    on:input={onInput}
+    on:input
+    on:mousedown={onMouseDown}
+    on:mousedown
+    on:keydown={onKeyDown}
+    on:keydown
+  >
+    <slot />
+  </select>
+  <span
+    class={cx('text-gray-6 absolute right-2 top-1.5 transition', {
+      'peer-active:rotate-180': !disabled,
+    })}
+  >
+    <Icon name="chevron-down" />
+  </span>
+</div>

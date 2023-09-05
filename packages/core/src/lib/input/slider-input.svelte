@@ -20,16 +20,9 @@ import {
 } from './utils';
 
 /** The input type */
-export let type: NumericInputTypes = 'number';
+export let type: NumericInputTypes | undefined = 'number';
 
-/**
- * The value of the input, if any.
- *
- * TODO: Discuss disabling these rules for svelte components, otherwise
- * these props are treatef as required and force users to add value={undefined}
- * when no initial value is set.
- */
-// eslint-disable-next-line no-undef-init,unicorn/no-useless-undefined
+/** The value of the input, if any. */
 export let value: number | undefined = undefined;
 
 /** The amount to increment/decrement when sliding. */
@@ -41,13 +34,21 @@ export let min = Number.NEGATIVE_INFINITY;
 /** The maximum allowed value, if any. */
 export let max = Number.POSITIVE_INFINITY;
 
-const dispatch = createEventDispatcher<{
+/** The HTML input element. */
+export let input: HTMLInputElement | undefined = undefined;
+
+type Events = {
+  /** Fired when an input event occurs. */
   input: number;
+  /** Fired when the slider updates the value. */
+  slide: number;
+  /** Fired after a keydown on the input. */
   keydown: number;
-}>();
+}
+
+const dispatch = createEventDispatcher<Events>();
 
 let numberDragTooltip: Tooltip;
-let input: HTMLInputElement | undefined;
 let numberDragCord: HTMLDivElement;
 let numberDragHead: HTMLDivElement;
 let isDragging = false;
@@ -56,8 +57,8 @@ let startValue = 0;
 
 let stepDecimalDigits = 0;
 $: {
-  const decimal = step % 1;
-  stepDecimalDigits = decimal === 0 ? 0 : `${decimal}`.length;
+  const [, decimal = ''] = String(step).split('.')
+  stepDecimalDigits = decimal.length;
 }
 
 $: isNumber = type === 'number';
@@ -101,6 +102,7 @@ const handlePointerMove = (event: PointerEvent) => {
   if (value !== next) {
     value = next;
     dispatch('input', value);
+    dispatch('slide', value);
   }
 
   /**
@@ -136,7 +138,7 @@ const handlePointerDown = async (event: PointerEvent) => {
 };
 </script>
 
-<svelte:window
+<svelte:document
   on:pointermove={isDragging ? handlePointerMove : undefined}
   on:pointerup={isDragging ? handlePointerUp : undefined}
 />
@@ -146,20 +148,22 @@ const handlePointerDown = async (event: PointerEvent) => {
     {type}
     {step}
     {...$$restProps}
-    style='padding-left: 0.75rem;'
+    style="padding-left: 0.75rem;"
     bind:value
-    bind:input={input}
+    bind:input
     on:input
     on:keydown
+    on:blur
   />
-  <div
-    class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700"
+  <button
+    aria-hidden="true"
+    class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-ew-resize bg-gray-400 hover:bg-gray-700 z-max"
     on:pointerdown|preventDefault|stopPropagation={handlePointerDown}
   >
     {#if isDragging}
       <div
         bind:this={numberDragCord}
-        class="pointer-events-none mt-[calc(13px)] h-px bg-gray-400 z-100"
+        class="z-100 pointer-events-none mt-[calc(13px)] h-px bg-gray-400"
       />
       <div
         bind:this={numberDragHead}
@@ -176,5 +180,5 @@ const handlePointerDown = async (event: PointerEvent) => {
         </div>
       </div>
     {/if}
-  </div>
+  </button>
 </div>

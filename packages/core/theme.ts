@@ -1,4 +1,9 @@
+import type { OptionalConfig } from 'tailwindcss/types/config';
+
 export const theme = {
+  zIndex: {
+    max: '1000',
+  },
   extend: {
     fontFamily: {
       'space-grotesk':
@@ -7,6 +12,7 @@ export const theme = {
         "'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace",
       'public-sans': "'Public Sans Variable', 'Public Sans', sans-serif",
     },
+
     boxShadow: {
       sm: '0 4px 32px rgba(0, 0, 0, 0.06)',
     },
@@ -54,9 +60,24 @@ export const theme = {
       'info-medium': '#b6d1f4',
       'disabled-dark': '#9c9ca4',
       'disabled-light': '#f2f2f4',
+
+      // Brand design colors
+      'power-wire': '#ff0047',
+      pcb: '#00501f',
+      'power-button': '#00ef83',
+      'solar-power': '#ffd400',
+      'mars-rover': '#ff7D80',
+      raspberry: '#9f0049',
+      hologram: '#00e8e8',
+      yoshimi: '#ff79ff',
+      cyberpunk: '#a51aff',
+      hyperlink: '#0000ea',
     },
     transitionProperty: {
       'expand-vertical': 'max-height,visibility',
     },
+    zIndex: {
+      max: '1000',
+    },
   },
-};
+} satisfies OptionalConfig['theme'];

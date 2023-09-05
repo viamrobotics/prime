@@ -4,7 +4,7 @@
 For numeric user inputs.
 
 ```svelte
-<NumericInput type="integer"  on:input={onInput} />
+<NumericInput type="integer" on:input={onInput} />
 ```
 -->
 <svelte:options immutable />
@@ -14,15 +14,9 @@ import Input from './input.svelte';
 import type { NumericInputTypes } from './utils';
 
 /** The input type */
-export let type: NumericInputTypes = 'number';
+export let type: NumericInputTypes | undefined = 'number';
 
-/**
- * The value of the input, if any.
- *
- * TODO: Discuss disabling these rules for svelte components, otherwise
- * these props are treatef as required and force users to add value={undefined}
- * when no initial value is set.
- */
+/** The value of the input, if any. */
 export let value: number | undefined = undefined;
 
 /** The amount to increment/decrement when using the up/down arrows. */
@@ -33,7 +27,6 @@ export let input: HTMLInputElement | undefined = undefined;
 
 $: isNumber = type === 'number';
 $: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
-
 </script>
 
 <Input
@@ -42,6 +35,8 @@ $: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
   {step}
   {...$$restProps}
   bind:value
-  bind:input={input}
+  bind:input
   on:input
+  on:blur
+  on:keydown
 />

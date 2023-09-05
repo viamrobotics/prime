@@ -1,0 +1,119 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Multiselect } from '@viamrobotics/prime-core';
+import LabeledSelect from './labeled-multiselect.svelte';
+
+<Meta
+  title='Elements/Select/Multiselect'
+  argTypes={{
+    value: {
+      description: "The select's value",
+      control: { type: 'text' },
+      table: { defaultValue: { summary: '' } },
+    },
+    options: {
+      description: 'The select options',
+      control: { type: 'object' },
+      table: {
+        defaultValue: {
+          summary: '[]',
+        },
+      },
+    },
+    disabled: {
+      description: 'If the select should be readonly and inoperable',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    state: {
+      description: 'The state of the select',
+      control: { type: 'select' },
+      options: ['warn', 'error', 'none'],
+      table: { defaultValue: { summary: 'none' } },
+    },
+    sort: {
+      description: 'The sorting/filtering behavior for the select',
+      control: { type: 'select' },
+      options: ['default', 'reduce', 'off'],
+      table: { defaultValue: { summary: 'default' } },
+    },
+    button: {
+      description: 'An optional action button for the select',
+      control: { type: 'object' },
+      table: {
+        defaultValue: { summary: { text: 'Do Something', icon: 'alert' } },
+      },
+    },
+    heading: {
+      description: 'An optional heading to put at the top of the select menu',
+      control: { type: 'text' },
+      table: { defaultValue: { summary: 'Search results' } },
+    },
+    clearable: {
+      description:
+        'If the select should be clearable with the clear all button',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    showPills: {
+      description: 'If the select should show selected options as pills',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: true } },
+    },
+  }}
+/>
+
+# Multiselect
+
+A user input for selecting multiple options from a list that can be filtered via text search.
+
+<Canvas>
+  <Story
+    name='Multiselect'
+    args={{
+      options: [
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'Something Else',
+        'With A Whole Lot Of Parts',
+      ],
+    }}
+  >
+    {(props) => ({
+      Component: Multiselect,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+## Labels
+
+For accessibility, consider wrapping your `<Multiselect />` in a `<Label />`. Make
+to pass it `slot="input"` to correctly slot it in.
+
+<Canvas>
+  <Story
+    name='Labeled Select'
+    args={{
+      options: [
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'Something Else',
+        'With A Whole Lot Of Parts',
+      ],
+    }}
+  >
+    {(props) => ({
+      Component: LabeledSelect,
+      options: [
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'Something Else',
+        'With A Whole Lot Of Parts',
+      ],
+      props,
+    })}
+  </Story>
+</Canvas>

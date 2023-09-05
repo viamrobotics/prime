@@ -1,0 +1,108 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { SearchableSelect } from '@viamrobotics/prime-core';
+import LabeledSelect from './labeled-searchable-select.svelte';
+
+<Meta
+  title='Elements/Select/SearchableSelect'
+  argTypes={{
+    value: {
+      description: "The select's value",
+      control: { type: 'text' },
+      table: { defaultValue: { summary: '' } },
+    },
+    options: {
+      description: 'The select options',
+      control: { type: 'object' },
+      table: {
+        defaultValue: {
+          summary: '[]',
+        },
+      },
+    },
+    disabled: {
+      description: 'If the select should be readonly and inoperable',
+      control: { type: 'boolean' },
+      table: { defaultValue: { summary: false } },
+    },
+    state: {
+      description: 'The state of the select',
+      control: { type: 'select' },
+      options: ['warn', 'error', 'none'],
+      table: { defaultValue: { summary: 'none' } },
+    },
+    sort: {
+      description: 'The sorting/filtering behavior for the select',
+      control: { type: 'select' },
+      options: ['default', 'reduce', 'off'],
+      table: { defaultValue: { summary: 'default' } },
+    },
+    button: {
+      description: 'An optional action button for the select',
+      control: { type: 'object' },
+      table: {
+        defaultValue: { summary: { text: 'Do Something', icon: 'alert' } },
+      },
+    },
+    heading: {
+      description: 'An optional heading to put at the top of the select menu',
+      control: { type: 'text' },
+      table: { defaultValue: { summary: 'Search results' } },
+    },
+  }}
+/>
+
+# Searchable Select
+
+A user input for selecting from a list of options that can be filtered via text search.
+
+<Canvas>
+  <Story
+    name='SearchableSelect'
+    args={{
+      options: [
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'Something Else',
+        'With A Whole Lot Of Parts',
+      ],
+    }}
+  >
+    {(props) => ({
+      Component: SearchableSelect,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+## Labels
+
+For accessibility, consider wrapping your `<SearchableSelect />` in a `<Label />`. Make
+to pass it `slot="input"` to correctly slot it in.
+
+<Canvas>
+  <Story
+    name='Labeled Select'
+    args={{
+      options: [
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'Something Else',
+        'With A Whole Lot Of Parts',
+      ],
+    }}
+  >
+    {(props) => ({
+      Component: LabeledSelect,
+      options: [
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'Something Else',
+        'With A Whole Lot Of Parts',
+      ],
+      props,
+    })}
+  </Story>
+</Canvas>
