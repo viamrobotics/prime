@@ -4,99 +4,79 @@
 For numeric user inputs that require easy adjustment.
 
 ```svelte
-<VectorInput
-  type='number'
-  label='Position'
-  placeholder='0'
-  value=''
-  step='0.1'
-/>
+    <VectorInput
+    type="number"
+    step={1}
+    labels={['x', 'y', 'z']}
+    placeholders={{
+      x: '0',
+      y: '0',
+      z: '0'
+    }}
+    values={{
+      x: 0,
+      y: 0,
+      z: 0
+    }}
+  />
 ```
 -->
 <svelte:options immutable />
 
-<script lang="ts">
-import { createEventDispatcher } from 'svelte';
-import SliderInput from '$lib/input/slider-input.svelte';
 
-/**
- * The label for the vector input.
- */
-export let label = '';
-/**
- * How many dimensions the vector input has.
- */
-export let dimensions = 3;
-/** The amount to increment/decrement on sliding and on keyup/down. */
-export let step = 1;
-/** The value of an input. */
-export let value = '';
-/** The placeholders for the input. */
-export let placeholders = ['x', 'y', 'z', 'w'];
-
-interface Events {
-    input: { value: (number | undefined)[] };
-}
-
-const dispatch = createEventDispatcher<Events>()
-/** The values of the vector input. */
-let valueArray: (number | undefined)[];
-
-$: {
-  const arr: (number | undefined)[] = [];
-
-  const split = value.split(',');
-  for (let i = 0; i < dimensions; i += 1) {
-    const num = Number.parseFloat(split[i]!);
-    if (!Number.isNaN(num)) {
-      arr[i] = num;
+<script lang='ts'>
+  import SliderInput from '$lib/input/slider-input.svelte';
+  import Label from '$lib/label.svelte';
+  import { createEventDispatcher } from 'svelte';
+  /** Whether the inputs are readonly. */
+  export let readonly = false;
+  /** Whether the inputs are integers or decimal numbers. */
+  export let type: 'integer' | 'number' = 'number';
+  /** The slider step. */
+  export let step = 1;
+  /** The input labels. */
+  export let labels = ['x', 'y', 'z'];
+  /** The input placeholders. */
+  export let placeholders: Record<string, string> = { x: '0', y: '0', z: '0' };
+  /** The input values. */
+  export let values: Record<string, number> = {};
+  const dispatch = createEventDispatcher<{
+    /** Fires when an input event occurs. */
+    input: Record<string, number>
+  }>();
+  const inputs: Record<string, HTMLInputElement> = {};
+  const handleInput = (label: string) => {
+    const value = inputs[label]?.valueAsNumber
+    if (value !== undefined && !Number.isNaN(value)) {
+      values[label] = value;
+      dispatch('input', values);
     }
-  }
-
-  valueArray = arr;
-}
-
-
-const handleInput = (index: number) => {
-  return (event: Event) => {
-    const input = event.target as HTMLInputElement;
-    const inputValue = input?.value;
-    if (event.target && inputValue) {
-    valueArray[index] = Number.parseFloat(inputValue || '0');
-    } else {
-    valueArray[index] = 0; 
-    }
-    value = valueArray.join(',');
-    dispatch('input', { value: valueArray });
   };
-};
-
-
-const dimensionsArray = () => {
-  const arr = [];
-
-  for (let i = 0; i < dimensions; i += 1) {
-    arr.push(i);
-  }
-
-  return arr;
-};
-</script>
-
-<div class="flex justify-between items-center gap-2">
-  <p class="m-0 text-[11px]">
-    {label}
-  </p>
-  <div class="flex gap-1">
-    {#each dimensionsArray() as i (i)}
-      <div class="w-16">
-        <SliderInput 
+  const handleKeydown = (event: KeyboardEvent, label: string) => {
+    if (event.key === 'Enter') {
+      handleInput(label);
+    }
+  };
+  </script>
+  
+  <div class='flex gap-1.5 items-end'>
+    {#each labels as label, index (label)}
+      <Label>
+        {label}
+        <SliderInput
+          slot='input'
+          bind:input={inputs[label]}
+          {type}
           {step}
-          value={valueArray[i] ?? undefined}
-          placeholder={placeholders[i]}
-          on:input={handleInput(i)}
+          placeholder={placeholders[index]}
+          class='max-w-[5.5rem]'
+          readonly={readonly ? 'readonly' : undefined}
+          value={values[label]}
+          incrementor={readonly ? '' : 'slider'}
+          on:blur={() => handleInput(label)}
+          on:slide={() => handleInput(label)}
+          on:keydown={(event) => handleKeydown(event, label)}
         />
-      </div>
+      </Label>
     {/each}
   </div>
-</div>

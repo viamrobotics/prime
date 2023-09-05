@@ -465,13 +465,23 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <!-- Vector Input -->
+
     <VectorInput
-      type='number'
-      label='Position'
-      placeholder='0'
-      value=''
-      step='0.1'
-    />
+    type="number"
+    step={1}
+    labels={['x', 'y', 'z']}
+    placeholders={{
+      x: '0',
+      y: '0',
+      z: '0'
+    }}
+    values={{
+      x: 0,
+      y: 0,
+      z: 0
+    }}
+  />
+  
   </div>
   
   <!-- Context menu -->
