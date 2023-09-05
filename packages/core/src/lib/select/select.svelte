@@ -23,18 +23,6 @@ export type SelectState = 'error' | 'warn' | 'none';
 <script lang="ts">
 import cx from 'classnames';
 import { Icon } from '$lib';
-import { createEventDispatcher } from 'svelte';
-
-const dispatch = createEventDispatcher<{
-  /** When the value of the select changes .*/
-  input: Event;
-
-  /** When a pointing device button (usually a mouse) is pressed on the select. */
-  mousedown: MouseEvent;
-
-  /** When a key is pressed down while the select is focused. */
-  keydown: KeyboardEvent;
-}>();
 
 /** The selected option value, if any */
 export let value: string | undefined = undefined;
@@ -45,31 +33,18 @@ export let disabled = false;
 /** The state of the select (info, warn, error, success), if any. */
 export let state: SelectState = 'none';
 
-const onInput = (event: Event) => {
+const handleDisabled = (event: Event) => {
   if (disabled) {
+    event.preventDefault();
     event.stopImmediatePropagation();
-    return;
   }
-
-  dispatch('input', event);
 };
 
-const onMouseDown = (event: MouseEvent) => {
-  if (disabled) {
+const handleDisabledKeydown = (event: KeyboardEvent) => {
+  if (disabled && event.code.toLowerCase() !== 'tab') {
+    event.preventDefault();
     event.stopImmediatePropagation();
-    return;
   }
-
-  dispatch('mousedown', event);
-};
-
-const onKeyDown = (event: KeyboardEvent) => {
-  if (disabled && event.key.toLowerCase() !== 'tab') {
-    event.stopImmediatePropagation();
-    return;
-  }
-
-  dispatch('keydown', event);
 };
 
 $: isWarn = state === 'warn';
@@ -95,11 +70,11 @@ $: isError = state === 'error';
       }
     )}
     {...$$restProps}
-    on:input={onInput}
-    on:input
-    on:mousedown={onMouseDown}
+    on:change|capture={handleDisabled}
+    on:change
+    on:mousedown|capture={handleDisabled}
     on:mousedown
-    on:keydown={onKeyDown}
+    on:keydown|capture={handleDisabledKeydown}
     on:keydown
   >
     <slot />

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import Select from '../select.svelte';
 import SelectSpec from './select.spec.svelte';
@@ -24,7 +24,7 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.select(select, { target: { value: 'Option 2' } });
+    await fireEvent.change(select, { target: { value: 'Option 2' } });
 
     expect(select.value).toBe('Option 2');
   });
@@ -69,5 +69,121 @@ describe('Select', () => {
     expect(select).toHaveClass(
       'border-danger-dark focus:outline-danger-dark focus:outline-[1.5px] focus:-outline-offset-1'
     );
+  });
+
+  it('Emits the change event', async () => {
+    const onChange = vi.fn();
+    const { component } = render(SelectSpec, {
+      placeholder: 'Select an option',
+    });
+
+    component.$on('change', onChange);
+
+    const select: HTMLSelectElement =
+      screen.getByPlaceholderText('Select an option');
+
+    await fireEvent.change(select, { target: { value: 'Option 2' } });
+
+    expect(onChange).toHaveBeenCalledOnce();
+  });
+
+  it('Does not emit the change event when disabled', async () => {
+    const onChange = vi.fn();
+    const { component } = render(SelectSpec, {
+      placeholder: 'Select an option',
+      disabled: true,
+    });
+
+    component.$on('change', onChange);
+
+    const select: HTMLSelectElement =
+      screen.getByPlaceholderText('Select an option');
+
+    await fireEvent.change(select, { target: { value: 'Option 2' } });
+
+    expect(onChange).toHaveBeenCalledTimes(0);
+  });
+
+  it('Emits the mousedown event', async () => {
+    const onMouseDown = vi.fn();
+    const { component } = render(SelectSpec, {
+      placeholder: 'Select an option',
+    });
+
+    component.$on('mousedown', onMouseDown);
+
+    const select: HTMLSelectElement =
+      screen.getByPlaceholderText('Select an option');
+
+    await fireEvent.mouseDown(select);
+
+    expect(onMouseDown).toHaveBeenCalledOnce();
+  });
+
+  it('Does not emit the mousedown event when disabled', async () => {
+    const onMouseDown = vi.fn();
+    const { component } = render(SelectSpec, {
+      placeholder: 'Select an option',
+      disabled: true,
+    });
+
+    component.$on('mousedown', onMouseDown);
+
+    const select: HTMLSelectElement =
+      screen.getByPlaceholderText('Select an option');
+
+    await fireEvent.mouseDown(select);
+
+    expect(onMouseDown).toHaveBeenCalledTimes(0);
+  });
+
+  it('Emits the keydown event', async () => {
+    const onKeydown = vi.fn();
+    const { component } = render(SelectSpec, {
+      placeholder: 'Select an option',
+    });
+
+    component.$on('keydown', onKeydown);
+
+    const select: HTMLSelectElement =
+      screen.getByPlaceholderText('Select an option');
+
+    await fireEvent.keyDown(select);
+
+    expect(onKeydown).toHaveBeenCalledOnce();
+  });
+
+  it('Does not emit the keydown event when disabled', async () => {
+    const onKeydown = vi.fn();
+    const { component } = render(SelectSpec, {
+      placeholder: 'Select an option',
+      disabled: true,
+    });
+
+    component.$on('keydown', onKeydown);
+
+    const select: HTMLSelectElement =
+      screen.getByPlaceholderText('Select an option');
+
+    await fireEvent.keyDown(select);
+
+    expect(onKeydown).toHaveBeenCalledTimes(0);
+  });
+
+  it('Does not emit the keydown event when disabled if code is tab', async () => {
+    const onKeydown = vi.fn();
+    const { component } = render(SelectSpec, {
+      placeholder: 'Select an option',
+      disabled: true,
+    });
+
+    component.$on('keydown', onKeydown);
+
+    const select: HTMLSelectElement =
+      screen.getByPlaceholderText('Select an option');
+
+    await fireEvent.keyDown(select, { code: 'Tab' });
+
+    expect(onKeydown).toHaveBeenCalledOnce();
   });
 });
