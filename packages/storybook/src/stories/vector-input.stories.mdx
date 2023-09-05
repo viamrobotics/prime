@@ -1,0 +1,71 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { VectorInput } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/VectorInput'
+  parameters={{
+    actions: {
+      handles: ['input'],
+    },
+  }}
+argTypes={{
+    type: {
+      description: 'The input type',
+      control: 'select',
+      options: ['number', 'integer'],
+      table: { defaultValue: { summary: 'number' } },
+    },
+    labels: {
+      description: 'The input labels',
+      control: 'array',
+      table: { defaultValue: { summary: ['x', 'y', 'z'] } },
+    },
+    readonly: {
+      description: 'Whether the inputs are readonly',
+      control: 'boolean',
+      table: { defaultValue: { summary: false } },
+    },
+    step: {
+      description: 'For number inputs, the increment step',
+      control: 'number',
+      table: { defaultValue: { summary: 1 } },
+    },
+
+    placeholders: {
+      description: 'Placeholders for the inputs',
+      control: 'object',
+      table: { defaultValue: { summary: { x: '0', y: '0', z: '0' } } },
+    },
+    values: {
+      description: 'Starting values for the inputs',
+      control: 'object',
+      table: { defaultValue: { summary: { x: 0, y: 0, z: 0 } } },
+    },
+    'on:input': {
+      description: 'Event fired whenever the input changes',
+    },
+
+}}
+
+/>
+
+# Vector Input
+
+For numeric user inputs that require easy adjustment.
+
+<Story
+  name='3 Dimension'
+  args={{
+    labels: ['x', 'y', 'z'],
+    type: 'number',
+    readonly: false,
+    step: 1,
+    placeholders: { x: '0', y: '0', z: '0' },
+    values: { x: 0, y: 0, z: 0 },
+  }}
+>
+  {(props) => ({
+    Component: VectorInput,
+    props,
+  })}
+</Story>

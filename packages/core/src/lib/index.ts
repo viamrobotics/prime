@@ -29,3 +29,5 @@ export {
   default as TextInput,
   type TextInputTypes,
 } from './input/text-input.svelte';
+
+export { default as VectorInput } from './vector-input.svelte';

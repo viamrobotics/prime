@@ -60,7 +60,7 @@ For numeric user inputs that require easy adjustment.
   </script>
   
   <div class='flex gap-1.5 items-end'>
-    {#each labels as label, index (label)}
+    {#each labels as label}
       <Label>
         {label}
         <SliderInput
@@ -68,7 +68,7 @@ For numeric user inputs that require easy adjustment.
           bind:input={inputs[label]}
           {type}
           {step}
-          placeholder={placeholders[index]}
+          placeholder={placeholders[label]}
           class='max-w-[5.5rem]'
           readonly={readonly ? 'readonly' : undefined}
           value={values[label]}

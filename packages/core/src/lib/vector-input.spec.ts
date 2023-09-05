@@ -5,7 +5,7 @@ import VectorInput from './vector-input.svelte';
 describe('VectorInput', () => {
   it('should render correct labels', () => {
     const { getByText } = render(VectorInput, {
-      labels: ['a', 'b', 'c']
+      labels: ['a', 'b', 'c'],
     });
     expect(getByText('a')).toBeInTheDocument();
     expect(getByText('b')).toBeInTheDocument();
@@ -17,8 +17,8 @@ describe('VectorInput', () => {
       values: {
         x: 10,
         y: 20,
-        z: 30
-      }
+        z: 30,
+      },
     });
 
     expect(getByDisplayValue('10')).toBeInTheDocument();
@@ -31,8 +31,8 @@ describe('VectorInput', () => {
       placeholders: {
         x: '0',
         y: '1',
-        z: '2'
-      }
+        z: '2',
+      },
     });
 
     expect(getByPlaceholderText('0')).toBeInTheDocument();
@@ -40,15 +40,13 @@ describe('VectorInput', () => {
     expect(getByPlaceholderText('0')).toBeInTheDocument();
   });
 
-
-
   it('should update input values on input', async () => {
     const { getByDisplayValue } = render(VectorInput, {
       values: {
         x: 0,
         y: 1,
-        z: 2
-      }
+        z: 2,
+      },
     });
 
     const xInput = getByDisplayValue(0);
@@ -58,13 +56,13 @@ describe('VectorInput', () => {
   });
 
   it('should make inputs readonly when readonly is set', () => {
-    const { getByDisplayValue} = render(VectorInput, {
+    const { getByDisplayValue } = render(VectorInput, {
       readonly: true,
       values: {
         x: 0,
         y: 1,
-        z: 2
-      }
+        z: 2,
+      },
     });
     const xInput = getByDisplayValue(0) as HTMLInputElement;
     expect(xInput.readOnly).toBeTruthy();
