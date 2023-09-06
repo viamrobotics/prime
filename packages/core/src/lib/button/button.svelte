@@ -10,9 +10,9 @@ For user triggered actions.
 <svelte:options immutable />
 
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
 import cx from 'classnames';
 import { Icon } from '$lib';
+import { preventHandler } from '$lib/prevent-handler';
 
 /** Whether or not the button accepts clicks. */
 export let disabled = false;
@@ -44,15 +44,7 @@ export let width: 'full' | 'default' = 'default';
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-const dispatch = createEventDispatcher<{ click: null }>();
-
-const onClick = () => {
-  if (disabled) {
-    return;
-  }
-
-  dispatch('click');
-};
+const handleDisabled = preventHandler(disabled);
 </script>
 
 <button
@@ -84,7 +76,8 @@ const onClick = () => {
     extraClasses
   )}
   {...$$restProps}
-  on:click={onClick}
+  on:click
+  on:click|capture={handleDisabled}
 >
   {#if icon}
     <span

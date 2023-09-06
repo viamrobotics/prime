@@ -23,6 +23,7 @@ export type SelectState = 'error' | 'warn' | 'none';
 <script lang="ts">
 import cx from 'classnames';
 import { Icon } from '$lib';
+import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 
 /** The selected option value, if any */
 export let value: string | undefined = undefined;
@@ -33,19 +34,8 @@ export let disabled = false;
 /** The state of the select (info, warn, error, success), if any. */
 export let state: SelectState = 'none';
 
-const handleDisabled = (event: Event) => {
-  if (disabled) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
-};
-
-const handleDisabledKeydown = (event: KeyboardEvent) => {
-  if (disabled && event.code.toLowerCase() !== 'tab') {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
-};
+const handleDisabled = preventHandler(disabled);
+const handleDisabledKeydown = preventKeyboardHandler(disabled);
 
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
@@ -70,12 +60,12 @@ $: isError = state === 'error';
       }
     )}
     {...$$restProps}
-    on:change|capture={handleDisabled}
     on:change
-    on:mousedown|capture={handleDisabled}
+    on:change|capture={handleDisabled}
     on:mousedown
-    on:keydown|capture={handleDisabledKeydown}
+    on:mousedown|capture={handleDisabled}
     on:keydown
+    on:keydown|capture={handleDisabledKeydown}
   >
     <slot />
   </select>
