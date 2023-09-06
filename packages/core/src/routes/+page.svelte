@@ -562,7 +562,7 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <Select
-      on:input={(event) => {
+      on:change={(event) => {
         // eslint-disable-next-line no-console
         console.log('Select input', event);
       }}
@@ -663,7 +663,10 @@ let buttonClickedTimes = 0;
     <Multiselect
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="Select an option"
-      on:input={(event) => console.log('Multiselect input', event)}
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Multiselect input', event);
+      }}
     />
     <Multiselect
       options={['First Option', 'Option 2', 'C.) Option']}

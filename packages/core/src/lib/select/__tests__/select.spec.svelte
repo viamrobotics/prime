@@ -22,6 +22,9 @@ export let state: SelectState = 'none';
   {disabled}
   {state}
   {...$$restProps}
+  on:change
+  on:keydown
+  on:mousedown
 >
   <option>Option 1</option>
   <option>Option 2</option>

@@ -10,14 +10,12 @@ A navigation aid that helps users understand the relationships between parents a
 <svelte:options immutable />
 
 <script lang="ts">
-/**
- * A list of each part.
- */
+/** A list of each part. */
 export let crumbs: [string, ...string[]];
 </script>
 
 <div
-  class="inline-flex gap-2.5 rounded-full border border-medium bg-light px-3 py-px text-default"
+  class="border-medium bg-light text-default inline-flex gap-2.5 rounded-full border px-2.5 py-px"
 >
   {#each crumbs as crumb, index (crumb)}
     <small class="text-xs">
@@ -26,10 +24,10 @@ export let crumbs: [string, ...string[]];
     {#if index !== crumbs.length - 1}
       <div>
         <div
-          class="-mt-0.5 h-[69%] w-px -rotate-[30deg] border-l border-medium"
+          class="border-medium -mt-0.5 h-[69%] w-px -rotate-[30deg] border-l"
         />
         <div
-          class="-mt-0.5 h-[69%] w-px rotate-[30deg] border-l border-medium"
+          class="border-medium -mt-0.5 h-[69%] w-px rotate-[30deg] border-l"
         />
       </div>
     {/if}
