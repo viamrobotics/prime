@@ -26,6 +26,7 @@ export let exitable = false;
   on:close
 >
   <svelte:fragment slot="title">This is the title.</svelte:fragment>
+  <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
   <svelte:fragment slot="message">This is the message.</svelte:fragment>
   <svelte:fragment slot="action">This is the action.</svelte:fragment>
 </Banner>

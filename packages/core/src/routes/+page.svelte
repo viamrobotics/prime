@@ -79,16 +79,10 @@ let buttonClickedTimes = 0;
       exitable={true}
     >
       <svelte:fragment slot="title">This is the warning title.</svelte:fragment>
+      <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
 
       <svelte:fragment slot="message">
         This is <strong>the</strong> message.
-      </svelte:fragment>
-
-      <svelte:fragment slot="action">
-        <a
-          href="/"
-          class="text-link">This is the action.</a
-        >
       </svelte:fragment>
     </Banner>
 
@@ -98,6 +92,10 @@ let buttonClickedTimes = 0;
     >
       <svelte:fragment slot="title">
         This is the <em>danger</em> title.
+      </svelte:fragment>
+      <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
+      <svelte:fragment slot="message">
+        This is <strong>the</strong> message.
       </svelte:fragment>
       <svelte:fragment slot="action">
         <Button variant="danger">This is the action.</Button>

@@ -117,11 +117,13 @@ $: {
         </figcaption>
 
         <div class="flex flex-col gap-3">
-          {#if $$slots.message}
+          {#if $$slots.subtitle}
             <p class="text-subtle-1 text-sm">
-              <slot name="message" />
+              <slot name="subtitle" />
             </p>
           {/if}
+
+          <span class="text-sm"><slot name="message" /></span>
 
           {#if $$slots.action}
             <div class="pb-2 pt-1 text-sm">
