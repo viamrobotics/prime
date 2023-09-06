@@ -8,6 +8,7 @@ export { default as Collapse } from './collapse.svelte';
 export { default as Icon } from './icon/icon.svelte';
 export { default as Label, type LabelPosition } from './label.svelte';
 export { default as Pill } from './pill.svelte';
+export { preventHandler, preventKeyboardHandler } from './prevent-handler';
 export { default as Switch } from './switch.svelte';
 export { default as Radio } from './radio.svelte';
 export { default as Tabs } from './tabs.svelte';

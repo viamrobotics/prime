@@ -80,16 +80,10 @@ let buttonClickedTimes = 0;
       exitable={true}
     >
       <svelte:fragment slot="title">This is the warning title.</svelte:fragment>
+      <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
 
       <svelte:fragment slot="message">
         This is <strong>the</strong> message.
-      </svelte:fragment>
-
-      <svelte:fragment slot="action">
-        <a
-          href="/"
-          class="text-link">This is the action.</a
-        >
       </svelte:fragment>
     </Banner>
 
@@ -99,6 +93,10 @@ let buttonClickedTimes = 0;
     >
       <svelte:fragment slot="title">
         This is the <em>danger</em> title.
+      </svelte:fragment>
+      <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
+      <svelte:fragment slot="message">
+        This is <strong>the</strong> message.
       </svelte:fragment>
       <svelte:fragment slot="action">
         <Button variant="danger">This is the action.</Button>
@@ -563,7 +561,7 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <Select
-      on:input={(event) => {
+      on:change={(event) => {
         // eslint-disable-next-line no-console
         console.log('Select input', event);
       }}
@@ -664,7 +662,10 @@ let buttonClickedTimes = 0;
     <Multiselect
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="Select an option"
-      on:input={(event) => console.log('Multiselect input', event)}
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Multiselect input', event);
+      }}
     />
     <Multiselect
       options={['First Option', 'Option 2', 'C.) Option']}

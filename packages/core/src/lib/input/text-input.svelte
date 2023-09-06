@@ -32,8 +32,9 @@ export let input: HTMLInputElement | undefined = undefined;
 <Input
   {...$$restProps}
   {type}
-  bind:value={value}
-  bind:input={input}
+  bind:value
+  bind:input
   on:input
   on:keydown
+  on:blur
 />

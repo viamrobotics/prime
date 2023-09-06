@@ -23,18 +23,7 @@ export type SelectState = 'error' | 'warn' | 'none';
 <script lang="ts">
 import cx from 'classnames';
 import { Icon } from '$lib';
-import { createEventDispatcher } from 'svelte';
-
-const dispatch = createEventDispatcher<{
-  /** When the value of the select changes .*/
-  input: Event;
-
-  /** When a pointing device button (usually a mouse) is pressed on the select. */
-  mousedown: MouseEvent;
-
-  /** When a key is pressed down while the select is focused. */
-  keydown: KeyboardEvent;
-}>();
+import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 
 /** The selected option value, if any */
 export let value: string | undefined = undefined;
@@ -45,32 +34,8 @@ export let disabled = false;
 /** The state of the select (info, warn, error, success), if any. */
 export let state: SelectState = 'none';
 
-const onInput = (event: Event) => {
-  if (disabled) {
-    event.stopImmediatePropagation();
-    return;
-  }
-
-  dispatch('input', event);
-};
-
-const onMouseDown = (event: MouseEvent) => {
-  if (disabled) {
-    event.stopImmediatePropagation();
-    return;
-  }
-
-  dispatch('mousedown', event);
-};
-
-const onKeyDown = (event: KeyboardEvent) => {
-  if (disabled && event.key.toLowerCase() !== 'tab') {
-    event.stopImmediatePropagation();
-    return;
-  }
-
-  dispatch('keydown', event);
-};
+const handleDisabled = preventHandler(disabled);
+const handleDisabledKeydown = preventKeyboardHandler(disabled);
 
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
@@ -82,7 +47,7 @@ $: isError = state === 'error';
     aria-disabled={disabled ? true : undefined}
     aria-invalid={isError ? true : undefined}
     class={cx(
-      'peer h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
+      'peer h-[30px] w-full appearance-none rounded-none border px-2 py-1.5 text-xs leading-tight outline-none',
       {
         'border-light hover:border-gray-6 focus:border-gray-9 bg-white':
           !disabled && !isError && !isWarn,
@@ -95,12 +60,12 @@ $: isError = state === 'error';
       }
     )}
     {...$$restProps}
-    on:input={onInput}
-    on:input
-    on:mousedown={onMouseDown}
+    on:change
+    on:change|capture={handleDisabled}
     on:mousedown
-    on:keydown={onKeyDown}
+    on:mousedown|capture={handleDisabled}
     on:keydown
+    on:keydown|capture={handleDisabledKeydown}
   >
     <slot />
   </select>
