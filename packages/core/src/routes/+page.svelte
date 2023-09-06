@@ -832,7 +832,7 @@ let buttonClickedTimes = 0;
       <VectorInput
       type="number"
       step={1}
-      labels={['x', 'y', 'z']}
+      labels={['x', 'y', 'z', 'd']}
       placeholders={{
         x: '0',
         y: '0',
