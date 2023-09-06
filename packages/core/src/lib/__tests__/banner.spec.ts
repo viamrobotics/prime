@@ -3,12 +3,13 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import Banner from './banner.spec.svelte';
 
 describe('Banner', () => {
-  it('Renders banner element with appropriate title, message, and action text', () => {
+  it('Renders banner element with appropriate title, subtitle, message, and action text', () => {
     render(Banner, {
       variant: 'info',
     });
 
     expect(screen.getByText('This is the title.')).toBeVisible();
+    expect(screen.getByText('This is the subtitle.')).toBeVisible();
     expect(screen.getByText('This is the message.')).toBeVisible();
     expect(screen.getByText('This is the action.')).toBeVisible();
   });
