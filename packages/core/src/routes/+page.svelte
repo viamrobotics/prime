@@ -19,6 +19,7 @@ import Tooltip from '$lib/tooltip.svelte';
 import TextInput from '$lib/input/text-input.svelte';
 import NumericInput from '$lib/input/numeric-input.svelte';
 import SliderInput from '$lib/input/slider-input.svelte';
+import VectorInput from '$lib/vector-input.svelte';
 import Table from '$lib/table/table.svelte';
 import TableBody from '$lib/table/table-body.svelte';
 import TableCell from '$lib/table/table-cell.svelte';
@@ -825,4 +826,24 @@ let buttonClickedTimes = 0;
       <div slot="text">This is the tooltip text!</div>
     </Tooltip>
   </div>
+
+    <!-- Vector Input -->
+    <h1 class="text-2xl">Vector Input</h1>
+    <div class="flex gap-4">
+      <VectorInput
+      type="number"
+      step={1}
+      labels={['x', 'y', 'z', 'd']}
+      placeholders={{
+        x: '0',
+        y: '0',
+        z: '0'
+      }}
+      values={{
+        x: 0,
+        y: 0,
+        z: 0
+      }}
+    />
+    </div>
 </div>

@@ -36,6 +36,7 @@ export {
   type TextInputTypes,
 } from './input/text-input.svelte';
 
+export { default as VectorInput } from './vector-input.svelte';
 export { NotificationContainer, notify } from './notification';
 
 export { default as Multiselect } from './select/multiselect.svelte';
