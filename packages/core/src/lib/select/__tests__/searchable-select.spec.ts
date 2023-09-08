@@ -47,7 +47,7 @@ describe('SearchableSelect', () => {
     const select = screen.getByPlaceholderText('Select an option');
 
     expect(select).toHaveClass(
-      'border-warning-bright focus:outline-warning-bright focus:outline-[1.5px] focus:-outline-offset-1'
+      'border-warning-bright group-focus:outline-warning-bright group-focus:outline-[1.5px] group-focus:-outline-offset-1'
     );
   });
 
@@ -60,7 +60,7 @@ describe('SearchableSelect', () => {
     const select = screen.getByPlaceholderText('Select an option');
 
     expect(select).toHaveClass(
-      'border-danger-dark focus:outline-danger-dark focus:outline-[1.5px] focus:-outline-offset-1'
+      'border-danger-dark group-focus:outline-danger-dark group-focus:outline-[1.5px] group-focus:-outline-offset-1'
     );
   });
 
