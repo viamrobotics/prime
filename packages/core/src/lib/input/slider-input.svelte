@@ -188,6 +188,8 @@ const handleChange = (event: Event) => {
   />
   <button
     aria-hidden="true"
+    disabled={disabled || readonly}
+    tabindex="-1"
     class={cx(
       'z-max absolute bottom-[3px] left-[0.2rem] h-[24px] w-1 cursor-ew-resize',
       {
