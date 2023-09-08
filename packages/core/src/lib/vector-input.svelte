@@ -74,11 +74,7 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
         {type}
         {step}
         {readonly}
-<<<<<<< HEAD
         placeholder={placeholders[label]}
-=======
-        placeholder={placeholders[index]}
->>>>>>> 030daee (Add cx prop to all components to apply additional css classes)
         cx="max-w-[5.5rem]"
         value={values[label]}
         incrementor={readonly ? '' : 'slider'}
