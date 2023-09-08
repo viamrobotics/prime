@@ -1,15 +1,17 @@
 <script lang="ts">
-import { Select, type InputState } from '@viamrobotics/prime-core';
+import { Select, type SelectState } from '@viamrobotics/prime-core';
 
 export let value: string | undefined = undefined;
 export let disabled = false;
-export let state: InputState = 'none';
+export let state: SelectState = 'none';
+export let cx = '';
 </script>
 
 <Select
   {value}
   {disabled}
   {state}
+  {cx}
   {...$$restProps}
 >
   <option>Option 1</option>

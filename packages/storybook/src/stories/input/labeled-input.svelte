@@ -5,6 +5,7 @@ export let value = '';
 export let readonly = false;
 export let disabled = false;
 export let state: InputState = 'none';
+export let cx = '';
 </script>
 
 <Label>
@@ -15,5 +16,6 @@ export let state: InputState = 'none';
     {readonly}
     {disabled}
     {state}
+    {cx}
   />
 </Label>

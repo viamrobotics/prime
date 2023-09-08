@@ -38,7 +38,7 @@ export let name: string;
 /** The size of the icon. */
 export let size: Size = 'base';
 
-/** Additional CSS classes to pass to the button. */
+/** Additional CSS classes to pass to the svg. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 

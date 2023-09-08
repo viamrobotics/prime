@@ -45,6 +45,10 @@ export let disabled: boolean | undefined = false;
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
 
+/** Additional CSS classes to pass to the input container. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
+
 const dispatch = createEventDispatcher<{
   /** Fired when the value of the input is edited or the slider is moved. */
   input: number;
@@ -164,7 +168,7 @@ const handleChange = () => {
   on:pointerup={isDragging ? handlePointerUp : undefined}
 />
 
-<div class="relative w-full">
+<div class={cx('relative w-full', extraClasses)}>
   <NumericInput
     {type}
     {step}

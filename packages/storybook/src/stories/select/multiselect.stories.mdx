@@ -1,6 +1,7 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { Multiselect } from '@viamrobotics/prime-core';
 import LabeledSelect from './labeled-multiselect.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Select/Multiselect'
@@ -59,6 +60,7 @@ import LabeledSelect from './labeled-multiselect.svelte';
       control: { type: 'boolean' },
       table: { defaultValue: { summary: true } },
     },
+    cx,
   }}
 />
 

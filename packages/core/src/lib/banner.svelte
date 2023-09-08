@@ -21,7 +21,7 @@ export let progress = 1;
 /** If true a user can close out of the notification. If false they cannot*/
 export let exitable = false;
 
-/** Additional CSS classes to pass to the button. */
+/** Additional CSS classes to pass to the banner. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 

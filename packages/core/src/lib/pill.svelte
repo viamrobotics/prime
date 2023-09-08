@@ -24,6 +24,10 @@ export let readonly = false;
 /** Whether or not the pill is disabled. */
 export let disabled = false;
 
+/** Additional CSS classes to pass to the pill. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
+
 const dispatch = createEventDispatcher<{
   /** When the pill is removed. */
   remove: { value: string };
@@ -44,7 +48,8 @@ const handleRemove = () => {
     {
       'bg-disabled-light text-disabled-dark cursor-not-allowed':
         disabled || readonly,
-    }
+    },
+    extraClasses
   )}
   aria-disabled={disabled ? true : undefined}
   aria-readonly={readonly ? true : undefined}

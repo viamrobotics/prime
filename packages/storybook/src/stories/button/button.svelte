@@ -17,6 +17,7 @@ export let variant:
 export let title = '';
 export let icon = '';
 export let width: 'full' | 'default' = 'default';
+export let cx = '';
 </script>
 
 <Button
@@ -26,6 +27,7 @@ export let width: 'full' | 'default' = 'default';
   {title}
   {icon}
   {width}
+  {cx}
   on:click
 >
   {label}

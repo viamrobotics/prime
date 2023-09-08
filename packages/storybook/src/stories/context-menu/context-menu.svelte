@@ -9,9 +9,10 @@ import {
 export let label: string = 'hi';
 export let variant: ContextMenuItemVariant = 'primary';
 export let icon: string = '';
+export let cx = '';
 </script>
 
-<ContextMenu>
+<ContextMenu {cx}>
   <ContextMenuItem
     {label}
     {variant}

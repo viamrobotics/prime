@@ -25,7 +25,7 @@ import cx from 'classnames';
 /** The communicated type of the table row. */
 export let variant: TableRowVariant = '';
 
-/** Additional CSS classes to pass to the button. */
+/** Additional CSS classes to pass to the tr. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 </script>
