@@ -329,6 +329,10 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <Input
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Input input', event);
+      }}
       name="name"
       placeholder="Enter your name"
     />
@@ -371,6 +375,10 @@ let buttonClickedTimes = 0;
     <TextInput
       name="name"
       placeholder="Enter your name"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('TextInput input', event);
+      }}
     />
 
     <TextInput
@@ -392,6 +400,10 @@ let buttonClickedTimes = 0;
     <NumericInput
       name="number"
       placeholder="Enter a number"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('NumericInput input', event);
+      }}
     />
 
     <NumericInput
@@ -405,18 +417,28 @@ let buttonClickedTimes = 0;
   <h2 class="text-xl">Slider Input</h2>
   <div class="flex gap-4">
     <SliderInput
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('SliderInput input', event);
+      }}
+      on:change={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('SliderInput change', event);
+      }}
       placeholder="Slide to select a number"
       name="slider"
     />
 
     <SliderInput
-      placeholder="Slide to select a number"
+      placeholder="Readonly"
+      readonly
       name="slider"
     />
 
     <SliderInput
-      placeholder="Slide to select a number"
+      placeholder="Disabled"
       name="slider"
+      disabled
     />
   </div>
 
@@ -827,23 +849,23 @@ let buttonClickedTimes = 0;
     </Tooltip>
   </div>
 
-    <!-- Vector Input -->
-    <h1 class="text-2xl">Vector Input</h1>
-    <div class="flex gap-4">
-      <VectorInput
+  <!-- Vector Input -->
+  <h1 class="text-2xl">Vector Input</h1>
+  <div class="flex gap-4">
+    <VectorInput
       type="number"
       step={1}
       labels={['x', 'y', 'z', 'd']}
       placeholders={{
         x: '0',
         y: '0',
-        z: '0'
+        z: '0',
       }}
       values={{
         x: 0,
         y: 0,
-        z: 0
+        z: 0,
       }}
     />
-    </div>
+  </div>
 </div>

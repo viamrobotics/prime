@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { SliderInput } from '$lib';
 
@@ -12,7 +12,10 @@ describe('Slider Input', () => {
   });
 
   it('It should not allow sliding below min', async () => {
-    render(SliderInput, { placeholder: 'Enter a number', min: 0 });
+    render(SliderInput, {
+      placeholder: 'Enter a number',
+      min: 0,
+    });
 
     const input: HTMLInputElement =
       screen.getByPlaceholderText('Enter a number');
@@ -54,7 +57,7 @@ describe('Slider Input', () => {
     expect(input.valueAsNumber).toBe(50);
   });
 
-  it('It slide in increments of step', async () => {
+  it('It slides in increments of step', async () => {
     render(SliderInput, { placeholder: 'Enter a number', step: 10 });
 
     const input: HTMLInputElement =
@@ -80,5 +83,69 @@ describe('Slider Input', () => {
     await fireEvent.pointerUp(document);
 
     expect(input.valueAsNumber % 10).toBe(0);
+  });
+
+  it('Emits the input event when the slider moves', async () => {
+    const { component } = render(SliderInput, {
+      placeholder: 'Enter a number',
+    });
+    const onInput = vi.fn();
+    component.$on('input', onInput);
+
+    const slider = screen.getByRole('button', { hidden: true });
+
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: 200 });
+
+    expect(onInput).toHaveBeenCalledTimes(1);
+
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: -300 });
+
+    expect(onInput).toHaveBeenCalledTimes(2);
+  });
+
+  it('Emits the change event when the slider is released', async () => {
+    const { component } = render(SliderInput, {
+      placeholder: 'Enter a number',
+    });
+    const onChange = vi.fn();
+    component.$on('change', onChange);
+
+    const slider = screen.getByRole('button', { hidden: true });
+
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: 200 });
+
+    expect(onChange).toHaveBeenCalledTimes(0);
+
+    await fireEvent.pointerDown(slider, { clientX: 0 });
+    await fireEvent.pointerMove(document, { clientX: -300 });
+
+    expect(onChange).toHaveBeenCalledTimes(0);
+
+    await fireEvent.pointerUp(document);
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('Emits the input and change events when the input is changed', async () => {
+    const { component } = render(SliderInput, {
+      placeholder: 'Enter a number',
+    });
+
+    const onInput = vi.fn();
+    const onChange = vi.fn();
+
+    component.$on('input', onInput);
+    component.$on('change', onChange);
+
+    const input: HTMLInputElement =
+      screen.getByPlaceholderText('Enter a number');
+
+    await fireEvent.change(input, { target: { value: 20 } });
+
+    expect(onInput).toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalled();
   });
 });

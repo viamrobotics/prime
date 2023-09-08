@@ -37,6 +37,7 @@ $: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
   bind:value
   bind:input
   on:input
+  on:change
   on:blur
   on:keydown
 />
