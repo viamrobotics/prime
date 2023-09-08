@@ -47,7 +47,7 @@ $: isError = state === 'error';
     aria-disabled={disabled ? true : undefined}
     aria-invalid={isError ? true : undefined}
     class={cx(
-      'h-7.5 peer w-full appearance-none rounded-none border px-2 py-1.5 text-xs leading-tight outline-none',
+      'peer h-[30px] w-full appearance-none rounded-none border px-2 py-1.5 text-xs leading-tight outline-none',
       {
         'border-light hover:border-gray-6 focus:border-gray-9 bg-white':
           !disabled && !isError && !isWarn,

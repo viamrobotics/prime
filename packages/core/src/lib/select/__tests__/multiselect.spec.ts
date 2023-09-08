@@ -19,7 +19,7 @@ describe('Multiselect', () => {
     const select = screen.getByPlaceholderText('Select an option');
 
     expect(select).toHaveClass(
-      'h-7.5 w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none'
+      'h-[30px] w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none'
     );
   });
 
@@ -87,7 +87,7 @@ describe('Multiselect', () => {
 
     expect(button).toHaveClass('pl-1.5');
     expect(button.parentElement).toHaveClass(
-      'hover:bg-light border-light flex h-7.5 w-full items-center border-t px-2 py-1 text-xs'
+      'hover:bg-light border-light flex h-[30px] w-full items-center border-t px-2 py-1 text-xs'
     );
   });
 
