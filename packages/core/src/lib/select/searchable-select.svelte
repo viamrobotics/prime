@@ -126,7 +126,7 @@ $: {
     on:keydown={handleKeyDown}
     on:focus={() => handleFocus(disabled)}
     on:mousemove={() => ($isKeyboardControlling = false)}
-    on:toggle={() => ($isOpen ? close() : handleFocus(disabled))}
+    on:click={() => ($isOpen ? close() : handleFocus(disabled))}
   />
 
   {#if !disabled}
