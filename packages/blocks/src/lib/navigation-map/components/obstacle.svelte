@@ -26,6 +26,7 @@ $: material?.color.set($hovered === obstacle.name
     obstacle={name}
     lnglat={obstacle.location}
     rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
+    on:mouseover={() => console.log('mouseover')}
   >
     {#if geometry.type === 'box'}
       {#if $view === '3D'}
