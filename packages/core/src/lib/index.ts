@@ -39,9 +39,14 @@ export {
 export { default as VectorInput } from './vector-input.svelte';
 export { NotificationContainer, notify } from './notification';
 
+export { selectControls } from './select/controls';
+export { createSearchableSelectDispatcher } from './select/dispatcher';
 export { default as Multiselect } from './select/multiselect.svelte';
+export { getSearchResults } from './select/search';
 export { default as Select, type SelectState } from './select/select.svelte';
 export { default as SearchableSelect } from './select/searchable-select.svelte';
+export { default as SelectInput } from './select/select-input.svelte';
+export { default as SelectMenu } from './select/select-menu.svelte';
 export { type SortOptions } from './select/search';
 
 export { default as Table, type TableVariant } from './table/table.svelte';

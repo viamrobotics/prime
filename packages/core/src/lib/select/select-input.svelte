@@ -11,9 +11,27 @@ export let state: SelectState;
 
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
+
+$: defaultClasses =
+  !disabled &&
+  !isError &&
+  !isWarn &&
+  'border-light group-hover:border-gray-6 group-focus:border-gray-9 bg-white';
+
+$: disabledClasses =
+  disabled &&
+  'border-disabled-light group-focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed';
+
+$: warnClasses =
+  isWarn &&
+  'border-warning-bright group-hover:outline-warning-bright group-focus:outline-warning-bright group-hover:outline-[1.5px] group-hover:-outline-offset-1 group-focus:outline-[1.5px] group-focus:-outline-offset-1';
+
+$: errorClasses =
+  isError &&
+  'border-danger-dark group-hover:outline-danger-dark group-hover:outline-[1.5px] group-hover:-outline-offset-1 group-focus:outline-danger-dark group-focus:outline-[1.5px] group-focus:-outline-offset-1';
 </script>
 
-<div class="flex w-full">
+<div class="group flex w-full">
   <input
     bind:value
     role="combobox"
@@ -24,16 +42,10 @@ $: isError = state === 'error';
     type="text"
     class={cx(
       'h-[30px] w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none',
-      {
-        'border-light hover:border-gray-6 focus:border-gray-9 bg-white':
-          !disabled && !isError && !isWarn,
-        'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed':
-          disabled,
-        'border-warning-bright hover:outline-warning-bright focus:outline-warning-bright hover:outline-[1.5px] hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
-          isWarn,
-        'border-danger-dark hover:outline-danger-dark focus:outline-danger-dark hover:outline-[1.5px hover:-outline-offset-1 focus:outline-[1.5px] focus:-outline-offset-1':
-          isError,
-      }
+      defaultClasses,
+      disabledClasses,
+      warnClasses,
+      errorClasses
     )}
     {...$$restProps}
     on:input
@@ -45,7 +57,7 @@ $: isError = state === 'error';
     class="absolute right-2 top-1.5"
     tabindex="-1"
     aria-label="Toggle menu"
-    on:toggle
+    on:click
     on:keydown
   >
     <Icon
