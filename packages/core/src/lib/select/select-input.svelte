@@ -28,7 +28,7 @@ $: warnClasses =
 
 $: errorClasses =
   isError &&
-  'border-danger-dark group-hover:outline-danger-dark group-hover:outline-[1.5px] group-hover:-outline-offset-1 group-focus:outline-[1.5px] group-focus:-outline-offset-1';
+  'border-danger-dark group-hover:outline-danger-dark group-hover:outline-[1.5px] group-hover:-outline-offset-1 group-focus:outline-danger-dark group-focus:outline-[1.5px] group-focus:-outline-offset-1';
 </script>
 
 <div class="group flex w-full">

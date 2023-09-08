@@ -15,7 +15,7 @@ export let heading = '';
 
 <div
   class={cx(
-    'border-gray-9 z-max absolute left-0 right-0 top-full z-40 mt-1 w-full overflow-hidden border bg-white drop-shadow-md',
+    'border-gray-9 z-max absolute left-0 right-0 top-full mt-1 w-full overflow-hidden border bg-white drop-shadow-md',
     {
       invisible: !open,
     }
@@ -39,7 +39,7 @@ export let heading = '';
   {#if button !== undefined}
     <button
       type="button"
-      class="hover:bg-light border-light flex h-[30px] w-full items-center border-t px-2 py-1 text-xs"
+      class="hover:bg-light border-light h-7.5 flex w-full items-center border-t px-2 py-1 text-xs"
     >
       <Icon
         name={button.icon}
