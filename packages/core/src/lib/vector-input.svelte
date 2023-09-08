@@ -38,7 +38,7 @@ export let placeholders: Record<string, string> = { x: '0', y: '0', z: '0' };
 /** The input values. */
 export let values: Record<string, number> = {};
 
-/** Additional CSS classes to pass to the pill. */
+/** Additional CSS classes to pass to the input container. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
