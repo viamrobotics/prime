@@ -49,7 +49,7 @@ const handleMapCreate = () => {
 
 </script>
 
-<div class='w-full h-full sm:flex items-stretch'>
+<div class='relative w-full h-full sm:flex items-stretch'>
   <MapLibre
     class='relative grow'
     {minPitch}
