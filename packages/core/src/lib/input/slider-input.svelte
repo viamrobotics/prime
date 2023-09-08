@@ -144,14 +144,25 @@ const handlePointerDown = async (event: PointerEvent) => {
   numberDragTooltip.recalculateStyle();
 };
 
-const handleChange = (event: Event) => {
-  const value = parseNumericInputValue(
+const handleInput = (event: Event) => {
+  const next = parseNumericInputValue(
     (event.target as HTMLInputElement).value,
     type
   );
 
-  dispatch('input', value);
-  dispatch('change', value);
+  value = next;
+};
+
+const handleChange = (event: Event) => {
+  const next = parseNumericInputValue(
+    (event.target as HTMLInputElement).value,
+    type
+  );
+
+  value = next;
+
+  dispatch('input', next);
+  dispatch('change', next);
 };
 </script>
 
@@ -166,12 +177,13 @@ const handleChange = (event: Event) => {
     {step}
     {disabled}
     {readonly}
+    {value}
     {...$$restProps}
     style="padding-left: 0.75rem;"
-    bind:value
     bind:input
-    on:keydown
     on:blur
+    on:keydown
+    on:input={handleInput}
     on:change={handleChange}
   />
   <button

@@ -851,21 +851,34 @@ let buttonClickedTimes = 0;
 
   <!-- Vector Input -->
   <h1 class="text-2xl">Vector Input</h1>
-  <div class="flex gap-4">
-    <VectorInput
-      type="number"
-      step={1}
-      labels={['x', 'y', 'z', 'd']}
-      placeholders={{
-        x: '0',
-        y: '0',
-        z: '0',
-      }}
-      values={{
-        x: 0,
-        y: 0,
-        z: 0,
-      }}
-    />
-  </div>
+  <VectorInput
+    on:input={(event) => {
+      // eslint-disable-next-line no-console
+      console.log('VectorInput input', event);
+    }}
+  />
+
+  <VectorInput
+    type="number"
+    step={10}
+    labels={['x', 'y', 'z', 'd']}
+    placeholders={{
+      x: '0',
+      y: '0',
+      z: '0',
+      // eslint-disable-next-line id-length
+      d: '0',
+    }}
+    values={{
+      x: 0,
+      y: 0,
+      z: 0,
+      // eslint-disable-next-line id-length
+      d: 0,
+    }}
+    on:input={(event) => {
+      // eslint-disable-next-line no-console
+      console.log('VectorInput input', event);
+    }}
+  />
 </div>

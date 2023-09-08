@@ -24,9 +24,8 @@ For numeric user inputs that require easy adjustment.
 <svelte:options immutable />
 
 <script lang="ts">
-import SliderInput from '$lib/input/slider-input.svelte';
-import Label from '$lib/label.svelte';
 import { createEventDispatcher } from 'svelte';
+import { Label, SliderInput } from '$lib';
 
 /** Whether the inputs are readonly. */
 export let readonly = false;
@@ -55,6 +54,7 @@ const inputs: Record<string, HTMLInputElement> = {};
 
 const handleInput = (label: string) => {
   const value = inputs[label]?.valueAsNumber;
+
   if (value !== undefined && !Number.isNaN(value)) {
     values[label] = value;
     dispatch('input', values);
@@ -69,7 +69,7 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
 </script>
 
 <div class="flex items-end gap-1.5">
-  {#each labels as label}
+  {#each labels as label, index (label)}
     <Label>
       {label}
       <SliderInput
@@ -78,11 +78,12 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
         {type}
         {step}
         {readonly}
-        placeholder={placeholders[label]}
-        cx="max-w-[5.5rem]"
+        placeholder={placeholders[index]}
+        class="max-w-[5.5rem]"
         value={values[label]}
+        incrementor={readonly ? '' : 'slider'}
         on:blur={() => handleInput(label)}
-        on:slide={() => handleInput(label)}
+        on:input={() => handleInput(label)}
         on:keydown={(event) => handleKeydown(event, label)}
       />
     </Label>
