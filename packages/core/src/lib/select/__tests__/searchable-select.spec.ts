@@ -87,7 +87,7 @@ describe('SearchableSelect', () => {
 
     expect(button).toHaveClass('pl-1.5');
     expect(button.parentElement).toHaveClass(
-      'group-hover:bg-light border-light flex h-7.5 w-full items-center border-t px-2 py-1 text-xs'
+      'hover:bg-light border-light flex h-7.5 w-full items-center border-t px-2 py-1 text-xs'
     );
   });
 
