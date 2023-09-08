@@ -12,7 +12,9 @@ export const style: StyleSpecification = {
     },
     satellite: {
       type: 'raster',
-      tiles: ['https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'], // Replace with actual satellite tile URL
+      tiles: [
+        'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
+      ], // Replace with actual satellite tile URL
       tileSize: 256,
       attribution: '&copy; USGS National Map Services',
       maxzoom: 19,
@@ -29,7 +31,7 @@ export const style: StyleSpecification = {
       type: 'raster',
       source: 'satellite',
       layout: {
-        visibility: 'none', 
+        visibility: 'none',
       },
     },
   ],
