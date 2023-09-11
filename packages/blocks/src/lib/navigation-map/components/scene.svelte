@@ -15,7 +15,7 @@ computeBoundingPlugin();
 interactivityPlugin();
 
 const { renderer, scene, invalidate } = useThrelte();
-const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.1);
+const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
 scene.add(world);
 
@@ -30,12 +30,12 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 
 </script>
 
-  <T.AmbientLight intensity={flat ? 2 : 1.5} />
+<T.AmbientLight intensity={flat ? 2 : 1.5} />
 
-  {#if !flat}
-    <T.DirectionalLight intensity={1.5} />
-  {/if}
-  
-  {#each $obstacles as obstacle (obstacle.name)}
-    <ObstacleGeometries {obstacle} />
-  {/each}
+{#if !flat}
+  <T.DirectionalLight intensity={1.5} />
+{/if}
+
+{#each $obstacles as obstacle (obstacle.name)}
+  <ObstacleGeometries {obstacle} />
+{/each}

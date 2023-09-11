@@ -6,13 +6,11 @@ import {
   type LngLat,
   type Map,
 } from 'maplibre-gl';
-import { AxesHelper } from 'trzy';
 import { cameraMatrix } from '../stores';
 
 const { clamp } = THREE.MathUtils;
 
 export const world = new THREE.Group();
-export const axes = new AxesHelper(1, 0.1);
 const rotation = new THREE.Euler();
 const rotationMatrix = new THREE.Matrix4();
 const scale = new THREE.Vector3();
@@ -21,7 +19,6 @@ const scale = new THREE.Vector3();
 world.rotateY(-Math.PI / 2);
 world.rotateX(-Math.PI / 2);
 world.rotateZ(Math.PI / 2);
-world.add(axes);
 
 let cursor = 0;
 
