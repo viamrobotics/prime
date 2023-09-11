@@ -1,5 +1,4 @@
-<script lang='ts'>
-
+<script lang="ts">
 import { SliderInput } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import { LngLat } from 'maplibre-gl';
@@ -18,41 +17,48 @@ export let lat: number | undefined = undefined;
 
 const dispatch = createEventDispatcher<{
   /** Fires when the latitude or longitude is edited. */
-  input: LngLat
+  input: LngLat;
 }>();
 
-let latInput: HTMLInputElement
-let lngInput: HTMLInputElement
-
+let latInput: HTMLInputElement;
+let lngInput: HTMLInputElement;
 </script>
 
-<div class='flex gap-1.5 items-end'>
+<div class="flex items-end gap-1.5">
   <SliderInput
     bind:input={latInput}
-    type='number'
+    type="number"
     label={label ?? 'Latitude'}
-    placeholder='0'
+    placeholder="0"
     incrementor={readonly ? undefined : 'slider'}
     value={lat}
     step={1}
-    class='grow'
-    on:blur={() => dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
-    on:slide={() => dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
-    on:keydown={(event) => event.key === 'Enter' && dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
+    class="grow"
+    on:blur={() =>
+      dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
+    on:input={() =>
+      dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
+    on:keydown={(event) =>
+      event.key === 'Enter' &&
+      dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
     {readonly}
   />
   <SliderInput
     bind:input={lngInput}
-    type='number'
+    type="number"
     label={label ? '' : 'Longitude'}
-    placeholder='0'
+    placeholder="0"
     incrementor={readonly ? undefined : 'slider'}
     value={lng}
     step={1}
-    class='grow'
-    on:blur={() => dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
-    on:slide={() => dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
-    on:keydown={(event) => event.key === 'Enter' && dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
+    class="grow"
+    on:blur={() =>
+      dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
+    on:input={() =>
+      dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
+    on:keydown={(event) =>
+      event.key === 'Enter' &&
+      dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
     {readonly}
   />
   <slot />

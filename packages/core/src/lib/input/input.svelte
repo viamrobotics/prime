@@ -22,6 +22,7 @@ export type InputState = 'info' | 'warn' | 'error' | 'none';
 
 <script lang="ts">
 import Icon from '$lib/icon/icon.svelte';
+import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 import cx from 'classnames';
 
 export let value: string | number | undefined = '';
@@ -41,6 +42,11 @@ export let input: HTMLInputElement | undefined = undefined;
 $: isInfo = state === 'info';
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
+
+const handleDisabled = preventHandler(Boolean(disabled || readonly));
+const handleDisabledKeydown = preventKeyboardHandler(
+  Boolean(disabled || readonly)
+);
 
 $: icon = {
   info: 'information',
@@ -72,7 +78,11 @@ $: icon = {
     bind:value
     bind:this={input}
     on:input
+    on:input|capture={handleDisabled}
+    on:change
+    on:change|capture={handleDisabled}
     on:keydown
+    on:keydown|capture={handleDisabledKeydown}
     on:blur
   />
 

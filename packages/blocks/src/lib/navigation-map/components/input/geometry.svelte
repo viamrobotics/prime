@@ -1,9 +1,7 @@
-<script lang='ts'>
-
-import { Radio } from '@viamrobotics/prime-core'
+<script lang="ts">
+import { Radio, VectorInput } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import type { Geometry, Shapes } from '$lib';
-import VectorInput from '../vector-input.svelte';
 import { createGeometry } from '../../lib/geometry';
 
 /** The geometry to edit. */
@@ -11,7 +9,7 @@ export let geometry: Geometry;
 
 const dispatch = createEventDispatcher<{
   /** Fires when a geometry is edited. */
-  input: Geometry
+  input: Geometry;
 }>();
 
 const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
@@ -20,7 +18,7 @@ const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
 };
 
 const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
-  const nextGeometry = { ...geometry }
+  const nextGeometry = { ...geometry };
 
   switch (nextGeometry.type) {
     case 'box': {
@@ -67,14 +65,13 @@ const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
 const shapeMap = {
   box: 'Box',
   sphere: 'Sphere',
-  capsule: 'Capsule'
+  capsule: 'Capsule',
 };
-
 </script>
 
-<div class='flex flex-col gap-2 my-2'>
+<div class="my-2 flex flex-col gap-2">
   <Radio
-    label='Shape'
+    label="Shape"
     options={['Box', 'Sphere', 'Capsule']}
     selected={shapeMap[geometry.type]}
     on:input={handleShapeSelect}
@@ -83,7 +80,11 @@ const shapeMap = {
   {#if geometry.type === 'box'}
     <VectorInput
       labels={['Length (m)', 'Width (m)', 'Height (m)']}
-      values={{ 'Length (m)': geometry.length, 'Width (m)': geometry.width, 'Height (m)': geometry.height }}
+      values={{
+        'Length (m)': geometry.length,
+        'Width (m)': geometry.width,
+        'Height (m)': geometry.height,
+      }}
       on:input={handleDimensionsInput}
     />
   {:else if geometry.type === 'capsule'}
