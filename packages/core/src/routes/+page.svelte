@@ -136,6 +136,26 @@ let buttonClickedTimes = 0;
     <Button variant="outline-danger">Outline Danger</Button>
   </div>
 
+  <div class="flex gap-4">
+    <Button icon="camera-outline">Primary</Button>
+    <Button
+      disabled
+      icon="cog"
+      on:click={() => {
+        // eslint-disable-next-line no-console
+        console.log('Uh oh, should not be called!');
+      }}
+    >
+      Disabled
+    </Button>
+
+    <Button variant="dark" icon="magnify">Dark</Button>
+    <Button variant="ghost" icon="credit-card-outline">Ghost</Button>
+    <Button variant="success" icon="earth">Success</Button>
+    <Button variant="danger" icon="download">Danger</Button>
+    <Button variant="outline-danger" icon="broadcast">Outline Danger</Button>
+  </div>
+
   <Button width="full">Full Width</Button>
 
   <!-- IconButton -->
