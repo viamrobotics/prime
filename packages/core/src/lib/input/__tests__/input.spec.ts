@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { Input } from '$lib';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Input', () => {
   it('Renders the input', () => {
@@ -77,5 +78,12 @@ describe('Input', () => {
 
     expect(svg).toBeInTheDocument();
     expect(svg).toHaveClass('text-danger-dark');
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Input, { placeholder: 'Enter your name', cx: cxTestArguments });
+    expect(screen.getByPlaceholderText('Enter your name')).toHaveClass(
+      cxTestResults
+    );
   });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 import { Icon } from '$lib';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Icon', () => {
   it('Renders an icon', () => {
@@ -46,5 +47,10 @@ describe('Icon', () => {
   it('Renders a 4xl icon', () => {
     const { container } = render(Icon, { name: 'cog', size: '4xl' });
     expect(container.querySelector('svg')).toHaveClass('w-9 h-9 ');
+  });
+
+  it('Renders with the passed cx classes', () => {
+    const { container } = render(Icon, { name: 'cog', cx: cxTestArguments });
+    expect(container.querySelector('svg')).toHaveClass(cxTestResults);
   });
 });

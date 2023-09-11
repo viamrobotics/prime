@@ -54,7 +54,7 @@ export let button: { text: string; icon: string } | undefined = undefined;
 /** An optional heading to render at the top of the select menu. */
 export let heading = '';
 
-/** Additional CSS classes to pass to the select input. */
+/** Additional CSS classes to pass to the input container. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
@@ -139,13 +139,12 @@ $: {
 </script>
 
 <div
-  class="relative flex h-fit w-full"
+  class={cx('relative flex h-fit w-full', extraClasses)}
   use:clickOutside={close}
 >
   <SelectInput
     bind:value
     isOpen={$isOpen}
-    cx={extraClasses}
     {menuId}
     {disabled}
     {state}

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import SearchableSelect from '../searchable-select.svelte';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('SearchableSelect', () => {
   const options = [
@@ -263,5 +264,17 @@ describe('SearchableSelect', () => {
     await fireEvent.keyDown(select, { code: 'Tab' });
 
     expect(menu.parentElement).toHaveClass('invisible');
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(SearchableSelect, {
+      ...common,
+      cx: cxTestArguments,
+    });
+
+    expect(
+      screen.getByPlaceholderText('Select an option').parentElement
+        ?.parentElement
+    ).toHaveClass(cxTestResults);
   });
 });

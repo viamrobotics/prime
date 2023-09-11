@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import Banner from './banner.spec.svelte';
+import { cxTestArguments, cxTestResults } from './cx-test';
 
 describe('Banner', () => {
   it('Renders banner element with appropriate title, subtitle, message, and action text', () => {
@@ -62,5 +63,16 @@ describe('Banner', () => {
     await fireEvent.click(screen.getByLabelText('Dismiss notification'));
 
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('Renders with the passed cx classes', () => {
+    const { container } = render(Banner, {
+      variant: 'info',
+      extraClasses: cxTestArguments,
+    });
+
+    expect(container.querySelector('.border-info-medium')).toHaveClass(
+      cxTestResults
+    );
   });
 });

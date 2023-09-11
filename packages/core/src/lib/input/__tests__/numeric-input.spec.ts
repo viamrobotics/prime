@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { NumericInput } from '$lib';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Numeric Input', () => {
   it('Renders the input', () => {
@@ -32,5 +33,16 @@ describe('Numeric Input', () => {
       screen.getByPlaceholderText<HTMLInputElement>('Enter a number');
 
     expect(input.checkValidity()).toBe(false);
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(NumericInput, {
+      placeholder: 'Enter a number',
+      cx: cxTestArguments,
+    });
+
+    expect(screen.getByPlaceholderText('Enter a number')).toHaveClass(
+      cxTestResults
+    );
   });
 });
