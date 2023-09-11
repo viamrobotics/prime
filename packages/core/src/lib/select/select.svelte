@@ -34,8 +34,8 @@ export let disabled = false;
 /** The state of the select (info, warn, error, success), if any. */
 export let state: SelectState = 'none';
 
-const handleDisabled = preventHandler(disabled);
-const handleDisabledKeydown = preventKeyboardHandler(disabled);
+$: handleDisabled = preventHandler(disabled);
+$: handleDisabledKeydown = preventKeyboardHandler(disabled);
 
 $: isWarn = state === 'warn';
 $: isError = state === 'error';

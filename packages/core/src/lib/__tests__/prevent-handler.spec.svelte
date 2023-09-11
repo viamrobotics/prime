@@ -4,8 +4,8 @@ import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 export let prevent = false;
 export let allowedCodes = ['Tab'];
 
-const handleClick = preventHandler(prevent);
-const handleKeydown = preventKeyboardHandler(prevent, allowedCodes);
+$: handleClick = preventHandler(prevent);
+$: handleKeydown = preventKeyboardHandler(prevent, allowedCodes);
 </script>
 
 <button
@@ -15,4 +15,12 @@ const handleKeydown = preventKeyboardHandler(prevent, allowedCodes);
   on:keydown|capture={handleKeydown}
 >
   Prevented
+</button>
+
+<button
+  on:click={() => {
+    prevent = !prevent;
+  }}
+>
+  Toggle prevent
 </button>

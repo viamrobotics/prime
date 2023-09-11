@@ -10,7 +10,7 @@ describe('preventHandler', () => {
 
     component.$on('click', onClick);
 
-    const button = screen.getByText('Prevented');
+    const button = screen.getByRole('button', { name: /prevented/iu });
 
     await userEvent.click(button);
 
@@ -23,11 +23,30 @@ describe('preventHandler', () => {
 
     component.$on('click', onClick);
 
-    const button = screen.getByText('Prevented');
+    const button = screen.getByRole('button', { name: /prevented/iu });
 
     await userEvent.click(button);
 
     expect(onClick).toHaveBeenCalledTimes(0);
+  });
+
+  it('Emits the click event if the prevent was toggled', async () => {
+    const onClick = vi.fn();
+    const { component } = render(PreventHandler, { prevent: true });
+
+    // Use a button to toggle prevent because rerender completely destroys the component.
+    const togglePreventButton = screen.getByRole('button', {
+      name: /toggle prevent/iu,
+    });
+    await userEvent.click(togglePreventButton);
+
+    component.$on('click', onClick);
+
+    const button = screen.getByRole('button', { name: /prevented/iu });
+
+    await userEvent.click(button);
+
+    expect(onClick).toHaveBeenCalledOnce();
   });
 
   it('Emits the keydown event', async () => {
@@ -36,7 +55,9 @@ describe('preventHandler', () => {
 
     component.$on('keydown', onKeydown);
 
-    const button: HTMLButtonElement = screen.getByText('Prevented');
+    const button = screen.getByRole('button', {
+      name: /prevented/iu,
+    });
     button.focus();
 
     await userEvent.keyboard('[Enter]');
@@ -50,12 +71,36 @@ describe('preventHandler', () => {
 
     component.$on('keydown', onKeydown);
 
-    const button: HTMLButtonElement = screen.getByText('Prevented');
+    const button = screen.getByRole('button', {
+      name: /prevented/iu,
+    });
     button.focus();
 
     await userEvent.keyboard('[Enter]');
 
     expect(onKeydown).toHaveBeenCalledTimes(0);
+  });
+
+  it('Emits the keydown event if the prevent was toggled', async () => {
+    const onKeydown = vi.fn();
+    const { component } = render(PreventHandler, { prevent: true });
+
+    // Use a button to toggle prevent because rerender completely destroys the component.
+    const togglePreventButton = screen.getByRole('button', {
+      name: /toggle prevent/iu,
+    });
+    await userEvent.click(togglePreventButton);
+
+    component.$on('keydown', onKeydown);
+
+    const button = screen.getByRole('button', {
+      name: /prevented/iu,
+    });
+    button.focus();
+
+    await userEvent.keyboard('[Enter]');
+
+    expect(onKeydown).toHaveBeenCalledOnce();
   });
 
   it('Does not emit the keydown event when prevent is true if code is tab', async () => {
@@ -64,7 +109,9 @@ describe('preventHandler', () => {
 
     component.$on('keydown', onKeydown);
 
-    const button: HTMLButtonElement = screen.getByText('Prevented');
+    const button = screen.getByRole('button', {
+      name: /prevented/iu,
+    });
     button.focus();
 
     await userEvent.keyboard('[Tab]');
@@ -81,7 +128,9 @@ describe('preventHandler', () => {
 
     component.$on('keydown', onKeydown);
 
-    const button: HTMLButtonElement = screen.getByText('Prevented');
+    const button = screen.getByRole('button', {
+      name: /prevented/iu,
+    });
     button.focus();
 
     await userEvent.keyboard('[Space]');

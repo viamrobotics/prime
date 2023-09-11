@@ -3,9 +3,12 @@
  * immediate propagation of an event if `prevent` is true. Useful to layer
  * disabled behavior onto native event forwarding.
  *
+ * Note: it's important that the usage be reactive such that the handler 
+ * will be updated if disabled's value changes.
+ *
  * ```svelte
  * export let disabled = false;
- * const handleDisabled = preventHandler(disabled);
+ * $: handleDisabled = preventHandler(disabled);
  * <control on:input on:input|capture={handleDisabled} />
  * ```
  *
@@ -24,9 +27,12 @@ export const preventHandler = (prevent: boolean) => (event: Event) => {
  * immediate propagation of an event if `disabled` is true. Useful to layer
  * disabled behavior onto native keyboard event forwarding.
  *
+ * Note: it's important that the usage be reactive such that the handler 
+ * will be updated if disabled's value changes.
+ *
  * ```svelte
  * export let disabled = false;
- * const handleDisabled = preventDisabled(disabled);
+ * $: handleDisabled = preventKeyboardHandler(disabled);
  * <control on:keydown on:keydown|capture={handleDisabled} />
  * ```
  *

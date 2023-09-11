@@ -33,6 +33,11 @@ import NotificationContainer from '$lib/notification/notification-container.svel
 import { notify } from '$lib/notification/notify';
 
 let buttonClickedTimes = 0;
+let disabled = true;
+
+const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
+  disabled = event.detail.value === 'Disabled';
+};
 </script>
 
 <NotificationContainer />
@@ -149,11 +154,26 @@ let buttonClickedTimes = 0;
       Disabled
     </Button>
 
-    <Button variant="dark" icon="magnify">Dark</Button>
-    <Button variant="ghost" icon="credit-card-outline">Ghost</Button>
-    <Button variant="success" icon="earth">Success</Button>
-    <Button variant="danger" icon="download">Danger</Button>
-    <Button variant="outline-danger" icon="broadcast">Outline Danger</Button>
+    <Button
+      variant="dark"
+      icon="magnify">Dark</Button
+    >
+    <Button
+      variant="ghost"
+      icon="credit-card-outline">Ghost</Button
+    >
+    <Button
+      variant="success"
+      icon="earth">Success</Button
+    >
+    <Button
+      variant="danger"
+      icon="download">Danger</Button
+    >
+    <Button
+      variant="outline-danger"
+      icon="broadcast">Outline Danger</Button
+    >
   </div>
 
   <Button width="full">Full Width</Button>
@@ -618,7 +638,12 @@ let buttonClickedTimes = 0;
       </optgroup>
     </Select>
 
-    <Select disabled>
+    <Radio
+      options={['Disabled', 'Enabled']}
+      selected={disabled ? 'Disabled' : 'Enabled'}
+      on:input={handleToggleDisabled}
+    />
+    <Select {disabled}>
       <option selected>Disabled select</option>
       <option>That thing</option>
       <option>The other thing</option>
