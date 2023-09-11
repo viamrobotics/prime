@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import { ContextMenuItem, ContextMenuSeparator } from '$lib';
 import ContextMenu from './context-menu.spec.svelte';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Context menu', () => {
   it('Renders context menu item', () => {
@@ -58,5 +59,17 @@ describe('Context menu', () => {
     render(ContextMenu);
     expect(screen.getByText('hello')).toBeVisible();
     expect(screen.getByRole('separator')).toBeVisible();
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(ContextMenu, { cx: cxTestArguments });
+
+    expect(screen.getByRole('menu')).toHaveClass(cxTestResults);
+
+    expect(screen.getByText('hello').parentElement?.parentElement).toHaveClass(
+      cxTestResults
+    );
+
+    expect(screen.getByRole('separator')).toHaveClass(cxTestResults);
   });
 });

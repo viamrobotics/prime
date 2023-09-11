@@ -10,12 +10,14 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
+import type cx from 'classnames';
 import { Label, type LabelPosition } from '$lib';
 
 export let position: LabelPosition = 'top';
 export let disabled = false;
 export let required = false;
 export let detail = '';
+export let cx: cx.Argument = '';
 </script>
 
 <Label
@@ -23,6 +25,7 @@ export let detail = '';
   {disabled}
   {required}
   {detail}
+  {cx}
 >
   Name:
   <input

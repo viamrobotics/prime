@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { SliderInput } from '$lib';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Slider Input', () => {
   it('Renders the input', () => {
@@ -147,5 +148,16 @@ describe('Slider Input', () => {
 
     expect(onInput).toHaveBeenCalled();
     expect(onChange).toHaveBeenCalled();
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(SliderInput, {
+      placeholder: 'Enter a number',
+      cx: cxTestArguments,
+    });
+
+    expect(
+      screen.getByPlaceholderText('Enter a number').parentElement?.parentElement
+    ).toHaveClass(cxTestResults);
   });
 });

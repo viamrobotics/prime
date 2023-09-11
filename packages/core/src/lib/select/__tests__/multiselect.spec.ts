@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import Multiselect from '../multiselect.svelte';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Multiselect', () => {
   const options = [
@@ -362,5 +363,17 @@ describe('Multiselect', () => {
     expect(
       screen.queryByLabelText('Remove C.) Option')
     ).not.toBeInTheDocument();
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Multiselect, {
+      ...common,
+      cx: cxTestArguments,
+    });
+
+    expect(
+      screen.getByPlaceholderText('Select an option').parentElement
+        ?.parentElement?.parentElement
+    ).toHaveClass(cxTestResults);
   });
 });

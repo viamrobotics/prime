@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { Table } from '$lib';
 import TableWith3Cols from './table.spec.svelte';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Table', () => {
   it('Renders default variant', () => {
@@ -31,5 +32,20 @@ describe('Table', () => {
       expect(col).toBeVisible();
       expect(col).toHaveStyle(`width:${width}`);
     }
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(TableWith3Cols, { cx: cxTestArguments });
+
+    expect(screen.getByText('stuff')).toHaveClass(cxTestResults);
+    expect(screen.getByText('stuff').parentElement).toHaveClass(cxTestResults);
+
+    expect(screen.getByText('stuff').parentElement?.parentElement).toHaveClass(
+      cxTestResults
+    );
+
+    expect(
+      screen.getByText('stuff').parentElement?.parentElement?.parentElement
+    ).toHaveClass(cxTestResults);
   });
 });

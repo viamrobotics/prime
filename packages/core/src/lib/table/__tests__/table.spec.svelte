@@ -10,15 +10,20 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
+import type cx from 'classnames';
 import { Table, TableBody, TableRow, TableCell } from '$lib';
 
 export let cols: string[] = [];
+export let cx: cx.Argument = '';
 </script>
 
-<Table {cols}>
-  <TableBody>
-    <TableRow>
-      <TableCell>stuff</TableCell>
+<Table
+  {cols}
+  {cx}
+>
+  <TableBody {cx}>
+    <TableRow {cx}>
+      <TableCell {cx}>stuff</TableCell>
       <TableCell>stuffs</TableCell>
       <TableCell>stufffss</TableCell>
     </TableRow>
