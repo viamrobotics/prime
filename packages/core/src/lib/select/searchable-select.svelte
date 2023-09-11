@@ -23,13 +23,40 @@ import { selectControls } from './controls';
 import { createSearchableSelectDispatcher } from './dispatcher';
 import SelectInput from './select-input.svelte';
 
+/** The options the user should be allowed to search and select from. */
 export let options: string[] = [];
+
+/** The value of the search input or the currently selected option, if any. */
 export let value: string | undefined = undefined;
+
+/** Whether or not the select should be rendered as disabled and be non-operable. */
 export let disabled = false;
+
+/** The state of the select (info, warn, error, success), if any. */
 export let state: SelectState = 'none';
+
+/**
+ * How to handle sorting for the select:
+ * - `default` will sort results with a match at the beginning of a word first,
+ * followed by any other results with match, followed by results with no match.
+ * - 'reduce' will do the same as `default` but will filter our results with
+ * no match.
+ * - `off` will apply no sorting or filtering.
+ */
 export let sort: SortOptions = 'default';
+
+/**
+ * An optional call-to-action button to render at the bottom of the select menu
+ * that will emit the `buttonclick` event when actioned.
+ */
 export let button: { text: string; icon: string } | undefined = undefined;
+
+/** An optional heading to render at the top of the select menu. */
 export let heading = '';
+
+/** Additional CSS classes to pass to the select input. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 
 const dispatch = createSearchableSelectDispatcher<{
   /** When an option is selected, emit the value. */
@@ -117,16 +144,17 @@ $: {
 >
   <SelectInput
     bind:value
+    isOpen={$isOpen}
+    cx={extraClasses}
     {menuId}
     {disabled}
     {state}
-    isOpen={$isOpen}
     {...$$restProps}
     on:input={handleInput}
     on:keydown={handleKeyDown}
     on:focus={() => handleFocus(disabled)}
     on:mousemove={() => ($isKeyboardControlling = false)}
-    on:toggle={() => ($isOpen ? close() : handleFocus(disabled))}
+    on:click={() => ($isOpen ? close() : handleFocus(disabled))}
   />
 
   {#if !disabled}

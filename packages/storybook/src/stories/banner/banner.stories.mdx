@@ -4,6 +4,7 @@ import Banner from './banner.svelte';
 import BannerWithMessage from './banner-with-message.svelte';
 import BannerWithAction from './banner-with-action.svelte';
 import BannerKitchenSink from './banner-kitchen-sink.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Banner'
@@ -29,6 +30,7 @@ import BannerKitchenSink from './banner-kitchen-sink.svelte';
       control: { type: 'number', min: 0, max: 1 },
       table: { defaultValue: { summary: 1 } },
     },
+    cx,
   }}
 />
 

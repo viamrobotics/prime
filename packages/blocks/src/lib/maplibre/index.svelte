@@ -45,6 +45,9 @@ export let maxZoom = 22;
  */
 export let center: LngLat = { lng: -73.984_421, lat: 40.771_811_6 };
 
+/** The MapLibre Map instance */
+export let map: Map | undefined = undefined;
+
 type Events = {
   /** Fired after the map has been created. */
   create: Map;
@@ -57,7 +60,6 @@ type Events = {
 const dispatch = createEventDispatcher<Events>();
 const context = provideMapContext(center, zoom)
 
-let map: Map | undefined;
 let container: HTMLElement;
 let created = false;
 

@@ -22,6 +22,7 @@ export type InputState = 'info' | 'warn' | 'error' | 'none';
 
 <script lang="ts">
 import Icon from '$lib/icon/icon.svelte';
+import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 import cx from 'classnames';
 
 export let value: string | number | undefined = '';
@@ -38,9 +39,18 @@ export let state: InputState | undefined = 'none';
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
 
+/** Additional CSS classes to pass to the input. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
+
 $: isInfo = state === 'info';
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
+
+const handleDisabled = preventHandler(Boolean(disabled || readonly));
+const handleDisabledKeydown = preventKeyboardHandler(
+  Boolean(disabled || readonly)
+);
 
 $: icon = {
   info: 'information',
@@ -49,6 +59,22 @@ $: icon = {
   none: '',
 }[state ?? 'none'];
 
+$: defaultClasses =
+  !disabled &&
+  !readonly &&
+  !isError &&
+  'border-light hover:border-gray-6 focus:border-gray-9';
+
+$: readonlyClasses =
+  readonly && 'bg-light focus:border-gray-9 border-transparent';
+
+$: disabledClasses =
+  disabled &&
+  'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed select-none';
+
+$: errorClasses =
+  isError &&
+  'border-danger-dark focus:outline-danger-dark focus:outline-[1.5px] focus:-outline-offset-1';
 </script>
 
 <div class="relative w-full">
@@ -59,20 +85,20 @@ $: icon = {
     aria-invalid={isError ? true : undefined}
     class={cx(
       'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
-      {
-        'border-light hover:border-gray-6 focus:border-gray-9':
-          !disabled && !readonly && !isError,
-        'bg-light focus:border-gray-9 border-transparent': readonly,
-        'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed select-none':
-          disabled,
-        'border-danger-dark focus:outline-danger-dark focus:outline-[1.5px] focus:-outline-offset-1':
-          isError,
-      }
+      defaultClasses,
+      readonlyClasses,
+      disabledClasses,
+      errorClasses,
+      extraClasses
     )}
     bind:value
     bind:this={input}
     on:input
+    on:input|capture={handleDisabled}
+    on:change
+    on:change|capture={handleDisabled}
     on:keydown
+    on:keydown|capture={handleDisabledKeydown}
     on:blur
   />
 

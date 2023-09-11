@@ -1,5 +1,6 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { Tabs } from '@viamrobotics/prime-core';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Tabs'
@@ -20,6 +21,7 @@ import { Tabs } from '@viamrobotics/prime-core';
     'on:input': {
       description: 'Event fired when tab is selected',
     },
+    cx,
   }}
 />
 

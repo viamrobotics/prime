@@ -1,9 +1,6 @@
 import type { OptionalConfig } from 'tailwindcss/types/config';
 
 export const theme = {
-  zIndex: {
-    max: '1000',
-  },
   extend: {
     fontFamily: {
       'space-grotesk':

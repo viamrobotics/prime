@@ -36,12 +36,19 @@ export let variant: ContextMenuItemVariant = 'primary';
 
 /** The text displayed. */
 export let label: string;
+
+/** Additional CSS classes to pass to the button. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <button
   role="menuitem"
   aria-labelledby={label}
-  class="flex w-full items-center gap-1 px-2 py-1.5 text-left hover:bg-light"
+  class={cx(
+    'hover:bg-light flex w-full items-center gap-1 px-2 py-1.5 text-left',
+    extraClasses
+  )}
   on:click={() => dispatch('select', { value: label })}
 >
   {#if icon !== ''}

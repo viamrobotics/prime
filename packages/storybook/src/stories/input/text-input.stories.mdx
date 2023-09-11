@@ -1,5 +1,6 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { TextInput } from '@viamrobotics/prime-core';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Input/Text Input'
@@ -30,6 +31,7 @@ import { TextInput } from '@viamrobotics/prime-core';
       options: ['text', 'email', 'password'],
       table: { defaultValue: { summary: 'text' } },
     },
+    cx,
   }}
 />
 

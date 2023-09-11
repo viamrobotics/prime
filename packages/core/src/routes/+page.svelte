@@ -33,6 +33,11 @@ import NotificationContainer from '$lib/notification/notification-container.svel
 import { notify } from '$lib/notification/notify';
 
 let buttonClickedTimes = 0;
+let disabled = true;
+
+const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
+  disabled = event.detail.value === 'Disabled';
+};
 </script>
 
 <NotificationContainer />
@@ -134,6 +139,41 @@ let buttonClickedTimes = 0;
     <Button variant="success">Success</Button>
     <Button variant="danger">Danger</Button>
     <Button variant="outline-danger">Outline Danger</Button>
+  </div>
+
+  <div class="flex gap-4">
+    <Button icon="camera-outline">Primary</Button>
+    <Button
+      disabled
+      icon="cog"
+      on:click={() => {
+        // eslint-disable-next-line no-console
+        console.log('Uh oh, should not be called!');
+      }}
+    >
+      Disabled
+    </Button>
+
+    <Button
+      variant="dark"
+      icon="magnify">Dark</Button
+    >
+    <Button
+      variant="ghost"
+      icon="credit-card-outline">Ghost</Button
+    >
+    <Button
+      variant="success"
+      icon="earth">Success</Button
+    >
+    <Button
+      variant="danger"
+      icon="download">Danger</Button
+    >
+    <Button
+      variant="outline-danger"
+      icon="broadcast">Outline Danger</Button
+    >
   </div>
 
   <Button width="full">Full Width</Button>
@@ -329,6 +369,10 @@ let buttonClickedTimes = 0;
 
   <div class="flex gap-4">
     <Input
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Input input', event);
+      }}
       name="name"
       placeholder="Enter your name"
     />
@@ -371,6 +415,10 @@ let buttonClickedTimes = 0;
     <TextInput
       name="name"
       placeholder="Enter your name"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('TextInput input', event);
+      }}
     />
 
     <TextInput
@@ -392,6 +440,10 @@ let buttonClickedTimes = 0;
     <NumericInput
       name="number"
       placeholder="Enter a number"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('NumericInput input', event);
+      }}
     />
 
     <NumericInput
@@ -405,18 +457,28 @@ let buttonClickedTimes = 0;
   <h2 class="text-xl">Slider Input</h2>
   <div class="flex gap-4">
     <SliderInput
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('SliderInput input', event);
+      }}
+      on:change={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('SliderInput change', event);
+      }}
       placeholder="Slide to select a number"
       name="slider"
     />
 
     <SliderInput
-      placeholder="Slide to select a number"
+      placeholder="Readonly"
+      readonly
       name="slider"
     />
 
     <SliderInput
-      placeholder="Slide to select a number"
+      placeholder="Disabled"
       name="slider"
+      disabled
     />
   </div>
 
@@ -576,7 +638,12 @@ let buttonClickedTimes = 0;
       </optgroup>
     </Select>
 
-    <Select disabled>
+    <Radio
+      options={['Disabled', 'Enabled']}
+      selected={disabled ? 'Disabled' : 'Enabled'}
+      on:input={handleToggleDisabled}
+    />
+    <Select {disabled}>
       <option selected>Disabled select</option>
       <option>That thing</option>
       <option>The other thing</option>
@@ -827,23 +894,36 @@ let buttonClickedTimes = 0;
     </Tooltip>
   </div>
 
-    <!-- Vector Input -->
-    <h1 class="text-2xl">Vector Input</h1>
-    <div class="flex gap-4">
-      <VectorInput
-      type="number"
-      step={1}
-      labels={['x', 'y', 'z', 'd']}
-      placeholders={{
-        x: '0',
-        y: '0',
-        z: '0'
-      }}
-      values={{
-        x: 0,
-        y: 0,
-        z: 0
-      }}
-    />
-    </div>
+  <!-- Vector Input -->
+  <h1 class="text-2xl">Vector Input</h1>
+  <VectorInput
+    on:input={(event) => {
+      // eslint-disable-next-line no-console
+      console.log('VectorInput input', event);
+    }}
+  />
+
+  <VectorInput
+    type="number"
+    step={10}
+    labels={['x', 'y', 'z', 'd']}
+    placeholders={{
+      x: '0',
+      y: '0',
+      z: '0',
+      // eslint-disable-next-line id-length
+      d: '0',
+    }}
+    values={{
+      x: 0,
+      y: 0,
+      z: 0,
+      // eslint-disable-next-line id-length
+      d: 0,
+    }}
+    on:input={(event) => {
+      // eslint-disable-next-line no-console
+      console.log('VectorInput input', event);
+    }}
+  />
 </div>
