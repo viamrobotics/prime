@@ -144,20 +144,13 @@ const handlePointerDown = async (event: PointerEvent) => {
   numberDragTooltip.recalculateStyle();
 };
 
-const handleInput = (event: Event) => {
-  const next = parseNumericInputValue(
-    (event.target as HTMLInputElement).value,
-    type
-  );
-
+const handleInput = () => {
+  const next = parseNumericInputValue(input?.value, type);
   value = next;
 };
 
-const handleChange = (event: Event) => {
-  const next = parseNumericInputValue(
-    (event.target as HTMLInputElement).value,
-    type
-  );
+const handleChange = () => {
+  const next = parseNumericInputValue(input?.value, type);
 
   value = next;
 
