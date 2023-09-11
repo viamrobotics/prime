@@ -40,11 +40,14 @@ export { extraClasses as cx };
 </script>
 
 <label
-  class={cx('flex w-full', {
-    'flex-col gap-1': position === 'top',
-    'items-center gap-2': position === 'left',
-    extraClasses,
-  })}
+  class={cx(
+    'flex w-full',
+    {
+      'flex-col gap-1': position === 'top',
+      'items-center gap-2': position === 'left',
+    },
+    extraClasses
+  )}
 >
   <span
     class={cx('flex text-xs', {

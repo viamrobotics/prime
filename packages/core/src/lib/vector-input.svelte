@@ -66,7 +66,7 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
 
 <div class={cx('flex items-end gap-1.5', extraClasses)}>
   {#each labels as label (label)}
-    <Label>
+    <Label cx="max-w-[5.5rem]">
       {label}
       <SliderInput
         slot="input"
@@ -75,7 +75,6 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
         {step}
         {readonly}
         placeholder={placeholders[label]}
-        cx="max-w-[5.5rem]"
         value={values[label]}
         incrementor={readonly ? '' : 'slider'}
         on:blur={() => handleInput(label)}

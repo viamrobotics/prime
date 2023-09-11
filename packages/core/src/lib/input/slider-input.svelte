@@ -176,7 +176,7 @@ const handleChange = () => {
     {readonly}
     {value}
     {...$$restProps}
-    style="padding-left: 0.75rem;"
+    cx="pl-3"
     bind:input
     on:blur
     on:keydown
