@@ -47,6 +47,7 @@ const handleMapCreate = (event: CustomEvent<Map>) => {
     class='relative grow'
     {minPitch}
     maxPitch={$view === '3D' ? maxPitch : minPitch}
+    minZoom={6}
     on:create={handleMapCreate}
   >
     <Nav

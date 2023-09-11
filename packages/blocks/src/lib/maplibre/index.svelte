@@ -31,6 +31,12 @@ export let maxPitch = 60;
 /** The initial map zoom. */
 export let zoom = 9;
 
+/** The maximum zoom level of the map (0-24). */
+export let minZoom = 0;
+
+/** The maximum zoom level of the map (0-24). */
+export let maxZoom = 22;
+
 /**
  * The initial map center.
  * 
@@ -93,6 +99,8 @@ onMount(() => {
     zoom,
     minPitch,
     maxPitch,
+    minZoom,
+    maxZoom
   });
 
   context.map.set(map);

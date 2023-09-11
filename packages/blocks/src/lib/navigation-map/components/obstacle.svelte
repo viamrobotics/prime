@@ -3,9 +3,12 @@
 
 import { theme } from '@viamrobotics/prime-core/theme';
 import * as THREE from 'three';
-import { T } from '@threlte/core';
+import { AxesHelper } from 'trzy';
+import { T, extend } from '@threlte/core';
 import type { Obstacle } from '$lib';
 import { view, hovered } from '../stores';
+
+extend({ AxesHelper })
 
 /** An obstacle to render. */
 export let obstacle: Obstacle;
@@ -24,9 +27,14 @@ $: material?.color.set($hovered === obstacle.name
   <T.Mesh
     name={name}
     obstacle={name}
-    lnglat={obstacle.location}
+    userData.lngLat={obstacle.location}
     rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
+    on:pointerover={() => ($hovered = name)}
+    on:pointerout={() => ($hovered = null)}
   >
+
+    <!-- <T.AxesHelper args={[1, 0.1]} /> -->
+
     {#if geometry.type === 'box'}
       {#if $view === '3D'}
         <T.BoxGeometry
