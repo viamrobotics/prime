@@ -10,12 +10,29 @@ export const style: StyleSpecification = {
       attribution: '&copy; OpenStreetMap Contributors',
       maxzoom: 19,
     },
+    satellite: {
+      type: 'raster',
+      tiles: [
+        'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+      attribution: '&copy; USGS National Map Services',
+      maxzoom: 19,
+    },
   },
   layers: [
     {
       id: 'osm',
       type: 'raster',
       source: 'osm',
+    },
+    {
+      id: 'satellite',
+      type: 'raster',
+      source: 'satellite',
+      layout: {
+        visibility: 'none',
+      },
     },
   ],
 };

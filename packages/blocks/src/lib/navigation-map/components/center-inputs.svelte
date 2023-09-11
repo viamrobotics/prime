@@ -11,7 +11,7 @@ const handleInput = (event: CustomEvent<LngLat>) => {
 
 </script>
 
-<div class='absolute right-10 flex flex-wrap gap-y-2 items-end justify-between py-2.5 w-60 px-4 z-max'>
+<div class='flex flex-wrap gap-y-2 items-end justify-between w-60'>
   <LngLatInput
     lng={$mapCenter.lng}
     lat={$mapCenter.lat}

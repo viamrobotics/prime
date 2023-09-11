@@ -1,7 +1,7 @@
 <script lang='ts'>
 
 import * as THREE from 'three';
-import { T, useThrelte, useFrame } from '@threlte/core';
+import { T, useThrelte, useRender } from '@threlte/core';
 import { view, obstacles } from '../stores';
 import ObstacleGeometries from './obstacle.svelte';
 import { useMapLibre, useMapLibreEvent } from '$lib/maplibre/hooks';
@@ -25,7 +25,7 @@ useMapLibreEvent('move', () => {
   setFrameloops(map)
 });
 
-useFrame(() => {
+useRender(() => {
   renderer.clear();
 
   axes.visible = scenes.length > 0

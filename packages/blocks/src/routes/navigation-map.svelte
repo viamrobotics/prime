@@ -73,7 +73,7 @@ const obstacles = [
 </script>
 
 <div class="px-12">
-  <div class='relative w-full h-[800px] sm:h-auto sm:aspect-video border border-gray-200'>
+  <div class='relative p-4 w-full h-[800px] sm:h-auto sm:aspect-video border border-gray-200'>
     <NavigationMap
       environment='configure'
       tab='Obstacles'
