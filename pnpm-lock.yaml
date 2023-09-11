@@ -12,7 +12,7 @@ importers:
     dependencies:
       '@threlte/extras':
         specifier: '>=5'
-        version: 5.2.0(svelte@4.2.0)(three@0.155.0)
+        version: 5.6.2(svelte@4.2.0)(three@0.155.0)
       maplibre-gl:
         specifier: ^3.3.0
         version: 3.3.0
@@ -4622,8 +4622,8 @@ packages:
       three: 0.155.0
     dev: true
 
-  /@threlte/extras@5.2.0(svelte@4.2.0)(three@0.155.0):
-    resolution: {integrity: sha512-hAijgQBK37gTpp2wGiSUQEb5y1+9x/V2S9kOCUiSb3A2O9+VlbDsjY4kYV1yck2nnewtlJf26mtRAyexrgjKoQ==}
+  /@threlte/extras@5.6.2(svelte@4.2.0)(three@0.155.0):
+    resolution: {integrity: sha512-7VDUtAEji3w0mlmgLwidKCnRwgD9HFaBV4INa4M1oZpXPToXYr4L1wu8agsCSr79uag6dE8whQ9tJ8qH77OzUQ==}
     peerDependencies:
       svelte: '>=4'
       three: '>=0.133'
