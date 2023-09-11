@@ -9,6 +9,10 @@ export let isOpen: boolean;
 export let disabled: boolean;
 export let state: SelectState;
 
+/** Additional CSS classes to pass to the  input. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
+
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
 
@@ -24,10 +28,12 @@ $: disabledClasses =
 
 $: warnClasses =
   isWarn &&
+  !disabled &&
   'border-warning-bright group-hover:outline-warning-bright group-focus:outline-warning-bright group-hover:outline-[1.5px] group-hover:-outline-offset-1 group-focus:outline-[1.5px] group-focus:-outline-offset-1';
 
 $: errorClasses =
   isError &&
+  !disabled &&
   'border-danger-dark group-hover:outline-danger-dark group-hover:outline-[1.5px] group-hover:-outline-offset-1 group-focus:outline-danger-dark group-focus:outline-[1.5px] group-focus:-outline-offset-1';
 </script>
 
@@ -45,7 +51,8 @@ $: errorClasses =
       defaultClasses,
       disabledClasses,
       warnClasses,
-      errorClasses
+      errorClasses,
+      extraClasses
     )}
     {...$$restProps}
     on:input

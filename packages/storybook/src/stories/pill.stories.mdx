@@ -1,5 +1,6 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { Pill } from '@viamrobotics/prime-core';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Pill'
@@ -23,6 +24,7 @@ import { Pill } from '@viamrobotics/prime-core';
     'on:remove': {
       description: 'Event fired when x icon is clicked',
     },
+    cx,
   }}
 />
 

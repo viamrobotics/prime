@@ -13,6 +13,7 @@ export let state: SelectState = 'none';
 export let sort: SortOptions = 'default';
 export let button: { text: string; icon: string } | undefined = undefined;
 export let heading = '';
+export let cx = '';
 </script>
 
 <Label>
@@ -26,5 +27,6 @@ export let heading = '';
     {sort}
     {button}
     {heading}
+    {cx}
   />
 </Label>

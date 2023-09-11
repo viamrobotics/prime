@@ -4,6 +4,7 @@ import {
   ContextMenuSeparator,
 } from '@viamrobotics/prime-core';
 import ContextMenu from './context-menu.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Context menu'
@@ -23,6 +24,7 @@ import ContextMenu from './context-menu.svelte';
       control: { type: 'input' },
       table: { defaultValue: { summary: '' } },
     },
+    cx,
   }}
 />
 

@@ -33,20 +33,28 @@ export let disabled = false;
 
 /** Additional detail text to render after the default slot. */
 export let detail = '';
+
+/** Additional CSS classes to pass to the label. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <label
-  class={cx('flex w-full', {
-    'flex-col gap-1': position === 'top',
-    'items-center gap-2': position === 'left',
-  })}
+  class={cx(
+    'flex w-full',
+    {
+      'flex-col gap-1': position === 'top',
+      'items-center gap-2': position === 'left',
+    },
+    extraClasses
+  )}
 >
   <span
     class={cx('flex text-xs', {
       'inline whitespace-nowrap': position === 'left',
       'text-subtle-1': !disabled,
-      'pointer-events-none text-disabled-dark': disabled,
-      'after:ml-1 after:text-danger-dark after:content-["*"]': required,
+      'text-disabled-dark cursor-not-allowed': disabled,
+      'after:text-danger-dark after:ml-1 after:content-["*"]': required,
     })}
   >
     <slot />

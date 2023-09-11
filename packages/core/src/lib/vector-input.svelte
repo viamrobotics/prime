@@ -8,16 +8,8 @@ For numeric user inputs that require easy adjustment.
     type="number"
     step={1}
     labels={['x', 'y', 'z']}
-    placeholders={{
-      x: '0',
-      y: '0',
-      z: '0'
-    }}
-    values={{
-      x: 0,
-      y: 0,
-      z: 0
-    }}
+    placeholders={{ x: '0', y: '0', z: '0' }}
+    values={{ x: 0, y: 0, z: 0 }}
   />
 ```
 -->
@@ -25,6 +17,7 @@ For numeric user inputs that require easy adjustment.
 
 <script lang="ts">
 import { createEventDispatcher } from 'svelte';
+import cx from 'classnames';
 import { Label, SliderInput } from '$lib';
 
 /** Whether the inputs are readonly. */
@@ -45,6 +38,10 @@ export let placeholders: Record<string, string> = { x: '0', y: '0', z: '0' };
 /** The input values. */
 export let values: Record<string, number> = {};
 
+/** Additional CSS classes to pass to the input container. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
+
 const dispatch = createEventDispatcher<{
   /** Fires when an input event occurs. */
   input: Record<string, number>;
@@ -54,7 +51,6 @@ const inputs: Record<string, HTMLInputElement> = {};
 
 const handleInput = (label: string) => {
   const value = inputs[label]?.valueAsNumber;
-
   if (value !== undefined && !Number.isNaN(value)) {
     values[label] = value;
     dispatch('input', values);
@@ -68,9 +64,9 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
 };
 </script>
 
-<div class="flex items-end gap-1.5">
-  {#each labels as label, index (label)}
-    <Label>
+<div class={cx('flex items-end gap-1.5', extraClasses)}>
+  {#each labels as label (label)}
+    <Label cx="max-w-[5.5rem]">
       {label}
       <SliderInput
         slot="input"
@@ -78,8 +74,7 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
         {type}
         {step}
         {readonly}
-        placeholder={placeholders[index]}
-        class="max-w-[5.5rem]"
+        placeholder={placeholders[label]}
         value={values[label]}
         incrementor={readonly ? '' : 'slider'}
         on:blur={() => handleInput(label)}

@@ -22,7 +22,7 @@ describe('Label', () => {
   it('Renders the label text as disabled', () => {
     render(Label, { disabled: true });
     expect(screen.getByText('Name:')).toHaveClass(
-      'text-xs pointer-events-none text-disabled-dark'
+      'text-xs cursor-not-allowed text-disabled-dark'
     );
   });
 

@@ -15,6 +15,7 @@ export let button: { text: string; icon: string } | undefined = undefined;
 export let heading = '';
 export let clearable = false;
 export let showPills = false;
+export let cx = '';
 </script>
 
 <Label>
@@ -30,5 +31,6 @@ export let showPills = false;
     {heading}
     {clearable}
     {showPills}
+    {cx}
   />
 </Label>

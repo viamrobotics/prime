@@ -15,15 +15,15 @@
 <script lang="ts">
 import cx from 'classnames';
 
-/**
- * The badge text.
- */
+/** The badge text. */
 export let label = '';
 
-/**
- * The color theme of the badge.
- */
+/** The color theme of the badge. */
 export let variant: 'green' | 'orange' | 'red' | 'gray' | 'blue' = 'gray';
+
+/** Additional CSS classes to pass to the badge. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <small
@@ -35,6 +35,7 @@ export let variant: 'green' | 'orange' | 'red' | 'gray' | 'blue' = 'gray';
     'border-danger-medium bg-danger-light text-danger-dark': variant === 'red',
     'border-medium bg-disabled-light text-default': variant === 'gray',
     'border-info-medium bg-info-light text-info-dark': variant === 'blue',
+    extraClasses,
   })}
 >
   {label}

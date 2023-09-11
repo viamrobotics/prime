@@ -2,6 +2,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { Icon } from '@viamrobotics/prime-core';
 import WithStyles from './with-styles.svelte';
 import AllIcons from './all-icons.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Icon'
@@ -23,6 +24,7 @@ import AllIcons from './all-icons.svelte';
       options: ['color:red', 'color:blue'],
       table: { defaultValue: { summary: 'color:red' } },
     },
+    cx,
   }}
 />
 
