@@ -1,6 +1,6 @@
 <script lang='ts'>
 
-import { Radio } from '@viamrobotics/prime-core';
+import { Button, Radio } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
 import { MapLibre } from '$lib';
 import { view, cameraMatrix } from '../stores';
@@ -16,37 +16,45 @@ export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
 const minPitch = 0;
 const maxPitch = 60;
 
+let map: Map | undefined;
+let satellite = false
+
 const handleViewSelect = (event: CustomEvent<{ value: string }>) => {
   $view = event.detail.value as '2D' | '3D';
 };
 
-const handleMapCreate = (event: CustomEvent<Map>) => {
-  const currentMap = event.detail
+const toggleTileset = () => {
+  satellite = !satellite
+  map?.setLayoutProperty('satellite', 'visibility', satellite ? 'visible' : 'none')
+}
 
-  currentMap.addLayer({
+const handleMapCreate = () => {
+  map?.addLayer({
     id: 'obstacle-layer',
     type: 'custom',
     renderingMode: '3d',
     render (_ctx, viewProjectionMatrix) {
       cameraMatrix.fromArray(viewProjectionMatrix);
-      currentMap.triggerRepaint();
+      // This is necessary to lock-step the two canvases.
+      map?.triggerRepaint();
     },
   });
 
   return () => {
-    if (currentMap.getLayer('obstacle-layer')) {
-      currentMap.removeLayer('obstacle-layer');
+    if (map?.getLayer('obstacle-layer')) {
+      map?.removeLayer('obstacle-layer');
     }
   };
 };
 
 </script>
 
-<div class='w-full h-full sm:flex items-stretch'>
+<div class='relative w-full h-full sm:flex items-stretch'>
   <MapLibre
     class='relative grow'
     {minPitch}
     maxPitch={$view === '3D' ? maxPitch : minPitch}
+    bind:map
     on:create={handleMapCreate}
   >
     <Nav
@@ -59,10 +67,16 @@ const handleMapCreate = (event: CustomEvent<Map>) => {
     <RobotMarker lngLat={baseGeoPose} />
     <Waypoints />
     <ObstacleLayer slot='layer' />
-    <CenterInputs />
 
+    <div class='absolute right-12 top-2.5 z-10 flex gap-2'>
+      <Button on:click={toggleTileset}>
+        {satellite ? 'Map' : 'Satellite'}
+      </Button>
+      <CenterInputs />
+    </div> 
+    
     {#if localStorage.getItem('prime_debug_3d')}
-      <div class='absolute bottom-12 right-3 z-max'>
+      <div class='absolute bottom-12 right-3 z-10'>
         <Radio
           options={['2D', '3D']}
           selected={$view}

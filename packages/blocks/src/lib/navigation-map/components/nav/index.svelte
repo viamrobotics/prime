@@ -18,7 +18,7 @@ const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
 </script>
 
 <nav class='sm:h-full sm:w-[350px]'>
-  <ol class='ml-4 mt-4 mb-2 flex flex-wrap items-center'>
+  <ol class='mb-2 flex flex-wrap items-center'>
     {#each $tabs as tabTitle}
       {@const selected = $tab === tabTitle}
       <li>
@@ -38,7 +38,7 @@ const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
   {#if $tab === NavigationTab.Waypoints}
     <ul
       on:mouseleave={() => ($hovered = null)}
-      class='px-4 py-2 sm:h-[calc(100%-30px)] overflow-y-scroll'
+      class='pr-4 py-2 sm:h-[calc(100%-38px)] overflow-y-scroll'
     >
       <WaypointsTab
         on:add-waypoint
@@ -48,14 +48,14 @@ const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
   {:else if $tab === NavigationTab.Obstacles}
     <ul
       on:mouseleave={() => ($hovered = null)}
-      class='px-4 py-2 sm:h-[calc(100%-30px)] overflow-y-scroll'
+      class='pr-4 py-2 sm:h-[calc(100%-38px)] overflow-y-scroll'
     >
       <ObstaclesTab
         on:update={handleUpdateObstacle}
       />
     </ul>
   {:else}
-    <div class='px-4 py-2 sm:h-[calc(100%-30px)] overflow-y-scroll'>
+    <div class='pr-4 py-2 sm:h-[calc(100%-38px)] overflow-y-scroll'>
       <slot name='tab' />
     </div>
   {/if}
