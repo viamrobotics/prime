@@ -47,7 +47,7 @@ const handleClick = () => {
     role="button"
     aria-label="Toggle Content"
     tabindex="0"
-    class="flex w-full cursor-pointer items-center justify-between border border-light bg-white px-4 py-2 text-default"
+    class="border-light text-default flex w-full cursor-pointer items-center justify-between border bg-white px-4 py-2"
     on:click={handleClick}
     on:keyup|preventDefault={handleClick}
   >

@@ -1,5 +1,6 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import WithInput from './with-input.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Label'
@@ -20,6 +21,7 @@ import WithInput from './with-input.svelte';
       control: { type: 'boolean' },
       table: { defaultValue: { summary: false } },
     },
+    cx,
   }}
 />
 

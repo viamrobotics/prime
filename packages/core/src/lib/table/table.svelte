@@ -31,7 +31,7 @@ export let variant: TableVariant = 'auto';
  */
 export let cols: string[] = [];
 
-/** Additional CSS classes to pass to the button. */
+/** Additional CSS classes to pass to the table. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 </script>

@@ -14,7 +14,7 @@ A table header.
 <script lang="ts">
 import cx from 'classnames';
 
-/** Additional CSS classes to pass to the button. */
+/** Additional CSS classes to pass to the thead. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 </script>

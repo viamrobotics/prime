@@ -2,6 +2,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { Select } from '@viamrobotics/prime-core';
 import SelectWithOptions from './select-with-options.svelte';
 import LabeledSelect from './labeled-select.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Select/Select'
@@ -22,6 +23,7 @@ import LabeledSelect from './labeled-select.svelte';
       options: ['warn', 'error', 'none'],
       table: { defaultValue: { summary: 'none' } },
     },
+    cx,
   }}
 />
 

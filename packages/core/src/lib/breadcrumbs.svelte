@@ -10,12 +10,21 @@ A navigation aid that helps users understand the relationships between parents a
 <svelte:options immutable />
 
 <script lang="ts">
+import cx from 'classnames';
+
 /** A list of each part. */
 export let crumbs: [string, ...string[]];
+
+/** Additional CSS classes to pass to the breadcrumbs container. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <div
-  class="border-medium bg-light text-default inline-flex gap-2.5 rounded-full border px-2.5 py-px"
+  class={cx(
+    'border-medium bg-light text-default inline-flex gap-2.5 rounded-full border px-2.5 py-px',
+    extraClasses
+  )}
 >
   {#each crumbs as crumb, index (crumb)}
     <small class="text-xs">

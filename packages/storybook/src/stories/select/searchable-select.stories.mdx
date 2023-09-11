@@ -1,6 +1,7 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { SearchableSelect } from '@viamrobotics/prime-core';
 import LabeledSelect from './labeled-searchable-select.svelte';
+import { cx } from '../../lib/cx-control';
 
 <Meta
   title='Elements/Select/SearchableSelect'
@@ -48,6 +49,7 @@ import LabeledSelect from './labeled-searchable-select.svelte';
       control: { type: 'text' },
       table: { defaultValue: { summary: 'Search results' } },
     },
+    cx,
   }}
 />
 

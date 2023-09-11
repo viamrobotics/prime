@@ -15,7 +15,7 @@ A table body.
 <script lang="ts">
 import cx from 'classnames';
 
-/** Additional CSS classes to pass to the button. */
+/** Additional CSS classes to pass to the td. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 </script>

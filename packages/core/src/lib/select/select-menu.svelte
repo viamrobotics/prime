@@ -11,6 +11,10 @@ export let open = false;
 export let element: HTMLUListElement;
 export let button: { text: string; icon: string } | undefined = undefined;
 export let heading = '';
+
+/** Additional CSS classes to pass to the menu. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <div
@@ -18,7 +22,8 @@ export let heading = '';
     'border-gray-9 z-max absolute left-0 right-0 top-full mt-1 w-full overflow-hidden border bg-white drop-shadow-md',
     {
       invisible: !open,
-    }
+    },
+    extraClasses
   )}
 >
   {#if heading}
