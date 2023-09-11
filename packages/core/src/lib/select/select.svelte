@@ -38,8 +38,8 @@ export let state: SelectState = 'none';
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-const handleDisabled = preventHandler(disabled);
-const handleDisabledKeydown = preventKeyboardHandler(disabled);
+$: handleDisabled = preventHandler(disabled);
+$: handleDisabledKeydown = preventKeyboardHandler(disabled);
 
 $: isWarn = state === 'warn';
 $: isError = state === 'error';

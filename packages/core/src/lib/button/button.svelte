@@ -44,7 +44,7 @@ export let width: 'full' | 'default' = 'default';
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-const handleDisabled = preventHandler(disabled);
+$: handleDisabled = preventHandler(disabled);
 </script>
 
 <button
