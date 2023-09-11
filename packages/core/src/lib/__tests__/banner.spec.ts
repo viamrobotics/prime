@@ -68,7 +68,7 @@ describe('Banner', () => {
   it('Renders with the passed cx classes', () => {
     const { container } = render(Banner, {
       variant: 'info',
-      cx: cxTestArguments,
+      extraClasses: cxTestArguments,
     });
 
     expect(container.querySelector('.border-info-medium')).toHaveClass(

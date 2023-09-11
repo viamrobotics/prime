@@ -18,14 +18,14 @@ import type { BannerVariant } from '$lib/banner.svelte';
 export let variant: BannerVariant;
 export let progress = 1;
 export let exitable = false;
-export let cx: cx.Argument = '';
+export let extraClasses: cx.Argument = '';
 </script>
 
 <Banner
   {variant}
   {progress}
   {exitable}
-  {cx}
+  cx={extraClasses}
   on:close
 >
   <svelte:fragment slot="title">This is the title.</svelte:fragment>

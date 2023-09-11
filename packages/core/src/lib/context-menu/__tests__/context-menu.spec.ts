@@ -62,7 +62,7 @@ describe('Context menu', () => {
   });
 
   it('Renders with the passed cx classes', () => {
-    render(ContextMenu, { cx: cxTestArguments });
+    render(ContextMenu, { extraClasses: cxTestArguments });
 
     expect(screen.getByRole('menu')).toHaveClass(cxTestResults);
 

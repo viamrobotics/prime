@@ -35,7 +35,7 @@ describe('Table', () => {
   });
 
   it('Renders with the passed cx classes', () => {
-    render(TableWith3Cols, { cx: cxTestArguments });
+    render(TableWith3Cols, { extraClasses: cxTestArguments });
 
     expect(screen.getByText('stuff')).toHaveClass(cxTestResults);
     expect(screen.getByText('stuff').parentElement).toHaveClass(cxTestResults);

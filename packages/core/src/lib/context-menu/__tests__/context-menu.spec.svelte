@@ -12,14 +12,14 @@
 <script lang="ts">
 import type cx from 'classnames';
 import { ContextMenu, ContextMenuItem, ContextMenuSeparator } from '$lib';
-export let cx: cx.Argument = '';
+export let extraClasses: cx.Argument = '';
 </script>
 
-<ContextMenu {cx}>
+<ContextMenu cx={extraClasses}>
   <ContextMenuItem
     label="hello"
     icon="plus"
-    {cx}
+    cx={extraClasses}
   />
-  <ContextMenuSeparator {cx} />
+  <ContextMenuSeparator cx={extraClasses} />
 </ContextMenu>

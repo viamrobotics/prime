@@ -17,7 +17,7 @@ export let position: LabelPosition = 'top';
 export let disabled = false;
 export let required = false;
 export let detail = '';
-export let cx: cx.Argument = '';
+export let extraClasses: cx.Argument = '';
 </script>
 
 <Label
@@ -25,7 +25,7 @@ export let cx: cx.Argument = '';
   {disabled}
   {required}
   {detail}
-  {cx}
+  cx={extraClasses}
 >
   Name:
   <input

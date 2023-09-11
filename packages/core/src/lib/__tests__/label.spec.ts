@@ -48,7 +48,7 @@ describe('Label', () => {
   });
 
   it('Renders with the passed cx classes', () => {
-    render(Label, { cx: cxTestArguments });
+    render(Label, { extraClasses: cxTestArguments });
     expect(screen.getByText('Name:').parentElement).toHaveClass(cxTestResults);
   });
 });
