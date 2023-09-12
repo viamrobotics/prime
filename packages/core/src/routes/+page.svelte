@@ -3,7 +3,6 @@ import Badge from '$lib/badge.svelte';
 import Breadcrumbs from '$lib/breadcrumbs.svelte';
 import Button from '$lib/button/button.svelte';
 import IconButton from '$lib/button/icon-button.svelte';
-import Collapse from '$lib/collapse.svelte';
 import ContextMenu from '$lib/context-menu/context-menu.svelte';
 import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
 import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
@@ -205,69 +204,6 @@ const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
       }}
     />
   </div>
-
-  <!-- Collapse -->
-  <h1 class="text-2xl">Collapse</h1>
-
-  <Collapse title="Motor 1">
-    <div
-      slot="content"
-      class="border-light border border-t-0 p-4 text-sm"
-    >
-      Motor one was conceived and executed at Bell Labs in 1972 under the
-      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
-    </div>
-  </Collapse>
-
-  <Collapse title="Motor 1">
-    <Badge
-      slot="header"
-      label="Inactive"
-    />
-    <div
-      slot="content"
-      class="border-light border border-t-0 p-4 text-sm"
-    >
-      Motor one was conceived and executed at Bell Labs in 1972 under the
-      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
-    </div>
-  </Collapse>
-
-  <Collapse title="Motor 1">
-    <Breadcrumbs
-      slot="title"
-      crumbs={['Robot', 'Motor']}
-    />
-    <Badge
-      slot="header"
-      label="Inactive"
-    />
-    <div
-      slot="content"
-      class="border-light border border-t-0 p-4 text-sm"
-    >
-      Motor one was conceived and executed at Bell Labs in 1972 under the
-      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
-    </div>
-  </Collapse>
-
-  <Collapse title="Motor 1">
-    <Breadcrumbs
-      slot="title"
-      crumbs={['Robot', 'Motor']}
-    />
-    <Badge
-      slot="header"
-      label="Inactive"
-    />
-    <div
-      slot="content"
-      class="p-4 text-sm"
-    >
-      Motor one was conceived and executed at Bell Labs in 1972 under the
-      guidance of lead director Dennis Richie and Supervisor Wallace Breen.
-    </div>
-  </Collapse>
 
   <!-- Context Menu -->
   <h1 class="text-2xl">Context Menu</h1>

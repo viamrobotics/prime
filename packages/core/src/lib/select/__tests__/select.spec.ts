@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import Select from '../select.svelte';
 import SelectSpec from './select.spec.svelte';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Select', () => {
   it('Renders the select', () => {
@@ -185,5 +186,12 @@ describe('Select', () => {
     await fireEvent.keyDown(select, { code: 'Tab' });
 
     expect(onKeydown).toHaveBeenCalledOnce();
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Select, { placeholder: 'Enter your name', cx: cxTestArguments });
+    expect(screen.getByPlaceholderText('Enter your name')).toHaveClass(
+      cxTestResults
+    );
   });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import { Tabs } from '$lib';
+import { cxTestArguments, cxTestResults } from './cx-test';
 
 describe('Tabs', () => {
   it('Renders tabs correctly', () => {
@@ -30,6 +31,17 @@ describe('Tabs', () => {
     await fireEvent.click(screen.getByText('Tab 2'));
     expect(onInput).toHaveBeenCalledWith(
       expect.objectContaining({ detail: { value: 'Tab 2' } })
+    );
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Tabs, {
+      tabs: ['Tab 1', 'Tab 2', 'Tab 3'],
+      selected: 'Tab 1',
+      cx: cxTestArguments,
+    });
+    expect(screen.getByText('Tab 1').parentElement?.parentElement).toHaveClass(
+      cxTestResults
     );
   });
 });

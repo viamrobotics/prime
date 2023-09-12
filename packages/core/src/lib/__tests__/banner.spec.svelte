@@ -11,18 +11,21 @@
  -->
 
 <script lang="ts">
+import type cx from 'classnames';
 import { Banner } from '$lib';
 import type { BannerVariant } from '$lib/banner.svelte';
 
 export let variant: BannerVariant;
 export let progress = 1;
 export let exitable = false;
+export let extraClasses: cx.Argument = '';
 </script>
 
 <Banner
   {variant}
   {progress}
   {exitable}
+  cx={extraClasses}
   on:close
 >
   <svelte:fragment slot="title">This is the title.</svelte:fragment>
