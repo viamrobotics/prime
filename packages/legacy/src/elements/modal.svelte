@@ -38,7 +38,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
 -->
 <div
   class={cx(
-    'z-50 bg-black bg-opacity-40 w-full h-full fixed top-0 left-0 flex justify-center items-center',
+    'fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40',
     {
       invisible: !isOpen,
     }
@@ -49,9 +49,9 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
   on:keyup|preventDefault={handleClose}
 >
   <div
-    class={cx('relative border border-medium bg-white p-6 max-w-lg shadow-sm', {
-      'w-[480px] min-h-[400px] max-h-[600px]': variant === '',
-      'w-[400px] max-h-[320px]': variant === 'small',
+    class={cx('relative max-w-lg border border-medium bg-white p-6 shadow-sm', {
+      'max-h-[600px] min-h-[400px] w-[480px]': variant === '',
+      'max-h-[320px] w-[400px]': variant === 'small',
     })}
   >
     <v-button
@@ -75,7 +75,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
 
       <div class="flex flex-grow"><slot /></div>
 
-      <div class="flex justify-end gap-2 mt-6">
+      <div class="mt-6 flex justify-end gap-2">
         <slot name="secondary" />
         <slot name="primary" />
       </div>

@@ -13,7 +13,7 @@ export const hovered = currentWritable<string | null>(null);
 export const waypoints = currentWritable<Waypoint[]>([]);
 export const obstacles = currentWritable<Obstacle[]>([]);
 
-export const obstacleNavItems = writable<Record<string, HTMLElement>>({})
+export const obstacleNavItems = writable<Record<string, HTMLElement>>({});
 
 export type Environments = 'debug' | 'configure';
 

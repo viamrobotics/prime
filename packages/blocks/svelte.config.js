@@ -17,7 +17,7 @@ const config = {
         ...tsconfig,
         include: [
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          ...tsconfig['include'],
+          ...tsconfig.include,
           '../.eslintrc.cjs',
           '../.prettierrc.cjs',
           '../postcss.config.js',

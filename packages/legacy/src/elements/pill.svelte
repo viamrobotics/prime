@@ -32,9 +32,9 @@ const handleRemove = (event: Event) => {
 
 <div
   class={cx(
-    'whitespace-nowrap flex items-center max-w-fit gap-1 rounded-xl bg-medium py-0.5 px-2 text-[10px] hover:bg-gray-3',
+    'flex max-w-fit items-center gap-1 whitespace-nowrap rounded-xl bg-medium px-2 py-0.5 text-[10px] hover:bg-gray-3',
     {
-      'bg-disabled-light text-disabled-dark cursor-not-allowed':
+      'cursor-not-allowed bg-disabled-light text-disabled-dark':
         isDisabled || isReadonly,
     }
   )}

@@ -134,5 +134,12 @@ module.exports = {
     'sonarjs/no-duplicate-string': 'warn',
     '@typescript-eslint/no-shadow': 'warn',
     'unicorn/switch-case-braces': 'warn',
+    '@typescript-eslint/no-unnecessary-condition': 'warn',
+    '@typescript-eslint/no-confusing-void-expression': 'warn',
+    '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+    '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
+    '@typescript-eslint/dot-notation': 'warn',
+    '@typescript-eslint/consistent-type-definitions': 'warn',
+    '@typescript-eslint/consistent-indexed-object-style': 'warn',
   },
 };

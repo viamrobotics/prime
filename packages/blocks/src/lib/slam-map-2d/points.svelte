@@ -5,8 +5,7 @@
   the points' bounding sphere.
   Emits click events that intersect this plane.
 -->
-<script lang='ts'>
-
+<script lang="ts">
 import * as THREE from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader';
 import { T, useThrelte, createRawEventDispatcher, extend } from '@threlte/core';
@@ -23,16 +22,15 @@ export let pointcloud: Uint8Array | undefined;
 /** The size of each individual point */
 export let size: number;
 
-type $$Events = {
-
+interface $$Events extends Record<string, unknown> {
   /** Dispatched when a user clicks within the bounding box of the pointcloud */
-  click: THREE.Vector3
+  click: THREE.Vector3;
 
   /** Dispatched whenever a new .pcd file is parsed. Emits the radius and center of the cloud's bounding sphere. */
   update: {
-    radius: number
-    center: { x: number; y: number }
-  }
+    radius: number;
+    center: { x: number; y: number };
+  };
 }
 
 const dispatch = createRawEventDispatcher<$$Events>();
@@ -67,22 +65,22 @@ const update = (cloud: Uint8Array) => {
   const { color } = points.geometry.attributes;
 
   if (color instanceof THREE.BufferAttribute) {
-    mapColorAttributeGrayscale(color)
+    mapColorAttributeGrayscale(color);
   }
 
   dispatch('update', { center, radius });
 };
 
 const handleIntersectionPlaneCreate = ({ ref }: { ref: THREE.Mesh }) => {
-  raycaster.objects = [ref]
-}
+  raycaster.objects = [ref];
+};
 
 const handleIntersectionPlaneClick = (event: THREE.Event) => {
   const [intersection] = event.intersections as THREE.Intersection[];
-  if (intersection && intersection.point) {
+  if (intersection?.point) {
     dispatch('click', intersection.point);
   }
-}
+};
 
 $: if (material) {
   material.size = size;
@@ -100,7 +98,6 @@ onMount(() => {
 onDestroy(() => {
   raycaster.removeEventListener('click', handleIntersectionPlaneClick);
 });
-
 </script>
 
 <T
@@ -110,7 +107,7 @@ onDestroy(() => {
 />
 
 <T.Mesh
-  name='Intersection plane'
+  name="Intersection plane"
   position.x={center.x}
   position.y={center.y}
   on:create={handleIntersectionPlaneCreate}

@@ -203,7 +203,7 @@ $: {
 </script>
 
 <div
-  class="w-full h-full relative isolate"
+  class="relative isolate h-full w-full"
   bind:this={container}
   on:input={handleInput}
 />

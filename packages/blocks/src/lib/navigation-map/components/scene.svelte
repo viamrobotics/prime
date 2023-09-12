@@ -1,5 +1,4 @@
-<script lang='ts'>
-
+<script lang="ts">
 import * as THREE from 'three';
 import { T, useThrelte } from '@threlte/core';
 import { AxesHelper } from 'trzy';
@@ -20,9 +19,6 @@ $: flat = $view === '2D';
 
 // This clips against the map so that objects intersecting sea level will not render over the map
 $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
-
-$: console.log($obstacles.length)
-
 </script>
 
 <T.AmbientLight intensity={flat ? 2 : 1.5} />

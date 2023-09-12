@@ -12,8 +12,7 @@
   ```
 -->
 
-<script lang='ts'>
-
+<script lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { onMount, createEventDispatcher, onDestroy } from 'svelte';
@@ -39,7 +38,7 @@ export let maxZoom = 22;
 
 /**
  * The initial map center.
- * 
+ *
  * @default { lng: -73.984421, lat: 40.7718116 }
  * The Viam Robotics office.
  */
@@ -48,7 +47,7 @@ export let center: LngLat = { lng: -73.984_421, lat: 40.771_811_6 };
 /** The MapLibre Map instance */
 export let map: Map | undefined = undefined;
 
-type Events = {
+interface Events {
   /** Fired after the map has been created. */
   create: Map;
   /** Fired when the map camera moves. */
@@ -58,7 +57,7 @@ type Events = {
 }
 
 const dispatch = createEventDispatcher<Events>();
-const context = provideMapContext(center, zoom)
+const context = provideMapContext(center, zoom);
 
 let container: HTMLElement;
 let created = false;
@@ -68,7 +67,7 @@ const setMapSize = () => {
   context.size.set({
     width: canvas.clientWidth,
     height: canvas.clientHeight,
-  })
+  });
 };
 
 const handleCreate = () => {
@@ -76,7 +75,7 @@ const handleCreate = () => {
   dispatch('create', map!);
 
   // Resize the map after any slots have been rendered.
-  requestAnimationFrame(() => map!.resize())
+  requestAnimationFrame(() => map!.resize());
 };
 
 const handleMove = () => {
@@ -102,7 +101,7 @@ onMount(() => {
     minPitch,
     maxPitch,
     minZoom,
-    maxZoom
+    maxZoom,
   });
 
   context.map.set(map);
@@ -119,24 +118,26 @@ onDestroy(() => {
   map!.off('move', handleMove);
   map!.off('resize', handleResize);
   map!.off('style.load', handleCreate);
-})
+});
 
 $: map?.setMinPitch(minPitch);
 $: map?.setMaxPitch(maxPitch);
-
 </script>
 
 {#if created}
   <slot />
 {/if}
 
-<div class='h-full' {...$$restProps}>
+<div
+  class="h-full"
+  {...$$restProps}
+>
   <div
-    class='h-full'
+    class="h-full"
     bind:this={container}
   />
 
   {#if created}
-    <slot name='layer' />
+    <slot name="layer" />
   {/if}
 </div>

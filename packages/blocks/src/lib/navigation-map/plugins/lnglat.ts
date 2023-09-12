@@ -31,13 +31,13 @@ const getOffsetInMeters = (center: LngLat, offset: LngLat) => {
   const zOffset = earthRadius * latDiff;
 
   return [-xOffset, zOffset] as const;
-}
+};
 
 export const lngLatPlugin = () => {
   const { scene, camera } = useThrelte();
   const { map } = useMapLibre();
 
-  const scale = new THREE.Matrix4()
+  const scale = new THREE.Matrix4();
 
   let center = map.getCenter();
   let mercator = MercatorCoordinate.fromLngLat(center, 0);
@@ -46,29 +46,31 @@ export const lngLatPlugin = () => {
   const cameraTransform = new THREE.Matrix4();
   const rotation = new THREE.Matrix4().multiplyMatrices(
     new THREE.Matrix4().makeRotationX(-0.5 * Math.PI),
-    new THREE.Matrix4().makeRotationY(Math.PI));
+    new THREE.Matrix4().makeRotationY(Math.PI)
+  );
 
   useFrame(() => {
     scene.traverse((object) => {
-      const { lngLat } = object.userData as { lngLat?: LngLat | undefined }
-      
+      const { lngLat } = object.userData as { lngLat?: LngLat | undefined };
+
       if (!lngLat) {
         return;
       }
 
-      const [x, z] = getOffsetInMeters(center, lngLat)
-      object.position.set(x, 0, z)
-    })
+      const [x, z] = getOffsetInMeters(center, lngLat);
+      object.position.set(x, 0, z);
+    });
 
-    
     scale.makeScale(mercatorScale, mercatorScale, -mercatorScale);
-    cameraTransform.multiplyMatrices(scale, rotation).setPosition(mercator.x, mercator.y, mercator.z);
+    cameraTransform
+      .multiplyMatrices(scale, rotation)
+      .setPosition(mercator.x, mercator.y, mercator.z);
     camera.current.projectionMatrix = cameraMatrix.multiply(cameraTransform);
-  })
+  });
 
   map.on('move', () => {
     center = map.getCenter();
     mercator = MercatorCoordinate.fromLngLat(center, 0);
-    mercatorScale = mercator.meterInMercatorCoordinateUnits();  
-  })
-}
+    mercatorScale = mercator.meterInMercatorCoordinateUnits();
+  });
+};

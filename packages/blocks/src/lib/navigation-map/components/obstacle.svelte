@@ -1,5 +1,4 @@
-<script lang='ts'>
-
+<script lang="ts">
 import { theme } from '@viamrobotics/prime-core/theme';
 import * as THREE from 'three';
 import { T } from '@threlte/core';
@@ -12,22 +11,26 @@ export let obstacle: Obstacle;
 let material: THREE.MeshPhongMaterial;
 
 $: name = obstacle.name;
-$: material?.color.set($hovered === obstacle.name
-  ? theme.extend.colors['solar-power']
-  : theme.extend.colors['power-wire']
+$: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
+  $hovered === obstacle.name
+    ? theme.extend.colors['solar-power']
+    : theme.extend.colors['power-wire']
 );
-
 </script>
 
 {#each obstacle.geometries as geometry, index (index)}
   <T.Mesh
-    name={name}
+    {name}
     obstacle={name}
     userData.lngLat={obstacle.location}
     rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
     on:pointerenter={() => ($hovered = name)}
     on:pointerleave={() => ($hovered = null)}
-    on:click={() => $obstacleNavItems[name]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
+    on:click={() =>
+      $obstacleNavItems[name]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      })}
   >
     <slot />
 
@@ -66,8 +69,6 @@ $: material?.color.set($hovered === obstacle.name
         on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
       />
     {/if}
-    <T.MeshPhongMaterial
-      bind:ref={material}
-    />
+    <T.MeshPhongMaterial bind:ref={material} />
   </T.Mesh>
 {/each}

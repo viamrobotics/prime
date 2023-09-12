@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('node:path');
+
 module.exports = {
   root: true,
   extends: ['@viamrobotics/eslint-config/svelte'],
@@ -7,25 +9,21 @@ module.exports = {
     project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
   },
+  settings: {
+    tailwindcss: {
+      config: path.join(__dirname, 'tailwind.config.ts'),
+    },
+  },
   env: {
     browser: true,
     node: true,
   },
-  rules: {
-    // @todo(mp APP-2482): move to js-config
-    'sonarjs/no-duplicate-string': 'off',
-    'no-undef-init': 'off',
-    'unicorn/no-useless-undefined': 'off',
-  },
   overrides: [
     {
-      files: '*.svelte',
+      files: 'src/routes/**/*',
       rules: {
-        /*
-         * TODO(mc, 2023-08-28): this rule is crashing with svelte actions.
-         * Investigate and fix once lint dependencies are updated.
-         */
-        'sonarjs/no-unused-collection': 'off',
+        'no-console': 'off',
+        'sonarjs/no-duplicate-string': 'off',
       },
     },
   ],

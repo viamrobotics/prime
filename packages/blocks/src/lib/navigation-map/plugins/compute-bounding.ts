@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import { injectPlugin } from '@threlte/core';
 import { boundingRadius } from '../stores';
 
-type Props = { computeBounding: string };
+interface Props {
+  computeBounding: string;
+}
 
 export const computeBoundingPlugin = () =>
   injectPlugin<Props>('computeBounding', ({ ref, props }) => {

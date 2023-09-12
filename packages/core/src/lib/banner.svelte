@@ -112,13 +112,13 @@ $: {
         class="flex flex-col"
         role="alert"
       >
-        <figcaption class="text-default text-sm font-medium">
+        <figcaption class="text-sm font-medium text-default">
           <slot name="title" />
         </figcaption>
 
         <div class="flex flex-col gap-3">
           {#if $$slots.subtitle}
-            <p class="text-subtle-1 text-sm">
+            <p class="text-sm text-subtle-1">
               <slot name="subtitle" />
             </p>
           {/if}

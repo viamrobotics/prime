@@ -5,11 +5,11 @@
   "type": "module",
   "homepage": "http://viamrobotics.github.io/prime",
   "repository": "git://github.com/viamrobotics/prime.git",
-  "packageManager": "pnpm@8.6.10",
+  "packageManager": "pnpm@8.7.5",
   "scripts": {
-    "build": "pnpm -r build",
-    "check": "pnpm -r check",
-    "format": "pnpm -r format",
-    "test": "pnpm -r test"
+    "build": "pnpm -r --aggregate-output build",
+    "check": "pnpm -r --aggregate-output check",
+    "format": "pnpm -r --aggregate-output format",
+    "test": "pnpm -r --aggregate-output test"
   }
 }

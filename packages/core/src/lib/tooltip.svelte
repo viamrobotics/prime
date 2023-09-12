@@ -142,12 +142,12 @@ $: {
   id={tooltipId}
   role="tooltip"
   class:invisible
-  class="border-gray-9 bg-gray-9 absolute left-0 top-0 z-[1000] flex w-max max-w-[250px] items-center gap-1 border px-2 py-1 text-left text-xs text-white"
+  class="absolute left-0 top-0 z-[1000] flex w-max max-w-[250px] items-center gap-1 border border-gray-9 bg-gray-9 px-2 py-1 text-left text-xs text-white"
   style="transform: translate({x}px, {y}px);"
 >
   <div
     bind:this={arrowElement}
-    class="border-b-gray-9 absolute h-0 w-0 border-b-[6px] border-l-[6px] border-r-[6px] border-l-transparent border-r-transparent"
+    class="absolute h-0 w-0 border-b-[6px] border-l-[6px] border-r-[6px] border-b-gray-9 border-l-transparent border-r-transparent"
   />
 
   {#if !invisible}
