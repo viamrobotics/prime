@@ -34,7 +34,7 @@ export const provideMapContext = (center: LngLat, zoom: number) => {
  * Provides context for a <MapLibre> instance. Must be called within a child of this component.
  */
 export const useMapLibre = () => {
-  const context = getContext<MapContext>(mapContextKey);
+  const context = getContext<MapContext | undefined>(mapContextKey);
 
   if (!context) {
     throw new Error(

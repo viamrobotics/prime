@@ -3,16 +3,16 @@
   A 2D marker that can accept a texture.
   Used for rendering the base position, endpoints, etc.
 -->
-<script lang='ts' context='module'>
-
+<script
+  lang="ts"
+  context="module"
+>
 import * as THREE from 'three';
 
 const textureLoader = new THREE.TextureLoader();
-
 </script>
 
-<script lang='ts'>
-
+<script lang="ts">
 import { T } from '@threlte/core';
 import { renderOrder } from './render-order';
 
@@ -21,9 +21,8 @@ export let url: string;
 export let rotation = 0;
 
 const handleSpriteCreate = ({ ref }: { ref: THREE.SpriteMaterial }) => {
-  ref.color.set('#ff0047')
-}
-
+  ref.color.set('#ff0047');
+};
 </script>
 
 <T.Sprite
@@ -38,4 +37,3 @@ const handleSpriteCreate = ({ ref }: { ref: THREE.SpriteMaterial }) => {
     on:create={handleSpriteCreate}
   />
 </T.Sprite>
-

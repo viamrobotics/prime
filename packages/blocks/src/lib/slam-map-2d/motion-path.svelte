@@ -6,8 +6,7 @@
   x,y\n
   ...
 -->
-<script lang='ts'>
-
+<script lang="ts">
 import { T, extend } from '@threlte/core';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
@@ -50,13 +49,12 @@ $: {
   geometry?.dispose();
   geometry = updatePath(path);
 }
-
 </script>
 
 {#if geometry}
   <T.Line2 renderOrder={renderOrder.motionPath}>
     <T.LineMaterial
-      color='#FF0047'
+      color="#FF0047"
       linewidth={0.005}
     />
     <T is={geometry} />

@@ -1,8 +1,8 @@
 import type { ViamObject3D } from '@viamrobotics/three';
 
-type BaseGeometry = {
+interface BaseGeometry {
   pose: ViamObject3D;
-};
+}
 
 export const NavigationTab = {
   Waypoints: 'Waypoints',
@@ -15,7 +15,10 @@ export type NavigationTabType =
 
 export type Shapes = 'box' | 'sphere' | 'capsule';
 
-export type LngLat = { lng: number; lat: number };
+export interface LngLat {
+  lng: number;
+  lat: number;
+}
 
 export type Waypoint = LngLat & { id: string };
 

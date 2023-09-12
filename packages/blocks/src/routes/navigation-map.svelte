@@ -1,7 +1,12 @@
-<script lang='ts'>
+<script lang="ts">
 /* eslint-disable no-console */
 
-import { NavigationMap, type CapsuleGeometry, type SphereGeometry, type BoxGeometry } from '$lib';
+import {
+  NavigationMap,
+  type CapsuleGeometry,
+  type SphereGeometry,
+  type BoxGeometry,
+} from '$lib';
 import { Label, SliderInput } from '@viamrobotics/prime-core';
 import { ViamObject3D } from '@viamrobotics/three';
 
@@ -9,7 +14,7 @@ const waypoints = [
   { lng: -73.968_899_054_033_95, lat: 40.663_071_086_044, id: '0' },
   { lng: -73.972_162_444_595_26, lat: 40.661_759_669_002_69, id: '1' },
   { lng: -73.969_889_726_168_73, lat: 40.659_372_529_105_895, id: '2' },
-]
+];
 
 const obstacles = [
   {
@@ -18,23 +23,29 @@ const obstacles = [
       lng: -73.965_918_2,
       lat: 40.670_520_9,
     },
-    geometries: [{
-      type: 'sphere',
-      pose: new ViamObject3D(),
-      radius: 20
-    } as SphereGeometry],
-  }, {
+    geometries: [
+      {
+        type: 'sphere',
+        pose: new ViamObject3D(),
+        radius: 20,
+      } as SphereGeometry,
+    ],
+  },
+  {
     name: 'obstacle 2',
     location: {
       lng: -73.976_472,
       lat: 40.693_268,
     },
-    geometries: [{
-      type: 'sphere',
-      pose: new ViamObject3D(),
-      radius: 200
-    } as SphereGeometry],
-  }, {
+    geometries: [
+      {
+        type: 'sphere',
+        pose: new ViamObject3D(),
+        radius: 200,
+      } as SphereGeometry,
+    ],
+  },
+  {
     name: 'obstacle 3',
     location: {
       lng: -73.958_847,
@@ -46,13 +57,14 @@ const obstacles = [
         radius: 50,
         length: 300,
         pose: (() => {
-          const object = new ViamObject3D()
-          object.orientationVector.th = Math.PI / 4
-          return object
+          const object = new ViamObject3D();
+          object.orientationVector.th = Math.PI / 4;
+          return object;
         })(),
-      } as CapsuleGeometry   
+      } as CapsuleGeometry,
     ],
-  }, {
+  },
+  {
     name: 'obstacle 4',
     location: {
       lng: -74.7,
@@ -65,18 +77,19 @@ const obstacles = [
         width: 50,
         height: 50,
         pose: new ViamObject3D(),
-      } as BoxGeometry
-    ]
-  }
-]
-
+      } as BoxGeometry,
+    ],
+  },
+];
 </script>
 
 <div class="px-12">
-  <div class='relative p-4 w-full h-[800px] sm:h-auto sm:aspect-video border border-gray-200'>
+  <div
+    class="relative h-[800px] w-full border border-gray-200 p-4 sm:aspect-video sm:h-auto"
+  >
     <NavigationMap
-      environment='configure'
-      tab='Obstacles'
+      environment="configure"
+      tab="Obstacles"
       tabs={['Attributes', 'Obstacles', 'Waypoints']}
       baseGeoPose={{ lng: -73.97, lat: 40.67 }}
       {obstacles}
@@ -86,10 +99,10 @@ const obstacles = [
       on:delete-waypoint={(event) => console.log('delete-waypoint', event)}
       on:update-obstacles={(event) => console.log('update-obstacles', event)}
     >
-      <div slot='tab'>
+      <div slot="tab">
         <Label>
           Test
-          <SliderInput slot='input' />
+          <SliderInput slot="input" />
         </Label>
       </div>
     </NavigationMap>
