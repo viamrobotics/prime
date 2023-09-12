@@ -34,10 +34,8 @@ const getOffsetInMeters = (center: LngLat, offset: LngLat) => {
 }
 
 export const lngLatPlugin = () => {
-  const { scene, camera, renderer } = useThrelte();
+  const { scene, camera } = useThrelte();
   const { map } = useMapLibre();
-
-  renderer.autoClear = false;
 
   const scale = new THREE.Matrix4()
 
@@ -62,6 +60,7 @@ export const lngLatPlugin = () => {
       object.position.set(x, 0, z)
     })
 
+    
     scale.makeScale(mercatorScale, mercatorScale, -mercatorScale);
     cameraTransform.multiplyMatrices(scale, rotation).setPosition(mercator.x, mercator.y, mercator.z);
     camera.current.projectionMatrix = cameraMatrix.multiply(cameraTransform);

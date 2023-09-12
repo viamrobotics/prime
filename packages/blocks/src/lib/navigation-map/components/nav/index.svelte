@@ -47,8 +47,8 @@ const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
     </ul>
   {:else if $tab === NavigationTab.Obstacles}
     <ul
-      on:mouseleave={() => ($hovered = null)}
       class='pr-4 py-2 sm:h-[calc(100%-38px)] overflow-y-scroll'
+      on:mouseleave={() => ($hovered = null)}
     >
       <ObstaclesTab
         on:update={handleUpdateObstacle}

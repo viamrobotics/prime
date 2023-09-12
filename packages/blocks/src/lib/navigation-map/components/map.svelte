@@ -3,7 +3,7 @@
 import { Button, Radio } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
 import { MapLibre } from '$lib';
-import { view, cameraMatrix } from '../stores';
+import { view } from '../stores';
 import ObstacleLayer from './obstacle-layer.svelte';
 import RobotMarker from './robot-marker.svelte';
 import CenterInputs from './center-inputs.svelte';
@@ -28,25 +28,6 @@ const toggleTileset = () => {
   map?.setLayoutProperty('satellite', 'visibility', satellite ? 'visible' : 'none')
 }
 
-const handleMapCreate = () => {
-  map?.addLayer({
-    id: 'obstacle-layer',
-    type: 'custom',
-    renderingMode: '3d',
-    render (_ctx, viewProjectionMatrix) {
-      cameraMatrix.fromArray(viewProjectionMatrix);
-      // This is necessary to lock-step the two canvases.
-      map?.triggerRepaint();
-    },
-  });
-
-  return () => {
-    if (map?.getLayer('obstacle-layer')) {
-      map?.removeLayer('obstacle-layer');
-    }
-  };
-};
-
 </script>
 
 <div class='relative w-full h-full sm:flex items-stretch'>
@@ -56,7 +37,6 @@ const handleMapCreate = () => {
     maxPitch={$view === '3D' ? maxPitch : minPitch}
     minZoom={6}
     bind:map
-    on:create={handleMapCreate}
   >
     <Nav
       on:add-obstacle
@@ -67,6 +47,7 @@ const handleMapCreate = () => {
     </Nav>
     <RobotMarker lngLat={baseGeoPose} />
     <Waypoints />
+
     <ObstacleLayer slot='layer' />
 
     <div class='absolute right-12 top-2.5 z-10 flex gap-2'>

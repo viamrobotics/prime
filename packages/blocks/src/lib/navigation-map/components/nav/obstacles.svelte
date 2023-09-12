@@ -5,9 +5,9 @@ import { type LngLat, type Geometry, useMapLibre, type Obstacle, useMapLibreEven
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
-import { environment, hovered, boundingRadius, obstacles } from '../../stores';
+import { environment, hovered, boundingRadius, obstacles, obstacleNavItems } from '../../stores';
 import { calculateBoundingBox } from '../../lib/bounding-box';
-import { createEventDispatcher } from 'svelte';
+import { createEventDispatcher, tick } from 'svelte';
 import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
 import { createName } from '$lib/navigation-map/lib/create-name';
 
@@ -34,6 +34,8 @@ const handleLngLatInput = (name: string) => (event: CustomEvent<LngLat>) => {
 
 const handleDeleteObstacle = (name: string) => () => {
   $obstacles = $obstacles.filter((obstacle) => obstacle.name !== name);
+  $hovered = null
+  dispatch('update', $obstacles);
 };
 
 const handleGeometryInput = (name: string, geoIndex: number) => (event: CustomEvent<Geometry>) => {
@@ -49,7 +51,7 @@ const handleOrientationInput = (name: string, geoIndex: number) => (event: Custo
 }
 
 // Click to add an obstacle
-useMapLibreEvent('click', (event) => {
+useMapLibreEvent('click', async (event) => {
   if ($hovered) {
     return;
   }
@@ -59,6 +61,11 @@ useMapLibreEvent('click', (event) => {
   const name = createName(names, 'obstacle', $obstacles.length);
   $obstacles = [createObstacle(name, location), ...$obstacles];
   dispatch('update', $obstacles);
+
+  await tick()
+
+  $hovered = name
+  $obstacleNavItems[name]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
 })
 
 </script>
@@ -76,6 +83,7 @@ useMapLibreEvent('click', (event) => {
 {#each $obstacles as { name, location, geometries }, index (index)}
   {#if $environment === 'configure'}
     <li
+      bind:this={$obstacleNavItems[name]}
       class='group mb-8 pl-2 border-l border-l-medium'
       on:mouseenter={() => ($hovered = name)}
     >

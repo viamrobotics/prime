@@ -1,11 +1,10 @@
-
 <script lang='ts'>
 
 import { theme } from '@viamrobotics/prime-core/theme';
 import * as THREE from 'three';
 import { T } from '@threlte/core';
 import type { Obstacle } from '$lib';
-import { view, hovered } from '../stores';
+import { view, hovered, obstacleNavItems } from '../stores';
 
 /** An obstacle to render. */
 export let obstacle: Obstacle;
@@ -28,7 +27,10 @@ $: material?.color.set($hovered === obstacle.name
     rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
     on:pointerenter={() => ($hovered = name)}
     on:pointerleave={() => ($hovered = null)}
+    on:click={() => $obstacleNavItems[name]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
   >
+    <slot />
+
     {#if geometry.type === 'box'}
       {#if $view === '3D'}
         <T.BoxGeometry
