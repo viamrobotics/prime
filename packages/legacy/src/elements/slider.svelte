@@ -458,7 +458,7 @@ const onChange = (event: Event) => {
   <div
     bind:this={slider}
     class={cn(
-      'slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-gray-6',
+      'slider relative mt-7 h-0.5 select-none bg-gray-6 transition-opacity duration-200',
       {
         'bg-disabled-light text-disabled-dark': isDisabled,
       }
@@ -475,7 +475,7 @@ const onChange = (event: Event) => {
     {#each endValue ? [startValue, endValue] : [startValue] as value, index}
       <span
         role="slider"
-        class="range absolute block h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]"
+        class="range absolute bottom-auto top-1 z-[2] block h-5 w-5 -translate-x-1/2 -translate-y-1/2"
         class:active={focus && activeHandle === index}
         class:press={handlePressed && activeHandle === index}
         data-handle={index}
@@ -494,12 +494,12 @@ const onChange = (event: Event) => {
         tabindex={disabled ? -1 : 0}
       >
         <span
-          class="handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400"
+          class="handle-bg absolute bottom-1 left-0 h-full w-full rounded-full bg-gray-400 opacity-50 transition-transform"
         />
 
         <span
           class={cn(
-            'absolute left-0 bottom-1 block rounded-full h-full w-full border border-gray-9 bg-white',
+            'absolute bottom-1 left-0 block h-full w-full rounded-full border border-gray-9 bg-white',
             {
               'border-disabled-dark': isDisabled || isReadonly,
             }
@@ -508,8 +508,8 @@ const onChange = (event: Event) => {
 
         <span
           class={cn(
-            'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2 select-none',
-            'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-gray-9 bg-white text-xs',
+            'floating absolute bottom-full left-1/2 block -translate-x-1/2 -translate-y-1/2 select-none',
+            'pointer-events-none whitespace-nowrap border border-gray-9 bg-white px-1.5 py-1 text-center text-xs opacity-0 transition duration-200',
             {
               '-translate-y-1.5': !focus || activeHandle !== index,
               'border-disabled-dark': isDisabled || isReadonly,
@@ -529,7 +529,7 @@ const onChange = (event: Event) => {
     {#if range}
       <span
         class={cn(
-          'absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-gray-9',
+          'absolute -top-0.5 z-[1] block h-1 select-none bg-gray-9 transition duration-200',
           {
             'bg-disabled-light': isDisabled || isReadonly,
           }
@@ -541,7 +541,7 @@ const onChange = (event: Event) => {
     {/if}
 
     <div
-      class="absolute h-2 left-0 right-0"
+      class="absolute left-0 right-0 h-2"
       class:disabled
       class:focus
     >
@@ -558,7 +558,7 @@ const onChange = (event: Event) => {
           {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
             <span
               class={cn(
-                'absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-gray-6',
+                'absolute top-[calc(50%-9px)] h-[4px] w-[1px] whitespace-nowrap bg-gray-6 transition',
                 {
                   'bg-disabled-light': isDisabled || isReadonly,
                 }

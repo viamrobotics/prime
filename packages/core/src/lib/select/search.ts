@@ -52,14 +52,14 @@ export interface SearchMatch extends SearchResult {
 }
 
 /**
- * A map of search results prioritized by where the match occured in the
+ * A map of search results prioritized by where the match occurred in the
  * option.
  */
-export type SearchMatches = {
-  [priority: number]: SearchMatch[];
+export interface SearchMatches {
+  [priority: number]: SearchMatch[] | undefined;
   0: SearchMatch[];
   '-1': SearchMatch[];
-};
+}
 
 /**
  * Returns the index of the word where the character with the passed index
@@ -155,7 +155,7 @@ export const prioritizeMatches = (options: string[], searchTerm: string) => {
 };
 
 /**
- * Sorts the passed options based on where a potential match occured with the
+ * Sorts the passed options based on where a potential match occurred with the
  * passed search term, and returns them along with their highlighting breakdown
  * for the match. If the passed sort option is `reduce`, options with no match
  * (-1 priority) will not be included in the results.

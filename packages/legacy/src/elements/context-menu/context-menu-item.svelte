@@ -18,7 +18,7 @@ const handleSelect = (event: Event) => {
 <button
   role="menuitem"
   aria-labelledby={label}
-  class="flex items-center gap-1 px-2 py-1.5 hover:bg-light w-full text-left"
+  class="flex w-full items-center gap-1 px-2 py-1.5 text-left hover:bg-light"
   on:click={handleSelect}
 >
   {#if icon && variant === 'primary'}

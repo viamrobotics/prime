@@ -22,7 +22,7 @@ export { extraClasses as cx };
 
 <div
   class={cx(
-    'border-medium bg-light text-default inline-flex gap-2.5 rounded-full border px-2.5 py-px',
+    'inline-flex gap-2.5 rounded-full border border-medium bg-light px-2.5 py-px text-default',
     extraClasses
   )}
 >
@@ -33,10 +33,10 @@ export { extraClasses as cx };
     {#if index !== crumbs.length - 1}
       <div>
         <div
-          class="border-medium -mt-0.5 h-[69%] w-px -rotate-[30deg] border-l"
+          class="-mt-0.5 h-[69%] w-px -rotate-[30deg] border-l border-medium"
         />
         <div
-          class="border-medium -mt-0.5 h-[69%] w-px rotate-[30deg] border-l"
+          class="-mt-0.5 h-[69%] w-px rotate-[30deg] border-l border-medium"
         />
       </div>
     {/if}

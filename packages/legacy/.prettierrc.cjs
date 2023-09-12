@@ -1,11 +1,9 @@
 'use strict';
 
-const baseConfig = require('@viamrobotics/prettier-config');
+const path = require('node:path');
+const baseConfig = require('@viamrobotics/prettier-config/svelte');
 
 module.exports = {
   ...baseConfig,
-  // TODO(mc, 2023-03-22): eslint-plugin-svelte does not respect single-quote for HTML
-  // https://github.com/sveltejs/prettier-plugin-svelte/issues/253
-  plugins: ['prettier-plugin-svelte'],
-  svelteIndentScriptAndStyle: false,
+  tailwindConfig: path.join(__dirname, 'tailwind.config.ts'),
 };

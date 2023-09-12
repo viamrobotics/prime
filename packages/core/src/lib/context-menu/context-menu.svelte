@@ -22,7 +22,7 @@ export { extraClasses as cx };
 <div
   role="menu"
   class={cx(
-    'border-medium max-w-xs border py-1 shadow-sm filter-none',
+    'max-w-xs border border-medium py-1 shadow-sm filter-none',
     extraClasses
   )}
 >

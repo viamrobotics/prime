@@ -16,4 +16,4 @@ let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 </script>
 
-<hr class={cx('border-light mb-0.5 mt-1 drop-shadow-none', extraClasses)} />
+<hr class={cx('mb-0.5 mt-1 border-light drop-shadow-none', extraClasses)} />

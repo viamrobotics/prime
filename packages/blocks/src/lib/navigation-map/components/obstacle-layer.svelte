@@ -1,11 +1,9 @@
-<script lang='ts'>
-
+<script lang="ts">
 import { Canvas } from '@threlte/core';
 import Scene from './scene.svelte';
-
 </script>
 
-<div class='absolute bottom-0 right-0 w-full h-full pointer-events-none'>
+<div class="pointer-events-none absolute bottom-0 right-0 h-full w-full">
   <Canvas useLegacyLights={false}>
     <Scene />
   </Canvas>

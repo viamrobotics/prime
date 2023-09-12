@@ -5,7 +5,6 @@
   ],
   "compilerOptions": {
     "types": ["svelte", "vite/client", "vitest"],
-    "noPropertyAccessFromIndexSignature": false,
     "noEmit": true
   }
 }

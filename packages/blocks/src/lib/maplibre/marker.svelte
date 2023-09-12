@@ -11,8 +11,7 @@
     />
   ```
 -->
-<script lang='ts'>
-
+<script lang="ts">
 import { onDestroy } from 'svelte';
 import { Marker } from 'maplibre-gl';
 import { useMapLibre } from './hooks';
@@ -25,20 +24,19 @@ export let lngLat: LngLat;
 export let scale = 1;
 
 /** The marker color. */
-export let color: string = '';
+export let color = '';
 
-const { map } = useMapLibre()
+const { map } = useMapLibre();
 
-let marker: Marker | undefined
+let marker: Marker | undefined;
 
 $: {
   marker?.remove();
   marker = new Marker({ scale, color });
   marker.getElement().style.zIndex = '1';
-  marker?.setLngLat(lngLat);
-  marker.addTo(map)
+  marker.setLngLat(lngLat);
+  marker.addTo(map);
 }
 
 onDestroy(() => marker?.remove());
-
 </script>

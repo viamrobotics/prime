@@ -58,13 +58,13 @@ $: handleDisabled = preventHandler(disabled);
       'inline-flex': width !== 'full',
       'px-3': !icon,
       'pl-2 pr-3': icon,
-      '!border-disabled-light !bg-disabled-light text-disabled-dark cursor-not-allowed':
+      'cursor-not-allowed !border-disabled-light !bg-disabled-light text-disabled-dark':
         disabled,
       'border-light bg-light hover:border-medium hover:bg-medium active:bg-gray-2':
         variant === 'primary' && !disabled,
       'border-gray-9 bg-gray-9 text-white hover:border-black hover:bg-black active:bg-[#000]':
         variant === 'dark' && !disabled,
-      'text-default active-border-[rgba(0,0,0,0.08)] border-transparent hover:bg-[rgba(0,0,0,0.04)] active:bg-[rgba(0,0,0,0.08)]':
+      'active-border-[rgba(0,0,0,0.08)] border-transparent text-default hover:bg-[rgba(0,0,0,0.04)] active:bg-[rgba(0,0,0,0.08)]':
         variant === 'ghost' && !disabled,
       'border-danger-dark bg-danger-dark text-white hover:bg-[#aa2a2b] active:bg-[#9e2728]':
         variant === 'danger' && !disabled,

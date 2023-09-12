@@ -53,8 +53,8 @@ export { extraClasses as cx };
     class={cx('flex text-xs', {
       'inline whitespace-nowrap': position === 'left',
       'text-subtle-1': !disabled,
-      'text-disabled-dark cursor-not-allowed': disabled,
-      'after:text-danger-dark after:ml-1 after:content-["*"]': required,
+      'cursor-not-allowed text-disabled-dark': disabled,
+      'after:ml-1 after:text-danger-dark after:content-["*"]': required,
     })}
   >
     <slot />

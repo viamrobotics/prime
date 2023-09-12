@@ -15,10 +15,14 @@
   ```
 -->
 <script lang="ts">
-
 import { environment as envStore } from './stores';
 import Map from './components/map.svelte';
-import { type Waypoint, type Obstacle, NavigationTab, type NavigationTabType } from './types';
+import {
+  type Waypoint,
+  type Obstacle,
+  NavigationTab,
+  type NavigationTabType,
+} from './types';
 import {
   waypoints as waypointsStore,
   obstacles as obstaclesStore,
@@ -39,7 +43,10 @@ export let obstacles: Obstacle[] = [];
 export let tab: NavigationTabType = NavigationTab.Waypoints;
 
 /** The visible set of tabs */
-export let tabs: NavigationTabType[] = [NavigationTab.Waypoints, NavigationTab.Obstacles];
+export let tabs: NavigationTabType[] = [
+  NavigationTab.Waypoints,
+  NavigationTab.Obstacles,
+];
 
 export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
 
@@ -48,7 +55,6 @@ $: $tabsStore = tabs;
 $: $waypointsStore = waypoints;
 $: $obstaclesStore = obstacles;
 $: $envStore = environment;
-
 </script>
 
 <Map
@@ -58,5 +64,8 @@ $: $envStore = environment;
   on:delete-waypoint
   on:update-obstacles
 >
-  <slot name='tab' slot='tab' />
+  <slot
+    name="tab"
+    slot="tab"
+  />
 </Map>

@@ -10,6 +10,6 @@ import { nanoid } from 'nanoid/non-secure';
  * const myOtherId = uniqueId('other'); // returns 'other_XXXXX`
  * ```
  */
-export const useUniqueId = (prefix: string = 'uid'): string => {
+export const useUniqueId = (prefix = 'uid'): string => {
   return `${prefix}_${nanoid()}`;
 };

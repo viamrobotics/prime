@@ -1,4 +1,4 @@
-import { expect, afterEach } from 'vitest';
+import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/svelte';
 import matchers from '@testing-library/jest-dom/matchers';
 
@@ -10,7 +10,7 @@ expect.extend(matchers);
  *
  * https://github.com/jsdom/jsdom/issues/1695
  */
-Element.prototype.scrollIntoView = () => {};
+Element.prototype.scrollIntoView = vi.fn();
 
 /**
  * `PointerEvent` does not exist in `jsdom` so this polyfill is based off this

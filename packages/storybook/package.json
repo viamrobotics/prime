@@ -4,10 +4,12 @@
   "version": "0.0.1",
   "packageManager": "pnpm@8.6.3",
   "scripts": {
-    "check": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write .",
+    "check": "pnpm run _prettier --check && pnpm run _eslint",
+    "format": "pnpm run _prettier --write",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build --docs -o prime"
+    "build-storybook": "storybook build --docs -o prime",
+    "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
+    "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\""
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^7.3.2",
@@ -26,22 +28,22 @@
     "@sveltejs/kit": "^1.22.4",
     "@sveltejs/package": "^2.2.0",
     "@types/node": "^20.4.5",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.4.0",
-    "@viamrobotics/eslint-config": "^0.1.2",
-    "@viamrobotics/prettier-config": "^0.1.2",
-    "@viamrobotics/prime-core": "workspace:../core",
-    "@viamrobotics/typescript-config": "^0.0.4",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "@viamrobotics/eslint-config": "^0.2.4",
+    "@viamrobotics/prettier-config": "^0.3.2",
+    "@viamrobotics/prime-core": "workspace:*",
+    "@viamrobotics/typescript-config": "^0.1.0",
     "autoprefixer": "^10.4.15",
-    "eslint": "^8.47.0",
+    "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-storybook": "^0.6.13",
-    "eslint-plugin-svelte": "^2.32.4",
+    "eslint-plugin-svelte": "^2.33.1",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "postcss": "^8.4.27",
-    "prettier": "^3.0.2",
+    "prettier": "^3.0.3",
     "prettier-plugin-svelte": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.4.1",
+    "prettier-plugin-tailwindcss": "^0.5.4",
     "publint": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -50,7 +52,7 @@
     "svelte": "^4.2.0",
     "tailwindcss": "^3.3.3",
     "tslib": "^2.6.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "type": "module"
 }

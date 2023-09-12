@@ -6,7 +6,7 @@ export let style = '';
 
 <th
   {style}
-  class="p-2 text-default font-normal overflow-hidden"
+  class="overflow-hidden p-2 font-normal text-default"
 >
   <slot />
 </th>

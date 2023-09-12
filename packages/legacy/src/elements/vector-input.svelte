@@ -51,7 +51,7 @@ const dimensionsArray = () => {
 };
 </script>
 
-<div class="flex justify-between items-center gap-2">
+<div class="flex items-center justify-between gap-2">
   <p class="m-0 text-[11px]">
     {label}
   </p>

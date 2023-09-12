@@ -89,7 +89,7 @@ $: errorClasses =
     <slot />
   </select>
   <span
-    class={cx('text-gray-6 absolute right-2 top-1.5 transition', {
+    class={cx('absolute right-2 top-1.5 text-gray-6 transition', {
       'peer-active:rotate-180': !disabled,
     })}
   >

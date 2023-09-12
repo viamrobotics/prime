@@ -131,22 +131,22 @@ const handleMoveClick = (target: ListBoxSide, event: Event) => {
 </script>
 
 <div
-  class={cx('w-full grid grid-cols-[1fr_32px_1fr] gap-8 items-center p-2', {
+  class={cx('grid w-full grid-cols-[1fr_32px_1fr] items-center gap-8 p-2', {
     '!text-black/50': isDisabled,
   })}
 >
   <div
-    class="w-full flex flex-col gap-2 self-stretch"
+    class="flex w-full flex-col gap-2 self-stretch"
     style={`height: ${height};`}
   >
     <span class="text-sm text-subtle-1">{leftlabel}</span>
     <div
-      class="border border-medium grow p-2 bg-white flex flex-col overflow-auto"
+      class="flex grow flex-col overflow-auto border border-medium bg-white p-2"
     >
       {#if options.left.length > 0}
         {#each options.left as option}
           <button
-            class={cx('flex items-center px-2 py text-sm', {
+            class={cx('py flex items-center px-2 text-sm', {
               'bg-focus/highlight': option.selected,
             })}
             on:click={(event) => handleOptionClick(option, LEFT, event)}
@@ -172,7 +172,7 @@ const handleMoveClick = (target: ListBoxSide, event: Event) => {
   <div class="flex flex-col gap-4">
     <button
       class={cx(
-        'rotate-90 border border-black h-8 w-8 flex items-center justify-center cursor-pointer hover:scale-105 bg-white',
+        'flex h-8 w-8 rotate-90 cursor-pointer items-center justify-center border border-black bg-white hover:scale-105',
         { 'border-black/50': isDisabled }
       )}
       data-testid="move-right"
@@ -185,30 +185,30 @@ const handleMoveClick = (target: ListBoxSide, event: Event) => {
     </button>
     <button
       class={cx(
-        '-rotate-90 border border-black h-8 w-8 flex items-center justify-center cursor-pointer hover:scale-105 bg-white',
+        'flex h-8 w-8 -rotate-90 cursor-pointer items-center justify-center border border-black bg-white hover:scale-105',
         { 'border-black/50': isDisabled }
       )}
       on:click={(event) => handleMoveClick(LEFT, event)}
       data-testid="move-left"
     >
       <v-icon
-        class="relative bottom-0.25"
+        class="bottom-0.25 relative"
         name="arrow-up"
       />
     </button>
   </div>
   <div
-    class="w-full flex flex-col gap-2 self-stretch"
+    class="flex w-full flex-col gap-2 self-stretch"
     style={`height: ${height};`}
   >
     <span class="text-sm text-subtle-2">{rightlabel}</span>
     <div
-      class="border border-medium grow p-2 bg-white flex flex-col overflow-auto"
+      class="flex grow flex-col overflow-auto border border-medium bg-white p-2"
     >
       {#if options.right.length > 0}
         {#each options.right as option}
           <button
-            class={cx('flex items-center px-2 py text-sm', {
+            class={cx('py flex items-center px-2 text-sm', {
               'bg-focus/highlight': option.selected,
             })}
             on:click={(event) => handleOptionClick(option, RIGHT, event)}

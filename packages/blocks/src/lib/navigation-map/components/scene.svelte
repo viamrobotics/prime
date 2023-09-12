@@ -1,11 +1,16 @@
-<script lang='ts'>
-
+<script lang="ts">
 import * as THREE from 'three';
 import { T, useThrelte, useRender } from '@threlte/core';
 import { view, obstacles } from '../stores';
 import ObstacleGeometries from './obstacle.svelte';
 import { useMapLibre, useMapLibreEvent } from '$lib/maplibre/hooks';
-import { renderPlugin, world, scenes, axes, setFrameloops } from '../plugins/render';
+import {
+  renderPlugin,
+  world,
+  scenes,
+  axes,
+  setFrameloops,
+} from '../plugins/render';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
 
 renderPlugin();
@@ -21,14 +26,14 @@ setFrameloops(map);
 scene.add(world);
 
 useMapLibreEvent('move', () => {
-  invalidate()
-  setFrameloops(map)
+  invalidate();
+  setFrameloops(map);
 });
 
 useRender(() => {
   renderer.clear();
 
-  axes.visible = scenes.length > 0
+  axes.visible = scenes.length > 0;
 
   for (const { ref, matrix } of scenes) {
     camera.current.projectionMatrix = matrix;
@@ -44,7 +49,6 @@ $: flat = $view === '2D';
 
 // This clips against the map so that objects intersecting sea level will not render over the map
 $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
-
 </script>
 
 <T.AmbientLight intensity={flat ? 2 : 1.5} />

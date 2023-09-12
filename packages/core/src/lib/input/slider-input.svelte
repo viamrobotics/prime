@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 For numeric user inputs that require easy adjustment.
 
 ```svelte
@@ -37,10 +37,10 @@ export let min = Number.NEGATIVE_INFINITY;
 export let max = Number.POSITIVE_INFINITY;
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly: boolean | undefined = false;
+export let readonly = false as boolean | undefined;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled: boolean | undefined = false;
+export let disabled = false as boolean | undefined;
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
@@ -71,10 +71,10 @@ $: {
 }
 
 $: isNumber = type === 'number';
+$: isButtonDisabled = readonly === true || disabled === true;
+$: handleDisabled = preventHandler(isButtonDisabled);
 
-const handleDisabled = preventHandler(Boolean(readonly || disabled));
-
-const handlePointerMove = (event: PointerEvent) => {
+$: handlePointerMove = (event: PointerEvent) => {
   const x = event.clientX;
   const deltaString = ((-(startX - x) * step) / 10).toFixed(
     isNumber ? stepDecimalDigits : 0
@@ -185,13 +185,13 @@ const handleChange = () => {
   />
   <button
     aria-hidden="true"
-    disabled={disabled || readonly}
+    disabled={isButtonDisabled}
     tabindex="-1"
     class={cx(
-      'z-max absolute bottom-[3px] left-[0.2rem] h-[24px] w-1 cursor-ew-resize',
+      'absolute bottom-[3px] left-[0.2rem] z-max h-[24px] w-1 cursor-ew-resize',
       {
-        'bg-gray-400 hover:bg-gray-700': !(disabled || readonly),
-        'bg-disabled-dark cursor-not-allowed': disabled || readonly,
+        'bg-gray-400 hover:bg-gray-700': !isButtonDisabled,
+        'cursor-not-allowed bg-disabled-dark': isButtonDisabled,
       }
     )}
     on:pointerdown|preventDefault|stopPropagation={handlePointerDown}

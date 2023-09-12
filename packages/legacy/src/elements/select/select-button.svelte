@@ -7,7 +7,7 @@ export let buttonicon = '';
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-  class="flex cursor-pointer hover:bg-light items-center px-2 py-1 border-t-[1px] border-light"
+  class="flex cursor-pointer items-center border-t-[1px] border-light px-2 py-1 hover:bg-light"
 >
   {#if buttonicon}
     <v-icon
@@ -15,5 +15,5 @@ export let buttonicon = '';
       name={buttonicon}
     />
   {/if}
-  <span class="text-sm pl-1.5">{buttontext}</span>
+  <span class="pl-1.5 text-sm">{buttontext}</span>
 </div>

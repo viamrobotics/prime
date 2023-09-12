@@ -126,7 +126,6 @@ const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
     <Button
       disabled
       on:click={() => {
-        // eslint-disable-next-line no-console
         console.log('Uh oh, should not be called!');
       }}
     >

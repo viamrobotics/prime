@@ -34,9 +34,9 @@ describe('search', () => {
       const match = new RegExp(escapeRegExp(search), 'giu').exec(option);
       const highlight = getSearchHighlight(option, search, match!);
 
-      expect(highlight?.[0]).toBe('Test ');
-      expect(highlight?.[1]).toBe(search);
-      expect(highlight?.[2]).toBe('ion');
+      expect(highlight[0]).toBe('Test ');
+      expect(highlight[1]).toBe(search);
+      expect(highlight[2]).toBe('ion');
     });
 
     it('should return a highlighting breakdown of the passed option with a term matching anywhere', () => {
@@ -44,9 +44,9 @@ describe('search', () => {
       const match = new RegExp(escapeRegExp(search), 'giu').exec(option);
       const highlight = getSearchHighlight(option, search, match!);
 
-      expect(highlight?.[0]).toBe('Test O');
-      expect(highlight?.[1]).toBe(search);
-      expect(highlight?.[2]).toBe('ion');
+      expect(highlight[0]).toBe('Test O');
+      expect(highlight[1]).toBe(search);
+      expect(highlight[2]).toBe('ion');
     });
   });
 

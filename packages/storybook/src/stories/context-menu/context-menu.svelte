@@ -6,9 +6,9 @@ import {
   type ContextMenuItemVariant,
 } from '@viamrobotics/prime-core';
 
-export let label: string = 'hi';
+export let label = 'hi';
 export let variant: ContextMenuItemVariant = 'primary';
-export let icon: string = '';
+export let icon = '';
 export let cx = '';
 </script>
 

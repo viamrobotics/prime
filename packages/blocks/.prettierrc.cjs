@@ -1,3 +1,9 @@
 'use strict';
 
-module.exports = '@viamrobotics/prettier-config/svelte';
+const path = require('node:path');
+const baseConfig = require('@viamrobotics/prettier-config/svelte');
+
+module.exports = {
+  ...baseConfig,
+  tailwindConfig: path.join(__dirname, 'tailwind.config.ts'),
+};
