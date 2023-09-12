@@ -1,6 +1,5 @@
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { Icon } from '@viamrobotics/prime-core';
-import WithStyles from './with-styles.svelte';
 import AllIcons from './all-icons.svelte';
 import { cx } from '../../lib/cx-control';
 
@@ -56,22 +55,6 @@ For displaying a list of items
   >
     {(props) => ({
       Component: Icon,
-      props,
-    })}
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story
-    name='Green circle checkmark icon at 4xl size'
-    args={{
-      name: 'check-circle',
-      size: '4xl',
-      style: 'color: #3d7d3f',
-    }}
-  >
-    {(props) => ({
-      Component: WithStyles,
       props,
     })}
   </Story>
