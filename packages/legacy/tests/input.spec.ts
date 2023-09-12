@@ -321,7 +321,13 @@ test('Given a disabled attribute, renders disabled input', async ({ page }) => {
   await expect(inputDisabled).toBeVisible();
   await expect(inputDisabled.locator('input').first()).toBeDisabled();
   await expect(inputDisabled.locator('input').first()).toHaveClass(
-    /bg-disabled-light text-disabled-dark border-disabled-light/u
+    /bg-disabled-light/u
+  );
+  await expect(inputDisabled.locator('input').first()).toHaveClass(
+    /text-disabled-dark/u
+  );
+  await expect(inputDisabled.locator('input').first()).toHaveClass(
+    /border-disabled-light/u
   );
 });
 
