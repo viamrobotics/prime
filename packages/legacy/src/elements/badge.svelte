@@ -10,14 +10,14 @@ export let variant: Variants = 'gray';
 </script>
 
 <small
-  class={cx('inline-block rounded-full px-3 py-0.5 text-xs border', {
-    'text-success-dark bg-success-light border-success-medium':
+  class={cx('inline-block rounded-full border px-3 py-0.5 text-xs', {
+    'border-success-medium bg-success-light text-success-dark':
       variant === 'green',
-    'text-warning-dark bg-warning-light border-warning-medium':
+    'border-warning-medium bg-warning-light text-warning-dark':
       variant === 'orange',
-    'text-danger-dark bg-danger-light border-danger-medium': variant === 'red',
-    'text-default bg-disabled-light border-medium': variant === 'gray',
-    'text-info-dark bg-info-light border-info-medium': variant === 'blue',
+    'border-danger-medium bg-danger-light text-danger-dark': variant === 'red',
+    'border-medium bg-disabled-light text-default': variant === 'gray',
+    'border-info-medium bg-info-light text-info-dark': variant === 'blue',
   })}
 >
   {label}

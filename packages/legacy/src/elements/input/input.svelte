@@ -263,8 +263,8 @@ $: {
         class={cx('text-xs', {
           'inline whitespace-nowrap': labelposition === 'left',
           'text-subtle-1': !isDisabled,
-          'text-disabled-dark pointer-events-none': isDisabled,
-          'after:text-danger-dark after:content-["*"] after:ml-1': isRequired,
+          'pointer-events-none text-disabled-dark': isDisabled,
+          'after:ml-1 after:text-danger-dark after:content-["*"]': isRequired,
         })}
       >
         {label}
@@ -298,17 +298,17 @@ $: {
     aria-disabled={isDisabled ? true : undefined}
     bind:this={input}
     class={cx(
-      'w-full py-1.5 px-2 leading-tight text-xs h-[30px] border outline-none appearance-none',
+      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
       {
         'pl-2.5': !isNumeric,
         'pl-3': isNumeric,
-        'bg-white border-light hover:border-medium focus:border-gray-9':
+        'border-light bg-white hover:border-medium focus:border-gray-9':
           !isDisabled && !isInvalidNumericInput,
-        'pointer-events-none bg-disabled-light text-disabled-dark border-disabled-light':
+        'pointer-events-none border-disabled-light bg-disabled-light text-disabled-dark':
           isDisabled || isDragging || isReadonly,
-        'border-danger-dark border -outline-offset-1 outline-[1.5px] outline-danger-dark':
+        'border border-danger-dark outline-[1.5px] -outline-offset-1 outline-danger-dark':
           state === 'error' || isInvalidNumericInput,
-        'border-warning-bright -outline-offset-1 outline-[1.5px] outline-warning-bright':
+        'border-warning-bright outline-[1.5px] -outline-offset-1 outline-warning-bright':
           state === 'warn',
       }
     )}
@@ -320,17 +320,17 @@ $: {
 
   {#if incrementor === 'slider' && isNumeric}
     <div
-      class="absolute left-[0.2rem] bottom-[3px] h-[24px] w-1 z-50 bg-gray-400 hover:bg-gray-700 cursor-pointer"
+      class="absolute bottom-[3px] left-[0.2rem] z-50 h-[24px] w-1 cursor-pointer bg-gray-400 hover:bg-gray-700"
       on:pointerdown={handleNumberDragDown}
     >
       {#if isDragging}
         <div
           bind:this={numberDragCord}
-          class="h-px bg-gray-400 mt-[calc(13px)] pointer-events-none"
+          class="pointer-events-none mt-[calc(13px)] h-px bg-gray-400"
         />
         <div
           bind:this={numberDragHead}
-          class="pointer-events-none -mt-[5px] -ml-[2px]"
+          class="pointer-events-none -ml-[2px] -mt-[5px]"
         >
           <div class="h-2 w-2">
             <v-tooltip
@@ -339,7 +339,7 @@ $: {
               minwidth="auto"
               text={value}
             >
-              <div class="h-2 w-2 bg-gray-800 rounded-full" />
+              <div class="h-2 w-2 rounded-full bg-gray-800" />
             </v-tooltip>
           </div>
         </div>

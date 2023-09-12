@@ -273,7 +273,7 @@ $: {
 <div class="relative">
   <label
     bind:this={root}
-    class={cx('relative min-w-[6rem] w-full flex gap-1', {
+    class={cx('relative flex w-full min-w-[6rem] gap-1', {
       'z-[100]': open,
       'flex-col': labelposition === 'top',
       'items-center': labelposition === 'left',
@@ -329,18 +329,18 @@ $: {
             aria-disabled={isDisabled ? true : undefined}
             type="text"
             class={cx(
-              'py-1.5 pl-2 pr-1 grow text-xs outline-none appearance-none w-full border bg-white',
+              'w-full grow appearance-none border bg-white py-1.5 pl-2 pr-1 text-xs outline-none',
               {
                 'border-light hover:border-medium focus:border-gray-9':
                   !isDisabled &&
                   !isReadonly &&
                   state !== 'error' &&
                   state !== 'warn',
-                'border-danger-dark -outline-offset-1 outline-[2px] outline-danger-dark':
+                'border-danger-dark outline-[2px] -outline-offset-1 outline-danger-dark':
                   state === 'error',
-                'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
+                'border-warning-bright outline-[2px] -outline-offset-1 outline-warning-bright':
                   state === 'warn',
-                'pointer-events-none !bg-disabled-light text-disabled-dark border-disabled-light':
+                'pointer-events-none border-disabled-light !bg-disabled-light text-disabled-dark':
                   isDisabled || isReadonly,
               }
             )}
@@ -351,8 +351,8 @@ $: {
             tabindex="-1"
             aria-label="Open dropdown"
             class={cx(
-              'absolute top-0 right-1 h-[29px]',
-              'py-1.5 px-1 grid place-content-center transition-transform duration-200',
+              'absolute right-1 top-0 h-[29px]',
+              'grid place-content-center px-1 py-1.5 transition-transform duration-200',
               {
                 'rotate-180': open,
                 'text-disabled-dark': isDisabled || isReadonly,
@@ -371,7 +371,7 @@ $: {
         <div
           slot="content"
           class={cx(
-            'absolute mt-1 left-0 w-full border border-black bg-white drop-shadow-md',
+            'absolute left-0 mt-1 w-full border border-black bg-white drop-shadow-md',
             {
               hidden: !open,
             }
@@ -387,7 +387,7 @@ $: {
                 on:mouseleave={clearNavigationIndex}
               >
                 {#if heading}
-                  <span class="flex text-xs text-default pl-1.5 py-1 flex-wrap">
+                  <span class="flex flex-wrap py-1 pl-1.5 text-xs text-default">
                     {heading}
                   </span>
                 {/if}
@@ -444,7 +444,7 @@ $: {
                       {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
                         <span
                           class={optionPartIndex === 0
-                            ? 'text-gray-800 w-5'
+                            ? 'w-5 text-gray-800'
                             : ''}
                         >
                           {optionPart}
@@ -457,7 +457,7 @@ $: {
                 {/each}
                 {#if canClearAll}
                   <button
-                    class="w-full px-2 py-1 hover:bg-light text-xs text-left"
+                    class="w-full px-2 py-1 text-left text-xs hover:bg-light"
                     on:mouseenter={clearNavigationIndex}
                     on:click={handleClearAll}
                   >
@@ -466,7 +466,7 @@ $: {
                 {/if}
               </div>
             {:else}
-              <div class="flex py-1 px-2.5 justify-center text-xs">
+              <div class="flex justify-center px-2.5 py-1 text-xs">
                 No matching results
               </div>
             {/if}
@@ -486,7 +486,7 @@ $: {
   {#if parsedSelected.length > 0 && showsPill}
     <div
       class={cx('flex flex-wrap gap-2 pt-2', {
-        'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
+        'pointer-events-none cursor-not-allowed': isDisabled || isReadonly,
         'text-black/50': isDisabled || isReadonly,
       })}
     >

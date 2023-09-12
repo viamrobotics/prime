@@ -7,7 +7,7 @@ export let style = '';
 <td
   {style}
   part="table-cell"
-  class="p-2 overflow-hidden"
+  class="overflow-hidden p-2"
 >
   <slot />
 </td>

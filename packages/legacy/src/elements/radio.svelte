@@ -85,13 +85,13 @@ $: {
     {#each parsedOptions as option}
       <button
         class={cx('whitespace-nowrap border px-3 py-1.5 text-xs', {
-          'bg-medium border-light text-subtle-1':
+          'border-light bg-medium text-subtle-1':
             option !== selected && !isReadonly,
-          'bg-light border-gray-6 text-default font-semibold':
+          'border-gray-6 bg-light font-semibold text-default':
             option === selected && !isReadonly,
-          'bg-light border-medium text-disabled-dark font-semibold':
+          'border-medium bg-light font-semibold text-disabled-dark':
             option === selected && isReadonly,
-          'bg-disabled-light border-light text-disabled-dark cursor-not-allowed pointer-events-none':
+          'pointer-events-none cursor-not-allowed border-light bg-disabled-light text-disabled-dark':
             isReadonly,
           'w-full': width === 'full',
         })}

@@ -2,7 +2,7 @@
 
 <div
   role="menu"
-  class="py-1 border border-medium shadow-sm max-w-xs"
+  class="max-w-xs border border-medium py-1 shadow-sm"
 >
   <slot class="filter-none" />
 </div>
