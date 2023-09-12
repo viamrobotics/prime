@@ -40,12 +40,12 @@ const handleClick = (option: string) => {
 </script>
 
 <div
-  class={cx('border-b-border-2 bg-medium flex w-full border-b', extraClasses)}
+  class={cx('border-b-border-2 flex w-full border-b bg-medium', extraClasses)}
 >
   {#each tabs as tab, index (tab)}
     <button
       class={cx('px-4 py-1 text-sm first:ml-6', {
-        'border-x-border-2 border-t-border-2 text-default -mb-px border border-b-white bg-white font-semibold':
+        'border-x-border-2 border-t-border-2 -mb-px border border-b-white bg-white font-semibold text-default':
           tab === selected,
         'text-subtle-1': tab !== selected,
         'border-l border-l-gray-300': selectedIndex > index,

@@ -46,7 +46,7 @@ export { extraClasses as cx };
   role="menuitem"
   aria-labelledby={label}
   class={cx(
-    'hover:bg-light flex w-full items-center gap-1 px-2 py-1.5 text-left',
+    'flex w-full items-center gap-1 px-2 py-1.5 text-left hover:bg-light',
     extraClasses
   )}
   on:click={() => dispatch('select', { value: label })}

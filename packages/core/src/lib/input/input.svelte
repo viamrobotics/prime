@@ -1,10 +1,10 @@
 <!--
 @component
-  
+
 For user inputs.
 
-This is the base input component that accepts all input properties without any 
-additional behaviors attached. Generally, other typed inputs like the 
+This is the base input component that accepts all input properties without any
+additional behaviors attached. Generally, other typed inputs like the
 NumberInput or DateInput are preferable.
 
 ```svelte
@@ -28,10 +28,10 @@ import cx from 'classnames';
 export let value: string | number | undefined = '';
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly: boolean | undefined = false;
+export let readonly = false as boolean | undefined;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled: boolean | undefined = false;
+export let disabled = false as boolean | undefined;
 
 /** The state of the input (info, warn, error, success), if any. */
 export let state: InputState | undefined = 'none';
@@ -46,11 +46,9 @@ export { extraClasses as cx };
 $: isInfo = state === 'info';
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
-
-const handleDisabled = preventHandler(Boolean(disabled || readonly));
-const handleDisabledKeydown = preventKeyboardHandler(
-  Boolean(disabled || readonly)
-);
+$: isInputReadOnly = disabled === true || readonly === true;
+$: handleDisabled = preventHandler(isInputReadOnly);
+$: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 
 $: icon = {
   info: 'information',
@@ -80,7 +78,7 @@ $: errorClasses =
 <div class="relative w-full">
   <input
     {...$$restProps}
-    readonly={disabled || readonly ? true : undefined}
+    readonly={isInputReadOnly ? true : undefined}
     aria-disabled={disabled ? true : undefined}
     aria-invalid={isError ? true : undefined}
     class={cx(

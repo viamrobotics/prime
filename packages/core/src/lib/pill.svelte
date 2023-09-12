@@ -44,9 +44,9 @@ const handleRemove = () => {
 
 <div
   class={cx(
-    'bg-medium hover:bg-gray-3 flex max-w-fit items-center gap-1 whitespace-nowrap rounded-xl px-2 py-0.5 text-[10px]',
+    'flex max-w-fit items-center gap-1 whitespace-nowrap rounded-xl bg-medium px-2 py-0.5 text-[10px] hover:bg-gray-3',
     {
-      'bg-disabled-light text-disabled-dark cursor-not-allowed':
+      'cursor-not-allowed bg-disabled-light text-disabled-dark':
         disabled || readonly,
     },
     extraClasses

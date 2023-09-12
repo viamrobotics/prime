@@ -21,7 +21,7 @@ export { extraClasses as cx };
 </script>
 
 <th
-  class={cx('text-default overflow-hidden p-2 font-normal', extraClasses)}
+  class={cx('overflow-hidden p-2 font-normal text-default', extraClasses)}
   {...$$restProps}
 >
   <slot />
