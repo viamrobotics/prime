@@ -1,11 +1,9 @@
-<script lang='ts'>
+<script lang="ts">
+import * as THREE from 'three';
+import { T } from '@threlte/core';
 
-import * as THREE from 'three'
-import { T } from '@threlte/core'
-
-export let thickness = 0.05
-export let length = 10
-
+export let thickness = 0.05;
+export let length = 10;
 </script>
 
 <T.Mesh
@@ -33,7 +31,8 @@ export let length = 10
   scale.y={length}
   scale.x={thickness}
   scale.z={thickness}
-  rotation.x={-Math.PI / 2} position.z={length / 2}
+  rotation.x={-Math.PI / 2}
+  position.z={length / 2}
 >
   <T is={new THREE.MeshBasicMaterial({ color: 'blue' })} />
   <T.CylinderGeometry args={[1, 1, 1]} />

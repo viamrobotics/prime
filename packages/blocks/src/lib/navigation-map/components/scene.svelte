@@ -28,7 +28,6 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 
 {#each $obstacles as obstacle (obstacle.name)}
   <ObstacleGeometries {obstacle}>
-    
     {#if $hovered === obstacle.name}
       <!-- nothing -->
     {/if}

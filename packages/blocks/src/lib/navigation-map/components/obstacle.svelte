@@ -33,12 +33,16 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
         block: 'nearest',
       })}
   >
-
     {#if geometry.type === 'box'}
       {#if $hovered === name}
         <AxesHelper
-          thickness={Math.max(geometry.length, geometry.width, geometry.height) / 100}
-          length={Math.max(geometry.length, geometry.width, geometry.height) * 2}
+          thickness={Math.max(
+            geometry.length,
+            geometry.width,
+            geometry.height
+          ) / 100}
+          length={Math.max(geometry.length, geometry.width, geometry.height) *
+            2}
         />
       {/if}
 
