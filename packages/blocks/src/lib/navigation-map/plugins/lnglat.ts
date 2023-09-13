@@ -2,9 +2,11 @@
  * This plugin carries out two functions:
  *
  * - It syncs the projection matrix of a mapbibre-gl camera to a THREE.Camera in order to render objects
- *   from the perspective of the map viewer.
+ *   from the perspective of the map viewer. The camera is set to look at the current center of the visible map.
  *
- * - It manages the position of any THREE.Object3D that has a `userData.lngLat` property.
+ * - It manages the position of any THREE.Object3D that has a `userData.lngLat` property. The position
+ *   is determined by calculating the difference of the map's center lng,lat and the object's lng,lat and then
+ *   making an approximate transform to an x,z plane offset in meters.
  */
 
 import * as THREE from 'three';

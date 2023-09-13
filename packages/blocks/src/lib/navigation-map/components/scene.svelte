@@ -1,7 +1,7 @@
 <script lang="ts">
 import * as THREE from 'three';
 import { T, useThrelte } from '@threlte/core';
-import { view, obstacles, hovered } from '../stores';
+import { view, obstacles } from '../stores';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
 import { lngLatPlugin } from '../plugins/lnglat';
 import { interactivityPlugin } from '../plugins/interactivity';
@@ -27,9 +27,5 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 {/if}
 
 {#each $obstacles as obstacle (obstacle.name)}
-  <ObstacleGeometries {obstacle}>
-    {#if $hovered === obstacle.name}
-      <!-- nothing -->
-    {/if}
-  </ObstacleGeometries>
+  <ObstacleGeometries {obstacle} />
 {/each}

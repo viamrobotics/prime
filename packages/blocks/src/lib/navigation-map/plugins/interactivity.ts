@@ -1,3 +1,9 @@
+/**
+ * Provides interactivity as described in @threlte/extras,
+ * but carries out necessary camera and screen-space transforms
+ * to be compatible with the map camera.
+ */
+
 import * as THREE from 'three';
 import { interactivity } from '@threlte/extras';
 import { useThrelte } from '@threlte/core';
