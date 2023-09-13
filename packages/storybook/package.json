@@ -7,7 +7,7 @@
     "check": "pnpm run _prettier --check && pnpm run _eslint",
     "format": "pnpm run _prettier --write",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build --docs -o prime",
+    "build": "storybook build --docs -o prime",
     "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
     "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\""
   },
