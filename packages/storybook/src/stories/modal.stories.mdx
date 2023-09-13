@@ -1,0 +1,72 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Modal } from '@viamrobotics/prime-core';
+
+<Meta
+  title='Elements/Modal'
+  parameters={{
+    actions: {
+      handles: ['close'],
+    },
+  }}
+  argTypes={{
+    title: {
+      description: 'The title text.',
+      table: { defaultValue: { summary: 'Title' } },
+    },
+    message: {
+      description: 'The message text.',
+      table: { defaultValue: { summary: 'Here is a sample message' } },
+    },
+    open: {
+      description: 'Whether the modal is open.',
+      table: { defaultValue: { summary: true } },
+      control: { type: 'boolean' },
+    },
+    variant: {
+      description: 'The variant of the modal.',
+      table: { defaultValue: { summary: '' } },
+      control: { type: 'radio' },
+      options: ['', 'small'],
+    },
+    'on:close': {
+      description: 'Event triggered when the modal is requested to close.'
+    },
+  }}
+/>
+
+# Modal
+
+A modal overlay for presenting content.
+
+<Canvas>
+  <Story
+    name='Default Modal'
+    args={{
+      title: 'Default title',
+      message: 'This is the default modal.',
+      open: true,
+    }}
+  >
+    {(props) => ({
+      Component: Modal,
+      props,
+    })}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name='Small Modal'
+    args={{
+      title: 'Small modal title',
+      message: 'This is a small modal.',
+      open: true,
+      variant: 'small',
+    }}
+  >
+    {(props) => ({
+      Component: Modal,
+      props,
+    })}
+  </Story>
+</Canvas>

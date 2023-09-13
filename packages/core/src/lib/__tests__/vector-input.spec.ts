@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
-import VectorInput from './vector-input.svelte';
+import VectorInput from '../vector-input.svelte';
 
 describe('VectorInput', () => {
   it('should render correct labels', () => {

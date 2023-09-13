@@ -29,13 +29,23 @@ import Select from '$lib/select/select.svelte';
 import SearchableSelect from '$lib/select/searchable-select.svelte';
 import Multiselect from '$lib/select/multiselect.svelte';
 import NotificationContainer from '$lib/notification/notification-container.svelte';
+import Modal from '$lib/modal.svelte';
 import { notify } from '$lib/notification/notify';
 
 let buttonClickedTimes = 0;
 let disabled = true;
+let modalOpen = false;
 
 const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
   disabled = event.detail.value === 'Disabled';
+};
+
+const handleCloseModal = () => {
+  modalOpen = false;
+};
+
+const handleOpenModal = () => {
+  modalOpen = true;
 };
 </script>
 
@@ -498,6 +508,30 @@ const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
     >
       Danger Notify
     </Button>
+  </div>
+
+  <!-- Modal -->
+  <h1 class="text-2xl">Modal</h1>
+
+  <div>
+    <Button on:click={handleOpenModal}>Open Modal</Button>
+    <Modal
+      open={modalOpen}
+      title="This is the modal demo"
+      message="Are you sure you want to kick off a notify toast?"
+      on:close={handleCloseModal}
+    >
+      <Button
+        slot="primary"
+        on:click={() => notify.success('Howdy Message', 'Howdy Partner')}
+        >Notify howdy</Button
+      >
+      <Button
+        slot="secondary"
+        variant="dark"
+        on:click={handleCloseModal}>Cancel</Button
+      >
+    </Modal>
   </div>
 
   <!-- Pill -->
