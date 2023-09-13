@@ -1,8 +1,14 @@
+<!--
+  @component An AxesHelper with thick lines.
+-->
 <script lang="ts">
 import * as THREE from 'three';
 import { T } from '@threlte/core';
 
+/** The thickness of all axes */
 export let thickness = 0.05;
+
+/** The length of all axes */
 export let length = 10;
 </script>
 
