@@ -61,14 +61,12 @@ const toggleTileset = () => {
       <CenterInputs />
     </div>
 
-    {#if localStorage.getItem('prime_debug_3d')}
-      <div class="absolute bottom-12 right-3 z-10">
-        <Radio
-          options={['2D', '3D']}
-          selected={$view}
-          on:input={handleViewSelect}
-        />
-      </div>
-    {/if}
+    <div class="absolute bottom-12 right-3 z-10">
+      <Radio
+        options={['2D', '3D']}
+        selected={$view}
+        on:input={handleViewSelect}
+      />
+    </div>
   </MapLibre>
 </div>
