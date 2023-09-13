@@ -1,12 +1,11 @@
 <script lang="ts">
 import * as THREE from 'three';
 import { T, useThrelte } from '@threlte/core';
-import { AxesHelper } from 'trzy';
 import { view, obstacles, hovered } from '../stores';
-import ObstacleGeometries from './obstacle.svelte';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
 import { lngLatPlugin } from '../plugins/lnglat';
 import { interactivityPlugin } from '../plugins/interactivity';
+import ObstacleGeometries from './obstacle.svelte';
 
 lngLatPlugin();
 computeBoundingPlugin();
@@ -29,8 +28,9 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 
 {#each $obstacles as obstacle (obstacle.name)}
   <ObstacleGeometries {obstacle}>
-    {#if false && $hovered === obstacle.name}
-      <T is={AxesHelper} />
+    
+    {#if $hovered === obstacle.name}
+      <!-- nothing -->
     {/if}
   </ObstacleGeometries>
 {/each}

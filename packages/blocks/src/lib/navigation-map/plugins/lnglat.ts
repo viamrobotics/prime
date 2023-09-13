@@ -1,3 +1,12 @@
+/**
+ * This plugin carries out two functions:
+ * 
+ * - It syncs the projection matrix of a mapbibre-gl camera to a THREE.Camera in order to render objects
+ *   from the perspective of the map viewer.
+ * 
+ * - It manages the position of any THREE.Object3D that has a `userData.lngLat` property.
+ */
+
 import * as THREE from 'three';
 import { useThrelte, useFrame } from '@threlte/core';
 import { MercatorCoordinate } from 'maplibre-gl';
@@ -9,25 +18,21 @@ export interface Props {
   lnglat?: LngLat;
 }
 
+// Uses the haversine formula for calculating approximate lng,lat distances.
 const getOffsetInMeters = (center: LngLat, offset: LngLat) => {
-  // Radius of the Earth in meters, approximately 6371 km
   const earthRadius = 6_371_000;
 
-  // Convert latitude and longitude from degrees to radians
   const lat1Rad = (center.lat * Math.PI) / 180;
   const lng1Rad = (center.lng * Math.PI) / 180;
   const lat2Rad = (offset.lat * Math.PI) / 180;
   const lng2Rad = (offset.lng * Math.PI) / 180;
 
-  // Calculate the differences in latitudes and longitudes
   const latDiff = lat2Rad - lat1Rad;
   const lngDiff = lng2Rad - lng1Rad;
 
-  // Calculate the average latitude
-  const avgLatRad = (lat1Rad + lat2Rad) / 2;
+  const averageLatRadius = (lat1Rad + lat2Rad) / 2;
 
-  // Calculate the x and z offsets in meters using local approximation
-  const xOffset = earthRadius * lngDiff * Math.cos(avgLatRad);
+  const xOffset = earthRadius * lngDiff * Math.cos(averageLatRadius);
   const zOffset = earthRadius * latDiff;
 
   return [-xOffset, zOffset] as const;

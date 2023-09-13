@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { T } from '@threlte/core';
 import type { Obstacle } from '$lib';
 import { view, hovered, obstacleNavItems } from '../stores';
+import AxesHelper from './axes-helper.svelte';
 
 /** An obstacle to render. */
 export let obstacle: Obstacle;
@@ -32,9 +33,15 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
         block: 'nearest',
       })}
   >
-    <slot />
 
     {#if geometry.type === 'box'}
+      {#if $hovered === name}
+        <AxesHelper
+          thickness={Math.max(geometry.length, geometry.width, geometry.height) / 100}
+          length={Math.max(geometry.length, geometry.width, geometry.height) * 2}
+        />
+      {/if}
+
       {#if $view === '3D'}
         <T.BoxGeometry
           computeBounding={name}
@@ -49,6 +56,13 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
         />
       {/if}
     {:else if geometry.type === 'sphere'}
+      {#if $hovered === name}
+        <AxesHelper
+          thickness={geometry.radius / 100}
+          length={geometry.radius * 2}
+        />
+      {/if}
+
       {#if $view === '3D'}
         <T.SphereGeometry
           computeBounding={name}
@@ -63,12 +77,20 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
         />
       {/if}
     {:else if geometry.type === 'capsule'}
+      {#if $hovered === name}
+        <AxesHelper
+          thickness={Math.max(geometry.radius, geometry.length) / 100}
+          length={Math.max(geometry.radius, geometry.length) * 2}
+        />
+      {/if}
+
       <T.CapsuleGeometry
         computeBounding={name}
         args={[geometry.radius, geometry.length, 16, 32]}
         on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
       />
     {/if}
+
     <T.MeshPhongMaterial bind:ref={material} />
   </T.Mesh>
 {/each}
