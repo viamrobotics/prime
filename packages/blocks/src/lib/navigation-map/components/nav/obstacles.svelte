@@ -18,7 +18,7 @@ import {
   obstacleNavItems,
 } from '../../stores';
 import { calculateBoundingBox } from '../../lib/bounding-box';
-import { createEventDispatcher, tick } from 'svelte';
+import { createEventDispatcher } from 'svelte';
 import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
 import { createName } from '$lib/navigation-map/lib/create-name';
 
@@ -65,7 +65,7 @@ const handleOrientationInput =
   };
 
 // Click to add an obstacle
-useMapLibreEvent('click', async (event) => {
+useMapLibreEvent('click', (event) => {
   if ($hovered) {
     return;
   }
@@ -75,8 +75,6 @@ useMapLibreEvent('click', async (event) => {
   const name = createName(names, 'obstacle', $obstacles.length);
   $obstacles = [createObstacle(name, location), ...$obstacles];
   dispatch('update', $obstacles);
-
-  await tick();
 
   $hovered = name;
   $obstacleNavItems[name]?.scrollIntoView({

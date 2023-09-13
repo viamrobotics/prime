@@ -11,6 +11,10 @@ export let obstacle: Obstacle;
 
 let material: THREE.MeshPhongMaterial;
 
+const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
+  ref.rotateX(-Math.PI / 2);
+};
+
 $: name = obstacle.name;
 $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
   $hovered === obstacle.name
@@ -50,13 +54,13 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
         <T.BoxGeometry
           computeBounding={name}
           args={[geometry.length, geometry.width, geometry.height]}
-          on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
+          on:create={handleGeometryCreate}
         />
       {:else}
         <T.PlaneGeometry
           computeBounding={name}
           args={[geometry.length, geometry.width]}
-          on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
+          on:create={handleGeometryCreate}
         />
       {/if}
     {:else if geometry.type === 'sphere'}
@@ -71,13 +75,13 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
         <T.SphereGeometry
           computeBounding={name}
           args={[geometry.radius]}
-          on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
+          on:create={handleGeometryCreate}
         />
       {:else}
         <T.CircleGeometry
           computeBounding={name}
           args={[geometry.radius]}
-          on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
+          on:create={handleGeometryCreate}
         />
       {/if}
     {:else if geometry.type === 'capsule'}
@@ -91,7 +95,7 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
       <T.CapsuleGeometry
         computeBounding={name}
         args={[geometry.radius, geometry.length, 16, 32]}
-        on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
+        on:create={handleGeometryCreate}
       />
     {/if}
 

@@ -7,25 +7,20 @@ import { cameraMatrix } from '../stores';
 
 const { map } = useMapLibre();
 
-let context: WebGLRenderingContext | WebGL2RenderingContext | undefined;
-
 onMount(() => {
   map.addLayer({
     id: 'obstacle-layer',
     type: 'custom',
     renderingMode: '3d',
-    render(ctx, viewProjectionMatrix) {
-      context = ctx;
+    render(_ctx, viewProjectionMatrix) {
       cameraMatrix.fromArray(viewProjectionMatrix);
       // This is necessary to lock-step the two canvases.
-      map?.triggerRepaint();
+      map.triggerRepaint();
     },
   });
 
   return () => {
-    if (map?.getLayer('obstacle-layer')) {
-      map?.removeLayer('obstacle-layer');
-    }
+    map.removeLayer('obstacle-layer');
   };
 });
 </script>
