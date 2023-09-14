@@ -68,7 +68,7 @@ onMount(() => {
       invisible: !open,
     }
   )}
-  role="dialog"
+  role="button"
   tabindex="0"
   aria-label={title}
   on:click={handleBackgroundClick}

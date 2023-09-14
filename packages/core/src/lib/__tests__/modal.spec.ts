@@ -35,7 +35,7 @@ describe('Modal', () => {
     const onClose = vi.fn();
     component.$on('close', onClose);
 
-    const background = container.querySelector('div[role="dialog"]');
+    const background = container.querySelector('div[role="button"]');
     if (!background) {
       throw new Error('Background not found');
     }
