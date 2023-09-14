@@ -1,19 +1,13 @@
 <svelte:options immutable />
 
-<script
-  lang="ts"
-  context="module"
->
-export type BannerVariant = 'danger' | 'warning' | 'success' | 'info';
-</script>
-
 <script lang="ts">
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
 import { Button, Icon, type IconName } from '$lib';
+import { BannerVariant, type BannerVariantType } from './variants';
 
 /** The severity of the notification you want to show users*/
-export let variant: BannerVariant;
+export let variant: BannerVariantType;
 
 /** The scaling applied on the y axis of the page*/
 export let progress = 1;
@@ -32,31 +26,31 @@ const dispatch = createEventDispatcher<{
 
 const handleClose = () => dispatch('close');
 
-$: isInfo = variant === 'info';
-$: isWarn = variant === 'warning';
-$: isDanger = variant === 'danger';
-$: isSuccess = variant === 'success';
+$: isInfo = variant === BannerVariant.Info;
+$: isWarn = variant === BannerVariant.Warning;
+$: isDanger = variant === BannerVariant.Danger;
+$: isSuccess = variant === BannerVariant.Success;
 
 let icon: IconName | null = null;
 let iconClasses = '';
 $: {
   switch (variant) {
-    case 'info': {
+    case BannerVariant.Info: {
       icon = 'information';
       iconClasses = 'text-info-dark';
       break;
     }
-    case 'warning': {
+    case BannerVariant.Warning: {
       icon = 'alert';
       iconClasses = 'text-warning-bright';
       break;
     }
-    case 'danger': {
+    case BannerVariant.Danger: {
       icon = 'alert-circle';
       iconClasses = 'text-danger-dark';
       break;
     }
-    case 'success': {
+    case BannerVariant.Success: {
       icon = 'check-circle';
       iconClasses = 'text-success-dark';
       break;
@@ -110,10 +104,7 @@ $: {
         />
       {/if}
 
-      <figure
-        class="flex flex-col"
-        role="alert"
-      >
+      <figure class="flex flex-col">
         <figcaption class="text-sm font-medium text-default">
           <slot name="title" />
         </figcaption>
@@ -138,7 +129,7 @@ $: {
       {#if exitable}
         <Button
           variant="ghost"
-          cx="text-gray-7 absolute right-1 top-1"
+          cx="text-gray-7 absolute right-1 top-2"
           aria-label="Dismiss notification"
           on:click={handleClose}
         >

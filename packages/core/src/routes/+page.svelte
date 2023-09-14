@@ -1,35 +1,40 @@
 <script lang="ts">
-import Badge from '$lib/badge.svelte';
-import Breadcrumbs from '$lib/breadcrumbs.svelte';
-import Button from '$lib/button/button.svelte';
-import IconButton from '$lib/button/icon-button.svelte';
-import ContextMenu from '$lib/context-menu/context-menu.svelte';
-import ContextMenuItem from '$lib/context-menu/context-menu-item.svelte';
-import ContextMenuSeparator from '$lib/context-menu/context-menu-separator.svelte';
-import Icon from '$lib/icon/icon.svelte';
-import Label from '$lib/label.svelte';
-import Banner from '$lib/banner.svelte';
-import Input from '$lib/input/input.svelte';
-import Pill from '$lib/pill.svelte';
-import Switch from '$lib/switch.svelte';
-import Radio from '$lib/radio.svelte';
-import Tabs from '$lib/tabs.svelte';
-import Tooltip from '$lib/tooltip.svelte';
-import TextInput from '$lib/input/text-input.svelte';
-import NumericInput from '$lib/input/numeric-input.svelte';
-import SliderInput from '$lib/input/slider-input.svelte';
-import VectorInput from '$lib/vector-input.svelte';
-import Table from '$lib/table/table.svelte';
-import TableBody from '$lib/table/table-body.svelte';
-import TableCell from '$lib/table/table-cell.svelte';
-import TableHeaderCell from '$lib/table/table-header-cell.svelte';
-import TableHeader from '$lib/table/table-header.svelte';
-import TableRow from '$lib/table/table-row.svelte';
-import Select from '$lib/select/select.svelte';
-import SearchableSelect from '$lib/select/searchable-select.svelte';
-import Multiselect from '$lib/select/multiselect.svelte';
-import NotificationContainer from '$lib/notification/notification-container.svelte';
-import { notify } from '$lib/notification/notify';
+import {
+  Badge,
+  Breadcrumbs,
+  Button,
+  IconButton,
+  ContextMenu,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  Icon,
+  Label,
+  Banner,
+  Input,
+  Pill,
+  Switch,
+  Radio,
+  Tabs,
+  Tooltip,
+  TextInput,
+  NumericInput,
+  SliderInput,
+  VectorInput,
+  Table,
+  TableBody,
+  TableCell,
+  TableHeaderCell,
+  TableHeader,
+  TableRow,
+  Select,
+  SearchableSelect,
+  Multiselect,
+  NotificationContainer,
+  provideNotify,
+  useNotify,
+} from '$lib';
+
+provideNotify();
 
 let buttonClickedTimes = 0;
 let disabled = true;
@@ -37,9 +42,8 @@ let disabled = true;
 const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
   disabled = event.detail.value === 'Disabled';
 };
+const notify = useNotify();
 </script>
-
-<NotificationContainer />
 
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
   <!-- Badge -->
@@ -479,6 +483,9 @@ const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
 
   <!-- Notify -->
   <h1 class="text-2xl">Notify</h1>
+
+  <NotificationContainer />
+
   <div class="flex gap-4">
     <Button on:click={() => notify.info('Info', 'Info message')}>
       Info Notify

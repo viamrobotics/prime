@@ -1,5 +1,5 @@
 export { default as Badge } from './badge.svelte';
-export { default as Banner, type BannerVariant } from './banner.svelte';
+export { Banner, BannerVariant, type BannerVariantType } from './banner';
 export { default as Breadcrumbs } from './breadcrumbs.svelte';
 export { default as Button } from './button/button.svelte';
 export { default as IconButton } from './button/icon-button.svelte';
@@ -37,7 +37,11 @@ export {
 } from './input/text-input.svelte';
 
 export { default as VectorInput } from './vector-input.svelte';
-export { NotificationContainer, notify } from './notification';
+export {
+  NotificationContainer,
+  provideNotify,
+  useNotify,
+} from './notification';
 
 export { selectControls } from './select/controls';
 export { createSearchableSelectDispatcher } from './select/dispatcher';

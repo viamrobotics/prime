@@ -2,8 +2,13 @@
 import {
   Button,
   NotificationContainer,
-  notify,
+  provideNotify,
+  useNotify,
 } from '@viamrobotics/prime-core';
+
+provideNotify();
+
+const notify = useNotify();
 </script>
 
 <div class="flex flex-col">
