@@ -9,7 +9,9 @@ import { Banner } from '@viamrobotics/prime-core';
   <Banner variant="info">
     <svelte:fragment slot="title">Just so you know.</svelte:fragment>
     <svelte:fragment slot="message">Here's some relevant info.</svelte:fragment>
-    <svelte:fragment slot="action">You can do something about it.</svelte:fragment>
+    <svelte:fragment slot="action"
+      >You can do something about it.</svelte:fragment
+    >
   </Banner>
 </Story>
 
@@ -33,6 +35,8 @@ import { Banner } from '@viamrobotics/prime-core';
   <Banner variant="danger">
     <svelte:fragment slot="title">Something went wrong.</svelte:fragment>
     <svelte:fragment slot="message">Everything is broken.</svelte:fragment>
-    <svelte:fragment slot="action">Try turning it off and on again.</svelte:fragment>
+    <svelte:fragment slot="action"
+      >Try turning it off and on again.</svelte:fragment
+    >
   </Banner>
 </Story>

@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/addon-svelte-csf';
 import { Badge } from '@viamrobotics/prime-core';
 </script>
 
-<Meta title='Elements/Badge' />
+<Meta title="Elements/Badge" />
 
 <Story name="Neutral">
   <Badge

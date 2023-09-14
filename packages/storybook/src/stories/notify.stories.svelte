@@ -12,7 +12,7 @@ import {
 <Story name="Basic">
   <div class="flex flex-col">
     <NotificationContainer />
-  
+
     <div class="flex gap-4 pt-80">
       <Button on:click={() => notify.info('Info', 'Info message')}>
         Info Notify
@@ -35,4 +35,3 @@ import {
     </div>
   </div>
 </Story>
-

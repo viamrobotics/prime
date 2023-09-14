@@ -13,7 +13,7 @@ import {
 <Meta title="Elements/Table" />
 
 <Story name="Basic">
-<Table
+  <Table
     variant="auto"
     cols={['10%', '10%', '60%', '10%', '10%']}
   >
