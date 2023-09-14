@@ -50,6 +50,12 @@ const handleBackgroundClick = (event: MouseEvent) => {
   }
 };
 
+const handleBackgroundKey = (event: KeyboardEvent) => {
+  if (event.key === 'Enter' || event.key === 'Space') {
+    handleCloseModal();
+  }
+};
+
 onMount(() => {
   document.body.classList.toggle('overflow-hidden', open);
 });
@@ -66,6 +72,7 @@ onMount(() => {
   tabindex="0"
   aria-label={title}
   on:click={handleBackgroundClick}
+  on:keydown={handleBackgroundKey}
 >
   <div
     class={cx('relative max-w-lg border border-medium bg-white p-6 shadow-sm', {

@@ -36,7 +36,9 @@ describe('Modal', () => {
     component.$on('close', onClose);
 
     const background = container.querySelector('div[role="dialog"]');
-    if (!background) throw new Error('Background not found');
+    if (!background) {
+      throw new Error('Background not found');
+    }
 
     await fireEvent.click(background);
 
