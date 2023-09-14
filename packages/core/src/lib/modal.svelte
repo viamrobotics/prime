@@ -1,7 +1,7 @@
 <!--
 @component
 
-Created a modal overlay.
+Creates a modal overlay.
 
 ```svelte
     <Modal
