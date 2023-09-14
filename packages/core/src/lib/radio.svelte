@@ -19,6 +19,7 @@ type LabelPosition = 'top' | 'left';
 
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
+import type { IconName } from './icon/icons';
 
 /**
  * The label for the radio button.
@@ -51,7 +52,7 @@ export let readonly = false;
 /**
  * The icon on the radio button.
  */
-let icon: string;
+let icon: IconName;
 /**
  * The width of the radio button.  Specifically, if width is 100% or if its the default.
  */
