@@ -10,7 +10,13 @@ import {
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
-import { environment, hovered, boundingRadius, obstacles } from '../../stores';
+import {
+  environment,
+  hovered,
+  boundingRadius,
+  obstacles,
+  obstacleNavItems,
+} from '../../stores';
 import { calculateBoundingBox } from '../../lib/bounding-box';
 import { createEventDispatcher } from 'svelte';
 import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
@@ -39,6 +45,8 @@ const handleLngLatInput = (name: string) => (event: CustomEvent<LngLat>) => {
 
 const handleDeleteObstacle = (name: string) => () => {
   $obstacles = $obstacles.filter((obstacle) => obstacle.name !== name);
+  $hovered = null;
+  dispatch('update', $obstacles);
 };
 
 const handleGeometryInput =
@@ -56,12 +64,23 @@ const handleOrientationInput =
     dispatch('update', $obstacles);
   };
 
+// Click to add an obstacle
 useMapLibreEvent('click', (event) => {
+  if ($hovered) {
+    return;
+  }
+
   const location = event.lngLat;
   const names = $obstacles.map((obstacle) => obstacle.name);
   const name = createName(names, 'obstacle', $obstacles.length);
   $obstacles = [createObstacle(name, location), ...$obstacles];
   dispatch('update', $obstacles);
+
+  $hovered = name;
+  $obstacleNavItems[name]?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+  });
 });
 </script>
 
@@ -78,6 +97,7 @@ useMapLibreEvent('click', (event) => {
 {#each $obstacles as { name, location, geometries }, index (index)}
   {#if $environment === 'configure'}
     <li
+      bind:this={$obstacleNavItems[name]}
       class="group mb-8 border-l border-l-medium pl-2"
       on:mouseenter={() => ($hovered = name)}
     >
