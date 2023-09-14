@@ -5,11 +5,11 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import { Icon } from '$lib';
+import { Icon, type IconName } from '$lib';
 
 export let open = false;
 export let element: HTMLUListElement;
-export let button: { text: string; icon: string } | undefined = undefined;
+export let button: { text: string; icon: IconName } | undefined = undefined;
 export let heading = '';
 
 /** Additional CSS classes to pass to the menu. */

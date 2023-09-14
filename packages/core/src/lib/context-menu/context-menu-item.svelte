@@ -19,6 +19,7 @@ export type ContextMenuItemVariant = 'primary' | 'danger';
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
 import Icon from '$lib/icon/icon.svelte';
+import type { IconName } from '$lib/icon/icons';
 
 const dispatch = createEventDispatcher<{
   /** Fires when selected with the label */
@@ -26,10 +27,9 @@ const dispatch = createEventDispatcher<{
 }>();
 
 /**
- * Optional icon name (https://prime.viam.com/?path=/docs/elements-icon--docs).
- * No icon by default.
+ * Optional icon name shown in the item.
  */
-export let icon = '';
+export let icon: IconName | undefined = undefined;
 
 /** The style variant, default value is 'primary' */
 export let variant: ContextMenuItemVariant = 'primary';
@@ -51,7 +51,7 @@ export { extraClasses as cx };
   )}
   on:click={() => dispatch('select', { value: label })}
 >
-  {#if icon !== ''}
+  {#if icon}
     <div
       class={cx({
         'text-gray-400': variant === 'primary',

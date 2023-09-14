@@ -30,10 +30,10 @@ const sizes: Record<Size, string> = {
 
 <script lang="ts">
 import cx from 'classnames';
-import { paths } from './icons';
+import { paths, type IconName } from './icons';
 
 /** The name of the icon. */
-export let name: string;
+export let name: IconName;
 
 /** The size of the icon. */
 export let size: Size = 'base';

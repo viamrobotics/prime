@@ -22,6 +22,7 @@ import { clickOutside } from '$lib/click-outside';
 import { selectControls } from './controls';
 import { createSearchableSelectDispatcher } from './dispatcher';
 import SelectInput from './select-input.svelte';
+import type { IconName } from '$lib/icon/icons';
 
 /** The options the user should be allowed to search and select from. */
 export let options: string[] = [];
@@ -49,7 +50,7 @@ export let sort: SortOptions = 'default';
  * An optional call-to-action button to render at the bottom of the select menu
  * that will emit the `buttonclick` event when actioned.
  */
-export let button: { text: string; icon: string } | undefined = undefined;
+export let button: { text: string; icon: IconName } | undefined = undefined;
 
 /** An optional heading to render at the top of the select menu. */
 export let heading = '';
