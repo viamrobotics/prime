@@ -45,6 +45,8 @@ const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
 const notify = useNotify();
 </script>
 
+<NotificationContainer />
+
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
   <!-- Badge -->
   <h1 class="text-2xl">Badge</h1>
@@ -483,8 +485,6 @@ const notify = useNotify();
 
   <!-- Notify -->
   <h1 class="text-2xl">Notify</h1>
-
-  <NotificationContainer />
 
   <div class="flex gap-4">
     <Button on:click={() => notify.info('Info', 'Info message')}>

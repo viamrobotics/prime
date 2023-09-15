@@ -13,6 +13,5 @@ export default defineConfig({
     setupFiles: ['src/vitest.setup.ts'],
     environment: 'jsdom',
     mockReset: true,
-    unstubGlobals: true,
   },
 });

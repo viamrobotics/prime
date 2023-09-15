@@ -18,9 +18,7 @@ export interface NotifyContext {
   notify: Notify;
 }
 
-/**
- * Notification sender.
- */
+/** Notification sender. */
 export interface Notify {
   /** Push an info notification with a title and optional message. */
   info: (title: string, message?: string) => void;
