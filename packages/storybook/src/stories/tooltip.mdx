@@ -1,0 +1,29 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as TooltipStories from './tooltip.stories.svelte';
+
+<Meta title='Elements/Tooltip' />
+
+# Tooltip
+
+For providing users additional context
+
+```ts
+import { Tooltip } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={TooltipStories.PlainText} />
+</Canvas>
+
+<Canvas>
+  <Story of={TooltipStories.RichHTML} />
+</Canvas>
+
+{/* TODO (APP-2290): Add this when Icon is added */}
+{/* <Canvas> */}
+{/* <Story name='With Icon'> */}
+{/* {() => ({ */}
+{/* Component: WithIcon, */}
+{/* })} */}
+{/* </Story> */}
+{/* </Canvas> */}
