@@ -32,15 +32,25 @@ import {
   NotificationContainer,
   provideNotify,
   useNotify,
+  Modal,
 } from '$lib';
 
 provideNotify();
 
 let buttonClickedTimes = 0;
 let disabled = true;
+let modalOpen = false;
 
 const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
   disabled = event.detail.value === 'Disabled';
+};
+
+const handleCloseModal = () => {
+  modalOpen = false;
+};
+
+const handleOpenModal = () => {
+  modalOpen = true;
 };
 const notify = useNotify();
 </script>
@@ -505,6 +515,35 @@ const notify = useNotify();
     >
       Danger Notify
     </Button>
+  </div>
+
+  <!-- Modal -->
+  <h1 class="text-2xl">Modal</h1>
+
+  <div>
+    <Button on:click={handleOpenModal}>Open Modal</Button>
+    <Modal
+      open={modalOpen}
+      on:close={handleCloseModal}
+    >
+      <span slot="title">This is the modal demo</span>
+      <span slot="message"
+        >Are you sure you want to kick off a notify toast?</span
+      >
+      <Button
+        slot="primary"
+        on:click={() => notify.success('Howdy Message', 'Howdy Partner')}
+      >
+        Notify howdy
+      </Button>
+      <Button
+        slot="secondary"
+        variant="dark"
+        on:click={handleCloseModal}
+      >
+        Cancel
+      </Button>
+    </Modal>
   </div>
 
   <!-- Pill -->
