@@ -42,6 +42,7 @@ export {
   NotificationContainer,
   provideNotify,
   useNotify,
+  type Notify,
 } from './notification';
 
 export { selectControls } from './select/controls';

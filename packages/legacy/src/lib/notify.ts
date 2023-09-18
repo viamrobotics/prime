@@ -1,3 +1,4 @@
+import type { Notify } from '@viamrobotics/prime-core';
 import { ToastContainer, toast } from '../elements/notification';
 
 export default new ToastContainer({ target: document.body });
@@ -18,7 +19,7 @@ const success = (title: string, message?: string) => {
   toast.push({ variant: 'success', title, message });
 };
 
-export const notify = {
+export const notify: Notify = {
   info,
   warn,
   danger,
