@@ -30,10 +30,6 @@ export interface Notify {
   success: (title: string, message?: string) => void;
 }
 
-export interface NotifyOptions {
-  duration?: number;
-}
-
 /** Internal notification state. */
 export interface NotifyState {
   notifications: Readable<Notification[]>;

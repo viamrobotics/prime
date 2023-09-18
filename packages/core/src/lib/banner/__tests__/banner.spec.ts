@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 
-import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 import Banner from './banner.spec.svelte';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Banner', () => {
   it('Renders banner element with appropriate title, subtitle, message, and action text', () => {

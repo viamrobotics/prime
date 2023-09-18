@@ -104,10 +104,10 @@ $: {
         />
       {/if}
 
-      <figure class="flex flex-col">
-        <figcaption class="text-sm font-medium text-default">
+      <div class="flex flex-col">
+        <p class="text-sm font-medium text-default">
           <slot name="title" />
-        </figcaption>
+        </p>
 
         <div class="flex flex-col gap-3">
           {#if $$slots.subtitle}
@@ -124,7 +124,7 @@ $: {
             </div>
           {/if}
         </div>
-      </figure>
+      </div>
 
       {#if exitable}
         <Button
