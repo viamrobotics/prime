@@ -1,49 +1,18 @@
 <script lang="ts">
 import * as THREE from 'three';
-import { T, useThrelte, useRender } from '@threlte/core';
+import { T, useThrelte } from '@threlte/core';
 import { view, obstacles } from '../stores';
-import ObstacleGeometries from './obstacle.svelte';
-import { useMapLibre, useMapLibreEvent } from '$lib/maplibre/hooks';
-import {
-  renderPlugin,
-  world,
-  scenes,
-  axes,
-  setFrameloops,
-} from '../plugins/render';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
+import { lngLatPlugin } from '../plugins/lnglat';
+import { interactivityPlugin } from '../plugins/interactivity';
+import ObstacleGeometries from './obstacle.svelte';
 
-renderPlugin();
+lngLatPlugin();
 computeBoundingPlugin();
+interactivityPlugin();
 
-const { renderer, scene, camera, invalidate } = useThrelte();
-const { map } = useMapLibre();
-const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.1);
-
-renderer.autoClear = false;
-
-setFrameloops(map);
-scene.add(world);
-
-useMapLibreEvent('move', () => {
-  invalidate();
-  setFrameloops(map);
-});
-
-useRender(() => {
-  renderer.clear();
-
-  axes.visible = scenes.length > 0;
-
-  for (const { ref, matrix } of scenes) {
-    camera.current.projectionMatrix = matrix;
-    axes.length = (ref.geometry.boundingSphere?.radius ?? 0) * 2;
-
-    world.add(ref);
-    renderer.render(scene, camera.current);
-    world.remove(ref);
-  }
-});
+const { renderer } = useThrelte();
+const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
 $: flat = $view === '2D';
 

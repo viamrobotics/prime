@@ -11,7 +11,7 @@ For user triggered actions.
 
 <script lang="ts">
 import cx from 'classnames';
-import { Icon } from '$lib';
+import { Icon, type IconName } from '$lib';
 import { preventHandler } from '$lib/prevent-handler';
 
 /** Whether or not the button accepts clicks. */
@@ -35,7 +35,7 @@ export let title = '';
 /**
  * The icon shown in the button.
  */
-export let icon = '';
+export let icon: IconName | undefined = undefined;
 
 /** The width of the button. */
 export let width: 'full' | 'default' = 'default';

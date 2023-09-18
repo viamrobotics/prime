@@ -1,0 +1,23 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as TableStories from './table.stories.svelte';
+
+<Meta title='Elements/Table' />
+
+# Table
+
+Displays tabular data.
+
+```ts
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={TableStories.Basic} />
+</Canvas>

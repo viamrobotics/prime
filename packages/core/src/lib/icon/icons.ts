@@ -4,7 +4,7 @@ import * as MDI from '@mdi/js';
  * Keys should match MDI name
  * e.g. 'account-multiple' for MDI.mdiAccountMultiple
  */
-export const paths: Record<string, string> = {
+export const paths = {
   'account-multiple': MDI.mdiAccountMultiple,
   'alert-circle-outline': MDI.mdiAlertCircleOutline,
   'alert-circle': MDI.mdiAlertCircle,
@@ -70,3 +70,8 @@ export const paths: Record<string, string> = {
   'robot-outline': MDI.mdiRobotOutline,
   domain: MDI.mdiDomain,
 };
+
+/**
+ * The possible icon names that can be rendered. This is good for typing props.
+ */
+export type IconName = keyof typeof paths;

@@ -22,6 +22,7 @@ export type InputState = 'info' | 'warn' | 'error' | 'none';
 
 <script lang="ts">
 import Icon from '$lib/icon/icon.svelte';
+import type { IconName } from '$lib/icon/icons';
 import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 import cx from 'classnames';
 
@@ -50,12 +51,23 @@ $: isInputReadOnly = disabled === true || readonly === true;
 $: handleDisabled = preventHandler(isInputReadOnly);
 $: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 
-$: icon = {
-  info: 'information',
-  warn: 'alert',
-  error: 'alert-circle',
-  none: '',
-}[state ?? 'none'];
+let icon: IconName | null;
+$: icon = (() => {
+  switch (state) {
+    case 'info': {
+      return 'information';
+    }
+    case 'warn': {
+      return 'alert';
+    }
+    case 'error': {
+      return 'alert-circle';
+    }
+    default: {
+      return null;
+    }
+  }
+})();
 
 $: defaultClasses =
   !disabled &&
@@ -100,7 +112,7 @@ $: errorClasses =
     on:blur
   />
 
-  {#if icon !== ''}
+  {#if icon}
     <Icon
       cx={[
         'absolute right-2 top-1.5',

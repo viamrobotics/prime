@@ -1,0 +1,32 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as RadioStories from './radio.stories.svelte';
+
+<Meta title='Elements/Radio' />
+
+# Radio
+
+A set of options where the user can select only one.
+
+```ts
+import { Radio } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={RadioStories.Basic} />
+</Canvas>
+
+<Canvas>
+  <Story of={RadioStories.WithLabel} />
+</Canvas>
+
+<Canvas>
+  <Story of={RadioStories.TooltipAndState} />
+</Canvas>
+
+<Canvas>
+  <Story of={RadioStories.Readonly} />
+</Canvas>
+
+<Canvas>
+  <Story of={RadioStories.FullWidthRadio} />
+</Canvas>

@@ -1,43 +1,46 @@
 <!--
 @component
-  
+
 For user notifications.
 
-This is the "container" element that all notifications pushed using the 
-`notify` API will be added to. 
+This is the "container" element that all notifications pushed using the
+`useNotify` API will be added to. Add this component near the root of
+your application, like in the root layout component.
 
-```svelte
-<NotificationCenter />
-```
+It needs access to context from `provideNotify`, which should also
+be added to the root layout component.
 -->
 <script lang="ts">
 import { fade, fly } from 'svelte/transition';
 import { flip } from 'svelte/animate';
-import { type NotificationOptions, notification } from './stores';
+
+import { useNotifyState } from './context';
 import NotificationItem from './notification-item.svelte';
 
-/** Optional configuration for notification behavior. */
-export let options: Partial<NotificationOptions> = {};
+const { notifications, pageIsVisible } = useNotifyState();
+let visibilityState: DocumentVisibilityState;
 
-/** Optional name to allow targeting different containers. */
-export let target = 'default';
-
-let items: NotificationOptions[] = [];
-
-$: notification.init(target, options);
-$: items = $notification.filter((item) => item.target === target);
+$: pageIsVisible.set(visibilityState === 'visible');
 </script>
 
-<ul
+<svelte:document bind:visibilityState />
+
+<div
+  role="alert"
+  aria-label="Notifications"
   class="pointer-events-none fixed bottom-auto left-auto right-6 top-6 z-[9999] m-0 p-0"
 >
-  {#each items as item (item.id)}
-    <li
-      in:fly={item.intro}
-      out:fade
-      animate:flip={{ duration: 200 }}
-    >
-      <NotificationItem {item} />
-    </li>
-  {/each}
-</ul>
+  <ul>
+    {#each $notifications as { id, pause, resume, ...notification } (id)}
+      <li
+        in:fly={{ x: 256 }}
+        out:fade
+        animate:flip={{ duration: 200 }}
+        on:mouseenter={pause}
+        on:mouseleave={resume}
+      >
+        <NotificationItem {...notification} />
+      </li>
+    {/each}
+  </ul>
+</div>

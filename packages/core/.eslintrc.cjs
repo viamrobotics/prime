@@ -18,6 +18,10 @@ module.exports = {
     browser: true,
     node: true,
   },
+  rules: {
+    // TODO(mc, 2023-09-15): add to js-config
+    'no-void': ['error', { allowAsStatement: true }],
+  },
   overrides: [
     {
       files: 'src/routes/**/*',
