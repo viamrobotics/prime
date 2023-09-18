@@ -1,4 +1,4 @@
-<!-- 
+<!--
   @component
 
   This component allows us to render a Notify with its slotted
@@ -12,10 +12,9 @@
 
 <script lang="ts">
 import type cx from 'classnames';
-import { Banner } from '$lib';
-import type { BannerVariant } from '$lib/banner.svelte';
+import { Banner, type BannerVariantType } from '$lib';
 
-export let variant: BannerVariant;
+export let variant: BannerVariantType;
 export let progress = 1;
 export let exitable = false;
 export let extraClasses: cx.Argument = '';

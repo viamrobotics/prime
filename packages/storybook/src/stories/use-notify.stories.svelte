@@ -3,11 +3,16 @@ import { Meta, Story } from '@storybook/addon-svelte-csf';
 import {
   Button,
   NotificationContainer,
-  notify,
+  provideNotify,
+  useNotify,
 } from '@viamrobotics/prime-core';
+
+provideNotify();
+
+const notify = useNotify();
 </script>
 
-<Meta title="APIs/notify" />
+<Meta title="APIs/useNotify" />
 
 <Story name="Basic">
   <div class="flex flex-col">
