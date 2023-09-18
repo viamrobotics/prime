@@ -11,11 +11,11 @@ For user triggered actions.
 
 <script lang="ts">
 import cx from 'classnames';
-import { Icon } from '$lib';
+import { Icon, type IconName } from '$lib';
 import { preventHandler } from '$lib/prevent-handler';
 
 /** The icon shown in the button. */
-export let icon: string;
+export let icon: IconName;
 
 /** aria-label text for accessibility */
 export let label: string;
@@ -30,7 +30,7 @@ export let type: 'button' | 'submit' | 'reset' = 'button';
 export let variant: 'primary' | 'danger' = 'primary';
 
 /**
- * The text that appears in a native popup box on hoveClassListArguements to the value
+ * The text that appears in a native popup box on hover. Defaults to the value
  * of `label`.
  */
 export let title = label;

@@ -10,7 +10,7 @@ export type BannerVariant = 'danger' | 'warning' | 'success' | 'info';
 <script lang="ts">
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
-import { Button, Icon } from '$lib';
+import { Button, Icon, type IconName } from '$lib';
 
 /** The severity of the notification you want to show users*/
 export let variant: BannerVariant;
@@ -37,7 +37,7 @@ $: isWarn = variant === 'warning';
 $: isDanger = variant === 'danger';
 $: isSuccess = variant === 'success';
 
-let icon = '';
+let icon: IconName | null = null;
 let iconClasses = '';
 $: {
   switch (variant) {
@@ -102,11 +102,13 @@ $: {
 
   <div class="relative flex w-full justify-between gap-2 p-3">
     <div class="flex gap-3">
-      <Icon
-        size="lg"
-        name={icon}
-        cx={iconClasses}
-      />
+      {#if icon}
+        <Icon
+          size="lg"
+          name={icon}
+          cx={iconClasses}
+        />
+      {/if}
 
       <figure
         class="flex flex-col"

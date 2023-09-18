@@ -4,7 +4,7 @@ import { IconButton } from '$lib';
 import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('IconButton', () => {
-  const common = { icon: 'close', label: 'close' };
+  const common = { icon: 'close' as const, label: 'close' };
   it('Renders a button in the style of the primary variant if no variant is specified', () => {
     render(IconButton, common);
     expect(screen.getByRole('button')).toHaveClass(
