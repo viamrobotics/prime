@@ -3,17 +3,6 @@ import { render, fireEvent } from '@testing-library/svelte';
 import Modal from '../modal.svelte';
 
 describe('Modal', () => {
-  it('should render the title and message', () => {
-    const { getByText } = render(Modal, {
-      title: 'Hello',
-      message: "It's me.",
-      open: true,
-    });
-
-    expect(getByText('Hello')).toBeInTheDocument();
-    expect(getByText("It's me.")).toBeInTheDocument();
-  });
-
   it('should emit close event when close icon button is clicked', async () => {
     const { getByTitle, component } = render(Modal, {
       open: true,

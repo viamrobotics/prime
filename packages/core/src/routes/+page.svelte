@@ -515,24 +515,21 @@ const handleOpenModal = () => {
 
   <div>
     <Button on:click={handleOpenModal}>Open Modal</Button>
-    <Modal
-      open={modalOpen}
-      title="This is the modal demo"
-      message="Are you sure you want to kick off a notify toast?"
-      on:close={handleCloseModal}
-    >
+    <Modal open={modalOpen} on:close={handleCloseModal}>
+      <span slot="title">This is the modal demo</span>
+      <span slot="message">Are you sure you want to kick off a notify toast?</span>
       <Button
         slot="primary"
         on:click={() => notify.success('Howdy Message', 'Howdy Partner')}
-        >Notify howdy</Button
       >
-      <Button
-        slot="secondary"
-        variant="dark"
-        on:click={handleCloseModal}>Cancel</Button
-      >
+        Notify howdy
+      </Button>
+      <Button slot="secondary" variant="dark" on:click={handleCloseModal}>
+        Cancel
+      </Button>
     </Modal>
   </div>
+  
 
   <!-- Pill -->
   <h1 class="text-2xl">Pill</h1>

@@ -4,19 +4,22 @@
 Creates a modal overlay.
 
 ```svelte
-    <Modal
-      open={modalOpen}
-      title='This is the modal demo'
-      message='Are you sure you want to kick off a notify toast?'
-      on:close={handleCloseModal}
-    >
-      <Button slot='primary' on:click={() => notify.success('Howdy Message', 'Howdy Partner')}>Notify howdy</Button>
-      <Button
-        slot='secondary'
-        variant='dark'
-        on:click={handleCloseModal}
-      >Cancel</Button>
-    </Modal>
+    <div>
+      <Button on:click={handleOpenModal}>Open Modal</Button>
+      <Modal open={modalOpen} on:close={handleCloseModal}>
+        <span slot="title">This is the modal demo</span>
+        <span slot="message">Are you sure you want to print a statement to the console?</span>
+        <Button
+          slot="primary"
+          on:click={() => console.log('statement')}
+        >
+          Print
+        </Button>
+        <Button slot="secondary" variant="dark" on:click={handleCloseModal}>
+          Cancel
+        </Button>
+      </Modal>
+    </div>
 ```
 -->
 <svelte:options immutable />
@@ -26,10 +29,6 @@ import cx from 'classnames';
 import { createEventDispatcher, onMount } from 'svelte';
 import IconButton from './button/icon-button.svelte';
 
-/** The title text in the modal. */
-export let title = '';
-/** The message text in the modal. */
-export let message = '';
 /** Whether the modal is open. */
 export let open = false;
 /** The variant of the modal. */
@@ -70,7 +69,6 @@ onMount(() => {
   )}
   role="button"
   tabindex="0"
-  aria-label={title}
   on:click={handleBackgroundClick}
   on:keydown={handleBackgroundKey}
 >
@@ -90,12 +88,12 @@ onMount(() => {
       class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
     >
       <figcaption class="pr-12 text-lg font-semibold">
-        {title}
+        <slot name="title" />
       </figcaption>
 
-      {#if message}
-        <p class="text-sm text-subtle-1">{message}</p>
-      {/if}
+      <div class="text-sm text-subtle-1">
+        <slot name="message" />
+      </div>
 
       <div class="flex flex-grow"><slot /></div>
 
