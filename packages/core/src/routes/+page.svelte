@@ -31,8 +31,8 @@ import {
   Multiselect,
   NotificationContainer,
   provideNotify,
-  Modal,
   useNotify,
+  Modal,
 } from '$lib';
 
 provideNotify();
