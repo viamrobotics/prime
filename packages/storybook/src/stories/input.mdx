@@ -1,0 +1,69 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as InputStories from './input.stories.svelte';
+
+<Meta title='Elements/Input' />
+
+# Input
+
+A simple user input. We use this input to build all of the other input types,
+so it is rarely beneificial to use this over the more specific varities.
+
+```ts
+import { Input } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={InputStories.Basic} />
+</Canvas>
+
+## Labels
+
+For accessibility, consider wrapping your `<Input />` in a `<Label />`. Make
+to pass it `slot="input"` to correctly slot it in.
+
+```ts
+import { Input } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={InputStories.Labeled} />
+</Canvas>
+
+# Text Input
+
+A user input for text values. This is ideal for text, email, and password fields.
+
+```ts
+import { TextInput } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={InputStories.Text} />
+</Canvas>
+
+# Numeric Input
+
+A user input for numeric values. This is ideal for number and integer fields.
+The value can be incremented/decremented using the up/down arrow keys.
+
+```ts
+import { NumericInput } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={InputStories.Numeric} />
+</Canvas>
+
+# Slider Input
+
+A user input for numeric values that allows easy adjustments with a slider.
+This is ideal for number and integer fields you expect the user to tweak often,
+and the value can be incremented/decremented using the up/down arrow keys.
+
+```ts
+import { SliderInput } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={InputStories.Slider} />
+</Canvas>

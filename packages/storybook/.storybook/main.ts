@@ -2,11 +2,16 @@ import type { StorybookConfig } from '@storybook/sveltekit';
 import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
-  stories: ['../src/stories/docs/**/*.mdx', '../src/stories/**/*.stories.mdx'],
+  stories: [
+    '../src/stories/docs/**/*.mdx',
+    '../src/stories/**/*.mdx',
+    '../src/stories/**/*.stories.svelte',
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-interactions',
     '@storybook/addon-a11y',
+    '@storybook/addon-svelte-csf',
     {
       name: '@storybook/addon-styling',
     },

@@ -1,0 +1,20 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as PillStories from './pill.stories.svelte';
+
+<Meta title='Elements/Pill' />
+
+# Pill
+
+Displays a list of items.
+
+```ts
+import { Pill } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={PillStories.Primary} />
+</Canvas>
+
+<Canvas>
+  <Story of={PillStories.Unremovable} />
+</Canvas>

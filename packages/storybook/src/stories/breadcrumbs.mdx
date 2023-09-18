@@ -1,0 +1,16 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as BreadcrumbsStories from './breadcrumbs.stories.svelte';
+
+<Meta title='Elements/Breadcrumbs' />
+
+# Breadcrumbs
+
+A navigation aid that helps users easily understand the relation between parents and children.
+
+```ts
+import { Breadcrumbs } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={BreadcrumbsStories.Basic} />
+</Canvas>

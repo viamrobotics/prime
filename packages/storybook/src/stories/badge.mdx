@@ -1,0 +1,32 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as BadgeStories from './badge.stories.svelte';
+
+<Meta title='Elements/Badge' />
+
+# Badge
+
+Displays status.
+
+```ts
+import { Badge } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={BadgeStories.Neutral} />
+</Canvas>
+
+<Canvas>
+  <Story of={BadgeStories.Success} />
+</Canvas>
+
+<Canvas>
+  <Story of={BadgeStories.Warning} />
+</Canvas>
+
+<Canvas>
+  <Story of={BadgeStories.Danger} />
+</Canvas>
+
+<Canvas>
+  <Story of={BadgeStories.Info} />
+</Canvas>

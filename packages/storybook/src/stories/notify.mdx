@@ -1,0 +1,16 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as NotifyStories from './notify.stories.svelte';
+
+<Meta title='APIs/notify' />
+
+# notify
+
+An API for pushing user notifications.
+
+```ts
+import { notify } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={NotifyStories.Basic} />
+</Canvas>
