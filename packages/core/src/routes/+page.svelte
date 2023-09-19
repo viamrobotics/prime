@@ -853,25 +853,39 @@ const notify = useNotify();
   <!-- Tooltip -->
   <h1 class="text-2xl">Tooltip</h1>
   <div class="flex gap-4">
-    <Tooltip>
-      This element has a top tooltip.
-      <div slot="text">This is the tooltip text!</div>
+    <Tooltip let:tooltipID>
+      <p aria-describedby={tooltipID}>This element has a top tooltip.</p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
 
-    <Tooltip location="left">
-      This element has a left tooltip.
-      <div slot="text">This is the tooltip text!</div>
+    <Tooltip
+      let:tooltipID
+      location="left"
+    >
+      <p aria-describedby={tooltipID}>This element has a left tooltip.</p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
 
-    <Tooltip location="right">
-      This element has a right tooltip.
-      <div slot="text">This is the tooltip text!</div>
+    <Tooltip
+      let:tooltipID
+      location="right"
+    >
+      <p aria-describedby={tooltipID}>This element has a right tooltip.</p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
 
-    <Tooltip location="bottom">
-      This element has a bottom tooltip and an icon!
-      <span class="ml-0.5"> <Icon name="information-outline" /></span>
-      <div slot="text">This is the tooltip text!</div>
+    <Tooltip
+      let:tooltipID
+      location="bottom"
+    >
+      <p
+        aria-describedby={tooltipID}
+        class="flex items-center gap-1"
+      >
+        This element has a bottom tooltip and an icon!
+        <Icon name="information-outline" />
+      </p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
   </div>
 

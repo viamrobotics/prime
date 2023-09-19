@@ -12,7 +12,7 @@ For numeric user inputs that require easy adjustment.
 <script lang="ts">
 import { createEventDispatcher, tick } from 'svelte';
 import cx from 'classnames';
-import Tooltip from '$lib/tooltip.svelte';
+import { Tooltip } from '$lib/tooltip';
 import NumericInput from './numeric-input.svelte';
 import {
   getDecimals,
@@ -212,7 +212,7 @@ const handleChange = () => {
             state="visible"
           >
             <div class="h-2 w-2 rounded-full bg-gray-800" />
-            <span slot="text">{value}</span>
+            <span slot="description">{value}</span>
           </Tooltip>
         </div>
       </div>
