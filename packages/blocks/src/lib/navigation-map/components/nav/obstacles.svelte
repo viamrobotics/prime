@@ -1,7 +1,8 @@
 <script lang="ts">
 import { IconButton, Label, TextInput } from '@viamrobotics/prime-core';
+import { LngLat, LngLatBounds } from 'maplibre-gl';
 import {
-  type LngLat,
+  type LngLat as LngLatInternal,
   type Geometry,
   useMapLibre,
   type Obstacle,
@@ -17,7 +18,6 @@ import {
   obstacles,
   obstacleNavItems,
 } from '../../stores';
-import { calculateBoundingBox } from '../../lib/bounding-box';
 import { createEventDispatcher } from 'svelte';
 import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
 import { createName } from '$lib/navigation-map/lib/create-name';
@@ -31,13 +31,14 @@ const dispatch = createEventDispatcher<Events>();
 
 const { map } = useMapLibre();
 
-const handleSelect = (selection: { name: string; location: LngLat }) => {
-  const zoom = boundingRadius[selection.name]!;
-  const bb = calculateBoundingBox(zoom, selection.location);
-  map.fitBounds(bb, { duration: 800, curve: 0.1 });
+const handleSelect = (selection: { name: string; location: LngLatInternal }) => {
+  const radius = boundingRadius[selection.name]!;
+  const lngLat = new LngLat(selection.location.lng, selection.location.lat)
+  const bounds = LngLatBounds.fromLngLat(lngLat, radius);
+  map.fitBounds(bounds, { duration: 800, curve: 0.1 });
 };
 
-const handleLngLatInput = (name: string) => (event: CustomEvent<LngLat>) => {
+const handleLngLatInput = (name: string) => (event: CustomEvent<LngLatInternal>) => {
   const index = $obstacles.findIndex((obstacle) => obstacle.name === name);
   $obstacles[index]!.location = event.detail;
   dispatch('update', $obstacles);

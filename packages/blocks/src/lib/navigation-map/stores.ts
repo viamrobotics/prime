@@ -36,4 +36,4 @@ export const environment = currentWritable<Environments>('debug');
 export const boundingRadius: Record<string, number> = {};
 
 /** The projection matrix of the map camera. */
-export const cameraMatrix = new THREE.Matrix4();
+export const projectionMatrix = new THREE.Matrix4();

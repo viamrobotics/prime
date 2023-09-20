@@ -12,18 +12,18 @@ import { useMapLibre } from '$lib/maplibre/hooks';
 import { onDestroy } from 'svelte';
 
 export const interactivityPlugin = () => {
-  const { camera } = useThrelte();
+  const { camera, invalidate } = useThrelte();
   const { map } = useMapLibre();
 
   let point: { x: number; y: number } = { x: 0, y: 0 };
 
-  const setPoint = (event: MapMouseEvent) => {
+  const handleMouseMove = (event: MapMouseEvent) => {
     point = event.point;
   };
 
-  map.on('mousemove', setPoint);
+  map.on('mousemove', handleMouseMove);
 
-  onDestroy(() => map.off('mousemove', setPoint));
+  onDestroy(() => map.off('mousemove', handleMouseMove));
 
   const cameraPosition = new THREE.Vector3();
   const mousePosition = new THREE.Vector3();
@@ -53,6 +53,7 @@ export const interactivityPlugin = () => {
       viewDirection.copy(mousePosition).sub(cameraPosition).normalize();
 
       state.raycaster.set(cameraPosition, viewDirection);
+      invalidate()
     },
   });
 };

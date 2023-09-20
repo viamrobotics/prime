@@ -29,7 +29,7 @@ export let length = 10;
   scale.z={thickness}
   position.y={length / 2}
 >
-  <T is={new THREE.MeshBasicMaterial({ color: 'green' })} />
+  <T is={new THREE.MeshBasicMaterial({ color: 'blue' })} />
   <T.CylinderGeometry args={[1, 1, 1]} />
 </T.Mesh>
 
@@ -40,6 +40,6 @@ export let length = 10;
   rotation.x={-Math.PI / 2}
   position.z={length / 2}
 >
-  <T is={new THREE.MeshBasicMaterial({ color: 'blue' })} />
+  <T is={new THREE.MeshBasicMaterial({ color: 'green' })} />
   <T.CylinderGeometry args={[1, 1, 1]} />
 </T.Mesh>
