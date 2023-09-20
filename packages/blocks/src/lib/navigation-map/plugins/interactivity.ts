@@ -12,7 +12,7 @@ import { useMapLibre } from '$lib/maplibre/hooks';
 import { onDestroy } from 'svelte';
 
 export const interactivityPlugin = () => {
-  const { camera, invalidate } = useThrelte();
+  const { camera } = useThrelte();
   const { map } = useMapLibre();
 
   let point: { x: number; y: number } = { x: 0, y: 0 };
@@ -53,7 +53,6 @@ export const interactivityPlugin = () => {
       viewDirection.copy(mousePosition).sub(cameraPosition).normalize();
 
       state.raycaster.set(cameraPosition, viewDirection);
-      invalidate();
     },
   });
 };
