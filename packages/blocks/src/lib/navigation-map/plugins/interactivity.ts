@@ -53,7 +53,7 @@ export const interactivityPlugin = () => {
       viewDirection.copy(mousePosition).sub(cameraPosition).normalize();
 
       state.raycaster.set(cameraPosition, viewDirection);
-      invalidate()
+      invalidate();
     },
   });
 };

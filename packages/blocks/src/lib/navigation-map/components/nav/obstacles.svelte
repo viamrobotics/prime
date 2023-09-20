@@ -31,18 +31,22 @@ const dispatch = createEventDispatcher<Events>();
 
 const { map } = useMapLibre();
 
-const handleSelect = (selection: { name: string; location: LngLatInternal }) => {
+const handleSelect = (selection: {
+  name: string;
+  location: LngLatInternal;
+}) => {
   const radius = boundingRadius[selection.name]!;
-  const lngLat = new LngLat(selection.location.lng, selection.location.lat)
+  const lngLat = new LngLat(selection.location.lng, selection.location.lat);
   const bounds = LngLatBounds.fromLngLat(lngLat, radius);
   map.fitBounds(bounds, { duration: 800, curve: 0.1 });
 };
 
-const handleLngLatInput = (name: string) => (event: CustomEvent<LngLatInternal>) => {
-  const index = $obstacles.findIndex((obstacle) => obstacle.name === name);
-  $obstacles[index]!.location = event.detail;
-  dispatch('update', $obstacles);
-};
+const handleLngLatInput =
+  (name: string) => (event: CustomEvent<LngLatInternal>) => {
+    const index = $obstacles.findIndex((obstacle) => obstacle.name === name);
+    $obstacles[index]!.location = event.detail;
+    dispatch('update', $obstacles);
+  };
 
 const handleDeleteObstacle = (name: string) => () => {
   $obstacles = $obstacles.filter((obstacle) => obstacle.name !== name);

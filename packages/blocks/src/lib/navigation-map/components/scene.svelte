@@ -3,11 +3,11 @@ import * as THREE from 'three';
 import { T, useThrelte } from '@threlte/core';
 import { view, obstacles } from '../stores';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
-import { lngLatPlugin } from '../plugins/lnglat';
+import { renderPlugin } from '../plugins/render';
 import { interactivityPlugin } from '../plugins/interactivity';
 import ObstacleGeometries from './obstacle.svelte';
 
-lngLatPlugin();
+renderPlugin();
 computeBoundingPlugin();
 interactivityPlugin();
 
@@ -18,7 +18,6 @@ $: flat = $view === '2D';
 
 // This clips against the map so that objects intersecting sea level will not render over the map
 $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
-
 </script>
 
 <T.AmbientLight intensity={flat ? 2 : 1.5} />

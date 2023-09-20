@@ -20,11 +20,11 @@ export interface Props {
   lnglat?: LngLat;
 }
 
-export const lngLatPlugin = () => {
+export const renderPlugin = () => {
   const { scene, camera, renderer } = useThrelte();
   const { map } = useMapLibre();
 
-  /** 
+  /**
    * Threlte's default camera enforces projection settings
    * that we don't want since we're syncing with the maplibre camera,
    * so we create a new one with no projection assumptions.
@@ -59,11 +59,11 @@ export const lngLatPlugin = () => {
 
       scene.traverse((object) => {
         const { lngLat } = object.userData as { lngLat?: LngLat | undefined };
-  
+
         if (!lngLat) {
           return;
         }
-  
+
         const mercatorOffset = MercatorCoordinate.fromLngLat(lngLat, 0);
         const cx = mercator.x / mercatorScale;
         const cy = mercator.y / mercatorScale;

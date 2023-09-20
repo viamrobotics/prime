@@ -34,6 +34,3 @@ export const environment = currentWritable<Environments>('debug');
 
 /** The bounding radius of an obstacle mapped to obstacle name. */
 export const boundingRadius: Record<string, number> = {};
-
-/** The projection matrix of the map camera. */
-export const projectionMatrix = new THREE.Matrix4();
