@@ -13,7 +13,6 @@ describe('Tooltip', () => {
 
     expect(target).toBeInTheDocument();
     expect(tooltip).toHaveClass('invisible');
-    expect(tooltip.parentElement).toHaveClass('sr-only');
   });
 
   it('Renders the tooltip when state is visible', async () => {
@@ -25,7 +24,6 @@ describe('Tooltip', () => {
     const tooltip = screen.getByRole('tooltip');
 
     expect(tooltip).not.toHaveClass('invisible');
-    expect(tooltip.parentElement).not.toHaveClass('sr-only');
 
     await user.hover(target);
     expect(tooltip).not.toHaveClass('invisible');

@@ -48,9 +48,12 @@ let isHovered = false;
 const styles = tooltipStyles();
 const show = () => (isHovered = true);
 const hide = () => (isHovered = false);
+let isVisible = false;
 
-$: isVisible = state === 'visible' || isHovered;
-$: isVisible, styles.recalculate(target, tooltip, arrow, location);
+$: {
+  isVisible = state === 'visible' || isHovered;
+  styles.recalculate(target, tooltip, arrow, location);
+}
 
 export const recalculateStyle = () => {
   styles.recalculate(target, tooltip, arrow, location);
