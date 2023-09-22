@@ -16,15 +16,14 @@ export interface Styles extends Readable<TooltipStyles> {
 
 export interface TooltipStyles {
   tooltip: {
-    left?: string | undefined;
     top?: string | undefined;
+    left?: string | undefined;
   };
   arrow: {
     top?: string | undefined;
     left?: string | undefined;
     right?: string;
     bottom?: string;
-    transform?: string;
   };
 }
 
