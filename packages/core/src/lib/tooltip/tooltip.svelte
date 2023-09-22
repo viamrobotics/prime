@@ -44,11 +44,11 @@ let target: HTMLElement | undefined;
 let tooltip: HTMLElement | undefined;
 let arrow: HTMLElement | undefined;
 let isHovered = false;
+let isVisible = false;
 
 const styles = tooltipStyles();
 const show = () => (isHovered = true);
 const hide = () => (isHovered = false);
-let isVisible = false;
 
 $: {
   isVisible = state === 'visible' || isHovered;
