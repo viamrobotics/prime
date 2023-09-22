@@ -1,12 +1,4 @@
-import {
-  computePosition,
-  flip,
-  shift,
-  offset,
-  arrow,
-  type Placement,
-  type Side,
-} from '@floating-ui/dom';
+import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
 import { writable, type Readable } from 'svelte/store';
 
 export type TooltipLocation = 'top' | 'bottom' | 'right' | 'left';
@@ -75,7 +67,7 @@ const calculateStyle = async (
       placement: location,
       middleware: [
         offset(7),
-        flip(),
+        flip({ fallbackAxisSideDirection: 'start' }),
         shift({ padding: 5 }),
         arrow({ element: arrowElement }),
       ],
@@ -83,7 +75,10 @@ const calculateStyle = async (
   );
 
   const { x: arrowX, y: arrowY } = middlewareData.arrow!;
-  const [staticSide, arrowOffset, arrowRotation] = getStaticSide(placement);
+  const side = placement.split('-')[0] as TooltipLocation;
+  const staticSide = (
+    { top: 'bottom', right: 'left', bottom: 'top', left: 'right' } as const
+  )[side];
 
   return {
     tooltip: {
@@ -93,27 +88,7 @@ const calculateStyle = async (
     arrow: {
       left: arrowX === undefined ? undefined : `${arrowX}px`,
       top: arrowY === undefined ? undefined : `${arrowY}px`,
-      [staticSide]: `${arrowOffset}px`,
-      transform: `rotate(${arrowRotation}deg)`,
+      [staticSide]: '-5px',
     },
   };
-};
-
-const getStaticSide = (
-  placement: Placement
-): [staticSide: Side, arrowOffset: number, arrowRotation: number] => {
-  const side = placement.split('-')[0] as Side;
-
-  const staticSide = (
-    { top: 'bottom', right: 'left', bottom: 'top', left: 'right' } as const
-  )[side];
-
-  const arrowOffset = { top: -6, right: -10, bottom: -6, left: -10 }[
-    staticSide
-  ];
-  const arrowRotation = { top: 0, right: 90, bottom: 180, left: 270 }[
-    staticSide
-  ];
-
-  return [staticSide, arrowOffset, arrowRotation];
 };

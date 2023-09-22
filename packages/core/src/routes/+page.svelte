@@ -852,7 +852,7 @@ const notify = useNotify();
 
   <!-- Tooltip -->
   <h1 class="text-2xl">Tooltip</h1>
-  <div class="flex gap-4">
+  <div class="flex flex-wrap items-start gap-4">
     <Tooltip let:tooltipID>
       <p aria-describedby={tooltipID}>This element has a top tooltip.</p>
       <p slot="description">This is the tooltip text!</p>

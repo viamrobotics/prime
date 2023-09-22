@@ -40,7 +40,7 @@ export let location: TooltipLocation = 'top';
 export let state: TooltipState = 'invisible';
 
 const tooltipID = useUniqueId('tooltip');
-let target: HTMLElement | undefined = undefined;
+let target: HTMLElement | undefined;
 let tooltip: HTMLElement | undefined;
 let arrow: HTMLElement | undefined;
 let isHovered = false;
@@ -49,15 +49,12 @@ const styles = tooltipStyles();
 const show = () => (isHovered = true);
 const hide = () => (isHovered = false);
 
+$: isVisible = state === 'visible' || isHovered;
+$: isVisible, styles.recalculate(target, tooltip, arrow, location);
+
 export const recalculateStyle = () => {
   styles.recalculate(target, tooltip, arrow, location);
 };
-
-$: isVisible = state === 'visible' || isHovered;
-
-$: if (isVisible) {
-  styles.recalculate(target, tooltip, arrow, location);
-}
 </script>
 
 <span
@@ -72,28 +69,26 @@ $: if (isVisible) {
 </span>
 
 <div
-  class="relative"
-  class:sr-only={!isVisible}
+  bind:this={tooltip}
+  id={tooltipID}
+  role="tooltip"
+  class:invisible={!isVisible}
+  class="absolute left-0 top-0 z-max w-max max-w-[250px] border border-gray-9"
+  style:top={$styles.tooltip.top}
+  style:left={$styles.tooltip.left}
 >
   <div
-    bind:this={tooltip}
-    id={tooltipID}
-    role="tooltip"
-    class:invisible={!isVisible}
-    class="absolute left-0 top-0 z-max flex w-max max-w-[250px] items-center gap-1 border border-gray-9 bg-gray-9 px-2 py-1 text-left text-xs text-white"
-    style:top={$styles.tooltip.top}
-    style:left={$styles.tooltip.left}
-  >
-    <div
-      bind:this={arrow}
-      class="absolute h-0 w-0 border-b-[6px] border-l-[6px] border-r-[6px] border-b-gray-9 border-l-transparent border-r-transparent"
-      style:top={$styles.arrow.top}
-      style:left={$styles.arrow.left}
-      style:right={$styles.arrow.right}
-      style:bottom={$styles.arrow.bottom}
-      style:transform={$styles.arrow.transform}
-    />
+    bind:this={arrow}
+    class="absolute h-[8.5px] w-[8.5px] rotate-45 bg-gray-9"
+    style:top={$styles.arrow.top}
+    style:left={$styles.arrow.left}
+    style:right={$styles.arrow.right}
+    style:bottom={$styles.arrow.bottom}
+  />
 
+  <div
+    class="flex items-center gap-1 bg-gray-9 px-2 py-1 text-left text-xs text-white"
+  >
     <slot name="description" />
   </div>
 </div>
