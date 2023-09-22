@@ -1,21 +1,41 @@
-import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
-import { writable, type Readable } from 'svelte/store';
+import {
+  autoUpdate,
+  computePosition,
+  flip,
+  shift,
+  offset,
+  arrow as floatingArrow,
+} from '@floating-ui/dom';
+import { setContext, getContext } from 'svelte';
+import { derived, writable, type Readable } from 'svelte/store';
+
+import { useUniqueId } from '$lib/unique-id';
 
 export type TooltipLocation = 'top' | 'bottom' | 'right' | 'left';
 
-export type TooltipState = 'invisible' | 'visible';
+export type TooltipVisibility = 'invisible' | 'visible';
 
-export interface Styles extends Readable<TooltipStyles> {
-  recalculate: (
-    target: HTMLElement | undefined,
-    tooltipElement: HTMLElement | undefined,
-    arrowElement: HTMLElement | undefined,
-    location: TooltipLocation
-  ) => unknown;
+export interface TooltipStylesStore extends Readable<TooltipStyles> {
+  id: string;
+  setHovered: (isHovered: boolean) => void;
+  setTarget: (target?: HTMLElement) => void;
+  setTooltip: (
+    location: TooltipLocation,
+    visibility: TooltipVisibility,
+    tooltip?: HTMLElement,
+    arrow?: HTMLElement
+  ) => void;
+}
+
+export interface TooltipElements {
+  target?: HTMLElement;
+  tooltip?: HTMLElement;
+  arrow?: HTMLElement;
 }
 
 export interface TooltipStyles {
   tooltip: {
+    visibility?: string | undefined;
     top?: string | undefined;
     left?: string | undefined;
   };
@@ -27,48 +47,92 @@ export interface TooltipStyles {
   };
 }
 
-export const tooltipStyles = (): Styles => {
-  const { subscribe, set } = writable<TooltipStyles>({
-    tooltip: {},
-    arrow: {},
-  });
+interface State {
+  location?: TooltipLocation;
+  visibility?: TooltipVisibility;
+  target?: HTMLElement | undefined;
+  tooltip?: HTMLElement | undefined;
+  arrow?: HTMLElement | undefined;
+  isHovered?: boolean;
+}
 
-  const recalculate = async (
-    targetElement: HTMLElement | undefined,
-    tooltipElement: HTMLElement | undefined,
-    arrowElement: HTMLElement | undefined,
-    location: TooltipLocation
-  ) => {
-    if (targetElement && tooltipElement && arrowElement) {
-      const nextStyles = await calculateStyle(
-        targetElement,
-        tooltipElement,
-        arrowElement,
-        location
-      );
-      set(nextStyles);
-    }
-  };
+const CONTEXT_KEY = Symbol('tooltip');
 
-  return { subscribe, recalculate };
+export const provideTooltipStyles = (): TooltipStylesStore => {
+  const store = createStylesStore();
+
+  setContext(CONTEXT_KEY, store);
+
+  return store;
 };
 
-const calculateStyle = async (
-  container: HTMLElement,
-  tooltipElement: HTMLElement,
-  arrowElement: HTMLElement,
-  location: TooltipLocation
-): Promise<TooltipStyles> => {
+export const useTooltipStyles = (): TooltipStylesStore => {
+  const store = getContext<TooltipStylesStore | undefined>(CONTEXT_KEY);
+
+  if (!store) {
+    throw new Error('Usage: tooltip styles context required');
+  }
+
+  return store;
+};
+
+const createStylesStore = (): TooltipStylesStore => {
+  const id = useUniqueId('tooltip');
+  const state = writable<State>({});
+  const styles = derived<typeof state, TooltipStyles>(
+    state,
+    ($state, set) => {
+      const { target, tooltip } = $state;
+
+      return target && tooltip
+        ? autoUpdate(target, tooltip, () => updateStyle($state, set))
+        : () => undefined;
+    },
+    { tooltip: {}, arrow: {} }
+  );
+
+  return {
+    id,
+    subscribe: styles.subscribe,
+    setHovered: (isHovered) =>
+      state.update((previous) => ({ ...previous, isHovered })),
+    setTarget: (target) =>
+      state.update((previous) => ({ ...previous, target })),
+    setTooltip: (location, visibility, tooltip, arrow) =>
+      state.update((previous) => ({
+        ...previous,
+        location,
+        visibility,
+        tooltip,
+        arrow,
+      })),
+  };
+};
+
+const updateStyle = (
+  state: State,
+  set: (styles: TooltipStyles) => void
+): void => {
+  void calculateStyle(state).then((styles) => set(styles));
+};
+
+const calculateStyle = async (state: State): Promise<TooltipStyles> => {
+  const { target, tooltip, arrow, location = 'top' } = state;
+
+  if (!target || !tooltip || !arrow) {
+    return { tooltip: {}, arrow: {} };
+  }
+
   const { x, y, placement, middlewareData } = await computePosition(
-    container,
-    tooltipElement,
+    target,
+    tooltip,
     {
       placement: location,
       middleware: [
         offset(7),
         flip({ fallbackAxisSideDirection: 'start' }),
         shift({ padding: 5 }),
-        arrow({ element: arrowElement }),
+        floatingArrow({ element: arrow }),
       ],
     }
   );
@@ -79,8 +143,12 @@ const calculateStyle = async (
     { top: 'bottom', right: 'left', bottom: 'top', left: 'right' } as const
   )[side];
 
+  const visibility =
+    state.visibility === 'visible' || state.isHovered ? 'visible' : 'hidden';
+
   return {
     tooltip: {
+      visibility,
       left: `${x}px`,
       top: `${y}px`,
     },

@@ -15,7 +15,14 @@ export { default as Tabs } from './tabs.svelte';
 export { default as Modal } from './modal.svelte';
 export { useUniqueId } from './unique-id';
 
-export { Tooltip, type TooltipLocation, type TooltipState } from './tooltip';
+export {
+  Tooltip,
+  TooltipContainer,
+  TooltipTarget,
+  TooltipText,
+  type TooltipLocation,
+  type TooltipVisibility,
+} from './tooltip';
 
 export { default as ContextMenu } from './context-menu/context-menu.svelte';
 export {
