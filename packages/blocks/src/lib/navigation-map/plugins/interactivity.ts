@@ -17,13 +17,13 @@ export const interactivityPlugin = () => {
 
   let point: { x: number; y: number } = { x: 0, y: 0 };
 
-  const setPoint = (event: MapMouseEvent) => {
+  const handleMouseMove = (event: MapMouseEvent) => {
     point = event.point;
   };
 
-  map.on('mousemove', setPoint);
+  map.on('mousemove', handleMouseMove);
 
-  onDestroy(() => map.off('mousemove', setPoint));
+  onDestroy(() => map.off('mousemove', handleMouseMove));
 
   const cameraPosition = new THREE.Vector3();
   const mousePosition = new THREE.Vector3();
