@@ -15,63 +15,64 @@ interface $$Events {
   update: Obstacle;
 }
 
-const dispatch = createRawEventDispatcher<$$Events>()
-const { map } = useMapLibre()
+const dispatch = createRawEventDispatcher<$$Events>();
+const { map } = useMapLibre();
 
 let material: THREE.MeshPhongMaterial;
-let selected: string | null = null
+let selected: string | null = null;
 
-let pointerdownTheta = 0
-let pointerdownRadius = 0
-let pointerdownLength = 0
-let pointerdownWidth = 0
-let pointerdownHeight = 0
+let pointerdownTheta = 0;
+let pointerdownRadius = 0;
+let pointerdownLength = 0;
+let pointerdownWidth = 0;
+let pointerdownHeight = 0;
 
-const pointermove = new THREE.Vector2()
-const pointerdown = new THREE.Vector2()
+const pointermove = new THREE.Vector2();
+const pointerdown = new THREE.Vector2();
 
 const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
   ref.rotateX(-Math.PI / 2);
 };
 
 const handleMouseMove = (event: MapMouseEvent) => {
-  if (selected === null) return
+  if (selected === null) return;
 
-  console.log(event.originalEvent)
+  console.log(event.originalEvent);
 
   // Rotate
   if (event.originalEvent.metaKey) {
-    pointermove.set(event.point.x, event.point.y)
-    pointermove.sub(pointerdown)
-    obstacle.geometries[0]!.pose.orientationVector.th = pointerdownTheta + pointermove.y
-  
-  // Scale
+    pointermove.set(event.point.x, event.point.y);
+    pointermove.sub(pointerdown);
+    obstacle.geometries[0]!.pose.orientationVector.th =
+      pointerdownTheta + pointermove.y;
+
+    // Scale
   } else if (event.originalEvent.altKey) {
-    pointermove.set(event.point.x, event.point.y)
-    pointermove.sub(pointerdown)
+    pointermove.set(event.point.x, event.point.y);
+    pointermove.sub(pointerdown);
 
     if (obstacle.geometries[0]!.type === 'sphere') {
-      obstacle.geometries[0]!.radius = pointerdownRadius - pointermove.y
+      obstacle.geometries[0]!.radius = pointerdownRadius - pointermove.y;
     } else if (obstacle.geometries[0]!.type === 'box') {
-      obstacle.geometries[0]!.length = pointerdownLength - pointermove.y
-      obstacle.geometries[0]!.width = pointerdownWidth - pointermove.y
-      obstacle.geometries[0]!.height = pointerdownHeight - pointermove.y
+      obstacle.geometries[0]!.length = pointerdownLength - pointermove.y;
+      obstacle.geometries[0]!.width = pointerdownWidth - pointermove.y;
+      obstacle.geometries[0]!.height = pointerdownHeight - pointermove.y;
     } else if (obstacle.geometries[0]!.type === 'capsule') {
-      obstacle.geometries[0]!.radius = pointerdownRadius - pointermove.y
-      obstacle.geometries[0]!.length = pointerdownLength - pointermove.y
+      obstacle.geometries[0]!.radius = pointerdownRadius - pointermove.y;
+      obstacle.geometries[0]!.length = pointerdownLength - pointermove.y;
     }
 
-  // Transform
+    // Transform
   } else {
-    obstacle.location.lng = event.lngLat.lng
-    obstacle.location.lat = event.lngLat.lat
+    obstacle.location.lng = event.lngLat.lng;
+    obstacle.location.lat = event.lngLat.lat;
   }
 
   dispatch('update', obstacle);
 };
 
 $: name = obstacle.name;
-$: active = $hovered === name || selected === name
+$: active = $hovered === name || selected === name;
 $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
   active
     ? theme.extend.colors['solar-power']
@@ -87,27 +88,26 @@ $: if (selected) {
 }
 
 useMapLibreEvent('mousedown', (event) => {
-  pointerdown.set(event.point.x, event.point.y)
+  pointerdown.set(event.point.x, event.point.y);
 
-  const geometry = obstacle.geometries[0]!
-  pointerdownTheta = obstacle.geometries[0]!.pose.orientationVector.th
-  
+  const geometry = obstacle.geometries[0]!;
+  pointerdownTheta = obstacle.geometries[0]!.pose.orientationVector.th;
+
   if (geometry.type === 'sphere') {
-    pointerdownRadius = geometry.radius
+    pointerdownRadius = geometry.radius;
   } else if (geometry.type === 'box') {
-    pointerdownLength = geometry.length
-    pointerdownWidth = geometry.width
-    pointerdownHeight = geometry.height
+    pointerdownLength = geometry.length;
+    pointerdownWidth = geometry.width;
+    pointerdownHeight = geometry.height;
   } else if (geometry.type === 'capsule') {
-    pointerdownRadius = geometry.radius
-    pointerdownLength = geometry.length
+    pointerdownRadius = geometry.radius;
+    pointerdownLength = geometry.length;
   }
-})
+});
 
 useMapLibreEvent('mouseup', () => {
-  selected = null
-})
-
+  selected = null;
+});
 </script>
 
 {#each obstacle.geometries as geometry, index (index)}
@@ -119,11 +119,11 @@ useMapLibreEvent('mouseup', () => {
     on:pointerenter={() => ($hovered = name)}
     on:pointerleave={() => ($hovered = null)}
     on:pointerdown={() => {
-      selected = name
+      selected = name;
       $obstacleNavItems[name]?.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
-      })
+      });
     }}
   >
     {#if geometry.type === 'box'}

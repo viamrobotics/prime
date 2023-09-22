@@ -11,6 +11,7 @@ import {
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
+import ObstaclesLegend from './obstacles-legend.svelte'
 import {
   environment,
   hovered,
@@ -92,7 +93,7 @@ useMapLibreEvent('click', (event) => {
 {#if $obstacles.length === 0}
   <li class="py-2 font-sans text-xs text-subtle-2">
     {#if $environment === 'configure'}
-      Click on the map to add an obstacle.
+      <ObstaclesLegend />
     {:else}
       Add static obstacles in your navigation service config.
     {/if}
