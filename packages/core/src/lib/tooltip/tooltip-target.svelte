@@ -11,9 +11,9 @@
 <svelte:options immutable />
 
 <script lang="ts">
-import { useTooltipStyles } from './tooltip-styles';
+import { useTooltip } from './tooltip-styles';
 
-const { setTarget, setHovered } = useTooltipStyles();
+const { setTarget, setHovered } = useTooltip();
 const hover = () => setHovered(true);
 const unhover = () => setHovered(false);
 let target: HTMLElement | undefined;

@@ -8,6 +8,7 @@ import {
 } from '@floating-ui/dom';
 import { setContext, getContext } from 'svelte';
 import { derived, writable, type Readable } from 'svelte/store';
+import noop from 'lodash/noop';
 
 import { useUniqueId } from '$lib/unique-id';
 
@@ -15,16 +16,18 @@ export type TooltipLocation = 'top' | 'bottom' | 'right' | 'left';
 
 export type TooltipVisibility = 'invisible' | 'visible';
 
-export interface TooltipStylesStore extends Readable<TooltipStyles> {
+export interface TooltipContext {
   id: string;
+  styles: Readable<TooltipStyles>;
+  isVisible: Readable<boolean>;
   setHovered: (isHovered: boolean) => void;
-  setTarget: (target?: HTMLElement) => void;
-  setTooltip: (
-    location: TooltipLocation,
-    visibility: TooltipVisibility,
-    tooltip?: HTMLElement,
-    arrow?: HTMLElement
-  ) => void;
+  setTarget: (target: HTMLElement | undefined) => void;
+  setTooltip: (options: {
+    location: TooltipLocation;
+    visibility: TooltipVisibility;
+    tooltip: HTMLElement | undefined;
+    arrow: HTMLElement | undefined;
+  }) => void;
 }
 
 export interface TooltipElements {
@@ -35,7 +38,6 @@ export interface TooltipElements {
 
 export interface TooltipStyles {
   tooltip: {
-    visibility?: string | undefined;
     top?: string | undefined;
     left?: string | undefined;
   };
@@ -47,7 +49,7 @@ export interface TooltipStyles {
   };
 }
 
-interface State {
+export interface State {
   location?: TooltipLocation;
   visibility?: TooltipVisibility;
   target?: HTMLElement | undefined;
@@ -57,55 +59,55 @@ interface State {
 }
 
 const CONTEXT_KEY = Symbol('tooltip');
+const INITIAL_STYLE: Readonly<TooltipStyles> = { tooltip: {}, arrow: {} };
 
-export const provideTooltipStyles = (): TooltipStylesStore => {
-  const store = createStylesStore();
+export const provideTooltipContext = (): TooltipContext => {
+  const context = createContext();
 
-  setContext(CONTEXT_KEY, store);
+  setContext(CONTEXT_KEY, context);
 
-  return store;
+  return context;
 };
 
-export const useTooltipStyles = (): TooltipStylesStore => {
-  const store = getContext<TooltipStylesStore | undefined>(CONTEXT_KEY);
+export const useTooltip = (): TooltipContext => {
+  const context = getContext<TooltipContext | undefined>(CONTEXT_KEY);
 
-  if (!store) {
-    throw new Error('Usage: tooltip styles context required');
+  if (!context) {
+    throw new Error('Usage: tooltip context required');
   }
 
-  return store;
+  return context;
 };
 
-const createStylesStore = (): TooltipStylesStore => {
+const createContext = (): TooltipContext => {
   const id = useUniqueId('tooltip');
   const state = writable<State>({});
-  const styles = derived<typeof state, TooltipStyles>(
+  const isVisible = derived(
+    state,
+    ($state) => $state.visibility === 'visible' || Boolean($state.isHovered)
+  );
+  const styles = derived<Readable<State>, TooltipStyles>(
     state,
     ($state, set) => {
       const { target, tooltip } = $state;
 
       return target && tooltip
         ? autoUpdate(target, tooltip, () => updateStyle($state, set))
-        : () => undefined;
+        : noop;
     },
-    { tooltip: {}, arrow: {} }
+    INITIAL_STYLE
   );
 
   return {
     id,
-    subscribe: styles.subscribe,
+    isVisible,
+    styles,
     setHovered: (isHovered) =>
       state.update((previous) => ({ ...previous, isHovered })),
     setTarget: (target) =>
       state.update((previous) => ({ ...previous, target })),
-    setTooltip: (location, visibility, tooltip, arrow) =>
-      state.update((previous) => ({
-        ...previous,
-        location,
-        visibility,
-        tooltip,
-        arrow,
-      })),
+    setTooltip: (options) =>
+      state.update((previous) => ({ ...previous, ...options })),
   };
 };
 
@@ -120,7 +122,7 @@ const calculateStyle = async (state: State): Promise<TooltipStyles> => {
   const { target, tooltip, arrow, location = 'top' } = state;
 
   if (!target || !tooltip || !arrow) {
-    return { tooltip: {}, arrow: {} };
+    return INITIAL_STYLE;
   }
 
   const { x, y, placement, middlewareData } = await computePosition(
@@ -143,12 +145,8 @@ const calculateStyle = async (state: State): Promise<TooltipStyles> => {
     { top: 'bottom', right: 'left', bottom: 'top', left: 'right' } as const
   )[side];
 
-  const visibility =
-    state.visibility === 'visible' || state.isHovered ? 'visible' : 'hidden';
-
   return {
     tooltip: {
-      visibility,
       left: `${x}px`,
       top: `${y}px`,
     },

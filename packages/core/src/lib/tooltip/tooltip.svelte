@@ -17,12 +17,9 @@
 <svelte:options immutable />
 
 <script lang="ts">
-import {
-  provideTooltipStyles,
-  type TooltipLocation,
-  type TooltipVisibility,
-} from './tooltip-styles';
+import type { TooltipLocation, TooltipVisibility } from './tooltip-styles';
 
+import TooltipContainer from './tooltip-container.svelte';
 import TooltipTarget from './tooltip-target.svelte';
 import TooltipText from './tooltip-text.svelte';
 
@@ -37,16 +34,16 @@ export let location: TooltipLocation = 'top';
  * will only render on mouse enter and focus
  */
 export let state: TooltipVisibility = 'invisible';
-
-const { id } = provideTooltipStyles();
 </script>
 
-<TooltipTarget>
-  <slot tooltipID={id} />
-</TooltipTarget>
-<TooltipText
-  {location}
-  visibility={state}
->
-  <slot name="description" />
-</TooltipText>
+<TooltipContainer let:tooltipID>
+  <TooltipTarget>
+    <slot {tooltipID} />
+  </TooltipTarget>
+  <TooltipText
+    {location}
+    {state}
+  >
+    <slot name="description" />
+  </TooltipText>
+</TooltipContainer>

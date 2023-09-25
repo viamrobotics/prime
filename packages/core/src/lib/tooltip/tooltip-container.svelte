@@ -32,9 +32,9 @@
 <svelte:options immutable />
 
 <script lang="ts">
-import { provideTooltipStyles } from './tooltip-styles';
+import { provideTooltipContext } from './tooltip-styles';
 
-const { id } = provideTooltipStyles();
+const { id } = provideTooltipContext();
 </script>
 
 <slot tooltipID={id} />

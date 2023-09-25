@@ -877,6 +877,17 @@ const notify = useNotify();
       <p slot="description">This is the tooltip text!</p>
     </Tooltip>
 
+    <Tooltip
+      let:tooltipID
+      location="bottom"
+      state="visible"
+    >
+      <p aria-describedby={tooltipID}>
+        This element has visible bottom tooltip.
+      </p>
+      <p slot="description">This is the tooltip text!</p>
+    </Tooltip>
+
     <div>
       <TooltipContainer let:tooltipID>
         <Label>
@@ -893,7 +904,7 @@ const notify = useNotify();
             aria-describedby={tooltipID}
           />
         </Label>
-        <TooltipText location="bottom">This is the tooltip text!</TooltipText>
+        <TooltipText>This is the tooltip text!</TooltipText>
       </TooltipContainer>
     </div>
   </div>

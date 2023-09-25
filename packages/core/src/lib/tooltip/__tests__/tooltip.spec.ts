@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Tooltip from './tooltip.spec.svelte';
 
 describe('Tooltip', () => {
-  it('Renders the target element without the tooltip', () => {
+  it('renders the target element without the tooltip', () => {
     render(Tooltip);
 
     const target = screen.getByTestId('target');
@@ -15,7 +15,17 @@ describe('Tooltip', () => {
     expect(tooltip).toHaveClass('invisible');
   });
 
-  it('Renders the tooltip when state is visible', async () => {
+  it('passes the tooltip ID to the target slot', () => {
+    render(Tooltip);
+
+    const target = screen.getByTestId('target');
+    const tooltip = screen.getByRole('tooltip');
+
+    expect(tooltip).toHaveAttribute('id', expect.any(String));
+    expect(target).toHaveAttribute('aria-describedby', tooltip.id);
+  });
+
+  it('renders the tooltip when state is visible', async () => {
     const user = userEvent.setup();
 
     render(Tooltip, { state: 'visible' });
@@ -32,7 +42,7 @@ describe('Tooltip', () => {
     expect(tooltip).not.toHaveClass('invisible');
   });
 
-  it('Renders the tooltip on mouse enter and hides it on mouse leave', async () => {
+  it('shows/hides the tooltip on mouse enter/exit', async () => {
     const user = userEvent.setup();
 
     render(Tooltip);
@@ -47,7 +57,7 @@ describe('Tooltip', () => {
     expect(tooltip).toHaveClass('invisible');
   });
 
-  it('Renders the tooltip on keyboard focus', async () => {
+  it('shows/hides the tooltip on keyboard focus/blur', async () => {
     render(Tooltip);
 
     const target = screen.getByTestId('target');

@@ -12,28 +12,27 @@
 
 <script lang="ts">
 import {
-  useTooltipStyles,
+  useTooltip,
   type TooltipLocation,
   type TooltipVisibility,
 } from './tooltip-styles';
 
 export let location: TooltipLocation = 'top';
-export let visibility: TooltipVisibility = 'invisible';
+export let state: TooltipVisibility = 'invisible';
 
-const styles = useTooltipStyles();
-const { id, setTooltip } = styles;
+const { id, styles, isVisible, setTooltip } = useTooltip();
 let tooltip: HTMLElement | undefined;
 let arrow: HTMLElement | undefined;
 
-$: setTooltip(location, visibility, tooltip, arrow);
+$: setTooltip({ tooltip, arrow, location, visibility: state });
 </script>
 
 <div
   bind:this={tooltip}
   {id}
   role="tooltip"
-  class="invisible absolute left-0 top-0 z-max w-max max-w-[250px] border border-gray-9"
-  style:visibility={$styles.tooltip.visibility}
+  class="absolute left-0 top-0 z-max w-max max-w-[250px] border border-gray-9"
+  class:invisible={!$isVisible}
   style:top={$styles.tooltip.top}
   style:left={$styles.tooltip.left}
 >
