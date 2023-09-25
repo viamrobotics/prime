@@ -50,7 +50,7 @@ export { extraClasses as cx };
   )}
 >
   <span
-    class={cx('flex text-xs', {
+    class={cx('text-xs', {
       'inline whitespace-nowrap': position === 'left',
       'text-subtle-1': !disabled,
       'cursor-not-allowed text-disabled-dark': disabled,

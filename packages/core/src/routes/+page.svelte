@@ -492,6 +492,13 @@ const notify = useNotify();
       />
     </Label>
   </div>
+  <Label position="left">
+    Left
+    <Input
+      slot="input"
+      name="name"
+    />
+  </Label>
 
   <!-- Notify -->
   <h1 class="text-2xl">Notify</h1>
