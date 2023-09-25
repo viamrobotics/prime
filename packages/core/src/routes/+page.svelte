@@ -891,7 +891,7 @@ const notify = useNotify();
     <div>
       <TooltipContainer let:tooltipID>
         <Label>
-          This element has a bottom tooltip on an icon!
+          This element has a tooltip on an icon!
           <TooltipTarget>
             <Icon
               tabindex="0"
