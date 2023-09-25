@@ -61,6 +61,11 @@ export interface State {
 const CONTEXT_KEY = Symbol('tooltip');
 const INITIAL_STYLE: Readonly<TooltipStyles> = { tooltip: {}, arrow: {} };
 
+/**
+ * Create and provide a context for the components of a tooltip.
+ *
+ * @returns tooltip ID, styles, and reactive actions
+ */
 export const provideTooltipContext = (): TooltipContext => {
   const context = createContext();
 
@@ -69,6 +74,11 @@ export const provideTooltipContext = (): TooltipContext => {
   return context;
 };
 
+/**
+ * Use a provided tooltip context inside a tooltip component.
+ *
+ * @returns tooltip ID, styles, and reactive actions
+ */
 export const useTooltip = (): TooltipContext => {
   const context = getContext<TooltipContext | undefined>(CONTEXT_KEY);
 
@@ -79,6 +89,7 @@ export const useTooltip = (): TooltipContext => {
   return context;
 };
 
+/** Create a context for a single tooltip */
 const createContext = (): TooltipContext => {
   const id = useUniqueId('tooltip');
   const state = writable<State>({});
@@ -88,13 +99,7 @@ const createContext = (): TooltipContext => {
   );
   const styles = derived<Readable<State>, TooltipStyles>(
     state,
-    ($state, set) => {
-      const { target, tooltip } = $state;
-
-      return target && tooltip
-        ? autoUpdate(target, tooltip, () => updateStyle($state, set))
-        : noop;
-    },
+    updateStyles,
     INITIAL_STYLE
   );
 
@@ -111,13 +116,35 @@ const createContext = (): TooltipContext => {
   };
 };
 
-const updateStyle = (
+/**
+ * Asynchronously update a tooltip's style as its state changes.
+ *
+ * For use as the update function of a derived store.
+ * Will update the styles when state changes, and also hooks into `autoUpdate`
+ * to update styles when the target or tooltip move on the page.
+ *
+ * @param state the current tooltip state
+ * @param set a callback to set the tooltips styles when needed
+ * @returns a cleanup function that will run whenever `state` is updated,
+ *   or the derived store has no more subscribers
+ */
+const updateStyles = (
   state: State,
-  set: (styles: TooltipStyles) => void
-): void => {
-  void calculateStyle(state).then((styles) => set(styles));
+  set: (nextStyles: TooltipStyles) => void
+): (() => void) => {
+  const { target, tooltip } = state;
+  let cleanup = noop;
+
+  if (target && tooltip) {
+    cleanup = autoUpdate(target, tooltip, () => {
+      void calculateStyle(state).then((styles) => set(styles));
+    });
+  }
+
+  return cleanup;
 };
 
+/** Given a tooltip's state, calculate its position with floating-ui. */
 const calculateStyle = async (state: State): Promise<TooltipStyles> => {
   const { target, tooltip, arrow, location } = state;
 
