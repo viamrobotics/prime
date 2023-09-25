@@ -37,8 +37,6 @@ const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
 const handleMouseMove = (event: MapMouseEvent) => {
   if (selected === null) return;
 
-  console.log(event.originalEvent);
-
   // Rotate
   if (event.originalEvent.metaKey) {
     pointermove.set(event.point.x, event.point.y);
@@ -51,15 +49,17 @@ const handleMouseMove = (event: MapMouseEvent) => {
     pointermove.set(event.point.x, event.point.y);
     pointermove.sub(pointerdown);
 
+    const { y } = pointermove;
+
     if (obstacle.geometries[0]!.type === 'sphere') {
-      obstacle.geometries[0]!.radius = pointerdownRadius - pointermove.y;
+      obstacle.geometries[0]!.radius = Math.max(0, pointerdownRadius - y);
     } else if (obstacle.geometries[0]!.type === 'box') {
-      obstacle.geometries[0]!.length = pointerdownLength - pointermove.y;
-      obstacle.geometries[0]!.width = pointerdownWidth - pointermove.y;
-      obstacle.geometries[0]!.height = pointerdownHeight - pointermove.y;
+      obstacle.geometries[0]!.length = Math.max(0, pointerdownLength - y);
+      obstacle.geometries[0]!.width = Math.max(0, pointerdownWidth - y);
+      obstacle.geometries[0]!.height = Math.max(0, pointerdownHeight - y);
     } else if (obstacle.geometries[0]!.type === 'capsule') {
-      obstacle.geometries[0]!.radius = pointerdownRadius - pointermove.y;
-      obstacle.geometries[0]!.length = pointerdownLength - pointermove.y;
+      obstacle.geometries[0]!.radius = Math.max(0, pointerdownRadius - y);
+      obstacle.geometries[0]!.length = Math.max(0, pointerdownLength - y);
     }
 
     // Transform
