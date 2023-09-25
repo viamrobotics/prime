@@ -50,9 +50,7 @@ import {
         </TooltipTarget>
       </p>
 
-      <TooltipText location="right">
-        This is the <b class="underline">tooltip text!</b>
-      </TooltipText>
+      <TooltipText location="right">This is the tooltip text!</TooltipText>
     </TooltipContainer>
   </div>
 </Story>
