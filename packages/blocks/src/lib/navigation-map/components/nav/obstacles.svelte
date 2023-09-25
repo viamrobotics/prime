@@ -11,7 +11,7 @@ import {
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
-import ObstaclesLegend from './obstacles-legend.svelte'
+import ObstaclesLegend from './obstacles-legend.svelte';
 import {
   environment,
   hovered,

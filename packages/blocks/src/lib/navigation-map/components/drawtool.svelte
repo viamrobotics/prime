@@ -19,14 +19,14 @@ let drawing = false;
 let width = 0;
 let height = 0;
 
-let moveSign = { x: 0, y: 0 }
+let moveSign = { x: 0, y: 0 };
 
 const handlePointerMove = (event: MapMouseEvent) => {
   const move = MercatorCoordinate.fromLngLat(event.lngLat, 0);
   const scale = move.meterInMercatorCoordinateUnits();
 
-  moveSign.x = Math.sign(move.x - down.x)
-  moveSign.y = Math.sign(move.y - down.y)
+  moveSign.x = Math.sign(move.x - down.x);
+  moveSign.y = Math.sign(move.y - down.y);
 
   width = Math.abs(move.x - down.x) / scale;
   height = Math.abs(move.y - down.y) / scale;
@@ -50,7 +50,7 @@ const handlePointerUp = () => {
 
   width = 0;
   height = 0;
-}
+};
 
 useMapLibreEvent('mousedown', (event) => {
   if (event.originalEvent.shiftKey) {
@@ -63,18 +63,17 @@ useMapLibreEvent('mousedown', (event) => {
 
 $: if (drawing) {
   map.on('mousemove', handlePointerMove);
-  map.on('mouseup', handlePointerUp)
+  map.on('mouseup', handlePointerUp);
 } else {
   map.off('mousemove', handlePointerMove);
-  map.off('mouseup', handlePointerUp)
+  map.off('mouseup', handlePointerUp);
 }
-
 </script>
 
 <T.Group userData.lngLat={downLngLat}>
   <T.Mesh
-    position.x={-moveSign.x * width / 2}
-    position.z={-moveSign.y * height / 2}
+    position.x={(-moveSign.x * width) / 2}
+    position.z={(-moveSign.y * height) / 2}
   >
     {#if $view === '3D'}
       <T.BoxGeometry
