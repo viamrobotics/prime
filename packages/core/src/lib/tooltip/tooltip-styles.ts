@@ -4,7 +4,7 @@ import {
   flip,
   shift,
   offset,
-  arrow as floatingArrow,
+  arrow as arrowMiddleware,
 } from '@floating-ui/dom';
 import { setContext, getContext } from 'svelte';
 import { derived, writable, type Readable } from 'svelte/store';
@@ -134,12 +134,12 @@ const calculateStyle = async (state: State): Promise<TooltipStyles> => {
         offset(7),
         flip({ fallbackAxisSideDirection: 'start' }),
         shift({ padding: 5 }),
-        floatingArrow({ element: arrow }),
+        arrowMiddleware({ element: arrow }),
       ],
     }
   );
 
-  const { x: arrowX, y: arrowY } = middlewareData.arrow!;
+  const { x: arrowX, y: arrowY } = middlewareData.arrow ?? {};
   const side = placement.split('-')[0] as TooltipLocation;
   const staticSide = (
     { top: 'bottom', right: 'left', bottom: 'top', left: 'right' } as const
