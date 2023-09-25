@@ -119,9 +119,9 @@ const updateStyle = (
 };
 
 const calculateStyle = async (state: State): Promise<TooltipStyles> => {
-  const { target, tooltip, arrow, location = 'top' } = state;
+  const { target, tooltip, arrow, location } = state;
 
-  if (!target || !tooltip || !arrow) {
+  if (!target || !tooltip || !arrow || !location) {
     return INITIAL_STYLE;
   }
 
