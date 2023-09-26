@@ -3,14 +3,14 @@ import { theme } from '@viamrobotics/prime-core/theme';
 import * as THREE from 'three';
 import { T, createRawEventDispatcher } from '@threlte/core';
 import { useMapLibre, type Obstacle, useMapLibreEvent } from '$lib';
-import { view, hovered, obstacleNavItems } from '../stores';
+import { view, hovered, selected } from '../stores';
 import AxesHelper from './axes-helper.svelte';
 import type { MapMouseEvent } from 'maplibre-gl';
 
 /** An obstacle to render. */
 export let obstacle: Obstacle;
 
-interface $$Events {
+type $$Events = {
   /** Fired when obstacles are created, destroyed, or edited. */
   update: Obstacle;
 }
@@ -19,13 +19,14 @@ const dispatch = createRawEventDispatcher<$$Events>();
 const { map } = useMapLibre();
 
 let material: THREE.MeshPhongMaterial;
-let selected: string | null = null;
 
 let pointerdownTheta = 0;
 let pointerdownRadius = 0;
 let pointerdownLength = 0;
 let pointerdownWidth = 0;
 let pointerdownHeight = 0;
+
+let dragging = false;
 
 const pointermove = new THREE.Vector2();
 const pointerdown = new THREE.Vector2();
@@ -35,7 +36,7 @@ const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
 };
 
 const handleMouseMove = (event: MapMouseEvent) => {
-  if (selected === null) return;
+  if ($selected === null) return;
 
   // Rotate
   if (event.originalEvent.metaKey) {
@@ -72,18 +73,16 @@ const handleMouseMove = (event: MapMouseEvent) => {
 };
 
 $: name = obstacle.name;
-$: active = $hovered === name || selected === name;
+$: active = $hovered === name || $selected === name;
 $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
   active
     ? theme.extend.colors['solar-power']
     : theme.extend.colors['power-wire']
 );
 
-$: if (selected) {
-  map.dragPan.disable();
+$: if (dragging) {
   map.on('mousemove', handleMouseMove);
 } else {
-  map.dragPan.enable();
   map.off('mousemove', handleMouseMove);
 }
 
@@ -106,7 +105,8 @@ useMapLibreEvent('mousedown', (event) => {
 });
 
 useMapLibreEvent('mouseup', () => {
-  selected = null;
+  dragging = false;
+  map.dragPan.enable();
 });
 </script>
 
@@ -119,11 +119,9 @@ useMapLibreEvent('mouseup', () => {
     on:pointerenter={() => ($hovered = name)}
     on:pointerleave={() => ($hovered = null)}
     on:pointerdown={() => {
-      selected = name;
-      $obstacleNavItems[name]?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-      });
+      map.dragPan.disable();
+      $selected = name;
+      dragging = true;
     }}
   >
     {#if geometry.type === 'box'}

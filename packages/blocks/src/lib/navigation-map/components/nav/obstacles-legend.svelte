@@ -4,11 +4,11 @@ import Key from './key.svelte';
 
 <p>Getting started:</p>
 
-<ul class="flex list-disc flex-col gap-2 pt-2">
-  <li>Click on the map to add an obstacle.</li>
-  <li>Click on an obstacle to select it.</li>
-  <li>Hold <Key>shift</Key> and drag on the map to draw an obstacle.</li>
-  <li>Drag an obstacle to move it.</li>
-  <li>Hold <Key>command</Key> and drag an obstacle to rotate it.</li>
-  <li>Hold <Key>option</Key> and drag an obstacle to scale it.</li>
+<ul class="flex !list-disc flex-col gap-2 pt-2">
+  <li class='ml-4'>Click on the map to add an obstacle.</li>
+  <li class='ml-4'>Click on an obstacle to select it.</li>
+  <li class='ml-4'>Hold <Key>shift</Key> and drag on the map to draw an obstacle.</li>
+  <li class='ml-4'>Drag an obstacle to move it.</li>
+  <li class='ml-4'>Hold <Key>command</Key> and drag an obstacle to rotate it.</li>
+  <li class='ml-4'>Hold <Key>option</Key> and drag an obstacle to scale it.</li>
 </ul>

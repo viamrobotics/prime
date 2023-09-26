@@ -21,6 +21,11 @@ let height = 0;
 
 let moveSign = { x: 0, y: 0 };
 
+const toPrecisionLevel = (number: number, decimals: number) => {
+  const multiplier = Math.pow(10, decimals);
+  return Math.floor(number * multiplier) / multiplier;
+}
+
 const handlePointerMove = (event: MapMouseEvent) => {
   const move = MercatorCoordinate.fromLngLat(event.lngLat, 0);
   const scale = move.meterInMercatorCoordinateUnits();
@@ -28,8 +33,8 @@ const handlePointerMove = (event: MapMouseEvent) => {
   moveSign.x = Math.sign(move.x - down.x);
   moveSign.y = Math.sign(move.y - down.y);
 
-  width = Math.abs(move.x - down.x) / scale;
-  height = Math.abs(move.y - down.y) / scale;
+  width = toPrecisionLevel(Math.abs(move.x - down.x) / scale, 2);
+  height = toPrecisionLevel(Math.abs(move.y - down.y) / scale, 2);
 };
 
 const handlePointerUp = () => {
