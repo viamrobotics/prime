@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import Label from './label.spec.svelte';
+import { cxTestArguments, cxTestResults } from './cx-test';
 
 describe('Label', () => {
   it('Renders the label text above the input', () => {
@@ -22,7 +23,7 @@ describe('Label', () => {
   it('Renders the label text as disabled', () => {
     render(Label, { disabled: true });
     expect(screen.getByText('Name:')).toHaveClass(
-      'text-xs pointer-events-none text-disabled-dark'
+      'text-xs cursor-not-allowed text-disabled-dark'
     );
   });
 
@@ -44,5 +45,10 @@ describe('Label', () => {
   it('Renders the detail', () => {
     render(Label, { detail: 'detail' });
     expect(screen.getByText('detail')).toHaveClass('text-disabled');
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Label, { extraClasses: cxTestArguments });
+    expect(screen.getByText('Name:').parentElement).toHaveClass(cxTestResults);
   });
 });

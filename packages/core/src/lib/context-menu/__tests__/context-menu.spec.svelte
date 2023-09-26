@@ -10,13 +10,16 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
+import type cx from 'classnames';
 import { ContextMenu, ContextMenuItem, ContextMenuSeparator } from '$lib';
+export let extraClasses: cx.Argument = '';
 </script>
 
-<ContextMenu>
+<ContextMenu cx={extraClasses}>
   <ContextMenuItem
     label="hello"
     icon="plus"
+    cx={extraClasses}
   />
-  <ContextMenuSeparator />
+  <ContextMenuSeparator cx={extraClasses} />
 </ContextMenu>

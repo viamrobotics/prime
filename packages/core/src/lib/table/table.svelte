@@ -31,20 +31,21 @@ export let variant: TableVariant = 'auto';
  */
 export let cols: string[] = [];
 
-/**
- * Custom table style
- * @example
- * style="border-collapse"
- */
-export let style = '';
+/** Additional CSS classes to pass to the table. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <table
-  {style}
-  class={cx('w-full bg-white text-xs', {
-    'table-fixed': variant === 'fixed',
-    'table-auto': variant === 'auto',
-  })}
+  class={cx(
+    'w-full bg-white text-xs',
+    {
+      'table-fixed': variant === 'fixed',
+      'table-auto': variant === 'auto',
+    },
+    extraClasses
+  )}
+  {...$$restProps}
 >
   <colgroup>
     {#each cols as col}

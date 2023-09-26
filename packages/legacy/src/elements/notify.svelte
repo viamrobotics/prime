@@ -24,16 +24,16 @@ const handleClose = (event: Event) => {
 
 <div
   class={cx('flex border', {
-    'bg-info-light border-info-medium': variant === 'info',
-    'bg-warning-light border-warning-medium': variant === 'warning',
-    'bg-success-light border-success-medium': variant === 'success',
-    'bg-danger-light border-danger-medium': variant === 'danger',
+    'border-info-medium bg-info-light': variant === 'info',
+    'border-warning-medium bg-warning-light': variant === 'warning',
+    'border-success-medium bg-success-light': variant === 'success',
+    'border-danger-medium bg-danger-light': variant === 'danger',
   })}
 >
   <div class="relative flex-col">
     <div
       class={cx(
-        'absolute top-0 left-0 w-[3px] h-[calc(100%+2px)] origin-bottom -mt-px -ml-px',
+        'absolute left-0 top-0 -ml-px -mt-px h-[calc(100%+2px)] w-[3px] origin-bottom',
         {
           'bg-[#df9a9b]': variant === 'danger',
           'bg-[#eed59f]': variant === 'warning',
@@ -44,7 +44,7 @@ const handleClose = (event: Event) => {
     />
     <div
       style="transform: scale(1, {progress})"
-      class={cx('w-[3px] h-[calc(100%+2px)] origin-bottom -mt-px -ml-px', {
+      class={cx('-ml-px -mt-px h-[calc(100%+2px)] w-[3px] origin-bottom', {
         'bg-danger-dark': variant === 'danger',
         'bg-warning-bright': variant === 'warning',
         'bg-success-dark': variant === 'success',
@@ -53,7 +53,7 @@ const handleClose = (event: Event) => {
     />
   </div>
 
-  <div class="flex justify-between w-full gap-2 p-3 relative">
+  <div class="relative flex w-full justify-between gap-2 p-3">
     <div class="flex gap-3">
       {#if variant === 'danger'}
         <v-icon
@@ -96,7 +96,7 @@ const handleClose = (event: Event) => {
           <slot />
 
           {#if $$slots.action}
-            <div class="pt-1 pb-2">
+            <div class="pb-2 pt-1">
               <slot name="action" />
             </div>
           {/if}

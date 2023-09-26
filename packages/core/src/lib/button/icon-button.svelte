@@ -10,12 +10,12 @@ For user triggered actions.
 <svelte:options immutable />
 
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
 import cx from 'classnames';
-import { Icon } from '$lib';
+import { Icon, type IconName } from '$lib';
+import { preventHandler } from '$lib/prevent-handler';
 
 /** The icon shown in the button. */
-export let icon: string;
+export let icon: IconName;
 
 /** aria-label text for accessibility */
 export let label: string;
@@ -30,7 +30,7 @@ export let type: 'button' | 'submit' | 'reset' = 'button';
 export let variant: 'primary' | 'danger' = 'primary';
 
 /**
- * The text that appears in a native popup box on hoveClassListArguements to the value
+ * The text that appears in a native popup box on hover. Defaults to the value
  * of `label`.
  */
 export let title = label;
@@ -39,28 +39,20 @@ export let title = label;
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-const dispatch = createEventDispatcher<{ click: undefined }>();
-
-const onClick = () => {
-  if (disabled) {
-    return;
-  }
-
-  dispatch('click');
-};
+$: handleDisabled = preventHandler(disabled);
 </script>
 
 <button
   {type}
   aria-label={label}
-  aria-disabled={disabled}
+  aria-disabled={disabled ? true : undefined}
   {title}
   class={cx(
     'inline-flex h-[30px] w-[30px] select-none items-center justify-center whitespace-nowrap',
     {
       'text-gray-6 hover:border-medium hover:bg-medium active:bg-gray-2':
         !disabled,
-      'text-disabled-dark cursor-not-allowed': disabled,
+      'cursor-not-allowed text-disabled-dark': disabled,
       'hover:text-gray-7 active:text-gray-8':
         variant === 'primary' && !disabled,
       'hover:text-danger-dark active:text-danger-dark':
@@ -69,7 +61,8 @@ const onClick = () => {
     extraClasses
   )}
   {...$$restProps}
-  on:click={onClick}
+  on:click
+  on:click|capture={handleDisabled}
 >
   <Icon name={icon} />
 </button>

@@ -16,14 +16,15 @@ A clickable element that allows the user to navigate to another page or area.
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
 
-/**
- * The set of tabs that is available for selection.
- */
+/** The set of tabs that is available for selection. */
 export let tabs: string[] = [];
-/**
- * The selected tab.
- */
+
+/** The selected tab. */
 export let selected = '';
+
+/** Additional CSS classes to pass to the tabs container. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 
 const dispatch = createEventDispatcher<{
   /** When an specific tab is selected. */
@@ -38,7 +39,9 @@ const handleClick = (option: string) => {
 };
 </script>
 
-<div class="border-b-border-2 flex w-full border-b bg-medium">
+<div
+  class={cx('border-b-border-2 flex w-full border-b bg-medium', extraClasses)}
+>
   {#each tabs as tab, index (tab)}
     <button
       class={cx('px-4 py-1 text-sm first:ml-6', {

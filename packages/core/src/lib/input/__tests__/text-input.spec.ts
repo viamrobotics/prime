@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { TextInput } from '$lib';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Text Input', () => {
   it('Renders the input', () => {
@@ -24,6 +25,17 @@ describe('Text Input', () => {
     expect(screen.getByPlaceholderText('Enter your password')).toHaveAttribute(
       'type',
       'password'
+    );
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(TextInput, {
+      placeholder: 'Enter your name',
+      cx: cxTestArguments,
+    });
+
+    expect(screen.getByPlaceholderText('Enter your name')).toHaveClass(
+      cxTestResults
     );
   });
 });

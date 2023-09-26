@@ -10,6 +10,7 @@ For displaying a list of items.
 <svelte:options immutable />
 
 <script lang="ts">
+import { Icon } from '$lib';
 import cx from 'classnames';
 
 import { createEventDispatcher } from 'svelte';
@@ -22,6 +23,10 @@ export let value = '';
 export let readonly = false;
 /** Whether or not the pill is disabled. */
 export let disabled = false;
+
+/** Additional CSS classes to pass to the pill. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 
 const dispatch = createEventDispatcher<{
   /** When the pill is removed. */
@@ -43,10 +48,11 @@ const handleRemove = () => {
     {
       'cursor-not-allowed bg-disabled-light text-disabled-dark':
         disabled || readonly,
-    }
+    },
+    extraClasses
   )}
-  aria-disabled={disabled}
-  aria-readonly={readonly}
+  aria-disabled={disabled ? true : undefined}
+  aria-readonly={readonly ? true : undefined}
 >
   <span>
     {value}
@@ -56,10 +62,10 @@ const handleRemove = () => {
       aria-label="Remove {value}"
       on:click={handleRemove}
     >
-      <!--  TODO(APP-2290): Use an icon once migrated. -->
-      <!-- <Icon name="close" /> -->
-      <!-- For now, just an "x" -->
-      x
+      <Icon
+        name="close"
+        size="xs"
+      />
     </button>
   {/if}
 </div>

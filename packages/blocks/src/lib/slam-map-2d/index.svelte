@@ -16,7 +16,6 @@
   ```
 -->
 <script lang="ts">
-
 import type * as THREE from 'three';
 import { createEventDispatcher } from 'svelte';
 import { Canvas } from '@threlte/core';
@@ -27,7 +26,8 @@ import Scene from './scene.svelte';
 export let pointcloud: Uint8Array | undefined = undefined;
 
 /** The pose of the base of the robot */
-export let basePose: { x: number; y: number; theta: number } | undefined = undefined;
+export let basePose: { x: number; y: number; theta: number } | undefined =
+  undefined;
 
 /** A user-specificed robot destination */
 export let destination: THREE.Vector2 | undefined = undefined;
@@ -38,17 +38,15 @@ export let helpers = true;
 /** An optional motion path */
 export let motionPath: string | undefined = undefined;
 
-type Events = {
-
+interface Events {
   /** Dispatched when a user clicks within the bounding box of the pointcloud */
-  click: THREE.Vector3
+  click: THREE.Vector3;
 }
 
 const dispatch = createEventDispatcher<Events>();
-
 </script>
 
-<div class="relative w-full h-[400px]">
+<div class="relative h-full w-full">
   <Canvas useLegacyLights={false}>
     <Scene
       {helpers}
@@ -61,9 +59,7 @@ const dispatch = createEventDispatcher<Events>();
   </Canvas>
 
   {#if helpers}
-    <p class="absolute left-3 top-3 bg-white text-xs">
-      Grid set to 1 meter
-    </p>
+    <p class="absolute left-3 top-3 bg-white text-xs">Grid set to 1 meter</p>
   {/if}
 
   <Legend />

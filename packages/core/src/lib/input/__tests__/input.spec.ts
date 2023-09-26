@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { Input } from '$lib';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Input', () => {
   it('Renders the input', () => {
@@ -13,7 +14,7 @@ describe('Input', () => {
     );
 
     expect(input).not.toHaveClass(
-      'bg-disabled-light text-disabled-dark border-disabled-light pointer-events-none'
+      'bg-disabled-light text-disabled-dark border-disabled-light cursor-not-allowed'
     );
   });
 
@@ -27,7 +28,7 @@ describe('Input', () => {
     );
 
     expect(input).toHaveClass(
-      'bg-disabled-light text-disabled-dark border-disabled-light pointer-events-none'
+      'bg-disabled-light text-disabled-dark border-disabled-light cursor-not-allowed'
     );
 
     expect(input).toHaveAttribute('aria-disabled', 'true');
@@ -42,7 +43,7 @@ describe('Input', () => {
       'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
-    expect(input).toHaveClass('bg-light border-none');
+    expect(input).toHaveClass('bg-light border-transparent');
     expect(input).not.toHaveAttribute('aria-disabled');
   });
 
@@ -54,7 +55,7 @@ describe('Input', () => {
     const svg = container.querySelector('svg');
 
     expect(svg).toBeInTheDocument();
-    expect(svg?.parentElement).toHaveClass('text-info-dark');
+    expect(svg).toHaveClass('text-info-dark');
   });
 
   it('Renders the input in the warn state', () => {
@@ -65,7 +66,7 @@ describe('Input', () => {
     const svg = container.querySelector('svg');
 
     expect(svg).toBeInTheDocument();
-    expect(svg?.parentElement).toHaveClass('text-warning-bright');
+    expect(svg).toHaveClass('text-warning-bright');
   });
 
   it('Renders the input in the error state', () => {
@@ -76,6 +77,13 @@ describe('Input', () => {
     const svg = container.querySelector('svg');
 
     expect(svg).toBeInTheDocument();
-    expect(svg?.parentElement).toHaveClass('text-danger-dark');
+    expect(svg).toHaveClass('text-danger-dark');
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Input, { placeholder: 'Enter your name', cx: cxTestArguments });
+    expect(screen.getByPlaceholderText('Enter your name')).toHaveClass(
+      cxTestResults
+    );
   });
 });

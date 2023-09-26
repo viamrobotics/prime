@@ -122,7 +122,7 @@ $: {
     '!bg-light': theme === 'vs',
   })}
 >
-  <pre class="flex-1 !bg-inherit !border-none !m-0 !p-0 !pt-2 !pl-2"><code
+  <pre class="!m-0 flex-1 !border-none !bg-inherit !p-0 !pl-2 !pt-2"><code
       bind:this={element}
       class="language-{language} font-mono">{code}</code
     ></pre>
@@ -130,7 +130,7 @@ $: {
   {#if showbutton === 'true'}
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <v-button
-      class="!text-black !font-sans"
+      class="!font-sans !text-black"
       on:click={copyToClipboard}
       on:keyup={copyToClipboard}
       {label}

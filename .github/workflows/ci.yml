@@ -9,56 +9,58 @@ on:
       - main
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install 🔧
-        uses: ./.github/actions/setup
-      - name: Run lints and checks
-        run: pnpm -r --aggregate-output check
-
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Install 🔧
-        uses: ./.github/actions/setup
+        uses: viamrobotics/js-config/.github/actions/setup@0006127efb3f62669f662ca31c555a49a034935e
+
       - name: Build 🏗️
-        run: pnpm -r --aggregate-output build
+        run: pnpm run build
+
+      - name: Lint and type check 💅
+        run: pnpm run check
+
       - name: Upload npm @viamrobotics/prime artifacts
         uses: actions/upload-artifact@v3
         with:
           name: npm-legacy-dist
           path: packages/legacy/dist
+
       - name: Upload npm @viamrobotics/prime-core artifacts
         uses: actions/upload-artifact@v3
         with:
           name: npm-core-dist
           path: packages/core/dist
+
       - name: Upload npm @viamrobotics/prime-blocks artifacts
         uses: actions/upload-artifact@v3
         with:
           name: npm-blocks-dist
           path: packages/blocks/dist
+
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
-          path: packages/legacy/prime
+          path: packages/storybook/prime
 
   test:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Install 🔧
-        uses: ./.github/actions/setup
-        with:
-          node-version: 16
+        uses: viamrobotics/js-config/.github/actions/setup@0006127efb3f62669f662ca31c555a49a034935e
+
       - name: Install Playwright Browsers
         run: pnpm -C packages/legacy playwright-install --with-deps
+
       - name: Run tests
-        run: pnpm -r --aggregate-output test
+        run: pnpm run test
+
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
@@ -68,30 +70,34 @@ jobs:
 
   deploy-npm:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: [check, build, test]
+    needs: [build, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Install 🔧
         uses: ./.github/actions/setup
         with:
-          node-version: 16
           registry-url: https://registry.npmjs.org
+
       - name: Download @viamrobotics/prime npm artifacts
         uses: actions/download-artifact@v3
         with:
           name: npm-legacy-dist
           path: packages/legacy/dist
+
       - name: Download @viamrobotics/prime-core npm artifacts
         uses: actions/download-artifact@v3
         with:
           name: npm-core-dist
           path: packages/core/dist
+
       - name: Download @viamrobotics/prime-blocks npm artifacts
         uses: actions/download-artifact@v3
         with:
           name: npm-blocks-dist
           path: packages/blocks/dist
+
       - name: Publish 🚀
         run: pnpm publish -r --ignore-scripts
         env:
@@ -99,14 +105,17 @@ jobs:
 
   deploy-pages:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: [check, build, test]
+    needs: [build, test]
     runs-on: ubuntu-latest
+
     permissions:
       pages: write
       id-token: write
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

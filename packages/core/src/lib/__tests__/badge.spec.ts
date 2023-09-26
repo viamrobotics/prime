@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { Badge } from '$lib';
+import { cxTestArguments, cxTestResults } from './cx-test';
 
 describe('Badge', () => {
   it('Renders the correct text', () => {
@@ -66,5 +67,10 @@ describe('Badge', () => {
       'bg-info-light',
       'text-info-dark'
     );
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Badge, { variant: 'gray', label: 'Inactive', cx: cxTestArguments });
+    expect(screen.getByText('Inactive')).toHaveClass(cxTestResults);
   });
 });

@@ -11,16 +11,17 @@ A table body.
 <svelte:options immutable />
 
 <script lang="ts">
-/**
- * Custom table body style
- * ```
- * <TableBody style="text-align:center">
- * ```
- */
-export let style = '';
+import cx from 'classnames';
+
+/** Additional CSS classes to pass to the tbody. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
-<tbody {style}>
+<tbody
+  class={cx(extraClasses)}
+  {...$$restProps}
+>
   <slot />
 </tbody>
 

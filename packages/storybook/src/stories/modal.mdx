@@ -1,0 +1,20 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as ModalStories from './modal.stories.svelte';
+
+<Meta title='Elements/Modal' />
+
+# Modal
+
+Creates a modal overlay
+
+```ts
+import { Modal } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={ModalStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={ModalStories.Small} />
+</Canvas>

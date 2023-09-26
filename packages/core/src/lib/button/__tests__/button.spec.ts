@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { Button } from '$lib';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('Button', () => {
   it('Renders label attribute as text within the button', () => {
@@ -73,5 +74,10 @@ describe('Button', () => {
   it('Renders a full width button', () => {
     render(Button, { width: 'full' });
     expect(screen.getByRole('button')).toHaveClass('w-full');
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Button, { cx: cxTestArguments });
+    expect(screen.getByRole('button')).toHaveClass(cxTestResults);
   });
 });

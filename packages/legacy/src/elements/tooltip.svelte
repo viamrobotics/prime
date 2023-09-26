@@ -96,25 +96,25 @@ const handleMouseLeave = () => {
     role="tooltip"
     class={`
       absolute
-      top-0
       left-0
-      bg-gray-9
-      text-white
-      text-left
-      text-xs
-      py-1 px-2
-      border
-      border-gray-9
+      top-0
       z-[1000]
+      flex
       w-max
       max-w-[250px]
-      flex items-center gap-1
+      items-center gap-1
+      border
+      border-gray-9
+      bg-gray-9
+      px-2
+      py-1
+      text-left text-xs text-white
     `}
     style="transform: translate({x}px, {y}px);"
   >
     <div
       bind:this={arrowElement}
-      class="absolute triangle border-b-gray-9 w-0 h-0"
+      class="triangle absolute h-0 w-0 border-b-gray-9"
     />
     <slot name="icon" />
     {text}

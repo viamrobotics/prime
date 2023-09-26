@@ -19,6 +19,7 @@ export type ContextMenuItemVariant = 'primary' | 'danger';
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
 import Icon from '$lib/icon/icon.svelte';
+import type { IconName } from '$lib/icon/icons';
 
 const dispatch = createEventDispatcher<{
   /** Fires when selected with the label */
@@ -26,25 +27,31 @@ const dispatch = createEventDispatcher<{
 }>();
 
 /**
- * Optional icon name (https://prime.viam.com/?path=/docs/elements-icon--docs).
- * No icon by default.
+ * Optional icon name shown in the item.
  */
-export let icon = '';
+export let icon: IconName | undefined = undefined;
 
 /** The style variant, default value is 'primary' */
 export let variant: ContextMenuItemVariant = 'primary';
 
 /** The text displayed. */
 export let label: string;
+
+/** Additional CSS classes to pass to the button. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <button
   role="menuitem"
   aria-labelledby={label}
-  class="flex w-full items-center gap-1 px-2 py-1.5 text-left hover:bg-light"
+  class={cx(
+    'flex w-full items-center gap-1 px-2 py-1.5 text-left hover:bg-light',
+    extraClasses
+  )}
   on:click={() => dispatch('select', { value: label })}
 >
-  {#if icon !== ''}
+  {#if icon}
     <div
       class={cx({
         'text-gray-400': variant === 'primary',

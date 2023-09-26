@@ -1,10 +1,10 @@
 <!--
 @component
-  
+
 For user inputs.
 
-This is the base input component that accepts all input properties without any 
-additional behaviors attached. Generally, other typed inputs like the 
+This is the base input component that accepts all input properties without any
+additional behaviors attached. Generally, other typed inputs like the
 NumberInput or DateInput are preferable.
 
 ```svelte
@@ -22,71 +22,108 @@ export type InputState = 'info' | 'warn' | 'error' | 'none';
 
 <script lang="ts">
 import Icon from '$lib/icon/icon.svelte';
+import type { IconName } from '$lib/icon/icons';
+import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 import cx from 'classnames';
 
 export let value: string | number | undefined = '';
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly = false;
+export let readonly = false as boolean | undefined;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled = false;
+export let disabled = false as boolean | undefined;
 
 /** The state of the input (info, warn, error, success), if any. */
-export let state: InputState = 'none';
+export let state: InputState | undefined = 'none';
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
-// Assert this element will be defined by the time it is used by the parent.
+
+/** Additional CSS classes to pass to the input. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 
 $: isInfo = state === 'info';
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
+$: isInputReadOnly = disabled === true || readonly === true;
+$: handleDisabled = preventHandler(isInputReadOnly);
+$: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 
-$: icon = {
-  info: 'information',
-  warn: 'alert',
-  error: 'alert-circle',
-  none: '',
-}[state];
+let icon: IconName | null;
+$: icon = (() => {
+  switch (state) {
+    case 'info': {
+      return 'information';
+    }
+    case 'warn': {
+      return 'alert';
+    }
+    case 'error': {
+      return 'alert-circle';
+    }
+    default: {
+      return null;
+    }
+  }
+})();
+
+$: defaultClasses =
+  !disabled &&
+  !readonly &&
+  !isError &&
+  'border-light hover:border-gray-6 focus:border-gray-9';
+
+$: readonlyClasses =
+  readonly && 'bg-light focus:border-gray-9 border-transparent';
+
+$: disabledClasses =
+  disabled &&
+  'border-disabled-light focus:border-disabled-dark bg-disabled-light text-disabled-dark cursor-not-allowed select-none';
+
+$: errorClasses =
+  isError &&
+  'border-danger-dark focus:outline-danger-dark focus:outline-[1.5px] focus:-outline-offset-1';
 </script>
 
 <div class="relative w-full">
   <input
     {...$$restProps}
-    readonly={disabled || readonly ? true : undefined}
+    readonly={isInputReadOnly ? true : undefined}
     aria-disabled={disabled ? true : undefined}
     aria-invalid={isError ? true : undefined}
     class={cx(
       'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
-      {
-        'border-light bg-white hover:border-gray-6 focus:border-gray-9':
-          !disabled && !readonly && !isError,
-        'border-none bg-light': readonly,
-        'pointer-events-none border-disabled-light bg-disabled-light text-disabled-dark':
-          disabled,
-        'border-light hover:border-medium focus:border-gray-9 ':
-          !disabled && !isError,
-        'border-danger-dark focus:outline-[1.5px] focus:-outline-offset-1 focus:outline-danger-dark':
-          isError,
-      }
+      defaultClasses,
+      readonlyClasses,
+      disabledClasses,
+      errorClasses,
+      extraClasses
     )}
     bind:value
     bind:this={input}
     on:input
+    on:input|capture={handleDisabled}
+    on:change
+    on:change|capture={handleDisabled}
     on:keydown
+    on:keydown|capture={handleDisabledKeydown}
+    on:blur
   />
 
-  {#if icon !== ''}
-    <span
-      class={cx('absolute right-2', {
-        'text-info-dark': isInfo,
-        'text-warning-bright': isWarn,
-        'text-danger-dark': isError,
-      })}
-    >
-      <Icon name={icon} />
-    </span>
+  {#if icon}
+    <Icon
+      cx={[
+        'absolute right-2 top-1.5',
+        {
+          'text-info-dark': isInfo,
+          'text-warning-bright': isWarn,
+          'text-danger-dark': isError,
+        },
+      ]}
+      name={icon}
+    />
   {/if}
 </div>
 

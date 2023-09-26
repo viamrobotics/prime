@@ -1,11 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { IconButton } from '$lib';
+import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
 describe('IconButton', () => {
-  const common = { icon: 'close', label: 'close' };
+  const common = { icon: 'close' as const, label: 'close' };
   it('Renders a button in the style of the primary variant if no variant is specified', () => {
-    render(IconButton);
+    render(IconButton, common);
     expect(screen.getByRole('button')).toHaveClass(
       'text-gray-6',
       'hover:border-medium'
@@ -47,5 +48,10 @@ describe('IconButton', () => {
     component.$on('click', onClick);
     await fireEvent.click(screen.getByRole('button'));
     expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(IconButton, { ...common, cx: cxTestArguments });
+    expect(screen.getByRole('button')).toHaveClass(cxTestResults);
   });
 });

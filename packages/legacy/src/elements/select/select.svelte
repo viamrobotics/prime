@@ -249,7 +249,7 @@ $: {
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label
   bind:this={root}
-  class={cx('relative min-w-[6rem] w-full flex gap-1', {
+  class={cx('relative flex w-full min-w-[6rem] gap-1', {
     'z-[100]': open,
     'flex-col': labelposition === 'top',
     'items-center': labelposition === 'left',
@@ -303,16 +303,16 @@ $: {
           readonly={isDisabled || isReadonly ? true : undefined}
           type="text"
           class={cx(
-            'pl-2 py-1.5 pr-1 grow text-xs outline-none appearance-none w-full border bg-white',
+            'w-full grow appearance-none border bg-white py-1.5 pl-2 pr-1 text-xs outline-none',
             {
               'border-light hover:border-medium focus:border-gray-9':
                 !isDisabled &&
                 !isReadonly &&
                 state !== 'error' &&
                 state !== 'warn',
-              'border-danger-dark -outline-offset-1 outline-[2px] outline-danger-dark':
+              'border-danger-dark outline-[2px] -outline-offset-1 outline-danger-dark':
                 state === 'error',
-              'border-warning-bright -outline-offset-1 outline-[2px] outline-warning-bright':
+              'border-warning-bright outline-[2px] -outline-offset-1 outline-warning-bright':
                 state === 'warn',
               'border-disabled-light !bg-disabled-light text-disabled-dark':
                 isDisabled || isReadonly,
@@ -325,8 +325,8 @@ $: {
           tabindex="-1"
           aria-label="Open dropdown"
           class={cx(
-            'absolute top-0 right-1 h-[29px]',
-            'py-1.5 px-1 grid place-content-center transition-transform duration-200',
+            'absolute right-1 top-0 h-[29px]',
+            'grid place-content-center px-1 py-1.5 transition-transform duration-200',
             {
               'rotate-180': open,
               'text-disabled-dark': isDisabled || isReadonly,
@@ -357,7 +357,7 @@ $: {
             on:mouseleave={clearNavigationIndex}
           >
             {#if heading}
-              <span class="flex text-xs text-default pl-2 py-1 flex-wrap">
+              <span class="flex flex-wrap py-1 pl-2 text-xs text-default">
                 {heading}
               </span>
             {/if}
@@ -375,7 +375,7 @@ $: {
                 <input
                   tabindex="-1"
                   type="checkbox"
-                  class="bg-black outline-none hidden"
+                  class="hidden bg-black outline-none"
                   checked={utils.shouldBeChecked(
                     value,
                     Array.isArray(option) ? option.join('') : option
@@ -414,7 +414,7 @@ $: {
                 {:else if hasPrefix}
                   {#each splitOptionOnWord(option) as optionPart, optionPartIndex (optionPart)}
                     <span
-                      class={optionPartIndex === 0 ? 'text-gray-800 w-5' : ''}
+                      class={optionPartIndex === 0 ? 'w-5 text-gray-800' : ''}
                     >
                       {optionPart}
                     </span>
@@ -426,7 +426,7 @@ $: {
             {/each}
           </div>
         {:else}
-          <div class="flex py-1 px-2 justify-center text-xs">
+          <div class="flex justify-center px-2 py-1 text-xs">
             No matching results
           </div>
         {/if}

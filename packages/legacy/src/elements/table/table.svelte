@@ -12,7 +12,7 @@ const colSizes = cols.split(',').map((col) => col.trim());
 
 <table
   {style}
-  class={cx('bg-white text-xs w-full', { 'table-fixed': variant === 'fixed' })}
+  class={cx('w-full bg-white text-xs', { 'table-fixed': variant === 'fixed' })}
 >
   <colgroup>
     {#each colSizes as col}

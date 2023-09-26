@@ -1,5 +1,4 @@
-<script lang='ts'>
-
+<script lang="ts">
 import * as THREE from 'three';
 import { T, createRawEventDispatcher, extend, useThrelte } from '@threlte/core';
 import { MapControls } from 'three/examples/jsm/controls/MapControls';
@@ -12,14 +11,14 @@ import BaseMarker from '$lib/assets/images/base-marker.txt?raw';
 
 export let helpers: boolean;
 export let pointcloud: Uint8Array | undefined;
-export let basePose: { x: number; y: number; theta: number } | undefined = undefined;
+export let basePose: { x: number; y: number; theta: number } | undefined =
+  undefined;
 export let destination: THREE.Vector2 | undefined;
 export let motionPath: string | undefined;
 
-type $$Events = {
-
+interface $$Events extends Record<string, unknown> {
   /** Dispatched when a user clicks within the bounding box of the pointcloud */
-  click: THREE.Vector3
+  click: THREE.Vector3;
 }
 
 const dispatch = createRawEventDispatcher<$$Events>();
@@ -49,9 +48,9 @@ const handleControlsChange = () => {
   updateZoom();
 };
 
-type UpdateEvent = {
-  radius: number
-  center: { x: number; y: number }
+interface UpdateEvent {
+  radius: number;
+  center: { x: number; y: number };
 }
 
 const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
@@ -61,24 +60,26 @@ const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
 
     const viewHeight = 1;
     const viewWidth = viewHeight * 2;
-    const aspect = renderer.domElement.clientHeight / renderer.domElement.clientWidth;
+    const aspect =
+      renderer.domElement.clientHeight / renderer.domElement.clientWidth;
     const aspectInverse = 0.008;
     const cam = camera.current as THREE.OrthographicCamera;
 
-    cam.zoom = aspect > 1
-      ? viewHeight / (radius * aspectInverse)
-      : viewWidth / (radius * aspectInverse);
+    cam.zoom =
+      aspect > 1
+        ? viewHeight / (radius * aspectInverse)
+        : viewWidth / (radius * aspectInverse);
 
     updateZoom();
   }
 };
 
-const handleCameraCreate = ({ ref }: { ref: THREE.OrthographicCamera}) => ref.lookAt(0, 0, 0)
+const handleCameraCreate = ({ ref }: { ref: THREE.OrthographicCamera }) =>
+  ref.lookAt(0, 0, 0);
 
 $: markerScale = baseSpriteSize / zoom;
 $: pointSize = zoom * defaultPointSize * window.devicePixelRatio;
 $: updateZoom($camera as THREE.OrthographicCamera);
-
 </script>
 
 <T.OrthographicCamera
@@ -116,7 +117,7 @@ $: updateZoom($camera as THREE.OrthographicCamera);
 />
 
 <Marker
-  name='Base marker'
+  name="Base marker"
   url={BaseMarker}
   visible={basePose !== undefined}
   position.x={basePose?.x}
@@ -127,7 +128,7 @@ $: updateZoom($camera as THREE.OrthographicCamera);
 />
 
 <Marker
-  name='Destination marker'
+  name="Destination marker"
   visible={destination !== undefined}
   url={DestMarker}
   position.x={destination?.x}

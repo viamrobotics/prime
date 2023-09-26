@@ -34,7 +34,7 @@ const handleClick = (event: Event) => {
 </script>
 
 <label
-  class={cx('flex gap-1 w-fit flex-col justify-start text-default', {
+  class={cx('flex w-fit flex-col justify-start gap-1 text-default', {
     'text-disabled-dark': isDisabled,
   })}
 >
@@ -49,7 +49,7 @@ const handleClick = (event: Event) => {
     {#if tooltip}
       <v-tooltip text={tooltip}>
         <v-icon
-          class="text-gray-6 -mt-0.5"
+          class="-mt-0.5 text-gray-6"
           name="information-outline"
         />
       </v-tooltip>
@@ -59,8 +59,8 @@ const handleClick = (event: Event) => {
   <button
     on:click={handleClick}
     type="button"
-    class={cx('flex gap-2 items-center', {
-      'cursor-not-allowed pointer-events-none': isDisabled || isReadonly,
+    class={cx('flex items-center gap-2', {
+      'pointer-events-none cursor-not-allowed': isDisabled || isReadonly,
     })}
     role="switch"
     aria-label={label}
@@ -69,11 +69,11 @@ const handleClick = (event: Event) => {
   >
     <div
       class={cx(
-        'relative inline-flex flex-shrink-0 h-5 w-11 border cursor-pointer motion-safe:transition-colors ease-in-out duration-200 focus:outline-none',
+        'relative inline-flex h-5 w-11 flex-shrink-0 cursor-pointer border duration-200 ease-in-out focus:outline-none motion-safe:transition-colors',
         {
-          'bg-gray-4 border-gray-4': isDisabled || isReadonly,
-          'bg-gray-6 border-gray-6': !on && !(isDisabled || isReadonly),
-          'bg-success-dark border-success-dark':
+          'border-gray-4 bg-gray-4': isDisabled || isReadonly,
+          'border-gray-6 bg-gray-6': !on && !(isDisabled || isReadonly),
+          'border-success-dark bg-success-dark':
             on && !(isDisabled || isReadonly),
           'text-disabled-dark': isDisabled,
         }
@@ -81,7 +81,7 @@ const handleClick = (event: Event) => {
     >
       <span
         class={cx(
-          'pointer-events-none relative inline-block h-4 w-4 mt-px ml-px bg-white transform ring-0 motion-safe:transition-transform ease-in-out duration-200',
+          'pointer-events-none relative ml-px mt-px inline-block h-4 w-4 transform bg-white ring-0 duration-200 ease-in-out motion-safe:transition-transform',
           {
             'border-gray-4': isDisabled || isReadonly,
           }

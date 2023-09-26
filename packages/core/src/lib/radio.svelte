@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 A graphical control element that allows the user to choose only one of a predefined set of mutually exclusive options.
 
 ```svelte
@@ -19,6 +19,7 @@ type LabelPosition = 'top' | 'left';
 
 import cx from 'classnames';
 import { createEventDispatcher } from 'svelte';
+import type { IconName } from './icon/icons';
 
 /**
  * The label for the radio button.
@@ -51,7 +52,7 @@ export let readonly = false;
 /**
  * The icon on the radio button.
  */
-let icon: string;
+let icon: IconName;
 /**
  * The width of the radio button.  Specifically, if width is 100% or if its the default.
  */
@@ -87,7 +88,7 @@ $: {
 }
 </script>
 
-<label
+<div
   class={cx('flex gap-1', {
     'flex-col': labelposition === 'top',
     'flex-row': labelposition === 'left',
@@ -106,15 +107,15 @@ $: {
 
     {#if tooltip}
       <Tooltip>
-        <div
+        <button
           class={cx({
             'text-warning-bright': state === 'warn',
             'text-danger-dark': state === 'error',
           })}
         >
           <Icon name={icon} />
-        </div>
-        <div slot="text">
+        </button>
+        <div slot="description">
           {tooltip}
         </div>
       </Tooltip>
@@ -142,4 +143,4 @@ $: {
       </button>
     {/each}
   </div>
-</label>
+</div>

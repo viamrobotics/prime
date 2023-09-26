@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import { Pill } from '$lib';
+import { cxTestArguments, cxTestResults } from './cx-test';
 
 describe('Pill', () => {
   it('Renders text within the pill if a value attribute is specified', () => {
@@ -25,9 +26,8 @@ describe('Pill', () => {
 
   it('Renders a normal pill if no disabled attribute has been specified', () => {
     render(Pill, { value: 'test' });
-    expect(screen.getByText('test').parentElement).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    expect(screen.getByText('test').parentElement).not.toHaveAttribute(
+      'aria-disabled'
     );
   });
 
@@ -41,9 +41,8 @@ describe('Pill', () => {
 
   it('Renders a normal pill if a disabled attribute of false has been specified', () => {
     render(Pill, { value: 'test', disabled: false });
-    expect(screen.getByText('test').parentElement).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    expect(screen.getByText('test').parentElement).not.toHaveAttribute(
+      'aria-disabled'
     );
   });
 
@@ -61,5 +60,10 @@ describe('Pill', () => {
     component.$on('remove', onClick);
     await fireEvent.click(screen.getByRole('button'));
     expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('Renders with the passed cx classes', () => {
+    render(Pill, { value: 'test', cx: cxTestArguments });
+    expect(screen.getByText('test').parentElement).toHaveClass(cxTestResults);
   });
 });

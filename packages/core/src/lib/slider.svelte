@@ -6,14 +6,20 @@ import { spring } from 'svelte/motion';
 import type { Spring } from 'svelte/motion';
 import cn from 'classnames';
 
-export let slider: HTMLElement;
+let slider: HTMLElement;
 export let range: 'min' | 'max' | 'range' | '' = '';
-export let min: string ='0';
+export let min: string = '0';
 export let max: string = '100';
 export let step: string = '1';
-export let value: string = ((Number.parseFloat(min || '0') + Number.parseFloat(max || '100'))/2).toString();
-export let start: string = ((Number.parseFloat(min || '0') + Number.parseFloat(max || '100'))/2).toString();
-export let end: string | undefined =  undefined;
+export let value: string = (
+  (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) /
+  2
+).toString();
+export let start: string = (
+  (Number.parseFloat(min || '0') + Number.parseFloat(max || '100')) /
+  2
+).toString();
+export let end: string | undefined = undefined;
 export let disabled: boolean = false;
 export let readonly: boolean = false;
 export let discrete = true;
@@ -23,14 +29,14 @@ export let label = '';
 export let suffix = '';
 
 type events = {
-    activeHandle:number,
-    previousValue:number,
-    value: number | undefined,
-    values: number[] | undefined,
+  activeHandle: number;
+  previousValue: number;
+  value: number | undefined;
+  values: number[] | undefined;
 };
 
 const dispatch = createEventDispatcher<{
-    input: events;
+  input: events;
 }>();
 
 const springValues = { stiffness: 0.1, damping: 0.4 };
@@ -43,15 +49,17 @@ let endValue: number | undefined;
 let pipStep: number;
 let pipCount: number;
 
-
 $: pipStep = (maxNum - minNum) / stepNum >= 100 ? (maxNum - minNum) / 20 : 1;
 $: pipCount = (maxNum - minNum) / stepNum;
 $: pipVal = (val: number): number => minNum + val * stepNum * pipStep;
 $: minNum = Number.parseFloat(min);
 $: maxNum = Number.parseFloat(max);
 $: stepNum = Number.parseFloat(step);
-$: startValue = (Number.parseFloat(start) == (Number.parseFloat(min) + Number.parseFloat(max))/2) ? 
-Number.parseFloat(value): Number.parseFloat(start);
+$: startValue =
+  Number.parseFloat(start) ==
+  (Number.parseFloat(min) + Number.parseFloat(max)) / 2
+    ? Number.parseFloat(value)
+    : Number.parseFloat(start);
 $: endValue = end ? Number.parseFloat(end) : undefined;
 
 // state management
@@ -433,7 +441,7 @@ const bodyKeyDown = (e: KeyboardEvent) => {
 const onChange = () => {
   if (disabled || readonly) return;
 
-  dispatch( 'input', {
+  dispatch('input', {
     activeHandle,
     previousValue,
     value: activeHandle === 0 ? startValue : endValue,
@@ -484,7 +492,6 @@ export const hashCode = (str: string) => {
 
   return hash;
 };
-
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -502,7 +509,7 @@ export const hashCode = (str: string) => {
   <div
     bind:this={slider}
     class={cn(
-      'slider relative h-0.5 mt-7 transition-opacity duration-200 select-none bg-gray-6',
+      'slider relative mt-7 h-0.5 select-none bg-gray-6 transition-opacity duration-200',
       {
         'bg-disabled-light text-disabled-dark': disabled,
       }
@@ -511,18 +518,18 @@ export const hashCode = (str: string) => {
     class:focus
     class:min={range === 'min'}
     class:max={range === 'max'}
-    on:mousedown={sliderInteractStart}
-    on:mouseup={sliderInteractEnd}
     on:touchstart|preventDefault={sliderInteractStart}
     on:touchend|preventDefault={sliderInteractEnd}
   >
     {#each endValue ? [startValue, endValue] : [startValue] as value, index}
       <span
         role="slider"
-        class="range absolute block h-5 w-5 top-1 bottom-auto -translate-x-1/2 -translate-y-1/2 z-[2]"
+        class="range absolute bottom-auto top-1 z-[2] block h-5 w-5 -translate-x-1/2 -translate-y-1/2"
         class:active={focus && activeHandle === index}
         class:press={handlePressed && activeHandle === index}
         data-handle={index}
+        on:mousedown={sliderInteractStart}
+        on:mouseup={sliderInteractEnd}
         on:blur={handleSliderBlur}
         on:focus={() => handleSliderFocus(index)}
         style="left: {$springPositions[index]}%; z-index: {activeHandle ===
@@ -538,12 +545,12 @@ export const hashCode = (str: string) => {
         tabindex={disabled ? -1 : 0}
       >
         <span
-          class="handle-bg absolute left-0 bottom-1 rounded-full opacity-50 h-full w-full transition-transform bg-gray-400"
+          class="handle-bg absolute bottom-1 left-0 h-full w-full rounded-full bg-gray-400 opacity-50 transition-transform"
         />
 
         <span
           class={cn(
-            'absolute left-0 bottom-1 block rounded-full h-full w-full border border-gray-9 bg-white',
+            'absolute bottom-1 left-0 block h-full w-full rounded-full border border-gray-9 bg-white',
             {
               'border-disabled-dark': disabled || readonly,
             }
@@ -552,8 +559,8 @@ export const hashCode = (str: string) => {
 
         <span
           class={cn(
-            'floating block absolute left-1/2 bottom-full -translate-x-1/2 -translate-y-1/2 select-none',
-            'py-1 px-1.5 text-center opacity-0 pointer-events-none whitespace-nowrap transition duration-200 border border-gray-9 bg-white text-xs',
+            'floating absolute bottom-full left-1/2 block -translate-x-1/2 -translate-y-1/2 select-none',
+            'pointer-events-none whitespace-nowrap border border-gray-9 bg-white px-1.5 py-1 text-center text-xs opacity-0 transition duration-200',
             {
               '-translate-y-1.5': !focus || activeHandle !== index,
               'border-disabled-dark': disabled || readonly,
@@ -573,7 +580,7 @@ export const hashCode = (str: string) => {
     {#if range}
       <span
         class={cn(
-          'absolute block transition duration-200 h-1 -top-0.5 select-none z-[1] bg-gray-9',
+          'absolute -top-0.5 z-[1] block h-1 select-none bg-gray-9 transition duration-200',
           {
             'bg-disabled-light': disabled || readonly,
           }
@@ -585,7 +592,7 @@ export const hashCode = (str: string) => {
     {/if}
 
     <div
-      class="absolute h-2 left-0 right-0"
+      class="absolute left-0 right-0 h-2"
       class:disabled
       class:focus
     >
@@ -602,7 +609,7 @@ export const hashCode = (str: string) => {
           {#if pipVal(i) !== minNum && pipVal(i) !== maxNum}
             <span
               class={cn(
-                'absolute h-[4px] w-[1px] top-[calc(50%-9px)] whitespace-nowrap transition bg-gray-6',
+                'absolute top-[calc(50%-9px)] h-[4px] w-[1px] whitespace-nowrap bg-gray-6 transition',
                 {
                   'bg-disabled-light': disabled || readonly,
                 }

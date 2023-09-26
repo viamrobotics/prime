@@ -30,7 +30,7 @@ const handleClick = (event: Event) => {
 <div class="relative w-full">
   <div
     class="{cx(
-      'w-full py-2 px-4 flex flex-reverse items-center justify-between text-default cursor-pointer',
+      'flex-reverse flex w-full cursor-pointer items-center justify-between px-4 py-2 text-default',
       {
         'border border-light bg-white': variant === 'default',
       }
@@ -38,7 +38,7 @@ const handleClick = (event: Event) => {
     on:click={handleClick}
     on:keyup|preventDefault={handleClick}
   >
-    <div class="flex flex-wrap gap-x-3 gap-y-1 items-center">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
       {#if title}
         <h2 class="m-0 text-sm">{title}</h2>
       {/if}
@@ -46,7 +46,7 @@ const handleClick = (event: Event) => {
       <slot name="title" />
     </div>
 
-    <div class="h-full flex items-center gap-3">
+    <div class="flex h-full items-center gap-3">
       <slot name="header" />
 
       <v-icon

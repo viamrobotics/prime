@@ -1,5 +1,2 @@
-/build
-/.svelte-kit
-/package
-dist
+.svelte-kit
 prime
