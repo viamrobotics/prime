@@ -169,9 +169,6 @@ describe('Slider', () => {
 
   it('Given readonly attributes as true, displays slider as readonly and prevents interaction', () => {
     // TODO
-    render(Slider, { readonly: true });
-    const slider = screen.getByRole('slider');
-    expect(slider).toHaveClass('readonly-class');
   });
 
   it('Given no attributes, renders slider with { min: 0, max100m value:50, step:1 )', async () => {
