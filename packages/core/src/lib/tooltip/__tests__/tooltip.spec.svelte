@@ -1,4 +1,4 @@
-<!-- 
+<!--
   @component
 
   This component allows us to render a Tooltip with its slotted
@@ -19,7 +19,13 @@ export let state: 'invisible' | 'visible' = 'invisible';
 <Tooltip
   {location}
   {state}
+  let:tooltipID
 >
-  <p>This element has a tooltip.</p>
-  <p slot="text">This is the tooltip text!</p>
+  <button
+    data-testid="target"
+    aria-describedby={tooltipID}
+  >
+    This element has a tooltip.
+  </button>
+  <p slot="description">This is the tooltip text!</p>
 </Tooltip>

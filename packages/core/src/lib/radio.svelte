@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 A graphical control element that allows the user to choose only one of a predefined set of mutually exclusive options.
 
 ```svelte
@@ -107,15 +107,15 @@ $: {
 
     {#if tooltip}
       <Tooltip>
-        <div
+        <button
           class={cx({
             'text-warning-bright': state === 'warn',
             'text-danger-dark': state === 'error',
           })}
         >
           <Icon name={icon} />
-        </div>
-        <div slot="text">
+        </button>
+        <div slot="description">
           {tooltip}
         </div>
       </Tooltip>

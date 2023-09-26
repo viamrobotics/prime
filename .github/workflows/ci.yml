@@ -79,7 +79,6 @@ jobs:
         uses: ./.github/actions/setup
         with:
           registry-url: https://registry.npmjs.org
-          install-dependencies: false
 
       - name: Download @viamrobotics/prime npm artifacts
         uses: actions/download-artifact@v3
