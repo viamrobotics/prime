@@ -23,7 +23,6 @@ export const delay = async (time: number) => {
 };
 
 describe('Slider', () => {
-
   // beforeEach(() => {
   //   const user = userEvent.setup();
   // });
@@ -172,7 +171,7 @@ describe('Slider', () => {
     // TODO
     render(Slider, { readonly: true });
     const slider = screen.getByRole('slider');
-    expect(slider).toHaveClass('readonly-class'); 
+    expect(slider).toHaveClass('readonly-class');
   });
 
   it('Given no attributes, renders slider with { min: 0, max100m value:50, step:1 )', async () => {

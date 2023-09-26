@@ -1,0 +1,40 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as SliderStories from './slider.stories.svelte';
+
+<Meta title='Elements/Slider' />
+
+# Slider
+
+A user interface element used for selecting a value from a range.
+
+```ts
+import { Slider } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={SliderStories.Default} />
+</Canvas>
+<Canvas>
+  <Story of={SliderStories.Range} />
+</Canvas>
+<Canvas>
+  <Story of={SliderStories.MinRange} />
+</Canvas>
+<Canvas>
+  <Story of={SliderStories.MaxRange} />
+</Canvas>
+<Canvas>
+  <Story of={SliderStories.WithSuffix} />
+</Canvas>
+<Canvas>
+  <Story of={SliderStories.WithValue} />
+</Canvas>
+<Canvas>
+  <Story of={SliderStories.WithLabel} />
+</Canvas>
+<Canvas>
+  <Story of={SliderStories.Disabled} />
+</Canvas>
+<Canvas>
+  <Story of={SliderStories.Readonly} />
+</Canvas>
