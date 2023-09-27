@@ -11,7 +11,7 @@ robotIcon.style.height = `20px`;
 export let lngLat: LngLat | undefined = undefined;
 
 /** The rotation of the marker. */
-export let heading: number = 0;
+export let heading = 0;
 </script>
 
 {#if lngLat}
