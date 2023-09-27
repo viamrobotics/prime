@@ -14,8 +14,8 @@ import ObstacleGeometries from './obstacle.svelte';
 import Drawtool from './drawtool.svelte';
 
 const dispatch = createEventDispatcher<{
-  'update-obstacles': Obstacle[]
-}>()
+  'update-obstacles': Obstacle[];
+}>();
 
 renderPlugin();
 computeBoundingPlugin();
