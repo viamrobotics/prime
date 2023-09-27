@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Button, Radio } from '@viamrobotics/prime-core';
+import { Button, Icon, Radio, Tooltip } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
 import { MapLibre } from '$lib';
 import { view } from '../stores';
@@ -8,6 +8,7 @@ import RobotMarker from './robot-marker.svelte';
 import CenterInputs from './center-inputs.svelte';
 import Nav from './nav/index.svelte';
 import Waypoints from './waypoints.svelte';
+import ObstaclesLegend from './nav/obstacles-legend.svelte';
 
 /** The Geopose of a robot base. */
 export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
@@ -54,11 +55,23 @@ const toggleTileset = () => {
     <Waypoints />
     <ObstacleLayer slot="layer" />
 
-    <div class="absolute right-12 top-2.5 z-10 flex gap-2">
+    <div class="absolute right-12 top-2.5 z-10 flex gap-2 items-center">
+      <Tooltip>
+        <div class='bg-white rounded-full'>
+          <Icon size='lg' name='help-circle-outline' />
+        </div>
+        <div class='flex flex-col p-2' slot='description'>
+          <ObstaclesLegend />
+        </div>
+        
+      </Tooltip>
+      
+      
       <Button on:click={toggleTileset}>
         {satellite ? 'Map' : 'Satellite'}
       </Button>
       <CenterInputs />
+      
     </div>
 
     <div class="absolute bottom-12 right-3 z-10">

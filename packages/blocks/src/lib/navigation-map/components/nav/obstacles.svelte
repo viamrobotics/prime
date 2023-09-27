@@ -54,8 +54,10 @@ const handleLngLatInput =
   };
 
 const handleDeleteObstacle = (name: string) => () => {
+  console.log('what?', name)
   $obstacles = $obstacles.filter((obstacle) => obstacle.name !== name);
   $hovered = null;
+  $selected = null;
   dispatch('update', $obstacles);
 };
 
@@ -73,6 +75,15 @@ const handleOrientationInput =
       event.detail;
     dispatch('update', $obstacles);
   };
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Backspace' && $selected) {
+    $obstacles = $obstacles.filter((obstacle) => obstacle.name !== $selected);
+    $hovered = null;
+    $selected = null;
+    dispatch('update', $obstacles);
+  }
+}
 
 // Click to add an obstacle
 useMapLibreEvent('click', (event) => {
@@ -92,6 +103,8 @@ useMapLibreEvent('click', (event) => {
 $: selectedObstacle = $obstacles.find((obstacle) => obstacle.name === $selected)
 $: debugMode = $environment === 'debug'
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 {#if $obstacles.length === 0}
   <li class="py-2 font-sans text-xs text-subtle-2">
