@@ -73,10 +73,10 @@ describe('VectorInput', () => {
     const onInput = vi.fn();
     component.$on('input', onInput);
 
-    const [slider] = screen.getAllByRole('button', { hidden: true, });
+    const [slider] = screen.getAllByRole('button', { hidden: true });
 
     if (!slider) {
-      throw new Error('No slider found!')
+      throw new Error('No slider found!');
     }
 
     await fireEvent.pointerDown(slider, { clientX: 0 });
@@ -92,15 +92,14 @@ describe('VectorInput', () => {
 
   it('Emits the input and change events when the input is changed', async () => {
     const { component } = render(VectorInput, {
-      placeholders: { x: '0', y: '1', z: '2' }
+      placeholders: { x: '0', y: '1', z: '2' },
     });
 
     const onChange = vi.fn();
 
     component.$on('change', onChange);
 
-    const input: HTMLInputElement =
-      screen.getByPlaceholderText('0');
+    const input: HTMLInputElement = screen.getByPlaceholderText('0');
 
     await fireEvent.change(input, { target: { value: 20 } });
 
