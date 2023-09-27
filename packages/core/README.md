@@ -155,7 +155,14 @@ For easier readability, we try to use a standard ordering for component composit
 </script>
 
 <!-- Your layout -->
-<div class="border-black"><slot /></div>
+<div class="border-black">
+  <!-- 
+    all slots should be named if there are multiple; otherwise a single slot 
+    can be the default `<slot />`  
+  -->
+  <slot name="title" />
+  <slot name="content" />
+</div>
 
 <style>
   /* custom styles */
