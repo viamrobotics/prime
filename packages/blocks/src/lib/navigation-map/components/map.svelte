@@ -55,23 +55,26 @@ const toggleTileset = () => {
     <Waypoints />
     <ObstacleLayer slot="layer" />
 
-    <div class="absolute right-12 top-2.5 z-10 flex gap-2 items-center">
+    <div class="absolute right-12 top-2.5 z-10 flex items-center gap-2">
       <Tooltip>
-        <div class='bg-white rounded-full'>
-          <Icon size='lg' name='help-circle-outline' />
+        <div class="rounded-full bg-white">
+          <Icon
+            size="lg"
+            name="help-circle-outline"
+          />
         </div>
-        <div class='flex flex-col p-2' slot='description'>
+        <div
+          class="flex flex-col p-2"
+          slot="description"
+        >
           <ObstaclesLegend />
         </div>
-        
       </Tooltip>
-      
-      
+
       <Button on:click={toggleTileset}>
         {satellite ? 'Map' : 'Satellite'}
       </Button>
       <CenterInputs />
-      
     </div>
 
     <div class="absolute bottom-12 right-3 z-10">

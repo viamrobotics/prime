@@ -42,7 +42,7 @@ const handleSelect = (selection: {
   map.fitBounds(bounds, {
     padding: 100,
     duration: 800,
-    curve: 0.1
+    curve: 0.1,
   });
 };
 
@@ -54,7 +54,6 @@ const handleLngLatInput =
   };
 
 const handleDeleteObstacle = (name: string) => () => {
-  console.log('what?', name)
   $obstacles = $obstacles.filter((obstacle) => obstacle.name !== name);
   $hovered = null;
   $selected = null;
@@ -83,7 +82,7 @@ const handleKeydown = (event: KeyboardEvent) => {
     $selected = null;
     dispatch('update', $obstacles);
   }
-}
+};
 
 // Click to add an obstacle
 useMapLibreEvent('click', (event) => {
@@ -97,11 +96,13 @@ useMapLibreEvent('click', (event) => {
   $obstacles = [createObstacle(name, location), ...$obstacles];
   dispatch('update', $obstacles);
 
-  $selected = name
+  $selected = name;
 });
 
-$: selectedObstacle = $obstacles.find((obstacle) => obstacle.name === $selected)
-$: debugMode = $environment === 'debug'
+$: selectedObstacle = $obstacles.find(
+  (obstacle) => obstacle.name === $selected
+);
+$: debugMode = $environment === 'debug';
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -117,61 +118,65 @@ $: debugMode = $environment === 'debug'
 {/if}
 
 {#each $obstacles as { name, location, geometries }, index (index)}
-    <li
-      class="group border-b border-b-medium leading-[1] pl-2 last:border-b-0"
-      class:py-3={debugMode}
-      class:bg-light={$selected === name}
-      on:mouseenter={() => ($hovered = name)}
+  <li
+    class="group border-b border-b-medium pl-2 leading-[1] last:border-b-0"
+    class:py-3={debugMode}
+    class:bg-light={$selected === name}
+    on:mouseenter={() => ($hovered = name)}
+  >
+    <button
+      class="w-full text-left"
+      on:click={() => ($selected = name)}
     >
-      <button
-        class='w-full text-left'
-        on:click={() => ($selected = name)}
-      >
-        <div class="flex items-center justify-between gap-1.5">
-          <small>{name}</small>
-          <div class="flex items-center gap-1.5">
-            {#if debugMode}
-              <small class="text-subtle-2 opacity-60 group-hover:opacity-100">
-                ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
-              </small>
-            {/if}
-            <IconButton
-              icon="image-filter-center-focus"
-              label="Focus {name}"
-              on:click={(event) => {
-                event.stopPropagation()
-                handleSelect({ name, location })
-              }}
-            />
-          </div>
-        </div>
-        {#if debugMode}
-          {#each geometries as geometry}
-            <small class="text-subtle-2">
-              {#if geometry.type === 'box'}
-                Length: {geometry.length}m, Width: {geometry.width}m, Height: {geometry.height}m
-              {:else if geometry.type === 'sphere'}
-                Radius: {geometry.radius}m
-              {:else if geometry.type === 'capsule'}
-                Radius: {geometry.radius}m, Length: {geometry.length}m
-              {/if}
+      <div class="flex items-center justify-between gap-1.5">
+        <small>{name}</small>
+        <div class="flex items-center gap-1.5">
+          {#if debugMode}
+            <small class="text-subtle-2 opacity-60 group-hover:opacity-100">
+              ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
             </small>
-
-            {#if geometry.pose.orientationVector.th !== 0}
-              <small class="mt-2 block text-subtle-2">
-                Theta: {geometry.pose.orientationVector.th.toFixed(2)}
-              </small>
+          {/if}
+          <IconButton
+            icon="image-filter-center-focus"
+            label="Focus {name}"
+            on:click={(event) => {
+              event.stopPropagation();
+              handleSelect({ name, location });
+            }}
+          />
+        </div>
+      </div>
+      {#if debugMode}
+        {#each geometries as geometry}
+          <small class="text-subtle-2">
+            {#if geometry.type === 'box'}
+              Length: {geometry.length}m, Width: {geometry.width}m, Height: {geometry.height}m
+            {:else if geometry.type === 'sphere'}
+              Radius: {geometry.radius}m
+            {:else if geometry.type === 'capsule'}
+              Radius: {geometry.radius}m, Length: {geometry.length}m
             {/if}
-          {/each}
-        {/if}
-      </button>
-    </li>
+          </small>
+
+          {#if geometry.pose.orientationVector.th !== 0}
+            <small class="mt-2 block text-subtle-2">
+              Theta: {geometry.pose.orientationVector.th.toFixed(2)}
+            </small>
+          {/if}
+        {/each}
+      {/if}
+    </button>
+  </li>
 {/each}
 
 {#if !debugMode && selectedObstacle}
   <li
-    class="group sticky bottom-0 pt-4 bg-white z-10"
-    on:mouseenter={() => ($hovered = selectedObstacle.name)}
+    class="group sticky bottom-0 z-10 bg-white pt-4"
+    on:mouseenter={() => {
+      if (selectedObstacle) {
+        $hovered = selectedObstacle.name;
+      }
+    }}
   >
     <div class="flex items-end gap-1.5 pb-2">
       <!-- @todo(mp) obstacle API doesn't yet allow custom names. -->
@@ -201,10 +206,14 @@ $: debugMode = $environment === 'debug'
         <IconButton
           label="Focus {selectedObstacle.name}"
           icon="image-filter-center-focus"
-          on:click={() => handleSelect({
-            name: selectedObstacle.name,
-            location: selectedObstacle.location
-          })}
+          on:click={() => {
+            if (selectedObstacle) {
+              handleSelect({
+                name: selectedObstacle.name,
+                location: selectedObstacle.location,
+              });
+            }
+          }}
         />
       </div>
     </LnglatInput>

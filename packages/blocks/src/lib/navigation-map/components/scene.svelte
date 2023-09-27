@@ -35,10 +35,12 @@ const handleDraw = ({
   const names = $obstacles.map((obstacle) => obstacle.name);
   const name = createName(names, 'obstacle', $obstacles.length);
   const obstacle = createObstacle(name, center);
+
   if (obstacle.geometries[0]!.type === 'box') {
-    (obstacle.geometries[0]!.length = width),
-      (obstacle.geometries[0]!.width = height);
+    obstacle.geometries[0]!.length = width;
+    obstacle.geometries[0]!.width = height;
   }
+
   $obstacles = [obstacle, ...$obstacles];
 
   // dispatch('update', $obstacles);

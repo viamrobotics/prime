@@ -10,7 +10,7 @@ import type { MapMouseEvent } from 'maplibre-gl';
 /** An obstacle to render. */
 export let obstacle: Obstacle;
 
-type $$Events = {
+interface $$Events extends Record<string, unknown> {
   /** Fired when obstacles are created, destroyed, or edited. */
   update: Obstacle;
 }
@@ -36,7 +36,9 @@ const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
 };
 
 const handleMouseMove = (event: MapMouseEvent) => {
-  if ($selected === null) return;
+  if ($selected === null) {
+    return;
+  }
 
   // Rotate
   if (event.originalEvent.metaKey) {
@@ -52,15 +54,22 @@ const handleMouseMove = (event: MapMouseEvent) => {
 
     const { y } = pointermove;
 
-    if (obstacle.geometries[0]!.type === 'sphere') {
-      obstacle.geometries[0]!.radius = Math.max(0, pointerdownRadius - y);
-    } else if (obstacle.geometries[0]!.type === 'box') {
-      obstacle.geometries[0]!.length = Math.max(0, pointerdownLength - y);
-      obstacle.geometries[0]!.width = Math.max(0, pointerdownWidth - y);
-      obstacle.geometries[0]!.height = Math.max(0, pointerdownHeight - y);
-    } else if (obstacle.geometries[0]!.type === 'capsule') {
-      obstacle.geometries[0]!.radius = Math.max(0, pointerdownRadius - y);
-      obstacle.geometries[0]!.length = Math.max(0, pointerdownLength - y);
+    switch (obstacle.geometries[0]!.type) {
+      case 'sphere': {
+        obstacle.geometries[0]!.radius = Math.max(0, pointerdownRadius - y);
+        break;
+      }
+      case 'box': {
+        obstacle.geometries[0]!.length = Math.max(0, pointerdownLength - y);
+        obstacle.geometries[0]!.width = Math.max(0, pointerdownWidth - y);
+        obstacle.geometries[0]!.height = Math.max(0, pointerdownHeight - y);
+        break;
+      }
+      case 'capsule': {
+        obstacle.geometries[0]!.radius = Math.max(0, pointerdownRadius - y);
+        obstacle.geometries[0]!.length = Math.max(0, pointerdownLength - y);
+        break;
+      }
     }
 
     // Transform
@@ -92,15 +101,22 @@ useMapLibreEvent('mousedown', (event) => {
   const geometry = obstacle.geometries[0]!;
   pointerdownTheta = obstacle.geometries[0]!.pose.orientationVector.th;
 
-  if (geometry.type === 'sphere') {
-    pointerdownRadius = geometry.radius;
-  } else if (geometry.type === 'box') {
-    pointerdownLength = geometry.length;
-    pointerdownWidth = geometry.width;
-    pointerdownHeight = geometry.height;
-  } else if (geometry.type === 'capsule') {
-    pointerdownRadius = geometry.radius;
-    pointerdownLength = geometry.length;
+  switch (geometry.type) {
+    case 'sphere': {
+      pointerdownRadius = geometry.radius;
+      break;
+    }
+    case 'box': {
+      pointerdownLength = geometry.length;
+      pointerdownWidth = geometry.width;
+      pointerdownHeight = geometry.height;
+      break;
+    }
+    case 'capsule': {
+      pointerdownRadius = geometry.radius;
+      pointerdownLength = geometry.length;
+      break;
+    }
   }
 });
 

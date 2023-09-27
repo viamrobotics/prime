@@ -9,10 +9,10 @@ import { useMapLibreEvent, useMapLibre } from '$lib';
 import { MercatorCoordinate, LngLat, type MapMouseEvent } from 'maplibre-gl';
 import { view } from '../stores';
 
-type $$Events = {
+interface $$Events extends Record<string, unknown> {
   /** Fires when a rectangle is drawn. */
   update: { width: number; height: number; center: LngLat };
-};
+}
 
 const dispatch = createRawEventDispatcher<$$Events>();
 const { map } = useMapLibre();
@@ -24,12 +24,12 @@ let drawing = false;
 let width = 0;
 let height = 0;
 
-let moveSign = { x: 0, y: 0 };
+const moveSign = { x: 0, y: 0 };
 
 const toPrecisionLevel = (number: number, decimals: number) => {
-  const multiplier = Math.pow(10, decimals);
+  const multiplier = 10 ** decimals;
   return Math.floor(number * multiplier) / multiplier;
-}
+};
 
 const handlePointerMove = (event: MapMouseEvent) => {
   const move = MercatorCoordinate.fromLngLat(event.lngLat, 0);
@@ -62,6 +62,10 @@ const handlePointerUp = () => {
   height = 0;
 };
 
+const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
+  ref.rotateX(-Math.PI / 2);
+};
+
 useMapLibreEvent('mousedown', (event) => {
   if (event.originalEvent.shiftKey) {
     event.preventDefault();
@@ -88,12 +92,12 @@ $: if (drawing) {
     {#if $view === '3D'}
       <T.BoxGeometry
         args={[width, height, 10]}
-        on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
+        on:create={handleGeometryCreate}
       />
     {:else}
       <T.PlaneGeometry
         args={[width, height]}
-        on:create={({ ref }) => ref.rotateX(-Math.PI / 2)}
+        on:create={handleGeometryCreate}
       />
     {/if}
     <T is={new THREE.MeshPhongMaterial({ color: 'red' })} />
