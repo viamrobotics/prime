@@ -1,3 +1,7 @@
+<!-- 
+  @component
+  Renders an in-progress rectangle that represents a drawn area by the user.
+-->
 <script lang="ts">
 import * as THREE from 'three';
 import { T, createRawEventDispatcher } from '@threlte/core';
@@ -6,6 +10,7 @@ import { MercatorCoordinate, LngLat, type MapMouseEvent } from 'maplibre-gl';
 import { view } from '../stores';
 
 type $$Events = {
+  /** Fires when a rectangle is drawn. */
   update: { width: number; height: number; center: LngLat };
 };
 
