@@ -17,7 +17,7 @@ const third = uniqueId('fake');
     <div
       id={club}
       title={club}
-      class="w-40 h-80 flex items-center justify-center bg-slate-700 text-white"
+      class="flex h-80 w-40 items-center justify-center bg-slate-700 text-white"
     >
       Club PRIME
     </div>
@@ -25,35 +25,35 @@ const third = uniqueId('fake');
     <div
       id={door}
       title={door}
-      class="w-4 h-20 bg-red-900"
+      class="h-20 w-4 bg-red-900"
     />
 
     <div class="flex flex-col gap-2">
       <div
         id={bouncer}
         title={bouncer}
-        class="w-20 h-20 bg-black text-white flex items-center justify-center"
+        class="flex h-20 w-20 items-center justify-center bg-black text-white"
       >
         Bouncer
       </div>
       <div
         id={first}
         title={first}
-        class="w-20 h-20 bg-red-300 flex items-center justify-center"
+        class="flex h-20 w-20 items-center justify-center bg-red-300"
       >
         Patron
       </div>
       <div
         id={second}
         title={second}
-        class="w-20 h-20 bg-blue-300 flex items-center justify-center"
+        class="flex h-20 w-20 items-center justify-center bg-blue-300"
       >
         Patron
       </div>
       <div
         id={third}
         title={third}
-        class="w-20 h-20 bg-yellow-300 flex items-center justify-center"
+        class="flex h-20 w-20 items-center justify-center bg-yellow-300"
       >
         Patron
       </div>
