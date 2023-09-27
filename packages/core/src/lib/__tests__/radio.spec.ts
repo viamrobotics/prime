@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
+import userEvent from '@testing-library/user-event';
 import { Radio } from '$lib';
 import * as MDI from '@mdi/js';
 
@@ -29,21 +30,23 @@ describe('Radio', () => {
   });
 
   it('Allows option click if not readonly', async () => {
+    const user = userEvent.setup();
     const { component } = render(Radio, {
       options: ['Option1', 'Option2'],
       selected: 'Option1',
     });
     const onInput = vi.fn();
     component.$on('input', onInput);
-    await fireEvent.click(screen.getByText('Option2'));
+    await user.click(screen.getByText('Option2'));
     expect(onInput).toHaveBeenCalledOnce();
-    await fireEvent.click(screen.getByText('Option2'));
+    await user.click(screen.getByText('Option2'));
     expect(onInput).toHaveBeenCalledWith(
       expect.objectContaining({ detail: { value: 'Option2' } })
     );
   });
 
   it('Prevents option click if readonly', async () => {
+    const user = userEvent.setup();
     const { component } = render(Radio, {
       options: ['Option1', 'Option2'],
       selected: 'Option1',
@@ -51,7 +54,7 @@ describe('Radio', () => {
     });
     const onInput = vi.fn();
     component.$on('input', onInput);
-    await fireEvent.click(screen.getByText('Option2'));
+    await user.click(screen.getByText('Option2'));
     expect(onInput).not.toHaveBeenCalled();
   });
 
@@ -61,9 +64,11 @@ describe('Radio', () => {
   });
 
   it('Displays tooltip when specified', async () => {
+    const user = userEvent.setup();
+
     render(Radio, { tooltip: 'Tooltip Text' });
     const target = screen.getByRole('button');
-    await fireEvent.mouseEnter(target);
+    await user.hover(target);
     await waitFor(() => {
       expect(screen.getByText('Tooltip Text')).toBeVisible();
     });
@@ -90,8 +95,8 @@ describe('Radio', () => {
       state: 'warn',
       tooltip: 'Strong warning',
     });
-    const icon = screen.getByRole('button');
-    expect(icon.firstChild).toHaveClass('text-warning-bright');
+    const tooltipTarget = screen.getByRole('button');
+    expect(tooltipTarget).toHaveClass('text-warning-bright');
 
     const svg = container.querySelector('svg');
     expect(svg).toBeVisible();
@@ -105,8 +110,8 @@ describe('Radio', () => {
       state: 'error',
       tooltip: 'Ahhhhh error!',
     });
-    const icon = screen.getByRole('button');
-    expect(icon.firstChild).toHaveClass('text-danger-dark');
+    const tooltipTarget = screen.getByRole('button');
+    expect(tooltipTarget).toHaveClass('text-danger-dark');
 
     const svg = container.querySelector('svg');
     expect(svg).toBeVisible();

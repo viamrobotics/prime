@@ -12,13 +12,10 @@ export { preventHandler, preventKeyboardHandler } from './prevent-handler';
 export { default as Switch } from './switch.svelte';
 export { default as Radio } from './radio.svelte';
 export { default as Tabs } from './tabs.svelte';
+export { default as Modal } from './modal.svelte';
 export { useUniqueId } from './unique-id';
 
-export {
-  default as Tooltip,
-  type TooltipLocation,
-  type TooltipState,
-} from './tooltip.svelte';
+export { Tooltip, type TooltipLocation, type TooltipState } from './tooltip';
 
 export { default as ContextMenu } from './context-menu/context-menu.svelte';
 export {
@@ -41,6 +38,7 @@ export {
   NotificationContainer,
   provideNotify,
   useNotify,
+  type Notify,
 } from './notification';
 
 export { selectControls } from './select/controls';

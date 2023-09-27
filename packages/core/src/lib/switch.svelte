@@ -1,6 +1,6 @@
 <!--
   @component
-  
+
   The switch is used to handle a binary input.
 
   ```svelte
@@ -76,7 +76,7 @@ const handleClick = () => {
         <div class="-mt-0.5">
           <Icon name="information-outline" />
         </div>
-        <div slot="text">
+        <div slot="description">
           {tooltip}
         </div>
       </Tooltip>

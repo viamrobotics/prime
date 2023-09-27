@@ -7,20 +7,22 @@ import { Tooltip, Icon } from '@viamrobotics/prime-core';
 
 <Story name="Plain Text">
   <div class="pt-5">
-    <Tooltip>
-      <p>This element has a tooltip.</p>
+    <Tooltip let:tooltipID>
+      <p aria-describedby={tooltipID}>This element has a tooltip.</p>
       <Icon name="information-outline" />
-      <p slot="text">This is the tooltip text!</p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
   </div>
 </Story>
 
 <Story name="Rich HTML">
   <div class="pt-5">
-    <Tooltip>
-      <p>This <b>element</b> has a <em>tooltip</em>.</p>
+    <Tooltip let:tooltipID>
+      <p aria-describedby={tooltipID}>
+        This <b>element</b> has a <em>tooltip</em>.
+      </p>
       <Icon name="information-outline" />
-      <p slot="text">
+      <p slot="description">
         This is the <b class="underline">tooltip text!</b>
       </p>
     </Tooltip>

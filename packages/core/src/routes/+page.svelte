@@ -32,15 +32,25 @@ import {
   NotificationContainer,
   provideNotify,
   useNotify,
+  Modal,
 } from '$lib';
 
 provideNotify();
 
 let buttonClickedTimes = 0;
 let disabled = true;
+let modalOpen = false;
 
 const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
   disabled = event.detail.value === 'Disabled';
+};
+
+const handleCloseModal = () => {
+  modalOpen = false;
+};
+
+const handleOpenModal = () => {
+  modalOpen = true;
 };
 const notify = useNotify();
 </script>
@@ -507,6 +517,35 @@ const notify = useNotify();
     </Button>
   </div>
 
+  <!-- Modal -->
+  <h1 class="text-2xl">Modal</h1>
+
+  <div>
+    <Button on:click={handleOpenModal}>Open Modal</Button>
+    <Modal
+      open={modalOpen}
+      on:close={handleCloseModal}
+    >
+      <span slot="title">This is the modal demo</span>
+      <span slot="message"
+        >Are you sure you want to kick off a notify toast?</span
+      >
+      <Button
+        slot="primary"
+        on:click={() => notify.success('Howdy Message', 'Howdy Partner')}
+      >
+        Notify howdy
+      </Button>
+      <Button
+        slot="secondary"
+        variant="dark"
+        on:click={handleCloseModal}
+      >
+        Cancel
+      </Button>
+    </Modal>
+  </div>
+
   <!-- Pill -->
   <h1 class="text-2xl">Pill</h1>
   <div class="flex gap-4">
@@ -813,26 +852,40 @@ const notify = useNotify();
 
   <!-- Tooltip -->
   <h1 class="text-2xl">Tooltip</h1>
-  <div class="flex gap-4">
-    <Tooltip>
-      This element has a top tooltip.
-      <div slot="text">This is the tooltip text!</div>
+  <div class="flex flex-wrap items-start gap-4">
+    <Tooltip let:tooltipID>
+      <p aria-describedby={tooltipID}>This element has a top tooltip.</p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
 
-    <Tooltip location="left">
-      This element has a left tooltip.
-      <div slot="text">This is the tooltip text!</div>
+    <Tooltip
+      let:tooltipID
+      location="left"
+    >
+      <p aria-describedby={tooltipID}>This element has a left tooltip.</p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
 
-    <Tooltip location="right">
-      This element has a right tooltip.
-      <div slot="text">This is the tooltip text!</div>
+    <Tooltip
+      let:tooltipID
+      location="right"
+    >
+      <p aria-describedby={tooltipID}>This element has a right tooltip.</p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
 
-    <Tooltip location="bottom">
-      This element has a bottom tooltip and an icon!
-      <span class="ml-0.5"> <Icon name="information-outline" /></span>
-      <div slot="text">This is the tooltip text!</div>
+    <Tooltip
+      let:tooltipID
+      location="bottom"
+    >
+      <p
+        aria-describedby={tooltipID}
+        class="flex items-center gap-1"
+      >
+        This element has a bottom tooltip and an icon!
+        <Icon name="information-outline" />
+      </p>
+      <p slot="description">This is the tooltip text!</p>
     </Tooltip>
   </div>
 
