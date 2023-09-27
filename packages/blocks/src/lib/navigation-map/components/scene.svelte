@@ -1,16 +1,21 @@
 <script lang="ts">
 import * as THREE from 'three';
+import { createEventDispatcher } from 'svelte';
 import { T, useThrelte } from '@threlte/core';
 import type { LngLat } from 'maplibre-gl';
+import type { Obstacle } from '../types';
 import { view, obstacles } from '../stores';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
 import { renderPlugin } from '../plugins/render';
 import { interactivityPlugin } from '../plugins/interactivity';
-import ObstacleGeometries from './obstacle.svelte';
 import { createObstacle } from '../lib/create-obstacle';
 import { createName } from '../lib/create-name';
-
+import ObstacleGeometries from './obstacle.svelte';
 import Drawtool from './drawtool.svelte';
+
+const dispatch = createEventDispatcher<{
+  'update-obstacles': Obstacle[]
+}>()
 
 renderPlugin();
 computeBoundingPlugin();
@@ -43,7 +48,7 @@ const handleDraw = ({
 
   $obstacles = [obstacle, ...$obstacles];
 
-  // dispatch('update', $obstacles);
+  dispatch('update-obstacles', $obstacles);
 };
 
 $: flat = $view === '2D';

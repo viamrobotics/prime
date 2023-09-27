@@ -5,6 +5,6 @@ import Scene from './scene.svelte';
 
 <div class="pointer-events-none absolute bottom-0 right-0 h-full w-full">
   <Canvas useLegacyLights={false}>
-    <Scene />
+    <Scene on:update-obstacles />
   </Canvas>
 </div>

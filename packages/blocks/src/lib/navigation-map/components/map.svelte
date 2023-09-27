@@ -42,7 +42,6 @@ const toggleTileset = () => {
     bind:map
   >
     <Nav
-      on:add-obstacle
       on:delete-waypoint
       on:update-obstacles
     >
@@ -53,7 +52,11 @@ const toggleTileset = () => {
     </Nav>
     <RobotMarker lngLat={baseGeoPose} />
     <Waypoints />
-    <ObstacleLayer slot="layer" />
+
+    <ObstacleLayer
+      slot="layer"
+      on:update-obstacles
+    />
 
     <div class="absolute right-12 top-2.5 z-10 flex items-center gap-2">
       <Tooltip>
