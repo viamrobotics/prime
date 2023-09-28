@@ -38,11 +38,11 @@ import {
 provideNotify();
 
 let buttonClickedTimes = 0;
-let disabled = true;
+let preventHandlerDisabled = true;
 let modalOpen = false;
 
-const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
-  disabled = event.detail.value === 'Disabled';
+const handleTogglePreventHandler = (event: CustomEvent<boolean>) => {
+  preventHandlerDisabled = event.detail;
 };
 
 const handleCloseModal = () => {
@@ -561,6 +561,28 @@ const notify = useNotify();
     />
   </div>
 
+  <!-- Prevent Handler -->
+
+  <h1 class="text-2xl">Prevent Handler</h1>
+  <div class="flex flex-col gap-4">
+    <Input
+      placeholder="Disable Me"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Prevent Handler input', event);
+      }}
+      disabled={preventHandlerDisabled}
+    />
+    <Switch
+      on={preventHandlerDisabled}
+      annotated
+      on:change={handleTogglePreventHandler}
+    >
+      <svelte:fragment slot="on">Enabled</svelte:fragment>
+      <svelte:fragment slot="off">Disabled</svelte:fragment>
+    </Switch>
+  </div>
+
   <!-- Radio -->
   <h1 class="text-2xl">Radio</h1>
 
@@ -619,12 +641,7 @@ const notify = useNotify();
       </optgroup>
     </Select>
 
-    <Radio
-      options={['Disabled', 'Enabled']}
-      selected={disabled ? 'Disabled' : 'Enabled'}
-      on:input={handleToggleDisabled}
-    />
-    <Select {disabled}>
+    <Select disabled={preventHandlerDisabled}>
       <option selected>Disabled select</option>
       <option>That thing</option>
       <option>The other thing</option>
@@ -771,34 +788,32 @@ const notify = useNotify();
   <h1 class="text-2xl">Switch</h1>
   <div class="flex gap-4">
     <Switch
+      on:toggle={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Switch toggle', event);
+      }}
+    />
+
+    <Switch on />
+
+    <Switch
       on
-      variant="annotated"
+      annotated
     />
 
     <Switch
       on
-      label="Lunchtime"
-    />
-
-    <Switch
-      on
-      variant="annotated"
-      tooltip="I'm a tooltip message"
-      label="Switch Label"
-    />
-
-    <Switch
-      on
+      annotated
       disabled
-      label="disabled"
     />
 
     <Switch
       on
-      variant="annotated"
-      readonly
-      label="readonly"
-    />
+      annotated
+    >
+      <svelte:fragment slot="on">Enabled</svelte:fragment>
+      <svelte:fragment slot="off">Disabled</svelte:fragment>
+    </Switch>
   </div>
 
   <!-- Table -->
@@ -831,6 +846,7 @@ const notify = useNotify();
       </TableRow>
     </TableBody>
   </Table>
+
   <!-- Tabs -->
   <h1 class="text-2xl">Tabs</h1>
   <div class="flex gap-4">
