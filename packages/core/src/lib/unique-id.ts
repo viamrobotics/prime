@@ -5,11 +5,11 @@ import { nanoid } from 'nanoid/non-secure';
  *
  * ```ts
  * // some-component.svelte
- * import { useUniqueId } from './unique-id';
+ * import { uniqueId } from './unique-id';
  * const myId = uniqueId(); // returns 'uid_XXXXX`
  * const myOtherId = uniqueId('other'); // returns 'other_XXXXX`
  * ```
  */
-export const useUniqueId = (prefix = 'uid'): string => {
+export const uniqueId = (prefix = 'uid'): string => {
   return `${prefix}_${nanoid()}`;
 };
