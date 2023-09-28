@@ -27,7 +27,7 @@ export let scale = 1;
 export let color = '';
 
 /** The marker icon */
-export let icon: HTMLElement | undefined;
+export let element: HTMLElement | undefined = undefined;
 
 /** The marker rotation, where 0 is north */
 export let rotation = 0;
@@ -38,7 +38,7 @@ let marker: Marker | undefined;
 
 $: {
   marker?.remove();
-  marker = new Marker({ element: icon!, scale, color });
+  marker = new Marker(element ? { element, scale, color } : { scale, color });
   marker.getElement().style.zIndex = '1';
   marker.setLngLat(lngLat);
   marker.setRotation(rotation);

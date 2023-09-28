@@ -7,6 +7,5 @@ import { waypoints } from '../stores';
   <MapLibreMarker
     scale={0.7}
     lngLat={waypoint}
-    icon={undefined}
   />
 {/each}
