@@ -70,14 +70,11 @@ export const theme = {
       cyberpunk: '#a51aff',
       hyperlink: '#0000ea',
     },
-    height: {
+    spacing: {
       '7.5': '1.875rem',
     },
     transitionProperty: {
       'expand-vertical': 'max-height,visibility',
-    },
-    width: {
-      '7.5': '1.875rem',
     },
     zIndex: {
       max: '1000',
