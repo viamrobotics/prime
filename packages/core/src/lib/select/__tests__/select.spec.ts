@@ -11,7 +11,7 @@ describe('Select', () => {
     const select = screen.getByPlaceholderText('Select an option');
 
     expect(select).toHaveClass(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
     expect(select).not.toHaveClass(
@@ -36,7 +36,7 @@ describe('Select', () => {
     const select = screen.getByPlaceholderText('Select an option');
 
     expect(select).toHaveClass(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
     expect(select).toHaveClass(
