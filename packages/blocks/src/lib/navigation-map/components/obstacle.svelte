@@ -2,10 +2,10 @@
 import { theme } from '@viamrobotics/prime-core/theme';
 import * as THREE from 'three';
 import { T, createRawEventDispatcher } from '@threlte/core';
-import { useMapLibre, type Obstacle, useMapLibreEvent } from '$lib';
-import { view, hovered, selected } from '../stores';
-import AxesHelper from './axes-helper.svelte';
 import type { MapMouseEvent } from 'maplibre-gl';
+import { useMapLibre, type Obstacle, useMapLibreEvent } from '$lib';
+import { view, hovered, selected, environment } from '../stores';
+import AxesHelper from './axes-helper.svelte';
 
 /** An obstacle to render. */
 export let obstacle: Obstacle;
@@ -26,7 +26,7 @@ let pointerdownLength = 0;
 let pointerdownWidth = 0;
 let pointerdownHeight = 0;
 
-let dragging = false;
+let draggingObstacle = false;
 
 const pointermove = new THREE.Vector2();
 const pointerdown = new THREE.Vector2();
@@ -35,7 +35,18 @@ const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
   ref.rotateX(-Math.PI / 2);
 };
 
-const handleMouseMove = (event: MapMouseEvent) => {
+const handlePointerDown = (name: string) => {
+  $selected = name;
+
+  if (debugMode) {
+    return;
+  }
+
+  map.dragPan.disable();
+  draggingObstacle = true;
+};
+
+const handlePointerMove = (event: MapMouseEvent) => {
   if ($selected === null) {
     return;
   }
@@ -81,6 +92,7 @@ const handleMouseMove = (event: MapMouseEvent) => {
   dispatch('update', obstacle);
 };
 
+$: debugMode = $environment === 'debug';
 $: name = obstacle.name;
 $: active = $hovered === name || $selected === name;
 $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
@@ -89,13 +101,17 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
     : theme.extend.colors['power-wire']
 );
 
-$: if (dragging) {
-  map.on('mousemove', handleMouseMove);
+$: if (draggingObstacle) {
+  map.on('mousemove', handlePointerMove);
 } else {
-  map.off('mousemove', handleMouseMove);
+  map.off('mousemove', handlePointerMove);
 }
 
 useMapLibreEvent('mousedown', (event) => {
+  if (debugMode) {
+    return;
+  }
+
   pointerdown.set(event.point.x, event.point.y);
 
   const geometry = obstacle.geometries[0]!;
@@ -121,7 +137,7 @@ useMapLibreEvent('mousedown', (event) => {
 });
 
 useMapLibreEvent('mouseup', () => {
-  dragging = false;
+  draggingObstacle = false;
   map.dragPan.enable();
 });
 </script>
@@ -134,11 +150,7 @@ useMapLibreEvent('mouseup', () => {
     rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
     on:pointerenter={() => ($hovered = name)}
     on:pointerleave={() => ($hovered = null)}
-    on:pointerdown={() => {
-      map.dragPan.disable();
-      $selected = name;
-      dragging = true;
-    }}
+    on:pointerdown={() => handlePointerDown(name)}
   >
     {#if geometry.type === 'box'}
       {#if active}

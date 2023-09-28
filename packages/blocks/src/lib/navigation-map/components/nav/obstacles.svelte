@@ -6,7 +6,6 @@ import {
   type Geometry,
   useMapLibre,
   type Obstacle,
-  useMapLibreEvent,
 } from '$lib';
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
@@ -20,8 +19,6 @@ import {
   obstacles,
 } from '../../stores';
 import { createEventDispatcher } from 'svelte';
-import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
-import { createName } from '$lib/navigation-map/lib/create-name';
 
 interface Events {
   /** Fired when obstacles are created, destroyed, or edited. */
@@ -84,21 +81,6 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 };
 
-// Click to add an obstacle
-useMapLibreEvent('click', (event) => {
-  if ($hovered) {
-    return;
-  }
-
-  const location = event.lngLat;
-  const names = $obstacles.map((obstacle) => obstacle.name);
-  const name = createName(names, 'obstacle', $obstacles.length);
-  $obstacles = [createObstacle(name, location), ...$obstacles];
-  dispatch('update', $obstacles);
-
-  $selected = name;
-});
-
 $: selectedObstacle = $obstacles.find(
   (obstacle) => obstacle.name === $selected
 );
@@ -120,7 +102,8 @@ $: debugMode = $environment === 'debug';
 {#each $obstacles as { name, location, geometries }, index (index)}
   <li
     class="group border-b border-b-medium pl-2 leading-[1] last:border-b-0"
-    class:py-3={debugMode}
+    class:pb-3={debugMode}
+    class:pt-1={debugMode}
     class:bg-light={$selected === name}
     on:mouseenter={() => ($hovered = name)}
   >
