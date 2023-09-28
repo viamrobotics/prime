@@ -20,7 +20,7 @@
 />
 
 <script lang="ts">
-import { useUniqueId } from '$lib/unique-id';
+import { uniqueId } from '$lib/unique-id';
 import {
   tooltipStyles,
   type TooltipLocation,
@@ -39,7 +39,7 @@ export let location: TooltipLocation = 'top';
  */
 export let state: TooltipState = 'invisible';
 
-const tooltipID = useUniqueId('tooltip');
+const tooltipID = uniqueId('tooltip');
 let target: HTMLElement | undefined;
 let tooltip: HTMLElement | undefined;
 let arrow: HTMLElement | undefined;
