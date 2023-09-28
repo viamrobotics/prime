@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { useUniqueId } from '$lib';
+import { uniqueId } from '$lib';
 
-describe('useUniqueId', () => {
+describe('uniqueId', () => {
   it('should return a unique ID with the default prefix', () => {
-    const first = useUniqueId();
-    const second = useUniqueId();
-    const third = useUniqueId();
+    const first = uniqueId();
+    const second = uniqueId();
+    const third = uniqueId();
 
     expect(first.includes('uid_')).toBeTruthy();
     expect(second.includes('uid_')).toBeTruthy();
@@ -15,9 +15,9 @@ describe('useUniqueId', () => {
   });
 
   it('should return a unique ID with the passed prefix', () => {
-    const first = useUniqueId('test');
-    const second = useUniqueId('test');
-    const third = useUniqueId('test');
+    const first = uniqueId('test');
+    const second = uniqueId('test');
+    const third = uniqueId('test');
 
     expect(first.includes('test_')).toBeTruthy();
     expect(second.includes('test_')).toBeTruthy();

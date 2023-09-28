@@ -13,7 +13,7 @@ export { default as Switch } from './switch.svelte';
 export { default as Radio } from './radio.svelte';
 export { default as Tabs } from './tabs.svelte';
 export { default as Modal } from './modal.svelte';
-export { useUniqueId } from './unique-id';
+export { uniqueId } from './unique-id';
 
 export {
   Tooltip,

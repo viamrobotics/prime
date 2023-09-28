@@ -13,8 +13,6 @@ For numeric user inputs that require easy adjustment.
   />
 ```
 -->
-<svelte:options immutable />
-
 <script lang="ts">
 import { createEventDispatcher } from 'svelte';
 import cx from 'classnames';
@@ -45,6 +43,9 @@ export { extraClasses as cx };
 const dispatch = createEventDispatcher<{
   /** Fires when an input event occurs. */
   input: Record<string, number>;
+
+  /** Fires when an input value changes. */
+  change: Record<string, number>;
 }>();
 
 const inputs: Record<string, HTMLInputElement> = {};
@@ -57,9 +58,11 @@ const handleInput = (label: string) => {
   }
 };
 
-const handleKeydown = (event: KeyboardEvent, label: string) => {
-  if (event.key === 'Enter') {
-    handleInput(label);
+const handleChange = (label: string) => {
+  const value = inputs[label]?.valueAsNumber;
+  if (value !== undefined && !Number.isNaN(value)) {
+    values[label] = value;
+    dispatch('change', values);
   }
 };
 </script>
@@ -77,9 +80,8 @@ const handleKeydown = (event: KeyboardEvent, label: string) => {
         placeholder={placeholders[label]}
         value={values[label]}
         incrementor={readonly ? '' : 'slider'}
-        on:blur={() => handleInput(label)}
         on:input={() => handleInput(label)}
-        on:keydown={(event) => handleKeydown(event, label)}
+        on:change={() => handleChange(label)}
       />
     </Label>
   {/each}

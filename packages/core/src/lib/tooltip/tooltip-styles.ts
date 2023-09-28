@@ -10,7 +10,7 @@ import { setContext, getContext } from 'svelte';
 import { derived, writable, type Readable } from 'svelte/store';
 import noop from 'lodash/noop';
 
-import { useUniqueId } from '$lib/unique-id';
+import { uniqueId } from '$lib/unique-id';
 
 export type TooltipLocation = 'top' | 'bottom' | 'right' | 'left';
 
@@ -91,7 +91,7 @@ export const useTooltip = (): TooltipContext => {
 
 /** Create a context for a single tooltip */
 const createContext = (): TooltipContext => {
-  const id = useUniqueId('tooltip');
+  const id = uniqueId('tooltip');
   const state = writable<State>({});
   const isVisible = derived(
     state,

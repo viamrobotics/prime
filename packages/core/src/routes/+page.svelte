@@ -916,25 +916,27 @@ const notify = useNotify();
       // eslint-disable-next-line no-console
       console.log('VectorInput input', event);
     }}
+    on:change={(event) => {
+      // eslint-disable-next-line no-console
+      console.log('VectorInput change', event);
+    }}
   />
 
   <VectorInput
     type="number"
     step={10}
-    labels={['x', 'y', 'z', 'd']}
+    labels={['x', 'y', 'z', 'w']}
     placeholders={{
       x: '0',
       y: '0',
       z: '0',
-      // eslint-disable-next-line id-length
-      d: '0',
+      w: '0',
     }}
     values={{
       x: 0,
       y: 0,
       z: 0,
-      // eslint-disable-next-line id-length
-      d: 0,
+      w: 0,
     }}
     on:input={(event) => {
       // eslint-disable-next-line no-console
