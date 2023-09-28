@@ -26,15 +26,22 @@ export let scale = 1;
 /** The marker color. */
 export let color = '';
 
+/** The marker icon */
+export let element: HTMLElement | undefined = undefined;
+
+/** The marker rotation, where 0 is north */
+export let rotation = 0;
+
 const { map } = useMapLibre();
 
 let marker: Marker | undefined;
 
 $: {
   marker?.remove();
-  marker = new Marker({ scale, color });
+  marker = new Marker(element ? { element, scale, color } : { scale, color });
   marker.getElement().style.zIndex = '1';
   marker.setLngLat(lngLat);
+  marker.setRotation(rotation);
   marker.addTo(map);
 }
 
