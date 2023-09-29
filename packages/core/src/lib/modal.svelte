@@ -60,6 +60,7 @@ onMount(() => {
 });
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <div
   class={cx(
     'fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40',
@@ -67,8 +68,9 @@ onMount(() => {
       invisible: !open,
     }
   )}
-  role="button"
-  tabindex="0"
+  role="dialog"
+  tabindex="-1"
+  aria-modal="true"
   on:click={handleBackgroundClick}
   on:keydown={handleBackgroundKey}
 >
