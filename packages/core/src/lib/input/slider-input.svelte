@@ -57,7 +57,6 @@ const dispatch = createEventDispatcher<{
   change: number | undefined;
 }>();
 
-let numberDragTooltip: Tooltip;
 let numberDragCord: HTMLDivElement;
 let numberDragHead: HTMLDivElement;
 let isDragging = false;
@@ -114,13 +113,6 @@ $: handlePointerMove = (event: PointerEvent) => {
     value = next;
     dispatch('input', value);
   }
-
-  /**
-   * TODO: Determine why this is being interpreted as an `any` type by the
-   * linter when it is of `() => Promise<void>`.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  numberDragTooltip.recalculateStyle();
 };
 
 const handlePointerUp = () => {
@@ -139,13 +131,6 @@ const handlePointerDown = async (event: PointerEvent) => {
   await tick();
 
   numberDragHead.style.transform = 'translate(0px, 0px)';
-
-  /**
-   * TODO: Determine why this is being interpreted as an `any` type by the
-   * linter when it is of `() => Promise<void>`.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  numberDragTooltip.recalculateStyle();
 };
 
 const handleInput = () => {
@@ -207,10 +192,7 @@ const handleChange = () => {
         class="pointer-events-none -ml-[2px] -mt-[5px]"
       >
         <div class="h-2 w-2">
-          <Tooltip
-            bind:this={numberDragTooltip}
-            state="visible"
-          >
+          <Tooltip state="visible">
             <div class="h-2 w-2 rounded-full bg-gray-800" />
             <span slot="description">{value}</span>
           </Tooltip>
