@@ -32,17 +32,17 @@ $: setTooltip({ tooltip, arrow, location, visibility: state });
   {id}
   role="tooltip"
   class="absolute left-0 top-0 z-max w-max max-w-[250px] border border-gray-9"
-  class:invisible={!$isVisible}
-  style:top={$styles.tooltip.top}
-  style:left={$styles.tooltip.left}
+  class:invisible={!$isVisible || !$styles}
+  style:top={$styles?.tooltip.top}
+  style:left={$styles?.tooltip.left}
 >
   <div
     bind:this={arrow}
     class="absolute h-[8.5px] w-[8.5px] rotate-45 bg-gray-9"
-    style:top={$styles.arrow.top}
-    style:left={$styles.arrow.left}
-    style:right={$styles.arrow.right}
-    style:bottom={$styles.arrow.bottom}
+    style:top={$styles?.arrow.top}
+    style:left={$styles?.arrow.left}
+    style:right={$styles?.arrow.right}
+    style:bottom={$styles?.arrow.bottom}
   />
 
   <div

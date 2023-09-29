@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 
 import Tooltip from './tooltip.spec.svelte';
@@ -33,7 +33,10 @@ describe('Tooltip', () => {
     const target = screen.getByTestId('target');
     const tooltip = screen.getByRole('tooltip');
 
-    expect(tooltip).not.toHaveClass('invisible');
+    // tooltip should initially be invisible before styles calculate
+    expect(tooltip).toHaveClass('invisible');
+    // then it should become visible
+    await waitFor(() => expect(tooltip).not.toHaveClass('invisible'));
 
     await user.hover(target);
     expect(tooltip).not.toHaveClass('invisible');

@@ -18,7 +18,7 @@ export type TooltipVisibility = 'invisible' | 'visible';
 
 export interface TooltipContext {
   id: string;
-  styles: Readable<TooltipStyles>;
+  styles: Readable<TooltipStyles | undefined>;
   isVisible: Readable<boolean>;
   setHovered: (isHovered: boolean) => void;
   setTarget: (target: HTMLElement | undefined) => void;
@@ -97,10 +97,9 @@ const createContext = (): TooltipContext => {
     state,
     ($state) => $state.visibility === 'visible' || Boolean($state.isHovered)
   );
-  const styles = derived<Readable<State>, TooltipStyles>(
+  const styles = derived<Readable<State>, TooltipStyles | undefined>(
     state,
-    updateStyles,
-    INITIAL_STYLE
+    updateStyles
   );
 
   return {
