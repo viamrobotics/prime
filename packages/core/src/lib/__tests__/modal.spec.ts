@@ -24,15 +24,31 @@ describe('Modal', () => {
     const onClose = vi.fn();
     component.$on('close', onClose);
 
-    const background = container.querySelector('div[role="button"]');
-    if (!background) {
-      throw new Error('Background not found');
+    const modal = container.querySelector('.relative.max-w-lg');
+    if (!modal) {
+      return;
     }
 
-    await fireEvent.click(background);
+    await fireEvent.click(modal.parentElement!);
 
     expect(onClose).toHaveBeenLastCalledWith(
       expect.objectContaining({ detail: true })
     );
+  });
+
+  it('if open is true, modal should be visible', () => {
+    const { container } = render(Modal, {
+      open: true,
+    });
+    const modal = container.querySelector('[role="dialog"]');
+    expect(modal).not.toHaveClass('invisible');
+  });
+
+  it('if open is false, modal should not be visible', () => {
+    const { container } = render(Modal, {
+      open: false,
+    });
+    const modal = container.querySelector('[role="dialog"]');
+    expect(modal).toHaveClass('invisible');
   });
 });

@@ -28,6 +28,7 @@ Creates a modal overlay.
 import cx from 'classnames';
 import { createEventDispatcher, onMount } from 'svelte';
 import IconButton from './button/icon-button.svelte';
+import { clickOutside } from '$lib';
 
 /** Whether the modal is open. */
 export let open = false;
@@ -43,14 +44,8 @@ const handleCloseModal = () => {
   dispatch('close', true);
 };
 
-const handleBackgroundClick = (event: MouseEvent) => {
-  if (event.target === event.currentTarget) {
-    handleCloseModal();
-  }
-};
-
-const handleBackgroundKey = (event: KeyboardEvent) => {
-  if (event.key === 'Enter' || event.key === 'Space') {
+const handleEscapePress = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
     handleCloseModal();
   }
 };
@@ -60,7 +55,8 @@ onMount(() => {
 });
 </script>
 
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<svelte:window on:keydown={handleEscapePress} />
+
 <div
   class={cx(
     'fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40',
@@ -71,10 +67,9 @@ onMount(() => {
   role="dialog"
   tabindex="-1"
   aria-modal="true"
-  on:click={handleBackgroundClick}
-  on:keydown={handleBackgroundKey}
 >
   <div
+    use:clickOutside={handleCloseModal}
     class={cx('relative max-w-lg border border-medium bg-white p-6 shadow-sm', {
       'max-h-[600px] min-h-[400px] w-[480px]': variant === '',
       'max-h-[320px] w-[400px]': variant === 'small',
