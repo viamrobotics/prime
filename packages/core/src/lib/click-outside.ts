@@ -50,7 +50,7 @@ export const clickOutside: Action<HTMLElement | undefined, () => unknown> = (
       handleClickOutside = nextHandler;
     },
     destroy: () => {
-      window.document.removeEventListener('click', handleWindowClick);
+      window.document.removeEventListener('click', handleWindowClick, true);
     },
   };
 };

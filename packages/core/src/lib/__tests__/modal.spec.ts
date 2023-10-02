@@ -1,14 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent } from '@testing-library/svelte';
+import { render, fireEvent, screen } from '@testing-library/svelte';
 import Modal from '../modal.svelte';
 
 describe('Modal', () => {
   it('should emit close event when close icon button is clicked', async () => {
-    const { getByTitle, component } = render(Modal, {
+    const { component } = render(Modal, {
       open: true,
     });
 
-    const closeButton = getByTitle('Close modal');
+    const closeButton = screen.getByTitle('Close modal');
     const onClose = vi.fn();
     component.$on('close', onClose);
     await fireEvent.click(closeButton);
@@ -17,14 +17,14 @@ describe('Modal', () => {
   });
 
   it('should emit close event when clicked outside the modal', async () => {
-    const { getByRole, component } = render(Modal, {
+    const { component } = render(Modal, {
       open: true,
     });
 
     const onClose = vi.fn();
     component.$on('close', onClose);
 
-    const modal = getByRole('dialog');
+    const modal = screen.getByRole('dialog');
 
     await fireEvent.click(modal.parentElement!);
 
@@ -34,18 +34,18 @@ describe('Modal', () => {
   });
 
   it('if open is true, modal should be visible', () => {
-    const { getByRole } = render(Modal, {
+    render(Modal, {
       open: true,
     });
-    const modal = getByRole('dialog');
+    const modal = screen.getByRole('dialog');
     expect(modal).toBeTruthy();
   });
 
   it('if open is false, modal should not be visible', () => {
-    const { queryByRole } = render(Modal, {
+    render(Modal, {
       open: false,
     });
-    const modal = queryByRole('dialog');
+    const modal = screen.queryByRole('dialog');
     expect(modal).toBeNull();
   });
 
