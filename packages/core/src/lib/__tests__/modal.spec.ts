@@ -51,4 +51,14 @@ describe('Modal', () => {
     const modal = container.querySelector('[role="dialog"]');
     expect(modal).toHaveClass('invisible');
   });
+
+  it('should emit close event when escape key is pressed', async () => {
+    const { component } = render(Modal, { open: true });
+
+    const onClose = vi.fn();
+    component.$on('close', onClose);
+
+    await fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalled();
+  });
 });
