@@ -44,7 +44,7 @@ export { extraClasses as cx };
   {#if button !== undefined}
     <button
       type="button"
-      class="flex h-[30px] w-full items-center border-t border-light px-2 py-1 text-xs hover:bg-light"
+      class="flex h-7.5 w-full items-center border-t border-light px-2 py-1 text-xs hover:bg-light"
     >
       <Icon
         name={button.icon}

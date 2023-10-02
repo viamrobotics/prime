@@ -94,7 +94,7 @@ $: errorClasses =
     aria-disabled={disabled ? true : undefined}
     aria-invalid={isError ? true : undefined}
     class={cx(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
       defaultClasses,
       readonlyClasses,
       disabledClasses,
