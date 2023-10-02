@@ -29,9 +29,12 @@ import cx from 'classnames';
 import { createEventDispatcher, onMount, afterUpdate } from 'svelte';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
+// import { writable } from 'svelte/store';
 
 /** Whether the modal is open. */
+// export const isOpen = writeable(false);
 export let open = false;
+
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 
@@ -53,14 +56,16 @@ afterUpdate(() => {
 });
 
 const handleCloseModal = () => {
-  if (!clickOutsideActive) {
+  if (!open || !clickOutsideActive) {
     return;
   }
   dispatch('close', true);
+  // isOpen.set(false)
 };
 
 const handleEscapePress = (event: KeyboardEvent) => {
   if (event.key === 'Escape') {
+    event.preventDefault();
     handleCloseModal();
   }
 };
@@ -72,47 +77,47 @@ onMount(() => {
 
 <svelte:window on:keydown={handleEscapePress} />
 
-<div
-  class={cx(
-    'fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40',
-    {
-      invisible: !open,
-    }
-  )}
-  role="dialog"
-  tabindex="-1"
-  aria-modal="true"
->
+{#if open}
   <div
-    use:clickOutside={handleCloseModal}
-    class={cx('relative max-w-lg border border-medium bg-white p-6 shadow-sm', {
-      'max-h-[600px] min-h-[400px] w-[480px]': variant === '',
-      'max-h-[320px] w-[400px]': variant === 'small',
-    })}
+    class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40"
+    role="dialog"
+    tabindex="-1"
+    aria-modal="true"
   >
-    <IconButton
-      class="absolute right-4 top-4 text-gray-6"
-      icon="close"
-      label="Close modal"
-      on:click={handleCloseModal}
-    />
-    <figure
-      class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
+    <div
+      use:clickOutside={handleCloseModal}
+      class={cx(
+        'relative max-w-lg border border-medium bg-white p-6 shadow-sm',
+        {
+          'max-h-[600px] min-h-[400px] w-[480px]': variant === '',
+          'max-h-[320px] w-[400px]': variant === 'small',
+        }
+      )}
     >
-      <figcaption class="pr-12 text-lg font-semibold">
-        <slot name="title" />
-      </figcaption>
+      <IconButton
+        class="absolute right-4 top-4 text-gray-6"
+        icon="close"
+        label="Close modal"
+        on:click={handleCloseModal}
+      />
+      <figure
+        class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
+      >
+        <figcaption class="pr-12 text-lg font-semibold">
+          <slot name="title" />
+        </figcaption>
 
-      <div class="text-sm text-subtle-1">
-        <slot name="message" />
-      </div>
+        <div class="text-sm text-subtle-1">
+          <slot name="message" />
+        </div>
 
-      <div class="flex flex-grow"><slot /></div>
+        <div class="flex flex-grow"><slot /></div>
 
-      <div class="mt-6 flex justify-end gap-2">
-        <slot name="secondary" />
-        <slot name="primary" />
-      </div>
-    </figure>
+        <div class="mt-6 flex justify-end gap-2">
+          <slot name="secondary" />
+          <slot name="primary" />
+        </div>
+      </figure>
+    </div>
   </div>
-</div>
+{/if}

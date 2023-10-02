@@ -17,17 +17,14 @@ describe('Modal', () => {
   });
 
   it('should emit close event when clicked outside the modal', async () => {
-    const { container, component } = render(Modal, {
+    const { getByRole, component } = render(Modal, {
       open: true,
     });
 
     const onClose = vi.fn();
     component.$on('close', onClose);
 
-    const modal = container.querySelector('.relative.max-w-lg');
-    if (!modal) {
-      return;
-    }
+    const modal = getByRole('dialog');
 
     await fireEvent.click(modal.parentElement!);
 
@@ -37,19 +34,19 @@ describe('Modal', () => {
   });
 
   it('if open is true, modal should be visible', () => {
-    const { container } = render(Modal, {
+    const { getByRole } = render(Modal, {
       open: true,
     });
-    const modal = container.querySelector('[role="dialog"]');
-    expect(modal).not.toHaveClass('invisible');
+    const modal = getByRole('dialog');
+    expect(modal).toBeTruthy();
   });
 
   it('if open is false, modal should not be visible', () => {
-    const { container } = render(Modal, {
+    const { queryByRole } = render(Modal, {
       open: false,
     });
-    const modal = container.querySelector('[role="dialog"]');
-    expect(modal).toHaveClass('invisible');
+    const modal = queryByRole('dialog');
+    expect(modal).toBeNull();
   });
 
   it('should emit close event when escape key is pressed', async () => {
