@@ -6,8 +6,9 @@
 import * as THREE from 'three';
 import { T, createRawEventDispatcher } from '@threlte/core';
 import { useMapLibreEvent, useMapLibre } from '$lib';
-import { MercatorCoordinate, LngLat, type MapMouseEvent } from 'maplibre-gl';
+import { MercatorCoordinate, LngLat, type MapMouseEvent, type MapLayerMouseEvent, type MapLayerTouchEvent } from 'maplibre-gl';
 import { view } from '../stores';
+import * as math from '../lib/math';
 
 interface $$Events extends Record<string, unknown> {
   /** Fires when a rectangle is drawn. */
@@ -18,7 +19,7 @@ const dispatch = createRawEventDispatcher<$$Events>();
 const { map } = useMapLibre();
 
 let downLngLat = new LngLat(0, 0);
-let down = new MercatorCoordinate(0, 0, 0);
+let downMercator = new MercatorCoordinate(0, 0, 0);
 
 let drawing = false;
 let width = 0;
@@ -26,35 +27,38 @@ let height = 0;
 
 const moveSign = { x: 0, y: 0 };
 
-const toPrecisionLevel = (number: number, decimals: number) => {
-  const multiplier = 10 ** decimals;
-  return Math.floor(number * multiplier) / multiplier;
-};
+const handlePointerDown = (event: MapLayerMouseEvent | MapLayerTouchEvent) => {
+  event.preventDefault();
+  drawing = true;
+  downLngLat = event.lngLat;
+  downMercator = math.lngLatToMercator(downLngLat);
+}
 
 const handlePointerMove = (event: MapMouseEvent) => {
-  const move = MercatorCoordinate.fromLngLat(event.lngLat, 0);
-  const scale = move.meterInMercatorCoordinateUnits();
+  const moveMercator = math.lngLatToMercator(event.lngLat)
+  const scale = moveMercator.meterInMercatorCoordinateUnits();
 
-  moveSign.x = Math.sign(move.x - down.x);
-  moveSign.y = Math.sign(move.y - down.y);
+  moveSign.x = Math.sign(moveMercator.x - downMercator.x);
+  moveSign.y = Math.sign(moveMercator.y - downMercator.y);
 
-  width = toPrecisionLevel(Math.abs(move.x - down.x) / scale, 2);
-  height = toPrecisionLevel(Math.abs(move.y - down.y) / scale, 2);
+  width = math.toPrecisionLevel(Math.abs(moveMercator.x - downMercator.x) / scale, 2);
+  height = math.toPrecisionLevel(Math.abs(moveMercator.y - downMercator.y) / scale, 2);
 };
 
 const handlePointerUp = () => {
   drawing = false;
 
-  const scale = down.meterInMercatorCoordinateUnits();
-  const offset = new MercatorCoordinate(
-    -moveSign.x * (width / 2) * scale,
-    -moveSign.y * (height / 2) * scale
-  );
+  const scale = downMercator.meterInMercatorCoordinateUnits();
+  const offset = math.cartesianToMercator(
+    -moveSign.x * (width / 2),
+    -moveSign.y * (height / 2),
+    scale
+  )
 
-  down.x -= offset.x;
-  down.y -= offset.y;
+  downMercator.x -= offset.x;
+  downMercator.y -= offset.y;
 
-  const center = down.toLngLat();
+  const center = downMercator.toLngLat();
 
   dispatch('update', { width, height, center });
 
@@ -68,10 +72,7 @@ const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
 
 useMapLibreEvent('mousedown', (event) => {
   if (event.originalEvent.shiftKey) {
-    event.preventDefault();
-    drawing = true;
-    downLngLat = event.lngLat;
-    down = MercatorCoordinate.fromLngLat(event.lngLat, 0);
+    handlePointerDown(event)
   }
 });
 

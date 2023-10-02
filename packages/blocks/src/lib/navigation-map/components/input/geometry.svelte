@@ -2,7 +2,7 @@
 import { Radio, VectorInput } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import type { Geometry, Shapes } from '$lib';
-import { createGeometry } from '../../lib/geometry';
+import { createGeometry } from '../../lib/create-geometry';
 
 /** The geometry to edit. */
 export let geometry: Geometry;

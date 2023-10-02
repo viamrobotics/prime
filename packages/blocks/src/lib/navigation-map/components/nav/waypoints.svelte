@@ -2,7 +2,6 @@
 import { IconButton } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import { waypoints } from '../../stores';
-import { flyToMap } from '../../lib/fly-to-map';
 import { useMapLibre, type LngLat, useMapLibreEvent } from '$lib';
 
 interface Events {
@@ -50,7 +49,12 @@ useMapLibreEvent('click', (event) => {
       <IconButton
         icon="image-filter-center-focus"
         label="Focus waypoint {index}"
-        on:click={() => flyToMap(map, waypoint)}
+        on:click={() => map.flyTo({
+          zoom: 15,
+          duration: 800,
+          curve: 0.1,
+          center: [waypoint.lng, waypoint.lat],
+        })}
       />
       <IconButton
         label="Remove waypoint {index}"
