@@ -26,7 +26,7 @@ Creates a modal overlay.
 
 <script lang="ts">
 import cx from 'classnames';
-import { createEventDispatcher, onMount } from 'svelte';
+import { createEventDispatcher, onMount, afterUpdate } from 'svelte';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
 
@@ -35,12 +35,27 @@ export let open = false;
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 
+let clickOutsideActive = false;
+
 const dispatch = createEventDispatcher<{
   /** Fires when the modal is requested to close. */
   close: boolean;
 }>();
 
+afterUpdate(() => {
+  if (open) {
+    setTimeout(() => {
+      clickOutsideActive = true;
+    }, 100);
+  } else {
+    clickOutsideActive = false;
+  }
+});
+
 const handleCloseModal = () => {
+  if (!clickOutsideActive) {
+    return;
+  }
   dispatch('close', true);
 };
 
