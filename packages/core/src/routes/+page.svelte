@@ -16,6 +16,9 @@ import {
   Radio,
   Tabs,
   Tooltip,
+  TooltipContainer,
+  TooltipTarget,
+  TooltipText,
   TextInput,
   NumericInput,
   SliderInput,
@@ -877,16 +880,33 @@ const notify = useNotify();
     <Tooltip
       let:tooltipID
       location="bottom"
+      state="visible"
     >
-      <p
-        aria-describedby={tooltipID}
-        class="flex items-center gap-1"
-      >
-        This element has a bottom tooltip and an icon!
-        <Icon name="information-outline" />
+      <p aria-describedby={tooltipID}>
+        This element has visible bottom tooltip.
       </p>
       <p slot="description">This is the tooltip text!</p>
     </Tooltip>
+
+    <div>
+      <TooltipContainer let:tooltipID>
+        <Label>
+          This element has a tooltip on an icon!
+          <TooltipTarget>
+            <Icon
+              tabindex="0"
+              cx="cursor-pointer"
+              name="information-outline"
+            />
+          </TooltipTarget>
+          <TextInput
+            slot="input"
+            aria-describedby={tooltipID}
+          />
+        </Label>
+        <TooltipText>This is the tooltip text!</TooltipText>
+      </TooltipContainer>
+    </div>
   </div>
 
   <!-- Vector Input -->
@@ -896,25 +916,27 @@ const notify = useNotify();
       // eslint-disable-next-line no-console
       console.log('VectorInput input', event);
     }}
+    on:change={(event) => {
+      // eslint-disable-next-line no-console
+      console.log('VectorInput change', event);
+    }}
   />
 
   <VectorInput
     type="number"
     step={10}
-    labels={['x', 'y', 'z', 'd']}
+    labels={['x', 'y', 'z', 'w']}
     placeholders={{
       x: '0',
       y: '0',
       z: '0',
-      // eslint-disable-next-line id-length
-      d: '0',
+      w: '0',
     }}
     values={{
       x: 0,
       y: 0,
       z: 0,
-      // eslint-disable-next-line id-length
-      d: 0,
+      w: 0,
     }}
     on:input={(event) => {
       // eslint-disable-next-line no-console
