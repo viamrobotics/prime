@@ -29,6 +29,7 @@ import cx from 'classnames';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
 import { writable } from 'svelte/store';
+import { onMount } from 'svelte';
 
 /** Whether the modal is open. */
 export let isOpen = writable(false);
@@ -52,6 +53,13 @@ const handleEscapePress = (event: KeyboardEvent) => {
     handleCloseModal();
   }
 };
+
+onMount(() => {
+  if ($isOpen) {
+    const modalHeading = document.getElementById('modal-heading');
+    modalHeading?.focus();
+  }
+});
 </script>
 
 <svelte:window on:keydown={handleEscapePress} />
@@ -60,7 +68,6 @@ const handleEscapePress = (event: KeyboardEvent) => {
   <div
     class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40"
     role="dialog"
-    tabindex="-1"
     aria-modal="true"
   >
     <div
@@ -80,12 +87,16 @@ const handleEscapePress = (event: KeyboardEvent) => {
         label="Close modal"
         on:click={handleCloseModal}
       />
-      <figure
+      <div
         class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
       >
-        <figcaption class="pr-12 text-lg font-semibold">
+        <h2
+          id="modal-heading"
+          tabindex="-1"
+          class="pr-12 text-lg font-semibold"
+        >
           <slot name="title" />
-        </figcaption>
+        </h2>
 
         <div class="text-sm text-subtle-1">
           <slot name="message" />
@@ -97,7 +108,7 @@ const handleEscapePress = (event: KeyboardEvent) => {
           <slot name="secondary" />
           <slot name="primary" />
         </div>
-      </figure>
+      </div>
     </div>
   </div>
 {/if}
