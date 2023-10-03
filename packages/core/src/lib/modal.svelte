@@ -29,13 +29,20 @@ import cx from 'classnames';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
 import type { Writable } from 'svelte/store';
-import { onMount } from 'svelte';
 
 /** Whether the modal is open. */
 export let isOpen: Writable<boolean>;
 
 $: if (typeof document !== 'undefined') {
   document.body.classList.toggle('overflow-hidden', $isOpen);
+}
+
+let headingElement: HTMLElement | undefined;
+
+$: headingElement?.focus();
+
+$: if (headingElement) {
+  requestAnimationFrame(() => headingElement?.focus());
 }
 
 /** The variant of the modal. */
@@ -53,15 +60,6 @@ const handleEscapePress = (event: KeyboardEvent) => {
     handleCloseModal();
   }
 };
-
-onMount(() => {
-  if ($isOpen) {
-    const modalHeading = document.querySelector(
-      '[role="heading"]'
-    ) as HTMLElement;
-    modalHeading?.focus();
-  }
-});
 </script>
 
 <svelte:window on:keydown={handleEscapePress} />
@@ -93,6 +91,7 @@ onMount(() => {
         class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
       >
         <h2
+          bind:this={headingElement}
           tabindex="-1"
           class="pr-12 text-lg font-semibold"
         >

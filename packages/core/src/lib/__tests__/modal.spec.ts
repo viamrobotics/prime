@@ -1,24 +1,14 @@
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, fireEvent, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import Modal from '../modal.svelte';
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 
 describe('Modal', () => {
   let isOpen = writable(true);
-  let currentValue = true;
 
   beforeEach(() => {
     isOpen = writable(true);
-    currentValue = true;
-
-    const unsubscribe = isOpen.subscribe((value) => {
-      currentValue = value;
-    });
-
-    afterEach(() => {
-      unsubscribe();
-    });
   });
 
   it('should close modal when close icon button is clicked', async () => {
@@ -29,7 +19,7 @@ describe('Modal', () => {
 
     await userEvent.click(closeButton);
 
-    expect(currentValue).toBe(false);
+    expect(get(isOpen)).toBe(false);
   });
 
   it('should close modal when clicked outside the modal', async () => {
@@ -38,7 +28,7 @@ describe('Modal', () => {
     const modal = screen.getByRole('dialog');
     await userEvent.click(modal.parentElement!);
 
-    expect(currentValue).toBe(false);
+    expect(get(isOpen)).toBe(false);
   });
 
   it('if open is true, modal should be visible', () => {
@@ -59,7 +49,7 @@ describe('Modal', () => {
     render(Modal, { isOpen });
 
     await fireEvent.keyDown(window, { key: 'Escape' });
-    expect(currentValue).toBe(false);
+    expect(get(isOpen)).toBe(false);
   });
 
   it('should focus on heading element on mount', () => {

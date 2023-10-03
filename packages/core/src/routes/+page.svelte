@@ -527,10 +527,7 @@ const notify = useNotify();
 
   <div>
     <Button on:click={handleOpenModal}>Open Modal</Button>
-    <Modal
-      isOpen={modalOpen}
-      on:close={handleCloseModal}
-    >
+    <Modal isOpen={modalOpen}>
       <span slot="title">This is the modal demo</span>
       <span slot="message"
         >Are you sure you want to kick off a notify toast?</span
