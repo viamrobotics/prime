@@ -28,11 +28,11 @@ Creates a modal overlay.
 import cx from 'classnames';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
-import { writable } from 'svelte/store';
+import type { Writable } from 'svelte/store';
 import { onMount } from 'svelte';
 
 /** Whether the modal is open. */
-export let isOpen = writable(false);
+export let isOpen: Writable<boolean>;
 
 $: if (typeof document !== 'undefined') {
   document.body.classList.toggle('overflow-hidden', $isOpen);
@@ -57,7 +57,7 @@ const handleEscapePress = (event: KeyboardEvent) => {
 onMount(() => {
   if ($isOpen) {
     const modalHeading = document.querySelector(
-      '#modal-heading'
+      '[role="heading"]'
     ) as HTMLElement;
     modalHeading?.focus();
   }
@@ -93,7 +93,6 @@ onMount(() => {
         class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
       >
         <h2
-          id="modal-heading"
           tabindex="-1"
           class="pr-12 text-lg font-semibold"
         >

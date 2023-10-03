@@ -64,8 +64,8 @@ describe('Modal', () => {
 
   it('should focus on heading element on mount', () => {
     render(Modal, { isOpen });
-    const heading = document.querySelector('#modal-heading');
-    const elementInFocus = document.activeElement;
-    expect(elementInFocus).toEqual(heading);
+    const modal = screen.getByRole('dialog');
+    const heading = within(modal).getByRole('heading');
+    expect(heading).toHaveFocus();
   });
 });
