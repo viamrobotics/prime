@@ -1,59 +1,60 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { render, fireEvent, screen } from '@testing-library/svelte';
 import Modal from '../modal.svelte';
+import { writable } from 'svelte/store';
 
 describe('Modal', () => {
-  it('should emit close event when close icon button is clicked', async () => {
-    const { component } = render(Modal, {
-      open: true,
+  let isOpen = writable(true);
+  let currentValue = true;
+
+  beforeEach(() => {
+    isOpen = writable(true);
+    currentValue = true;
+
+    const unsubscribe = isOpen.subscribe((value) => {
+      currentValue = value;
     });
 
-    const closeButton = screen.getByTitle('Close modal');
-    const onClose = vi.fn();
-    component.$on('close', onClose);
-    await fireEvent.click(closeButton);
-
-    expect(onClose).toBeCalled();
+    afterEach(() => {
+      unsubscribe();
+    });
   });
 
-  it('should emit close event when clicked outside the modal', async () => {
-    const { component } = render(Modal, {
-      open: true,
-    });
+  it('should close modal when close icon button is clicked', async () => {
+    render(Modal, { isOpen });
 
-    const onClose = vi.fn();
-    component.$on('close', onClose);
+    const closeButton = screen.getByTitle('Close modal');
+    await fireEvent.click(closeButton);
+
+    expect(currentValue).toBe(false);
+  });
+
+  it('should close modal when clicked outside the modal', async () => {
+    render(Modal, { isOpen });
 
     const modal = screen.getByRole('dialog');
-
     await fireEvent.click(modal.parentElement!);
 
-    expect(onClose).toBeCalled();
+    expect(currentValue).toBe(false);
   });
 
   it('if open is true, modal should be visible', () => {
-    render(Modal, {
-      open: true,
-    });
+    render(Modal, { isOpen });
     const modal = screen.getByRole('dialog');
     expect(modal).toBeTruthy();
   });
 
   it('if open is false, modal should not be visible', () => {
-    render(Modal, {
-      open: false,
-    });
+    isOpen.set(false);
+    render(Modal, { isOpen });
     const modal = screen.queryByRole('dialog');
-    expect(modal).toBeNull();
+    expect(modal).toBeFalsy();
   });
 
-  it('should emit close event when escape key is pressed', async () => {
-    const { component } = render(Modal, { open: true });
-
-    const onClose = vi.fn();
-    component.$on('close', onClose);
+  it('should close modal when escape key is pressed', async () => {
+    render(Modal, { isOpen });
 
     await fireEvent.keyDown(window, { key: 'Escape' });
-    expect(onClose).toHaveBeenCalled();
+    expect(currentValue).toBe(false);
   });
 });

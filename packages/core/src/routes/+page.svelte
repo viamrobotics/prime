@@ -38,22 +38,24 @@ import {
   Modal,
 } from '$lib';
 
+import { writable } from 'svelte/store';
+
 provideNotify();
 
 let buttonClickedTimes = 0;
 let disabled = true;
-let modalOpen = false;
+const modalOpen = writable(false);
 
 const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
   disabled = event.detail.value === 'Disabled';
 };
 
 const handleCloseModal = () => {
-  modalOpen = false;
+  modalOpen.set(false);
 };
 
 const handleOpenModal = () => {
-  modalOpen = true;
+  modalOpen.set(true);
 };
 const notify = useNotify();
 </script>
@@ -526,7 +528,7 @@ const notify = useNotify();
   <div>
     <Button on:click={handleOpenModal}>Open Modal</Button>
     <Modal
-      open={modalOpen}
+      isOpen={modalOpen}
       on:close={handleCloseModal}
     >
       <span slot="title">This is the modal demo</span>
