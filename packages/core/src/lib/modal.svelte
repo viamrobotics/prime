@@ -42,14 +42,14 @@ export let variant: 'small' | '' = '';
 
 const dispatch = createEventDispatcher<{
   /** Fires when the modal is requested to close. */
-  close: boolean;
+  close: void;
 }>();
 
 const handleCloseModal = () => {
   if (!open) {
     return;
   }
-  dispatch('close', true);
+  dispatch('close');
 };
 
 const handleEscapePress = (event: KeyboardEvent) => {
