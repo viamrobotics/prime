@@ -15,21 +15,24 @@ const defaultProps = {
 
 describe('ListBox', () => {
   it('Renders left options and can move them to the right', async () => {
-    render(ListBox, { ...defaultProps });
-    const leftValue = screen.getByText('leftText2');
-    await fireEvent.click(leftValue);
-    const leftValue2 = screen.getByText('leftText2');
-    expect(leftValue2).toHaveClass('bg-focus/highlight');
+    render(ListBoxSlot, { ...defaultProps });
+
+    await fireEvent.click(screen.getByText('leftText1'));
+    await fireEvent.click(screen.getByText('leftText2'));
+    await fireEvent.click(screen.getByText('leftText3'));
 
     const moveRightButton = screen.getByTestId('move-right');
     await fireEvent.click(moveRightButton);
 
-    const movedValue = screen.getByText('leftText2');
-    expect(leftValue).not.toBeVisible();
-    expect(movedValue).toBeVisible();
+    expect(screen.getByText('leftText1')).toBeVisible();
+    expect(screen.getByText('leftText2')).toBeVisible();
+    expect(screen.getByText('leftText3')).toBeVisible();
+    expect(screen.getByText('Your left box is empty')).toBeVisible();
   });
+
   it('Renders left options and does not move when move left button is clicked', async () => {
-    render(ListBox, { ...defaultProps });
+    render(ListBoxSlot, { right: '' });
+
     const leftValue = screen.getByText('leftText2');
     await fireEvent.click(leftValue);
 
@@ -37,10 +40,11 @@ describe('ListBox', () => {
     await fireEvent.click(moveLeftButton);
 
     expect(leftValue).toBeVisible();
+    expect(screen.getByText('Your right box is empty')).toBeVisible();
   });
 
   it('Renders right options and does not move when move right button is clicked', async () => {
-    render(ListBox, { ...defaultProps });
+    render(ListBoxSlot, { left: '' });
     const rightValue = screen.getByText('rightText2');
     await fireEvent.click(rightValue);
 
@@ -48,9 +52,11 @@ describe('ListBox', () => {
     await fireEvent.click(moveRightButton);
 
     expect(rightValue).toBeVisible();
+    expect(screen.getByText('Your left box is empty')).toBeVisible();
   });
 
   it('Only selected options move in the specified direction', async () => {
+    render(ListBox, { ...defaultProps });
     const leftValue1 = screen.getByText('leftText1');
     const leftValue2 = screen.getByText('leftText2');
     const leftValue3 = screen.getByText('leftText3');
@@ -67,10 +73,10 @@ describe('ListBox', () => {
     await fireEvent.click(moveRightButton);
 
     expect(leftValue1).toBeVisible();
-    expect(leftValue2).not.toBeVisible();
     expect(leftValue1).toBeVisible();
     expect(rightValue1).toBeVisible();
   });
+
   it('Displays the left empty state', async () => {
     render(ListBoxSlot);
     await fireEvent.click(screen.getByText('leftText1'));

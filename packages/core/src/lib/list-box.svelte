@@ -28,7 +28,7 @@ import { Icon } from '$lib';
 const dispatch = createEventDispatcher();
 
 // Toggle element on or off
-export let disabled: boolean;
+export let disabled = false;
 // Elements in the left list
 export let left = '';
 // Elements in the right list
@@ -39,8 +39,8 @@ export let leftlabel = '';
 export let rightlabel = '';
 // Height of the two boxes
 export let height = '200px';
-// ?????
-export let suffix: boolean;
+// Enable suffix that can be put in front of elements in the box
+export let suffix = false;
 
 type ListBoxSide = 'left' | 'right';
 
