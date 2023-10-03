@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { render, fireEvent, screen } from '@testing-library/svelte';
+import { render, fireEvent, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import Modal from '../modal.svelte';
 import { writable } from 'svelte/store';
@@ -24,7 +24,9 @@ describe('Modal', () => {
   it('should close modal when close icon button is clicked', async () => {
     render(Modal, { isOpen });
 
-    const closeButton = screen.getByTitle('Close modal');
+    const modal = screen.getByRole('dialog')
+	  const closeButton = within(modal).getByRole('button', { name: /close/iu });
+
     await userEvent.click(closeButton);
 
     expect(currentValue).toBe(false);
