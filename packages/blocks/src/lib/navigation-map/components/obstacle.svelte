@@ -141,6 +141,11 @@ useMapLibreEvent('mouseup', () => {
   draggingObstacle = false;
   map.dragPan.enable();
 });
+
+useMapLibreEvent('mouseout', () => {
+  draggingObstacle = false;
+  map.dragPan.enable();
+})
 </script>
 
 {#each obstacle.geometries as geometry, index (index)}
