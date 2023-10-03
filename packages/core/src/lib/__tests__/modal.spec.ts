@@ -24,8 +24,8 @@ describe('Modal', () => {
   it('should close modal when close icon button is clicked', async () => {
     render(Modal, { isOpen });
 
-    const modal = screen.getByRole('dialog')
-	  const closeButton = within(modal).getByRole('button', { name: /close/iu });
+    const modal = screen.getByRole('dialog');
+    const closeButton = within(modal).getByRole('button', { name: /close/iu });
 
     await userEvent.click(closeButton);
 

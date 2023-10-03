@@ -56,7 +56,9 @@ const handleEscapePress = (event: KeyboardEvent) => {
 
 onMount(() => {
   if ($isOpen) {
-    const modalHeading = document.getElementById('modal-heading');
+    const modalHeading = document.querySelector(
+      '#modal-heading'
+    ) as HTMLElement;
     modalHeading?.focus();
   }
 });
