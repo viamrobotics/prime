@@ -41,10 +41,6 @@ let headingElement: HTMLElement | undefined;
 
 $: headingElement?.focus();
 
-$: if (headingElement) {
-  requestAnimationFrame(() => headingElement?.focus());
-}
-
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 

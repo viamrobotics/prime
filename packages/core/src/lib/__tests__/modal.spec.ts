@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, fireEvent, screen, within } from '@testing-library/svelte';
+import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import Modal from '../modal.svelte';
 import { writable, get } from 'svelte/store';
@@ -13,20 +13,22 @@ describe('Modal', () => {
 
   it('should close modal when close icon button is clicked', async () => {
     render(Modal, { isOpen });
+    const user = userEvent.setup();
 
     const modal = screen.getByRole('dialog');
     const closeButton = within(modal).getByRole('button', { name: /close/iu });
 
-    await userEvent.click(closeButton);
+    await user.click(closeButton);
 
     expect(get(isOpen)).toBe(false);
   });
 
   it('should close modal when clicked outside the modal', async () => {
     render(Modal, { isOpen });
+    const user = userEvent.setup();
 
     const modal = screen.getByRole('dialog');
-    await userEvent.click(modal.parentElement!);
+    await user.click(modal.parentElement!);
 
     expect(get(isOpen)).toBe(false);
   });
@@ -47,8 +49,8 @@ describe('Modal', () => {
 
   it('should close modal when escape key is pressed', async () => {
     render(Modal, { isOpen });
-
-    await fireEvent.keyDown(window, { key: 'Escape' });
+    const user = userEvent.setup();
+    await user.keyboard('{Escape}');
     expect(get(isOpen)).toBe(false);
   });
 
