@@ -47,7 +47,7 @@ $: errorClasses =
     aria-disabled={disabled ? true : undefined}
     type="text"
     class={cx(
-      'h-[30px] w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none',
+      'h-7.5 w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none',
       defaultClasses,
       disabledClasses,
       warnClasses,

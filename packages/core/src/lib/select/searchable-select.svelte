@@ -174,7 +174,7 @@ $: {
               role="menuitem"
               tabindex="-1"
               class={cx(
-                'flex h-[30px] w-full items-center text-ellipsis whitespace-nowrap px-2 text-xs outline-none',
+                'flex h-7.5 w-full items-center text-ellipsis whitespace-nowrap px-2 text-xs outline-none',
                 {
                   'bg-light': $navigationIndex === index,
                 }
