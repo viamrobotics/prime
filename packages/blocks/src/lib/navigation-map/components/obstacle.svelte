@@ -31,6 +31,8 @@ let draggingObstacle = false;
 const pointermove = new THREE.Vector2();
 const pointerdown = new THREE.Vector2();
 
+$: debugMode = $environment === 'debug';
+
 const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
   ref.rotateX(-Math.PI / 2);
 };
@@ -92,7 +94,6 @@ const handlePointerMove = (event: MapMouseEvent) => {
   dispatch('update', obstacle);
 };
 
-$: debugMode = $environment === 'debug';
 $: name = obstacle.name;
 $: active = $hovered === name || $selected === name;
 $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(

@@ -6,7 +6,13 @@
 import * as THREE from 'three';
 import { T, createRawEventDispatcher } from '@threlte/core';
 import { useMapLibreEvent, useMapLibre } from '$lib';
-import { MercatorCoordinate, LngLat, type MapMouseEvent, type MapLayerMouseEvent, type MapLayerTouchEvent } from 'maplibre-gl';
+import {
+  MercatorCoordinate,
+  LngLat,
+  type MapMouseEvent,
+  type MapLayerMouseEvent,
+  type MapLayerTouchEvent,
+} from 'maplibre-gl';
 import { view } from '../stores';
 import * as math from '../lib/math';
 
@@ -32,17 +38,23 @@ const handlePointerDown = (event: MapLayerMouseEvent | MapLayerTouchEvent) => {
   drawing = true;
   downLngLat = event.lngLat;
   downMercator = math.lngLatToMercator(downLngLat);
-}
+};
 
 const handlePointerMove = (event: MapMouseEvent) => {
-  const moveMercator = math.lngLatToMercator(event.lngLat)
+  const moveMercator = math.lngLatToMercator(event.lngLat);
   const scale = moveMercator.meterInMercatorCoordinateUnits();
 
   moveSign.x = Math.sign(moveMercator.x - downMercator.x);
   moveSign.y = Math.sign(moveMercator.y - downMercator.y);
 
-  width = math.toPrecisionLevel(Math.abs(moveMercator.x - downMercator.x) / scale, 2);
-  height = math.toPrecisionLevel(Math.abs(moveMercator.y - downMercator.y) / scale, 2);
+  width = math.toPrecisionLevel(
+    Math.abs(moveMercator.x - downMercator.x) / scale,
+    2
+  );
+  height = math.toPrecisionLevel(
+    Math.abs(moveMercator.y - downMercator.y) / scale,
+    2
+  );
 };
 
 const handlePointerUp = () => {
@@ -53,7 +65,7 @@ const handlePointerUp = () => {
     -moveSign.x * (width / 2),
     -moveSign.y * (height / 2),
     scale
-  )
+  );
 
   downMercator.x -= offset.x;
   downMercator.y -= offset.y;
@@ -72,7 +84,7 @@ const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
 
 useMapLibreEvent('mousedown', (event) => {
   if (event.originalEvent.shiftKey) {
-    handlePointerDown(event)
+    handlePointerDown(event);
   }
 });
 

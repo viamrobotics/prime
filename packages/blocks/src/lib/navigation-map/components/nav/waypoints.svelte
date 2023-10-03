@@ -49,12 +49,13 @@ useMapLibreEvent('click', (event) => {
       <IconButton
         icon="image-filter-center-focus"
         label="Focus waypoint {index}"
-        on:click={() => map.flyTo({
-          zoom: 15,
-          duration: 800,
-          curve: 0.1,
-          center: [waypoint.lng, waypoint.lat],
-        })}
+        on:click={() =>
+          map.flyTo({
+            zoom: 15,
+            duration: 800,
+            curve: 0.1,
+            center: [waypoint.lng, waypoint.lat],
+          })}
       />
       <IconButton
         label="Remove waypoint {index}"
