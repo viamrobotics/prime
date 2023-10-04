@@ -3,9 +3,8 @@ import * as THREE from 'three';
 import { createEventDispatcher } from 'svelte';
 import { T, useThrelte } from '@threlte/core';
 import type { LngLat } from 'maplibre-gl';
-import { useMapLibreEvent } from '$lib';
 import type { Obstacle } from '../types';
-import { hovered, selected, view, obstacles, environment } from '../stores';
+import { view, obstacles, environment } from '../stores';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
 import { renderPlugin } from '../plugins/render';
 import { interactivityPlugin } from '../plugins/interactivity';
@@ -26,7 +25,7 @@ const { renderer } = useThrelte();
 const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
 const handleUpdate = () => {
-  $obstacles = $obstacles;
+  dispatch('update-obstacles', $obstacles);
 };
 
 const handleDraw = ({
@@ -57,20 +56,6 @@ $: flat = $view === '2D';
 // This clips against the map so that objects intersecting sea level will not render over the map
 $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 
-// Click to add an obstacle
-useMapLibreEvent('click', (event) => {
-  if ($hovered) {
-    return;
-  }
-
-  const location = event.lngLat;
-  const names = $obstacles.map((obstacle) => obstacle.name);
-  const name = createName(names, 'obstacle', $obstacles.length);
-  $obstacles = [createObstacle(name, location), ...$obstacles];
-  dispatch('update-obstacles', $obstacles);
-
-  $selected = name;
-});
 </script>
 
 <T.AmbientLight intensity={flat ? 2 : 1.5} />
@@ -81,7 +66,7 @@ useMapLibreEvent('click', (event) => {
 
 {#each $obstacles as obstacle (obstacle.name)}
   <ObstacleGeometries
-    {obstacle}
+    name={obstacle.name}
     on:update={handleUpdate}
   />
 {/each}

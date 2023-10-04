@@ -101,7 +101,7 @@ $: debugMode = $environment === 'debug';
 
 {#each $obstacles as { name, location, geometries }, index (index)}
   <li
-    class="group border-b border-b-medium pl-2 leading-[1] last:border-b-0"
+    class="group border-b border-b-medium pl-2 leading-[1] last:border-b-0 min-h-[30px] flex items-center"
     class:pb-3={debugMode}
     class:pt-1={debugMode}
     class:bg-light={$selected === name}
@@ -119,6 +119,11 @@ $: debugMode = $environment === 'debug';
               ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
             </small>
           {/if}
+          <IconButton
+            label="Delete {name}"
+            icon="trash-can-outline"
+            on:click={handleDeleteObstacle(name)}
+          />
           <IconButton
             icon="image-filter-center-focus"
             label="Focus {name}"
@@ -171,35 +176,12 @@ $: debugMode = $environment === 'debug';
           value={selectedObstacle.name}
         />
       </Label>
-
-      <div class="grow">
-        <IconButton
-          label="Delete {selectedObstacle.name}"
-          icon="trash-can-outline"
-          on:click={handleDeleteObstacle(selectedObstacle.name)}
-        />
-      </div>
     </div>
     <LnglatInput
       lng={selectedObstacle.location.lng}
       lat={selectedObstacle.location.lat}
       on:input={handleLngLatInput(selectedObstacle.name)}
-    >
-      <div class="grow">
-        <IconButton
-          label="Focus {selectedObstacle.name}"
-          icon="image-filter-center-focus"
-          on:click={() => {
-            if (selectedObstacle) {
-              handleSelect({
-                name: selectedObstacle.name,
-                location: selectedObstacle.location,
-              });
-            }
-          }}
-        />
-      </div>
-    </LnglatInput>
+    />
 
     {#each selectedObstacle.geometries as geometry, geoIndex (geoIndex)}
       <GeometryInputs

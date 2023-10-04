@@ -47,6 +47,11 @@ useMapLibreEvent('click', (event) => {
     </small>
     <div class="flex items-center gap-1.5">
       <IconButton
+        label="Remove waypoint {index}"
+        icon="trash-can-outline"
+        on:click={() => handleDeleteWaypoint(waypoint.id)}
+      />
+      <IconButton
         icon="image-filter-center-focus"
         label="Focus waypoint {index}"
         on:click={() =>
@@ -56,11 +61,6 @@ useMapLibreEvent('click', (event) => {
             curve: 0.1,
             center: [waypoint.lng, waypoint.lat],
           })}
-      />
-      <IconButton
-        label="Remove waypoint {index}"
-        icon="trash-can-outline"
-        on:click={() => handleDeleteWaypoint(waypoint.id)}
       />
     </div>
   </li>
