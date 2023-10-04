@@ -88,6 +88,16 @@ useMapLibreEvent('mousedown', (event) => {
   }
 });
 
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.shiftKey) {
+    map.getCanvas().classList.add('!cursor-crosshair')
+  }
+}
+
+const handleKeyup = () => {
+  map.getCanvas().classList.remove('!cursor-crosshair')
+}
+
 $: if (drawing) {
   map.on('mousemove', handlePointerMove);
   map.on('mouseup', handlePointerUp);
@@ -96,6 +106,11 @@ $: if (drawing) {
   map.off('mouseup', handlePointerUp);
 }
 </script>
+
+<svelte:window
+  on:keydown={handleKeydown}
+  on:keyup={handleKeyup}
+/>
 
 <T.Group userData.lngLat={downLngLat}>
   <T.Mesh

@@ -4,6 +4,7 @@
 <script lang="ts">
 import * as THREE from 'three';
 import { T } from '@threlte/core';
+import { view } from '../stores';
 
 /** The thickness of all axes */
 export let thickness = 0.05;
@@ -24,6 +25,7 @@ export let length = 10;
 </T.Mesh>
 
 <T.Mesh
+  visible={$view === '3D'}
   scale.y={length}
   scale.x={thickness}
   scale.z={thickness}

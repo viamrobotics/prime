@@ -73,7 +73,7 @@ const handleOrientationInput =
   };
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === 'Backspace' && $selected) {
+  if (event.key === 'Backspace' && $selected && document.activeElement?.tagName !== 'INPUT') {
     $obstacles = $obstacles.filter((obstacle) => obstacle.name !== $selected);
     $hovered = null;
     $selected = null;

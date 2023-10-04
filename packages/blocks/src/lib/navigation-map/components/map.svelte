@@ -77,7 +77,7 @@ let didHoverTooltip = Boolean(
           >
             {#if didHoverTooltip === false}
               <div
-                class="absolute h-full w-full animate-ping rounded-full bg-green-600"
+                class="absolute h-[28px] w-[28px] -m-1 animate-ping rounded-full bg-success-dark"
               />
             {/if}
             <div class="relative z-10 rounded-full bg-white">
