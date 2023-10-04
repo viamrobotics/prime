@@ -7,7 +7,11 @@ import type {
 } from '$lib';
 import { ViamObject3D } from '@viamrobotics/three';
 
-export const createGeometry = (type: Shapes, size = 5, rotation = 0): Geometry => {
+export const createGeometry = (
+  type: Shapes,
+  size = 5,
+  rotation = 0
+): Geometry => {
   const pose = new ViamObject3D();
   pose.orientationVector.th = rotation;
 

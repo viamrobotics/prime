@@ -47,7 +47,7 @@ const handleDraw = ({
   }
 
   $obstacles = [obstacle, ...$obstacles];
-  $selected = obstacle.name
+  $selected = obstacle.name;
 
   dispatch('update-obstacles', $obstacles);
 };
