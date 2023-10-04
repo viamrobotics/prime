@@ -218,7 +218,7 @@ const handleButtonClick = () => dispatch('buttonclick');
           {#each searchedOptions as { highlight, option }, index (option)}
             <li role="presentation">
               <label
-                class={cx('flex h-[30px] w-full items-center px-2', {
+                class={cx('flex h-7.5 w-full items-center px-2', {
                   'bg-light': $navigationIndex === index,
                 })}
                 on:mouseenter={() => handleOptionFocus(index)}
@@ -256,7 +256,7 @@ const handleButtonClick = () => dispatch('buttonclick');
                 tabindex="-1"
                 role="menuitem"
                 class={cx(
-                  'flex h-[30px] w-full items-center px-2 text-xs outline-none',
+                  'flex h-7.5 w-full items-center px-2 text-xs outline-none',
                   {
                     'bg-light': $navigationIndex === searchedOptions.length,
                   }

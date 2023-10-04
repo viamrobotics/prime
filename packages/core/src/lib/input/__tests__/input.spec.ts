@@ -10,7 +10,7 @@ describe('Input', () => {
     const input = screen.getByPlaceholderText('Enter your name');
 
     expect(input).toHaveClass(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
     expect(input).not.toHaveClass(
@@ -24,7 +24,7 @@ describe('Input', () => {
     const input = screen.getByPlaceholderText('Enter your name');
 
     expect(input).toHaveClass(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
     expect(input).toHaveClass(
@@ -40,7 +40,7 @@ describe('Input', () => {
     const input = screen.getByPlaceholderText('Enter your name');
 
     expect(input).toHaveClass(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
     expect(input).toHaveClass('bg-light border-transparent');

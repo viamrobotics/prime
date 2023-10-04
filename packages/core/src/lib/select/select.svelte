@@ -71,7 +71,7 @@ $: errorClasses =
     aria-disabled={disabled ? true : undefined}
     aria-invalid={isError ? true : undefined}
     class={cx(
-      'peer h-[30px] w-full appearance-none rounded-none border px-2 py-1.5 text-xs leading-tight outline-none',
+      'peer h-7.5 w-full appearance-none rounded-none border px-2 py-1.5 text-xs leading-tight outline-none',
       defaultClasses,
       disabledClasses,
       warnClasses,

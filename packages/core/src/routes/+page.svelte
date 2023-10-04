@@ -16,6 +16,9 @@ import {
   Radio,
   Tabs,
   Tooltip,
+  TooltipContainer,
+  TooltipTarget,
+  TooltipText,
   TextInput,
   NumericInput,
   SliderInput,
@@ -35,22 +38,24 @@ import {
   Modal,
 } from '$lib';
 
+import { writable } from 'svelte/store';
+
 provideNotify();
 
 let buttonClickedTimes = 0;
 let preventHandlerDisabled = true;
-let modalOpen = false;
+const modalOpen = writable(false);
 
 const handleTogglePreventHandler = (event: CustomEvent<boolean>) => {
   preventHandlerDisabled = event.detail;
 };
 
 const handleCloseModal = () => {
-  modalOpen = false;
+  modalOpen.set(false);
 };
 
 const handleOpenModal = () => {
-  modalOpen = true;
+  modalOpen.set(true);
 };
 const notify = useNotify();
 </script>
@@ -522,10 +527,7 @@ const notify = useNotify();
 
   <div>
     <Button on:click={handleOpenModal}>Open Modal</Button>
-    <Modal
-      open={modalOpen}
-      on:close={handleCloseModal}
-    >
+    <Modal isOpen={modalOpen}>
       <span slot="title">This is the modal demo</span>
       <span slot="message"
         >Are you sure you want to kick off a notify toast?</span
@@ -893,16 +895,33 @@ const notify = useNotify();
     <Tooltip
       let:tooltipID
       location="bottom"
+      state="visible"
     >
-      <p
-        aria-describedby={tooltipID}
-        class="flex items-center gap-1"
-      >
-        This element has a bottom tooltip and an icon!
-        <Icon name="information-outline" />
+      <p aria-describedby={tooltipID}>
+        This element has visible bottom tooltip.
       </p>
       <p slot="description">This is the tooltip text!</p>
     </Tooltip>
+
+    <div>
+      <TooltipContainer let:tooltipID>
+        <Label>
+          This element has a tooltip on an icon!
+          <TooltipTarget>
+            <Icon
+              tabindex="0"
+              cx="cursor-pointer"
+              name="information-outline"
+            />
+          </TooltipTarget>
+          <TextInput
+            slot="input"
+            aria-describedby={tooltipID}
+          />
+        </Label>
+        <TooltipText>This is the tooltip text!</TooltipText>
+      </TooltipContainer>
+    </div>
   </div>
 
   <!-- Vector Input -->
