@@ -7,31 +7,29 @@ import type {
 } from '$lib';
 import { ViamObject3D } from '@viamrobotics/three';
 
-export const defaultSize = 5;
-
-export const createGeometry = (type: Shapes): Geometry => {
+export const createGeometry = (type: Shapes, size = 5): Geometry => {
   switch (type) {
     case 'box': {
       return {
         type,
-        length: defaultSize * 2,
-        width: defaultSize * 2,
-        height: defaultSize * 2,
+        length: size * 2,
+        width: size * 2,
+        height: size * 2,
         pose: new ViamObject3D(),
       } satisfies BoxGeometry;
     }
     case 'sphere': {
       return {
         type,
-        radius: defaultSize,
+        radius: size,
         pose: new ViamObject3D(),
       } satisfies SphereGeometry;
     }
     case 'capsule': {
       return {
         type,
-        radius: defaultSize,
-        length: defaultSize * 2,
+        radius: size / 2,
+        length: size,
         pose: new ViamObject3D(),
       } satisfies CapsuleGeometry;
     }

@@ -90,13 +90,13 @@ useMapLibreEvent('mousedown', (event) => {
 
 const handleKeydown = (event: KeyboardEvent) => {
   if (event.shiftKey) {
-    map.getCanvas().classList.add('!cursor-crosshair')
+    map.getCanvas().classList.add('!cursor-crosshair');
   }
-}
+};
 
 const handleKeyup = () => {
-  map.getCanvas().classList.remove('!cursor-crosshair')
-}
+  map.getCanvas().classList.remove('!cursor-crosshair');
+};
 
 $: if (drawing) {
   map.on('mousemove', handlePointerMove);

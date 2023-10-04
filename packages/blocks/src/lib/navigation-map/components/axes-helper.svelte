@@ -19,8 +19,13 @@ export let length = 10;
   scale.z={thickness}
   rotation.z={Math.PI / 2}
   position.x={-length / 2}
+  renderOrder={10}
 >
-  <T is={new THREE.MeshBasicMaterial({ color: 'red' })} />
+  <!-- Don't depth test these materials: we always want them to render on top. -->
+  <T
+    is={new THREE.MeshBasicMaterial({ color: 'red' })}
+    depthTest={false}
+  />
   <T.CylinderGeometry args={[1, 1, 1]} />
 </T.Mesh>
 
@@ -30,8 +35,12 @@ export let length = 10;
   scale.x={thickness}
   scale.z={thickness}
   position.y={length / 2}
+  renderOrder={10}
 >
-  <T is={new THREE.MeshBasicMaterial({ color: 'blue' })} />
+  <T
+    is={new THREE.MeshBasicMaterial({ color: 'blue' })}
+    depthTest={false}
+  />
   <T.CylinderGeometry args={[1, 1, 1]} />
 </T.Mesh>
 
@@ -41,7 +50,11 @@ export let length = 10;
   scale.z={thickness}
   rotation.x={-Math.PI / 2}
   position.z={length / 2}
+  renderOrder={10}
 >
-  <T is={new THREE.MeshBasicMaterial({ color: 'green' })} />
+  <T
+    is={new THREE.MeshBasicMaterial({ color: 'green' })}
+    depthTest={false}
+  />
   <T.CylinderGeometry args={[1, 1, 1]} />
 </T.Mesh>

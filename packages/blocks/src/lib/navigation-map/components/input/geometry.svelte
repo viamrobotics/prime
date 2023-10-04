@@ -12,9 +12,23 @@ const dispatch = createEventDispatcher<{
   input: Geometry;
 }>();
 
+const getNormalizedSize = () => {
+  switch (geometry.type) {
+    case 'box':
+      return geometry.length > geometry.height
+        ? geometry.length / 2
+        : geometry.height / 2;
+    case 'sphere':
+      return geometry.radius;
+    case 'capsule':
+      return geometry.length;
+  }
+};
+
 const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
+  const currentSize = getNormalizedSize();
   const nextType = event.detail.value.toLowerCase() as Shapes;
-  dispatch('input', createGeometry(nextType));
+  dispatch('input', createGeometry(nextType, currentSize));
 };
 
 const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
