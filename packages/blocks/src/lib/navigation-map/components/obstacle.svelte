@@ -60,6 +60,14 @@ const handleMapPointerDown = (
     return;
   }
 
+  const ev = event.originalEvent;
+  const isManipulating = ev.metaKey || ev.ctrlKey || ev.altKey;
+
+  if (isManipulating) {
+    event.preventDefault();
+    map.getCanvas().classList.add('!cursor-ns-resize');
+  }
+
   pointerdown.set(event.point.x, event.point.y);
 
   const geometry = obstacle.geometries[0]!;
@@ -90,7 +98,7 @@ const handlePointerMove = (event: MapMouseEvent) => {
   }
 
   // Rotate
-  if (event.originalEvent.metaKey) {
+  if (event.originalEvent.metaKey || event.originalEvent.ctrlKey) {
     pointermove.set(event.point.x, event.point.y);
     pointermove.sub(pointerdown);
     obstacle.geometries[0]!.pose.orientationVector.th =
@@ -135,6 +143,7 @@ const handlePointerMove = (event: MapMouseEvent) => {
 const handlePointerUp = () => {
   draggingObstacle = false;
   map.dragPan.enable();
+  map.getCanvas().classList.remove('!cursor-ns-resize');
 };
 
 $: active = $hovered === name || $selected === name;
