@@ -25,7 +25,7 @@ export { extraClasses as cx };
   {id}
   role="menu"
   class={cx(
-    'w-max border border-medium py-1 shadow-sm filter-none',
+    'w-max border border-medium bg-white py-1 shadow-sm filter-none',
     extraClasses
   )}
 >
