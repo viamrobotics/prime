@@ -24,12 +24,12 @@ export {
   type TooltipVisibility,
 } from './tooltip';
 
-export { default as ContextMenu } from './context-menu/context-menu.svelte';
 export {
-  default as ContextMenuItem,
+  ContextMenu,
+  ContextMenuItem,
+  ContextMenuSeparator,
   type ContextMenuItemVariant,
-} from './context-menu/context-menu-item.svelte';
-export { default as ContextMenuSeparator } from './context-menu/context-menu-separator.svelte';
+} from './context-menu';
 
 export { default as Input, type InputState } from './input/input.svelte';
 export { default as NumericInput } from './input/numeric-input.svelte';

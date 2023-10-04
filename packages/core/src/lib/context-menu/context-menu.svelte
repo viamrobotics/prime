@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 A simple list menu with items, usually appears on click.
 ```svelte
 <ContextMenu>
@@ -14,15 +14,18 @@ A simple list menu with items, usually appears on click.
 <script lang="ts">
 import cx from 'classnames';
 
+export let id: string;
+
 /** Additional CSS classes to pass to the menu. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 </script>
 
 <div
+  {id}
   role="menu"
   class={cx(
-    'max-w-xs border border-medium py-1 shadow-sm filter-none',
+    'w-max border border-medium py-1 shadow-sm filter-none',
     extraClasses
   )}
 >
