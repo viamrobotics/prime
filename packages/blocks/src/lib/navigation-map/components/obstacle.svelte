@@ -127,6 +127,8 @@ const handlePointerMove = (event: MapMouseEvent) => {
     obstacle.location.lat = event.lngLat.lat;
   }
 
+  $obstacles = $obstacles;
+
   dispatch('update', obstacle);
 };
 

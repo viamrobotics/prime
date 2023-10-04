@@ -21,15 +21,17 @@ const handleInput = () => {
 };
 </script>
 
-<Label position="top">
-  Rotation
-  <SliderInput
-    slot="input"
-    bind:input
-    value={th}
-    placholder={0}
-    on:blur={handleInput}
-    on:input={handleInput}
-    on:keydown={(event) => event.key === 'Enter' && handleInput()}
-  />
-</Label>
+<div class="w-1/2">
+  <Label position="top">
+    Rotation (deg)
+    <SliderInput
+      slot="input"
+      bind:input
+      value={th}
+      placholder={0}
+      on:blur={handleInput}
+      on:input={handleInput}
+      on:keydown={(event) => event.key === 'Enter' && handleInput()}
+    />
+  </Label>
+</div>
