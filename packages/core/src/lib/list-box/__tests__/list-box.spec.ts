@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import userEvent from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event';
 import { ListBox } from '$lib';
 import { default as ListBoxSlot } from '../list-box-slot.svelte';
 
@@ -16,7 +16,7 @@ const defaultProps = {
 
 describe('ListBox', () => {
   it('Renders left options and can move them to the right', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
     render(ListBoxSlot, { ...defaultProps });
 
     await user.click(screen.getByText('leftText1'));
@@ -33,7 +33,7 @@ describe('ListBox', () => {
   });
 
   it('Renders left options and does not move when move left button is clicked', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
 
     render(ListBoxSlot, { right: '' });
 
@@ -48,7 +48,7 @@ describe('ListBox', () => {
   });
 
   it('Renders right options and does not move when move right button is clicked', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
 
     render(ListBoxSlot, { left: '' });
     const rightValue = screen.getByText('rightText2');
@@ -62,7 +62,7 @@ describe('ListBox', () => {
   });
 
   it('Only selected options move in the specified direction', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
 
     render(ListBox, { ...defaultProps });
     const leftValue1 = screen.getByText('leftText1');
@@ -86,7 +86,7 @@ describe('ListBox', () => {
   });
 
   it('Displays the left empty state', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
 
     render(ListBoxSlot);
     await user.click(screen.getByText('leftText1'));
@@ -98,7 +98,7 @@ describe('ListBox', () => {
     expect(screen.getByText('Your left box is empty')).toBeVisible();
   });
   it('Displays the right empty state', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
     render(ListBoxSlot);
 
     await user.click(screen.getByText('rightText1'));
