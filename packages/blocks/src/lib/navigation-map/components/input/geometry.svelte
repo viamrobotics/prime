@@ -27,8 +27,9 @@ const getNormalizedSize = () => {
 
 const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
   const currentSize = getNormalizedSize();
+  const currentRotation = geometry.pose.orientationVector.th;
   const nextType = event.detail.value.toLowerCase() as Shapes;
-  dispatch('input', createGeometry(nextType, currentSize));
+  dispatch('input', createGeometry(nextType, currentSize, currentRotation));
 };
 
 const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {

@@ -4,7 +4,7 @@ import { createEventDispatcher } from 'svelte';
 import { T, useThrelte } from '@threlte/core';
 import type { LngLat } from 'maplibre-gl';
 import type { Obstacle } from '../types';
-import { view, obstacles, environment } from '../stores';
+import { view, obstacles, selected, environment } from '../stores';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
 import { renderPlugin } from '../plugins/render';
 import { interactivityPlugin } from '../plugins/interactivity';
@@ -47,6 +47,7 @@ const handleDraw = ({
   }
 
   $obstacles = [obstacle, ...$obstacles];
+  $selected = obstacle.name
 
   dispatch('update-obstacles', $obstacles);
 };
