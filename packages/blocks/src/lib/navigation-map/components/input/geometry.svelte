@@ -14,14 +14,17 @@ const dispatch = createEventDispatcher<{
 
 const getNormalizedSize = () => {
   switch (geometry.type) {
-    case 'box':
+    case 'box': {
       return geometry.length > geometry.height
         ? geometry.length / 2
         : geometry.height / 2;
-    case 'sphere':
+    }
+    case 'sphere': {
       return geometry.radius;
-    case 'capsule':
+    }
+    case 'capsule': {
       return geometry.length;
+    }
   }
 };
 

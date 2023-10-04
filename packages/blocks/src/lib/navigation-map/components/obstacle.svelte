@@ -42,7 +42,7 @@ const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
   ref.rotateX(-Math.PI / 2);
 };
 
-const handlePointerDown = (name: string) => {
+const handlePointerDown = () => {
   $selected = name;
 
   if (debugMode) {
@@ -163,7 +163,7 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
     rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
     on:pointerenter={() => ($hovered = name)}
     on:pointerleave={() => ($hovered = null)}
-    on:pointerdown={() => handlePointerDown(name)}
+    on:pointerdown={() => handlePointerDown()}
   >
     {#if geometry.type === 'box'}
       {#if active}
