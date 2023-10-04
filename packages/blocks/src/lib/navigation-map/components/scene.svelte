@@ -55,7 +55,6 @@ $: flat = $view === '2D';
 
 // This clips against the map so that objects intersecting sea level will not render over the map
 $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
-
 </script>
 
 <T.AmbientLight intensity={flat ? 2 : 1.5} />

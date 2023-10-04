@@ -31,6 +31,10 @@ const toggleTileset = () => {
     satellite ? 'visible' : 'none'
   );
 };
+
+let didHoverTooltip = Boolean(
+  localStorage.getItem('navigation-service-card-tooltip-hovered')
+);
 </script>
 
 <div class="relative h-full w-full items-stretch sm:flex">
@@ -61,12 +65,29 @@ const toggleTileset = () => {
     <div class="absolute right-12 top-2.5 z-10 flex items-center gap-2">
       {#if $environment === 'configure'}
         <Tooltip>
-          <div class="rounded-full bg-white">
-            <Icon
-              size="lg"
-              name="help-circle-outline"
-            />
+          <div
+            class="relative"
+            on:pointerenter={() => {
+              didHoverTooltip = true;
+              localStorage.setItem(
+                'navigation-service-card-tooltip-hovered',
+                'true'
+              );
+            }}
+          >
+            {#if didHoverTooltip === false}
+              <div
+                class="absolute h-full w-full animate-ping rounded-full bg-green-600"
+              />
+            {/if}
+            <div class="relative z-10 rounded-full bg-white">
+              <Icon
+                size="lg"
+                name="help-circle-outline"
+              />
+            </div>
           </div>
+
           <div
             class="flex flex-col p-2"
             slot="description"

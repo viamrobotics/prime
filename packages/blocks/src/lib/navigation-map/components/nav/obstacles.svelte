@@ -101,7 +101,7 @@ $: debugMode = $environment === 'debug';
 
 {#each $obstacles as { name, location, geometries }, index (index)}
   <li
-    class="group border-b border-b-medium pl-2 leading-[1] last:border-b-0 min-h-[30px] flex items-center"
+    class="group flex min-h-[30px] items-center border-b border-b-medium pl-2 leading-[1] last:border-b-0"
     class:pb-3={debugMode}
     class:pt-1={debugMode}
     class:bg-light={$selected === name}

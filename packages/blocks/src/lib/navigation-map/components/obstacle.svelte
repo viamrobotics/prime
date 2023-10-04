@@ -2,7 +2,11 @@
 import { theme } from '@viamrobotics/prime-core/theme';
 import * as THREE from 'three';
 import { T, createRawEventDispatcher } from '@threlte/core';
-import type { MapMouseEvent, MapLayerMouseEvent, MapLayerTouchEvent } from 'maplibre-gl';
+import type {
+  MapMouseEvent,
+  MapLayerMouseEvent,
+  MapLayerTouchEvent,
+} from 'maplibre-gl';
 import { useMapLibre, type Obstacle, useMapLibreEvent } from '$lib';
 import { view, hovered, selected, environment, obstacles } from '../stores';
 import AxesHelper from './axes-helper.svelte';
@@ -32,7 +36,7 @@ const pointermove = new THREE.Vector2();
 const pointerdown = new THREE.Vector2();
 
 $: debugMode = $environment === 'debug';
-$: obstacle = $obstacles.find((item) => item.name === name)!
+$: obstacle = $obstacles.find((item) => item.name === name)!;
 
 const handleGeometryCreate = ({ ref }: { ref: THREE.BufferGeometry }) => {
   ref.rotateX(-Math.PI / 2);
@@ -49,7 +53,9 @@ const handlePointerDown = (name: string) => {
   draggingObstacle = true;
 };
 
-const handleMapPointerDown = (event: MapLayerMouseEvent | MapLayerTouchEvent) => {
+const handleMapPointerDown = (
+  event: MapLayerMouseEvent | MapLayerTouchEvent
+) => {
   if (debugMode) {
     return;
   }
@@ -76,7 +82,7 @@ const handleMapPointerDown = (event: MapLayerMouseEvent | MapLayerTouchEvent) =>
       break;
     }
   }
-}
+};
 
 const handlePointerMove = (event: MapMouseEvent) => {
   if ($selected === null) {
@@ -127,7 +133,7 @@ const handlePointerMove = (event: MapMouseEvent) => {
 const handlePointerUp = () => {
   draggingObstacle = false;
   map.dragPan.enable();
-}
+};
 
 $: active = $hovered === name || $selected === name;
 $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
@@ -143,12 +149,9 @@ $: if (draggingObstacle) {
 }
 
 useMapLibreEvent('mousedown', handleMapPointerDown);
-
 </script>
 
-<svelte:window
-  on:pointerup={handlePointerUp}
-/>
+<svelte:window on:pointerup={handlePointerUp} />
 
 {#each obstacle.geometries as geometry, index (index)}
   <T.Mesh
