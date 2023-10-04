@@ -2,7 +2,7 @@
 import { Radio, VectorInput } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import type { Geometry, Shapes } from '$lib';
-import { createGeometry } from '../../lib/geometry';
+import { createGeometry } from '../../lib/create-geometry';
 
 /** The geometry to edit. */
 export let geometry: Geometry;
@@ -12,9 +12,27 @@ const dispatch = createEventDispatcher<{
   input: Geometry;
 }>();
 
+const getNormalizedSize = () => {
+  switch (geometry.type) {
+    case 'box': {
+      return geometry.length > geometry.height
+        ? geometry.length / 2
+        : geometry.height / 2;
+    }
+    case 'sphere': {
+      return geometry.radius;
+    }
+    case 'capsule': {
+      return geometry.length;
+    }
+  }
+};
+
 const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
+  const currentSize = getNormalizedSize();
+  const currentRotation = geometry.pose.orientationVector.th;
   const nextType = event.detail.value.toLowerCase() as Shapes;
-  dispatch('input', createGeometry(nextType));
+  dispatch('input', createGeometry(nextType, currentSize, currentRotation));
 };
 
 const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
