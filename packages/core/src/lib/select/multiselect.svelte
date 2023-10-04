@@ -16,7 +16,7 @@ For selecting multiple options from a list.
 import cx from 'classnames';
 
 import { clickOutside } from '$lib/click-outside';
-import { useUniqueId } from '$lib/unique-id';
+import { uniqueId } from '$lib/unique-id';
 
 import SelectMenu from './select-menu.svelte';
 import type { SelectState } from './select.svelte';
@@ -85,7 +85,7 @@ const dispatch = createSearchableSelectDispatcher<{
   clear: null;
 }>();
 
-const menuId = useUniqueId('multiselect');
+const menuId = uniqueId('multiselect');
 
 let menu: HTMLUListElement;
 
@@ -218,7 +218,7 @@ const handleButtonClick = () => dispatch('buttonclick');
           {#each searchedOptions as { highlight, option }, index (option)}
             <li role="presentation">
               <label
-                class={cx('flex h-[30px] w-full items-center px-2', {
+                class={cx('flex h-7.5 w-full items-center px-2', {
                   'bg-light': $navigationIndex === index,
                 })}
                 on:mouseenter={() => handleOptionFocus(index)}
@@ -256,7 +256,7 @@ const handleButtonClick = () => dispatch('buttonclick');
                 tabindex="-1"
                 role="menuitem"
                 class={cx(
-                  'flex h-[30px] w-full items-center px-2 text-xs outline-none',
+                  'flex h-7.5 w-full items-center px-2 text-xs outline-none',
                   {
                     'bg-light': $navigationIndex === searchedOptions.length,
                   }

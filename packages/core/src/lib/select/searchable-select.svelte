@@ -17,7 +17,7 @@ import cx from 'classnames';
 import SelectMenu from './select-menu.svelte';
 import type { SelectState } from './select.svelte';
 import { type SortOptions, getSearchResults } from './search';
-import { useUniqueId } from '$lib/unique-id';
+import { uniqueId } from '$lib/unique-id';
 import { clickOutside } from '$lib/click-outside';
 import { selectControls } from './controls';
 import { createSearchableSelectDispatcher } from './dispatcher';
@@ -64,7 +64,7 @@ const dispatch = createSearchableSelectDispatcher<{
   input: string | undefined;
 }>();
 
-const menuId = useUniqueId('searchable-select');
+const menuId = uniqueId('searchable-select');
 
 let menu: HTMLUListElement;
 
@@ -174,7 +174,7 @@ $: {
               role="menuitem"
               tabindex="-1"
               class={cx(
-                'flex h-[30px] w-full items-center text-ellipsis whitespace-nowrap px-2 text-xs outline-none',
+                'flex h-7.5 w-full items-center text-ellipsis whitespace-nowrap px-2 text-xs outline-none',
                 {
                   'bg-light': $navigationIndex === index,
                 }

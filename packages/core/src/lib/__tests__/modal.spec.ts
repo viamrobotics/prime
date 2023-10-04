@@ -1,38 +1,63 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent } from '@testing-library/svelte';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { render, screen, within } from '@testing-library/svelte';
+import userEvent from '@testing-library/user-event';
 import Modal from '../modal.svelte';
+import { writable, get } from 'svelte/store';
 
 describe('Modal', () => {
-  it('should emit close event when close icon button is clicked', async () => {
-    const { getByTitle, component } = render(Modal, {
-      open: true,
-    });
+  let isOpen = writable(true);
 
-    const closeButton = getByTitle('Close modal');
-    const onClose = vi.fn();
-    component.$on('close', onClose);
-    await fireEvent.click(closeButton);
-
-    expect(onClose).toBeCalledWith(expect.objectContaining({ detail: true }));
+  beforeEach(() => {
+    isOpen = writable(true);
   });
 
-  it('should emit close event when clicked outside the modal', async () => {
-    const { container, component } = render(Modal, {
-      open: true,
-    });
+  it('should close modal when close icon button is clicked', async () => {
+    render(Modal, { isOpen });
+    const user = userEvent.setup();
 
-    const onClose = vi.fn();
-    component.$on('close', onClose);
+    const modal = screen.getByRole('dialog');
+    const closeButton = within(modal).getByRole('button', { name: /close/iu });
 
-    const background = container.querySelector('div[role="button"]');
-    if (!background) {
-      throw new Error('Background not found');
-    }
+    await user.click(closeButton);
 
-    await fireEvent.click(background);
+    expect(get(isOpen)).toBe(false);
+  });
 
-    expect(onClose).toHaveBeenLastCalledWith(
-      expect.objectContaining({ detail: true })
-    );
+  it('should close modal when clicked outside the modal', async () => {
+    render(Modal, { isOpen });
+    const user = userEvent.setup();
+
+    const modal = screen.getByRole('dialog');
+    await user.click(modal.parentElement!);
+
+    expect(get(isOpen)).toBe(false);
+  });
+
+  it('if open is true, modal should be visible', () => {
+    render(Modal, { isOpen });
+    const modal = screen.queryByRole('dialog');
+    expect(modal).toBeInTheDocument();
+    expect(modal).toHaveAttribute('aria-modal', 'true');
+  });
+
+  it('if open is false, modal should not be visible', () => {
+    isOpen.set(false);
+    render(Modal, { isOpen });
+    const modal = screen.queryByRole('dialog');
+    expect(modal).not.toBeInTheDocument();
+  });
+
+  it('should close modal when escape key is pressed', async () => {
+    render(Modal, { isOpen });
+    const user = userEvent.setup();
+    await user.keyboard('{Escape}');
+    expect(get(isOpen)).toBe(false);
+  });
+
+  it('should focus on heading element on mount', () => {
+    render(Modal, { isOpen });
+    const modal = screen.getByRole('dialog');
+    const heading = within(modal).getByRole('heading');
+    expect(heading).toHaveFocus();
   });
 });
