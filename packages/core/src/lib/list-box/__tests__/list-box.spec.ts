@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
+import userEvent from '@testing-library/user-event'
 import { ListBox } from '$lib';
 import { default as ListBoxSlot } from '../list-box-slot.svelte';
 
@@ -15,14 +16,15 @@ const defaultProps = {
 
 describe('ListBox', () => {
   it('Renders left options and can move them to the right', async () => {
+    const user = userEvent.setup()
     render(ListBoxSlot, { ...defaultProps });
 
-    await fireEvent.click(screen.getByText('leftText1'));
-    await fireEvent.click(screen.getByText('leftText2'));
-    await fireEvent.click(screen.getByText('leftText3'));
+    await user.click(screen.getByText('leftText1'));
+    await user.click(screen.getByText('leftText2'));
+    await user.click(screen.getByText('leftText3'));
 
     const moveRightButton = screen.getByTestId('move-right');
-    await fireEvent.click(moveRightButton);
+    await user.click(moveRightButton);
 
     expect(screen.getByText('leftText1')).toBeVisible();
     expect(screen.getByText('leftText2')).toBeVisible();
@@ -31,31 +33,37 @@ describe('ListBox', () => {
   });
 
   it('Renders left options and does not move when move left button is clicked', async () => {
+    const user = userEvent.setup()
+
     render(ListBoxSlot, { right: '' });
 
     const leftValue = screen.getByText('leftText2');
-    await fireEvent.click(leftValue);
+    await user.click(leftValue);
 
     const moveLeftButton = screen.getByTestId('move-left');
-    await fireEvent.click(moveLeftButton);
+    await user.click(moveLeftButton);
 
     expect(leftValue).toBeVisible();
     expect(screen.getByText('Your right box is empty')).toBeVisible();
   });
 
   it('Renders right options and does not move when move right button is clicked', async () => {
+    const user = userEvent.setup()
+
     render(ListBoxSlot, { left: '' });
     const rightValue = screen.getByText('rightText2');
-    await fireEvent.click(rightValue);
+    await user.click(rightValue);
 
     const moveRightButton = screen.getByTestId('move-right');
-    await fireEvent.click(moveRightButton);
+    await user.click(moveRightButton);
 
     expect(rightValue).toBeVisible();
     expect(screen.getByText('Your left box is empty')).toBeVisible();
   });
 
   it('Only selected options move in the specified direction', async () => {
+    const user = userEvent.setup()
+
     render(ListBox, { ...defaultProps });
     const leftValue1 = screen.getByText('leftText1');
     const leftValue2 = screen.getByText('leftText2');
@@ -67,10 +75,10 @@ describe('ListBox', () => {
     expect(leftValue3).toBeVisible();
     expect(rightValue1).toBeVisible();
 
-    await fireEvent.click(leftValue2);
+    await user.click(leftValue2);
 
     const moveRightButton = screen.getByTestId('move-right');
-    await fireEvent.click(moveRightButton);
+    await user.click(moveRightButton);
 
     expect(leftValue1).toBeVisible();
     expect(leftValue1).toBeVisible();
@@ -78,23 +86,26 @@ describe('ListBox', () => {
   });
 
   it('Displays the left empty state', async () => {
-    render(ListBoxSlot);
-    await fireEvent.click(screen.getByText('leftText1'));
-    await fireEvent.click(screen.getByText('leftText2'));
-    await fireEvent.click(screen.getByText('leftText3'));
+    const user = userEvent.setup()
 
-    await fireEvent.click(screen.getByTestId('move-right'));
+    render(ListBoxSlot);
+    await user.click(screen.getByText('leftText1'));
+    await user.click(screen.getByText('leftText2'));
+    await user.click(screen.getByText('leftText3'));
+
+    await user.click(screen.getByTestId('move-right'));
 
     expect(screen.getByText('Your left box is empty')).toBeVisible();
   });
   it('Displays the right empty state', async () => {
+    const user = userEvent.setup()
     render(ListBoxSlot);
 
-    await fireEvent.click(screen.getByText('rightText1'));
-    await fireEvent.click(screen.getByText('rightText2'));
-    await fireEvent.click(screen.getByText('rightText3'));
+    await user.click(screen.getByText('rightText1'));
+    await user.click(screen.getByText('rightText2'));
+    await user.click(screen.getByText('rightText3'));
 
-    await fireEvent.click(screen.getByTestId('move-left'));
+    await user.click(screen.getByTestId('move-left'));
 
     expect(screen.getByText('Your right box is empty')).toBeVisible();
   });
