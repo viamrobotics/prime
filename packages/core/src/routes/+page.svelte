@@ -38,6 +38,7 @@ import {
   useNotify,
   Modal,
 } from '$lib';
+import { uniqueId } from 'lodash';
 
 import { writable } from 'svelte/store';
 
@@ -228,22 +229,18 @@ const notify = useNotify();
 
   <!-- Context Menu -->
   <h1 class="text-2xl">Context Menu</h1>
-  <ContextMenu>
-    <ContextMenuItem label="label 1" />
+  <ContextMenu id={uniqueId('context-menu')}>
+    <ContextMenuItem>label 1</ContextMenuItem>
     <ContextMenuSeparator />
-    <ContextMenuItem
-      label="label 2"
-      variant="primary"
-    />
-    <ContextMenuItem
-      icon="trash-can-outline"
-      label="label 3"
-    />
+    <ContextMenuItem variant="primary">label 2</ContextMenuItem>
+    <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
     <ContextMenuItem
       icon="close"
-      label="danger"
       variant="danger"
-    />
+      on:click={() => console.log('oh no')}
+    >
+      danger
+    </ContextMenuItem>
   </ContextMenu>
 
   <!-- Icon -->
