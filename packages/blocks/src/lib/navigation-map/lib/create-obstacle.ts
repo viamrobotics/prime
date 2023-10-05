@@ -1,5 +1,5 @@
 import type { Obstacle, Shapes, LngLat } from '$lib';
-import { createGeometry } from './geometry';
+import { createGeometry } from './create-geometry';
 
 export const createObstacle = (
   name: string,
