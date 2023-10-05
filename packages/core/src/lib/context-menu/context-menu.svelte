@@ -14,6 +14,7 @@ A simple list menu with items, usually appears on click.
 <script lang="ts">
 import cx from 'classnames';
 
+/** ID attribute of the menu element. */
 export let id: string;
 
 /** Additional CSS classes to pass to the menu. */
