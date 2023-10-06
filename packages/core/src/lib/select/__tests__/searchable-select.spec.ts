@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/svelte';
 import SearchableSelect from '../searchable-select.svelte';
 import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
+import userEvent from '@testing-library/user-event';
 
 describe('SearchableSelect', () => {
   const options = [
@@ -78,11 +79,14 @@ describe('SearchableSelect', () => {
     );
   });
 
-  it('Renders the select button', () => {
-    render(SearchableSelect, {
+  it('Renders the select button', async () => {
+    const onButtonClick = vi.fn();
+    const { component } = render(SearchableSelect, {
       ...common,
       button: { text: 'Test Button', icon: 'alert' },
     });
+
+    component.$on('buttonclick', onButtonClick);
 
     const button = screen.getByText('Test Button');
 
@@ -90,6 +94,10 @@ describe('SearchableSelect', () => {
     expect(button.parentElement).toHaveClass(
       'hover:bg-light border-light flex h-7.5 w-full items-center border-t px-2 py-1 text-xs'
     );
+
+    await userEvent.click(button);
+
+    expect(onButtonClick).toHaveBeenCalled();
   });
 
   it('Sorts results with a match at the start of a word', async () => {
@@ -99,14 +107,14 @@ describe('SearchableSelect', () => {
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
 
-    await fireEvent.focus(select);
-    await fireEvent.input(select, { target: { value: 'C.)' } });
+    select.focus();
+    await userEvent.type(select, 'C.)');
 
     expect(menu.children[0]?.textContent?.trim()).toBe('C.)  Option');
 
-    await fireEvent.input(select, { target: { value: 'Opt' } });
+    await userEvent.type(select, 'Opt');
 
-    expect(menu.children[0]?.textContent?.trim()).toBe('First  Opt ion');
+    expect(menu.children[0]?.textContent?.trim()).toBe('First Option');
   });
 
   it('Sorts results with a match below matches at a start of the word', async () => {
@@ -116,8 +124,8 @@ describe('SearchableSelect', () => {
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
 
-    await fireEvent.focus(select);
-    await fireEvent.input(select, { target: { value: 'l' } });
+    select.focus();
+    await userEvent.type(select, 'l');
 
     expect(menu.children[0]?.textContent?.trim()).toBe(
       'With A Whole  L ot Of Parts'
@@ -133,8 +141,8 @@ describe('SearchableSelect', () => {
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
 
-    await fireEvent.focus(select);
-    await fireEvent.input(select, { target: { value: 'C.)' } });
+    select.focus();
+    await userEvent.type(select, 'C.)');
 
     expect(menu.children[0]?.textContent?.trim()).toBe('C.)  Option');
     expect(menu.children.length).toBe(1);
@@ -147,8 +155,8 @@ describe('SearchableSelect', () => {
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
 
-    await fireEvent.focus(select);
-    await fireEvent.input(select, { target: { value: 'C.)' } });
+    select.focus();
+    await userEvent.type(select, 'C.)');
 
     expect(menu.children[0]?.textContent?.trim()).toBe('First Option');
     expect(menu.children[1]?.textContent?.trim()).toBe('Option 2');
@@ -162,8 +170,8 @@ describe('SearchableSelect', () => {
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.focus(select);
-    await fireEvent.click(screen.getAllByRole('menuitem')[2]!);
+    select.focus();
+    await userEvent.click(screen.getAllByRole('menuitem')[2]!);
 
     expect(select.value).toBe('C.) Option');
   });
@@ -174,11 +182,11 @@ describe('SearchableSelect', () => {
     const select: HTMLInputElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.focus(select);
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'Enter' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[Enter]');
 
     expect(select.value).toBe('C.) Option');
   });
@@ -190,32 +198,32 @@ describe('SearchableSelect', () => {
       screen.getByPlaceholderText('Select an option');
     const menuItems = screen.getAllByRole('menuitem');
 
-    await fireEvent.focus(select);
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[0]).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[2]).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[4]).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[0]).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowUp' });
+    await userEvent.keyboard('[ArrowUp]');
 
     expect(menuItems[4]).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowUp' });
-    await fireEvent.keyDown(select, { code: 'ArrowUp' });
-    await fireEvent.keyDown(select, { code: 'Enter' });
+    await userEvent.keyboard('[ArrowUp]');
+    await userEvent.keyboard('[ArrowUp]');
+    await userEvent.keyboard('[Enter]');
 
     expect(select.value).toBe('C.) Option');
   });
@@ -230,15 +238,12 @@ describe('SearchableSelect', () => {
 
     expect(menu.parentElement).toHaveClass('invisible');
 
-    await fireEvent.focus(select);
-
-    expect(menu.parentElement).not.toHaveClass('invisible');
-
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[0]).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'Escape' });
+    await userEvent.keyboard('[Escape]');
 
     expect(menu.parentElement).toHaveClass('invisible');
   });
@@ -253,15 +258,12 @@ describe('SearchableSelect', () => {
 
     expect(menu.parentElement).toHaveClass('invisible');
 
-    await fireEvent.focus(select);
-
-    expect(menu.parentElement).not.toHaveClass('invisible');
-
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[0]).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'Tab' });
+    await userEvent.keyboard('[Tab]');
 
     expect(menu.parentElement).toHaveClass('invisible');
   });

@@ -44,9 +44,11 @@ export const selectControls = () => {
     navigationIndex.set(next);
   };
 
-  const scrollToOption = (menu: HTMLUListElement) => {
-    const option = menu.children[get(navigationIndex)]! as HTMLLIElement;
-    ensureOptionIsVisible(menu, option);
+  const scrollToOption = (menu: HTMLUListElement | undefined) => {
+    const option = menu?.children[get(navigationIndex)];
+    if (option) {
+      ensureOptionIsVisible(menu, option as HTMLLIElement);
+    }
   };
 
   const handleNavigation = (
