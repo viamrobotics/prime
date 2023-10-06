@@ -807,10 +807,7 @@ const notify = useNotify();
       disabled
     />
 
-    <Switch
-      on
-      annotated
-    >
+    <Switch on>
       <svelte:fragment slot="on">Enabled</svelte:fragment>
       <svelte:fragment slot="off">Disabled</svelte:fragment>
     </Switch>

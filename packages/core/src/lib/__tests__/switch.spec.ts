@@ -45,7 +45,7 @@ describe('Switch', () => {
   });
 
   it('Renders annotated switch with custom annotation', async () => {
-    render(AnnotatedSwitch, { annotated: true });
+    render(AnnotatedSwitch);
 
     expect(screen.getByText('Disabled')).toBeVisible();
 
