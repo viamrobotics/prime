@@ -4,27 +4,25 @@ import {
   ContextMenu,
   ContextMenuItem,
   ContextMenuSeparator,
+  uniqueId,
 } from '@viamrobotics/prime-core';
+
+const menuID = uniqueId('context-menu');
 </script>
 
 <Meta title="Elements/Context menu" />
 
 <Story name="Basic">
-  <ContextMenu>
-    <ContextMenuItem label="Just a label" />
-    <ContextMenuItem
-      label="With icon"
-      icon="trash-can-outline"
-    />
+  <ContextMenu id={menuID}>
+    <ContextMenuItem>Just a label</ContextMenuItem>
+    <ContextMenuItem icon="trash-can-outline">With icon</ContextMenuItem>
     <ContextMenuSeparator />
+    <ContextMenuItem variant="primary">Primary</ContextMenuItem>
     <ContextMenuItem
-      label="Primary"
-      variant="primary"
-    />
-    <ContextMenuItem
-      label="Danger"
       icon="close"
       variant="danger"
-    />
+    >
+      Danger
+    </ContextMenuItem>
   </ContextMenu>
 </Story>
