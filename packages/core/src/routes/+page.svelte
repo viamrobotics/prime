@@ -939,5 +939,4 @@ const notify = useNotify();
       console.log('VectorInput input', event);
     }}
   />
-
 </div>
