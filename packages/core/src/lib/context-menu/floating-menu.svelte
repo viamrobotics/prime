@@ -36,36 +36,34 @@ $: style.register({ controlElement, menuElement });
 
 <svelte:document on:keydown={isOpen ? handleEscape : undefined} />
 
-<div>
-  <button
-    class={cx(buttonCX)}
-    aria-haspopup="menu"
-    aria-controls={menuID}
-    aria-expanded={isOpen}
-    on:click={isOpen ? closeMenu : openMenu}
-    bind:this={controlElement}
-  >
-    <slot
-      name="control"
-      {isOpen}
-    />
-  </button>
+<button
+  class={cx(buttonCX)}
+  aria-haspopup="menu"
+  aria-controls={menuID}
+  aria-expanded={isOpen}
+  on:click={isOpen ? closeMenu : openMenu}
+  bind:this={controlElement}
+>
+  <slot
+    name="control"
+    {isOpen}
+  />
+</button>
 
-  {#if isOpen}
-    <div
-      use:clickOutside={handleClickOutside}
-      bind:this={menuElement}
-      class="absolute left-0 top-0 z-max w-max"
-      class:invisible={!$style}
-      style:top={$style?.top}
-      style:left={$style?.left}
+{#if isOpen}
+  <div
+    use:clickOutside={handleClickOutside}
+    bind:this={menuElement}
+    class="absolute left-0 top-0 z-max w-max"
+    class:invisible={!$style}
+    style:top={$style?.top}
+    style:left={$style?.left}
+  >
+    <ContextMenu
+      id={menuID}
+      cx={menuCX}
     >
-      <ContextMenu
-        id={menuID}
-        cx={menuCX}
-      >
-        <slot name="items" />
-      </ContextMenu>
-    </div>
-  {/if}
-</div>
+      <slot name="items" />
+    </ContextMenu>
+  </div>
+{/if}
