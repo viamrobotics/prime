@@ -942,26 +942,26 @@ const notify = useNotify();
   />
 
   <!--  List Box -->
-  <div>  
+  <div>
     <ListBox
       disabled={false}
-      left={['leftText','leftText2','leftText3']}
-      right={['rightText','rightText2','rightText3']}
+      left={['leftText', 'leftText2', 'leftText3']}
+      right={['rightText', 'rightText2', 'rightText3']}
       leftlabel={['Left']}
       rightlabel={['Right']}
-      height='200px'
+      height="200px"
       suffix={false}
     >
-    <div slot="left-empty">Your left box is empty</div>
-    <div slot="right-empty">Your right box is empty</div>
-  </ListBox>
+      <div slot="left-empty">Your left box is empty</div>
+      <div slot="right-empty">Your right box is empty</div>
+    </ListBox>
     <ListBox
       disabled={false}
       left={['leftText']}
       right={['rightText']}
       leftlabel={['Left']}
       rightlabel={['Right']}
-      height='200px'
+      height="200px"
       suffix={true}
     />
     <ListBox
@@ -970,9 +970,8 @@ const notify = useNotify();
       right={['rightText']}
       leftlabel={['Left']}
       rightlabel={['Right']}
-      height='200px'
+      height="200px"
       suffix={false}
     />
-   
   </div>
 </div>

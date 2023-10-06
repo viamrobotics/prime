@@ -27,13 +27,13 @@ const dispatch = createEventDispatcher();
 // Toggle element on or off
 export let disabled = false;
 // Elements in the left list
-export let left = <string[]>[];
+export let left: string[] = [];
 // Elements in the right list
-export let right = <string[]>[];
+export let right: string[] = [];
 // Label for the left list
-export let leftlabel = <string[]>[];
+export let leftlabel: string[] = [];
 // Label for the right list
-export let rightlabel = <string[]>[];
+export let rightlabel: string[] = [];
 // Height of the two boxes
 export let height = '200px';
 // Enable suffix that can be put in front of elements in the box
@@ -221,7 +221,8 @@ const handleMoveClick = (target: ListBoxSide) => {
             class={cx('py flex items-center px-2 text-sm', {
               'bg-focus/highlight': option.selected,
             })}
-            on:click={() => handleOptionClick(option, RIGHT)}          >
+            on:click={() => handleOptionClick(option, RIGHT)}
+          >
             <input
               type="checkbox"
               checked={option.selected}

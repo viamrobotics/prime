@@ -3,11 +3,10 @@ import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { ListBox } from '$lib';
 import { default as ListBoxSlot } from '../list-box-slot.svelte';
-import { text } from '@sveltejs/kit';
 
 const defaultProps = {
   disabled: false,
-  left: ['leftText1','leftText2','leftText3'],
+  left: ['leftText1', 'leftText2', 'leftText3'],
   right: ['rightText1,rightText2,rightText3'],
   leftlabel: ['Left'],
   rightlabel: ['Right'],
@@ -16,20 +15,26 @@ const defaultProps = {
 };
 
 describe('ListBox', () => {
-  it('Renders left options and can move them to the right', async() => {
+  it('Renders left options and can move them to the right', async () => {
     const user = userEvent.setup();
     render(ListBoxSlot, { ...defaultProps });
 
-    await user.click( screen.getByRole('button',{name: /leftText1/iu}))
-    await user.click( screen.getByRole('button',{name: /leftText2/iu}))
-    await user.click( screen.getByRole('button',{name: /leftText3/iu}))
+    let leftValue1 = screen.getByRole('button', { name: /leftText1/iu });
+    let leftValue2 = screen.getByRole('button', { name: /leftText2/iu });
+    let leftValue3 = screen.getByRole('button', { name: /leftText3/iu });
+    await user.click(leftValue1);
+    await user.click(leftValue2);
+    await user.click(leftValue3);
 
     const moveRightButton = screen.getByTestId('move-right');
     await user.click(moveRightButton);
 
-    expect(screen.getByRole('button',{name: /leftText1/iu})).toBeVisible()
-    expect(screen.getByRole('button',{name: /leftText2/iu})).toBeVisible()
-    expect(screen.getByRole('button',{name: /leftText3/iu})).toBeVisible()
+    leftValue1 = screen.getByRole('button', { name: /leftText1/iu });
+    leftValue2 = screen.getByRole('button', { name: /leftText2/iu });
+    leftValue3 = screen.getByRole('button', { name: /leftText3/iu });
+    expect(leftValue1).toBeVisible();
+    expect(leftValue2).toBeVisible();
+    expect(leftValue3).toBeVisible();
     expect(screen.getByText('Your left box is empty')).toBeVisible();
   });
 
@@ -38,7 +43,7 @@ describe('ListBox', () => {
 
     render(ListBoxSlot, { right: [] });
 
-    const leftValue = screen.getByRole('button',{name: /leftText2/iu})
+    const leftValue = screen.getByRole('button', { name: /leftText2/iu });
     await user.click(leftValue);
 
     const moveLeftButton = screen.getByTestId('move-left');
@@ -52,7 +57,7 @@ describe('ListBox', () => {
     const user = userEvent.setup();
 
     render(ListBoxSlot, { left: [] });
-    const rightValue = screen.getByRole('button',{name: /rightText1/iu});
+    const rightValue = screen.getByRole('button', { name: /rightText1/iu });
     await user.click(rightValue);
 
     const moveRightButton = screen.getByTestId('move-right');
@@ -66,10 +71,10 @@ describe('ListBox', () => {
     const user = userEvent.setup();
 
     render(ListBox, { ...defaultProps });
-    const leftValue1 = screen.getByRole('button',{name: /leftText1/iu});
-    const leftValue2 = screen.getByRole('button',{name: /leftText2/iu});
-    const leftValue3 = screen.getByRole('button',{name: /leftText3/iu});
-    const rightValue1 = screen.getByRole('button',{name: /rightText1/iu});
+    const leftValue1 = screen.getByRole('button', { name: /leftText1/iu });
+    let leftValue2 = screen.getByRole('button', { name: /leftText2/iu });
+    let leftValue3 = screen.getByRole('button', { name: /leftText3/iu });
+    const rightValue1 = screen.getByRole('button', { name: /rightText1/iu });
 
     expect(leftValue1).toBeVisible();
     expect(leftValue2).toBeVisible();
@@ -81,8 +86,11 @@ describe('ListBox', () => {
     const moveRightButton = screen.getByTestId('move-right');
     await user.click(moveRightButton);
 
+    leftValue2 = screen.getByRole('button', { name: /leftText2/iu });
+    leftValue3 = screen.getByRole('button', { name: /leftText3/iu });
     expect(leftValue1).toBeVisible();
-    expect(leftValue1).toBeVisible();
+    expect(leftValue2).toBeVisible();
+    expect(leftValue3).toBeVisible();
     expect(rightValue1).toBeVisible();
   });
 
@@ -90,9 +98,12 @@ describe('ListBox', () => {
     const user = userEvent.setup();
 
     render(ListBoxSlot);
-    await user.click( screen.getByRole('button',{name: /leftText1/iu}))
-    await user.click( screen.getByRole('button',{name: /leftText2/iu}))
-    await user.click( screen.getByRole('button',{name: /leftText3/iu}))
+    const leftValue1 = screen.getByRole('button', { name: /leftText1/iu });
+    const leftValue2 = screen.getByRole('button', { name: /leftText2/iu });
+    const leftValue3 = screen.getByRole('button', { name: /leftText3/iu });
+    await user.click(leftValue1);
+    await user.click(leftValue2);
+    await user.click(leftValue3);
 
     await user.click(screen.getByTestId('move-right'));
     expect(screen.getByText('Your left box is empty')).toBeVisible();
@@ -102,9 +113,12 @@ describe('ListBox', () => {
     const user = userEvent.setup();
     render(ListBoxSlot);
 
-    await user.click( screen.getByRole('button',{name: /rightText1/iu}))
-    await user.click( screen.getByRole('button',{name: /rightText2/iu}))
-    await user.click( screen.getByRole('button',{name: /rightText3/iu}))
+    const rightValue1 = screen.getByRole('button', { name: /rightText1/iu });
+    const rightValue2 = screen.getByRole('button', { name: /rightText2/iu });
+    const rightValue3 = screen.getByRole('button', { name: /rightText3/iu });
+    await user.click(rightValue1);
+    await user.click(rightValue2);
+    await user.click(rightValue3);
 
     await user.click(screen.getByTestId('move-left'));
 
