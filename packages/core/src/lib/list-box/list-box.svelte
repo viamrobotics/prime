@@ -5,10 +5,10 @@
     ```svelete
      <ListBox
         disabled = {false}
-        left ='leftText1,leftText2,leftText3',
-        right = 'rightText1,rightText2,rightText3'
-        leftlabel = 'Left'
-        rightlabel = 'Right'
+        left =['leftText1','leftText2','leftText3'],
+        right = ['rightText1','rightText2','rightText3'],
+        leftlabel = ['Left']
+        rightlabel = ['Right']
         height = '200px'
         suffix= {false}
         />
@@ -18,9 +18,6 @@
 <svelte:options immutable />
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// disabled to pass untyped object to cx library in template
-
 import cx from 'classnames';
 import { afterUpdate, createEventDispatcher } from 'svelte';
 import { Icon } from '$lib';
@@ -30,13 +27,13 @@ const dispatch = createEventDispatcher();
 // Toggle element on or off
 export let disabled = false;
 // Elements in the left list
-export let left = '';
+export let left = <string[]>[];
 // Elements in the right list
-export let right = '';
+export let right = <string[]>[];
 // Label for the left list
-export let leftlabel = '';
+export let leftlabel = <string[]>[];
 // Label for the right list
-export let rightlabel = '';
+export let rightlabel = <string[]>[];
 // Height of the two boxes
 export let height = '200px';
 // Enable suffix that can be put in front of elements in the box
@@ -68,8 +65,8 @@ const generateOption = (initial: string): ListBoxOption => {
 };
 
 let options = {
-  left: left ? left.split(',').map((val) => generateOption(val)) : [],
-  right: right ? right.split(',').map((val) => generateOption(val)) : [],
+  left: left ? left.map((val) => generateOption(val)) : [],
+  right: right ? right.map((val) => generateOption(val)) : [],
 };
 
 // when new values are added, we want to update the state of options to include those values
@@ -80,13 +77,11 @@ const addNewData = () => {
   ]);
   const newLeftOptions = left
     ? left
-        .split(',')
         .map((val) => generateOption(val))
         .filter((opt) => !allValues.has(opt.value))
     : [];
   const newRightOptions = right
     ? right
-        .split(',')
         .map((val) => generateOption(val))
         .filter((opt) => !allValues.has(opt.value))
     : [];
@@ -190,8 +185,8 @@ const handleMoveClick = (target: ListBoxSide) => {
         'flex h-8 w-8 rotate-90 cursor-pointer items-center justify-center border border-black bg-white hover:scale-105',
         { 'border-black/50': disabled }
       )}
-      data-testid="move-right"
       on:click={() => handleMoveClick(RIGHT)}
+      data-testid="move-right"
     >
       <Icon
         class="relative bottom-0.5"
@@ -226,8 +221,7 @@ const handleMoveClick = (target: ListBoxSide) => {
             class={cx('py flex items-center px-2 text-sm', {
               'bg-focus/highlight': option.selected,
             })}
-            on:click={() => handleOptionClick(option, RIGHT)}
-          >
+            on:click={() => handleOptionClick(option, RIGHT)}          >
             <input
               type="checkbox"
               checked={option.selected}

@@ -4,13 +4,13 @@ import { ListBox } from '$lib';
 // Toggle element on or off
 export let disabled = false;
 // Elements in the left list
-export let left = 'leftText1,leftText2,leftText3';
+export let left = ['leftText1', 'leftText2', 'leftText3'];
 // Elements in the right list
-export let right = 'rightText1,rightText2,rightText3';
+export let right = ['rightText1', 'rightText2', 'rightText3'];
 // Label for the left list
-export let leftlabel = 'Left';
+export let leftlabel = ['Left'];
 // Label for the right list
-export let rightlabel = 'Right';
+export let rightlabel = ['Right'];
 // Height of the two boxes
 export let height = '200px';
 // Enable suffix that can be put in front of elements in the box
