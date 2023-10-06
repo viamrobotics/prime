@@ -65,8 +65,8 @@ const generateOption = (initial: string): ListBoxOption => {
 };
 
 let options = {
-  left: left ? left.map((val) => generateOption(val)) : [],
-  right: right ? right.map((val) => generateOption(val)) : [],
+  left: left.map((val) => generateOption(val)),
+  right: right.map((val) => generateOption(val)),
 };
 
 // when new values are added, we want to update the state of options to include those values
@@ -76,15 +76,11 @@ const addNewData = () => {
     ...options.right.map((opt) => opt.value),
   ]);
   const newLeftOptions = left
-    ? left
-        .map((val) => generateOption(val))
-        .filter((opt) => !allValues.has(opt.value))
-    : [];
+    .map((val) => generateOption(val))
+    .filter((opt) => !allValues.has(opt.value));
   const newRightOptions = right
-    ? right
-        .map((val) => generateOption(val))
-        .filter((opt) => !allValues.has(opt.value))
-    : [];
+    .map((val) => generateOption(val))
+    .filter((opt) => !allValues.has(opt.value));
 
   const newOptions = {
     left: [...options.left, ...newLeftOptions],
