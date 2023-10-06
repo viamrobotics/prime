@@ -22,7 +22,7 @@ describe('use:clickOutside', () => {
 
     await user.click(outsideButton);
 
-    expect(onClickOutside).toHaveBeenCalledOnce();
+    expect(onClickOutside).toHaveBeenCalledWith(outsideButton);
   });
 
   it('should not trigger if clicked element gets removed from the DOM', async () => {
