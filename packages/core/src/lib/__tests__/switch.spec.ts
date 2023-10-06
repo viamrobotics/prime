@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import { Switch } from '$lib';
 import AnnotatedSwitch from './switch.spec.svelte';
+import userEvent from '@testing-library/user-event';
 
 describe('Switch', () => {
   it('Renders with default values', () => {
@@ -17,10 +18,10 @@ describe('Switch', () => {
 
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
 
-    await fireEvent.click(screen.getByRole('switch'));
+    await userEvent.click(screen.getByRole('switch'));
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'true');
 
-    await fireEvent.click(screen.getByRole('switch'));
+    await userEvent.click(screen.getByRole('switch'));
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
   });
 
@@ -29,7 +30,7 @@ describe('Switch', () => {
 
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
 
-    await fireEvent.click(screen.getByRole('switch'));
+    await userEvent.click(screen.getByRole('switch'));
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
   });
 
@@ -38,7 +39,7 @@ describe('Switch', () => {
 
     expect(screen.getByText('Off')).toBeVisible();
 
-    await fireEvent.click(screen.getByRole('switch'));
+    await userEvent.click(screen.getByRole('switch'));
 
     expect(screen.getByText('On')).toBeVisible();
   });
@@ -48,7 +49,7 @@ describe('Switch', () => {
 
     expect(screen.getByText('Disabled')).toBeVisible();
 
-    await fireEvent.click(screen.getByRole('switch'));
+    await userEvent.click(screen.getByRole('switch'));
 
     expect(screen.getByText('Enabled')).toBeVisible();
   });

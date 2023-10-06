@@ -18,8 +18,10 @@ import { preventHandler, preventKeyboardHandler } from '$lib';
 export let on = false;
 
 /**
- * Whether or not to render the `on` and `off` slots, which have a default content
- * of 'On' or 'Off' respectively, which can be overwritten by adding the slots.
+ * Whether or not to render the `On` and `Off` annotations, which can be
+ * overwritten by using the slots `on` and `off` slots.
+ *
+ * Note: If you use the `on` and/or `off` slots, this will be ignored.
  */
 export let annotated = false;
 
@@ -89,7 +91,7 @@ const toggle = () => {
     />
   </div>
 
-  {#if annotated}
+  {#if annotated || $$slots.on || $$slots.off}
     <p class={cx('pr-px text-sm', { 'text-gray-5': disabled })}>
       {#if on}
         <slot name="on">On</slot>
