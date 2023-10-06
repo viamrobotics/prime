@@ -4,11 +4,11 @@ export const createName = (
   index: number
 ) => {
   let i = index;
-  let name = `${template}-${i}`;
+  let name = `${template} ${i}`;
 
   while (existingNames.includes(name)) {
     i += 1;
-    name = `${template}-${i}`;
+    name = `${template} ${i}`;
   }
 
   return name;
