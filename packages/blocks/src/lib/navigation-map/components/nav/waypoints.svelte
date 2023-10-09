@@ -23,7 +23,7 @@ useMapLibreEvent('click', (event) => {
   const lngLat = {
     lng: event.lngLat.lng,
     lat: event.lngLat.lat,
-  }
+  };
 
   $waypoints = [
     ...$waypoints,
