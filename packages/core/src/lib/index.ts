@@ -28,6 +28,7 @@ export {
   ContextMenu,
   ContextMenuItem,
   ContextMenuSeparator,
+  FloatingMenu,
   type ContextMenuItemVariant,
 } from './context-menu';
 
