@@ -421,7 +421,7 @@ const restrictedValue = writable('');
   <!-- Restricted Text Input -->
   <h2 class="text-xl">Restricted Text Input</h2>
 
-  <div class="flex gap-4 mb-5">
+  <div class="flex gap-4">
     <RestrictedTextInput
       name="namespace"
       placeholder="Enter your money namespace"
