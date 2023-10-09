@@ -7,6 +7,7 @@ import {
   ContextMenu,
   ContextMenuItem,
   ContextMenuSeparator,
+  FloatingMenu,
   Icon,
   Label,
   Banner,
@@ -228,19 +229,46 @@ const notify = useNotify();
 
   <!-- Context Menu -->
   <h1 class="text-2xl">Context Menu</h1>
-  <ContextMenu id={uniqueId('context-menu')}>
-    <ContextMenuItem>label 1</ContextMenuItem>
-    <ContextMenuSeparator />
-    <ContextMenuItem variant="primary">label 2</ContextMenuItem>
-    <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
-    <ContextMenuItem
-      icon="close"
-      variant="danger"
-      on:click={() => console.log('oh no')}
+  <div class="flex items-start gap-4">
+    <ContextMenu id={uniqueId('context-menu')}>
+      <ContextMenuItem>label 1</ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem variant="primary">label 2</ContextMenuItem>
+      <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
+      <ContextMenuItem
+        icon="close"
+        variant="danger"
+        on:click={() => console.log('oh no')}
+      >
+        danger
+      </ContextMenuItem>
+    </ContextMenu>
+
+    <FloatingMenu
+      placement="top-start"
+      offset={4}
     >
-      danger
-    </ContextMenuItem>
-  </ContextMenu>
+      <svelte:fragment
+        slot="control"
+        let:isOpen
+      >
+        {isOpen ? 'Close menu' : 'Open menu'}
+      </svelte:fragment>
+      <svelte:fragment slot="items">
+        <ContextMenuItem>label 1</ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem variant="primary">label 2</ContextMenuItem>
+        <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
+        <ContextMenuItem
+          icon="close"
+          variant="danger"
+          on:click={() => console.log('oh no')}
+        >
+          danger
+        </ContextMenuItem>
+      </svelte:fragment>
+    </FloatingMenu>
+  </div>
 
   <!-- Icon -->
   <h1 class="text-2xl">Icon</h1>
