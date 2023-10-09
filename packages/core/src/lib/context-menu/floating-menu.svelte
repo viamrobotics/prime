@@ -65,7 +65,10 @@ $: style.register({ controlElement, menuElement, placement, offset });
       id={menuID}
       cx={menuCX}
     >
-      <slot name="items" />
+      <slot
+        name="items"
+        {closeMenu}
+      />
     </ContextMenu>
   </div>
 {/if}

@@ -78,4 +78,17 @@ describe('<FloatingMenu> component', () => {
     const menu = screen.queryByRole('menu');
     expect(menu).not.toBeInTheDocument();
   });
+
+  it('should pass a close menu handler to the items', async () => {
+    render(Subject);
+
+    const control = screen.getByRole('button', { name: /open/iu });
+    await user.click(control);
+
+    const item = screen.getByRole('menuitem');
+    await user.click(item);
+
+    const menu = screen.queryByRole('menu');
+    expect(menu).not.toBeInTheDocument();
+  });
 });
