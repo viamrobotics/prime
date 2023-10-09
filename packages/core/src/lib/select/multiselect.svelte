@@ -16,17 +16,17 @@ For selecting multiple options from a list.
 import cx from 'classnames';
 
 import { clickOutside } from '$lib/click-outside';
+import type { IconName } from '$lib/icon/icons';
+import Pill from '$lib/pill.svelte';
 import { uniqueId } from '$lib/unique-id';
 
+import { selectControls } from './controls';
+import { createSearchableSelectDispatcher } from './dispatcher';
+import { getSearchResults, type SortOptions } from './search';
+import SelectMenuButton from './select-menu-button.svelte';
+import SelectInput from './select-input.svelte';
 import SelectMenu from './select-menu.svelte';
 import type { SelectState } from './select.svelte';
-import { getSearchResults, type SortOptions } from './search';
-
-import { selectControls } from './controls';
-import Pill from '$lib/pill.svelte';
-import { createSearchableSelectDispatcher } from './dispatcher';
-import SelectInput from './select-input.svelte';
-import type { IconName } from '$lib/icon/icons';
 
 /** The options the user should be allowed to search and select from. */
 export let options: string[] = [];
@@ -61,6 +61,7 @@ export let showPills = true;
  * currently selected items.
  */
 export let clearable = false;
+
 /**
  * An optional call-to-action button to render at the bottom of the select menu
  * that will emit the `buttonclick` event when actioned.
@@ -86,11 +87,27 @@ const dispatch = createSearchableSelectDispatcher<{
 }>();
 
 const menuId = uniqueId('multiselect');
-
 let menu: HTMLUListElement;
 
 $: searchedOptions = getSearchResults(options, value, sort);
 $: isChecked = (option: string) => selected.includes(option);
+
+let navigationCount = 0;
+let clearIndex = -1;
+let buttonIndex = -1;
+$: {
+  navigationCount = searchedOptions.length;
+
+  if (clearable) {
+    clearIndex = navigationCount;
+    navigationCount += 1;
+  }
+
+  if (button !== undefined) {
+    buttonIndex = navigationCount;
+    navigationCount += 1;
+  }
+}
 
 const {
   isOpen,
@@ -103,6 +120,8 @@ const {
   handleOptionFocus,
 } = selectControls();
 
+const handleButtonClick = () => dispatch('buttonclick');
+
 const handleInput = (event: Event) => {
   event.preventDefault();
   resetNavigationIndex();
@@ -110,18 +129,12 @@ const handleInput = (event: Event) => {
   dispatch('search', value ?? '');
 };
 
-const handleKeyDown = (event: KeyboardEvent, clear = false) => {
-  if (
-    handleNavigation(
-      event,
-      menu,
-      clearable ? searchedOptions.length + 1 : searchedOptions.length
-    )
-  ) {
+const handleKeyDown = (event: KeyboardEvent, isButton = false) => {
+  if (handleNavigation(event, menu, navigationCount)) {
     return;
   }
 
-  if (clear) {
+  if (isButton) {
     return;
   }
 
@@ -181,8 +194,6 @@ const handleClearAll = () => {
   dispatch('input', { selected });
   dispatch('clear');
 };
-
-const handleButtonClick = () => dispatch('buttonclick');
 </script>
 
 <div
@@ -209,11 +220,14 @@ const handleButtonClick = () => dispatch('buttonclick');
         open={$isOpen}
         id={menuId}
         bind:element={menu}
-        bind:heading
-        bind:button
-        on:buttonclick={handleButtonClick}
         on:mouseleave={resetNavigationIndex}
       >
+        {#if heading}
+          <span class="flex flex-wrap py-1 pl-2 text-xs text-default">
+            {heading}
+          </span>
+        {/if}
+
         {#if searchedOptions.length > 0}
           {#each searchedOptions as { highlight, option }, index (option)}
             <li role="presentation">
@@ -249,30 +263,39 @@ const handleButtonClick = () => dispatch('buttonclick');
               </label>
             </li>
           {/each}
+
           {#if clearable}
             <li role="presentation">
-              <button
-                type="button"
-                tabindex="-1"
-                role="menuitem"
-                class={cx(
-                  'flex h-7.5 w-full items-center px-2 text-xs outline-none',
-                  {
-                    'bg-light': $navigationIndex === searchedOptions.length,
-                  }
-                )}
+              <SelectMenuButton
                 on:click={handleClearAll}
-                on:mouseenter={() => handleOptionFocus(searchedOptions.length)}
+                on:mouseenter={() => handleOptionFocus(clearIndex)}
                 on:keydown={(event) => handleKeyDown(event, true)}
               >
                 <slot name="clear-text">Clear all</slot>
-              </button>
+              </SelectMenuButton>
             </li>
           {/if}
         {:else}
           <li class="flex justify-center px-2 py-1 text-xs">
             No matching results
           </li>
+        {/if}
+
+        {#if button !== undefined}
+          <SelectMenuButton
+            icon={button.icon}
+            cx={[
+              'border-light border-t',
+              {
+                'bg-light': $navigationIndex === buttonIndex,
+              },
+            ]}
+            on:click={handleButtonClick}
+            on:mouseenter={() => handleOptionFocus(searchedOptions.length)}
+            on:keydown={(event) => handleKeyDown(event, true)}
+          >
+            {button.text}
+          </SelectMenuButton>
         {/if}
       </SelectMenu>
     {/if}

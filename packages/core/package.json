@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime-core",
-  "version": "0.0.43",
+  "version": "0.0.46",
   "publishConfig": {
     "access": "public"
   },
@@ -38,13 +38,13 @@
     "svelte": ">=4.0.0 <5"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.5.1",
     "@mdi/js": "^7.2.96",
     "classnames": "^2.3.2",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.2"
   },
   "devDependencies": {
-    "@floating-ui/dom": "^1.5.1",
     "@sveltejs/adapter-auto": "^2.1.0",
     "@sveltejs/kit": "^1.22.6",
     "@sveltejs/package": "^2.2.1",

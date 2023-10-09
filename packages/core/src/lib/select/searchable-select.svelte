@@ -14,15 +14,17 @@ For selecting from a list of options.
 
 <script lang="ts">
 import cx from 'classnames';
-import SelectMenu from './select-menu.svelte';
-import type { SelectState } from './select.svelte';
-import { type SortOptions, getSearchResults } from './search';
 import { uniqueId } from '$lib/unique-id';
 import { clickOutside } from '$lib/click-outside';
+import type { IconName } from '$lib/icon/icons';
+
 import { selectControls } from './controls';
 import { createSearchableSelectDispatcher } from './dispatcher';
+import { type SortOptions, getSearchResults } from './search';
 import SelectInput from './select-input.svelte';
-import type { IconName } from '$lib/icon/icons';
+import SelectMenuButton from './select-menu-button.svelte';
+import SelectMenu from './select-menu.svelte';
+import type { SelectState } from './select.svelte';
 
 /** The options the user should be allowed to search and select from. */
 export let options: string[] = [];
@@ -65,7 +67,6 @@ const dispatch = createSearchableSelectDispatcher<{
 }>();
 
 const menuId = uniqueId('searchable-select');
-
 let menu: HTMLUListElement;
 
 $: searchedOptions = getSearchResults(options, value, sort);
@@ -88,8 +89,20 @@ const handleInput = (event: Event) => {
   dispatch('search', value ?? '');
 };
 
-const handleKeyDown = (event: KeyboardEvent) => {
-  if (handleNavigation(event, menu, searchedOptions.length)) {
+const handleButtonClick = () => dispatch('buttonclick');
+
+const handleKeyDown = (event: KeyboardEvent, isButton = false) => {
+  if (
+    handleNavigation(
+      event,
+      menu,
+      button === undefined ? searchedOptions.length : searchedOptions.length + 1
+    )
+  ) {
+    return;
+  }
+
+  if (isButton) {
     return;
   }
 
@@ -129,8 +142,6 @@ const handleSelect = (option: string) => {
   dispatch('input', value);
 };
 
-const handleButtonClick = () => dispatch('buttonclick');
-
 $: {
   if (!$isOpen && value && !options.includes(value)) {
     value = undefined;
@@ -162,11 +173,17 @@ $: {
       open={$isOpen}
       id={menuId}
       bind:element={menu}
-      bind:heading
-      bind:button
-      on:buttonclick={handleButtonClick}
       on:mouseleave={resetNavigationIndex}
     >
+      {#if heading}
+        <li
+          role="presentation"
+          class="flex flex-wrap py-1 pl-2 text-xs text-default"
+        >
+          {heading}
+        </li>
+      {/if}
+
       {#if searchedOptions.length > 0}
         {#each searchedOptions as { highlight, option }, index (option)}
           <li role="presentation">
@@ -201,6 +218,23 @@ $: {
         <li class="flex justify-center px-2 py-1 text-xs">
           No matching results
         </li>
+      {/if}
+
+      {#if button !== undefined}
+        <SelectMenuButton
+          icon={button.icon}
+          cx={[
+            'border-light border-t',
+            {
+              'bg-light': $navigationIndex === searchedOptions.length,
+            },
+          ]}
+          on:click={handleButtonClick}
+          on:mouseenter={() => handleOptionFocus(searchedOptions.length)}
+          on:keydown={(event) => handleKeyDown(event, true)}
+        >
+          {button.text}
+        </SelectMenuButton>
       {/if}
     </SelectMenu>
   {/if}

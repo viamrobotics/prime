@@ -69,6 +69,7 @@ export const paths = {
   'account-group-outline': MDI.mdiAccountGroupOutline,
   'robot-outline': MDI.mdiRobotOutline,
   domain: MDI.mdiDomain,
+  'database-outline': MDI.mdiDatabaseOutline,
 };
 
 /**
