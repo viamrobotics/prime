@@ -244,7 +244,10 @@ const notify = useNotify();
       </ContextMenuItem>
     </ContextMenu>
 
-    <FloatingMenu placement>
+    <FloatingMenu
+      placement="top-start"
+      offset={4}
+    >
       <svelte:fragment
         slot="control"
         let:isOpen
