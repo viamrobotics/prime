@@ -20,14 +20,20 @@ const handleDeleteWaypoint = (id: string) => {
 };
 
 useMapLibreEvent('click', (event) => {
+  const lngLat = {
+    lng: event.lngLat.lng,
+    lat: event.lngLat.lat,
+  }
+
   $waypoints = [
     ...$waypoints,
     {
       id: crypto.randomUUID(),
-      lng: event.lngLat.lng,
-      lat: event.lngLat.lat,
+      ...lngLat,
     },
   ];
+
+  dispatch('add-waypoint', lngLat);
 });
 </script>
 
