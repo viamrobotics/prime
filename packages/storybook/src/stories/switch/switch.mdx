@@ -5,22 +5,14 @@ import * as SwitchStories from './switch.stories.svelte';
 
 # Switch
 
-Handles binary input.
+Used to handle binary input.
 
 ```ts
 import { Switch } from '@viamrobotics/prime-core';
 ```
 
 <Canvas>
-  <Story of={SwitchStories.Default} />
-</Canvas>
-
-<Canvas>
-  <Story of={SwitchStories.Annotated} />
-</Canvas>
-
-<Canvas>
-  <Story of={SwitchStories.WithLabel} />
+  <Story of={SwitchStories.Basic} />
 </Canvas>
 
 <Canvas>
@@ -28,9 +20,13 @@ import { Switch } from '@viamrobotics/prime-core';
 </Canvas>
 
 <Canvas>
-  <Story of={SwitchStories.WithTooltipAndIcon} />
+  <Story of={SwitchStories.WithLabel} />
 </Canvas>
 
 <Canvas>
-  <Story of={SwitchStories.Readonly} />
+  <Story of={SwitchStories.Annotated} />
+</Canvas>
+
+<Canvas>
+  <Story of={SwitchStories.CustomAnnotations} />
 </Canvas>
