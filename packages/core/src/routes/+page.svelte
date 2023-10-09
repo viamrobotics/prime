@@ -37,6 +37,7 @@ import {
   useNotify,
   Modal,
 } from '$lib';
+import RestrictedTextInput from '$lib/input/restricted-text-input.svelte';
 import { uniqueId } from 'lodash';
 
 import { writable } from 'svelte/store';
@@ -59,6 +60,8 @@ const handleOpenModal = () => {
   modalOpen.set(true);
 };
 const notify = useNotify();
+
+const restrictedValue = writable('');
 </script>
 
 <NotificationContainer />
@@ -384,6 +387,24 @@ const notify = useNotify();
       type="password"
       name="password"
       placeholder="Enter your password"
+    />
+  </div>
+
+  <!-- Restricted Text Input -->
+  <h2 class="text-xl">Restricted Text Input</h2>
+
+  <div class="flex gap-4 mb-5">
+    <RestrictedTextInput
+      name="namespace"
+      placeholder="Enter your money namespace"
+      value={restrictedValue}
+      tooltipDescription="Valid characters: numbers, lowercase letters, dashes, dolla $ign"
+      restrictInput={(inputValue) =>
+        inputValue
+          .replaceAll(/\s/gu, '-')
+          .replaceAll(/%/gu, '$')
+          .replaceAll(/[^a-z0-9-$]/gu, '')}
+      inputCX="min-w-[300px]"
     />
   </div>
 

@@ -41,6 +41,18 @@ import { TextInput } from '@viamrobotics/prime-core';
   <Story of={InputStories.Text} />
 </Canvas>
 
+# Restricted Text Input
+
+An opinionated input for text values that only allows specified regex. The allowed characters are specified by the `restrictInput` function.
+
+```ts
+import { RestrictedTextInput } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={InputStories.RestrictedText} />
+</Canvas>
+
 # Numeric Input
 
 A user input for numeric values. This is ideal for number and integer fields.

@@ -24,7 +24,7 @@ export interface TooltipContext {
   setTarget: (target: HTMLElement | undefined) => void;
   setTooltip: (options: {
     location: TooltipLocation;
-    visibility: TooltipVisibility;
+    visibility?: TooltipVisibility | undefined;
     tooltip: HTMLElement | undefined;
     arrow: HTMLElement | undefined;
   }) => void;
@@ -51,7 +51,7 @@ export interface TooltipStyles {
 
 export interface State {
   location?: TooltipLocation;
-  visibility?: TooltipVisibility;
+  visibility?: TooltipVisibility | undefined;
   target?: HTMLElement | undefined;
   tooltip?: HTMLElement | undefined;
   arrow?: HTMLElement | undefined;
@@ -95,7 +95,9 @@ const createContext = (): TooltipContext => {
   const state = writable<State>({});
   const isVisible = derived(
     state,
-    ($state) => $state.visibility === 'visible' || Boolean($state.isHovered)
+    ($state) =>
+      $state.visibility === 'visible' ||
+      Boolean($state.visibility === undefined && $state.isHovered)
   );
   const styles = derived<Readable<State>, TooltipStyles | undefined>(
     state,
