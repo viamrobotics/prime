@@ -9,7 +9,7 @@ export let isOpen: boolean;
 export let disabled: boolean;
 export let state: SelectState;
 
-/** Additional CSS classes to pass to the  input. */
+/** Additional CSS classes to pass to the input. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 

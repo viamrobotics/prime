@@ -45,7 +45,7 @@ $: isWarn = state === 'warn';
 $: isError = state === 'error';
 
 $: defaultClasses =
-  disabled &&
+  !disabled &&
   !isError &&
   !isWarn &&
   'border-light hover:border-gray-6 focus:border-gray-9 bg-white';

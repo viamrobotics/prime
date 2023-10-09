@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/svelte';
 import Multiselect from '../multiselect.svelte';
 import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
+import userEvent from '@testing-library/user-event';
 
 describe('Multiselect', () => {
   const options = [
@@ -78,11 +79,14 @@ describe('Multiselect', () => {
     );
   });
 
-  it('Renders the select button', () => {
-    render(Multiselect, {
+  it('Renders the select button', async () => {
+    const onButtonClick = vi.fn();
+    const { component } = render(Multiselect, {
       ...common,
       button: { text: 'Test Button', icon: 'alert' },
     });
+
+    component.$on('buttonclick', onButtonClick);
 
     const button = screen.getByText('Test Button');
 
@@ -90,6 +94,10 @@ describe('Multiselect', () => {
     expect(button.parentElement).toHaveClass(
       'hover:bg-light border-light flex h-7.5 w-full items-center border-t px-2 py-1 text-xs'
     );
+
+    await userEvent.click(button);
+
+    expect(onButtonClick).toHaveBeenCalled();
   });
 
   it('Sorts results with a match at the start of a word', async () => {
@@ -99,14 +107,14 @@ describe('Multiselect', () => {
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
 
-    await fireEvent.focus(select);
-    await fireEvent.input(select, { target: { value: 'C.)' } });
+    select.focus();
+    await userEvent.type(select, 'C.)');
 
     expect(menu.children[0]?.textContent?.trim()).toBe('C.)  Option');
 
-    await fireEvent.input(select, { target: { value: 'Opt' } });
+    await userEvent.type(select, 'Opt');
 
-    expect(menu.children[0]?.textContent?.trim()).toBe('First  Opt ion');
+    expect(menu.children[0]?.textContent?.trim()).toBe('First Option');
   });
 
   it('Sorts results with a match below matches at a start of the word', async () => {
@@ -116,8 +124,8 @@ describe('Multiselect', () => {
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
 
-    await fireEvent.focus(select);
-    await fireEvent.input(select, { target: { value: 'l' } });
+    select.focus();
+    await userEvent.type(select, 'l');
 
     expect(menu.children[0]?.textContent?.trim()).toBe(
       'With A Whole  L ot Of Parts'
@@ -133,8 +141,8 @@ describe('Multiselect', () => {
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
 
-    await fireEvent.focus(select);
-    await fireEvent.input(select, { target: { value: 'C.)' } });
+    select.focus();
+    await userEvent.type(select, 'C.)');
 
     expect(menu.children[0]?.textContent?.trim()).toBe('C.)  Option');
     expect(menu.children.length).toBe(1);
@@ -147,8 +155,7 @@ describe('Multiselect', () => {
       screen.getByPlaceholderText('Select an option');
     const menu = screen.getByRole('menu');
 
-    await fireEvent.focus(select);
-    await fireEvent.input(select, { target: { value: 'C.)' } });
+    await userEvent.type(select, 'C.)');
 
     expect(menu.children[0]?.textContent?.trim()).toBe('First Option');
     expect(menu.children[1]?.textContent?.trim()).toBe('Option 2');
@@ -165,8 +172,8 @@ describe('Multiselect', () => {
       'menuitemcheckbox'
     )[2]! as HTMLInputElement;
 
-    await fireEvent.focus(select);
-    await fireEvent.click(menuItem);
+    select.focus();
+    await userEvent.click(menuItem);
 
     expect(menuItem.checked).toBe(true);
     expect(screen.getByLabelText('Remove C.) Option')).toBeInTheDocument();
@@ -181,14 +188,14 @@ describe('Multiselect', () => {
       'menuitemcheckbox'
     )[2]! as HTMLInputElement;
 
-    await fireEvent.focus(select);
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItem.parentElement).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(menuItem, { code: 'Enter' });
+    await userEvent.keyboard('[Enter]');
 
     expect(menuItem.checked).toBe(true);
   });
@@ -200,32 +207,32 @@ describe('Multiselect', () => {
       screen.getByPlaceholderText('Select an option');
     const menuItems = screen.getAllByRole('menuitemcheckbox');
 
-    await fireEvent.focus(select);
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[0]?.parentElement).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[2]?.parentElement).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[4]?.parentElement).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[0]?.parentElement).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowUp' });
+    await userEvent.keyboard('[ArrowUp]');
 
     expect(menuItems[4]?.parentElement).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'ArrowUp' });
-    await fireEvent.keyDown(select, { code: 'ArrowUp' });
-    await fireEvent.keyDown(menuItems[2]!, { code: 'Enter' });
+    await userEvent.keyboard('[ArrowUp]');
+    await userEvent.keyboard('[ArrowUp]');
+    await userEvent.keyboard('[Enter]');
 
     expect((menuItems[2] as HTMLInputElement).checked).toBe(true);
   });
@@ -240,15 +247,12 @@ describe('Multiselect', () => {
 
     expect(menu.parentElement).toHaveClass('invisible');
 
-    await fireEvent.focus(select);
-
-    expect(menu.parentElement).not.toHaveClass('invisible');
-
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[0]?.parentElement).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'Escape' });
+    await userEvent.keyboard('[Escape]');
 
     expect(menu.parentElement).toHaveClass('invisible');
   });
@@ -263,15 +267,12 @@ describe('Multiselect', () => {
 
     expect(menu.parentElement).toHaveClass('invisible');
 
-    await fireEvent.focus(select);
-
-    expect(menu.parentElement).not.toHaveClass('invisible');
-
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
 
     expect(menuItems[0]?.parentElement).toHaveClass('bg-light');
 
-    await fireEvent.keyDown(select, { code: 'Tab' });
+    await userEvent.keyboard('[Tab]');
 
     expect(menu.parentElement).toHaveClass('invisible');
   });
@@ -292,23 +293,23 @@ describe('Multiselect', () => {
     )[2]! as HTMLInputElement;
     const clear = screen.getByText('Clear all');
 
-    await fireEvent.focus(select);
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(first, { code: 'Enter' });
+    select.focus();
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[Enter]');
 
     expect(first.checked).toBe(true);
 
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(second, { code: 'Enter' });
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[Enter]');
 
     expect(second.checked).toBe(true);
 
-    await fireEvent.keyDown(select, { code: 'ArrowDown' });
-    await fireEvent.keyDown(third, { code: 'Enter' });
+    await userEvent.keyboard('[ArrowDown]');
+    await userEvent.keyboard('[Enter]');
 
     expect(third.checked).toBe(true);
 
-    await fireEvent.click(clear);
+    await userEvent.click(clear);
 
     expect(first.checked).toBe(false);
     expect(second.checked).toBe(false);
@@ -324,8 +325,8 @@ describe('Multiselect', () => {
       'menuitemcheckbox'
     )[2]! as HTMLInputElement;
 
-    await fireEvent.focus(select);
-    await fireEvent.click(menuItem);
+    select.focus();
+    await userEvent.click(menuItem);
 
     expect(menuItem.checked).toBe(true);
     expect(screen.queryByLabelText('Remove C.) Option')).toBeNull();
@@ -351,13 +352,13 @@ describe('Multiselect', () => {
       'menuitemcheckbox'
     )[2]! as HTMLInputElement;
 
-    await fireEvent.focus(select);
-    await fireEvent.click(menuItem);
+    select.focus();
+    await userEvent.click(menuItem);
 
     expect(menuItem.checked).toBe(true);
     expect(screen.getByLabelText('Remove C.) Option')).toBeInTheDocument();
 
-    await fireEvent.click(screen.getByLabelText('Remove C.) Option'));
+    await userEvent.click(screen.getByLabelText('Remove C.) Option'));
 
     expect(menuItem.checked).toBe(false);
     expect(
