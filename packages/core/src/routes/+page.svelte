@@ -9,7 +9,6 @@ import {
   ContextMenuSeparator,
   Icon,
   Label,
-  ListBox,
   Banner,
   Input,
   Pill,
@@ -953,35 +952,4 @@ const notify = useNotify();
       console.log('VectorInput input', event);
     }}
   />
-
-  <!--  List Box -->
-  <div>
-    <ListBox
-      disabled={false}
-      left="leftText,leftText2,leftText3"
-      right="rightText,rightText2,rightText3"
-      leftlabel="Left"
-      rightlabel="Right"
-      height="200px"
-      suffix={false}
-    />
-    <ListBox
-      disabled={false}
-      left="leftText"
-      right="rightText"
-      leftlabel="Left"
-      rightlabel="Right"
-      height="200px"
-      suffix={true}
-    />
-    <ListBox
-      disabled={true}
-      left="leftText"
-      right="rightText"
-      leftlabel="Left"
-      rightlabel="Right"
-      height="200px"
-      suffix={false}
-    />
-  </div>
 </div>
