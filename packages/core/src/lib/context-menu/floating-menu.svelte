@@ -2,9 +2,11 @@
 import cx from 'classnames';
 import { uniqueId } from '$lib/unique-id';
 import { clickOutside } from '$lib/click-outside';
-import { floatingStyle } from './floating-style';
+import { floatingStyle, type FloatingMenuPlacement } from './floating-style';
 import ContextMenu from './context-menu.svelte';
 
+export let placement: FloatingMenuPlacement = 'bottom-start';
+export let offset = 0;
 export let buttonCX: cx.Argument = '';
 export let menuCX: cx.Argument = '';
 
@@ -19,7 +21,7 @@ const openMenu = () => (isOpen = true);
 const closeMenu = () => (isOpen = false);
 
 const handleClickOutside = (element: Element) => {
-  if (element !== controlElement) {
+  if (!controlElement?.contains(element)) {
     closeMenu();
   }
 };
@@ -31,7 +33,7 @@ const handleEscape = (event: KeyboardEvent) => {
   }
 };
 
-$: style.register({ controlElement, menuElement });
+$: style.register({ controlElement, menuElement, placement, offset });
 </script>
 
 <svelte:document on:keydown={isOpen ? handleEscape : undefined} />
@@ -52,8 +54,8 @@ $: style.register({ controlElement, menuElement });
 
 {#if isOpen}
   <div
-    use:clickOutside={handleClickOutside}
     bind:this={menuElement}
+    use:clickOutside={handleClickOutside}
     class="absolute left-0 top-0 z-max w-max"
     class:invisible={!$style}
     style:top={$style?.top}

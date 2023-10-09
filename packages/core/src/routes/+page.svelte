@@ -244,13 +244,13 @@ const notify = useNotify();
       </ContextMenuItem>
     </ContextMenu>
 
-    <FloatingMenu>
-      <span
+    <FloatingMenu placement>
+      <svelte:fragment
         slot="control"
         let:isOpen
       >
         {isOpen ? 'Close menu' : 'Open menu'}
-      </span>
+      </svelte:fragment>
       <svelte:fragment slot="items">
         <ContextMenuItem>label 1</ContextMenuItem>
         <ContextMenuSeparator />
