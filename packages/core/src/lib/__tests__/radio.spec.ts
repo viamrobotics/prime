@@ -70,10 +70,17 @@ describe('Radio', () => {
   });
 
   it('Renders the legend correctly when disabled', () => {
-    render(Radio, {...common, disabled: true});
-    
-    const legend = screen.getByText('Test radio options')
+    render(Radio, { ...common, disabled: true });
+
+    const legend = screen.getByText('Test radio options');
     expect(legend).toHaveClass('text-disabled-dark cursor-not-allowed');
+  });
+
+  it('Renders the legend correctly when required', () => {
+    render(Radio, { ...common, required: true });
+
+    const legend = screen.getByText('Test radio options');
+    expect(legend).toHaveClass('after:ml-1 after:text-danger-dark after:content-["*"]');
   });
 
   it('Renders in a row if specified', () => {

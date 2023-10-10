@@ -20,7 +20,7 @@ describe('ToggleButtons', () => {
 
   it('Marks the selected option correctly', () => {
     render(ToggleButtons, common);
-    
+
     const button = screen.getByRole('button', { name: /option 1/iu });
     expect(button).toHaveClass('font-semibold text-default');
   });
@@ -32,7 +32,9 @@ describe('ToggleButtons', () => {
     });
 
     const button = screen.getByRole('button', { name: /option 1/iu });
-    expect(button).toHaveClass('font-semibold text-disabled-dark cursor-not-allowed');
+    expect(button).toHaveClass(
+      'font-semibold text-disabled-dark cursor-not-allowed'
+    );
   });
 
   it('Allows option input if not disabled', async () => {
@@ -70,9 +72,9 @@ describe('ToggleButtons', () => {
   });
 
   it('Renders the legend correctly when disabled', () => {
-    render(ToggleButtons, {...common, disabled: true});
-    
-    const legend = screen.getByText('Test toggle buttons')
+    render(ToggleButtons, { ...common, disabled: true });
+
+    const legend = screen.getByText('Test toggle buttons');
     expect(legend).toHaveClass('text-disabled-dark cursor-not-allowed');
   });
 });
