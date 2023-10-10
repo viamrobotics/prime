@@ -24,7 +24,7 @@ export interface TooltipContext {
   setTarget: (target: HTMLElement | undefined) => void;
   setTooltip: (options: {
     location: TooltipLocation;
-    visibility?: TooltipVisibility | undefined;
+    visibility: TooltipVisibility | undefined;
     tooltip: HTMLElement | undefined;
     arrow: HTMLElement | undefined;
   }) => void;
