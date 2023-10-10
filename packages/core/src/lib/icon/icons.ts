@@ -84,5 +84,5 @@ export type IconName = keyof typeof paths;
  * A map of icon names, useful for dynamically adding icons with type safety.
  */
 export const iconNames = Object.fromEntries<IconName>(
-  Array<IconName>.from(Object.keys(paths)).map((name) => [name, name as IconName])
+  Object.keys(paths).map((name) => [name, name as IconName]),
 ) as Record<IconName, IconName>
