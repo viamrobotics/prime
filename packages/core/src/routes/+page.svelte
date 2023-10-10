@@ -7,9 +7,9 @@ import {
   ContextMenu,
   ContextMenuItem,
   ContextMenuSeparator,
+  FloatingMenu,
   Icon,
   Label,
-  ListBox,
   Banner,
   Input,
   Pill,
@@ -45,11 +45,11 @@ import { writable } from 'svelte/store';
 provideNotify();
 
 let buttonClickedTimes = 0;
-let disabled = true;
+let preventHandlerDisabled = true;
 const modalOpen = writable(false);
 
-const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
-  disabled = event.detail.value === 'Disabled';
+const handleTogglePreventHandler = (event: CustomEvent<boolean>) => {
+  preventHandlerDisabled = event.detail;
 };
 
 const handleCloseModal = () => {
@@ -229,19 +229,46 @@ const notify = useNotify();
 
   <!-- Context Menu -->
   <h1 class="text-2xl">Context Menu</h1>
-  <ContextMenu id={uniqueId('context-menu')}>
-    <ContextMenuItem>label 1</ContextMenuItem>
-    <ContextMenuSeparator />
-    <ContextMenuItem variant="primary">label 2</ContextMenuItem>
-    <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
-    <ContextMenuItem
-      icon="close"
-      variant="danger"
-      on:click={() => console.log('oh no')}
+  <div class="flex items-start gap-4">
+    <ContextMenu id={uniqueId('context-menu')}>
+      <ContextMenuItem>label 1</ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem variant="primary">label 2</ContextMenuItem>
+      <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
+      <ContextMenuItem
+        icon="close"
+        variant="danger"
+        on:click={() => console.log('oh no')}
+      >
+        danger
+      </ContextMenuItem>
+    </ContextMenu>
+
+    <FloatingMenu
+      placement="top-start"
+      offset={4}
     >
-      danger
-    </ContextMenuItem>
-  </ContextMenu>
+      <svelte:fragment
+        slot="control"
+        let:isOpen
+      >
+        {isOpen ? 'Close menu' : 'Open menu'}
+      </svelte:fragment>
+      <svelte:fragment slot="items">
+        <ContextMenuItem>label 1</ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem variant="primary">label 2</ContextMenuItem>
+        <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
+        <ContextMenuItem
+          icon="close"
+          variant="danger"
+          on:click={() => console.log('oh no')}
+        >
+          danger
+        </ContextMenuItem>
+      </svelte:fragment>
+    </FloatingMenu>
+  </div>
 
   <!-- Icon -->
   <h1 class="text-2xl">Icon</h1>
@@ -561,6 +588,28 @@ const notify = useNotify();
     />
   </div>
 
+  <!-- Prevent Handler -->
+
+  <h1 class="text-2xl">Prevent Handler</h1>
+  <div class="flex flex-col gap-4">
+    <Input
+      placeholder="Disable Me"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Prevent Handler input', event);
+      }}
+      disabled={preventHandlerDisabled}
+    />
+    <Switch
+      on={preventHandlerDisabled}
+      annotated
+      on:change={handleTogglePreventHandler}
+    >
+      <svelte:fragment slot="on">Enabled</svelte:fragment>
+      <svelte:fragment slot="off">Disabled</svelte:fragment>
+    </Switch>
+  </div>
+
   <!-- Radio -->
   <h1 class="text-2xl">Radio</h1>
 
@@ -619,12 +668,7 @@ const notify = useNotify();
       </optgroup>
     </Select>
 
-    <Radio
-      options={['Disabled', 'Enabled']}
-      selected={disabled ? 'Disabled' : 'Enabled'}
-      on:input={handleToggleDisabled}
-    />
-    <Select {disabled}>
+    <Select disabled={preventHandlerDisabled}>
       <option selected>Disabled select</option>
       <option>That thing</option>
       <option>The other thing</option>
@@ -771,34 +815,29 @@ const notify = useNotify();
   <h1 class="text-2xl">Switch</h1>
   <div class="flex gap-4">
     <Switch
+      on:toggle={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Switch toggle', event);
+      }}
+    />
+
+    <Switch on />
+
+    <Switch
       on
-      variant="annotated"
+      annotated
     />
 
     <Switch
       on
-      label="Lunchtime"
-    />
-
-    <Switch
-      on
-      variant="annotated"
-      tooltip="I'm a tooltip message"
-      label="Switch Label"
-    />
-
-    <Switch
-      on
+      annotated
       disabled
-      label="disabled"
     />
 
-    <Switch
-      on
-      variant="annotated"
-      readonly
-      label="readonly"
-    />
+    <Switch on>
+      <svelte:fragment slot="on">Enabled</svelte:fragment>
+      <svelte:fragment slot="off">Disabled</svelte:fragment>
+    </Switch>
   </div>
 
   <!-- Table -->
@@ -831,6 +870,7 @@ const notify = useNotify();
       </TableRow>
     </TableBody>
   </Table>
+
   <!-- Tabs -->
   <h1 class="text-2xl">Tabs</h1>
   <div class="flex gap-4">
@@ -940,35 +980,4 @@ const notify = useNotify();
       console.log('VectorInput input', event);
     }}
   />
-
-  <!--  List Box -->
-  <div>
-    <ListBox
-      disabled={false}
-      left="leftText,leftText2,leftText3"
-      right="rightText,rightText2,rightText3"
-      leftlabel="Left"
-      rightlabel="Right"
-      height="200px"
-      suffix={false}
-    />
-    <ListBox
-      disabled={false}
-      left="leftText"
-      right="rightText"
-      leftlabel="Left"
-      rightlabel="Right"
-      height="200px"
-      suffix={true}
-    />
-    <ListBox
-      disabled={true}
-      left="leftText"
-      right="rightText"
-      leftlabel="Left"
-      rightlabel="Right"
-      height="200px"
-      suffix={false}
-    />
-  </div>
 </div>
