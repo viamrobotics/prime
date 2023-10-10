@@ -83,7 +83,7 @@ const obstacles = [
 ];
 
 let elapsed = 0;
-let pose = { lng: -73.97, lat: 40.67, rotation: Math.random() * 360 };
+const pose = { lng: -73.97, lat: 40.67, rotation: Math.random() * 360 };
 
 requestAnimationFrame(function frame(time) {
   requestAnimationFrame(frame);
