@@ -46,6 +46,7 @@ let didHoverTooltip = Boolean(
     bind:map
   >
     <Nav
+      on:add-waypoint
       on:delete-waypoint
       on:update-obstacles
     >
