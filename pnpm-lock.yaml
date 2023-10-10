@@ -143,6 +143,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@floating-ui/dom':
+        specifier: ^1.5.1
+        version: 1.5.1
       '@mdi/js':
         specifier: ^7.2.96
         version: 7.2.96
@@ -156,9 +159,6 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
     devDependencies:
-      '@floating-ui/dom':
-        specifier: ^1.5.1
-        version: 1.5.1
       '@sveltejs/adapter-auto':
         specifier: ^2.1.0
         version: 2.1.0(@sveltejs/kit@1.22.6)
@@ -2185,14 +2185,12 @@ packages:
     resolution: {integrity: sha512-jk3WqquEJRlcyu7997NtR5PibI+y5bi+LS3hPmguVClypenMsCY3CBa3LAQnozRCtCrYWSEtAdiskpamuJRFOQ==}
     dependencies:
       '@floating-ui/utils': 0.1.1
-    dev: true
 
   /@floating-ui/dom@1.5.1:
     resolution: {integrity: sha512-KwvVcPSXg6mQygvA1TjbN/gh///36kKtllIF8SUm0qpFj8+rvYrpvlYdL1JoA71SHpDqgSSdGOSoQ0Mp3uY5aw==}
     dependencies:
       '@floating-ui/core': 1.4.1
       '@floating-ui/utils': 0.1.1
-    dev: true
 
   /@floating-ui/react-dom@2.0.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-rZtAmSht4Lry6gdhAJDrCp/6rKN7++JnL1/Anbr/DdeyYXQPxvg/ivrbYvJulbRf4vL8b212suwMM2lxbv+RQA==}
@@ -2207,7 +2205,6 @@ packages:
 
   /@floating-ui/utils@0.1.1:
     resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
-    dev: true
 
   /@floating-ui/vue@1.0.2(vue@3.3.4):
     resolution: {integrity: sha512-sImlAl9mAoCKZLNlwWz2P2ZMJIDlOEDXrRD6aD2sIHAka1LPC+nWtB+D3lPe7IE7FGWSbwBPTnlSdlABa3Fr0A==}
@@ -5232,7 +5229,7 @@ packages:
       eslint: 8.49.0
       eslint-config-prettier: 9.0.0(eslint@8.49.0)
       eslint-plugin-sonarjs: 0.21.0(eslint@8.49.0)
-      eslint-plugin-svelte: 2.33.1(eslint@8.49.0)(svelte@4.2.0)
+      eslint-plugin-svelte: 2.33.1(eslint@8.49.0)(svelte@4.1.2)
       eslint-plugin-tailwindcss: 3.13.0(tailwindcss@3.3.3)
       eslint-plugin-unicorn: 48.0.1(eslint@8.49.0)
     dev: true
@@ -5250,7 +5247,7 @@ packages:
         optional: true
     dependencies:
       prettier: 3.0.3
-      prettier-plugin-svelte: 3.0.3(prettier@3.0.3)(svelte@4.2.0)
+      prettier-plugin-svelte: 3.0.3(prettier@3.0.3)(svelte@4.1.2)
       prettier-plugin-tailwindcss: 0.5.4(prettier-plugin-svelte@3.0.3)(prettier@3.0.3)
     dev: true
 
@@ -10646,7 +10643,7 @@ packages:
         optional: true
     dependencies:
       prettier: 3.0.3
-      prettier-plugin-svelte: 3.0.3(prettier@3.0.3)(svelte@4.2.0)
+      prettier-plugin-svelte: 3.0.3(prettier@3.0.3)(svelte@4.1.2)
     dev: true
 
   /prettier@2.8.8:
