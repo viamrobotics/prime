@@ -80,7 +80,9 @@ describe('Radio', () => {
     render(Radio, { ...common, required: true });
 
     const legend = screen.getByText('Test radio options');
-    expect(legend).toHaveClass('after:ml-1 after:text-danger-dark after:content-["*"]');
+    expect(legend).toHaveClass(
+      'after:ml-1 after:text-danger-dark after:content-["*"]'
+    );
   });
 
   it('Renders in a row if specified', () => {
