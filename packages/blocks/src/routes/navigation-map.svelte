@@ -82,17 +82,16 @@ const obstacles = [
   },
 ];
 
-let elapsed = 0
-let pose = { lng: -73.97, lat: 40.67, rotation: Math.random() * 360 }
+let elapsed = 0;
+let pose = { lng: -73.97, lat: 40.67, rotation: Math.random() * 360 };
 
-requestAnimationFrame(function frame (time) {
-  requestAnimationFrame(frame)
-  elapsed = (time / 100)
-  pose.rotation = elapsed * 10
-  pose.lng += (Math.sin(elapsed / 10) / 1e3)
-  pose.lat += (Math.cos(elapsed / 10) / 1e3)
+requestAnimationFrame(function frame(time) {
+  requestAnimationFrame(frame);
+  elapsed = time / 100;
+  pose.rotation = elapsed * 10;
+  pose.lng += Math.sin(elapsed / 10) / 1e3;
+  pose.lat += Math.cos(elapsed / 10) / 1e3;
 });
-
 </script>
 
 <div class="px-12">
