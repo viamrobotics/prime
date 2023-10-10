@@ -32,6 +32,11 @@ export let tooltipDescription: string;
 /** Additional CSS classes to pass to the input. */
 export let inputCX: cx.Argument = '';
 
+/*
+ * The TextInput must be bound to the value so the input will update
+ * when the value is replaced. Instead of binding to the value parameter
+ * and causing double updates, create a local value that can be bound.
+ */
 $: localValue = value;
 
 let validationState: 'hide' | 'invalid' | 'invalid-remind' = 'hide';
