@@ -69,6 +69,13 @@ describe('Radio', () => {
     expect(screen.getByText('Test radio options')).toBeVisible();
   });
 
+  it('Renders the legend correctly when disabled', () => {
+    render(Radio, {...common, disabled: true});
+    
+    const legend = screen.getByText('Test radio options')
+    expect(legend).toHaveClass('text-disabled-dark cursor-not-allowed');
+  });
+
   it('Renders in a row if specified', () => {
     render(Radio, { ...common, direction: 'row' });
     expect(

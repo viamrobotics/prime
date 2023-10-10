@@ -54,6 +54,7 @@ $: getIcon = (option: string): IconName =>
 <fieldset
   aria-disabled={disabled ? true : undefined}
   class={cx('flex', extraClasses)}
+  {...$$restProps}
 >
   {#if $$slots.legend}
     <legend

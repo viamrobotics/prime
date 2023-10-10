@@ -37,6 +37,7 @@ import {
   useNotify,
   Modal,
 } from '$lib';
+import ToggleButtons from '$lib/toggle-buttons.svelte';
 import { uniqueId } from 'lodash';
 
 import { writable } from 'svelte/store';
@@ -871,6 +872,42 @@ const notify = useNotify();
       tabs={['Tab 1', 'Tab 2']}
       selected="Tab 2"
     />
+  </div>
+
+  <!-- Toggle Buttons -->
+  <h1 class="text-2xl">Toggle Buttons</h1>
+
+  <div class="flex items-end gap-4">
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('ToggleButtons input', event);
+      }}
+    />
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2']}
+      selected="Opt 1"
+    >
+      <svelte:fragment slot="legend">Preselected toggle</svelte:fragment>
+    </ToggleButtons>
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      disabled
+    >
+      <svelte:fragment slot="legend">Disabled toggle</svelte:fragment>
+    </ToggleButtons>
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      cx="w-full"
+    >
+      <svelte:fragment slot="legend">Full width</svelte:fragment>
+    </ToggleButtons>
   </div>
 
   <!-- Tooltip -->

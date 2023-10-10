@@ -1,0 +1,32 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as ToggleButtonsStories from './toggle-buttons.stories.svelte';
+
+<Meta title='Elements/ToggleButtons' />
+
+# Toggle Buttons
+
+A set of options the user can toggle between.
+
+```ts
+import { ToggleButtons } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={ToggleButtonsStories.Basic} />
+</Canvas>
+
+<Canvas>
+  <Story of={ToggleButtonsStories.WithLegend} />
+</Canvas>
+
+<Canvas>
+  <Story of={ToggleButtonsStories.Required} />
+</Canvas>
+
+<Canvas>
+  <Story of={ToggleButtonsStories.Disabled} />
+</Canvas>
+
+<Canvas>
+  <Story of={ToggleButtonsStories.FullWidth} />
+</Canvas>
