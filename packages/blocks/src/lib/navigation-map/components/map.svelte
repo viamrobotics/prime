@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Button, Icon, Radio, Tooltip } from '@viamrobotics/prime-core';
+import { Button, Icon, ToggleButtons, Tooltip } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
 import { MapLibre } from '$lib';
 import { environment, view } from '../stores';
@@ -19,8 +19,8 @@ const maxPitch = 60;
 let map: Map | undefined;
 let satellite = false;
 
-const handleViewSelect = (event: CustomEvent<{ value: string }>) => {
-  $view = event.detail.value as '2D' | '3D';
+const handleViewSelect = ({ detail }: CustomEvent<string>) => {
+  $view = detail as '2D' | '3D';
 };
 
 const toggleTileset = () => {
@@ -105,7 +105,7 @@ let didHoverTooltip = Boolean(
     </div>
 
     <div class="absolute bottom-12 right-3 z-10">
-      <Radio
+      <ToggleButtons
         options={['2D', '3D']}
         selected={$view}
         on:input={handleViewSelect}
