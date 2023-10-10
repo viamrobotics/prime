@@ -9,8 +9,8 @@ export { default as SlamMap2D } from './slam-map-2d/index.svelte';
 
 // Navigation map components
 export { default as NavigationMap } from './navigation-map/index.svelte';
+export { NavigationTab } from './navigation-map/types';
 export type {
-  NavigationTab,
   NavigationTabType,
   Shapes,
   CapsuleGeometry,

@@ -13,12 +13,12 @@
 -->
 <script lang="ts">
 import { onDestroy } from 'svelte';
-import { Marker } from 'maplibre-gl';
+import { Marker, LngLat } from 'maplibre-gl';
 import { useMapLibre } from './hooks';
 import type { GeoPose } from '$lib';
 
 /** The Geo position of the marker. */
-export let pose: GeoPose;
+export let pose: GeoPose | undefined;
 
 /** The relative size of the marker. */
 export let scale = 1;
@@ -33,11 +33,11 @@ const { map } = useMapLibre();
 
 let marker: Marker | undefined;
 
-$: {
+$: if (pose) {
   marker?.remove();
   marker = new Marker(element ? { element, scale, color } : { scale, color });
   marker.getElement().style.zIndex = '1';
-  marker.setLngLat(pose);
+  marker.setLngLat(new LngLat(pose.lng, pose.lat));
   marker.setRotation(pose.rotation);
   marker.addTo(map);
 }
