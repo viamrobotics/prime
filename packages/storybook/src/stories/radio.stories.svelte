@@ -7,43 +7,51 @@ import { Radio } from '@viamrobotics/prime-core';
 
 <Story name="Basic">
   <Radio
+    name="basic"
     options={['Opt 1', 'Opt 2', 'Opt 3']}
     selected="Opt 1"
   />
 </Story>
 
-<Story name="With label">
+<Story name="With legend">
   <Radio
-    label="These are your options"
-    labelposition="top"
+    name="legend"
     options={['Opt 1', 'Opt 2']}
     selected="Opt 1"
-  />
+  >
+    <svelte:fragment slot="legend">These are your options</svelte:fragment>
+  </Radio>
 </Story>
 
-<Story name="Tooltip and state">
+<Story name="Required">
   <Radio
-    label="Your options"
-    labelposition="top"
-    options={['Option 1', 'Option 2', 'Option 3']}
-    selected="Option 1"
-    tooltip="Warning - these options may not be your only options."
-    state="warn"
-  />
-</Story>
-
-<Story name="Readonly">
-  <Radio
-    options={['Opt 1', 'Opt 2', 'Opt 3']}
+    name="required"
+    options={['To be', 'Not to be']}
     selected="Opt 1"
-    readonly={true}
-  />
+    required
+  >
+    <svelte:fragment slot="legend">Answer the question</svelte:fragment>
+  </Radio>
 </Story>
 
-<Story name="Full width radio">
+<Story name="Disabled">
   <Radio
-    options={['Opt 1', 'Opt 2', 'Opt 3']}
-    selected="Opt 1"
-    width="full"
+    name="disabled"
+    options={['Frank', 'Dave']}
+    selected="Frank"
+    disabled
+  >
+    <svelte:fragment slot="legend"
+      >I'm afraid that's something I cannot allow to happen.
+    </svelte:fragment>
+  </Radio>
+</Story>
+
+<Story name="Row">
+  <Radio
+    name="row"
+    options={['Left', 'Right']}
+    selected="Left"
+    direction="row"
   />
 </Story>

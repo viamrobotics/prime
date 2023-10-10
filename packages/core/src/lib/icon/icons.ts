@@ -38,6 +38,7 @@ export const paths = {
   'credit-card-outline': MDI.mdiCreditCardOutline,
   'dots-horizontal': MDI.mdiDotsHorizontal,
   download: MDI.mdiDownload,
+  earth: MDI.mdiEarth,
   'file-download-outline': MDI.mdiFileDownloadOutline,
   'filter-outline': MDI.mdiFilterOutline,
   github: MDI.mdiGithub,
@@ -58,7 +59,9 @@ export const paths = {
   'pencil-outline': MDI.mdiPencilOutline,
   'play-circle-outline': MDI.mdiPlayCircleOutline,
   plus: MDI.mdiPlus,
-  earth: MDI.mdiEarth,
+  'radiobox-blank': MDI.mdiRadioboxBlank,
+  'radiobox-indeterminate-variant': MDI.mdiRadioboxIndeterminateVariant,
+  'radiobox-marked': MDI.mdiRadioboxMarked,
   refresh: MDI.mdiRefresh,
   send: MDI.mdiSend,
   'stop-circle-outline': MDI.mdiStopCircleOutline,
@@ -76,3 +79,10 @@ export const paths = {
  * The possible icon names that can be rendered. This is good for typing props.
  */
 export type IconName = keyof typeof paths;
+
+/** 
+ * A map of icon names, useful for dynamically adding icons with type safety.
+ */
+export const iconNames = Object.fromEntries<IconName>(
+  Array<IconName>.from(Object.keys(paths)).map((name) => [name, name as IconName])
+) as Record<IconName, IconName>
