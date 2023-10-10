@@ -17,18 +17,14 @@
 <script lang="ts">
 import { environment as envStore } from './stores';
 import Map from './components/map.svelte';
-import {
-  type Waypoint,
-  type Obstacle,
-  NavigationTab,
-  type NavigationTabType,
-} from './types';
+import { type Obstacle, NavigationTab, type NavigationTabType } from './types';
 import {
   waypoints as waypointsStore,
   obstacles as obstaclesStore,
   tab as tabStore,
   tabs as tabsStore,
 } from './stores';
+import type { GeoPose, Waypoint } from '$lib';
 
 /** The map environment. "debug" assumes the robot is on and connected. */
 export let environment: 'debug' | 'configure' = 'debug';
@@ -48,7 +44,8 @@ export let tabs: NavigationTabType[] = [
   NavigationTab.Obstacles,
 ];
 
-export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
+/** The pose (Lng,Lat) and rotation of a base */
+export let baseGeoPose: GeoPose | undefined = undefined;
 
 $: $tabStore = tab;
 $: $tabsStore = tabs;
