@@ -22,6 +22,7 @@ import {
   TooltipText,
   TextInput,
   NumericInput,
+  RestrictedTextInput,
   SliderInput,
   VectorInput,
   Table,
@@ -38,7 +39,6 @@ import {
   useNotify,
   Modal,
 } from '$lib';
-import RestrictedTextInput from '$lib/input/restricted-text-input.svelte';
 import { uniqueId } from 'lodash';
 
 import { writable } from 'svelte/store';
@@ -62,7 +62,14 @@ const handleOpenModal = () => {
 };
 const notify = useNotify();
 
-const restrictedValue = writable('');
+let restrictedValue = '';
+$: console.log(restrictedValue);
+
+const restrictInput = (inputValue: string) =>
+  inputValue
+    .replaceAll(/\s/gu, '-')
+    .replaceAll('%', '$')
+    .replaceAll(/[^a-z0-9-$]/gu, '');
 </script>
 
 <NotificationContainer />
@@ -425,13 +432,9 @@ const restrictedValue = writable('');
     <RestrictedTextInput
       name="namespace"
       placeholder="Enter your money namespace"
-      value={restrictedValue}
+      bind:value={restrictedValue}
       tooltipDescription="Valid characters: numbers, lowercase letters, dashes, dolla $ign"
-      restrictInput={(inputValue) =>
-        inputValue
-          .replaceAll(/\s/gu, '-')
-          .replaceAll(/%/gu, '$')
-          .replaceAll(/[^a-z0-9-$]/gu, '')}
+      {restrictInput}
       inputCX="min-w-[300px]"
     />
   </div>

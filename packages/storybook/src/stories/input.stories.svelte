@@ -8,7 +8,9 @@ import {
   SliderInput,
   TextInput,
 } from '@viamrobotics/prime-core';
-import { writable } from 'svelte/store';
+
+const restrictInput = (inputValue: string) =>
+  inputValue.replaceAll(/[^a-n]/gu, '');
 </script>
 
 <Meta title="Elements/Input" />
@@ -31,8 +33,8 @@ import { writable } from 'svelte/store';
 <Story name="Restricted Text">
   <div class="mb-2">
     <RestrictedTextInput
-      value={writable('')}
-      restrictInput={(inputValue) => inputValue.replaceAll(/[^a-n]/gu, '')}
+      value=""
+      {restrictInput}
       tooltipDescription="Only lowercase a-n allowed"
     />
   </div>

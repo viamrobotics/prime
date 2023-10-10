@@ -47,6 +47,9 @@ An opinionated input for text values that only allows specified regex. The allow
 
 ```ts
 import { RestrictedTextInput } from '@viamrobotics/prime-core';
+
+const restrictInput = (inputValue: string) =>
+  inputValue.replaceAll(/[^a-n]/gu, '');
 ```
 
 <Canvas>

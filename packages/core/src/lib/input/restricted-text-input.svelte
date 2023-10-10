@@ -18,10 +18,10 @@ For text-based user inputs that only allow certain characters. Shows the user a 
 import type cx from 'classnames';
 import { TextInput } from '$lib';
 import { Tooltip, type TooltipVisibility } from '$lib/tooltip';
-import { writable, type Writable } from 'svelte/store';
+import { onDestroy } from 'svelte';
 
 /** The value of the input. A store because the value is not exactly bound to user input. */
-export let value: Writable<string>;
+export let value: string;
 
 /** A function to restrict the input value. If the function returns a different string than what the user inputted, the help tooltip is shown. */
 export let restrictInput: (inputValue: string) => string;
@@ -30,51 +30,65 @@ export let restrictInput: (inputValue: string) => string;
 export let tooltipDescription: string;
 
 /** Additional CSS classes to pass to the input. */
-let extraInputClasses: cx.Argument = '';
-export { extraInputClasses as inputCX };
+export let inputCX: cx.Argument = '';
 
-const tooltipVisible = writable<TooltipVisibility>('invisible');
-let tooltipTimeoutID = -1;
+$: localValue = value;
 
-const tooltipWiggle = writable(false);
-let tooltipWiggleTimeoutID = -1;
+let validationState: 'hide' | 'invalid' | 'invalid-remind' = 'hide';
+let tooltipTimeoutID: number | undefined = undefined;
+
+const clearTooltipTimeout = () => {
+  clearTimeout(tooltipTimeoutID);
+};
+
+const hideInvalid = () => {
+  clearTooltipTimeout();
+  validationState = 'hide';
+};
+
+const showInvalid = () => {
+  clearTooltipTimeout();
+  validationState = 'invalid';
+  tooltipTimeoutID = window.setTimeout(hideInvalid, 5000);
+};
+
+const remindInvalid = () => {
+  clearTooltipTimeout();
+  validationState = 'invalid-remind';
+  tooltipTimeoutID = window.setTimeout(showInvalid, 250);
+};
 
 const handleInput = (event: Event) => {
-  const inputValue = (event.currentTarget as HTMLInputElement).value;
-  const nextValue = restrictInput(inputValue);
+  const rawValue = (event.currentTarget as HTMLInputElement).value;
+  localValue = restrictInput(rawValue);
+  value = localValue;
 
-  if (nextValue !== inputValue) {
-    if (tooltipTimeoutID >= 0) {
-      window.clearTimeout(tooltipWiggleTimeoutID);
-      $tooltipWiggle = true;
-      tooltipWiggleTimeoutID = window.setTimeout(() => {
-        $tooltipWiggle = false;
-      }, 500);
-    }
-
-    window.clearTimeout(tooltipTimeoutID);
-    $tooltipVisible = 'visible';
-    tooltipTimeoutID = window.setTimeout(() => {
-      $tooltipVisible = 'invisible';
-      tooltipTimeoutID = -1;
-    }, 5000);
+  if (value === rawValue) {
+    hideInvalid();
+  } else if (validationState === 'hide') {
+    showInvalid();
+  } else if (validationState === 'invalid') {
+    remindInvalid();
   }
-
-  $value = nextValue;
 };
+
+$: tooltipWiggle = validationState === 'invalid-remind';
+let tooltipVisibility: TooltipVisibility;
+$: tooltipVisibility = validationState === 'hide' ? 'invisible' : 'visible';
+onDestroy(clearTooltipTimeout);
 </script>
 
 <Tooltip
-  cx={$tooltipWiggle && 'animate-wiggle'}
-  state={$tooltipVisible}
+  cx={tooltipWiggle && 'animate-wiggle'}
+  state={tooltipVisibility}
   location="bottom"
   let:tooltipID
 >
   <p slot="description">{tooltipDescription}</p>
   <TextInput
-    cx={extraInputClasses}
+    cx={inputCX}
     aria-describedby={tooltipID}
-    bind:value={$value}
+    bind:value={localValue}
     on:input={handleInput}
     {...$$restProps}
   />
