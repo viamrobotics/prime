@@ -71,8 +71,9 @@ const handleParentClick = (event: PointerEvent) => {
         variant === 'icon',
       'h-[30px] w-[30px] text-gray-6 hover:text-danger-dark active:text-danger-dark':
         variant === 'icon-danger',
+      'inline-grid place-content-center': variant === 'icon' || variant === 'icon-danger',
       'px-3': !icon && variant !== 'icon',
-      'pl-2 pr-3': icon && variant !== 'icon',
+      'pl-2 pr-3': icon && variant !== 'icon' && variant !== 'icon-danger',
       'inline-flex items-center justify-center gap-1.5 border px-3 py-1.5 text-xs':
         variant !== 'icon' && variant !== 'icon-danger',
       'border-light bg-light hover:border-medium hover:bg-medium active:bg-gray-2':
