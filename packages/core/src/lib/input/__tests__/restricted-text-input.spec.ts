@@ -58,6 +58,32 @@ describe('Restricted Text Input', () => {
     );
   });
 
+  it('sets the value the exact number of times there was input', async () => {
+    const { component } = render(BoundRestrictedTextInput, {
+      value: '',
+      restrictInput: (value: string) => value.replaceAll(' ', '-'),
+    });
+
+    const onChange = vi.fn();
+    component.$on('change', onChange);
+
+    const input = screen.getByRole('textbox');
+
+    await user.type(input, ' ');
+
+    expect(onChange).toHaveBeenCalledOnce();
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ detail: '-' })
+    );
+
+    await user.type(input, ' ');
+
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ detail: '--' })
+    );
+  });
+
   it('shows a tooltip and an animation when an incorrect character is entered', async () => {
     render(RestrictedTextInput, {
       value: '',
