@@ -16,7 +16,8 @@ export let baseGeoPose: GeoPose | undefined = undefined;
 const minPitch = 0;
 const maxPitch = 60;
 
-let map: Map | undefined;
+export let map: Map | undefined = undefined;
+
 let satellite = false;
 
 const handleViewSelect = (event: CustomEvent<{ value: string }>) => {

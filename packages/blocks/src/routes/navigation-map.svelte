@@ -7,6 +7,7 @@ import {
   type SphereGeometry,
   type BoxGeometry,
 } from '$lib';
+import type { Map } from 'maplibre-gl';
 import { Label, SliderInput } from '@viamrobotics/prime-core';
 import { ViamObject3D } from '@viamrobotics/three';
 
@@ -82,6 +83,8 @@ const obstacles = [
   },
 ];
 
+let map: Map;
+
 let elapsed = 0;
 const pose = { lng: -73.97, lat: 40.67, rotation: Math.random() * 360 };
 
@@ -92,6 +95,7 @@ requestAnimationFrame(function frame(time) {
   pose.lng += Math.sin(elapsed / 10) / 1e3;
   pose.lat += Math.cos(elapsed / 10) / 1e3;
 });
+
 </script>
 
 <div class="px-12">
@@ -99,6 +103,7 @@ requestAnimationFrame(function frame(time) {
     class="relative h-[800px] w-full border border-gray-200 p-4 sm:aspect-video sm:h-auto"
   >
     <NavigationMap
+      bind:map
       environment="configure"
       tab="Obstacles"
       tabs={['Attributes', 'Obstacles', 'Waypoints']}

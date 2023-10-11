@@ -16,6 +16,7 @@
 -->
 <script lang="ts">
 import { environment as envStore } from './stores';
+import type { Map as MapType } from 'maplibre-gl';
 import Map from './components/map.svelte';
 import { type Obstacle, NavigationTab, type NavigationTabType } from './types';
 import {
@@ -35,16 +36,19 @@ export let waypoints: Waypoint[] = [];
 /** The obstacles to render on the map. */
 export let obstacles: Obstacle[] = [];
 
-/** The initial tab to show */
+/** The initial tab to show. */
 export let tab: NavigationTabType = NavigationTab.Waypoints;
 
-/** The visible set of tabs */
+/** A reference to the maplibre map, once created. */
+export let map: MapType | undefined = undefined;
+
+/** The visible set of tabs. */
 export let tabs: NavigationTabType[] = [
   NavigationTab.Waypoints,
   NavigationTab.Obstacles,
 ];
 
-/** The pose (Lng,Lat) and rotation of a base */
+/** The pose (Lng,Lat) and rotation of a base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
 
 $: $tabStore = tab;
@@ -55,6 +59,7 @@ $: $envStore = environment;
 </script>
 
 <Map
+  bind:map
   {baseGeoPose}
   on:create
   on:add-waypoint
