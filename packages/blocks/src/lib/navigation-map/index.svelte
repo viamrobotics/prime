@@ -56,7 +56,7 @@ $: $envStore = environment;
 
 <Map
   {baseGeoPose}
-  on:click
+  on:create
   on:add-waypoint
   on:delete-waypoint
   on:update-obstacles

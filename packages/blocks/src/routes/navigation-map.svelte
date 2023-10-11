@@ -105,7 +105,7 @@ requestAnimationFrame(function frame(time) {
       baseGeoPose={pose}
       {obstacles}
       {waypoints}
-      on:click={(event) => console.log('click', event)}
+      on:create={(event) => console.log('create', event)}
       on:add-waypoint={(event) => console.log('add-waypoint', event)}
       on:delete-waypoint={(event) => console.log('delete-waypoint', event)}
       on:update-obstacles={(event) => console.log('update-obstacles', event)}

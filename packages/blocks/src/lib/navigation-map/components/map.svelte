@@ -44,6 +44,7 @@ let didHoverTooltip = Boolean(
     maxPitch={$view === '3D' ? maxPitch : minPitch}
     minZoom={6}
     bind:map
+    on:create
   >
     <Nav
       on:add-waypoint
