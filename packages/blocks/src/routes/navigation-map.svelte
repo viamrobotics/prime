@@ -81,6 +81,17 @@ const obstacles = [
     ],
   },
 ];
+
+let elapsed = 0;
+const pose = { lng: -73.97, lat: 40.67, rotation: Math.random() * 360 };
+
+requestAnimationFrame(function frame(time) {
+  requestAnimationFrame(frame);
+  elapsed = time / 100;
+  pose.rotation = elapsed * 10;
+  pose.lng += Math.sin(elapsed / 10) / 1e3;
+  pose.lat += Math.cos(elapsed / 10) / 1e3;
+});
 </script>
 
 <div class="px-12">
@@ -91,7 +102,7 @@ const obstacles = [
       environment="configure"
       tab="Obstacles"
       tabs={['Attributes', 'Obstacles', 'Waypoints']}
-      baseGeoPose={{ lng: -73.97, lat: 40.67 }}
+      baseGeoPose={pose}
       {obstacles}
       {waypoints}
       on:click={(event) => console.log('click', event)}
