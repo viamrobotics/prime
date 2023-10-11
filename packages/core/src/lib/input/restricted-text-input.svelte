@@ -32,6 +32,12 @@ export let tooltipDescription: string;
 /** Additional CSS classes to pass to the input. */
 export let inputCX: cx.Argument = '';
 
+/** The duration to show the tooltip for invalid input. Useful for testing. */
+export let tooltipDurationMs = 5000;
+
+/** The duration to show the wiggle animation. This animation is defined in the tailwind theme. */
+export let wiggleDurationMs = 250;
+
 let validationState: 'hide' | 'invalid' | 'invalid-remind' = 'hide';
 let tooltipTimeoutID: number | undefined = undefined;
 
@@ -47,13 +53,13 @@ const hideInvalid = () => {
 const showInvalid = () => {
   clearTooltipTimeout();
   validationState = 'invalid';
-  tooltipTimeoutID = window.setTimeout(hideInvalid, 5000);
+  tooltipTimeoutID = window.setTimeout(hideInvalid, tooltipDurationMs);
 };
 
 const remindInvalid = () => {
   clearTooltipTimeout();
   validationState = 'invalid-remind';
-  tooltipTimeoutID = window.setTimeout(showInvalid, 250);
+  tooltipTimeoutID = window.setTimeout(showInvalid, wiggleDurationMs);
 };
 
 const handleInput = (event: Event) => {
