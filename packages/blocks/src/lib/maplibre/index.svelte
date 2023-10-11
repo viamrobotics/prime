@@ -115,9 +115,9 @@ onMount(() => {
 });
 
 onDestroy(() => {
-  map!.off('move', handleMove);
-  map!.off('resize', handleResize);
-  map!.off('style.load', handleCreate);
+  map?.off('move', handleMove);
+  map?.off('resize', handleResize);
+  map?.off('style.load', handleCreate);
 });
 
 $: map?.setMinPitch(minPitch);
