@@ -18,7 +18,7 @@ For text-based user inputs that only allow certain characters. Shows the user a 
 import type cx from 'classnames';
 import { TextInput } from '$lib';
 import { Tooltip, type TooltipVisibility } from '$lib/tooltip';
-import { onDestroy } from 'svelte';
+import { onDestroy, onMount } from 'svelte';
 
 /** The value of the input. */
 export let value: string;
@@ -39,10 +39,15 @@ export let tooltipDurationMs = 5000;
 export let wiggleDurationMs = 250;
 
 let validationState: 'hide' | 'invalid' | 'invalid-remind' = 'hide';
-let tooltipTimeoutID: number | NodeJS.Timeout | undefined = undefined;
+let tooltipTimeoutID: number | undefined = undefined;
+
+// window is not available when using SSR so check if mounted before trying to clear timeouts.
+let mounted = false;
 
 const clearTooltipTimeout = () => {
-  clearTimeout(tooltipTimeoutID);
+  if (mounted) {
+    window.clearTimeout(tooltipTimeoutID);
+  }
 };
 
 const hideInvalid = () => {
@@ -53,13 +58,13 @@ const hideInvalid = () => {
 const showInvalid = () => {
   clearTooltipTimeout();
   validationState = 'invalid';
-  tooltipTimeoutID = setTimeout(hideInvalid, tooltipDurationMs);
+  tooltipTimeoutID = window.setTimeout(hideInvalid, tooltipDurationMs);
 };
 
 const remindInvalid = () => {
   clearTooltipTimeout();
   validationState = 'invalid-remind';
-  tooltipTimeoutID = setTimeout(showInvalid, wiggleDurationMs);
+  tooltipTimeoutID = window.setTimeout(showInvalid, wiggleDurationMs);
 };
 
 const handleInput = (event: Event) => {
@@ -81,7 +86,14 @@ const handleInput = (event: Event) => {
 $: tooltipWiggle = validationState === 'invalid-remind';
 let tooltipVisibility: TooltipVisibility;
 $: tooltipVisibility = validationState === 'hide' ? 'invisible' : 'visible';
-onDestroy(clearTooltipTimeout);
+
+onMount(() => {
+  mounted = true;
+});
+onDestroy(() => {
+  clearTooltipTimeout();
+  mounted = false;
+});
 </script>
 
 <Tooltip
