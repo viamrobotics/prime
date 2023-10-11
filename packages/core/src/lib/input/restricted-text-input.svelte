@@ -20,7 +20,7 @@ import { TextInput } from '$lib';
 import { Tooltip, type TooltipVisibility } from '$lib/tooltip';
 import { onDestroy } from 'svelte';
 
-/** The value of the input. A store because the value is not exactly bound to user input. */
+/** The value of the input. */
 export let value: string;
 
 /** A function to restrict the input value. If the function returns a different string than what the user inputted, the help tooltip is shown. */
@@ -31,13 +31,6 @@ export let tooltipDescription: string;
 
 /** Additional CSS classes to pass to the input. */
 export let inputCX: cx.Argument = '';
-
-/*
- * The TextInput must be bound to the value so the input will update
- * when the value is replaced. Instead of binding to the value parameter
- * and causing double updates, create a local value that can be bound.
- */
-$: localValue = value;
 
 let validationState: 'hide' | 'invalid' | 'invalid-remind' = 'hide';
 let tooltipTimeoutID: number | undefined = undefined;
@@ -64,9 +57,11 @@ const remindInvalid = () => {
 };
 
 const handleInput = (event: Event) => {
-  const rawValue = (event.currentTarget as HTMLInputElement).value;
-  localValue = restrictInput(rawValue);
-  value = localValue;
+  const target = event.currentTarget as HTMLInputElement;
+  const rawValue = target.value;
+
+  value = restrictInput(rawValue);
+  target.value = value;
 
   if (value === rawValue) {
     hideInvalid();
@@ -93,7 +88,7 @@ onDestroy(clearTooltipTimeout);
   <TextInput
     cx={inputCX}
     aria-describedby={tooltipID}
-    bind:value={localValue}
+    {value}
     on:input={handleInput}
     {...$$restProps}
   />
