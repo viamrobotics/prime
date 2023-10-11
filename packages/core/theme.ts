@@ -79,5 +79,16 @@ export const theme = {
     zIndex: {
       max: '1000',
     },
+
+    keyframes: {
+      wiggle: {
+        '25%': { transform: 'translateX(2px)' },
+        '75%': { transform: 'translateX(-2px)' },
+      },
+    },
+
+    animation: {
+      wiggle: 'wiggle 0.25s',
+    },
   },
 } satisfies OptionalConfig['theme'];

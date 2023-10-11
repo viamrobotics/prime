@@ -4,9 +4,13 @@ import {
   Input,
   Label,
   NumericInput,
+  RestrictedTextInput,
   SliderInput,
   TextInput,
 } from '@viamrobotics/prime-core';
+
+const restrictInput = (inputValue: string) =>
+  inputValue.replaceAll(/[^a-n]/gu, '');
 </script>
 
 <Meta title="Elements/Input" />
@@ -24,6 +28,16 @@ import {
 
 <Story name="Text">
   <TextInput />
+</Story>
+
+<Story name="Restricted Text">
+  <div class="mb-2">
+    <RestrictedTextInput
+      value=""
+      {restrictInput}
+      tooltipDescription="Only lowercase a-n allowed"
+    />
+  </div>
 </Story>
 
 <Story name="Numeric">

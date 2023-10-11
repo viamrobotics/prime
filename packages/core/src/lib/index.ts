@@ -32,14 +32,16 @@ export {
   type ContextMenuItemVariant,
 } from './context-menu';
 
-export { default as Input, type InputState } from './input/input.svelte';
-export { default as NumericInput } from './input/numeric-input.svelte';
-export { default as SliderInput } from './input/slider-input.svelte';
-export { type NumericInputTypes } from './input/utils';
 export {
-  default as TextInput,
+  Input,
+  NumericInput,
+  RestrictedTextInput,
+  SliderInput,
+  TextInput,
+  type InputState,
+  type NumericInputTypes,
   type TextInputTypes,
-} from './input/text-input.svelte';
+} from './input';
 
 export { default as VectorInput } from './vector-input.svelte';
 export {
