@@ -39,7 +39,7 @@ export let tooltipDurationMs = 5000;
 export let wiggleDurationMs = 250;
 
 let validationState: 'hide' | 'invalid' | 'invalid-remind' = 'hide';
-let tooltipTimeoutID: number | undefined = undefined;
+let tooltipTimeoutID: number | NodeJS.Timeout | undefined = undefined;
 
 const clearTooltipTimeout = () => {
   clearTimeout(tooltipTimeoutID);
@@ -53,13 +53,13 @@ const hideInvalid = () => {
 const showInvalid = () => {
   clearTooltipTimeout();
   validationState = 'invalid';
-  tooltipTimeoutID = window.setTimeout(hideInvalid, tooltipDurationMs);
+  tooltipTimeoutID = setTimeout(hideInvalid, tooltipDurationMs);
 };
 
 const remindInvalid = () => {
   clearTooltipTimeout();
   validationState = 'invalid-remind';
-  tooltipTimeoutID = window.setTimeout(showInvalid, wiggleDurationMs);
+  tooltipTimeoutID = setTimeout(showInvalid, wiggleDurationMs);
 };
 
 const handleInput = (event: Event) => {
