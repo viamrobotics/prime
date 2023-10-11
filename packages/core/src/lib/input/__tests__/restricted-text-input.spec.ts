@@ -3,11 +3,10 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { RestrictedTextInput } from '$lib';
 import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 import userEvent from '@testing-library/user-event';
-import type { UserEvent } from '@testing-library/user-event/dist/types/setup/setup';
 import BoundRestrictedTextInput from './restricted-text-input.spec.svelte';
 
 describe('Restricted Text Input', () => {
-  let user: UserEvent;
+  let user: ReturnType<typeof userEvent.setup>;
 
   beforeEach(() => {
     user = userEvent.setup();
