@@ -13,8 +13,7 @@ import * as THREE from 'three';
 import { onDestroy } from 'svelte';
 import { useRender, useThrelte } from '@threlte/core';
 import { MercatorCoordinate } from 'maplibre-gl';
-import type { LngLat } from '../types';
-import { useMapLibre } from '$lib';
+import { useMapLibre, type LngLat } from '$lib';
 
 export interface Props {
   lnglat?: LngLat;
