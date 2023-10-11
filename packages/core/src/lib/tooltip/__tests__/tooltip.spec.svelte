@@ -10,10 +10,10 @@
   - https://github.com/testing-library/svelte-testing-library/issues/48
  -->
 <script lang="ts">
-import { Tooltip, type TooltipLocation } from '$lib';
+import { Tooltip, type TooltipLocation, type TooltipVisibility } from '$lib';
 
 export let location: TooltipLocation = 'top';
-export let state: 'invisible' | 'visible' = 'invisible';
+export let state: TooltipVisibility | undefined = undefined;
 </script>
 
 <Tooltip

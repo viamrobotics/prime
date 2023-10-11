@@ -45,6 +45,25 @@ describe('Tooltip', () => {
     expect(tooltip).not.toHaveClass('invisible');
   });
 
+  it('does not render the tooltip when state is invisible', async () => {
+    const user = userEvent.setup();
+
+    render(Tooltip, { state: 'invisible' });
+
+    const target = screen.getByTestId('target');
+    const tooltip = screen.getByRole('tooltip');
+
+    // tooltip should initially be invisible before styles calculate
+    expect(tooltip).toHaveClass('invisible');
+
+    // tooltip should stay invisible despite hover state
+    await user.hover(target);
+    expect(tooltip).toHaveClass('invisible');
+
+    await user.unhover(target);
+    expect(tooltip).toHaveClass('invisible');
+  });
+
   it('shows/hides the tooltip on mouse enter/exit', async () => {
     const user = userEvent.setup();
 
