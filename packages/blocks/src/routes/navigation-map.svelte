@@ -96,6 +96,8 @@ requestAnimationFrame(function frame(time) {
   pose.lat += Math.cos(elapsed / 10) / 1e3;
 });
 
+$: map?.setCenter({ lat: 40.7032561061375, lng: -74.17448195037605 })
+
 </script>
 
 <div class="px-12">
