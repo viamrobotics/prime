@@ -2,7 +2,7 @@
 import { IconButton } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import { waypoints } from '../../stores';
-import { useMapLibre, type LngLat, useMapLibreEvent } from '$lib';
+import { useMapLibre, useMapLibreEvent, type LngLat } from '$lib';
 
 interface Events {
   /** Fired when a waypoint is added. */

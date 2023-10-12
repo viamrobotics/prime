@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Button, Icon, ToggleButtons, Tooltip } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
-import { MapLibre } from '$lib';
+import { MapLibre, type GeoPose } from '$lib';
 import { environment, view } from '../stores';
 import ObstacleLayer from './obstacle-layer.svelte';
 import RobotMarker from './robot-marker.svelte';
@@ -11,12 +11,13 @@ import Waypoints from './waypoints.svelte';
 import ObstaclesLegend from './nav/obstacles-legend.svelte';
 
 /** The Geo-pose of a robot base. */
-export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
+export let baseGeoPose: GeoPose | undefined = undefined;
 
 const minPitch = 0;
 const maxPitch = 60;
 
-let map: Map | undefined;
+export let map: Map | undefined = undefined;
+
 let satellite = false;
 
 const handleViewSelect = ({ detail }: CustomEvent<string>) => {
@@ -44,6 +45,7 @@ let didHoverTooltip = Boolean(
     maxPitch={$view === '3D' ? maxPitch : minPitch}
     minZoom={6}
     bind:map
+    on:create
   >
     <Nav
       on:add-waypoint
@@ -55,7 +57,7 @@ let didHoverTooltip = Boolean(
         slot="tab"
       />
     </Nav>
-    <RobotMarker lngLat={baseGeoPose} />
+    <RobotMarker pose={baseGeoPose} />
     <Waypoints />
 
     <ObstacleLayer
