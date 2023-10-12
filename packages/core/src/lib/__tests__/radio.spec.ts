@@ -19,7 +19,6 @@ describe('Radio', () => {
 
   it('Marks the selected option correctly', () => {
     render(Radio, common);
-    screen.debug();
     expect(screen.getByLabelText('Option 1')).toBeChecked();
   });
 
