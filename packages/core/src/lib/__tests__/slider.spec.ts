@@ -1,9 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import {
-  act,
-  createEvent,
-  fireEvent,
   render,
   screen,
 } from '@testing-library/svelte';
@@ -23,9 +20,6 @@ export const delay = async (time: number) => {
 };
 
 describe('Slider', () => {
-  // beforeEach(() => {
-  //   const user = userEvent.setup();
-  // });
 
   it('Displays min and max values', () => {
     render(Slider, {
@@ -39,6 +33,7 @@ describe('Slider', () => {
     expect(screen.getByText('-50', { exact: true })).toBeVisible();
     expect(screen.getByText('50', { exact: true })).toBeVisible();
   });
+
 
   it('Displays start and and end values', () => {
     const { container } = render(Slider, {
@@ -151,6 +146,7 @@ describe('Slider', () => {
     expect(screen.getByText(customMin, { exact: true })).toBeVisible();
     expect(screen.getByText(customMax, { exact: true })).toBeVisible();
   });
+  
   it('Dispatches "input" event with value when user drags slider to value', async () => {
     const { container } = render(Slider, {
       min: '-50',
@@ -163,32 +159,40 @@ describe('Slider', () => {
     // TODO
   });
 
-  it('Given disabled attributes as true, displays slider as disabled and prevents interaction', () => {
-    // TODO
-  });
+  it('Given disabled attributes as true, displays slider as disabled and prevents interaction', async () => {
+    const user = userEvent.setup();
 
-  it('Given readonly attributes as true, displays slider as readonly and prevents interaction', () => {
-    // TODO
+    render(Slider, { disabled: true });
+
+    const slider = screen.getByRole('slider');
+
+    expect(slider).toHaveAttribute('aria-disabled', 'true');
+
+    await user.click(slider);  
+
+    await user.pointer([{ type: 'pointerDown', target: slider, clientX: 50 }]); 
+
+    expect(slider.getAttribute('aria-valuenow')).toBe('50');
+  
   });
 
   it('Given no attributes, renders slider with { min: 0, max100m value:50, step:1 )', async () => {
     render(Slider);
+    const user = userEvent.setup();
+
     expect(screen.getByText('0', { exact: true })).toBeVisible();
-    expect(screen.getByText('50', { exact: true }));
-    expect(screen.getByText('100', { exact: true }));
-
+    expect(screen.getByText('50', { exact: true })).toBeVisible();
+    expect(screen.getByText('100', { exact: true })).toBeVisible();
+  
     const slider = screen.getByRole('slider');
-    expect(slider).toBeVisible();
-
-    // TODO Drag isnt working as expected
-    // Drag documentation https://testing-library.com/docs/example-drag/
-    // await fireEvent.mouseDown(slider);
-    // await fireEvent.mouseMove(document, { clientX: -5, y: 0 });
-    // await fireEvent.mouseUp(document);
-    await fireEvent.drag(slider, { delta: { x: -5, y: 0 } });
+  
+    await user.pointer([
+      { keys: '[MouseLeft>]', target: slider, clientX: 50 },
+      { target: slider, clientX: 45 },
+      { keys: '[/MouseLeft]' }
+    ]);
+  
     const newValue = slider.getAttribute('aria-valuenow');
     expect(newValue).toBe('45');
-    // await fireEvent.drag(slider, { delta: { x: -5, y: 0 } });
-    // expect(slider).toBe(45);
   });
 });
