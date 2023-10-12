@@ -11,6 +11,7 @@
 <svelte:options immutable />
 
 <script lang="ts">
+import cx from 'classnames';
 import {
   useTooltip,
   type TooltipLocation,
@@ -18,7 +19,11 @@ import {
 } from './tooltip-styles';
 
 export let location: TooltipLocation = 'top';
-export let state: TooltipVisibility = 'invisible';
+export let state: TooltipVisibility | undefined = undefined;
+
+/** Additional CSS classes to pass to the tooltip text element. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 
 const { id, styles, isVisible, setTooltip } = useTooltip();
 let tooltip: HTMLElement | undefined;
@@ -31,10 +36,13 @@ $: setTooltip({ tooltip, arrow, location, visibility: state });
   bind:this={tooltip}
   {id}
   role="tooltip"
-  class="absolute left-0 top-0 z-max w-max max-w-[250px] border border-gray-9"
   class:invisible={!$isVisible || !$styles}
   style:top={$styles?.tooltip.top}
   style:left={$styles?.tooltip.left}
+  class={cx(
+    'absolute left-0 top-0 z-max w-max max-w-[250px] border border-gray-9',
+    extraClasses
+  )}
 >
   <div
     bind:this={arrow}

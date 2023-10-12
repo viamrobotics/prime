@@ -22,6 +22,7 @@ import {
   TooltipText,
   TextInput,
   NumericInput,
+  RestrictedTextInput,
   SliderInput,
   VectorInput,
   Table,
@@ -61,6 +62,15 @@ const handleOpenModal = () => {
   modalOpen.set(true);
 };
 const notify = useNotify();
+
+let restrictedValue = '';
+$: console.log(restrictedValue);
+
+const restrictInput = (inputValue: string) =>
+  inputValue
+    .replaceAll(/\s/gu, '-')
+    .replaceAll('%', '$')
+    .replaceAll(/[^a-z0-9-$]/gu, '');
 </script>
 
 <NotificationContainer />
@@ -413,6 +423,20 @@ const notify = useNotify();
       type="password"
       name="password"
       placeholder="Enter your password"
+    />
+  </div>
+
+  <!-- Restricted Text Input -->
+  <h2 class="text-xl">Restricted Text Input</h2>
+
+  <div class="flex gap-4">
+    <RestrictedTextInput
+      name="namespace"
+      placeholder="Enter your money namespace"
+      bind:value={restrictedValue}
+      tooltipDescription="Valid characters: numbers, lowercase letters, dashes, dolla $ign"
+      {restrictInput}
+      inputCX="min-w-[300px]"
     />
   </div>
 

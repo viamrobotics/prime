@@ -16,19 +16,16 @@
 -->
 <script lang="ts">
 import { environment as envStore } from './stores';
+import type { Map as MapType } from 'maplibre-gl';
 import Map from './components/map.svelte';
-import {
-  type Waypoint,
-  type Obstacle,
-  NavigationTab,
-  type NavigationTabType,
-} from './types';
+import { type Obstacle, NavigationTab, type NavigationTabType } from './types';
 import {
   waypoints as waypointsStore,
   obstacles as obstaclesStore,
   tab as tabStore,
   tabs as tabsStore,
 } from './stores';
+import type { GeoPose, Waypoint } from '$lib';
 
 /** The map environment. "debug" assumes the robot is on and connected. */
 export let environment: 'debug' | 'configure' = 'debug';
@@ -39,16 +36,20 @@ export let waypoints: Waypoint[] = [];
 /** The obstacles to render on the map. */
 export let obstacles: Obstacle[] = [];
 
-/** The initial tab to show */
+/** The initial tab to show. */
 export let tab: NavigationTabType = NavigationTab.Waypoints;
 
-/** The visible set of tabs */
+/** A reference to the maplibre map, once created. */
+export let map: MapType | undefined = undefined;
+
+/** The visible set of tabs. */
 export let tabs: NavigationTabType[] = [
   NavigationTab.Waypoints,
   NavigationTab.Obstacles,
 ];
 
-export let baseGeoPose: { lng: number; lat: number } | undefined = undefined;
+/** The pose (Lng,Lat) and rotation of a base. */
+export let baseGeoPose: GeoPose | undefined = undefined;
 
 $: $tabStore = tab;
 $: $tabsStore = tabs;
@@ -58,8 +59,9 @@ $: $envStore = environment;
 </script>
 
 <Map
+  bind:map
   {baseGeoPose}
-  on:click
+  on:create
   on:add-waypoint
   on:delete-waypoint
   on:update-obstacles

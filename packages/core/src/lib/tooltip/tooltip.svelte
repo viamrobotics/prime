@@ -17,6 +17,7 @@
 <svelte:options immutable />
 
 <script lang="ts">
+import type cx from 'classnames';
 import type { TooltipLocation, TooltipVisibility } from './tooltip-styles';
 
 import TooltipContainer from './tooltip-container.svelte';
@@ -31,9 +32,13 @@ export let location: TooltipLocation = 'top';
 
 /**
  * If `visible`, the tooltip will always render. When `invisible` the tooltip
- * will only render on mouse enter and focus
+ * will never render. When `undefined` the tooltip will only render on mouse enter and focus
  */
-export let state: TooltipVisibility = 'invisible';
+export let state: TooltipVisibility | undefined = undefined;
+
+/** Additional CSS classes to pass to the tooltip text element. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
 <TooltipContainer let:tooltipID>
@@ -41,6 +46,7 @@ export let state: TooltipVisibility = 'invisible';
     <slot {tooltipID} />
   </TooltipTarget>
   <TooltipText
+    cx={extraClasses}
     {location}
     {state}
   >
