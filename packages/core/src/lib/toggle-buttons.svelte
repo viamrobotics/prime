@@ -78,6 +78,7 @@ const handleClick = (value: string) => {
     {#each options as option}
       <button
         aria-pressed={isSelected(option)}
+        aria-disabled={disabled ? true : undefined}
         class={cx(
           'h-7.5 w-full whitespace-nowrap border px-3 py-1.5 text-xs',
           getButtonClasses(option)

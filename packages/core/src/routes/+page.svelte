@@ -30,6 +30,7 @@ import {
   TableHeaderCell,
   TableHeader,
   TableRow,
+  ToggleButtons,
   Select,
   SearchableSelect,
   Multiselect,
@@ -38,7 +39,6 @@ import {
   useNotify,
   Modal,
 } from '$lib';
-import ToggleButtons from '$lib/toggle-buttons.svelte';
 import { uniqueId } from 'lodash';
 
 import { writable } from 'svelte/store';

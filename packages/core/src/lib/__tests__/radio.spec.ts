@@ -19,9 +19,8 @@ describe('Radio', () => {
 
   it('Marks the selected option correctly', () => {
     render(Radio, common);
-    expect(
-      screen.getByLabelText('Option 1').parentElement?.parentElement
-    ).toHaveClass('font-semibold text-default');
+    screen.debug();
+    expect(screen.getByLabelText('Option 1')).toBeChecked();
   });
 
   it('Marks the selected option as disabled if a disabled attribute of true has been specified', () => {
@@ -30,9 +29,9 @@ describe('Radio', () => {
       disabled: true,
     });
 
-    expect(
-      screen.getByLabelText('Option 1').parentElement?.parentElement
-    ).toHaveClass('font-semibold text-disabled-dark cursor-not-allowed');
+    const option = screen.getByLabelText('Option 1');
+    expect(option).toHaveAttribute('readonly');
+    expect(option).toHaveAttribute('aria-disabled');
   });
 
   it('Allows option input if not disabled', async () => {

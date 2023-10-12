@@ -32,9 +32,7 @@ describe('ToggleButtons', () => {
     });
 
     const button = screen.getByRole('button', { name: /option 1/iu });
-    expect(button).toHaveClass(
-      'font-semibold text-disabled-dark cursor-not-allowed'
-    );
+    expect(button).toHaveAttribute('aria-disabled');
   });
 
   it('Allows option input if not disabled', async () => {
@@ -47,7 +45,7 @@ describe('ToggleButtons', () => {
     await userEvent.click(button);
 
     expect(onInput).toHaveBeenCalled();
-    expect(button).toHaveClass('font-semibold text-default');
+    expect(button).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('Prevents option input if disabled', async () => {
@@ -63,7 +61,6 @@ describe('ToggleButtons', () => {
     await userEvent.click(button);
 
     expect(onInput).not.toHaveBeenCalled();
-    expect(button).toHaveClass('text-disabled-dark cursor-not-allowed');
   });
 
   it('Renders the legend correctly', () => {

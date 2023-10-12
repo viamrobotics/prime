@@ -18,7 +18,7 @@ import cx from 'classnames';
 import Label from './label.svelte';
 import Icon from './icon/icon.svelte';
 import { preventHandler, preventKeyboardHandler } from './prevent-handler';
-import { type IconName, iconNames } from './icon/icons';
+import type { IconName } from './icon/icons';
 
 /** The set of options that is available in the radio button. */
 export let options: string[];
@@ -46,9 +46,7 @@ $: isSelected = (option: string) => option === selected;
 $: handleDisabled = preventHandler(disabled);
 $: handleDisabledKeydown = preventKeyboardHandler(disabled);
 $: getIcon = (option: string): IconName =>
-  isSelected(option)
-    ? iconNames['radiobox-marked']
-    : iconNames['radiobox-blank'];
+  isSelected(option) ? 'radiobox-marked' : 'radiobox-blank';
 </script>
 
 <fieldset
@@ -96,6 +94,8 @@ $: getIcon = (option: string): IconName =>
           value={option}
           class="peer appearance-none"
           checked={isSelected(option)}
+          readonly={disabled ? true : undefined}
+          aria-disabled={disabled ? true : undefined}
           bind:group={selected}
           on:input
           on:input|capture={handleDisabled}

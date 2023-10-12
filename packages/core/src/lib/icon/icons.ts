@@ -79,12 +79,3 @@ export const paths = {
  * The possible icon names that can be rendered. This is good for typing props.
  */
 export type IconName = keyof typeof paths;
-
-const ICON_NAMES = Object.keys(paths) as IconName[];
-
-/**
- * A map of icon names, useful for dynamically adding icons with type safety.
- */
-export const iconNames = Object.fromEntries<IconName>(
-  ICON_NAMES.map((name) => [name, name])
-) as Record<IconName, IconName>;
