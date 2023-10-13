@@ -31,6 +31,7 @@ import {
   TableHeaderCell,
   TableHeader,
   TableRow,
+  ToggleButtons,
   Select,
   SearchableSelect,
   Multiselect,
@@ -637,39 +638,50 @@ const restrictInput = (inputValue: string) =>
   <!-- Radio -->
   <h1 class="text-2xl">Radio</h1>
 
-  <div class="flex flex-col gap-4">
+  <div class="flex gap-4">
     <Radio
       options={['Opt 1', 'Opt 2', 'Opt 3']}
-      selected="Opt 1"
+      name="radio"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Radio input', event);
+      }}
     />
 
     <Radio
-      label="These are your options"
-      labelposition="top"
       options={['Opt 1', 'Opt 2']}
       selected="Opt 1"
-    />
-
-    <Radio
-      label="Your options"
-      labelposition="top"
-      selected="Option 1"
-      options={['Opt 1', 'Opt 2', 'Opt 3']}
-      tooltip="Warning: these options may not be your only options."
-      state="warn"
-    />
+      name="preselected-radio"
+    >
+      <svelte:fragment slot="legend">Preselected Radio</svelte:fragment>
+    </Radio>
 
     <Radio
       options={['Opt 1', 'Opt 2', 'Opt 3']}
       selected="Opt 1"
-      readonly={true}
-    />
+      name="required-radio"
+      required
+    >
+      <svelte:fragment slot="legend">Required Radio</svelte:fragment>
+    </Radio>
 
     <Radio
       options={['Opt 1', 'Opt 2', 'Opt 3']}
       selected="Opt 1"
-      width="full"
-    />
+      name="disabled-radio"
+      disabled
+    >
+      <svelte:fragment slot="legend">Disabled Radio</svelte:fragment>
+    </Radio>
+
+    <Radio
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      name="row-radio"
+      direction="row"
+    >
+      <svelte:fragment slot="legend">Row Radio</svelte:fragment>
+    </Radio>
   </div>
 
   <!-- Select -->
@@ -912,6 +924,42 @@ const restrictInput = (inputValue: string) =>
       tabs={['Tab 1', 'Tab 2']}
       selected="Tab 2"
     />
+  </div>
+
+  <!-- Toggle Buttons -->
+  <h1 class="text-2xl">Toggle Buttons</h1>
+
+  <div class="flex items-end gap-4">
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('ToggleButtons input', event);
+      }}
+    />
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2']}
+      selected="Opt 1"
+    >
+      <svelte:fragment slot="legend">Preselected toggle</svelte:fragment>
+    </ToggleButtons>
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      disabled
+    >
+      <svelte:fragment slot="legend">Disabled toggle</svelte:fragment>
+    </ToggleButtons>
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      cx="w-full"
+    >
+      <svelte:fragment slot="legend">Full width</svelte:fragment>
+    </ToggleButtons>
   </div>
 
   <!-- Tooltip -->

@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime-blocks",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "publishConfig": {
     "access": "public"
   },
@@ -35,7 +35,7 @@
   "peerDependencies": {
     "@threlte/core": ">=6",
     "@threlte/extras": ">=5",
-    "@viamrobotics/prime-core": ">=0.0.10",
+    "@viamrobotics/prime-core": ">=0.0.48",
     "@viamrobotics/three": ">=0.0.2",
     "svelte": ">=4 <5",
     "tailwindcss": ">=3",

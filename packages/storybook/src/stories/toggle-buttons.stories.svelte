@@ -1,42 +1,38 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
-import { Radio } from '@viamrobotics/prime-core';
+import { ToggleButtons } from '@viamrobotics/prime-core';
 </script>
 
-<Meta title="Elements/Radio" />
+<Meta title="Elements/ToggleButtons" />
 
 <Story name="Basic">
-  <Radio
-    name="basic"
+  <ToggleButtons
     options={['Opt 1', 'Opt 2', 'Opt 3']}
     selected="Opt 1"
   />
 </Story>
 
 <Story name="With legend">
-  <Radio
-    name="legend"
+  <ToggleButtons
     options={['Opt 1', 'Opt 2']}
     selected="Opt 1"
   >
     <svelte:fragment slot="legend">These are your options</svelte:fragment>
-  </Radio>
+  </ToggleButtons>
 </Story>
 
 <Story name="Required">
-  <Radio
-    name="required"
+  <ToggleButtons
     options={['To be', 'Not to be']}
     selected="Opt 1"
     required
   >
     <svelte:fragment slot="legend">Answer the question</svelte:fragment>
-  </Radio>
+  </ToggleButtons>
 </Story>
 
 <Story name="Disabled">
-  <Radio
-    name="disabled"
+  <ToggleButtons
     options={['Frank', 'Dave']}
     selected="Frank"
     disabled
@@ -44,14 +40,20 @@ import { Radio } from '@viamrobotics/prime-core';
     <svelte:fragment slot="legend"
       >I'm afraid that's something I cannot allow to happen.
     </svelte:fragment>
-  </Radio>
+  </ToggleButtons>
 </Story>
 
-<Story name="Row">
-  <Radio
-    name="row"
-    options={['Left', 'Right']}
-    selected="Left"
-    direction="row"
-  />
+<Story name="Full Width">
+  <div class="flex flex-row gap-2">
+    <ToggleButtons
+      options={['Left', 'Right']}
+      selected="Left"
+    />
+
+    <ToggleButtons
+      options={['Left', 'Right']}
+      selected="Right"
+      cx="w-full"
+    />
+  </div>
 </Story>
