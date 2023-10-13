@@ -64,7 +64,7 @@ const handleClick = (value: string) => {
   {#if $$slots.legend}
     <legend
       class={cx(
-        cx('flex text-xs', {
+        cx('mb-1 flex text-xs', {
           'text-subtle-1': !disabled,
           'cursor-not-allowed text-disabled-dark': disabled,
         })
