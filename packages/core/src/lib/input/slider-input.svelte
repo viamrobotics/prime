@@ -173,7 +173,7 @@ const handleChange = () => {
     disabled={isButtonDisabled}
     tabindex="-1"
     class={cx(
-      'absolute bottom-[3px] left-[0.2rem] z-max h-[24px] w-1 cursor-ew-resize',
+      'absolute bottom-[3px] left-[0.2rem] h-[24px] w-1 cursor-ew-resize',
       {
         'bg-gray-400 hover:bg-gray-700': !isButtonDisabled,
         'cursor-not-allowed bg-disabled-dark': isButtonDisabled,
@@ -185,11 +185,11 @@ const handleChange = () => {
     {#if isDragging}
       <div
         bind:this={numberDragCord}
-        class="z-100 pointer-events-none mt-[calc(13px)] h-px bg-gray-400"
+        class="pointer-events-none relative z-max mt-[6px] h-px bg-gray-400"
       />
       <div
         bind:this={numberDragHead}
-        class="pointer-events-none -ml-[2px] -mt-[5px]"
+        class="pointer-events-none relative z-max -ml-[2px] -mt-[5px]"
       >
         <div class="h-2 w-2">
           <Tooltip state="visible">
