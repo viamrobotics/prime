@@ -185,11 +185,11 @@ const handleChange = () => {
     {#if isDragging}
       <div
         bind:this={numberDragCord}
-        class="relative z-max pointer-events-none mt-[6px] h-px bg-gray-400"
+        class="pointer-events-none relative z-max mt-[6px] h-px bg-gray-400"
       />
       <div
         bind:this={numberDragHead}
-        class="relative z-max pointer-events-none -ml-[2px] -mt-[5px]"
+        class="pointer-events-none relative z-max -ml-[2px] -mt-[5px]"
       >
         <div class="h-2 w-2">
           <Tooltip state="visible">
