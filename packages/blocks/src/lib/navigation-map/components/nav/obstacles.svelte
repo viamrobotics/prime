@@ -123,11 +123,11 @@ $: debugMode = $environment === 'debug';
               ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
             </small>
           {:else}
-          <IconButton
-            label="Delete {name}"
-            icon="trash-can-outline"
-            on:click={handleDeleteObstacle(name)}
-          />
+            <IconButton
+              label="Delete {name}"
+              icon="trash-can-outline"
+              on:click={handleDeleteObstacle(name)}
+            />
           {/if}
           <IconButton
             icon="image-filter-center-focus"
