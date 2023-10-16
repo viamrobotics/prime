@@ -44,15 +44,6 @@ import {
 import { uniqueId } from 'lodash';
 import { writable } from 'svelte/store';
 
-import cpp from './code-snippets/cpp.txt?raw';
-import dart from './code-snippets/dart.txt?raw';
-import go from './code-snippets/go.txt?raw';
-import javascript from './code-snippets/javascript.txt?raw';
-import json from './code-snippets/json.txt?raw';
-import python from './code-snippets/python.txt?raw';
-import rust from './code-snippets/rust.txt?raw';
-import typescript from './code-snippets/typescript.txt?raw';
-
 provideNotify();
 
 let buttonClickedTimes = 0;
@@ -79,6 +70,314 @@ const restrictInput = (inputValue: string) =>
     .replaceAll(/\s/gu, '-')
     .replaceAll('%', '$')
     .replaceAll(/[^a-z0-9-$]/gu, '');
+
+const jsonSnippet = `
+[{
+  "id": 1,
+  "first_name": "Beatrice",
+  "last_name": "Earwicker",
+  "email": "bearwicker0@washington.edu",
+  "gender": "Female",
+  "ip_address": "180.7.54.35"
+}, {
+  "id": 2,
+  "first_name": "Linnell",
+  "last_name": "Juhruke",
+  "email": "ljuhruke1@newyorker.com",
+  "gender": "Female",
+  "ip_address": "57.19.218.117"
+}, {
+  "id": 3,
+  "first_name": "Mathew",
+  "last_name": "Abramovic",
+  "email": "mabramovic2@miibeian.gov.cn",
+  "gender": "Male",
+  "ip_address": "46.0.113.0"
+}]`.trim();
+
+const jsSnippet = `
+/**
+ * Function that implements the FizzBuzz algorithm.
+ *
+ * @param {number} n - The number of iterations.
+ * @returns {string[]} An array of strings containing the FizzBuzz sequence.
+ */
+function fizzBuzz(n) {
+    const result = [];
+ 
+    for (let i = 1; i <= n; i++) {
+        let output = "";
+ 
+        if (i % 3 === 0) {
+            output += "Fizz";
+        }
+ 
+        if (i % 5 === 0) {
+            output += "Buzz";
+        }
+ 
+        if (output === "") {
+            output = i.toString();
+        }
+ 
+        result.push(output);
+    }
+ 
+    return result;
+}
+ 
+// Usage Example
+const fizzBuzzSequence = fizzBuzz(15);
+console.log(fizzBuzzSequence);`.trim();
+
+const tsSnippet = `
+/**
+ * fizzBuzz: A function that implements the FizzBuzz algorithm.
+ *
+ * @param n - The number of iterations to perform the FizzBuzz algorithm.
+ *
+ * @returns {string[]} - An array of strings representing the FizzBuzz sequence.
+ */
+function fizzBuzz(n: number): string[] {
+    const result: string[] = [];
+
+    for (let i = 1; i <= n; i++) {
+        let value = "";
+
+        if (i % 3 === 0) {
+            value += "Fizz";
+        }
+
+        if (i % 5 === 0) {
+            value += "Buzz";
+        }
+
+        if (value === "") {
+            value = i.toString();
+        }
+
+        result.push(value);
+    }
+
+    return result;
+}
+
+// Usage example for the fizzBuzz function.
+
+// Example: Generating the FizzBuzz sequence for n = 15.
+const sequence = fizzBuzz(15);
+console.log(\`The FizzBuzz sequence for n = 15 is:\`);
+console.log(sequence); // Outputs: ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"]`.trim();
+
+const goSnippet = `
+import "fmt"
+ 
+// FizzBuzz
+//
+// Parameters:
+// n (int): The number up to which the FizzBuzz algorithm should be applied.
+//
+// Returns:
+// []string: A slice of strings containing the FizzBuzz results for each number from 1 to n.
+func FizzBuzz(n int) []string {
+  result := make([]string, n)
+ 
+  for i := 1; i <= n; i++ {
+    if i%3 == 0 && i%5 == 0 {
+      result[i-1] = "FizzBuzz"
+    } else if i%3 == 0 {
+      result[i-1] = "Fizz"
+    } else if i%5 == 0 {
+      result[i-1] = "Buzz"
+    } else {
+      result[i-1] = fmt.Sprintf("%d", i)
+    }
+  }
+ 
+  return result
+}
+ 
+// Usage Example for FizzBuzz
+ 
+func main() {
+  // Apply FizzBuzz algorithm up to 20
+  fizzBuzzResult := FizzBuzz(20)
+ 
+  // Print the FizzBuzz results
+  for _, value := range fizzBuzzResult {
+    fmt.Println(value)
+  }
+}`.trim();
+
+const pythonSnippet = `
+def fizzbuzz(n: int):
+    """
+    Function to implement the FizzBuzz algorithm.
+ 
+    Parameters:
+    - n: int
+        The number up to which the FizzBuzz algorithm should be applied.
+ 
+    Returns:
+    - list:
+        A list of strings representing the FizzBuzz sequence from 1 to n.
+ 
+    Raises:
+    - ValueError:
+        Will raise an error if the input number 'n' is less than 1.
+    """
+ 
+    # Validating the input number
+    if n < 1:
+        raise ValueError("Input number should be greater than or equal to 1.")
+ 
+    # Initializing an empty list to store the FizzBuzz sequence
+    fizzbuzz_sequence = []
+ 
+    # Looping through numbers from 1 to n (inclusive)
+    for i in range(1, n+1):
+        # Checking if the number is divisible by both 3 and 5
+        if i % 3 == 0 and i % 5 == 0:
+            fizzbuzz_sequence.append("FizzBuzz")
+        # Checking if the number is divisible by 3
+        elif i % 3 == 0:
+            fizzbuzz_sequence.append("Fizz")
+        # Checking if the number is divisible by 5
+        elif i % 5 == 0:
+            fizzbuzz_sequence.append("Buzz")
+        # If none of the above conditions are met, add the number itself
+        else:
+            fizzbuzz_sequence.append(str(i))
+ 
+    return fizzbuzz_sequence
+ 
+# Example usage of the fizzbuzz function
+n = 20
+result = fizzbuzz(n)
+print(result)`.trim();
+
+const cppSnippet = `
+#include <iostream>
+#include <string>
+ 
+/**
+ * @brief Implements the FizzBuzz algorithm.
+ * 
+ * The FizzBuzz algorithm is a common programming task where you iterate over a range of numbers
+ * and print "Fizz" for numbers divisible by 3, "Buzz" for numbers divisible by 5, and "FizzBuzz"
+ * for numbers divisible by both 3 and 5. For all other numbers, the number itself is printed.
+ * 
+ * @param n The number of iterations to perform.
+ */
+void fizzBuzz(int n) {
+    for (int i = 1; i <= n; i++) {
+        std::string output = "";
+ 
+        if (i % 3 == 0) {
+            output += "Fizz";
+        }
+ 
+        if (i % 5 == 0) {
+            output += "Buzz";
+        }
+ 
+        if (output.empty()) {
+            output = std::to_string(i);
+        }
+ 
+        std::cout << output << std::endl;
+    }
+}
+ 
+int main() {
+    int n = 100; // Number of iterations
+ 
+    fizzBuzz(n);
+ 
+    return 0;
+}`.trim();
+
+const dartSnippet = `
+// This function implements the FizzBuzz algorithm.
+// It takes an integer \`n\` as input and prints the numbers from 1 to \`n\`,
+// replacing multiples of 3 with "Fizz", multiples of 5 with "Buzz",
+// and multiples of both 3 and 5 with "FizzBuzz".
+//
+// - Parameters:
+//   - \`n\`: The upper limit of the range of numbers to be printed.
+//
+// - Throws:
+//   - \`ArgumentError\` if \`n\` is not a positive integer.
+void fizzBuzz(int n) {
+  if (n <= 0 || n % 1 != 0) {
+    throw ArgumentError('n must be a positive integer.');
+  }
+
+  for (int i = 1; i <= n; i++) {
+    if (i % 3 == 0 && i % 5 == 0) {
+      print('FizzBuzz');
+    } else if (i % 3 == 0) {
+      print('Fizz');
+    } else if (i % 5 == 0) {
+      print('Buzz');
+    } else {
+      print(i);
+    }
+  }
+}
+
+void main() {
+  // Usage Example
+  fizzBuzz(15);
+  // Expected output:
+  // 1
+  // 2
+  // Fizz
+  // 4
+  // Buzz
+  // Fizz
+  // 7
+  // 8
+  // Fizz
+  // Buzz
+  // 11
+  // Fizz
+  // 13
+  // 14
+  // FizzBuzz
+}`.trim();
+
+const rustSnippet = `
+// Function to implement the FizzBuzz algorithm.
+// Params:
+// - n: The number up to which FizzBuzz should be performed.
+// Returns: None
+fn fizzbuzz(n: u32) {
+    // Iterate from 1 to n (inclusive).
+    for i in 1..=n {
+        // Check if the current number is divisible by both 3 and 5.
+        if i % 3 == 0 && i % 5 == 0 {
+            println!("FizzBuzz");
+        }
+        // Check if the current number is divisible by 3.
+        else if i % 3 == 0 {
+            println!("Fizz");
+        }
+        // Check if the current number is divisible by 5.
+        else if i % 5 == 0 {
+            println!("Buzz");
+        }
+        // If none of the above conditions are met, print the number itself.
+        else {
+            println!("{}", i);
+        }
+    }
+}
+
+// Usage example for the fizzbuzz function.
+fn main() {
+    fizzbuzz(20);
+}`.trim();
 </script>
 
 <NotificationContainer />
@@ -257,50 +556,50 @@ const restrictInput = (inputValue: string) =>
     language="json"
     on:copy={({ detail: { message, succeeded } }) =>
       succeeded ? notify.success(message) : notify.danger(message)}
-    code={json}
+    code={jsonSnippet}
   />
 
   <h2 class="text-lg text-subtle-1">JavaScript</h2>
   <CodeSnippet
     language="javascript"
-    code={javascript}
+    code={jsSnippet}
   />
 
   <h2 class="text-lg text-subtle-1">Typescript</h2>
   <CodeSnippet
     language="typescript"
-    code={typescript}
+    code={tsSnippet}
   />
 
   <h2 class="text-lg text-subtle-1">Go</h2>
   <CodeSnippet
     language="go"
-    code={go}
+    code={goSnippet}
   />
 
   <h2 class="text-lg text-subtle-1">Python</h2>
   <CodeSnippet
     language="python"
-    code={python}
+    code={pythonSnippet}
   />
 
   <h2 class="text-lg text-subtle-1">C++</h2>
   <CodeSnippet
     language="cpp"
-    code={cpp}
+    code={cppSnippet}
     dependencies={['c']}
   />
 
   <h2 class="text-lg text-subtle-1">Dart</h2>
   <CodeSnippet
     language="dart"
-    code={dart}
+    code={dartSnippet}
   />
 
   <h2 class="text-lg text-subtle-1">Rust</h2>
   <CodeSnippet
     language="rust"
-    code={rust}
+    code={rustSnippet}
   />
 
   <!-- Context Menu -->
