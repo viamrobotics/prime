@@ -122,12 +122,13 @@ $: debugMode = $environment === 'debug';
             <small class="text-subtle-2 opacity-60 group-hover:opacity-100">
               ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
             </small>
+          {:else}
+            <IconButton
+              label="Delete {name}"
+              icon="trash-can-outline"
+              on:click={handleDeleteObstacle(name)}
+            />
           {/if}
-          <IconButton
-            label="Delete {name}"
-            icon="trash-can-outline"
-            on:click={handleDeleteObstacle(name)}
-          />
           <IconButton
             icon="image-filter-center-focus"
             label="Focus {name}"
