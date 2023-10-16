@@ -1,0 +1,38 @@
+import "fmt"
+ 
+// FizzBuzz
+//
+// Parameters:
+// n (int): The number up to which the FizzBuzz algorithm should be applied.
+//
+// Returns:
+// []string: A slice of strings containing the FizzBuzz results for each number from 1 to n.
+func FizzBuzz(n int) []string {
+  result := make([]string, n)
+ 
+  for i := 1; i <= n; i++ {
+    if i%3 == 0 && i%5 == 0 {
+      result[i-1] = "FizzBuzz"
+    } else if i%3 == 0 {
+      result[i-1] = "Fizz"
+    } else if i%5 == 0 {
+      result[i-1] = "Buzz"
+    } else {
+      result[i-1] = fmt.Sprintf("%d", i)
+    }
+  }
+ 
+  return result
+}
+ 
+// Usage Example for FizzBuzz
+ 
+func main() {
+  // Apply FizzBuzz algorithm up to 20
+  fizzBuzzResult := FizzBuzz(20)
+ 
+  // Print the FizzBuzz results
+  for _, value := range fizzBuzzResult {
+    fmt.Println(value)
+  }
+}

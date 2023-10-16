@@ -39,10 +39,18 @@ import {
   provideNotify,
   useNotify,
   Modal,
+  CodeSnippet,
 } from '$lib';
 import { uniqueId } from 'lodash';
-
 import { writable } from 'svelte/store';
+
+import cpp from './code-snippets/cpp.txt?raw';
+import dart from './code-snippets/dart.txt?raw';
+import go from './code-snippets/go.txt?raw';
+import javascript from './code-snippets/javascript.txt?raw';
+import python from './code-snippets/python.txt?raw';
+import rust from './code-snippets/rust.txt?raw';
+import typescript from './code-snippets/typescript.txt?raw';
 
 provideNotify();
 
@@ -64,7 +72,6 @@ const handleOpenModal = () => {
 const notify = useNotify();
 
 let restrictedValue = '';
-$: console.log(restrictedValue);
 
 const restrictInput = (inputValue: string) =>
   inputValue
@@ -237,6 +244,57 @@ const restrictInput = (inputValue: string) =>
       }}
     />
   </div>
+
+  <!-- Code Snippet -->
+  <h1 class="text-2xl">Code Snippet</h1>
+  <p>
+    Uses <a href="https://prismjs.com/">prismjs</a> for syntax highlighting.
+  </p>
+
+  <h2 class="text-lg text-subtle-1">JavaScript</h2>
+  <CodeSnippet
+    language="javascript"
+    on:copy={({ detail: { message, succeeded } }) =>
+      succeeded ? notify.success(message) : notify.danger(message)}
+    code={javascript}
+  />
+
+  <h2 class="text-lg text-subtle-1">Typescript</h2>
+  <CodeSnippet
+    language="typescript"
+    code={typescript}
+  />
+
+  <h2 class="text-lg text-subtle-1">Go</h2>
+  <CodeSnippet
+    language="go"
+    code={go}
+  />
+
+  <h2 class="text-lg text-subtle-1">Python</h2>
+  <CodeSnippet
+    language="python"
+    code={python}
+  />
+
+  <h2 class="text-lg text-subtle-1">C++</h2>
+  <CodeSnippet
+    language="cpp"
+    code={cpp}
+    dependencies={['c']}
+  />
+
+  <h2 class="text-lg text-subtle-1">Dart</h2>
+  <CodeSnippet
+    language="dart"
+    code={dart}
+  />
+
+  <h2 class="text-lg text-subtle-1">Rust</h2>
+  <CodeSnippet
+    language="rust"
+    code={rust}
+  />
 
   <!-- Context Menu -->
   <h1 class="text-2xl">Context Menu</h1>

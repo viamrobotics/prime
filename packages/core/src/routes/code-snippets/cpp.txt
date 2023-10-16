@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+ 
+/**
+ * @brief Implements the FizzBuzz algorithm.
+ * 
+ * The FizzBuzz algorithm is a common programming task where you iterate over a range of numbers
+ * and print "Fizz" for numbers divisible by 3, "Buzz" for numbers divisible by 5, and "FizzBuzz"
+ * for numbers divisible by both 3 and 5. For all other numbers, the number itself is printed.
+ * 
+ * @param n The number of iterations to perform.
+ */
+void fizzBuzz(int n) {
+    for (int i = 1; i <= n; i++) {
+        std::string output = "";
+ 
+        if (i % 3 == 0) {
+            output += "Fizz";
+        }
+ 
+        if (i % 5 == 0) {
+            output += "Buzz";
+        }
+ 
+        if (output.empty()) {
+            output = std::to_string(i);
+        }
+ 
+        std::cout << output << std::endl;
+    }
+}
+ 
+int main() {
+    int n = 100; // Number of iterations
+ 
+    fizzBuzz(n);
+ 
+    return 0;
+}

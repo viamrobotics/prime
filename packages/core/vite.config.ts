@@ -13,5 +13,7 @@ export default defineConfig({
     setupFiles: ['src/vitest.setup.ts'],
     environment: 'jsdom',
     mockReset: true,
+    // For testing svelte internals like onMount, see: https://github.com/vitest-dev/vitest/issues/2834
+    alias: [{ find: /^svelte$/u, replacement: 'svelte/internal' }],
   },
 });

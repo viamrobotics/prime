@@ -1,0 +1,33 @@
+/**
+ * Function that implements the FizzBuzz algorithm.
+ *
+ * @param {number} n - The number of iterations.
+ * @returns {string[]} An array of strings containing the FizzBuzz sequence.
+ */
+function fizzBuzz(n) {
+    const result = [];
+ 
+    for (let i = 1; i <= n; i++) {
+        let output = "";
+ 
+        if (i % 3 === 0) {
+            output += "Fizz";
+        }
+ 
+        if (i % 5 === 0) {
+            output += "Buzz";
+        }
+ 
+        if (output === "") {
+            output = i.toString();
+        }
+ 
+        result.push(output);
+    }
+ 
+    return result;
+}
+ 
+// Usage Example
+const fizzBuzzSequence = fizzBuzz(15);
+console.log(fizzBuzzSequence);

@@ -4,6 +4,7 @@ export { default as Breadcrumbs } from './breadcrumbs.svelte';
 export { default as Button } from './button/button.svelte';
 export { default as IconButton } from './button/icon-button.svelte';
 export { clickOutside } from './click-outside';
+export { default as CodeSnippet } from './code-snippet.svelte';
 export { default as Icon } from './icon/icon.svelte';
 export type { IconName } from './icon/icons';
 export { default as Label, type LabelPosition } from './label.svelte';

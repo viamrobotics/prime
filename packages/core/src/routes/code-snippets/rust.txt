@@ -1,0 +1,30 @@
+// Function to implement the FizzBuzz algorithm.
+// Params:
+// - n: The number up to which FizzBuzz should be performed.
+// Returns: None
+fn fizzbuzz(n: u32) {
+    // Iterate from 1 to n (inclusive).
+    for i in 1..=n {
+        // Check if the current number is divisible by both 3 and 5.
+        if i % 3 == 0 && i % 5 == 0 {
+            println!("FizzBuzz");
+        }
+        // Check if the current number is divisible by 3.
+        else if i % 3 == 0 {
+            println!("Fizz");
+        }
+        // Check if the current number is divisible by 5.
+        else if i % 5 == 0 {
+            println!("Buzz");
+        }
+        // If none of the above conditions are met, print the number itself.
+        else {
+            println!("{}", i);
+        }
+    }
+}
+
+// Usage example for the fizzbuzz function.
+fn main() {
+    fizzbuzz(20);
+}

@@ -1,0 +1,45 @@
+def fizzbuzz(n: int):
+    """
+    Function to implement the FizzBuzz algorithm.
+ 
+    Parameters:
+    - n: int
+        The number up to which the FizzBuzz algorithm should be applied.
+ 
+    Returns:
+    - list:
+        A list of strings representing the FizzBuzz sequence from 1 to n.
+ 
+    Raises:
+    - ValueError:
+        Will raise an error if the input number 'n' is less than 1.
+    """
+ 
+    # Validating the input number
+    if n < 1:
+        raise ValueError("Input number should be greater than or equal to 1.")
+ 
+    # Initializing an empty list to store the FizzBuzz sequence
+    fizzbuzz_sequence = []
+ 
+    # Looping through numbers from 1 to n (inclusive)
+    for i in range(1, n+1):
+        # Checking if the number is divisible by both 3 and 5
+        if i % 3 == 0 and i % 5 == 0:
+            fizzbuzz_sequence.append("FizzBuzz")
+        # Checking if the number is divisible by 3
+        elif i % 3 == 0:
+            fizzbuzz_sequence.append("Fizz")
+        # Checking if the number is divisible by 5
+        elif i % 5 == 0:
+            fizzbuzz_sequence.append("Buzz")
+        # If none of the above conditions are met, add the number itself
+        else:
+            fizzbuzz_sequence.append(str(i))
+ 
+    return fizzbuzz_sequence
+ 
+# Example usage of the fizzbuzz function
+n = 20
+result = fizzbuzz(n)
+print(result)
