@@ -48,6 +48,7 @@ import cpp from './code-snippets/cpp.txt?raw';
 import dart from './code-snippets/dart.txt?raw';
 import go from './code-snippets/go.txt?raw';
 import javascript from './code-snippets/javascript.txt?raw';
+import json from './code-snippets/json.txt?raw';
 import python from './code-snippets/python.txt?raw';
 import rust from './code-snippets/rust.txt?raw';
 import typescript from './code-snippets/typescript.txt?raw';
@@ -251,11 +252,17 @@ const restrictInput = (inputValue: string) =>
     Uses <a href="https://prismjs.com/">prismjs</a> for syntax highlighting.
   </p>
 
+  <h2 class="text-lg text-subtle-1">JSON</h2>
+  <CodeSnippet
+    language="json"
+    on:copy={({ detail: { message, succeeded } }) =>
+      succeeded ? notify.success(message) : notify.danger(message)}
+    code={json}
+  />
+
   <h2 class="text-lg text-subtle-1">JavaScript</h2>
   <CodeSnippet
     language="javascript"
-    on:copy={({ detail: { message, succeeded } }) =>
-      succeeded ? notify.success(message) : notify.danger(message)}
     code={javascript}
   />
 
