@@ -16,6 +16,8 @@ export { default as Modal } from './modal.svelte';
 export { default as ToggleButtons } from './toggle-buttons.svelte';
 export { uniqueId } from './unique-id';
 
+export { persisted } from './persisted';
+
 export {
   Tooltip,
   TooltipContainer,

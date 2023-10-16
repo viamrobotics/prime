@@ -36,6 +36,7 @@ const toggleTileset = () => {
 let didHoverTooltip = Boolean(
   localStorage.getItem('navigation-service-card-tooltip-hovered')
 );
+
 </script>
 
 <div class="relative h-full w-full items-stretch sm:flex">
