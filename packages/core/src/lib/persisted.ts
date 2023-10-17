@@ -14,7 +14,8 @@ const createPersisted = <T>(
   const store = writable<T | null>(initialValue, (set) => {
     const json = storage.getItem(key);
 
-    if (json) {
+    // eslint-disable-next-line unicorn/no-negated-condition
+    if (json !== null) {
       try {
         set(JSON.parse(json) as T);
       } catch {
