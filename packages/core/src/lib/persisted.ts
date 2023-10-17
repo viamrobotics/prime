@@ -11,7 +11,11 @@ const getStorage = (type: 'local' | 'session') => {
   return type === 'local' ? localStorage : sessionStorage;
 };
 
-const parse = <T>(value: string): T | null => {
+const parse = <T>(value: string | null): T | null => {
+  if (value === null) {
+    return null
+  }  
+
   try {
     return JSON.parse(value) as T;
   } catch {
