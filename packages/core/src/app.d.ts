@@ -11,10 +11,6 @@ declare global {
      * interface Platform {}
      */
   }
-
-  interface Window {
-    Prism: import('@types/prismjs');
-  }
 }
 
 export {};

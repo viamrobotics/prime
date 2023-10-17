@@ -23,7 +23,7 @@ const PRISM_VERSION = '1.29.0' as const;
 // See: https://github.com/PrismJS/prism-themes/releases
 const PRISM_THEMES_VERSION = '1.9.0' as const;
 
-const loadedLanguages: Record<string, boolean> = {};
+const loadedLibraries: Record<string, boolean> = {};
 </script>
 
 <script lang="ts">
@@ -67,7 +67,7 @@ export let dependencies: string[] = [];
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-let element: HTMLElement;
+let element: HTMLElement | undefined;
 
 $: copyButtonLabel = 'Copy';
 $: copyButtonIcon = 'content-copy' as IconName;
@@ -107,7 +107,9 @@ const copyToClipboard = async () => {
 };
 
 const highlight = () => {
-  window.Prism.highlightElement(element);
+  if (element) {
+    window.Prism.highlightElement(element);
+  }
 };
 
 const addScript = (
@@ -125,7 +127,7 @@ const addScript = (
 
 const loadLanguage = () => {
   // If the language has already been loaded in the document, highlight
-  if (loadedLanguages[language]) {
+  if (loadedLibraries[language]) {
     highlight();
     return;
   }
@@ -133,6 +135,7 @@ const loadLanguage = () => {
   addScript(
     `components/prism-${language}.min.js`,
     () => highlight(),
+    /* eslint-disable-next-line no-console */
     (error) => console.error(`Error loading prism-${language}`, error)
   );
 };
@@ -144,7 +147,7 @@ const loadDependency = (index: number) => {
   }
 
   const dependency = dependencies[index]!;
-  if (loadedLanguages[dependency]) {
+  if (loadedLibraries[dependency]) {
     loadDependency(index + 1);
     return;
   }
@@ -152,16 +155,17 @@ const loadDependency = (index: number) => {
   addScript(
     `components/prism-${dependency}.min.js`,
     () => {
-      loadedLanguages[dependency] = true;
+      loadedLibraries[dependency] = true;
       loadDependency(index + 1);
     },
+    /* eslint-disable-next-line no-console */
     (error) => console.error(`Error loading prism-${dependency}`, error)
   );
 };
 
 const loadPrism = () => {
   // If we have already loaded prism, move on to dependencies
-  if (loadedLanguages['prism']) {
+  if (loadedLibraries.prism) {
     loadDependency(0);
     return;
   }
@@ -169,9 +173,10 @@ const loadPrism = () => {
   addScript(
     'prism.min.js',
     () => {
-      loadedLanguages['prism'] = true;
+      loadedLibraries.prism = true;
       loadDependency(0);
     },
+    /* eslint-disable-next-line no-console */
     (error) => console.error('Error loading prism', error)
   );
 };
@@ -194,7 +199,7 @@ const formatCode = (input: string): string => {
 };
 
 $: {
-  if (element && code && window.Prism !== undefined) {
+  if (element && code && loadedLibraries.prism) {
     element.innerHTML = formatCode(code);
     highlight();
   }

@@ -554,8 +554,18 @@ fn main() {
   <h2 class="text-lg text-subtle-1">JSON</h2>
   <CodeSnippet
     language="json"
-    on:copy={({ detail: { message, succeeded } }) =>
-      succeeded ? notify.success(message) : notify.danger(message)}
+    on:copy={(event) => {
+      // TODO: Figure out why `detail` is being linted as `any`
+      /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */
+      const { succeeded, message } = event.detail;
+      if (succeeded) {
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */
+        notify.success(message);
+      } else {
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */
+        notify.danger(message);
+      }
+    }}
     code={jsonSnippet}
   />
 
