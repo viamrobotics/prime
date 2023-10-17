@@ -6,6 +6,14 @@ const getStorage = (type: 'local' | 'session') => {
   return type === 'local' ? localStorage : sessionStorage;
 };
 
+const parse = <T>(value: string): T | null => {
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return null;
+  }
+}
+
 const createPersisted = <T>(
   key: string,
   initialValue: T | null,
@@ -16,11 +24,7 @@ const createPersisted = <T>(
 
     // eslint-disable-next-line unicorn/no-negated-condition
     if (json !== null) {
-      try {
-        set(JSON.parse(json) as T);
-      } catch {
-        set(null);
-      }
+      set(parse<T>(json))
     } else {
       storage.setItem(key, JSON.stringify(initialValue));
     }
@@ -28,11 +32,7 @@ const createPersisted = <T>(
     const handleStorage = (event: StorageEvent) => {
       if (event.key === key) {
         if (event.newValue) {
-          try {
-            set(JSON.parse(event.newValue) as T);
-          } catch {
-            set(null);
-          }
+          set(parse<T>(event.newValue))
         } else {
           set(null);
         }
