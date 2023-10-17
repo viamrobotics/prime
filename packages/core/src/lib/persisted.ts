@@ -1,4 +1,5 @@
 import { writable, type Writable } from 'svelte/store';
+import type { Jsonifiable } from 'type-fest';
 
 const stores: Record<string, Writable<unknown> | undefined> = {};
 
@@ -14,7 +15,7 @@ const parse = <T>(value: string): T | null => {
   }
 }
 
-const createPersisted = <T>(
+const createPersisted = <T extends Jsonifiable>(
   key: string,
   initialValue: T | null,
   storage: ReturnType<typeof getStorage>
@@ -70,7 +71,7 @@ const createPersisted = <T>(
  * @param initialValue The initial value to put in storage if no value exists.
  * @param storageType 'local' or 'session'
  */
-export const persisted = <T>(
+export const persisted = <T extends Jsonifiable>(
   key: string,
   initialValue: T | null = null,
   storageType: 'local' | 'session' = 'local'
