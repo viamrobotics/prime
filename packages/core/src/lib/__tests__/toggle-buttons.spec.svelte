@@ -1,7 +1,7 @@
 <!-- 
   @component
 
-  This component allows us to render a Notify with its slotted
+  This component allows us to render ToggleButtons with its slotted
   children, due to limitations with rendering slots using
   `@testing-library`.
 
