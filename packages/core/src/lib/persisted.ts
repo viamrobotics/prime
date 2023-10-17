@@ -31,7 +31,8 @@ const createPersisted = <T>(
 
     const handleStorage = (event: StorageEvent) => {
       if (event.key === key) {
-        if (event.newValue) {
+        // eslint-disable-next-line unicorn/no-negated-condition
+        if (event.newValue !== null) {
           set(parse<T>(event.newValue))
         } else {
           set(null);
