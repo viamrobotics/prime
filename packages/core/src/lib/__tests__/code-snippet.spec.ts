@@ -23,27 +23,6 @@ describe('CodeSnippet', () => {
     expect(screen.getByRole('figure')).toHaveClass(cxTestResults);
   });
 
-  it('Renders with the default theme', () => {
-    render(CodeSnippet, common);
-
-    const link = document.querySelector(
-      'link[href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-vs.min.css"]'
-    );
-    expect(link).toBeInTheDocument();
-  });
-
-  it('Renders with the dark theme', () => {
-    render(CodeSnippet, {
-      ...common,
-      theme: 'vsc-dark-plus',
-    });
-
-    const link = document.querySelector(
-      'link[href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-vsc-dark-plus.min.css"]'
-    );
-    expect(link).toBeInTheDocument();
-  });
-
   it('Renders with the copy button', () => {
     render(CodeSnippet, common);
 
@@ -54,5 +33,13 @@ describe('CodeSnippet', () => {
     render(CodeSnippet, { ...common, showCopyButton: false });
 
     expect(screen.queryByLabelText('Copy')).toBeNull();
+  });
+
+  it('Renders with the passed dependencies', () => {
+    render(CodeSnippet, { ...common, dependencies: ['dep1', 'dep2'] });
+
+    const code = document.querySelector('code.language-json');
+
+    expect(code).toHaveAttribute('data-dependencies', 'dep1,dep2');
   });
 });
