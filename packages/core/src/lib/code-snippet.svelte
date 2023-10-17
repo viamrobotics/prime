@@ -137,13 +137,11 @@ onMount(async () => {
    */
   switch (theme) {
     case 'vs': {
-      await import('../../node_modules/prism-themes/themes/prism-vs.min.css');
+      await import('prism-themes/themes/prism-vs.min.css');
       break;
     }
     case 'vsc-dark-plus': {
-      await import(
-        '../../node_modules/prism-themes/themes/prism-vsc-dark-plus.min.css'
-      );
+      await import('prism-themes/themes/prism-vsc-dark-plus.min.css');
       break;
     }
     default: {
@@ -158,12 +156,12 @@ onMount(async () => {
    */
   await import(
     // @ts-expect-error no type declaration for this JS file
-    '../../node_modules/prismjs/plugins/autoloader/prism-autoloader'
+    'prismjs/plugins/autoloader/prism-autoloader'
   );
 
   // Make sure the autoloader knows where to find our languages
   (Prism.plugins.autoloader as { languages_path: string }).languages_path =
-    '../../node_modules/prismjs/components/';
+    'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
 
   // Do the initial highlighting
   if (element) {
