@@ -161,6 +161,7 @@ onMount(async () => {
 
   // Make sure the autoloader knows where to find our languages
   (Prism.plugins.autoloader as { languages_path: string }).languages_path =
+    // TODO: better way to get the version
     'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
 
   // Do the initial highlighting
