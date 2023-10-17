@@ -15,15 +15,10 @@ https://prismjs.com
   context="module"
   lang="ts"
 >
+import Prism from 'prismjs';
+import 'prismjs/components';
+
 export type CodeSnippetTheme = 'vs' | 'vsc-dark-plus';
-
-// See: https://github.com/PrismJS/prism/releases
-const PRISM_VERSION = '1.29.0' as const;
-
-// See: https://github.com/PrismJS/prism-themes/releases
-const PRISM_THEMES_VERSION = '1.9.0' as const;
-
-const loadedLibraries: Record<string, boolean> = {};
 </script>
 
 <script lang="ts">
@@ -60,6 +55,8 @@ export let showCopyButton = true;
 /**
  * Some prism languages have dependencies. For example, C++ requires C. If the
  * passed `language` has dependencies, they must be included here to be loaded.
+ *
+ * See: https://prismjs.com/plugins/autoloader/
  */
 export let dependencies: string[] = [];
 
@@ -75,9 +72,6 @@ $: copyButtonIcon = 'content-copy' as IconName;
 const dispatch = createEventDispatcher<{
   copy: { succeeded: boolean; message: string };
 }>();
-
-const getCdnUrl = (src: string) =>
-  `https://cdnjs.cloudflare.com/ajax/libs/prism/${PRISM_VERSION}/${src}`;
 
 const copyToClipboard = async () => {
   try {
@@ -108,77 +102,8 @@ const copyToClipboard = async () => {
 
 const highlight = () => {
   if (element) {
-    window.Prism.highlightElement(element);
+    Prism.highlightElement(element);
   }
-};
-
-const addScript = (
-  src: string,
-  onLoad?: (event: Event) => void,
-  onError?: (event: ErrorEvent) => void
-) => {
-  const el = document.createElement('script');
-  el.async = true;
-  el.src = getCdnUrl(src);
-  el.addEventListener('load', (event) => onLoad?.(event));
-  el.addEventListener('error', (event) => onError?.(event));
-  document.head.append(el);
-};
-
-const loadLanguage = () => {
-  // If the language has already been loaded in the document, highlight
-  if (loadedLibraries[language]) {
-    highlight();
-    return;
-  }
-
-  addScript(
-    `components/prism-${language}.min.js`,
-    () => highlight(),
-    /* eslint-disable-next-line no-console */
-    (error) => console.error(`Error loading prism-${language}`, error)
-  );
-};
-
-const loadDependency = (index: number) => {
-  if (index === dependencies.length) {
-    loadLanguage();
-    return;
-  }
-
-  const dependency = dependencies[index]!;
-  if (loadedLibraries[dependency]) {
-    loadDependency(index + 1);
-    return;
-  }
-
-  addScript(
-    `components/prism-${dependency}.min.js`,
-    () => {
-      loadedLibraries[dependency] = true;
-      loadDependency(index + 1);
-    },
-    /* eslint-disable-next-line no-console */
-    (error) => console.error(`Error loading prism-${dependency}`, error)
-  );
-};
-
-const loadPrism = () => {
-  // If we have already loaded prism, move on to dependencies
-  if (loadedLibraries.prism) {
-    loadDependency(0);
-    return;
-  }
-
-  addScript(
-    'prism.min.js',
-    () => {
-      loadedLibraries.prism = true;
-      loadDependency(0);
-    },
-    /* eslint-disable-next-line no-console */
-    (error) => console.error('Error loading prism', error)
-  );
 };
 
 const formatCode = (input: string): string => {
@@ -199,14 +124,51 @@ const formatCode = (input: string): string => {
 };
 
 $: {
-  if (element && code && loadedLibraries.prism) {
+  if (element && code) {
     element.innerHTML = formatCode(code);
     highlight();
   }
 }
 
-onMount(() => {
-  loadPrism();
+onMount(async () => {
+  /**
+   * Load the themes, for vite to properly discover them we cannot use string templates,
+   * so we use a switch statement for our supported themes.
+   */
+  switch (theme) {
+    case 'vs': {
+      await import('../../node_modules/prism-themes/themes/prism-vs.min.css');
+      break;
+    }
+    case 'vsc-dark-plus': {
+      await import(
+        '../../node_modules/prism-themes/themes/prism-vsc-dark-plus.min.css'
+      );
+      break;
+    }
+    default: {
+      // Unsupported theme
+      break;
+    }
+  }
+
+  /**
+   * After the HTML is loaded in the DOM, we can use the autoloader to manage
+   * scanning for languages and including the components properly
+   */
+  await import(
+    // @ts-expect-error no type declaration for this JS file
+    '../../node_modules/prismjs/plugins/autoloader/prism-autoloader'
+  );
+
+  // Make sure the autoloader knows where to find our languages
+  (Prism.plugins.autoloader as { languages_path: string }).languages_path =
+    '../../node_modules/prismjs/components/';
+
+  // Do the initial highlighting
+  if (element) {
+    Prism.highlightElement(element);
+  }
 });
 </script>
 
@@ -220,7 +182,8 @@ onMount(() => {
     <!-- The formatting here is intentional to preserve the formatting of `code` -->
     <pre class="flex-1 overflow-x-auto"><code
         bind:this={element}
-        class="language-{language}">{code}</code
+        class="language-{language}"
+        data-dependencies={dependencies.join(',')}>{code}</code
       ></pre>
 
     {#if showCopyButton}
@@ -236,13 +199,6 @@ onMount(() => {
 </figure>
 
 {#if theme}
-  <link
-    rel="stylesheet"
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/{PRISM_THEMES_VERSION}/prism-{theme}.min.css"
-  />
-
   <style>
   /* Theme overrides */
   figure pre[class*='language-'],
