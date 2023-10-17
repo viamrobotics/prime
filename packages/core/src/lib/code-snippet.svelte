@@ -16,7 +16,6 @@ https://prismjs.com
   lang="ts"
 >
 import Prism from 'prismjs';
-import 'prismjs/components';
 
 export type CodeSnippetTheme = 'vs' | 'vsc-dark-plus';
 </script>
@@ -131,42 +130,47 @@ $: {
 }
 
 onMount(async () => {
-  /**
-   * Load the themes, for vite to properly discover them we cannot use string templates,
-   * so we use a switch statement for our supported themes.
-   */
-  switch (theme) {
-    case 'vs': {
-      await import('prism-themes/themes/prism-vs.min.css');
-      break;
+  try {
+    /**
+     * Load the themes, for vite to properly discover them we cannot use string templates,
+     * so we use a switch statement for our supported themes.
+     */
+    switch (theme) {
+      case 'vs': {
+        await import('prism-themes/themes/prism-vs.min.css');
+        break;
+      }
+      case 'vsc-dark-plus': {
+        await import('prism-themes/themes/prism-vsc-dark-plus.min.css');
+        break;
+      }
+      default: {
+        // Unsupported theme
+        break;
+      }
     }
-    case 'vsc-dark-plus': {
-      await import('prism-themes/themes/prism-vsc-dark-plus.min.css');
-      break;
+
+    /**
+     * After the HTML is loaded in the DOM, we can use the autoloader to manage
+     * scanning for languages and including the components properly
+     */
+    await import(
+      // @ts-expect-error no type declaration for this JS file
+      'prismjs/plugins/autoloader/prism-autoloader'
+    );
+
+    // Make sure the autoloader knows where to find our languages
+    (Prism.plugins.autoloader as { languages_path: string }).languages_path =
+      // TODO: do we want a better way to get the version?
+      'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
+
+    // Do the initial highlighting
+    if (element) {
+      Prism.highlightElement(element);
     }
-    default: {
-      // Unsupported theme
-      break;
-    }
-  }
-
-  /**
-   * After the HTML is loaded in the DOM, we can use the autoloader to manage
-   * scanning for languages and including the components properly
-   */
-  await import(
-    // @ts-expect-error no type declaration for this JS file
-    'prismjs/plugins/autoloader/prism-autoloader'
-  );
-
-  // Make sure the autoloader knows where to find our languages
-  (Prism.plugins.autoloader as { languages_path: string }).languages_path =
-    // TODO: better way to get the version
-    'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
-
-  // Do the initial highlighting
-  if (element) {
-    Prism.highlightElement(element);
+  } catch (error) {
+    /* eslint-disable-next-line no-console */
+    console.error('Error initializing prismjs', error);
   }
 });
 </script>
