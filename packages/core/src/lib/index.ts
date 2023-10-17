@@ -3,6 +3,7 @@ export { Banner, BannerVariant, type BannerVariantType } from './banner';
 export { default as Breadcrumbs } from './breadcrumbs.svelte';
 export { default as Button } from './button/button.svelte';
 export { default as IconButton } from './button/icon-button.svelte';
+export { default as JsonEditor } from './code-editors/json-editor.svelte';
 export { clickOutside } from './click-outside';
 export { default as Icon } from './icon/icon.svelte';
 export type { IconName } from './icon/icons';

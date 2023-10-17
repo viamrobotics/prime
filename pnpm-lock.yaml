@@ -231,6 +231,9 @@ importers:
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
+      monaco-editor:
+        specifier: ^0.37.1
+        version: 0.37.1
       postcss:
         specifier: ^8.4.28
         version: 8.4.28

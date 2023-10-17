@@ -39,6 +39,7 @@ import {
   provideNotify,
   useNotify,
   Modal,
+  JsonEditor,
 } from '$lib';
 import { uniqueId } from 'lodash';
 
@@ -236,6 +237,128 @@ const restrictInput = (inputValue: string) =>
         console.log('Uh oh, should not be called!');
       }}
     />
+  </div>
+
+  <!-- Code Editors -->
+  <h1 class="text-2xl">Code Editors</h1>
+  <div class="flex items-start gap-4">
+    <div class="h-full w-full">
+      <h2 class="text-xl">JSON Editor</h2>
+      <JsonEditor
+        value={`{}`}
+        schema={{
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://go.viam.com/rdk/components/board/fake/config',
+          $ref: '#/$defs/Config',
+          $defs: {
+            AnalogReaderConfig: {
+              properties: {
+                name: {
+                  type: 'string',
+                },
+                pin: {
+                  type: 'string',
+                },
+                average_over_ms: {
+                  type: 'integer',
+                },
+                samples_per_sec: {
+                  type: 'integer',
+                },
+              },
+              additionalProperties: false,
+              type: 'object',
+              required: ['name', 'pin'],
+            },
+            AttributeMap: {
+              type: 'object',
+            },
+            Config: {
+              properties: {
+                i2cs: {
+                  items: {
+                    $ref: '#/$defs/I2CConfig',
+                  },
+                  type: 'array',
+                },
+                spis: {
+                  items: {
+                    $ref: '#/$defs/SPIConfig',
+                  },
+                  type: 'array',
+                },
+                analogs: {
+                  items: {
+                    $ref: '#/$defs/AnalogReaderConfig',
+                  },
+                  type: 'array',
+                },
+                digital_interrupts: {
+                  items: {
+                    $ref: '#/$defs/DigitalInterruptConfig',
+                  },
+                  type: 'array',
+                },
+                attributes: {
+                  $ref: '#/$defs/AttributeMap',
+                },
+                fail_new: {
+                  type: 'boolean',
+                },
+              },
+              additionalProperties: false,
+              type: 'object',
+              required: ['fail_new'],
+            },
+            DigitalInterruptConfig: {
+              properties: {
+                name: {
+                  type: 'string',
+                },
+                pin: {
+                  type: 'string',
+                },
+                type: {
+                  type: 'string',
+                },
+                formula: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: false,
+              type: 'object',
+              required: ['name', 'pin'],
+            },
+            I2CConfig: {
+              properties: {
+                name: {
+                  type: 'string',
+                },
+                bus: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: false,
+              type: 'object',
+              required: ['name', 'bus'],
+            },
+            SPIConfig: {
+              properties: {
+                name: {
+                  type: 'string',
+                },
+                bus_select: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: false,
+              type: 'object',
+              required: ['name', 'bus_select'],
+            },
+          },
+        }}
+      ></JsonEditor>
+    </div>
   </div>
 
   <!-- Context Menu -->

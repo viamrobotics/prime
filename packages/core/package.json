@@ -68,6 +68,7 @@
     "eslint-plugin-tailwindcss": "^3.13.0",
     "eslint-plugin-unicorn": "^48.0.1",
     "jsdom": "^22.1.0",
+    "monaco-editor": "^0.37.1",
     "postcss": "^8.4.28",
     "prettier": "^3.0.3",
     "prettier-plugin-svelte": "^3.0.3",
