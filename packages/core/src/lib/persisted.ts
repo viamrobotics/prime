@@ -13,7 +13,7 @@ const parse = <T>(value: string): T | null => {
   } catch {
     return null;
   }
-}
+};
 
 const createPersisted = <T extends Jsonifiable>(
   key: string,
@@ -25,7 +25,7 @@ const createPersisted = <T extends Jsonifiable>(
 
     // eslint-disable-next-line unicorn/no-negated-condition
     if (json !== null) {
-      set(parse<T>(json))
+      set(parse<T>(json));
     } else {
       storage.setItem(key, JSON.stringify(initialValue));
     }
@@ -34,7 +34,7 @@ const createPersisted = <T extends Jsonifiable>(
       if (event.key === key) {
         // eslint-disable-next-line unicorn/no-negated-condition
         if (event.newValue !== null) {
-          set(parse<T>(event.newValue))
+          set(parse<T>(event.newValue));
         } else {
           set(null);
         }
