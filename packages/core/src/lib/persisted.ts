@@ -1,5 +1,4 @@
 import { writable, type Writable } from 'svelte/store';
-import type { Jsonifiable } from 'type-fest';
 
 /**
  * This singleton's purpose is for caching stores only during a browser session.
@@ -7,14 +6,28 @@ import type { Jsonifiable } from 'type-fest';
  */
 const stores: Record<string, Writable<unknown> | undefined> = {};
 
+const browser = () => typeof window !== 'undefined';
+
+if (browser()) {
+  window.addEventListener('storage', ({ key, newValue }: StorageEvent) => {
+    if (key === null) {
+      return;
+    }
+    const store = stores[key];
+    if (store !== undefined) {
+      store.set(parse(newValue));
+    }
+  });
+}
+
 const getStorage = (type: 'local' | 'session') => {
   return type === 'local' ? localStorage : sessionStorage;
 };
 
 const parse = <T>(value: string | null): T | null => {
   if (value === null) {
-    return null
-  }  
+    return null;
+  }
 
   try {
     return JSON.parse(value) as T;
@@ -23,26 +36,15 @@ const parse = <T>(value: string | null): T | null => {
   }
 };
 
-const createPersisted = <T extends Jsonifiable>(
+const createPersisted = <T>(
   key: string,
   initialValue: T | null,
   storage: ReturnType<typeof getStorage>
 ) => {
-  initialValue = parse(storage.getItem(key)) ?? initialValue
-  
-  const store = writable<T | null>(initialValue, (set) => {
-    storage.setItem(key, JSON.stringify(initialValue));
+  const initialOrStoredValue = parse<T>(storage.getItem(key)) ?? initialValue;
+  const store = writable<T | null>(initialOrStoredValue);
 
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === key) {
-        set(parse<T>(event.newValue));
-      }
-    };
-
-    window.addEventListener('storage', handleStorage);
-
-    return () => window.removeEventListener('storage', handleStorage);
-  });
+  storage.setItem(key, JSON.stringify(initialOrStoredValue));
 
   const { subscribe, set } = store;
 
@@ -69,15 +71,12 @@ const createPersisted = <T extends Jsonifiable>(
  * @param initialValue The initial value to put in storage if no value exists.
  * @param storageType 'local' or 'session'
  */
-export const persisted = <T extends Jsonifiable>(
+export const persisted = <T>(
   key: string,
   initialValue: T | null = null,
   storageType: 'local' | 'session' = 'local'
 ): Writable<T | null> => {
-  const browser =
-    typeof window !== 'undefined' && typeof document !== 'undefined';
-
-  if (!browser) {
+  if (!browser()) {
     return writable<T | null>(initialValue);
   }
 
