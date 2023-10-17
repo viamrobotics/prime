@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { CodeSnippet } from '$lib';
 import { cxTestArguments, cxTestResults } from './cx-test';
+import CaptionedCodeSnippet from './code-snippet.spec.svelte'
 
 describe('CodeSnippet', () => {
   const common = {
@@ -41,5 +42,11 @@ describe('CodeSnippet', () => {
     const code = document.querySelector('code.language-json');
 
     expect(code).toHaveAttribute('data-dependencies', 'dep1,dep2');
+  });
+
+  it('Renders with a figcaption when the default slot is provided', () => {
+    render(CaptionedCodeSnippet);
+
+    expect(screen.getByText('This is the caption text.')).toBeInTheDocument();
   });
 });

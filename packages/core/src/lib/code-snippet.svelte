@@ -6,7 +6,9 @@ For rendering readonly blocks of code. Uses `prism` for syntax highlighting:
 https://prismjs.com
 
 ```svelte
-<CodeSnippet language="json" code="{ myThing: true }" />
+<CodeSnippet language="json" code="{ myThing: true }">
+    This text captions the code snippet.
+</CodeSnippet>
 ```
 -->
 <svelte:options immutable />
@@ -175,7 +177,11 @@ onMount(async () => {
 });
 </script>
 
-<figure class={cx('flex flex-col', extraClasses)}>
+<figure class={cx('flex flex-col gap-2', extraClasses)}>
+  {#if $$slots.default}
+    <figcaption><slot /></figcaption>
+  {/if}
+
   <div
     class={cx('flex gap-x-4 p-2', {
       'bg-gray-9': theme === 'vsc-dark-plus',

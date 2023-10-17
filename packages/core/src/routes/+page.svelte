@@ -566,7 +566,9 @@ fn main() {
     language="json"
     on:copy={handleCodeSnippetCopy}
     code={jsonSnippet}
-  />
+  >
+    This is some caption text related to the code snippet below!
+  </CodeSnippet>
 
   <h2 class="text-lg text-subtle-1">JavaScript</h2>
   <CodeSnippet
