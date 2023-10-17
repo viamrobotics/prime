@@ -6,7 +6,7 @@ For rendering readonly blocks of code. Uses `prism` for syntax highlighting:
 https://prismjs.com
 
 ```svelte
-<Breadcrumbs crumbs={['Dessert', 'Cookie']} />
+<CodeSnippet language="json" code="{ myThing: true }" />
 ```
 -->
 <svelte:options immutable />
