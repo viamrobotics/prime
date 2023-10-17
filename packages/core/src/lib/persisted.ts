@@ -28,24 +28,14 @@ const createPersisted = <T extends Jsonifiable>(
   initialValue: T | null,
   storage: ReturnType<typeof getStorage>
 ) => {
+  initialValue = parse(storage.getItem(key)) ?? initialValue
+  
   const store = writable<T | null>(initialValue, (set) => {
-    const json = storage.getItem(key);
-
-    // eslint-disable-next-line unicorn/no-negated-condition
-    if (json !== null) {
-      set(parse<T>(json));
-    } else {
-      storage.setItem(key, JSON.stringify(initialValue));
-    }
+    storage.setItem(key, JSON.stringify(initialValue));
 
     const handleStorage = (event: StorageEvent) => {
       if (event.key === key) {
-        // eslint-disable-next-line unicorn/no-negated-condition
-        if (event.newValue !== null) {
-          set(parse<T>(event.newValue));
-        } else {
-          set(null);
-        }
+        set(parse<T>(event.newValue));
       }
     };
 
