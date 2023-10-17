@@ -1,6 +1,10 @@
 import { writable, type Writable } from 'svelte/store';
 import type { Jsonifiable } from 'type-fest';
 
+/**
+ * This singleton's purpose is for caching stores only during a browser session.
+ * It is disabled on the server.
+ */
 const stores: Record<string, Writable<unknown> | undefined> = {};
 
 const getStorage = (type: 'local' | 'session') => {
