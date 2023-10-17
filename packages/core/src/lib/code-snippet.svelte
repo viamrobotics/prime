@@ -18,8 +18,11 @@ https://prismjs.com
   lang="ts"
 >
 import Prism from 'prismjs';
+import PrismPackage from 'prismjs/package.json';
 
 export type CodeSnippetTheme = 'vs' | 'vsc-dark-plus';
+
+const PRISM_VERSION = PrismPackage.version;
 </script>
 
 <script lang="ts">
@@ -164,7 +167,7 @@ onMount(async () => {
     // Make sure the autoloader knows where to find our languages
     (Prism.plugins.autoloader as { languages_path: string }).languages_path =
       // TODO: do we want a better way to get the version?
-      'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
+      `https://cdnjs.cloudflare.com/ajax/libs/prism/${PRISM_VERSION}/components/`;
 
     // Do the initial highlighting
     if (element) {
