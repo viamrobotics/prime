@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { CodeSnippet } from '$lib';
 import { cxTestArguments, cxTestResults } from './cx-test';
-import CaptionedCodeSnippet from './code-snippet.spec.svelte'
+import CaptionedCodeSnippet from './code-snippet.spec.svelte';
 
 describe('CodeSnippet', () => {
   const common = {
