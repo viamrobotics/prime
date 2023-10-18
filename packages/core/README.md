@@ -175,6 +175,7 @@ We keep tests in a `__tests__` directory that is a sibling of the code being tes
 
 Some components require test components to render slotted children, due to limitations with rendering slots using `@testing-library`.
 
-  See:
-  - https://sveltesociety.dev/recipes/testing-and-debugging/unit-testing-svelte-component
-  - https://github.com/testing-library/svelte-testing-library/issues/48
+See:
+
+- https://sveltesociety.dev/recipes/testing-and-debugging/unit-testing-svelte-component
+- https://github.com/testing-library/svelte-testing-library/issues/48
