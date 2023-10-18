@@ -64,6 +64,16 @@ export let showCopyButton = true;
  */
 export let dependencies: string[] = [];
 
+/**
+ * We use the prism autoloader to handle loading in language grammar files. The
+ * default path for the grammar files is a CDN link so we don't have to include
+ * grammar files in our bundle. If you prefer to point to your own grammars and
+ * bypass the CDN, define the path to those files.
+ *
+ * See: https://prismjs.com/plugins/autoloader/
+ */
+export let grammarsPath = `https://cdnjs.cloudflare.com/ajax/libs/prism/${PRISM_VERSION}/components/`;
+
 /** Additional CSS classes to pass to the aside. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
@@ -153,8 +163,7 @@ onMount(async () => {
 
     // Make sure the autoloader knows where to find our languages
     (plugins.autoloader as { languages_path: string }).languages_path =
-      // TODO: do we want a better way to get the version?
-      `https://cdnjs.cloudflare.com/ajax/libs/prism/${PRISM_VERSION}/components/`;
+      grammarsPath;
 
     // Do the initial highlighting
     highlight();
