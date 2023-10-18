@@ -81,7 +81,7 @@ const handleCodeSnippetCopy = ({
   }
 };
 
-const jsonSnippet = `
+let jsonSnippet = `
 [{
   "id": 1,
   "first_name": "Beatrice",
@@ -124,7 +124,7 @@ function fizzBuzz(n) {
  
         if (i % 5 === 0) {
             output += "Buzz";
-        }
+        } 
  
         if (output === "") {
             output = i.toString();
@@ -388,6 +388,55 @@ fn fizzbuzz(n: u32) {
 fn main() {
     fizzbuzz(20);
 }`.trim();
+
+const htmlSnippet = `
+<h1>Ask her how her day was.</h1>
+<p>
+  Now, now. Perfectly symmetrical violence never solved anything. Meh. So, how
+  'bout them Knicks? Ooh, name it after me! Whoa a real live robot; or is that
+  some kind of cheesy New Year's costume?
+</p>
+<p>
+  Well, then good news! It's a suppository. Yes! In your face, Gandhi! No! The
+  cat shelter's on to me. <strong> I'm sorry, guys.</strong>
+  <em> I never meant to hurt you.</em> Just to destroy everything you ever believed
+  in.
+</p>
+<h2>Leela's gonna kill me.</h2>
+<p>
+  This opera's as lousy as it is brilliant! Your lyrics lack subtlety. You can't
+  just have your characters announce how they feel. That makes me feel angry!
+  Tell them I hate them. All I want is to be a monkey of moderate intelligence
+  who wears a suit… that's why I'm transferring to business school!
+</p>
+<ol>
+  <li>
+    Son, as your lawyer, I declare y'all are in a 12-piece bucket o' trouble.
+    But I done struck you a deal: Five hours of community service cleanin' up
+    that ol' mess you caused.
+  </li>
+  <li>Hey! I'm a porno-dealing monster, what do I care what you think?</li>
+  <li>
+    It may comfort you to know that Fry's death took only fifteen seconds, yet
+    the pain was so intense, that it felt to him like fifteen years. And it goes
+    without saying, it caused him to empty his bowels.
+  </li>
+</ol>
+
+<h3>
+  For one beautiful night I knew what it was like to be a grandmother.
+  Subjugated, yet honored.
+</h3>
+<p>
+  Is today's hectic lifestyle making you tense and impatient? Now, now.
+  Perfectly symmetrical violence never solved anything. Hey, whatcha watching?
+  Noooooo!
+</p>
+<ul>
+  <li>Yeah, I do that with my stupidness.</li>
+  <li>But I know you in the future. I cleaned your poop.</li>
+  <li>Ummm…to eBay?</li>
+</ul>`.trim();
 </script>
 
 <NotificationContainer />
@@ -562,12 +611,23 @@ fn main() {
   </p>
 
   <h2 class="text-lg text-subtle-1">JSON</h2>
+  <Label
+    position="top"
+    cx="w-full"
+  >
+    JSON Snippet
+    <textarea
+      slot="input"
+      class="text-small min-h-[200px] font-roboto-mono"
+      bind:value={jsonSnippet}
+    />
+  </Label>
   <CodeSnippet
     language="json"
-    on:copy={handleCodeSnippetCopy}
     code={jsonSnippet}
+    on:copy={handleCodeSnippetCopy}
   >
-    This is some caption text related to the code snippet below!
+    Edit the JSON in the <code>textarea</code> above to see it rendered here!
   </CodeSnippet>
 
   <h2 class="text-lg text-subtle-1">JavaScript</h2>
@@ -611,6 +671,12 @@ fn main() {
   <CodeSnippet
     language="rust"
     code={rustSnippet}
+  />
+
+  <h2 class="text-lg text-subtle-1">HTML</h2>
+  <CodeSnippet
+    language="html"
+    code={htmlSnippet}
   />
 
   <!-- Context Menu -->

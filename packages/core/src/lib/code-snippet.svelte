@@ -17,7 +17,7 @@ https://prismjs.com
   context="module"
   lang="ts"
 >
-import Prism from 'prismjs';
+import { highlightElement, plugins } from 'prismjs';
 import PrismPackage from 'prismjs/package.json';
 
 export type CodeSnippetTheme = 'vs' | 'vsc-dark-plus';
@@ -106,30 +106,17 @@ const copyToClipboard = async () => {
 
 const highlight = () => {
   if (element) {
-    Prism.highlightElement(element);
+    /**
+     * We need to reset the inner HTML of the element to the raw value of
+     * `code` so it can rescanned for highlighting from the raw.
+     */
+    element.innerHTML = code;
+    highlightElement(element);
   }
-};
-
-const formatCode = (input: string): string => {
-  const htmlEntities: Record<string, string> = {
-    '<': '&lt;',
-    '>': '&gt',
-    '/': '&#47;',
-  };
-
-  let formattedCode = input;
-  for (const [key, value] of Object.entries(htmlEntities)) {
-    if (formattedCode) {
-      formattedCode = formattedCode.replaceAll(key, value);
-    }
-  }
-
-  return formattedCode;
 };
 
 $: {
-  if (element && code) {
-    element.innerHTML = formatCode(code);
+  if (code) {
     highlight();
   }
 }
@@ -165,14 +152,12 @@ onMount(async () => {
     );
 
     // Make sure the autoloader knows where to find our languages
-    (Prism.plugins.autoloader as { languages_path: string }).languages_path =
+    (plugins.autoloader as { languages_path: string }).languages_path =
       // TODO: do we want a better way to get the version?
       `https://cdnjs.cloudflare.com/ajax/libs/prism/${PRISM_VERSION}/components/`;
 
     // Do the initial highlighting
-    if (element) {
-      Prism.highlightElement(element);
-    }
+    highlight();
   } catch (error) {
     /* eslint-disable-next-line no-console */
     console.error('Error initializing prismjs', error);
