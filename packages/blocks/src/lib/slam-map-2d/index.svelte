@@ -43,7 +43,7 @@ interface Events {
   click: THREE.Vector3;
 }
 
-const dispatch = createEventDispatcher<Events>();
+createEventDispatcher<Events>();
 </script>
 
 <div class="relative h-full w-full">
@@ -54,7 +54,7 @@ const dispatch = createEventDispatcher<Events>();
       {basePose}
       {destination}
       {motionPath}
-      on:click={(event) => dispatch('click', event)}
+      on:click
     />
   </Canvas>
 
