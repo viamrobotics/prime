@@ -27,8 +27,7 @@ for (const [index, axis] of axes.entries()) {
 
 geometry.setColors(colors);
 
-$: linewidth = width / 100;
-$: material.linewidth = linewidth;
+$: material.linewidth = width / 100;
 
 $: {
   const positions = new Float32Array(27);
