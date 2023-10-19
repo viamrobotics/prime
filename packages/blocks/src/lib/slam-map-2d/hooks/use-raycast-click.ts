@@ -19,19 +19,23 @@ export const useRaycastClick = () => {
   const plane = new THREE.Plane();
   plane.normal.set(0, 0, -1);
 
-  const normalizedDeviceCoordinates = (x: number, y: number, vec2: THREE.Vector2) => {
+  const normalizedDeviceCoordinates = (
+    x: number,
+    y: number,
+    vec2: THREE.Vector2
+  ) => {
     const canvas = renderer.domElement;
     const rect = canvas.getBoundingClientRect();
     vec2.x = ((x - rect.x) / canvas.clientWidth) * 2 - 1;
     vec2.y = -(((y - rect.y) / canvas.clientHeight) * 2) + 1;
-  }
+  };
 
   const handleDown = (event: PointerEvent) => {
-    normalizedDeviceCoordinates(event.clientX, event.clientY, pointerDown)
+    normalizedDeviceCoordinates(event.clientX, event.clientY, pointerDown);
   };
 
   const handleUp = (event: MouseEvent) => {
-    normalizedDeviceCoordinates(event.clientX, event.clientY, pointerUp)
+    normalizedDeviceCoordinates(event.clientX, event.clientY, pointerUp);
 
     const pointerMoved = pointerDown.sub(pointerUp).lengthSq() > EPSILON;
 

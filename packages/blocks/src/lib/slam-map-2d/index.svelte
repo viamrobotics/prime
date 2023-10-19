@@ -36,7 +36,6 @@ export let helpers = true;
 
 /** An optional motion path */
 export let motionPath: string | undefined = undefined;
-
 </script>
 
 <div class="relative h-full w-full">
