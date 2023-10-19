@@ -3,7 +3,11 @@ import { useThrelte } from '@threlte/core';
 import { createEventDispatcher, onMount } from 'svelte';
 
 interface Events {
-  /** Fires when the user clicks on the canvas */
+  /**
+   * Fires when the user clicks on the canvas, and reports
+   * the intersection of a ray cast from the mouse coordinate
+   * to an infinite xy plane at z=0.
+   */
   click: THREE.Vector3;
 }
 
