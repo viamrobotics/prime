@@ -7,7 +7,7 @@ import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 
 export let length = 1;
 export let width = 0.2;
-let axesColors = ['red', 'green', 'blue'];
+export let axesColors = ['red', 'green', 'blue'];
 
 const TOTAL_VERTICES = 9;
 const VERTEX_COMPONENTS = 3;
