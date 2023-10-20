@@ -25,7 +25,12 @@ export const useRaycastClick = () => {
   plane.normal.set(0, 0, -1);
 
   const handleDown = (event: PointerEvent) => {
-    normalizeDeviceCoordinates(canvas, event.clientX, event.clientY, pointerDown);
+    normalizeDeviceCoordinates(
+      canvas,
+      event.clientX,
+      event.clientY,
+      pointerDown
+    );
   };
 
   const handleUp = (event: MouseEvent) => {
