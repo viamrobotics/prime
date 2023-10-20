@@ -14,8 +14,8 @@
     "check-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check-lint": "pnpm run _prettier --check && pnpm run _eslint",
     "format": "pnpm run _prettier --write",
-    "test": "svelte-kit sync && echo \"TODO: write tests for @viamrobotics/blocks\"",
-    "test:watch": "echo \"TODO: write tests for @viamrobotics/blocks\"",
+    "test": "svelte-kit sync && vitest run",
+    "test:watch": "vitest",
     "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
     "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\""
   },
