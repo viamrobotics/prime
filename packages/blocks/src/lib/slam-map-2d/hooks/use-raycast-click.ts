@@ -60,7 +60,7 @@ export const useRaycastClick = () => {
     renderer.domElement.addEventListener('click', handleUp);
 
     return () => {
-      renderer.domElement.addEventListener('pointerdown', handleUp);
+      renderer.domElement.removeEventListener('pointerdown', handleDown);
       renderer.domElement.removeEventListener('click', handleUp);
     };
   });
