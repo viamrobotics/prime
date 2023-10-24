@@ -20,6 +20,7 @@ const fetchPointcloud = async () => {
         <SlamMap2D
           {pointcloud}
           {motionPath}
+          on:click={(event) => console.log(event.detail)}
         />
       {/await}
     </div>
