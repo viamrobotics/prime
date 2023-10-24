@@ -4,6 +4,7 @@ import {
   Input,
   Label,
   NumericInput,
+  RangeInput,
   RestrictedTextInput,
   SliderInput,
   TextInput,
@@ -46,4 +47,8 @@ const restrictInput = (inputValue: string) =>
 
 <Story name="Slider">
   <SliderInput />
+</Story>
+
+<Story name="Range">
+  <RangeInput />
 </Story>

@@ -40,6 +40,7 @@ export {
 export {
   Input,
   NumericInput,
+  RangeInput,
   RestrictedTextInput,
   SliderInput,
   TextInput,

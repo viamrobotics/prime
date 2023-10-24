@@ -40,6 +40,7 @@ import {
   useNotify,
   Modal,
   CodeSnippet,
+  RangeInput,
 } from '$lib';
 import { uniqueId } from 'lodash';
 import { writable } from 'svelte/store';
@@ -928,6 +929,44 @@ const htmlSnippet = `
       placeholder="Disabled"
       name="slider"
       disabled
+    />
+  </div>
+
+  <!-- Range Input -->
+  <h2 class="text-xl">Range Input</h2>
+  <div class="flex flex-col gap-2">
+    <RangeInput
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('RangeInput input', event);
+      }}
+      on:change={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('RangeInput change', event);
+      }}
+      name="range"
+    />
+
+    <RangeInput
+      name="disabled-range"
+      disabled
+    />
+
+    <RangeInput
+      name="suffix-range"
+      suffix="%"
+    />
+
+    <RangeInput
+      name="tiny-range"
+      max={1}
+      step={0.01}
+    />
+
+    <RangeInput
+      name="large-range"
+      max={1000}
+      step={1}
     />
   </div>
 
