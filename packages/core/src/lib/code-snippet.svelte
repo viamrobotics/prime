@@ -137,7 +137,8 @@ $: if (code) {
 }
 
 onMount(async () => {
-  const glob = import.meta.glob('/node_modules/prism-themes/themes/*.css', {});
+  // This throws a warning but it is a lie: https://github.com/vitejs/vite/issues/12001
+  const glob = import.meta.glob('/node_modules/prism-themes/themes/*.css');
   const importTheme =
     glob[`/node_modules/prism-themes/themes/prism-${theme}.min.css`];
 
