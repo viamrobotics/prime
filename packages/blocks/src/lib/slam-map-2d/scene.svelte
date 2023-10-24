@@ -1,7 +1,8 @@
 <script lang="ts">
 import * as THREE from 'three';
-import { T, createRawEventDispatcher, extend, useThrelte } from '@threlte/core';
+import { T, extend, useThrelte } from '@threlte/core';
 import { MapControls } from 'three/examples/jsm/controls/MapControls';
+import { useRaycastClick } from './hooks/use-raycast-click';
 import Helpers from './helpers.svelte';
 import Points from './points.svelte';
 import Marker from './marker.svelte';
@@ -16,14 +17,9 @@ export let basePose: { x: number; y: number; theta: number } | undefined =
 export let destination: THREE.Vector2 | undefined;
 export let motionPath: string | undefined;
 
-interface $$Events extends Record<string, unknown> {
-  /** Dispatched when a user clicks within the bounding box of the pointcloud */
-  click: THREE.Vector3;
-}
-
-const dispatch = createRawEventDispatcher<$$Events>();
-
 extend({ MapControls });
+
+useRaycastClick();
 
 const { renderer, camera, invalidate } = useThrelte();
 
@@ -112,7 +108,6 @@ $: updateZoom($camera as THREE.OrthographicCamera);
 <Points
   {pointcloud}
   size={pointSize}
-  on:click={(event) => dispatch('click', event)}
   on:update={handlePointsUpdate}
 />
 

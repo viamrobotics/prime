@@ -8,13 +8,10 @@
 <script lang="ts">
 import * as THREE from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader';
-import { T, useThrelte, createRawEventDispatcher, extend } from '@threlte/core';
-import { MeshDiscardMaterial, MouseRaycaster } from 'trzy';
+import { T, createRawEventDispatcher } from '@threlte/core';
 import { renderOrder } from './render-order';
-import { onDestroy, onMount } from 'svelte';
+import { onMount } from 'svelte';
 import { mapColorAttributeGrayscale } from './color-map';
-
-extend({ MeshDiscardMaterial });
 
 /** A buffer representing a .pcd file */
 export let pointcloud: Uint8Array | undefined;
@@ -23,9 +20,6 @@ export let pointcloud: Uint8Array | undefined;
 export let size: number;
 
 interface $$Events extends Record<string, unknown> {
-  /** Dispatched when a user clicks within the bounding box of the pointcloud */
-  click: THREE.Vector3;
-
   /** Dispatched whenever a new .pcd file is parsed. Emits the radius and center of the cloud's bounding sphere. */
   update: {
     radius: number;
@@ -34,19 +28,12 @@ interface $$Events extends Record<string, unknown> {
 }
 
 const dispatch = createRawEventDispatcher<$$Events>();
-const { camera, renderer } = useThrelte();
 const loader = new PCDLoader();
 
 let points: THREE.Points;
 let material: THREE.PointsMaterial | undefined;
 let radius = 1;
 let center = { x: 0, y: 0 };
-
-const raycaster = new MouseRaycaster({
-  camera: camera.current as THREE.OrthographicCamera,
-  target: renderer.domElement,
-  recursive: false,
-});
 
 const update = (cloud: Uint8Array) => {
   points = loader.parse(cloud.buffer);
@@ -71,32 +58,15 @@ const update = (cloud: Uint8Array) => {
   dispatch('update', { center, radius });
 };
 
-const handleIntersectionPlaneCreate = ({ ref }: { ref: THREE.Mesh }) => {
-  raycaster.objects = [ref];
-};
-
-const handleIntersectionPlaneClick = (event: THREE.Event) => {
-  const [intersection] = event.intersections as THREE.Intersection[];
-  if (intersection?.point) {
-    dispatch('click', intersection.point);
-  }
-};
-
 $: if (material) {
   material.size = size;
 }
 $: if (pointcloud) {
   update(pointcloud);
 }
-$: raycaster.camera = camera.current as THREE.OrthographicCamera;
 
 onMount(() => {
   dispatch('update', { center, radius });
-  raycaster.addEventListener('click', handleIntersectionPlaneClick);
-});
-
-onDestroy(() => {
-  raycaster.removeEventListener('click', handleIntersectionPlaneClick);
 });
 </script>
 
@@ -105,13 +75,3 @@ onDestroy(() => {
   renderOrder={renderOrder.points}
   frustumCulled={false}
 />
-
-<T.Mesh
-  name="Intersection plane"
-  position.x={center.x}
-  position.y={center.y}
-  on:create={handleIntersectionPlaneCreate}
->
-  <T.PlaneGeometry args={[radius * 2, radius * 2, 1, 1]} />
-  <T.MeshDiscardMaterial />
-</T.Mesh>
