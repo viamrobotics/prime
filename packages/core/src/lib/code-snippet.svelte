@@ -7,7 +7,7 @@ https://prismjs.com
 
 ```svelte
 <CodeSnippet language="json" code="{ myThing: true }">
-    This text captions the code snippet.
+    <svelte:fragment slot="caption">This text captions the code snippet.</svelte:fragment>
 </CodeSnippet>
 ```
 -->
