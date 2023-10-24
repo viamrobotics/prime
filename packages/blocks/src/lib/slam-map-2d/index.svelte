@@ -17,7 +17,6 @@
 -->
 <script lang="ts">
 import type * as THREE from 'three';
-import { createEventDispatcher } from 'svelte';
 import { Canvas } from '@threlte/core';
 import Legend from './legend.svelte';
 import Scene from './scene.svelte';
@@ -37,13 +36,6 @@ export let helpers = true;
 
 /** An optional motion path */
 export let motionPath: string | undefined = undefined;
-
-interface Events {
-  /** Dispatched when a user clicks within the bounding box of the pointcloud */
-  click: THREE.Vector3;
-}
-
-const dispatch = createEventDispatcher<Events>();
 </script>
 
 <div class="relative h-full w-full">
@@ -54,7 +46,7 @@ const dispatch = createEventDispatcher<Events>();
       {basePose}
       {destination}
       {motionPath}
-      on:click={(event) => dispatch('click', event)}
+      on:click
     />
   </Canvas>
 
