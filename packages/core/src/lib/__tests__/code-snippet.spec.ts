@@ -4,6 +4,7 @@ import { CodeSnippet } from '$lib';
 import { cxTestArguments, cxTestResults } from './cx-test';
 import CaptionedCodeSnippet from './code-snippet.spec.svelte';
 import userEvent from '@testing-library/user-event';
+import { escape } from 'lodash';
 
 describe('CodeSnippet', () => {
   const common = {
@@ -13,7 +14,7 @@ describe('CodeSnippet', () => {
 
   it('Renders the code snippet', () => {
     render(CodeSnippet, common);
-    expect(screen.getByText('{ my: "json" }')).toBeInTheDocument();
+    expect(screen.getByText(escape('{ my: "json" }'))).toBeInTheDocument();
   });
 
   it('Renders with the passed cx classes', () => {
