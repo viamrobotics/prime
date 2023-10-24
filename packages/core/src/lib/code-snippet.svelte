@@ -19,18 +19,28 @@ https://prismjs.com
 >
 import { highlightElement, plugins } from 'prismjs';
 import PrismPackage from 'prismjs/package.json';
-
 export type CodeSnippetTheme = 'vs' | 'vsc-dark-plus';
 
 const PRISM_VERSION = PrismPackage.version;
+
+type CodeSnippetCopyState = 'copy' | 'copied' | 'failed';
+const COPY_STATES: Record<
+  CodeSnippetCopyState,
+  { label: string; icon: IconName }
+> = {
+  copy: { label: 'Copy', icon: 'content-copy' },
+  copied: { label: 'Copied', icon: 'check' },
+  failed: { label: 'Failed', icon: 'alert' },
+} as const;
 </script>
 
 <script lang="ts">
 import { createEventDispatcher, onMount } from 'svelte';
 import cx from 'classnames';
 
-import type { IconName } from '$lib';
 import IconButton from './button/icon-button.svelte';
+import { useTimeout } from './use-timeout';
+import type { IconName } from './icon/icons';
 
 /**
  * The language to use for syntax highlighting. Must be a language supported by
@@ -78,10 +88,11 @@ export let grammarsPath = `https://cdnjs.cloudflare.com/ajax/libs/prism/${PRISM_
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
+const { set: setCopyTimeout } = useTimeout();
+
 let element: HTMLElement | undefined;
 
-$: copyButtonLabel = 'Copy';
-$: copyButtonIcon = 'content-copy' as IconName;
+$: copyState = 'copy' as CodeSnippetCopyState;
 
 const dispatch = createEventDispatcher<{
   copy: { succeeded: boolean; message: string };
@@ -90,17 +101,14 @@ const dispatch = createEventDispatcher<{
 const copyToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(code);
-
-    copyButtonLabel = 'Copied';
-    copyButtonIcon = 'check';
+    copyState = 'copied';
 
     dispatch('copy', {
       succeeded: true,
       message: 'Successfully copied snippet to the clipboard',
     });
   } catch {
-    copyButtonLabel = 'Failed';
-    copyButtonIcon = 'alert';
+    copyState = 'failed';
 
     dispatch('copy', {
       succeeded: false,
@@ -108,9 +116,8 @@ const copyToClipboard = async () => {
     });
   }
 
-  window.setTimeout(() => {
-    copyButtonLabel = 'Copy';
-    copyButtonIcon = 'content-copy';
+  setCopyTimeout(() => {
+    copyState = 'copy';
   }, 2000);
 };
 
@@ -125,32 +132,17 @@ const highlight = () => {
   }
 };
 
-$: {
-  if (code) {
-    highlight();
-  }
+$: if (code) {
+  highlight();
 }
 
 onMount(async () => {
+  const glob = import.meta.glob('/node_modules/prism-themes/themes/*.css', {});
+  const importTheme =
+    glob[`/node_modules/prism-themes/themes/prism-${theme}.min.css`];
+
   try {
-    /**
-     * Load the themes, for vite to properly discover them we cannot use string templates,
-     * so we use a switch statement for our supported themes.
-     */
-    switch (theme) {
-      case 'vs': {
-        await import('prism-themes/themes/prism-vs.min.css');
-        break;
-      }
-      case 'vsc-dark-plus': {
-        await import('prism-themes/themes/prism-vsc-dark-plus.min.css');
-        break;
-      }
-      default: {
-        // Unsupported theme
-        break;
-      }
-    }
+    await importTheme?.();
 
     /**
      * After the HTML is loaded in the DOM, we can use the autoloader to manage
@@ -175,8 +167,8 @@ onMount(async () => {
 </script>
 
 <figure class={cx('flex flex-col gap-2', extraClasses)}>
-  {#if $$slots.default}
-    <figcaption><slot /></figcaption>
+  {#if $$slots.caption}
+    <figcaption><slot name="caption" /></figcaption>
   {/if}
 
   <div
@@ -195,8 +187,8 @@ onMount(async () => {
     {#if showCopyButton}
       <IconButton
         class="text-black"
-        icon={copyButtonIcon}
-        label={copyButtonLabel}
+        icon={COPY_STATES[copyState].icon}
+        label={COPY_STATES[copyState].label}
         on:click={copyToClipboard}
         on:keyup={copyToClipboard}
       />

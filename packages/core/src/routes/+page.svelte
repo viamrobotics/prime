@@ -627,7 +627,9 @@ const htmlSnippet = `
     code={jsonSnippet}
     on:copy={handleCodeSnippetCopy}
   >
-    Edit the JSON in the <code>textarea</code> above to see it rendered here!
+    <svelte:fragment slot="caption">
+      Edit the JSON in the <code>textarea</code> above to see it rendered here!
+    </svelte:fragment>
   </CodeSnippet>
 
   <h2 class="text-lg text-subtle-1">JavaScript</h2>

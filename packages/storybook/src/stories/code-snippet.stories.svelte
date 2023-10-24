@@ -182,3 +182,37 @@ fn main() {
      `.trim()}
   />
 </Story>
+
+<Story name="Captioned">
+  <CodeSnippet
+    language="json"
+    code={`
+[{
+  "id": 1,
+  "first_name": "Beatrice",
+  "last_name": "Earwicker",
+  "email": "bearwicker0@washington.edu",
+  "gender": "Female",
+  "ip_address": "180.7.54.35"
+}, {
+  "id": 2,
+  "first_name": "Linnell",
+  "last_name": "Juhruke",
+  "email": "ljuhruke1@newyorker.com",
+  "gender": "Female",
+  "ip_address": "57.19.218.117"
+}, {
+  "id": 3,
+  "first_name": "Mathew",
+  "last_name": "Abramovic",
+  "email": "mabramovic2@miibeian.gov.cn",
+  "gender": "Male",
+  "ip_address": "46.0.113.0"
+}]
+     `.trim()}
+  >
+    <svelte:fragment slot="caption"
+      >Check out this cool captioned JSON!</svelte:fragment
+    >
+  </CodeSnippet>
+</Story>

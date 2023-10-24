@@ -6,5 +6,5 @@ import CodeSnippet from '$lib/code-snippet.svelte';
   language="json"
   code={`{ myThing: true }`}
 >
-  This is the caption text.
+  <svelte:fragment slot="caption">This is the caption text.</svelte:fragment>
 </CodeSnippet>
