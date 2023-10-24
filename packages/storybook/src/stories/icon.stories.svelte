@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
-import { Icon, Tooltip } from '@viamrobotics/prime-core';
+import { Icon, Tooltip, type IconName } from '@viamrobotics/prime-core';
 
 import { paths } from '../../../core/src/lib/icon/icons';
 
-const pathsKeys = Object.keys(paths);
+const pathsKeys = Object.keys(paths) as IconName[];
 </script>
 
 <Meta title="Elements/Icon" />
@@ -28,7 +28,7 @@ const pathsKeys = Object.keys(paths);
           {name}
           size="lg"
         />
-        <p slot="text">
+        <p slot="description">
           {name}
         </p>
       </Tooltip>

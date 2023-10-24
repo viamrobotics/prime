@@ -63,6 +63,7 @@ export const paths = {
   'radiobox-indeterminate-variant': MDI.mdiRadioboxIndeterminateVariant,
   'radiobox-marked': MDI.mdiRadioboxMarked,
   refresh: MDI.mdiRefresh,
+  'selection-ellipse': MDI.mdiSelectionEllipse,
   send: MDI.mdiSend,
   'stop-circle-outline': MDI.mdiStopCircleOutline,
   'trash-can-outline': MDI.mdiTrashCanOutline,
@@ -73,7 +74,7 @@ export const paths = {
   'robot-outline': MDI.mdiRobotOutline,
   domain: MDI.mdiDomain,
   'database-outline': MDI.mdiDatabaseOutline,
-};
+} as const;
 
 /**
  * The possible icon names that can be rendered. This is good for typing props.
