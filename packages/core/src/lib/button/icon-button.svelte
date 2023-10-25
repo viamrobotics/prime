@@ -55,7 +55,7 @@ $: handleDisabled = preventHandler(disabled);
       'cursor-not-allowed text-gray-4': disabled,
       'hover:text-gray-7 active:text-gray-8':
         variant === 'primary' && !disabled,
-      'hover:text-danger-dark hover:bg-[rgba(190,53,54,0.08)] active:text-danger-dark active:bg-[rgba(190,53,54,0.16)]':
+      'hover:bg-[rgba(190,53,54,0.08)] hover:text-danger-dark active:bg-[rgba(190,53,54,0.16)] active:text-danger-dark':
         variant === 'danger' && !disabled,
     },
     extraClasses
