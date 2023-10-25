@@ -160,7 +160,7 @@ onMount(async () => {
     <pre class="flex-1 overflow-x-auto language-{language}"><code
         bind:this={element}
         class="language-{language}"
-        data-dependencies={dependencies.join(',')}>{escape(code)}</code
+        data-dependencies={dependencies.join(',')}>{code}</code
       ></pre>
 
     {#if showCopyButton}
