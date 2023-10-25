@@ -105,7 +105,7 @@ $: {
       {/if}
 
       <div class="flex flex-col">
-        <p class="text-sm font-medium text-default">
+        <p class="text-sm font-semibold text-default">
           <slot name="title" />
         </p>
 
