@@ -48,13 +48,11 @@ const hideInvalid = () => {
 };
 
 const showInvalid = () => {
-  clearTooltipTimeout();
   validationState = 'invalid';
   setTooltipTimeout(hideInvalid, tooltipDurationMs);
 };
 
 const remindInvalid = () => {
-  clearTooltipTimeout();
   validationState = 'invalid-remind';
   setTooltipTimeout(showInvalid, wiggleDurationMs);
 };
