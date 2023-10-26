@@ -59,7 +59,6 @@ import {
   mdiTools,
   mdiAxisArrow,
   mdiCodeBraces,
-  mdiAxisXArrow,
 } from '@mdi/js';
 
 export const paths: Record<string, string> = {
@@ -97,7 +96,7 @@ export const paths: Record<string, string> = {
   'arrow-right': mdiArrowRight,
   'arrow-top-right-bottom-left': mdiArrowTopRightBottomLeft,
   'arrow-up': mdiArrowUp,
-  'axis-arrow': mdiAxisXArrow,
+  'axis-arrow': mdiAxisArrow,
   'broadcast-off': mdiBroadcastOff,
   'camera-flip-outline': mdiCameraFlipOutline,
   'camera-outline': mdiCameraOutline,
