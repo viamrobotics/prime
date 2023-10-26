@@ -19,7 +19,7 @@ https://prismjs.com
 >
 import { highlightElement, plugins } from 'prismjs';
 import PrismPackage from 'prismjs/package.json';
-export type CodeSnippetTheme = 'vs' | 'vsc-dark-plus';
+import 'prism-themes/themes/prism-vs.min.css';
 
 const PRISM_VERSION = PrismPackage.version;
 
@@ -38,9 +38,8 @@ const COPY_STATES: Record<
 import { createEventDispatcher, onMount } from 'svelte';
 import cx from 'classnames';
 
-import IconButton from './button/icon-button.svelte';
-import { useTimeout } from './use-timeout';
-import type { IconName } from './icon/icons';
+import { IconButton, type IconName, useTimeout } from '$lib';
+import { escape } from 'lodash';
 
 /**
  * The language to use for syntax highlighting. Must be a language supported by
@@ -52,14 +51,6 @@ export let language: string;
  * The code to render in the code-snippet.
  */
 export let code: string;
-
-/**
- * The theme to use for syntax highlighting. Must be a theme provided by
- * prism-themes: https://github.com/PrismJS/prism-themes#available-themes
- *
- * Currently only the `vs` and `vsc-dark-plus` themes are supported.
- */
-export let theme: CodeSnippetTheme = 'vs';
 
 /**
  * Whether or not to show a copy-to-clipboard button.
@@ -89,7 +80,6 @@ let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
 const { set: setCopyTimeout } = useTimeout();
-
 let element: HTMLElement | undefined;
 
 $: copyState = 'copy' as CodeSnippetCopyState;
@@ -127,7 +117,7 @@ const highlight = () => {
      * We need to reset the inner HTML of the element to the raw value of
      * `code` so it can rescanned for highlighting from the raw.
      */
-    element.innerHTML = code;
+    element.innerHTML = escape(code);
     highlightElement(element);
   }
 };
@@ -137,14 +127,7 @@ $: if (code) {
 }
 
 onMount(async () => {
-  // This throws a warning but it is a lie: https://github.com/vitejs/vite/issues/12001
-  const glob = import.meta.glob('/node_modules/prism-themes/themes/*.css');
-  const importTheme =
-    glob[`/node_modules/prism-themes/themes/prism-${theme}.min.css`];
-
   try {
-    await importTheme?.();
-
     /**
      * After the HTML is loaded in the DOM, we can use the autoloader to manage
      * scanning for languages and including the components properly
@@ -172,14 +155,9 @@ onMount(async () => {
     <figcaption><slot name="caption" /></figcaption>
   {/if}
 
-  <div
-    class={cx('flex gap-x-4 p-2', {
-      'bg-gray-9': theme === 'vsc-dark-plus',
-      'bg-light': theme === 'vs',
-    })}
-  >
+  <div class="flex gap-x-4 bg-light p-2">
     <!-- The formatting here is intentional to preserve the formatting of `code` -->
-    <pre class="flex-1 overflow-x-auto"><code
+    <pre class="flex-1 overflow-x-auto language-{language}"><code
         bind:this={element}
         class="language-{language}"
         data-dependencies={dependencies.join(',')}>{code}</code
@@ -197,24 +175,22 @@ onMount(async () => {
   </div>
 </figure>
 
-{#if theme}
-  <style>
-  /* Theme overrides */
-  figure pre[class*='language-'],
-  figure pre[class*='language-'] > code[class*='language-'] {
-    margin: 0;
-    border: none;
-    background: inherit;
-  }
+<style>
+/* Theme overrides */
+figure pre[class*='language-'],
+figure pre[class*='language-'] > code[class*='language-'] {
+  margin: 0;
+  border: none;
+  background: inherit;
+}
 
-  figure pre[class*='language-'] {
-    padding: 0;
-    padding-left: 0.5rem;
-    padding-top: 0.5rem;
-  }
+figure pre[class*='language-'] {
+  padding: 0;
+  padding-left: 0.5rem;
+  padding-top: 0.5rem;
+}
 
-  figure pre[class*='language-'] > code[class*='language-'] {
-    font-family: 'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace;
-  }
-  </style>
-{/if}
+figure pre[class*='language-'] > code[class*='language-'] {
+  font-family: 'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace;
+}
+</style>
