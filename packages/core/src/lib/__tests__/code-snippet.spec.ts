@@ -13,7 +13,7 @@ describe('CodeSnippet', () => {
 
   it('Renders the code snippet', () => {
     render(CodeSnippet, common);
-    expect(screen.getByText('{ my: "json" }')).toBeInTheDocument();
+    expect(screen.getByText(common.code)).toBeInTheDocument();
   });
 
   it('Renders with the passed cx classes', () => {
@@ -26,10 +26,10 @@ describe('CodeSnippet', () => {
   });
 
   it('Renders with the copy button', async () => {
-    const copy = vi.fn();
+    const writeText = vi.fn();
     Object.defineProperty(navigator, 'clipboard', {
       value: {
-        writeText: copy,
+        writeText,
       },
     });
 
@@ -43,7 +43,7 @@ describe('CodeSnippet', () => {
 
     await userEvent.click(button);
 
-    expect(copy).toHaveBeenCalledWith(common.code);
+    expect(writeText).toHaveBeenCalledWith(common.code);
   });
 
   it('Renders without the copy button', () => {
