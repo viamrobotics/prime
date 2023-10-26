@@ -68,7 +68,7 @@ export const paths = {
   'selection-ellipse': MDI.mdiSelectionEllipse,
   send: MDI.mdiSend,
   'stop-circle-outline': MDI.mdiStopCircleOutline,
-  'tools': MDI.mdiTools,
+  tools: MDI.mdiTools,
   'trash-can-outline': MDI.mdiTrashCanOutline,
   twitter: MDI.mdiTwitter,
   undo: MDI.mdiUndo,
