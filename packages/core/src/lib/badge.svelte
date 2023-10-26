@@ -28,7 +28,7 @@ export { extraClasses as cx };
 
 <small
   class={cx(
-    'inline-block rounded-full border px-3 py-0.5 text-xs',
+    'inline-block rounded-full border px-2.5 py-0.5 text-xs',
     {
       'border-success-medium bg-success-light text-success-dark':
         variant === 'green',

@@ -44,7 +44,7 @@ const handleRemove = () => {
 
 <div
   class={cx(
-    'flex max-w-fit items-center gap-1 whitespace-nowrap rounded-xl bg-medium px-2 py-0.5 text-[10px] hover:bg-gray-3',
+    'flex max-w-fit items-center gap-1 whitespace-nowrap rounded bg-medium px-2 py-0.5 text-xs',
     {
       'cursor-not-allowed bg-disabled-light text-disabled-dark':
         disabled || readonly,
@@ -61,6 +61,10 @@ const handleRemove = () => {
     <button
       aria-label="Remove {value}"
       on:click={handleRemove}
+      class={cx('text-gray-6', {
+        'hover:text-default': !disabled,
+        'cursor-not-allowed': disabled,
+      })}
     >
       <Icon
         name="close"
