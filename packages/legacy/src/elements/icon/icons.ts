@@ -59,8 +59,6 @@ import {
   mdiTools,
   mdiAxisArrow,
   mdiCodeBraces,
-  mdiDatabaseOutline,
-  mdiMagnify,
 } from '@mdi/js';
 
 export const paths: Record<string, string> = {
@@ -109,7 +107,6 @@ export const paths: Record<string, string> = {
   'content-duplicate': mdiContentDuplicate,
   'content-save-outline': mdiContentSaveOutline,
   'credit-card-outline': mdiCreditCardOutline,
-  'database-outline': mdiDatabaseOutline,
   'dots-horizontal': mdiDotsHorizontal,
   'file-download-outline': mdiFileDownloadOutline,
   'filter-outline': mdiFilterOutline,
@@ -122,7 +119,7 @@ export const paths: Record<string, string> = {
   'play-circle-outline': mdiPlayCircleOutline,
   'robot-outline': mdiRobotOutline,
   'stop-circle-outline': mdiStopCircleOutline,
-  tools: mdiTools,
+  'tools': mdiTools,
   'trash-can-outline': mdiTrashCanOutline,
   'video-outline': mdiVideoOutline,
 };
