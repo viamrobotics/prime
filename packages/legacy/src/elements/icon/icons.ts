@@ -119,7 +119,7 @@ export const paths: Record<string, string> = {
   'play-circle-outline': mdiPlayCircleOutline,
   'robot-outline': mdiRobotOutline,
   'stop-circle-outline': mdiStopCircleOutline,
-  tools: mdiTools,
+  'tools': mdiTools,
   'trash-can-outline': mdiTrashCanOutline,
   'video-outline': mdiVideoOutline,
 };
