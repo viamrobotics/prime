@@ -56,6 +56,10 @@ import {
   mdiAccountGroupOutline,
   mdiDomain,
   mdiRobotOutline,
+  mdiTools,
+  mdiAxisArrow,
+  mdiCodeBraces,
+  mdiAxisXArrow,
 } from '@mdi/js';
 
 export const paths: Record<string, string> = {
@@ -93,11 +97,13 @@ export const paths: Record<string, string> = {
   'arrow-right': mdiArrowRight,
   'arrow-top-right-bottom-left': mdiArrowTopRightBottomLeft,
   'arrow-up': mdiArrowUp,
+  'axis-arrow': mdiAxisXArrow,
   'broadcast-off': mdiBroadcastOff,
   'camera-flip-outline': mdiCameraFlipOutline,
   'camera-outline': mdiCameraOutline,
   'check-circle': mdiCheckCircle,
   'chevron-down': mdiChevronDown,
+  'code-braces': mdiCodeBraces,
   'content-copy': mdiContentCopy,
   'content-duplicate': mdiContentDuplicate,
   'content-save-outline': mdiContentSaveOutline,
@@ -114,6 +120,7 @@ export const paths: Record<string, string> = {
   'play-circle-outline': mdiPlayCircleOutline,
   'robot-outline': mdiRobotOutline,
   'stop-circle-outline': mdiStopCircleOutline,
+  'tools': mdiTools,
   'trash-can-outline': mdiTrashCanOutline,
   'video-outline': mdiVideoOutline,
 };
