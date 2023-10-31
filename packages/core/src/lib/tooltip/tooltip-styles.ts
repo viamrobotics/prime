@@ -160,7 +160,7 @@ const calculateStyle = async (state: State): Promise<TooltipStyles> => {
       placement: location,
       middleware: [
         offset(7),
-        flip({ fallbackAxisSideDirection: 'start' }),
+        flip({ fallbackAxisSideDirection: 'start', crossAxis: false }),
         shift({ padding: 5 }),
         arrowMiddleware({ element: arrow }),
       ],
