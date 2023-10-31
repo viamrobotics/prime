@@ -46,7 +46,7 @@ export const theme = {
       'danger-light': '#fcecea',
       'danger-medium': '#edc0bf',
       'warning-dark': '#a6570f',
-      'warning-light': '#fef8cA',
+      'warning-light': '#fef3e0',
       'warning-medium': '#e9c89d',
       'warning-bright': '#ddab3f',
       'success-dark': '#3d7d3f',

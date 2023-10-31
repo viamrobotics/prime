@@ -18,7 +18,7 @@ For text-based user inputs that only allow certain characters. Shows the user a 
 import type cx from 'classnames';
 import { TextInput } from '$lib';
 import { Tooltip, type TooltipVisibility } from '$lib/tooltip';
-import { onDestroy, onMount } from 'svelte';
+import { useTimeout } from '$lib/use-timeout';
 
 /** The value of the input. */
 export let value: string;
@@ -38,17 +38,9 @@ export let tooltipDurationMs = 5000;
 /** The duration to show the wiggle animation. This animation is defined in the tailwind theme. */
 export let wiggleDurationMs = 250;
 
+const { set: setTooltipTimeout, clear: clearTooltipTimeout } = useTimeout();
+
 let validationState: 'hide' | 'invalid' | 'invalid-remind' = 'hide';
-let tooltipTimeoutID: number | undefined = undefined;
-
-// window is not available when using SSR so check if mounted before trying to clear timeouts.
-let mounted = false;
-
-const clearTooltipTimeout = () => {
-  if (mounted) {
-    window.clearTimeout(tooltipTimeoutID);
-  }
-};
 
 const hideInvalid = () => {
   clearTooltipTimeout();
@@ -56,15 +48,13 @@ const hideInvalid = () => {
 };
 
 const showInvalid = () => {
-  clearTooltipTimeout();
   validationState = 'invalid';
-  tooltipTimeoutID = window.setTimeout(hideInvalid, tooltipDurationMs);
+  setTooltipTimeout(hideInvalid, tooltipDurationMs);
 };
 
 const remindInvalid = () => {
-  clearTooltipTimeout();
   validationState = 'invalid-remind';
-  tooltipTimeoutID = window.setTimeout(showInvalid, wiggleDurationMs);
+  setTooltipTimeout(showInvalid, wiggleDurationMs);
 };
 
 const handleInput = (event: Event) => {
@@ -86,14 +76,6 @@ const handleInput = (event: Event) => {
 $: tooltipWiggle = validationState === 'invalid-remind';
 let tooltipVisibility: TooltipVisibility;
 $: tooltipVisibility = validationState === 'hide' ? 'invisible' : 'visible';
-
-onMount(() => {
-  mounted = true;
-});
-onDestroy(() => {
-  clearTooltipTimeout();
-  mounted = false;
-});
 </script>
 
 <Tooltip

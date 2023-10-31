@@ -19,6 +19,7 @@ export const paths = {
   'arrow-right': MDI.mdiArrowRight,
   'arrow-top-right-bottom-left': MDI.mdiArrowTopRightBottomLeft,
   'arrow-up': MDI.mdiArrowUp,
+  'axis-arrow': MDI.mdiAxisArrow,
   'broadcast-off': MDI.mdiBroadcastOff,
   broadcast: MDI.mdiBroadcast,
   'camera-flip-outline': MDI.mdiCameraFlipOutline,
@@ -31,6 +32,7 @@ export const paths = {
   'chevron-down': MDI.mdiChevronDown,
   'chevron-left': MDI.mdiChevronLeft,
   close: MDI.mdiClose,
+  'code-braces': MDI.mdiCodeBraces,
   cog: MDI.mdiCog,
   'content-copy': MDI.mdiContentCopy,
   'content-duplicate': MDI.mdiContentDuplicate,
@@ -63,8 +65,10 @@ export const paths = {
   'radiobox-indeterminate-variant': MDI.mdiRadioboxIndeterminateVariant,
   'radiobox-marked': MDI.mdiRadioboxMarked,
   refresh: MDI.mdiRefresh,
+  'selection-ellipse': MDI.mdiSelectionEllipse,
   send: MDI.mdiSend,
   'stop-circle-outline': MDI.mdiStopCircleOutline,
+  tools: MDI.mdiTools,
   'trash-can-outline': MDI.mdiTrashCanOutline,
   twitter: MDI.mdiTwitter,
   undo: MDI.mdiUndo,
@@ -73,7 +77,7 @@ export const paths = {
   'robot-outline': MDI.mdiRobotOutline,
   domain: MDI.mdiDomain,
   'database-outline': MDI.mdiDatabaseOutline,
-};
+} as const;
 
 /**
  * The possible icon names that can be rendered. This is good for typing props.
