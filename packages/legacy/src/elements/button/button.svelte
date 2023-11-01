@@ -81,7 +81,7 @@ const handleParentClick = (event: PointerEvent) => {
         variant === 'primary',
       'border-gray-9 bg-gray-9 text-white hover:border-black hover:bg-black active:bg-[#000]':
         variant === 'inverse-primary',
-      'active:border-ghost-medium hover:bg-ghost-light active:bg-ghost-medium border-transparent':
+      'border-transparent hover:bg-ghost-light active:border-ghost-medium active:bg-ghost-medium':
         variant === 'ghost' || variant === 'icon' || variant === 'icon-danger',
       'border-danger-dark bg-danger-dark text-white hover:bg-[#aa2a2b] active:bg-[#9e2728]':
         variant === 'danger',
