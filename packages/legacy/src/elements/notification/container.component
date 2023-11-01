@@ -15,7 +15,7 @@
   $: items = $toast.filter((item) => item.target === target)
 </script>
 
-<ul class="fixed m-0 p-0 top-6 right-6 bottom-auto left-auto pointer-events-none z-[9999]">
+<ul class="fixed m-0 p-0 top-16 right-6 bottom-auto left-auto pointer-events-none z-[9999]">
   {#each items as item (item.id)}
     <li
       in:fly={item.intro}
