@@ -58,6 +58,10 @@ export const theme = {
       'disabled-dark': '#9c9ca4',
       'disabled-light': '#f2f2f4',
 
+      // Opaque grayscale
+      'ghost-light': 'rgba(0,0,0,0.04)',
+      'ghost-medium': 'rgba(0,0,0,0.08)',
+
       // Brand design colors
       'power-wire': '#ff0047',
       pcb: '#00501f',
