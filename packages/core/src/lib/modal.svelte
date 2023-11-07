@@ -26,28 +26,24 @@ Creates a modal overlay.
 
 <script lang="ts">
 import cx from 'classnames';
+import { createEventDispatcher } from 'svelte';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
-import type { Writable } from 'svelte/store';
 
 /** Whether the modal is open. */
-export let isOpen: Writable<boolean>;
-
-$: if (typeof document !== 'undefined') {
-  document.body.classList.toggle('overflow-hidden', $isOpen);
-}
-
-let headingElement: HTMLElement | undefined;
-
-$: headingElement?.focus();
+export let isOpen: boolean;
 
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 
+let headingElement: HTMLElement | undefined;
+
+const dispatch = createEventDispatcher<{
+  close: undefined;
+}>();
+
 const handleCloseModal = () => {
-  if ($isOpen) {
-    isOpen.set(false);
-  }
+  dispatch('close');
 };
 
 const handleEscapePress = (event: KeyboardEvent) => {
@@ -56,11 +52,17 @@ const handleEscapePress = (event: KeyboardEvent) => {
     handleCloseModal();
   }
 };
+
+$: if (typeof document !== 'undefined') {
+  document.body.classList.toggle('overflow-hidden', isOpen);
+}
+
+$: headingElement?.focus();
 </script>
 
 <svelte:window on:keydown={handleEscapePress} />
 
-{#if $isOpen}
+{#if isOpen}
   <div
     class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40"
     role="dialog"
