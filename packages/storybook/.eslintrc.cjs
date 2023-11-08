@@ -18,4 +18,7 @@ module.exports = {
     browser: true,
     node: true,
   },
+  rules: {
+    'no-console': 'off',
+  },
 };
