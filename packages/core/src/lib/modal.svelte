@@ -76,7 +76,7 @@ $: if (typeof document !== 'undefined') {
 $: headingElement?.focus();
 </script>
 
-<svelte:window on:keydown={handleEscapePress} />
+<svelte:window on:keydown={isOpen ? handleEscapePress : undefined} />
 
 {#if isOpen}
   <div

@@ -61,6 +61,15 @@ describe('Modal', () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
+  it('should not emit close events on escape if the modal is closed', async () => {
+    const user = userEvent.setup();
+    renderSubject({ isOpen: false });
+
+    await user.keyboard('{Escape}');
+
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it('should focus on heading element on mount', () => {
     render(Modal, { isOpen: true });
 
