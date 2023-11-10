@@ -5,6 +5,7 @@ import * as MDI from '@mdi/js';
  * e.g. 'account-multiple' for MDI.mdiAccountMultiple
  */
 export const paths = {
+  'account-group-outline': MDI.mdiAccountGroupOutline,
   'account-multiple': MDI.mdiAccountMultiple,
   'alert-circle-outline': MDI.mdiAlertCircleOutline,
   'alert-circle': MDI.mdiAlertCircle,
@@ -27,10 +28,10 @@ export const paths = {
   cancel: MDI.mdiCancel,
   'check-circle': MDI.mdiCheckCircle,
   check: MDI.mdiCheck,
-  'chevron-up': MDI.mdiChevronUp,
-  'chevron-right': MDI.mdiChevronRight,
   'chevron-down': MDI.mdiChevronDown,
   'chevron-left': MDI.mdiChevronLeft,
+  'chevron-right': MDI.mdiChevronRight,
+  'chevron-up': MDI.mdiChevronUp,
   close: MDI.mdiClose,
   'code-braces': MDI.mdiCodeBraces,
   cog: MDI.mdiCog,
@@ -38,6 +39,8 @@ export const paths = {
   'content-duplicate': MDI.mdiContentDuplicate,
   'content-save-outline': MDI.mdiContentSaveOutline,
   'credit-card-outline': MDI.mdiCreditCardOutline,
+  'database-outline': MDI.mdiDatabaseOutline,
+  domain: MDI.mdiDomain,
   'dots-horizontal': MDI.mdiDotsHorizontal,
   download: MDI.mdiDownload,
   earth: MDI.mdiEarth,
@@ -55,6 +58,8 @@ export const paths = {
   magnify: MDI.mdiMagnify,
   menu: MDI.mdiMenu,
   minus: MDI.mdiMinus,
+  'navigation-variant-outline': MDI.mdiNavigationVariantOutline,
+  'navigation-variant': MDI.mdiNavigationVariant,
   'open-in-new': MDI.mdiOpenInNew,
   'package-variant-closed': MDI.mdiPackageVariantClosed,
   'pause-circle-outline': MDI.mdiPauseCircleOutline,
@@ -65,6 +70,7 @@ export const paths = {
   'radiobox-indeterminate-variant': MDI.mdiRadioboxIndeterminateVariant,
   'radiobox-marked': MDI.mdiRadioboxMarked,
   refresh: MDI.mdiRefresh,
+  'robot-outline': MDI.mdiRobotOutline,
   'selection-ellipse': MDI.mdiSelectionEllipse,
   send: MDI.mdiSend,
   'stop-circle-outline': MDI.mdiStopCircleOutline,
@@ -73,10 +79,6 @@ export const paths = {
   twitter: MDI.mdiTwitter,
   undo: MDI.mdiUndo,
   'video-outline': MDI.mdiVideoOutline,
-  'account-group-outline': MDI.mdiAccountGroupOutline,
-  'robot-outline': MDI.mdiRobotOutline,
-  domain: MDI.mdiDomain,
-  'database-outline': MDI.mdiDatabaseOutline,
 } as const;
 
 /**
