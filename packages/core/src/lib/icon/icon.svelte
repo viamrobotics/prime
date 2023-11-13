@@ -43,6 +43,9 @@ let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
 const hasNameProperty = Object.hasOwn(paths, name);
+
+$: pathData = paths[name];
+$: isPathArray = Array.isArray(pathData);
 </script>
 
 <!--
@@ -62,8 +65,11 @@ const hasNameProperty = Object.hasOwn(paths, name);
   focusable="false"
   {...$$restProps}
 >
-  <path
-    d={paths[name]}
-    fill="currentColor"
-  />
+  {#if isPathArray}
+    {#each pathData as path}
+      <path d={path} fill="currentColor" />
+    {/each}
+  {:else}
+    <path d={pathData} fill="currentColor" />
+  {/if}
 </svg>
