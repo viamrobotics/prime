@@ -36,6 +36,23 @@ const toggleTileset = () => {
 let didHoverTooltip = Boolean(
   localStorage.getItem('navigation-service-card-tooltip-hovered')
 );
+
+let isFollowingBase = false;
+const followBase = () => {
+  if (baseGeoPose && isFollowingBase) {
+    map?.setCenter(baseGeoPose);
+    requestAnimationFrame(followBase);
+  }
+};
+
+const startFollowingBase = () => {
+  isFollowingBase = true;
+  requestAnimationFrame(followBase);
+};
+
+const stopFollowingBase = () => {
+  isFollowingBase = false;
+};
 </script>
 
 <div class="relative h-full w-full items-stretch sm:flex">
@@ -103,15 +120,31 @@ let didHoverTooltip = Boolean(
       <Button on:click={toggleTileset}>
         {satellite ? 'Map' : 'Satellite'}
       </Button>
-      <CenterInputs />
-    </div>
-
-    <div class="absolute bottom-12 right-3 z-10">
       <ToggleButtons
         options={['2D', '3D']}
         selected={$view}
         on:input={handleViewSelect}
       />
+      <CenterInputs />
+    </div>
+
+    <div class="absolute bottom-10 right-2 z-10">
+      <Button
+        disabled={!baseGeoPose}
+        on:click={() => {
+          if (isFollowingBase) {
+            stopFollowingBase();
+          } else {
+            startFollowingBase();
+          }
+        }}
+      >
+        <Icon
+          name={isFollowingBase
+            ? 'navigation-variant'
+            : 'navigation-variant-outline'}
+        />
+      </Button>
     </div>
   </MapLibre>
 </div>
