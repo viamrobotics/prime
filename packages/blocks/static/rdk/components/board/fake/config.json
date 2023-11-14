@@ -1,0 +1,111 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://localhost:5173/rdk/components/board/fake/config",
+    "$ref": "#/$defs/Config",
+    "$defs": {
+      "AnalogReaderConfig": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "string"
+          },
+          "average_over_ms": {
+            "type": "integer"
+          },
+          "samples_per_sec": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["name", "pin"]
+      },
+      "AttributeMap": {
+        "type": "object"
+      },
+      "Config": {
+        "properties": {
+          "i2cs": {
+            "items": {
+              "$ref": "#/$defs/I2CConfig"
+            },
+            "type": "array"
+          },
+          "spis": {
+            "items": {
+              "$ref": "#/$defs/SPIConfig"
+            },
+            "type": "array"
+          },
+          "analogs": {
+            "items": {
+              "$ref": "#/$defs/AnalogReaderConfig"
+            },
+            "type": "array"
+          },
+          "digital_interrupts": {
+            "items": {
+              "$ref": "#/$defs/DigitalInterruptConfig"
+            },
+            "type": "array"
+          },
+          "attributes": {
+            "$ref": "#/$defs/AttributeMap"
+          },
+          "fail_new": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["fail_new"]
+      },
+      "DigitalInterruptConfig": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "formula": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["name", "pin"]
+      },
+      "I2CConfig": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "bus": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["name", "bus"]
+      },
+      "SPIConfig": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "bus_select": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["name", "bus_select"]
+      }
+    }
+  }

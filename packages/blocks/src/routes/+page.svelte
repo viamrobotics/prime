@@ -3,6 +3,7 @@ import pointcloudUrl from '$lib/assets/pointcloud.pcd?url';
 import motionPath from '$lib/assets/cbirrtsmooth800.txt?raw';
 import { MapLibre, SlamMap2D } from '$lib';
 import NavigationMap from './navigation-map.svelte';
+import JsonEditor from '$lib/code-editors/json-editor.svelte';
 
 const fetchPointcloud = async () => {
   const response = await fetch(pointcloudUrl);
@@ -31,4 +32,8 @@ const fetchPointcloud = async () => {
       <MapLibre />
     </div>
   </div>
+</div>
+
+<div class="m-auto flex max-w-6xl">
+  <JsonEditor schema="/rdk/components/board/fake/config.json" />
 </div>
