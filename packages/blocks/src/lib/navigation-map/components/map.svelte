@@ -9,6 +9,7 @@ import CenterInputs from './center-inputs.svelte';
 import Nav from './nav/index.svelte';
 import Waypoints from './waypoints.svelte';
 import ObstaclesLegend from './nav/obstacles-legend.svelte';
+import { onDestroy } from 'svelte';
 
 /** The Geo-pose of a robot base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
@@ -38,21 +39,27 @@ let didHoverTooltip = Boolean(
 );
 
 let isFollowingBase = false;
+let af = 0;
 const followBase = () => {
   if (baseGeoPose && isFollowingBase) {
     map?.setCenter(baseGeoPose);
-    requestAnimationFrame(followBase);
+    af = requestAnimationFrame(followBase);
   }
 };
 
 const startFollowingBase = () => {
   isFollowingBase = true;
-  requestAnimationFrame(followBase);
+  af = requestAnimationFrame(followBase);
 };
 
 const stopFollowingBase = () => {
   isFollowingBase = false;
+  cancelAnimationFrame(af);
 };
+
+onDestroy(() => {
+  cancelAnimationFrame(af);
+});
 </script>
 
 <div class="relative h-full w-full items-stretch sm:flex">
@@ -131,13 +138,7 @@ const stopFollowingBase = () => {
     <div class="absolute bottom-10 right-2 z-10">
       <Button
         disabled={!baseGeoPose}
-        on:click={() => {
-          if (isFollowingBase) {
-            stopFollowingBase();
-          } else {
-            startFollowingBase();
-          }
-        }}
+        on:click={isFollowingBase ? stopFollowingBase : startFollowingBase}
       >
         <Icon
           name={isFollowingBase
