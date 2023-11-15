@@ -42,25 +42,25 @@ import {
   CodeSnippet,
 } from '$lib';
 import { uniqueId } from 'lodash';
-import { writable } from 'svelte/store';
 
 provideNotify();
 
 let buttonClickedTimes = 0;
 let preventHandlerDisabled = true;
-const modalOpen = writable(false);
+let modalOpen = false;
 
 const handleTogglePreventHandler = (event: CustomEvent<boolean>) => {
   preventHandlerDisabled = event.detail;
 };
 
 const handleCloseModal = () => {
-  modalOpen.set(false);
+  modalOpen = false;
 };
 
 const handleOpenModal = () => {
-  modalOpen.set(true);
+  modalOpen = true;
 };
+
 const notify = useNotify();
 
 let restrictedValue = '';
@@ -114,28 +114,28 @@ const jsSnippet = `
  */
 function fizzBuzz(n) {
     const result = [];
- 
+
     for (let i = 1; i <= n; i++) {
         let output = "";
- 
+
         if (i % 3 === 0) {
             output += "Fizz";
         }
- 
+
         if (i % 5 === 0) {
             output += "Buzz";
-        } 
- 
+        }
+
         if (output === "") {
             output = i.toString();
         }
- 
+
         result.push(output);
     }
- 
+
     return result;
 }
- 
+
 // Usage Example
 const fizzBuzzSequence = fizzBuzz(15);
 console.log(fizzBuzzSequence);`.trim();
@@ -181,7 +181,7 @@ console.log(sequence); // Outputs: ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", 
 
 const goSnippet = `
 import "fmt"
- 
+
 // FizzBuzz
 //
 // Parameters:
@@ -191,7 +191,7 @@ import "fmt"
 // []string: A slice of strings containing the FizzBuzz results for each number from 1 to n.
 func FizzBuzz(n int) []string {
   result := make([]string, n)
- 
+
   for i := 1; i <= n; i++ {
     if i%3 == 0 && i%5 == 0 {
       result[i-1] = "FizzBuzz"
@@ -203,16 +203,16 @@ func FizzBuzz(n int) []string {
       result[i-1] = fmt.Sprintf("%d", i)
     }
   }
- 
+
   return result
 }
- 
+
 // Usage Example for FizzBuzz
- 
+
 func main() {
   // Apply FizzBuzz algorithm up to 20
   fizzBuzzResult := FizzBuzz(20)
- 
+
   // Print the FizzBuzz results
   for _, value := range fizzBuzzResult {
     fmt.Println(value)
@@ -223,27 +223,27 @@ const pythonSnippet = `
 def fizzbuzz(n: int):
     """
     Function to implement the FizzBuzz algorithm.
- 
+
     Parameters:
     - n: int
         The number up to which the FizzBuzz algorithm should be applied.
- 
+
     Returns:
     - list:
         A list of strings representing the FizzBuzz sequence from 1 to n.
- 
+
     Raises:
     - ValueError:
         Will raise an error if the input number 'n' is less than 1.
     """
- 
+
     # Validating the input number
     if n < 1:
         raise ValueError("Input number should be greater than or equal to 1.")
- 
+
     # Initializing an empty list to store the FizzBuzz sequence
     fizzbuzz_sequence = []
- 
+
     # Looping through numbers from 1 to n (inclusive)
     for i in range(1, n+1):
         # Checking if the number is divisible by both 3 and 5
@@ -258,9 +258,9 @@ def fizzbuzz(n: int):
         # If none of the above conditions are met, add the number itself
         else:
             fizzbuzz_sequence.append(str(i))
- 
+
     return fizzbuzz_sequence
- 
+
 # Example usage of the fizzbuzz function
 n = 20
 result = fizzbuzz(n)
@@ -269,41 +269,41 @@ print(result)`.trim();
 const cppSnippet = `
 #include <iostream>
 #include <string>
- 
+
 /**
  * @brief Implements the FizzBuzz algorithm.
- * 
+ *
  * The FizzBuzz algorithm is a common programming task where you iterate over a range of numbers
  * and print "Fizz" for numbers divisible by 3, "Buzz" for numbers divisible by 5, and "FizzBuzz"
  * for numbers divisible by both 3 and 5. For all other numbers, the number itself is printed.
- * 
+ *
  * @param n The number of iterations to perform.
  */
 void fizzBuzz(int n) {
     for (int i = 1; i <= n; i++) {
         std::string output = "";
- 
+
         if (i % 3 == 0) {
             output += "Fizz";
         }
- 
+
         if (i % 5 == 0) {
             output += "Buzz";
         }
- 
+
         if (output.empty()) {
             output = std::to_string(i);
         }
- 
+
         std::cout << output << std::endl;
     }
 }
- 
+
 int main() {
     int n = 100; // Number of iterations
- 
+
     fizzBuzz(n);
- 
+
     return 0;
 }`.trim();
 
@@ -1020,7 +1020,10 @@ const htmlSnippet = `
 
   <div>
     <Button on:click={handleOpenModal}>Open Modal</Button>
-    <Modal isOpen={modalOpen}>
+    <Modal
+      isOpen={modalOpen}
+      on:close={handleCloseModal}
+    >
       <span slot="title">This is the modal demo</span>
       <span slot="message"
         >Are you sure you want to kick off a notify toast?</span
