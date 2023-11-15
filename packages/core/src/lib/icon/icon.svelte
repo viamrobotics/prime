@@ -64,6 +64,8 @@ const hasNameProperty = Object.hasOwn(paths, name);
 >
   <path
     d={paths[name]}
+    fill-rule="evenodd"
+    clip-rule="evenodd"
     fill="currentColor"
   />
 </svg>
