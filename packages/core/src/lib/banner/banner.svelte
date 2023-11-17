@@ -97,11 +97,13 @@ $: {
   <div class="relative flex w-full justify-between gap-2 p-3">
     <div class="flex gap-3">
       {#if icon}
-        <Icon
-          size="lg"
-          name={icon}
-          cx={iconClasses}
-        />
+        <div class="w-[18px]">
+          <Icon
+            size="lg"
+            name={icon}
+            cx={iconClasses}
+          />
+        </div>
       {/if}
 
       <div class="flex flex-col">
