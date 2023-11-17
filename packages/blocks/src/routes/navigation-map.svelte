@@ -83,6 +83,47 @@ const obstacles = [
   },
 ];
 
+const plans = {
+  current: [
+    { lng: -73.968, lat: 40.663 },
+    { lng: -73.9681, lat: 40.6631 },
+    { lng: -73.968, lat: 40.6632 },
+    { lng: -73.9681, lat: 40.6633 },
+    { lng: -73.968, lat: 40.6634 },
+    { lng: -73.9681, lat: 40.6635 },
+    { lng: -73.968, lat: 40.6636 },
+  ],
+  previous: [
+    [
+      { lng: -73.968, lat: 40.663 },
+      { lng: -73.9679, lat: 40.6631 },
+      { lng: -73.967_95, lat: 40.6632 },
+      { lng: -73.9679, lat: 40.6633 },
+      { lng: -73.967_95, lat: 40.6634 },
+      { lng: -73.9679, lat: 40.6635 },
+      { lng: -73.968, lat: 40.6636 },
+    ],
+    [
+      { lng: -73.968, lat: 40.663 },
+      { lng: -73.968_05, lat: 40.6631 },
+      { lng: -73.968_025, lat: 40.6632 },
+      { lng: -73.968_05, lat: 40.6633 },
+      { lng: -73.968_025, lat: 40.6634 },
+      { lng: -73.968_05, lat: 40.6635 },
+      { lng: -73.968, lat: 40.6636 },
+    ],
+    [
+      { lng: -73.968, lat: 40.663 },
+      { lng: -73.968_15, lat: 40.6631 },
+      { lng: -73.968_125, lat: 40.6632 },
+      { lng: -73.968_15, lat: 40.6633 },
+      { lng: -73.968_125, lat: 40.6634 },
+      { lng: -73.968_15, lat: 40.6635 },
+      { lng: -73.968, lat: 40.6636 },
+    ],
+  ],
+};
+
 let map: Map | undefined;
 
 let elapsed = 0;
@@ -111,6 +152,7 @@ $: map?.setCenter({ lat: 40.7, lng: -74.17 });
       baseGeoPose={pose}
       {obstacles}
       {waypoints}
+      {plans}
       on:create={(event) => console.log('create', event)}
       on:add-waypoint={(event) => console.log('add-waypoint', event)}
       on:delete-waypoint={(event) => console.log('delete-waypoint', event)}

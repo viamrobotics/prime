@@ -1,13 +1,14 @@
 import { writable } from 'svelte/store';
 import { currentWritable } from '@threlte/core';
 import type { Waypoint } from '$lib';
-import { type Obstacle, NavigationTab, type NavigationTabType } from './types';
+import { type Obstacle, NavigationTab, type NavigationTabType, type Plans } from './types';
 
 export const hovered = currentWritable<string | null>(null);
 export const selected = currentWritable<string | null>(null);
 
 export const waypoints = currentWritable<Waypoint[]>([]);
 export const obstacles = currentWritable<Obstacle[]>([]);
+export const plans = currentWritable<Plans>({});
 
 export type Environments = 'debug' | 'configure';
 

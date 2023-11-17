@@ -4,7 +4,7 @@ import { createEventDispatcher } from 'svelte';
 import { T, useThrelte } from '@threlte/core';
 import type { LngLat } from 'maplibre-gl';
 import type { Obstacle } from '../types';
-import { view, obstacles, selected, environment } from '../stores';
+import { view, obstacles, plans, selected, environment } from '../stores';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
 import { renderPlugin } from '../plugins/render';
 import { interactivityPlugin } from '../plugins/interactivity';
@@ -12,6 +12,7 @@ import { createObstacle } from '../lib/create-obstacle';
 import { createName } from '../lib/create-name';
 import ObstacleGeometries from './obstacle.svelte';
 import Drawtool from './draw-tool.svelte';
+import Plan from './plan.svelte';
 
 const dispatch = createEventDispatcher<{
   'update-obstacles': Obstacle[];
@@ -70,6 +71,23 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
     on:update={handleUpdate}
   />
 {/each}
+
+{#if $plans.previous}
+  {#each $plans.previous as plan}
+    <Plan
+      {plan}
+      color={0x00_ff_ff}
+    />
+  {/each}
+{/if}
+
+<!-- Render the current plan last -->
+{#if $plans.current}
+  <Plan
+    plan={$plans.current}
+    color={0x00_00_ff}
+  />
+{/if}
 
 {#if $environment === 'configure'}
   <Drawtool on:update={handleDraw} />

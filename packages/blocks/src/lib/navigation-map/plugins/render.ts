@@ -39,13 +39,15 @@ export const renderPlugin = () => {
   );
 
   map.addLayer({
-    id: 'obstacle-layer',
+    id: 'scene-layer',
     type: 'custom',
     renderingMode: '3d',
     render(_, viewProjectionMatrix) {
       const center = map.getCenter();
       const mercator = MercatorCoordinate.fromLngLat(center, 0);
       const mercatorScale = mercator.meterInMercatorCoordinateUnits();
+      const cx = mercator.x / mercatorScale;
+      const cy = mercator.y / mercatorScale;
 
       scale.makeScale(mercatorScale, mercatorScale, -mercatorScale);
       cameraTransform
@@ -56,19 +58,32 @@ export const renderPlugin = () => {
         .fromArray(viewProjectionMatrix)
         .multiply(cameraTransform);
 
+      const lngLatToPosition = (lngLat: LngLat): [number, number, number] => {
+        const mercatorOffset = MercatorCoordinate.fromLngLat(lngLat, 0);
+        const ox = mercatorOffset.x / mercatorScale;
+        const oy = mercatorOffset.y / mercatorScale;
+        return [cx - ox, 0, cy - oy];
+      };
+
       scene.traverse((object) => {
-        const { lngLat } = object.userData as { lngLat?: LngLat | undefined };
+        const { lngLat } = object.userData as {
+          lngLat?: LngLat | LngLat[] | undefined;
+        };
 
         if (!lngLat) {
           return;
         }
 
-        const mercatorOffset = MercatorCoordinate.fromLngLat(lngLat, 0);
-        const cx = mercator.x / mercatorScale;
-        const cy = mercator.y / mercatorScale;
-        const ox = mercatorOffset.x / mercatorScale;
-        const oy = mercatorOffset.y / mercatorScale;
-        object.position.set(cx - ox, 0, cy - oy);
+        if (Array.isArray(lngLat)) {
+          (object as THREE.Mesh).geometry.setFromPoints(
+            lngLat.map((ll) => new THREE.Vector3(...lngLatToPosition(ll)))
+          );
+          if (object instanceof THREE.Line) {
+            object.computeLineDistances();
+          }
+        } else {
+          object.position.set(...lngLatToPosition(lngLat));
+        }
       });
 
       renderer.render(scene, camera.current);
@@ -84,6 +99,6 @@ export const renderPlugin = () => {
   });
 
   onDestroy(() => {
-    map.removeLayer('obstacle-layer');
+    map.removeLayer('scene-layer');
   });
 };

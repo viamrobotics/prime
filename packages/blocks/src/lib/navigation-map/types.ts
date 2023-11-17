@@ -41,3 +41,8 @@ export interface Obstacle {
   location: LngLat;
   geometries: Geometry[];
 }
+
+export interface Plans {
+  current?: LngLat[];
+  previous?: LngLat[][];
+}
