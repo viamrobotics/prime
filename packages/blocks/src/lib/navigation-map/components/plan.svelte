@@ -1,10 +1,10 @@
 <script lang="ts">
 import type { LngLat } from '$lib/maplibre/types';
 import { T } from '@threlte/core';
-import { Color } from 'three';
+import { Color, type ColorRepresentation } from 'three';
 
 export let plan: LngLat[];
-export let color: number;
+export let color: ColorRepresentation;
 
 // The typings for color are incorrect - they expect a number but need a THREE.Color.
 $: threeColor = new Color(color) as unknown as number;

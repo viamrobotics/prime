@@ -13,6 +13,7 @@ import { createName } from '../lib/create-name';
 import ObstacleGeometries from './obstacle.svelte';
 import Drawtool from './draw-tool.svelte';
 import Plan from './plan.svelte';
+import { theme } from '@viamrobotics/prime-core/theme';
 
 const dispatch = createEventDispatcher<{
   'update-obstacles': Obstacle[];
@@ -76,7 +77,7 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
   {#each $plans.previous as plan}
     <Plan
       {plan}
-      color={0x00_ff_ff}
+      color={theme.extend.colors['cyberpunk']}
     />
   {/each}
 {/if}
