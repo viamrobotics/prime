@@ -9,6 +9,7 @@ import CenterInputs from './center-inputs.svelte';
 import Nav from './nav/index.svelte';
 import Waypoints from './waypoints.svelte';
 import ObstaclesLegend from './nav/obstacles-legend.svelte';
+import { onDestroy } from 'svelte';
 
 /** The Geo-pose of a robot base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
@@ -36,6 +37,29 @@ const toggleTileset = () => {
 let didHoverTooltip = Boolean(
   localStorage.getItem('navigation-service-card-tooltip-hovered')
 );
+
+let isFollowingBase = false;
+let af = 0;
+const followBase = () => {
+  if (baseGeoPose && isFollowingBase) {
+    map?.setCenter(baseGeoPose);
+    af = requestAnimationFrame(followBase);
+  }
+};
+
+const startFollowingBase = () => {
+  isFollowingBase = true;
+  af = requestAnimationFrame(followBase);
+};
+
+const stopFollowingBase = () => {
+  isFollowingBase = false;
+  cancelAnimationFrame(af);
+};
+
+onDestroy(() => {
+  cancelAnimationFrame(af);
+});
 </script>
 
 <div class="relative h-full w-full items-stretch sm:flex">
@@ -103,15 +127,25 @@ let didHoverTooltip = Boolean(
       <Button on:click={toggleTileset}>
         {satellite ? 'Map' : 'Satellite'}
       </Button>
-      <CenterInputs />
-    </div>
-
-    <div class="absolute bottom-12 right-3 z-10">
       <ToggleButtons
         options={['2D', '3D']}
         selected={$view}
         on:input={handleViewSelect}
       />
+      <CenterInputs />
+    </div>
+
+    <div class="absolute bottom-10 right-2 z-10">
+      <Button
+        disabled={!baseGeoPose}
+        on:click={isFollowingBase ? stopFollowingBase : startFollowingBase}
+      >
+        <Icon
+          name={isFollowingBase
+            ? 'navigation-variant'
+            : 'navigation-variant-outline'}
+        />
+      </Button>
     </div>
   </MapLibre>
 </div>
