@@ -1,4 +1,5 @@
-import { MercatorCoordinate, LngLat } from 'maplibre-gl';
+import { MercatorCoordinate } from 'maplibre-gl';
+import type { LngLat } from '$lib';
 
 export const toPrecisionLevel = (number: number, decimals: number): number => {
   const multiplier = 10 ** decimals;
@@ -9,14 +10,16 @@ export const lngLatToMercator = (lngLat: LngLat): MercatorCoordinate => {
   return MercatorCoordinate.fromLngLat(lngLat, 0);
 };
 
-export const mercatorToCartesian = (mercator: MercatorCoordinate) => {
-  const scale = mercator.meterInMercatorCoordinateUnits();
+export const mercatorToCartesian = (
+  mercator: MercatorCoordinate,
+  scale = mercator.meterInMercatorCoordinateUnits()
+) => {
   return { x: mercator.x / scale, y: mercator.y / scale };
 };
 
-export const lngLatToCartesian = (lngLat: LngLat): { x: number; y: number } => {
+export const lngLatToCartesian = (lngLat: LngLat, scale?: number): { x: number; y: number } => {
   const mercator = lngLatToMercator(lngLat);
-  return mercatorToCartesian(mercator);
+  return mercatorToCartesian(mercator, scale);
 };
 
 export const cartesianToMercator = (x: number, y: number, scale: number) => {

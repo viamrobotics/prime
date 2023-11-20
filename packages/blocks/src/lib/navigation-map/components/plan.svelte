@@ -21,6 +21,7 @@ $: threeColor = new Color(color) as unknown as number;
   <T.BufferGeometry />
   <T.LineDashedMaterial
     color={threeColor}
-    args={[{ dashSize: 0.5, gapSize: 0.5 }]}
+    dashSize={0.5}
+    gapSize={0.5}
   />
 </T.Line>
