@@ -18,7 +18,12 @@
 import { environment as envStore } from './stores';
 import type { Map as MapType } from 'maplibre-gl';
 import Map from './components/map.svelte';
-import { type Obstacle, NavigationTab, type NavigationTabType, type Plans } from './types';
+import {
+  type Obstacle,
+  NavigationTab,
+  type NavigationTabType,
+  type Plans,
+} from './types';
 import {
   waypoints as waypointsStore,
   obstacles as obstaclesStore,
