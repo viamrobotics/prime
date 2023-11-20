@@ -6,12 +6,16 @@ import { ResourcePill } from '@viamrobotics/prime-core';
 <Meta title="Elements/ResourcePill" />
 
 <Story name="Primary">
-  <ResourcePill value="cool pill" />
+  <ResourcePill
+    value="Not removable by default"
+    icon="viam-service"
+  />
 </Story>
 
-<Story name="Removable">
+<Story name="Unremovable">
   <ResourcePill
-    value="Not removable"
+    value="Removable"
+    icon="viam-service"
     removable
   />
 </Story>
