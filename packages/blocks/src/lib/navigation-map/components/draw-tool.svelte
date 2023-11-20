@@ -3,7 +3,7 @@
   Renders an in-progress rectangle that represents a drawn area by the user.
 -->
 <script lang="ts">
-import * as THREE from 'three';
+import type * as THREE from 'three';
 import { T, createRawEventDispatcher } from '@threlte/core';
 import { useMapLibreEvent, useMapLibre } from '$lib';
 import {
@@ -128,6 +128,6 @@ $: if (drawing) {
         on:create={handleGeometryCreate}
       />
     {/if}
-    <T is={new THREE.MeshPhongMaterial({ color: 'red' })} />
+    <T.MeshPhongMaterial color="red" />
   </T.Mesh>
 </T.Group>
