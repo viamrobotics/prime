@@ -12,7 +12,7 @@ importers:
     dependencies:
       '@threlte/extras':
         specifier: '>=7'
-        version: 7.3.0(svelte@4.2.0)(three@0.155.0)
+        version: 7.3.0(svelte@4.2.0)(three@0.158.0)
       maplibre-gl:
         specifier: ^3.3.0
         version: 3.3.0
@@ -39,14 +39,14 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3(svelte@4.2.0)
       '@threlte/core':
-        specifier: ^6.0.6
-        version: 6.0.6(svelte@4.2.0)(three@0.155.0)
+        specifier: ^6.1.1
+        version: 6.1.1(svelte@4.2.0)(three@0.158.0)
       '@types/testing-library__jest-dom':
         specifier: ^5.14.9
         version: 5.14.9
       '@types/three':
-        specifier: ^0.155.0
-        version: 0.155.0
+        specifier: ^0.158.2
+        version: 0.158.2
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.7.0
         version: 6.7.0(@typescript-eslint/parser@6.7.0)(eslint@8.49.0)(typescript@5.2.2)
@@ -64,7 +64,7 @@ importers:
         version: link:../core
       '@viamrobotics/three':
         specifier: ^0.0.2
-        version: 0.0.2(three@0.155.0)
+        version: 0.0.2(three@0.158.0)
       '@viamrobotics/typescript-config':
         specifier: ^0.1.0
         version: 0.1.0(typescript@5.2.2)
@@ -123,8 +123,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       three:
-        specifier: ^0.155.0
-        version: 0.155.0
+        specifier: ^0.158.0
+        version: 0.158.0
       tslib:
         specifier: ^2.6.1
         version: 2.6.1
@@ -4664,17 +4664,17 @@ packages:
       '@testing-library/dom': 9.3.1
     dev: true
 
-  /@threlte/core@6.0.6(svelte@4.2.0)(three@0.155.0):
-    resolution: {integrity: sha512-nB1MgGc/3vXmsbrgPVK9m9lTrFx5EdPB368oagzZZxzmqLD60aEmbRzF9JfyWtU59HP7KBLWC3Z8pXb883a4Sg==}
+  /@threlte/core@6.1.1(svelte@4.2.0)(three@0.158.0):
+    resolution: {integrity: sha512-bEsZIZzmP6vOg4bWbUg5EKxEid3KhO6YZ69bQM1NrtSC467KxXMxNorPGiAr2e5Z0L3w5++aRoSKmYjeUMLZ0g==}
     peerDependencies:
       svelte: '>=4'
       three: '>=0.133'
     dependencies:
       svelte: 4.2.0
-      three: 0.155.0
+      three: 0.158.0
     dev: true
 
-  /@threlte/extras@7.3.0(svelte@4.2.0)(three@0.155.0):
+  /@threlte/extras@7.3.0(svelte@4.2.0)(three@0.158.0):
     resolution: {integrity: sha512-Q7y+a6e45PtbE+MNK4ercSTYxcXto9MZKvBkgmbJiv3kDZxSYJuhys4pKJlhKZ5Nq17ZC0txDKCg0aLKBkrF1g==}
     peerDependencies:
       svelte: '>=4'
@@ -4682,17 +4682,13 @@ packages:
     dependencies:
       lodash-es: 4.17.21
       svelte: 4.2.0
-      three: 0.155.0
-      troika-three-text: 0.47.2(three@0.155.0)
+      three: 0.158.0
+      troika-three-text: 0.47.2(three@0.158.0)
     dev: false
 
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
-    dev: true
-
-  /@tweenjs/tween.js@18.6.4:
-    resolution: {integrity: sha512-lB9lMjuqjtuJrx7/kOkqQBtllspPIN+96OvTCeJ2j5FEzinoAXTdAMFnDAQT1KVPRlnYfBrqxtqP66vDM40xxQ==}
     dev: true
 
   /@types/aria-query@5.0.1:
@@ -4994,14 +4990,12 @@ packages:
       '@types/jest': 29.5.3
     dev: true
 
-  /@types/three@0.155.0:
-    resolution: {integrity: sha512-IzdbqXsGsbG0flvq9D5L9pZRwySQQps2bGcizLYEsfvK3dM+B0sqKR6S+xAOXbouXemfDmHttrcQjVOM46YnAw==}
+  /@types/three@0.158.2:
+    resolution: {integrity: sha512-KPYbdLI8VPhu7qnHqsayfkuk58Qk+20l1U5HBK7uG50EjtrqeCreurNNpnatMZje29XRuTM1A+pGHGdDBHPyUQ==}
     dependencies:
-      '@tweenjs/tween.js': 18.6.4
       '@types/stats.js': 0.17.0
       '@types/webxr': 0.5.3
       fflate: 0.6.10
-      lil-gui: 0.17.0
       meshoptimizer: 0.18.1
     dev: true
 
@@ -5266,12 +5260,12 @@ packages:
       prettier-plugin-tailwindcss: 0.5.4(prettier-plugin-svelte@3.0.3)(prettier@3.0.3)
     dev: true
 
-  /@viamrobotics/three@0.0.2(three@0.155.0):
+  /@viamrobotics/three@0.0.2(three@0.158.0):
     resolution: {integrity: sha512-pRRwtVfY1kcaymwSs+o3Lpc9RBvWOGwhb5RPlbYgYK994N3oHSWwWG1PpBeuBGkwqM6hLCcTRVp8+SLQOHy+Ag==}
     peerDependencies:
       three: '*'
     dependencies:
-      three: 0.155.0
+      three: 0.158.0
     dev: true
 
   /@viamrobotics/typescript-config@0.1.0(typescript@5.2.2):
@@ -9116,10 +9110,6 @@ packages:
       type-check: 0.4.0
     dev: true
 
-  /lil-gui@0.17.0:
-    resolution: {integrity: sha512-MVBHmgY+uEbmJNApAaPbtvNh1RCAeMnKym82SBjtp5rODTYKWtM+MXHCifLe2H2Ti1HuBGBtK/5SyG4ShQ3pUQ==}
-    dev: true
-
   /lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
@@ -12336,8 +12326,8 @@ packages:
       any-promise: 1.3.0
     dev: true
 
-  /three@0.155.0:
-    resolution: {integrity: sha512-sNgCYmDijnIqkD/bMfk+1pHg3YzsxW7V2ChpuP6HCQ8NiZr3RufsXQr8M3SSUMjW4hG+sUk7YbyuY0DncaDTJQ==}
+  /three@0.158.0:
+    resolution: {integrity: sha512-TALj4EOpdDPF1henk2Q+s17K61uEAAWQ7TJB68nr7FKxqwyDr3msOt5IWdbGm4TaWKjrtWS8DJJWe9JnvsWOhQ==}
 
   /through2@2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
@@ -12424,24 +12414,24 @@ packages:
     hasBin: true
     dev: true
 
-  /troika-three-text@0.47.2(three@0.155.0):
+  /troika-three-text@0.47.2(three@0.158.0):
     resolution: {integrity: sha512-qylT0F+U7xGs+/PEf3ujBdJMYWbn0Qci0kLqI5BJG2kW1wdg4T1XSxneypnF05DxFqJhEzuaOR9S2SjiyknMng==}
     peerDependencies:
       three: '>=0.125.0'
     dependencies:
       bidi-js: 1.0.3
-      three: 0.155.0
-      troika-three-utils: 0.47.2(three@0.155.0)
+      three: 0.158.0
+      troika-three-utils: 0.47.2(three@0.158.0)
       troika-worker-utils: 0.47.2
       webgl-sdf-generator: 1.1.1
     dev: false
 
-  /troika-three-utils@0.47.2(three@0.155.0):
+  /troika-three-utils@0.47.2(three@0.158.0):
     resolution: {integrity: sha512-/28plhCxfKtH7MSxEGx8e3b/OXU5A0xlwl+Sbdp0H8FXUHKZDoksduEKmjQayXYtxAyuUiCRunYIv/8Vi7aiyg==}
     peerDependencies:
       three: '>=0.125.0'
     dependencies:
-      three: 0.155.0
+      three: 0.158.0
     dev: false
 
   /troika-worker-utils@0.47.2:

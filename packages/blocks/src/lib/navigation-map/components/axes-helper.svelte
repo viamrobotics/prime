@@ -2,7 +2,6 @@
   @component An AxesHelper with thick lines.
 -->
 <script lang="ts">
-import * as THREE from 'three';
 import { T } from '@threlte/core';
 import { view } from '../stores';
 
@@ -22,8 +21,8 @@ export let length = 10;
   renderOrder={10}
 >
   <!-- Don't depth test these materials: we always want them to render on top. -->
-  <T
-    is={new THREE.MeshBasicMaterial({ color: 'red' })}
+  <T.MeshBasicMaterial
+    color="red"
     depthTest={false}
   />
   <T.CylinderGeometry args={[1, 1, 1]} />
@@ -37,8 +36,8 @@ export let length = 10;
   position.y={length / 2}
   renderOrder={10}
 >
-  <T
-    is={new THREE.MeshBasicMaterial({ color: 'blue' })}
+  <T.MeshBasicMaterial
+    color="blue"
     depthTest={false}
   />
   <T.CylinderGeometry args={[1, 1, 1]} />
@@ -52,8 +51,8 @@ export let length = 10;
   position.z={length / 2}
   renderOrder={10}
 >
-  <T
-    is={new THREE.MeshBasicMaterial({ color: 'green' })}
+  <T.MeshBasicMaterial
+    color="green"
     depthTest={false}
   />
   <T.CylinderGeometry args={[1, 1, 1]} />
