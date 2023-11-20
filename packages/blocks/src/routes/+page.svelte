@@ -16,6 +16,7 @@ const fetchPointcloud = async () => {
     <div class="relative aspect-video w-full border border-gray-200">
       {#await fetchPointcloud() then pointcloud}
         <SlamMap2D
+          basePose={{ x: 1, y: 2, theta: 45 }}
           {pointcloud}
           {motionPath}
           on:click={(event) => console.log(event.detail)}
