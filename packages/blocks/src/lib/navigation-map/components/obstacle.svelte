@@ -229,9 +229,10 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
       />
     {/if}
 
-    <T.MeshPhongMaterial color={active
-      ? theme.extend.colors['solar-power']
-      : theme.extend.colors['power-wire']}
+    <T.MeshPhongMaterial
+      color={active
+        ? theme.extend.colors['solar-power']
+        : theme.extend.colors['power-wire']}
     />
   </T.Mesh>
 {/each}

@@ -23,7 +23,7 @@ useRaycastClick();
 
 const { renderer, camera, invalidate } = useThrelte();
 
-let controls: MapControls
+let controls: MapControls;
 
 const baseSpriteSize = 15.5;
 const defaultPointSize = 0.03;
@@ -51,10 +51,10 @@ interface UpdateEvent {
 
 const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
   if (!userControlling) {
-    camera.current.position.set(center.x, center.y, 1)
-    camera.current.lookAt(center.x, center.y, 0)
-    controls.target.set(center.x, center.y, 0)
-  
+    camera.current.position.set(center.x, center.y, 1);
+    camera.current.lookAt(center.x, center.y, 0);
+    controls.target.set(center.x, center.y, 0);
+
     const viewHeight = 1;
     const viewWidth = viewHeight * 2;
     const aspect =
@@ -66,7 +66,7 @@ const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
       aspect > 1
         ? viewHeight / (radius * aspectInverse)
         : viewWidth / (radius * aspectInverse);
-    cam.updateProjectionMatrix()
+    cam.updateProjectionMatrix();
 
     updateZoom();
   }
