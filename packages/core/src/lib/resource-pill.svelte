@@ -58,6 +58,7 @@ const handleRemove = () => {
     <button
       on:click={handleRemove}
       class="text-gray-6 hover:text-default"
+      aria-label="remove"
     >
       <Icon
         name="close"

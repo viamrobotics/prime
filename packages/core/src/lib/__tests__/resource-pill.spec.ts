@@ -11,7 +11,7 @@ describe('ResourcePill', () => {
 
   it('Renders a normal resource pill that is removable if removable attribute has been specified', () => {
     render(ResourcePill, { icon: 'viam-service', removable: true });
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByLabelText('remove')).toBeInTheDocument();
   });
 
   it('Renders a resource pill that is not removable if a removable attribute of true has not been specified', () => {
@@ -25,22 +25,15 @@ describe('ResourcePill', () => {
   });
 
   it('Confirms default resource pill is clickable', async () => {
-    const { component } = render(ResourcePill, {
-      icon: 'viam-service',
-      removable: true,
-    });
+    const { component } = render(ResourcePill, { icon: 'viam-service', removable: true });
     const onClick = vi.fn();
     component.$on('remove', onClick);
-    await fireEvent.click(screen.getByRole('button'));
+    await fireEvent.click(screen.getByLabelText('remove'));
     expect(onClick).toHaveBeenCalledOnce();
   });
 
   it('Renders with the passed cx classes', () => {
-    render(ResourcePill, {
-      value: 'test',
-      icon: 'viam-service',
-      cx: cxTestArguments,
-    });
+    render(ResourcePill, { value: 'test', icon: 'viam-service', cx: cxTestArguments });
     expect(screen.getByText('test').parentElement).toHaveClass(cxTestResults);
   });
 });
