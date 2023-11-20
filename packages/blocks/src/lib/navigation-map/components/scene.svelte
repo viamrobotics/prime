@@ -23,8 +23,10 @@ renderPlugin();
 computeBoundingPlugin();
 interactivityPlugin();
 
-const { renderer } = useThrelte();
+const { renderer, scene } = useThrelte();
 const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+
+(window as unknown as { scene: THREE.Scene }).scene = scene;
 
 const handleUpdate = () => {
   dispatch('update-obstacles', $obstacles);
@@ -77,7 +79,7 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
   {#each $plans.previous as plan}
     <Plan
       {plan}
-      color={theme.extend.colors['cyberpunk']}
+      color={theme.extend.colors.cyberpunk}
     />
   {/each}
 {/if}
@@ -86,7 +88,7 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 {#if $plans.current}
   <Plan
     plan={$plans.current}
-    color={0x00_00_ff}
+    color="blue"
   />
 {/if}
 
