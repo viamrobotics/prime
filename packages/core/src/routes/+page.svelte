@@ -13,6 +13,7 @@ import {
   Banner,
   Input,
   Pill,
+  ResourcePill,
   Switch,
   Radio,
   Tabs,
@@ -1056,6 +1057,20 @@ const htmlSnippet = `
     <Pill
       disabled
       value="Baz"
+    />
+  </div>
+
+  <!-- Resource Pill -->
+  <h1 class="text-2xl">Resource Pill</h1>
+  <div class="flex gap-4">
+    <ResourcePill
+      value="Service"
+      icon="viam-service"
+      removable
+    />
+    <ResourcePill
+      value="Component"
+      icon="viam-component"
     />
   </div>
 
