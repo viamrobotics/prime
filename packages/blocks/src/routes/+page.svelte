@@ -12,8 +12,6 @@ const fetchPointcloud = async () => {
 </script>
 
 <div class="m-auto flex max-w-6xl flex-col gap-6 py-6">
-  <NavigationMap />
-
   <div class="px-12">
     <div class="relative aspect-video w-full border border-gray-200">
       {#await fetchPointcloud() then pointcloud}
@@ -25,6 +23,8 @@ const fetchPointcloud = async () => {
       {/await}
     </div>
   </div>
+
+  <NavigationMap />
 
   <div class="px-12">
     <div class="relative aspect-video w-full border border-gray-200 pt-0">

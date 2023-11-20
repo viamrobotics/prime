@@ -22,8 +22,6 @@ interface $$Events extends Record<string, unknown> {
 const dispatch = createRawEventDispatcher<$$Events>();
 const { map } = useMapLibre();
 
-let material: THREE.MeshPhongMaterial;
-
 let pointerdownTheta = 0;
 let pointerdownRadius = 0;
 let pointerdownLength = 0;
@@ -147,11 +145,6 @@ const handlePointerUp = () => {
 };
 
 $: active = $hovered === name || $selected === name;
-$: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
-  active
-    ? theme.extend.colors['solar-power']
-    : theme.extend.colors['power-wire']
-);
 
 $: if (draggingObstacle) {
   map.on('mousemove', handlePointerMove);
@@ -236,6 +229,9 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
       />
     {/if}
 
-    <T.MeshPhongMaterial bind:ref={material} />
+    <T.MeshPhongMaterial color={active
+      ? theme.extend.colors['solar-power']
+      : theme.extend.colors['power-wire']}
+    />
   </T.Mesh>
 {/each}

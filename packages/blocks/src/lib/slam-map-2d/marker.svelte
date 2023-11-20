@@ -19,10 +19,6 @@ import { renderOrder } from './render-order';
 export let name: string;
 export let url: string;
 export let rotation = 0;
-
-const handleSpriteCreate = ({ ref }: { ref: THREE.SpriteMaterial }) => {
-  ref.color.set('#ff0047');
-};
 </script>
 
 <T.Sprite
@@ -33,7 +29,7 @@ const handleSpriteCreate = ({ ref }: { ref: THREE.SpriteMaterial }) => {
   <T.SpriteMaterial
     map={textureLoader.load(url)}
     sizeAttenuation={false}
+    color="#ff0047"
     {rotation}
-    on:create={handleSpriteCreate}
   />
 </T.Sprite>

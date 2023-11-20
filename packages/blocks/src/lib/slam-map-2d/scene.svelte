@@ -23,11 +23,11 @@ useRaycastClick();
 
 const { renderer, camera, invalidate } = useThrelte();
 
+let controls: MapControls
+
 const baseSpriteSize = 15.5;
 const defaultPointSize = 0.03;
 
-let cameraX = 0;
-let cameraY = 0;
 let userControlling = false;
 let markerScale = 0;
 let pointSize = 0;
@@ -51,9 +51,10 @@ interface UpdateEvent {
 
 const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
   if (!userControlling) {
-    cameraX = center.x;
-    cameraY = center.y;
-
+    camera.current.position.set(center.x, center.y, 1)
+    camera.current.lookAt(center.x, center.y, 0)
+    controls.target.set(center.x, center.y, 0)
+  
     const viewHeight = 1;
     const viewWidth = viewHeight * 2;
     const aspect =
@@ -65,13 +66,11 @@ const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
       aspect > 1
         ? viewHeight / (radius * aspectInverse)
         : viewWidth / (radius * aspectInverse);
+    cam.updateProjectionMatrix()
 
     updateZoom();
   }
 };
-
-const handleCameraCreate = ({ ref }: { ref: THREE.OrthographicCamera }) =>
-  ref.lookAt(0, 0, 0);
 
 $: markerScale = baseSpriteSize / zoom;
 $: pointSize = zoom * defaultPointSize * window.devicePixelRatio;
@@ -82,18 +81,12 @@ $: updateZoom($camera as THREE.OrthographicCamera);
   makeDefault
   near={0.1}
   far={2}
-  position.x={cameraX}
-  position.y={cameraY}
-  position.z={1}
   zoom={10}
-  on:create={handleCameraCreate}
   let:ref
 >
   <T.MapControls
+    bind:ref={controls}
     args={[ref, renderer.domElement]}
-    target.x={cameraX}
-    target.y={cameraY}
-    target.z={0}
     enableRotate={false}
     screenSpacePanning={true}
     on:change={handleControlsChange}

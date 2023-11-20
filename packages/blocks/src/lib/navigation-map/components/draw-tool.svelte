@@ -128,6 +128,6 @@ $: if (drawing) {
         on:create={handleGeometryCreate}
       />
     {/if}
-    <T is={new THREE.MeshPhongMaterial({ color: 'red' })} />
+    <T.MeshPhongMaterial color="red" />
   </T.Mesh>
 </T.Group>
