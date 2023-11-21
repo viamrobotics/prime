@@ -5,12 +5,12 @@ import { cxTestArguments, cxTestResults } from './cx-test';
 
 describe('Badge', () => {
   it('Renders the correct text', () => {
-    render(Badge, { variant: 'gray', label: 'Inactive' });
+    render(Badge, { variant: 'inactive', label: 'Inactive' });
     expect(screen.getByText('Inactive')).toBeInTheDocument();
   });
 
   it('Renders a gray badge if the variant is specified as gray', () => {
-    render(Badge, { variant: 'gray', label: 'Inactive' });
+    render(Badge, { variant: 'inactive', label: 'Inactive' });
     const grayBadge = screen.getByText('Inactive');
     expect(grayBadge).toHaveClass(
       'border-medium',
@@ -30,7 +30,7 @@ describe('Badge', () => {
   });
 
   it('Renders a green badge if the variant is specified as green', () => {
-    render(Badge, { variant: 'green', label: 'Go' });
+    render(Badge, { variant: 'success', label: 'Go' });
     const greenBadge = screen.getByText('Go', { exact: true });
     expect(greenBadge).toHaveClass(
       'border-success-medium',
@@ -40,7 +40,7 @@ describe('Badge', () => {
   });
 
   it('Renders an orange badge if the variant is specified as orange', () => {
-    render(Badge, { variant: 'orange', label: 'Danger' });
+    render(Badge, { variant: 'warning', label: 'Danger' });
     const orangeBadge = screen.getByText('Danger');
     expect(orangeBadge).toHaveClass(
       'border-warning-medium',
@@ -50,7 +50,7 @@ describe('Badge', () => {
   });
 
   it('Renders a red badge if the variant is specified as red', () => {
-    render(Badge, { variant: 'red', label: 'Unhealthy' });
+    render(Badge, { variant: 'danger', label: 'Unhealthy' });
     const redBadge = screen.getByText('Unhealthy');
     expect(redBadge).toHaveClass(
       'border-danger-medium',
@@ -60,7 +60,7 @@ describe('Badge', () => {
   });
 
   it('Renders a blue badge if the variant is specified as blue', () => {
-    render(Badge, { variant: 'blue', label: 'Info' });
+    render(Badge, { variant: 'neutral', label: 'Neutral' });
     const blueBadge = screen.getByText('Info');
     expect(blueBadge).toHaveClass(
       'border-info-medium',
@@ -70,7 +70,11 @@ describe('Badge', () => {
   });
 
   it('Renders with the passed cx classes', () => {
-    render(Badge, { variant: 'gray', label: 'Inactive', cx: cxTestArguments });
+    render(Badge, {
+      variant: 'inactive',
+      label: 'Inactive',
+      cx: cxTestArguments,
+    });
     expect(screen.getByText('Inactive')).toHaveClass(cxTestResults);
   });
 });
