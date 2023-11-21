@@ -12,12 +12,11 @@ const fetchPointcloud = async () => {
 </script>
 
 <div class="m-auto flex max-w-6xl flex-col gap-6 py-6">
-  <NavigationMap />
-
   <div class="px-12">
     <div class="relative aspect-video w-full border border-gray-200">
       {#await fetchPointcloud() then pointcloud}
         <SlamMap2D
+          basePose={{ x: 1, y: 2, theta: 45 }}
           {pointcloud}
           {motionPath}
           on:click={(event) => console.log(event.detail)}
@@ -25,6 +24,8 @@ const fetchPointcloud = async () => {
       {/await}
     </div>
   </div>
+
+  <NavigationMap />
 
   <div class="px-12">
     <div class="relative aspect-video w-full border border-gray-200 pt-0">
