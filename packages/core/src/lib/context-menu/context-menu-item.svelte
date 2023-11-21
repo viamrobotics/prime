@@ -31,7 +31,7 @@ export { extraClasses as cx };
 <button
   role="menuitem"
   class={cx(
-    'flex w-full items-center gap-1 px-2 py-1.5 text-left hover:bg-light',
+    'flex w-full items-center gap-1.5 px-3 py-1.5 text-left hover:bg-light',
     extraClasses
   )}
   on:click
