@@ -17,7 +17,10 @@ export const mercatorToCartesian = (
   return { x: mercator.x / scale, y: mercator.y / scale };
 };
 
-export const lngLatToCartesian = (lngLat: LngLat, scale?: number): { x: number; y: number } => {
+export const lngLatToCartesian = (
+  lngLat: LngLat,
+  scale?: number
+): { x: number; y: number } => {
   const mercator = lngLatToMercator(lngLat);
   return mercatorToCartesian(mercator, scale);
 };
