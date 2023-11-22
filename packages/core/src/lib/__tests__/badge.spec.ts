@@ -9,7 +9,7 @@ describe('Badge', () => {
     expect(screen.getByText('Inactive')).toBeInTheDocument();
   });
 
-  it('Renders a gray badge if the variant is specified as gray', () => {
+  it('Renders a inactive badge if the variant is specified as gray', () => {
     render(Badge, { variant: 'inactive', label: 'Inactive' });
     const grayBadge = screen.getByText('Inactive');
     expect(grayBadge).toHaveClass(
@@ -61,7 +61,7 @@ describe('Badge', () => {
 
   it('Renders a blue badge if the variant is specified as blue', () => {
     render(Badge, { variant: 'neutral', label: 'Neutral' });
-    const blueBadge = screen.getByText('Info');
+    const blueBadge = screen.getByText('Neutral');
     expect(blueBadge).toHaveClass(
       'border-info-medium',
       'bg-info-light',
