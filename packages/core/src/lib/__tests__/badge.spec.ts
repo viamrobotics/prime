@@ -9,7 +9,7 @@ describe('Badge', () => {
     expect(screen.getByText('Inactive')).toBeInTheDocument();
   });
 
-  it('Renders a inactive badge if the variant is specified as inactive', () => {
+  it('Renders an inactive badge if the variant is specified as inactive', () => {
     render(Badge, { variant: 'inactive', label: 'Inactive' });
     const badge = screen.getByText('Inactive');
     expect(badge).toHaveClass(
