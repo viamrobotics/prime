@@ -446,24 +446,24 @@ const htmlSnippet = `
   <h1 class="text-2xl">Badge</h1>
   <div>
     <Badge
-      variant="gray"
+      variant="inactive"
       label="Inactive"
     />
     <Badge
-      variant="green"
-      label="Active"
+      variant="success"
+      label="Success"
     />
     <Badge
-      variant="orange"
+      variant="warning"
+      label="Warning"
+    />
+    <Badge
+      variant="danger"
       label="Danger"
     />
     <Badge
-      variant="red"
-      label="Unhealthy"
-    />
-    <Badge
-      variant="blue"
-      label="Info"
+      variant="neutral"
+      label="Neutral"
     />
   </div>
 

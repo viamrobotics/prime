@@ -5,37 +5,37 @@ import { Badge } from '@viamrobotics/prime-core';
 
 <Meta title="Elements/Badge" />
 
-<Story name="Neutral">
+<Story name="Inactive">
   <Badge
-    variant="gray"
+    variant="inactive"
     label="Inactive"
   />
 </Story>
 
 <Story name="Success">
   <Badge
-    variant="green"
-    label="Active"
+    variant="success"
+    label="Success"
   />
 </Story>
 
 <Story name="Warning">
   <Badge
-    variant="orange"
-    label="Danger"
+    variant="warning"
+    label="Warning"
   />
 </Story>
 
 <Story name="Danger">
   <Badge
-    variant="red"
-    label="Unhealthy"
+    variant="danger"
+    label="Danger"
   />
 </Story>
 
-<Story name="Info">
+<Story name="Neutral">
   <Badge
-    variant="blue"
-    label="Info"
+    variant="neutral"
+    label="Neutral"
   />
 </Story>
