@@ -12,8 +12,12 @@
 import * as THREE from 'three';
 import { onDestroy } from 'svelte';
 import { useRender, useThrelte } from '@threlte/core';
-import { MercatorCoordinate } from 'maplibre-gl';
 import { useMapLibre, type LngLat } from '$lib';
+import {
+  lngLatToCartesian,
+  lngLatToMercator,
+  mercatorToCartesian,
+} from '../lib/math';
 
 export interface Props {
   lnglat?: LngLat;
@@ -39,13 +43,14 @@ export const renderPlugin = () => {
   );
 
   map.addLayer({
-    id: 'obstacle-layer',
+    id: 'scene-layer',
     type: 'custom',
     renderingMode: '3d',
     render(_, viewProjectionMatrix) {
       const center = map.getCenter();
-      const mercator = MercatorCoordinate.fromLngLat(center, 0);
+      const mercator = lngLatToMercator(center);
       const mercatorScale = mercator.meterInMercatorCoordinateUnits();
+      const { x: cx, y: cy } = mercatorToCartesian(mercator, mercatorScale);
 
       scale.makeScale(mercatorScale, mercatorScale, -mercatorScale);
       cameraTransform
@@ -57,18 +62,28 @@ export const renderPlugin = () => {
         .multiply(cameraTransform);
 
       scene.traverse((object) => {
-        const { lngLat } = object.userData as { lngLat?: LngLat | undefined };
+        const { lngLat } = object.userData as {
+          lngLat?: LngLat | LngLat[] | undefined;
+        };
 
         if (!lngLat) {
           return;
         }
 
-        const mercatorOffset = MercatorCoordinate.fromLngLat(lngLat, 0);
-        const cx = mercator.x / mercatorScale;
-        const cy = mercator.y / mercatorScale;
-        const ox = mercatorOffset.x / mercatorScale;
-        const oy = mercatorOffset.y / mercatorScale;
-        object.position.set(cx - ox, 0, cy - oy);
+        if (Array.isArray(lngLat)) {
+          if (object instanceof THREE.Line) {
+            (object.geometry as THREE.BufferGeometry).setFromPoints(
+              lngLat.map((ll) => {
+                const { x: ox, y: oy } = lngLatToCartesian(ll, mercatorScale);
+                return new THREE.Vector3(cx - ox, 0, cy - oy);
+              })
+            );
+            object.computeLineDistances();
+          }
+        } else {
+          const { x: ox, y: oy } = lngLatToCartesian(lngLat, mercatorScale);
+          object.position.set(cx - ox, 0, cy - oy);
+        }
       });
 
       renderer.render(scene, camera.current);
@@ -84,6 +99,6 @@ export const renderPlugin = () => {
   });
 
   onDestroy(() => {
-    map.removeLayer('obstacle-layer');
+    map.removeLayer('scene-layer');
   });
 };
