@@ -9,60 +9,60 @@ describe('Badge', () => {
     expect(screen.getByText('Inactive')).toBeInTheDocument();
   });
 
-  it('Renders a inactive badge if the variant is specified as gray', () => {
+  it('Renders a inactive badge if the variant is specified as inactive', () => {
     render(Badge, { variant: 'inactive', label: 'Inactive' });
-    const grayBadge = screen.getByText('Inactive');
-    expect(grayBadge).toHaveClass(
+    const badge = screen.getByText('Inactive');
+    expect(badge).toHaveClass(
       'border-medium',
       'bg-disabled-light',
       'text-default'
     );
   });
 
-  it('Renders a gray badge if the variant is not specified', () => {
-    render(Badge, { label: 'Default' });
-    const defaultBadge = screen.getByText('Default');
-    expect(defaultBadge).toHaveClass(
+  it('Renders an inactive badge if the variant is not specified', () => {
+    render(Badge, { label: 'Inactive' });
+    const badge = screen.getByText('Inactive');
+    expect(badge).toHaveClass(
       'border-medium',
       'bg-disabled-light',
       'text-default'
     );
   });
 
-  it('Renders a green badge if the variant is specified as green', () => {
-    render(Badge, { variant: 'success', label: 'Go' });
-    const greenBadge = screen.getByText('Go', { exact: true });
-    expect(greenBadge).toHaveClass(
+  it('Renders a success badge if the variant is specified as success', () => {
+    render(Badge, { variant: 'success', label: 'Success' });
+    const badge = screen.getByText('Success');
+    expect(badge).toHaveClass(
       'border-success-medium',
       'bg-success-light',
       'text-success-dark'
     );
   });
 
-  it('Renders an orange badge if the variant is specified as orange', () => {
-    render(Badge, { variant: 'warning', label: 'Danger' });
-    const orangeBadge = screen.getByText('Danger');
-    expect(orangeBadge).toHaveClass(
+  it('Renders an warning badge if the variant is specified as warning', () => {
+    render(Badge, { variant: 'warning', label: 'Warning' });
+    const badge = screen.getByText('Warning');
+    expect(badge).toHaveClass(
       'border-warning-medium',
       'bg-warning-light',
       'text-warning-dark'
     );
   });
 
-  it('Renders a red badge if the variant is specified as red', () => {
-    render(Badge, { variant: 'danger', label: 'Unhealthy' });
-    const redBadge = screen.getByText('Unhealthy');
-    expect(redBadge).toHaveClass(
+  it('Renders a danger badge if the variant is specified as danger', () => {
+    render(Badge, { variant: 'danger', label: 'Danger' });
+    const badge = screen.getByText('Danger');
+    expect(badge).toHaveClass(
       'border-danger-medium',
       'bg-danger-light',
       'text-danger-dark'
     );
   });
 
-  it('Renders a blue badge if the variant is specified as blue', () => {
+  it('Renders a neutral badge if the variant is specified as neutral', () => {
     render(Badge, { variant: 'neutral', label: 'Neutral' });
-    const blueBadge = screen.getByText('Neutral');
-    expect(blueBadge).toHaveClass(
+    const badge = screen.getByText('Neutral');
+    expect(badge).toHaveClass(
       'border-info-medium',
       'bg-info-light',
       'text-info-dark'
@@ -71,7 +71,6 @@ describe('Badge', () => {
 
   it('Renders with the passed cx classes', () => {
     render(Badge, {
-      variant: 'inactive',
       label: 'Inactive',
       cx: cxTestArguments,
     });
