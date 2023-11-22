@@ -39,7 +39,7 @@ describe('Badge', () => {
     );
   });
 
-  it('Renders an warning badge if the variant is specified as warning', () => {
+  it('Renders a warning badge if the variant is specified as warning', () => {
     render(Badge, { variant: 'warning', label: 'Warning' });
     const badge = screen.getByText('Warning');
     expect(badge).toHaveClass(
