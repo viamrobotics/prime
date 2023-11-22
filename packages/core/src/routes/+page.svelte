@@ -451,15 +451,15 @@ const htmlSnippet = `
     />
     <Badge
       variant="success"
-      label="Active"
+      label="Success"
     />
     <Badge
       variant="warning"
-      label="Danger"
+      label="Warning"
     />
     <Badge
       variant="danger"
-      label="Unhealthy"
+      label="Danger"
     />
     <Badge
       variant="neutral"
