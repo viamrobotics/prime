@@ -118,7 +118,9 @@ $: debugMode = $environment === 'debug';
   >
     <button
       class="w-full text-left"
-      on:click={() => ($selected = name)}
+      on:click={() => {
+        $selected = $selected === name ? null : name;
+      }}
     >
       <div class="flex items-center justify-between gap-1.5">
         <small>{name}</small>

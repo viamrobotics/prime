@@ -15,6 +15,7 @@ import {
 } from 'maplibre-gl';
 import { view } from '../stores';
 import * as math from '../lib/math';
+import { theme } from '@viamrobotics/prime-core/theme';
 
 interface $$Events extends Record<string, unknown> {
   /** Fires when a rectangle is drawn. */
@@ -128,6 +129,6 @@ $: if (drawing) {
         on:create={handleGeometryCreate}
       />
     {/if}
-    <T.MeshPhongMaterial color="red" />
+    <T.MeshPhongMaterial color={theme.extend.colors.cyberpunk} />
   </T.Mesh>
 </T.Group>
