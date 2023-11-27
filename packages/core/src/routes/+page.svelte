@@ -1063,12 +1063,12 @@ const htmlSnippet = `
   <!-- Resource Pill -->
   <h1 class="text-2xl">Resource Pill</h1>
   <div class="flex gap-4">
-    <ResourcePill
+    <Pill
       value="Service"
       icon="viam-service"
       removable
     />
-    <ResourcePill
+    <Pill
       value="Component"
       icon="viam-component"
     />

@@ -9,9 +9,9 @@ describe('Pill', () => {
     expect(screen.getByText('test')).toBeVisible();
   });
 
-  it('Renders a normal pill that is not readonly if no readonly attribute has been specified', () => {
-    render(Pill);
-    expect(screen.getByRole('button')).toBeVisible();
+  it('Renders a removable pill', () => {
+    render(Pill, { value: 'test' });
+    expect(screen.getByLabelText('Remove test')).toBeVisible();
   });
 
   it('Renders a pill that is readonly if a readonly attribute of true has been specified', () => {
@@ -20,8 +20,8 @@ describe('Pill', () => {
   });
 
   it('Renders a pill that is not readonly if a readonly attribute of false has been specified', () => {
-    render(Pill, { readonly: false });
-    expect(screen.getByRole('button')).toBeVisible();
+    render(Pill, { value: 'test', readonly: false });
+    expect(screen.getByLabelText('Remove test')).toBeVisible();
   });
 
   it('Renders a normal pill if no disabled attribute has been specified', () => {
@@ -44,6 +44,11 @@ describe('Pill', () => {
     expect(screen.getByText('test').parentElement).not.toHaveAttribute(
       'aria-disabled'
     );
+  });
+
+  it('Renders a resource pill that is not removable if a removable attribute of true has not been specified', () => {
+    render(Pill, { removable: false });
+    expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('Confirms default pill is clickable', async () => {

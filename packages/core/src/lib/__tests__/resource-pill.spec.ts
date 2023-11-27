@@ -25,7 +25,10 @@ describe('ResourcePill', () => {
   });
 
   it('Confirms default resource pill is clickable', async () => {
-    const { component } = render(ResourcePill, { icon: 'viam-service', removable: true });
+    const { component } = render(ResourcePill, {
+      icon: 'viam-service',
+      removable: true,
+    });
     const onClick = vi.fn();
     component.$on('remove', onClick);
     await fireEvent.click(screen.getByLabelText('remove'));
@@ -33,7 +36,11 @@ describe('ResourcePill', () => {
   });
 
   it('Renders with the passed cx classes', () => {
-    render(ResourcePill, { value: 'test', icon: 'viam-service', cx: cxTestArguments });
+    render(ResourcePill, {
+      value: 'test',
+      icon: 'viam-service',
+      cx: cxTestArguments,
+    });
     expect(screen.getByText('test').parentElement).toHaveClass(cxTestResults);
   });
 });
