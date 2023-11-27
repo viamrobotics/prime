@@ -1,5 +1,10 @@
 <script lang="ts">
-import { IconButton, Label, TextInput } from '@viamrobotics/prime-core';
+import {
+  IconButton,
+  Label,
+  TextInput,
+  Tooltip,
+} from '@viamrobotics/prime-core';
 import { LngLat, LngLatBounds } from 'maplibre-gl';
 import {
   type LngLat as LngLatInternal,
@@ -103,7 +108,7 @@ $: debugMode = $environment === 'debug';
   </li>
 {/if}
 
-{#each $obstacles as { name, location, geometries }, index (index)}
+{#each $obstacles as { name, location, geometries, color, label }, index (index)}
   <li
     class="group flex min-h-[30px] items-center border-b border-b-medium pl-2 leading-[1] last:border-b-0"
     class:pb-3={debugMode}
@@ -137,6 +142,17 @@ $: debugMode = $environment === 'debug';
               handleSelect({ name, location });
             }}
           />
+          <Tooltip
+            let:tooltipID
+            location="right"
+          >
+            <div
+              aria-describedby={tooltipID}
+              class="m-2 h-3.5 w-3.5"
+              style:background-color={color}
+            />
+            <p slot="description">{label}</p>
+          </Tooltip>
         </div>
       </div>
       {#if debugMode}

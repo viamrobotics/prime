@@ -1,5 +1,6 @@
 import type { ViamObject3D } from '@viamrobotics/three';
 import type { LngLat } from '../maplibre/types';
+import type { ColorRepresentation } from 'three';
 
 interface BaseGeometry {
   pose: ViamObject3D;
@@ -40,6 +41,8 @@ export interface Obstacle {
   name: string;
   location: LngLat;
   geometries: Geometry[];
+  color: string;
+  label: string;
 }
 
 export interface Plans {
