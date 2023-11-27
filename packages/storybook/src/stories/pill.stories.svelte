@@ -19,7 +19,7 @@ import { Pill } from '@viamrobotics/prime-core';
 <Story name="Resource">
   <Pill
     value="Viam resource"
-    variant="resource"
+    variant="outlined"
     icon="viam-service"
     removable={false}
   />

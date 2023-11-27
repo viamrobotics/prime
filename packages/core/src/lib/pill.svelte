@@ -28,7 +28,7 @@ export let disabled = false;
 export let removable = true;
 
 /** Variants */
-export let variant: 'primary' | 'resource' = 'primary';
+export let variant: 'primary' | 'outlined' = 'primary';
 
 /** The icon shown in the button. */
 export let icon: IconName | '' = '';
@@ -59,14 +59,14 @@ const handleRemove = () => {
         disabled || readonly,
       'gap-1 bg-medium px-2 py-0.5': variant === 'primary',
       'h-6 gap-1.5 border border-medium bg-light pl-1.5 pr-2':
-        variant === 'resource',
+        variant === 'outlined',
     },
     extraClasses
   )}
   aria-disabled={disabled ? true : undefined}
   aria-readonly={readonly ? true : undefined}
 >
-  {#if icon && variant === 'resource'}
+  {#if icon && variant === 'outlined'}
     <Icon
       name={icon}
       cx="text-gray-6"

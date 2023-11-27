@@ -1064,13 +1064,13 @@ const htmlSnippet = `
   <div class="flex gap-4">
     <Pill
       value="Service"
-      variant="resource"
+      variant="outlined"
       icon="viam-service"
       removable
     />
     <Pill
       value="Component"
-      variant="resource"
+      variant="outlined"
       icon="viam-component"
       removable={false}
     />
