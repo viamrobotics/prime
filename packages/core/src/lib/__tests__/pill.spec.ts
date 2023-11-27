@@ -47,7 +47,7 @@ describe('Pill', () => {
   });
 
   it('Renders a resource pill that is not removable if a removable attribute of true has not been specified', () => {
-    render(Pill, { removable: false });
+    render(Pill, { variant: 'resource', removable: false });
     expect(screen.queryByRole('button')).toBeNull();
   });
 
