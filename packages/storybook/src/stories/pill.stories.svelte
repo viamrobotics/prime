@@ -16,7 +16,7 @@ import { Pill } from '@viamrobotics/prime-core';
   />
 </Story>
 
-<Story name="Resource">
+<Story name="Outlined">
   <Pill
     value="Viam resource"
     variant="outlined"

@@ -1059,8 +1059,8 @@ const htmlSnippet = `
     />
   </div>
 
-  <!-- Resource Pill -->
-  <h1 class="text-2xl">adsf Pill</h1>
+  <!-- Outlined Pill -->
+  <h1 class="text-2xl">Outlined Pill</h1>
   <div class="flex gap-4">
     <Pill
       value="Service"
