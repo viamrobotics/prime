@@ -3,7 +3,7 @@ import { Button, Icon, ToggleButtons, Tooltip } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
 import { MapLibre, type GeoPose } from '$lib';
 import { environment, view } from '../stores';
-import ObstacleLayer from './obstacle-layer.svelte';
+import SceneLayer from './scene-layer.svelte';
 import RobotMarker from './robot-marker.svelte';
 import CenterInputs from './center-inputs.svelte';
 import Nav from './nav/index.svelte';
@@ -84,7 +84,7 @@ onDestroy(() => {
     <RobotMarker pose={baseGeoPose} />
     <Waypoints />
 
-    <ObstacleLayer
+    <SceneLayer
       slot="layer"
       on:update-obstacles
     />
