@@ -13,7 +13,6 @@ import {
   Banner,
   Input,
   Pill,
-  ResourcePill,
   Switch,
   Radio,
   Tabs,
@@ -1061,16 +1060,19 @@ const htmlSnippet = `
   </div>
 
   <!-- Resource Pill -->
-  <h1 class="text-2xl">Resource Pill</h1>
+  <h1 class="text-2xl">adsf Pill</h1>
   <div class="flex gap-4">
     <Pill
       value="Service"
+      variant="resource"
       icon="viam-service"
       removable
     />
     <Pill
       value="Component"
+      variant="resource"
       icon="viam-component"
+      removable={false}
     />
   </div>
 

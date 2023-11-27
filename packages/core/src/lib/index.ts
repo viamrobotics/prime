@@ -9,7 +9,6 @@ export { default as Icon } from './icon/icon.svelte';
 export type { IconName } from './icon/icons';
 export { default as Label, type LabelPosition } from './label.svelte';
 export { default as Pill } from './pill.svelte';
-export { default as ResourcePill } from './resource-pill.svelte';
 export { preventHandler, preventKeyboardHandler } from './prevent-handler';
 export { default as Switch } from './switch.svelte';
 export { default as Radio } from './radio.svelte';
