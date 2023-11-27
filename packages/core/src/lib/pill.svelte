@@ -28,7 +28,7 @@ export let disabled = false;
 export let removable = true;
 
 /** Variants */
-export let variant: 'primary' | 'outlined' = 'primary';
+export let variant: 'default' | 'outlined' = 'default';
 
 /** The icon shown in the button. */
 export let icon: IconName | '' = '';
@@ -57,7 +57,7 @@ const handleRemove = () => {
     {
       'cursor-not-allowed bg-disabled-light text-disabled-dark':
         disabled || readonly,
-      'gap-1 bg-medium px-2 py-0.5': variant === 'primary',
+      'gap-1 bg-medium px-2 py-0.5': variant === 'default',
       'h-6 gap-1.5 border border-medium bg-light pl-1.5 pr-2':
         variant === 'outlined',
     },
