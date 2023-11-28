@@ -15,3 +15,12 @@ import { Pill } from '@viamrobotics/prime-core';
     readonly
   />
 </Story>
+
+<Story name="Outlined">
+  <Pill
+    value="Viam resource"
+    variant="outlined"
+    icon="viam-service"
+    removable={false}
+  />
+</Story>

@@ -1059,6 +1059,23 @@ const htmlSnippet = `
     />
   </div>
 
+  <!-- Outlined Pill -->
+  <h1 class="text-2xl">Outlined Pill</h1>
+  <div class="flex gap-4">
+    <Pill
+      value="Service"
+      variant="outlined"
+      icon="viam-service"
+      removable
+    />
+    <Pill
+      value="Component"
+      variant="outlined"
+      icon="viam-component"
+      removable={false}
+    />
+  </div>
+
   <!-- Prevent Handler -->
 
   <h1 class="text-2xl">Prevent Handler</h1>
