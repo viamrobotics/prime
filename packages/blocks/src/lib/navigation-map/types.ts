@@ -40,6 +40,8 @@ export interface Obstacle {
   name: string;
   location: LngLat;
   geometries: Geometry[];
+  color: string;
+  label: string;
 }
 
 export interface Plans {

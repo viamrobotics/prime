@@ -18,4 +18,5 @@ export type {
   BoxGeometry,
   Geometry,
   Obstacle,
+  Plans,
 } from './navigation-map/types';
