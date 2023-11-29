@@ -14,7 +14,7 @@ describe('<FloatingMenu> component', () => {
   it('should open and close a menu when the control is clicked', async () => {
     render(Subject);
 
-    const control = screen.getByRole('button', { name: /open/iu });
+    const control = screen.getByRole('button', { name: /cool menu/iu });
     let menu = screen.queryByRole('menu');
     let item = screen.queryByRole('menuitem');
 
@@ -41,7 +41,7 @@ describe('<FloatingMenu> component', () => {
   it('should pass aria props to the control', async () => {
     render(Subject);
 
-    const control = screen.getByRole('button', { name: /open/iu });
+    const control = screen.getByRole('button', { name: /cool menu/iu });
 
     expect(control).toHaveAttribute('aria-haspopup', 'menu');
     expect(control).toHaveAttribute('aria-expanded', 'false');
@@ -50,6 +50,7 @@ describe('<FloatingMenu> component', () => {
     const menu = screen.getByRole('menu');
 
     expect(menu).toHaveAttribute('id', expect.any(String));
+    expect(menu).toHaveAccessibleName(/cool menu/iu);
     expect(control).toHaveAttribute('aria-controls', menu.id);
     expect(control).toHaveAttribute('aria-expanded', 'true');
   });
@@ -57,7 +58,7 @@ describe('<FloatingMenu> component', () => {
   it('should close the menu if escape is pressed', async () => {
     render(Subject);
 
-    const control = screen.getByRole('button', { name: /open/iu });
+    const control = screen.getByRole('button', { name: /cool menu/iu });
 
     await user.click(control);
     await user.keyboard('{Escape}');
@@ -69,7 +70,7 @@ describe('<FloatingMenu> component', () => {
   it('should close the menu on click outside', async () => {
     render(Subject);
 
-    const control = screen.getByRole('button', { name: /open/iu });
+    const control = screen.getByRole('button', { name: /cool menu/iu });
     const outside = screen.getByTestId('outside-element');
 
     await user.click(control);
@@ -82,7 +83,7 @@ describe('<FloatingMenu> component', () => {
   it('should pass a close menu handler to the items', async () => {
     render(Subject);
 
-    const control = screen.getByRole('button', { name: /open/iu });
+    const control = screen.getByRole('button', { name: /cool menu/iu });
     await user.click(control);
 
     const item = screen.getByRole('menuitem');

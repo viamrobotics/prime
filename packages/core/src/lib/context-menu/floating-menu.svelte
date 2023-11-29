@@ -6,14 +6,15 @@ import { floatingStyle, type FloatingMenuPlacement } from './floating-style';
 import ContextMenu from './context-menu.svelte';
 
 export let isOpen: boolean;
+export let label: string | undefined = undefined;
+export let describedBy: string | undefined = undefined;
 export let placement: FloatingMenuPlacement = 'bottom-start';
 export let offset = 0;
 export let buttonCX: cx.Argument = '';
 export let menuCX: cx.Argument = '';
-export let label: string | undefined = undefined;
-export let describedBy: string | undefined = undefined;
 export let onChange: (isOpen: boolean) => unknown;
 
+const buttonID = uniqueId('floating-menu-control');
 const menuID = uniqueId('floating-menu');
 const style = floatingStyle();
 const openMenu = () => onChange(true);
@@ -41,6 +42,7 @@ $: style.register({ controlElement, menuElement, placement, offset });
 <svelte:window on:keydown={isOpen ? handleEscape : undefined} />
 
 <button
+  id={buttonID}
   class={cx(buttonCX)}
   aria-haspopup="menu"
   aria-controls={menuID}
@@ -64,6 +66,7 @@ $: style.register({ controlElement, menuElement, placement, offset });
   >
     <ContextMenu
       id={menuID}
+      labeledBy={buttonID}
       cx={menuCX}
     >
       <slot name="items" />

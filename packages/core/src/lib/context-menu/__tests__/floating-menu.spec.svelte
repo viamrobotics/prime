@@ -8,6 +8,7 @@ const handleChange = (nextIsOpen: boolean) => (isOpen = nextIsOpen);
 
 <FloatingMenu
   {isOpen}
+  label="cool menu"
   onChange={handleChange}
 >
   <span slot="control">
