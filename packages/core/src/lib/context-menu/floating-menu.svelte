@@ -5,20 +5,23 @@ import { clickOutside } from '$lib/click-outside';
 import { floatingStyle, type FloatingMenuPlacement } from './floating-style';
 import ContextMenu from './context-menu.svelte';
 
+export let isOpen: boolean;
+export let label: string | undefined = undefined;
+export let describedBy: string | undefined = undefined;
 export let placement: FloatingMenuPlacement = 'bottom-start';
 export let offset = 0;
 export let buttonCX: cx.Argument = '';
 export let menuCX: cx.Argument = '';
+export let onChange: (isOpen: boolean) => unknown;
 
+const buttonID = uniqueId('floating-menu-control');
 const menuID = uniqueId('floating-menu');
 const style = floatingStyle();
+const openMenu = () => onChange(true);
+const closeMenu = () => onChange(false);
 
-let isOpen = false;
 let controlElement: HTMLElement | undefined;
 let menuElement: HTMLElement | undefined;
-
-const openMenu = () => (isOpen = true);
-const closeMenu = () => (isOpen = false);
 
 const handleClickOutside = (element: Element) => {
   if (!controlElement?.contains(element)) {
@@ -36,20 +39,20 @@ const handleEscape = (event: KeyboardEvent) => {
 $: style.register({ controlElement, menuElement, placement, offset });
 </script>
 
-<svelte:document on:keydown={isOpen ? handleEscape : undefined} />
+<svelte:window on:keydown={isOpen ? handleEscape : undefined} />
 
 <button
+  id={buttonID}
   class={cx(buttonCX)}
   aria-haspopup="menu"
   aria-controls={menuID}
   aria-expanded={isOpen}
+  aria-label={label}
+  aria-describedby={describedBy}
   on:click={isOpen ? closeMenu : openMenu}
   bind:this={controlElement}
 >
-  <slot
-    name="control"
-    {isOpen}
-  />
+  <slot name="control" />
 </button>
 
 {#if isOpen}
@@ -63,12 +66,10 @@ $: style.register({ controlElement, menuElement, placement, offset });
   >
     <ContextMenu
       id={menuID}
+      labelledBy={buttonID}
       cx={menuCX}
     >
-      <slot
-        name="items"
-        {closeMenu}
-      />
+      <slot name="items" />
     </ContextMenu>
   </div>
 {/if}
