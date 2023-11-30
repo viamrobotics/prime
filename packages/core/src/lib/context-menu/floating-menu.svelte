@@ -66,7 +66,7 @@ $: style.register({ controlElement, menuElement, placement, offset });
   >
     <ContextMenu
       id={menuID}
-      labeledBy={buttonID}
+      labelledBy={buttonID}
       cx={menuCX}
     >
       <slot name="items" />
