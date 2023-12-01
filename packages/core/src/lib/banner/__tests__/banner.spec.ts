@@ -12,7 +12,6 @@ describe('Banner', () => {
 
     expect(screen.getByText('This is the title.')).toBeVisible();
     expect(screen.getByText('This is the subtitle.')).toBeVisible();
-    expect(screen.getByText('This is the message.')).toBeVisible();
     expect(screen.getByText('This is the action.')).toBeVisible();
   });
 

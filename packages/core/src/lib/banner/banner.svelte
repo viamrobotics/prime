@@ -94,7 +94,7 @@ $: {
     />
   </div>
 
-  <div class="relative flex w-full justify-between gap-2 p-3">
+  <div class="relative flex w-full justify-between gap-2 p-3 pr-10">
     <div class="flex gap-3">
       {#if icon}
         <div class="w-[18px]">
@@ -111,18 +111,22 @@ $: {
           <slot name="title" />
         </p>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-2 text-subtle-1">
           {#if $$slots.subtitle}
-            <p class="text-sm text-subtle-1">
+            <p class="text-sm">
               <slot name="subtitle" />
             </p>
           {/if}
 
-          <span class="text-sm"><slot name="message" /></span>
-
           {#if $$slots.action}
-            <div class="pb-2 pt-1 text-sm">
+            <div class="text-sm font-medium hover:underline">
               <slot name="action" />
+            </div>
+          {/if}
+
+          {#if $$slots.actionEmphasize}
+            <div class="mb-1 mt-2 text-sm">
+              <slot name="actionEmphasize" />
             </div>
           {/if}
         </div>
