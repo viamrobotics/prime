@@ -705,7 +705,7 @@ const htmlSnippet = `
 
     <FloatingMenu
       isOpen={floatingMenuOpen}
-      placement="top-start"
+      placement="right-start"
       offset={4}
       onChange={handleFloatingMenuChange}
     >

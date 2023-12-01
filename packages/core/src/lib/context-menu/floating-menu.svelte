@@ -1,14 +1,13 @@
 <script lang="ts">
 import cx from 'classnames';
 import { uniqueId } from '$lib/unique-id';
-import { clickOutside } from '$lib/click-outside';
-import { floatingStyle, type FloatingMenuPlacement } from './floating-style';
+import { Floating, type FloatingPlacement } from '$lib/floating';
 import ContextMenu from './context-menu.svelte';
 
 export let isOpen: boolean;
 export let label: string | undefined = undefined;
 export let describedBy: string | undefined = undefined;
-export let placement: FloatingMenuPlacement = 'bottom-start';
+export let placement: FloatingPlacement = 'bottom-start';
 export let offset = 0;
 export let buttonCX: cx.Argument = '';
 export let menuCX: cx.Argument = '';
@@ -16,15 +15,13 @@ export let onChange: (isOpen: boolean) => unknown;
 
 const buttonID = uniqueId('floating-menu-control');
 const menuID = uniqueId('floating-menu');
-const style = floatingStyle();
 const openMenu = () => onChange(true);
 const closeMenu = () => onChange(false);
 
-let controlElement: HTMLElement | undefined;
-let menuElement: HTMLElement | undefined;
+let referenceElement: HTMLElement | undefined;
 
 const handleClickOutside = (element: Element) => {
-  if (!controlElement?.contains(element)) {
+  if (!referenceElement?.contains(element)) {
     closeMenu();
   }
 };
@@ -35,8 +32,6 @@ const handleEscape = (event: KeyboardEvent) => {
     closeMenu();
   }
 };
-
-$: style.register({ controlElement, menuElement, placement, offset });
 </script>
 
 <svelte:window on:keydown={isOpen ? handleEscape : undefined} />
@@ -50,19 +45,17 @@ $: style.register({ controlElement, menuElement, placement, offset });
   aria-label={label}
   aria-describedby={describedBy}
   on:click={isOpen ? closeMenu : openMenu}
-  bind:this={controlElement}
+  bind:this={referenceElement}
 >
   <slot name="control" />
 </button>
 
 {#if isOpen}
-  <div
-    bind:this={menuElement}
-    use:clickOutside={handleClickOutside}
-    class="absolute left-0 top-0 z-max w-max"
-    class:invisible={!$style}
-    style:top={$style?.top}
-    style:left={$style?.left}
+  <Floating
+    {offset}
+    {placement}
+    {referenceElement}
+    onClickOutside={handleClickOutside}
   >
     <ContextMenu
       id={menuID}
@@ -71,5 +64,5 @@ $: style.register({ controlElement, menuElement, placement, offset });
     >
       <slot name="items" />
     </ContextMenu>
-  </div>
+  </Floating>
 {/if}
