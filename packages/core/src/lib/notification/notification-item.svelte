@@ -17,7 +17,7 @@ export let dismiss: () => unknown;
   {variant}
 >
   <svelte:fragment slot="title">{title}</svelte:fragment>
-  <svelte:fragment slot="message">
+  <svelte:fragment slot="subtitle">
     {#if message?.length}
       {message}
     {/if}
