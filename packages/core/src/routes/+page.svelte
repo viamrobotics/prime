@@ -481,7 +481,6 @@ const htmlSnippet = `
 
     <Banner variant="success">
       <svelte:fragment slot="title">This is the success title.</svelte:fragment>
-      <svelte:fragment slot="message">This is the message.</svelte:fragment>
     </Banner>
 
     <Banner
@@ -491,8 +490,8 @@ const htmlSnippet = `
       <svelte:fragment slot="title">This is the warning title.</svelte:fragment>
       <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
 
-      <svelte:fragment slot="message">
-        This is <strong>the</strong> message.
+      <svelte:fragment slot="actionEmphasize">
+        <Button variant="dark">This is the action emphasized.</Button>
       </svelte:fragment>
     </Banner>
 
@@ -504,11 +503,8 @@ const htmlSnippet = `
         This is the <em>danger</em> title.
       </svelte:fragment>
       <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
-      <svelte:fragment slot="message">
-        This is <strong>the</strong> message.
-      </svelte:fragment>
       <svelte:fragment slot="action">
-        <Button variant="danger">This is the action.</Button>
+        <a href="http://www.viam.com">This is the action link.</a>
       </svelte:fragment>
     </Banner>
   </div>
@@ -999,21 +995,21 @@ const htmlSnippet = `
   <h1 class="text-2xl">Notify</h1>
 
   <div class="flex gap-4">
-    <Button on:click={() => notify.info('Info', 'Info message')}>
+    <Button on:click={() => notify.info('Info', 'Info notify')}>
       Info Notify
     </Button>
-    <Button on:click={() => notify.warn('Warn', 'Warn message')}>
+    <Button on:click={() => notify.warn('Warn', 'Warn notify')}>
       Warn Notify
     </Button>
     <Button
       variant="success"
-      on:click={() => notify.success('Success', 'Success message')}
+      on:click={() => notify.success('Success', 'Success notify')}
     >
       Success Notify
     </Button>
     <Button
       variant="danger"
-      on:click={() => notify.danger('Danger', 'Danger message')}
+      on:click={() => notify.danger('Danger', 'Danger notify')}
     >
       Danger Notify
     </Button>
