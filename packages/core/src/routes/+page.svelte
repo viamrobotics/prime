@@ -48,6 +48,7 @@ provideNotify();
 let buttonClickedTimes = 0;
 let preventHandlerDisabled = true;
 let modalOpen = false;
+let floatingMenuOpen = false;
 
 const handleTogglePreventHandler = (event: CustomEvent<boolean>) => {
   preventHandlerDisabled = event.detail;
@@ -59,6 +60,10 @@ const handleCloseModal = () => {
 
 const handleOpenModal = () => {
   modalOpen = true;
+};
+
+const handleFloatingMenuChange = (isOpen: boolean) => {
+  floatingMenuOpen = isOpen;
 };
 
 const notify = useNotify();
@@ -695,14 +700,13 @@ const htmlSnippet = `
     </ContextMenu>
 
     <FloatingMenu
+      isOpen={floatingMenuOpen}
       placement="top-start"
       offset={4}
+      onChange={handleFloatingMenuChange}
     >
-      <svelte:fragment
-        slot="control"
-        let:isOpen
-      >
-        {isOpen ? 'Close menu' : 'Open menu'}
+      <svelte:fragment slot="control">
+        {floatingMenuOpen ? 'Close menu' : 'Open menu'}
       </svelte:fragment>
       <svelte:fragment slot="items">
         <ContextMenuItem>label 1</ContextMenuItem>
