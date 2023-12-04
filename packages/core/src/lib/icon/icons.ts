@@ -42,6 +42,7 @@ export const paths = {
   'content-duplicate': MDI.mdiContentDuplicate,
   'content-save-outline': MDI.mdiContentSaveOutline,
   'credit-card-outline': MDI.mdiCreditCardOutline,
+  'database-outline': MDI.mdiDatabaseOutline,
   domain: MDI.mdiDomain,
   'dots-horizontal': MDI.mdiDotsHorizontal,
   download: MDI.mdiDownload,
