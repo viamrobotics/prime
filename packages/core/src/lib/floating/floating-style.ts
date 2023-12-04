@@ -26,8 +26,8 @@ export interface FloatingStyleStore
 }
 
 export interface FloatingStyle {
-  top?: string | undefined;
-  left?: string | undefined;
+  top?: string;
+  left?: string;
   arrow?: ArrowStyle | undefined;
 }
 
