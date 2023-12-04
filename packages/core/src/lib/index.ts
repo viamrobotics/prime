@@ -77,7 +77,6 @@ export {
   TooltipContainer,
   TooltipTarget,
   TooltipText,
-  type TooltipLocation,
   type TooltipVisibility,
 } from './tooltip';
 
