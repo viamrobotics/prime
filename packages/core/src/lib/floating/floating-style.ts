@@ -127,6 +127,7 @@ const getConfig = (state: State): ComputePositionConfig => {
 };
 
 const isBrowser = Boolean(
-  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-  typeof window !== 'undefined' && window.IntersectionObserver
+  typeof window !== 'undefined' &&
+    typeof window.IntersectionObserver === 'function' &&
+    typeof window.ResizeObserver === 'function'
 );
