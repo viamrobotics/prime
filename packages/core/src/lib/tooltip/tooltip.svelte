@@ -18,7 +18,8 @@
 
 <script lang="ts">
 import type cx from 'classnames';
-import type { TooltipLocation, TooltipVisibility } from './tooltip-styles';
+import type { FloatingPlacement } from '$lib/floating';
+import type { TooltipVisibility } from './tooltip-styles';
 
 import TooltipContainer from './tooltip-container.svelte';
 import TooltipTarget from './tooltip-target.svelte';
@@ -28,7 +29,7 @@ import TooltipText from './tooltip-text.svelte';
  * The desired location for the tooltip, may be computed to a different
  * location  depending on layout.
  */
-export let location: TooltipLocation = 'top';
+export let location: FloatingPlacement = 'top';
 
 /**
  * If `visible`, the tooltip will always render. When `invisible` the tooltip
