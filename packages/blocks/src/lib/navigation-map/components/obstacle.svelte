@@ -194,23 +194,27 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
         />
       {/if}
     {:else if geometry.type === 'sphere'}
+      <!--
+        Points are defined as a sphere with radius 0.
+        Those points use sensible defaults defined below.
+      -->
       {#if active}
         <AxesHelper
-          thickness={geometry.radius / 100}
-          length={geometry.radius * 2}
+          thickness={geometry.radius / 100 || 0.05}
+          length={geometry.radius * 2 || 10}
         />
       {/if}
 
       {#if $view === '3D'}
         <T.SphereGeometry
           computeBounding={name}
-          args={[geometry.radius]}
+          args={[geometry.radius || 5]}
           on:create={handleGeometryCreate}
         />
       {:else}
         <T.CircleGeometry
           computeBounding={name}
-          args={[geometry.radius]}
+          args={[geometry.radius || 5]}
           on:create={handleGeometryCreate}
         />
       {/if}
