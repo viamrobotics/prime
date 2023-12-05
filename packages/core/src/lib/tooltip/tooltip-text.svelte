@@ -12,33 +12,31 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import {
-  useTooltip,
-  type TooltipLocation,
-  type TooltipVisibility,
-} from './tooltip-styles';
+import type { FloatingPlacement } from '$lib/floating';
+import { useTooltip, type TooltipVisibility } from './tooltip-styles';
 
-export let location: TooltipLocation = 'top';
+export let location: FloatingPlacement = 'top';
 export let state: TooltipVisibility | undefined = undefined;
 
 /** Additional CSS classes to pass to the tooltip text element. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-const { id, styles, isVisible, setTooltip } = useTooltip();
+const { id, style, isVisible, setVisibility, setTooltip } = useTooltip();
 let tooltip: HTMLElement | undefined;
 let arrow: HTMLElement | undefined;
 
-$: setTooltip({ tooltip, arrow, location, visibility: state });
+$: setVisibility(state);
+$: setTooltip({ tooltip, arrow, placement: location });
 </script>
 
 <div
   bind:this={tooltip}
   {id}
   role="tooltip"
-  class:invisible={!$isVisible || !$styles}
-  style:top={$styles?.tooltip.top}
-  style:left={$styles?.tooltip.left}
+  class:invisible={!$isVisible || !$style}
+  style:top={$style?.top}
+  style:left={$style?.left}
   class={cx(
     'absolute left-0 top-0 z-max w-max max-w-[250px] border border-gray-9',
     extraClasses
@@ -47,10 +45,10 @@ $: setTooltip({ tooltip, arrow, location, visibility: state });
   <div
     bind:this={arrow}
     class="absolute h-[8.5px] w-[8.5px] rotate-45 bg-gray-9"
-    style:top={$styles?.arrow.top}
-    style:left={$styles?.arrow.left}
-    style:right={$styles?.arrow.right}
-    style:bottom={$styles?.arrow.bottom}
+    style:top={$style?.arrow?.top}
+    style:left={$style?.arrow?.left}
+    style:right={$style?.arrow?.right}
+    style:bottom={$style?.arrow?.bottom}
   />
 
   <div

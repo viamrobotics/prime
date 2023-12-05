@@ -1,7 +1,7 @@
 <script lang="ts">
-import { Tooltip, type TooltipLocation, type TooltipVisibility } from '$lib';
+import { Tooltip, type FloatingPlacement, type TooltipVisibility } from '$lib';
 
-export let location: TooltipLocation = 'top';
+export let location: FloatingPlacement = 'top';
 export let state: TooltipVisibility | undefined = undefined;
 </script>
 
