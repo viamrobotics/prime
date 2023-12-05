@@ -19,7 +19,8 @@ import cx from 'classnames';
 export let label = '';
 
 /** The color theme of the badge. */
-export let variant: 'green' | 'orange' | 'red' | 'gray' | 'blue' = 'gray';
+export let variant: 'success' | 'warning' | 'danger' | 'inactive' | 'neutral' =
+  'inactive';
 
 /** Additional CSS classes to pass to the badge. */
 let extraClasses: cx.Argument = '';
@@ -28,16 +29,16 @@ export { extraClasses as cx };
 
 <small
   class={cx(
-    'inline-block rounded-full border px-3 py-0.5 text-xs',
+    'inline-block rounded-full border px-2.5 py-0.5 text-xs',
     {
       'border-success-medium bg-success-light text-success-dark':
-        variant === 'green',
+        variant === 'success',
       'border-warning-medium bg-warning-light text-warning-dark':
-        variant === 'orange',
+        variant === 'warning',
       'border-danger-medium bg-danger-light text-danger-dark':
-        variant === 'red',
-      'border-medium bg-disabled-light text-default': variant === 'gray',
-      'border-info-medium bg-info-light text-info-dark': variant === 'blue',
+        variant === 'danger',
+      'border-medium bg-disabled-light text-default': variant === 'inactive',
+      'border-info-medium bg-info-light text-info-dark': variant === 'neutral',
     },
     extraClasses
   )}

@@ -22,8 +22,6 @@ interface $$Events extends Record<string, unknown> {
 const dispatch = createRawEventDispatcher<$$Events>();
 const { map } = useMapLibre();
 
-let material: THREE.MeshPhongMaterial;
-
 let pointerdownTheta = 0;
 let pointerdownRadius = 0;
 let pointerdownLength = 0;
@@ -147,11 +145,6 @@ const handlePointerUp = () => {
 };
 
 $: active = $hovered === name || $selected === name;
-$: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
-  active
-    ? theme.extend.colors['solar-power']
-    : theme.extend.colors['power-wire']
-);
 
 $: if (draggingObstacle) {
   map.on('mousemove', handlePointerMove);
@@ -201,23 +194,27 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
         />
       {/if}
     {:else if geometry.type === 'sphere'}
+      <!--
+        Points are defined as a sphere with radius 0.
+        Those points use sensible defaults defined below.
+      -->
       {#if active}
         <AxesHelper
-          thickness={geometry.radius / 100}
-          length={geometry.radius * 2}
+          thickness={geometry.radius / 100 || 0.05}
+          length={geometry.radius * 2 || 10}
         />
       {/if}
 
       {#if $view === '3D'}
         <T.SphereGeometry
           computeBounding={name}
-          args={[geometry.radius]}
+          args={[geometry.radius || 5]}
           on:create={handleGeometryCreate}
         />
       {:else}
         <T.CircleGeometry
           computeBounding={name}
-          args={[geometry.radius]}
+          args={[geometry.radius || 5]}
           on:create={handleGeometryCreate}
         />
       {/if}
@@ -236,6 +233,8 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
       />
     {/if}
 
-    <T.MeshPhongMaterial bind:ref={material} />
+    <T.MeshPhongMaterial
+      color={active ? theme.extend.colors['solar-power'] : obstacle.color}
+    />
   </T.Mesh>
 {/each}

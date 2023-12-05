@@ -3,12 +3,13 @@ import { Button, Icon, ToggleButtons, Tooltip } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
 import { MapLibre, type GeoPose } from '$lib';
 import { environment, view } from '../stores';
-import ObstacleLayer from './obstacle-layer.svelte';
+import SceneLayer from './scene-layer.svelte';
 import RobotMarker from './robot-marker.svelte';
 import CenterInputs from './center-inputs.svelte';
 import Nav from './nav/index.svelte';
 import Waypoints from './waypoints.svelte';
 import ObstaclesLegend from './nav/obstacles-legend.svelte';
+import { onDestroy } from 'svelte';
 
 /** The Geo-pose of a robot base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
@@ -36,9 +37,37 @@ const toggleTileset = () => {
 let didHoverTooltip = Boolean(
   localStorage.getItem('navigation-service-card-tooltip-hovered')
 );
+
+let isFollowingBase = false;
+let af = 0;
+const followBase = () => {
+  if (baseGeoPose && isFollowingBase) {
+    map?.setCenter(baseGeoPose);
+    af = requestAnimationFrame(followBase);
+  }
+};
+
+const startFollowingBase = () => {
+  isFollowingBase = true;
+  af = requestAnimationFrame(followBase);
+};
+
+const stopFollowingBase = () => {
+  isFollowingBase = false;
+  cancelAnimationFrame(af);
+};
+
+onDestroy(() => {
+  cancelAnimationFrame(af);
+});
 </script>
 
-<div class="relative h-full w-full items-stretch sm:flex">
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+  class="relative h-full w-full items-stretch sm:flex"
+  on:mousedown={stopFollowingBase}
+  on:wheel={stopFollowingBase}
+>
   <MapLibre
     class="relative grow"
     {minPitch}
@@ -60,7 +89,7 @@ let didHoverTooltip = Boolean(
     <RobotMarker pose={baseGeoPose} />
     <Waypoints />
 
-    <ObstacleLayer
+    <SceneLayer
       slot="layer"
       on:update-obstacles
     />
@@ -103,15 +132,25 @@ let didHoverTooltip = Boolean(
       <Button on:click={toggleTileset}>
         {satellite ? 'Map' : 'Satellite'}
       </Button>
-      <CenterInputs />
-    </div>
-
-    <div class="absolute bottom-12 right-3 z-10">
       <ToggleButtons
         options={['2D', '3D']}
         selected={$view}
         on:input={handleViewSelect}
       />
+      <CenterInputs />
+    </div>
+
+    <div class="absolute bottom-10 right-2 z-10">
+      <Button
+        disabled={!baseGeoPose}
+        on:click={isFollowingBase ? stopFollowingBase : startFollowingBase}
+      >
+        <Icon
+          name={isFollowingBase
+            ? 'navigation-variant'
+            : 'navigation-variant-outline'}
+        />
+      </Button>
     </div>
   </MapLibre>
 </div>

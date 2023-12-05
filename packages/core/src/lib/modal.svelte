@@ -4,50 +4,62 @@
 Creates a modal overlay.
 
 ```svelte
-    <div>
-      <Button on:click={handleOpenModal}>Open Modal</Button>
-      <Modal open={modalOpen} on:close={handleCloseModal}>
-        <span slot="title">This is the modal demo</span>
-        <span slot="message">Are you sure you want to print a statement to the console?</span>
-        <Button
-          slot="primary"
-          on:click={() => console.log('statement')}
-        >
-          Print
-        </Button>
-        <Button slot="secondary" variant="dark" on:click={handleCloseModal}>
-          Cancel
-        </Button>
-      </Modal>
-    </div>
+<script lang="ts">
+  let isOpen = false
+  const handleOpen = () => (isOpen = true)
+  const handleClose = () => (isOpen = false)
+</script>
+
+<div>
+  <Button on:click={handleOpen}>
+    Open Modal
+  </Button>
+  <Modal {isOpen} on:close={handleClose}>
+    <svelte:fragment slot="title">
+      This is the modal demo
+    </svelte:fragment>
+    <svelte:fragment slot="message">
+      Are you sure you want to print a statement to the console?
+    </svelte:fragment>
+    <Button
+      slot="primary"
+      on:click={() => console.log('statement')}
+    >
+      Print
+    </Button>
+    <Button
+      slot="secondary"
+      variant="dark"
+      on:click={handleClose}
+    >
+      Cancel
+    </Button>
+  </Modal>
+</div>
 ```
 -->
 <svelte:options immutable />
 
 <script lang="ts">
 import cx from 'classnames';
+import { createEventDispatcher } from 'svelte';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
-import type { Writable } from 'svelte/store';
 
 /** Whether the modal is open. */
-export let isOpen: Writable<boolean>;
-
-$: if (typeof document !== 'undefined') {
-  document.body.classList.toggle('overflow-hidden', $isOpen);
-}
-
-let headingElement: HTMLElement | undefined;
-
-$: headingElement?.focus();
+export let isOpen: boolean;
 
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 
+let headingElement: HTMLElement | undefined;
+
+const dispatch = createEventDispatcher<{
+  close: undefined;
+}>();
+
 const handleCloseModal = () => {
-  if ($isOpen) {
-    isOpen.set(false);
-  }
+  dispatch('close');
 };
 
 const handleEscapePress = (event: KeyboardEvent) => {
@@ -56,11 +68,17 @@ const handleEscapePress = (event: KeyboardEvent) => {
     handleCloseModal();
   }
 };
+
+$: if (typeof document !== 'undefined') {
+  document.body.classList.toggle('overflow-hidden', isOpen);
+}
+
+$: headingElement?.focus();
 </script>
 
-<svelte:window on:keydown={handleEscapePress} />
+<svelte:window on:keydown={isOpen ? handleEscapePress : undefined} />
 
-{#if $isOpen}
+{#if isOpen}
   <div
     class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40"
     role="dialog"

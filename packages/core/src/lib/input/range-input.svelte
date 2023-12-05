@@ -9,11 +9,11 @@ import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 import NumericInput from './numeric-input.svelte';
 import { uniqueId } from '$lib/unique-id';
 
-export let min: number = 0;
-export let max: number = 100;
-export let step: number = 1;
+export let min = 0;
+export let max = 100;
+export let step = 1;
 export let value: number = min;
-export let disabled: boolean = false;
+export let disabled = false;
 export let showPips = true;
 export let suffix = '';
 
@@ -81,6 +81,11 @@ $: positionIndicator = () => {
   indicatorPosition.set(left);
 };
 
+/*
+ * TODO (DTCurrie): The below is valid syntax in svelte to invoke a function on a variable change, we should
+ * update our linters to allow this in svelte files.
+ */
+// eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-confusing-void-expression, no-sequences
 $: value, positionIndicator();
 onMount(() => positionIndicator());
 </script>

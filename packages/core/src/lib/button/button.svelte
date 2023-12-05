@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 For user triggered actions.
 
 ```svelte
@@ -64,7 +64,7 @@ $: handleDisabled = preventHandler(disabled);
         variant === 'primary' && !disabled,
       'border-gray-9 bg-gray-9 text-white hover:border-black hover:bg-black active:bg-[#000]':
         variant === 'dark' && !disabled,
-      'active-border-[rgba(0,0,0,0.08)] border-transparent text-default hover:bg-[rgba(0,0,0,0.04)] active:bg-[rgba(0,0,0,0.08)]':
+      'border-transparent text-default hover:bg-ghost-light active:border-ghost-medium active:bg-ghost-medium':
         variant === 'ghost' && !disabled,
       'border-danger-dark bg-danger-dark text-white hover:bg-[#aa2a2b] active:bg-[#9e2728]':
         variant === 'danger' && !disabled,

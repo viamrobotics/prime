@@ -28,7 +28,7 @@ $: pageIsVisible.set(visibilityState === 'visible');
 <div
   role="alert"
   aria-label="Notifications"
-  class="pointer-events-none fixed bottom-auto left-auto right-6 top-6 z-[9999] m-0 p-0"
+  class="pointer-events-none fixed bottom-auto left-auto right-0 top-6 z-[9999] m-0 p-0 sm:right-6"
 >
   <ul>
     {#each $notifications as { id, pause, resume, ...notification } (id)}

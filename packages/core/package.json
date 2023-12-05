@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime-core",
-  "version": "0.0.53",
+  "version": "0.0.70",
   "publishConfig": {
     "access": "public"
   },
@@ -24,8 +24,9 @@
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
     },
-    "./theme": "./theme.ts",
-    "./prime.css": "./prime.css"
+    "./prime.css": "./prime.css",
+    "./plugins": "./plugins.ts",
+    "./theme": "./theme.ts"
   },
   "files": [
     "dist",

@@ -14,10 +14,10 @@ import AxesHelper from './axes-helper.svelte';
   infiniteGrid
   fadeDistance={150}
   renderOrder={renderOrder.grid}
-  plane="xy"
   rotation.x={Math.PI / 2}
   cellColor="#ddd"
   sectionColor="#ccc"
+  sectionThickness={1.5}
   position.z={-0.1}
 />
 

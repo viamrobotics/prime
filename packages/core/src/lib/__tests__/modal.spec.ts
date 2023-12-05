@@ -1,63 +1,81 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
+import type { ComponentProps } from 'svelte';
 import Modal from '../modal.svelte';
-import { writable, get } from 'svelte/store';
 
 describe('Modal', () => {
-  let isOpen = writable(true);
+  const onClose = vi.fn();
 
-  beforeEach(() => {
-    isOpen = writable(true);
+  const renderSubject = (props: ComponentProps<Modal>) => {
+    const { component } = render(Modal, props);
+    component.$on('close', onClose);
+  };
+
+  it('should be visible if open is true ', () => {
+    renderSubject({ isOpen: true });
+
+    const modal = screen.queryByRole('dialog');
+
+    expect(modal).toBeInTheDocument();
+    expect(modal).toHaveAttribute('aria-modal', 'true');
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it('should not be visible if open is false', () => {
+    renderSubject({ isOpen: false });
+
+    const modal = screen.queryByRole('dialog');
+
+    expect(modal).not.toBeInTheDocument();
+    expect(onClose).not.toHaveBeenCalled();
   });
 
   it('should close modal when close icon button is clicked', async () => {
-    render(Modal, { isOpen });
     const user = userEvent.setup();
+    renderSubject({ isOpen: true });
 
     const modal = screen.getByRole('dialog');
     const closeButton = within(modal).getByRole('button', { name: /close/iu });
 
     await user.click(closeButton);
-
-    expect(get(isOpen)).toBe(false);
+    expect(onClose).toHaveBeenCalledOnce();
   });
 
   it('should close modal when clicked outside the modal', async () => {
-    render(Modal, { isOpen });
     const user = userEvent.setup();
+    renderSubject({ isOpen: true });
 
     const modal = screen.getByRole('dialog');
     await user.click(modal.parentElement!);
 
-    expect(get(isOpen)).toBe(false);
-  });
-
-  it('if open is true, modal should be visible', () => {
-    render(Modal, { isOpen });
-    const modal = screen.queryByRole('dialog');
-    expect(modal).toBeInTheDocument();
-    expect(modal).toHaveAttribute('aria-modal', 'true');
-  });
-
-  it('if open is false, modal should not be visible', () => {
-    isOpen.set(false);
-    render(Modal, { isOpen });
-    const modal = screen.queryByRole('dialog');
-    expect(modal).not.toBeInTheDocument();
+    expect(onClose).toHaveBeenCalledOnce();
   });
 
   it('should close modal when escape key is pressed', async () => {
-    render(Modal, { isOpen });
     const user = userEvent.setup();
+    renderSubject({ isOpen: true });
+
     await user.keyboard('{Escape}');
-    expect(get(isOpen)).toBe(false);
+
+    expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it('should not emit close events on escape if the modal is closed', async () => {
+    const user = userEvent.setup();
+    renderSubject({ isOpen: false });
+
+    await user.keyboard('{Escape}');
+
+    expect(onClose).not.toHaveBeenCalled();
   });
 
   it('should focus on heading element on mount', () => {
-    render(Modal, { isOpen });
+    render(Modal, { isOpen: true });
+
     const modal = screen.getByRole('dialog');
     const heading = within(modal).getByRole('heading');
+
     expect(heading).toHaveFocus();
   });
 });

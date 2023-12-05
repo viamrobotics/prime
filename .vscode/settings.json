@@ -1,0 +1,26 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "svelte.enable-ts-plugin": true,
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown",
+    "svelte"
+  ],
+  "eslint.validate": ["svelte"],
+  "prettier.documentSelectors": ["**/*.svelte"],
+  "prettier.singleQuote": true,
+  "prettier.jsxSingleQuote": true,
+  "prettier.singleAttributePerLine": true,
+  "tailwindCSS.classAttributes": ["class", "cx"],
+  "tailwindCSS.experimental.classRegex": [
+    ["cx\\(([\\S\\s]*?)\\)", "'([^']*)'"]
+  ],
+  "[svelte]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

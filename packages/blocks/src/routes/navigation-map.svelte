@@ -6,18 +6,22 @@ import {
   type CapsuleGeometry,
   type SphereGeometry,
   type BoxGeometry,
+  type Obstacle,
+  type Waypoint,
+  type Plans,
 } from '$lib';
 import type { Map } from 'maplibre-gl';
 import { Label, SliderInput } from '@viamrobotics/prime-core';
 import { ViamObject3D } from '@viamrobotics/three';
+import { theme } from '@viamrobotics/prime-core/theme';
 
-const waypoints = [
+const waypoints: Waypoint[] = [
   { lng: -73.968_899_054_033_95, lat: 40.663_071_086_044, id: '0' },
   { lng: -73.972_162_444_595_26, lat: 40.661_759_669_002_69, id: '1' },
   { lng: -73.969_889_726_168_73, lat: 40.659_372_529_105_895, id: '2' },
 ];
 
-const obstacles = [
+const obstacles: Obstacle[] = [
   {
     name: 'obstacle 1',
     location: {
@@ -31,6 +35,8 @@ const obstacles = [
         radius: 20,
       } as SphereGeometry,
     ],
+    color: theme.extend.colors.cyberpunk,
+    label: 'static',
   },
   {
     name: 'obstacle 2',
@@ -45,6 +51,8 @@ const obstacles = [
         radius: 200,
       } as SphereGeometry,
     ],
+    color: theme.extend.colors.cyberpunk,
+    label: 'static',
   },
   {
     name: 'obstacle 3',
@@ -64,9 +72,11 @@ const obstacles = [
         })(),
       } as CapsuleGeometry,
     ],
+    color: theme.extend.colors.cyberpunk,
+    label: 'static',
   },
   {
-    name: 'obstacle 4',
+    name: 'transient obstacle 4',
     location: {
       lng: -74.7,
       lat: 40,
@@ -80,8 +90,85 @@ const obstacles = [
         pose: new ViamObject3D(),
       } as BoxGeometry,
     ],
+    color: theme.extend.colors.hologram,
+    label: 'transient',
+  },
+  {
+    name: 'obstacle 5',
+    location: {
+      lng: -74.701,
+      lat: 40.001,
+    },
+    geometries: [
+      {
+        type: 'box',
+        length: 50,
+        width: 50,
+        height: 50,
+        pose: new ViamObject3D(),
+      } as BoxGeometry,
+    ],
+    color: theme.extend.colors.cyberpunk,
+    label: 'static',
+  },
+  {
+    name: 'a point',
+    location: {
+      lng: -74.701,
+      lat: 40,
+    },
+    geometries: [
+      {
+        type: 'sphere',
+        radius: 0,
+        pose: new ViamObject3D(),
+      } as SphereGeometry,
+    ],
+    color: theme.extend.colors.hologram,
+    label: 'transient',
   },
 ];
+
+const plans: Plans = {
+  current: [
+    { lng: -73.968, lat: 40.663 },
+    { lng: -73.9681, lat: 40.6631 },
+    { lng: -73.968, lat: 40.6632 },
+    { lng: -73.9681, lat: 40.6633 },
+    { lng: -73.968, lat: 40.6634 },
+    { lng: -73.9681, lat: 40.6635 },
+    { lng: -73.968, lat: 40.6636 },
+  ],
+  previous: [
+    [
+      { lng: -73.968, lat: 40.663 },
+      { lng: -73.9679, lat: 40.6631 },
+      { lng: -73.967_95, lat: 40.6632 },
+      { lng: -73.9679, lat: 40.6633 },
+      { lng: -73.967_95, lat: 40.6634 },
+      { lng: -73.9679, lat: 40.6635 },
+      { lng: -73.968, lat: 40.6636 },
+    ],
+    [
+      { lng: -73.968, lat: 40.663 },
+      { lng: -73.968_05, lat: 40.6631 },
+      { lng: -73.968_025, lat: 40.6632 },
+      { lng: -73.968_05, lat: 40.6633 },
+      { lng: -73.968_025, lat: 40.6634 },
+      { lng: -73.968_05, lat: 40.6635 },
+      { lng: -73.968, lat: 40.6636 },
+    ],
+    [
+      { lng: -73.968, lat: 40.663 },
+      { lng: -73.968_15, lat: 40.6631 },
+      { lng: -73.968_125, lat: 40.6632 },
+      { lng: -73.968_15, lat: 40.6633 },
+      { lng: -73.968_125, lat: 40.6634 },
+      { lng: -73.968_15, lat: 40.6635 },
+      { lng: -73.968, lat: 40.6636 },
+    ],
+  ],
+};
 
 let map: Map | undefined;
 
@@ -111,6 +198,7 @@ $: map?.setCenter({ lat: 40.7, lng: -74.17 });
       baseGeoPose={pose}
       {obstacles}
       {waypoints}
+      {plans}
       on:create={(event) => console.log('create', event)}
       on:add-waypoint={(event) => console.log('add-waypoint', event)}
       on:delete-waypoint={(event) => console.log('delete-waypoint', event)}

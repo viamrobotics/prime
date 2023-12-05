@@ -9,6 +9,12 @@ import {
 } from '@viamrobotics/prime-core';
 
 const menuID = uniqueId('context-menu');
+
+let floatingMenuOpen = false;
+
+const setFloatingMenuOpen = (isOpen: boolean) => {
+  floatingMenuOpen = isOpen;
+};
 </script>
 
 <Meta title="Elements/Context menu" />
@@ -32,17 +38,13 @@ const menuID = uniqueId('context-menu');
   <FloatingMenu
     placement="bottom-start"
     offset={4}
+    isOpen={floatingMenuOpen}
+    onChange={setFloatingMenuOpen}
   >
-    <svelte:fragment
-      slot="control"
-      let:isOpen
-    >
-      {isOpen ? 'Close menu' : 'Open menu'}
+    <svelte:fragment slot="control">
+      {floatingMenuOpen ? 'Close menu' : 'Open menu'}
     </svelte:fragment>
-    <svelte:fragment
-      slot="items"
-      let:closeMenu
-    >
+    <svelte:fragment slot="items">
       <ContextMenuItem>Just a label</ContextMenuItem>
       <ContextMenuItem icon="trash-can-outline">With icon</ContextMenuItem>
       <ContextMenuSeparator />
@@ -50,7 +52,7 @@ const menuID = uniqueId('context-menu');
       <ContextMenuItem
         icon="close"
         variant="danger"
-        on:click={closeMenu}
+        on:click={() => setFloatingMenuOpen(false)}
       >
         Danger
       </ContextMenuItem>

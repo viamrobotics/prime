@@ -46,7 +46,7 @@ export const theme = {
       'danger-light': '#fcecea',
       'danger-medium': '#edc0bf',
       'warning-dark': '#a6570f',
-      'warning-light': '#fef8cA',
+      'warning-light': '#fef3e0',
       'warning-medium': '#e9c89d',
       'warning-bright': '#ddab3f',
       'success-dark': '#3d7d3f',
@@ -57,6 +57,10 @@ export const theme = {
       'info-medium': '#b6d1f4',
       'disabled-dark': '#9c9ca4',
       'disabled-light': '#f2f2f4',
+
+      // Opaque grayscale
+      'ghost-light': 'rgba(0,0,0,0.04)',
+      'ghost-medium': 'rgba(0,0,0,0.08)',
 
       // Brand design colors
       'power-wire': '#ff0047',
