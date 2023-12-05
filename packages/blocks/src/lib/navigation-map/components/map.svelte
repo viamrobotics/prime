@@ -62,7 +62,12 @@ onDestroy(() => {
 });
 </script>
 
-<div class="relative h-full w-full items-stretch sm:flex">
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+  class="relative h-full w-full items-stretch sm:flex"
+  on:mousedown={stopFollowingBase}
+  on:wheel={stopFollowingBase}
+>
   <MapLibre
     class="relative grow"
     {minPitch}
