@@ -111,6 +111,22 @@ const obstacles: Obstacle[] = [
     color: theme.extend.colors.cyberpunk,
     label: 'static',
   },
+  {
+    name: 'a point',
+    location: {
+      lng: -74.701,
+      lat: 40,
+    },
+    geometries: [
+      {
+        type: 'sphere',
+        radius: 0,
+        pose: new ViamObject3D(),
+      } as SphereGeometry,
+    ],
+    color: theme.extend.colors.hologram,
+    label: 'transient',
+  },
 ];
 
 const plans: Plans = {
