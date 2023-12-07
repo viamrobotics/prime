@@ -4,7 +4,7 @@ import { createEventDispatcher } from 'svelte';
 import { T, useThrelte } from '@threlte/core';
 import type { LngLat } from 'maplibre-gl';
 import type { Obstacle } from '../types';
-import { view, obstacles, plans, selected, environment } from '../stores';
+import { view, obstacles, paths, selected, environment } from '../stores';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
 import { renderPlugin } from '../plugins/render';
 import { interactivityPlugin } from '../plugins/interactivity';
@@ -12,7 +12,7 @@ import { createObstacle } from '../lib/create-obstacle';
 import { createName } from '../lib/create-name';
 import ObstacleGeometries from './obstacle.svelte';
 import Drawtool from './draw-tool.svelte';
-import Plan from './plan.svelte';
+import Path from './path.svelte';
 import { theme } from '@viamrobotics/prime-core/theme';
 
 const dispatch = createEventDispatcher<{
@@ -73,22 +73,12 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
   />
 {/each}
 
-{#if $plans.previous}
-  {#each $plans.previous as plan}
-    <Plan
-      {plan}
-      color={theme.extend.colors.cyberpunk}
-    />
-  {/each}
-{/if}
-
-<!-- Render the current plan last -->
-{#if $plans.current}
-  <Plan
-    plan={$plans.current}
-    color="blue"
+{#each $paths as path}
+  <Path
+    {path}
+    color={theme.extend.colors.hyperlink}
   />
-{/if}
+{/each}
 
 {#if $environment === 'configure'}
   <Drawtool on:update={handleDraw} />

@@ -5,7 +5,7 @@ import {
   type Obstacle,
   NavigationTab,
   type NavigationTabType,
-  type Plans,
+  type Path,
 } from './types';
 
 export const hovered = currentWritable<string | null>(null);
@@ -13,7 +13,7 @@ export const selected = currentWritable<string | null>(null);
 
 export const waypoints = currentWritable<Waypoint[]>([]);
 export const obstacles = currentWritable<Obstacle[]>([]);
-export const plans = currentWritable<Plans>({});
+export const paths = currentWritable<Path[]>([]);
 
 export type Environments = 'debug' | 'configure';
 
