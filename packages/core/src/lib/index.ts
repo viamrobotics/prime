@@ -47,6 +47,8 @@ export {
   type Notify,
 } from './notification';
 
+export { ToastContainer, provideToast, useToast, type Toast } from './toast';
+
 export { persisted } from './persisted';
 export { default as Pill } from './pill.svelte';
 export { preventHandler, preventKeyboardHandler } from './prevent-handler';
