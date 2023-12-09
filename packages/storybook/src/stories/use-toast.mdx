@@ -1,0 +1,69 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as ToastStories from './use-toast.stories.svelte';
+
+<Meta title='APIs/useToast' />
+
+# useToast
+
+Components and an API for displaying user toast messages.
+
+## Setup
+
+To use toasts, provide the toast context somewhere high your component tree along with the `ToastContainer` component.
+
+The root layout component is probably the best place to set up the context.
+
+```svelte
+<!-- +layout.svelte -->
+<script lang="ts">
+import { ToastContainer, provideToast } from '@viamrobotics/prime-core';
+
+import PageRoot from '$lib/layout/page-root.svelte';
+import PageContent from '$lib/layout/page-content.svelte';
+
+provideToast();
+</script>
+
+<PageRoot>
+  <PageContent>
+    <slot />
+  </PageContent>
+  <ToastContainer />
+</PageRoot>
+```
+
+## Usage
+
+To display a toast, use the `useToast` function:
+
+```ts
+import { useToast } from '@viamrobotics/prime-core';
+
+const doSomethingCrazy = () => {
+  const toast = useNotify();
+
+  notify.neutral('Hello, Brooklyn!');
+};
+```
+
+There are three different types of toast, each with a different styling.
+
+```ts
+import { useToast } from '@viamrobotics/prime-core';
+
+const doSomethingCrazy = () => {
+  const toast = useToast();
+
+  toast.neutral('Plain slice please!');
+  toast.upload('Uploading file!', 'Cancel');
+  toast.success('Fuhgeddaboudit!');
+};
+```
+
+```ts
+import { toast } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={ToastStories.Basic} />
+</Canvas>
