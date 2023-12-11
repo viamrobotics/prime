@@ -44,7 +44,4 @@ export interface Obstacle {
   label: string;
 }
 
-export interface Plans {
-  current?: LngLat[];
-  previous?: LngLat[][];
-}
+export type Path = LngLat[];

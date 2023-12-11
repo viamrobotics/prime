@@ -1,7 +1,7 @@
 <!--
   @component
 
-  A map for configuring or viewing navigation service information, such as waypoints, obstacles, or motion plans.
+  A map for configuring or viewing navigation service information, such as waypoints, obstacles, or motion paths.
 
   ```svelte
     <NavigationMap
@@ -22,12 +22,12 @@ import {
   type Obstacle,
   NavigationTab,
   type NavigationTabType,
-  type Plans,
+  type Path,
 } from './types';
 import {
   waypoints as waypointsStore,
   obstacles as obstaclesStore,
-  plans as plansStore,
+  paths as pathsStore,
   tab as tabStore,
   tabs as tabsStore,
 } from './stores';
@@ -42,8 +42,8 @@ export let waypoints: Waypoint[] = [];
 /** The obstacles to render on the map. */
 export let obstacles: Obstacle[] = [];
 
-/** The plans to render on the map. */
-export let plans: Plans = {};
+/** The paths to render on the map. */
+export let paths: Path[] = [];
 
 /** The initial tab to show. */
 export let tab: NavigationTabType = NavigationTab.Waypoints;
@@ -64,7 +64,7 @@ $: $tabStore = tab;
 $: $tabsStore = tabs;
 $: $waypointsStore = waypoints;
 $: $obstaclesStore = obstacles;
-$: $plansStore = plans;
+$: $pathsStore = paths;
 $: $envStore = environment;
 </script>
 
