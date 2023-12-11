@@ -23,7 +23,7 @@ let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
 const dispatch = createEventDispatcher<{
-  /** when the notification close button is pressed*/
+  /** when the toast close button is pressed*/
   close: null;
   /**  when the action button is pressed*/
   action: null;
@@ -83,7 +83,7 @@ $: {
         <Button
           variant="ghost"
           cx="text-gray-7 absolute right-1"
-          aria-label="Dismiss notification"
+          aria-label="Dismiss toast"
           on:click={handleClose}
         >
           <Icon name="close" />
@@ -112,9 +112,7 @@ $: {
       />
       <div
         style="transform: scale({progress}, 1)"
-        class={cx('-ml-px -mt-px h-[3px] w-[calc(100%+2px)] origin-left', {
-          'bg-info-dark': isUpload,
-        })}
+        class="-ml-px -mt-px h-[3px] w-[calc(100%+2px)] origin-left bg-info-dark"
       />
     </div>
   {/if}

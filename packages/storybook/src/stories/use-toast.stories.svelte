@@ -27,9 +27,15 @@ const toast = useToast();
       </Button>
       <Button
         variant="success"
-        on:click={() => toast.success('Success message', true)}
+        on:click={() => toast.success('Success message')}
       >
         Success Toast
+      </Button>
+      <Button
+        variant="success"
+        on:click={() => toast.success('Success message', true)}
+      >
+        Success Toast with close Button
       </Button>
     </div>
   </div>
