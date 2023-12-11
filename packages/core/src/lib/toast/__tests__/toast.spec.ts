@@ -1,70 +1,57 @@
-import { describe, it, expect, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { act, render, screen, within } from '@testing-library/svelte';
 
-import Toast from './toast.spec.svelte';
-import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
+import { createToastContext, type ToastContext } from '../context';
+import ToastSpec from './toast.spec.svelte';
 
-describe('Toast', () => {
-  it('Renders toast element with appropriate message, and action text', () => {
-    render(Toast, {
-      variant: 'upload',
-    });
+describe('toast', () => {
+  let context: ToastContext;
 
-    expect(screen.getByText('This is a message.')).toBeVisible();
-    expect(screen.getByText('Cancel')).toBeVisible();
-    expect(screen.getByRole('button')).toBeVisible();
+  beforeEach(() => {
+    context = createToastContext();
+
+    render(ToastSpec, { toastContext: context });
   });
 
-  it('Renders toast with neutral style if the variant is set to neutral', () => {
-    const { container } = render(Toast, {
-      variant: 'neutral',
-    });
-
-    expect(container.querySelector('.bg-light')).toBeVisible();
-    expect(screen.getByRole('button')).toBeVisible();
-    expect(screen.getByRole('button')).toHaveClass(
-      'text-gray-7',
-      'hover:bg-ghost-light'
-    );
+  it('should have an alert live region', () => {
+    screen.getByRole('alert', { name: 'Toasts' });
   });
 
-  it('Renders toast with success style if the variant is set to success', () => {
-    const { container } = render(Toast, {
-      variant: 'success',
+  it('should display dismissible notifications', async () => {
+    await act(() => {
+      context.toast.neutral('Hello, world');
     });
 
-    expect(container.querySelector('.text-success-dark')).toBeVisible();
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    const status = screen.getByRole('alert');
+    const toast = within(status).getByRole('listitem');
+
+    within(toast).getByRole('button', { name: /dismiss/iu });
+    expect(toast).toHaveTextContent(/hello, world/iu);
   });
 
-  it('Renders toast with uploading file style if the variant is set to uploading file', () => {
-    const { container } = render(Toast, {
-      variant: 'upload',
+  it('should display proper toast with style for upload variant', async () => {
+    await act(() => {
+      context.toast.upload('def');
     });
 
-    expect(container.querySelector('.text-info-dark')).toBeVisible();
+    const status = screen.getByRole('alert');
+    const toast = within(status).getByRole('listitem');
+
+    within(toast).getByRole('button', { name: /perform action/iu });
+    expect(status.querySelector('svg')).toBeVisible();
+    expect(toast).toHaveTextContent(/def/iu);
   });
 
-  it('Emits the close event when closeable and the close button is clicked', async () => {
-    const onClose = vi.fn();
-    const { component } = render(Toast, {
-      closeable: true,
-      variant: 'success',
+  it('should display proper toast with style for success variant that is closeable', async () => {
+    await act(() => {
+      context.toast.success('abc', true);
     });
 
-    component.$on('close', onClose);
+    const status = screen.getByRole('alert');
+    const toast = within(status).getByRole('listitem');
 
-    await fireEvent.click(screen.getByLabelText('Dismiss toast'));
-
-    expect(onClose).toHaveBeenCalled();
-  });
-
-  it('Renders with the passed cx classes', () => {
-    const { container } = render(Toast, {
-      variant: 'upload',
-      extraClasses: cxTestArguments,
-    });
-
-    expect(container.querySelector('.border-b-0')).toHaveClass(cxTestResults);
+    within(toast).getByRole('button', { name: /dismiss/iu });
+    expect(status.querySelector('svg')).toBeVisible();
+    expect(toast).toHaveTextContent(/abc/iu);
   });
 });

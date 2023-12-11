@@ -1,21 +1,10 @@
 <script lang="ts">
-import type cx from 'classnames';
-import { Toast, type ToastVariantType } from '$lib';
+import { ToastContainer, provideToast } from '..';
+import type { ToastContext } from '../context';
 
-export let message = 'This is a message.';
-export let variant: ToastVariantType;
-export let progress = 1;
-export let actionable = false;
-export let closeable = false;
-export let extraClasses: cx.Argument = '';
+export let toastContext: ToastContext;
+
+$: provideToast(toastContext);
 </script>
 
-<Toast
-  {message}
-  {variant}
-  {progress}
-  {actionable}
-  {closeable}
-  cx={extraClasses}
-  on:close
-/>
+<ToastContainer />
