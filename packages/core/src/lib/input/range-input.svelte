@@ -1,7 +1,15 @@
+<!--
+@component
+  
+For tweakable numeric user inputs that have minimum and maximum values.
+
+```svelte
+<RangeInput max={1} step={0.01} />
+```
+-->
 <svelte:options immutable />
 
 <script lang="ts">
-import { onMount } from 'svelte';
 import { writable } from 'svelte/store';
 import cx from 'classnames';
 
@@ -9,13 +17,30 @@ import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 import NumericInput from './numeric-input.svelte';
 import { uniqueId } from '$lib/unique-id';
 
+/** The minimum allowed value. */
 export let min = 0;
+
+/** The maximum allowed value. */
 export let max = 100;
+
+/** The amount to add/subtract when moving the slider. */
 export let step = 1;
+
+/** The value of the input, defaults to the value of `min` */
 export let value: number = min;
+
+/** Whether to render the input as disabled or not. */
 export let disabled = false;
+
+/**
+ * Whether to render a datalist of values, defaults to true. The number of
+ * options in the datalist is determined by the values of `min`, `max`, and
+ * `step`.
+ */
 export let showPips = true;
-export let suffix = '';
+
+/** An optional suffix to render after the value, e.g.: % */
+export let suffix: string | undefined = undefined;
 
 /** Additional CSS classes to pass to the input. */
 let extraClasses: cx.Argument = '';
@@ -38,8 +63,7 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
 
 $: inputClasses = cx(
   'slider-track-w-full slider-thumb-w-5 slider-thumb-h-5 slider-thumb-light',
-  'slider-thumb-border slider-track-h-0.5 peer h-7.5 w-full outline-offset-2',
-  'focus:outline-none',
+  'slider-thumb-border slider-track-h-0.5 peer h-7.5 w-full focus:outline-none',
   !disabled &&
     'slider-track-gray-4 focus:slider-track-gray-5 slider-track-cursor-pointer slider-thumb-cursor-pointer',
   disabled &&
@@ -83,11 +107,11 @@ $: positionIndicator = () => {
 
 /*
  * TODO (DTCurrie): The below is valid syntax in svelte to invoke a function on a variable change, we should
- * update our linters to allow this in svelte files.
+ * update our linters to allow this in svelte files, unless we hate it then we can update `positionIndicator`
+ * to accept a `currentValue` argument and pass `value` to it here. That will trigger whenever `value` changes.
  */
 // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-confusing-void-expression, no-sequences
 $: value, positionIndicator();
-onMount(() => positionIndicator());
 </script>
 
 <svelte:window on:resize={positionIndicator} />
