@@ -79,6 +79,19 @@ describe('Tooltip', () => {
     expect(tooltip).toHaveClass('invisible');
   });
 
+  it('shows the tooltip on mouse enter after a delay', async () => {
+    const user = userEvent.setup();
+
+    render(Tooltip, { hoverDelayMs: 50 });
+
+    const target = screen.getByTestId('target');
+    const tooltip = screen.getByRole('tooltip');
+
+    await user.hover(target);
+    expect(tooltip).toHaveClass('invisible');
+    await waitFor(() => expect(tooltip).not.toHaveClass('invisible'));
+  });
+
   it('shows/hides the tooltip on keyboard focus/blur', async () => {
     render(Tooltip);
 

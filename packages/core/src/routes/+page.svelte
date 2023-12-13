@@ -442,6 +442,11 @@ const htmlSnippet = `
   <li>But I know you in the future. I cleaned your poop.</li>
   <li>Ummm…to eBay?</li>
 </ul>`.trim();
+
+let hoverDelayMs = 1000;
+const onHoverDelayMsInput = (event: Event) => {
+  hoverDelayMs = Number.parseInt((event.target as HTMLInputElement).value, 10);
+};
 </script>
 
 <NotificationContainer />
@@ -1477,6 +1482,32 @@ const htmlSnippet = `
           />
         </Label>
         <TooltipText>This is the tooltip text!</TooltipText>
+      </TooltipContainer>
+    </div>
+
+    <div>
+      <TooltipContainer
+        let:tooltipID
+        {hoverDelayMs}
+      >
+        <Label>
+          This icon has a tooltip if you're patient.
+          <TooltipTarget>
+            <Icon
+              tabindex="0"
+              cx="cursor-pointer"
+              name="history"
+            />
+          </TooltipTarget>
+          <NumericInput
+            slot="input"
+            aria-describedby={tooltipID}
+            name="hoverDelayMs"
+            value={hoverDelayMs}
+            on:input={onHoverDelayMsInput}
+          />
+        </Label>
+        <TooltipText>Thanks for waiting!</TooltipText>
       </TooltipContainer>
     </div>
   </div>
