@@ -7,7 +7,7 @@ import {
   type FloatingPlacement,
 } from '$lib/floating';
 import { uniqueId } from '$lib/unique-id';
-import { useTimeout } from '$lib/use-timeout';
+import { noop } from 'lodash';
 
 export type TooltipVisibility = 'invisible' | 'visible';
 
@@ -17,7 +17,7 @@ export interface TooltipContext {
   isVisible: Readable<boolean>;
   setHovered: (isHovered: boolean) => void;
   setVisibility: (visibility: TooltipVisibility | undefined) => void;
-  setHoverDelayMs: (hoverDelayMs: number | undefined) => void;
+  setHoverDelayMS: (hoverDelayMS: number) => void;
   setTarget: (target: HTMLElement | undefined) => void;
   setTooltip: (options: {
     tooltip: HTMLElement | undefined;
@@ -67,37 +67,34 @@ const createContext = (): TooltipContext => {
   const id = uniqueId('tooltip');
   const isHovered = writable(false);
   const visibility = writable<TooltipVisibility | undefined>();
-  let hoverDelayMs: number | undefined = undefined;
+  const hoverDelayMS = writable<number>();
   const isVisible = derived(
-    [isHovered, visibility],
-    ([$isHovered, $visibility]) =>
-      $visibility === 'visible' ||
-      Boolean($visibility === undefined && $isHovered)
+    [isHovered, visibility, hoverDelayMS],
+    ([$isHovered, $visibility, $hoverDelayMS], set) => {
+      let cleanup = noop;
+
+      if ($visibility === 'visible') {
+        set(true);
+      } else if ($visibility === 'invisible' || !$isHovered) {
+        set(false);
+      } else {
+        const timeoutID = setTimeout(() => set(true), $hoverDelayMS);
+        cleanup = () => clearTimeout(timeoutID);
+      }
+
+      return cleanup;
+    },
+    false
   );
   const style = floatingStyle({ offset: 7, shift: 5, flip: true, auto: true });
-
-  const { set: setHoveredTimeout, clear: clearHoveredTimeout } = useTimeout();
-  const setHovered = (value: boolean) => {
-    if (!hoverDelayMs || !value) {
-      clearHoveredTimeout();
-      isHovered.set(value);
-      return;
-    }
-
-    setHoveredTimeout(() => {
-      isHovered.set(value);
-    }, hoverDelayMs);
-  };
 
   return {
     id,
     isVisible,
     style,
-    setHovered,
+    setHovered: isHovered.set,
     setVisibility: visibility.set,
-    setHoverDelayMs: (value: number | undefined) => {
-      hoverDelayMs = value;
-    },
+    setHoverDelayMS: hoverDelayMS.set,
     setTarget: (target) => style.register({ referenceElement: target }),
     setTooltip: ({ tooltip, arrow, placement }) => {
       style.register({

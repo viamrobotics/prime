@@ -59,7 +59,7 @@ import {
   <div class="flex pt-5">
     <Tooltip
       let:tooltipID
-      hoverDelayMs={1000}
+      hoverDelayMS={1000}
     >
       <p aria-describedby={tooltipID}>
         This element has a tooltip that shows up if you're patient.

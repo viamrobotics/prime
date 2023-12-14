@@ -34,11 +34,11 @@
 <script lang="ts">
 import { provideTooltipContext } from './tooltip-styles';
 
-export let hoverDelayMs: number | undefined = undefined;
+export let hoverDelayMS = 0;
 
-const { id, setHoverDelayMs } = provideTooltipContext();
+const { id, setHoverDelayMS } = provideTooltipContext();
 
-$: setHoverDelayMs(hoverDelayMs);
+$: setHoverDelayMS(hoverDelayMS);
 </script>
 
 <slot tooltipID={id} />

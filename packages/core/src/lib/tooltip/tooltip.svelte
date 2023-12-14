@@ -42,7 +42,7 @@ export let state: TooltipVisibility | undefined = undefined;
  * On mouse enter, this delay is present before the tooltip is shown.
  * There is no delay for focus.
  */
-export let hoverDelayMs: number | undefined = undefined;
+export let hoverDelayMS = 0;
 
 /** Additional CSS classes to pass to the tooltip text element. */
 let extraClasses: cx.Argument = '';
@@ -51,7 +51,7 @@ export { extraClasses as cx };
 
 <TooltipContainer
   let:tooltipID
-  {hoverDelayMs}
+  {hoverDelayMS}
 >
   <TooltipTarget>
     <slot {tooltipID} />

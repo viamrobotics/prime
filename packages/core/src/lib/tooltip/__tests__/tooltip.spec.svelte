@@ -3,13 +3,13 @@ import { Tooltip, type FloatingPlacement, type TooltipVisibility } from '$lib';
 
 export let location: FloatingPlacement = 'top';
 export let state: TooltipVisibility | undefined = undefined;
-export let hoverDelayMs: number | undefined = undefined;
+export let hoverDelayMS: number | undefined = undefined;
 </script>
 
 <Tooltip
   {location}
   {state}
-  {hoverDelayMs}
+  {hoverDelayMS}
   let:tooltipID
 >
   <button

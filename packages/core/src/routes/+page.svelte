@@ -443,9 +443,9 @@ const htmlSnippet = `
   <li>Ummm…to eBay?</li>
 </ul>`.trim();
 
-let hoverDelayMs = 1000;
+let hoverDelayMS = 1000;
 const onHoverDelayMsInput = (event: Event) => {
-  hoverDelayMs = Number.parseInt((event.target as HTMLInputElement).value, 10);
+  hoverDelayMS = Number.parseInt((event.target as HTMLInputElement).value, 10);
 };
 </script>
 
@@ -1488,7 +1488,7 @@ const onHoverDelayMsInput = (event: Event) => {
     <div>
       <TooltipContainer
         let:tooltipID
-        {hoverDelayMs}
+        {hoverDelayMS}
       >
         <Label>
           This icon has a tooltip if you're patient.
@@ -1502,8 +1502,8 @@ const onHoverDelayMsInput = (event: Event) => {
           <NumericInput
             slot="input"
             aria-describedby={tooltipID}
-            name="hoverDelayMs"
-            value={hoverDelayMs}
+            name="hoverDelayMS"
+            value={hoverDelayMS}
             on:input={onHoverDelayMsInput}
           />
         </Label>

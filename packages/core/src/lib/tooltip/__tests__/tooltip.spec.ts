@@ -82,7 +82,7 @@ describe('Tooltip', () => {
   it('shows the tooltip on mouse enter after a delay', async () => {
     const user = userEvent.setup();
 
-    render(Tooltip, { hoverDelayMs: 50 });
+    render(Tooltip, { hoverDelayMS: 50 });
 
     const target = screen.getByTestId('target');
     const tooltip = screen.getByRole('tooltip');
