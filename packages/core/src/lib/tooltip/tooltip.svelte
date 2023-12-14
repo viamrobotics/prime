@@ -37,12 +37,22 @@ export let location: FloatingPlacement = 'top';
  */
 export let state: TooltipVisibility | undefined = undefined;
 
+/**
+ * If state is `undefined`, the tooltip only renders on mouse enter and focus.
+ * On mouse enter, this delay is present before the tooltip is shown.
+ * There is no delay for focus.
+ */
+export let hoverDelayMS = 0;
+
 /** Additional CSS classes to pass to the tooltip text element. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 </script>
 
-<TooltipContainer let:tooltipID>
+<TooltipContainer
+  let:tooltipID
+  {hoverDelayMS}
+>
   <TooltipTarget>
     <slot {tooltipID} />
   </TooltipTarget>
