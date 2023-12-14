@@ -7,7 +7,7 @@ import {
   type FloatingPlacement,
 } from '$lib/floating';
 import { uniqueId } from '$lib/unique-id';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 
 export type TooltipVisibility = 'invisible' | 'visible';
 
