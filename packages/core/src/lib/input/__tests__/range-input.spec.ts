@@ -10,6 +10,49 @@ describe('Range Input', () => {
     expect(screen.getByRole('slider')).toHaveAttribute('type', 'range');
   });
 
+  it('Renders the inputs as readonly', () => {
+    render(RangeInput, { readonly: true });
+
+    const input = screen.getByRole('spinbutton');
+    const slider = screen.getByRole('slider');
+
+    expect(input).toHaveClass(
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+    );
+
+    expect(input).toHaveClass('bg-light border-transparent');
+    expect(input).not.toHaveAttribute('aria-disabled');
+
+    expect(slider).toHaveClass(
+      'slider-track-disabled-light slider-track-cursor-not-allowed slider-thumb-cursor-not-allowed cursor-not-allowed'
+    );
+
+    expect(slider).not.toHaveAttribute('aria-disabled');
+  });
+
+  it('Renders the inputs as disabled', () => {
+    render(RangeInput, { disabled: true });
+
+    const input = screen.getByRole('spinbutton');
+    const slider = screen.getByRole('slider');
+
+    expect(input).toHaveClass(
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+    );
+
+    expect(input).toHaveClass(
+      'bg-disabled-light text-disabled-dark border-disabled-light cursor-not-allowed'
+    );
+
+    expect(input).toHaveAttribute('aria-disabled', 'true');
+
+    expect(slider).toHaveClass(
+      'slider-track-disabled-light slider-track-cursor-not-allowed slider-thumb-cursor-not-allowed cursor-not-allowed'
+    );
+
+    expect(slider).toHaveAttribute('aria-disabled');
+  });
+
   it('Renders the pips', () => {
     render(RangeInput);
 

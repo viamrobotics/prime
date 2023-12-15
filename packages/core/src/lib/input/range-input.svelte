@@ -29,8 +29,11 @@ export let step = 1;
 /** The value of the input, defaults to the value of `min` */
 export let value: number = min;
 
-/** Whether to render the input as disabled or not. */
-export let disabled = false;
+/** Whether or not the input should be rendered as readonly and be operable. */
+export let readonly = false as boolean | undefined;
+
+/** Whether or not the input should be rendered as readonly and be non-operable. */
+export let disabled = false as boolean | undefined;
 
 /**
  * Whether to render a datalist of values, defaults to true. The number of
@@ -55,18 +58,21 @@ $: steps = range / step;
 $: hasExcessivePips = steps >= 100;
 $: excessivePipsStep = steps / 20;
 
+$: suffixValue = suffix ?? '';
+
 $: pipStep = hasExcessivePips ? excessivePipsStep : step;
 $: pipVal = (val: number): number => min + val * step * pipStep;
 
-$: handleDisabled = preventHandler(disabled);
-$: handleDisabledKeydown = preventKeyboardHandler(disabled);
+$: isInputReadOnly = disabled === true || readonly === true;
+$: handleDisabled = preventHandler(isInputReadOnly);
+$: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 
 $: inputClasses = cx(
   'slider-track-w-full slider-thumb-w-5 slider-thumb-h-5 slider-thumb-light',
   'slider-thumb-border slider-track-h-0.5 peer h-7.5 w-full focus:outline-none',
-  !disabled &&
+  !isInputReadOnly &&
     'slider-track-gray-4 focus:slider-track-gray-5 slider-track-cursor-pointer slider-thumb-cursor-pointer',
-  disabled &&
+  isInputReadOnly &&
     'slider-track-disabled-light slider-track-cursor-not-allowed slider-thumb-cursor-not-allowed cursor-not-allowed'
 );
 
@@ -122,6 +128,7 @@ $: value, positionIndicator();
     {min}
     {max}
     {step}
+    {readonly}
     {disabled}
     on:input
     on:change
@@ -131,10 +138,10 @@ $: value, positionIndicator();
   <div class="relative w-full">
     <div class="flex w-full justify-between">
       <small class="whitespace-nowrap text-xs">
-        {min}{suffix}
+        {min}{suffixValue}
       </small>
       <small class="whitespace-nowrap text-xs">
-        {max}{suffix}
+        {max}{suffixValue}
       </small>
     </div>
 
@@ -145,6 +152,7 @@ $: value, positionIndicator();
       {min}
       {max}
       {step}
+      readonly={isInputReadOnly ? true : undefined}
       aria-disabled={disabled ? true : undefined}
       list={datalistId}
       {...$$restProps}
@@ -158,12 +166,12 @@ $: value, positionIndicator();
       on:blur
     />
 
-    {#if !disabled}
+    {#if !isInputReadOnly}
       <span
         class={indicatorClasses}
         style="left: {$indicatorPosition}px"
       >
-        {value}{suffix}
+        {value}{suffixValue}
       </span>
     {/if}
 

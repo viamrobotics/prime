@@ -951,6 +951,11 @@ const htmlSnippet = `
     />
 
     <RangeInput
+      name="readonly-range"
+      readonly
+    />
+
+    <RangeInput
       name="disabled-range"
       disabled
     />
