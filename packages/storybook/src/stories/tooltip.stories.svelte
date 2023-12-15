@@ -54,3 +54,17 @@ import {
     </TooltipContainer>
   </div>
 </Story>
+
+<Story name="Hover Delay">
+  <div class="flex pt-5">
+    <Tooltip
+      let:tooltipID
+      hoverDelayMS={1000}
+    >
+      <p aria-describedby={tooltipID}>
+        This element has a tooltip that shows up if you're patient.
+      </p>
+      <p slot="description">Thanks for waiting!</p>
+    </Tooltip>
+  </div>
+</Story>
