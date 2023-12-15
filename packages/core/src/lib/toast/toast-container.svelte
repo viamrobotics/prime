@@ -26,11 +26,11 @@ $: pageIsVisible.set(visibilityState === 'visible');
 <svelte:document bind:visibilityState />
 
 <div
-  role="alert"
+  role="status"
   aria-label="Toasts"
-  class="pointer-events-none fixed bottom-auto left-1/2 top-auto z-[9999] m-0 -translate-x-1/2 transform p-0"
+  class="pointer-events-none fixed bottom-0 left-1/2 top-auto z-[9999] -translate-x-1/2 transform"
 >
-  <ul>
+  <ul class="flex flex-col items-center gap-2">
     {#each $toasts as { id, pause, resume, ...toast } (id)}
       <li
         in:fly={{ y: 256 }}
@@ -38,6 +38,7 @@ $: pageIsVisible.set(visibilityState === 'visible');
         animate:flip={{ duration: 200 }}
         on:mouseenter={pause}
         on:mouseleave={resume}
+        class="inline-block"
       >
         <ToastItem {...toast} />
       </li>

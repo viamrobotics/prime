@@ -1,20 +1,19 @@
 <script lang="ts">
+import type { ToastVariantType } from './../variants.ts';
 import { ToastBanner } from '$lib/toast';
 import type cx from 'classnames';
-import type { ToastVariantType } from '$lib';
 
 export let variant: ToastVariantType;
-export let progress = 1;
-export let closeable = false;
+export let dismiss = () => {};
 export let extraClasses: cx.Argument = '';
 </script>
 
 <ToastBanner
   {variant}
-  {progress}
-  {closeable}
+  {dismiss}
   cx={extraClasses}
   on:close
 >
   <svelte:fragment slot="message">This is the message.</svelte:fragment>
+  <svelte:fragment slot="action">This is the action button.</svelte:fragment>
 </ToastBanner>

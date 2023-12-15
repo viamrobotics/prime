@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/addon-svelte-csf';
 import {
   Button,
   ToastContainer,
+  ToastVariant,
   provideToast,
   useToast,
 } from '@viamrobotics/prime-core';
@@ -19,23 +20,29 @@ const toast = useToast();
     <ToastContainer />
 
     <div class="flex gap-4 pt-80">
-      <Button on:click={() => toast.neutral('Neutral message')}>
-        Neutral Toast
-      </Button>
-      <Button on:click={() => toast.upload('Upload message')}>
-        Upload Toast
+      <Button
+        variant="success"
+        on:click={() =>
+          toast({
+            message: 'Success message',
+            variant: ToastVariant.Success,
+          })}
+      >
+        Success Toast without action button
       </Button>
       <Button
         variant="success"
-        on:click={() => toast.success('Success message')}
+        on:click={() =>
+          toast({
+            message: 'Success message',
+            variant: ToastVariant.Success,
+            action: {
+              text: 'Action',
+              handler: () => {},
+            },
+          })}
       >
-        Success Toast
-      </Button>
-      <Button
-        variant="success"
-        on:click={() => toast.success('Success message', true)}
-      >
-        Success Toast with close Button
+        Success Toast with action button
       </Button>
     </div>
   </div>

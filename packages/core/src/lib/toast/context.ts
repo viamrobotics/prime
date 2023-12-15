@@ -8,24 +8,19 @@ import {
 } from 'svelte/store';
 
 import { uniqueId } from '$lib/unique-id';
-import { ToastVariant, type ToastVariantType } from '$lib/toast';
 
-import { pausableProgress } from '../notification/pausable-progress';
+import { pausableProgress } from '$lib/notification';
+import type { ToastVariantType } from '.';
 
 /** Internal toast context. */
 export interface ToastContext {
   state: ToastState;
-  toast: Toast;
+  toast: (params: ToastParams) => void;
 }
-
-/** Notification sender. */
-export interface Toast {
-  /** Push a neutral toast with a message. */
-  neutral: (message: string, closeable?: boolean) => void;
-  /** Push an upload toast with a message. */
-  upload: (message: string, closeable?: boolean) => void;
-  /** Push a success toast with a message. */
-  success: (message: string, closeable?: boolean) => void;
+export interface ToastParams {
+  message: string;
+  action?: { text: string; handler: () => unknown } | undefined;
+  variant: ToastVariantType;
 }
 
 /** Internal toast state. */
@@ -38,16 +33,15 @@ export interface ToastState {
 export interface ToastElement {
   id: string;
   message: string;
-  closeable: boolean | undefined;
+  action?: { text: string; handler: () => unknown } | undefined;
   variant: ToastVariantType;
-  progress: Readable<number>;
   pause: () => void;
   resume: () => void;
   dismiss: () => void;
 }
 
 const ToastContextKey = Symbol('toast-context');
-const ToastDuration = 4000;
+const ToastDuration = 400_000_000_000_000;
 
 /** Create the internal toast state and context object. */
 export const createToastContext = (): ToastContext => {
@@ -56,38 +50,34 @@ export const createToastContext = (): ToastContext => {
   const pausedID = writable<string | undefined>();
   const unsubscribeByID = new Map<string, () => void>();
 
-  const add =
-    (variant: ToastVariantType) =>
-    (message: string, closeable: boolean | undefined): void => {
-      const id = uniqueId('toast-element');
-      const isPaused = derived(
-        [pageIsVisible, pausedID],
-        ([$pageIsVisible, $pausedID]) => $pausedID === id || !$pageIsVisible
-      );
+  const add = (params: ToastParams): void => {
+    const id = uniqueId('toast-element');
+    const isPaused = derived(
+      [pageIsVisible, pausedID],
+      ([$pageIsVisible, $pausedID]) => $pausedID === id || !$pageIsVisible
+    );
 
-      const pause = () => setPaused(id, true);
-      const resume = () => setPaused(id, false);
-      const dismiss = () => remove(id);
-      const { progress, unsubscribe } = pausableProgress({
-        isPaused,
-        totalDuration: ToastDuration,
-        onComplete: dismiss,
-      });
+    const pause = () => setPaused(id, true);
+    const resume = () => setPaused(id, false);
+    const dismiss = () => remove(id);
+    const { progress, unsubscribe } = pausableProgress({
+      isPaused,
+      totalDuration: ToastDuration,
+      onComplete: dismiss,
+    });
 
-      const toast = {
-        id,
-        variant,
-        message,
-        progress,
-        closeable,
-        pause,
-        resume,
-        dismiss,
-      };
-
-      unsubscribeByID.set(id, unsubscribe);
-      toasts.set([...get(toasts), toast]);
+    const toast = {
+      id,
+      progress,
+      pause,
+      resume,
+      dismiss,
+      ...params,
     };
+
+    unsubscribeByID.set(id, unsubscribe);
+    toasts.set([...get(toasts), toast]);
+  };
 
   const remove = (id: string) => {
     unsubscribeByID.get(id)?.();
@@ -105,11 +95,7 @@ export const createToastContext = (): ToastContext => {
 
   const context: ToastContext = {
     state: { toasts, pageIsVisible },
-    toast: {
-      neutral: add(ToastVariant.Neutral),
-      upload: add(ToastVariant.Upload),
-      success: add(ToastVariant.Success),
-    },
+    toast: add,
   };
 
   return context;
@@ -131,8 +117,13 @@ const useToastContext = (): ToastContext => {
 };
 
 /** Get access to the toast notifier in a component. */
-export const useToast = (): Toast => {
-  return useToastContext().toast;
+
+export const useToast = (): ((params: ToastParams) => void) => {
+  const context = useToastContext();
+
+  return (params: ToastParams) => {
+    context.toast(params);
+  };
 };
 
 /** Get access to the internal toast state. */

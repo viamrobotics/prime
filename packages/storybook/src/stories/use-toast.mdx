@@ -37,26 +37,27 @@ provideToast();
 To display a toast, use the `useToast` function:
 
 ```ts
-import { useToast } from '@viamrobotics/prime-core';
+import { useToast, ToastVariant } from '@viamrobotics/prime-core';
 
 const doSomethingCrazy = () => {
-  const toast = useNotify();
+  const toast = useToast();
 
-  notify.neutral('Hello, Brooklyn!');
+  toast({ message: 'Hello, Brooklyn!', variant: ToastVariant.Success });
 };
 ```
 
-There are three different types of toast, each with a different styling.
+Right now only different variants of a success toast is supported.
 
 ```ts
 import { useToast } from '@viamrobotics/prime-core';
 
 const doSomethingCrazy = () => {
   const toast = useToast();
+  const exampleHanderFunction = () => void;
 
-  toast.neutral('Plain slice please!');
-  toast.upload('Uploading file!');
-  toast.success('Fuhgeddaboudit!');
+  toast({ message: 'Plain slice please!', variant: ToastVariant.Success });
+  toast({ message: 'Plain slice please!', variant: ToastVariant.Success, action: { text: 'action', handler: exampleHandlerFunction });
+
 };
 ```
 

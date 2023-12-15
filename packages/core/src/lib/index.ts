@@ -51,7 +51,7 @@ export {
   ToastContainer,
   provideToast,
   useToast,
-  type Toast,
+  ToastVariant,
   type ToastVariantType,
 } from './toast';
 
