@@ -55,6 +55,9 @@ jobs:
       - name: Install 🔧
         uses: viamrobotics/js-config/.github/actions/setup@0006127efb3f62669f662ca31c555a49a034935e
 
+      - name: Build 🏗️
+        run: pnpm run build
+
       - name: Install Playwright Browsers
         run: pnpm -C packages/legacy playwright-install --with-deps
 
