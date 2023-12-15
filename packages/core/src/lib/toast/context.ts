@@ -41,7 +41,7 @@ export interface ToastElement {
 }
 
 const ToastContextKey = Symbol('toast-context');
-const ToastDuration = 400_000_000_000_000;
+const ToastDuration = 4000;
 
 /** Create the internal toast state and context object. */
 export const createToastContext = (): ToastContext => {
