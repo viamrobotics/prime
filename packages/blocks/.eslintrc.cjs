@@ -19,9 +19,8 @@ module.exports = {
     node: true,
   },
   rules: {
-    // @todo(mp APP-2482): move to js-config
-    'sonarjs/no-duplicate-string': 'off',
-    'no-undef-init': 'off',
-    'unicorn/no-useless-undefined': 'off',
+    // TODO(mc, 2023-12-15): remove overrides, fix issues
+    '@typescript-eslint/no-non-null-assertion': 'warn',
+    'sonarjs/no-duplicate-string': 'warn',
   },
 };

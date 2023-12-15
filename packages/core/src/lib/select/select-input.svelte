@@ -69,7 +69,7 @@ $: errorClasses =
   >
     <Icon
       name="chevron-down"
-      cx={['text-gray-6 transition cursor-pointer', { 'rotate-180': isOpen }]}
+      cx={['cursor-pointer text-gray-6 transition', { 'rotate-180': isOpen }]}
     />
   </button>
 </div>

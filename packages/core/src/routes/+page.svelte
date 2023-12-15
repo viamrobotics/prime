@@ -41,7 +41,7 @@ import {
   Modal,
   CodeSnippet,
 } from '$lib';
-import { uniqueId } from 'lodash';
+import { uniqueId } from 'lodash-es';
 
 provideNotify();
 
