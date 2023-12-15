@@ -37,8 +37,10 @@ const toast = useToast();
             message: 'Success message',
             variant: ToastVariant.Success,
             action: {
-              text: 'Action',
-              handler: () => {},
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
             },
           })}
       >

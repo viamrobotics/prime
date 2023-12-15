@@ -21,7 +21,6 @@ describe('Toast', () => {
     const dismissMock = vi.fn();
     render(Toast, {
       variant: 'success',
-      dismiss: dismissMock,
     });
 
     await fireEvent.click(screen.getByLabelText(/Dismiss toast/iu));

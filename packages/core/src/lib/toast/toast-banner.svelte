@@ -18,12 +18,10 @@ let icon: IconName | null = null;
 let iconClasses = '';
 
 $: {
-  switch (variant) {
-    case ToastVariant.Success: {
-      icon = 'check-circle';
-      iconClasses = 'text-success-dark';
-      break;
-    }
+  // TODO: use a `switch` statement when extending the variants
+  if (variant === ToastVariant.Success) {
+    icon = 'check-circle';
+    iconClasses = 'text-success-dark';
   }
 }
 </script>
