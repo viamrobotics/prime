@@ -2,13 +2,11 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import { Button, Icon, type ToastVariantType } from '$lib';
+import { Button, Icon } from '$lib';
 import { iconName, iconClasses } from './variants';
 
 /** The message displayed on the toast */
 export let message: string;
-/** The type of toast banner to be displayed to the user */
-export let variant: ToastVariantType;
 /** Function called when the close button is clicked */
 export let dismiss: () => void;
 /** The action performed on the button */
