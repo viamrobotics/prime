@@ -117,13 +117,8 @@ const useToastContext = (): ToastContext => {
 };
 
 /** Get access to the toast notifier in a component. */
-
 export const useToast = (): ((params: ToastParams) => void) => {
-  const context = useToastContext();
-
-  return (params: ToastParams) => {
-    context.toast(params);
-  };
+  return useToastContext().toast;
 };
 
 /** Get access to the internal toast state. */

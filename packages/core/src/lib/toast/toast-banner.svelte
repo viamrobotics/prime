@@ -5,10 +5,15 @@ import cx from 'classnames';
 import { Button, Icon, type IconName, type ToastVariantType } from '$lib';
 import { ToastVariant } from './variants';
 
+/** The message displayed on the toast */
+export let message: string;
 /** The type of toast banner to be displayed to the user */
 export let variant: ToastVariantType;
 /** Function called when the close button is clicked */
 export let dismiss: () => void;
+/** The action performed on the button */
+export let action: { text: string; handler: () => unknown } | undefined =
+  undefined;
 
 /** Additional CSS classes to pass to the banner. */
 let extraClasses: cx.Argument = '';
@@ -28,7 +33,7 @@ $: {
 
 <div
   class={cx(
-    'relative flex w-auto items-center gap-2 border bg-medium p-3 text-sm',
+    'pointer-events-auto relative flex w-auto items-center gap-2 border bg-medium p-3 text-sm',
     extraClasses
   )}
 >
@@ -38,16 +43,22 @@ $: {
         size="lg"
         name={icon}
         cx={iconClasses}
+        role="img"
+        aria-hidden={false}
+        aria-label="success"
       />
     </div>
   {/if}
 
-  <div class="mr-auto"><slot name="message" /></div>
+  <div class="mr-auto">{message}</div>
 
-  {#if $$slots.action}
-    <div class="text-sm font-medium hover:underline">
-      <slot name="action" />
-    </div>
+  {#if action}
+    <button
+      on:click={action.handler}
+      aria-label="Perform action"
+    >
+      <span class="text-sm font-medium hover:underline">{action.text}</span>
+    </button>
   {/if}
   <Button
     variant="ghost"

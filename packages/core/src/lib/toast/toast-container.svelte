@@ -15,7 +15,7 @@ import { fade, fly } from 'svelte/transition';
 import { flip } from 'svelte/animate';
 
 import { useToastState } from './context';
-import ToastItem from './toast-item.svelte';
+import ToastBanner from './toast-banner.svelte';
 
 const { toasts, pageIsVisible } = useToastState();
 let visibilityState: DocumentVisibilityState;
@@ -40,7 +40,7 @@ $: pageIsVisible.set(visibilityState === 'visible');
         on:mouseleave={resume}
         class="inline-block"
       >
-        <ToastItem {...toast} />
+        <ToastBanner {...toast} />
       </li>
     {/each}
   </ul>

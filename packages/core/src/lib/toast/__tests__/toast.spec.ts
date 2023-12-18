@@ -1,5 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { act, render, screen, within } from '@testing-library/svelte';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from '@testing-library/svelte';
 
 import { createToastContext, type ToastContext } from '../context';
 import ToastSpec from './toast.spec.svelte';
@@ -28,24 +34,34 @@ describe('toast', () => {
 
     const status = screen.getByRole('status');
     const toast = within(status).getByRole('listitem');
+    const icon = screen.getByRole('img', { name: /success/iu });
 
     within(toast).getByRole('button', { name: /dismiss/iu });
     expect(toast).toHaveTextContent(/This is a success toast message/iu);
+    expect(icon).toHaveClass('text-success-dark');
   });
 
-  it('should display proper toast with style for success variant', async () => {
+  it('should display a toast with an action button when action is provided', async () => {
+    const actionHandler = vi.fn();
     await act(() => {
       context.toast({
-        message: 'abc',
+        message: 'This is a success toast message',
         variant: ToastVariant.Success,
+        action: {
+          text: 'Action text',
+          handler: actionHandler,
+        },
       });
     });
 
     const status = screen.getByRole('status');
     const toast = within(status).getByRole('listitem');
+    const actionButton = screen.getByRole('button', {
+      name: /perform action/iu,
+    });
+    await fireEvent.click(actionButton);
 
-    within(toast).getByRole('button', { name: /dismiss/iu });
-    expect(status.querySelector('svg')).toBeVisible();
-    expect(toast).toHaveTextContent(/abc/iu);
+    expect(toast).toHaveTextContent(/action text/iu);
+    expect(actionHandler).toHaveBeenCalled();
   });
 });
