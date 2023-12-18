@@ -98,7 +98,7 @@ $: {
 }
 
 $: pips = Array.from({ length: pipCount + 1 }).map((_, i) => pipVal(i));
-$: positionIndicator = () => {
+$: positionIndicator = (currentValue: number) => {
   if (!datalist) {
     return;
   }
@@ -107,20 +107,14 @@ $: positionIndicator = () => {
   const datalistWidth = datalist.clientWidth - 20;
 
   // Adding 10px to center on thumb (width of 20px)
-  const left = ((value - min) / (max - min)) * datalistWidth + 10;
+  const left = ((currentValue - min) / (max - min)) * datalistWidth + 10;
   indicatorPosition.set(left);
 };
 
-/*
- * TODO (DTCurrie): The below is valid syntax in svelte to invoke a function on a variable change, we should
- * update our linters to allow this in svelte files, unless we hate it then we can update `positionIndicator`
- * to accept a `currentValue` argument and pass `value` to it here. That will trigger whenever `value` changes.
- */
-// eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-confusing-void-expression, no-sequences
-$: value, positionIndicator();
+$: positionIndicator(value);
 </script>
 
-<svelte:window on:resize={positionIndicator} />
+<svelte:window on:resize={() => positionIndicator(value)} />
 
 <div class={cx('grid w-full grid-cols-[3rem_1fr] gap-2', extraClasses)}>
   <NumericInput
