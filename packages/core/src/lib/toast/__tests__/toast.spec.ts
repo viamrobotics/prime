@@ -1,11 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  within,
-} from '@testing-library/svelte';
+import { act, render, screen, within } from '@testing-library/svelte';
+import userEvent from '@testing-library/user-event';
 
 import { createToastContext, type ToastContext } from '../context';
 import ToastSpec from './toast.spec.svelte';
@@ -43,6 +38,7 @@ describe('toast', () => {
 
   it('should display a toast with an action button when action is provided', async () => {
     const actionHandler = vi.fn();
+    const user = userEvent.setup();
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
@@ -59,7 +55,7 @@ describe('toast', () => {
     const actionButton = screen.getByRole('button', {
       name: /perform action/iu,
     });
-    await fireEvent.click(actionButton);
+    await user.click(actionButton);
 
     expect(toast).toHaveTextContent(/action text/iu);
     expect(actionHandler).toHaveBeenCalled();

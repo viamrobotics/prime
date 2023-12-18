@@ -28,7 +28,7 @@ $: pageIsVisible.set(visibilityState === 'visible');
 <div
   role="status"
   aria-label="Toasts"
-  class="pointer-events-none fixed bottom-0 left-1/2 top-auto z-[9999] -translate-x-1/2 transform"
+  class="pointer-events-auto fixed bottom-0 left-1/2 top-auto z-max -translate-x-1/2 transform overflow-hidden"
 >
   <ul class="flex flex-col items-center gap-2">
     {#each $toasts as { id, pause, resume, ...toast } (id)}
@@ -38,7 +38,6 @@ $: pageIsVisible.set(visibilityState === 'visible');
         animate:flip={{ duration: 200 }}
         on:mouseenter={pause}
         on:mouseleave={resume}
-        class="inline-block"
       >
         <ToastBanner {...toast} />
       </li>
