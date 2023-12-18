@@ -98,25 +98,23 @@ describe('Range Input', () => {
    * See:
    * https://github.com/testing-library/user-event/issues/1066
    * https://github.com/testing-library/user-event/issues/1067
-   *
-   *
-   * it('It should slide at increments of step', async () => {
-   *   render(RangeInput, {
-   *     max: 100,
-   *     step: 5,
-   *   });
-   *
-   *   const slider = screen.getByRole<HTMLInputElement>('slider');
-   *
-   *   await fireEvent.keyDown(slider, { key: 'ArrowRight' });
-   *
-   *   expect(slider.valueAsNumber).toBe(5);
-   *
-   *   await fireEvent.keyDown(slider, { key: 'ArrowUp' });
-   *
-   *   expect(slider.valueAsNumber).toBe(10);
-   * });
    */
+  it.skip('It should slide at increments of step', async () => {
+    render(RangeInput, {
+      max: 100,
+      step: 5,
+    });
+
+    const slider = screen.getByRole<HTMLInputElement>('slider');
+
+    await fireEvent.keyDown(slider, { key: 'ArrowRight' });
+
+    expect(slider.valueAsNumber).toBe(5);
+
+    await fireEvent.keyDown(slider, { key: 'ArrowUp' });
+
+    expect(slider.valueAsNumber).toBe(10);
+  });
 
   it('Emits the input and change events when the input is changed', async () => {
     const { component } = render(RangeInput);

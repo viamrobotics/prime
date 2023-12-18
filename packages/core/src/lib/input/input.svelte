@@ -29,10 +29,10 @@ import cx from 'classnames';
 export let value: string | number | undefined = '';
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly = false as boolean | undefined;
+export let readonly = false;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled = false as boolean | undefined;
+export let disabled = false;
 
 /** The state of the input (info, warn, error, success), if any. */
 export let state: InputState | undefined = 'none';
@@ -47,7 +47,7 @@ export { extraClasses as cx };
 $: isInfo = state === 'info';
 $: isWarn = state === 'warn';
 $: isError = state === 'error';
-$: isInputReadOnly = disabled === true || readonly === true;
+$: isInputReadOnly = disabled || readonly;
 $: handleDisabled = preventHandler(isInputReadOnly);
 $: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 

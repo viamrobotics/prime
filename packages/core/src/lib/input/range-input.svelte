@@ -30,10 +30,10 @@ export let step = 1;
 export let value: number = min;
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly = false as boolean | undefined;
+export let readonly = false;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled = false as boolean | undefined;
+export let disabled = false;
 
 /**
  * Whether to render a datalist of values, defaults to true. The number of
@@ -63,7 +63,7 @@ $: suffixValue = suffix ?? '';
 $: pipStep = hasExcessivePips ? excessivePipsStep : step;
 $: pipVal = (val: number): number => min + val * step * pipStep;
 
-$: isInputReadOnly = disabled === true || readonly === true;
+$: isInputReadOnly = disabled || readonly;
 $: handleDisabled = preventHandler(isInputReadOnly);
 $: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 

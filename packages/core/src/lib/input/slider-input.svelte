@@ -37,10 +37,10 @@ export let min = Number.NEGATIVE_INFINITY;
 export let max = Number.POSITIVE_INFINITY;
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly = false as boolean | undefined;
+export let readonly = false;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled = false as boolean | undefined;
+export let disabled = false;
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
@@ -70,7 +70,7 @@ $: {
 }
 
 $: isNumber = type === 'number';
-$: isButtonDisabled = readonly === true || disabled === true;
+$: isButtonDisabled = readonly || disabled;
 $: handleDisabled = preventHandler(isButtonDisabled);
 
 $: handlePointerMove = (event: PointerEvent) => {
