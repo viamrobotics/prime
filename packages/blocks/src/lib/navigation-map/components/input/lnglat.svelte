@@ -7,7 +7,7 @@ import { LngLat } from 'maplibre-gl';
 export let label: string | undefined = undefined;
 
 /** Whether the inputs are readonly. */
-export let readonly: boolean | undefined = undefined;
+export let readonly = false;
 
 /** The longitude value. */
 export let lng: number | undefined = undefined;
