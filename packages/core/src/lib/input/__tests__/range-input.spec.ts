@@ -67,14 +67,36 @@ describe('Range Input', () => {
     });
 
     const slider = screen.getByRole<HTMLInputElement>('slider');
+    const input: HTMLInputElement = screen.getByRole('spinbutton');
 
     await fireEvent.change(slider, { target: { value: 50 } });
 
     expect(slider.valueAsNumber).toBe(50);
+    expect(input.valueAsNumber).toBe(50);
 
     await fireEvent.change(slider, { target: { value: -50 } });
 
     expect(slider.valueAsNumber).toBe(0);
+    expect(input.valueAsNumber).toBe(0);
+  });
+
+  it('It should not allow setting the value below min', async () => {
+    render(RangeInput, {
+      min: 0,
+    });
+
+    const slider = screen.getByRole<HTMLInputElement>('slider');
+    const input: HTMLInputElement = screen.getByRole('spinbutton');
+
+    await fireEvent.input(input, { target: { value: 50 } });
+
+    expect(slider.valueAsNumber).toBe(50);
+    expect(input.valueAsNumber).toBe(50);
+
+    await fireEvent.input(input, { target: { value: -50 } });
+
+    expect(slider.valueAsNumber).toBe(0);
+    expect(input.valueAsNumber).toBe(0);
   });
 
   it('It should not allow sliding above max', async () => {
@@ -83,10 +105,26 @@ describe('Range Input', () => {
     });
 
     const slider = screen.getByRole<HTMLInputElement>('slider');
+    const input: HTMLInputElement = screen.getByRole('spinbutton');
 
     await fireEvent.change(slider, { target: { value: 150 } });
 
     expect(slider.valueAsNumber).toBe(100);
+    expect(input.valueAsNumber).toBe(100);
+  });
+
+  it('It should not allow setting the value above max', async () => {
+    render(RangeInput, {
+      max: 100,
+    });
+
+    const slider = screen.getByRole<HTMLInputElement>('slider');
+    const input: HTMLInputElement = screen.getByRole('spinbutton');
+
+    await fireEvent.input(input, { target: { value: 150 } });
+
+    expect(slider.valueAsNumber).toBe(100);
+    expect(input.valueAsNumber).toBe(100);
   });
 
   /**

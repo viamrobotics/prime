@@ -112,6 +112,12 @@ $: positionIndicator = (currentValue: number) => {
 };
 
 $: positionIndicator(value);
+
+$: if (value > max) {
+  value = max;
+} else if (value < min) {
+  value = min;
+}
 </script>
 
 <svelte:window on:resize={() => positionIndicator(value)} />
