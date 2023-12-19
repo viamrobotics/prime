@@ -1,16 +1,8 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
-import {
-  Button,
-  ToastContainer,
-  ToastVariant,
-  provideToast,
-  useToast,
-} from '@viamrobotics/prime-core';
+import { Button, ToastContainer, provideToast } from '@viamrobotics/prime-core';
 
-provideToast();
-
-const toast = useToast();
+const toast = provideToast();
 </script>
 
 <Meta title="APIs/useToast" />
@@ -25,7 +17,6 @@ const toast = useToast();
         on:click={() =>
           toast({
             message: 'Success message',
-            variant: ToastVariant.Success,
           })}
       >
         Success Toast without action button
@@ -35,7 +26,6 @@ const toast = useToast();
         on:click={() =>
           toast({
             message: 'Success message',
-            variant: ToastVariant.Success,
             action: {
               text: 'action',
               handler: () => {

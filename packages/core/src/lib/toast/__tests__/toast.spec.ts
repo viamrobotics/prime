@@ -23,7 +23,6 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
-        variant: ToastVariant.Success,
       });
     });
 

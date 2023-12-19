@@ -28,7 +28,7 @@ $: pageIsVisible.set(visibilityState === 'visible');
 <div
   role="status"
   aria-label="Toasts"
-  class="pointer-events-auto fixed bottom-0 left-1/2 top-auto z-max -translate-x-1/2 transform overflow-hidden"
+  class="pointer-events-auto fixed bottom-0 left-1/2 top-auto z-max -translate-x-1/2 transform overflow-hidden p-1.5"
 >
   <ul class="flex flex-col items-center gap-2">
     {#each $toasts as { id, pause, resume, ...toast } (id)}
