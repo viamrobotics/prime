@@ -17,23 +17,23 @@ jobs:
       - name: Install 🔧
         uses: viamrobotics/js-config/.github/actions/setup@0006127efb3f62669f662ca31c555a49a034935e
 
+      - name: Install Playwright Browsers
+        run: pnpm -C packages/legacy playwright-install --with-deps
+
       - name: Build 🏗️
         run: pnpm run build
 
       - name: Lint and type check 💅
         run: pnpm run check
 
-      - name: Install Playwright Browsers
-        run: pnpm -C packages/legacy playwright-install --with-deps
+      - name: Run tests
+        run: pnpm run test
 
       - name: Upload npm @viamrobotics/prime artifacts
         uses: actions/upload-artifact@v3
         with:
           name: npm-legacy-dist
           path: packages/legacy/dist
-
-      - name: Run tests
-        run: pnpm run test
 
       - name: Upload npm @viamrobotics/prime-core artifacts
         uses: actions/upload-artifact@v3
