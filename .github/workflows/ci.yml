@@ -62,7 +62,7 @@ jobs:
 
   deploy-npm:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: [build, test]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -97,7 +97,7 @@ jobs:
 
   deploy-pages:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: [build, test]
+    needs: build
     runs-on: ubuntu-latest
 
     permissions:
