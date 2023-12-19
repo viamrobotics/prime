@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import { createToastContext, type ToastContext } from '../context';
 import ToastSpec from './toast.spec.svelte';
-import { ToastVariant } from '..';
+import { ToastVariant } from '../variants';
 
 describe('toast', () => {
   let context: ToastContext;
