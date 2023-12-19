@@ -12,10 +12,12 @@ import { uniqueId } from '$lib/unique-id';
 import { pausableProgress } from '$lib/notification';
 import type { ToastVariantType } from '.';
 
+export type Toast = (params: ToastParams) => void;
+
 /** Internal toast context. */
 export interface ToastContext {
   state: ToastState;
-  toast: (params: ToastParams) => void;
+  toast: Toast
 }
 export interface ToastParams {
   message: string;
@@ -102,8 +104,9 @@ export const createToastContext = (): ToastContext => {
 };
 
 /** Provide toast state to a component tree. */
-export const provideToast = (context = createToastContext()): void => {
+export const provideToast = (context = createToastContext()): Toast => {
   setContext(ToastContextKey, context);
+  return context.toast
 };
 
 const useToastContext = (): ToastContext => {
@@ -117,7 +120,7 @@ const useToastContext = (): ToastContext => {
 };
 
 /** Get access to the toast notifier in a component. */
-export const useToast = (): ((params: ToastParams) => void) => {
+export const useToast = (): Toast => {
   return useToastContext().toast;
 };
 
