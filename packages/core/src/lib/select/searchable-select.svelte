@@ -224,7 +224,7 @@ $: {
         <SelectMenuButton
           icon={button.icon}
           cx={[
-            'border-light border-t',
+            'border-t border-light',
             {
               'bg-light': $navigationIndex === searchedOptions.length,
             },

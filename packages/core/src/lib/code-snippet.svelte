@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 For rendering readonly blocks of code. Uses `prism` for syntax highlighting:
 
 https://prismjs.com
@@ -17,7 +17,7 @@ https://prismjs.com
   context="module"
   lang="ts"
 >
-import { highlightElement, plugins } from 'prismjs';
+import Prism from 'prismjs';
 import PrismPackage from 'prismjs/package.json';
 import 'prism-themes/themes/prism-vs.min.css';
 
@@ -39,7 +39,7 @@ import { createEventDispatcher, onMount } from 'svelte';
 import cx from 'classnames';
 
 import { IconButton, type IconName, useTimeout } from '$lib';
-import { escape } from 'lodash';
+import { escape } from 'lodash-es';
 
 /**
  * The language to use for syntax highlighting. Must be a language supported by
@@ -118,7 +118,7 @@ const highlight = () => {
      * `code` so it can rescanned for highlighting from the raw.
      */
     element.innerHTML = escape(code);
-    highlightElement(element);
+    Prism.highlightElement(element);
   }
 };
 
@@ -138,7 +138,7 @@ onMount(async () => {
     );
 
     // Make sure the autoloader knows where to find our languages
-    (plugins.autoloader as { languages_path: string }).languages_path =
+    (Prism.plugins.autoloader as { languages_path: string }).languages_path =
       grammarsPath;
 
     // Do the initial highlighting

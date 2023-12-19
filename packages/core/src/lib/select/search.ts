@@ -1,4 +1,4 @@
-import escapeRegExp from 'lodash/escapeRegExp';
+import { escapeRegExp } from 'lodash-es';
 
 export type SortOptions = 'default' | 'reduce' | 'off';
 

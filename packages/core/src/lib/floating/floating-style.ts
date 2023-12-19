@@ -13,7 +13,7 @@ import {
 } from '@floating-ui/dom';
 
 import { derived, writable, type Readable } from 'svelte/store';
-import noop from 'lodash/noop';
+import { noop } from 'lodash-es';
 
 export type {
   Placement as FloatingPlacement,

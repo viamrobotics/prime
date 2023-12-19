@@ -1,8 +1,6 @@
-import { expect, afterEach, vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/svelte';
-import matchers from '@testing-library/jest-dom/matchers';
-
-expect.extend(matchers);
+import '@testing-library/jest-dom/vitest';
 
 /**
  * `Element.scrollIntoView` is not implemented/stubbed in `jsdom` so we stub it
