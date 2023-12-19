@@ -68,12 +68,12 @@ $: handleDisabled = preventHandler(isInputReadOnly);
 $: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 
 $: inputClasses = cx(
-  'slider-track-w-full slider-thumb-w-5 slider-thumb-h-5 slider-thumb-light',
-  'slider-thumb-border slider-track-h-0.5 peer h-7.5 w-full focus:outline-none',
+  'slider-track-w-full slider-thumb-light slider-thumb-w-5 slider-thumb-h-5',
+  'peer h-7.5 w-full slider-track-h-0.5 slider-thumb-border focus:outline-none',
   !isInputReadOnly &&
-    'slider-track-gray-4 focus:slider-track-gray-5 slider-track-cursor-pointer slider-thumb-cursor-pointer',
+    'slider-track-gray-4 slider-track-cursor-pointer slider-thumb-cursor-pointer focus:slider-track-gray-5',
   isInputReadOnly &&
-    'slider-track-disabled-light slider-track-cursor-not-allowed slider-thumb-cursor-not-allowed cursor-not-allowed'
+    'cursor-not-allowed slider-track-disabled-light slider-track-cursor-not-allowed slider-thumb-cursor-not-allowed'
 );
 
 $: indicatorClasses = cx(
