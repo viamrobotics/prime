@@ -23,7 +23,6 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
-        variant: ToastVariant.Success,
       });
     });
 
@@ -42,7 +41,6 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
-        variant: ToastVariant.Success,
         action: {
           text: 'Action text',
           handler: actionHandler,
