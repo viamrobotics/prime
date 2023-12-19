@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import { createToastContext, type ToastContext } from '../context';
 import ToastSpec from './toast.spec.svelte';
+import { ToastVariant } from '..';
 
 describe('toast', () => {
   let context: ToastContext;
@@ -40,6 +41,7 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
+        variant: ToastVariant.Success,
         action: {
           text: 'Action text',
           handler: actionHandler,
