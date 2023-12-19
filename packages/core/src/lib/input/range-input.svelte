@@ -13,24 +13,16 @@ For tweakable numeric user inputs that have minimum and maximum values.
   lang="ts"
   context="module"
 >
-import cx from 'classnames';
-
 const SLIDER_CLASSES =
   'slider-track-w-full slider-track-h-0.5 slider-thumb-light slider-thumb-w-5 slider-thumb-h-5 slider-thumb-border';
 
-const indicatorClasses = cx(
-  'invisible absolute bottom-9 -translate-x-1/2 -translate-y-1/2 select-none',
-  'whitespace-nowrap bg-gray-9 px-1.5 py-1 text-center text-xs text-white',
-  'transition duration-200 after:absolute after:bottom-[-2px]',
-  'after:left-[calc(50%-2px)] after:h-0 after:w-0 after:border-x-[2px]',
-  'after:border-b-[0] after:border-t-[2px] after:border-solid',
-  'after:border-x-transparent after:border-b-transparent after:border-t-gray-9',
-  'peer-focus:visible peer-focus:-translate-y-1.5'
-);
+const INDICATOR_CLASSES =
+  'invisible absolute bottom-9 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap bg-gray-9 px-1.5 py-1 text-center text-xs text-white transition duration-200 after:absolute after:bottom-[-2px] after:left-[calc(50%-2px)] after:h-0 after:w-0 after:border-x-[2px] after:border-b-[0] after:border-t-[2px] after:border-solid after:border-x-transparent after:border-b-transparent after:border-t-gray-9 peer-focus:visible peer-focus:-translate-y-1.5';
 </script>
 
 <script lang="ts">
 import { writable } from 'svelte/store';
+import cx from 'classnames';
 
 import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 import { uniqueId } from '$lib/unique-id';
@@ -178,7 +170,7 @@ $: if (value > max) {
 
     {#if !isInputReadOnly}
       <span
-        class={indicatorClasses}
+        class={INDICATOR_CLASSES}
         style="left: {$indicatorPosition}px"
       >
         {value}{suffixValue}
