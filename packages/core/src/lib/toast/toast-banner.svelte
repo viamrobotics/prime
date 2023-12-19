@@ -20,7 +20,7 @@ export { extraClasses as cx };
 
 <div
   class={cx(
-    'relative flex w-auto items-center gap-2 border bg-medium p-3 text-sm',
+    'relative flex w-auto items-center gap-2 border bg-medium p-2 text-sm',
     extraClasses
   )}
 >
