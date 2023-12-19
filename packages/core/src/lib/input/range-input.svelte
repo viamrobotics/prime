@@ -9,17 +9,6 @@ For tweakable numeric user inputs that have minimum and maximum values.
 -->
 <svelte:options immutable />
 
-<script
-  lang="ts"
-  context="module"
->
-const SLIDER_CLASSES =
-  'slider-track-w-full slider-track-h-0.5 slider-thumb-light slider-thumb-w-5 slider-thumb-h-5 slider-thumb-border';
-
-const INDICATOR_CLASSES =
-  'invisible absolute bottom-9 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap bg-gray-9 px-1.5 py-1 text-center text-xs text-white transition duration-200 after:absolute after:bottom-[-2px] after:left-[calc(50%-2px)] after:h-0 after:w-0 after:border-x-[2px] after:border-b-[0] after:border-t-[2px] after:border-solid after:border-x-transparent after:border-b-transparent after:border-t-gray-9 peer-focus:visible peer-focus:-translate-y-1.5';
-</script>
-
 <script lang="ts">
 import { writable } from 'svelte/store';
 import cx from 'classnames';
@@ -81,7 +70,7 @@ $: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 
 $: inputClasses = cx(
   'peer h-7.5 w-full focus:outline-none',
-  SLIDER_CLASSES,
+  'slider-track-w-full slider-track-h-0.5 slider-thumb-light slider-thumb-w-5 slider-thumb-h-5 slider-thumb-border',
   !isInputReadOnly &&
     'slider-track-gray-4 slider-track-cursor-pointer slider-thumb-cursor-pointer focus:slider-track-gray-5',
   isInputReadOnly &&
@@ -170,7 +159,7 @@ $: if (value > max) {
 
     {#if !isInputReadOnly}
       <span
-        class={INDICATOR_CLASSES}
+        class="invisible absolute bottom-9 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap bg-gray-9 px-1.5 py-1 text-center text-xs text-white transition duration-200 after:absolute after:bottom-[-2px] after:left-[calc(50%-2px)] after:h-0 after:w-0 after:border-x-[2px] after:border-b-[0] after:border-t-[2px] after:border-solid after:border-x-transparent after:border-b-transparent after:border-t-gray-9 peer-focus:visible peer-focus:-translate-y-1.5"
         style="left: {$indicatorPosition}px"
       >
         {value}{suffixValue}
