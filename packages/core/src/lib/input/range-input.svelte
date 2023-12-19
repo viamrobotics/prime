@@ -9,13 +9,33 @@ For tweakable numeric user inputs that have minimum and maximum values.
 -->
 <svelte:options immutable />
 
-<script lang="ts">
-import { writable } from 'svelte/store';
+<script
+  lang="ts"
+  context="module"
+>
 import cx from 'classnames';
 
+const SLIDER_CLASSES =
+  'slider-track-w-full slider-track-h-0.5 slider-thumb-light slider-thumb-w-5 slider-thumb-h-5 slider-thumb-border';
+
+const indicatorClasses = cx(
+  'invisible absolute bottom-9 -translate-x-1/2 -translate-y-1/2 select-none',
+  'whitespace-nowrap bg-gray-9 px-1.5 py-1 text-center text-xs text-white',
+  'transition duration-200 after:absolute after:bottom-[-2px]',
+  'after:left-[calc(50%-2px)] after:h-0 after:w-0 after:border-x-[2px]',
+  'after:border-b-[0] after:border-t-[2px] after:border-solid',
+  'after:border-x-transparent after:border-b-transparent after:border-t-gray-9',
+  'peer-focus:visible peer-focus:-translate-y-1.5'
+);
+</script>
+
+<script lang="ts">
+import { writable } from 'svelte/store';
+
 import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
-import NumericInput from './numeric-input.svelte';
 import { uniqueId } from '$lib/unique-id';
+
+import NumericInput from './numeric-input.svelte';
 
 /** The minimum allowed value. */
 export let min = 0;
@@ -68,22 +88,12 @@ $: handleDisabled = preventHandler(isInputReadOnly);
 $: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 
 $: inputClasses = cx(
-  'slider-track-w-full slider-thumb-light slider-thumb-w-5 slider-thumb-h-5',
-  'peer h-7.5 w-full slider-track-h-0.5 slider-thumb-border focus:outline-none',
+  'peer h-7.5 w-full focus:outline-none',
+  SLIDER_CLASSES,
   !isInputReadOnly &&
     'slider-track-gray-4 slider-track-cursor-pointer slider-thumb-cursor-pointer focus:slider-track-gray-5',
   isInputReadOnly &&
     'cursor-not-allowed slider-track-disabled-light slider-track-cursor-not-allowed slider-thumb-cursor-not-allowed'
-);
-
-$: indicatorClasses = cx(
-  'invisible absolute bottom-9 -translate-x-1/2 -translate-y-1/2 select-none',
-  'whitespace-nowrap bg-gray-9 px-1.5 py-1 text-center text-xs text-white',
-  'transition duration-200 after:absolute after:-bottom-[2px]',
-  'after:left-[calc(50%-2px)] after:h-0 after:w-0 after:border-x-[2px]',
-  'after:border-b-[0] after:border-t-[2px] after:border-solid',
-  'after:border-x-transparent after:border-b-transparent after:border-t-gray-9',
-  'peer-focus:visible peer-focus:-translate-y-1.5'
 );
 
 let pipCount = 0;

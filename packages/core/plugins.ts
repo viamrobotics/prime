@@ -26,7 +26,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('width') ?? {} }
+      { values: theme('width') }
     );
 
     matchUtilities(
@@ -104,7 +104,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('colors') ?? {} }
+      { values: theme('colors') }
     );
 
     matchUtilities(
@@ -121,7 +121,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('width') ?? {} }
+      { values: theme('width') }
     );
 
     matchUtilities(
@@ -138,7 +138,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('height') ?? {} }
+      { values: theme('height') }
     );
 
     matchUtilities(
@@ -155,7 +155,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('cursor') ?? {} }
+      { values: theme('cursor') }
     );
 
     matchUtilities(
@@ -193,7 +193,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('width') ?? {} }
+      { values: theme('width') }
     );
 
     matchUtilities(
@@ -211,7 +211,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('height') ?? {} }
+      { values: theme('height') }
     );
 
     /*
@@ -232,7 +232,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('borderWidth') ?? {} }
+      { values: theme('borderWidth') }
     );
 
     matchUtilities(
@@ -315,7 +315,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('cursor') ?? {} }
+      { values: theme('cursor') }
     );
   }),
 ] satisfies OptionalConfig['plugins'];
