@@ -85,6 +85,7 @@ export const paths = {
   send: MDI.mdiSend,
   'shield-key-outline': MDI.mdiShieldKeyOutline,
   'stop-circle-outline': MDI.mdiStopCircleOutline,
+  sync: MDI.mdiSync,
   tools: MDI.mdiTools,
   'trash-can-outline': MDI.mdiTrashCanOutline,
   twitter: MDI.mdiTwitter,
