@@ -1,0 +1,70 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as ToastStories from './use-toast.stories.svelte';
+
+<Meta title='APIs/useToast' />
+
+# useToast
+
+Components and an API for displaying user toast messages.
+
+## Setup
+
+To use toasts, provide the toast context somewhere high your component tree along with the `ToastContainer` component.
+
+The root layout component is probably the best place to set up the context.
+
+```svelte
+<!-- +layout.svelte -->
+<script lang="ts">
+import { ToastContainer, provideToast } from '@viamrobotics/prime-core';
+
+import PageRoot from '$lib/layout/page-root.svelte';
+import PageContent from '$lib/layout/page-content.svelte';
+
+provideToast();
+</script>
+
+<PageRoot>
+  <PageContent>
+    <slot />
+  </PageContent>
+  <ToastContainer />
+</PageRoot>
+```
+
+## Usage
+
+To display a toast, use the `useToast` function:
+
+```ts
+import { useToast, ToastVariant } from '@viamrobotics/prime-core';
+
+const doSomethingCrazy = () => {
+  const toast = useToast();
+
+  toast({ message: 'Hello, Brooklyn!', variant: ToastVariant.Success });
+};
+```
+
+Right now only different variants of a success toast is supported.
+
+```ts
+import { useToast } from '@viamrobotics/prime-core';
+
+const doSomethingCrazy = () => {
+  const toast = useToast();
+  const exampleHanderFunction = () => void;
+
+  toast({ message: 'Plain slice please!', variant: ToastVariant.Success });
+  toast({ message: 'Plain slice please!', variant: ToastVariant.Success, action: { text: 'action', handler: exampleHandlerFunction });
+
+};
+```
+
+```ts
+import { toast } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={ToastStories.Basic} />
+</Canvas>
