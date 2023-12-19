@@ -1,8 +1,6 @@
-import { expect, afterEach } from 'vitest';
+import { afterEach } from 'vitest';
 import { cleanup } from '@testing-library/svelte';
-import matchers from '@testing-library/jest-dom/matchers';
-
-expect.extend(matchers);
+import '@testing-library/jest-dom/vitest';
 
 afterEach(() => {
   cleanup();

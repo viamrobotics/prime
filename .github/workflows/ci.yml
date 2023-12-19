@@ -17,11 +17,17 @@ jobs:
       - name: Install 🔧
         uses: viamrobotics/js-config/.github/actions/setup@0006127efb3f62669f662ca31c555a49a034935e
 
+      - name: Install Playwright Browsers
+        run: pnpm -C packages/legacy playwright-install --with-deps
+
       - name: Build 🏗️
         run: pnpm run build
 
       - name: Lint and type check 💅
         run: pnpm run check
+
+      - name: Run tests
+        run: pnpm run test
 
       - name: Upload npm @viamrobotics/prime artifacts
         uses: actions/upload-artifact@v3
@@ -46,22 +52,8 @@ jobs:
         with:
           path: packages/storybook/prime
 
-  test:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install 🔧
-        uses: viamrobotics/js-config/.github/actions/setup@0006127efb3f62669f662ca31c555a49a034935e
-
-      - name: Install Playwright Browsers
-        run: pnpm -C packages/legacy playwright-install --with-deps
-
-      - name: Run tests
-        run: pnpm run test
-
-      - uses: actions/upload-artifact@v3
+      - name: Upload Playwright test artifacts
+        uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: playwright-report
@@ -70,7 +62,7 @@ jobs:
 
   deploy-npm:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: [build, test]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -105,7 +97,7 @@ jobs:
 
   deploy-pages:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: [build, test]
+    needs: build
     runs-on: ubuntu-latest
 
     permissions:

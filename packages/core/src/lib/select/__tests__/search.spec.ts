@@ -7,7 +7,7 @@ import {
   getWordIndex,
   prioritizeMatches,
 } from '../search';
-import { escapeRegExp } from 'lodash';
+import { escapeRegExp } from 'lodash-es';
 
 describe('search', () => {
   const options = [

@@ -135,7 +135,7 @@ $: {
       {#if exitable}
         <Button
           variant="ghost"
-          cx="text-gray-7 absolute right-1 top-2"
+          cx="absolute right-1 top-2 text-gray-7"
           aria-label="Dismiss notification"
           on:click={handleClose}
         >

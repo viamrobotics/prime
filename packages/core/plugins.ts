@@ -15,7 +15,7 @@ export const plugins = [
           scrollbarColor: value,
         }),
       },
-      { values: theme('colors') ?? {} }
+      { values: theme('colors') }
     );
 
     matchUtilities(
@@ -37,7 +37,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('colors') ?? {} }
+      { values: theme('colors') }
     );
 
     matchUtilities(
@@ -48,7 +48,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('colors') ?? {} }
+      { values: theme('colors') }
     );
 
     matchUtilities(
@@ -59,7 +59,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('borderRadius') ?? {} }
+      { values: theme('borderRadius') }
     );
 
     matchUtilities(
@@ -70,7 +70,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('borderWidth') ?? {} }
+      { values: theme('borderWidth') }
     );
 
     matchUtilities(
@@ -81,7 +81,7 @@ export const plugins = [
           },
         }),
       },
-      { values: theme('borderColor') ?? {} }
+      { values: theme('borderColor') }
     );
 
     matchUtilities(

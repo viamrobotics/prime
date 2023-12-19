@@ -42,7 +42,7 @@ import {
   CodeSnippet,
   RangeInput,
 } from '$lib';
-import { uniqueId } from 'lodash';
+import { uniqueId } from 'lodash-es';
 
 provideNotify();
 

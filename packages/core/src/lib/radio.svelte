@@ -84,7 +84,7 @@ $: getIcon = (option: string): IconName =>
             'font-semibold': isSelected(option),
             'text-default': isSelected(option) && !disabled,
             'text-subtle-1': !isSelected(option) && !disabled,
-            'text-disabled-dark cursor-not-allowed': disabled,
+            'cursor-not-allowed text-disabled-dark': disabled,
           },
         ]}
       >
