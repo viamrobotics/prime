@@ -17,7 +17,7 @@ export type Toast = (params: ToastParams) => void;
 /** Internal toast context. */
 export interface ToastContext {
   state: ToastState;
-  toast: Toast
+  toast: Toast;
 }
 export interface ToastParams {
   message: string;
@@ -106,7 +106,7 @@ export const createToastContext = (): ToastContext => {
 /** Provide toast state to a component tree. */
 export const provideToast = (context = createToastContext()): Toast => {
   setContext(ToastContextKey, context);
-  return context.toast
+  return context.toast;
 };
 
 const useToastContext = (): ToastContext => {
