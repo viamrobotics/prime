@@ -16,12 +16,10 @@ The root layout component is probably the best place to set up the context.
 ```svelte
 <!-- +layout.svelte -->
 <script lang="ts">
-import { ToastContainer, provideToast } from '@viamrobotics/prime-core';
+import { ToastContainer } from '@viamrobotics/prime-core';
 
 import PageRoot from '$lib/layout/page-root.svelte';
 import PageContent from '$lib/layout/page-content.svelte';
-
-provideToast();
 </script>
 
 <PageRoot>
@@ -37,10 +35,10 @@ provideToast();
 To display a toast, use the `useToast` function:
 
 ```ts
-import { useToast, ToastVariant } from '@viamrobotics/prime-core';
+import { provideToast } from '@viamrobotics/prime-core';
 
 const doSomethingCrazy = () => {
-  const toast = useToast();
+  const toast = provideToast();
 
   toast({ message: 'Hello, Brooklyn!', variant: ToastVariant.Success });
 };
@@ -49,20 +47,20 @@ const doSomethingCrazy = () => {
 Right now only different variants of a success toast is supported.
 
 ```ts
-import { useToast } from '@viamrobotics/prime-core';
+import { provideToast } from '@viamrobotics/prime-core';
 
 const doSomethingCrazy = () => {
-  const toast = useToast();
+  const toast = provideToast();
   const exampleHanderFunction = () => void;
 
-  toast({ message: 'Plain slice please!', variant: ToastVariant.Success });
-  toast({ message: 'Plain slice please!', variant: ToastVariant.Success, action: { text: 'action', handler: exampleHandlerFunction });
+  toast({ message: 'Plain slice please!' });
+  toast({ message: 'Plain slice please!', action: { text: 'action', handler: exampleHandlerFunction });
 
 };
 ```
 
 ```ts
-import { toast } from '@viamrobotics/prime-core';
+import { provideToast } from '@viamrobotics/prime-core';
 ```
 
 <Canvas>

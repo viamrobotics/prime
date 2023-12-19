@@ -22,7 +22,7 @@ export interface ToastContext {
 export interface ToastParams {
   message: string;
   action?: { text: string; handler: () => unknown } | undefined;
-  variant: ToastVariantType;
+  variant?: ToastVariantType;
 }
 
 /** Internal toast state. */
@@ -36,7 +36,7 @@ export interface ToastElement {
   id: string;
   message: string;
   action?: { text: string; handler: () => unknown } | undefined;
-  variant: ToastVariantType;
+  variant?: ToastVariantType;
   pause: () => void;
   resume: () => void;
   dismiss: () => void;
