@@ -40,6 +40,7 @@ import {
   useNotify,
   Modal,
   CodeSnippet,
+  RangeInput,
 } from '$lib';
 import { uniqueId } from 'lodash-es';
 
@@ -698,7 +699,10 @@ const onHoverDelayMsInput = (event: Event) => {
       <ContextMenuItem
         icon="close"
         variant="danger"
-        on:click={() => console.log('oh no')}
+        on:click={() => {
+          // eslint-disable-next-line no-console
+          console.log('oh no');
+        }}
       >
         danger
       </ContextMenuItem>
@@ -933,6 +937,49 @@ const onHoverDelayMsInput = (event: Event) => {
       placeholder="Disabled"
       name="slider"
       disabled
+    />
+  </div>
+
+  <!-- Range Input -->
+  <h2 class="text-xl">Range Input</h2>
+  <div class="flex flex-col gap-2">
+    <RangeInput
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('RangeInput input', event);
+      }}
+      on:change={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('RangeInput change', event);
+      }}
+      name="range"
+    />
+
+    <RangeInput
+      name="readonly-range"
+      readonly
+    />
+
+    <RangeInput
+      name="disabled-range"
+      disabled
+    />
+
+    <RangeInput
+      name="suffix-range"
+      suffix="%"
+    />
+
+    <RangeInput
+      name="tiny-range"
+      max={1}
+      step={0.01}
+    />
+
+    <RangeInput
+      name="large-range"
+      max={1000}
+      step={1}
     />
   </div>
 

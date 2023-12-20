@@ -29,6 +29,7 @@ export type { IconName } from './icon/icons';
 export {
   Input,
   NumericInput,
+  RangeInput,
   RestrictedTextInput,
   SliderInput,
   TextInput,

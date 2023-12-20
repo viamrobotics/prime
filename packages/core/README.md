@@ -16,6 +16,7 @@ Install [Tailwind][]. In the `tailwind.config.js`, add the components to the con
 
 ```js
 import { theme } from '@viamrobotics/prime-core/theme';
+import { plugins } from '@viamrobotics/prime-core/plugins';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -24,7 +25,7 @@ export default {
     './node_modules/@viamrobotics/prime-core/**/*.{ts,svelte}',
   ],
   theme,
-  plugins: [],
+  plugins,
 };
 ```
 
