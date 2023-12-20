@@ -6,7 +6,10 @@ import { Button, Banner } from '@viamrobotics/prime-core';
 <Meta title="Elements/Banner" />
 
 <Story name="Info">
-  <Banner variant="info" cx="max-w-[600px]">
+  <Banner
+    variant="info"
+    cx="max-w-[600px]"
+  >
     <svelte:fragment slot="title">Info message</svelte:fragment>
     <svelte:fragment slot="subtitle">
       Here is some helpful information. This message should be no longer than
@@ -19,7 +22,10 @@ import { Button, Banner } from '@viamrobotics/prime-core';
 </Story>
 
 <Story name="Success">
-  <Banner variant="success" cx="max-w-[600px]">
+  <Banner
+    variant="success"
+    cx="max-w-[600px]"
+  >
     <svelte:fragment slot="title">Success message</svelte:fragment>
     <svelte:fragment slot="subtitle">
       Here is some helpful information. This message should be no longer than
@@ -29,7 +35,10 @@ import { Button, Banner } from '@viamrobotics/prime-core';
 </Story>
 
 <Story name="Warning">
-  <Banner variant="warning" cx="max-w-[600px]">
+  <Banner
+    variant="warning"
+    cx="max-w-[600px]"
+  >
     <svelte:fragment slot="title">Warning message</svelte:fragment>
     <svelte:fragment slot="subtitle">
       Here is some helpful information. This message should be no longer than
@@ -39,7 +48,10 @@ import { Button, Banner } from '@viamrobotics/prime-core';
 </Story>
 
 <Story name="Danger">
-  <Banner variant="danger" cx="max-w-[600px]">
+  <Banner
+    variant="danger"
+    cx="max-w-[600px]"
+  >
     <svelte:fragment slot="title">Danger message</svelte:fragment>
     <svelte:fragment slot="subtitle">
       Here is some helpful information. This message should be no longer than
@@ -49,7 +61,10 @@ import { Button, Banner } from '@viamrobotics/prime-core';
 </Story>
 
 <Story name="DangerWithEmphasizedAction">
-  <Banner variant="danger" cx="max-w-[600px]">
+  <Banner
+    variant="danger"
+    cx="max-w-[600px]"
+  >
     <svelte:fragment slot="title">Danger message</svelte:fragment>
     <svelte:fragment slot="subtitle">
       Here is some helpful information. This message should be no longer than
