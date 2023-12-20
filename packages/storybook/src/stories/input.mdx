@@ -5,8 +5,8 @@ import * as InputStories from './input.stories.svelte';
 
 # Input
 
-A simple user input. We use this input to build all of the other input types,
-so it is rarely beneificial to use this over the more specific varities.
+A simple user input. We use this input to build all of the other input types.
+This is ideal for text, email, and password fields.
 
 ```ts
 import { Input } from '@viamrobotics/prime-core';
@@ -27,18 +27,6 @@ import { Input } from '@viamrobotics/prime-core';
 
 <Canvas>
   <Story of={InputStories.Labeled} />
-</Canvas>
-
-# Text Input
-
-A user input for text values. This is ideal for text, email, and password fields.
-
-```ts
-import { TextInput } from '@viamrobotics/prime-core';
-```
-
-<Canvas>
-  <Story of={InputStories.Text} />
 </Canvas>
 
 # Restricted Text Input
@@ -96,5 +84,5 @@ import { RangeInput } from '@viamrobotics/prime-core';
 ```
 
 <Canvas>
-  <Story of={InputStories.RangeInput} />
+  <Story of={InputStories.Range} />
 </Canvas>

@@ -51,6 +51,7 @@ const hasNameProperty = Object.hasOwn(paths, name);
 -->
 <svg
   class={cx(
+    'text-gray-6',
     sizes[size],
     {
       hidden: !hasNameProperty,

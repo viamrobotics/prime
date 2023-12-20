@@ -211,8 +211,8 @@ fn main() {
 }]
      `.trim()}
   >
-    <svelte:fragment slot="caption"
-      >Check out this cool captioned JSON!</svelte:fragment
-    >
+    <svelte:fragment slot="caption">
+      Check out this cool captioned JSON!
+    </svelte:fragment>
   </CodeSnippet>
 </Story>

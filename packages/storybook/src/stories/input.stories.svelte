@@ -7,7 +7,6 @@ import {
   RangeInput,
   RestrictedTextInput,
   SliderInput,
-  TextInput,
 } from '@viamrobotics/prime-core';
 
 const restrictInput = (inputValue: string) =>
@@ -17,22 +16,25 @@ const restrictInput = (inputValue: string) =>
 <Meta title="Elements/Input" />
 
 <Story name="Basic">
-  <Input />
+  <Input
+    cx="max-w-[200px]"
+    placeholder="Placeholder"
+  />
 </Story>
 
 <Story name="Labeled">
   <Label>
-    Name:
-    <Input slot="input" />
+    Full name
+    <Input
+      slot="input"
+      cx="max-w-[200px]"
+      placeholder="Eliot Horowitz"
+    />
   </Label>
 </Story>
 
-<Story name="Text">
-  <TextInput />
-</Story>
-
 <Story name="Restricted Text">
-  <div class="mb-2">
+  <div class="mb-2 max-w-[200px]">
     <RestrictedTextInput
       value=""
       {restrictInput}
@@ -42,13 +44,13 @@ const restrictInput = (inputValue: string) =>
 </Story>
 
 <Story name="Numeric">
-  <NumericInput />
+  <NumericInput cx="max-w-[200px]" />
 </Story>
 
 <Story name="Slider">
-  <SliderInput />
+  <SliderInput cx="max-w-[200px]" />
 </Story>
 
 <Story name="Range">
-  <RangeInput />
+  <RangeInput cx="max-w-[300px]" />
 </Story>
