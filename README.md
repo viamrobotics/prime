@@ -12,7 +12,7 @@ A collection of UI elements.
 
 [`@viamrobotics/prime-core`][core] - Core components. Exported as Svelte components.
 
-[`@viamrobotics/prime-blocks`][blocks] - Large blocks of UI that often have dependencies like [Threlte][]. Exported as Svelte components.
+[`@viamrobotics/prime-blocks`][blocks] - Large blocks of UI that often have dependencies like [Threlte][threlte]. Exported as Svelte components.
 
 [legacy]: https://github.com/viamrobotics/prime/tree/main/packages/legacy
 [core]: https://github.com/viamrobotics/prime/tree/main/packages/core

@@ -5,6 +5,7 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   FloatingMenu,
+  IconButton,
   uniqueId,
 } from '@viamrobotics/prime-core';
 
@@ -20,42 +21,47 @@ const setFloatingMenuOpen = (isOpen: boolean) => {
 <Meta title="Elements/Context menu" />
 
 <Story name="Basic">
-  <ContextMenu id={menuID}>
-    <ContextMenuItem>Just a label</ContextMenuItem>
-    <ContextMenuItem icon="trash-can-outline">With icon</ContextMenuItem>
+  <ContextMenu
+    id={menuID}
+    cx="max-w-[150px]"
+  >
+    <ContextMenuItem icon="refresh">Restart</ContextMenuItem>
+    <ContextMenuItem icon="open-in-new">View more info</ContextMenuItem>
     <ContextMenuSeparator />
-    <ContextMenuItem variant="primary">Primary</ContextMenuItem>
     <ContextMenuItem
-      icon="close"
+      icon="trash-can-outline"
       variant="danger"
     >
-      Danger
+      Delete
     </ContextMenuItem>
   </ContextMenu>
 </Story>
 
 <Story name="Floating">
-  <FloatingMenu
-    placement="bottom-start"
-    offset={4}
-    isOpen={floatingMenuOpen}
-    onChange={setFloatingMenuOpen}
-  >
-    <svelte:fragment slot="control">
-      {floatingMenuOpen ? 'Close menu' : 'Open menu'}
-    </svelte:fragment>
-    <svelte:fragment slot="items">
-      <ContextMenuItem>Just a label</ContextMenuItem>
-      <ContextMenuItem icon="trash-can-outline">With icon</ContextMenuItem>
-      <ContextMenuSeparator />
-      <ContextMenuItem variant="primary">Primary</ContextMenuItem>
-      <ContextMenuItem
-        icon="close"
-        variant="danger"
-        on:click={() => setFloatingMenuOpen(false)}
-      >
-        Danger
-      </ContextMenuItem>
-    </svelte:fragment>
-  </FloatingMenu>
+  <div class="min-h-[150px]">
+    <FloatingMenu
+      placement="bottom-start"
+      offset={4}
+      isOpen={floatingMenuOpen}
+      onChange={setFloatingMenuOpen}
+    >
+      <svelte:fragment slot="control">
+        <IconButton
+          icon="dots-horizontal"
+          label="See more"
+        />
+      </svelte:fragment>
+      <svelte:fragment slot="items">
+        <ContextMenuItem icon="refresh">Restart</ContextMenuItem>
+        <ContextMenuItem icon="open-in-new">View more info</ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem
+          icon="trash-can-outline"
+          variant="danger"
+        >
+          Delete
+        </ContextMenuItem>
+      </svelte:fragment>
+    </FloatingMenu>
+  </div>
 </Story>
