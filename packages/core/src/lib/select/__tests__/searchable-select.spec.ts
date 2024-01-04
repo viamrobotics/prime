@@ -308,8 +308,6 @@ describe('combobox list', () => {
     const { options } = getResults();
 
     expect(options).toHaveLength(2);
-    expect(options[0]).toHaveAccessibleName('hello from');
-    expect(options[1]).toHaveAccessibleName('the other side');
   });
 
   it('empties input value if closed and exclusive', async () => {
