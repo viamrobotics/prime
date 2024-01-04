@@ -1,9 +1,11 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
 import {
+  Label,
   Multiselect,
   SearchableSelect,
   Select,
+  SortOptions,
 } from '@viamrobotics/prime-core';
 </script>
 
@@ -23,8 +25,11 @@ import {
 </Story>
 
 <Story name="Searchable">
-  <div class="h-[200px]">
+  <Label cx="h-[200px]">
+    Searchable select with limited options
     <SearchableSelect
+      slot="input"
+      placeholder="Search options"
       options={[
         'First Option',
         'Option 2',
@@ -32,8 +37,21 @@ import {
         'Something Else',
         'With A Whole Lot Of Parts',
       ]}
+      exclusive
     />
-  </div>
+  </Label>
+</Story>
+
+<Story name="Searchable with arbitrary text">
+  <Label cx="h-[200px]">
+    Select with arbitrary text
+    <SearchableSelect
+      slot="input"
+      placeholder="Search lyrics or invent your own"
+      options={['Hello', 'From', 'The other side']}
+      sort={SortOptions.REDUCE}
+    />
+  </Label>
 </Story>
 
 <Story name="Multi">

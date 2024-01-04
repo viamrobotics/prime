@@ -37,7 +37,7 @@ $: warnClasses =
   isWarn &&
   !disabled &&
   cx(
-    'border-warning-bright group-hover/select-input:outline-[1.5px] group-hover/select-input:-outline-offset-1 group-hover/select-input:outline-warning-bright',
+    'border-warning-bright bg-white group-hover/select-input:outline-[1.5px] group-hover/select-input:-outline-offset-1 group-hover/select-input:outline-warning-bright',
     {
       'focus:outline-[1.5px] focus:-outline-offset-1 focus:outline-warning-bright':
         isFocused !== false,
@@ -48,7 +48,7 @@ $: errorClasses =
   isError &&
   !disabled &&
   cx(
-    'border-danger-dark group-hover/select-input:outline-[1.5px] group-hover/select-input:-outline-offset-1 group-hover/select-input:outline-danger-dark',
+    'border-danger-dark bg-white group-hover/select-input:outline-[1.5px] group-hover/select-input:-outline-offset-1 group-hover/select-input:outline-danger-dark',
     {
       'focus:outline-[1.5px] focus:-outline-offset-1 focus:outline-danger-dark':
         isFocused !== false,
