@@ -15,10 +15,9 @@ For users to choose only one of a predefined set of mutually exclusive options.
 
 <script lang="ts">
 import cx from 'classnames';
-import Label from './label.svelte';
-import Icon from './icon/icon.svelte';
-import { preventHandler, preventKeyboardHandler } from './prevent-handler';
-import type { IconName } from './icon/icons';
+import Label from '$lib/label.svelte';
+import { Icon, type IconName } from '$lib/icon';
+import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 
 /** The set of options that is available in the radio button. */
 export let options: string[];
