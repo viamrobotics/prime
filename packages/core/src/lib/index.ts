@@ -81,6 +81,7 @@ export {
   type TooltipVisibility,
 } from './tooltip';
 
+export * from './keyboard';
 export { useTimeout } from './use-timeout';
 export { uniqueId } from './unique-id';
 export { default as VectorInput } from './vector-input.svelte';

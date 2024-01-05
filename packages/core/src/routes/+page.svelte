@@ -1245,19 +1245,45 @@ const onHoverDelayMsInput = (event: Event) => {
 
   <div class="flex gap-4">
     <SearchableSelect
+      exclusive
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="Select an option"
-      on:input={(event) => {
+      onChange={(value) => {
         // eslint-disable-next-line no-console
-        console.log('SearchableSelect input', event);
+        console.log('Selected', value);
       }}
     />
     <SearchableSelect
+      exclusive
       options={['First Option', 'Disabled select', 'C.) Option']}
       value="Disabled select"
       disabled
     />
+  </div>
+
+  <div class="flex gap-4">
     <SearchableSelect
+      exclusive
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Warn state"
+      state="warn"
+    />
+    <SearchableSelect
+      exclusive
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Error state"
+      state="error"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <SearchableSelect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="With arbitrary input"
+      otherOptionPrefix="Arbitrary:"
+    />
+    <SearchableSelect
+      exclusive
       options={[
         'First Option',
         'Option 2',
@@ -1270,32 +1296,6 @@ const onHoverDelayMsInput = (event: Event) => {
       ]}
       placeholder="Reducing Select"
       sort="reduce"
-    />
-  </div>
-
-  <div class="flex gap-4">
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="Warn state"
-      state="warn"
-    />
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="Error state"
-      state="error"
-    />
-  </div>
-
-  <div class="flex gap-4">
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="With a button"
-      button={{ text: 'Other', icon: 'information-outline' }}
-    />
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="With a heading"
-      heading="Some heading text"
     />
   </div>
 
