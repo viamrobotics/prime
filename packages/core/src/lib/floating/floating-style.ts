@@ -6,6 +6,7 @@ import {
   flip as flipMiddleware,
   shift as shiftMiddleware,
   arrow as arrowMiddleware,
+  size as sizeMiddleware,
   type Placement,
   type Side,
   type ComputePositionConfig,
@@ -46,6 +47,7 @@ export interface State {
   offset?: number;
   flip?: boolean;
   shift?: number;
+  matchWidth?: boolean;
   auto?: boolean;
 }
 
@@ -109,7 +111,7 @@ const calculateStyle = async (state: State): Promise<FloatingStyle> => {
 };
 
 const getConfig = (state: State): ComputePositionConfig => {
-  const { arrowElement, placement, offset, flip, shift } = state;
+  const { arrowElement, placement, offset, flip, shift, matchWidth } = state;
 
   return {
     placement: placement ?? 'top',
@@ -122,6 +124,14 @@ const getConfig = (state: State): ComputePositionConfig => {
         }),
       shift !== undefined && shiftMiddleware({ padding: shift }),
       arrowElement && arrowMiddleware({ element: arrowElement }),
+      matchWidth &&
+        sizeMiddleware({
+          apply({ rects, elements }) {
+            Object.assign(elements.floating.style, {
+              width: `${rects.reference.width}px`,
+            });
+          },
+        }),
     ],
   };
 };

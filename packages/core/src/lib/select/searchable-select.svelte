@@ -1,11 +1,11 @@
 <!--
 @component
-  
+
 For selecting from a list of options.
 
 ```svelte
-<SearchableSelect 
-  options={["Option 1", "Option 2", "Option 3"]} 
+<SearchableSelect
+  options={["Option 1", "Option 2", "Option 3"]}
   on:input={onSelect}
 />
 ```
@@ -16,15 +16,15 @@ For selecting from a list of options.
 import cx from 'classnames';
 import { uniqueId } from '$lib/unique-id';
 import { clickOutside } from '$lib/click-outside';
-import type { IconName } from '$lib/icon/icons';
+import type { IconName } from '$lib/icon';
+import { InputStates, type InputState } from '$lib/input';
 
 import { selectControls } from './controls';
 import { createSearchableSelectDispatcher } from './dispatcher';
-import { type SortOptions, getSearchResults } from './search';
+import { SortOptions, getSearchResults, type SortOption } from './search';
 import SelectInput from './select-input.svelte';
 import SelectMenuButton from './select-menu-button.svelte';
 import SelectMenu from './select-menu.svelte';
-import type { SelectState } from './select.svelte';
 
 /** The options the user should be allowed to search and select from. */
 export let options: string[] = [];
@@ -36,7 +36,7 @@ export let value: string | undefined = undefined;
 export let disabled = false;
 
 /** The state of the select (info, warn, error, success), if any. */
-export let state: SelectState = 'none';
+export let state: InputState = InputStates.NONE;
 
 /**
  * How to handle sorting for the select:
@@ -46,7 +46,7 @@ export let state: SelectState = 'none';
  * no match.
  * - `off` will apply no sorting or filtering.
  */
-export let sort: SortOptions = 'default';
+export let sort: SortOption = SortOptions.DEFAULT;
 
 /**
  * An optional call-to-action button to render at the bottom of the select menu

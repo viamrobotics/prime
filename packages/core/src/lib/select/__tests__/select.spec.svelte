@@ -1,9 +1,9 @@
 <script lang="ts">
-import { Select, type SelectState } from '$lib';
+import { Select, InputStates, type InputState } from '$lib';
 
 export let value: string | undefined = undefined;
 export let disabled = false;
-export let state: SelectState = 'none';
+export let state: InputState = InputStates.NONE;
 </script>
 
 <Select

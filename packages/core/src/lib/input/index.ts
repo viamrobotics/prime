@@ -1,4 +1,5 @@
-export { default as Input, type InputState } from './input.svelte';
+export { InputStates, type InputState } from './input-state';
+export { default as Input } from './input.svelte';
 export { default as NumericInput } from './numeric-input.svelte';
 export { default as SliderInput } from './slider-input.svelte';
 export { type NumericInputTypes } from './utils';
