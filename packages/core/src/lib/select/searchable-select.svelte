@@ -102,9 +102,12 @@ $: autoSelectOption = allOptions[autoSelectIndex] ?? otherOption;
 $: isExpanded = menuState === FOCUS_SEARCH || menuState === FOCUS_ITEM;
 $: activeOption = isExpanded ? autoSelectOption : undefined;
 $: activeID = activeOption ? SELECTED_ID : undefined;
+$: activeElement = activeOption
+  ? optionElements[activeOption.option]
+  : undefined;
 
-$: if (activeOption) {
-  optionElements[activeOption.option]?.scrollIntoView({ block: 'nearest' });
+$: if (typeof activeElement?.scrollIntoView === 'function') {
+  activeElement.scrollIntoView({ block: 'nearest' });
 }
 
 const setMenuState = (nextMenuState: MenuState) => {
