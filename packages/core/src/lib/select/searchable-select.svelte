@@ -30,8 +30,13 @@ export let value = '';
 /** The placeholder of the input. */
 export let placeholder = '';
 
-/** Value must be constrained to `options` on change. */
-export let exclusive = false;
+/**
+ * Whether value must be constrained to `options` on change.
+ * - `false` (Default) - any value may be selected
+ * - `true` - value must be in `options`
+ * - `Function` - value must be in `options` or pass the test function
+ */
+export let exclusive: boolean | ((value: string) => boolean) = false;
 
 /** Input is disabled. */
 export let disabled = false;
@@ -70,11 +75,14 @@ const optionElements: Record<string, HTMLElement> = {};
 let inputElement: HTMLInputElement | undefined;
 let autoSelectIndex = -1;
 let menuState: MenuState | undefined;
+let previousValue: string | undefined = undefined;
 
 $: searchResults = getSearchResults(options, value, sort);
 $: valueInSearch = searchResults.some(({ option }) => option === value);
+$: getOtherIsAllowed =
+  typeof exclusive === 'function' ? exclusive : () => !exclusive;
 $: otherOption =
-  !exclusive && value !== '' && !valueInSearch
+  value !== '' && !valueInSearch && getOtherIsAllowed(value)
     ? { option: value, priority: -1, highlight: undefined }
     : undefined;
 
@@ -114,11 +122,17 @@ const handleBlur = (event: FocusEvent) => {
   onBlur?.(event);
 };
 
-const handleSelect = (nextValue: string | undefined) => {
+const handleSelect = (selectedValue: string | undefined) => {
   const fallback = exclusive && !valueInSearch ? '' : value;
+  const nextValue = selectedValue ?? fallback;
+
   setMenuState(CLOSED);
-  value = nextValue ?? fallback;
-  onChange?.(value);
+
+  if (nextValue !== previousValue) {
+    value = nextValue;
+    previousValue = nextValue;
+    onChange?.(nextValue);
+  }
 };
 
 const handleButtonClick = () => {
@@ -203,7 +217,7 @@ const handleKeydown = createHandleKey({
       {@const isSelected = activeOption?.option === option}
       {@const isOther = otherOption?.option === option}
 
-      {#if isOther}
+      {#if isOther && allOptions.length > 1}
         <li
           role="none"
           class="mb-0.5 mt-[3px] border-b border-light"
@@ -222,6 +236,8 @@ const handleKeydown = createHandleKey({
           'flex h-7.5 w-full cursor-pointer items-center justify-start text-ellipsis whitespace-nowrap px-2.5 text-xs',
           isSelected ? 'bg-light' : 'hover:bg-light'
         )}
+        on:pointerdown|preventDefault
+        on:mousedown|preventDefault
         on:click={() => handleSelect(option)}
         bind:this={optionElements[option]}
       >

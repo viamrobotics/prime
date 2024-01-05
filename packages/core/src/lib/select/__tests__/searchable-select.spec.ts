@@ -196,8 +196,11 @@ describe('combobox list', () => {
     const { search, options } = getResults();
 
     await user.click(search);
-    await user.click(options[0]!);
+    // TODO(mc, 2024-02-03): replace .click with userEvent
+    // https://github.com/testing-library/user-event/issues/1119
+    await act(() => options[0]?.click());
 
+    expect(search).toHaveFocus();
     expect(onChange).toHaveBeenCalledWith('hello from');
     expect(search).toHaveValue('hello from');
     expect(search).toHaveAttribute('aria-expanded', 'false');
@@ -239,6 +242,15 @@ describe('combobox list', () => {
     await user.keyboard('{Tab}');
 
     expect(onChange).toHaveBeenCalledWith('the other side');
+  });
+
+  it('does not send multiple change events on blur', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    await user.keyboard('{Tab}hello{Enter}{Tab}');
+
+    expect(onChange).toHaveBeenCalledOnce();
   });
 
   it('keeps input value if menu closed on blur', async () => {
@@ -308,6 +320,17 @@ describe('combobox list', () => {
     const { options } = getResults();
 
     expect(options).toHaveLength(2);
+  });
+
+  it('has an "other" option when value matches exclusivity function', async () => {
+    const user = userEvent.setup();
+    renderSubject({ exclusive: (value: string) => value === 'hello' });
+
+    const { search } = getResults();
+    await user.type(search, 'hello');
+    const { options } = getResults();
+
+    expect(options).toHaveLength(3);
   });
 
   it('empties input value if closed and exclusive', async () => {
