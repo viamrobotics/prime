@@ -47,6 +47,9 @@ export let state: InputState = InputStates.NONE;
 /** Option sorting behavior. */
 export let sort: SortOption = SortOptions.DEFAULT;
 
+/** Prefix to display with the arbitrary text option, if non-exclusive. */
+export let otherOptionPrefix = '';
+
 /** Error message ID, if any. */
 export let errorID = '';
 
@@ -231,7 +234,9 @@ const handleKeydown = createHandleKey({
         role="option"
         id={isSelected ? activeID : undefined}
         aria-selected={isSelected}
-        aria-label={isOther ? `other: ${option}` : option}
+        aria-label={isOther
+          ? [otherOptionPrefix, option].filter(Boolean).join(' ')
+          : option}
         class={cx(
           'flex h-7.5 w-full cursor-pointer items-center justify-start text-ellipsis whitespace-nowrap px-2.5 text-xs',
           isSelected ? 'bg-light' : 'hover:bg-light'
@@ -251,6 +256,8 @@ const handleKeydown = createHandleKey({
           <span class="whitespace-pre">{highlight[0]}</span>
           <span class="whitespace-pre bg-yellow-100">{highlight[1]}</span>
           <span class="whitespace-pre">{highlight[2]}</span>
+        {:else if isOther && otherOptionPrefix}
+          {otherOptionPrefix} {option}
         {:else}
           {option}
         {/if}

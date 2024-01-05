@@ -275,7 +275,7 @@ describe('combobox list', () => {
     expect(options).toHaveLength(3);
     expect(options[0]).toHaveAccessibleName('hello from');
     expect(options[1]).toHaveAccessibleName('the other side');
-    expect(options[2]).toHaveAccessibleName('other: hello');
+    expect(options[2]).toHaveAccessibleName('hello');
     expect(options[2]).toHaveAttribute('aria-selected', 'false');
   });
 
@@ -287,7 +287,7 @@ describe('combobox list', () => {
     await user.type(search, 'asdf');
     const { options } = getResults();
 
-    expect(options[2]).toHaveAccessibleName('other: asdf');
+    expect(options[2]).toHaveAccessibleName('asdf');
     expect(options[2]).toHaveAttribute('aria-selected', 'true');
     expect(search).toHaveAttribute('aria-activedescendant', options[2]?.id);
   });
@@ -331,6 +331,17 @@ describe('combobox list', () => {
     const { options } = getResults();
 
     expect(options).toHaveLength(3);
+  });
+
+  it('adds a prefix to the "other" option display text', async () => {
+    const user = userEvent.setup();
+    renderSubject({ otherOptionPrefix: 'You said:' });
+
+    const { search } = getResults();
+    await user.type(search, 'hello');
+    const { options } = getResults();
+
+    expect(options[2]).toHaveAccessibleName('You said: hello');
   });
 
   it('empties input value if closed and exclusive', async () => {

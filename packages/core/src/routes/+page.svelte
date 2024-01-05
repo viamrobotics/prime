@@ -1280,6 +1280,7 @@ const onHoverDelayMsInput = (event: Event) => {
     <SearchableSelect
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="With arbitrary input"
+      otherOptionPrefix="Arbitrary:"
     />
     <SearchableSelect
       exclusive

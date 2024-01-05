@@ -48,6 +48,7 @@ import {
     <SearchableSelect
       slot="input"
       placeholder="Search lyrics or invent your own"
+      otherOptionPrefix="Other:"
       options={['Hello', 'From', 'The other side']}
       sort={SortOptions.REDUCE}
     />
