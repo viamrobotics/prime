@@ -28,6 +28,7 @@
     "combobox",
     "listbox",
     "radiobox",
+    "unstub",
     "viamrobotics"
   ]
 }
