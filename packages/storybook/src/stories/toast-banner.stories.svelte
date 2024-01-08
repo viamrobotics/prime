@@ -19,7 +19,7 @@ import { ToastBanner } from '@viamrobotics/prime-core';
   <ToastBanner
     message="Success message"
     dismiss={() => {
-      console.log('Clicked close button')
+      console.log('Clicked close button');
     }}
     action={{
       text: 'action',
