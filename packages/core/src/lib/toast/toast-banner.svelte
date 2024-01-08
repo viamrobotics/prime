@@ -10,7 +10,7 @@ export let message: string;
 /** Function called when the close button is clicked */
 export let dismiss: () => void;
 /** The action performed on the button */
-export let action: { text: string; handler: () => unknown } | undefined =
+export let action: { text: string; handler: () => void } | undefined =
   undefined;
 
 /** Additional CSS classes to pass to the banner. */
@@ -20,11 +20,11 @@ export { extraClasses as cx };
 
 <div
   class={cx(
-    'relative flex w-auto items-center gap-2 border bg-medium p-1 text-sm',
+    'relative flex h-10 w-auto max-w-[480px] items-center border bg-medium pl-3 pr-1 text-sm',
     extraClasses
   )}
 >
-  <div class="w-[18px]">
+  <div class="mr-4 flex gap-2">
     <Icon
       size="lg"
       name={iconName}
@@ -33,9 +33,9 @@ export { extraClasses as cx };
       aria-hidden={false}
       aria-label="success"
     />
-  </div>
 
-  <div class="mr-auto">{message}</div>
+    {message}
+  </div>
 
   {#if action}
     <button

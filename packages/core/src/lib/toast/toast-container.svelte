@@ -11,10 +11,11 @@ It needs access to context from `provideToast`, which should also
 be added to the root layout component.
 -->
 <script lang="ts">
-import { fade, fly } from 'svelte/transition';
+import { fly, fade } from 'svelte/transition';
 
 import { useToastState } from './context';
 import ToastBanner from './toast-banner.svelte';
+import { flip } from 'svelte/animate';
 
 const { toasts, pageIsVisible } = useToastState();
 let visibilityState: DocumentVisibilityState;
@@ -27,13 +28,14 @@ $: pageIsVisible.set(visibilityState === 'visible');
 <div
   role="status"
   aria-label="Toasts"
-  class="pointer-events-auto fixed bottom-0 left-1/2 top-auto z-max -translate-x-1/2 transform overflow-hidden pb-6"
+  class="fixed bottom-0 left-1/2 top-auto z-max -translate-x-1/2 transform pb-6"
 >
-  <ul class="flex flex-col items-center gap-2">
+  <ul class="flex flex-col items-center gap-3">
     {#each $toasts as { id, pause, resume, ...toast } (id)}
       <li
-        in:fly={{ y: 256 }}
-        out:fade={{ duration: 400, delay: 400 }}
+        in:fly={{ y: 64 }}
+        out:fade
+        animate:flip={{ duration: 200 }}
         on:mouseenter={pause}
         on:mouseleave={resume}
       >
