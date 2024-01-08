@@ -18,7 +18,9 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 <Story name="SuccessWithEmphasizedAction">
   <ToastBanner
     message="Success message"
-    dismiss={() => {}}
+    dismiss={() => {
+      console.log('Clicked close button')
+    }}
     action={{
       text: 'action',
       handler: () => {
