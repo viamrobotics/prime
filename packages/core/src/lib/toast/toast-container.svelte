@@ -11,11 +11,11 @@ It needs access to context from `provideToast`, which should also
 be added to the root layout component.
 -->
 <script lang="ts">
-import { fly, fade } from 'svelte/transition';
+import { fade, fly } from 'svelte/transition';
+import { flip } from 'svelte/animate';
 
 import { useToastState } from './context';
 import ToastBanner from './toast-banner.svelte';
-import { flip } from 'svelte/animate';
 
 const { toasts, pageIsVisible } = useToastState();
 let visibilityState: DocumentVisibilityState;

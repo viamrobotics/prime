@@ -2,7 +2,7 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import { Button, Icon } from '$lib';
+import { Icon, IconButton } from '$lib';
 import { iconName, iconClasses } from './variants';
 
 /** The message displayed on the toast */
@@ -10,7 +10,7 @@ export let message: string;
 /** Function called when the close button is clicked */
 export let dismiss: () => void;
 /** The action performed on the button */
-export let action: { text: string; handler: () => void } | undefined =
+export let action: { text: string; handler: () => unknown } | undefined =
   undefined;
 
 /** Additional CSS classes to pass to the banner. */
@@ -37,20 +37,21 @@ export { extraClasses as cx };
     {message}
   </div>
 
-  {#if action}
-    <button
-      on:click={action.handler}
-      aria-label="Perform action"
-    >
-      <span class="text-sm font-medium hover:underline">{action.text}</span>
-    </button>
-  {/if}
-  <Button
-    variant="ghost"
-    cx="text-gray-7"
-    aria-label="Dismiss toast"
-    on:click={dismiss}
-  >
-    <Icon name="close" />
-  </Button>
+  <div class="flex gap-1">
+    {#if action}
+      <button
+        type="button"
+        on:click={action.handler}
+        aria-label="Perform action"
+      >
+        <span class="text-sm font-medium hover:underline">{action.text}</span>
+      </button>
+    {/if}
+    <IconButton
+      cx="text-gray-7"
+      label="Dismiss toast"
+      icon="close"
+      on:click={dismiss}
+    />
+  </div>
 </div>
