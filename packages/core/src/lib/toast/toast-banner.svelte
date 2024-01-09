@@ -20,7 +20,7 @@ export { extraClasses as cx };
 
 <div
   class={cx(
-    'relative flex h-10 w-auto max-w-[480px] items-center border bg-medium pl-3 pr-1 text-sm',
+    'relative flex h-10 w-max max-w-[480px] items-center border bg-medium pl-3 pr-1 text-sm',
     extraClasses
   )}
 >
@@ -34,7 +34,7 @@ export { extraClasses as cx };
       aria-label="success"
     />
 
-    {message}
+    <p class="truncate">{message}</p>
   </div>
 
   <div class="flex gap-1">
