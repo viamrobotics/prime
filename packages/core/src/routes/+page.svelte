@@ -1246,7 +1246,12 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="flex gap-4">
     <SearchableSelect
       exclusive
-      options={['First Option', 'Option 2', 'C.) Option']}
+      options={[
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'A really long forth option just in case you need it',
+      ]}
       placeholder="Select an option"
       onChange={(value) => {
         // eslint-disable-next-line no-console

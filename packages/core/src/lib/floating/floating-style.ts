@@ -17,8 +17,6 @@ import {
   type SizeOptions,
 } from '@floating-ui/dom';
 
-export type {};
-
 import { derived, writable, type Readable } from 'svelte/store';
 import { noop } from 'lodash-es';
 
