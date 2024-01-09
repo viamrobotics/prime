@@ -86,7 +86,12 @@ const createContext = (): TooltipContext => {
     },
     false
   );
-  const style = floatingStyle({ offset: 7, shift: 5, flip: true, auto: true });
+  const style = floatingStyle({
+    offset: 7,
+    shift: { padding: 5 },
+    flip: { fallbackAxisSideDirection: 'start', crossAxis: false },
+    auto: true,
+  });
 
   return {
     id,

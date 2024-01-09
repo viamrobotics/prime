@@ -12,7 +12,7 @@ Select an option from a list, with search
 -->
 <script lang="ts">
 import cx from 'classnames';
-import { Floating } from '$lib/floating';
+import { Floating, matchWidth } from '$lib/floating';
 import { Icon } from '$lib/icon';
 import { InputStates, type InputState } from '$lib/input';
 import { createHandleKey } from '$lib/keyboard';
@@ -209,9 +209,10 @@ const handleKeydown = createHandleKey({
   bind:value
 />
 <Floating
-  matchWidth
   offset={4}
   referenceElement={inputElement}
+  size={matchWidth}
+  auto
 >
   <ul
     id={LIST_ID}
@@ -241,7 +242,7 @@ const handleKeydown = createHandleKey({
           ? [otherOptionPrefix, option].filter(Boolean).join(' ')
           : option}
         class={cx(
-          'flex h-7.5 w-full cursor-pointer items-center justify-start text-ellipsis whitespace-nowrap px-2.5 text-xs',
+          'flex h-7.5 w-full cursor-pointer items-center justify-start  px-2.5 text-xs',
           isSelected ? 'bg-light' : 'hover:bg-light'
         )}
         on:pointerdown|preventDefault
@@ -251,19 +252,21 @@ const handleKeydown = createHandleKey({
       >
         {#if isOther}
           <Icon
-            cx="mr-1 text-gray-6"
+            cx="mr-1 shrink-0 text-gray-6"
             name="plus"
           />
         {/if}
-        {#if highlight !== undefined}
-          <span class="whitespace-pre">{highlight[0]}</span>
-          <span class="whitespace-pre bg-yellow-100">{highlight[1]}</span>
-          <span class="whitespace-pre">{highlight[2]}</span>
-        {:else if isOther && otherOptionPrefix}
-          {otherOptionPrefix} {option}
-        {:else}
-          {option}
-        {/if}
+        <p class="truncate">
+          {#if highlight !== undefined}
+            <span class="whitespace-pre">{highlight[0]}</span>
+            <span class="whitespace-pre bg-yellow-100">{highlight[1]}</span>
+            <span class="whitespace-pre">{highlight[2]}</span>
+          {:else if isOther && otherOptionPrefix}
+            {otherOptionPrefix} {option}
+          {:else}
+            {option}
+          {/if}
+        </p>
       </li>
     {/each}
     <slot />
