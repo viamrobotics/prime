@@ -62,7 +62,7 @@ export const createToastContext = (): ToastContext => {
     const pause = () => setPaused(id, true);
     const resume = () => setPaused(id, false);
     const dismiss = () => remove(id);
-    const { progress, unsubscribe } = pausableProgress({
+    const { unsubscribe } = pausableProgress({
       isPaused,
       totalDuration: ToastDuration,
       onComplete: dismiss,
@@ -70,7 +70,6 @@ export const createToastContext = (): ToastContext => {
 
     const toast = {
       id,
-      progress,
       pause,
       resume,
       dismiss,

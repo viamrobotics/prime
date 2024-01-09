@@ -2,7 +2,7 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import { Button, Icon } from '$lib';
+import { Icon, IconButton } from '$lib';
 import { iconName, iconClasses } from './variants';
 
 /** The message displayed on the toast */
@@ -20,11 +20,11 @@ export { extraClasses as cx };
 
 <div
   class={cx(
-    'relative flex w-auto items-center gap-2 border bg-medium p-2 text-sm',
+    'relative flex h-10 w-max max-w-[480px] items-center border bg-medium pl-3 pr-1 text-sm',
     extraClasses
   )}
 >
-  <div class="w-[18px]">
+  <div class="mr-4 flex gap-2">
     <Icon
       size="lg"
       name={iconName}
@@ -33,24 +33,25 @@ export { extraClasses as cx };
       aria-hidden={false}
       aria-label="success"
     />
+
+    <p class="truncate">{message}</p>
   </div>
 
-  <div class="mr-auto">{message}</div>
-
-  {#if action}
-    <button
-      on:click={action.handler}
-      aria-label="Perform action"
-    >
-      <span class="text-sm font-medium hover:underline">{action.text}</span>
-    </button>
-  {/if}
-  <Button
-    variant="ghost"
-    cx="text-gray-7"
-    aria-label="Dismiss toast"
-    on:click={dismiss}
-  >
-    <Icon name="close" />
-  </Button>
+  <div class="flex gap-1">
+    {#if action}
+      <button
+        type="button"
+        on:click={action.handler}
+        aria-label="Perform action"
+      >
+        <span class="text-sm font-medium hover:underline">{action.text}</span>
+      </button>
+    {/if}
+    <IconButton
+      cx="text-gray-7"
+      label="Dismiss toast"
+      icon="close"
+      on:click={dismiss}
+    />
+  </div>
 </div>
