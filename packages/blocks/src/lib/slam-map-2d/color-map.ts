@@ -51,10 +51,10 @@ export const mapColorAttributeGrayscale = (colors: THREE.BufferAttribute) => {
 
     // if the point has been postprocessed
     if (colors.getX(i) === 1) {
-      colors.setXYZ(i, .8, 0, 0);
-      continue
+      colors.setXYZ(i, 0.8, 0, 0);
+      continue;
     }
-    
+
     const colorMapPoint = colorBuckets(colors.getZ(i) * 10);
     colors.setXYZ(i, colorMapPoint.x, colorMapPoint.y, colorMapPoint.z);
   }
