@@ -45,13 +45,16 @@ const colorBuckets = (probability: number): THREE.Vector3 => {
 export const mapColorAttributeGrayscale = (colors: THREE.BufferAttribute) => {
   for (let i = 0; i < colors.count; i += 1) {
     /*
-     * Probability is currently assumed to be held in the rgb field of the PCD map, on a scale of 0 to 100.
-     * ticket to look into this further https://viam.atlassian.net/browse/RSDK-2605
+     * Probability is currently assumed to be held in the b part of the rgb field of the PCD map, on a scale of 0 to 100.
+     * ticket to look into this further https://viam.atlassian.net/browse/RSDK-2605. 
+     * 
+     * User generated points that have been added to the pcd are marked as such by putting 100% probability
+     * in the r part of the rgb field. If that has been set, we will draw the point in blue instead of mapping it to its
+     * corresponding shade of gray to signal it is a user generated point.
      */
 
-    // if the point has been postprocessed
     if (colors.getX(i) === 1) {
-      colors.setXYZ(i, 0.8, 0, 0);
+      colors.setXYZ(i, 0, 0, 1);
       continue;
     }
 
