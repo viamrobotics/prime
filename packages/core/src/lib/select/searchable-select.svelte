@@ -12,7 +12,7 @@ Select an option from a list, with search
 -->
 <script lang="ts">
 import cx from 'classnames';
-import { Floating } from '$lib/floating';
+import { Floating, matchWidth } from '$lib/floating';
 import { Icon } from '$lib/icon';
 import { InputStates, type InputState } from '$lib/input';
 import { createHandleKey } from '$lib/keyboard';
@@ -209,9 +209,10 @@ const handleKeydown = createHandleKey({
   bind:value
 />
 <Floating
-  matchWidth
   offset={4}
   referenceElement={inputElement}
+  size={matchWidth}
+  auto
 >
   <ul
     id={LIST_ID}
