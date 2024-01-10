@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 For selecting from a list of options.
 
 ```svelte
@@ -13,16 +13,10 @@ For selecting from a list of options.
 -->
 <svelte:options immutable />
 
-<script
-  lang="ts"
-  context="module"
->
-export type SelectState = 'error' | 'warn' | 'none';
-</script>
-
 <script lang="ts">
 import cx from 'classnames';
-import { Icon } from '$lib';
+import { Icon } from '$lib/icon';
+import { InputStates, type InputState } from '$lib/input';
 import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 
 /** The selected option value, if any */
@@ -32,7 +26,7 @@ export let value: string | undefined = undefined;
 export let disabled = false;
 
 /** The state of the select (info, warn, error, success), if any. */
-export let state: SelectState = 'none';
+export let state: InputState = InputStates.NONE;
 
 /** Additional CSS classes to pass to the select container. */
 let extraClasses: cx.Argument = '';
@@ -41,8 +35,8 @@ export { extraClasses as cx };
 $: handleDisabled = preventHandler(disabled);
 $: handleDisabledKeydown = preventKeyboardHandler(disabled);
 
-$: isWarn = state === 'warn';
-$: isError = state === 'error';
+$: isWarn = state === InputStates.WARN;
+$: isError = state === InputStates.ERROR;
 
 $: defaultClasses =
   !disabled &&

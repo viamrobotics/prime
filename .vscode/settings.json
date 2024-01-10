@@ -22,5 +22,13 @@
   ],
   "[svelte]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "cSpell.words": [
+    "activedescendant",
+    "combobox",
+    "listbox",
+    "radiobox",
+    "unstub",
+    "viamrobotics"
+  ]
 }

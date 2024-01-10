@@ -1,282 +1,474 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
-import SearchableSelect from '../searchable-select.svelte';
-import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
+import { describe, expect, it, vi } from 'vitest';
+import { act, render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
+import type { ComponentProps } from 'svelte';
 
-describe('SearchableSelect', () => {
-  const options = [
-    'First Option',
-    'Option 2',
-    'C.) Option',
-    'Something Else',
-    'With A Whole Lot Of Parts',
-  ];
+import { SearchableSelect as Subject, InputStates } from '$lib';
 
-  const common = { placeholder: 'Select an option', options };
+const onChange = vi.fn();
+const onFocus = vi.fn();
+const onBlur = vi.fn();
 
-  it('Renders the select input', () => {
-    render(SearchableSelect, common);
+const renderSubject = (props: Partial<ComponentProps<Subject>> = {}) => {
+  return render(Subject, {
+    options: ['hello from', 'the other side'],
+    onChange,
+    onFocus,
+    onBlur,
+    ...props,
+  });
+};
 
-    const select = screen.getByPlaceholderText('Select an option');
+const getResults = (): {
+  search: HTMLElement;
+  button: HTMLElement;
+  list: HTMLElement;
+  options: HTMLElement[];
+} => {
+  const search = screen.getByRole('combobox');
+  const button = screen.getByRole('button');
+  const list = screen.getByRole('listbox');
+  const options = within(list).queryAllByRole('option');
 
-    expect(select).toHaveClass(
-      'h-7.5 w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none'
-    );
+  return { search, button, list, options };
+};
+
+describe('combobox list', () => {
+  it('controls a listbox', () => {
+    renderSubject();
+
+    const { search, button, list } = getResults();
+
+    expect(list).toHaveAttribute('id', expect.any(String));
+    expect(button).toHaveAttribute('aria-controls', list.id);
+    expect(search).toHaveAttribute('aria-controls', list.id);
+    expect(search).toHaveAttribute('aria-autocomplete', 'list');
   });
 
-  it('Renders the select as disabled', () => {
-    render(SearchableSelect, {
-      ...common,
+  it('has a placeholder', () => {
+    renderSubject({ placeholder: "It's me" });
+
+    expect(getResults().search).toBe(screen.getByPlaceholderText("It's me"));
+  });
+
+  it.each([
+    {
+      state: InputStates.NONE,
+      disabled: false,
+      classNames: ['border-light', 'bg-white', 'focus:border-gray-9'],
+    },
+    {
+      state: InputStates.WARN,
+      disabled: false,
+      classNames: [
+        'border-warning-bright',
+        'bg-white',
+        'focus:outline-warning-bright',
+      ],
+    },
+    {
+      state: InputStates.ERROR,
+      disabled: false,
+      classNames: [
+        'border-danger-dark',
+        'bg-white',
+        'focus:outline-danger-dark',
+      ],
+    },
+    {
+      state: InputStates.NONE,
       disabled: true,
-    });
+      classNames: [
+        'cursor-not-allowed',
+        'border-disabled-light',
+        'bg-disabled-light',
+        'focus:border-disabled-dark',
+      ],
+    },
+  ])(
+    'displays state=$state, disabled=$disabled',
+    ({ state, disabled, classNames }) => {
+      renderSubject({ state, disabled });
 
-    const select = screen.getByPlaceholderText('Select an option');
+      expect(getResults().search).toHaveClass(...classNames);
+    }
+  );
 
-    expect(select).toHaveClass(
-      'bg-disabled-light text-disabled-dark border-disabled-light cursor-not-allowed'
-    );
+  it('expands the listbox on focus', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    expect(select).toHaveAttribute('aria-disabled', 'true');
+    const { search, button, list } = getResults();
+
+    expect(list).toHaveClass('hidden');
+    expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+
+    await user.keyboard('{Tab}');
+
+    expect(onFocus).toHaveBeenCalledOnce();
+    expect(search).toHaveFocus();
+    expect(list).not.toHaveClass('hidden');
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(search).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('Renders the select in the warn state', () => {
-    render(SearchableSelect, {
-      ...common,
-      state: 'warn',
-    });
+  it('expands the listbox on button click', async () => {
+    renderSubject();
 
-    const select = screen.getByPlaceholderText('Select an option');
+    const { search, button } = getResults();
 
-    expect(select).toHaveClass(
-      'border-warning-bright group-focus:outline-warning-bright group-focus:outline-[1.5px] group-focus:-outline-offset-1'
-    );
+    // TODO(mc, 2024-02-03): replace button.click with userEvent
+    // https://github.com/testing-library/user-event/issues/1119
+    await act(() => button.click());
+
+    expect(search).toHaveFocus();
+    expect(search).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('Renders the select in the error state', () => {
-    render(SearchableSelect, {
-      ...common,
-      state: 'error',
-    });
+  it('does not expand the listbox if disabled', async () => {
+    const user = userEvent.setup();
+    renderSubject({ disabled: true });
 
-    const select = screen.getByPlaceholderText('Select an option');
+    const { search } = getResults();
+    await user.keyboard('{Tab}');
 
-    expect(select).toHaveClass(
-      'border-danger-dark group-focus:outline-danger-dark group-focus:outline-[1.5px] group-focus:-outline-offset-1'
-    );
+    expect(onFocus).toHaveBeenCalledOnce();
+    expect(search).toHaveFocus();
+    expect(search).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('Renders the select heading', () => {
-    render(SearchableSelect, {
-      ...common,
-      heading: 'Test Heading',
-    });
+  it('closes the listbox if no options', async () => {
+    const user = userEvent.setup();
+    renderSubject({ exclusive: true, sort: 'reduce' });
 
-    const heading = screen.getByText('Test Heading');
+    const { search } = getResults();
+    await user.type(search, 'asdf');
 
-    expect(heading).toHaveClass(
-      'text-default flex flex-wrap py-1 pl-2 text-xs'
-    );
+    expect(search).toHaveFocus();
+    expect(search).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('Renders the select button', async () => {
-    const onButtonClick = vi.fn();
-    const { component } = render(SearchableSelect, {
-      ...common,
-      button: { text: 'Test Button', icon: 'alert' },
-    });
+  it('closes the listbox on second button click', async () => {
+    renderSubject();
 
-    component.$on('buttonclick', onButtonClick);
+    const { search, button } = getResults();
 
-    const button = screen.getByText('Test Button');
+    // TODO(mc, 2024-02-03): replace button.click with userEvent
+    // https://github.com/testing-library/user-event/issues/1119
+    await act(() => button.click());
+    await act(() => button.click());
 
-    expect(button).toHaveClass('pl-1.5');
-    expect(button.parentElement).toHaveClass(
-      'hover:bg-light border-light flex h-7.5 w-full items-center border-t px-2 py-1 text-xs'
-    );
-
-    await userEvent.click(button);
-
-    expect(onButtonClick).toHaveBeenCalled();
+    expect(search).toHaveFocus();
+    expect(search).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('Sorts results with a match at the start of a word', async () => {
-    render(SearchableSelect, common);
+  it('collapses the listbox on blur', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
-    const menu = screen.getByRole('menu');
+    const { search } = getResults();
 
-    select.focus();
-    await userEvent.type(select, 'C.)');
+    await user.keyboard('{Tab}{Tab}');
 
-    expect(menu.children[0]?.textContent?.trim()).toBe('C.)  Option');
-
-    await userEvent.type(select, 'Opt');
-
-    expect(menu.children[0]?.textContent?.trim()).toBe('First Option');
+    expect(onBlur).toHaveBeenCalledOnce();
+    expect(search).not.toHaveFocus();
+    expect(search).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('Sorts results with a match below matches at a start of the word', async () => {
-    render(SearchableSelect, common);
+  it('has options', () => {
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
-    const menu = screen.getByRole('menu');
+    const { search, options } = getResults();
 
-    select.focus();
-    await userEvent.type(select, 'l');
-
-    expect(menu.children[0]?.textContent?.trim()).toBe(
-      'With A Whole  L ot Of Parts'
-    );
-
-    expect(menu.children[1]?.textContent?.trim()).toBe('Something E l se');
+    expect(options).toHaveLength(2);
+    expect(options[0]).toHaveAccessibleName('hello from');
+    expect(options[0]).toHaveAttribute('aria-selected', 'false');
+    expect(options[1]).toHaveAccessibleName('the other side');
+    expect(options[1]).toHaveAttribute('aria-selected', 'false');
+    expect(search).not.toHaveAttribute('aria-activedescendant');
   });
 
-  it('Filters out options without a match when reduce is true', async () => {
-    render(SearchableSelect, { ...common, sort: 'reduce' });
+  it('selects a clicked option', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
-    const menu = screen.getByRole('menu');
+    const { search, options } = getResults();
 
-    select.focus();
-    await userEvent.type(select, 'C.)');
+    await user.click(search);
+    // TODO(mc, 2024-02-03): replace .click with userEvent
+    // https://github.com/testing-library/user-event/issues/1119
+    await act(() => options[0]?.click());
 
-    expect(menu.children[0]?.textContent?.trim()).toBe('C.)  Option');
-    expect(menu.children.length).toBe(1);
+    expect(search).toHaveFocus();
+    expect(onChange).toHaveBeenCalledWith('hello from');
+    expect(search).toHaveValue('hello from');
+    expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(search).not.toHaveAttribute('aria-activedescendant');
   });
 
-  it('Just highlights but does not filter or sort when sort is off', async () => {
-    render(SearchableSelect, { ...common, sort: 'off' });
+  it('auto-selects search result on Enter', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
-    const menu = screen.getByRole('menu');
+    const { search } = getResults();
+    await user.type(search, 'the other');
+    const { options } = getResults();
 
-    select.focus();
-    await userEvent.type(select, 'C.)');
+    expect(options[0]).toHaveAccessibleName('the other side');
+    expect(options[0]).toHaveAttribute('aria-selected', 'true');
+    expect(options[0]).toHaveAttribute('id', expect.any(String));
+    expect(options[1]).toHaveAccessibleName('hello from');
+    expect(options[1]).toHaveAttribute('aria-selected', 'false');
+    expect(options[1]).not.toHaveAttribute('id', options[0]?.id);
+    expect(search).toHaveAttribute('aria-activedescendant', options[0]?.id);
 
-    expect(menu.children[0]?.textContent?.trim()).toBe('First Option');
-    expect(menu.children[1]?.textContent?.trim()).toBe('Option 2');
-    expect(menu.children[2]?.textContent?.trim()).toBe('C.)  Option');
-    expect(menu.children.length).toBe(5);
+    await user.keyboard('{Enter}');
+
+    expect(onChange).toHaveBeenCalledWith('the other side');
+    expect(search).toHaveValue('the other side');
+    expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(options[0]).toHaveAttribute('aria-selected', 'false');
+    expect(options[1]).toHaveAttribute('aria-selected', 'false');
+    expect(search).not.toHaveAttribute('aria-activedescendant');
   });
 
-  it('Selects an option with click', async () => {
-    render(SearchableSelect, common);
+  it('auto-selects search result on blur', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
+    const { search } = getResults();
+    await user.type(search, 'the other');
+    await user.keyboard('{Tab}');
 
-    select.focus();
-    await userEvent.click(screen.getAllByRole('menuitem')[2]!);
-
-    expect(select.value).toBe('C.) Option');
+    expect(onChange).toHaveBeenCalledWith('the other side');
   });
 
-  it('Navigates to and selects an option with enter', async () => {
-    render(SearchableSelect, common);
+  it('does not send multiple change events on blur', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
+    await user.keyboard('{Tab}hello{Enter}{Tab}');
 
-    select.focus();
-    await userEvent.keyboard('[ArrowDown]');
-    await userEvent.keyboard('[ArrowDown]');
-    await userEvent.keyboard('[ArrowDown]');
-    await userEvent.keyboard('[Enter]');
-
-    expect(select.value).toBe('C.) Option');
+    expect(onChange).toHaveBeenCalledOnce();
   });
 
-  it('Navigates through the list', async () => {
-    render(SearchableSelect, common);
+  it('keeps input value if menu closed on blur', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
-    const menuItems = screen.getAllByRole('menuitem');
+    const { search } = getResults();
+    await user.type(search, 'the other');
+    await user.keyboard('{Escape}{Tab}');
 
-    select.focus();
-    await userEvent.keyboard('[ArrowDown]');
-
-    expect(menuItems[0]).toHaveClass('bg-light');
-
-    await userEvent.keyboard('[ArrowDown]');
-    await userEvent.keyboard('[ArrowDown]');
-
-    expect(menuItems[2]).toHaveClass('bg-light');
-
-    await userEvent.keyboard('[ArrowDown]');
-    await userEvent.keyboard('[ArrowDown]');
-
-    expect(menuItems[4]).toHaveClass('bg-light');
-
-    await userEvent.keyboard('[ArrowDown]');
-
-    expect(menuItems[0]).toHaveClass('bg-light');
-
-    await userEvent.keyboard('[ArrowUp]');
-
-    expect(menuItems[4]).toHaveClass('bg-light');
-
-    await userEvent.keyboard('[ArrowUp]');
-    await userEvent.keyboard('[ArrowUp]');
-    await userEvent.keyboard('[Enter]');
-
-    expect(select.value).toBe('C.) Option');
+    expect(onChange).toHaveBeenCalledWith('the other');
   });
 
-  it('Closes the menu on escape', async () => {
-    render(SearchableSelect, common);
+  it('has an "other" option when not exclusive', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
-    const menu = screen.getByRole('menu');
-    const menuItems = screen.getAllByRole('menuitem');
+    const { search } = getResults();
+    await user.type(search, 'hello');
+    const { options } = getResults();
 
-    expect(menu.parentElement).toHaveClass('invisible');
-
-    select.focus();
-    await userEvent.keyboard('[ArrowDown]');
-
-    expect(menuItems[0]).toHaveClass('bg-light');
-
-    await userEvent.keyboard('[Escape]');
-
-    expect(menu.parentElement).toHaveClass('invisible');
+    expect(options).toHaveLength(3);
+    expect(options[0]).toHaveAccessibleName('hello from');
+    expect(options[1]).toHaveAccessibleName('the other side');
+    expect(options[2]).toHaveAccessibleName('hello');
+    expect(options[2]).toHaveAttribute('aria-selected', 'false');
   });
 
-  it('Closes the menu on tab', async () => {
-    render(SearchableSelect, common);
+  it('sets an "other" option as active when no search matches', async () => {
+    const user = userEvent.setup();
+    renderSubject();
 
-    const select: HTMLInputElement =
-      screen.getByPlaceholderText('Select an option');
-    const menu = screen.getByRole('menu');
-    const menuItems = screen.getAllByRole('menuitem');
+    const { search } = getResults();
+    await user.type(search, 'asdf');
+    const { options } = getResults();
 
-    expect(menu.parentElement).toHaveClass('invisible');
-
-    select.focus();
-    await userEvent.keyboard('[ArrowDown]');
-
-    expect(menuItems[0]).toHaveClass('bg-light');
-
-    await userEvent.keyboard('[Tab]');
-
-    expect(menu.parentElement).toHaveClass('invisible');
+    expect(options[2]).toHaveAccessibleName('asdf');
+    expect(options[2]).toHaveAttribute('aria-selected', 'true');
+    expect(search).toHaveAttribute('aria-activedescendant', options[2]?.id);
   });
 
-  it('Renders with the passed cx classes', () => {
-    render(SearchableSelect, {
-      ...common,
-      cx: cxTestArguments,
-    });
+  it('has no "other" option when value empty', () => {
+    renderSubject();
 
-    expect(
-      screen.getByPlaceholderText('Select an option').parentElement
-        ?.parentElement
-    ).toHaveClass(cxTestResults);
+    const { options } = getResults();
+
+    expect(options).toHaveLength(2);
+  });
+
+  it('has no "other" option when value matches', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search } = getResults();
+    await user.type(search, 'hello from');
+    const { options } = getResults();
+
+    expect(options).toHaveLength(2);
+  });
+
+  it('has no "other" option when exclusive', async () => {
+    const user = userEvent.setup();
+    renderSubject({ exclusive: true });
+
+    const { search } = getResults();
+    await user.type(search, 'hello');
+    const { options } = getResults();
+
+    expect(options).toHaveLength(2);
+  });
+
+  it('has an "other" option when value matches exclusivity function', async () => {
+    const user = userEvent.setup();
+    renderSubject({ exclusive: (value: string) => value === 'hello' });
+
+    const { search } = getResults();
+    await user.type(search, 'hello');
+    const { options } = getResults();
+
+    expect(options).toHaveLength(3);
+  });
+
+  it('adds a prefix to the "other" option display text', async () => {
+    const user = userEvent.setup();
+    renderSubject({ otherOptionPrefix: 'You said:' });
+
+    const { search } = getResults();
+    await user.type(search, 'hello');
+    const { options } = getResults();
+
+    expect(options[2]).toHaveAccessibleName('You said: hello');
+  });
+
+  it('empties input value if closed and exclusive', async () => {
+    const user = userEvent.setup();
+    renderSubject({ exclusive: true });
+
+    const { search } = getResults();
+    await user.type(search, 'hello');
+    await user.keyboard('{Escape}{Tab}');
+
+    expect(onChange).toHaveBeenCalledWith('');
+  });
+
+  it('closes listbox on escape', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search } = getResults();
+    await user.type(search, 'the other');
+    await user.keyboard('{Escape}');
+
+    expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(search).toHaveValue('the other');
+  });
+
+  it('resets input after closing on escape', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search } = getResults();
+
+    await user.type(search, 'the other');
+    await user.keyboard('{Escape}{Escape}');
+
+    expect(search).toHaveValue('');
+  });
+
+  it('reopens listbox on more typing', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search, options } = getResults();
+
+    await user.type(search, 'the other');
+    await user.keyboard('{Escape} side');
+
+    expect(search).toHaveAttribute('aria-expanded', 'true');
+    expect(search).toHaveAttribute('aria-activedescendant', options[1]?.id);
+    expect(options[0]).toHaveAttribute('aria-selected', 'false');
+    expect(options[1]).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('moves visual focus to options on arrow keys', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search, options } = getResults();
+    await user.keyboard('{Tab}');
+
+    await user.keyboard('{ArrowDown}');
+    expect(search).toHaveAttribute('aria-activedescendant', options[0]?.id);
+    expect(options[0]).toHaveAttribute('aria-selected', 'true');
+    expect(options[1]).toHaveAttribute('aria-selected', 'false');
+
+    await user.keyboard('{ArrowDown}');
+    expect(search).toHaveAttribute('aria-activedescendant', options[1]?.id);
+    expect(options[0]).toHaveAttribute('aria-selected', 'false');
+    expect(options[1]).toHaveAttribute('aria-selected', 'true');
+
+    await user.keyboard('{ArrowDown}');
+    expect(options[0]).toHaveAttribute('aria-selected', 'true');
+
+    await user.keyboard('{ArrowUp}');
+    expect(options[1]).toHaveAttribute('aria-selected', 'true');
+
+    await user.keyboard('{ArrowUp}');
+    expect(options[0]).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('sets cursor with home and end', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search } = getResults();
+    await user.type(search, 'e');
+    await user.keyboard('{Home}h');
+
+    expect(search).toHaveValue('he');
+
+    await user.keyboard('{End}llo');
+    expect(search).toHaveValue('hello');
+  });
+
+  it('opens listbox with alt+down arrow without changing selected state', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search, options } = getResults();
+    await user.keyboard('{Tab}{Alt>}{ArrowDown}{/Alt}');
+
+    expect(search).toHaveAttribute('aria-expanded', 'true');
+    expect(options[0]).toHaveAttribute('aria-selected', 'false');
+    expect(options[1]).toHaveAttribute('aria-selected', 'false');
+  });
+
+  it.each(['{Home}', '{End}', '{ArrowRight}', '{ArrowLeft}'])(
+    'moves visual focus to input and resets highlight with %s',
+    async (key) => {
+      const user = userEvent.setup();
+      renderSubject();
+
+      const { search, options } = getResults();
+      await user.type(search, 'hello');
+      await user.keyboard(`{ArrowDown}${key}`);
+
+      expect(options[0]).toHaveAttribute('aria-selected', 'true');
+    }
+  );
+
+  it('resets selected item on close', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search, options } = getResults();
+    await user.type(search, 'hello');
+    await user.keyboard('{Escape}{ArrowDown}');
+
+    expect(options[0]).toHaveAttribute('aria-selected', 'true');
   });
 });
