@@ -50,6 +50,7 @@ export {
 
 export {
   ToastContainer,
+  ToastBanner,
   provideToast,
   useToast,
   ToastVariant,

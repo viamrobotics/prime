@@ -5,12 +5,18 @@ import {
   floatingStyle,
   type FloatingReferenceElement,
   type FloatingPlacement,
+  type FloatingFlipOptions,
+  type FloatingShiftOptions,
+  type FloatingSizeOptions,
 } from './floating-style';
 
 export let referenceElement: FloatingReferenceElement | undefined;
 export let placement: FloatingPlacement = 'bottom-start';
-export let offset = 0;
-export let matchWidth = false;
+export let offset: number | undefined = undefined;
+export let flip: FloatingFlipOptions | undefined = undefined;
+export let shift: FloatingShiftOptions | undefined = undefined;
+export let size: FloatingSizeOptions | undefined = undefined;
+export let auto = false;
 export let onClickOutside: ((target: Element) => unknown) | undefined =
   undefined;
 
@@ -25,7 +31,10 @@ $: style.register({
   floatingElement,
   placement,
   offset,
-  matchWidth,
+  flip,
+  shift,
+  size,
+  auto,
 });
 </script>
 
