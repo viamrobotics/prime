@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { theme } from '@viamrobotics/prime-core/theme';
 
 /*
  * this color map is greyscale. The color map is being used map probability values of a PCD
@@ -18,6 +19,9 @@ const colorMapGrey = [
   [0, 0, 0],
 ].map(([red, green, blue]) =>
   new THREE.Vector3(red, green, blue).multiplyScalar(1 / 255)
+);
+const USER_GENERATED_POINT_COLOR = new THREE.Color(
+  theme.extend.colors.cyberpunk
 );
 
 /*
@@ -54,7 +58,12 @@ export const mapColorAttributeGrayscale = (colors: THREE.BufferAttribute) => {
      */
 
     if (colors.getX(i) === 1) {
-      colors.setXYZ(i, 0, 0, 1);
+      colors.setXYZ(
+        i,
+        USER_GENERATED_POINT_COLOR.r,
+        USER_GENERATED_POINT_COLOR.g,
+        USER_GENERATED_POINT_COLOR.b
+      );
       continue;
     }
 
