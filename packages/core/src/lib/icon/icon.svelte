@@ -41,8 +41,6 @@ export let size: Size = 'base';
 /** Additional CSS classes to pass to the svg. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
-
-const hasNameProperty = Object.hasOwn(paths, name);
 </script>
 
 <!--
@@ -50,14 +48,7 @@ const hasNameProperty = Object.hasOwn(paths, name);
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
 <svg
-  class={cx(
-    'text-gray-6',
-    sizes[size],
-    {
-      hidden: !hasNameProperty,
-    },
-    extraClasses
-  )}
+  class={cx(sizes[size], extraClasses)}
   viewBox="0 0 24 24"
   aria-hidden="true"
   focusable="false"
