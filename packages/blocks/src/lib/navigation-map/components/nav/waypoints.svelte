@@ -49,7 +49,7 @@ useMapLibreEvent('click', (event) => {
   >
     <small>Waypoint {index}</small>
     <small class="text-subtle-2 opacity-60 group-hover:opacity-100">
-      ({waypoint.lng.toFixed(4)}, {waypoint.lat.toFixed(4)})
+      ({waypoint.lat.toFixed(4)}, {waypoint.lng.toFixed(4)})
     </small>
     <div class="flex items-center gap-1.5">
       <IconButton
