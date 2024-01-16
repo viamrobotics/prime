@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { theme } from '@viamrobotics/prime-core/theme';
 
 /*
  * this color map is greyscale. The color map is being used map probability values of a PCD
@@ -18,6 +19,9 @@ const colorMapGrey = [
   [0, 0, 0],
 ].map(([red, green, blue]) =>
   new THREE.Vector3(red, green, blue).multiplyScalar(1 / 255)
+);
+const USER_GENERATED_POINT_COLOR = new THREE.Color(
+  theme.extend.colors.cyberpunk
 );
 
 /*
@@ -45,9 +49,24 @@ const colorBuckets = (probability: number): THREE.Vector3 => {
 export const mapColorAttributeGrayscale = (colors: THREE.BufferAttribute) => {
   for (let i = 0; i < colors.count; i += 1) {
     /*
-     * Probability is currently assumed to be held in the rgb field of the PCD map, on a scale of 0 to 100.
-     * ticket to look into this further https://viam.atlassian.net/browse/RSDK-2605
+     * Probability is currently assumed to be held in the b part of the rgb field of the PCD map, on a scale of 0 to 100.
+     * ticket to look into this further https://viam.atlassian.net/browse/RSDK-2605.
+     *
+     * User generated points that have been added to the pcd are marked as such by putting 100% probability
+     * in the r part of the rgb field. If that has been set, we will draw the point in blue instead of mapping it to its
+     * corresponding shade of gray to signal it is a user generated point.
      */
+
+    if (colors.getX(i) === 1) {
+      colors.setXYZ(
+        i,
+        USER_GENERATED_POINT_COLOR.r,
+        USER_GENERATED_POINT_COLOR.g,
+        USER_GENERATED_POINT_COLOR.b
+      );
+      continue;
+    }
+
     const colorMapPoint = colorBuckets(colors.getZ(i) * 10);
     colors.setXYZ(i, colorMapPoint.x, colorMapPoint.y, colorMapPoint.z);
   }
