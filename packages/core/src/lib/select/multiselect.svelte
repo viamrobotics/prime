@@ -1,11 +1,11 @@
 <!--
 @component
-  
+
 For selecting multiple options from a list.
 
 ```svelte
-<Multiselect 
-  options={["Option 1", "Option 2", "Option 3"]} 
+<Multiselect
+  options={["Option 1", "Option 2", "Option 3"]}
   on:input={onSelect}
 />
 ```
@@ -16,17 +16,17 @@ For selecting multiple options from a list.
 import cx from 'classnames';
 
 import { clickOutside } from '$lib/click-outside';
-import type { IconName } from '$lib/icon/icons';
+import type { IconName } from '$lib/icon';
+import { InputStates, type InputState } from '$lib/input';
 import Pill from '$lib/pill.svelte';
 import { uniqueId } from '$lib/unique-id';
 
 import { selectControls } from './controls';
 import { createSearchableSelectDispatcher } from './dispatcher';
-import { getSearchResults, type SortOptions } from './search';
+import { SortOptions, getSearchResults, type SortOption } from './search';
 import SelectMenuButton from './select-menu-button.svelte';
 import SelectInput from './select-input.svelte';
 import SelectMenu from './select-menu.svelte';
-import type { SelectState } from './select.svelte';
 
 /** The options the user should be allowed to search and select from. */
 export let options: string[] = [];
@@ -41,7 +41,7 @@ export let value: string | undefined = undefined;
 export let disabled = false;
 
 /** The state of the select (info, warn, error, success), if any. */
-export let state: SelectState = 'none';
+export let state: InputState = InputStates.NONE;
 
 /**
  * How to handle sorting for the select:
@@ -51,7 +51,7 @@ export let state: SelectState = 'none';
  * no match.
  * - `off` will apply no sorting or filtering.
  */
-export let sort: SortOptions = 'default';
+export let sort: SortOption = SortOptions.DEFAULT;
 
 /** Whether or not to show selected values below the input at pills. */
 export let showPills = true;

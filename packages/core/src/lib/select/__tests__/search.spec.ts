@@ -1,15 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import {
-  getSearchHighlight,
-  getSearchMatch,
-  getSearchMatches,
-  getSearchResults,
-  getWordIndex,
-  prioritizeMatches,
-} from '../search';
-import { escapeRegExp } from 'lodash-es';
+import { getSearchResults } from '../search';
 
-describe('search', () => {
+describe('getSearchResults', () => {
   const options = [
     'First Option',
     'Option 2',
@@ -18,132 +10,65 @@ describe('search', () => {
     'With A Whole Lot Of Parts',
   ];
 
-  describe('getWordIndex', () => {
-    it('should return the index of the word containing the character at the passed index', () => {
-      const option = 'With A Whole Lot Of Parts';
-      const index = option.indexOf('c');
-      expect(getWordIndex(option, index)).toBe(5);
-    });
+  it('returns an array of search results sorted by priority', () => {
+    const matches = getSearchResults(options, 's');
+
+    expect(matches).toEqual([
+      {
+        option: 'Something Else',
+        priority: 0,
+        highlight: ['', 'S', 'omething Else'],
+      },
+      {
+        option: 'First Option',
+        priority: 1,
+        highlight: ['Fir', 's', 't Option'],
+      },
+      {
+        option: 'With A Whole Lot Of Parts',
+        priority: 6,
+        highlight: ['With A Whole Lot Of Part', 's', ''],
+      },
+      { option: 'Option 2', priority: -1 },
+      { option: 'C.) Option', priority: -1 },
+    ]);
   });
 
-  describe('getSearchHighlight', () => {
-    const option = 'Test Option';
+  it('returns an array of search results sorted by priority without any non-matches', () => {
+    const matches = getSearchResults(options, 's', 'reduce');
 
-    it('should return a highlighting breakdown of the passed option with a term matching the start of a word', () => {
-      const search = 'Opt';
-      const match = new RegExp(escapeRegExp(search), 'giu').exec(option);
-      const highlight = getSearchHighlight(option, search, match!);
-
-      expect(highlight[0]).toBe('Test ');
-      expect(highlight[1]).toBe(search);
-      expect(highlight[2]).toBe('ion');
-    });
-
-    it('should return a highlighting breakdown of the passed option with a term matching anywhere', () => {
-      const search = 'pt';
-      const match = new RegExp(escapeRegExp(search), 'giu').exec(option);
-      const highlight = getSearchHighlight(option, search, match!);
-
-      expect(highlight[0]).toBe('Test O');
-      expect(highlight[1]).toBe(search);
-      expect(highlight[2]).toBe('ion');
-    });
+    expect(matches).toEqual([
+      expect.objectContaining({ option: 'Something Else' }),
+      expect.objectContaining({ option: 'First Option' }),
+      expect.objectContaining({ option: 'With A Whole Lot Of Parts' }),
+    ]);
   });
 
-  describe('getSearchMatch', () => {
-    const option = 'Test Option';
+  it('returns an array of search results with highlights but no sorting', () => {
+    const matches = getSearchResults(options, 's', 'off');
 
-    it('should return a priority 0 match (start of word)', () => {
-      const search = 'Opt';
-      const match = getSearchMatch(option, search);
-
-      expect(match.priority).toBe(0);
-    });
-
-    it('should return a priority 1 match (in first word)', () => {
-      const search = 'est';
-      const match = getSearchMatch(option, search);
-
-      expect(match.priority).toBe(1);
-    });
-
-    it('should return a priority 2 match (in second word)', () => {
-      const search = 'pt';
-      const match = getSearchMatch(option, search);
-
-      expect(match.priority).toBe(2);
-    });
-
-    it('should return a priority -1 match (no match)', () => {
-      const search = 'rf';
-      const match = getSearchMatch(option, search);
-
-      expect(match.priority).toBe(-1);
-    });
+    expect(matches).toEqual([
+      expect.objectContaining({ option: 'First Option' }),
+      expect.objectContaining({ option: 'Option 2' }),
+      expect.objectContaining({ option: 'C.) Option' }),
+      expect.objectContaining({ option: 'Something Else' }),
+      expect.objectContaining({ option: 'With A Whole Lot Of Parts' }),
+    ]);
   });
 
-  describe('prioritizeMatches', () => {
-    it('should return a prioritized map of matches', () => {
-      const matches = prioritizeMatches(options, 's');
+  it('matches and highlights special character at the start of an option', () => {
+    const matches = getSearchResults(options, 'C.)', 'reduce');
 
-      expect(matches['-1'].length).toBe(2);
-      expect(matches['0'].length).toBe(1);
-      expect(matches['1']?.length).toBe(1);
-      expect(matches['6']?.length).toBe(1);
-    });
+    expect(matches).toEqual([
+      { option: 'C.) Option', priority: 0, highlight: ['', 'C.)', ' Option'] },
+    ]);
   });
 
-  describe('getSearchMatches', () => {
-    it('should return an array of search matches sorted by their priority', () => {
-      const matches = getSearchMatches(options, 's');
+  it('matches and highlights special character in the middle of an option', () => {
+    const matches = getSearchResults(options, '.)', 'reduce');
 
-      expect(matches[0]?.priority).toBe(0);
-      expect(matches[1]?.priority).toBe(1);
-      expect(matches[2]?.priority).toBe(6);
-      expect(matches[3]?.priority).toBe(-1);
-      expect(matches[4]?.priority).toBe(-1);
-    });
-
-    it('should return an array of search matches sorted by their priority without any non-matches', () => {
-      const matches = getSearchMatches(options, 's', 'reduce');
-
-      expect(matches[0]?.priority).toBe(0);
-      expect(matches[1]?.priority).toBe(1);
-      expect(matches[2]?.priority).toBe(6);
-      expect(matches[3]).toBe(undefined);
-      expect(matches[4]).toBe(undefined);
-    });
-  });
-
-  describe('getSearchResults', () => {
-    it('should return an array of search results sorted by priority', () => {
-      const matches = getSearchResults(options, 's');
-
-      expect(matches[0]?.option).toBe('Something Else');
-      expect(matches[1]?.option).toBe('First Option');
-      expect(matches[2]?.option).toBe('With A Whole Lot Of Parts');
-      expect(matches[3]?.option).toBe('Option 2');
-      expect(matches[4]?.option).toBe('C.) Option');
-    });
-
-    it('should return an array of search results sorted by priority without any non-matches', () => {
-      const matches = getSearchResults(options, 's', 'reduce');
-
-      expect(matches[0]?.option).toBe('Something Else');
-      expect(matches[1]?.option).toBe('First Option');
-      expect(matches[2]?.option).toBe('With A Whole Lot Of Parts');
-      expect(matches[3]).toBe(undefined);
-      expect(matches[4]).toBe(undefined);
-    });
-
-    it('should return an array of search results with highlights but no sorting', () => {
-      const matches = getSearchResults(options, 's', 'off');
-
-      expect(matches[0]?.option).toBe(options[0]);
-      expect(matches[1]?.option).toBe(options[1]);
-      expect(matches[2]?.option).toBe(options[2]);
-      expect(matches[3]?.option).toBe(options[3]);
-      expect(matches[4]?.option).toBe(options[4]);
-    });
+    expect(matches).toEqual([
+      { option: 'C.) Option', priority: 1, highlight: ['C', '.)', ' Option'] },
+    ]);
   });
 });

@@ -6,10 +6,15 @@ import {
   flip as flipMiddleware,
   shift as shiftMiddleware,
   arrow as arrowMiddleware,
+  size as sizeMiddleware,
   type Placement,
   type Side,
   type ComputePositionConfig,
   type ReferenceElement,
+  type OffsetOptions,
+  type FlipOptions,
+  type ShiftOptions,
+  type SizeOptions,
 } from '@floating-ui/dom';
 
 import { derived, writable, type Readable } from 'svelte/store';
@@ -18,6 +23,10 @@ import { noop } from 'lodash-es';
 export type {
   Placement as FloatingPlacement,
   ReferenceElement as FloatingReferenceElement,
+  OffsetOptions as FloatingOffsetOptions,
+  FlipOptions as FloatingFlipOptions,
+  ShiftOptions as FloatingShiftOptions,
+  SizeOptions as FloatingSizeOptions,
 } from '@floating-ui/dom';
 
 export interface FloatingStyleStore
@@ -42,10 +51,11 @@ export interface State {
   referenceElement?: ReferenceElement | undefined;
   floatingElement?: HTMLElement | undefined;
   arrowElement?: Element | undefined;
-  placement?: Placement;
-  offset?: number;
-  flip?: boolean;
-  shift?: number;
+  placement?: Placement | undefined;
+  offset?: OffsetOptions | undefined;
+  flip?: FlipOptions | undefined;
+  shift?: ShiftOptions | undefined;
+  size?: SizeOptions | undefined;
   auto?: boolean;
 }
 
@@ -109,19 +119,16 @@ const calculateStyle = async (state: State): Promise<FloatingStyle> => {
 };
 
 const getConfig = (state: State): ComputePositionConfig => {
-  const { arrowElement, placement, offset, flip, shift } = state;
+  const { arrowElement, placement, offset, flip, shift, size } = state;
 
   return {
     placement: placement ?? 'top',
     middleware: [
       offset !== undefined && offsetMiddleware(offset),
-      flip &&
-        flipMiddleware({
-          fallbackAxisSideDirection: 'start',
-          crossAxis: shift === undefined,
-        }),
-      shift !== undefined && shiftMiddleware({ padding: shift }),
+      flip !== undefined && flipMiddleware(flip),
+      shift !== undefined && shiftMiddleware(shift),
       arrowElement && arrowMiddleware({ element: arrowElement }),
+      size !== undefined && sizeMiddleware(size),
     ],
   };
 };
