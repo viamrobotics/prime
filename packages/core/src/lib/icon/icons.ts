@@ -110,6 +110,18 @@ export const paths = {
   'viam-service':
     'M10.6 9.6L9 15L7.4 9.6L2 8L7.4 6.4L9 1L10.6 6.4L16 8L10.6 9.6ZM17 14.2L21 12L18.8 16L21 20L17 17.8L13 20L15.2 16L13 12L17 14.2ZM10 16L8.3 19L10 22L7 20.3L4 22L5.7 19L4 16L7 17.7L10 16Z',
   'video-outline': MDI.mdiVideoOutline,
+  'grid-orthographic':
+    'M11 11V4H4v7h7Zm0 2H4v7h7v-7Zm2 7v-7h7v7h-7ZM3 22l-1-1V3l1-1h18l1 1v18l-1 1H3Zm17-11h-7V4h7v7Z',
+  'grid-perspective':
+    'M11 11V4.5H6.7l-1 6.5H11Zm0 2H5.4l-1 6.5H11V13Zm2 6.5V13h5.6l1 6.5H13Zm-10.1 2a.7.7 0 0 1-.8-.9L5 3.1c0-.3.4-.6.7-.6h12.8c.3 0 .6.3.7.6L22 20.6c0 .5-.3.9-.8.9H3ZM18.3 11H13V4.5h4.3l1 6.5Z',
+  'magnet-off':
+    'M21 16.8V11A9 9 0 0 0 7.2 3.4l3 3A5 5 0 0 1 17 11v2l4 3.8ZM3 19h4v3H3v-3Z M3 11v6h4v-6c0-.6.1-1.3.4-1.9L17.5 19H17v3h3.6l2 1.8 1.3-1.4-2.9-2.8-.6-.6-2-2-1.4-1.3-8.5-8.3-2.9-2.7L2 1 .5 2.5l3.9 3.7A9 9 0 0 0 3 11Z',
+  magnet:
+    'M3 17v-6a9 9 0 1 1 18 0v6h-4v-6a5 5 0 0 0-10 0v6m10 2h4v3h-4M3 19h4v3H3',
+  resize:
+    'm11 12 4-4h-4V6h7v7h-2V9l-4 4v3h8V4H8v8h3ZM22 2v16H12v4H2V12h4V2h16ZM10 14H4v6h6v-6Z',
+  'cursor-move':
+    'M13 6v5h5V7.7l4.3 4.3-4.3 4.3V13h-5v5h3.3L12 22.3 7.7 18H11v-5H6v3.3L1.7 12 6 7.7V11h5V6H7.7L12 1.7 16.3 6H13Z',
 } as const;
 
 /**
