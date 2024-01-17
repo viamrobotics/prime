@@ -37,7 +37,7 @@ An opinionated input for text values that only allows specified regex. The allow
 import { RestrictedTextInput } from '@viamrobotics/prime-core';
 
 const restrictInput = (inputValue: string) =>
-  inputValue.replaceAll(/[^a-n]/gu, '');
+  inputValue.replaceAll(/[^a-zA-Z0-9]/gu, '');
 ```
 
 <Canvas>

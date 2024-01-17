@@ -8,50 +8,39 @@ import { Radio } from '@viamrobotics/prime-core';
 <Story name="Basic">
   <Radio
     name="basic"
-    options={['Opt 1', 'Opt 2', 'Opt 3']}
-    selected="Opt 1"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
   />
 </Story>
 
 <Story name="With legend">
   <Radio
     name="legend"
-    options={['Opt 1', 'Opt 2']}
-    selected="Opt 1"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
   >
-    <svelte:fragment slot="legend">These are your options</svelte:fragment>
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
   </Radio>
 </Story>
 
 <Story name="Required">
   <Radio
     name="required"
-    options={['To be', 'Not to be']}
-    selected="Opt 1"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
     required
   >
-    <svelte:fragment slot="legend">Answer the question</svelte:fragment>
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
   </Radio>
 </Story>
 
 <Story name="Disabled">
   <Radio
     name="disabled"
-    options={['Frank', 'Dave']}
-    selected="Frank"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
     disabled
   >
-    <svelte:fragment slot="legend"
-      >I'm afraid that's something I cannot allow to happen.
-    </svelte:fragment>
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
   </Radio>
-</Story>
-
-<Story name="Row">
-  <Radio
-    name="row"
-    options={['Left', 'Right']}
-    selected="Left"
-    direction="row"
-  />
 </Story>

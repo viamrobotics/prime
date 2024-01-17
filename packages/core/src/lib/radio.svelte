@@ -56,10 +56,8 @@ $: getIcon = (option: string): IconName =>
   {#if $$slots.legend}
     <legend
       class={cx(
-        cx('mb-1 flex text-xs', {
-          'text-subtle-1': !disabled,
-          'cursor-not-allowed text-disabled-dark': disabled,
-          'after:ml-1 after:text-danger-dark after:content-["*"]': required,
+        cx('mb-1 flex text-xs text-subtle-1', {
+          'after:text-danger-dark after:content-["*"]': required,
         })
       )}
     >
@@ -105,9 +103,11 @@ $: getIcon = (option: string): IconName =>
           name={getIcon(option)}
           cx={cx({
             'text-disabled-dark': disabled,
+            'text-gray-9': !disabled && option === selected,
+            'text-gray-6': !disabled && option !== selected,
           })}
         />
-        <span class="pl-1.5 peer-focus:underline">
+        <span class="pl-1.5">
           {option}
         </span>
       </Label>

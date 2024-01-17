@@ -8,17 +8,16 @@ let smallModalOpen = false;
 
 <Meta title="Elements/Modal" />
 
-<Story name="Default">
-  <div class="h-[500px]">
-    <Button on:click={() => (defaultModalOpen = true)}>Open</Button>
+<Story name="Small">
+  <div class="h-[200px]">
+    <Button on:click={() => (smallModalOpen = true)}>Open</Button>
     <Modal
-      isOpen={defaultModalOpen}
-      on:close={() => (defaultModalOpen = false)}
+      isOpen={smallModalOpen}
+      variant="small"
+      on:close={() => (smallModalOpen = false)}
     >
-      <svelte:fragment slot="title">Default title</svelte:fragment>
-      <svelte:fragment slot="message"
-        >This is the default modal.</svelte:fragment
-      >
+      <svelte:fragment slot="title">Small modal title</svelte:fragment>
+      <svelte:fragment slot="message">This is a small modal.</svelte:fragment>
       <Button
         slot="primary"
         on:click={() => console.log('Primary button clicked')}
@@ -36,16 +35,20 @@ let smallModalOpen = false;
   </div>
 </Story>
 
-<Story name="Small">
-  <div class="h-[200px]">
-    <Button on:click={() => (smallModalOpen = true)}>Open</Button>
+<Story name="Default">
+  <div class="h-[500px]">
+    <Button on:click={() => (defaultModalOpen = true)}>Open</Button>
     <Modal
-      isOpen={smallModalOpen}
-      variant="small"
-      on:close={() => (smallModalOpen = false)}
+      isOpen={defaultModalOpen}
+      on:close={() => (defaultModalOpen = false)}
     >
-      <svelte:fragment slot="title">Small modal title</svelte:fragment>
-      <svelte:fragment slot="message">This is a small modal.</svelte:fragment>
+      <svelte:fragment slot="title">Default title</svelte:fragment>
+      <div
+        slot="message"
+        class="h-full border border-dashed border-light"
+      >
+        This is a large modal.
+      </div>
       <Button
         slot="primary"
         on:click={() => console.log('Primary button clicked')}
