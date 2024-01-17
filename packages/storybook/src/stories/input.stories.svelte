@@ -10,7 +10,7 @@ import {
 } from '@viamrobotics/prime-core';
 
 const restrictInput = (inputValue: string) =>
-  inputValue.replaceAll(/[^a-n]/gu, '');
+  inputValue.replaceAll(/[^a-zA-Z0-9]/gu, '');
 </script>
 
 <Meta title="Elements/Input" />
@@ -34,21 +34,28 @@ const restrictInput = (inputValue: string) =>
 </Story>
 
 <Story name="Restricted Text">
-  <div class="mb-2 max-w-[200px]">
-    <RestrictedTextInput
-      value=""
-      {restrictInput}
-      tooltipDescription="Only lowercase a-n allowed"
-    />
-  </div>
+  <Label>
+    Username
+    <div
+      slot="input"
+      class="mb-2 max-w-[200px]"
+    >
+      <RestrictedTextInput
+        value=""
+        {restrictInput}
+        tooltipDescription="Valid characters: letters, numbers"
+        placeholder="funkymonkey89"
+      />
+    </div>
+  </Label>
 </Story>
 
 <Story name="Numeric">
-  <NumericInput cx="max-w-[200px]" />
+  <NumericInput cx="max-w-[80px]" />
 </Story>
 
 <Story name="Slider">
-  <SliderInput cx="max-w-[200px]" />
+  <SliderInput cx="max-w-[80px]" />
 </Story>
 
 <Story name="Range">
