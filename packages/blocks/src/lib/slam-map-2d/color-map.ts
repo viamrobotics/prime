@@ -60,7 +60,7 @@ export const mapColorAttributeGrayscale = (colors: THREE.BufferAttribute) => {
      * shade of gray to signal it is a user generated point.
      * 
      * SLAM positions have been added to the pcd are marked as such by putting 100% probability in the g part of the rgb field. 
-     * If that has been set, we will draw the point in hoshimi instead of mapping it to its corresponding shade of gray to signal 
+     * If that has been set, we will draw the point in hologram instead of mapping it to its corresponding shade of gray to signal 
      * it is a SLAM position.
      */
 
