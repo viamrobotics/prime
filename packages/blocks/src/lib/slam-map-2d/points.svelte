@@ -8,6 +8,7 @@
 <script lang="ts">
 import * as THREE from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader';
+import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { T, createRawEventDispatcher } from '@threlte/core';
 import { renderOrder } from './render-order';
 import { onMount } from 'svelte';
@@ -18,6 +19,9 @@ export let pointcloud: Uint8Array | undefined;
 
 /** The size of each individual point */
 export let size: number;
+
+/** Optional slam path */
+export let slamPath: Uint8Array | undefined;
 
 interface $$Events extends Record<string, unknown> {
   /** Dispatched whenever a new .pcd file is parsed. Emits the radius and center of the cloud's bounding sphere. */
@@ -35,8 +39,20 @@ let material: THREE.PointsMaterial | undefined;
 let radius = 1;
 let center = { x: 0, y: 0 };
 
-const update = (cloud: Uint8Array) => {
-  points = loader.parse(cloud.buffer);
+const update = (cloud: Uint8Array | undefined) => {
+  if (cloud !== undefined) {
+    points = loader.parse(cloud.buffer);
+  }
+  
+  if (slamPath) {
+    const slamloader = new PCDLoader();
+    const slamPathPoints = slamloader.parse(slamPath.buffer);
+
+    points.geometry = BufferGeometryUtils.mergeGeometries(
+      [points.geometry, slamPathPoints.geometry]
+    );
+  }
+
   material = points.material as THREE.PointsMaterial;
   material.sizeAttenuation = false;
   material.size = size;
@@ -62,6 +78,9 @@ $: if (material) {
   material.size = size;
 }
 $: if (pointcloud) {
+  update(pointcloud);
+}
+$: if (slamPath) {
   update(pointcloud);
 }
 

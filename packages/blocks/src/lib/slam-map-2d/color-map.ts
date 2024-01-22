@@ -23,6 +23,9 @@ const colorMapGrey = [
 const USER_GENERATED_POINT_COLOR = new THREE.Color(
   theme.extend.colors.cyberpunk
 );
+const SLAM_POSITION_POINT_COLOR = new THREE.Color(
+  theme.extend.colors.hologram
+);
 
 /*
  * Find the desired color bucket for a given probability. This assumes the probability will be a value from 0 to 100
@@ -52,9 +55,13 @@ export const mapColorAttributeGrayscale = (colors: THREE.BufferAttribute) => {
      * Probability is currently assumed to be held in the b part of the rgb field of the PCD map, on a scale of 0 to 100.
      * ticket to look into this further https://viam.atlassian.net/browse/RSDK-2605.
      *
-     * User generated points that have been added to the pcd are marked as such by putting 100% probability
-     * in the r part of the rgb field. If that has been set, we will draw the point in blue instead of mapping it to its
-     * corresponding shade of gray to signal it is a user generated point.
+     * User generated points that have been added to the pcd are marked as such by putting 100% probability in the r part of 
+     * the rgb field. If that has been set, we will draw the point in cyberpunk instead of mapping it to its corresponding 
+     * shade of gray to signal it is a user generated point.
+     * 
+     * SLAM positions have been added to the pcd are marked as such by putting 100% probability in the g part of the rgb field. 
+     * If that has been set, we will draw the point in hoshimi instead of mapping it to its corresponding shade of gray to signal 
+     * it is a SLAM position.
      */
 
     if (colors.getX(i) === 1) {
@@ -63,6 +70,16 @@ export const mapColorAttributeGrayscale = (colors: THREE.BufferAttribute) => {
         USER_GENERATED_POINT_COLOR.r,
         USER_GENERATED_POINT_COLOR.g,
         USER_GENERATED_POINT_COLOR.b
+      );
+      continue;
+    }
+
+    if (colors.getY(i) === 1) {
+      colors.setXYZ(
+        i,
+        SLAM_POSITION_POINT_COLOR.r,
+        SLAM_POSITION_POINT_COLOR.g,
+        SLAM_POSITION_POINT_COLOR.b
       );
       continue;
     }

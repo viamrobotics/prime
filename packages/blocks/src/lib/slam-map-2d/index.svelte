@@ -36,6 +36,9 @@ export let helpers = true;
 
 /** An optional motion path */
 export let motionPath: string | undefined = undefined;
+
+/** An optional slam path */
+export let slamPath: Uint8Array | undefined = undefined;
 </script>
 
 <div class="relative h-full w-full">
@@ -43,6 +46,7 @@ export let motionPath: string | undefined = undefined;
     <Scene
       {helpers}
       {pointcloud}
+      {slamPath}
       {basePose}
       {destination}
       {motionPath}

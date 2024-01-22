@@ -16,6 +16,7 @@ export let basePose: { x: number; y: number; theta: number } | undefined =
   undefined;
 export let destination: THREE.Vector2 | undefined;
 export let motionPath: string | undefined;
+export let slamPath: Uint8Array | undefined;
 
 extend({ MapControls });
 
@@ -100,6 +101,7 @@ $: updateZoom($camera as THREE.OrthographicCamera);
 
 <Points
   {pointcloud}
+  slamPath={slamPath}
   size={pointSize}
   on:update={handlePointsUpdate}
 />
