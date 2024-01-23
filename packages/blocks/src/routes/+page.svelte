@@ -10,20 +10,21 @@ const fetchPointcloud = async () => {
   return new Uint8Array(buffer);
 };
 
-const path = () => ( 
-  new Float32Array(motionPath.split("\n").flatMap((str) => {
-    const [xStr, yStr] = str.split(",");
-    if (xStr && yStr) {
-      const x = Number.parseFloat(xStr) / 1000;
-      const y = Number.parseFloat(yStr) / 1000;
-      if (!Number.isNaN(x) && !Number.isNaN(y)) {
-        return [x,y];
+const path = () =>
+  new Float32Array(
+    motionPath.split('\n').flatMap((str) => {
+      const [xStr, yStr] = str.split(',');
+      if (xStr && yStr) {
+        const x = Number.parseFloat(xStr) / 1000;
+        const y = Number.parseFloat(yStr) / 1000;
+        if (!Number.isNaN(x) && !Number.isNaN(y)) {
+          return [x, y];
+        }
+        return [];
       }
       return [];
-    }
-    return [];
-  }))
-);
+    })
+  );
 </script>
 
 <div class="m-auto flex max-w-6xl flex-col gap-6 py-6">

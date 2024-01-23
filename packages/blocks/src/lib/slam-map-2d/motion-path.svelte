@@ -26,14 +26,14 @@ const updatePath = (xy?: Float32Array) => {
 
   const lineGeometry = new LineGeometry();
   const xyz: number[] = [];
-  for (let i = 0; i < xy.length -1; i+=2) {
+  for (let i = 0; i < xy.length - 1; i += 2) {
     const x = xy[i];
-    const y = xy[i+1];
+    const y = xy[i + 1];
     if (x !== undefined && y !== undefined) {
       xyz.push(x, y, 0);
     }
   }
-  
+
   lineGeometry.setPositions(new Float32Array(xyz));
 
   return lineGeometry;
