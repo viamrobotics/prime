@@ -11,7 +11,7 @@
     basePose={{ x: number, y: number, z: number }} // An optional pose of a robot.
     destination={{ x: number, y: number }} // An optional user-specificed robot destination.
     helpers={true | false} // Whether or not scene helpers should be rendered. Default true.
-    motionPath={new Float32Array(x1, y1, x2, y2, x3, y3])} // An optional motion path.
+    motionPath={new Float32Array(x1, y1, x2, y2, x3, y3])} // An optional motion path. Units are assumed to be in Meters. Must not contain NaN.
   />
   ```
 -->
