@@ -11,7 +11,7 @@
     basePose={{ x: number, y: number, z: number }} // An optional pose of a robot.
     destination={{ x: number, y: number }} // An optional user-specificed robot destination.
     helpers={true | false} // Whether or not scene helpers should be rendered. Default true.
-    motionPath={'0.1,0.2\n0.3,0.4\n'} // An optional motion path.
+    motionPath={new Float32Array(x1, y1, x2, y2, x3, y3])} // An optional motion path.
   />
   ```
 -->
@@ -35,7 +35,7 @@ export let destination: THREE.Vector2 | undefined = undefined;
 export let helpers = true;
 
 /** An optional motion path */
-export let motionPath: string | undefined = undefined;
+export let motionPath: Float32Array | undefined = undefined;
 </script>
 
 <div class="relative h-full w-full">

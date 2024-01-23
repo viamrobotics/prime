@@ -15,7 +15,7 @@ export let pointcloud: Uint8Array | undefined;
 export let basePose: { x: number; y: number; theta: number } | undefined =
   undefined;
 export let destination: THREE.Vector2 | undefined;
-export let motionPath: string | undefined;
+export let motionPath: Float32Array | undefined = undefined;
 
 extend({ MapControls });
 
