@@ -34,7 +34,7 @@ const updatePath = (xy?: Float32Array) => {
     }
   }
 
- lineGeometry.setPositions(xyz);
+  lineGeometry.setPositions(xyz);
 
   return lineGeometry;
 };
