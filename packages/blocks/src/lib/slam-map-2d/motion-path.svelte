@@ -1,10 +1,12 @@
 <!--
   @component
   Renders a motion plan using thick lines.
-  Assumes the motion plan is coming in as a string in the format:
-  x,y\n
-  x,y\n
-  ...
+  
+  Assumes the motion plan is coming in as a Float32Array in the following format:
+  Float32Array([x1, y1, x2, y2, x3, y3, ...])
+
+  Units are assumed to be in Meters.
+  Must not contain NaN.
 -->
 <script lang="ts">
 import { T, extend } from '@threlte/core';
@@ -15,30 +17,24 @@ import { renderOrder } from './render-order';
 
 extend({ Line2, LineMaterial, LineGeometry });
 
-export let path: string | undefined;
+export let path: Float32Array | undefined;
 
-const updatePath = (pathstr?: string) => {
-  if (pathstr === undefined) {
+const updatePath = (xy?: Float32Array) => {
+  if (xy === undefined) {
     return;
   }
 
   const lineGeometry = new LineGeometry();
-  const points: number[] = [];
-
-  for (const xy of pathstr.split('\n')) {
-    const [xString, yString] = xy.split(',');
-    if (xString !== undefined && yString !== undefined) {
-      const x = Number.parseFloat(xString) / 1000;
-      const y = Number.parseFloat(yString) / 1000;
-      if (Number.isNaN(x) || Number.isNaN(y)) {
-        continue;
-      }
-      points.push(x, y, 0);
+  const xyz: number[] = [];
+  for (let i = 0; i < xy.length - 1; i += 2) {
+    const x = xy[i];
+    const y = xy[i + 1];
+    if (x !== undefined && y !== undefined) {
+      xyz.push(x, y, 0);
     }
   }
 
-  const vertices = new Float32Array(points);
-  lineGeometry.setPositions(vertices);
+  lineGeometry.setPositions(xyz);
 
   return lineGeometry;
 };
