@@ -1,6 +1,5 @@
 <script lang="ts">
 import { theme } from '@viamrobotics/prime-core/theme';
-import * as THREE from 'three';
 import { T } from '@threlte/core';
 import type { Obstacle } from '$lib';
 import { view, hovered, obstacleNavItems } from '../stores';
@@ -28,7 +27,7 @@ $: (material as THREE.MeshPhongMaterial | undefined)?.color.set(
     {name}
     obstacle={name}
     userData.lngLat={obstacle.location}
-    rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
+    rotation.y={geometry.pose.orientationVector.th}
     on:pointerenter={() => ($hovered = name)}
     on:pointerleave={() => ($hovered = null)}
     on:click={() =>
