@@ -162,7 +162,7 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
     {name}
     obstacle={name}
     userData.lngLat={obstacle.location}
-    rotation.y={geometry.pose.orientationVector.th * THREE.MathUtils.DEG2RAD}
+    rotation.y={geometry.pose.orientationVector.th}
     on:pointerenter={() => ($hovered = name)}
     on:pointerleave={() => ($hovered = null)}
     on:pointerdown={() => handlePointerDown()}
