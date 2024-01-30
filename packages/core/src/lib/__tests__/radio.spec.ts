@@ -1,142 +1,97 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
+import Radio from './radio.spec.svelte';
 import userEvent from '@testing-library/user-event';
-import { Radio } from '$lib';
-import * as MDI from '@mdi/js';
 
 describe('Radio', () => {
+  const common = {
+    name: 'Test radios',
+    options: ['Option 1', 'Option 2', 'Option 3'],
+    selected: 'Option 1',
+  };
+
   it('Renders radio options correctly', () => {
-    render(Radio, { options: ['Option1', 'Option2'], selected: 'Option1' });
-    expect(screen.getByText('Option1')).toBeVisible();
-    expect(screen.getByText('Option2')).toBeVisible();
+    render(Radio, common);
+    expect(screen.getByLabelText('Option 1')).toBeVisible();
+    expect(screen.getByLabelText('Option 2')).toBeVisible();
+    expect(screen.getByLabelText('Option 3')).toBeVisible();
   });
 
   it('Marks the selected option correctly', () => {
-    render(Radio, { options: ['Option1', 'Option2'], selected: 'Option1' });
-    expect(screen.getByText('Option1')).toHaveClass(
-      'bg-light border-gray-6 text-default font-semibold'
-    );
+    render(Radio, common);
+    expect(screen.getByLabelText('Option 1')).toBeChecked();
   });
 
-  it('Marks the selected option as readonly if a readonly attribute of true has been specified', () => {
+  it('Marks the selected option as disabled if a disabled attribute of true has been specified', () => {
     render(Radio, {
-      options: ['Option1', 'Option2'],
-      selected: 'Option1',
-      readonly: true,
+      ...common,
+      disabled: true,
     });
-    expect(screen.getByText('Option1')).toHaveClass(
-      'bg-light border-medium text-disabled-dark font-semibold'
-    );
+
+    const option = screen.getByLabelText('Option 1');
+    expect(option).toHaveAttribute('readonly');
+    expect(option).toHaveAttribute('aria-disabled');
   });
 
-  it('Allows option click if not readonly', async () => {
-    const user = userEvent.setup();
+  it('Allows option input if not disabled', async () => {
+    const { component } = render(Radio, common);
+    const onInput = vi.fn();
+    component.$on('input', onInput);
+
+    const option: HTMLInputElement = screen.getByLabelText('Option 2');
+
+    await userEvent.click(option);
+
+    expect(onInput).toHaveBeenCalled();
+    expect(option.checked).toBe(true);
+  });
+
+  it('Prevents option input if disabled', async () => {
     const { component } = render(Radio, {
-      options: ['Option1', 'Option2'],
-      selected: 'Option1',
+      ...common,
+      disabled: true,
     });
     const onInput = vi.fn();
     component.$on('input', onInput);
-    await user.click(screen.getByText('Option2'));
-    expect(onInput).toHaveBeenCalledOnce();
-    await user.click(screen.getByText('Option2'));
-    expect(onInput).toHaveBeenCalledWith(
-      expect.objectContaining({ detail: { value: 'Option2' } })
-    );
-  });
 
-  it('Prevents option click if readonly', async () => {
-    const user = userEvent.setup();
-    const { component } = render(Radio, {
-      options: ['Option1', 'Option2'],
-      selected: 'Option1',
-      readonly: true,
-    });
-    const onInput = vi.fn();
-    component.$on('input', onInput);
-    await user.click(screen.getByText('Option2'));
+    const option: HTMLInputElement = screen.getByLabelText('Option 2');
+
+    await userEvent.click(option);
+
     expect(onInput).not.toHaveBeenCalled();
+    expect(option.checked).toBe(false);
   });
 
-  it('Renders label correctly', () => {
-    render(Radio, { label: 'Test Label' });
-    expect(screen.getByText('Test Label')).toBeVisible();
+  it('Renders the legend correctly', () => {
+    render(Radio, common);
+    expect(screen.getByText('Test radio options')).toBeVisible();
   });
 
-  it('Displays tooltip when specified', async () => {
-    const user = userEvent.setup();
+  it('Renders the legend correctly when required', () => {
+    render(Radio, { ...common, required: true });
 
-    render(Radio, { tooltip: 'Tooltip Text' });
-    const target = screen.getByRole('button');
-    await user.hover(target);
-    await waitFor(() => {
-      expect(screen.getByText('Tooltip Text')).toBeVisible();
-    });
+    const legend = screen.getByText('Test radio options');
+    expect(legend).toHaveClass('after:text-danger-dark after:content-["*"]');
   });
 
-  it('Applies correct icon for info state', () => {
-    const { container } = render(Radio, {
-      state: 'info',
-      tooltip: 'For your information',
-    });
-    const iconButton = screen.getByRole('button');
-    expect(iconButton).toBeVisible();
-
-    const svg = container.querySelector('svg');
-    expect(svg).toBeVisible();
-
-    const path = svg?.querySelector('path');
-    expect(path).toHaveAttribute('d', MDI.mdiInformationOutline);
-    expect(path).toHaveAttribute('fill', 'currentColor');
+  it('Renders in a row if specified', () => {
+    render(Radio, { ...common, direction: 'row' });
+    expect(
+      screen.getByText('Test radio options').nextElementSibling
+    ).toHaveClass('flex-row gap-2');
   });
 
-  it('Applies correct color for warn state', () => {
-    const { container } = render(Radio, {
-      state: 'warn',
-      tooltip: 'Strong warning',
-    });
-    const tooltipTarget = screen.getByRole('button');
-    expect(tooltipTarget).toHaveClass('text-warning-bright');
-
-    const svg = container.querySelector('svg');
-    expect(svg).toBeVisible();
-
-    const path = svg?.querySelector('path');
-    expect(path).toHaveAttribute('d', MDI.mdiAlertCircleOutline);
+  it('Renders in a column if specified', () => {
+    render(Radio, { ...common, direction: 'col' });
+    expect(
+      screen.getByText('Test radio options').nextElementSibling
+    ).toHaveClass('flex-col');
   });
 
-  it('Applies correct color for error state', () => {
-    const { container } = render(Radio, {
-      state: 'error',
-      tooltip: 'Ahhhhh error!',
-    });
-    const tooltipTarget = screen.getByRole('button');
-    expect(tooltipTarget).toHaveClass('text-danger-dark');
-
-    const svg = container.querySelector('svg');
-    expect(svg).toBeVisible();
-
-    const path = svg?.querySelector('path');
-    expect(path).toHaveAttribute('d', MDI.mdiAlertCircleOutline);
-  });
-
-  it('Renders with full width if specified', () => {
-    render(Radio, { width: 'full', options: ['Opt1', 'Opt2', 'Opt3'] });
-    const button1 = screen.getByText('Opt1');
-    const button2 = screen.getByText('Opt2');
-    const button3 = screen.getByText('Opt3');
-    expect(button1).toHaveClass('w-full');
-    expect(button2).toHaveClass('w-full');
-    expect(button3).toHaveClass('w-full');
-  });
-
-  it('Renders with default width if specified', () => {
-    render(Radio, { width: 'default', options: ['Opt1', 'Opt2', 'Opt3'] });
-    const button1 = screen.getByText('Opt1');
-    const button2 = screen.getByText('Opt2');
-    const button3 = screen.getByText('Opt3');
-    expect(button1).not.toHaveClass('w-full');
-    expect(button2).not.toHaveClass('w-full');
-    expect(button3).not.toHaveClass('w-full');
+  it('Renders in a column if no direction specififed', () => {
+    render(Radio, common);
+    expect(
+      screen.getByText('Test radio options').nextElementSibling
+    ).toHaveClass('flex-col');
   });
 });

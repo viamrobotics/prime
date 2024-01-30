@@ -13,29 +13,22 @@ NumberInput or DateInput are preferable.
 -->
 <svelte:options immutable />
 
-<script
-  lang="ts"
-  context="module"
->
-export type InputState = 'info' | 'warn' | 'error' | 'none';
-</script>
-
 <script lang="ts">
-import Icon from '$lib/icon/icon.svelte';
-import type { IconName } from '$lib/icon/icons';
-import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 import cx from 'classnames';
+import { Icon, type IconName } from '$lib/icon';
+import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
+import { InputStates, type InputState } from './input-state';
 
 export let value: string | number | undefined = '';
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly = false as boolean | undefined;
+export let readonly = false;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled = false as boolean | undefined;
+export let disabled = false;
 
 /** The state of the input (info, warn, error, success), if any. */
-export let state: InputState | undefined = 'none';
+export let state: InputState | undefined = InputStates.NONE;
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
@@ -44,30 +37,22 @@ export let input: HTMLInputElement | undefined = undefined;
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-$: isInfo = state === 'info';
-$: isWarn = state === 'warn';
-$: isError = state === 'error';
-$: isInputReadOnly = disabled === true || readonly === true;
+$: isInfo = state === InputStates.INFO;
+$: isWarn = state === InputStates.WARN;
+$: isError = state === InputStates.ERROR;
+$: isInputReadOnly = disabled || readonly;
 $: handleDisabled = preventHandler(isInputReadOnly);
 $: handleDisabledKeydown = preventKeyboardHandler(isInputReadOnly);
 
-let icon: IconName | null;
-$: icon = (() => {
-  switch (state) {
-    case 'info': {
-      return 'information';
-    }
-    case 'warn': {
-      return 'alert';
-    }
-    case 'error': {
-      return 'alert-circle';
-    }
-    default: {
-      return null;
-    }
-  }
-})();
+$: icon = state
+  ? (
+      {
+        [InputStates.INFO]: 'information',
+        [InputStates.WARN]: 'alert',
+        [InputStates.ERROR]: 'alert-circle',
+      } as Record<InputState, IconName>
+    )[state]
+  : undefined;
 
 $: defaultClasses =
   !disabled &&
@@ -94,7 +79,7 @@ $: errorClasses =
     aria-disabled={disabled ? true : undefined}
     aria-invalid={isError ? true : undefined}
     class={cx(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none',
       defaultClasses,
       readonlyClasses,
       disabledClasses,
@@ -109,6 +94,7 @@ $: errorClasses =
     on:change|capture={handleDisabled}
     on:keydown
     on:keydown|capture={handleDisabledKeydown}
+    on:focus
     on:blur
   />
 

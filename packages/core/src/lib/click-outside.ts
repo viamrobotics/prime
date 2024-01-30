@@ -1,5 +1,7 @@
 import type { Action } from 'svelte/action';
 
+export type ClickOutsideHandler = (target: Element) => void;
+
 /**
  * Trigger a callback when the user clicks outside the element.
  *
@@ -26,31 +28,36 @@ import type { Action } from 'svelte/action';
  * @param handler The callback to run
  * @returns The Svelte Action
  */
-export const clickOutside: Action<HTMLElement | undefined, () => unknown> = (
-  node,
-  handler
-) => {
+export const clickOutside: Action<
+  Element | undefined,
+  ClickOutsideHandler | undefined
+> = (node, handler) => {
   let handleClickOutside = handler;
 
   const handleWindowClick = (event: MouseEvent): void => {
+    if (!node || !handleClickOutside) {
+      return;
+    }
+
+    const target = event.target as Element;
+
     if (
-      node &&
-      window.document.contains(event.target as Element) &&
-      !node.contains(event.target as Element) &&
+      window.document.contains(target) &&
+      !node.contains(target) &&
       !event.defaultPrevented
     ) {
-      handleClickOutside();
+      handleClickOutside(target);
     }
   };
 
-  window.document.addEventListener('click', handleWindowClick);
+  window.document.addEventListener('click', handleWindowClick, true);
 
   return {
-    update: (nextHandler: () => unknown) => {
+    update: (nextHandler: ClickOutsideHandler | undefined) => {
       handleClickOutside = nextHandler;
     },
     destroy: () => {
-      window.document.removeEventListener('click', handleWindowClick);
+      window.document.removeEventListener('click', handleWindowClick, true);
     },
   };
 };

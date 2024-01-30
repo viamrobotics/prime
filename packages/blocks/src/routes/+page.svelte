@@ -9,21 +9,39 @@ const fetchPointcloud = async () => {
   const buffer = await response.arrayBuffer();
   return new Uint8Array(buffer);
 };
+
+const path = () =>
+  new Float32Array(
+    motionPath.split('\n').flatMap((str) => {
+      const [xStr, yStr] = str.split(',');
+      if (xStr && yStr) {
+        const x = Number.parseFloat(xStr) / 1000;
+        const y = Number.parseFloat(yStr) / 1000;
+        if (!Number.isNaN(x) && !Number.isNaN(y)) {
+          return [x, y];
+        }
+        return [];
+      }
+      return [];
+    })
+  );
 </script>
 
 <div class="m-auto flex max-w-6xl flex-col gap-6 py-6">
-  <NavigationMap />
-
   <div class="px-12">
     <div class="relative aspect-video w-full border border-gray-200">
       {#await fetchPointcloud() then pointcloud}
         <SlamMap2D
+          basePose={{ x: 1, y: 2, theta: 45 }}
           {pointcloud}
-          {motionPath}
+          motionPath={path()}
+          on:click={(event) => console.log(event.detail)}
         />
       {/await}
     </div>
   </div>
+
+  <NavigationMap />
 
   <div class="px-12">
     <div class="relative aspect-video w-full border border-gray-200 pt-0">

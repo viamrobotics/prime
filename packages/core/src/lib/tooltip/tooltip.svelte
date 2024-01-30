@@ -14,84 +14,53 @@
   </Tooltip>
   ```
 -->
-<svelte:options
-  immutable
-  accessors
-/>
+<svelte:options immutable />
 
 <script lang="ts">
-import { useUniqueId } from '$lib/unique-id';
-import {
-  tooltipStyles,
-  type TooltipLocation,
-  type TooltipState,
-} from './tooltip-styles';
+import type cx from 'classnames';
+import type { FloatingPlacement } from '$lib/floating';
+import type { TooltipVisibility } from './tooltip-styles';
+
+import TooltipContainer from './tooltip-container.svelte';
+import TooltipTarget from './tooltip-target.svelte';
+import TooltipText from './tooltip-text.svelte';
 
 /**
  * The desired location for the tooltip, may be computed to a different
  * location  depending on layout.
  */
-export let location: TooltipLocation = 'top';
+export let location: FloatingPlacement = 'top';
 
 /**
  * If `visible`, the tooltip will always render. When `invisible` the tooltip
- * will only render on mouse enter and focus
+ * will never render. When `undefined` the tooltip will only render on mouse enter and focus
  */
-export let state: TooltipState = 'invisible';
+export let state: TooltipVisibility | undefined = undefined;
 
-const tooltipID = useUniqueId('tooltip');
-let target: HTMLElement | undefined;
-let tooltip: HTMLElement | undefined;
-let arrow: HTMLElement | undefined;
-let isHovered = false;
-let isVisible = false;
+/**
+ * If state is `undefined`, the tooltip only renders on mouse enter and focus.
+ * On mouse enter, this delay is present before the tooltip is shown.
+ * There is no delay for focus.
+ */
+export let hoverDelayMS = 0;
 
-const styles = tooltipStyles();
-const show = () => (isHovered = true);
-const hide = () => (isHovered = false);
-
-$: {
-  isVisible = state === 'visible' || isHovered;
-  styles.recalculate(target, tooltip, arrow, location);
-}
-
-export const recalculateStyle = () => {
-  styles.recalculate(target, tooltip, arrow, location);
-};
+/** Additional CSS classes to pass to the tooltip text element. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 </script>
 
-<span
-  role="presentation"
-  bind:this={target}
-  on:mouseenter={show}
-  on:mouseleave={hide}
-  on:focusin={show}
-  on:focusout={hide}
+<TooltipContainer
+  let:tooltipID
+  {hoverDelayMS}
 >
-  <slot {tooltipID} />
-</span>
-
-<div
-  bind:this={tooltip}
-  id={tooltipID}
-  role="tooltip"
-  class:invisible={!isVisible}
-  class="absolute left-0 top-0 z-max w-max max-w-[250px] border border-gray-9"
-  style:top={$styles.tooltip.top}
-  style:left={$styles.tooltip.left}
->
-  <div
-    bind:this={arrow}
-    class="absolute h-[8.5px] w-[8.5px] rotate-45 bg-gray-9"
-    style:top={$styles.arrow.top}
-    style:left={$styles.arrow.left}
-    style:right={$styles.arrow.right}
-    style:bottom={$styles.arrow.bottom}
-  />
-
-  <div
-    class="flex items-center gap-1 bg-gray-9 px-2 py-1 text-left text-xs text-white"
+  <TooltipTarget>
+    <slot {tooltipID} />
+  </TooltipTarget>
+  <TooltipText
+    cx={extraClasses}
+    {location}
+    {state}
   >
     <slot name="description" />
-  </div>
-</div>
+  </TooltipText>
+</TooltipContainer>

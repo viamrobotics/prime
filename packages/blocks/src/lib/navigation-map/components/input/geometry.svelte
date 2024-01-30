@@ -1,8 +1,8 @@
 <script lang="ts">
-import { Radio, VectorInput } from '@viamrobotics/prime-core';
+import { ToggleButtons, VectorInput } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import type { Geometry, Shapes } from '$lib';
-import { createGeometry } from '../../lib/geometry';
+import { createGeometry } from '../../lib/create-geometry';
 
 /** The geometry to edit. */
 export let geometry: Geometry;
@@ -12,9 +12,27 @@ const dispatch = createEventDispatcher<{
   input: Geometry;
 }>();
 
-const handleShapeSelect = (event: CustomEvent<{ value: string }>) => {
-  const nextType = event.detail.value.toLowerCase() as Shapes;
-  dispatch('input', createGeometry(nextType));
+const getNormalizedSize = () => {
+  switch (geometry.type) {
+    case 'box': {
+      return geometry.length > geometry.height
+        ? geometry.length / 2
+        : geometry.height / 2;
+    }
+    case 'sphere': {
+      return geometry.radius;
+    }
+    case 'capsule': {
+      return geometry.length;
+    }
+  }
+};
+
+const handleShapeSelect = ({ detail }: CustomEvent<string>) => {
+  const currentSize = getNormalizedSize();
+  const currentRotation = geometry.pose.orientationVector.th;
+  const nextType = detail.toLowerCase() as Shapes;
+  dispatch('input', createGeometry(nextType, currentSize, currentRotation));
 };
 
 const handleDimensionsInput = (event: CustomEvent<Record<string, number>>) => {
@@ -70,12 +88,13 @@ const shapeMap = {
 </script>
 
 <div class="my-2 flex flex-col gap-2">
-  <Radio
-    label="Shape"
+  <ToggleButtons
     options={['Box', 'Sphere', 'Capsule']}
     selected={shapeMap[geometry.type]}
     on:input={handleShapeSelect}
-  />
+  >
+    <svelte:fragment slot="legend">Shape</svelte:fragment>
+  </ToggleButtons>
 
   {#if geometry.type === 'box'}
     <VectorInput

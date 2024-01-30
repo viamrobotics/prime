@@ -7,7 +7,7 @@ import { LngLat } from 'maplibre-gl';
 export let label: string | undefined = undefined;
 
 /** Whether the inputs are readonly. */
-export let readonly: boolean | undefined = undefined;
+export let readonly = false;
 
 /** The longitude value. */
 export let lng: number | undefined = undefined;
@@ -34,12 +34,9 @@ let lngInput: HTMLInputElement;
     value={lat}
     step={1}
     class="grow"
-    on:blur={() =>
+    on:change={() =>
       dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
     on:input={() =>
-      dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
-    on:keydown={(event) =>
-      event.key === 'Enter' &&
       dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
     {readonly}
   />
@@ -52,13 +49,10 @@ let lngInput: HTMLInputElement;
     value={lng}
     step={1}
     class="grow"
-    on:blur={() =>
+    on:change={() =>
       dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
     on:input={() =>
       dispatch('input', new LngLat(lngInput.valueAsNumber, lat ?? 0))}
-    on:keydown={(event) =>
-      event.key === 'Enter' &&
-      dispatch('input', new LngLat(lng ?? 0, latInput.valueAsNumber))}
     {readonly}
   />
   <slot />

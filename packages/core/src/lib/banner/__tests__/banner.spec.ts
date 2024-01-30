@@ -12,8 +12,8 @@ describe('Banner', () => {
 
     expect(screen.getByText('This is the title.')).toBeVisible();
     expect(screen.getByText('This is the subtitle.')).toBeVisible();
-    expect(screen.getByText('This is the message.')).toBeVisible();
     expect(screen.getByText('This is the action.')).toBeVisible();
+    expect(screen.getByText('This is the button.')).toBeVisible();
   });
 
   it('Renders banner with danger style if the variant is set to danger', () => {

@@ -5,16 +5,31 @@ import * as PillStories from './pill.stories.svelte';
 
 # Pill
 
-Displays a list of items.
+There are two types of pills, `default` (no icon) and `outlined` (icon).
+Either type can be removable or read-only.
+
+The `outlined` variant should be used to represent objects within Viam
+like components, services, machines, fragments, etc. The icon should be
+the appropriate icon for the object type and the text should be the
+user-defined name of the object (ie. the machine name, component name,
+etc).
 
 ```ts
 import { Pill } from '@viamrobotics/prime-core';
 ```
 
 <Canvas>
-  <Story of={PillStories.Primary} />
+  <Story of={PillStories.Default} />
 </Canvas>
 
 <Canvas>
-  <Story of={PillStories.Unremovable} />
+  <Story of={PillStories.DefaultNotRemovable} />
+</Canvas>
+
+<Canvas>
+  <Story of={PillStories.Outlined} />
+</Canvas>
+
+<Canvas>
+  <Story of={PillStories.OutlinedNotRemovable} />
 </Canvas>

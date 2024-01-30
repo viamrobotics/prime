@@ -1,26 +1,29 @@
 <script lang="ts">
-import { IconButton, Label, TextInput } from '@viamrobotics/prime-core';
+import {
+  IconButton,
+  Label,
+  TextInput,
+  Tooltip,
+} from '@viamrobotics/prime-core';
 import { LngLat, LngLatBounds } from 'maplibre-gl';
 import {
   type LngLat as LngLatInternal,
   type Geometry,
   useMapLibre,
   type Obstacle,
-  useMapLibreEvent,
 } from '$lib';
 import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
+import ObstaclesLegend from './obstacles-legend.svelte';
 import {
   environment,
   hovered,
+  selected,
   boundingRadius,
   obstacles,
-  obstacleNavItems,
 } from '../../stores';
 import { createEventDispatcher } from 'svelte';
-import { createObstacle } from '$lib/navigation-map/lib/create-obstacle';
-import { createName } from '$lib/navigation-map/lib/create-name';
 
 interface Events {
   /** Fired when obstacles are created, destroyed, or edited. */
@@ -38,7 +41,11 @@ const handleSelect = (selection: {
   const radius = boundingRadius[selection.name]!;
   const lngLat = new LngLat(selection.location.lng, selection.location.lat);
   const bounds = LngLatBounds.fromLngLat(lngLat, radius);
-  map.fitBounds(bounds, { duration: 800, curve: 0.1 });
+  map.fitBounds(bounds, {
+    padding: 100,
+    duration: 800,
+    curve: 0.1,
+  });
 };
 
 const handleLngLatInput =
@@ -51,6 +58,7 @@ const handleLngLatInput =
 const handleDeleteObstacle = (name: string) => () => {
   $obstacles = $obstacles.filter((obstacle) => obstacle.name !== name);
   $hovered = null;
+  $selected = null;
   dispatch('update', $obstacles);
 };
 
@@ -69,122 +77,144 @@ const handleOrientationInput =
     dispatch('update', $obstacles);
   };
 
-// Click to add an obstacle
-useMapLibreEvent('click', (event) => {
-  if ($hovered) {
-    return;
+const handleKeydown = (event: KeyboardEvent) => {
+  if (
+    event.key === 'Backspace' &&
+    $selected &&
+    document.activeElement?.tagName !== 'INPUT'
+  ) {
+    $obstacles = $obstacles.filter((obstacle) => obstacle.name !== $selected);
+    $hovered = null;
+    $selected = null;
+    dispatch('update', $obstacles);
   }
+};
 
-  const location = event.lngLat;
-  const names = $obstacles.map((obstacle) => obstacle.name);
-  const name = createName(names, 'obstacle', $obstacles.length);
-  $obstacles = [createObstacle(name, location), ...$obstacles];
-  dispatch('update', $obstacles);
-
-  $hovered = name;
-  $obstacleNavItems[name]?.scrollIntoView({
-    behavior: 'smooth',
-    block: 'nearest',
-  });
-});
+$: selectedObstacle = $obstacles.find(
+  (obstacle) => obstacle.name === $selected
+);
+$: debugMode = $environment === 'debug';
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 {#if $obstacles.length === 0}
   <li class="py-2 font-sans text-xs text-subtle-2">
-    {#if $environment === 'configure'}
-      Click on the map to add an obstacle.
-    {:else}
+    {#if debugMode}
       Add static obstacles in your navigation service config.
+    {:else}
+      <ObstaclesLegend />
     {/if}
   </li>
 {/if}
 
-{#each $obstacles as { name, location, geometries }, index (index)}
-  {#if $environment === 'configure'}
-    <li
-      bind:this={$obstacleNavItems[name]}
-      class="group mb-8 border-l border-l-medium pl-2"
-      on:mouseenter={() => ($hovered = name)}
-    >
-      <div class="flex items-end gap-1.5 pb-2">
-        <!-- @todo(mp) obstacle API doesn't yet allow custom names. -->
-        <Label>
-          Name
-          <TextInput
-            slot="input"
-            readonly
-            value={name}
-          />
-        </Label>
-
-        <div class="grow">
-          <IconButton
-            label="Delete {name}"
-            icon="trash-can-outline"
-            on:click={handleDeleteObstacle(name)}
-          />
-        </div>
-      </div>
-      <LnglatInput
-        lng={location.lng}
-        lat={location.lat}
-        on:input={handleLngLatInput(name)}
-      >
-        <div class="grow">
-          <IconButton
-            label="Focus {name}"
-            icon="image-filter-center-focus"
-            on:click={() => handleSelect({ name, location })}
-          />
-        </div>
-      </LnglatInput>
-
-      {#each geometries as geometry, geoIndex (geoIndex)}
-        <GeometryInputs
-          {geometry}
-          on:input={handleGeometryInput(name, geoIndex)}
-        />
-        <OrientationInput
-          th={geometry.pose.orientationVector.th}
-          on:input={handleOrientationInput(name, geoIndex)}
-        />
-      {/each}
-    </li>
-  {:else}
-    <li
-      class="group border-b border-b-medium py-3 leading-[1] last:border-b-0"
-      on:mouseenter={() => ($hovered = name)}
+{#each $obstacles as { name, location, geometries, color, label }, index (index)}
+  <li
+    class="group flex min-h-[30px] items-center border-b border-b-medium pl-2 leading-[1] last:border-b-0"
+    class:pb-3={debugMode}
+    class:pt-1={debugMode}
+    class:bg-light={$selected === name}
+    on:mouseenter={() => ($hovered = name)}
+  >
+    <button
+      class="w-full text-left"
+      on:click={() => {
+        $selected = $selected === name ? null : name;
+      }}
     >
       <div class="flex items-center justify-between gap-1.5">
         <small>{name}</small>
         <div class="flex items-center gap-1.5">
-          <small class="text-subtle-2 opacity-60 group-hover:opacity-100">
-            ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
-          </small>
+          {#if debugMode}
+            <small class="text-subtle-2 opacity-60 group-hover:opacity-100">
+              ({location.lat.toFixed(4)}, {location.lng.toFixed(4)})
+            </small>
+          {:else}
+            <IconButton
+              label="Delete {name}"
+              icon="trash-can-outline"
+              on:click={handleDeleteObstacle(name)}
+            />
+          {/if}
           <IconButton
             icon="image-filter-center-focus"
             label="Focus {name}"
-            on:click={() => handleSelect({ name, location })}
+            on:click={(event) => {
+              event.stopPropagation();
+              handleSelect({ name, location });
+            }}
           />
+          <Tooltip
+            let:tooltipID
+            location="right"
+          >
+            <div
+              aria-describedby={tooltipID}
+              class="m-2 h-3.5 w-3.5"
+              style:background-color={color}
+            />
+            <p slot="description">{label}</p>
+          </Tooltip>
         </div>
       </div>
-      {#each geometries as geometry}
-        <small class="text-subtle-2">
-          {#if geometry.type === 'box'}
-            Length: {geometry.length}m, Width: {geometry.width}m, Height: {geometry.height}m
-          {:else if geometry.type === 'sphere'}
-            Radius: {geometry.radius}m
-          {:else if geometry.type === 'capsule'}
-            Radius: {geometry.radius}m, Length: {geometry.length}m
-          {/if}
-        </small>
-
-        {#if geometry.pose.orientationVector.th !== 0}
-          <small class="mt-2 block text-subtle-2">
-            Theta: {geometry.pose.orientationVector.th.toFixed(2)}
+      {#if debugMode}
+        {#each geometries as geometry}
+          <small class="text-subtle-2">
+            {#if geometry.type === 'box'}
+              Length: {geometry.length}m, Width: {geometry.width}m, Height: {geometry.height}m
+            {:else if geometry.type === 'sphere'}
+              Radius: {geometry.radius}m
+            {:else if geometry.type === 'capsule'}
+              Radius: {geometry.radius}m, Length: {geometry.length}m
+            {/if}
           </small>
-        {/if}
-      {/each}
-    </li>
-  {/if}
+
+          {#if geometry.pose.orientationVector.th !== 0}
+            <small class="mt-2 block text-subtle-2">
+              Theta: {geometry.pose.orientationVector.th.toFixed(2)}
+            </small>
+          {/if}
+        {/each}
+      {/if}
+    </button>
+  </li>
 {/each}
+
+{#if !debugMode && selectedObstacle}
+  <li
+    class="group sticky bottom-0 z-10 bg-white pt-4"
+    on:mouseenter={() => {
+      if (selectedObstacle) {
+        $hovered = selectedObstacle.name;
+      }
+    }}
+  >
+    <div class="flex items-end gap-1.5 pb-2">
+      <!-- @todo(mp) obstacle API doesn't yet allow custom names. -->
+      <Label>
+        Name
+        <TextInput
+          slot="input"
+          readonly
+          value={selectedObstacle.name}
+        />
+      </Label>
+    </div>
+    <LnglatInput
+      lng={selectedObstacle.location.lng}
+      lat={selectedObstacle.location.lat}
+      on:input={handleLngLatInput(selectedObstacle.name)}
+    />
+
+    {#each selectedObstacle.geometries as geometry, geoIndex (geoIndex)}
+      <GeometryInputs
+        {geometry}
+        on:input={handleGeometryInput(selectedObstacle.name, geoIndex)}
+      />
+      <OrientationInput
+        th={geometry.pose.orientationVector.th}
+        on:input={handleOrientationInput(selectedObstacle.name, geoIndex)}
+      />
+    {/each}
+  </li>
+{/if}

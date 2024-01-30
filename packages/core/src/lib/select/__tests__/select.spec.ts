@@ -1,8 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import Select from '../select.svelte';
 import SelectSpec from './select.spec.svelte';
 import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
+import userEvent from '@testing-library/user-event';
 
 describe('Select', () => {
   it('Renders the select', () => {
@@ -11,7 +12,7 @@ describe('Select', () => {
     const select = screen.getByPlaceholderText('Select an option');
 
     expect(select).toHaveClass(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
     expect(select).not.toHaveClass(
@@ -25,7 +26,7 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.change(select, { target: { value: 'Option 2' } });
+    await userEvent.selectOptions(select, 'Option 2');
 
     expect(select.value).toBe('Option 2');
   });
@@ -36,7 +37,7 @@ describe('Select', () => {
     const select = screen.getByPlaceholderText('Select an option');
 
     expect(select).toHaveClass(
-      'h-[30px] w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight outline-none'
     );
 
     expect(select).toHaveClass(
@@ -83,7 +84,7 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.change(select, { target: { value: 'Option 2' } });
+    await userEvent.selectOptions(select, 'Option 2');
 
     expect(onChange).toHaveBeenCalledOnce();
   });
@@ -100,7 +101,7 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.change(select, { target: { value: 'Option 2' } });
+    await userEvent.selectOptions(select, 'Option 2');
 
     expect(onChange).toHaveBeenCalledTimes(0);
   });
@@ -116,7 +117,7 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.mouseDown(select);
+    await userEvent.selectOptions(select, 'Option 2');
 
     expect(onMouseDown).toHaveBeenCalledOnce();
   });
@@ -133,7 +134,7 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.mouseDown(select);
+    await userEvent.click(select);
 
     expect(onMouseDown).toHaveBeenCalledTimes(0);
   });
@@ -149,7 +150,8 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.keyDown(select);
+    select.focus();
+    await userEvent.keyboard('[Enter]');
 
     expect(onKeydown).toHaveBeenCalledOnce();
   });
@@ -166,7 +168,8 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.keyDown(select);
+    select.focus();
+    await userEvent.keyboard('[Enter]');
 
     expect(onKeydown).toHaveBeenCalledTimes(0);
   });
@@ -183,7 +186,8 @@ describe('Select', () => {
     const select: HTMLSelectElement =
       screen.getByPlaceholderText('Select an option');
 
-    await fireEvent.keyDown(select, { code: 'Tab' });
+    select.focus();
+    await userEvent.keyboard('[Tab]');
 
     expect(onKeydown).toHaveBeenCalledOnce();
   });

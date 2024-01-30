@@ -5,8 +5,8 @@ import * as InputStories from './input.stories.svelte';
 
 # Input
 
-A simple user input. We use this input to build all of the other input types,
-so it is rarely beneificial to use this over the more specific varities.
+A simple user input. We use this input to build all of the other input types.
+This is ideal for text, email, and password fields.
 
 ```ts
 import { Input } from '@viamrobotics/prime-core';
@@ -29,16 +29,19 @@ import { Input } from '@viamrobotics/prime-core';
   <Story of={InputStories.Labeled} />
 </Canvas>
 
-# Text Input
+# Restricted Text Input
 
-A user input for text values. This is ideal for text, email, and password fields.
+An opinionated input for text values that only allows specified regex. The allowed characters are specified by the `restrictInput` function.
 
 ```ts
-import { TextInput } from '@viamrobotics/prime-core';
+import { RestrictedTextInput } from '@viamrobotics/prime-core';
+
+const restrictInput = (inputValue: string) =>
+  inputValue.replaceAll(/[^a-zA-Z0-9]/gu, '');
 ```
 
 <Canvas>
-  <Story of={InputStories.Text} />
+  <Story of={InputStories.RestrictedText} />
 </Canvas>
 
 # Numeric Input
@@ -66,4 +69,20 @@ import { SliderInput } from '@viamrobotics/prime-core';
 
 <Canvas>
   <Story of={InputStories.Slider} />
+</Canvas>
+
+# Range Input
+
+A user input for numeric values within a specified range that allows easy
+adjustments with a slider. This is ideal for number and integer fields you
+expect the user to tweak often, should be restricted between a min and max
+value, and the value can be incremented/decremented using the up/down arrow
+keys. It also includes a numeric input for direct inputs.
+
+```ts
+import { RangeInput } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={InputStories.Range} />
 </Canvas>

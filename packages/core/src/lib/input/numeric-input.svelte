@@ -40,6 +40,7 @@ $: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
   {pattern}
   {step}
   {...$$restProps}
+  placeholder={$$restProps.placeholder ?? 0}
   bind:value
   bind:input
   on:input

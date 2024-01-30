@@ -7,7 +7,7 @@ import {
   type Writable,
 } from 'svelte/store';
 
-import { useUniqueId } from '$lib/unique-id';
+import { uniqueId } from '$lib/unique-id';
 import { BannerVariant, type BannerVariantType } from '$lib/banner';
 
 import { pausableProgress } from './pausable-progress';
@@ -61,7 +61,7 @@ export const createNotifyContext = (): NotifyContext => {
   const add =
     (variant: BannerVariantType) =>
     (title: string, message?: string): void => {
-      const id = useUniqueId('notification');
+      const id = uniqueId('notification');
       const isPaused = derived(
         [pageIsVisible, pausedID],
         ([$pageIsVisible, $pausedID]) => $pausedID === id || !$pageIsVisible

@@ -1,7 +1,8 @@
 <script lang="ts">
 import * as THREE from 'three';
-import { T, createRawEventDispatcher, extend, useThrelte } from '@threlte/core';
+import { T, extend, useThrelte } from '@threlte/core';
 import { MapControls } from 'three/examples/jsm/controls/MapControls';
+import { useRaycastClick } from './hooks/use-raycast-click';
 import Helpers from './helpers.svelte';
 import Points from './points.svelte';
 import Marker from './marker.svelte';
@@ -14,24 +15,19 @@ export let pointcloud: Uint8Array | undefined;
 export let basePose: { x: number; y: number; theta: number } | undefined =
   undefined;
 export let destination: THREE.Vector2 | undefined;
-export let motionPath: string | undefined;
-
-interface $$Events extends Record<string, unknown> {
-  /** Dispatched when a user clicks within the bounding box of the pointcloud */
-  click: THREE.Vector3;
-}
-
-const dispatch = createRawEventDispatcher<$$Events>();
+export let motionPath: Float32Array | undefined = undefined;
 
 extend({ MapControls });
 
+useRaycastClick();
+
 const { renderer, camera, invalidate } = useThrelte();
+
+let controls: MapControls;
 
 const baseSpriteSize = 15.5;
 const defaultPointSize = 0.03;
 
-let cameraX = 0;
-let cameraY = 0;
 let userControlling = false;
 let markerScale = 0;
 let pointSize = 0;
@@ -55,8 +51,9 @@ interface UpdateEvent {
 
 const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
   if (!userControlling) {
-    cameraX = center.x;
-    cameraY = center.y;
+    camera.current.position.set(center.x, center.y, 1);
+    camera.current.lookAt(center.x, center.y, 0);
+    controls.target.set(center.x, center.y, 0);
 
     const viewHeight = 1;
     const viewWidth = viewHeight * 2;
@@ -69,13 +66,11 @@ const handlePointsUpdate = ({ center, radius }: UpdateEvent) => {
       aspect > 1
         ? viewHeight / (radius * aspectInverse)
         : viewWidth / (radius * aspectInverse);
+    cam.updateProjectionMatrix();
 
     updateZoom();
   }
 };
-
-const handleCameraCreate = ({ ref }: { ref: THREE.OrthographicCamera }) =>
-  ref.lookAt(0, 0, 0);
 
 $: markerScale = baseSpriteSize / zoom;
 $: pointSize = zoom * defaultPointSize * window.devicePixelRatio;
@@ -86,18 +81,12 @@ $: updateZoom($camera as THREE.OrthographicCamera);
   makeDefault
   near={0.1}
   far={2}
-  position.x={cameraX}
-  position.y={cameraY}
-  position.z={1}
   zoom={10}
-  on:create={handleCameraCreate}
   let:ref
 >
   <T.MapControls
+    bind:ref={controls}
     args={[ref, renderer.domElement]}
-    target.x={cameraX}
-    target.y={cameraY}
-    target.z={0}
     enableRotate={false}
     screenSpacePanning={true}
     on:change={handleControlsChange}
@@ -112,7 +101,6 @@ $: updateZoom($camera as THREE.OrthographicCamera);
 <Points
   {pointcloud}
   size={pointSize}
-  on:click={(event) => dispatch('click', event)}
   on:update={handlePointsUpdate}
 />
 

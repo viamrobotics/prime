@@ -1,5 +1,6 @@
 import type { Obstacle, Shapes, LngLat } from '$lib';
-import { createGeometry } from './geometry';
+import { theme } from '@viamrobotics/prime-core/theme';
+import { createGeometry } from './create-geometry';
 
 export const createObstacle = (
   name: string,
@@ -10,5 +11,7 @@ export const createObstacle = (
     name,
     location: { lng: lngLat.lng, lat: lngLat.lat },
     geometries: [createGeometry(type)],
+    label: 'static',
+    color: theme.extend.colors.cyberpunk,
   };
 };

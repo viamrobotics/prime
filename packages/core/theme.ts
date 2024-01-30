@@ -46,7 +46,7 @@ export const theme = {
       'danger-light': '#fcecea',
       'danger-medium': '#edc0bf',
       'warning-dark': '#a6570f',
-      'warning-light': '#fef8cA',
+      'warning-light': '#fef3e0',
       'warning-medium': '#e9c89d',
       'warning-bright': '#ddab3f',
       'success-dark': '#3d7d3f',
@@ -57,6 +57,10 @@ export const theme = {
       'info-medium': '#b6d1f4',
       'disabled-dark': '#9c9ca4',
       'disabled-light': '#f2f2f4',
+
+      // Opaque grayscale
+      'ghost-light': 'rgba(0,0,0,0.04)',
+      'ghost-medium': 'rgba(0,0,0,0.08)',
 
       // Brand design colors
       'power-wire': '#ff0047',
@@ -70,11 +74,25 @@ export const theme = {
       cyberpunk: '#a51aff',
       hyperlink: '#0000ea',
     },
+    spacing: {
+      '7.5': '1.875rem',
+    },
     transitionProperty: {
       'expand-vertical': 'max-height,visibility',
     },
     zIndex: {
       max: '1000',
+    },
+
+    keyframes: {
+      wiggle: {
+        '25%': { transform: 'translateX(2px)' },
+        '75%': { transform: 'translateX(-2px)' },
+      },
+    },
+
+    animation: {
+      wiggle: 'wiggle 0.25s',
     },
   },
 } satisfies OptionalConfig['theme'];

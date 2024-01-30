@@ -1,4 +1,5 @@
 import type { ViamObject3D } from '@viamrobotics/three';
+import type { LngLat } from '../maplibre/types';
 
 interface BaseGeometry {
   pose: ViamObject3D;
@@ -14,13 +15,6 @@ export type NavigationTabType =
   (typeof NavigationTab)[keyof typeof NavigationTab];
 
 export type Shapes = 'box' | 'sphere' | 'capsule';
-
-export interface LngLat {
-  lng: number;
-  lat: number;
-}
-
-export type Waypoint = LngLat & { id: string };
 
 export type CapsuleGeometry = BaseGeometry & {
   type: 'capsule';
@@ -46,4 +40,8 @@ export interface Obstacle {
   name: string;
   location: LngLat;
   geometries: Geometry[];
+  color: string;
+  label: string;
 }
+
+export type Path = LngLat[];

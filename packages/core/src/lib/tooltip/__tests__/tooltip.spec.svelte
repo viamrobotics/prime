@@ -1,24 +1,15 @@
-<!--
-  @component
-
-  This component allows us to render a Tooltip with its slotted
-  children, due to limitations with rendering slots using
-  `@testing-library`.
-
-  See:
-  - https://sveltesociety.dev/recipes/testing-and-debugging/unit-testing-svelte-component
-  - https://github.com/testing-library/svelte-testing-library/issues/48
- -->
 <script lang="ts">
-import { Tooltip, type TooltipLocation } from '$lib';
+import { Tooltip, type FloatingPlacement, type TooltipVisibility } from '$lib';
 
-export let location: TooltipLocation = 'top';
-export let state: 'invisible' | 'visible' = 'invisible';
+export let location: FloatingPlacement = 'top';
+export let state: TooltipVisibility | undefined = undefined;
+export let hoverDelayMS = 0;
 </script>
 
 <Tooltip
   {location}
   {state}
+  {hoverDelayMS}
   let:tooltipID
 >
   <button

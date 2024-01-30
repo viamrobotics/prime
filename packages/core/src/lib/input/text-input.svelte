@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 For text-based user inputs.
 
 ```svelte
@@ -42,5 +42,6 @@ export { extraClasses as cx };
   bind:input
   on:input
   on:keydown
+  on:focus
   on:blur
 />

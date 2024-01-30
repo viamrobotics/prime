@@ -4,7 +4,9 @@
     "./.svelte-kit/tsconfig.json"
   ],
   "compilerOptions": {
-    "types": ["svelte", "vite/client", "vitest"],
+    // NOTE(mc, 2023-12-15): node resolution required to import Three.js examples
+    "moduleResolution": "node",
+    "types": ["svelte", "vite/client", "vitest", "@testing-library/jest-dom"],
     "noEmit": true
   }
 }

@@ -5,29 +5,30 @@
 -->
 <script lang="ts">
 import { T } from '@threlte/core';
-import { AxesHelper, GridHelper } from 'trzy';
+import { Grid } from '@threlte/extras';
 import { renderOrder } from './render-order';
+import AxesHelper from './axes-helper.svelte';
 </script>
 
-<!-- trzy.GridHelper is more performant by drawing the grid in a shader, and can have small and large cells. -->
-<T
-  is={GridHelper}
+<Grid
+  infiniteGrid
+  fadeDistance={150}
   renderOrder={renderOrder.grid}
-  color="#ddd"
   rotation.x={Math.PI / 2}
+  cellColor="#ddd"
+  sectionColor="#ccc"
+  sectionThickness={1.5}
+  position.z={-0.1}
 />
 
-<!-- trzy.AxesHelper uses thick lines so that axes are more clearly displayed, and is dynamically resizable. -->
-<T
-  is={AxesHelper}
-  renderOrder={renderOrder.axes}
+<AxesHelper
   width={0.2}
   length={10_000}
 />
 
-<T.AxesHelper
-  renderOrder={renderOrder.axes}
-  width={0.2}
-  length={10_000}
-  rotation.z={Math.PI}
-/>
+<T.Group rotation.z={Math.PI}>
+  <AxesHelper
+    width={0.2}
+    length={10_000}
+  />
+</T.Group>

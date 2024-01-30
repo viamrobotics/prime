@@ -1,93 +1,112 @@
-import { computePosition, flip, shift, offset, arrow } from '@floating-ui/dom';
-import { writable, type Readable } from 'svelte/store';
+import { setContext, getContext } from 'svelte';
+import { derived, writable, type Readable } from 'svelte/store';
 
-export type TooltipLocation = 'top' | 'bottom' | 'right' | 'left';
+import {
+  floatingStyle,
+  type FloatingStyle,
+  type FloatingPlacement,
+} from '$lib/floating';
+import { uniqueId } from '$lib/unique-id';
+import { noop } from 'lodash-es';
 
-export type TooltipState = 'invisible' | 'visible';
+export type TooltipVisibility = 'invisible' | 'visible';
 
-export interface Styles extends Readable<TooltipStyles> {
-  recalculate: (
-    target: HTMLElement | undefined,
-    tooltipElement: HTMLElement | undefined,
-    arrowElement: HTMLElement | undefined,
-    location: TooltipLocation
-  ) => unknown;
+export interface TooltipContext {
+  id: string;
+  style: Readable<FloatingStyle | undefined>;
+  isVisible: Readable<boolean>;
+  setHovered: (isHovered: boolean) => void;
+  setVisibility: (visibility: TooltipVisibility | undefined) => void;
+  setHoverDelayMS: (hoverDelayMS: number) => void;
+  setTarget: (target: HTMLElement | undefined) => void;
+  setTooltip: (options: {
+    tooltip: HTMLElement | undefined;
+    arrow: HTMLElement | undefined;
+    placement: FloatingPlacement;
+  }) => void;
 }
 
-export interface TooltipStyles {
-  tooltip: {
-    top?: string | undefined;
-    left?: string | undefined;
-  };
-  arrow: {
-    top?: string | undefined;
-    left?: string | undefined;
-    right?: string;
-    bottom?: string;
-  };
+export interface TooltipElements {
+  target?: HTMLElement;
+  tooltip?: HTMLElement;
+  arrow?: HTMLElement;
 }
 
-export const tooltipStyles = (): Styles => {
-  const { subscribe, set } = writable<TooltipStyles>({
-    tooltip: {},
-    arrow: {},
-  });
+const CONTEXT_KEY = Symbol('tooltip');
 
-  const recalculate = async (
-    targetElement: HTMLElement | undefined,
-    tooltipElement: HTMLElement | undefined,
-    arrowElement: HTMLElement | undefined,
-    location: TooltipLocation
-  ) => {
-    if (targetElement && tooltipElement && arrowElement) {
-      const nextStyles = await calculateStyle(
-        targetElement,
-        tooltipElement,
-        arrowElement,
-        location
-      );
-      set(nextStyles);
-    }
-  };
+/**
+ * Create and provide a context for the components of a tooltip.
+ *
+ * @returns tooltip ID, styles, and reactive actions
+ */
+export const provideTooltipContext = (): TooltipContext => {
+  const context = createContext();
 
-  return { subscribe, recalculate };
+  setContext(CONTEXT_KEY, context);
+
+  return context;
 };
 
-const calculateStyle = async (
-  container: HTMLElement,
-  tooltipElement: HTMLElement,
-  arrowElement: HTMLElement,
-  location: TooltipLocation
-): Promise<TooltipStyles> => {
-  const { x, y, placement, middlewareData } = await computePosition(
-    container,
-    tooltipElement,
-    {
-      placement: location,
-      middleware: [
-        offset(7),
-        flip({ fallbackAxisSideDirection: 'start' }),
-        shift({ padding: 5 }),
-        arrow({ element: arrowElement }),
-      ],
-    }
-  );
+/**
+ * Use a provided tooltip context inside a tooltip component.
+ *
+ * @returns tooltip ID, styles, and reactive actions
+ */
+export const useTooltip = (): TooltipContext => {
+  const context = getContext<TooltipContext | undefined>(CONTEXT_KEY);
 
-  const { x: arrowX, y: arrowY } = middlewareData.arrow!;
-  const side = placement.split('-')[0] as TooltipLocation;
-  const staticSide = (
-    { top: 'bottom', right: 'left', bottom: 'top', left: 'right' } as const
-  )[side];
+  if (!context) {
+    throw new Error('Usage: tooltip context required');
+  }
+
+  return context;
+};
+
+/** Create a context for a single tooltip */
+const createContext = (): TooltipContext => {
+  const id = uniqueId('tooltip');
+  const isHovered = writable(false);
+  const visibility = writable<TooltipVisibility | undefined>();
+  const hoverDelayMS = writable<number>();
+  const isVisible = derived(
+    [isHovered, visibility, hoverDelayMS],
+    ([$isHovered, $visibility, $hoverDelayMS], set) => {
+      let cleanup = noop;
+
+      if ($visibility === 'visible') {
+        set(true);
+      } else if ($visibility === 'invisible' || !$isHovered) {
+        set(false);
+      } else {
+        const timeoutID = setTimeout(() => set(true), $hoverDelayMS);
+        cleanup = () => clearTimeout(timeoutID);
+      }
+
+      return cleanup;
+    },
+    false
+  );
+  const style = floatingStyle({
+    offset: 7,
+    shift: { padding: 5 },
+    flip: { fallbackAxisSideDirection: 'start', crossAxis: false },
+    auto: true,
+  });
 
   return {
-    tooltip: {
-      left: `${x}px`,
-      top: `${y}px`,
-    },
-    arrow: {
-      left: arrowX === undefined ? undefined : `${arrowX}px`,
-      top: arrowY === undefined ? undefined : `${arrowY}px`,
-      [staticSide]: '-5px',
+    id,
+    isVisible,
+    style,
+    setHovered: isHovered.set,
+    setVisibility: visibility.set,
+    setHoverDelayMS: hoverDelayMS.set,
+    setTarget: (target) => style.register({ referenceElement: target }),
+    setTooltip: ({ tooltip, arrow, placement }) => {
+      style.register({
+        placement,
+        floatingElement: tooltip,
+        arrowElement: arrow,
+      });
     },
   };
 };

@@ -1,10 +1,11 @@
 <!--
 @component
 
-A graphical control element that allows the user to choose only one of a predefined set of mutually exclusive options.
+For users to choose only one of a predefined set of mutually exclusive options.
 
 ```svelte
 <Radio
+  name="options"
   options="['Opt 1', 'Opt 2', 'Opt 3']"
   selected="Opt 1"
 />
@@ -13,134 +14,103 @@ A graphical control element that allows the user to choose only one of a predefi
 <svelte:options immutable />
 
 <script lang="ts">
-import { Tooltip, Icon } from '$lib';
-
-type LabelPosition = 'top' | 'left';
-
 import cx from 'classnames';
-import { createEventDispatcher } from 'svelte';
-import type { IconName } from './icon/icons';
+import Label from '$lib/label.svelte';
+import { Icon, type IconName } from '$lib/icon';
+import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 
-/**
- * The label for the radio button.
- */
-export let label = '';
-/**
- * The set of options that is available in the radio button.
- */
-export let options: string[] = [];
-/**
- * The selected option on the radio button.
- */
-export let selected = '';
-/**
- * The position of the label on the radio button.
- */
-export let labelposition: LabelPosition = 'top';
-/**
- * The tooltip message associated with the icon on your radio button.
- */
-export let tooltip = '';
-/**
- * The state of the radio button.  Which is an indicator of what icon is associated with your radio button.
- */
-export let state: 'info' | 'warn' | 'error' = 'info';
-/**
- * Whether or not the radio is readonly.
- */
-export let readonly = false;
-/**
- * The icon on the radio button.
- */
-let icon: IconName;
-/**
- * The width of the radio button.  Specifically, if width is 100% or if its the default.
- */
-export let width: 'full' | 'default' = 'default';
+/** The set of options that is available in the radio button. */
+export let options: string[];
 
-const dispatch = createEventDispatcher<{
-  /** When an option on the radio is selected. */
-  input: { value: string };
-}>();
+/** The name for the inputs in the fieldset of radio options. */
+export let name: string;
 
-const handleClick = (value: string) => {
-  if (!readonly) {
-    selected = value;
-    dispatch('input', { value });
-  }
-};
+/** The selected option on the radio button. */
+export let selected: string | undefined = undefined;
 
-$: {
-  switch (state) {
-    case 'info': {
-      icon = 'information-outline';
-      break;
-    }
-    case 'warn': {
-      icon = 'alert-circle-outline';
-      break;
-    }
-    case 'error': {
-      icon = 'alert-circle-outline';
-      break;
-    }
-  }
-}
+/**  Whether or not the radio should render as disabled. */
+export let disabled = false;
+
+/** Whether or not the fieldset should render as required */
+export let required = false;
+
+/** The `flex` direction to apply to the option radio inputs. */
+export let direction: 'col' | 'row' = 'col';
+
+/** Additional CSS classes to pass to the fieldset. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
+
+$: isSelected = (option: string) => option === selected;
+$: handleDisabled = preventHandler(disabled);
+$: handleDisabledKeydown = preventKeyboardHandler(disabled);
+$: getIcon = (option: string): IconName =>
+  isSelected(option) ? 'radiobox-marked' : 'radiobox-blank';
 </script>
 
-<div
-  class={cx('flex gap-1', {
-    'flex-col': labelposition === 'top',
-    'flex-row': labelposition === 'left',
-  })}
+<fieldset
+  aria-disabled={disabled ? true : undefined}
+  class={cx('flex', extraClasses)}
+  {...$$restProps}
 >
-  <div class="flex items-center gap-1.5">
-    {#if label}
-      <p
-        class={cx('text-xs text-subtle-1', {
-          'text-black/50': readonly,
-        })}
-      >
-        {label}
-      </p>
-    {/if}
+  {#if $$slots.legend}
+    <legend
+      class={cx(
+        cx('mb-1 flex text-xs text-subtle-1', {
+          'after:text-danger-dark after:content-["*"]': required,
+        })
+      )}
+    >
+      <slot name="legend" />
+    </legend>
+  {/if}
 
-    {#if tooltip}
-      <Tooltip>
-        <button
-          class={cx({
-            'text-warning-bright': state === 'warn',
-            'text-danger-dark': state === 'error',
-          })}
-        >
-          <Icon name={icon} />
-        </button>
-        <div slot="description">
-          {tooltip}
-        </div>
-      </Tooltip>
-    {/if}
-  </div>
-
-  <div class="flex flex-nowrap">
+  <div
+    class={cx('flex', {
+      'flex-col': direction === 'col',
+      'flex-row gap-2': direction === 'row',
+    })}
+  >
     {#each options as option}
-      <button
-        aria-label="Select {option}"
-        class={cx('whitespace-nowrap border px-3 py-1.5 text-xs', {
-          'border-light bg-medium text-subtle-1':
-            option !== selected && !readonly,
-          'border-gray-6 bg-light font-semibold text-default':
-            option === selected && !readonly,
-          'border-medium bg-light font-semibold text-disabled-dark':
-            option === selected && readonly,
-          'pointer-events-none cursor-not-allowed border-light bg-disabled-light text-disabled-dark':
-            readonly,
-          'w-full': width === 'full',
-        })}
-        on:click={() => handleClick(option)}
+      <Label
+        position="left"
+        {disabled}
+        cx={[
+          'h-7.5 whitespace-nowrap text-xs',
+          {
+            'font-semibold': isSelected(option),
+            'text-default': isSelected(option) && !disabled,
+            'text-subtle-1': !isSelected(option) && !disabled,
+            'cursor-not-allowed text-disabled-dark': disabled,
+          },
+        ]}
       >
-        {option}
-      </button>
+        <input
+          {name}
+          type="radio"
+          value={option}
+          class="peer appearance-none"
+          checked={isSelected(option)}
+          readonly={disabled ? true : undefined}
+          aria-disabled={disabled ? true : undefined}
+          bind:group={selected}
+          on:input
+          on:input|capture={handleDisabled}
+          on:click|capture={handleDisabled}
+          on:keydown|capture={handleDisabledKeydown}
+        />
+        <Icon
+          name={getIcon(option)}
+          cx={cx({
+            'text-disabled-dark': disabled,
+            'text-gray-9': !disabled && option === selected,
+            'text-gray-6': !disabled && option !== selected,
+          })}
+        />
+        <span class="pl-1.5">
+          {option}
+        </span>
+      </Label>
     {/each}
   </div>
-</div>
+</fieldset>

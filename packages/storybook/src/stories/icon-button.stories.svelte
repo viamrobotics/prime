@@ -7,31 +7,23 @@ import { IconButton } from '@viamrobotics/prime-core';
 
 <Story name="Primary">
   <IconButton
-    icon="play-circle-outline"
-    label="Run"
+    icon="plus"
+    label="Add object"
   />
 </Story>
 
 <Story name="Danger">
   <IconButton
-    label="Stop"
-    icon="stop-circle-outline"
+    icon="trash-can-outline"
+    label="Delete object"
     variant="danger"
   />
 </Story>
 
 <Story name="Disabled">
   <IconButton
-    icon="play-circle-outline"
-    label="Run"
+    icon="refresh"
+    label="Restart object"
     disabled
-  />
-</Story>
-
-<Story name="With title">
-  <IconButton
-    icon="play-circle-outline"
-    label="Run"
-    title="Run this command"
   />
 </Story>

@@ -4,7 +4,7 @@
     "./.svelte-kit/tsconfig.json"
   ],
   "compilerOptions": {
-    "types": ["svelte", "vite/client", "vitest"],
+    "types": ["svelte", "vite/client", "vitest", "@testing-library/jest-dom"],
     "noEmit": true
   }
 }

@@ -7,6 +7,7 @@ import {
   ContextMenu,
   ContextMenuItem,
   ContextMenuSeparator,
+  FloatingMenu,
   Icon,
   Label,
   Banner,
@@ -16,8 +17,12 @@ import {
   Radio,
   Tabs,
   Tooltip,
+  TooltipContainer,
+  TooltipTarget,
+  TooltipText,
   TextInput,
   NumericInput,
+  RestrictedTextInput,
   SliderInput,
   VectorInput,
   Table,
@@ -26,6 +31,7 @@ import {
   TableHeaderCell,
   TableHeader,
   TableRow,
+  ToggleButtons,
   Select,
   SearchableSelect,
   Multiselect,
@@ -33,16 +39,20 @@ import {
   provideNotify,
   useNotify,
   Modal,
+  CodeSnippet,
+  RangeInput,
 } from '$lib';
+import { uniqueId } from 'lodash-es';
 
 provideNotify();
 
 let buttonClickedTimes = 0;
-let disabled = true;
+let preventHandlerDisabled = true;
 let modalOpen = false;
+let floatingMenuOpen = false;
 
-const handleToggleDisabled = (event: CustomEvent<{ value: string }>) => {
-  disabled = event.detail.value === 'Disabled';
+const handleTogglePreventHandler = (event: CustomEvent<boolean>) => {
+  preventHandlerDisabled = event.detail;
 };
 
 const handleCloseModal = () => {
@@ -52,7 +62,392 @@ const handleCloseModal = () => {
 const handleOpenModal = () => {
   modalOpen = true;
 };
+
+const handleFloatingMenuChange = (isOpen: boolean) => {
+  floatingMenuOpen = isOpen;
+};
+
 const notify = useNotify();
+
+let restrictedValue = '';
+
+const restrictInput = (inputValue: string) =>
+  inputValue
+    .replaceAll(/\s/gu, '-')
+    .replaceAll('%', '$')
+    .replaceAll(/[^a-z0-9-$]/gu, '');
+
+const handleCodeSnippetCopy = ({
+  detail: { succeeded, message },
+}: CustomEvent<{ succeeded: boolean; message: string }>) => {
+  if (succeeded) {
+    notify.success(message);
+  } else {
+    notify.danger(message);
+  }
+};
+
+let jsonSnippet = `
+[{
+  "id": 1,
+  "first_name": "Beatrice",
+  "last_name": "Earwicker",
+  "email": "bearwicker0@washington.edu",
+  "gender": "Female",
+  "ip_address": "180.7.54.35"
+}, {
+  "id": 2,
+  "first_name": "Linnell",
+  "last_name": "Juhruke",
+  "email": "ljuhruke1@newyorker.com",
+  "gender": "Female",
+  "ip_address": "57.19.218.117"
+}, {
+  "id": 3,
+  "first_name": "Mathew",
+  "last_name": "Abramovic",
+  "email": "mabramovic2@miibeian.gov.cn",
+  "gender": "Male",
+  "ip_address": "46.0.113.0"
+}]`.trim();
+
+const jsSnippet = `
+/**
+ * Function that implements the FizzBuzz algorithm.
+ *
+ * @param {number} n - The number of iterations.
+ * @returns {string[]} An array of strings containing the FizzBuzz sequence.
+ */
+function fizzBuzz(n) {
+    const result = [];
+
+    for (let i = 1; i <= n; i++) {
+        let output = "";
+
+        if (i % 3 === 0) {
+            output += "Fizz";
+        }
+
+        if (i % 5 === 0) {
+            output += "Buzz";
+        }
+
+        if (output === "") {
+            output = i.toString();
+        }
+
+        result.push(output);
+    }
+
+    return result;
+}
+
+// Usage Example
+const fizzBuzzSequence = fizzBuzz(15);
+console.log(fizzBuzzSequence);`.trim();
+
+const tsSnippet = `
+/**
+ * fizzBuzz: A function that implements the FizzBuzz algorithm.
+ *
+ * @param n - The number of iterations to perform the FizzBuzz algorithm.
+ *
+ * @returns {string[]} - An array of strings representing the FizzBuzz sequence.
+ */
+function fizzBuzz(n: number): string[] {
+    const result: string[] = [];
+
+    for (let i = 1; i <= n; i++) {
+        let value = "";
+
+        if (i % 3 === 0) {
+            value += "Fizz";
+        }
+
+        if (i % 5 === 0) {
+            value += "Buzz";
+        }
+
+        if (value === "") {
+            value = i.toString();
+        }
+
+        result.push(value);
+    }
+
+    return result;
+}
+
+// Usage example for the fizzBuzz function.
+
+// Example: Generating the FizzBuzz sequence for n = 15.
+const sequence = fizzBuzz(15);
+console.log(\`The FizzBuzz sequence for n = 15 is:\`);
+console.log(sequence); // Outputs: ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"]`.trim();
+
+const goSnippet = `
+import "fmt"
+
+// FizzBuzz
+//
+// Parameters:
+// n (int): The number up to which the FizzBuzz algorithm should be applied.
+//
+// Returns:
+// []string: A slice of strings containing the FizzBuzz results for each number from 1 to n.
+func FizzBuzz(n int) []string {
+  result := make([]string, n)
+
+  for i := 1; i <= n; i++ {
+    if i%3 == 0 && i%5 == 0 {
+      result[i-1] = "FizzBuzz"
+    } else if i%3 == 0 {
+      result[i-1] = "Fizz"
+    } else if i%5 == 0 {
+      result[i-1] = "Buzz"
+    } else {
+      result[i-1] = fmt.Sprintf("%d", i)
+    }
+  }
+
+  return result
+}
+
+// Usage Example for FizzBuzz
+
+func main() {
+  // Apply FizzBuzz algorithm up to 20
+  fizzBuzzResult := FizzBuzz(20)
+
+  // Print the FizzBuzz results
+  for _, value := range fizzBuzzResult {
+    fmt.Println(value)
+  }
+}`.trim();
+
+const pythonSnippet = `
+def fizzbuzz(n: int):
+    """
+    Function to implement the FizzBuzz algorithm.
+
+    Parameters:
+    - n: int
+        The number up to which the FizzBuzz algorithm should be applied.
+
+    Returns:
+    - list:
+        A list of strings representing the FizzBuzz sequence from 1 to n.
+
+    Raises:
+    - ValueError:
+        Will raise an error if the input number 'n' is less than 1.
+    """
+
+    # Validating the input number
+    if n < 1:
+        raise ValueError("Input number should be greater than or equal to 1.")
+
+    # Initializing an empty list to store the FizzBuzz sequence
+    fizzbuzz_sequence = []
+
+    # Looping through numbers from 1 to n (inclusive)
+    for i in range(1, n+1):
+        # Checking if the number is divisible by both 3 and 5
+        if i % 3 == 0 and i % 5 == 0:
+            fizzbuzz_sequence.append("FizzBuzz")
+        # Checking if the number is divisible by 3
+        elif i % 3 == 0:
+            fizzbuzz_sequence.append("Fizz")
+        # Checking if the number is divisible by 5
+        elif i % 5 == 0:
+            fizzbuzz_sequence.append("Buzz")
+        # If none of the above conditions are met, add the number itself
+        else:
+            fizzbuzz_sequence.append(str(i))
+
+    return fizzbuzz_sequence
+
+# Example usage of the fizzbuzz function
+n = 20
+result = fizzbuzz(n)
+print(result)`.trim();
+
+const cppSnippet = `
+#include <iostream>
+#include <string>
+
+/**
+ * @brief Implements the FizzBuzz algorithm.
+ *
+ * The FizzBuzz algorithm is a common programming task where you iterate over a range of numbers
+ * and print "Fizz" for numbers divisible by 3, "Buzz" for numbers divisible by 5, and "FizzBuzz"
+ * for numbers divisible by both 3 and 5. For all other numbers, the number itself is printed.
+ *
+ * @param n The number of iterations to perform.
+ */
+void fizzBuzz(int n) {
+    for (int i = 1; i <= n; i++) {
+        std::string output = "";
+
+        if (i % 3 == 0) {
+            output += "Fizz";
+        }
+
+        if (i % 5 == 0) {
+            output += "Buzz";
+        }
+
+        if (output.empty()) {
+            output = std::to_string(i);
+        }
+
+        std::cout << output << std::endl;
+    }
+}
+
+int main() {
+    int n = 100; // Number of iterations
+
+    fizzBuzz(n);
+
+    return 0;
+}`.trim();
+
+const dartSnippet = `
+// This function implements the FizzBuzz algorithm.
+// It takes an integer \`n\` as input and prints the numbers from 1 to \`n\`,
+// replacing multiples of 3 with "Fizz", multiples of 5 with "Buzz",
+// and multiples of both 3 and 5 with "FizzBuzz".
+//
+// - Parameters:
+//   - \`n\`: The upper limit of the range of numbers to be printed.
+//
+// - Throws:
+//   - \`ArgumentError\` if \`n\` is not a positive integer.
+void fizzBuzz(int n) {
+  if (n <= 0 || n % 1 != 0) {
+    throw ArgumentError('n must be a positive integer.');
+  }
+
+  for (int i = 1; i <= n; i++) {
+    if (i % 3 == 0 && i % 5 == 0) {
+      print('FizzBuzz');
+    } else if (i % 3 == 0) {
+      print('Fizz');
+    } else if (i % 5 == 0) {
+      print('Buzz');
+    } else {
+      print(i);
+    }
+  }
+}
+
+void main() {
+  // Usage Example
+  fizzBuzz(15);
+  // Expected output:
+  // 1
+  // 2
+  // Fizz
+  // 4
+  // Buzz
+  // Fizz
+  // 7
+  // 8
+  // Fizz
+  // Buzz
+  // 11
+  // Fizz
+  // 13
+  // 14
+  // FizzBuzz
+}`.trim();
+
+const rustSnippet = `
+// Function to implement the FizzBuzz algorithm.
+// Params:
+// - n: The number up to which FizzBuzz should be performed.
+// Returns: None
+fn fizzbuzz(n: u32) {
+    // Iterate from 1 to n (inclusive).
+    for i in 1..=n {
+        // Check if the current number is divisible by both 3 and 5.
+        if i % 3 == 0 && i % 5 == 0 {
+            println!("FizzBuzz");
+        }
+        // Check if the current number is divisible by 3.
+        else if i % 3 == 0 {
+            println!("Fizz");
+        }
+        // Check if the current number is divisible by 5.
+        else if i % 5 == 0 {
+            println!("Buzz");
+        }
+        // If none of the above conditions are met, print the number itself.
+        else {
+            println!("{}", i);
+        }
+    }
+}
+
+// Usage example for the fizzbuzz function.
+fn main() {
+    fizzbuzz(20);
+}`.trim();
+
+const htmlSnippet = `
+<h1>Ask her how her day was.</h1>
+<p>
+  Now, now. Perfectly symmetrical violence never solved anything. Meh. So, how
+  'bout them Knicks? Ooh, name it after me! Whoa a real live robot; or is that
+  some kind of cheesy New Year's costume?
+</p>
+<p>
+  Well, then good news! It's a suppository. Yes! In your face, Gandhi! No! The
+  cat shelter's on to me. <strong> I'm sorry, guys.</strong>
+  <em> I never meant to hurt you.</em> Just to destroy everything you ever believed
+  in.
+</p>
+<h2>Leela's gonna kill me.</h2>
+<p>
+  This opera's as lousy as it is brilliant! Your lyrics lack subtlety. You can't
+  just have your characters announce how they feel. That makes me feel angry!
+  Tell them I hate them. All I want is to be a monkey of moderate intelligence
+  who wears a suit… that's why I'm transferring to business school!
+</p>
+<ol>
+  <li>
+    Son, as your lawyer, I declare y'all are in a 12-piece bucket o' trouble.
+    But I done struck you a deal: Five hours of community service cleanin' up
+    that ol' mess you caused.
+  </li>
+  <li>Hey! I'm a porno-dealing monster, what do I care what you think?</li>
+  <li>
+    It may comfort you to know that Fry's death took only fifteen seconds, yet
+    the pain was so intense, that it felt to him like fifteen years. And it goes
+    without saying, it caused him to empty his bowels.
+  </li>
+</ol>
+
+<h3>
+  For one beautiful night I knew what it was like to be a grandmother.
+  Subjugated, yet honored.
+</h3>
+<p>
+  Is today's hectic lifestyle making you tense and impatient? Now, now.
+  Perfectly symmetrical violence never solved anything. Hey, whatcha watching?
+  Noooooo!
+</p>
+<ul>
+  <li>Yeah, I do that with my stupidness.</li>
+  <li>But I know you in the future. I cleaned your poop.</li>
+  <li>Ummm…to eBay?</li>
+</ul>`.trim();
+
+let hoverDelayMS = 1000;
+const onHoverDelayMsInput = (event: Event) => {
+  hoverDelayMS = Number.parseInt((event.target as HTMLInputElement).value, 10);
+};
 </script>
 
 <NotificationContainer />
@@ -62,24 +457,24 @@ const notify = useNotify();
   <h1 class="text-2xl">Badge</h1>
   <div>
     <Badge
-      variant="gray"
+      variant="inactive"
       label="Inactive"
     />
     <Badge
-      variant="green"
-      label="Active"
+      variant="success"
+      label="Success"
     />
     <Badge
-      variant="orange"
+      variant="warning"
+      label="Warning"
+    />
+    <Badge
+      variant="danger"
       label="Danger"
     />
     <Badge
-      variant="red"
-      label="Unhealthy"
-    />
-    <Badge
-      variant="blue"
-      label="Info"
+      variant="neutral"
+      label="Neutral"
     />
   </div>
 
@@ -92,7 +487,6 @@ const notify = useNotify();
 
     <Banner variant="success">
       <svelte:fragment slot="title">This is the success title.</svelte:fragment>
-      <svelte:fragment slot="message">This is the message.</svelte:fragment>
     </Banner>
 
     <Banner
@@ -102,8 +496,8 @@ const notify = useNotify();
       <svelte:fragment slot="title">This is the warning title.</svelte:fragment>
       <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
 
-      <svelte:fragment slot="message">
-        This is <strong>the</strong> message.
+      <svelte:fragment slot="actionEmphasize">
+        <Button variant="dark">This is the action emphasized.</Button>
       </svelte:fragment>
     </Banner>
 
@@ -115,11 +509,8 @@ const notify = useNotify();
         This is the <em>danger</em> title.
       </svelte:fragment>
       <svelte:fragment slot="subtitle">This is the subtitle.</svelte:fragment>
-      <svelte:fragment slot="message">
-        This is <strong>the</strong> message.
-      </svelte:fragment>
       <svelte:fragment slot="action">
-        <Button variant="danger">This is the action.</Button>
+        <a href="http://www.viam.com">This is the action link.</a>
       </svelte:fragment>
     </Banner>
   </div>
@@ -220,25 +611,127 @@ const notify = useNotify();
     />
   </div>
 
+  <!-- Code Snippet -->
+  <h1 class="text-2xl">Code Snippet</h1>
+  <p>
+    Uses <a href="https://prismjs.com/">prismjs</a> for syntax highlighting.
+  </p>
+
+  <h2 class="text-lg text-subtle-1">JSON</h2>
+  <Label
+    position="top"
+    cx="w-full"
+  >
+    JSON Snippet
+    <textarea
+      slot="input"
+      class="text-small min-h-[200px] font-roboto-mono"
+      bind:value={jsonSnippet}
+    />
+  </Label>
+  <CodeSnippet
+    language="json"
+    code={jsonSnippet}
+    on:copy={handleCodeSnippetCopy}
+  >
+    <svelte:fragment slot="caption">
+      Edit the JSON in the <code>textarea</code> above to see it rendered here!
+    </svelte:fragment>
+  </CodeSnippet>
+
+  <h2 class="text-lg text-subtle-1">JavaScript</h2>
+  <CodeSnippet
+    language="javascript"
+    code={jsSnippet}
+  />
+
+  <h2 class="text-lg text-subtle-1">Typescript</h2>
+  <CodeSnippet
+    language="typescript"
+    code={tsSnippet}
+  />
+
+  <h2 class="text-lg text-subtle-1">Go</h2>
+  <CodeSnippet
+    language="go"
+    code={goSnippet}
+  />
+
+  <h2 class="text-lg text-subtle-1">Python</h2>
+  <CodeSnippet
+    language="python"
+    code={pythonSnippet}
+  />
+
+  <h2 class="text-lg text-subtle-1">C++</h2>
+  <CodeSnippet
+    language="cpp"
+    code={cppSnippet}
+    dependencies={['c']}
+  />
+
+  <h2 class="text-lg text-subtle-1">Dart</h2>
+  <CodeSnippet
+    language="dart"
+    code={dartSnippet}
+  />
+
+  <h2 class="text-lg text-subtle-1">Rust</h2>
+  <CodeSnippet
+    language="rust"
+    code={rustSnippet}
+  />
+
+  <h2 class="text-lg text-subtle-1">HTML</h2>
+  <CodeSnippet
+    language="html"
+    code={htmlSnippet}
+  />
+
   <!-- Context Menu -->
   <h1 class="text-2xl">Context Menu</h1>
-  <ContextMenu>
-    <ContextMenuItem label="label 1" />
-    <ContextMenuSeparator />
-    <ContextMenuItem
-      label="label 2"
-      variant="primary"
-    />
-    <ContextMenuItem
-      icon="trash-can-outline"
-      label="label 3"
-    />
-    <ContextMenuItem
-      icon="close"
-      label="danger"
-      variant="danger"
-    />
-  </ContextMenu>
+  <div class="flex items-start gap-4">
+    <ContextMenu id={uniqueId('context-menu')}>
+      <ContextMenuItem>label 1</ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem variant="primary">label 2</ContextMenuItem>
+      <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
+      <ContextMenuItem
+        icon="close"
+        variant="danger"
+        on:click={() => {
+          // eslint-disable-next-line no-console
+          console.log('oh no');
+        }}
+      >
+        danger
+      </ContextMenuItem>
+    </ContextMenu>
+
+    <FloatingMenu
+      isOpen={floatingMenuOpen}
+      placement="right-start"
+      offset={4}
+      onChange={handleFloatingMenuChange}
+    >
+      <svelte:fragment slot="control">
+        {floatingMenuOpen ? 'Close menu' : 'Open menu'}
+      </svelte:fragment>
+      <svelte:fragment slot="items">
+        <ContextMenuItem>label 1</ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem variant="primary">label 2</ContextMenuItem>
+        <ContextMenuItem icon="trash-can-outline">label 3</ContextMenuItem>
+        <ContextMenuItem
+          icon="close"
+          variant="danger"
+          on:click={() => console.log('oh no')}
+        >
+          danger
+        </ContextMenuItem>
+      </svelte:fragment>
+    </FloatingMenu>
+  </div>
 
   <!-- Icon -->
   <h1 class="text-2xl">Icon</h1>
@@ -385,6 +878,20 @@ const notify = useNotify();
     />
   </div>
 
+  <!-- Restricted Text Input -->
+  <h2 class="text-xl">Restricted Text Input</h2>
+
+  <div class="flex gap-4">
+    <RestrictedTextInput
+      name="namespace"
+      placeholder="Enter your money namespace"
+      bind:value={restrictedValue}
+      tooltipDescription="Valid characters: numbers, lowercase letters, dashes, dolla $ign"
+      {restrictInput}
+      inputCX="min-w-[300px]"
+    />
+  </div>
+
   <!-- Numeric Input -->
   <h2 class="text-xl">Numeric Input</h2>
   <div class="flex gap-4">
@@ -430,6 +937,49 @@ const notify = useNotify();
       placeholder="Disabled"
       name="slider"
       disabled
+    />
+  </div>
+
+  <!-- Range Input -->
+  <h2 class="text-xl">Range Input</h2>
+  <div class="flex flex-col gap-2">
+    <RangeInput
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('RangeInput input', event);
+      }}
+      on:change={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('RangeInput change', event);
+      }}
+      name="range"
+    />
+
+    <RangeInput
+      name="readonly-range"
+      readonly
+    />
+
+    <RangeInput
+      name="disabled-range"
+      disabled
+    />
+
+    <RangeInput
+      name="suffix-range"
+      suffix="%"
+    />
+
+    <RangeInput
+      name="tiny-range"
+      max={1}
+      step={0.01}
+    />
+
+    <RangeInput
+      name="large-range"
+      max={1000}
+      step={1}
     />
   </div>
 
@@ -497,21 +1047,21 @@ const notify = useNotify();
   <h1 class="text-2xl">Notify</h1>
 
   <div class="flex gap-4">
-    <Button on:click={() => notify.info('Info', 'Info message')}>
+    <Button on:click={() => notify.info('Info', 'Info notify')}>
       Info Notify
     </Button>
-    <Button on:click={() => notify.warn('Warn', 'Warn message')}>
+    <Button on:click={() => notify.warn('Warn', 'Warn notify')}>
       Warn Notify
     </Button>
     <Button
       variant="success"
-      on:click={() => notify.success('Success', 'Success message')}
+      on:click={() => notify.success('Success', 'Success notify')}
     >
       Success Notify
     </Button>
     <Button
       variant="danger"
-      on:click={() => notify.danger('Danger', 'Danger message')}
+      on:click={() => notify.danger('Danger', 'Danger notify')}
     >
       Danger Notify
     </Button>
@@ -523,7 +1073,7 @@ const notify = useNotify();
   <div>
     <Button on:click={handleOpenModal}>Open Modal</Button>
     <Modal
-      open={modalOpen}
+      isOpen={modalOpen}
       on:close={handleCloseModal}
     >
       <span slot="title">This is the modal demo</span>
@@ -561,42 +1111,92 @@ const notify = useNotify();
     />
   </div>
 
+  <!-- Outlined Pill -->
+  <h1 class="text-2xl">Outlined Pill</h1>
+  <div class="flex gap-4">
+    <Pill
+      value="Service"
+      variant="outlined"
+      icon="viam-service"
+      removable
+    />
+    <Pill
+      value="Component"
+      variant="outlined"
+      icon="viam-component"
+      removable={false}
+    />
+  </div>
+
+  <!-- Prevent Handler -->
+
+  <h1 class="text-2xl">Prevent Handler</h1>
+  <div class="flex flex-col gap-4">
+    <Input
+      placeholder="Disable Me"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Prevent Handler input', event);
+      }}
+      disabled={preventHandlerDisabled}
+    />
+    <Switch
+      on={preventHandlerDisabled}
+      annotated
+      on:change={handleTogglePreventHandler}
+    >
+      <svelte:fragment slot="on">Enabled</svelte:fragment>
+      <svelte:fragment slot="off">Disabled</svelte:fragment>
+    </Switch>
+  </div>
+
   <!-- Radio -->
   <h1 class="text-2xl">Radio</h1>
 
-  <div class="flex flex-col gap-4">
+  <div class="flex gap-4">
     <Radio
       options={['Opt 1', 'Opt 2', 'Opt 3']}
-      selected="Opt 1"
+      name="radio"
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Radio input', event);
+      }}
     />
 
     <Radio
-      label="These are your options"
-      labelposition="top"
       options={['Opt 1', 'Opt 2']}
       selected="Opt 1"
-    />
-
-    <Radio
-      label="Your options"
-      labelposition="top"
-      selected="Option 1"
-      options={['Opt 1', 'Opt 2', 'Opt 3']}
-      tooltip="Warning: these options may not be your only options."
-      state="warn"
-    />
+      name="preselected-radio"
+    >
+      <svelte:fragment slot="legend">Preselected Radio</svelte:fragment>
+    </Radio>
 
     <Radio
       options={['Opt 1', 'Opt 2', 'Opt 3']}
       selected="Opt 1"
-      readonly={true}
-    />
+      name="required-radio"
+      required
+    >
+      <svelte:fragment slot="legend">Required Radio</svelte:fragment>
+    </Radio>
 
     <Radio
       options={['Opt 1', 'Opt 2', 'Opt 3']}
       selected="Opt 1"
-      width="full"
-    />
+      name="disabled-radio"
+      disabled
+    >
+      <svelte:fragment slot="legend">Disabled Radio</svelte:fragment>
+    </Radio>
+
+    <Radio
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      name="row-radio"
+      direction="row"
+    >
+      <svelte:fragment slot="legend">Row Radio</svelte:fragment>
+    </Radio>
   </div>
 
   <!-- Select -->
@@ -619,12 +1219,7 @@ const notify = useNotify();
       </optgroup>
     </Select>
 
-    <Radio
-      options={['Disabled', 'Enabled']}
-      selected={disabled ? 'Disabled' : 'Enabled'}
-      on:input={handleToggleDisabled}
-    />
-    <Select {disabled}>
+    <Select disabled={preventHandlerDisabled}>
       <option selected>Disabled select</option>
       <option>That thing</option>
       <option>The other thing</option>
@@ -650,19 +1245,50 @@ const notify = useNotify();
 
   <div class="flex gap-4">
     <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
+      exclusive
+      options={[
+        'First Option',
+        'Option 2',
+        'C.) Option',
+        'A really long forth option just in case you need it',
+      ]}
       placeholder="Select an option"
-      on:input={(event) => {
+      onChange={(value) => {
         // eslint-disable-next-line no-console
-        console.log('SearchableSelect input', event);
+        console.log('Selected', value);
       }}
     />
     <SearchableSelect
+      exclusive
       options={['First Option', 'Disabled select', 'C.) Option']}
       value="Disabled select"
       disabled
     />
+  </div>
+
+  <div class="flex gap-4">
     <SearchableSelect
+      exclusive
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Warn state"
+      state="warn"
+    />
+    <SearchableSelect
+      exclusive
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="Error state"
+      state="error"
+    />
+  </div>
+
+  <div class="flex gap-4">
+    <SearchableSelect
+      options={['First Option', 'Option 2', 'C.) Option']}
+      placeholder="With arbitrary input"
+      otherOptionPrefix="Arbitrary:"
+    />
+    <SearchableSelect
+      exclusive
       options={[
         'First Option',
         'Option 2',
@@ -675,32 +1301,6 @@ const notify = useNotify();
       ]}
       placeholder="Reducing Select"
       sort="reduce"
-    />
-  </div>
-
-  <div class="flex gap-4">
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="Warn state"
-      state="warn"
-    />
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="Error state"
-      state="error"
-    />
-  </div>
-
-  <div class="flex gap-4">
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="With a button"
-      button={{ text: 'Other', icon: 'information-outline' }}
-    />
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="With a heading"
-      heading="Some heading text"
     />
   </div>
 
@@ -771,34 +1371,29 @@ const notify = useNotify();
   <h1 class="text-2xl">Switch</h1>
   <div class="flex gap-4">
     <Switch
+      on:toggle={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('Switch toggle', event);
+      }}
+    />
+
+    <Switch on />
+
+    <Switch
       on
-      variant="annotated"
+      annotated
     />
 
     <Switch
       on
-      label="Lunchtime"
-    />
-
-    <Switch
-      on
-      variant="annotated"
-      tooltip="I'm a tooltip message"
-      label="Switch Label"
-    />
-
-    <Switch
-      on
+      annotated
       disabled
-      label="disabled"
     />
 
-    <Switch
-      on
-      variant="annotated"
-      readonly
-      label="readonly"
-    />
+    <Switch on>
+      <svelte:fragment slot="on">Enabled</svelte:fragment>
+      <svelte:fragment slot="off">Disabled</svelte:fragment>
+    </Switch>
   </div>
 
   <!-- Table -->
@@ -831,6 +1426,7 @@ const notify = useNotify();
       </TableRow>
     </TableBody>
   </Table>
+
   <!-- Tabs -->
   <h1 class="text-2xl">Tabs</h1>
   <div class="flex gap-4">
@@ -848,6 +1444,42 @@ const notify = useNotify();
       tabs={['Tab 1', 'Tab 2']}
       selected="Tab 2"
     />
+  </div>
+
+  <!-- Toggle Buttons -->
+  <h1 class="text-2xl">Toggle Buttons</h1>
+
+  <div class="flex items-end gap-4">
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      on:input={(event) => {
+        // eslint-disable-next-line no-console
+        console.log('ToggleButtons input', event);
+      }}
+    />
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2']}
+      selected="Opt 1"
+    >
+      <svelte:fragment slot="legend">Preselected toggle</svelte:fragment>
+    </ToggleButtons>
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      disabled
+    >
+      <svelte:fragment slot="legend">Disabled toggle</svelte:fragment>
+    </ToggleButtons>
+
+    <ToggleButtons
+      options={['Opt 1', 'Opt 2', 'Opt 3']}
+      selected="Opt 1"
+      cx="w-full"
+    >
+      <svelte:fragment slot="legend">Full width</svelte:fragment>
+    </ToggleButtons>
   </div>
 
   <!-- Tooltip -->
@@ -877,16 +1509,59 @@ const notify = useNotify();
     <Tooltip
       let:tooltipID
       location="bottom"
+      state="visible"
     >
-      <p
-        aria-describedby={tooltipID}
-        class="flex items-center gap-1"
-      >
-        This element has a bottom tooltip and an icon!
-        <Icon name="information-outline" />
+      <p aria-describedby={tooltipID}>
+        This element has visible bottom tooltip.
       </p>
       <p slot="description">This is the tooltip text!</p>
     </Tooltip>
+
+    <div>
+      <TooltipContainer let:tooltipID>
+        <Label>
+          This element has a tooltip on an icon!
+          <TooltipTarget>
+            <Icon
+              tabindex="0"
+              cx="cursor-pointer"
+              name="information-outline"
+            />
+          </TooltipTarget>
+          <TextInput
+            slot="input"
+            aria-describedby={tooltipID}
+          />
+        </Label>
+        <TooltipText>This is the tooltip text!</TooltipText>
+      </TooltipContainer>
+    </div>
+
+    <div>
+      <TooltipContainer
+        let:tooltipID
+        {hoverDelayMS}
+      >
+        <Label>
+          This icon has a tooltip if you're patient.
+          <TooltipTarget>
+            <Icon
+              tabindex="0"
+              cx="cursor-pointer"
+              name="history"
+            />
+          </TooltipTarget>
+          <NumericInput
+            slot="input"
+            aria-describedby={tooltipID}
+            name="hoverDelayMS"
+            value={hoverDelayMS}
+            on:input={onHoverDelayMsInput}
+          />
+        </Label>
+        <TooltipText>Thanks for waiting!</TooltipText>
+      </TooltipContainer>
+    </div>
   </div>
 
   <!-- Vector Input -->
@@ -896,25 +1571,27 @@ const notify = useNotify();
       // eslint-disable-next-line no-console
       console.log('VectorInput input', event);
     }}
+    on:change={(event) => {
+      // eslint-disable-next-line no-console
+      console.log('VectorInput change', event);
+    }}
   />
 
   <VectorInput
     type="number"
     step={10}
-    labels={['x', 'y', 'z', 'd']}
+    labels={['x', 'y', 'z', 'w']}
     placeholders={{
       x: '0',
       y: '0',
       z: '0',
-      // eslint-disable-next-line id-length
-      d: '0',
+      w: '0',
     }}
     values={{
       x: 0,
       y: 0,
       z: 0,
-      // eslint-disable-next-line id-length
-      d: 0,
+      w: 0,
     }}
     on:input={(event) => {
       // eslint-disable-next-line no-console

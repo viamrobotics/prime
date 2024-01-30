@@ -7,43 +7,40 @@ import { Radio } from '@viamrobotics/prime-core';
 
 <Story name="Basic">
   <Radio
-    options={['Opt 1', 'Opt 2', 'Opt 3']}
-    selected="Opt 1"
+    name="basic"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
   />
 </Story>
 
-<Story name="With label">
+<Story name="With legend">
   <Radio
-    label="These are your options"
-    labelposition="top"
-    options={['Opt 1', 'Opt 2']}
-    selected="Opt 1"
-  />
+    name="legend"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
 </Story>
 
-<Story name="Tooltip and state">
+<Story name="Required">
   <Radio
-    label="Your options"
-    labelposition="top"
-    options={['Option 1', 'Option 2', 'Option 3']}
-    selected="Option 1"
-    tooltip="Warning - these options may not be your only options."
-    state="warn"
-  />
+    name="required"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+    required
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
 </Story>
 
-<Story name="Readonly">
+<Story name="Disabled">
   <Radio
-    options={['Opt 1', 'Opt 2', 'Opt 3']}
-    selected="Opt 1"
-    readonly={true}
-  />
-</Story>
-
-<Story name="Full width radio">
-  <Radio
-    options={['Opt 1', 'Opt 2', 'Opt 3']}
-    selected="Opt 1"
-    width="full"
-  />
+    name="disabled"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+    disabled
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
 </Story>

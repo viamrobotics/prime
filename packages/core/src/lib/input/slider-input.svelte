@@ -37,10 +37,10 @@ export let min = Number.NEGATIVE_INFINITY;
 export let max = Number.POSITIVE_INFINITY;
 
 /** Whether or not the input should be rendered as readonly and be operable. */
-export let readonly = false as boolean | undefined;
+export let readonly = false;
 
 /** Whether or not the input should be rendered as readonly and be non-operable. */
-export let disabled = false as boolean | undefined;
+export let disabled = false;
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
@@ -57,7 +57,6 @@ const dispatch = createEventDispatcher<{
   change: number | undefined;
 }>();
 
-let numberDragTooltip: Tooltip;
 let numberDragCord: HTMLDivElement;
 let numberDragHead: HTMLDivElement;
 let isDragging = false;
@@ -71,7 +70,7 @@ $: {
 }
 
 $: isNumber = type === 'number';
-$: isButtonDisabled = readonly === true || disabled === true;
+$: isButtonDisabled = readonly || disabled;
 $: handleDisabled = preventHandler(isButtonDisabled);
 
 $: handlePointerMove = (event: PointerEvent) => {
@@ -114,13 +113,6 @@ $: handlePointerMove = (event: PointerEvent) => {
     value = next;
     dispatch('input', value);
   }
-
-  /**
-   * TODO: Determine why this is being interpreted as an `any` type by the
-   * linter when it is of `() => Promise<void>`.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  numberDragTooltip.recalculateStyle();
 };
 
 const handlePointerUp = () => {
@@ -139,13 +131,6 @@ const handlePointerDown = async (event: PointerEvent) => {
   await tick();
 
   numberDragHead.style.transform = 'translate(0px, 0px)';
-
-  /**
-   * TODO: Determine why this is being interpreted as an `any` type by the
-   * linter when it is of `() => Promise<void>`.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  numberDragTooltip.recalculateStyle();
 };
 
 const handleInput = () => {
@@ -188,7 +173,7 @@ const handleChange = () => {
     disabled={isButtonDisabled}
     tabindex="-1"
     class={cx(
-      'absolute bottom-[3px] left-[0.2rem] z-max h-[24px] w-1 cursor-ew-resize',
+      'absolute bottom-[3px] left-[0.2rem] h-[24px] w-1 cursor-ew-resize',
       {
         'bg-gray-400 hover:bg-gray-700': !isButtonDisabled,
         'cursor-not-allowed bg-disabled-dark': isButtonDisabled,
@@ -200,17 +185,14 @@ const handleChange = () => {
     {#if isDragging}
       <div
         bind:this={numberDragCord}
-        class="z-100 pointer-events-none mt-[calc(13px)] h-px bg-gray-400"
+        class="pointer-events-none relative z-max mt-[6px] h-px bg-gray-400"
       />
       <div
         bind:this={numberDragHead}
-        class="pointer-events-none -ml-[2px] -mt-[5px]"
+        class="pointer-events-none relative z-max -ml-[2px] -mt-[5px]"
       >
         <div class="h-2 w-2">
-          <Tooltip
-            bind:this={numberDragTooltip}
-            state="visible"
-          >
+          <Tooltip state="visible">
             <div class="h-2 w-2 rounded-full bg-gray-800" />
             <span slot="description">{value}</span>
           </Tooltip>
