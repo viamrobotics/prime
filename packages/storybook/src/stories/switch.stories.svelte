@@ -14,19 +14,8 @@ import { Label, Switch } from '@viamrobotics/prime-core';
 </Story>
 
 <Story name="With label">
-  <Label position="left">
-    Switch
+  <Label position="top">
+    Enable encryption
     <Switch slot="input" />
   </Label>
-</Story>
-
-<Story name="Annotated">
-  <Switch annotated />
-</Story>
-
-<Story name="Custom annotations">
-  <Switch annotated>
-    <svelte:fragment slot="on">Enabled</svelte:fragment>
-    <svelte:fragment slot="off">Disabled</svelte:fragment>
-  </Switch>
 </Story>

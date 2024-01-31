@@ -7,7 +7,7 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 
 <Story name="Success">
   <ToastBanner
-    message="Success message"
+    message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
     }}
@@ -17,12 +17,12 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 
 <Story name="SuccessWithEmphasizedAction">
   <ToastBanner
-    message="Success message"
+    message={`Deleted "my-arm"`}
     dismiss={() => {
       console.log('Clicked close button');
     }}
     action={{
-      text: 'action',
+      text: 'Undo',
       handler: () => {
         console.log('Clicked action');
       },

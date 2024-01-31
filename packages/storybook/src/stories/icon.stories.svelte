@@ -10,13 +10,17 @@ const pathsKeys = Object.keys(paths) as IconName[];
 <Meta title="Elements/Icon" />
 
 <Story name="Checkmark">
-  <Icon name="check-circle" />
+  <Icon
+    name="check-circle"
+    cx="text-gray-6"
+  />
 </Story>
 
 <Story name="Checkmark 2xl">
   <Icon
     name="check-circle"
     size="2xl"
+    cx="text-gray-6"
   />
 </Story>
 
@@ -27,6 +31,7 @@ const pathsKeys = Object.keys(paths) as IconName[];
         <Icon
           {name}
           size="lg"
+          cx="text-gray-6"
         />
         <p slot="description">
           {name}
