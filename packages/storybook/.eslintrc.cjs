@@ -20,5 +20,6 @@ module.exports = {
   },
   rules: {
     'no-console': 'off',
+    'sonarjs/no-duplicate-string': 'off',
   },
 };

@@ -12,7 +12,7 @@ import {
 <Meta title="Elements/Select" />
 
 <Story name="Basic">
-  <Select>
+  <Select cx="max-w-[200px]">
     <option>Option 1</option>
     <option>Option 2</option>
     <option>Option 3</option>
@@ -26,16 +26,17 @@ import {
 
 <Story name="Searchable">
   <Label cx="h-[200px]">
-    Searchable select with limited options
+    Searchable select
     <SearchableSelect
       slot="input"
+      cx="max-w-[200px]"
       placeholder="Search options"
       options={[
-        'First Option',
-        'Option 2',
-        'C.) Option',
-        'Something Else',
-        'With A Whole Lot Of Parts',
+        'First option',
+        'Second option',
+        'Third option',
+        'Something else',
+        'With a whole lot of parts',
       ]}
       exclusive
     />
@@ -44,10 +45,11 @@ import {
 
 <Story name="Searchable with arbitrary text">
   <Label cx="h-[200px]">
-    Select with arbitrary text
+    Searchable select with create
     <SearchableSelect
       slot="input"
-      placeholder="Search lyrics or invent your own"
+      cx="max-w-[200px]"
+      placeholder="Type to find or create..."
       otherOptionPrefix="Other:"
       options={['Hello', 'From', 'The other side']}
       sort={SortOptions.REDUCE}
@@ -56,15 +58,18 @@ import {
 </Story>
 
 <Story name="Multi">
-  <div class="h-[200px]">
+  <Label cx="h-[200px]">
+    Select multiple objects
     <Multiselect
+      slot="input"
+      cx="max-w-[300px]"
       options={[
-        'First Option',
-        'Option 2',
-        'C.) Option',
-        'Something Else',
-        'With A Whole Lot Of Parts',
+        'First option',
+        'Second option',
+        'Third option',
+        'Something else',
+        'With a whole lot of parts',
       ]}
     />
-  </div>
+  </Label>
 </Story>

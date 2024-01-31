@@ -1,12 +1,6 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
-import {
-  Tooltip,
-  TooltipContainer,
-  TooltipTarget,
-  TooltipText,
-  Icon,
-} from '@viamrobotics/prime-core';
+import { Tooltip, Icon, IconButton } from '@viamrobotics/prime-core';
 </script>
 
 <Meta title="Elements/Tooltip" />
@@ -14,57 +8,30 @@ import {
 <Story name="Plain Text">
   <div class="flex pt-5">
     <Tooltip let:tooltipID>
-      <p aria-describedby={tooltipID}>This element has a tooltip.</p>
-      <p slot="description">This is the tooltip text!</p>
-    </Tooltip>
-  </div>
-</Story>
-
-<Story name="Rich HTML">
-  <div class="flex pt-5">
-    <Tooltip let:tooltipID>
-      <p aria-describedby={tooltipID}>
-        This <b>element</b> has a <em>tooltip</em>.
-      </p>
-      <p slot="description">
-        This is the <b class="underline">tooltip text!</b>
-      </p>
-    </Tooltip>
-  </div>
-</Story>
-
-<Story name="Custom Target">
-  <div class="flex">
-    <TooltipContainer let:tooltipID>
-      <p
+      <Icon
         aria-describedby={tooltipID}
-        class="flex items-center gap-1"
-      >
-        This element has a tooltip on the icon.
-        <TooltipTarget>
-          <Icon
-            name="information-outline"
-            label="information"
-            cx="cursor-pointer"
-          />
-        </TooltipTarget>
+        name="information-outline"
+        cx="cursor-pointer text-gray-6"
+      />
+      <p slot="description">
+        This is some helpful but not critical information
       </p>
-
-      <TooltipText location="right">This is the tooltip text!</TooltipText>
-    </TooltipContainer>
+    </Tooltip>
   </div>
 </Story>
 
-<Story name="Hover Delay">
+<Story name="More actions">
   <div class="flex pt-5">
     <Tooltip
       let:tooltipID
       hoverDelayMS={1000}
     >
-      <p aria-describedby={tooltipID}>
-        This element has a tooltip that shows up if you're patient.
-      </p>
-      <p slot="description">Thanks for waiting!</p>
+      <IconButton
+        aria-describedby={tooltipID}
+        icon="dots-horizontal"
+        label="More actions"
+      />
+      <p slot="description">More actions</p>
     </Tooltip>
   </div>
 </Story>

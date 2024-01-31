@@ -5,6 +5,13 @@ import { Button } from '@viamrobotics/prime-core';
 
 <Meta title="Elements/Button" />
 
+<Story name="Group">
+  <div class="flex flex-row gap-2">
+    <Button variant="dark">Primary action</Button>
+    <Button>Secondary action</Button>
+  </div>
+</Story>
+
 <Story name="Primary">
   <Button>Run</Button>
 </Story>
@@ -56,25 +63,5 @@ import { Button } from '@viamrobotics/prime-core';
     icon="trash-can-outline"
   >
     Delete component
-  </Button>
-</Story>
-
-<Story name="Full width button">
-  <Button width="full">Wiiiiiiiiiiiiiiiiiiiiide</Button>
-</Story>
-
-<Story
-  name="Full width button with icon"
-  args={{
-    width: 'full',
-    label: 'hello',
-    icon: 'trash-can-outline',
-  }}
->
-  <Button
-    icon="trash-can-outline"
-    width="full"
-  >
-    Iiiiiiiiiiiiiiiicon
   </Button>
 </Story>
