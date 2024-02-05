@@ -5,7 +5,7 @@ import { Label } from '@viamrobotics/prime-core';
 
 <Meta title="Elements/Label" />
 
-<Story name="Basic">
+<Story name="Input">
   <Label>
     Name:
     <input
