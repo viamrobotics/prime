@@ -19,12 +19,8 @@ const notify = useNotify();
     <NotificationContainer />
 
     <div class="flex gap-4 pt-80">
-      <Button on:click={() => notify.info('Info', 'Info message')}>
-        Info
-      </Button>
-      <Button on:click={() => notify.warn('Warn', 'Warn message')}>
-        Warn
-      </Button>
+      <Button on:click={() => notify.info('Info', 'Info message')}>Info</Button>
+      <Button on:click={() => notify.warn('Warn', 'Warn message')}>Warn</Button>
       <Button on:click={() => notify.success('Success', 'Success message')}>
         Success
       </Button>
