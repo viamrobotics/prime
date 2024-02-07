@@ -20,22 +20,16 @@ const notify = useNotify();
 
     <div class="flex gap-4 pt-80">
       <Button on:click={() => notify.info('Info', 'Info message')}>
-        Info Notify
+        Info
       </Button>
       <Button on:click={() => notify.warn('Warn', 'Warn message')}>
-        Warn Notify
+        Warn
       </Button>
-      <Button
-        variant="success"
-        on:click={() => notify.success('Success', 'Success message')}
-      >
-        Success Notify
+      <Button on:click={() => notify.success('Success', 'Success message')}>
+        Success
       </Button>
-      <Button
-        variant="danger"
-        on:click={() => notify.danger('Danger', 'Danger message')}
-      >
-        Danger Notify
+      <Button on:click={() => notify.danger('Danger', 'Danger message')}>
+        Danger
       </Button>
     </div>
   </div>
