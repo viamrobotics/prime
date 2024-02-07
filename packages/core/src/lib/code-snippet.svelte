@@ -155,7 +155,7 @@ onMount(async () => {
     <figcaption><slot name="caption" /></figcaption>
   {/if}
 
-  <div class="flex gap-x-4 bg-light p-2 items-baseline">
+  < class="flex gap-x-4 bg-light p-2 items-baseline">
     <!-- The formatting here is intentional to preserve the formatting of `code` -->
     <pre class="flex-1 overflow-x-auto language-{language}"><code
         bind:this={element}
@@ -164,15 +164,13 @@ onMount(async () => {
       ></pre>
 
     {#if showCopyButton}
-      <div class="gray-6">
-        <IconButton
-          cx="m-1 text-gray-6"
-          icon={COPY_STATES[copyState].icon}
-          label={COPY_STATES[copyState].label}
-          on:click={copyToClipboard}
-          on:keyup={copyToClipboard}
-        />
-      </div>
+      <IconButton
+        cx="m-1 text-gray-6"
+        icon={COPY_STATES[copyState].icon}
+        label={COPY_STATES[copyState].label}
+        on:click={copyToClipboard}
+        on:keyup={copyToClipboard}
+      />
     {/if}
   </div>
 </figure>
