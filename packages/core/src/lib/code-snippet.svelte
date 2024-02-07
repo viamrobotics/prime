@@ -164,13 +164,15 @@ onMount(async () => {
       ></pre>
 
     {#if showCopyButton}
-      <IconButton
-        class="text-black m-2"
-        icon={COPY_STATES[copyState].icon}
-        label={COPY_STATES[copyState].label}
-        on:click={copyToClipboard}
-        on:keyup={copyToClipboard}
-      />
+      <div class="gray-6">
+        <IconButton
+          cx="m-1 text-gray-6"
+          icon={COPY_STATES[copyState].icon}
+          label={COPY_STATES[copyState].label}
+          on:click={copyToClipboard}
+          on:keyup={copyToClipboard}
+        />
+      </div>
     {/if}
   </div>
 </figure>
