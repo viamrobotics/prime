@@ -17,7 +17,7 @@ export { extraClasses as cx };
 
 <div
   class={cx(
-    'absolute left-0 right-0 top-full z-max mt-1 w-full overflow-hidden border border-gray-9 bg-white drop-shadow-md',
+    'absolute inset-x-0 top-full z-max mt-1 w-full overflow-hidden border border-gray-9 bg-white shadow-md',
     {
       invisible: !open,
     },

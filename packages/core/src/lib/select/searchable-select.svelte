@@ -217,8 +217,7 @@ const handleKeydown = createHandleKey({
   <ul
     id={LIST_ID}
     role="listbox"
-    class:hidden={!isExpanded}
-    class="max-h-36 flex-col overflow-y-auto border border-gray-9 bg-white py-1 drop-shadow-md"
+    class="max-h-36 flex-col overflow-y-auto border border-gray-9 bg-white py-1 shadow-sm"
   >
     {#each allOptions as { option, highlight } (option)}
       {@const isSelected = activeOption?.option === option}
@@ -242,7 +241,7 @@ const handleKeydown = createHandleKey({
           ? [otherOptionPrefix, option].filter(Boolean).join(' ')
           : option}
         class={cx(
-          'flex h-7.5 w-full cursor-pointer items-center justify-start  px-2.5 text-xs',
+          'flex h-7.5 w-full cursor-pointer items-center justify-start px-2.5 text-xs',
           isSelected ? 'bg-light' : 'hover:bg-light'
         )}
         on:pointerdown|preventDefault
