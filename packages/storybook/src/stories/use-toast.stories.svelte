@@ -13,16 +13,14 @@ const toast = provideToast();
 
     <div class="flex gap-4 pt-80">
       <Button
-        variant="success"
         on:click={() =>
           toast({
             message: 'Success message',
           })}
       >
-        Success Toast without action button
+        Success
       </Button>
       <Button
-        variant="success"
         on:click={() =>
           toast({
             message: 'Success message',
@@ -34,7 +32,7 @@ const toast = provideToast();
             },
           })}
       >
-        Success Toast with action button
+        Success with action
       </Button>
     </div>
   </div>
