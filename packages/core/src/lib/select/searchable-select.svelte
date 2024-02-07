@@ -217,6 +217,7 @@ const handleKeydown = createHandleKey({
   <ul
     id={LIST_ID}
     role="listbox"
+    class:hidden={!isExpanded}
     class="max-h-36 flex-col overflow-y-auto border border-gray-9 bg-white py-1 shadow-sm"
   >
     {#each allOptions as { option, highlight } (option)}
