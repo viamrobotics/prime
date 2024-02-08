@@ -2,7 +2,6 @@
 import { Meta, Story } from '@storybook/addon-svelte-csf';
 import {
   Label,
-  Multiselect,
   SearchableSelect,
   Select,
   SortOptions,
@@ -25,11 +24,10 @@ import {
 </Story>
 
 <Story name="Searchable">
-  <Label cx="h-[200px]">
+  <Label cx="h-[200px] max-w-[200px]">
     Searchable select
     <SearchableSelect
       slot="input"
-      cx="max-w-[200px]"
       placeholder="Search options"
       options={[
         'First option',
@@ -44,11 +42,10 @@ import {
 </Story>
 
 <Story name="Searchable with arbitrary text">
-  <Label cx="h-[200px]">
+  <Label cx="h-[200px] max-w-[200px]">
     Searchable select with create
     <SearchableSelect
       slot="input"
-      cx="max-w-[200px]"
       placeholder="Type to find or create..."
       otherOptionPrefix="Other:"
       options={['Hello', 'From', 'The other side']}
@@ -57,12 +54,11 @@ import {
   </Label>
 </Story>
 
-<Story name="Multi">
-  <Label cx="h-[200px]">
-    Select multiple objects
-    <Multiselect
+<Story name="Searchable with multiple">
+  <Label cx="h-[200px] max-w-[200px]">
+    Select multiple options
+    <SearchableSelect
       slot="input"
-      cx="max-w-[300px]"
       options={[
         'First option',
         'Second option',
@@ -70,6 +66,9 @@ import {
         'Something else',
         'With a whole lot of parts',
       ]}
+      sort={SortOptions.REDUCE}
+      exclusive
+      multiple
     />
   </Label>
 </Story>

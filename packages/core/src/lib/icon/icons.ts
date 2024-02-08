@@ -29,6 +29,8 @@ export const paths = {
   cancel: MDI.mdiCancel,
   'check-circle': MDI.mdiCheckCircle,
   check: MDI.mdiCheck,
+  'checkbox-blank-outline': MDI.mdiCheckboxBlankOutline,
+  'checkbox-marked': MDI.mdiCheckboxMarked,
   'chevron-double-up': MDI.mdiChevronDoubleUp,
   'chevron-down': MDI.mdiChevronDown,
   'chevron-left': MDI.mdiChevronLeft,

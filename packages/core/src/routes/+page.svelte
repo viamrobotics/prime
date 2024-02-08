@@ -1301,6 +1301,7 @@ const onHoverDelayMsInput = (event: Event) => {
       ]}
       placeholder="Reducing Select"
       sort="reduce"
+      multiple
     />
   </div>
 

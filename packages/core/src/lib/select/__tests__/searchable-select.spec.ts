@@ -6,6 +6,7 @@ import type { ComponentProps } from 'svelte';
 import { SearchableSelect as Subject, InputStates } from '$lib';
 
 const onChange = vi.fn();
+const onMultiChange = vi.fn();
 const onFocus = vi.fn();
 const onBlur = vi.fn();
 
@@ -13,6 +14,7 @@ const renderSubject = (props: Partial<ComponentProps<Subject>> = {}) => {
   return render(Subject, {
     options: ['hello from', 'the other side'],
     onChange,
+    onMultiChange,
     onFocus,
     onBlur,
     ...props,
@@ -33,8 +35,8 @@ const getResults = (): {
   return { search, button, list, options };
 };
 
-describe('combobox list', () => {
-  it('controls a listbox', () => {
+describe('SearchableSelect', () => {
+  it('is a combobox that controls a listbox', () => {
     renderSubject();
 
     const { search, button, list } = getResults();
@@ -43,6 +45,7 @@ describe('combobox list', () => {
     expect(button).toHaveAttribute('aria-controls', list.id);
     expect(search).toHaveAttribute('aria-controls', list.id);
     expect(search).toHaveAttribute('aria-autocomplete', 'list');
+    expect(search).not.toHaveAttribute('aria-multiselectable');
   });
 
   it('has a placeholder', () => {
@@ -421,6 +424,31 @@ describe('combobox list', () => {
     expect(options[0]).toHaveAttribute('aria-selected', 'true');
   });
 
+  it('selects visually focused option with space', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search } = getResults();
+    await user.click(search);
+    await user.keyboard('{ArrowDown} ');
+
+    expect(onChange).toHaveBeenCalledWith('hello from');
+    expect(search).toHaveValue('hello from');
+    expect(search).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('types with space when visual focus on search', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search } = getResults();
+    await user.click(search);
+    await user.keyboard(' ');
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(search).toHaveValue(' ');
+  });
+
   it('sets cursor with home and end', async () => {
     const user = userEvent.setup();
     renderSubject();
@@ -470,5 +498,79 @@ describe('combobox list', () => {
     await user.keyboard('{Escape}{ArrowDown}');
 
     expect(options[0]).toHaveAttribute('aria-selected', 'true');
+  });
+
+  describe('multiple mode', () => {
+    it('can select multiple options without closing', async () => {
+      const user = userEvent.setup();
+      renderSubject({ multiple: true });
+
+      const { search, options } = getResults();
+
+      expect(search).toHaveAttribute('aria-multiselectable', 'true');
+
+      await user.click(search);
+
+      // TODO(mc, 2024-02-03): replace .click with userEvent
+      // https://github.com/testing-library/user-event/issues/1119
+      await act(() => options[0]?.click());
+      expect(onMultiChange).toHaveBeenCalledWith(['hello from']);
+      expect(search).toHaveFocus();
+      expect(search).toHaveValue('');
+      expect(search).toHaveAttribute('aria-expanded', 'true');
+      expect(options[0]).toHaveAttribute('aria-checked', 'true');
+      expect(options[1]).toHaveAttribute('aria-checked', 'false');
+
+      await act(() => options[1]?.click());
+      expect(onMultiChange).toHaveBeenCalledWith([
+        'hello from',
+        'the other side',
+      ]);
+      expect(search).toHaveFocus();
+      expect(search).toHaveValue('');
+      expect(search).toHaveAttribute('aria-expanded', 'true');
+      expect(options[0]).toHaveAttribute('aria-checked', 'true');
+      expect(options[1]).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('can select unselect with the mouse', async () => {
+      const user = userEvent.setup();
+      renderSubject({ multiple: true });
+
+      const { search, options } = getResults();
+
+      await user.click(search);
+
+      // TODO(mc, 2024-02-03): replace .click with userEvent
+      // https://github.com/testing-library/user-event/issues/1119
+      await act(() => options[0]?.click());
+      expect(onMultiChange).toHaveBeenCalledWith(['hello from']);
+      await act(() => options[0]?.click());
+      expect(onMultiChange).toHaveBeenCalledWith([]);
+    });
+
+    it('resets search input on select', async () => {
+      const user = userEvent.setup();
+      renderSubject({ multiple: true });
+
+      const { search } = getResults();
+      await user.click(search);
+
+      await user.type(search, 'hello{Enter}');
+
+      expect(onMultiChange).toHaveBeenCalledWith(['hello from']);
+      expect(search).toHaveValue('');
+    });
+
+    it('closes menu on blur', async () => {
+      const user = userEvent.setup();
+      renderSubject({ multiple: true });
+
+      const { search } = getResults();
+      await user.click(search);
+      await user.keyboard('{Tab}');
+
+      expect(search).toHaveAttribute('aria-expanded', 'false');
+    });
   });
 });
