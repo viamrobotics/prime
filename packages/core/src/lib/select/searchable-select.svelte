@@ -306,11 +306,10 @@ const handleKeydown = createHandleKey({
             name="plus"
           />
         {/if}
-        <p class="truncate">
+        <p class="truncate whitespace-pre">
           {#if highlight !== undefined}
-            <span class="whitespace-pre">{highlight[0]}</span>
-            <span class="whitespace-pre bg-yellow-100">{highlight[1]}</span>
-            <span class="whitespace-pre">{highlight[2]}</span>
+            {@const [prefix, match, suffix] = highlight}
+            {prefix}<span class="bg-yellow-100">{match}</span>{suffix}
           {:else if isOther && otherOptionPrefix}
             {otherOptionPrefix} {option}
           {:else}
