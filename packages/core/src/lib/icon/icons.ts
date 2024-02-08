@@ -64,6 +64,7 @@ export const paths = {
   'language-python': MDI.mdiLanguagePython,
   'language-typescript': MDI.mdiLanguageTypescript,
   linkedin: MDI.mdiLinkedin,
+  'link-variant': MDI.mdiLinkVariant,
   lock: MDI.mdiLockOutline,
   logout: MDI.mdiLogout,
   magnify: MDI.mdiMagnify,
