@@ -27,6 +27,9 @@ export let options: string[];
 /** The value of the search input or the currently selected option, if any. */
 export let value = '';
 
+/** All selected values, if `multiple` is `true`. */
+export let values: string[] = [];
+
 /** The placeholder of the input. */
 export let placeholder = '';
 
@@ -37,6 +40,9 @@ export let placeholder = '';
  * - `Function` - value must be in `options` or pass the test function
  */
 export let exclusive: boolean | ((value: string) => boolean) = false;
+
+/** Multiple selections allowed. */
+export let multiple: boolean | undefined = undefined;
 
 /** Input is disabled. */
 export let disabled = false;
@@ -53,8 +59,16 @@ export let otherOptionPrefix = '';
 /** Error message ID, if any. */
 export let errorID = '';
 
-/** Notify the parent of a value change, after Enter key or blur. */
+/**
+ * Notify the parent of a value change, after Enter key or blur.
+ *
+ * Only used if `multiple` is `false` (default)
+ */
 export let onChange: ((value: string) => unknown) | undefined = undefined;
+
+/** Notify the parent of a value change, if `multiple` is `true` */
+export let onMultiChange: ((values: string[]) => unknown) | undefined =
+  undefined;
 
 /** Notify the parent of focus. */
 export let onFocus: ((event: FocusEvent) => unknown) | undefined = undefined;
@@ -110,6 +124,34 @@ $: if (typeof activeElement?.scrollIntoView === 'function') {
   activeElement.scrollIntoView({ block: 'nearest' });
 }
 
+const handleSingleSelect = (selectedValue: string | undefined) => {
+  const fallback = exclusive && !valueInSearch ? '' : value;
+  const nextValue = selectedValue ?? fallback;
+
+  if (nextValue !== previousValue) {
+    setMenuState(CLOSED);
+
+    value = nextValue;
+    previousValue = nextValue;
+    onChange?.(nextValue);
+  }
+};
+
+const handleMultiSelect = (selectedValue: string | undefined) => {
+  if (!selectedValue) {
+    return;
+  }
+
+  values = values.includes(selectedValue)
+    ? values.filter((val) => val !== selectedValue)
+    : [...values, selectedValue];
+
+  value = '';
+  onMultiChange?.(values);
+};
+
+$: handleSelect = multiple ? handleMultiSelect : handleSingleSelect;
+
 const setMenuState = (nextMenuState: MenuState) => {
   menuState = disabled ? CLOSED : nextMenuState;
 };
@@ -125,20 +167,8 @@ const handleFocus = (event: FocusEvent) => {
 
 const handleBlur = (event: FocusEvent) => {
   handleSelect(autoSelectOption?.option);
-  onBlur?.(event);
-};
-
-const handleSelect = (selectedValue: string | undefined) => {
-  const fallback = exclusive && !valueInSearch ? '' : value;
-  const nextValue = selectedValue ?? fallback;
-
   setMenuState(CLOSED);
-
-  if (nextValue !== previousValue) {
-    value = nextValue;
-    previousValue = nextValue;
-    onChange?.(nextValue);
-  }
+  onBlur?.(event);
 };
 
 const handleButtonClick = () => {
@@ -149,6 +179,15 @@ const handleButtonClick = () => {
 const handleKeydown = createHandleKey({
   Enter: () => {
     handleSelect(autoSelectOption?.option);
+  },
+  ' ': {
+    handler: (event) => {
+      if (menuState === FOCUS_ITEM) {
+        handleSelect(autoSelectOption?.option);
+        event.preventDefault();
+      }
+    },
+    preventDefault: false,
   },
   Escape: () => {
     if (menuState === CLOSED) {
@@ -198,6 +237,7 @@ const handleKeydown = createHandleKey({
   isFocused={menuState === FOCUS_ITEM ? false : undefined}
   cx={[{ 'caret-transparent': menuState === FOCUS_ITEM }, inputCx]}
   aria-autocomplete="list"
+  aria-multiselectable={multiple}
   aria-activedescendant={activeID}
   aria-errormessage={errorID}
   on:focus={handleFocus}
@@ -221,7 +261,9 @@ const handleKeydown = createHandleKey({
     class="max-h-36 flex-col overflow-y-auto border border-gray-9 bg-white py-1 shadow-sm"
   >
     {#each allOptions as { option, highlight } (option)}
-      {@const isSelected = activeOption?.option === option}
+      {@const isActive = activeOption?.option === option}
+      {@const isSelected = multiple ? false : isActive}
+      {@const isChecked = multiple ? values.includes(option) : undefined}
       {@const isOther = otherOption?.option === option}
 
       {#if isOther && allOptions.length > 1}
@@ -236,20 +278,28 @@ const handleKeydown = createHandleKey({
       -->
       <li
         role="option"
-        id={isSelected ? activeID : undefined}
+        id={isActive ? activeID : undefined}
         aria-selected={isSelected}
+        aria-checked={isChecked}
         aria-label={isOther
           ? [otherOptionPrefix, option].filter(Boolean).join(' ')
           : option}
         class={cx(
-          'flex h-7.5 w-full cursor-pointer items-center justify-start px-2.5 text-xs',
-          isSelected ? 'bg-light' : 'hover:bg-light'
+          'flex h-7.5 w-full cursor-pointer items-center justify-start text-xs',
+          multiple ? 'pl-2 pr-2.5' : 'px-2.5',
+          isActive ? 'bg-light' : 'hover:bg-light'
         )}
         on:pointerdown|preventDefault
         on:mousedown|preventDefault
         on:click={() => handleSelect(option)}
         bind:this={optionElements[option]}
       >
+        {#if multiple}
+          <Icon
+            cx={['mr-1 shrink-0', !isChecked && 'text-gray-6']}
+            name={isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'}
+          />
+        {/if}
         {#if isOther}
           <Icon
             cx="mr-1 shrink-0 text-gray-6"
