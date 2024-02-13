@@ -11,6 +11,7 @@ export const paths = {
   'alert-circle': MDI.mdiAlertCircle,
   'alert-outline': MDI.mdiAlertOutline,
   alert: MDI.mdiAlert,
+  apple: MDI.mdiApple,
   'apple-keyboard-command': MDI.mdiAppleKeyboardCommand,
   'arrow-collapse-left': MDI.mdiArrowCollapseLeft,
   'arrow-collapse-right': MDI.mdiArrowCollapseRight,
@@ -74,7 +75,6 @@ export const paths = {
   linux: MDI.mdiLinux,
   lock: MDI.mdiLockOutline,
   logout: MDI.mdiLogout,
-  apple: MDI.mdiApple,
   magnet:
     'M3 17v-6a9 9 0 1 1 18 0v6h-4v-6a5 5 0 0 0-10 0v6m10 2h4v3h-4M3 19h4v3H3',
   'magnet-off':
