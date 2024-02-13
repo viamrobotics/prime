@@ -1,6 +1,5 @@
-import { afterEach } from 'vitest';
-import { cleanup } from '@testing-library/svelte';
 import '@testing-library/jest-dom/vitest';
+import '@testing-library/svelte/vitest';
 
 /**
  * `PointerEvent` does not exist in `jsdom` so this polyfill is based off this
@@ -39,7 +38,3 @@ if (!global.PointerEvent) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   global.PointerEvent = PointerEvent as any;
 }
-
-afterEach(() => {
-  cleanup();
-});
