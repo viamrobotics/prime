@@ -192,5 +192,6 @@ figure pre[class*='language-'] {
 
 figure pre[class*='language-'] > code[class*='language-'] {
   font-family: 'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace;
+  font-size: 1em;
 }
 </style>
