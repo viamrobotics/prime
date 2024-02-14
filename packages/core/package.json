@@ -82,7 +82,7 @@
     "tslib": "^2.6.2",
     "type-fest": "^4.8.3",
     "typescript": "^5.3.3",
-    "vite": "^5.0.10",
+    "vite": "^4.5.2",
     "vitest": "^1.1.0"
   },
   "svelte": "./dist/index.js",
