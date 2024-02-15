@@ -12,6 +12,14 @@ import { IconButton } from '@viamrobotics/prime-core';
   />
 </Story>
 
+<Story name="Secondary">
+  <IconButton
+    icon="plus"
+    label="Add secondary object"
+    variant="secondary"
+  />
+</Story>
+
 <Story name="Danger">
   <IconButton
     icon="trash-can-outline"

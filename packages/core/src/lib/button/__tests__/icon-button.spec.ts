@@ -21,6 +21,11 @@ describe('IconButton', () => {
     );
   });
 
+  it('Renders a button in the style of the secondary variant if variant is specified as secondary', () => {
+    render(IconButton, { ...common, variant: 'secondary' });
+    expect(screen.getByRole('button')).toHaveClass('border-light', 'bg-light');
+  });
+
   it('Renders a button in the style of danger if the variant is specified as danger', () => {
     render(IconButton, { ...common, variant: 'danger' });
     expect(screen.getByRole('button')).toHaveClass(

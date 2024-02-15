@@ -27,7 +27,7 @@ export let disabled = false;
 export let type: 'button' | 'submit' | 'reset' = 'button';
 
 /** The communicated action type to the user. */
-export let variant: 'primary' | 'danger' = 'primary';
+export let variant: 'primary' | 'secondary' | 'danger' = 'primary';
 
 /** Additional CSS classes to pass to the button. */
 let extraClasses: cx.Argument = '';
@@ -48,6 +48,8 @@ $: handleDisabled = preventHandler(disabled);
       'cursor-not-allowed text-gray-4': disabled,
       'hover:text-gray-7 active:text-gray-8':
         variant === 'primary' && !disabled,
+      'border-light bg-light hover:border-medium hover:bg-medium active:border-medium active:bg-gray-2':
+        variant === 'secondary' && !disabled,
       'hover:bg-danger-dark hover:bg-opacity-[0.08] hover:text-danger-dark active:bg-[rgba(190,53,54,0.16)] active:text-danger-dark':
         variant === 'danger' && !disabled,
     },
