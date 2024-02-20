@@ -155,7 +155,7 @@ onMount(async () => {
     <figcaption><slot name="caption" /></figcaption>
   {/if}
 
-  <div class="flex gap-x-4 p-4 bg-light">
+  <div class="flex gap-x-4 bg-light p-4">
     <!-- The formatting here is intentional to preserve the formatting of `code` -->
     <pre class="flex-1 overflow-x-auto language-{language}"><code
         bind:this={element}
