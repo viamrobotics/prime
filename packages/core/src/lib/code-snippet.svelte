@@ -155,7 +155,7 @@ onMount(async () => {
     <figcaption><slot name="caption" /></figcaption>
   {/if}
 
-  <div class="flex items-baseline gap-x-4 bg-light p-2">
+  <div class="flex gap-x-4 bg-light p-4">
     <!-- The formatting here is intentional to preserve the formatting of `code` -->
     <pre class="flex-1 overflow-x-auto language-{language}"><code
         bind:this={element}
@@ -165,7 +165,7 @@ onMount(async () => {
 
     {#if showCopyButton}
       <IconButton
-        cx="m-1 text-gray-6"
+        cx="text-gray-6"
         icon={COPY_STATES[copyState].icon}
         label={COPY_STATES[copyState].label}
         on:click={copyToClipboard}
@@ -186,8 +186,6 @@ figure pre[class*='language-'] > code[class*='language-'] {
 
 figure pre[class*='language-'] {
   padding: 0;
-  padding-left: 0.5rem;
-  padding-top: 0.5rem;
 }
 
 figure pre[class*='language-'] > code[class*='language-'] {
