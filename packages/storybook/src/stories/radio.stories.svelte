@@ -44,3 +44,13 @@ import { Radio } from '@viamrobotics/prime-core';
     <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
   </Radio>
 </Story>
+
+<Story name="With icon">
+  <Radio
+    name="With icon"
+    options={[{ label: 'Lion', value: 'lion', icon: 'earth' }, 'Tiger', 'Bear']}
+    selected="Lion"
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
+</Story>

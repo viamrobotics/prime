@@ -19,8 +19,16 @@ import Label from '$lib/label.svelte';
 import { Icon, type IconName } from '$lib/icon';
 import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 
+interface Option {
+  label: string;
+  value: string;
+  icon?: IconName;
+}
+
+type Options = (string | Option)[];
+
 /** The set of options that is available in the radio button. */
-export let options: string[];
+export let options: Options;
 
 /** The name for the inputs in the fieldset of radio options. */
 export let name: string;
@@ -41,11 +49,13 @@ export let direction: 'col' | 'row' = 'col';
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-$: isSelected = (option: string) => option === selected;
+let optionsInternal: Option[] = [];
+
+$: optionsInternal = options.map((option) =>
+  typeof option === 'string' ? { label: option, value: option } : option
+);
 $: handleDisabled = preventHandler(disabled);
 $: handleDisabledKeydown = preventKeyboardHandler(disabled);
-$: getIcon = (option: string): IconName =>
-  isSelected(option) ? 'radiobox-marked' : 'radiobox-blank';
 </script>
 
 <fieldset
@@ -71,26 +81,28 @@ $: getIcon = (option: string): IconName =>
       'flex-row gap-2': direction === 'row',
     })}
   >
-    {#each options as option}
+    {#each optionsInternal as { label, value, icon }}
+      {@const isSelected = value === selected}
+      {@const radioIcon = isSelected ? 'radiobox-marked' : 'radiobox-blank'}
       <Label
         position="left"
         {disabled}
         cx={[
           'h-7.5 whitespace-nowrap text-xs',
           {
-            'font-semibold': isSelected(option),
-            'text-default': isSelected(option) && !disabled,
-            'text-subtle-1': !isSelected(option) && !disabled,
+            'font-semibold': isSelected,
+            'text-default': isSelected && !disabled,
+            'text-subtle-1': !isSelected && !disabled,
             'cursor-not-allowed text-disabled-dark': disabled,
           },
         ]}
       >
         <input
           {name}
+          {value}
           type="radio"
-          value={option}
           class="peer appearance-none"
-          checked={isSelected(option)}
+          checked={isSelected}
           readonly={disabled ? true : undefined}
           aria-disabled={disabled ? true : undefined}
           bind:group={selected}
@@ -100,15 +112,21 @@ $: getIcon = (option: string): IconName =>
           on:keydown|capture={handleDisabledKeydown}
         />
         <Icon
-          name={getIcon(option)}
+          name={radioIcon}
           cx={cx({
             'text-disabled-dark': disabled,
-            'text-gray-9': !disabled && option === selected,
-            'text-gray-6': !disabled && option !== selected,
+            'text-gray-9': !disabled && label === selected,
+            'text-gray-6': !disabled && label !== selected,
           })}
         />
-        <span class="pl-1.5">
-          {option}
+        <span class="flex gap-1.5 pl-1.5">
+          {#if icon}
+            <Icon
+              cx="text-gray-7"
+              name={icon}
+            />
+          {/if}
+          {label}
         </span>
       </Label>
     {/each}
