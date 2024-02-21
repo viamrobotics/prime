@@ -22,6 +22,7 @@ import { preventHandler, preventKeyboardHandler } from '$lib/prevent-handler';
 interface Option {
   label: string;
   value: string;
+  description?: string;
   icon?: IconName;
 }
 
@@ -66,7 +67,7 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
   {#if $$slots.legend}
     <legend
       class={cx(
-        cx('mb-1 flex text-xs text-subtle-1', {
+        cx('mb-2 flex text-xs text-subtle-1', {
           'after:text-danger-dark after:content-["*"]': required,
         })
       )}
@@ -76,22 +77,20 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
   {/if}
 
   <div
-    class={cx('flex', {
+    class={cx('flex gap-2', {
       'flex-col': direction === 'col',
-      'flex-row gap-2': direction === 'row',
+      'flex-row': direction === 'row',
     })}
   >
-    {#each optionsInternal as { label, value, icon }}
+    {#each optionsInternal as { label, value, description, icon }}
       {@const isSelected = value === selected}
       {@const radioIcon = isSelected ? 'radiobox-marked' : 'radiobox-blank'}
       <Label
         position="left"
         {disabled}
         cx={[
-          'h-7.5 whitespace-nowrap text-xs',
+          'whitespace-nowrap text-xs',
           {
-            'font-semibold': isSelected,
-            'text-default': isSelected && !disabled,
             'text-subtle-1': !isSelected && !disabled,
             'cursor-not-allowed text-disabled-dark': disabled,
           },
@@ -115,18 +114,28 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
           name={radioIcon}
           cx={cx({
             'text-disabled-dark': disabled,
-            'text-gray-9': !disabled && label === selected,
-            'text-gray-6': !disabled && label !== selected,
+            'text-gray-9': !disabled && isSelected,
+            'text-gray-6': !disabled && !isSelected,
           })}
         />
-        <span class="flex gap-1.5 pl-1.5">
-          {#if icon}
-            <Icon
-              cx="text-gray-7"
-              name={icon}
-            />
+        <span class="pl-1.5">
+          <span class="flex gap-1.5">
+            {#if icon}
+              <Icon
+                cx="text-gray-7"
+                name={icon}
+              />
+            {/if}
+            <span
+              class={cx({
+                'font-semibold': isSelected,
+                'text-default': isSelected && !disabled,
+              })}>{label}</span
+            >
+          </span>
+          {#if description}
+            <p class="mt-0.5 text-subtle-2">{description}</p>
           {/if}
-          {label}
         </span>
       </Label>
     {/each}
