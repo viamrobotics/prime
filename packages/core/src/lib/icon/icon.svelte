@@ -47,16 +47,38 @@ export { extraClasses as cx };
   Accessibility approach for icon svgs taken from:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
-<svg
-  class={cx(sizes[size], extraClasses)}
-  viewBox="0 0 24 24"
-  aria-hidden="true"
-  focusable="false"
-  {...$$restProps}
->
-  <path
-    d={paths[name]}
-    fill-rule="evenodd"
-    fill="currentColor"
-  />
-</svg>
+{#if name === 'viam-part-status'}
+  <svg
+    class={cx(sizes[size], extraClasses)}
+    viewBox="0 0 16 16"
+    aria-hidden="true"
+    focusable="false"
+    {...$$restProps}
+  >
+    <path
+      d={paths[name].path1}
+      fill-rule="evenodd"
+      fill="currentColor"
+    />
+    <path
+      d={paths[name].path2}
+      fill-rule="evenodd"
+      fill="currentColor"
+      opacity={0.5}
+    />
+  </svg>
+{:else}
+  <svg
+    class={cx(sizes[size], extraClasses)}
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+    {...$$restProps}
+  >
+    <path
+      d={paths[name]}
+      fill-rule="evenodd"
+      fill="currentColor"
+    />
+  </svg>
+{/if}
