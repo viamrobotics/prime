@@ -15,7 +15,7 @@ const handleUpdateObstacle = (event: CustomEvent<Obstacle[]>) => {
 };
 </script>
 
-<nav class="sm:h-full sm:w-[350px]">
+<nav class="sm:h-full sm:w-[350px] py-4 pl-4">
   <ol class="mb-2 flex flex-wrap items-center">
     {#each $tabs as tabTitle}
       {@const selected = $tab === tabTitle}
