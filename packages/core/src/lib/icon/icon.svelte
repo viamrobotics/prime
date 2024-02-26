@@ -47,7 +47,7 @@ export { extraClasses as cx };
   Accessibility approach for icon svgs taken from:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
-{#if name === 'viam-part-status'}
+{#if name === 'viam-mixed-part-status'}
   <svg
     class={cx(sizes[size], extraClasses)}
     viewBox="0 0 16 16"
