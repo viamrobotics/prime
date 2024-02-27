@@ -41,44 +41,30 @@ export let size: Size = 'base';
 /** Additional CSS classes to pass to the svg. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
+
+$: allPaths = typeof paths[name] === 'string'
+    ? [{ path: paths[name] }]
+    : paths[name]
 </script>
 
 <!--
   Accessibility approach for icon svgs taken from:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
-{#if name === 'viam-mixed-part-status'}
+  
   <svg
     class={cx(sizes[size], extraClasses)}
-    viewBox="0 0 16 16"
+    viewBox={name === 'viam-mixed-part-status' ? "0 0 16 16" : "0 0 24 24"}
     aria-hidden="true"
     focusable="false"
     {...$$restProps}
   >
-    <path
-      d={paths[name].path1}
-      fill-rule="evenodd"
-      fill="currentColor"
-    />
-    <path
-      d={paths[name].path2}
-      fill-rule="evenodd"
-      fill="currentColor"
-      opacity={0.5}
-    />
+    {#each allPaths as { path: d, opacity }}
+      <path
+        {d}
+        {opacity}
+        fill-rule="evenodd"
+        fill="currentColor"
+      />
+    {/each}
   </svg>
-{:else}
-  <svg
-    class={cx(sizes[size], extraClasses)}
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    focusable="false"
-    {...$$restProps}
-  >
-    <path
-      d={paths[name]}
-      fill-rule="evenodd"
-      fill="currentColor"
-    />
-  </svg>
-{/if}
