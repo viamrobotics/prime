@@ -65,7 +65,7 @@ $: {
 
 <svg
   class={cx(sizes[size], extraClasses)}
-  viewBox={name === 'viam-mixed-part-status' ? '0 0 16 16' : '0 0 24 24'}
+  viewBox="0 0 24 24"
   aria-hidden="true"
   focusable="false"
   {...$$restProps}

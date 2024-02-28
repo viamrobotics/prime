@@ -186,7 +186,7 @@ $: map?.setCenter({ lat: 40.7, lng: -74.17 });
 
 <div class="px-12">
   <div
-    class="relative h-[800px] w-full border border-gray-200 p-4 sm:aspect-video sm:h-auto"
+    class="relative h-[800px] w-full border border-gray-200 sm:aspect-video sm:h-auto"
   >
     <NavigationMap
       bind:map
