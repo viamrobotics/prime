@@ -2,12 +2,12 @@ import * as MDI from '@mdi/js';
 
 type Path = string;
 
-type CustomIcon = {
+export interface CustomIcon {
   path: string;
-  opacity?: number;
-};
+  opacity?: number | undefined;
+}
 
-type IconPath = Path | CustomIcon[];
+export type IconPath = Path | CustomIcon[];
 
 /**
  * Keys should match MDI name

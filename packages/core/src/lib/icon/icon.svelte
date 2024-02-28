@@ -30,7 +30,7 @@ const sizes: Record<Size, string> = {
 
 <script lang="ts">
 import cx from 'classnames';
-import { paths, type IconName } from './icons';
+import { paths, type IconName, type CustomIcon } from './icons';
 
 /** The name of the icon. */
 export let name: IconName;
@@ -42,29 +42,40 @@ export let size: Size = 'base';
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-$: allPaths = typeof paths[name] === 'string'
-    ? [{ path: paths[name] }]
-    : paths[name]
+let allPaths: CustomIcon[] = [];
+
+$: {
+  const pathValue = paths[name];
+
+  if (typeof pathValue === 'string') {
+    allPaths = [{ path: pathValue }];
+  } else if (Array.isArray(pathValue)) {
+    allPaths = pathValue.map((icon) => ({
+      path: icon.path,
+      opacity: icon.opacity,
+    }));
+  }
+}
 </script>
 
 <!--
   Accessibility approach for icon svgs taken from:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
-  
-  <svg
-    class={cx(sizes[size], extraClasses)}
-    viewBox={name === 'viam-mixed-part-status' ? "0 0 16 16" : "0 0 24 24"}
-    aria-hidden="true"
-    focusable="false"
-    {...$$restProps}
-  >
-    {#each allPaths as { path: d, opacity }}
-      <path
-        {d}
-        {opacity}
-        fill-rule="evenodd"
-        fill="currentColor"
-      />
-    {/each}
-  </svg>
+
+<svg
+  class={cx(sizes[size], extraClasses)}
+  viewBox={name === 'viam-mixed-part-status' ? '0 0 16 16' : '0 0 24 24'}
+  aria-hidden="true"
+  focusable="false"
+  {...$$restProps}
+>
+  {#each allPaths as { path: dAttribute, opacity }}
+    <path
+      d={dAttribute}
+      {opacity}
+      fill-rule="evenodd"
+      fill="currentColor"
+    />
+  {/each}
+</svg>
