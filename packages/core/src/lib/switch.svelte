@@ -65,7 +65,7 @@ const toggle = () => {
 >
   <div
     class={cx(
-      'relative inline-flex h-5 w-11 flex-shrink-0 border duration-200 ease-in-out focus:outline-none motion-safe:transition-colors',
+      'relative inline-flex h-5 w-11 shrink-0 border duration-200 ease-in-out focus:outline-none motion-safe:transition-colors',
       {
         'border-gray-6 bg-gray-6': !on && !disabled,
         'border-success-dark bg-success-dark': on && !disabled,
@@ -75,7 +75,7 @@ const toggle = () => {
   >
     <span
       class={cx(
-        'pointer-events-none relative ml-px mt-px inline-block h-4 w-4 transform bg-white ring-0 duration-200 ease-in-out motion-safe:transition-transform',
+        'pointer-events-none relative ml-px mt-px inline-block h-4 w-4 bg-white ring-0 duration-200 ease-in-out motion-safe:transition-transform',
         {
           'border-gray-4': disabled,
           'translate-x-0': !on,
