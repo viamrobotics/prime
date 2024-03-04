@@ -31,7 +31,7 @@ export let removable = true;
 export let variant: 'default' | 'outlined' = 'default';
 
 /** The icon shown in the button. */
-export let icon: IconName | '' = '';
+export let icon: IconName = '';
 
 /** Additional CSS classes to pass to the pill. */
 let extraClasses: cx.Argument = '';

@@ -160,8 +160,11 @@ const handleEnter = (event: KeyboardEvent) => {
     }
   } else {
     // if the user has used arrow keys to navigate options, enter should add/remove item
-    const { option } = searchedOptions[$navigationIndex]!;
-    handleOptionSelect(option);
+    const navigationOption = searchedOptions[$navigationIndex];
+    if (navigationOption) {
+      const { option } = navigationOption;
+      handleOptionSelect(option);
+    }
   }
 };
 
