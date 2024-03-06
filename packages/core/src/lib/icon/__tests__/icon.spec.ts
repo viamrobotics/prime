@@ -9,6 +9,11 @@ describe('Icon', () => {
     expect(container.querySelector('svg')).toBeVisible();
   });
 
+  it('Renders an icon with the correct name attribute', () => {
+    const { container } = render(Icon, { name: 'camera-outline' });
+    expect(container.querySelector('svg[name=camera-outline]')).toBeVisible();
+  });
+
   it('Renders an extra small icon', () => {
     const { container } = render(Icon, { name: 'cog', size: 'xs' });
     expect(container.querySelector('svg')).toHaveClass('w-3 h-3 ');
