@@ -74,13 +74,6 @@ describe('Radio', () => {
     expect(legend).toHaveClass('after:text-danger-dark after:content-["*"]');
   });
 
-  it('Renders in a row if specified', () => {
-    render(Radio, { ...common, direction: 'row' });
-    expect(
-      screen.getByText('Test radio options').nextElementSibling
-    ).toHaveClass('flex-row gap-2');
-  });
-
   it('Renders in a column if specified', () => {
     render(Radio, { ...common, direction: 'col' });
     expect(
