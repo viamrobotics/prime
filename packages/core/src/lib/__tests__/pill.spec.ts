@@ -46,11 +46,6 @@ describe('Pill', () => {
     );
   });
 
-  it('Renders a resource pill that is not removable if a removable attribute of true has not been specified', () => {
-    render(Pill, { variant: 'outlined', removable: false });
-    expect(screen.queryByRole('button')).toBeNull();
-  });
-
   it('Confirms default pill is clickable', async () => {
     const { component } = render(Pill);
     const onClick = vi.fn();

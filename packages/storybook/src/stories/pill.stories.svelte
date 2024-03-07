@@ -30,43 +30,37 @@ import { Pill } from '@viamrobotics/prime-core';
   </div>
 </Story>
 
-<Story name="Outlined">
+<Story name="Icon">
   <div class="flex flex-row gap-1.5">
     <Pill
       value="my-base"
-      variant="outlined"
       icon="viam-component"
     />
     <Pill
       value="my-movement-sensor"
-      variant="outlined"
       icon="viam-component"
     />
     <Pill
       value="my-nav-service"
-      variant="outlined"
       icon="viam-service"
     />
   </div>
 </Story>
 
-<Story name="Outlined Not Removable">
+<Story name="Icon Not Removable">
   <div class="flex flex-row gap-1.5">
     <Pill
       value="my-base"
-      variant="outlined"
       icon="viam-component"
       removable={false}
     />
     <Pill
       value="my-movement-sensor"
-      variant="outlined"
       icon="viam-component"
       removable={false}
     />
     <Pill
       value="my-nav-service"
-      variant="outlined"
       icon="viam-service"
       removable={false}
     />
