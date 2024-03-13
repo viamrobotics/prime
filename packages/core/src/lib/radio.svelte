@@ -86,7 +86,11 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
             'text-subtle-1': !isSelected && !disabled,
             'cursor-not-allowed text-disabled-dark': disabled,
           },
+        ]}
+      >
+        <input
           {name}
+          {value}
           type="radio"
           class="peer appearance-none"
           checked={isSelected}
