@@ -20,13 +20,13 @@ let smallModalOpen = false;
       <svelte:fragment slot="message">This is a small modal.</svelte:fragment>
       <Button
         slot="primary"
+        variant="dark"
         on:click={() => console.log('Primary button clicked')}
       >
         Primary
       </Button>
       <Button
         slot="secondary"
-        variant="dark"
         on:click={() => console.log('Secondary button clicked')}
       >
         Secondary

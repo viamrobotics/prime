@@ -16,8 +16,7 @@ describe('Label', () => {
     render(Label, { position: 'left' });
 
     const label = screen.getByText('Name:');
-    expect(label).toHaveClass('text-xs text-subtle-1');
-    expect(label).toHaveClass('inline whitespace-nowrap');
+    expect(label).toHaveClass('inline text-xs text-subtle-1');
   });
 
   it('Renders the label text as disabled', () => {

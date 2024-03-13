@@ -39,9 +39,7 @@ const handleClick = (option: string) => {
 };
 </script>
 
-<div
-  class={cx('border-b-border-2 flex w-full border-b bg-medium', extraClasses)}
->
+<div class={cx('flex w-full border-b bg-medium', extraClasses)}>
   {#each tabs as tab, index (tab)}
     <button
       class={cx('px-4 py-1 text-sm first:ml-6', {

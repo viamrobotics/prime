@@ -1109,20 +1109,12 @@ const onHoverDelayMsInput = (event: Event) => {
       disabled
       value="Baz"
     />
-  </div>
-
-  <!-- Outlined Pill -->
-  <h1 class="text-2xl">Outlined Pill</h1>
-  <div class="flex gap-4">
     <Pill
       value="Service"
-      variant="outlined"
       icon="viam-service"
-      removable
     />
     <Pill
       value="Component"
-      variant="outlined"
       icon="viam-component"
       removable={false}
     />
@@ -1188,14 +1180,27 @@ const onHoverDelayMsInput = (event: Event) => {
     >
       <svelte:fragment slot="legend">Disabled Radio</svelte:fragment>
     </Radio>
+  </div>
 
+  <div>
     <Radio
-      options={['Opt 1', 'Opt 2', 'Opt 3']}
-      selected="Opt 1"
-      name="row-radio"
-      direction="row"
+      name="Upload model"
+      options={[
+        {
+          label: 'New model',
+          value: 'new model',
+          description: 'Upload a new model',
+        },
+        {
+          label: 'New version',
+          value: 'new version',
+          description:
+            'Upload a new version of a model that already exists in Viam',
+        },
+      ]}
+      selected="new model"
     >
-      <svelte:fragment slot="legend">Row Radio</svelte:fragment>
+      <svelte:fragment slot="legend">Upload model</svelte:fragment>
     </Radio>
   </div>
 
