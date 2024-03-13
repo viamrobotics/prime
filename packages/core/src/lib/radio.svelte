@@ -73,16 +73,7 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
     </legend>
   {/if}
 
-<<<<<<< HEAD
-  <div
-    class={cx('flex gap-2', {
-      'flex-col': direction === 'col',
-      'flex-row': direction === 'row',
-    })}
-  >
-=======
   <div class="flex flex-col gap-2">
->>>>>>> 9573b71504f4a4c5ac006b279c46de64698b3371
     {#each optionsInternal as { label, value, description, icon }}
       {@const isSelected = value === selected}
       {@const radioIcon = isSelected ? 'radiobox-marked' : 'radiobox-blank'}
@@ -90,20 +81,12 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
         position="left"
         {disabled}
         cx={[
-<<<<<<< HEAD
-          'whitespace-nowrap text-xs',
-=======
           'cursor-pointer text-xs',
->>>>>>> 9573b71504f4a4c5ac006b279c46de64698b3371
           {
             'text-subtle-1': !isSelected && !disabled,
             'cursor-not-allowed text-disabled-dark': disabled,
           },
-        ]}
-      >
-        <input
           {name}
-          {value}
           type="radio"
           class="peer appearance-none"
           checked={isSelected}
