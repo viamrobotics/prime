@@ -96,7 +96,7 @@ $: headingElement?.focus();
       )}
     >
       <IconButton
-        class="absolute right-4 top-4 text-gray-6"
+        cx="absolute right-4 top-4 text-gray-6"
         icon="close"
         label="Close modal"
         on:click={handleCloseModal}
@@ -107,7 +107,7 @@ $: headingElement?.focus();
         <h2
           bind:this={headingElement}
           tabindex="-1"
-          class="pr-12 text-lg font-semibold"
+          class="pr-12 text-lg font-semibold text-default"
         >
           <slot name="title" />
         </h2>

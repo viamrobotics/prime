@@ -1082,13 +1082,13 @@ const onHoverDelayMsInput = (event: Event) => {
       >
       <Button
         slot="primary"
+        variant="dark"
         on:click={() => notify.success('Howdy Message', 'Howdy Partner')}
       >
         Notify howdy
       </Button>
       <Button
         slot="secondary"
-        variant="dark"
         on:click={handleCloseModal}
       >
         Cancel
