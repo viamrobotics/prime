@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'svelte';
 import Modal from '../modal.svelte';
-import ModelOneSlot from './modal-one-slot.spec.svelte'
+import ModelOneSlot from './modal-one-slot.spec.svelte';
 import ModalTwoSlots from './modal-two-slots.spec.svelte';
 
 describe('Modal', () => {
@@ -85,7 +85,7 @@ describe('Modal', () => {
     render(ModelOneSlot, { isOpen: true });
 
     const modal = screen.getByRole('dialog');
-    const button = within(modal).getByRole('button',{name:/primary/iu});
+    const button = within(modal).getByRole('button', { name: /primary/iu });
 
     expect(button).toHaveFocus();
   });
@@ -94,7 +94,9 @@ describe('Modal', () => {
     render(ModalTwoSlots, { isOpen: true });
 
     const modal = screen.getByRole('dialog');
-    const secondaryButton = within(modal).getByRole('button',{name:/secondary/iu});
+    const secondaryButton = within(modal).getByRole('button', {
+      name: /secondary/iu,
+    });
 
     expect(secondaryButton).toHaveFocus();
   });
@@ -103,7 +105,9 @@ describe('Modal', () => {
     render(ModalTwoSlots, { isOpen: true, focusPrimaryElement: true });
 
     const modal = screen.getByRole('alertdialog');
-    const primaryButton = within(modal).getByRole('button',{name:/primary/iu});
+    const primaryButton = within(modal).getByRole('button', {
+      name: /primary/iu,
+    });
 
     expect(primaryButton).toHaveFocus();
   });
