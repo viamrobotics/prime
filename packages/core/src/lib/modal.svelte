@@ -52,7 +52,7 @@ export let isOpen: boolean;
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 
-export let role = "dialog"
+export let role = 'dialog';
 
 const dispatch = createEventDispatcher<{
   close: undefined;
@@ -112,9 +112,7 @@ $: if (typeof document !== 'undefined') {
 
         <div class="flex flex-grow"><slot /></div>
 
-        <div
-          class="mt-6 flex justify-end gap-2"
-        >
+        <div class="mt-6 flex justify-end gap-2">
           <slot name="secondary" />
           <slot name="primary" />
         </div>

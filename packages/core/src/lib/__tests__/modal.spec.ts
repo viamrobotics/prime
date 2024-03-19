@@ -71,10 +71,10 @@ describe('Modal', () => {
   });
 
   it('should change role to alertdialog when role is passed', () => {
-    renderSubject({ isOpen: true, role:"alertdialog" });
+    renderSubject({ isOpen: true, role: 'alertdialog' });
 
     const modal = screen.getByRole('alertdialog');
 
-    expect(modal).toBeInTheDocument()
+    expect(modal).toBeInTheDocument();
   });
 });
