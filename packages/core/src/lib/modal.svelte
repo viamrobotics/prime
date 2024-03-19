@@ -54,7 +54,6 @@ export let variant: 'small' | '' = '';
 
 export let focusPrimaryElement = false;
 
-let headingElement: HTMLElement | undefined;
 let slotElement: HTMLElement | undefined;
 
 const dispatch = createEventDispatcher<{
@@ -77,20 +76,17 @@ $: if (typeof document !== 'undefined') {
 }
 
 // Focus Logic
-// If no slots are passed focus defaults to heading
 // If one slot is passed focus slot element
 // if two slots are passed reference focusPrimaryElement and focus primary or secondary slot
 $: {
   if (isOpen) {
     const slotValues = slotElement?.querySelectorAll('button');
-    if (slotValues?.length === 0) {
-      headingElement?.focus();
-    } else if (slotValues?.length === 1) {
-      slotElement?.querySelectorAll('button').item(0).focus();
-    } else if (focusPrimaryElement) {
-      slotValues?.item(1).focus();
-    } else {
-      slotValues?.item(0).focus();
+    if (slotValues?.length !== undefined && slotValues.length > 0) {
+      if (focusPrimaryElement) {
+        slotValues.item(1).focus();
+      } else {
+        slotValues.item(0).focus();
+      }
     }
   }
 }
@@ -124,11 +120,7 @@ $: {
       <div
         class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
       >
-        <h2
-          bind:this={headingElement}
-          tabindex="-1"
-          class="pr-12 text-lg font-semibold text-default"
-        >
+        <h2 class="pr-12 text-lg font-semibold text-default">
           <slot name="title" />
         </h2>
 

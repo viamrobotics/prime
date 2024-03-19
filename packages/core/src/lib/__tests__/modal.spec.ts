@@ -10,7 +10,7 @@ describe('Modal', () => {
   const onClose = vi.fn();
 
   const renderSubject = (props: ComponentProps<Modal>) => {
-    const { component } = render(Modal, props);
+    const { component } = render(ModelOneSlot, props);
     component.$on('close', onClose);
   };
 
@@ -70,15 +70,6 @@ describe('Modal', () => {
     await user.keyboard('{Escape}');
 
     expect(onClose).not.toHaveBeenCalled();
-  });
-
-  it('should focus on heading element on mount with no slots', () => {
-    render(Modal, { isOpen: true });
-
-    const modal = screen.getByRole('alertdialog');
-    const heading = within(modal).getByRole('heading');
-
-    expect(heading).toHaveFocus();
   });
 
   it('should focus on only button element on mount with one slot', () => {
