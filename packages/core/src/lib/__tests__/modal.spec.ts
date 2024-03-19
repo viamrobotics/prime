@@ -3,6 +3,8 @@ import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'svelte';
 import Modal from '../modal.svelte';
+import ModelOneSlot from './modal-one-slot.spec.svelte'
+import ModalTwoSlots from './modal-two-slots.spec.svelte';
 
 describe('Modal', () => {
   const onClose = vi.fn();
@@ -70,12 +72,39 @@ describe('Modal', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it('should focus on heading element on mount', () => {
+  it('should focus on heading element on mount with no slots passed', () => {
     render(Modal, { isOpen: true });
 
     const modal = screen.getByRole('dialog');
     const heading = within(modal).getByRole('heading');
 
     expect(heading).toHaveFocus();
+  });
+
+  it('should focus on only button element on mount with one slot passed', () => {
+    render(ModelOneSlot, { isOpen: true });
+
+    const modal = screen.getByRole('dialog');
+    const button = within(modal).getByRole('button',{name:/primary/iu});
+
+    expect(button).toHaveFocus();
+  });
+
+  it('should focus on secondary button element on mount with two slots passed ', () => {
+    render(ModalTwoSlots, { isOpen: true });
+
+    const modal = screen.getByRole('dialog');
+    const secondaryButton = within(modal).getByRole('button',{name:/secondary/iu});
+
+    expect(secondaryButton).toHaveFocus();
+  });
+
+  it('should focus on primary button element on mount with two slots passed and focusPrimaryElement set', () => {
+    render(ModalTwoSlots, { isOpen: true, focusPrimaryElement: true });
+
+    const modal = screen.getByRole('alertdialog');
+    const primaryButton = within(modal).getByRole('button',{name:/primary/iu});
+
+    expect(primaryButton).toHaveFocus();
   });
 });

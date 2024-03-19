@@ -52,7 +52,10 @@ export let isOpen: boolean;
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 
+export let focusPrimaryElement = false;
+
 let headingElement: HTMLElement | undefined;
+let slotElement: HTMLElement | undefined;
 
 const dispatch = createEventDispatcher<{
   close: undefined;
@@ -73,7 +76,24 @@ $: if (typeof document !== 'undefined') {
   document.body.classList.toggle('overflow-hidden', isOpen);
 }
 
-$: headingElement?.focus();
+// Focus Logic
+// If no slots are passed focus defaults to heading
+// If one slot is passed focus slot element
+// if two slots are passed reference focusPrimaryElement and focus primary or secondary slot
+$: {
+  if (isOpen) {
+    const slotValues = slotElement?.querySelectorAll('button');
+    if (slotValues?.length === 0) {
+      headingElement?.focus();
+    } else if (slotValues?.length === 1) {
+      slotElement?.querySelectorAll('button').item(0).focus();
+    } else if (focusPrimaryElement) {
+      slotValues?.item(1).focus();
+    } else {
+      slotValues?.item(0).focus();
+    }
+  }
+}
 </script>
 
 <svelte:window on:keydown={isOpen ? handleEscapePress : undefined} />
@@ -81,7 +101,7 @@ $: headingElement?.focus();
 {#if isOpen}
   <div
     class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40"
-    role="dialog"
+    role={focusPrimaryElement ? 'alertdialog' : 'dialog'}
     aria-modal="true"
   >
     <div
@@ -118,7 +138,10 @@ $: headingElement?.focus();
 
         <div class="flex flex-grow"><slot /></div>
 
-        <div class="mt-6 flex justify-end gap-2">
+        <div
+          class="mt-6 flex justify-end gap-2"
+          bind:this={slotElement}
+        >
           <slot name="secondary" />
           <slot name="primary" />
         </div>
