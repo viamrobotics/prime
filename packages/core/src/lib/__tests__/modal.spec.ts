@@ -3,8 +3,6 @@ import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'svelte';
 import Modal from '../modal.svelte';
-import ModelOneSlot from './modal-one-slot.spec.svelte';
-import ModalTwoSlots from './modal-two-slots.spec.svelte';
 
 describe('Modal', () => {
   const onClose = vi.fn();
@@ -17,7 +15,7 @@ describe('Modal', () => {
   it('should be visible if open is true', () => {
     renderSubject({ isOpen: true });
 
-    const modal = screen.queryByRole('alertdialog');
+    const modal = screen.queryByRole('dialog');
 
     expect(modal).toBeInTheDocument();
     expect(modal).toHaveAttribute('aria-modal', 'true');
@@ -27,7 +25,7 @@ describe('Modal', () => {
   it('should not be visible if open is false', () => {
     renderSubject({ isOpen: false });
 
-    const modal = screen.queryByRole('alertdialog');
+    const modal = screen.queryByRole('dialog');
 
     expect(modal).not.toBeInTheDocument();
     expect(onClose).not.toHaveBeenCalled();
@@ -37,7 +35,7 @@ describe('Modal', () => {
     const user = userEvent.setup();
     renderSubject({ isOpen: true });
 
-    const modal = screen.getByRole('alertdialog');
+    const modal = screen.getByRole('dialog');
     const closeButton = within(modal).getByRole('button', { name: /close/iu });
 
     await user.click(closeButton);
@@ -48,7 +46,7 @@ describe('Modal', () => {
     const user = userEvent.setup();
     renderSubject({ isOpen: true });
 
-    const modal = screen.getByRole('alertdialog');
+    const modal = screen.getByRole('dialog');
     await user.click(modal.parentElement!);
 
     expect(onClose).toHaveBeenCalledOnce();
@@ -72,34 +70,11 @@ describe('Modal', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it('should focus on only button element on mount with one slot', () => {
-    render(ModelOneSlot, { isOpen: true });
+  it('should change role to alertdialog when role is passed', () => {
+    renderSubject({ isOpen: true, role:"alertdialog" });
 
     const modal = screen.getByRole('alertdialog');
-    const button = within(modal).getByRole('button', { name: /primary/iu });
 
-    expect(button).toHaveFocus();
-  });
-
-  it('should focus on secondary button element on mount with two slots', () => {
-    render(ModalTwoSlots, { isOpen: true });
-
-    const modal = screen.getByRole('alertdialog');
-    const secondaryButton = within(modal).getByRole('button', {
-      name: /secondary/iu,
-    });
-
-    expect(secondaryButton).toHaveFocus();
-  });
-
-  it('should focus on primary button element on mount with two slots and focusPrimaryElement true', () => {
-    render(ModalTwoSlots, { isOpen: true, focusPrimaryElement: true });
-
-    const modal = screen.getByRole('alertdialog');
-    const primaryButton = within(modal).getByRole('button', {
-      name: /primary/iu,
-    });
-
-    expect(primaryButton).toHaveFocus();
+    expect(modal).toBeInTheDocument()
   });
 });

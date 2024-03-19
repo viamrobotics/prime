@@ -52,9 +52,7 @@ export let isOpen: boolean;
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 
-export let focusPrimaryElement = false;
-
-let slotElement: HTMLElement | undefined;
+export let role = "dialog"
 
 const dispatch = createEventDispatcher<{
   close: undefined;
@@ -74,22 +72,6 @@ const handleEscapePress = (event: KeyboardEvent) => {
 $: if (typeof document !== 'undefined') {
   document.body.classList.toggle('overflow-hidden', isOpen);
 }
-
-// Focus Logic
-// If one slot is passed focus slot element
-// if two slots are passed reference focusPrimaryElement and focus primary or secondary slot
-$: {
-  if (isOpen) {
-    const slotValues = slotElement?.querySelectorAll('button');
-    if (slotValues?.length !== undefined && slotValues.length > 0) {
-      if (focusPrimaryElement) {
-        slotValues.item(1).focus();
-      } else {
-        slotValues.item(0).focus();
-      }
-    }
-  }
-}
 </script>
 
 <svelte:window on:keydown={isOpen ? handleEscapePress : undefined} />
@@ -97,7 +79,7 @@ $: {
 {#if isOpen}
   <div
     class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40"
-    role="alertdialog"
+    {role}
     aria-modal="true"
   >
     <div
@@ -132,7 +114,6 @@ $: {
 
         <div
           class="mt-6 flex justify-end gap-2"
-          bind:this={slotElement}
         >
           <slot name="secondary" />
           <slot name="primary" />
