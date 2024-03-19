@@ -101,7 +101,7 @@ $: {
 {#if isOpen}
   <div
     class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40"
-    role='alertdialog'
+    role="alertdialog"
     aria-modal="true"
   >
     <div
