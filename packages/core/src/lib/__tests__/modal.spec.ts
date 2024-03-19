@@ -14,7 +14,7 @@ describe('Modal', () => {
     component.$on('close', onClose);
   };
 
-  it('should be visible if open is true ', () => {
+  it('should be visible if open is true', () => {
     renderSubject({ isOpen: true });
 
     const modal = screen.queryByRole('alertdialog');
@@ -72,7 +72,7 @@ describe('Modal', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it('should focus on heading element on mount with no slots passed', () => {
+  it('should focus on heading element on mount with no slots', () => {
     render(Modal, { isOpen: true });
 
     const modal = screen.getByRole('alertdialog');
@@ -81,7 +81,7 @@ describe('Modal', () => {
     expect(heading).toHaveFocus();
   });
 
-  it('should focus on only button element on mount with one slot passed', () => {
+  it('should focus on only button element on mount with one slot', () => {
     render(ModelOneSlot, { isOpen: true });
 
     const modal = screen.getByRole('alertdialog');
@@ -90,7 +90,7 @@ describe('Modal', () => {
     expect(button).toHaveFocus();
   });
 
-  it('should focus on secondary button element on mount with two slots passed ', () => {
+  it('should focus on secondary button element on mount with two slots', () => {
     render(ModalTwoSlots, { isOpen: true });
 
     const modal = screen.getByRole('alertdialog');
@@ -101,7 +101,7 @@ describe('Modal', () => {
     expect(secondaryButton).toHaveFocus();
   });
 
-  it('should focus on primary button element on mount with two slots passed and focusPrimaryElement set', () => {
+  it('should focus on primary button element on mount with two slots and focusPrimaryElement true', () => {
     render(ModalTwoSlots, { isOpen: true, focusPrimaryElement: true });
 
     const modal = screen.getByRole('alertdialog');
