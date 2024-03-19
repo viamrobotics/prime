@@ -10,7 +10,7 @@ describe('Modal', () => {
   const onClose = vi.fn();
 
   const renderSubject = (props: ComponentProps<Modal>) => {
-    const { component } = render(ModelOneSlot, props);
+    const { component } = render(Modal, props);
     component.$on('close', onClose);
   };
 
