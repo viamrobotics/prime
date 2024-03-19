@@ -17,7 +17,7 @@ describe('Modal', () => {
   it('should be visible if open is true ', () => {
     renderSubject({ isOpen: true });
 
-    const modal = screen.queryByRole('dialog');
+    const modal = screen.queryByRole('alertdialog');
 
     expect(modal).toBeInTheDocument();
     expect(modal).toHaveAttribute('aria-modal', 'true');
@@ -27,7 +27,7 @@ describe('Modal', () => {
   it('should not be visible if open is false', () => {
     renderSubject({ isOpen: false });
 
-    const modal = screen.queryByRole('dialog');
+    const modal = screen.queryByRole('alertdialog');
 
     expect(modal).not.toBeInTheDocument();
     expect(onClose).not.toHaveBeenCalled();
@@ -37,7 +37,7 @@ describe('Modal', () => {
     const user = userEvent.setup();
     renderSubject({ isOpen: true });
 
-    const modal = screen.getByRole('dialog');
+    const modal = screen.getByRole('alertdialog');
     const closeButton = within(modal).getByRole('button', { name: /close/iu });
 
     await user.click(closeButton);
@@ -48,7 +48,7 @@ describe('Modal', () => {
     const user = userEvent.setup();
     renderSubject({ isOpen: true });
 
-    const modal = screen.getByRole('dialog');
+    const modal = screen.getByRole('alertdialog');
     await user.click(modal.parentElement!);
 
     expect(onClose).toHaveBeenCalledOnce();
@@ -75,7 +75,7 @@ describe('Modal', () => {
   it('should focus on heading element on mount with no slots passed', () => {
     render(Modal, { isOpen: true });
 
-    const modal = screen.getByRole('dialog');
+    const modal = screen.getByRole('alertdialog');
     const heading = within(modal).getByRole('heading');
 
     expect(heading).toHaveFocus();
@@ -84,7 +84,7 @@ describe('Modal', () => {
   it('should focus on only button element on mount with one slot passed', () => {
     render(ModelOneSlot, { isOpen: true });
 
-    const modal = screen.getByRole('dialog');
+    const modal = screen.getByRole('alertdialog');
     const button = within(modal).getByRole('button', { name: /primary/iu });
 
     expect(button).toHaveFocus();
@@ -93,7 +93,7 @@ describe('Modal', () => {
   it('should focus on secondary button element on mount with two slots passed ', () => {
     render(ModalTwoSlots, { isOpen: true });
 
-    const modal = screen.getByRole('dialog');
+    const modal = screen.getByRole('alertdialog');
     const secondaryButton = within(modal).getByRole('button', {
       name: /secondary/iu,
     });
