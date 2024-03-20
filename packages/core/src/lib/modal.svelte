@@ -52,7 +52,7 @@ export let isOpen: boolean;
 /** The variant of the modal. */
 export let variant: 'small' | '' = '';
 
-let headingElement: HTMLElement | undefined;
+export let role = 'dialog';
 
 const dispatch = createEventDispatcher<{
   close: undefined;
@@ -72,8 +72,6 @@ const handleEscapePress = (event: KeyboardEvent) => {
 $: if (typeof document !== 'undefined') {
   document.body.classList.toggle('overflow-hidden', isOpen);
 }
-
-$: headingElement?.focus();
 </script>
 
 <svelte:window on:keydown={isOpen ? handleEscapePress : undefined} />
@@ -81,7 +79,7 @@ $: headingElement?.focus();
 {#if isOpen}
   <div
     class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-40"
-    role="dialog"
+    {role}
     aria-modal="true"
   >
     <div
@@ -104,11 +102,7 @@ $: headingElement?.focus();
       <div
         class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
       >
-        <h2
-          bind:this={headingElement}
-          tabindex="-1"
-          class="pr-12 text-lg font-semibold text-default"
-        >
+        <h2 class="pr-12 text-lg font-semibold text-default">
           <slot name="title" />
         </h2>
 
