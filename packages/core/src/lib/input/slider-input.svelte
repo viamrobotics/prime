@@ -169,6 +169,7 @@ const handleChange = () => {
     on:change={handleChange}
   />
   <button
+    type="button"
     aria-hidden="true"
     disabled={isButtonDisabled}
     tabindex="-1"

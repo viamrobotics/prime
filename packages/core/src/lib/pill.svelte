@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 For displaying a list of items.
 
 ```svelte
@@ -74,6 +74,7 @@ const handleRemove = () => {
   </span>
   {#if !readonly && removable}
     <button
+      type="button"
       aria-label="Remove {value}"
       on:click={handleRemove}
       class={cx('text-gray-6', {
