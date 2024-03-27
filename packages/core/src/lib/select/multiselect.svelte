@@ -93,7 +93,7 @@ const dispatch = createSearchableSelectDispatcher<{
 
 const menuId = uniqueId('multiselect');
 let menu: HTMLUListElement;
-const detailedOptions = optionsToDetailedOptions(options);
+$: detailedOptions = optionsToDetailedOptions(options);
 
 $: searchedOptions = getSearchResults(detailedOptions, value, sort);
 $: isChecked = (option: string) => selected.includes(option);

@@ -27,7 +27,6 @@ import {
   type DetailedOption,
 } from './search';
 import SelectInput from './select-input.svelte';
-import { writable } from 'svelte/store';
 
 /** The options the user should be allowed to search and select from. */
 export let options: (string | DetailedOption)[];
@@ -96,11 +95,10 @@ const FOCUS_ITEM = 'focus-item';
 
 type MenuState = typeof CLOSED | typeof FOCUS_SEARCH | typeof FOCUS_ITEM;
 
-const detailedOptions = writable(optionsToDetailedOptions(options));
-$: detailedOptions.set(optionsToDetailedOptions(options));
+$: detailedOptions = optionsToDetailedOptions(options);
 
 const getDetailedOption = (val: string) =>
-  $detailedOptions.find((opt) => opt.value === val);
+  detailedOptions.find((opt) => opt.value === val);
 
 const optionElements: Record<string, HTMLElement> = {};
 
@@ -110,11 +108,11 @@ let menuState: MenuState | undefined;
 // previousValue is used to ensure we don't double-call onChange
 let previousValue: string | undefined = undefined;
 // initialize the search value to the option that matches the passed value field (or the value field itself as a fallback)
-let searchValue = optionDisplayValue(getDetailedOption(value) ?? { value });
+$: searchValue = optionDisplayValue(getDetailedOption(value) ?? { value });
 
 $: selectedSearchOption = getDetailedOption(value);
 
-$: searchResults = getSearchResults($detailedOptions, searchValue, sort);
+$: searchResults = getSearchResults(detailedOptions, searchValue, sort);
 $: valueInSearch = searchResults.some(
   ({ option }) => optionDisplayValue(option) === searchValue
 );
