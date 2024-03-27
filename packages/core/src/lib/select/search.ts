@@ -17,7 +17,7 @@ export type SortOption = (typeof SortOptions)[keyof typeof SortOptions];
 export interface DetailedOption {
   /** Value of the option (used for onChange) */
   value: string;
-  /** Display label */
+  /** Display label (defaults to `value` if unset) */
   label?: string;
   /** Display description */
   description?: string;
