@@ -106,7 +106,7 @@ $: errorClasses =
     <div class="absolute right-2 top-1/2 -translate-y-1/2 transform">
       <Icon
         name="chevron-down"
-        cx={['transition-transition text-gray-6', { 'rotate-180': isOpen }]}
+        cx={['text-gray-6 transition-transform', { 'rotate-180': isOpen }]}
       />
     </div>
   </button>
