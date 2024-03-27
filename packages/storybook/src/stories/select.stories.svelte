@@ -54,6 +54,37 @@ import {
   </Label>
 </Story>
 
+<Story name="Searchable with descriptions ">
+  <Label cx="h-[200px] max-w-[200px]">
+    Searchable select with description
+    <SearchableSelect
+      slot="input"
+      exclusive
+      placeholder="Type to find or create..."
+      options={[
+        {
+          value: 'a',
+          label: 'app.viam.com',
+          description: 'Website',
+          icon: 'earth',
+        },
+        {
+          value: 'b',
+          label: 'viam',
+          description: 'Command Line Interface',
+          icon: 'tools',
+        },
+        {
+          value: 'c',
+          label: 'Viam app',
+          description: 'Mobile App',
+          icon: 'apple',
+        },
+      ]}
+    />
+  </Label>
+</Story>
+
 <Story name="Searchable with multiple">
   <Label cx="h-[200px] max-w-[200px]">
     Select multiple options
@@ -67,6 +98,22 @@ import {
         'With a whole lot of parts',
       ]}
       sort={SortOptions.REDUCE}
+      exclusive
+      multiple
+    />
+  </Label>
+</Story>
+
+<Story name="Searchable with multiple and descriptions">
+  <Label cx="h-[200px] max-w-[200px]">
+    Searchable select with description
+    <SearchableSelect
+      slot="input"
+      placeholder="Type to find or create..."
+      options={[
+        { value: 'a', label: 'app.viam', description: 'website' },
+        { value: 'b', label: 'viam', description: 'cli' },
+      ]}
       exclusive
       multiple
     />

@@ -3,11 +3,11 @@ import { getSearchResults } from '../search';
 
 describe('getSearchResults', () => {
   const options = [
-    'First Option',
-    'Option 2',
-    'C.) Option',
-    'Something Else',
-    'With A Whole Lot Of Parts',
+    { value: 'First Option' },
+    { value: 'Option 2' },
+    { value: 'C.) Option' },
+    { value: 'Something Else' },
+    { value: 'With A Whole Lot Of Parts' },
   ];
 
   it('returns an array of search results sorted by priority', () => {
@@ -15,22 +15,22 @@ describe('getSearchResults', () => {
 
     expect(matches).toEqual([
       {
-        option: 'Something Else',
+        option: { value: 'Something Else' },
         priority: 0,
         highlight: ['', 'S', 'omething Else'],
       },
       {
-        option: 'First Option',
+        option: { value: 'First Option' },
         priority: 1,
         highlight: ['Fir', 's', 't Option'],
       },
       {
-        option: 'With A Whole Lot Of Parts',
+        option: { value: 'With A Whole Lot Of Parts' },
         priority: 6,
         highlight: ['With A Whole Lot Of Part', 's', ''],
       },
-      { option: 'Option 2', priority: -1 },
-      { option: 'C.) Option', priority: -1 },
+      { option: { value: 'Option 2' }, priority: -1 },
+      { option: { value: 'C.) Option' }, priority: -1 },
     ]);
   });
 
@@ -38,9 +38,11 @@ describe('getSearchResults', () => {
     const matches = getSearchResults(options, 's', 'reduce');
 
     expect(matches).toEqual([
-      expect.objectContaining({ option: 'Something Else' }),
-      expect.objectContaining({ option: 'First Option' }),
-      expect.objectContaining({ option: 'With A Whole Lot Of Parts' }),
+      expect.objectContaining({ option: { value: 'Something Else' } }),
+      expect.objectContaining({ option: { value: 'First Option' } }),
+      expect.objectContaining({
+        option: { value: 'With A Whole Lot Of Parts' },
+      }),
     ]);
   });
 
@@ -48,11 +50,13 @@ describe('getSearchResults', () => {
     const matches = getSearchResults(options, 's', 'off');
 
     expect(matches).toEqual([
-      expect.objectContaining({ option: 'First Option' }),
-      expect.objectContaining({ option: 'Option 2' }),
-      expect.objectContaining({ option: 'C.) Option' }),
-      expect.objectContaining({ option: 'Something Else' }),
-      expect.objectContaining({ option: 'With A Whole Lot Of Parts' }),
+      expect.objectContaining({ option: { value: 'First Option' } }),
+      expect.objectContaining({ option: { value: 'Option 2' } }),
+      expect.objectContaining({ option: { value: 'C.) Option' } }),
+      expect.objectContaining({ option: { value: 'Something Else' } }),
+      expect.objectContaining({
+        option: { value: 'With A Whole Lot Of Parts' },
+      }),
     ]);
   });
 
@@ -60,7 +64,11 @@ describe('getSearchResults', () => {
     const matches = getSearchResults(options, 'C.)', 'reduce');
 
     expect(matches).toEqual([
-      { option: 'C.) Option', priority: 0, highlight: ['', 'C.)', ' Option'] },
+      {
+        option: { value: 'C.) Option' },
+        priority: 0,
+        highlight: ['', 'C.)', ' Option'],
+      },
     ]);
   });
 
@@ -68,7 +76,11 @@ describe('getSearchResults', () => {
     const matches = getSearchResults(options, '.)', 'reduce');
 
     expect(matches).toEqual([
-      { option: 'C.) Option', priority: 1, highlight: ['C', '.)', ' Option'] },
+      {
+        option: { value: 'C.) Option' },
+        priority: 1,
+        highlight: ['C', '.)', ' Option'],
+      },
     ]);
   });
 });

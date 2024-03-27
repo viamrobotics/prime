@@ -1252,9 +1252,9 @@ const onHoverDelayMsInput = (event: Event) => {
     <SearchableSelect
       exclusive
       options={[
-        'First Option',
+        { value: 'First Option', description: 'First option' },
         'Option 2',
-        'C.) Option',
+        { value: 'C.) Option', description: 'second' },
         'A really long forth option just in case you need it',
       ]}
       placeholder="Select an option"
@@ -1267,6 +1267,106 @@ const onHoverDelayMsInput = (event: Event) => {
       exclusive
       options={['First Option', 'Disabled select', 'C.) Option']}
       value="Disabled select"
+      disabled
+    />
+  </div>
+  <div class="flex gap-4">
+    <SearchableSelect
+      exclusive
+      options={[
+        {
+          value: 'opt-1',
+          label: 'Option 1',
+          description: 'Seconary Text',
+          icon: 'twitter',
+        },
+        {
+          value: 'opt-2',
+          label: 'Option 2',
+          description: 'Seconary Text',
+          icon: 'instagram',
+        },
+        {
+          value: 'opt-3',
+          label: 'Option 3',
+          description: 'Seconary Text',
+          icon: 'magnet',
+        },
+        {
+          value: 'opt-4',
+          label: 'Option 4',
+          icon: 'apple',
+          description:
+            'Seconary Text. This is an example where the seconary text is really long',
+        },
+        { value: 'opt-5', label: 'Option 5', icon: 'earth' },
+        { value: 'opt-6', label: 'Option 6 (no icon or desc)' },
+        {
+          value: 'opt-7',
+          label: 'Option 7 (no icon)',
+          description: 'Seconary Text',
+        },
+      ]}
+      placeholder="Select an option (exclusive)"
+      onChange={(value) => {
+        // eslint-disable-next-line no-console
+        console.log('Selected', value);
+      }}
+    />
+    <SearchableSelect
+      options={[
+        {
+          value: 'opt-1',
+          label: 'Option 1',
+          description: 'Seconary Text',
+          icon: 'twitter',
+        },
+        {
+          value: 'opt-2',
+          label: 'Option 2',
+          description: 'Seconary Text',
+          icon: 'instagram',
+        },
+        {
+          value: 'opt-3',
+          label: 'Option 3',
+          description: 'Seconary Text',
+          icon: 'magnet',
+        },
+        {
+          value: 'opt-4',
+          label: 'Option 4',
+          icon: 'apple',
+          description:
+            'Seconary Text. This is an example where the seconary text is really long',
+        },
+        { value: 'opt-5', label: 'Option 5', icon: 'earth' },
+        { value: 'opt-6', label: 'Option 6 (no icon or desc)' },
+        {
+          value: 'opt-7',
+          label: 'Option 7 (no icon)',
+          description: 'Seconary Text',
+        },
+      ]}
+      placeholder="Select an option (non-exclusive)"
+      onChange={(value) => {
+        // eslint-disable-next-line no-console
+        console.log('Selected', value);
+      }}
+    />
+    <SearchableSelect
+      exclusive
+      options={[
+        {
+          value: '1',
+          label: 'Disabled Select with Icon',
+          description: 'Seconary Text',
+          icon: 'twitter',
+        },
+        { value: 'Option 2', description: 'Seconary Text', icon: 'instagram' },
+      ]}
+      placeholder="Select an option"
+      value="1"
       disabled
     />
   </div>
