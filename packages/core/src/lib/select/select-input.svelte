@@ -57,7 +57,7 @@ $: errorClasses =
   );
 </script>
 
-<div class="relative flex w-full">
+<div class="group/select-input relative flex w-full">
   <input
     bind:value
     bind:this={inputElement}
@@ -99,14 +99,14 @@ $: errorClasses =
       <div class="absolute left-2 top-1/2 -translate-y-1/2">
         <Icon
           name={icon}
-          cx={['text-gray-6']}
+          cx="text-gray-6"
         />
       </div>
     {/if}
     <div class="absolute right-2 top-1/2 -translate-y-1/2 transform">
       <Icon
         name="chevron-down"
-        cx={['text-gray-6 transition', { 'rotate-180': isOpen }]}
+        cx={['transition-transition text-gray-6', { 'rotate-180': isOpen }]}
       />
     </div>
   </button>

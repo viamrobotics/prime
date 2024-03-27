@@ -11,7 +11,9 @@ describe('Icon', () => {
 
   it('Renders an icon with the correct name attribute', () => {
     const { container } = render(Icon, { name: 'camera-outline' });
-    expect(container.querySelector('svg[data-icon-name=camera-outline]')).toBeVisible();
+    expect(
+      container.querySelector('svg[data-icon-name=camera-outline]')
+    ).toBeVisible();
   });
 
   it('Renders an extra small icon', () => {
