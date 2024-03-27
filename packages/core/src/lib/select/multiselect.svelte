@@ -23,7 +23,12 @@ import { uniqueId } from '$lib/unique-id';
 
 import { selectControls } from './controls';
 import { createSearchableSelectDispatcher } from './dispatcher';
-import { SortOptions, getSearchResults, type SortOption } from './search';
+import {
+  SortOptions,
+  getSearchResults,
+  type SortOption,
+  optionsToDetailedOptions,
+} from './search';
 import SelectMenuButton from './select-menu-button.svelte';
 import SelectInput from './select-input.svelte';
 import SelectMenu from './select-menu.svelte';
@@ -88,8 +93,9 @@ const dispatch = createSearchableSelectDispatcher<{
 
 const menuId = uniqueId('multiselect');
 let menu: HTMLUListElement;
+const detailedOptions = optionsToDetailedOptions(options);
 
-$: searchedOptions = getSearchResults(options, value, sort);
+$: searchedOptions = getSearchResults(detailedOptions, value, sort);
 $: isChecked = (option: string) => selected.includes(option);
 
 let navigationCount = 0;
@@ -152,18 +158,18 @@ const handleEnter = (event: KeyboardEvent) => {
   if ($navigationIndex === -1) {
     // if user hits enter when focused on the search input
     const match = searchedOptions.find(
-      ({ option }) => option.toLowerCase() === value?.toLowerCase()
+      ({ option }) => option.value.toLowerCase() === value?.toLowerCase()
     );
 
     if (match) {
-      handleOptionSelect(match.option);
+      handleOptionSelect(match.option.value);
     }
   } else {
     // if the user has used arrow keys to navigate options, enter should add/remove item
     const navigationOption = searchedOptions[$navigationIndex];
     if (navigationOption) {
       const { option } = navigationOption;
-      handleOptionSelect(option);
+      handleOptionSelect(option.value);
     }
   }
 };
@@ -245,9 +251,10 @@ const handleClearAll = () => {
                   type="checkbox"
                   class="outline-none"
                   role="menuitemcheckbox"
-                  aria-checked={isChecked(option)}
-                  checked={isChecked(option)}
-                  on:input|stopPropagation={() => handleOptionSelect(option)}
+                  aria-checked={isChecked(option.value)}
+                  checked={isChecked(option.value)}
+                  on:input|stopPropagation={() =>
+                    handleOptionSelect(option.value)}
                   on:keydown={handleKeyDown}
                 />
                 <span class="text-ellipsis whitespace-nowrap pl-1.5 text-xs">
@@ -260,7 +267,7 @@ const handleClearAll = () => {
                       <span class="whitespace-pre">{highlight[2]}</span>
                     </span>
                   {:else}
-                    {option}
+                    {option.value}
                   {/if}
                 </span>
               </label>

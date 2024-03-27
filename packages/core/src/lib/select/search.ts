@@ -1,3 +1,4 @@
+import type { IconName } from '$lib';
 import { escapeRegExp } from 'lodash-es';
 
 /** How to handle sorting select options. */
@@ -11,6 +12,32 @@ export const SortOptions = {
 } as const;
 
 export type SortOption = (typeof SortOptions)[keyof typeof SortOptions];
+
+/** Used for when you want to display things other than your keys */
+export interface DetailedOption {
+  /** Value of the option (used for onChange) */
+  value: string;
+  /** Display label */
+  label?: string;
+  /** Display description */
+  description?: string;
+  /** Icon for this option */
+  icon?: IconName | undefined;
+}
+
+export const optionsToDetailedOptions = (
+  opts: (string | DetailedOption)[]
+): DetailedOption[] =>
+  opts.map((option) =>
+    typeof option === 'string'
+      ? {
+          value: option,
+        }
+      : option
+  );
+
+export const optionDisplayValue = (opt: DetailedOption): string =>
+  opt.label ?? opt.value;
 
 /**
  * A breakdown of how a search result should be highlighted. `before` is the
@@ -30,7 +57,7 @@ export interface SearchResult {
   highlight: SearchHighlight | undefined;
 
   /** The select option that had a potential match. */
-  option: string;
+  option: DetailedOption;
 
   /** The sorting priority for the option. */
   priority: number;
@@ -80,23 +107,28 @@ const getSearchHighlight = (
  * - `-1` for non-matches
  */
 export const getSearchResult = (
-  option: string,
+  option: DetailedOption,
   searchTerm: string
 ): SearchResult => {
+  let searchKey = optionDisplayValue(option);
   // Match on the initial character of any word in the option
   const initialCharacterMatch = new RegExp(
     `(^${searchTerm}|(?<=\\s)${searchTerm})`,
     'iu'
-  ).exec(option);
+  ).exec(searchKey);
 
-  const anyMatch = new RegExp(searchTerm, 'giu').exec(option);
+  const anyMatch = new RegExp(searchTerm, 'giu').exec(searchKey);
 
   if (initialCharacterMatch !== null) {
     // Match on an initial character is highest priority
     return {
       priority: 0,
       option,
-      highlight: getSearchHighlight(option, searchTerm, initialCharacterMatch),
+      highlight: getSearchHighlight(
+        searchKey,
+        searchTerm,
+        initialCharacterMatch
+      ),
     };
   }
 
@@ -106,9 +138,9 @@ export const getSearchResult = (
      * prioritize them below matching on an initial character.
      */
     return {
-      priority: getWordIndex(option, anyMatch.index) + 1,
+      priority: getWordIndex(searchKey, anyMatch.index) + 1,
       option,
-      highlight: getSearchHighlight(option, searchTerm, anyMatch),
+      highlight: getSearchHighlight(searchKey, searchTerm, anyMatch),
     };
   }
 
@@ -124,7 +156,7 @@ export const getSearchResult = (
  * Checks each passed option if it matches with the passed search term, and
  * returns a prioritized map of the results.
  */
-const prioritizeMatches = (options: string[], searchTerm: string) => {
+const prioritizeMatches = (options: DetailedOption[], searchTerm: string) => {
   const results: PrioritizedSearchResults = {
     '0': [],
     '-1': [],
@@ -148,7 +180,7 @@ const prioritizeMatches = (options: string[], searchTerm: string) => {
  * (-1 priority) will not be included in the results.
  */
 const getSearchMatches = (
-  options: string[],
+  options: DetailedOption[],
   searchTerm: string,
   sort: SortOption = SortOptions.DEFAULT
 ) => {
@@ -185,7 +217,7 @@ const getSearchMatches = (
  * @returns {SearchResult[]} The sorted search results
  */
 export const getSearchResults = (
-  options: string[],
+  options: DetailedOption[],
   searchTerm?: string,
   sort: SortOption = SortOptions.DEFAULT
 ): SearchResult[] => {
