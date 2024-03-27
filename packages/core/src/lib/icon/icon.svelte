@@ -68,7 +68,7 @@ $: {
   viewBox="0 0 24 24"
   aria-hidden="true"
   focusable="false"
-  {name}
+  data-icon-name={name}
   {...$$restProps}
 >
   {#each allPaths as { path: dAttribute, opacity }}

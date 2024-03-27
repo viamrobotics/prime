@@ -238,10 +238,10 @@ describe('SearchableSelect', () => {
     expect(search).not.toHaveAttribute('aria-activedescendant');
     // icons are rendered
     expect(
-      container.querySelector('svg[name=viam-process]')
+      container.querySelector('svg[data-icon-name=viam-process]')
     ).toBeInTheDocument();
     expect(
-      container.querySelector('svg[name=language-cpp]')
+      container.querySelector('svg[data-icon-name=language-cpp]')
     ).toBeInTheDocument();
     // descriptions are rendered
     expect(screen.getByText(/wizard/iu)).toBeInTheDocument();
@@ -283,9 +283,9 @@ describe('SearchableSelect', () => {
     expect(search).toHaveAttribute('aria-expanded', 'false');
     expect(search).not.toHaveAttribute('aria-activedescendant');
     // test that both icons render for option + svg in the input
-    expect(container.querySelectorAll('svg[name=viam-process]')).toHaveLength(
-      2
-    );
+    expect(
+      container.querySelectorAll('svg[data-icon-name=viam-process]')
+    ).toHaveLength(2);
   });
 
   it('renders the initial input value', () => {
@@ -297,9 +297,9 @@ describe('SearchableSelect', () => {
     const { search } = getResults();
     expect(search).toHaveValue('Karlach');
     // test that both icons render for option + svg in the input
-    expect(container.querySelectorAll('svg[name=language-cpp]')).toHaveLength(
-      2
-    );
+    expect(
+      container.querySelectorAll('svg[data-icon-name=language-cpp]')
+    ).toHaveLength(2);
   });
 
   it('auto-selects search result on Enter', async () => {
@@ -339,7 +339,7 @@ describe('SearchableSelect', () => {
     expect(options[0]).toHaveAccessibleName(detailedOptions[0]?.label);
     expect(options[1]).toHaveAccessibleName(detailedOptions[1]?.label);
     expect(
-      container.querySelector('svg[name=language-cpp]')
+      container.querySelector('svg[data-icon-name=language-cpp]')
     ).toBeInTheDocument();
 
     // Define new options
@@ -361,9 +361,11 @@ describe('SearchableSelect', () => {
     expect(options[1]).toHaveAccessibleName('New Option 2');
     expect(options[2]).toHaveAccessibleName('New Option 3');
 
-    expect(container.querySelector('svg[name=apple]')).toBeInTheDocument();
     expect(
-      container.querySelector('svg[name=language-cpp]')
+      container.querySelector('svg[data-icon-name=apple]')
+    ).toBeInTheDocument();
+    expect(
+      container.querySelector('svg[data-icon-name=language-cpp]')
     ).not.toBeInTheDocument();
   });
 
@@ -754,7 +756,7 @@ describe('SearchableSelect', () => {
       expect(onChange).toHaveBeenCalledWith('opt-1');
       expect(search).toHaveValue('Gale');
       expect(
-        container.querySelector('svg[name="viam-process"]')
+        container.querySelector('svg[data-icon-name="viam-process"]')
       ).toBeInTheDocument();
 
       onChange.mockReset();
@@ -765,7 +767,7 @@ describe('SearchableSelect', () => {
       expect(onChange).not.toHaveBeenCalled();
       expect(search).toHaveValue('Gale');
       expect(
-        container.querySelector('svg[name="viam-process"]')
+        container.querySelector('svg[data-icon-name="viam-process"]')
       ).toBeInTheDocument();
     });
 
