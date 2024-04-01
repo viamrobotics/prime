@@ -24,98 +24,108 @@ import {
 </Story>
 
 <Story name="Searchable">
-  <Label cx="h-[200px] max-w-[200px]">
-    Searchable select
-    <SearchableSelect
-      slot="input"
-      placeholder="Search options"
-      options={[
-        'First option',
-        'Second option',
-        'Third option',
-        'Something else',
-        'With a whole lot of parts',
-      ]}
-      exclusive
-    />
-  </Label>
+  <div class="h-[200px] max-w-[200px]">
+    <Label>
+      Searchable select
+      <SearchableSelect
+        slot="input"
+        placeholder="Search options"
+        options={[
+          'First option',
+          'Second option',
+          'Third option',
+          'Something else',
+          'With a whole lot of parts',
+        ]}
+        exclusive
+      />
+    </Label>
+  </div>
 </Story>
 
 <Story name="Searchable with arbitrary text">
-  <Label cx="h-[200px] max-w-[200px]">
-    Searchable select with create
-    <SearchableSelect
-      slot="input"
-      placeholder="Type to find or create..."
-      otherOptionPrefix="Other:"
-      options={['Hello', 'From', 'The other side']}
-      sort={SortOptions.REDUCE}
-    />
-  </Label>
+  <div class="h-[200px] max-w-[200px]">
+    <Label>
+      Searchable select with create
+      <SearchableSelect
+        slot="input"
+        placeholder="Type to find or create..."
+        otherOptionPrefix="Other:"
+        options={['Hello', 'From', 'The other side']}
+        sort={SortOptions.REDUCE}
+      />
+    </Label>
+  </div>
 </Story>
 
 <Story name="Searchable with descriptions ">
-  <Label cx="h-[200px] max-w-[200px]">
-    Searchable select with description
-    <SearchableSelect
-      slot="input"
-      exclusive
-      placeholder="Type to find or create..."
-      options={[
-        {
-          value: 'a',
-          label: 'app.viam.com',
-          description: 'Website',
-          icon: 'earth',
-        },
-        {
-          value: 'b',
-          label: 'viam',
-          description: 'Command Line Interface',
-          icon: 'tools',
-        },
-        {
-          value: 'c',
-          label: 'Viam app',
-          description: 'Mobile App',
-          icon: 'apple',
-        },
-      ]}
-    />
-  </Label>
+  <div class="h-[200px] max-w-[250px]">
+    <Label>
+      Searchable select with description
+      <SearchableSelect
+        slot="input"
+        exclusive
+        placeholder="Type to find or create..."
+        options={[
+          {
+            value: 'a',
+            label: 'app.viam.com',
+            description: 'Website',
+            icon: 'earth',
+          },
+          {
+            value: 'b',
+            label: 'viam',
+            description: 'Command Line Interface',
+            icon: 'tools',
+          },
+          {
+            value: 'c',
+            label: 'Viam app',
+            description: 'Mobile App',
+            icon: 'apple',
+          },
+        ]}
+      />
+    </Label>
+  </div>
 </Story>
 
 <Story name="Searchable with multiple">
-  <Label cx="h-[200px] max-w-[200px]">
-    Select multiple options
-    <SearchableSelect
-      slot="input"
-      options={[
-        'First option',
-        'Second option',
-        'Third option',
-        'Something else',
-        'With a whole lot of parts',
-      ]}
-      sort={SortOptions.REDUCE}
-      exclusive
-      multiple
-    />
-  </Label>
+  <div class="h-[200px] max-w-[200px]">
+    <Label>
+      Select multiple options
+      <SearchableSelect
+        slot="input"
+        options={[
+          'First option',
+          'Second option',
+          'Third option',
+          'Something else',
+          'With a whole lot of parts',
+        ]}
+        sort={SortOptions.REDUCE}
+        exclusive
+        multiple
+      />
+    </Label>
+  </div>
 </Story>
 
 <Story name="Searchable with multiple and descriptions">
-  <Label cx="h-[200px] max-w-[200px]">
-    Searchable select with description
-    <SearchableSelect
-      slot="input"
-      placeholder="Type to find or create..."
-      options={[
-        { value: 'a', label: 'app.viam', description: 'website' },
-        { value: 'b', label: 'viam', description: 'cli' },
-      ]}
-      exclusive
-      multiple
-    />
-  </Label>
+  <div class="h-[200px] max-w-[200px]">
+    <Label>
+      Searchable select with description
+      <SearchableSelect
+        slot="input"
+        placeholder="Type to find or create..."
+        options={[
+          { value: 'a', label: 'app.viam', description: 'website' },
+          { value: 'b', label: 'viam', description: 'cli' },
+        ]}
+        exclusive
+        multiple
+      />
+    </Label>
+  </div>
 </Story>
