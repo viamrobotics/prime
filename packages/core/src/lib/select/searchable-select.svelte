@@ -349,11 +349,8 @@ const handleKeydown = createHandleKey({
               .join(' ')
           : optionDisplayValue(option)}
         class={cx(
-          'flex cursor-pointer items-center justify-start text-xs',
+          'flex cursor-pointer items-center justify-start px-2.5 py-1.5',
           multiple ? 'pl-2 pr-2.5' : 'px-2.5',
-          option.icon !== undefined || option.description !== undefined
-            ? 'px-2.5 py-1.5'
-            : 'h-7.5',
           isActive ? 'bg-light' : 'hover:bg-light'
         )}
         on:pointerdown|preventDefault
@@ -366,18 +363,18 @@ const handleKeydown = createHandleKey({
           <!-- (multi with icon is not a designed use case yet) -->
           {#if multiple}
             <Icon
-              cx={['shrink-0', !isChecked && 'text-gray-6']}
+              cx={['my-0.5 shrink-0', !isChecked && 'text-gray-6']}
               name={isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'}
             />
           {/if}
           {#if option.icon}
             <Icon
-              cx={['shrink-0 text-gray-6']}
+              cx={['my-0.5 shrink-0 text-gray-6']}
               name={option.icon}
             />
           {/if}
           <div class="flex flex-col">
-            <p class="text-wrap">
+            <p class="text-wrap text-sm">
               {#if highlight !== undefined}
                 {@const [prefix, match, suffix] = highlight}
                 {prefix}<span class="bg-yellow-100">{match}</span>{suffix}
