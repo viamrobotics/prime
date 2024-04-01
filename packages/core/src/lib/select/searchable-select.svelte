@@ -96,9 +96,9 @@ const FOCUS_ITEM = 'focus-item';
 type MenuState = typeof CLOSED | typeof FOCUS_SEARCH | typeof FOCUS_ITEM;
 
 $: detailedOptions = optionsToDetailedOptions(options);
-
-const getDetailedOption = (val: string) =>
-  detailedOptions.find((opt) => opt.value === val);
+$: detailedOptionsMap = Object.fromEntries(
+  detailedOptions.map((opt) => [opt.value, opt])
+);
 
 const optionElements: Record<string, HTMLElement> = {};
 
@@ -108,9 +108,9 @@ let menuState: MenuState | undefined;
 // previousValue is used to ensure we don't double-call onChange
 let previousValue: string | undefined = undefined;
 // initialize the search value to the option that matches the passed value field (or the value field itself as a fallback)
-$: searchValue = optionDisplayValue(getDetailedOption(value) ?? { value });
+$: searchValue = optionDisplayValue(detailedOptionsMap[value] ?? { value });
 
-$: selectedSearchOption = getDetailedOption(value);
+$: selectedSearchOption = detailedOptionsMap[value];
 
 $: searchResults = getSearchResults(detailedOptions, searchValue, sort);
 $: valueInSearch = searchResults.some(
