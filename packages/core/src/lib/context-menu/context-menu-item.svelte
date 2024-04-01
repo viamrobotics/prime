@@ -29,6 +29,7 @@ export { extraClasses as cx };
 </script>
 
 <button
+  type="button"
   role="menuitem"
   class={cx(
     'flex w-full items-center gap-1.5 px-3 py-1.5 text-left hover:bg-light',

@@ -37,6 +37,7 @@ const handleEscape = (event: KeyboardEvent) => {
 <svelte:window on:keydown={isOpen ? handleEscape : undefined} />
 
 <button
+  type="button"
   id={buttonID}
   class={cx(buttonCX)}
   aria-haspopup="menu"
