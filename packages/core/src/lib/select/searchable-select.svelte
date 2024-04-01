@@ -361,18 +361,18 @@ const handleKeydown = createHandleKey({
         on:click={() => handleSelect(option)}
         bind:this={optionElements[option.value]}
       >
-        <div class="flex flex-row">
+        <div class="flex flex-row gap-2">
           <!-- In all real cases, only one of these icons should should be active at once-->
           <!-- (multi with icon is not a designed use case yet) -->
           {#if multiple}
             <Icon
-              cx={['mr-2 shrink-0', !isChecked && 'text-gray-6']}
+              cx={['shrink-0', !isChecked && 'text-gray-6']}
               name={isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'}
             />
           {/if}
           {#if option.icon}
             <Icon
-              cx={['mr-2 shrink-0 text-gray-6']}
+              cx={['shrink-0 text-gray-6']}
               name={option.icon}
             />
           {/if}
