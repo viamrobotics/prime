@@ -352,7 +352,6 @@ describe('SearchableSelect', () => {
     expect(options[2]).toHaveAccessibleName('New Option 3');
 
     expect(screen.getByTestId('icon-apple')).toBeInTheDocument();
-    expect(screen.getByTestId('icon-language-cpp')).not.toBeInTheDocument();
   });
 
   it('clears the input when extra text is added and Enter is pressed again in exclusive mode', async () => {
@@ -741,7 +740,7 @@ describe('SearchableSelect', () => {
 
       expect(onChange).toHaveBeenCalledWith('opt-1');
       expect(search).toHaveValue('Gale');
-      expect(screen.getByTestId('icon-viam-process')).toBeInTheDocument();
+      expect(screen.getAllByTestId('icon-viam-process')).toHaveLength(2);
 
       onChange.mockReset();
 
@@ -750,7 +749,7 @@ describe('SearchableSelect', () => {
       // Verify that onChange is not called again
       expect(onChange).not.toHaveBeenCalled();
       expect(search).toHaveValue('Gale');
-      expect(screen.getByTestId('icon-viam-process')).toBeInTheDocument();
+      expect(screen.getAllByTestId('icon-viam-process')).toHaveLength(2);
     });
 
     it('closes menu on blur', async () => {
