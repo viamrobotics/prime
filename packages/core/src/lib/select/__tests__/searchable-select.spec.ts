@@ -224,7 +224,7 @@ describe('SearchableSelect', () => {
   });
 
   it('has options with labels descriptions and icons', () => {
-    const { container } = renderSubject({
+    renderSubject({
       options: detailedOptions,
     });
 
@@ -237,12 +237,8 @@ describe('SearchableSelect', () => {
     expect(secondOption).toHaveAttribute('aria-selected', 'false');
     expect(search).not.toHaveAttribute('aria-activedescendant');
     // icons are rendered
-    expect(
-      container.querySelector('svg[data-icon-name=viam-process]')
-    ).toBeInTheDocument();
-    expect(
-      container.querySelector('svg[data-icon-name=language-cpp]')
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('icon-viam-process')).toBeInTheDocument();
+    expect(screen.getByTestId('icon-language-cpp')).toBeInTheDocument();
     // descriptions are rendered
     expect(screen.getByText(/wizard/iu)).toBeInTheDocument();
     expect(screen.getByText(/barbarian/iu)).toBeInTheDocument();
@@ -268,7 +264,7 @@ describe('SearchableSelect', () => {
 
   it('displays the correct icon and label on select', async () => {
     const user = userEvent.setup();
-    const { container } = renderSubject({ options: detailedOptions });
+    renderSubject({ options: detailedOptions });
 
     const { search, options } = getResults();
 
@@ -283,13 +279,11 @@ describe('SearchableSelect', () => {
     expect(search).toHaveAttribute('aria-expanded', 'false');
     expect(search).not.toHaveAttribute('aria-activedescendant');
     // test that both icons render for option + svg in the input
-    expect(
-      container.querySelectorAll('svg[data-icon-name=viam-process]')
-    ).toHaveLength(2);
+    expect(screen.getAllByTestId('icon-viam-process')).toHaveLength(2);
   });
 
   it('renders the initial input value', () => {
-    const { container } = renderSubject({
+    renderSubject({
       options: detailedOptions,
       value: 'opt-2',
     });
@@ -297,9 +291,7 @@ describe('SearchableSelect', () => {
     const { search } = getResults();
     expect(search).toHaveValue('Karlach');
     // test that both icons render for option + svg in the input
-    expect(
-      container.querySelectorAll('svg[data-icon-name=language-cpp]')
-    ).toHaveLength(2);
+    expect(screen.getAllByTestId('icon-language-cpp')).toHaveLength(2);
   });
 
   it('auto-selects search result on Enter', async () => {
@@ -329,7 +321,7 @@ describe('SearchableSelect', () => {
   });
 
   it('updates the rendered options when the options input field changes', async () => {
-    const { component, container } = renderSubject({
+    const { component } = renderSubject({
       options: detailedOptions,
     });
 
@@ -338,9 +330,7 @@ describe('SearchableSelect', () => {
     expect(options).toHaveLength(stringOptions.length);
     expect(options[0]).toHaveAccessibleName(detailedOptions[0]?.label);
     expect(options[1]).toHaveAccessibleName(detailedOptions[1]?.label);
-    expect(
-      container.querySelector('svg[data-icon-name=language-cpp]')
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('icon-language-cpp')).toBeInTheDocument();
 
     // Define new options
     const newOptions = [
@@ -361,12 +351,8 @@ describe('SearchableSelect', () => {
     expect(options[1]).toHaveAccessibleName('New Option 2');
     expect(options[2]).toHaveAccessibleName('New Option 3');
 
-    expect(
-      container.querySelector('svg[data-icon-name=apple]')
-    ).toBeInTheDocument();
-    expect(
-      container.querySelector('svg[data-icon-name=language-cpp]')
-    ).not.toBeInTheDocument();
+    expect(screen.getByTestId('icon-apple')).toBeInTheDocument();
+    expect(screen.getByTestId('icon-language-cpp')).not.toBeInTheDocument();
   });
 
   it('clears the input when extra text is added and Enter is pressed again in exclusive mode', async () => {
@@ -746,7 +732,7 @@ describe('SearchableSelect', () => {
 
     it('renders the icon and does not change the contents of the select when Enter is pressed twice', async () => {
       const user = userEvent.setup();
-      const { container } = renderSubject({ options: detailedOptions });
+      renderSubject({ options: detailedOptions });
 
       const { search } = getResults();
       await user.click(search);
@@ -755,9 +741,7 @@ describe('SearchableSelect', () => {
 
       expect(onChange).toHaveBeenCalledWith('opt-1');
       expect(search).toHaveValue('Gale');
-      expect(
-        container.querySelector('svg[data-icon-name="viam-process"]')
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('icon-viam-process')).toBeInTheDocument();
 
       onChange.mockReset();
 
@@ -766,9 +750,7 @@ describe('SearchableSelect', () => {
       // Verify that onChange is not called again
       expect(onChange).not.toHaveBeenCalled();
       expect(search).toHaveValue('Gale');
-      expect(
-        container.querySelector('svg[data-icon-name="viam-process"]')
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('icon-viam-process')).toBeInTheDocument();
     });
 
     it('closes menu on blur', async () => {

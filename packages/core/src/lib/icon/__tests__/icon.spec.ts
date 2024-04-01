@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import { Icon } from '$lib';
 import { cxTestArguments, cxTestResults } from '$lib/__tests__/cx-test';
 
@@ -10,10 +10,8 @@ describe('Icon', () => {
   });
 
   it('Renders an icon with the correct name attribute', () => {
-    const { container } = render(Icon, { name: 'camera-outline' });
-    expect(
-      container.querySelector('svg[data-icon-name=camera-outline]')
-    ).toBeVisible();
+    render(Icon, { name: 'camera-outline' });
+    expect(screen.getByTestId('icon-camera-outline')).toBeInTheDocument();
   });
 
   it('Renders an extra small icon', () => {
