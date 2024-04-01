@@ -59,7 +59,7 @@ import {
 </Story>
 
 <Story name="Searchable with descriptions ">
-  <div class="h-[200px] max-w-[250px]">
+  <div class="h-[200px] max-w-[200px]">
     <Label>
       Searchable select with description
       <SearchableSelect
