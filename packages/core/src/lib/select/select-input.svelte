@@ -70,6 +70,7 @@ $: errorClasses =
     type="text"
     class={cx(
       'h-7.5 w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none',
+      // We want the native select to include the icon so we need abolute positioning and this padding
       { 'pl-8': Boolean(icon) },
       defaultClasses,
       disabledClasses,
