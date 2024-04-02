@@ -58,32 +58,79 @@ import {
   </div>
 </Story>
 
-<Story name="Searchable with descriptions ">
+<Story name="Searchable OS/Platform list ">
   <div class="h-[200px] max-w-[200px]">
     <Label>
-      Searchable select with description
+      Searchable OS/Platform list
       <SearchableSelect
         slot="input"
         exclusive
         placeholder="Type to find or create..."
         options={[
           {
-            value: 'a',
-            label: 'app.viam.com',
-            description: 'Website',
-            icon: 'earth',
+            value: 'linux-aarch64',
+            label: 'Linux (Aarch64)',
+            icon: 'linux',
           },
           {
-            value: 'b',
-            label: 'viam',
-            description: 'Command Line Interface',
-            icon: 'tools',
+            value: 'linux-x86',
+            label: 'Linux (x86_64)',
+            icon: 'linux',
           },
           {
-            value: 'c',
-            label: 'Viam app',
-            description: 'Mobile App',
+            value: 'linux-arm7l',
+            label: 'Linux (Arm7l)',
+            icon: 'linux',
+          },
+          {
+            value: 'macos',
+            label: 'Mac',
             icon: 'apple',
+          },
+          {
+            value: 'windows',
+            label: 'Windows',
+            icon: 'windows',
+          },
+        ]}
+      />
+    </Label>
+  </div>
+</Story>
+
+<Story name="Searchable MlModel list ">
+  <div class="h-[200px] max-w-[200px]">
+    <Label>
+      Searchable MlModel list
+      <SearchableSelect
+        slot="input"
+        exclusive
+        placeholder="Type to find or create..."
+        options={[
+          {
+            value: 'uuid-1',
+            label: 'viam:catdetector',
+            description: 'tflite',
+          },
+          {
+            value: 'uuid-2',
+            label: 'nasa:asteroid-classifer',
+            description: 'pytorch',
+          },
+          {
+            value: 'uuid-3',
+            label: 'viam:plate-reader',
+            description: 'tflite',
+          },
+          {
+            value: 'uuid-4',
+            label: 'apple:face-detection',
+            description: 'metal',
+          },
+          {
+            value: 'uuid-5',
+            label: 'mug-detector',
+            description: 'tflite',
           },
         ]}
       />
@@ -105,24 +152,6 @@ import {
           'With a whole lot of parts',
         ]}
         sort={SortOptions.REDUCE}
-        exclusive
-        multiple
-      />
-    </Label>
-  </div>
-</Story>
-
-<Story name="Searchable with multiple and descriptions">
-  <div class="h-[200px] max-w-[200px]">
-    <Label>
-      Searchable select with description
-      <SearchableSelect
-        slot="input"
-        placeholder="Type to find or create..."
-        options={[
-          { value: 'a', label: 'app.viam', description: 'website' },
-          { value: 'b', label: 'viam', description: 'cli' },
-        ]}
         exclusive
         multiple
       />
