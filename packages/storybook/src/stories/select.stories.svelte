@@ -58,10 +58,10 @@ import {
   </div>
 </Story>
 
-<Story name="Searchable OS/Platform list ">
+<Story name="Searchable with icons ">
   <div class="h-[200px] max-w-[200px]">
     <Label>
-      Searchable OS/Platform list
+      Select an OS/Platform
       <SearchableSelect
         slot="input"
         exclusive
@@ -98,10 +98,10 @@ import {
   </div>
 </Story>
 
-<Story name="Searchable MlModel list ">
+<Story name="Searchable with descriptions ">
   <div class="h-[200px] max-w-[200px]">
     <Label>
-      Searchable MlModel list
+      Select a MlModel
       <SearchableSelect
         slot="input"
         exclusive
