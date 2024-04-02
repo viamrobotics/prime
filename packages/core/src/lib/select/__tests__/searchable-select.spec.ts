@@ -425,15 +425,45 @@ describe('SearchableSelect', () => {
     expect(onChange).toHaveBeenCalledOnce();
   });
 
-  it('keeps input value if menu closed on blur', async () => {
+  it('keeps input value if menu is closed with escape', async () => {
     const user = userEvent.setup();
     renderSubject();
 
     const { search } = getResults();
     await user.type(search, 'the other');
-    await user.keyboard('{Escape}{Tab}');
+    await user.keyboard('{Escape}');
+    expect(search).toHaveValue('the other');
+    await user.keyboard('{Tab}');
+    expect(search).toHaveValue('');
+    expect(onChange).not.toHaveBeenCalled();
+  });
 
-    expect(onChange).toHaveBeenCalledWith('the other');
+  it('keeps last selected value if menu is closed with escape (non exclusive)', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search } = getResults();
+    await user.type(search, 'testFoo{Enter}');
+    expect(onChange).toHaveBeenCalledWith('testFoo');
+    expect(search).toHaveValue('testFoo');
+    onChange.mockReset();
+    await user.type(search, 'ohNoIMeantToClickElseWhereOops{Escape}{Tab}');
+    expect(search).toHaveValue('testFoo');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('keeps last selected value if menu is closed with escape (exclusive)', async () => {
+    const user = userEvent.setup();
+    renderSubject({ exclusive: true });
+
+    const { search } = getResults();
+    await user.type(search, 'the other{Enter}');
+    expect(onChange).toHaveBeenCalledWith('the other side');
+    expect(search).toHaveValue('the other side');
+    onChange.mockReset();
+    await user.type(search, 'ohNoIMeantToClickElseWhereOops{Escape}{Tab}');
+    expect(search).toHaveValue('the other side');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('has an "other" option when not exclusive', async () => {
@@ -514,17 +544,6 @@ describe('SearchableSelect', () => {
     const { options } = getResults();
 
     expect(options[2]).toHaveAccessibleName('You said: hello');
-  });
-
-  it('empties input value if closed and exclusive', async () => {
-    const user = userEvent.setup();
-    renderSubject({ exclusive: true });
-
-    const { search } = getResults();
-    await user.type(search, 'hello');
-    await user.keyboard('{Escape}{Tab}');
-
-    expect(onChange).toHaveBeenCalledWith('');
   });
 
   it('closes listbox on escape', async () => {

@@ -3,6 +3,8 @@
 
 Select an option from a list, with search
 
+Guided by https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+
 ```svelte
 <SearchableSelect
   options={["Option 1", "Option 2", "Option 3"]}
@@ -107,9 +109,24 @@ let autoSelectIndex = -1;
 let menuState: MenuState | undefined;
 // previousValue is used to ensure we don't double-call onChange
 let previousValue: string | undefined = undefined;
-// initialize the search value to the option that matches the passed value field (or the value field itself as a fallback)
-$: searchValue = optionDisplayValue(detailedOptionsMap[value] ?? { value });
 
+// searchValue is the value stored inside the search input field
+// it is primarily updated reactively through a call to resetSearchValue when
+// value changes (in handleSelect)
+//
+// It is also manually updated in edge cases like Escape or Blur
+let searchValue = '';
+const resetSearchValue = (
+  valueParam: string,
+  detailedOptionsMapParam: { [k: string]: DetailedOption }
+) => {
+  searchValue = optionDisplayValue(
+    detailedOptionsMapParam[valueParam] ?? { value: valueParam }
+  );
+};
+$: resetSearchValue(value, detailedOptionsMap);
+
+// selectedSeachOption represents the value that was last selected (or the initial value)
 $: selectedSearchOption = detailedOptionsMap[value];
 
 $: searchResults = getSearchResults(detailedOptions, searchValue, sort);
@@ -167,8 +184,6 @@ const handleSingleSelect = (selectedOption: DetailedOption | undefined) => {
   const fallback =
     exclusive && !valueInSearch ? { value: '' } : { value: searchValue };
   const nextOption = selectedOption ?? fallback;
-  // update the current search field with the display value of the option
-  searchValue = optionDisplayValue(nextOption);
 
   // we always set the menu state to closed even if the value is equal to the previous value
   // but we don't call onChange
@@ -220,6 +235,9 @@ const handleBlur = (event: FocusEvent) => {
     handleSelect(autoSelectOption?.option);
     setMenuState(CLOSED);
   }
+  // we reset the search value here to the last selected option to ensure there is no mismatch
+  // between what was actually selected vs what is in the search input
+  resetSearchValue(value, detailedOptionsMap);
   onBlur?.(event);
 };
 
@@ -244,15 +262,11 @@ const handleKeydown = createHandleKey({
     preventDefault: false,
   },
   Escape: () => {
+    // WAI: Dismisses the popup if it is visible. Optionally, if the popup is hidden before Escape is pressed, clears the combobox.
     if (menuState === CLOSED) {
       searchValue = '';
       handleSelect(undefined);
     } else {
-      // if the menu is open and we haven't selected a option (but we have pressed escape), we should
-      // select that to update the state accordingly
-      if (selectedSearchOption === undefined) {
-        handleSelect(undefined);
-      }
       setMenuState(CLOSED);
     }
   },
