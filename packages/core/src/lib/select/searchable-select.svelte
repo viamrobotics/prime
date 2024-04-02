@@ -118,7 +118,7 @@ let previousValue: string | undefined = undefined;
 let searchValue = '';
 const resetSearchValue = (
   valueParam: string,
-  detailedOptionsMapParam: { [k: string]: DetailedOption }
+  detailedOptionsMapParam: Record<string, DetailedOption>
 ) => {
   searchValue = optionDisplayValue(
     detailedOptionsMapParam[valueParam] ?? { value: valueParam }
