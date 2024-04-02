@@ -219,8 +219,8 @@ const handleBlur = (event: FocusEvent) => {
   if (!disabled && menuState !== CLOSED) {
     handleSelect(autoSelectOption?.option);
     setMenuState(CLOSED);
-    onBlur?.(event);
   }
+  onBlur?.(event);
 };
 
 const handleButtonClick = () => {
