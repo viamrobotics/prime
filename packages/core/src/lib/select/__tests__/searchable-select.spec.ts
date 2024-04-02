@@ -237,11 +237,13 @@ describe('SearchableSelect', () => {
     expect(secondOption).toHaveAttribute('aria-selected', 'false');
     expect(search).not.toHaveAttribute('aria-activedescendant');
     // icons are rendered
-    expect(screen.getByTestId('icon-viam-process')).toBeInTheDocument();
-    expect(screen.getByTestId('icon-language-cpp')).toBeInTheDocument();
+    const firstOptionIcon = screen.getByTestId('icon-viam-process');
+    const secondOptionIcon = screen.getByTestId('icon-language-cpp');
+    expect(firstOptionIcon).toBeInTheDocument();
+    expect(secondOptionIcon).toBeInTheDocument();
     // descriptions are rendered
-    expect(screen.getByText(/wizard/iu)).toBeInTheDocument();
-    expect(screen.getByText(/barbarian/iu)).toBeInTheDocument();
+    expect(firstOption).toHaveAccessibleDescription(/wizard/iu);
+    expect(secondOption).toHaveAccessibleDescription(/barbarian/iu);
   });
 
   it('selects a clicked option', async () => {

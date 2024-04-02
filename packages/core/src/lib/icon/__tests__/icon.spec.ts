@@ -9,9 +9,10 @@ describe('Icon', () => {
     expect(container.querySelector('svg')).toBeVisible();
   });
 
-  it('Renders an icon with the correct name attribute', () => {
+  it('Renders an icon with the correct test attribute', () => {
     render(Icon, { name: 'camera-outline' });
-    expect(screen.getByTestId('icon-camera-outline')).toBeInTheDocument();
+    const result = screen.getByTestId('icon-camera-outline');
+    expect(result).toBeInTheDocument();
   });
 
   it('Renders an extra small icon', () => {

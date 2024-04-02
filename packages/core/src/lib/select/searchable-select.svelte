@@ -327,6 +327,7 @@ const handleKeydown = createHandleKey({
       {@const isSelected = multiple ? false : isActive}
       {@const isChecked = multiple ? values.includes(option.value) : undefined}
       {@const isOther = otherOption?.option === option}
+      {@const descriptionID = uniqueId('combobox-list-item-description')}
 
       {#if isOther && allOptions.length > 1}
         <li
@@ -343,6 +344,7 @@ const handleKeydown = createHandleKey({
         id={isActive ? activeID : undefined}
         aria-selected={isSelected}
         aria-checked={isChecked}
+        aria-describedby={descriptionID}
         aria-label={isOther
           ? [otherOptionPrefix, optionDisplayValue(option)]
               .filter(Boolean)
@@ -385,7 +387,10 @@ const handleKeydown = createHandleKey({
               {/if}
             </p>
             {#if option.description}
-              <p class="text-wrap text-xs text-subtle-2">
+              <p
+                id={descriptionID}
+                class="text-wrap text-xs text-subtle-2"
+              >
                 {option.description}
               </p>
             {/if}
