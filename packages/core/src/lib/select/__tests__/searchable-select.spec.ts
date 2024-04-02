@@ -447,7 +447,7 @@ describe('SearchableSelect', () => {
     expect(onChange).toHaveBeenCalledWith('testFoo');
     expect(search).toHaveValue('testFoo');
     onChange.mockReset();
-    await user.type(search, 'ohNoIMeantToClickElseWhereOops{Escape}{Tab}');
+    await user.type(search, 'ohNoIMeantToClickElsewhereOops{Escape}{Tab}');
     expect(search).toHaveValue('testFoo');
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -461,7 +461,7 @@ describe('SearchableSelect', () => {
     expect(onChange).toHaveBeenCalledWith('the other side');
     expect(search).toHaveValue('the other side');
     onChange.mockReset();
-    await user.type(search, 'ohNoIMeantToClickElseWhereOops{Escape}{Tab}');
+    await user.type(search, 'ohNoIMeantToClickElsewhereOops{Escape}{Tab}');
     expect(search).toHaveValue('the other side');
     expect(onChange).not.toHaveBeenCalled();
   });
