@@ -41,6 +41,7 @@ export { extraClasses as cx };
   bind:value
   bind:input
   on:input
+  on:change
   on:keydown
   on:focus
   on:blur
