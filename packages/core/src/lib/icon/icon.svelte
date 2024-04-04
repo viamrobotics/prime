@@ -68,6 +68,7 @@ $: {
   viewBox="0 0 24 24"
   aria-hidden="true"
   focusable="false"
+  data-testid={`icon-${name}`}
   {...$$restProps}
 >
   {#each allPaths as { path: dAttribute, opacity }}

@@ -1,6 +1,6 @@
 <script lang="ts">
 import cx from 'classnames';
-import { Icon } from '$lib/icon';
+import { Icon, type IconName } from '$lib/icon';
 import { InputStates, type InputState } from '$lib/input';
 
 export let value: string | undefined;
@@ -10,6 +10,7 @@ export let isFocused: boolean | undefined = undefined;
 export let disabled = false;
 export let state: InputState = InputStates.NONE;
 export let inputElement: HTMLInputElement | undefined = undefined;
+export let icon: IconName | undefined = undefined;
 
 /** Additional CSS classes to pass to the input. */
 let extraClasses: cx.Argument = '';
@@ -69,6 +70,8 @@ $: errorClasses =
     type="text"
     class={cx(
       'h-7.5 w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none',
+      // We want the native select to include the icon so we need abolute positioning and this padding
+      { 'pl-8': Boolean(icon) },
       defaultClasses,
       disabledClasses,
       warnClasses,
@@ -84,7 +87,6 @@ $: errorClasses =
   />
   <button
     type="button"
-    class="absolute right-2 top-1/2 -translate-y-1/2 transform"
     tabindex="-1"
     aria-label="Toggle menu"
     aria-controls={menuId}
@@ -94,9 +96,19 @@ $: errorClasses =
     on:mousedown|preventDefault
     on:pointerdown|preventDefault
   >
-    <Icon
-      name="chevron-down"
-      cx={['text-gray-6 transition', { 'rotate-180': isOpen }]}
-    />
+    {#if icon}
+      <div class="absolute left-2 top-1/2 -translate-y-1/2">
+        <Icon
+          name={icon}
+          cx="text-gray-6"
+        />
+      </div>
+    {/if}
+    <div class="absolute right-2 top-1/2 -translate-y-1/2 transform">
+      <Icon
+        name="chevron-down"
+        cx={['text-gray-6 transition-transform', { 'rotate-180': isOpen }]}
+      />
+    </div>
   </button>
 </div>

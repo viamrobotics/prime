@@ -9,10 +9,25 @@ const onChange = vi.fn();
 const onMultiChange = vi.fn();
 const onFocus = vi.fn();
 const onBlur = vi.fn();
+const detailedOptions = [
+  {
+    value: 'opt-1',
+    label: 'Gale',
+    description: 'Wizard',
+    icon: 'viam-process',
+  },
+  {
+    value: 'opt-2',
+    label: 'Karlach',
+    description: 'Barbarian',
+    icon: 'language-cpp',
+  },
+];
+const stringOptions = ['hello from', 'the other side'];
 
 const renderSubject = (props: Partial<ComponentProps<Subject>> = {}) => {
   return render(Subject, {
-    options: ['hello from', 'the other side'],
+    options: stringOptions,
     onChange,
     onMultiChange,
     onFocus,
@@ -141,6 +156,22 @@ describe('SearchableSelect', () => {
     expect(search).toHaveAttribute('aria-expanded', 'false');
   });
 
+  it('does not change the select when clicking and then blurring', async () => {
+    const user = userEvent.setup();
+    renderSubject({
+      options: detailedOptions,
+      value: 'opt-1',
+      disabled: true,
+    });
+
+    const { search } = getResults();
+    expect(search).toHaveValue('Gale');
+    await user.click(search);
+    await user.tab();
+    expect(onChange).not.toHaveBeenCalled();
+    expect(search).toHaveValue('Gale');
+  });
+
   it('closes the listbox if no options', async () => {
     const user = userEvent.setup();
     renderSubject({ exclusive: true, sort: 'reduce' });
@@ -192,6 +223,29 @@ describe('SearchableSelect', () => {
     expect(search).not.toHaveAttribute('aria-activedescendant');
   });
 
+  it('has options with labels descriptions and icons', () => {
+    renderSubject({
+      options: detailedOptions,
+    });
+
+    const { search, options } = getResults();
+
+    expect(options).toHaveLength(2);
+    const firstOption = screen.getByRole('option', { name: /gale/iu });
+    const secondOption = screen.getByRole('option', { name: /karlach/iu });
+    expect(firstOption).toHaveAttribute('aria-selected', 'false');
+    expect(secondOption).toHaveAttribute('aria-selected', 'false');
+    expect(search).not.toHaveAttribute('aria-activedescendant');
+    // icons are rendered
+    const firstOptionIcon = screen.getByTestId('icon-viam-process');
+    const secondOptionIcon = screen.getByTestId('icon-language-cpp');
+    expect(firstOptionIcon).toBeInTheDocument();
+    expect(secondOptionIcon).toBeInTheDocument();
+    // descriptions are rendered
+    expect(firstOption).toHaveAccessibleDescription(/wizard/iu);
+    expect(secondOption).toHaveAccessibleDescription(/barbarian/iu);
+  });
+
   it('selects a clicked option', async () => {
     const user = userEvent.setup();
     renderSubject();
@@ -208,6 +262,38 @@ describe('SearchableSelect', () => {
     expect(search).toHaveValue('hello from');
     expect(search).toHaveAttribute('aria-expanded', 'false');
     expect(search).not.toHaveAttribute('aria-activedescendant');
+  });
+
+  it('displays the correct icon and label on select', async () => {
+    const user = userEvent.setup();
+    renderSubject({ options: detailedOptions });
+
+    const { search, options } = getResults();
+
+    await user.click(search);
+    // TODO(mc, 2024-02-03): replace .click with userEvent
+    // https://github.com/testing-library/user-event/issues/1119
+    await act(() => options[0]?.click());
+
+    expect(search).toHaveFocus();
+    expect(onChange).toHaveBeenCalledWith('opt-1');
+    expect(search).toHaveValue('Gale');
+    expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(search).not.toHaveAttribute('aria-activedescendant');
+    // test that both icons render for option + svg in the input
+    expect(screen.getAllByTestId('icon-viam-process')).toHaveLength(2);
+  });
+
+  it('renders the initial input value', () => {
+    renderSubject({
+      options: detailedOptions,
+      value: 'opt-2',
+    });
+
+    const { search } = getResults();
+    expect(search).toHaveValue('Karlach');
+    // test that both icons render for option + svg in the input
+    expect(screen.getAllByTestId('icon-language-cpp')).toHaveLength(2);
   });
 
   it('auto-selects search result on Enter', async () => {
@@ -236,6 +322,89 @@ describe('SearchableSelect', () => {
     expect(search).not.toHaveAttribute('aria-activedescendant');
   });
 
+  it('updates the rendered options when the options input field changes', async () => {
+    const { component } = renderSubject({
+      options: detailedOptions,
+    });
+
+    // Verify initial options
+    let { options } = getResults();
+    expect(options).toHaveLength(stringOptions.length);
+    expect(options[0]).toHaveAccessibleName(detailedOptions[0]?.label);
+    expect(options[1]).toHaveAccessibleName(detailedOptions[1]?.label);
+    expect(screen.getByTestId('icon-language-cpp')).toBeInTheDocument();
+
+    // Define new options
+    const newOptions = [
+      { value: 'New Option 1' },
+      { value: 'opt1', label: 'New Option 2' },
+      { value: 'opt3', label: 'New Option 3', icon: 'apple' },
+    ];
+
+    // Update the options prop
+    await act(() => {
+      component.$set({ options: newOptions });
+    });
+
+    // Verify updated options
+    ({ options } = getResults());
+    expect(options).toHaveLength(newOptions.length);
+    expect(options[0]).toHaveAccessibleName('New Option 1');
+    expect(options[1]).toHaveAccessibleName('New Option 2');
+    expect(options[2]).toHaveAccessibleName('New Option 3');
+
+    expect(screen.getByTestId('icon-apple')).toBeInTheDocument();
+  });
+
+  it('clears the input when extra text is added and Enter is pressed again in exclusive mode', async () => {
+    const user = userEvent.setup();
+    renderSubject({
+      options: detailedOptions,
+      exclusive: true,
+    });
+
+    const { search } = getResults();
+    await user.click(search);
+    await user.type(search, 'Gale');
+    await user.keyboard('{Enter}');
+
+    expect(onChange).toHaveBeenCalledWith('opt-1');
+    expect(search).toHaveValue('Gale');
+
+    await user.type(search, ' extra text');
+    expect(search).toHaveValue('Gale extra text');
+
+    await user.keyboard('{Enter}');
+
+    // Verify that the onChange event is called with an empty string
+    expect(onChange).toHaveBeenCalledWith('');
+    expect(search).toHaveValue('');
+  });
+
+  it('does not set the field again on blur after the menu is closed', async () => {
+    const user = userEvent.setup();
+    renderSubject({
+      options: detailedOptions,
+      exclusive: true,
+    });
+
+    const { search } = getResults();
+    await user.click(search);
+    await user.type(search, 'Gale');
+    await user.keyboard('{Enter}');
+
+    expect(onChange).toHaveBeenCalledWith('opt-1');
+    expect(search).toHaveValue('Gale');
+
+    onChange.mockReset();
+
+    // Simulate a blur event after the menu is CLOSED but still has focus
+    await user.tab();
+
+    // Verify that the onChange event is not called again after the blur event
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('auto-selects search result on blur', async () => {
     const user = userEvent.setup();
     renderSubject();
@@ -256,15 +425,45 @@ describe('SearchableSelect', () => {
     expect(onChange).toHaveBeenCalledOnce();
   });
 
-  it('keeps input value if menu closed on blur', async () => {
+  it('keeps input value if menu is closed with escape', async () => {
     const user = userEvent.setup();
     renderSubject();
 
     const { search } = getResults();
     await user.type(search, 'the other');
-    await user.keyboard('{Escape}{Tab}');
+    await user.keyboard('{Escape}');
+    expect(search).toHaveValue('the other');
+    await user.keyboard('{Tab}');
+    expect(search).toHaveValue('');
+    expect(onChange).not.toHaveBeenCalled();
+  });
 
-    expect(onChange).toHaveBeenCalledWith('the other');
+  it('keeps last selected value if menu is closed with escape (non exclusive)', async () => {
+    const user = userEvent.setup();
+    renderSubject();
+
+    const { search } = getResults();
+    await user.type(search, 'testFoo{Enter}');
+    expect(onChange).toHaveBeenCalledWith('testFoo');
+    expect(search).toHaveValue('testFoo');
+    onChange.mockReset();
+    await user.type(search, 'ohNoIMeantToClickElsewhereOops{Escape}{Tab}');
+    expect(search).toHaveValue('testFoo');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('keeps last selected value if menu is closed with escape (exclusive)', async () => {
+    const user = userEvent.setup();
+    renderSubject({ exclusive: true });
+
+    const { search } = getResults();
+    await user.type(search, 'the other{Enter}');
+    expect(onChange).toHaveBeenCalledWith('the other side');
+    expect(search).toHaveValue('the other side');
+    onChange.mockReset();
+    await user.type(search, 'ohNoIMeantToClickElsewhereOops{Escape}{Tab}');
+    expect(search).toHaveValue('the other side');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('has an "other" option when not exclusive', async () => {
@@ -345,17 +544,6 @@ describe('SearchableSelect', () => {
     const { options } = getResults();
 
     expect(options[2]).toHaveAccessibleName('You said: hello');
-  });
-
-  it('empties input value if closed and exclusive', async () => {
-    const user = userEvent.setup();
-    renderSubject({ exclusive: true });
-
-    const { search } = getResults();
-    await user.type(search, 'hello');
-    await user.keyboard('{Escape}{Tab}');
-
-    expect(onChange).toHaveBeenCalledWith('');
   });
 
   it('closes listbox on escape', async () => {
@@ -560,6 +748,29 @@ describe('SearchableSelect', () => {
 
       expect(onMultiChange).toHaveBeenCalledWith(['hello from']);
       expect(search).toHaveValue('');
+    });
+
+    it('renders the icon and does not change the contents of the select when Enter is pressed twice', async () => {
+      const user = userEvent.setup();
+      renderSubject({ options: detailedOptions });
+
+      const { search } = getResults();
+      await user.click(search);
+      await user.type(search, 'Gale');
+      await user.keyboard('{Enter}');
+
+      expect(onChange).toHaveBeenCalledWith('opt-1');
+      expect(search).toHaveValue('Gale');
+      expect(screen.getAllByTestId('icon-viam-process')).toHaveLength(2);
+
+      onChange.mockReset();
+
+      await user.keyboard('{Enter}');
+
+      // Verify that onChange is not called again
+      expect(onChange).not.toHaveBeenCalled();
+      expect(search).toHaveValue('Gale');
+      expect(screen.getAllByTestId('icon-viam-process')).toHaveLength(2);
     });
 
     it('closes menu on blur', async () => {
