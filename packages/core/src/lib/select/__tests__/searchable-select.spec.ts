@@ -266,6 +266,22 @@ describe('SearchableSelect', () => {
     expect(search).not.toHaveAttribute('aria-activedescendant');
   });
 
+  it('subsequent blur after value reset does not trigger additional onChange', async () => {
+    const user = userEvent.setup();
+    const { component } = renderSubject({ value: 'hello from' });
+
+    const { search } = getResults();
+
+    // reset the value, click, and blur
+    await act(() => {
+      component.$set({ value: '' });
+    });
+    await user.click(search);
+    await user.keyboard('{Tab}');
+
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('displays the correct icon and label on select', async () => {
     const user = userEvent.setup();
     renderSubject({ options: detailedOptions });
