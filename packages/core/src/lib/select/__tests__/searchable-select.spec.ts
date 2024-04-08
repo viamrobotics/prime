@@ -156,7 +156,7 @@ describe('SearchableSelect', () => {
     expect(search).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('does not change the select when clicking and then blurring', async () => {
+  it('does not change the select when clicking and then blurring if disabled', async () => {
     const user = userEvent.setup();
     renderSubject({
       options: detailedOptions,
@@ -195,6 +195,7 @@ describe('SearchableSelect', () => {
 
     expect(search).toHaveFocus();
     expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('collapses the listbox on blur', async () => {
@@ -208,6 +209,7 @@ describe('SearchableSelect', () => {
     expect(onBlur).toHaveBeenCalledOnce();
     expect(search).not.toHaveFocus();
     expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('has options', () => {
@@ -262,6 +264,22 @@ describe('SearchableSelect', () => {
     expect(search).toHaveValue('hello from');
     expect(search).toHaveAttribute('aria-expanded', 'false');
     expect(search).not.toHaveAttribute('aria-activedescendant');
+  });
+
+  it('subsequent blur after value reset does not trigger additional onChange', async () => {
+    const user = userEvent.setup();
+    const { component } = renderSubject({ value: 'hello from' });
+
+    const { search } = getResults();
+
+    // reset the value, click, and blur
+    await act(() => {
+      component.$set({ value: '' });
+    });
+    await user.click(search);
+    await user.keyboard('{Tab}');
+
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('displays the correct icon and label on select', async () => {

@@ -107,8 +107,6 @@ const optionElements: Record<string, HTMLElement> = {};
 let inputElement: HTMLInputElement | undefined;
 let autoSelectIndex = -1;
 let menuState: MenuState | undefined;
-// previousValue is used to ensure we don't double-call onChange
-let previousValue: string | undefined = undefined;
 
 // searchValue is the value stored inside the search input field
 // it is primarily updated reactively through a call to resetSearchValue when
@@ -188,9 +186,8 @@ const handleSingleSelect = (selectedOption: DetailedOption | undefined) => {
   // we always set the menu state to closed even if the value is equal to the previous value
   // but we don't call onChange
   setMenuState(CLOSED);
-  if (nextOption.value !== previousValue) {
+  if (nextOption.value !== value) {
     value = nextOption.value;
-    previousValue = nextOption.value;
     onChange?.(nextOption.value);
   }
 };
