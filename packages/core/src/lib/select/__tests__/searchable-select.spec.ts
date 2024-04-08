@@ -156,7 +156,7 @@ describe('SearchableSelect', () => {
     expect(search).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('does not change the select when clicking and then blurring', async () => {
+  it('does not change the select when clicking and then blurring if disabled', async () => {
     const user = userEvent.setup();
     renderSubject({
       options: detailedOptions,
@@ -195,6 +195,7 @@ describe('SearchableSelect', () => {
 
     expect(search).toHaveFocus();
     expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('collapses the listbox on blur', async () => {
@@ -208,6 +209,7 @@ describe('SearchableSelect', () => {
     expect(onBlur).toHaveBeenCalledOnce();
     expect(search).not.toHaveFocus();
     expect(search).toHaveAttribute('aria-expanded', 'false');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('has options', () => {

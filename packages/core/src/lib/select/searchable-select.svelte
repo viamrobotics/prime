@@ -108,7 +108,7 @@ let inputElement: HTMLInputElement | undefined;
 let autoSelectIndex = -1;
 let menuState: MenuState | undefined;
 // previousValue is used to ensure we don't double-call onChange
-let previousValue: string | undefined = undefined;
+let previousValue = value;
 
 // searchValue is the value stored inside the search input field
 // it is primarily updated reactively through a call to resetSearchValue when
