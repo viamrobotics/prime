@@ -1,5 +1,5 @@
 <script lang="ts">
-import cx from 'classnames';
+import classnames from 'classnames';
 import { clickOutside } from '$lib/click-outside';
 import {
   floatingStyle,
@@ -8,6 +8,7 @@ import {
   type FloatingFlipOptions,
   type FloatingShiftOptions,
   type FloatingSizeOptions,
+  type FloatingStrategy,
 } from './floating-style';
 
 export let referenceElement: FloatingReferenceElement | undefined;
@@ -16,12 +17,11 @@ export let offset: number | undefined = undefined;
 export let flip: FloatingFlipOptions | undefined = undefined;
 export let shift: FloatingShiftOptions | undefined = undefined;
 export let size: FloatingSizeOptions | undefined = undefined;
+export let strategy: FloatingStrategy | undefined = undefined;
 export let auto = false;
 export let onClickOutside: ((target: Element) => unknown) | undefined =
   undefined;
-
-let className: cx.Argument = undefined;
-export { className as cx };
+export let cx: classnames.Argument = undefined;
 
 const style = floatingStyle();
 let floatingElement: HTMLElement | undefined;
@@ -34,13 +34,18 @@ $: style.register({
   flip,
   shift,
   size,
+  strategy,
   auto,
 });
 </script>
 
 <div
   bind:this={floatingElement}
-  class={cx('absolute left-0 top-0 z-max w-max', className)}
+  class={classnames(
+    'left-0 top-0 z-max w-max',
+    strategy === 'fixed' ? 'fixed' : 'absolute',
+    cx
+  )}
   class:invisible={!$style}
   style:top={$style?.top}
   style:left={$style?.left}
