@@ -14,15 +14,7 @@ export {
   type ContextMenuItemVariant,
 } from './context-menu';
 
-export {
-  floatingStyle,
-  Floating,
-  type FloatingPlacement,
-  type FloatingReferenceElement,
-  type FloatingStyleStore,
-  type FloatingStyle,
-} from './floating';
-
+export * from './floating';
 export * from './icon';
 
 export {

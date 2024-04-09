@@ -15,6 +15,7 @@ import {
   type FlipOptions,
   type ShiftOptions,
   type SizeOptions,
+  type Strategy,
 } from '@floating-ui/dom';
 
 import { derived, writable, type Readable } from 'svelte/store';
@@ -22,6 +23,7 @@ import { noop } from 'lodash-es';
 
 export type {
   Placement as FloatingPlacement,
+  Strategy as FloatingStrategy,
   ReferenceElement as FloatingReferenceElement,
   OffsetOptions as FloatingOffsetOptions,
   FlipOptions as FloatingFlipOptions,
@@ -56,6 +58,7 @@ export interface State {
   flip?: FlipOptions | undefined;
   shift?: ShiftOptions | undefined;
   size?: SizeOptions | undefined;
+  strategy?: Strategy | undefined;
   auto?: boolean;
 }
 
@@ -119,9 +122,11 @@ const calculateStyle = async (state: State): Promise<FloatingStyle> => {
 };
 
 const getConfig = (state: State): ComputePositionConfig => {
-  const { arrowElement, placement, offset, flip, shift, size } = state;
+  const { arrowElement, placement, offset, flip, shift, size, strategy } =
+    state;
 
   return {
+    strategy: strategy ?? 'absolute',
     placement: placement ?? 'top',
     middleware: [
       offset !== undefined && offsetMiddleware(offset),
