@@ -16,14 +16,14 @@ import { useTooltip } from './tooltip-styles';
 const { style, setHovered } = useTooltip();
 const hover = () => setHovered(true);
 const unhover = () => setHovered(false);
-let target: HTMLElement | undefined;
+let referenceElement: HTMLElement | undefined;
 
-$: style.register({ referenceElement: target });
+$: style.register({ referenceElement });
 </script>
 
 <span
   role="presentation"
-  bind:this={target}
+  bind:this={referenceElement}
   on:mouseenter={hover}
   on:mouseleave={unhover}
   on:focusin={hover}
