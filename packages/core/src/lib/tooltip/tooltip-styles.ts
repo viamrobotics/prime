@@ -1,11 +1,7 @@
 import { setContext, getContext } from 'svelte';
 import { derived, writable, type Readable } from 'svelte/store';
 
-import {
-  floatingStyle,
-  type FloatingStyle,
-  type FloatingPlacement,
-} from '$lib/floating';
+import { floatingStyle, type FloatingStyleStore } from '$lib/floating';
 import { uniqueId } from '$lib/unique-id';
 import { noop } from 'lodash-es';
 
@@ -13,17 +9,11 @@ export type TooltipVisibility = 'invisible' | 'visible';
 
 export interface TooltipContext {
   id: string;
-  style: Readable<FloatingStyle | undefined>;
+  style: FloatingStyleStore;
   isVisible: Readable<boolean>;
   setHovered: (isHovered: boolean) => void;
   setVisibility: (visibility: TooltipVisibility | undefined) => void;
   setHoverDelayMS: (hoverDelayMS: number) => void;
-  setTarget: (target: HTMLElement | undefined) => void;
-  setTooltip: (options: {
-    tooltip: HTMLElement | undefined;
-    arrow: HTMLElement | undefined;
-    placement: FloatingPlacement;
-  }) => void;
 }
 
 export interface TooltipElements {
@@ -86,11 +76,12 @@ const createContext = (): TooltipContext => {
     },
     false
   );
+
   const style = floatingStyle({
     offset: 7,
     shift: { padding: 5 },
     flip: { fallbackAxisSideDirection: 'start', crossAxis: false },
-    auto: true,
+    auto: false,
   });
 
   return {
@@ -100,13 +91,5 @@ const createContext = (): TooltipContext => {
     setHovered: isHovered.set,
     setVisibility: visibility.set,
     setHoverDelayMS: hoverDelayMS.set,
-    setTarget: (target) => style.register({ referenceElement: target }),
-    setTooltip: ({ tooltip, arrow, placement }) => {
-      style.register({
-        placement,
-        floatingElement: tooltip,
-        arrowElement: arrow,
-      });
-    },
   };
 };

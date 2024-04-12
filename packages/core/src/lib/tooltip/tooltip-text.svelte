@@ -22,16 +22,21 @@ export let state: TooltipVisibility | undefined = undefined;
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-const { id, style, isVisible, setVisibility, setTooltip } = useTooltip();
-let tooltip: HTMLElement | undefined;
-let arrow: HTMLElement | undefined;
+const { id, style, isVisible, setVisibility } = useTooltip();
+let floatingElement: HTMLElement | undefined;
+let arrowElement: HTMLElement | undefined;
 
 $: setVisibility(state);
-$: setTooltip({ tooltip, arrow, placement: location });
+$: style.register({
+  floatingElement,
+  arrowElement,
+  placement: location,
+  auto: $isVisible,
+});
 </script>
 
 <div
-  bind:this={tooltip}
+  bind:this={floatingElement}
   {id}
   role="tooltip"
   class:invisible={!$isVisible || !$style}
@@ -43,7 +48,7 @@ $: setTooltip({ tooltip, arrow, placement: location });
   )}
 >
   <div
-    bind:this={arrow}
+    bind:this={arrowElement}
     class="absolute h-[8.5px] w-[8.5px] rotate-45 bg-gray-9"
     style:top={$style?.arrow?.top}
     style:left={$style?.arrow?.left}

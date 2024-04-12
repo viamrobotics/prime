@@ -13,17 +13,17 @@
 <script lang="ts">
 import { useTooltip } from './tooltip-styles';
 
-const { setTarget, setHovered } = useTooltip();
+const { style, setHovered } = useTooltip();
 const hover = () => setHovered(true);
 const unhover = () => setHovered(false);
-let target: HTMLElement | undefined;
+let referenceElement: HTMLElement | undefined;
 
-$: setTarget(target);
+$: style.register({ referenceElement });
 </script>
 
 <span
   role="presentation"
-  bind:this={target}
+  bind:this={referenceElement}
   on:mouseenter={hover}
   on:mouseleave={unhover}
   on:focusin={hover}
