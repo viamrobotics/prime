@@ -31,7 +31,7 @@ export const paths: Record<string, IconPath> = {
   'arrow-right': MDI.mdiArrowRight,
   'arrow-top-right-bottom-left': MDI.mdiArrowTopRightBottomLeft,
   'arrow-up': MDI.mdiArrowUp,
-  'article': MDI.mdiTextBoxOutline,
+  article: MDI.mdiTextBoxOutline,
   'axis-arrow': MDI.mdiAxisArrow,
   'broadcast-off': MDI.mdiBroadcastOff,
   broadcast: MDI.mdiBroadcast,
