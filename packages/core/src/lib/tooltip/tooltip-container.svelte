@@ -36,9 +36,10 @@ import { provideTooltipContext } from './tooltip-styles';
 
 export let hoverDelayMS = 0;
 
-const { id, setHoverDelayMS } = provideTooltipContext();
+const { id, isVisible, setHoverDelayMS, style } = provideTooltipContext();
 
 $: setHoverDelayMS(hoverDelayMS);
+$: style.register({ auto: $isVisible });
 </script>
 
 <slot tooltipID={id} />

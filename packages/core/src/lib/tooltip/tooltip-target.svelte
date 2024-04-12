@@ -13,12 +13,12 @@
 <script lang="ts">
 import { useTooltip } from './tooltip-styles';
 
-const { setTarget, setHovered } = useTooltip();
+const { style, setHovered } = useTooltip();
 const hover = () => setHovered(true);
 const unhover = () => setHovered(false);
 let target: HTMLElement | undefined;
 
-$: setTarget(target);
+$: style.register({ referenceElement: target });
 </script>
 
 <span
