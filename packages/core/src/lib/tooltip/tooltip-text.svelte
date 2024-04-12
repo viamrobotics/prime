@@ -27,7 +27,12 @@ let floatingElement: HTMLElement | undefined;
 let arrowElement: HTMLElement | undefined;
 
 $: setVisibility(state);
-$: style.register({ floatingElement, arrowElement, placement: location });
+$: style.register({
+  floatingElement,
+  arrowElement,
+  placement: location,
+  auto: $isVisible,
+});
 </script>
 
 <div
