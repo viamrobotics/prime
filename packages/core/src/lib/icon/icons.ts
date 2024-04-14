@@ -21,6 +21,7 @@ export const paths: Record<string, IconPath> = {
   'alert-outline': MDI.mdiAlertOutline,
   alert: MDI.mdiAlert,
   apple: MDI.mdiApple,
+  'application-outline': MDI.mdiApplicationOutline,
   'apple-keyboard-command': MDI.mdiAppleKeyboardCommand,
   'arrow-collapse-left': MDI.mdiArrowCollapseLeft,
   'arrow-collapse-right': MDI.mdiArrowCollapseRight,
