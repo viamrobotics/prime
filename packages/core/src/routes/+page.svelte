@@ -806,6 +806,10 @@ const onHoverDelayMsInput = (event: Event) => {
       name="earth"
       size="4xl"
     />
+    <Icon
+      name="application-outline"
+      size="4xl"
+    />
   </div>
 
   <!-- Input -->
