@@ -43,9 +43,6 @@ export let disabled = false;
 /** Whether or not the fieldset should render as required */
 export let required = false;
 
-/** The `flex` direction to apply to the option radio inputs. */
-export let direction: 'col' | 'row' = 'col';
-
 /** Additional CSS classes to pass to the fieldset. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
@@ -76,12 +73,7 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
     </legend>
   {/if}
 
-  <div
-    class={cx('flex gap-2', {
-      'flex-col': direction === 'col',
-      'flex-row': direction === 'row',
-    })}
-  >
+  <div class="flex flex-col gap-2">
     {#each optionsInternal as { label, value, description, icon }}
       {@const isSelected = value === selected}
       {@const radioIcon = isSelected ? 'radiobox-marked' : 'radiobox-blank'}
@@ -89,7 +81,7 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
         position="left"
         {disabled}
         cx={[
-          'whitespace-nowrap text-xs',
+          'cursor-pointer text-xs',
           {
             'text-subtle-1': !isSelected && !disabled,
             'cursor-not-allowed text-disabled-dark': disabled,
@@ -110,14 +102,16 @@ $: handleDisabledKeydown = preventKeyboardHandler(disabled);
           on:click|capture={handleDisabled}
           on:keydown|capture={handleDisabledKeydown}
         />
-        <Icon
-          name={radioIcon}
-          cx={cx({
-            'text-disabled-dark': disabled,
-            'text-gray-9': !disabled && isSelected,
-            'text-gray-6': !disabled && !isSelected,
-          })}
-        />
+        <div>
+          <Icon
+            name={radioIcon}
+            cx={cx({
+              'text-disabled-dark': disabled,
+              'text-gray-9': !disabled && isSelected,
+              'text-gray-6': !disabled && !isSelected,
+            })}
+          />
+        </div>
         <span class="pl-1.5">
           <span class="flex gap-1.5">
             {#if icon}

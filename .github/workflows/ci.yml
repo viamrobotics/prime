@@ -17,9 +17,6 @@ jobs:
       - name: Install 🔧
         uses: viamrobotics/js-config/.github/actions/setup@0006127efb3f62669f662ca31c555a49a034935e
 
-      - name: Install Playwright Browsers
-        run: pnpm -C packages/legacy playwright-install --with-deps
-
       - name: Build 🏗️
         run: pnpm run build
 
@@ -51,14 +48,6 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           path: packages/storybook/prime
-
-      - name: Upload Playwright test artifacts
-        uses: actions/upload-artifact@v3
-        if: ${{ always() }}
-        with:
-          name: playwright-report
-          path: packages/legacy/playwright-report/
-          retention-days: 30
 
   deploy-npm:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}

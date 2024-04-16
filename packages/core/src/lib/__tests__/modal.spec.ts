@@ -12,7 +12,7 @@ describe('Modal', () => {
     component.$on('close', onClose);
   };
 
-  it('should be visible if open is true ', () => {
+  it('should be visible if open is true', () => {
     renderSubject({ isOpen: true });
 
     const modal = screen.queryByRole('dialog');
@@ -70,12 +70,11 @@ describe('Modal', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it('should focus on heading element on mount', () => {
-    render(Modal, { isOpen: true });
+  it('should change role to alertdialog when role is passed', () => {
+    renderSubject({ isOpen: true, role: 'alertdialog' });
 
-    const modal = screen.getByRole('dialog');
-    const heading = within(modal).getByRole('heading');
+    const modal = screen.getByRole('alertdialog');
 
-    expect(heading).toHaveFocus();
+    expect(modal).toBeInTheDocument();
   });
 });

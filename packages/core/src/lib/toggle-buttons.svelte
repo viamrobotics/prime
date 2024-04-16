@@ -77,6 +77,7 @@ const handleClick = (value: string) => {
   <div class="flex w-full flex-nowrap">
     {#each options as option}
       <button
+        type="button"
         aria-pressed={isSelected(option)}
         aria-disabled={disabled ? true : undefined}
         class={cx(

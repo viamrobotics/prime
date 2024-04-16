@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 A clickable element that allows the user to navigate to another page or area.
 
 ```svelte
@@ -39,11 +39,10 @@ const handleClick = (option: string) => {
 };
 </script>
 
-<div
-  class={cx('border-b-border-2 flex w-full border-b bg-medium', extraClasses)}
->
+<div class={cx('flex w-full border-b bg-medium', extraClasses)}>
   {#each tabs as tab, index (tab)}
     <button
+      type="button"
       class={cx('px-4 py-1 text-sm first:ml-6', {
         'border-x-border-2 border-t-border-2 -mb-px border border-b-white bg-white font-semibold text-default':
           tab === selected,

@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 For displaying a list of items.
 
 ```svelte
@@ -27,11 +27,8 @@ export let disabled = false;
 /** Whether or not the pill is removable. If removable, and not readonly, there is a button to remove the pill. */
 export let removable = true;
 
-/** Variants */
-export let variant: 'default' | 'outlined' = 'default';
-
 /** The icon shown in the button. */
-export let icon: IconName | '' = '';
+export let icon: IconName = '';
 
 /** Additional CSS classes to pass to the pill. */
 let extraClasses: cx.Argument = '';
@@ -57,16 +54,15 @@ const handleRemove = () => {
     {
       'cursor-not-allowed bg-disabled-light text-disabled-dark':
         disabled || readonly,
-      'gap-1 bg-medium px-2 py-0.5': variant === 'default',
-      'h-6 gap-1.5 border border-medium bg-light pl-1.5 pr-2':
-        variant === 'outlined',
+      'gap-1 bg-medium px-2 py-0.5': !icon,
+      'h-6 gap-1.5 border border-medium bg-light pl-1.5 pr-2': icon,
     },
     extraClasses
   )}
   aria-disabled={disabled ? true : undefined}
   aria-readonly={readonly ? true : undefined}
 >
-  {#if icon && variant === 'outlined'}
+  {#if icon}
     <Icon
       name={icon}
       cx="text-gray-6"
@@ -78,6 +74,7 @@ const handleRemove = () => {
   </span>
   {#if !readonly && removable}
     <button
+      type="button"
       aria-label="Remove {value}"
       on:click={handleRemove}
       class={cx('text-gray-6', {

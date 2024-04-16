@@ -3,6 +3,8 @@
 
 Select an option from a list, with search
 
+Guided by https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+
 ```svelte
 <SearchableSelect
   options={["Option 1", "Option 2", "Option 3"]}
@@ -18,11 +20,18 @@ import { InputStates, type InputState } from '$lib/input';
 import { createHandleKey } from '$lib/keyboard';
 import { uniqueId } from '$lib/unique-id';
 
-import { SortOptions, getSearchResults, type SortOption } from './search';
+import {
+  SortOptions,
+  getSearchResults,
+  optionDisplayValue,
+  optionsToDetailedOptions,
+  type SortOption,
+  type DetailedOption,
+} from './search';
 import SelectInput from './select-input.svelte';
 
 /** The options the user should be allowed to search and select from. */
-export let options: string[];
+export let options: (string | DetailedOption)[];
 
 /** The value of the search input or the currently selected option, if any. */
 export let value = '';
@@ -88,26 +97,69 @@ const FOCUS_ITEM = 'focus-item';
 
 type MenuState = typeof CLOSED | typeof FOCUS_SEARCH | typeof FOCUS_ITEM;
 
+$: detailedOptions = optionsToDetailedOptions(options);
+$: detailedOptionsMap = Object.fromEntries(
+  detailedOptions.map((opt) => [opt.value, opt])
+);
+
 const optionElements: Record<string, HTMLElement> = {};
+
 let inputElement: HTMLInputElement | undefined;
 let autoSelectIndex = -1;
 let menuState: MenuState | undefined;
-let previousValue: string | undefined = undefined;
 
-$: searchResults = getSearchResults(options, value, sort);
-$: valueInSearch = searchResults.some(({ option }) => option === value);
+// searchValue is the value stored inside the search input field
+// it is primarily updated reactively through a call to resetSearchValue when
+// value changes (in handleSelect)
+//
+// It is also manually updated in edge cases like Escape or Blur
+let searchValue = '';
+const resetSearchValue = (
+  valueParam: string,
+  detailedOptionsMapParam: Record<string, DetailedOption>
+) => {
+  searchValue = optionDisplayValue(
+    detailedOptionsMapParam[valueParam] ?? { value: valueParam }
+  );
+};
+$: resetSearchValue(value, detailedOptionsMap);
+
+// selectedSeachOption represents the value that was last selected (or the initial value)
+$: selectedSearchOption = detailedOptionsMap[value];
+
+$: searchResults = getSearchResults(detailedOptions, searchValue, sort);
+$: valueInSearch = searchResults.some(
+  ({ option }) => optionDisplayValue(option) === searchValue
+);
 $: getOtherIsAllowed =
   typeof exclusive === 'function' ? exclusive : () => !exclusive;
+
 $: otherOption =
-  value !== '' && !valueInSearch && getOtherIsAllowed(value)
-    ? { option: value, priority: -1, highlight: undefined }
+  searchValue !== '' && !valueInSearch && getOtherIsAllowed(searchValue)
+    ? {
+        option: { value: searchValue, icon: 'plus' } as DetailedOption,
+        priority: -1,
+        highlight: undefined,
+      }
     : undefined;
 
 $: allOptions = otherOption ? [...searchResults, otherOption] : searchResults;
 $: menuState = !menuState || allOptions.length === 0 ? CLOSED : menuState;
 
 $: if (menuState === undefined || menuState === FOCUS_SEARCH) {
-  autoSelectIndex = allOptions.findIndex(({ priority }) => priority !== -1);
+  let nextAutoSelectIndex = allOptions.findIndex(
+    ({ priority }) => priority !== -1
+  );
+  // if we don't find any options with a non negative priority,
+  // we set the nextAutoSelectIndex to the option that matches
+  // the current seach value. This is used so that when we blur
+  // with a valid seachValue, we autoSelect the correct option
+  if (nextAutoSelectIndex === -1) {
+    nextAutoSelectIndex = allOptions.findIndex(
+      ({ option }) => optionDisplayValue(option) === searchValue
+    );
+  }
+  autoSelectIndex = nextAutoSelectIndex;
 } else if (menuState === CLOSED) {
   autoSelectIndex = -1;
 }
@@ -117,36 +169,41 @@ $: isExpanded = menuState === FOCUS_SEARCH || menuState === FOCUS_ITEM;
 $: activeOption = isExpanded ? autoSelectOption : undefined;
 $: activeID = activeOption ? SELECTED_ID : undefined;
 $: activeElement = activeOption
-  ? optionElements[activeOption.option]
+  ? optionElements[activeOption.option.value]
   : undefined;
 
 $: if (typeof activeElement?.scrollIntoView === 'function') {
   activeElement.scrollIntoView({ block: 'nearest' });
 }
 
-const handleSingleSelect = (selectedValue: string | undefined) => {
-  const fallback = exclusive && !valueInSearch ? '' : value;
-  const nextValue = selectedValue ?? fallback;
+const handleSingleSelect = (selectedOption: DetailedOption | undefined) => {
+  // if we are exclusive && it is not in the search, we should fallback to an empty value option
+  // otherwise, we should populate the value with whatever exists in the search field
+  const fallback =
+    exclusive && !valueInSearch ? { value: '' } : { value: searchValue };
+  const nextOption = selectedOption ?? fallback;
 
-  if (nextValue !== previousValue) {
-    setMenuState(CLOSED);
-
-    value = nextValue;
-    previousValue = nextValue;
-    onChange?.(nextValue);
+  // we always set the menu state to closed even if the value is equal to the previous value
+  // but we don't call onChange
+  setMenuState(CLOSED);
+  if (nextOption.value !== value) {
+    value = nextOption.value;
+    onChange?.(nextOption.value);
   }
 };
 
-const handleMultiSelect = (selectedValue: string | undefined) => {
-  if (!selectedValue) {
+// inputValue is the value of option that was selected (not the value in the search field)
+const handleMultiSelect = (selectedOption: DetailedOption | undefined) => {
+  if (!selectedOption) {
     return;
   }
 
-  values = values.includes(selectedValue)
-    ? values.filter((val) => val !== selectedValue)
-    : [...values, selectedValue];
+  values = values.includes(selectedOption.value)
+    ? values.filter((val) => val !== selectedOption.value)
+    : [...values, selectedOption.value];
 
   value = '';
+  searchValue = '';
   onMultiChange?.(values);
 };
 
@@ -156,7 +213,10 @@ const setMenuState = (nextMenuState: MenuState) => {
   menuState = disabled ? CLOSED : nextMenuState;
 };
 
-const handleInput = () => {
+const handleInput = (event: Event) => {
+  // update the searchValue on inputs to the search field
+  const element = event.target as HTMLInputElement;
+  searchValue = element.value;
   setMenuState(FOCUS_SEARCH);
 };
 
@@ -166,8 +226,15 @@ const handleFocus = (event: FocusEvent) => {
 };
 
 const handleBlur = (event: FocusEvent) => {
-  handleSelect(autoSelectOption?.option);
-  setMenuState(CLOSED);
+  // blur can still be triggered if the input is diabled or the menu is closed,
+  // but we shouldn't select anything if so
+  if (!disabled && menuState !== CLOSED) {
+    handleSelect(autoSelectOption?.option);
+    setMenuState(CLOSED);
+  }
+  // we reset the search value here to the last selected option to ensure there is no mismatch
+  // between what was actually selected vs what is in the search input
+  resetSearchValue(value, detailedOptionsMap);
   onBlur?.(event);
 };
 
@@ -178,7 +245,9 @@ const handleButtonClick = () => {
 
 const handleKeydown = createHandleKey({
   Enter: () => {
-    handleSelect(autoSelectOption?.option);
+    if (menuState !== CLOSED) {
+      handleSelect(autoSelectOption?.option);
+    }
   },
   ' ': {
     handler: (event) => {
@@ -190,10 +259,13 @@ const handleKeydown = createHandleKey({
     preventDefault: false,
   },
   Escape: () => {
+    // WAI: Dismisses the popup if it is visible. Optionally, if the popup is hidden before Escape is pressed, clears the combobox.
     if (menuState === CLOSED) {
-      value = '';
+      searchValue = '';
+      handleSelect(undefined);
+    } else {
+      setMenuState(CLOSED);
     }
-    setMenuState(CLOSED);
   },
   ArrowDown: (event) => {
     if (event.altKey) {
@@ -223,7 +295,7 @@ const handleKeydown = createHandleKey({
   },
   End: () => {
     setMenuState(FOCUS_SEARCH);
-    inputElement?.setSelectionRange(value.length, value.length);
+    inputElement?.setSelectionRange(searchValue.length, searchValue.length);
   },
 });
 </script>
@@ -236,6 +308,7 @@ const handleKeydown = createHandleKey({
   isOpen={isExpanded}
   isFocused={menuState === FOCUS_ITEM ? false : undefined}
   cx={[{ 'caret-transparent': menuState === FOCUS_ITEM }, inputCx]}
+  icon={selectedSearchOption?.icon}
   aria-autocomplete="list"
   aria-multiselectable={multiple}
   aria-activedescendant={activeID}
@@ -246,7 +319,7 @@ const handleKeydown = createHandleKey({
   on:input={handleInput}
   on:click={handleButtonClick}
   bind:inputElement
-  bind:value
+  value={searchValue}
 />
 <Floating
   offset={4}
@@ -263,8 +336,9 @@ const handleKeydown = createHandleKey({
     {#each allOptions as { option, highlight } (option)}
       {@const isActive = activeOption?.option === option}
       {@const isSelected = multiple ? false : isActive}
-      {@const isChecked = multiple ? values.includes(option) : undefined}
+      {@const isChecked = multiple ? values.includes(option.value) : undefined}
       {@const isOther = otherOption?.option === option}
+      {@const descriptionID = uniqueId('combobox-list-item-description')}
 
       {#if isOther && allOptions.length > 1}
         <li
@@ -281,41 +355,58 @@ const handleKeydown = createHandleKey({
         id={isActive ? activeID : undefined}
         aria-selected={isSelected}
         aria-checked={isChecked}
+        aria-describedby={descriptionID}
         aria-label={isOther
-          ? [otherOptionPrefix, option].filter(Boolean).join(' ')
-          : option}
+          ? [otherOptionPrefix, optionDisplayValue(option)]
+              .filter(Boolean)
+              .join(' ')
+          : optionDisplayValue(option)}
         class={cx(
-          'flex h-7.5 w-full cursor-pointer items-center justify-start text-xs',
+          'flex cursor-pointer items-center justify-start px-2.5 py-1.5',
           multiple ? 'pl-2 pr-2.5' : 'px-2.5',
           isActive ? 'bg-light' : 'hover:bg-light'
         )}
         on:pointerdown|preventDefault
         on:mousedown|preventDefault
         on:click={() => handleSelect(option)}
-        bind:this={optionElements[option]}
+        bind:this={optionElements[option.value]}
       >
-        {#if multiple}
-          <Icon
-            cx={['mr-1 shrink-0', !isChecked && 'text-gray-6']}
-            name={isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'}
-          />
-        {/if}
-        {#if isOther}
-          <Icon
-            cx="mr-1 shrink-0 text-gray-6"
-            name="plus"
-          />
-        {/if}
-        <p class="truncate whitespace-pre">
-          {#if highlight !== undefined}
-            {@const [prefix, match, suffix] = highlight}
-            {prefix}<span class="bg-yellow-100">{match}</span>{suffix}
-          {:else if isOther && otherOptionPrefix}
-            {otherOptionPrefix} {option}
-          {:else}
-            {option}
+        <div class="flex flex-row gap-2">
+          <!-- In all real cases, only one of these icons should should be active at once-->
+          <!-- (multi with icon is not a designed use case yet) -->
+          {#if multiple}
+            <Icon
+              cx={['my-0.5 shrink-0', !isChecked && 'text-gray-6']}
+              name={isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'}
+            />
           {/if}
-        </p>
+          {#if option.icon}
+            <Icon
+              cx={['my-0.5 shrink-0 text-gray-6']}
+              name={option.icon}
+            />
+          {/if}
+          <div class="flex flex-col">
+            <p class="text-wrap text-sm">
+              {#if highlight !== undefined}
+                {@const [prefix, match, suffix] = highlight}
+                {prefix}<span class="bg-yellow-100">{match}</span>{suffix}
+              {:else if isOther && otherOptionPrefix}
+                {otherOptionPrefix} {optionDisplayValue(option)}
+              {:else}
+                {optionDisplayValue(option)}
+              {/if}
+            </p>
+            {#if option.description}
+              <p
+                id={descriptionID}
+                class="text-wrap text-xs text-subtle-2"
+              >
+                {option.description}
+              </p>
+            {/if}
+          </div>
+        </div>
       </li>
     {/each}
     <slot />

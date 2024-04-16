@@ -1,10 +1,19 @@
 import * as MDI from '@mdi/js';
 
+type Path = string;
+
+export interface CustomIcon {
+  path: string;
+  opacity?: number | undefined;
+}
+
+export type IconPath = Path | CustomIcon[];
+
 /**
  * Keys should match MDI name
  * e.g. 'account-multiple' for MDI.mdiAccountMultiple
  */
-export const paths = {
+export const paths: Record<string, IconPath> = {
   'account-group-outline': MDI.mdiAccountGroupOutline,
   'account-multiple': MDI.mdiAccountMultiple,
   'alert-circle-outline': MDI.mdiAlertCircleOutline,
@@ -12,6 +21,7 @@ export const paths = {
   'alert-outline': MDI.mdiAlertOutline,
   alert: MDI.mdiAlert,
   apple: MDI.mdiApple,
+  'application-outline': MDI.mdiApplicationOutline,
   'apple-keyboard-command': MDI.mdiAppleKeyboardCommand,
   'arrow-collapse-left': MDI.mdiArrowCollapseLeft,
   'arrow-collapse-right': MDI.mdiArrowCollapseRight,
@@ -22,6 +32,7 @@ export const paths = {
   'arrow-right': MDI.mdiArrowRight,
   'arrow-top-right-bottom-left': MDI.mdiArrowTopRightBottomLeft,
   'arrow-up': MDI.mdiArrowUp,
+  article: MDI.mdiTextBoxOutline,
   'axis-arrow': MDI.mdiAxisArrow,
   'broadcast-off': MDI.mdiBroadcastOff,
   broadcast: MDI.mdiBroadcast,
@@ -117,6 +128,15 @@ export const paths = {
     'M17 22v-2h3v-3h2v3.5c0 .4-.2.7-.5 1-.3.3-.6.5-1 .5H17ZM7 22H3.5c-.4 0-.7-.2-1-.5-.3-.3-.5-.6-.5-1V17h2v3h3v2ZM17 2h3.5c.4 0 .7.2 1 .5.3.3.5.6.5 1V7h-2V4h-3V2ZM7 2v2H4v3H2V3.5c0-.4.2-.7.5-1 .3-.3.6-.5 1-.5H7Zm6 15.3 4-2.4v-4.5l-4 2.3v4.6Zm-1-6.4 4-2.3-4-2.3-4 2.3 4 2.3Zm-5 4 4 2.3v-4.5l-4-2.3v4.5Zm11.2-7.3c.5.3.8.7.8 1.3v6.3c0 .6-.3 1-.8 1.4l-5.4 3.1c-.6.4-1 .4-1.6 0l-5.4-3.1c-.5-.4-.8-.8-.8-1.4V9c0-.6.3-1 .8-1.3l5.5-3.2a1.6 1.6 0 0 1 1.4 0l5.5 3.2Z',
   'viam-local-module':
     'M3 3v18h18V3H3Zm5.6 9.9H5V5h8v3.6H8.6V13Zm-3.6 6h14V5h-4v5.6h-4.4V15H5v4Z',
+  'viam-mixed-part-status': [
+    {
+      path: 'M12 11c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm6 2c0-3.31-2.69-6-6-6s-6 2.69-6 6c0 2.22 1.21 4.15 3 5.19l1-1.74c-1.19-.7-2-1.97-2-3.45 0-2.21 1.79-4 4-4s4 1.79 4 4c0 1.48-.81 2.75-2 3.45l1 1.74c1.79-1.04 3-2.97 3-5.19Z',
+    },
+    {
+      path: 'M12 3C6.48 3 2 7.48 2 13c0 3.7 2.01 6.92 4.99 8.65l1-1.73C5.61 18.53 4 15.96 4 13c0-4.42 3.58-8 8-8s8 3.58 8 8c0 2.96-1.61 5.53-4 6.92l1 1.73c2.99-1.73 5-4.95 5-8.65 0-5.52-4.48-10-10-10Z',
+      opacity: 0.5,
+    },
+  ],
   'viam-ml-model':
     'M22 4.3a2.3 2.3 0 0 1-3 2.2L16.2 10a2.6 2.6 0 0 1-.2 3l3.1 4.5a2.3 2.3 0 1 1-1.6 3h-11a2.3 2.3 0 1 1-1-2.8l6.1-5.1a2.6 2.6 0 0 1 0-2l-6-4.4a2 2 0 0 1-1.3.4 2.3 2.3 0 1 1 2.2-3.1h11a2.3 2.3 0 0 1 4.6.8ZM14 14c-.4 0-.8 0-1.2-.2l-6.2 5h11l.2-.4-3.2-4.4H14Zm0-5.2c-.6 0-1 .2-1.5.4L7 5.2h10.7l.1.3L15 9l-1-.2Z',
   'viam-process':
@@ -127,6 +147,7 @@ export const paths = {
   'viam-service':
     'M10.6 9.6L9 15L7.4 9.6L2 8L7.4 6.4L9 1L10.6 6.4L16 8L10.6 9.6ZM17 14.2L21 12L18.8 16L21 20L17 17.8L13 20L15.2 16L13 12L17 14.2ZM10 16L8.3 19L10 22L7 20.3L4 22L5.7 19L4 16L7 17.7L10 16Z',
   'video-outline': MDI.mdiVideoOutline,
+  webhook: MDI.mdiWebhook,
   windows: MDI.mdiMicrosoftWindows,
 } as const;
 

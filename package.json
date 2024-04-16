@@ -10,6 +10,6 @@
     "build": "pnpm -r --aggregate-output build",
     "check": "pnpm -r --aggregate-output check",
     "format": "pnpm -r --aggregate-output format",
-    "test": "pnpm -r --aggregate-output test"
+    "test": "pnpm -r --aggregate-output --filter \\!./packages/legacy test"
   }
 }

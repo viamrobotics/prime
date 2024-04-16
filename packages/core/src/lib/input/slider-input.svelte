@@ -79,7 +79,7 @@ $: handlePointerMove = (event: PointerEvent) => {
     isNumber ? stepDecimalDigits : 0
   );
 
-  const inputValue = input!.value;
+  const inputValue = input?.value;
   const delta = parseNumericInputValue(deltaString, type);
   const next = parseNumericInputValue(
     (startValue + delta * step).toFixed(getDecimals(inputValue)),
@@ -126,7 +126,7 @@ const handlePointerDown = async (event: PointerEvent) => {
   startValue = value;
   isDragging = true;
 
-  input!.focus();
+  input?.focus();
 
   await tick();
 
@@ -169,6 +169,7 @@ const handleChange = () => {
     on:change={handleChange}
   />
   <button
+    type="button"
     aria-hidden="true"
     disabled={isButtonDisabled}
     tabindex="-1"
