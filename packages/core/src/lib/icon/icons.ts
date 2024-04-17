@@ -63,6 +63,7 @@ export const paths: Record<string, IconPath> = {
   'dots-horizontal': MDI.mdiDotsHorizontal,
   download: MDI.mdiDownload,
   earth: MDI.mdiEarth,
+  'file-chart-outline': MDI.mdiFileChartOutline,
   'file-download-outline': MDI.mdiFileDownloadOutline,
   'filter-outline': MDI.mdiFilterOutline,
   github: MDI.mdiGithub,
