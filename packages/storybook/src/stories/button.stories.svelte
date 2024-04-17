@@ -65,3 +65,7 @@ import { Button } from '@viamrobotics/prime-core';
     Delete component
   </Button>
 </Story>
+
+<Story name="Progress">
+  <Button progress="indeterminate">Loading...</Button>
+</Story>
