@@ -90,7 +90,7 @@ $: handleDisabled = preventHandler(disabled);
         'text-gray-4': disabled,
       })}
     >
-      <Progress />
+      <Progress variant={variant === 'danger' ? 'light' : 'dark'} />
     </span>
   {:else if icon}
     <span
