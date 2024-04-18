@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/prime-core",
-  "version": "0.0.110",
+  "version": "0.0.111",
   "publishConfig": {
     "access": "public"
   },
