@@ -1,3 +1,18 @@
+<!-- 
+  @component
+  
+  Adds a set of navigation controls.
+
+  @example
+
+  ```html
+    <MapLibre>
+      <MapLibreControls />
+    </MapLibre>
+  ```
+
+  @see https://maplibre.org/maplibre-gl-js/docs/API/classes/NavigationControl/
+-->
 <script lang="ts">
 import { NavigationControl, type ControlPosition } from 'maplibre-gl';
 import { onMount } from 'svelte';
