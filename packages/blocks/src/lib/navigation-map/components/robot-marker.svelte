@@ -13,6 +13,8 @@ export let pose: GeoPose | undefined = undefined;
 {#if pose}
   <MapLibreMarker
     {element}
-    {pose}
+    lng={pose.lng}
+    lat={pose.lat}
+    rotation={pose.rotation}
   />
 {/if}

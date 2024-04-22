@@ -15,10 +15,11 @@
 import { onDestroy } from 'svelte';
 import { Marker, LngLat } from 'maplibre-gl';
 import { useMapLibre } from './hooks';
-import type { GeoPose } from '$lib';
 
 /** The Geo position of the marker. */
-export let pose: GeoPose | undefined;
+export let lng = 0;
+export let lat = 0;
+export let rotation = 0;
 
 /** The relative size of the marker. */
 export let scale = 1;
@@ -33,14 +34,15 @@ const { map } = useMapLibre();
 
 let marker: Marker | undefined;
 
-$: if (pose) {
+$: {
   marker?.remove();
   marker = new Marker(element ? { element, scale, color } : { scale, color });
+  marker.setLngLat(new LngLat(0, 0));
   marker.getElement().style.zIndex = '1';
-  marker.setLngLat(new LngLat(pose.lng, pose.lat));
-  marker.setRotation(pose.rotation);
   marker.addTo(map);
 }
+$: marker?.setLngLat(new LngLat(lng, lat));
+$: marker?.setRotation(rotation);
 
 onDestroy(() => marker?.remove());
 </script>

@@ -6,6 +6,7 @@ import { waypoints } from '../stores';
 {#each $waypoints as waypoint (waypoint.id)}
   <MapLibreMarker
     scale={0.7}
-    pose={{ lng: waypoint.lng, lat: waypoint.lat, rotation: 0 }}
+    lng={waypoint.lng}
+    lat={waypoint.lat}
   />
 {/each}

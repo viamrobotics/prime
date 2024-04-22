@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Button, Icon, ToggleButtons, Tooltip } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
-import { MapLibre, type GeoPose } from '$lib';
+import { MapLibre, type GeoPose, MapLibreControls } from '$lib';
 import { environment, view } from '../stores';
 import SceneLayer from './scene-layer.svelte';
 import RobotMarker from './robot-marker.svelte';
@@ -74,8 +74,9 @@ onDestroy(() => {
     maxPitch={$view === '3D' ? maxPitch : minPitch}
     minZoom={6}
     bind:map
-    on:create
   >
+    <MapLibreControls options={{ showZoom: false }} />
+
     <Nav
       on:add-waypoint
       on:delete-waypoint
