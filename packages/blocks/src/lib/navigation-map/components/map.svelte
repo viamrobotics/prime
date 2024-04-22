@@ -75,7 +75,7 @@ onDestroy(() => {
     minZoom={6}
     bind:map
   >
-    <MapLibreControls options={{ showZoom: false }} />
+    <MapLibreControls showZoom={false} />
 
     <Nav
       on:add-waypoint
