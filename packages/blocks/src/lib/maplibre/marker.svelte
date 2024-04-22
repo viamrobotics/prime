@@ -16,9 +16,13 @@ import { onDestroy } from 'svelte';
 import { Marker, LngLat } from 'maplibre-gl';
 import { useMapLibre } from './hooks';
 
-/** The Geo position of the marker. */
+/** The longitude of the marker. */
 export let lng = 0;
+
+/** The latitude of the marker. */
 export let lat = 0;
+
+/** The rotation angle of the marker (clockwise, in degrees) */
 export let rotation = 0;
 
 /** The relative size of the marker. */
