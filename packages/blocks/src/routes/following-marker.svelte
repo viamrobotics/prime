@@ -1,18 +1,23 @@
 <script lang="ts">
-import { MapLibre, MapLibreMarker } from '$lib';
+import { MapLibre, MapLibreDirectionalMarker } from '$lib';
 import type { Map } from 'maplibre-gl';
 
 let lng = -73.98;
 let lat = 40.77;
 let rotation = 0;
 
+const RAD2DEG = 180 / Math.PI;
+
 const frame = (delta: number) => {
   requestAnimationFrame(frame);
 
-  lat += Math.sin(delta / 10e6) / 10e3;
-  lng += Math.cos(delta / 10e6) / 10e3;
-  map?.flyTo({ center: { lng, lat } });
-  rotation = 0;
+  const dy = Math.sin(delta / 10e2) / 10e2;
+  const dx = Math.cos(delta / 10e2) / 10e2;
+
+  rotation = (Math.atan2(dx, dy) - Math.atan2(lng, lat)) * RAD2DEG - 90;
+  lat += dy;
+  lng += dx;
+  map?.jumpTo({ center: { lng, lat } });
 };
 
 let map: Map | undefined;
@@ -29,7 +34,7 @@ requestAnimationFrame(frame);
       center={{ lng, lat }}
       onCreate={() => console.log('create')}
     >
-      <MapLibreMarker
+      <MapLibreDirectionalMarker
         {lng}
         {lat}
         {rotation}

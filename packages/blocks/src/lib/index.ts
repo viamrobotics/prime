@@ -1,6 +1,7 @@
 // MapLibre components
 export { default as MapLibre } from './maplibre/index.svelte';
 export { default as MapLibreMarker } from './maplibre/marker.svelte';
+export { default as MapLibreDirectionalMarker } from './maplibre/directional-marker.svelte';
 export { default as MapLibreControls } from './maplibre/controls.svelte';
 export { useMapLibre, useMapLibreEvent } from './maplibre/hooks';
 export type { LngLat, GeoPose, Waypoint } from './maplibre/types';
