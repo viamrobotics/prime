@@ -15,9 +15,9 @@
 <script lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { onMount, createEventDispatcher, onDestroy } from 'svelte';
+import { onMount, tick } from 'svelte';
 import { provideMapContext } from './hooks';
-import { Map, NavigationControl } from 'maplibre-gl';
+import { Map, type MapOptions } from 'maplibre-gl';
 import { style } from './style';
 import type { LngLat } from '$lib';
 
@@ -44,51 +44,65 @@ export let maxZoom = 22;
  */
 export let center: LngLat = { lng: -73.984_421, lat: 40.771_811_6 };
 
-/** The MapLibre Map instance */
+/** A binding to the MapLibre Map instance */
 export let map: Map | undefined = undefined;
 
-interface Events {
-  /** Fired after the map has been created. */
-  create: Map;
-  /** Fired when the map camera moves. */
-  move: Map;
-  /** Fired when the map resizes. */
-  resize: Map;
-}
+export let options: Partial<MapOptions> | undefined = undefined;
 
-const dispatch = createEventDispatcher<Events>();
+/** Fired after the map has been created. */
+export let onCreate: undefined | ((map: Map) => void) = undefined;
+
+/** Fired when the map camera moves. */
+
+export let onMove: undefined | ((map: Map) => void) = undefined;
+/** Fired when the map resizes. */
+
+export let onResize: undefined | ((map: Map) => void) = undefined;
+
 const context = provideMapContext(center, zoom);
 
 let container: HTMLElement;
 let created = false;
 
 const setMapSize = () => {
-  const canvas = map!.getCanvas();
+  const canvas = map?.getCanvas();
   context.size.set({
-    width: canvas.clientWidth,
-    height: canvas.clientHeight,
+    width: canvas?.clientWidth ?? 0,
+    height: canvas?.clientHeight ?? 0,
   });
 };
 
 const handleCreate = () => {
+  if (map === undefined) {
+    return;
+  }
+
   created = true;
-  dispatch('create', map!);
+  onCreate?.(map);
 
   // Resize the map after any slots have been rendered.
-  requestAnimationFrame(() => map!.resize());
+  void tick().then(() => map?.resize());
 };
 
 const handleMove = () => {
-  context.center.set(map!.getCenter());
-  context.zoom.set(map!.getZoom());
-  dispatch('move', map!);
+  if (map === undefined) {
+    return;
+  }
+
+  context.center.set(map.getCenter());
+  context.zoom.set(map.getZoom());
+  onMove?.(map);
 };
 
 const handleResize = () => {
+  if (map === undefined) {
+    return;
+  }
+
   setMapSize();
-  context.center.set(map!.getCenter());
-  context.zoom.set(map!.getZoom());
-  dispatch('resize', map!);
+  context.center.set(map.getCenter());
+  context.zoom.set(map.getZoom());
+  onResize?.(map);
 };
 
 onMount(() => {
@@ -102,22 +116,20 @@ onMount(() => {
     maxPitch,
     minZoom,
     maxZoom,
+    ...options,
   });
 
   context.map.set(map);
 
-  const nav = new NavigationControl({ showZoom: false });
-  map.addControl(nav, 'top-right');
-
   map.on('move', handleMove);
   map.on('resize', handleResize);
   map.on('style.load', handleCreate);
-});
 
-onDestroy(() => {
-  map?.off('move', handleMove);
-  map?.off('resize', handleResize);
-  map?.off('style.load', handleCreate);
+  return () => {
+    map?.off('move', handleMove);
+    map?.off('resize', handleResize);
+    map?.off('style.load', handleCreate);
+  };
 });
 
 $: map?.setMinPitch(minPitch);
@@ -129,7 +141,7 @@ $: map?.setMaxPitch(maxPitch);
 {/if}
 
 <div
-  class="h-full"
+  class="h-full {$$restProps.class ?? ''}"
   {...$$restProps}
 >
   <div
