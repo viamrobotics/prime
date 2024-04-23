@@ -12,7 +12,7 @@ describe('Tooltip', () => {
     const tooltip = screen.getByRole('tooltip');
 
     expect(target).toBeInTheDocument();
-    expect(tooltip).toHaveClass('invisible');
+    expect(tooltip).toHaveClass('hidden');
   });
 
   it('passes the tooltip ID to the target slot', () => {
@@ -34,15 +34,15 @@ describe('Tooltip', () => {
     const tooltip = screen.getByRole('tooltip');
 
     // tooltip should initially be invisible before styles calculate
-    expect(tooltip).toHaveClass('invisible');
+    expect(tooltip).toHaveClass('hidden');
     // then it should become visible
     await waitFor(() => expect(tooltip).not.toHaveClass('invisible'));
 
     await user.hover(target);
-    expect(tooltip).not.toHaveClass('invisible');
+    expect(tooltip).not.toHaveClass('hidden');
 
     await user.unhover(target);
-    expect(tooltip).not.toHaveClass('invisible');
+    expect(tooltip).not.toHaveClass('hidden');
   });
 
   it('does not render the tooltip when state is invisible', async () => {
@@ -54,14 +54,14 @@ describe('Tooltip', () => {
     const tooltip = screen.getByRole('tooltip');
 
     // tooltip should initially be invisible before styles calculate
-    expect(tooltip).toHaveClass('invisible');
+    expect(tooltip).toHaveClass('hidden');
 
     // tooltip should stay invisible despite hover state
     await user.hover(target);
-    expect(tooltip).toHaveClass('invisible');
+    expect(tooltip).toHaveClass('hidden');
 
     await user.unhover(target);
-    expect(tooltip).toHaveClass('invisible');
+    expect(tooltip).toHaveClass('hidden');
   });
 
   it('shows/hides the tooltip on mouse enter/exit', async () => {
@@ -73,10 +73,10 @@ describe('Tooltip', () => {
     const tooltip = screen.getByRole('tooltip');
 
     await user.hover(target);
-    expect(tooltip).not.toHaveClass('invisible');
+    expect(tooltip).not.toHaveClass('hidden');
 
     await user.unhover(target);
-    expect(tooltip).toHaveClass('invisible');
+    expect(tooltip).toHaveClass('hidden');
   });
 
   it('shows the tooltip on mouse enter after a delay', async () => {
@@ -88,7 +88,7 @@ describe('Tooltip', () => {
     const tooltip = screen.getByRole('tooltip');
 
     await user.hover(target);
-    expect(tooltip).toHaveClass('invisible');
+    expect(tooltip).toHaveClass('hidden');
     await waitFor(() => expect(tooltip).not.toHaveClass('invisible'));
   });
 
@@ -100,10 +100,10 @@ describe('Tooltip', () => {
 
     await userEvent.tab();
     expect(target).toHaveFocus();
-    expect(tooltip).not.toHaveClass('invisible');
+    expect(tooltip).not.toHaveClass('hidden');
 
     await userEvent.tab();
     expect(target).not.toHaveFocus();
-    expect(tooltip).toHaveClass('invisible');
+    expect(tooltip).toHaveClass('hidden');
   });
 });
