@@ -39,7 +39,7 @@ $: style.register({
   bind:this={floatingElement}
   {id}
   role="tooltip"
-  class:invisible={!$isVisible || !$style}
+  class:hidden={!$isVisible || !$style}
   style:top={$style?.top}
   style:left={$style?.left}
   class={cx(
