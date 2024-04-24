@@ -41,6 +41,7 @@ import {
   Modal,
   CodeSnippet,
   RangeInput,
+  Progress,
 } from '$lib';
 import { uniqueId } from 'lodash-es';
 
@@ -518,6 +519,11 @@ const onHoverDelayMsInput = (event: Event) => {
   <!-- Breadcrumbs -->
   <h1 class="text-2xl">Breadcrumbs</h1>
   <Breadcrumbs crumbs={['Chocolate Chip', 'Oatmeal Raisin']} />
+
+  <!-- Progress -->
+  <Progress size="small" />
+  <Progress size="medium" />
+  <Progress size="large" />
 
   <!-- Button -->
   <h1 class="text-2xl">Button</h1>
