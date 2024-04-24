@@ -13,7 +13,7 @@ For user triggered actions.
 import cx from 'classnames';
 import { Icon, type IconName } from '$lib';
 import { preventHandler } from '$lib/prevent-handler';
-import Progress from './progress.svelte';
+import Progress from '../progress/progress.svelte';
 
 /** Whether or not the button accepts clicks. */
 export let disabled = false;
