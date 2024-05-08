@@ -27,7 +27,7 @@ export let minPitch = 0;
 /** The maximum camera pitch. */
 export let maxPitch = 60;
 
-/** The initial map zoom. */
+/** The map zoom. */
 export let zoom = 9;
 
 /** The maximum zoom level of the map (0-24). */
@@ -37,7 +37,7 @@ export let minZoom = 0;
 export let maxZoom = 22;
 
 /**
- * The initial map center.
+ * The map center.
  *
  * @default { lng: -73.984421, lat: 40.7718116 }
  * The Viam Robotics office.
@@ -134,6 +134,8 @@ onMount(() => {
 
 $: map?.setMinPitch(minPitch);
 $: map?.setMaxPitch(maxPitch);
+$: map?.setZoom(zoom);
+$: map?.setCenter(center);
 </script>
 
 {#if created}

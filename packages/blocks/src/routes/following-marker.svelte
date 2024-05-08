@@ -1,6 +1,5 @@
 <script lang="ts">
 import { MapLibre, MapLibreDirectionalMarker } from '$lib';
-import type { Map } from 'maplibre-gl';
 
 let lng = -73.98;
 let lat = 40.77;
@@ -17,10 +16,7 @@ const frame = (delta: number) => {
   rotation = (Math.atan2(dx, dy) - Math.atan2(lng, lat)) * RAD2DEG - 90;
   lat += dy;
   lng += dx;
-  map?.jumpTo({ center: { lng, lat } });
 };
-
-let map: Map | undefined;
 
 requestAnimationFrame(frame);
 </script>
@@ -29,10 +25,9 @@ requestAnimationFrame(frame);
   Following robot
   <div class="relative aspect-video w-full border border-gray-200 pt-0">
     <MapLibre
-      bind:map
       minZoom={10}
       center={{ lng, lat }}
-      onCreate={() => console.log('create')}
+      options={{ dragPan: false }}
     >
       <MapLibreDirectionalMarker
         {lng}
