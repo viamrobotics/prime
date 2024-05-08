@@ -14,18 +14,20 @@ export let variant: 'dark' | 'light' = 'dark';
     }
   )}
 >
-  {#each { length: 8 } as _, index}
-    <div
-      style="
-          transform: rotate({index * 45}deg);
-          animation-delay: {index * 100}ms;
-        "
-      class="pill absolute -mt-[0.5px] h-px w-[3px] rounded-[1px] {variant ===
-      'dark'
-        ? 'bg-gray-8'
-        : 'bg-white'}"
-    />
-  {/each}
+  <div class="translate-x-[-6.5px]">
+    {#each { length: 8 } as _, index}
+      <div
+        style="
+            transform: rotate({index * 45}deg);
+            animation-delay: {index * 100}ms;
+          "
+        class="pill absolute -mt-[0.5px] h-px w-[3px] rounded-[1px] {variant ===
+        'dark'
+          ? 'bg-gray-8'
+          : 'bg-white'}"
+      />
+    {/each}
+  </div>
 </div>
 
 <style>
