@@ -35,3 +35,11 @@ import { IconButton } from '@viamrobotics/prime-core';
     disabled
   />
 </Story>
+
+<Story name="Progress">
+  <IconButton
+    icon="refresh"
+    progress="indeterminate"
+    label="Restart object"
+  />
+</Story>

@@ -13,6 +13,7 @@ For user triggered actions.
 import cx from 'classnames';
 import { Icon, type IconName } from '$lib';
 import { preventHandler } from '$lib/prevent-handler';
+import Progress from '$lib/progress/progress.svelte';
 
 /** The icon shown in the button. */
 export let icon: IconName;
@@ -28,6 +29,9 @@ export let type: 'button' | 'submit' | 'reset' = 'button';
 
 /** The communicated action type to the user. */
 export let variant: 'primary' | 'secondary' | 'danger' = 'primary';
+
+/** Shows progress indicator. Determinite progress is a @TODO */
+export let progress: 'indeterminate' | number | undefined = undefined;
 
 /** Additional CSS classes to pass to the button. */
 let extraClasses: cx.Argument = '';
@@ -59,5 +63,9 @@ $: handleDisabled = preventHandler(disabled);
   on:click
   on:click|capture={handleDisabled}
 >
-  <Icon name={icon} />
+  {#if progress}
+    <Progress variant={variant === 'danger' ? 'light' : 'dark'} />
+  {:else}
+    <Icon name={icon} />
+  {/if}
 </button>

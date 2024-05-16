@@ -5,14 +5,11 @@ export let variant: 'dark' | 'light' = 'dark';
 </script>
 
 <div
-  class={cx(
-    'container -ml-1 flex h-4 w-4 items-center justify-center p-[1.5px]',
-    {
-      '': size === 'small',
-      'scale-[1.125]': size === 'medium',
-      'scale-[1.5]': size === 'large',
-    }
-  )}
+  class={cx('container flex h-4 w-4 items-center justify-center p-[1.5px]', {
+    '': size === 'small',
+    'scale-[1.125]': size === 'medium',
+    'scale-[1.5]': size === 'large',
+  })}
 >
   <div class="translate-x-[-6.5px]">
     {#each { length: 8 } as _, index}
