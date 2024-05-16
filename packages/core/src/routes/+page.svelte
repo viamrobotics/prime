@@ -566,6 +566,13 @@ const onHoverDelayMsInput = (event: Event) => {
     </Button>
 
     <Button progress="indeterminate">Loading</Button>
+    <IconButton
+      label="Pause"
+      variant="secondary"
+      progress="indeterminate"
+      icon="pause"
+      cx="border border-light"
+    />
     <Button
       progress="indeterminate"
       variant="danger">Loading</Button
