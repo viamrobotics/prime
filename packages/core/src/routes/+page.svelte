@@ -1616,7 +1616,9 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="flex flex-wrap items-start gap-4">
     <Tooltip let:tooltipID>
       <p aria-describedby={tooltipID}>This element has a top tooltip.</p>
-      <p slot="description">ThisIsTheTooltipTextWithoutSpacesOrHyphensForTestingPurposes</p>
+      <p slot="description">
+        ThisIsTheTooltipTextWithoutSpacesOrHyphensForTestingPurposes
+      </p>
     </Tooltip>
 
     <Tooltip
