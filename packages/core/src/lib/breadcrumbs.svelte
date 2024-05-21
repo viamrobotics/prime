@@ -27,7 +27,7 @@ export { extraClasses as cx };
   )}
 >
   {#each crumbs as crumb, index (crumb)}
-    <small class="text-xs">
+    <small class="truncate text-xs">
       {crumb}
     </small>
     {#if index !== crumbs.length - 1}
