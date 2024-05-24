@@ -1,0 +1,33 @@
+---
+layout: ../layouts/DocsLayout.astro
+title: Button
+---
+
+import { Button } from '@viamrobotics/prime-core';
+import Example from '../components/Example.svelte'
+
+The button is a button like thing.
+
+```svelte
+<script lang='ts'>
+  import { Button } from '@viamrobotics/prime-core'
+</script>
+
+<Button>Click me</Button>
+```
+
+<Example title='Primary' snippet='hi'>
+  <Button variant='primary'>
+    Click me
+  </Button>
+</Example>
+
+### secondary
+
+<div class='w-1/2'>
+  <Button variant='secondary'>
+    Click me
+  </Button>
+</div>
+
+<Button variant="ghost">Walk</Button>
