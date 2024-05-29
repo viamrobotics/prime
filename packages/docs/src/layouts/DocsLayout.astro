@@ -1,11 +1,17 @@
 ---
+import Header from '../components/Header/Header.astro';
+import LeftSidebar from '../components/LeftSidebar.astro';
+import RightSidebar from '../components/RightSidebar.astro';
+import PageContent from '../components/PageContent.astro';
+
 interface Props {
   frontmatter: {
     title: string;
   };
 }
 
-const { frontmatter } = Astro.props;
+const { content = {}, frontmatter } = Astro.props;
+const currentPage = new URL(Astro.request.url).pathname;
 ---
 
 <!doctype html>
@@ -46,12 +52,39 @@ const { frontmatter } = Astro.props;
 
     <title>{frontmatter.title}</title>
   </head>
-  <body>
+  <body class='bg-slate-100'>
+    <div class='sticky top-0 z-10 w-full'>
+      <Header currentPage={currentPage} />
+    </div>
+    <div class='grid grid-cols-12'>
+      <div class='col-span-3 sticky top-0 pt-12 h-screen flex'>
+        <div class='ml-auto'>
+          <LeftSidebar currentPage={currentPage} />
+        </div>
+      </div>
+      <main class='py-4 px-8 pb-32 col-span-6 overflow-auto'>
+        <div>
+          <PageContent content={content}>
+            <slot />
+          </PageContent>
+        </div>
+      </main>
+      <div class='col-span-3 sticky top-0 h-screen flex'>
+        <RightSidebar content={content} />
+      </div>
+    </div>
+  </body>
+
+  <!-- <body>
+		
     <main class='container max-w-[720px] m-auto py-8 px-12'>
       <h1 class='text-4xl'>{frontmatter.title}</h1>
+			<aside>
+
+			</aside>
       <slot />
     </main>
-  </body>
+  </body> -->
 </html>
 
 <style is:global>

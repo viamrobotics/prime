@@ -1,5 +1,7 @@
 # Astro Starter Kit: Basics
 
+- https://github.com/jordienr/astro-design-system
+
 ```sh
 npm create astro@latest -- --template basics
 ```
