@@ -31,6 +31,10 @@ export let required = false;
 /** Whether or not the label should render as disabled */
 export let disabled = false;
 
+/** The input the label describes */
+let htmlFor: string | undefined = undefined;
+export { htmlFor as for };
+
 /** Additional detail text to render after the default slot. */
 export let detail = '';
 
@@ -48,6 +52,7 @@ export { extraClasses as cx };
     },
     extraClasses
   )}
+  for={htmlFor}
 >
   <span
     class={cx('flex text-xs', {
