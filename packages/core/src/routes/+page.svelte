@@ -1064,6 +1064,20 @@ const onHoverDelayMsInput = (event: Event) => {
         name="name"
       />
     </Label>
+
+    <div>
+      <Label
+        for="targetID"
+        cx="whitespace-nowrap"
+      >
+        For attribute example
+      </Label>
+      <Input
+        cx="max-w-[70px]"
+        id="targetID"
+        name="name"
+      />
+    </div>
   </div>
 
   <!-- Notify -->
