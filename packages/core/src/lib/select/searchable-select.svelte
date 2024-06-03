@@ -42,6 +42,9 @@ export let values: string[] = [];
 /** The placeholder of the input. */
 export let placeholder = '';
 
+/** Optional id used in parent label `for` attribute */
+export let id: string | undefined = undefined;
+
 /**
  * Whether value must be constrained to `options` on change.
  * - `false` (Default) - any value may be selected
@@ -307,6 +310,7 @@ const handleKeydown = createHandleKey({
   menuId={LIST_ID}
   isOpen={isExpanded}
   isFocused={menuState === FOCUS_ITEM ? false : undefined}
+  {id}
   cx={[{ 'caret-transparent': menuState === FOCUS_ITEM }, inputCx]}
   icon={selectedSearchOption?.icon}
   aria-autocomplete="list"
