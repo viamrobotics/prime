@@ -1065,18 +1065,30 @@ const onHoverDelayMsInput = (event: Event) => {
       />
     </Label>
 
-    <div>
+    <div class="flex flex-col gap-1">
       <Label
         for="targetID"
         cx="whitespace-nowrap"
       >
-        For attribute example
+        For attribute example with SearchableSelect
       </Label>
-      <Input
-        cx="max-w-[70px]"
-        id="targetID"
-        name="name"
-      />
+      <div class="max-w-fit">
+        <SearchableSelect
+          id="targetID"
+          exclusive
+          options={[
+            { value: 'First Option', description: 'First option' },
+            'Option 2',
+            { value: 'C.) Option', description: 'second' },
+            'A really long forth option just in case you need it',
+          ]}
+          placeholder="Select an option"
+          onChange={(value) => {
+            // eslint-disable-next-line no-console
+            console.log('Selected', value);
+          }}
+        />
+      </div>
     </div>
   </div>
 
