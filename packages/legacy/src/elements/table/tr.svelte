@@ -1,7 +1,6 @@
 <svelte:options immutable />
 
 <script lang="ts">
-export let variant = '';
 export let style = '';
 </script>
 
