@@ -8,6 +8,7 @@ interface Props {
   frontmatter: {
     title: string;
   };
+  content?: Record<string, any>;
 }
 
 const { content = {}, frontmatter } = Astro.props;

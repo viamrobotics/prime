@@ -1,5 +1,7 @@
 ---
-const { headers } = Astro.props;
+const { headers } = Astro.props as {
+  headers: Array<{ slug: string; text: string }>;
+};
 ---
 
 <ul class='flex flex-col gap-4 mt-24'>

@@ -3,18 +3,30 @@ import { SIDEBAR } from '../config';
 const { currentPage } = Astro.props;
 const currentPageMatch = currentPage.slice(1);
 
-const isCurrentPage = (item) => {
+type Item =
+  | {
+      text: string;
+      header: boolean;
+      link?: undefined;
+    }
+  | {
+      text: string;
+      link: string;
+      header?: undefined;
+    };
+
+const isCurrentPage = (item: Item) => {
   if (item.link) {
     return item.link.includes(currentPageMatch);
   }
   return false;
 };
 
-const getLinkClasses = (link) => {
+const getLinkClasses = (item: Item) => {
   const baseClasses =
     'block py-2 px-6  my-1 transition-colors border-l hover:border-slate-400 text-slate-500 hover:text-slate-900';
 
-  if (isCurrentPage(link)) {
+  if (isCurrentPage(item)) {
     return baseClasses + ' border-slate-500 text-slate-900';
   } else {
     return baseClasses;
@@ -45,7 +57,7 @@ const getLinkClasses = (link) => {
 </aside>
 
 <script is:inline>
-  window.addEventListener('DOMContentLoaded', (event) => {
+  window.addEventListener('DOMContentLoaded', () => {
     var target = document.querySelector('[aria-current="page"]');
     if (target && target.offsetTop > window.innerHeight - 100) {
       document.querySelector('.nav-groups').scrollTop = target.offsetTop;
