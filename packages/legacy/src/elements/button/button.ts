@@ -1,3 +1,4 @@
+import type { IElementInternals } from 'element-internals-polyfill';
 import { addStyles } from '../../lib';
 import ButtonInternal from './button.svelte';
 
@@ -15,11 +16,12 @@ export default class Button extends (
 ).element {
   static formAssociated = true;
 
+  internals: IElementInternals;
+
   constructor() {
     super();
     // `internals` is defined as a prop on the component
-    (this as unknown as { internals: ElementInternals }).internals =
-      this.attachInternals();
+    this.internals = this.attachInternals();
 
     addStyles(this);
   }
