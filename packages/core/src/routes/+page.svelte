@@ -925,12 +925,22 @@ const onHoverDelayMsInput = (event: Event) => {
         // eslint-disable-next-line no-console
         console.log('NumericInput input', event);
       }}
+      cx="invalid:bg-red-500"
     />
 
     <NumericInput
       type="integer"
       name="integer"
       placeholder="Enter an integer"
+      cx="invalid:bg-red-500"
+    />
+
+    <NumericInput
+      type="integer"
+      name="integer"
+      acceptNegative={false}
+      placeholder="Enter a positive integer"
+      cx="invalid:bg-red-500"
     />
   </div>
 
