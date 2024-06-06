@@ -12,7 +12,7 @@ For numeric user inputs.
 <script lang="ts">
 import type cx from 'classnames';
 import Input from './input.svelte';
-import type { NumericInputTypes } from './utils';
+import { patternForNumericInput, type NumericInputTypes } from './utils';
 
 /** The input type */
 export let type: NumericInputTypes | undefined = 'number';
@@ -26,12 +26,14 @@ export let step = 1;
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
 
+/** Indicates if the field should accept negative numbers */
+export let acceptNegative = true;
+
 /** Additional CSS classes to pass to the input. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-$: isNumber = type === 'number';
-$: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
+$: pattern = patternForNumericInput(type ?? 'number', acceptNegative);
 </script>
 
 <Input

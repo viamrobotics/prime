@@ -35,6 +35,20 @@ describe('Numeric Input', () => {
     expect(input.checkValidity()).toBe(false);
   });
 
+  it('Does not accept negative numbers when disallowed', () => {
+    render(NumericInput, {
+      placeholder: 'Enter a number',
+      type: 'number',
+      acceptNegative: false,
+      value: -12.34,
+    });
+
+    const input =
+      screen.getByPlaceholderText<HTMLInputElement>('Enter a number');
+
+    expect(input.checkValidity()).toBe(false);
+  });
+
   it('Renders with the passed cx classes', () => {
     render(NumericInput, {
       placeholder: 'Enter a number',
