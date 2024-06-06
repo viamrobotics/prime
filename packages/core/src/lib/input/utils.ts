@@ -19,6 +19,6 @@ export const patternForNumericInput = (
 ) => {
   const signPattern = allowNegative ? /[-+]?/u : /\+?/u;
   return type === 'number'
-    ? new RegExp(`^${signPattern.source}[0-9]+(\\.[0-9]+)?$`, 'u')
+    ? new RegExp(`^${signPattern.source}[0-9]*\\.?[0-9]+$`, 'u')
     : new RegExp(`^${signPattern.source}[0-9]+$`, 'u');
 };
