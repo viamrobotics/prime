@@ -21,7 +21,7 @@ export let type: NumericInputTypes | undefined = 'number';
 export let value: number | undefined = undefined;
 
 /** The amount to increment/decrement when using the up/down arrows. */
-export let step: number | undefined = undefined;
+export let step: number | 'any' | undefined = undefined;
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
