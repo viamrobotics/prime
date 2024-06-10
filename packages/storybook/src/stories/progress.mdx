@@ -1,0 +1,26 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import * as ProgressStories from './progress.stories.svelte';
+
+<Meta title='Elements/Progress' />
+
+# Progress
+
+```ts
+import { Progress } from '@viamrobotics/prime-core';
+```
+
+<Canvas>
+  <Story of={ProgressStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={ProgressStories.Light} />
+</Canvas>
+
+<Canvas>
+  <Story of={ProgressStories.Medium} />
+</Canvas>
+
+<Canvas>
+  <Story of={ProgressStories.Large} />
+</Canvas>

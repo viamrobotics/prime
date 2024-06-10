@@ -12,6 +12,9 @@ export let state: InputState = InputStates.NONE;
 export let inputElement: HTMLInputElement | undefined = undefined;
 export let icon: IconName | undefined = undefined;
 
+/** Optional id used in parent label `for` attribute */
+export let id: string | undefined = undefined;
+
 /** Additional CSS classes to pass to the input. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
@@ -61,6 +64,7 @@ $: errorClasses =
   <input
     bind:value
     bind:this={inputElement}
+    {id}
     role="combobox"
     readonly={disabled ? true : undefined}
     aria-controls={menuId}

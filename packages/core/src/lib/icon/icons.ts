@@ -64,6 +64,7 @@ export const paths: Record<string, IconPath> = {
   'dots-horizontal': MDI.mdiDotsHorizontal,
   download: MDI.mdiDownload,
   earth: MDI.mdiEarth,
+  'file-chart-outline': MDI.mdiFileChartOutline,
   'file-download-outline': MDI.mdiFileDownloadOutline,
   'filter-outline': MDI.mdiFilterOutline,
   github: MDI.mdiGithub,
@@ -99,6 +100,7 @@ export const paths: Record<string, IconPath> = {
   'navigation-variant': MDI.mdiNavigationVariant,
   'open-in-new': MDI.mdiOpenInNew,
   'package-variant-closed': MDI.mdiPackageVariantClosed,
+  pause: MDI.mdiPause,
   'pause-circle-outline': MDI.mdiPauseCircleOutline,
   'pencil-outline': MDI.mdiPencilOutline,
   'play-circle-outline': MDI.mdiPlayCircleOutline,
@@ -110,6 +112,7 @@ export const paths: Record<string, IconPath> = {
   resize:
     'm11 12 4-4h-4V6h7v7h-2V9l-4 4v3h8V4H8v8h3ZM22 2v16H12v4H2V12h4V2h16ZM10 14H4v6h6v-6Z',
   'robot-outline': MDI.mdiRobotOutline,
+  'script-text-outline': MDI.mdiScriptTextOutline,
   'selection-ellipse': MDI.mdiSelectionEllipse,
   send: MDI.mdiSend,
   'shield-key-outline': MDI.mdiShieldKeyOutline,
@@ -119,6 +122,8 @@ export const paths: Record<string, IconPath> = {
   'trash-can-outline': MDI.mdiTrashCanOutline,
   twitter: MDI.mdiTwitter,
   undo: MDI.mdiUndo,
+  'unfold-less-horizontal': MDI.mdiUnfoldLessHorizontal,
+  'unfold-more-horizontal': MDI.mdiUnfoldMoreHorizontal,
   upload: MDI.mdiUpload,
   'viam-component':
     'm12 4-8 8 8 8 8-8-8-8Zm.5-2.4a.8.8 0 0 0-1 0l-9.9 9.9c-.3.3-.3.7 0 1l9.9 9.9c.3.3.7.3 1 0l9.9-9.9c.3-.3.3-.7 0-1l-9.9-9.9Z',

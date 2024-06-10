@@ -41,6 +41,7 @@ import {
   Modal,
   CodeSnippet,
   RangeInput,
+  Progress,
 } from '$lib';
 import { uniqueId } from 'lodash-es';
 
@@ -519,6 +520,11 @@ const onHoverDelayMsInput = (event: Event) => {
   <h1 class="text-2xl">Breadcrumbs</h1>
   <Breadcrumbs crumbs={['Chocolate Chip', 'Oatmeal Raisin']} />
 
+  <!-- Progress -->
+  <Progress size="small" />
+  <Progress size="medium" />
+  <Progress size="large" />
+
   <!-- Button -->
   <h1 class="text-2xl">Button</h1>
 
@@ -558,6 +564,19 @@ const onHoverDelayMsInput = (event: Event) => {
     >
       Disabled
     </Button>
+
+    <Button progress="indeterminate">Loading</Button>
+    <IconButton
+      label="Pause"
+      variant="secondary"
+      progress="indeterminate"
+      icon="pause"
+      cx="border border-light"
+    />
+    <Button
+      progress="indeterminate"
+      variant="danger">Loading</Button
+    >
 
     <Button
       variant="dark"
@@ -1045,6 +1064,32 @@ const onHoverDelayMsInput = (event: Event) => {
         name="name"
       />
     </Label>
+
+    <div class="flex flex-col gap-1">
+      <Label
+        for="targetID"
+        cx="whitespace-nowrap"
+      >
+        For attribute example with SearchableSelect
+      </Label>
+      <div class="max-w-fit">
+        <SearchableSelect
+          id="targetID"
+          exclusive
+          options={[
+            { value: 'First Option', description: 'First option' },
+            'Option 2',
+            { value: 'C.) Option', description: 'second' },
+            'A really long forth option just in case you need it',
+          ]}
+          placeholder="Select an option"
+          onChange={(value) => {
+            // eslint-disable-next-line no-console
+            console.log('Selected', value);
+          }}
+        />
+      </div>
+    </div>
   </div>
 
   <!-- Notify -->
@@ -1597,7 +1642,9 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="flex flex-wrap items-start gap-4">
     <Tooltip let:tooltipID>
       <p aria-describedby={tooltipID}>This element has a top tooltip.</p>
-      <p slot="description">This is the tooltip text!</p>
+      <p slot="description">
+        ThisIsTheTooltipTextWithoutSpacesOrHyphensForTestingPurposes
+      </p>
     </Tooltip>
 
     <Tooltip

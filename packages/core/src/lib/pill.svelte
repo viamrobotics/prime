@@ -69,9 +69,7 @@ const handleRemove = () => {
       size="sm"
     />
   {/if}
-  <span>
-    {value}
-  </span>
+  <span class="truncate">{value}</span>
   {#if !readonly && removable}
     <button
       type="button"

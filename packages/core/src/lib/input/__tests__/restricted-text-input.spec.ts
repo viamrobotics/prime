@@ -99,14 +99,14 @@ describe('Restricted Text Input', () => {
     // Type a single invalid character, which shows the tooltip but does not wiggle
     await user.type(input, 'a');
 
-    expect(tooltip).not.toHaveClass('invisible');
+    expect(tooltip).not.toHaveClass('hidden');
     expect(tooltip).not.toHaveClass('animate-wiggle');
-    await waitFor(() => expect(tooltip).toHaveClass('invisible'));
+    await waitFor(() => expect(tooltip).toHaveClass('hidden'));
 
     // Type multiple invalid characters, which shows the tooltip and wiggles
     await user.type(input, 'aa');
 
-    expect(tooltip).not.toHaveClass('invisible');
+    expect(tooltip).not.toHaveClass('hidden');
     expect(tooltip).toHaveClass('animate-wiggle');
     await waitFor(() => expect(tooltip).not.toHaveClass('animate-wiggle'));
   });

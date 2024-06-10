@@ -1,3 +1,4 @@
+import type { IElementInternals } from 'element-internals-polyfill';
 import { addStyles } from '../../lib';
 import InputInternal from './input.svelte';
 
@@ -15,11 +16,12 @@ export default class Input extends (
 ).element {
   static formAssociated = true;
 
+  internals: IElementInternals;
+
   constructor() {
     super();
     // `internals` is defined as a prop on the component
-    (this as unknown as { internals: ElementInternals }).internals =
-      this.attachInternals();
+    this.internals = this.attachInternals();
 
     addStyles(this);
   }
