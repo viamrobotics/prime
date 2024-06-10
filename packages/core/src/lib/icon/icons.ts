@@ -34,6 +34,7 @@ export const paths: Record<string, IconPath> = {
   'arrow-up': MDI.mdiArrowUp,
   article: MDI.mdiTextBoxOutline,
   'axis-arrow': MDI.mdiAxisArrow,
+  'backup-restore': MDI.mdiBackupRestore,
   'broadcast-off': MDI.mdiBroadcastOff,
   broadcast: MDI.mdiBroadcast,
   'camera-flip-outline': MDI.mdiCameraFlipOutline,
