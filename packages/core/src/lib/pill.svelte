@@ -18,6 +18,9 @@ import { createEventDispatcher } from 'svelte';
 /** The text in the pill. */
 export let value = '';
 
+/** Optional URL that the hyperlink points to. */
+export let href = '';
+
 /** Whether or not the pill has the aria-readonly attribute. If readonly, there is not a button to remove the pill. */
 export let readonly = false;
 
@@ -69,7 +72,15 @@ const handleRemove = () => {
       size="sm"
     />
   {/if}
-  <span class="truncate">{value}</span>
+  {#if href}
+    <a
+      {href}
+      target="_blank"
+      class="truncate hover:underline">{value}</a
+    >
+  {:else}
+    <span class="truncate">{value}</span>
+  {/if}
   {#if !readonly && removable}
     <button
       type="button"
