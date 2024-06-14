@@ -28,6 +28,7 @@ import {
   type SortOption,
   type DetailedOption,
 } from './search';
+
 import SelectInput from './select-input.svelte';
 
 /** The options the user should be allowed to search and select from. */
@@ -127,7 +128,7 @@ const resetSearchValue = (
 };
 $: resetSearchValue(value, detailedOptionsMap);
 
-// selectedSeachOption represents the value that was last selected (or the initial value)
+// selectedSearchOption represents the value that was last selected (or the initial value)
 $: selectedSearchOption = detailedOptionsMap[value];
 
 $: searchResults = getSearchResults(detailedOptions, searchValue, sort);
@@ -155,8 +156,8 @@ $: if (menuState === undefined || menuState === FOCUS_SEARCH) {
   );
   // if we don't find any options with a non negative priority,
   // we set the nextAutoSelectIndex to the option that matches
-  // the current seach value. This is used so that when we blur
-  // with a valid seachValue, we autoSelect the correct option
+  // the current search value. This is used so that when we blur
+  // with a valid searchValue, we autoSelect the correct option
   if (nextAutoSelectIndex === -1) {
     nextAutoSelectIndex = allOptions.findIndex(
       ({ option }) => optionDisplayValue(option) === searchValue
@@ -229,7 +230,7 @@ const handleFocus = (event: FocusEvent) => {
 };
 
 const handleBlur = (event: FocusEvent) => {
-  // blur can still be triggered if the input is diabled or the menu is closed,
+  // blur can still be triggered if the input is disabled or the menu is closed,
   // but we shouldn't select anything if so
   if (!disabled && menuState !== CLOSED) {
     handleSelect(autoSelectOption?.option);
@@ -325,94 +326,97 @@ const handleKeydown = createHandleKey({
   bind:inputElement
   value={searchValue}
 />
-<Floating
-  offset={4}
-  referenceElement={inputElement}
-  size={matchWidth}
-  auto
->
-  <ul
-    id={LIST_ID}
-    role="listbox"
-    class:hidden={!isExpanded}
-    class="max-h-36 flex-col overflow-y-auto border border-gray-9 bg-white py-1 shadow-sm"
+{#if isExpanded}
+  <Floating
+    offset={4}
+    referenceElement={inputElement}
+    size={matchWidth}
+    auto
   >
-    {#each allOptions as { option, highlight } (option)}
-      {@const isActive = activeOption?.option === option}
-      {@const isSelected = multiple ? false : isActive}
-      {@const isChecked = multiple ? values.includes(option.value) : undefined}
-      {@const isOther = otherOption?.option === option}
-      {@const descriptionID = uniqueId('combobox-list-item-description')}
+    <ul
+      id={LIST_ID}
+      role="listbox"
+      class="max-h-36 flex-col overflow-y-auto border border-gray-9 bg-white py-1 shadow-sm"
+    >
+      {#each allOptions as { option, highlight } (option.value)}
+        {@const isActive = activeOption?.option === option}
+        {@const isSelected = multiple ? false : isActive}
+        {@const isChecked = multiple
+          ? values.includes(option.value)
+          : undefined}
+        {@const isOther = otherOption?.option === option}
+        {@const descriptionID = uniqueId('combobox-list-item-description')}
 
-      {#if isOther && allOptions.length > 1}
-        <li
-          role="none"
-          class="mb-0.5 mt-[3px] border-b border-light"
-        />
-      {/if}
-      <!--
+        {#if isOther && allOptions.length > 1}
+          <li
+            role="none"
+            class="mb-0.5 mt-[3px] border-b border-light"
+          />
+        {/if}
+        <!--
         Focus stays on combobox per WAI; key handlers on options not needed.
         svelte-ignore a11y-click-events-have-key-events
       -->
-      <li
-        role="option"
-        id={isActive ? activeID : undefined}
-        aria-selected={isSelected}
-        aria-checked={isChecked}
-        aria-describedby={descriptionID}
-        aria-label={isOther
-          ? [otherOptionPrefix, optionDisplayValue(option)]
-              .filter(Boolean)
-              .join(' ')
-          : optionDisplayValue(option)}
-        class={cx(
-          'flex cursor-pointer items-center justify-start px-2.5 py-1.5',
-          multiple ? 'pl-2 pr-2.5' : 'px-2.5',
-          isActive ? 'bg-light' : 'hover:bg-light'
-        )}
-        on:pointerdown|preventDefault
-        on:mousedown|preventDefault
-        on:click={() => handleSelect(option)}
-        bind:this={optionElements[option.value]}
-      >
-        <div class="flex flex-row gap-2">
-          <!-- In all real cases, only one of these icons should should be active at once-->
-          <!-- (multi with icon is not a designed use case yet) -->
-          {#if multiple}
-            <Icon
-              cx={['my-0.5 shrink-0', !isChecked && 'text-gray-6']}
-              name={isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'}
-            />
-          {/if}
-          {#if option.icon}
-            <Icon
-              cx={['my-0.5 shrink-0 text-gray-6']}
-              name={option.icon}
-            />
-          {/if}
-          <div class="flex flex-col">
-            <p class="text-wrap text-sm">
-              {#if highlight !== undefined}
-                {@const [prefix, match, suffix] = highlight}
-                {prefix}<span class="bg-yellow-100">{match}</span>{suffix}
-              {:else if isOther && otherOptionPrefix}
-                {otherOptionPrefix} {optionDisplayValue(option)}
-              {:else}
-                {optionDisplayValue(option)}
-              {/if}
-            </p>
-            {#if option.description}
-              <p
-                id={descriptionID}
-                class="text-wrap text-xs text-subtle-2"
-              >
-                {option.description}
-              </p>
+        <li
+          role="option"
+          id={isActive ? activeID : undefined}
+          aria-selected={isSelected}
+          aria-checked={isChecked}
+          aria-describedby={descriptionID}
+          aria-label={isOther
+            ? [otherOptionPrefix, optionDisplayValue(option)]
+                .filter(Boolean)
+                .join(' ')
+            : optionDisplayValue(option)}
+          class={cx(
+            'flex cursor-pointer items-center justify-start px-2.5 py-1.5',
+            multiple ? 'pl-2 pr-2.5' : 'px-2.5',
+            isActive ? 'bg-light' : 'hover:bg-light'
+          )}
+          on:pointerdown|preventDefault
+          on:mousedown|preventDefault
+          on:click={() => handleSelect(option)}
+          bind:this={optionElements[option.value]}
+        >
+          <div class="flex flex-row gap-2">
+            <!-- In all real cases, only one of these icons should should be active at once-->
+            <!-- (multi with icon is not a designed use case yet) -->
+            {#if multiple}
+              <Icon
+                cx={['my-0.5 shrink-0', !isChecked && 'text-gray-6']}
+                name={isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'}
+              />
             {/if}
+            {#if option.icon}
+              <Icon
+                cx={['my-0.5 shrink-0 text-gray-6']}
+                name={option.icon}
+              />
+            {/if}
+            <div class="flex flex-col">
+              <p class="text-wrap text-sm">
+                {#if highlight !== undefined}
+                  {@const [prefix, match, suffix] = highlight}
+                  {prefix}<span class="bg-yellow-100">{match}</span>{suffix}
+                {:else if isOther && otherOptionPrefix}
+                  {otherOptionPrefix} {optionDisplayValue(option)}
+                {:else}
+                  {optionDisplayValue(option)}
+                {/if}
+              </p>
+              {#if option.description}
+                <p
+                  id={descriptionID}
+                  class="text-wrap text-xs text-subtle-2"
+                >
+                  {option.description}
+                </p>
+              {/if}
+            </div>
           </div>
-        </div>
-      </li>
-    {/each}
-    <slot />
-  </ul>
-</Floating>
+        </li>
+      {/each}
+      <slot />
+    </ul>
+  </Floating>
+{/if}
