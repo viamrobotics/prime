@@ -49,6 +49,7 @@ export const paths: Record<string, IconPath> = {
   'chevron-left': MDI.mdiChevronLeft,
   'chevron-right': MDI.mdiChevronRight,
   'chevron-up': MDI.mdiChevronUp,
+  'circle-md': MDI.mdiCircleMedium,
   close: MDI.mdiClose,
   'code-braces': MDI.mdiCodeBraces,
   'code-json': MDI.mdiCodeJson,

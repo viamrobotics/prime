@@ -89,10 +89,16 @@ export const theme = {
         '25%': { transform: 'translateX(2px)' },
         '75%': { transform: 'translateX(-2px)' },
       },
+      blink:{
+        '29%': { opacity: '1' },
+        '60%,72%': { opacity: '.3'},
+        '100': { opacity: '1'}
+      },
     },
 
     animation: {
       wiggle: 'wiggle 0.25s',
+      blink: 'blink 1.7s linear infinite'
     },
   },
 } satisfies OptionalConfig['theme'];
