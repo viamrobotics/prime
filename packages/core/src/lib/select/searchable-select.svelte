@@ -19,6 +19,7 @@ import { Icon } from '$lib/icon';
 import { InputStates, type InputState } from '$lib/input';
 import { createHandleKey } from '$lib/keyboard';
 import { uniqueId } from '$lib/unique-id';
+import { useNextFrame } from '$lib/use-next-frame';
 
 import {
   SortOptions,
@@ -98,6 +99,7 @@ const SELECTED_ID = uniqueId('combobox-list-selected-item');
 const CLOSED = 'closed';
 const FOCUS_SEARCH = 'focus-search';
 const FOCUS_ITEM = 'focus-item';
+const onNextFrame = useNextFrame();
 
 type MenuState = typeof CLOSED | typeof FOCUS_SEARCH | typeof FOCUS_ITEM;
 
@@ -176,9 +178,15 @@ $: activeElement = activeOption
   ? optionElements[activeOption.option.value]
   : undefined;
 
-$: if (typeof activeElement?.scrollIntoView === 'function') {
-  activeElement.scrollIntoView({ block: 'nearest' });
-}
+const scrollIntoView = (element: HTMLElement | undefined): void => {
+  if (typeof element?.scrollIntoView === 'function') {
+    onNextFrame(() => {
+      element.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
+  }
+};
+
+$: scrollIntoView(activeElement);
 
 const handleSingleSelect = (selectedOption: DetailedOption | undefined) => {
   // if we are exclusive && it is not in the search, we should fallback to an empty value option
