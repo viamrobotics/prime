@@ -180,6 +180,8 @@ $: activeElement = activeOption
 
 const scrollIntoView = (element: HTMLElement | undefined): void => {
   if (typeof element?.scrollIntoView === 'function') {
+    // NOTE(mc, 2024-06-17): do not scroll right away, or else we can accidentally
+    // scroll the whole document instead of the element's containing `<ul>`
     onNextFrame(() => {
       element.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     });
