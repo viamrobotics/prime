@@ -66,3 +66,20 @@ import { Pill } from '@viamrobotics/prime-core';
     />
   </div>
 </Story>
+
+<Story name="Link">
+  <div class="flex flex-row gap-1.5">
+    <Pill
+      value="my-machine-123"
+      icon="multiplication-box"
+      href="https://i.imgur.com/aQCBxdr.png"
+      removable={false}
+    />
+    <Pill
+      value="target-self-example"
+      href="https://i.imgur.com/aQCBxdr.png"
+      target="_self"
+      removable={false}
+    />
+  </div>
+</Story>
