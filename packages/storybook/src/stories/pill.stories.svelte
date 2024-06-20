@@ -75,5 +75,11 @@ import { Pill } from '@viamrobotics/prime-core';
       href="https://i.imgur.com/aQCBxdr.png"
       removable={false}
     />
+    <Pill
+      value="target-self-example"
+      href="https://i.imgur.com/aQCBxdr.png"
+      target="_self"
+      removable={false}
+    />
   </div>
 </Story>

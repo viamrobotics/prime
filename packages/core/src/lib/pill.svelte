@@ -21,6 +21,9 @@ export let value = '';
 /** Optional URL that the hyperlink points to. */
 export let href = '';
 
+/** Optional target for linked URL. */
+export let target: '_self' | '_blank' | '_parent' | '_top' = '_blank';
+
 /** Whether or not the pill has the aria-readonly attribute. If readonly, there is not a button to remove the pill. */
 export let readonly = false;
 
@@ -75,7 +78,7 @@ const handleRemove = () => {
   {#if href}
     <a
       {href}
-      target="_blank"
+      {target}
       class="truncate hover:underline">{value}</a
     >
   {:else}

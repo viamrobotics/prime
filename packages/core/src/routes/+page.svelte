@@ -1173,6 +1173,12 @@ const onHoverDelayMsInput = (event: Event) => {
       href="https://i.imgur.com/aQCBxdr.png"
       removable={false}
     />
+    <Pill
+      value="target-self-example"
+      href="https://i.imgur.com/aQCBxdr.png"
+      target="_self"
+      removable={false}
+    />
   </div>
 
   <!-- Prevent Handler -->
