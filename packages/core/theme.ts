@@ -98,7 +98,7 @@ export const theme = {
 
     animation: {
       wiggle: 'wiggle 0.25s',
-      blink: 'blink 1.7s linear infinite',
+      blink: 'blink 1.7s ease-in-out infinite',
     },
   },
 } satisfies OptionalConfig['theme'];
