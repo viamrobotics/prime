@@ -12,7 +12,7 @@ For numeric user inputs.
 <script lang="ts">
 import type cx from 'classnames';
 import Input from './input.svelte';
-import type { NumericInputTypes } from './utils';
+import { type NumericInputTypes } from './utils';
 
 /** The input type */
 export let type: NumericInputTypes | undefined = 'number';
@@ -21,24 +21,27 @@ export let type: NumericInputTypes | undefined = 'number';
 export let value: number | undefined = undefined;
 
 /** The amount to increment/decrement when using the up/down arrows. */
-export let step = 1;
+export let step: number | 'any' | undefined = undefined;
 
 /** The HTML input element. */
 export let input: HTMLInputElement | undefined = undefined;
+
+/** Indicates if the field should accept negative numbers */
+export let acceptNegative = true;
 
 /** Additional CSS classes to pass to the input. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
-$: isNumber = type === 'number';
-$: pattern = isNumber ? '^([-+,0-9.]+)' : '[0-9]+';
+$: pattern = acceptNegative ? /[+-]?.*/ : /[\+]?.*/;
+$: inferredStep = step ?? type === 'number' ? 'any' : 1;
 </script>
 
 <Input
   type="number"
   cx={extraClasses}
   {pattern}
-  {step}
+  step={inferredStep}
   {...$$restProps}
   placeholder={$$restProps.placeholder ?? 0}
   bind:value
