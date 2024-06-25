@@ -19,20 +19,89 @@ describe('toast', () => {
     screen.getByRole('status', { name: 'Toasts' });
   });
 
-  it('should display a dismissible toast', async () => {
+  it('should display a toast with success variant with correct classes and label', async () => {
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
+        variant: ToastVariant.Success
       });
     });
 
     const status = screen.getByRole('status');
     const toast = within(status).getByRole('listitem');
-    const icon = screen.getByRole('img', { name: /check-circle/iu });
+    const icon = screen.getByRole('img', { name: /success/iu });
 
     within(toast).getByRole('button', { name: /dismiss/iu });
     expect(toast).toHaveTextContent(/This is a success toast message/iu);
     expect(icon).toHaveClass('text-success-dark');
+  });
+
+  it('should display a toast with info variant with correct classes and label', async () => {
+    await act(() => {
+      context.toast({
+        message: 'This is a info toast message',
+        variant: ToastVariant.Info
+      });
+    });
+
+    const status = screen.getByRole('status');
+    const toast = within(status).getByRole('listitem');
+    const icon = screen.getByRole('img', { name: /info/iu });
+
+    within(toast).getByRole('button', { name: /dismiss/iu });
+    expect(toast).toHaveTextContent(/This is a info toast message/iu);
+    expect(icon).toHaveClass('text-info-dark');
+  });
+
+  it('should display a toast with warning variant with correct classes and label', async () => {
+    await act(() => {
+      context.toast({
+        message: 'This is a warning toast message',
+        variant: ToastVariant.Warning
+      });
+    });
+
+    const status = screen.getByRole('status');
+    const toast = within(status).getByRole('listitem');
+    const icon = screen.getByRole('img', { name: /warning/iu });
+
+    within(toast).getByRole('button', { name: /dismiss/iu });
+    expect(toast).toHaveTextContent(/This is a warning toast message/iu);
+    expect(icon).toHaveClass('text-warning-bright');
+  });
+
+  it('should display a toast with danger variant with correct classes and label', async () => {
+    await act(() => {
+      context.toast({
+        message: 'This is a danger toast message',
+        variant: ToastVariant.Danger
+      });
+    });
+
+    const status = screen.getByRole('status');
+    const toast = within(status).getByRole('listitem');
+    const icon = screen.getByRole('img', { name: /danger/iu });
+
+    within(toast).getByRole('button', { name: /dismiss/iu });
+    expect(toast).toHaveTextContent(/This is a danger toast message/iu);
+    expect(icon).toHaveClass('text-danger-dark');
+  });
+
+  it('should display a toast with neutral variant with correct classes and label', async () => {
+    await act(() => {
+      context.toast({
+        message: 'This is a neutral toast message',
+        variant: ToastVariant.Neutral
+      });
+    });
+
+    const status = screen.getByRole('status');
+    const toast = within(status).getByRole('listitem');
+    const icon = screen.getByRole('img', { name: /neutral/iu });
+
+    within(toast).getByRole('button', { name: /dismiss/iu });
+    expect(toast).toHaveTextContent(/This is a neutral toast message/iu);
+    expect(icon).toHaveClass('text-gray-7');
   });
 
   it('should display a toast with an action button when action is provided', async () => {

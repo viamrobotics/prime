@@ -1,13 +1,13 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
-import { ToastBanner } from '@viamrobotics/prime-core';
+import { ToastBanner, ToastVariant } from '@viamrobotics/prime-core';
 </script>
 
 <Meta title="Elements/ToastBanner" />
 
 <Story name="Success">
   <ToastBanner
-    variant="success"
+    variant={ ToastVariant.Success }
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -17,7 +17,7 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 
 <Story name="Info">
   <ToastBanner
-    variant="info"
+    variant={ ToastVariant.Info }
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -27,7 +27,7 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 
 <Story name="Danger">
   <ToastBanner
-    variant="danger"
+    variant={ ToastVariant.Danger }
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -37,7 +37,7 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 
 <Story name="Warning">
   <ToastBanner
-    variant="warning"
+    variant={ ToastVariant.Warning }
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -47,7 +47,7 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 
 <Story name="Neutral">
   <ToastBanner
-    variant="neutral"
+    variant={ ToastVariant.Neutral }
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -58,7 +58,7 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 <Story name="SuccessWithEmphasizedAction">
   <ToastBanner
     message={`Deleted "my-arm"`}
-    variant="success"
+    variant={ ToastVariant.Success }
     dismiss={() => {
       console.log('Clicked close button');
     }}

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
-import { Button, ToastContainer, provideToast } from '@viamrobotics/prime-core';
+import { Button, ToastContainer, ToastVariant, provideToast } from '@viamrobotics/prime-core';
 
 const toast = provideToast();
 </script>
@@ -16,7 +16,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Success message',
-            variant: 'success',
+            variant: ToastVariant.Success,
           })}
       >
         Success
@@ -25,7 +25,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Info message',
-            variant: 'info',
+            variant: ToastVariant.Info,
           })}
       >
         Info
@@ -34,7 +34,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Danger message',
-            variant: 'danger',
+            variant: ToastVariant.Danger,
           })}
       >
         Danger
@@ -43,7 +43,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Warning message',
-            variant: 'warning',
+            variant: ToastVariant.Warning,
           })}
       >
         Warning
@@ -52,7 +52,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Neutral message',
-            variant: 'neutral',
+            variant: ToastVariant.Neutral,
           })}
       >
         Neutral
@@ -61,7 +61,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Success message',
-            variant: 'success',
+            variant: ToastVariant.Success,
             action: {
               text: 'action',
               handler: () => {
@@ -76,7 +76,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Info message',
-            variant: 'info',
+            variant: ToastVariant.Info,
             action: {
               text: 'action',
               handler: () => {
@@ -91,7 +91,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Danger message',
-            variant: 'danger',
+            variant: ToastVariant.Danger,
             action: {
               text: 'action',
               handler: () => {
@@ -106,7 +106,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Warning message',
-            variant: 'warning',
+            variant: ToastVariant.Warning,
             action: {
               text: 'action',
               handler: () => {
@@ -121,7 +121,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Neutral message',
-            variant: 'neutral',
+            variant: ToastVariant.Neutral,
             action: {
               text: 'action',
               handler: () => {

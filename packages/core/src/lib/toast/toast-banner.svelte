@@ -36,6 +36,7 @@ export { extraClasses as cx };
         cx={variant.iconClasses}
         role="img"
         aria-hidden={false}
+        aria-label={variant.label}
       />
     <p class="truncate">{message}</p>
   </div>
