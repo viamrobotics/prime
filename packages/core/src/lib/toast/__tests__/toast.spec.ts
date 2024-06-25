@@ -28,7 +28,7 @@ describe('toast', () => {
 
     const status = screen.getByRole('status');
     const toast = within(status).getByRole('listitem');
-    const icon = screen.getByRole('img', { name: /success/iu });
+    const icon = screen.getByRole('img', { name: /check-circle/iu });
 
     within(toast).getByRole('button', { name: /dismiss/iu });
     expect(toast).toHaveTextContent(/This is a success toast message/iu);
@@ -51,7 +51,9 @@ describe('toast', () => {
 
     const status = screen.getByRole('status');
     const toast = within(status).getByRole('listitem');
-    const actionButton = screen.getByText(/action text/iu);
+    const actionButton = screen.getByRole('button', {
+      name: /action text/iu,
+    });
     await user.click(actionButton);
 
     expect(toast).toHaveTextContent(/action text/iu);

@@ -33,6 +33,7 @@ import {
   TableRow,
   ToastBanner,
   ToastContainer,
+  ToastVariantType,
   ToggleButtons,
   Select,
   SearchableSelect,
@@ -1611,7 +1612,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="flex gap-4">
     <ToastBanner
       message="Test Message"
-      variant="success"
+      variant=ToastVariantType.Success
       dismiss={() => {
         console.log('Clicked close button');
       }}

@@ -3,7 +3,7 @@
 <script lang="ts">
 import cx from 'classnames';
 import Button from '$lib/button/button.svelte';
-import { Icon, type IconName } from '$lib/icon';
+import { Icon } from '$lib/icon';
 import IconButton from '$lib/button/icon-button.svelte';
 import { ToastVariant, type ToastVariantType } from './variants';
 
@@ -16,42 +16,11 @@ export let action: { text: string; handler: () => unknown } | undefined =
   undefined;
 
 /** The severity of the notification you want to show users*/
-export let variant: ToastVariantType = 'success';
+export let variant: ToastVariantType = ToastVariant.Success;
 
 /** Additional CSS classes to pass to the banner. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
-
-let icon: IconName | null = null;
-let iconClasses = '';
-$: {
-  switch (variant) {
-    case ToastVariant.Info: {
-      icon = 'information-outline';
-      iconClasses = 'text-info-dark';
-      break;
-    }
-    case ToastVariant.Warning: {
-      icon = 'alert';
-      iconClasses = 'text-warning-bright';
-      break;
-    }
-    case ToastVariant.Danger: {
-      icon = 'alert-circle';
-      iconClasses = 'text-danger-dark';
-      break;
-    }
-    case ToastVariant.Success: {
-      icon = 'check-circle';
-      iconClasses = 'text-success-dark';
-      break;
-    }
-    case ToastVariant.Neutral: {
-      icon = 'domain';
-      iconClasses = 'text-gray-7';
-    }
-  }
-}
 </script>
 
 <div
@@ -61,17 +30,13 @@ $: {
   )}
 >
   <div class="mr-4 flex gap-2">
-    {#if icon}
       <Icon
         size="lg"
-        name={icon}
-        cx={iconClasses}
+        name={variant.icon}
+        cx={variant.iconClasses}
         role="img"
         aria-hidden={false}
-        aria-label="success"
       />
-    {/if}
-
     <p class="truncate">{message}</p>
   </div>
 
