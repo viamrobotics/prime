@@ -31,12 +31,15 @@ import {
   TableHeaderCell,
   TableHeader,
   TableRow,
+  ToastBanner,
+  ToastContainer,
   ToggleButtons,
   Select,
   SearchableSelect,
   Multiselect,
   NotificationContainer,
   provideNotify,
+  provideToast,
   useNotify,
   Modal,
   CodeSnippet,
@@ -69,6 +72,7 @@ const handleFloatingMenuChange = (isOpen: boolean) => {
 };
 
 const notify = useNotify();
+const toast = provideToast();
 
 let restrictedValue = '';
 
@@ -1599,6 +1603,153 @@ const onHoverDelayMsInput = (event: Event) => {
       tabs={['Tab 1', 'Tab 2']}
       selected="Tab 2"
     />
+  </div>
+
+  <!-- Toast Banner -->
+  <h1 class="text-2xl">Toast Banner</h1>
+
+  <div class="flex gap-4">
+    <ToastBanner
+      message="Test Message"
+      variant="success"
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+    <ToastBanner
+      message="Test Message"
+      variant="info"
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+    <ToastBanner
+      message="Test Message"
+      variant="danger"
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+    <ToastBanner
+      message="Test Message"
+      variant="warning"
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+    <ToastBanner
+      message="Test Message"
+      variant="neutral"
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+  </div>
+  <div class="flex gap-4">
+    <ToastBanner
+      message="Test Message"
+      variant="success"
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+    <ToastBanner
+      message="Test Message"
+      variant="info"
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+    <ToastBanner
+      message="Test Message"
+      variant="danger"
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+    <ToastBanner
+      message="Test Message"
+      variant="warning"
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
+  </div>
+
+  <!-- Toast Container -->
+  <h1 class="text-2xl">Toast Container</h1>
+
+  <div class="flex gap-4">
+    <ToastContainer />
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Success', variant: 'success' });
+        }}
+      >
+        Click to show "Success" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Information', variant: 'info' });
+        }}
+      >
+        Click to show "Info" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Dangerous', variant: 'danger' });
+        }}
+      >
+        Click to show "Danger" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Warning', variant: 'warning' });
+        }}
+      >
+        Click to show "Warning" button
+      </Button>
+    </div>
   </div>
 
   <!-- Toggle Buttons -->

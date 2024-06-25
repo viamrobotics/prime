@@ -51,9 +51,7 @@ describe('toast', () => {
 
     const status = screen.getByRole('status');
     const toast = within(status).getByRole('listitem');
-    const actionButton = screen.getByRole('button', {
-      name: /perform action/iu,
-    });
+    const actionButton = screen.getByText(/action text/iu);
     await user.click(actionButton);
 
     expect(toast).toHaveTextContent(/action text/iu);

@@ -1,10 +1,9 @@
-import type { IconName } from '$lib/icon/icons';
-
 export const ToastVariant = {
+  Info: 'info',
+  Warning: 'warning',
+  Danger: 'danger',
   Success: 'success',
+  Neutral: 'neutral',
 } as const;
-
-export const iconName: IconName = 'check-circle';
-export const iconClasses = 'text-success-dark';
 
 export type ToastVariantType = (typeof ToastVariant)[keyof typeof ToastVariant];
