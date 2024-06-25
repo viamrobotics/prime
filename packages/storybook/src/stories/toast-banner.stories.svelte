@@ -7,7 +7,7 @@ import { ToastBanner, ToastVariant } from '@viamrobotics/prime-core';
 
 <Story name="Success">
   <ToastBanner
-    variant={ ToastVariant.Success }
+    variant={ToastVariant.Success}
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -17,7 +17,7 @@ import { ToastBanner, ToastVariant } from '@viamrobotics/prime-core';
 
 <Story name="Info">
   <ToastBanner
-    variant={ ToastVariant.Info }
+    variant={ToastVariant.Info}
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -27,7 +27,7 @@ import { ToastBanner, ToastVariant } from '@viamrobotics/prime-core';
 
 <Story name="Danger">
   <ToastBanner
-    variant={ ToastVariant.Danger }
+    variant={ToastVariant.Danger}
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -37,7 +37,7 @@ import { ToastBanner, ToastVariant } from '@viamrobotics/prime-core';
 
 <Story name="Warning">
   <ToastBanner
-    variant={ ToastVariant.Warning }
+    variant={ToastVariant.Warning}
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -47,7 +47,7 @@ import { ToastBanner, ToastVariant } from '@viamrobotics/prime-core';
 
 <Story name="Neutral">
   <ToastBanner
-    variant={ ToastVariant.Neutral }
+    variant={ToastVariant.Neutral}
     message="Saved configuration"
     dismiss={() => {
       console.log('Clicked close button');
@@ -58,7 +58,7 @@ import { ToastBanner, ToastVariant } from '@viamrobotics/prime-core';
 <Story name="SuccessWithEmphasizedAction">
   <ToastBanner
     message={`Deleted "my-arm"`}
-    variant={ ToastVariant.Success }
+    variant={ToastVariant.Success}
     dismiss={() => {
       console.log('Clicked close button');
     }}

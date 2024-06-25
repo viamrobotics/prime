@@ -1612,7 +1612,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="flex gap-4">
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Success }
+      variant={ToastVariant.Success}
       dismiss={() => {
         console.log('Clicked close button');
       }}
@@ -1620,7 +1620,7 @@ const onHoverDelayMsInput = (event: Event) => {
     />
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Info }
+      variant={ToastVariant.Info}
       dismiss={() => {
         console.log('Clicked close button');
       }}
@@ -1628,7 +1628,7 @@ const onHoverDelayMsInput = (event: Event) => {
     />
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Danger }
+      variant={ToastVariant.Danger}
       dismiss={() => {
         console.log('Clicked close button');
       }}
@@ -1636,7 +1636,7 @@ const onHoverDelayMsInput = (event: Event) => {
     />
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Warning }
+      variant={ToastVariant.Warning}
       dismiss={() => {
         console.log('Clicked close button');
       }}
@@ -1644,7 +1644,7 @@ const onHoverDelayMsInput = (event: Event) => {
     />
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Neutral }
+      variant={ToastVariant.Neutral}
       dismiss={() => {
         console.log('Clicked close button');
       }}
@@ -1654,7 +1654,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="flex gap-4">
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Success }
+      variant={ToastVariant.Success}
       action={{
         text: 'Undo',
         handler: () => {
@@ -1668,7 +1668,7 @@ const onHoverDelayMsInput = (event: Event) => {
     />
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Info }
+      variant={ToastVariant.Info}
       action={{
         text: 'Undo',
         handler: () => {
@@ -1682,7 +1682,7 @@ const onHoverDelayMsInput = (event: Event) => {
     />
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Danger }
+      variant={ToastVariant.Danger}
       action={{
         text: 'Undo',
         handler: () => {
@@ -1696,7 +1696,7 @@ const onHoverDelayMsInput = (event: Event) => {
     />
     <ToastBanner
       message="Test Message"
-      variant={ ToastVariant.Warning }
+      variant={ToastVariant.Warning}
       action={{
         text: 'Undo',
         handler: () => {

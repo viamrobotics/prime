@@ -1,6 +1,11 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
-import { Button, ToastContainer, ToastVariant, provideToast } from '@viamrobotics/prime-core';
+import {
+  Button,
+  ToastContainer,
+  ToastVariant,
+  provideToast,
+} from '@viamrobotics/prime-core';
 
 const toast = provideToast();
 </script>

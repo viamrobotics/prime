@@ -23,7 +23,7 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
-        variant: ToastVariant.Success
+        variant: ToastVariant.Success,
       });
     });
 
@@ -40,7 +40,7 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a info toast message',
-        variant: ToastVariant.Info
+        variant: ToastVariant.Info,
       });
     });
 
@@ -57,7 +57,7 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a warning toast message',
-        variant: ToastVariant.Warning
+        variant: ToastVariant.Warning,
       });
     });
 
@@ -74,7 +74,7 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a danger toast message',
-        variant: ToastVariant.Danger
+        variant: ToastVariant.Danger,
       });
     });
 
@@ -91,7 +91,7 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a neutral toast message',
-        variant: ToastVariant.Neutral
+        variant: ToastVariant.Neutral,
       });
     });
 

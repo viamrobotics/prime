@@ -30,14 +30,14 @@ export { extraClasses as cx };
   )}
 >
   <div class="mr-4 flex gap-2">
-      <Icon
-        size="lg"
-        name={variant.icon}
-        cx={variant.iconClasses}
-        role="img"
-        aria-hidden={false}
-        aria-label={variant.label}
-      />
+    <Icon
+      size="lg"
+      name={variant.icon}
+      cx={variant.iconClasses}
+      role="img"
+      aria-hidden={false}
+      aria-label={variant.label}
+    />
     <p class="truncate">{message}</p>
   </div>
 
