@@ -31,7 +31,7 @@ export const DisplayDetailsByVariant = {
     icon: 'domain',
     iconClasses: 'text-gray-7',
     label: 'neutral',
-  }
-}
+  },
+};
 
 export type ToastVariantType = (typeof ToastVariant)[keyof typeof ToastVariant];

@@ -5,7 +5,11 @@ import cx from 'classnames';
 import Button from '$lib/button/button.svelte';
 import { Icon } from '$lib/icon';
 import IconButton from '$lib/button/icon-button.svelte';
-import { DisplayDetailsByVariant, ToastVariant, type ToastVariantType } from './variants';
+import {
+  DisplayDetailsByVariant,
+  ToastVariant,
+  type ToastVariantType,
+} from './variants';
 
 /** The message displayed on the toast */
 export let message: string;
@@ -18,7 +22,7 @@ export let action: { text: string; handler: () => unknown } | undefined =
 /** The severity of the notification you want to show users*/
 export let variant: ToastVariantType = ToastVariant.Success;
 
-const displayDetails = DisplayDetailsByVariant[variant]
+const displayDetails = DisplayDetailsByVariant[variant];
 
 /** Additional CSS classes to pass to the banner. */
 let extraClasses: cx.Argument = '';

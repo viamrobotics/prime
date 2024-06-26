@@ -68,17 +68,16 @@ describe('toast', () => {
       expectedColor: 'text-success-dark',
     },
     // ...
-  ])('displays correct icon for %variant', async ({
-    variant,
-    expectedName,
-    expectedColor,
-  }) => {
-    await act(() => context.toast({ message: 'Hello world', variant }));
-  
-    const status = screen.getByRole('status');
-    const toast = within(status).getByRole('listitem');
-    const icon = within(toast).getByRole('img', { name: expectedName });
-  
-    expect(icon).toHaveClass(expectedColor);
-  })
+  ])(
+    'displays correct icon for %variant',
+    async ({ variant, expectedName, expectedColor }) => {
+      await act(() => context.toast({ message: 'Hello world', variant }));
+
+      const status = screen.getByRole('status');
+      const toast = within(status).getByRole('listitem');
+      const icon = within(toast).getByRole('img', { name: expectedName });
+
+      expect(icon).toHaveClass(expectedColor);
+    }
+  );
 });
