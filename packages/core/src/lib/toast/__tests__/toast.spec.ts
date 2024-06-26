@@ -19,7 +19,7 @@ describe('toast', () => {
     screen.getByRole('status', { name: 'Toasts' });
   });
 
-  it('should display a dismissable toast', async () => {
+  it('should display a dismissible toast', async () => {
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
