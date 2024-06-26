@@ -5,7 +5,7 @@ import * as ToastBannerStories from './toast-banner.stories.svelte';
 
 # ToastBanner
 
-Toast Banner message of type success.
+You can specify a toast banner message of 5 types: success, info, warn, danger, and neutral.
 
 ```ts
 import { ToastBanner } from '@viamrobotics/prime-core';
@@ -14,6 +14,24 @@ import { ToastBanner } from '@viamrobotics/prime-core';
 <Canvas>
   <Story of={ToastBannerStories.Success} />
 </Canvas>
+
+<Canvas>
+  <Story of={ToastBannerStories.Info} />
+</Canvas>
+
+<Canvas>
+  <Story of={ToastBannerStories.Danger} />
+</Canvas>
+
+<Canvas>
+  <Story of={ToastBannerStories.Warning} />
+</Canvas>
+
+<Canvas>
+  <Story of={ToastBannerStories.Neutral} />
+</Canvas>
+
+An option action can also be specified in the Toast.
 
 <Canvas>
   <Story of={ToastBannerStories.SuccessWithEmphasizedAction} />
