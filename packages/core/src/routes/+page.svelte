@@ -1616,7 +1616,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
     <ToastBanner
       message="Test Message"
@@ -1624,7 +1623,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
     <ToastBanner
       message="Test Message"
@@ -1632,7 +1630,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
     <ToastBanner
       message="Test Message"
@@ -1640,7 +1637,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
     <ToastBanner
       message="Test Message"
@@ -1648,7 +1644,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
   </div>
   <div class="flex gap-4">
@@ -1664,7 +1659,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
     <ToastBanner
       message="Test Message"
@@ -1678,7 +1672,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
     <ToastBanner
       message="Test Message"
@@ -1692,7 +1685,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
     <ToastBanner
       message="Test Message"
@@ -1706,7 +1698,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
     <ToastBanner
       message="Test Message"
@@ -1720,7 +1711,6 @@ const onHoverDelayMsInput = (event: Event) => {
       dismiss={() => {
         console.log('Clicked close button');
       }}
-      cx="max-w-[240px]"
     />
   </div>
 
