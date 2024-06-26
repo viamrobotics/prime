@@ -1,29 +1,37 @@
 export const ToastVariant = {
-  Info: {
+  Info: 'info',
+  Warning: 'warning',
+  Danger: 'danger',
+  Success: 'success',
+  Neutral: 'neutral',
+} as const;
+
+export const DisplayDetailsByVariant = {
+  [ToastVariant.Info]: {
     icon: 'information-outline',
     iconClasses: 'text-info-dark',
     label: 'info',
   },
-  Warning: {
+  [ToastVariant.Warning]: {
     icon: 'alert',
     iconClasses: 'text-warning-bright',
     label: 'warning',
   },
-  Danger: {
+  [ToastVariant.Danger]: {
     icon: 'alert-circle',
     iconClasses: 'text-danger-dark',
     label: 'danger',
   },
-  Success: {
+  [ToastVariant.Success]: {
     icon: 'check-circle',
     iconClasses: 'text-success-dark',
     label: 'success',
   },
-  Neutral: {
+  [ToastVariant.Neutral]: {
     icon: 'domain',
     iconClasses: 'text-gray-7',
     label: 'neutral',
-  },
-} as const;
+  }
+}
 
 export type ToastVariantType = (typeof ToastVariant)[keyof typeof ToastVariant];

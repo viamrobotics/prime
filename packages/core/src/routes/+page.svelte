@@ -1708,6 +1708,20 @@ const onHoverDelayMsInput = (event: Event) => {
       }}
       cx="max-w-[240px]"
     />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Neutral}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+      cx="max-w-[240px]"
+    />
   </div>
 
   <!-- Toast Container -->
