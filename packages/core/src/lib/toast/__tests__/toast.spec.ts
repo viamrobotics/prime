@@ -67,7 +67,26 @@ describe('toast', () => {
       expectedName: /success/iu,
       expectedColor: 'text-success-dark',
     },
-    // ...
+    {
+      variant: ToastVariant.Info,
+      expectedName: /info/iu,
+      expectedColor: 'text-info-dark',
+    },
+    {
+      variant: ToastVariant.Warning,
+      expectedName: /warning/iu,
+      expectedColor: 'text-warning-bright',
+    },
+    {
+      variant: ToastVariant.Danger,
+      expectedName: /danger/iu,
+      expectedColor: 'text-danger-dark',
+    },
+    {
+      variant: ToastVariant.Neutral,
+      expectedName: /neutral/iu,
+      expectedColor: 'text-gray-7',
+    },
   ])(
     'displays correct icon for %variant',
     async ({ variant, expectedName, expectedColor }) => {
