@@ -14,22 +14,22 @@ export const DisplayDetailsByVariant = {
   },
   [ToastVariant.Warning]: {
     icon: 'alert',
-    iconClasses: 'text-warning-bright shrink-0',
+    iconClasses: 'text-warning-bright',
     label: 'warning',
   },
   [ToastVariant.Danger]: {
     icon: 'alert-circle',
-    iconClasses: 'text-danger-dark shrink-0',
+    iconClasses: 'text-danger-dark',
     label: 'danger',
   },
   [ToastVariant.Success]: {
     icon: 'check-circle',
-    iconClasses: 'text-success-dark shrink-0',
+    iconClasses: 'text-success-dark',
     label: 'success',
   },
   [ToastVariant.Neutral]: {
     icon: 'domain',
-    iconClasses: 'text-gray-7 shrink-0',
+    iconClasses: 'text-gray-7',
     label: 'neutral',
   },
 } as const;
