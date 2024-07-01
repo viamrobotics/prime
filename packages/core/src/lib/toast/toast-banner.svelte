@@ -35,7 +35,7 @@ export { extraClasses as cx };
     extraClasses
   )}
 >
-  <div class="mr-4 flex gap-2">
+  <div class="mr-4 flex gap-4 truncate">
     <Icon
       size="lg"
       name={displayDetails.icon}
