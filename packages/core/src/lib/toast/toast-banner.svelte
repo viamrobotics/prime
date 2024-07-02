@@ -31,7 +31,7 @@ export { extraClasses as cx };
 
 <div
   class={cx(
-    'relative flex h-10 w-max max-w-[480px] shrink-0 items-center border border-medium bg-medium pl-3 pr-1 text-sm text-default shadow-sm',
+    'relative flex h-10 w-max max-w-[480px] items-center border border-medium bg-medium pl-3 pr-1 text-sm text-default shadow-sm',
     extraClasses
   )}
 >
@@ -39,7 +39,7 @@ export { extraClasses as cx };
     <Icon
       size="lg"
       name={displayDetails.icon}
-      cx={displayDetails.iconClasses}
+      cx={['shrink-0', displayDetails.iconClasses]}
       role="img"
       aria-hidden={false}
       aria-label={displayDetails.label}
