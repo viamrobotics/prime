@@ -13,6 +13,8 @@ First, build the other packages for use in storybook:
 pnpm -r build
 ```
 
+**NOTE:** Storybook does not have the hot reloading feature. You must rebuild the package using the above command every time there is a change.
+
 Then run the storybook:
 
 ```

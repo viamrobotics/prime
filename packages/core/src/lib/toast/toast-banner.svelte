@@ -35,11 +35,11 @@ export { extraClasses as cx };
     extraClasses
   )}
 >
-  <div class="mr-4 flex gap-2">
+  <div class="mr-4 flex gap-4 truncate">
     <Icon
       size="lg"
       name={displayDetails.icon}
-      cx={displayDetails.iconClasses}
+      cx={['shrink-0', displayDetails.iconClasses]}
       role="img"
       aria-hidden={false}
       aria-label={displayDetails.label}
