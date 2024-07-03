@@ -1172,6 +1172,18 @@ const onHoverDelayMsInput = (event: Event) => {
       icon="viam-component"
       removable={false}
     />
+    <Pill
+      value="my-machine-123"
+      icon="multiplication-box"
+      href="https://i.imgur.com/aQCBxdr.png"
+      removable={false}
+    />
+    <Pill
+      value="target-self-example"
+      href="https://i.imgur.com/aQCBxdr.png"
+      target="_self"
+      removable={false}
+    />
   </div>
 
   <!-- Prevent Handler -->
