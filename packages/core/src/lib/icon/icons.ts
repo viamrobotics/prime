@@ -67,6 +67,7 @@ export const paths: Record<string, IconPath> = {
   earth: MDI.mdiEarth,
   'file-chart-outline': MDI.mdiFileChartOutline,
   'file-download-outline': MDI.mdiFileDownloadOutline,
+  'file-swap-outline': MDI.mdiFileSwapOutline,
   'filter-outline': MDI.mdiFilterOutline,
   github: MDI.mdiGithub,
   'grid-orthographic':
