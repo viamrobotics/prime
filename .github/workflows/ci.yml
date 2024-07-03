@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install 🔧
-        uses: viamrobotics/js-config/.github/actions/setup@0006127efb3f62669f662ca31c555a49a034935e
+        uses: viamrobotics/js-config/.github/actions/setup@7e4e4f1bd14c83aaec2fd877324c38028d8a387b
 
       - name: Build 🏗️
         run: pnpm run build
