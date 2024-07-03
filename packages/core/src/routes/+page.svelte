@@ -31,12 +31,16 @@ import {
   TableHeaderCell,
   TableHeader,
   TableRow,
+  ToastBanner,
+  ToastContainer,
+  ToastVariant,
   ToggleButtons,
   Select,
   SearchableSelect,
   Multiselect,
   NotificationContainer,
   provideNotify,
+  provideToast,
   useNotify,
   Modal,
   CodeSnippet,
@@ -69,6 +73,7 @@ const handleFloatingMenuChange = (isOpen: boolean) => {
 };
 
 const notify = useNotify();
+const toast = provideToast();
 
 let restrictedValue = '';
 
@@ -1611,6 +1616,157 @@ const onHoverDelayMsInput = (event: Event) => {
       tabs={['Tab 1', 'Tab 2']}
       selected="Tab 2"
     />
+  </div>
+
+  <!-- Toast Banner -->
+  <h1 class="text-2xl">Toast Banner</h1>
+
+  <div class="flex gap-4">
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Success}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Info}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Danger}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Warning}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Neutral}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+  </div>
+  <div class="flex gap-4">
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Success}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Info}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Danger}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Warning}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Neutral}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+  </div>
+
+  <!-- Toast Container -->
+  <h1 class="text-2xl">Toast Container</h1>
+
+  <div class="flex gap-4">
+    <ToastContainer />
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Success', variant: ToastVariant.Success });
+        }}
+      >
+        Click to show "Success" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Information', variant: ToastVariant.Info });
+        }}
+      >
+        Click to show "Info" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Dangerous', variant: ToastVariant.Danger });
+        }}
+      >
+        Click to show "Danger" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Warning', variant: ToastVariant.Warning });
+        }}
+      >
+        Click to show "Warning" button
+      </Button>
+    </div>
   </div>
 
   <!-- Toggle Buttons -->

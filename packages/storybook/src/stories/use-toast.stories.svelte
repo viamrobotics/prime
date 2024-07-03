@@ -1,6 +1,11 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
-import { Button, ToastContainer, provideToast } from '@viamrobotics/prime-core';
+import {
+  Button,
+  ToastContainer,
+  ToastVariant,
+  provideToast,
+} from '@viamrobotics/prime-core';
 
 const toast = provideToast();
 </script>
@@ -16,6 +21,7 @@ const toast = provideToast();
         on:click={() =>
           toast({
             message: 'Success message',
+            variant: ToastVariant.Success,
           })}
       >
         Success
@@ -23,7 +29,44 @@ const toast = provideToast();
       <Button
         on:click={() =>
           toast({
+            message: 'Info message',
+            variant: ToastVariant.Info,
+          })}
+      >
+        Info
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Danger message',
+            variant: ToastVariant.Danger,
+          })}
+      >
+        Danger
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Warning message',
+            variant: ToastVariant.Warning,
+          })}
+      >
+        Warning
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Neutral message',
+            variant: ToastVariant.Neutral,
+          })}
+      >
+        Neutral
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
             message: 'Success message',
+            variant: ToastVariant.Success,
             action: {
               text: 'action',
               handler: () => {
@@ -33,6 +76,66 @@ const toast = provideToast();
           })}
       >
         Success with action
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Info message',
+            variant: ToastVariant.Info,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Info with action
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Danger message',
+            variant: ToastVariant.Danger,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Danger with action
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Warning message',
+            variant: ToastVariant.Warning,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Warning with action
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Neutral message',
+            variant: ToastVariant.Neutral,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Neutral with action
       </Button>
     </div>
   </div>

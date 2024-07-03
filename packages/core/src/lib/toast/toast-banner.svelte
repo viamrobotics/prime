@@ -2,8 +2,14 @@
 
 <script lang="ts">
 import cx from 'classnames';
-import { Icon, IconButton } from '$lib';
-import { iconName, iconClasses } from './variants';
+import Button from '$lib/button/button.svelte';
+import { Icon } from '$lib/icon';
+import IconButton from '$lib/button/icon-button.svelte';
+import {
+  DisplayDetailsByVariant,
+  ToastVariant,
+  type ToastVariantType,
+} from './variants';
 
 /** The message displayed on the toast */
 export let message: string;
@@ -13,6 +19,11 @@ export let dismiss: () => void;
 export let action: { text: string; handler: () => unknown } | undefined =
   undefined;
 
+/** The severity of the notification you want to show users*/
+export let variant: ToastVariantType = ToastVariant.Success;
+
+const displayDetails = DisplayDetailsByVariant[variant];
+
 /** Additional CSS classes to pass to the banner. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
@@ -20,34 +31,36 @@ export { extraClasses as cx };
 
 <div
   class={cx(
-    'relative flex h-10 w-max max-w-[480px] items-center border bg-medium pl-3 pr-1 text-sm',
+    'relative flex h-10 w-max max-w-[480px] items-center border border-medium bg-medium pl-3 pr-1 text-sm text-default shadow-sm',
     extraClasses
   )}
 >
-  <div class="mr-4 flex gap-2">
+  <div class="mr-4 flex gap-4 truncate">
     <Icon
       size="lg"
-      name={iconName}
-      cx={iconClasses}
+      name={displayDetails.icon}
+      cx={['shrink-0', displayDetails.iconClasses]}
       role="img"
       aria-hidden={false}
-      aria-label="success"
+      aria-label={displayDetails.label}
     />
-
     <p class="truncate">{message}</p>
   </div>
 
-  <div class="flex gap-1">
+  <div class="flex">
     {#if action}
-      <button
+      <Button
+        height="fixed"
+        textSize="text-sm"
+        variant="ghost"
         type="button"
         on:click={action.handler}
-        aria-label="Perform action"
       >
-        <span class="text-sm font-medium hover:underline">{action.text}</span>
-      </button>
+        {action.text}
+      </Button>
     {/if}
     <IconButton
+      variant="ghost"
       cx="text-gray-7"
       label="Dismiss toast"
       icon="close"
