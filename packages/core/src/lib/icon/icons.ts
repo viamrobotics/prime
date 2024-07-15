@@ -100,6 +100,7 @@ export const paths: Record<string, IconPath> = {
   'multiplication-box': MDI.mdiMultiplicationBox,
   'navigation-variant-outline': MDI.mdiNavigationVariantOutline,
   'navigation-variant': MDI.mdiNavigationVariant,
+  'network-outline': MDI.mdiNetworkOutline,
   'open-in-new': MDI.mdiOpenInNew,
   'package-variant-closed': MDI.mdiPackageVariantClosed,
   pause: MDI.mdiPause,
