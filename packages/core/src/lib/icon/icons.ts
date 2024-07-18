@@ -86,6 +86,7 @@ export const paths: Record<string, IconPath> = {
   'language-python': MDI.mdiLanguagePython,
   'language-typescript': MDI.mdiLanguageTypescript,
   linkedin: MDI.mdiLinkedin,
+  'link': MDI.mdiLink,
   'link-variant': MDI.mdiLinkVariant,
   linux: MDI.mdiLinux,
   lock: MDI.mdiLockOutline,
