@@ -107,6 +107,7 @@ export const paths: Record<string, IconPath> = {
   pause: MDI.mdiPause,
   'pause-circle-outline': MDI.mdiPauseCircleOutline,
   'pencil-outline': MDI.mdiPencilOutline,
+  'picture-in-picture-top-right': MDI.mdiPictureInPictureTopRight,
   'play-circle-outline': MDI.mdiPlayCircleOutline,
   plus: MDI.mdiPlus,
   'radiobox-blank': MDI.mdiRadioboxBlank,
