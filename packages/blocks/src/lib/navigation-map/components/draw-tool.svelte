@@ -38,11 +38,11 @@ const handlePointerDown = (event: MapLayerMouseEvent | MapLayerTouchEvent) => {
   event.preventDefault();
   drawing = true;
   downLngLat = event.lngLat;
-  downMercator = math.lngLatToMercator(downLngLat);
+  downMercator = MercatorCoordinate.fromLngLat(downLngLat, 0);
 };
 
 const handlePointerMove = (event: MapMouseEvent) => {
-  const moveMercator = math.lngLatToMercator(event.lngLat);
+  const moveMercator = MercatorCoordinate.fromLngLat(event.lngLat, 0);
   const scale = moveMercator.meterInMercatorCoordinateUnits();
 
   moveSign.x = Math.sign(moveMercator.x - downMercator.x);
@@ -62,10 +62,10 @@ const handlePointerUp = () => {
   drawing = false;
 
   const scale = downMercator.meterInMercatorCoordinateUnits();
-  const offset = math.cartesianToMercator(
-    -moveSign.x * (width / 2),
-    -moveSign.y * (height / 2),
-    scale
+  const offset = new MercatorCoordinate(
+    -moveSign.x * (width / 2) * scale,
+    -moveSign.y * (height / 2) * scale,
+    0
   );
 
   downMercator.x -= offset.x;

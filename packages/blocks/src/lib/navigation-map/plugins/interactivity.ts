@@ -4,55 +4,28 @@
  * to be compatible with the map camera.
  */
 
-import * as THREE from 'three';
-import { interactivity } from '@threlte/extras';
+import { interactivity, type Intersection } from '@threlte/extras';
 import { useThrelte } from '@threlte/core';
-import type { MapMouseEvent } from 'maplibre-gl';
-import { useMapLibre } from '$lib/maplibre/hooks';
-import { onDestroy } from 'svelte';
+import { useMapLibre, maplibreRaycastPlugin } from '$lib';
 
 export const interactivityPlugin = () => {
   const { camera } = useThrelte();
   const { map } = useMapLibre();
-
-  let point: { x: number; y: number } = { x: 0, y: 0 };
-
-  const handleMouseMove = (event: MapMouseEvent) => {
-    point = event.point;
-  };
-
-  map.on('mousemove', handleMouseMove);
-
-  onDestroy(() => map.off('mousemove', handleMouseMove));
-
-  const cameraPosition = new THREE.Vector3();
-  const mousePosition = new THREE.Vector3();
-  const viewDirection = new THREE.Vector3();
-  const camInverseProjection = new THREE.Matrix4();
+  const { pointer, compute } = maplibreRaycastPlugin(camera);
 
   interactivity({
     target: map.getCanvas(),
-    filter: (hits) => {
+    filter: (hits: Intersection[]) => {
       // Only return the first hit
       return hits.slice(0, 1);
     },
     compute: (_, state) => {
       state.pointer.update((vec2) => {
-        vec2.x = (point.x / map.transform.width) * 2 - 1;
-        vec2.y = -(point.y / map.transform.height) * 2 + 1;
+        vec2.copy(pointer);
         return vec2;
       });
 
-      const { current } = state.pointer;
-
-      camInverseProjection.copy(camera.current.projectionMatrix).invert();
-      cameraPosition.set(0, 0, 0).applyMatrix4(camInverseProjection);
-      mousePosition
-        .set(current.x, current.y, 1)
-        .applyMatrix4(camInverseProjection);
-      viewDirection.copy(mousePosition).sub(cameraPosition).normalize();
-
-      state.raycaster.set(cameraPosition, viewDirection);
+      compute(state.raycaster);
     },
   });
 };

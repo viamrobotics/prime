@@ -33,6 +33,7 @@ const path = () =>
     <div class="relative aspect-video w-full border border-gray-200">
       {#await fetchPointcloud() then pointcloud}
         <SlamMap2D
+          helpers
           basePose={{ x: 1, y: 2, theta: 45 }}
           {pointcloud}
           motionPath={path()}

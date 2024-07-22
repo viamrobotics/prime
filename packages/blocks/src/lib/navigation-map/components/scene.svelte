@@ -6,10 +6,10 @@ import type { LngLat } from 'maplibre-gl';
 import type { Obstacle } from '../types';
 import { view, obstacles, paths, selected, environment } from '../stores';
 import { computeBoundingPlugin } from '../plugins/compute-bounding';
-import { renderPlugin } from '../plugins/render';
 import { interactivityPlugin } from '../plugins/interactivity';
 import { createObstacle } from '../lib/create-obstacle';
 import { createName } from '../lib/create-name';
+import { maplibreRenderPlugin } from '../../index';
 import ObstacleGeometries from './obstacle.svelte';
 import Drawtool from './draw-tool.svelte';
 import Path from './path.svelte';
@@ -19,12 +19,17 @@ const dispatch = createEventDispatcher<{
   'update-obstacles': Obstacle[];
 }>();
 
-renderPlugin();
 computeBoundingPlugin();
 interactivityPlugin();
 
-const { renderer } = useThrelte();
+const { renderer, scene, camera } = useThrelte();
 const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+
+camera.set(new THREE.Camera());
+
+maplibreRenderPlugin(scene, camera, () => {
+  renderer.render(scene, camera.current);
+});
 
 const handleUpdate = () => {
   dispatch('update-obstacles', $obstacles);
@@ -61,6 +66,7 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 </script>
 
 <T.AmbientLight intensity={flat ? 2 : 1.5} />
+<T.DirectionalLight intensity={1.5} />
 
 {#if !flat}
   <T.DirectionalLight intensity={1.5} />
