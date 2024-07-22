@@ -1,11 +1,18 @@
 <script lang="ts">
 import { Color } from 'three';
-import { T } from '@threlte/core';
+import { T, type Props } from '@threlte/core';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
-export let length: number | [x: number, y: number, z: number] = 1;
+interface $$Props extends Props<Line2> {
+  length?: number;
+  width?: number;
+  axesColors?: [x: string, y: string, z: string];
+  depthTest?: boolean;
+}
+
+export let length = 1;
 export let width = 1;
 export let axesColors = ['red', 'green', 'blue'];
 export let depthTest = true;
@@ -44,14 +51,10 @@ const X_AXIS_X_COMPONENT_INDEX = 3;
 const Y_AXIS_Y_COMPONENT_INDEX = 13;
 const Z_AXIS_Z_COMPONENT_INDEX = 23;
 
-$: xLength = Array.isArray(length) ? length[0] : length;
-$: yLength = Array.isArray(length) ? length[1] : length;
-$: zLength = Array.isArray(length) ? length[2] : length;
-
 $: {
-  positions[X_AXIS_X_COMPONENT_INDEX] = xLength;
-  positions[Y_AXIS_Y_COMPONENT_INDEX] = yLength;
-  positions[Z_AXIS_Z_COMPONENT_INDEX] = zLength;
+  positions[X_AXIS_X_COMPONENT_INDEX] = length;
+  positions[Y_AXIS_Y_COMPONENT_INDEX] = length;
+  positions[Z_AXIS_Z_COMPONENT_INDEX] = length;
   geometry.setPositions(positions);
 }
 </script>

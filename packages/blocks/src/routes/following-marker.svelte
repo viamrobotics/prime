@@ -1,5 +1,5 @@
 <script lang="ts">
-import { MapLibre, MapLibreDirectionalMarker } from '$lib';
+import { MapLibre, DirectionalMarker } from '$lib';
 
 let lng = -73.98;
 let lat = 40.77;
@@ -29,7 +29,7 @@ requestAnimationFrame(frame);
       center={{ lng, lat }}
       options={{ dragPan: false }}
     >
-      <MapLibreDirectionalMarker
+      <DirectionalMarker
         {lng}
         {lat}
         {rotation}

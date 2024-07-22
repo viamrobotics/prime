@@ -11,8 +11,8 @@ import {
   type Geometry,
   useMapLibre,
   type Obstacle,
+  LngLatInput,
 } from '$lib';
-import LnglatInput from '../input/lnglat.svelte';
 import GeometryInputs from '../input/geometry.svelte';
 import OrientationInput from '../input/orientation.svelte';
 import ObstaclesLegend from './obstacles-legend.svelte';
@@ -200,7 +200,7 @@ $: debugMode = $environment === 'debug';
         />
       </Label>
     </div>
-    <LnglatInput
+    <LngLatInput
       lng={selectedObstacle.location.lng}
       lat={selectedObstacle.location.lat}
       on:input={handleLngLatInput(selectedObstacle.name)}

@@ -1,5 +1,5 @@
 <script lang="ts">
-import * as THREE from 'three';
+import { Camera, Plane, Vector3 } from 'three';
 import { createEventDispatcher } from 'svelte';
 import { T, useThrelte } from '@threlte/core';
 import type { LngLat } from 'maplibre-gl';
@@ -23,9 +23,9 @@ computeBoundingPlugin();
 interactivityPlugin();
 
 const { renderer, scene, camera } = useThrelte();
-const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+const clippingPlane = new Plane(new Vector3(0, 1, 0), 0);
 
-camera.set(new THREE.Camera());
+camera.set(new Camera());
 
 maplibreRenderPlugin(scene, camera, () => {
   renderer.render(scene, camera.current);
