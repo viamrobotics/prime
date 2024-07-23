@@ -1,6 +1,6 @@
 <!--
 @component
-  
+
 A navigation aid that helps users understand the relationships between parents and children.
 
 ```svelte
@@ -10,20 +10,23 @@ A navigation aid that helps users understand the relationships between parents a
 <svelte:options immutable />
 
 <script lang="ts">
-import cx from 'classnames';
+import classnames from 'classnames';
 
 /** A list of each part. */
 export let crumbs: [string, ...string[]];
 
+/** Render the breadcrumbs as disabled. */
+export let isDisabled = false;
+
 /** Additional CSS classes to pass to the breadcrumbs container. */
-let extraClasses: cx.Argument = '';
-export { extraClasses as cx };
+export let cx: classnames.Argument = '';
 </script>
 
 <div
-  class={cx(
-    'inline-flex gap-2.5 rounded-full border border-medium bg-light px-2.5 py-px text-default',
-    extraClasses
+  class={classnames(
+    'inline-flex gap-2.5 rounded-full border border-medium bg-light px-2.5 py-px',
+    isDisabled ? 'text-disabled' : 'text-default',
+    cx
   )}
 >
   {#each crumbs as crumb, index (crumb)}

@@ -13,7 +13,7 @@ export type IconPath = Path | CustomIcon[];
  * Keys should match MDI name
  * e.g. 'account-multiple' for MDI.mdiAccountMultiple
  */
-export const paths: Record<string, IconPath> = {
+export const paths = {
   'account-group-outline': MDI.mdiAccountGroupOutline,
   'account-multiple': MDI.mdiAccountMultiple,
   'alert-circle-outline': MDI.mdiAlertCircleOutline,
@@ -34,6 +34,7 @@ export const paths: Record<string, IconPath> = {
   'arrow-up': MDI.mdiArrowUp,
   article: MDI.mdiTextBoxOutline,
   'axis-arrow': MDI.mdiAxisArrow,
+  'backup-restore': MDI.mdiBackupRestore,
   'broadcast-off': MDI.mdiBroadcastOff,
   broadcast: MDI.mdiBroadcast,
   'camera-flip-outline': MDI.mdiCameraFlipOutline,
@@ -48,6 +49,7 @@ export const paths: Record<string, IconPath> = {
   'chevron-left': MDI.mdiChevronLeft,
   'chevron-right': MDI.mdiChevronRight,
   'chevron-up': MDI.mdiChevronUp,
+  'circle-md': MDI.mdiCircleMedium,
   close: MDI.mdiClose,
   'code-braces': MDI.mdiCodeBraces,
   'code-json': MDI.mdiCodeJson,
@@ -65,6 +67,7 @@ export const paths: Record<string, IconPath> = {
   earth: MDI.mdiEarth,
   'file-chart-outline': MDI.mdiFileChartOutline,
   'file-download-outline': MDI.mdiFileDownloadOutline,
+  'file-swap-outline': MDI.mdiFileSwapOutline,
   'filter-outline': MDI.mdiFilterOutline,
   github: MDI.mdiGithub,
   'grid-orthographic':
@@ -82,6 +85,7 @@ export const paths: Record<string, IconPath> = {
   'language-go': MDI.mdiLanguageGo,
   'language-python': MDI.mdiLanguagePython,
   'language-typescript': MDI.mdiLanguageTypescript,
+  link: MDI.mdiLink,
   linkedin: MDI.mdiLinkedin,
   'link-variant': MDI.mdiLinkVariant,
   linux: MDI.mdiLinux,
@@ -97,11 +101,13 @@ export const paths: Record<string, IconPath> = {
   'multiplication-box': MDI.mdiMultiplicationBox,
   'navigation-variant-outline': MDI.mdiNavigationVariantOutline,
   'navigation-variant': MDI.mdiNavigationVariant,
+  'network-outline': MDI.mdiNetworkOutline,
   'open-in-new': MDI.mdiOpenInNew,
   'package-variant-closed': MDI.mdiPackageVariantClosed,
   pause: MDI.mdiPause,
   'pause-circle-outline': MDI.mdiPauseCircleOutline,
   'pencil-outline': MDI.mdiPencilOutline,
+  'picture-in-picture-top-right': MDI.mdiPictureInPictureTopRight,
   'play-circle-outline': MDI.mdiPlayCircleOutline,
   plus: MDI.mdiPlus,
   'radiobox-blank': MDI.mdiRadioboxBlank,
@@ -119,6 +125,8 @@ export const paths: Record<string, IconPath> = {
   sync: MDI.mdiSync,
   tools: MDI.mdiTools,
   'trash-can-outline': MDI.mdiTrashCanOutline,
+  'toggle-switch-outline': MDI.mdiToggleSwitchOutline,
+  'toggle-switch-off-outline': MDI.mdiToggleSwitchOffOutline,
   twitter: MDI.mdiTwitter,
   undo: MDI.mdiUndo,
   'unfold-less-horizontal': MDI.mdiUnfoldLessHorizontal,
