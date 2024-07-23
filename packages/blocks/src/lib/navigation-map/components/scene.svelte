@@ -66,7 +66,6 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 </script>
 
 <T.AmbientLight intensity={flat ? 2 : 1.5} />
-<T.DirectionalLight intensity={1.5} />
 
 {#if !flat}
   <T.DirectionalLight intensity={1.5} />
