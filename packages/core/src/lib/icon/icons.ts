@@ -13,7 +13,7 @@ export type IconPath = Path | CustomIcon[];
  * Keys should match MDI name
  * e.g. 'account-multiple' for MDI.mdiAccountMultiple
  */
-export const paths: Record<string, IconPath> = {
+export const paths = {
   'account-group-outline': MDI.mdiAccountGroupOutline,
   'account-multiple': MDI.mdiAccountMultiple,
   'alert-circle-outline': MDI.mdiAlertCircleOutline,
@@ -125,6 +125,8 @@ export const paths: Record<string, IconPath> = {
   sync: MDI.mdiSync,
   tools: MDI.mdiTools,
   'trash-can-outline': MDI.mdiTrashCanOutline,
+  'toggle-switch-outline': MDI.mdiToggleSwitchOutline,
+  'toggle-switch-off-outline': MDI.mdiToggleSwitchOffOutline,
   twitter: MDI.mdiTwitter,
   undo: MDI.mdiUndo,
   'unfold-less-horizontal': MDI.mdiUnfoldLessHorizontal,

@@ -52,7 +52,7 @@ $: {
   } else if (Array.isArray(pathValue)) {
     allPaths = pathValue.map((icon) => ({
       path: icon.path,
-      opacity: icon.opacity,
+      opacity: 'opacity' in icon ? icon.opacity : undefined,
     }));
   }
 }

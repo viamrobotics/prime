@@ -14,13 +14,13 @@ const detailedOptions = [
     value: 'opt-1',
     label: 'Gale',
     description: 'Wizard',
-    icon: 'viam-process',
+    icon: 'viam-process' as const,
   },
   {
     value: 'opt-2',
     label: 'Karlach',
     description: 'Barbarian',
-    icon: 'language-cpp',
+    icon: 'language-cpp' as const,
   },
 ];
 const stringOptions = ['hello from', 'the other side'];
@@ -364,7 +364,7 @@ describe('SearchableSelect', () => {
     const newOptions = [
       { value: 'New Option 1' },
       { value: 'opt1', label: 'New Option 2' },
-      { value: 'opt3', label: 'New Option 3', icon: 'apple' },
+      { value: 'opt3', label: 'New Option 3', icon: 'apple' as const },
     ];
 
     // Update the options prop

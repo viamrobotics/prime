@@ -34,7 +34,7 @@ export let disabled = false;
 export let removable = true;
 
 /** The icon shown in the button. */
-export let icon: IconName = '';
+export let icon: IconName | undefined = undefined;
 
 /** Additional CSS classes to pass to the pill. */
 let extraClasses: cx.Argument = '';
