@@ -110,7 +110,7 @@ let didHoverTooltip = Boolean(
     </div>
 
     <div class="absolute bottom-10 right-2 z-10">
-      <FollowControls pose={baseGeoPose} />
+      <FollowControls lngLat={baseGeoPose} />
     </div>
   </MapLibre>
 </div>

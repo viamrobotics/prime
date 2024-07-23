@@ -2,7 +2,7 @@
 export { default as AxesHelper } from './axes-helper/axes-helper.svelte';
 
 // MapLibre components
-export { LngLat } from 'maplibre-gl';
+export { LngLat, MercatorCoordinate } from 'maplibre-gl';
 export { default as MapLibre } from './maplibre/index.svelte';
 export { default as MapLibreMarker } from './maplibre/marker.svelte';
 export { default as DirectionalMarker } from './maplibre/directional-marker.svelte';
@@ -14,6 +14,13 @@ export { default as LngLatInput } from './maplibre/lnglat-input.svelte';
 export { useMapLibre, useMapLibreEvent } from './maplibre/hooks';
 export { maplibreRenderPlugin } from './maplibre/plugins/three';
 export { maplibreRaycastPlugin } from './maplibre/plugins/raycast';
+export {
+  lngLatToMercator,
+  mercatorToCartesian,
+  lngLatToCartesian,
+  cartesianToLngLat,
+  cartesianToMercator,
+} from './maplibre/math';
 export type { GeoPose, Waypoint } from './maplibre/types';
 
 // Slam components
