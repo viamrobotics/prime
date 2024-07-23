@@ -21,7 +21,7 @@ export {
   cartesianToLngLat,
   cartesianToMercator,
 } from './maplibre/math';
-export type { GeoPose, Waypoint } from './maplibre/types';
+export { GeoPose, Waypoint } from './maplibre/types';
 
 // Slam components
 export { default as SlamMap2D } from './slam-map-2d/index.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { MapLibre, DirectionalMarker } from '$lib';
+import { MapLibre, DirectionalMarker, LngLat } from '$lib';
 
 let lng = -73.98;
 let lat = 40.77;
@@ -26,7 +26,7 @@ requestAnimationFrame(frame);
   <div class="relative aspect-video w-full border border-gray-200 pt-0">
     <MapLibre
       minZoom={10}
-      center={{ lng, lat }}
+      center={new LngLat(lng, lat)}
       options={{ dragPan: false }}
     >
       <DirectionalMarker
