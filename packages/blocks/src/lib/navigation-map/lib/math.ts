@@ -6,6 +6,10 @@ export const toPrecisionLevel = (number: number, decimals: number): number => {
   return Math.floor(number * multiplier) / multiplier;
 };
 
+export const lngLatToMercator = (lngLat: LngLat): MercatorCoordinate => {
+  return MercatorCoordinate.fromLngLat(lngLat, 0);
+};
+
 export const mercatorToCartesian = (
   mercator: MercatorCoordinate,
   scale = mercator.meterInMercatorCoordinateUnits()
@@ -17,11 +21,15 @@ export const lngLatToCartesian = (
   lngLat: LngLat,
   scale?: number
 ): { x: number; y: number } => {
-  const mercator = MercatorCoordinate.fromLngLat(lngLat, 0);
+  const mercator = lngLatToMercator(lngLat);
   return mercatorToCartesian(mercator, scale);
 };
 
+export const cartesianToMercator = (x: number, y: number, scale: number) => {
+  return new MercatorCoordinate(x * scale, y * scale, 0);
+};
+
 export const cartesianToLngLat = (x: number, y: number, scale: number) => {
-  const mercator = new MercatorCoordinate(x * scale, y * scale, 0);
+  const mercator = cartesianToMercator(x, y, scale);
   return mercator.toLngLat();
 };
