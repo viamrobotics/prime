@@ -1,3 +1,7 @@
+<!-- 
+  @component
+  Adds an lat, lng set of inputs for viewing and setting the map center.
+-->
 <script lang="ts">
 import { LngLat } from 'maplibre-gl';
 import { persisted } from '@viamrobotics/prime-core';

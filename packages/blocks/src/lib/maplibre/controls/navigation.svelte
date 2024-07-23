@@ -1,7 +1,7 @@
 <!-- 
   @component
   
-  Adds a set of navigation controls.
+  Adds a set of maplibre navigation controls.
 
   @example
 

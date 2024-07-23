@@ -1,10 +1,17 @@
+<!-- 
+  @component
+  Adds controls for following a lat, lng point on a map.
+-->
 <script lang="ts">
 import { onMount } from 'svelte';
 import { Button, Icon } from '@viamrobotics/prime-core';
 import { useMapLibre } from '../hooks';
-import type { GeoPose } from '../types';
+import type { LngLat } from 'maplibre-gl';
 
-export let pose: GeoPose | undefined = undefined;
+/** The map point to follow */
+export let lngLat: LngLat | undefined = undefined;
+
+/** Whether following is enabled */
 export let following = false;
 
 const { map } = useMapLibre();
@@ -12,8 +19,8 @@ const { map } = useMapLibre();
 let rafID = 0;
 
 const follow = () => {
-  if (pose && following) {
-    map.setCenter(pose);
+  if (lngLat && following) {
+    map.setCenter(lngLat);
     rafID = requestAnimationFrame(follow);
   }
 };
@@ -30,6 +37,7 @@ $: if (following) {
 onMount(() => {
   map.on('wheel', stop);
   map.on('mousedown', stop);
+
   return () => {
     cancelAnimationFrame(rafID);
     map.off('wheel', stop);
@@ -39,7 +47,7 @@ onMount(() => {
 </script>
 
 <Button
-  disabled={!pose}
+  disabled={lngLat === undefined}
   on:click={(event) => {
     event.stopPropagation();
     following = !following;

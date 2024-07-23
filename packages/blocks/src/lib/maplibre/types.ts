@@ -1,11 +1,5 @@
-export interface LngLat {
-  lng: number;
-  lat: number;
-}
-
-export interface GeoPose {
-  lng: number;
-  lat: number;
+import type { LngLat } from 'maplibre-gl';
+export interface GeoPose extends LngLat {
   /** The rotation, where 0 is north */
   rotation: number;
 }

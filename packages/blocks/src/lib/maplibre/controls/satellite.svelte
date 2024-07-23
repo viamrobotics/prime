@@ -1,6 +1,6 @@
 <!-- 
   @component
-  Controls for toggling between a satellite and map view.
+  Adds controls for toggling between a satellite and map view.
 -->
 <script lang="ts">
 import { Button } from '@viamrobotics/prime-core';
