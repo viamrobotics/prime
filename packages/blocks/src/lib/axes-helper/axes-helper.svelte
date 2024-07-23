@@ -67,7 +67,6 @@ $: {
   <T is={geometry} />
   <T
     is={material}
-    alphaToCoverage
     vertexColors
     {depthTest}
   />
