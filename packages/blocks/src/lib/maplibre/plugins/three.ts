@@ -15,13 +15,13 @@ import { onMount } from 'svelte';
  * is determined by calculating the difference of the map's center lng,lat and the object's lng,lat and then
  * making an approximate transform to an x,z plane offset in meters.
  *
+ * The userData.lngLat property must be a maplibre LngLat object, or in the case of a THREE.Line, a LngLat[].
  *
  * @param scene A THREE.Scene instance.
- * @param cameraSignal This should only be a THREE.Camera instance. Perspective and Ortho cams make projection defaults that will not work with maplibre.
+ * @param cameraSignal This should only be a THREE.Camera instance. Perspective and Orthographic cameras make projection defaults that will not work with Maplibre.
  * @param renderFn A callback that runs on each map draw. Use it to render your scene.
- * @returns A cleanup function to call when the map unmounts.
  */
-export const maplibreRenderPlugin = (
+export const useMapLibreThreeRenderer = (
   scene: Scene,
   cameraSignal: { current: Camera },
   renderFn: (scene: Scene, camera: Camera) => void

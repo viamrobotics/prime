@@ -6,12 +6,12 @@
 
 import { interactivity, type Intersection } from '@threlte/extras';
 import { useThrelte } from '@threlte/core';
-import { useMapLibre, maplibreRaycastPlugin } from '$lib';
+import { useMapLibre, useMapLibreThreeRaycast } from '$lib';
 
 export const interactivityPlugin = () => {
   const { camera } = useThrelte();
   const { map } = useMapLibre();
-  const { pointer, compute } = maplibreRaycastPlugin(camera);
+  const { pointer, compute } = useMapLibreThreeRaycast(camera);
 
   interactivity({
     target: map.getCanvas(),

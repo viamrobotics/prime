@@ -9,7 +9,7 @@ import { computeBoundingPlugin } from '../plugins/compute-bounding';
 import { interactivityPlugin } from '../plugins/interactivity';
 import { createObstacle } from '../lib/create-obstacle';
 import { createName } from '../lib/create-name';
-import { maplibreRenderPlugin } from '../../index';
+import { useMapLibreThreeRenderer } from '../../index';
 import ObstacleGeometries from './obstacle.svelte';
 import Drawtool from './draw-tool.svelte';
 import Path from './path.svelte';
@@ -27,7 +27,7 @@ const clippingPlane = new Plane(new Vector3(0, 1, 0), 0);
 
 camera.set(new Camera());
 
-maplibreRenderPlugin(scene, camera, () => {
+useMapLibreThreeRenderer(scene, camera, () => {
   renderer.render(scene, camera.current);
 });
 

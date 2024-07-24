@@ -6,7 +6,7 @@ import { useMapLibre } from '../hooks';
 /**
  * Provides raycasting against THREE objects projected on to a maplibre map.
  */
-export const maplibreRaycastPlugin = (cameraSignal: { current: Camera }) => {
+export const useMapLibreThreeRaycast = (cameraSignal: { current: Camera }) => {
   const { map } = useMapLibre();
   const pointer = new Vector2();
 

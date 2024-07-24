@@ -10,6 +10,7 @@ import { useMapLibre } from '../hooks';
 /** The map point to follow */
 export let lng: number | undefined = undefined;
 export let lat: number | undefined = undefined;
+export let onChange: ((following: boolean) => void) | undefined = undefined;
 
 let following = false;
 
@@ -50,6 +51,7 @@ onMount(() => {
   on:click={(event) => {
     event.stopPropagation();
     following = !following;
+    onChange?.(following);
   }}
 >
   <Icon

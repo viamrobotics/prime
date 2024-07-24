@@ -12,8 +12,8 @@ export { default as FollowControls } from './maplibre/controls/follow.svelte';
 export { default as SatelliteControls } from './maplibre/controls/satellite.svelte';
 export { default as LngLatInput } from './maplibre/lnglat-input.svelte';
 export { useMapLibre, useMapLibreEvent } from './maplibre/hooks';
-export { maplibreRenderPlugin } from './maplibre/plugins/three';
-export { maplibreRaycastPlugin } from './maplibre/plugins/raycast';
+export { useMapLibreThreeRenderer } from './maplibre/plugins/three';
+export { useMapLibreThreeRaycast } from './maplibre/plugins/raycast';
 export {
   lngLatToMercator,
   mercatorToCartesian,
