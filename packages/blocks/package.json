@@ -33,16 +33,14 @@
     "prime.css"
   ],
   "peerDependencies": {
-    "@threlte/core": ">=7",
-    "@threlte/extras": ">=8",
+    "@threlte/core": ">=7 <8",
+    "@threlte/extras": ">=8 <9",
     "@viamrobotics/prime-core": ">=0.0.48",
     "@viamrobotics/three": ">=0.0.3",
+    "maplibre-gl": ">=4",
     "svelte": ">=4 <5",
     "tailwindcss": ">=3",
     "three": ">=0.159"
-  },
-  "dependencies": {
-    "maplibre-gl": "^4.5.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
@@ -72,6 +70,7 @@
     "eslint-plugin-tailwindcss": "^3.13.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "jsdom": "^23.0.1",
+    "maplibre-gl": "^4.5.0",
     "postcss": "^8.4.32",
     "prettier": "^3.1.1",
     "prettier-plugin-svelte": "^3.1.2",
