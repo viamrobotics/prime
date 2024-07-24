@@ -60,7 +60,7 @@ export const useMapLibreThreeRenderer = (
             lngLat?: LngLat | LngLat[] | undefined;
           };
 
-          if (!lngLat) {
+          if (lngLat === undefined) {
             return;
           }
 
