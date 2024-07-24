@@ -6,21 +6,20 @@
 import { onMount } from 'svelte';
 import { Button, Icon } from '@viamrobotics/prime-core';
 import { useMapLibre } from '../hooks';
-import type { LngLat } from 'maplibre-gl';
 
 /** The map point to follow */
-export let lngLat: LngLat | undefined = undefined;
+export let lng: number | undefined = undefined;
+export let lat: number | undefined = undefined;
 
-/** Whether following is enabled */
-export let following = false;
+let following = false;
 
 const { map } = useMapLibre();
 
 let rafID = 0;
 
 const follow = () => {
-  if (lngLat && following) {
-    map.setCenter(lngLat);
+  if (lng && lat && following) {
+    map.setCenter([lng, lat]);
     rafID = requestAnimationFrame(follow);
   }
 };
@@ -47,7 +46,7 @@ onMount(() => {
 </script>
 
 <Button
-  disabled={lngLat === undefined}
+  disabled={lng === undefined || lat === undefined}
   on:click={(event) => {
     event.stopPropagation();
     following = !following;
