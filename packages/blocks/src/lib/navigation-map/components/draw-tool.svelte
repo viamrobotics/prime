@@ -5,7 +5,12 @@
 <script lang="ts">
 import type * as THREE from 'three';
 import { T, createRawEventDispatcher } from '@threlte/core';
-import { useMapLibreEvent, useMapLibre } from '$lib';
+import {
+  useMapLibreEvent,
+  useMapLibre,
+  lngLatToMercator,
+  cartesianToMercator,
+} from '$lib';
 import {
   MercatorCoordinate,
   LngLat,
@@ -14,7 +19,6 @@ import {
   type MapLayerTouchEvent,
 } from 'maplibre-gl';
 import { view } from '../stores';
-import * as math from '../lib/math';
 import { theme } from '@viamrobotics/prime-core/theme';
 
 interface $$Events extends Record<string, unknown> {
@@ -34,25 +38,30 @@ let height = 0;
 
 const moveSign = { x: 0, y: 0 };
 
+const toPrecisionLevel = (number: number, decimals: number): number => {
+  const multiplier = 10 ** decimals;
+  return Math.floor(number * multiplier) / multiplier;
+};
+
 const handlePointerDown = (event: MapLayerMouseEvent | MapLayerTouchEvent) => {
   event.preventDefault();
   drawing = true;
   downLngLat = event.lngLat;
-  downMercator = math.lngLatToMercator(downLngLat);
+  downMercator = lngLatToMercator(downLngLat);
 };
 
 const handlePointerMove = (event: MapMouseEvent) => {
-  const moveMercator = math.lngLatToMercator(event.lngLat);
+  const moveMercator = lngLatToMercator(event.lngLat);
   const scale = moveMercator.meterInMercatorCoordinateUnits();
 
   moveSign.x = Math.sign(moveMercator.x - downMercator.x);
   moveSign.y = Math.sign(moveMercator.y - downMercator.y);
 
-  width = math.toPrecisionLevel(
+  width = toPrecisionLevel(
     Math.abs(moveMercator.x - downMercator.x) / scale,
     2
   );
-  height = math.toPrecisionLevel(
+  height = toPrecisionLevel(
     Math.abs(moveMercator.y - downMercator.y) / scale,
     2
   );
@@ -62,7 +71,7 @@ const handlePointerUp = () => {
   drawing = false;
 
   const scale = downMercator.meterInMercatorCoordinateUnits();
-  const offset = math.cartesianToMercator(
+  const offset = cartesianToMercator(
     -moveSign.x * (width / 2),
     -moveSign.y * (height / 2),
     scale

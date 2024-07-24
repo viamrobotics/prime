@@ -19,7 +19,7 @@ import { onMount, tick } from 'svelte';
 import { provideMapContext } from './hooks';
 import { Map, type MapOptions } from 'maplibre-gl';
 import { style } from './style';
-import type { LngLat } from '$lib';
+import { LngLat } from '$lib';
 
 /** The minimum camera pitch. */
 export let minPitch = 0;
@@ -42,7 +42,7 @@ export let maxZoom = 22;
  * @default { lng: -73.984421, lat: 40.7718116 }
  * The Viam Robotics office.
  */
-export let center: LngLat = { lng: -73.984_421, lat: 40.771_811_6 };
+export let center: LngLat = new LngLat(-73.984_421, 40.771_811_6);
 
 /** A binding to the MapLibre Map instance */
 export let map: Map | undefined = undefined;

@@ -1,15 +1,20 @@
 <script lang="ts">
-import { Button, Icon, ToggleButtons, Tooltip } from '@viamrobotics/prime-core';
+import { Icon, ToggleButtons, Tooltip } from '@viamrobotics/prime-core';
 import type { Map } from 'maplibre-gl';
-import { MapLibre, type GeoPose, MapLibreControls } from '$lib';
+import {
+  MapLibre,
+  type GeoPose,
+  NavigationControls,
+  SatelliteControls,
+  FollowControls,
+  CenterControls,
+} from '$lib';
 import { environment, view } from '../stores';
 import SceneLayer from './scene-layer.svelte';
 import RobotMarker from './robot-marker.svelte';
-import CenterInputs from './center-inputs.svelte';
 import Nav from './nav/index.svelte';
 import Waypoints from './waypoints.svelte';
 import ObstaclesLegend from './nav/obstacles-legend.svelte';
-import { onDestroy } from 'svelte';
 
 /** The Geo-pose of a robot base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
@@ -19,55 +24,16 @@ const maxPitch = 60;
 
 export let map: Map | undefined = undefined;
 
-let satellite = false;
-
 const handleViewSelect = ({ detail }: CustomEvent<string>) => {
   $view = detail as '2D' | '3D';
-};
-
-const toggleTileset = () => {
-  satellite = !satellite;
-  map?.setLayoutProperty(
-    'satellite',
-    'visibility',
-    satellite ? 'visible' : 'none'
-  );
 };
 
 let didHoverTooltip = Boolean(
   localStorage.getItem('navigation-service-card-tooltip-hovered')
 );
-
-let isFollowingBase = false;
-let af = 0;
-const followBase = () => {
-  if (baseGeoPose && isFollowingBase) {
-    map?.setCenter(baseGeoPose);
-    af = requestAnimationFrame(followBase);
-  }
-};
-
-const startFollowingBase = () => {
-  isFollowingBase = true;
-  af = requestAnimationFrame(followBase);
-};
-
-const stopFollowingBase = () => {
-  isFollowingBase = false;
-  cancelAnimationFrame(af);
-};
-
-onDestroy(() => {
-  cancelAnimationFrame(af);
-});
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-  class="relative h-full w-full items-stretch sm:flex"
-  on:mousedown={stopFollowingBase}
-  on:wheel={stopFollowingBase}
->
+<div class="relative h-full w-full items-stretch sm:flex">
   <MapLibre
     class="relative grow"
     {minPitch}
@@ -75,7 +41,7 @@ onDestroy(() => {
     minZoom={6}
     bind:map
   >
-    <MapLibreControls showZoom={false} />
+    <NavigationControls showZoom={false} />
 
     <Nav
       on:add-waypoint
@@ -130,28 +96,24 @@ onDestroy(() => {
         </Tooltip>
       {/if}
 
-      <Button on:click={toggleTileset}>
-        {satellite ? 'Map' : 'Satellite'}
-      </Button>
+      <SatelliteControls />
+
       <ToggleButtons
         options={['2D', '3D']}
         selected={$view}
         on:input={handleViewSelect}
       />
-      <CenterInputs />
+
+      <div class="flex w-60 flex-wrap items-end justify-between gap-y-2">
+        <CenterControls />
+      </div>
     </div>
 
     <div class="absolute bottom-10 right-2 z-10">
-      <Button
-        disabled={!baseGeoPose}
-        on:click={isFollowingBase ? stopFollowingBase : startFollowingBase}
-      >
-        <Icon
-          name={isFollowingBase
-            ? 'navigation-variant'
-            : 'navigation-variant-outline'}
-        />
-      </Button>
+      <FollowControls
+        lng={baseGeoPose?.lng}
+        lat={baseGeoPose?.lat}
+      />
     </div>
   </MapLibre>
 </div>

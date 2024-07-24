@@ -4,10 +4,9 @@
   Contains a grid and axes, with small grid spaces placed at 1m.
 -->
 <script lang="ts">
-import { T } from '@threlte/core';
 import { Grid } from '@threlte/extras';
 import { renderOrder } from './render-order';
-import AxesHelper from './axes-helper.svelte';
+import { AxesHelper } from '../index';
 </script>
 
 <Grid
@@ -21,14 +20,9 @@ import AxesHelper from './axes-helper.svelte';
   position.z={-0.1}
 />
 
+<AxesHelper length={10_000} />
+
 <AxesHelper
-  width={0.2}
+  rotation.z={Math.PI}
   length={10_000}
 />
-
-<T.Group rotation.z={Math.PI}>
-  <AxesHelper
-    width={0.2}
-    length={10_000}
-  />
-</T.Group>

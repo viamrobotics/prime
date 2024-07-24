@@ -1,5 +1,5 @@
 import type { ViamObject3D } from '@viamrobotics/three';
-import type { LngLat } from '../maplibre/types';
+import type { LngLat } from 'maplibre-gl';
 
 interface BaseGeometry {
   pose: ViamObject3D;
