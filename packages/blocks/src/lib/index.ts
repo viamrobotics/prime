@@ -1,5 +1,6 @@
 // Three.js components
 export { default as AxesHelper } from './axes-helper/axes-helper.svelte';
+export { LengthCapsuleGeometry } from './capsule-geometry/capsule-geometry';
 
 // MapLibre components
 export { LngLat, MercatorCoordinate } from 'maplibre-gl';

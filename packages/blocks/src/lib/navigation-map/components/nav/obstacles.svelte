@@ -70,10 +70,9 @@ const handleGeometryInput =
   };
 
 const handleOrientationInput =
-  (name: string, geoIndex: number) => (event: CustomEvent<number>) => {
+  (name: string, geoIndex: number) => (value: number) => {
     const index = $obstacles.findIndex((obstacle) => obstacle.name === name);
-    $obstacles[index]!.geometries[geoIndex]!.pose.orientationVector.th =
-      event.detail;
+    $obstacles[index]!.geometries[geoIndex]!.pose.orientationVector.th = value;
     dispatch('update', $obstacles);
   };
 
@@ -213,7 +212,7 @@ $: debugMode = $environment === 'debug';
       />
       <OrientationInput
         th={geometry.pose.orientationVector.th}
-        on:input={handleOrientationInput(selectedObstacle.name, geoIndex)}
+        onChange={handleOrientationInput(selectedObstacle.name, geoIndex)}
       />
     {/each}
   </li>

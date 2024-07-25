@@ -7,7 +7,13 @@ import type {
   MapLayerMouseEvent,
   MapLayerTouchEvent,
 } from 'maplibre-gl';
-import { useMapLibre, type Obstacle, useMapLibreEvent, AxesHelper } from '$lib';
+import {
+  useMapLibre,
+  type Obstacle,
+  useMapLibreEvent,
+  AxesHelper,
+  LengthCapsuleGeometry,
+} from '$lib';
 import { view, hovered, selected, environment, obstacles } from '../stores';
 
 /** The obstacle name. */
@@ -99,7 +105,7 @@ const handlePointerMove = (event: MapMouseEvent) => {
     pointermove.set(event.point.x, event.point.y);
     pointermove.sub(pointerdown);
     obstacle.geometries[0]!.pose.orientationVector.th =
-      pointerdownTheta + pointermove.y;
+      pointerdownTheta + pointermove.y / 10;
 
     // Scale
   } else if (event.originalEvent.altKey) {
@@ -221,7 +227,8 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
         />
       {/if}
 
-      <T.CapsuleGeometry
+      <T
+        is={LengthCapsuleGeometry}
         computeBounding={name}
         args={[geometry.radius, geometry.length, 16, 32]}
         on:create={handleGeometryCreate}
