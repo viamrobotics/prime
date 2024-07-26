@@ -11,7 +11,7 @@ export let dismiss: () => unknown;
 
 <Banner
   exitable
-  cx="pointer-events-auto relative z-[9999] mb-2 w-screen sm:w-[360px]"
+  cx="pointer-events-auto relative mb-2 w-screen sm:w-[360px]"
   on:close={dismiss}
   progress={$progress}
   {variant}
