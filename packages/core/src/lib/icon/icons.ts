@@ -52,6 +52,7 @@ export const paths: Record<string, IconPath> = {
   'code-braces': MDI.mdiCodeBraces,
   'code-json': MDI.mdiCodeJson,
   cog: MDI.mdiCog,
+  console: MDI.mdiConsole,
   'content-copy': MDI.mdiContentCopy,
   'content-duplicate': MDI.mdiContentDuplicate,
   'content-save-outline': MDI.mdiContentSaveOutline,
