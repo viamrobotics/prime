@@ -12,6 +12,9 @@ export let state: InputState = InputStates.NONE;
 export let inputElement: HTMLInputElement | undefined = undefined;
 export let icon: IconName | undefined = undefined;
 
+/** Optional id used in parent label `for` attribute */
+export let id: string | undefined = undefined;
+
 /** Additional CSS classes to pass to the input. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
@@ -61,6 +64,7 @@ $: errorClasses =
   <input
     bind:value
     bind:this={inputElement}
+    {id}
     role="combobox"
     readonly={disabled ? true : undefined}
     aria-controls={menuId}
@@ -70,7 +74,7 @@ $: errorClasses =
     type="text"
     class={cx(
       'h-7.5 w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none',
-      // We want the native select to include the icon so we need abolute positioning and this padding
+      // We want the native select to include the icon so we need absolute positioning and this padding
       { 'pl-8': Boolean(icon) },
       defaultClasses,
       disabledClasses,

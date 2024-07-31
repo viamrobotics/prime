@@ -1,14 +1,16 @@
+<!--
+@component
+An editable 2d rotation input, presented to the user in degrees
+-->
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
+import { MathUtils } from 'three';
 import { SliderInput, Label } from '@viamrobotics/prime-core';
 
-/** The orientation angle along the z-axis. */
+/** The rotation in radians */
 export let th: number;
 
-const dispatch = createEventDispatcher<{
-  /** Fires when the orientation is edited. */
-  input: number;
-}>();
+/** Fires when orientation changes with the new value in radians */
+export let onChange: ((th: number) => void) | undefined = undefined;
 
 let input: HTMLInputElement;
 
@@ -16,7 +18,7 @@ const handleInput = () => {
   const value = input.valueAsNumber;
 
   if (!Number.isNaN(value)) {
-    dispatch('input', value);
+    onChange?.(MathUtils.degToRad(value));
   }
 };
 </script>
@@ -27,8 +29,8 @@ const handleInput = () => {
     <SliderInput
       slot="input"
       bind:input
-      value={th}
-      placholder={0}
+      value={MathUtils.radToDeg(th)}
+      placeholder={0}
       on:blur={handleInput}
       on:input={handleInput}
       on:keydown={(event) => event.key === 'Enter' && handleInput()}

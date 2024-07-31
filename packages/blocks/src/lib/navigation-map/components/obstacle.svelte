@@ -7,9 +7,14 @@ import type {
   MapLayerMouseEvent,
   MapLayerTouchEvent,
 } from 'maplibre-gl';
-import { useMapLibre, type Obstacle, useMapLibreEvent } from '$lib';
+import {
+  useMapLibre,
+  type Obstacle,
+  useMapLibreEvent,
+  AxesHelper,
+  LengthCapsuleGeometry,
+} from '$lib';
 import { view, hovered, selected, environment, obstacles } from '../stores';
-import AxesHelper from './axes-helper.svelte';
 
 /** The obstacle name. */
 export let name: string;
@@ -100,7 +105,7 @@ const handlePointerMove = (event: MapMouseEvent) => {
     pointermove.set(event.point.x, event.point.y);
     pointermove.sub(pointerdown);
     obstacle.geometries[0]!.pose.orientationVector.th =
-      pointerdownTheta + pointermove.y;
+      pointerdownTheta + pointermove.y / 10;
 
     // Scale
   } else if (event.originalEvent.altKey) {
@@ -170,13 +175,9 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
     {#if geometry.type === 'box'}
       {#if active}
         <AxesHelper
-          thickness={Math.max(
-            geometry.length,
-            geometry.width,
-            geometry.height
-          ) / 100}
           length={Math.max(geometry.length, geometry.width, geometry.height) *
             2}
+          depthTest={false}
         />
       {/if}
 
@@ -200,8 +201,8 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
       -->
       {#if active}
         <AxesHelper
-          thickness={geometry.radius / 100 || 0.05}
-          length={geometry.radius * 2 || 10}
+          length={geometry.radius * 2}
+          depthTest={false}
         />
       {/if}
 
@@ -221,12 +222,13 @@ useMapLibreEvent('mousedown', handleMapPointerDown);
     {:else if geometry.type === 'capsule'}
       {#if active}
         <AxesHelper
-          thickness={Math.max(geometry.radius, geometry.length) / 100}
           length={Math.max(geometry.radius, geometry.length) * 2}
+          depthTest={false}
         />
       {/if}
 
-      <T.CapsuleGeometry
+      <T
+        is={LengthCapsuleGeometry}
         computeBounding={name}
         args={[geometry.radius, geometry.length, 16, 32]}
         on:create={handleGeometryCreate}

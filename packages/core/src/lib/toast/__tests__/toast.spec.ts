@@ -23,6 +23,7 @@ describe('toast', () => {
     await act(() => {
       context.toast({
         message: 'This is a success toast message',
+        variant: ToastVariant.Success,
       });
     });
 
@@ -52,11 +53,50 @@ describe('toast', () => {
     const status = screen.getByRole('status');
     const toast = within(status).getByRole('listitem');
     const actionButton = screen.getByRole('button', {
-      name: /perform action/iu,
+      name: /action text/iu,
     });
     await user.click(actionButton);
 
     expect(toast).toHaveTextContent(/action text/iu);
     expect(actionHandler).toHaveBeenCalled();
   });
+
+  it.each([
+    {
+      variant: ToastVariant.Success,
+      expectedName: /success/iu,
+      expectedColor: 'text-success-dark',
+    },
+    {
+      variant: ToastVariant.Info,
+      expectedName: /info/iu,
+      expectedColor: 'text-info-dark',
+    },
+    {
+      variant: ToastVariant.Warning,
+      expectedName: /warning/iu,
+      expectedColor: 'text-warning-bright',
+    },
+    {
+      variant: ToastVariant.Danger,
+      expectedName: /danger/iu,
+      expectedColor: 'text-danger-dark',
+    },
+    {
+      variant: ToastVariant.Neutral,
+      expectedName: /neutral/iu,
+      expectedColor: 'text-gray-7',
+    },
+  ])(
+    'displays correct icon for %variant',
+    async ({ variant, expectedName, expectedColor }) => {
+      await act(() => context.toast({ message: 'Hello world', variant }));
+
+      const status = screen.getByRole('status');
+      const toast = within(status).getByRole('listitem');
+      const icon = within(toast).getByRole('img', { name: expectedName });
+
+      expect(icon).toHaveClass(expectedColor);
+    }
+  );
 });

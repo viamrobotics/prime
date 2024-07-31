@@ -57,7 +57,7 @@ $: style.register({
   />
 
   <div
-    class="flex items-center gap-1 bg-gray-9 px-2 py-1 text-left text-xs text-white"
+    class="flex items-center gap-1 break-words bg-gray-9 px-2 py-1 text-left text-xs text-white"
   >
     <slot />
   </div>

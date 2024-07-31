@@ -2,7 +2,7 @@
 import { IconButton } from '@viamrobotics/prime-core';
 import { createEventDispatcher } from 'svelte';
 import { waypoints } from '../../stores';
-import { useMapLibre, useMapLibreEvent, type LngLat } from '$lib';
+import { useMapLibre, useMapLibreEvent, Waypoint, type LngLat } from '$lib';
 
 interface Events {
   /** Fired when a waypoint is added. */
@@ -20,20 +20,15 @@ const handleDeleteWaypoint = (id: string) => {
 };
 
 useMapLibreEvent('click', (event) => {
-  const lngLat = {
-    lng: event.lngLat.lng,
-    lat: event.lngLat.lat,
-  };
+  const waypoint = new Waypoint(
+    event.lngLat.lng,
+    event.lngLat.lat,
+    crypto.randomUUID()
+  );
 
-  $waypoints = [
-    ...$waypoints,
-    {
-      id: crypto.randomUUID(),
-      ...lngLat,
-    },
-  ];
+  $waypoints = [...$waypoints, waypoint];
 
-  dispatch('add-waypoint', lngLat);
+  dispatch('add-waypoint', waypoint);
 });
 </script>
 

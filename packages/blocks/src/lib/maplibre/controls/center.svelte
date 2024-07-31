@@ -1,7 +1,12 @@
+<!-- 
+  @component
+  Adds an lat, lng set of inputs for viewing and setting the map center.
+-->
 <script lang="ts">
+import { LngLat } from 'maplibre-gl';
 import { persisted } from '@viamrobotics/prime-core';
-import { useMapLibre, useMapLibreEvent, type LngLat } from '$lib';
-import LngLatInput from '../components/input/lnglat.svelte';
+import { useMapLibre, useMapLibreEvent } from '../hooks';
+import LngLatInput from '../lnglat-input.svelte';
 
 const { map, mapCenter } = useMapLibre();
 const lastPosition = persisted<{ center: LngLat; zoom: number }>(
@@ -24,10 +29,8 @@ useMapLibreEvent('move', () => {
 });
 </script>
 
-<div class="flex w-60 flex-wrap items-end justify-between gap-y-2">
-  <LngLatInput
-    lng={$mapCenter.lng}
-    lat={$mapCenter.lat}
-    on:input={handleInput}
-  />
-</div>
+<LngLatInput
+  lng={$mapCenter.lng}
+  lat={$mapCenter.lat}
+  on:input={handleInput}
+/>

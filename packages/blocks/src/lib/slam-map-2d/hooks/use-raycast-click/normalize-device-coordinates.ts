@@ -1,8 +1,10 @@
+import { Vector2 } from 'three';
+
 export const normalizeDeviceCoordinates = (
   element: HTMLElement,
   x: number,
   y: number,
-  target: THREE.Vector2
+  target: Vector2
 ) => {
   if (element.clientWidth === 0 || element.clientHeight === 0) {
     throw new Error(

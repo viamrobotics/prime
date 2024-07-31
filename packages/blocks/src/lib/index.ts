@@ -1,10 +1,28 @@
+// Three.js components
+export { default as AxesHelper } from './axes-helper/axes-helper.svelte';
+export { LengthCapsuleGeometry } from './capsule-geometry/capsule-geometry';
+
 // MapLibre components
+export { LngLat, MercatorCoordinate } from 'maplibre-gl';
 export { default as MapLibre } from './maplibre/index.svelte';
 export { default as MapLibreMarker } from './maplibre/marker.svelte';
-export { default as MapLibreDirectionalMarker } from './maplibre/directional-marker.svelte';
-export { default as MapLibreControls } from './maplibre/controls.svelte';
+export { default as DirectionalMarker } from './maplibre/directional-marker.svelte';
+export { default as NavigationControls } from './maplibre/controls/navigation.svelte';
+export { default as CenterControls } from './maplibre/controls/center.svelte';
+export { default as FollowControls } from './maplibre/controls/follow.svelte';
+export { default as SatelliteControls } from './maplibre/controls/satellite.svelte';
+export { default as LngLatInput } from './maplibre/lnglat-input.svelte';
 export { useMapLibre, useMapLibreEvent } from './maplibre/hooks';
-export type { LngLat, GeoPose, Waypoint } from './maplibre/types';
+export { useMapLibreThreeRenderer } from './maplibre/plugins/three';
+export { useMapLibreThreeRaycast } from './maplibre/plugins/raycast';
+export {
+  lngLatToMercator,
+  mercatorToCartesian,
+  lngLatToCartesian,
+  cartesianToLngLat,
+  cartesianToMercator,
+} from './maplibre/math';
+export { GeoPose, Waypoint } from './maplibre/types';
 
 // Slam components
 export { default as SlamMap2D } from './slam-map-2d/index.svelte';

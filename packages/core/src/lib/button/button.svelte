@@ -41,6 +41,11 @@ export let icon: IconName | undefined = undefined;
 /** The width of the button. */
 export let width: 'full' | 'default' = 'default';
 
+/** The height of the button. */
+export let height: 'fixed' | 'default' = 'default';
+
+export let textSize: 'text-sm' | 'text-xs' = 'text-xs';
+
 /** Shows progress indicator. Determinite progress is a @TODO */
 export let progress: 'indeterminate' | number | undefined = undefined;
 
@@ -56,7 +61,7 @@ $: handleDisabled = preventHandler(disabled);
   {title}
   aria-disabled={disabled ? true : undefined}
   class={cx(
-    'inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap border py-1.5 text-xs',
+    'inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap border',
     {
       'flex w-full': width === 'full',
       'inline-flex': width !== 'full',
@@ -77,6 +82,8 @@ $: handleDisabled = preventHandler(disabled);
       'border-danger-medium bg-danger-light text-danger-dark hover:bg-[#f5dfdc] active:bg-[#f6d7d3]':
         variant === 'outline-danger' && !disabled,
     },
+    height === 'fixed' ? 'h-7.5' : 'py-1.5',
+    textSize,
     extraClasses
   )}
   {...$$restProps}

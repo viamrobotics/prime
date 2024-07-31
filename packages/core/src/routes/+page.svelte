@@ -31,12 +31,16 @@ import {
   TableHeaderCell,
   TableHeader,
   TableRow,
+  ToastBanner,
+  ToastContainer,
+  ToastVariant,
   ToggleButtons,
   Select,
   SearchableSelect,
   Multiselect,
   NotificationContainer,
   provideNotify,
+  provideToast,
   useNotify,
   Modal,
   CodeSnippet,
@@ -69,6 +73,7 @@ const handleFloatingMenuChange = (isOpen: boolean) => {
 };
 
 const notify = useNotify();
+const toast = provideToast();
 
 let restrictedValue = '';
 
@@ -566,6 +571,13 @@ const onHoverDelayMsInput = (event: Event) => {
     </Button>
 
     <Button progress="indeterminate">Loading</Button>
+    <IconButton
+      label="Pause"
+      variant="secondary"
+      progress="indeterminate"
+      icon="pause"
+      cx="border border-light"
+    />
     <Button
       progress="indeterminate"
       variant="danger">Loading</Button
@@ -1057,6 +1069,32 @@ const onHoverDelayMsInput = (event: Event) => {
         name="name"
       />
     </Label>
+
+    <div class="flex flex-col gap-1">
+      <Label
+        for="targetID"
+        cx="whitespace-nowrap"
+      >
+        For attribute example with SearchableSelect
+      </Label>
+      <div class="max-w-fit">
+        <SearchableSelect
+          id="targetID"
+          exclusive
+          options={[
+            { value: 'First Option', description: 'First option' },
+            'Option 2',
+            { value: 'C.) Option', description: 'second' },
+            'A really long forth option just in case you need it',
+          ]}
+          placeholder="Select an option"
+          onChange={(value) => {
+            // eslint-disable-next-line no-console
+            console.log('Selected', value);
+          }}
+        />
+      </div>
+    </div>
   </div>
 
   <!-- Notify -->
@@ -1132,6 +1170,18 @@ const onHoverDelayMsInput = (event: Event) => {
     <Pill
       value="Component"
       icon="viam-component"
+      removable={false}
+    />
+    <Pill
+      value="my-machine-123"
+      icon="multiplication-box"
+      href="https://i.imgur.com/aQCBxdr.png"
+      removable={false}
+    />
+    <Pill
+      value="target-self-example"
+      href="https://i.imgur.com/aQCBxdr.png"
+      target="_self"
       removable={false}
     />
   </div>
@@ -1568,6 +1618,157 @@ const onHoverDelayMsInput = (event: Event) => {
     />
   </div>
 
+  <!-- Toast Banner -->
+  <h1 class="text-2xl">Toast Banner</h1>
+
+  <div class="flex gap-4">
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Success}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Info}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Danger}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Warning}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Neutral}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+  </div>
+  <div class="flex gap-4">
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Success}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Info}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Danger}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Warning}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+    <ToastBanner
+      message="Test Message"
+      variant={ToastVariant.Neutral}
+      action={{
+        text: 'Undo',
+        handler: () => {
+          console.log('Clicked action');
+        },
+      }}
+      dismiss={() => {
+        console.log('Clicked close button');
+      }}
+    />
+  </div>
+
+  <!-- Toast Container -->
+  <h1 class="text-2xl">Toast Container</h1>
+
+  <div class="flex gap-4">
+    <ToastContainer />
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Success', variant: ToastVariant.Success });
+        }}
+      >
+        Click to show "Success" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Information', variant: ToastVariant.Info });
+        }}
+      >
+        Click to show "Info" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Dangerous', variant: ToastVariant.Danger });
+        }}
+      >
+        Click to show "Danger" button
+      </Button>
+    </div>
+    <div>
+      <Button
+        on:click={() => {
+          toast({ message: 'Warning', variant: ToastVariant.Warning });
+        }}
+      >
+        Click to show "Warning" button
+      </Button>
+    </div>
+  </div>
+
   <!-- Toggle Buttons -->
   <h1 class="text-2xl">Toggle Buttons</h1>
 
@@ -1609,7 +1810,9 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="flex flex-wrap items-start gap-4">
     <Tooltip let:tooltipID>
       <p aria-describedby={tooltipID}>This element has a top tooltip.</p>
-      <p slot="description">This is the tooltip text!</p>
+      <p slot="description">
+        ThisIsTheTooltipTextWithoutSpacesOrHyphensForTestingPurposes
+      </p>
     </Tooltip>
 
     <Tooltip

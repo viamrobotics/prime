@@ -1,13 +1,13 @@
 <!-- 
   @component
   
-  Adds a set of navigation controls.
+  Adds a set of maplibre navigation controls.
 
   @example
 
   ```html
     <MapLibre>
-      <MapLibreControls />
+      <NavigationControls />
     </MapLibre>
   ```
 
@@ -16,7 +16,7 @@
 <script lang="ts">
 import { NavigationControl, type ControlPosition } from 'maplibre-gl';
 import { onMount } from 'svelte';
-import { useMapLibre } from './hooks';
+import { useMapLibre } from '../hooks';
 
 export let position: ControlPosition = 'top-right';
 
