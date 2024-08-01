@@ -20,18 +20,18 @@ import {
  * import { vi } from 'vitest';
  * import { render } from '@testing-library/svelte';
  *
- * import { createToastContext } from '@viamrobotics/prime-core/__fixtures__';
+ * import { createNoopToastContext } from '@viamrobotics/prime-core/__fixtures__';
  *
  * import Subject from '../cool-component.svelte';
  *
  * const toast = vi.fn();
  * const renderSubject = () => {
- *   const toastContext = createToastContext(toast)
+ *   const toastContext = createNoopToastContext(toast)
  *   return render(Subject, { props: {}, context: new Map([toastContext]) });
  * }
  * ```
  */
-export const createToastContext = (toast?: Toast): [unknown, unknown] => [
+export const createNoopToastContext = (toast?: Toast): [unknown, unknown] => [
   ToastContextKey,
   {
     state: { toasts: readable([]), pageIsVisible: writable(false) },

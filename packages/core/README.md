@@ -35,7 +35,9 @@ Import the stylesheet. If you are using [SvelteKit][], you can do this in `src/r
 import '@viamrobotics/prime-core/prime.css';
 ```
 
-You can now use the components in your app:
+## Usage
+
+Once installed, you can use the components in your app:
 
 ```html
 <script lang="ts">
@@ -50,6 +52,40 @@ You can now use the components in your app:
 
 [tailwind]: https://tailwindcss.com/
 [sveltekit]: https://kit.svelte.dev/
+
+### Testing components that use Prime
+
+All Prime components have their own test suites, so in your application tests, you generally only need to test that the component itself is rendered rather than try to test that all the behaviors work - we've already written those tests.
+
+#### Testing toasts
+
+The `useToast` hook requires a Svelte context to render. In order to test a component that issues toasts, you can use the `createNoopToastContext` fixture. Before using this fixture, consider if you can re-structure your components to avoid the need for testing a component wired to `useToast` directly.
+
+```ts
+import { describe, expect, test, vi } from 'vitest';
+import { render } from '@testing-library/svelte';
+
+import { createNoopToastContext } from '@viamrobotics/prime-core/__fixtures__';
+
+import Subject from '../cool-component.svelte';
+
+const toast = vi.fn();
+
+const renderSubject = () => {
+  const toastContext = createNoopToastContext(toast);
+  return render(Subject, {
+    props: { message: 'hello' },
+    context: new Map([toastContext]),
+  });
+};
+
+describe('<CoolComponent>', () => {
+  it('toasts `message` on mount', () => {
+    renderSubject();
+    expect(toast).toHaveBeenCalledWith({ message: 'hello' });
+  });
+});
+```
 
 ## Playground
 
@@ -157,9 +193,9 @@ For easier readability, we try to use a standard ordering for component composit
 
 <!-- Your layout -->
 <div class="border-black">
-  <!-- 
-    all slots should be named if there are multiple; otherwise a single slot 
-    can be the default `<slot />`  
+  <!--
+    all slots should be named if there are multiple; otherwise a single slot
+    can be the default `<slot />`
   -->
   <slot name="title" />
   <slot name="content" />
