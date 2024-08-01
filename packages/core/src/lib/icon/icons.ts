@@ -86,6 +86,7 @@ export const paths = {
   'language-go': MDI.mdiLanguageGo,
   'language-python': MDI.mdiLanguagePython,
   'language-typescript': MDI.mdiLanguageTypescript,
+  'layers-triple-outline': MDI.mdiLayersTripleOutline,
   link: MDI.mdiLink,
   linkedin: MDI.mdiLinkedin,
   'link-variant': MDI.mdiLinkVariant,
