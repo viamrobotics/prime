@@ -42,7 +42,7 @@ export interface ToastElement {
   dismiss: () => void;
 }
 
-const ToastContextKey = Symbol('toast-context');
+export const ToastContextKey = Symbol('toast-context');
 const ToastDuration = 4000;
 
 /** Create the internal toast state and context object. */
