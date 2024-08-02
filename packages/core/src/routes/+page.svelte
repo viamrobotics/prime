@@ -15,7 +15,8 @@ import {
   Pill,
   Switch,
   Radio,
-  Tabs,
+  TabsBar,
+  Tab,
   Tooltip,
   TooltipContainer,
   TooltipTarget,
@@ -1601,21 +1602,41 @@ const onHoverDelayMsInput = (event: Event) => {
 
   <!-- Tabs -->
   <h1 class="text-2xl">Tabs</h1>
-  <div class="flex gap-4">
-    <Tabs
-      tabs={['Tab 1', 'Tab 2', 'Tab 3']}
-      selected="Tab 1"
-    />
+  <div class="flex flex-col gap-4">
+    <TabsBar aria-label="Tab example one">
+      <Tab
+        title="The first tab"
+        href="#first"
+        selected
+      />
+      <Tab
+        title="The second tab"
+        href="#second"
+      />
+      <Tab
+        title="The third tab"
+        href="#third"
+      />
+    </TabsBar>
 
-    <Tabs
-      tabs={['Tab 1', 'Tab 2', 'Tab 3']}
-      selected="Tab 2"
-    />
-
-    <Tabs
-      tabs={['Tab 1', 'Tab 2']}
-      selected="Tab 2"
-    />
+    <TabsBar
+      aria-label="Tab example two"
+      variant="secondary"
+    >
+      <Tab
+        title="The first tab"
+        href="#first"
+        selected
+      />
+      <Tab
+        title="The second tab"
+        href="#second"
+      />
+      <Tab
+        title="The third tab"
+        href="#third"
+      />
+    </TabsBar>
   </div>
 
   <!-- Toast Banner -->
