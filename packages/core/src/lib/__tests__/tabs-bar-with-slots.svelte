@@ -3,7 +3,7 @@ import TabsBar from '$lib/tabs-bar.svelte';
 import Tab from '$lib/tab.svelte';
 </script>
 
-<TabsBar variant="secondary">
+<TabsBar aria-label="Tab example one">
   <Tab
     title="The first tab"
     href="#first"
