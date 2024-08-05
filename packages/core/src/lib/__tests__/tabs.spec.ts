@@ -1,47 +1,43 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/svelte';
-import { Tabs } from '$lib';
-import { cxTestArguments, cxTestResults } from './cx-test';
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/svelte';
+import { TabsBar } from '$lib';
+import TabsBarWithSlots from './tabs-bar-with-slots.svelte';
 
-describe('Tabs', () => {
-  it('Renders tabs correctly', () => {
-    render(Tabs, { tabs: ['Tab 1', 'Tab 2', 'Tab 3'], selected: 'Tab 1' });
-    expect(screen.getByText('Tab 1')).toBeVisible();
-    expect(screen.getByText('Tab 2')).toBeVisible();
-    expect(screen.getByText('Tab 3')).toBeVisible();
-  });
-
-  it('Marks the selected tab correctly', () => {
-    render(Tabs, { tabs: ['Tab 1', 'Tab 2', 'Tab 3'], selected: 'Tab 1' });
-    expect(screen.getByRole('button', { name: 'Tab 1' })).toHaveClass(
-      'bg-white border border-x-border-2 border-t-border-2 border-b-white font-semibold'
+describe('TabsBar renders correctly', () => {
+  it('Renders rest props and default variant', () => {
+    render(TabsBar, { 'aria-label': 'Tab example one' });
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'Tab example one'
+    );
+    expect(screen.getByRole('navigation')).toHaveClass(
+      'h-10 bg-medium tracking-wide sm:px-2 flex items-center font-roboto-mono'
     );
   });
 
-  it('Switches to another tab on click', async () => {
-    const { component } = render(Tabs, {
-      tabs: ['Tab 1', 'Tab 2', 'Tab 3'],
-      selected: 'Tab 1',
-    });
-    const onInput = vi.fn();
-    component.$on('input', onInput);
-
-    await fireEvent.click(screen.getByText('Tab 2'));
-    expect(onInput).toHaveBeenCalledOnce();
-    await fireEvent.click(screen.getByText('Tab 2'));
-    expect(onInput).toHaveBeenCalledWith(
-      expect.objectContaining({ detail: { value: 'Tab 2' } })
+  it('Renders secondary variant', () => {
+    render(TabsBar, { variant: 'secondary' });
+    expect(screen.getByRole('navigation')).toHaveClass(
+      'flex items-center font-roboto-mono'
     );
   });
 
-  it('Renders with the passed cx classes', () => {
-    render(Tabs, {
-      tabs: ['Tab 1', 'Tab 2', 'Tab 3'],
-      selected: 'Tab 1',
-      cx: cxTestArguments,
-    });
-    expect(screen.getByText('Tab 1').parentElement?.parentElement).toHaveClass(
-      cxTestResults
-    );
+  it('Renders TabsBar with Tab components in slots', () => {
+    render(TabsBarWithSlots);
+
+    expect(screen.getByText('The first tab')).toBeInTheDocument();
+    expect(screen.getByText('The second tab')).toBeInTheDocument();
+    expect(screen.getByText('The third tab')).toBeInTheDocument();
+
+    const firstTab = screen.getByText('The first tab');
+    const secondTab = screen.getByText('The second tab');
+    const thirdTab = screen.getByText('The third tab');
+
+    expect(firstTab.closest('a')).toHaveAttribute('href', '#first');
+    expect(secondTab.closest('a')).toHaveAttribute('href', '#second');
+    expect(thirdTab.closest('a')).toHaveAttribute('href', '#third');
+
+    expect(firstTab).toHaveAttribute('aria-current', 'page');
+    expect(secondTab).toHaveAttribute('aria-current', 'false');
+    expect(thirdTab).toHaveAttribute('aria-current', 'false');
   });
 });
