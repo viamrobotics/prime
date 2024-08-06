@@ -21,13 +21,16 @@ import { getContext } from 'svelte';
 import type { Writable } from 'svelte/store';
 
 interface $$Props extends HTMLAttributes<HTMLElement> {
-  href: string;
+  href?: string;
   title: string;
   selected?: boolean;
   class?: string;
+
+  /** Todo: remove after Svelte 5 and just spread props into component */
+  onclick?: (event: MouseEvent) => void;
 }
 /** The tab's href. */
-export let href: $$Props['href'];
+export let href: $$Props['href'] = undefined;
 
 /** The tab's title. */
 export let title: $$Props['title'];
@@ -35,13 +38,18 @@ export let title: $$Props['title'];
 //* The tab's state */
 export let selected: $$Props['selected'] = false;
 
+export let onclick: $$Props['onclick'] = undefined;
+
 const variant = getContext<Writable<'primary' | 'secondary'>>(CONTEXT_KEY);
 
 let className = '';
 export { className as class };
 </script>
 
-<a
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<svelte:element
+  this={href ? 'a' : 'button'}
+  role="navigation"
   {href}
   aria-current={selected ? 'page' : false}
   class={cx(
@@ -55,6 +63,7 @@ export { className as class };
     },
     className
   )}
+  on:click={onclick}
 >
   {title}
-</a>
+</svelte:element>
