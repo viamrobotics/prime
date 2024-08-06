@@ -17,7 +17,7 @@ A clickable element that allows the user to navigate to another page or area.
 import cx from 'classnames';
 import type { HTMLAttributes } from 'svelte/elements';
 import { CONTEXT_KEY } from './tabs-bar.svelte';
-import { getContext } from 'svelte';
+import { createEventDispatcher, getContext } from 'svelte';
 import type { Writable } from 'svelte/store';
 
 interface $$Props extends HTMLAttributes<HTMLElement> {
@@ -25,9 +25,6 @@ interface $$Props extends HTMLAttributes<HTMLElement> {
   title: string;
   selected?: boolean;
   class?: string;
-
-  /** Todo: remove after Svelte 5 and just spread props into component */
-  onclick?: (event: MouseEvent) => void;
 }
 /** The tab's href. */
 export let href: $$Props['href'] = undefined;
@@ -38,12 +35,16 @@ export let title: $$Props['title'];
 //* The tab's state */
 export let selected: $$Props['selected'] = false;
 
-export let onclick: $$Props['onclick'] = undefined;
+let className = '';
+export { className as class };
 
 const variant = getContext<Writable<'primary' | 'secondary'>>(CONTEXT_KEY);
 
-let className = '';
-export { className as class };
+const dispatch = createEventDispatcher<{ click: MouseEvent }>();
+
+const onclick = (event: MouseEvent) => {
+  dispatch('click', event);
+};
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->

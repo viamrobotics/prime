@@ -1645,15 +1645,15 @@ const onHoverDelayMsInput = (event: Event) => {
       <Tab
         title="The first tab"
         selected
-        onclick={() => console.log('first')}
+        on:click={() => console.log('first')}
       />
       <Tab
         title="The second tab"
-        onclick={() => console.log('first')}
+        on:click={() => console.log('second')}
       />
       <Tab
         title="The third tab"
-        onclick={() => console.log('first')}
+        on:click={() => console.log('third')}
       />
     </TabsBar>
   </div>
