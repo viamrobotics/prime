@@ -1637,6 +1637,25 @@ const onHoverDelayMsInput = (event: Event) => {
         href="#third"
       />
     </TabsBar>
+
+    <TabsBar
+      aria-label="Tab example two"
+      variant="secondary"
+    >
+      <Tab
+        title="The first tab"
+        selected
+        on:click={() => console.log('first')}
+      />
+      <Tab
+        title="The second tab"
+        on:click={() => console.log('second')}
+      />
+      <Tab
+        title="The third tab"
+        on:click={() => console.log('third')}
+      />
+    </TabsBar>
   </div>
 
   <!-- Toast Banner -->

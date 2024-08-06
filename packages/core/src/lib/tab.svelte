@@ -17,17 +17,17 @@ A clickable element that allows the user to navigate to another page or area.
 import cx from 'classnames';
 import type { HTMLAttributes } from 'svelte/elements';
 import { CONTEXT_KEY } from './tabs-bar.svelte';
-import { getContext } from 'svelte';
+import { createEventDispatcher, getContext } from 'svelte';
 import type { Writable } from 'svelte/store';
 
 interface $$Props extends HTMLAttributes<HTMLElement> {
-  href: string;
+  href?: string;
   title: string;
   selected?: boolean;
   class?: string;
 }
 /** The tab's href. */
-export let href: $$Props['href'];
+export let href: $$Props['href'] = undefined;
 
 /** The tab's title. */
 export let title: $$Props['title'];
@@ -35,13 +35,22 @@ export let title: $$Props['title'];
 //* The tab's state */
 export let selected: $$Props['selected'] = false;
 
-const variant = getContext<Writable<'primary' | 'secondary'>>(CONTEXT_KEY);
-
 let className = '';
 export { className as class };
+
+const variant = getContext<Writable<'primary' | 'secondary'>>(CONTEXT_KEY);
+
+const dispatch = createEventDispatcher<{ click: MouseEvent }>();
+
+const onclick = (event: MouseEvent) => {
+  dispatch('click', event);
+};
 </script>
 
-<a
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<svelte:element
+  this={href ? 'a' : 'button'}
+  role="navigation"
   {href}
   aria-current={selected ? 'page' : false}
   class={cx(
@@ -55,6 +64,7 @@ export { className as class };
     },
     className
   )}
+  on:click={onclick}
 >
   {title}
-</a>
+</svelte:element>
