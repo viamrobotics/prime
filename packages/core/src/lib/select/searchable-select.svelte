@@ -90,6 +90,9 @@ export let onFocus: ((event: FocusEvent) => unknown) | undefined = undefined;
 /** Notify the parent of blur. */
 export let onBlur: ((event: FocusEvent) => unknown) | undefined = undefined;
 
+/** Additional CSS classes to pass to the floating window*/
+export let menuCx: cx.Argument = ''
+
 /** Additional CSS classes to pass to the input container. */
 let inputCx: cx.Argument = '';
 export { inputCx as cx };
@@ -342,6 +345,7 @@ const handleKeydown = createHandleKey({
     referenceElement={inputElement}
     size={matchWidth}
     auto
+    cx={menuCx}
   >
     <ul
       id={LIST_ID}
