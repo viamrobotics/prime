@@ -315,12 +315,6 @@ importers:
       '@codemirror/view':
         specifier: ^6.22.0
         version: 6.30.0
-      '@floating-ui/dom':
-        specifier: ^1.5.3
-        version: 1.5.3
-      '@mdi/js':
-        specifier: ^7.3.67
-        version: 7.3.67
       classnames:
         specifier: ^2.3.2
         version: 2.3.2
@@ -330,15 +324,6 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
-      nanoid:
-        specifier: ^5.0.4
-        version: 5.0.4
-      prism-themes:
-        specifier: ^1.9.0
-        version: 1.9.0
-      prismjs:
-        specifier: ^1.29.0
-        version: 1.29.0
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
@@ -8119,7 +8104,7 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
-      '@sveltejs/kit': 2.0.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.17)(vite@5.2.11)
+      '@sveltejs/kit': 2.0.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.10)
       import-meta-resolve: 4.0.0
     dev: true
 
@@ -8209,12 +8194,12 @@ packages:
     peerDependencies:
       svelte: ^3.44.0 || ^4.0.0
     dependencies:
-      chokidar: 3.6.0
+      chokidar: 3.5.3
       kleur: 4.1.5
       sade: 1.8.1
-      semver: 7.6.2
+      semver: 7.5.4
       svelte: 4.2.17
-      svelte2tsx: 0.6.27(svelte@4.2.17)(typescript@5.4.5)
+      svelte2tsx: 0.6.19(svelte@4.2.17)(typescript@5.4.5)
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -9125,7 +9110,7 @@ packages:
       graphemer: 1.4.0
       ignore: 5.3.0
       natural-compare: 1.4.0
-      semver: 7.6.2
+      semver: 7.5.4
       ts-api-utils: 1.0.3(typescript@5.4.5)
       typescript: 5.4.5
     transitivePeerDependencies:
@@ -9596,13 +9581,13 @@ packages:
       eslint-plugin-tailwindcss:
         optional: true
     dependencies:
-      '@typescript-eslint/eslint-plugin': 6.15.0(@typescript-eslint/parser@6.15.0)(eslint@8.56.0)(typescript@5.4.5)
-      '@typescript-eslint/parser': 6.15.0(eslint@8.56.0)(typescript@5.4.5)
+      '@typescript-eslint/eslint-plugin': 6.15.0(@typescript-eslint/parser@6.15.0)(eslint@8.56.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 6.15.0(eslint@8.56.0)(typescript@5.3.3)
       eslint: 8.56.0
       eslint-config-prettier: 9.1.0(eslint@8.56.0)
       eslint-plugin-sonarjs: 0.23.0(eslint@8.56.0)
-      eslint-plugin-svelte: 2.35.1(eslint@8.56.0)(svelte@4.2.17)
-      eslint-plugin-tailwindcss: 3.13.0(tailwindcss@3.4.3)
+      eslint-plugin-svelte: 2.35.1(eslint@8.56.0)(svelte@4.2.8)
+      eslint-plugin-tailwindcss: 3.13.0(tailwindcss@3.3.7)
       eslint-plugin-unicorn: 49.0.0(eslint@8.56.0)
     dev: true
 
@@ -9636,7 +9621,7 @@ packages:
         optional: true
     dependencies:
       prettier: 3.1.1
-      prettier-plugin-svelte: 3.1.2(prettier@3.1.1)(svelte@4.2.17)
+      prettier-plugin-svelte: 3.1.2(prettier@3.1.1)(svelte@4.2.8)
       prettier-plugin-tailwindcss: 0.5.9(prettier-plugin-svelte@3.1.2)(prettier@3.1.1)
     dev: true
 
@@ -17061,7 +17046,7 @@ packages:
         optional: true
     dependencies:
       prettier: 3.1.1
-      prettier-plugin-svelte: 3.1.2(prettier@3.1.1)(svelte@4.2.17)
+      prettier-plugin-svelte: 3.1.2(prettier@3.1.1)(svelte@4.2.8)
     dev: true
 
   /prettier@2.8.8:
@@ -19026,6 +19011,18 @@ packages:
       typescript: 5.3.3
     dev: true
 
+  /svelte2tsx@0.6.19(svelte@4.2.17)(typescript@5.4.5):
+    resolution: {integrity: sha512-h3b5OtcO8zyVL/RiB2zsDwCopeo/UH+887uyhgb2mjnewOFwiTxu+4IGuVwrrlyuh2onM2ktfUemNrNmQwXONQ==}
+    peerDependencies:
+      svelte: ^3.55 || ^4.0.0-next.0 || ^4.0
+      typescript: ^4.9.4 || ^5.0.0
+    dependencies:
+      dedent-js: 1.0.1
+      pascal-case: 3.1.2
+      svelte: 4.2.17
+      typescript: 5.4.5
+    dev: true
+
   /svelte2tsx@0.6.19(svelte@4.2.8)(typescript@5.3.3):
     resolution: {integrity: sha512-h3b5OtcO8zyVL/RiB2zsDwCopeo/UH+887uyhgb2mjnewOFwiTxu+4IGuVwrrlyuh2onM2ktfUemNrNmQwXONQ==}
     peerDependencies:
@@ -19048,6 +19045,7 @@ packages:
       pascal-case: 3.1.2
       svelte: 4.2.17
       typescript: 5.4.5
+    dev: false
 
   /svelte@4.1.2:
     resolution: {integrity: sha512-/evA8U6CgOHe5ZD1C1W3va9iJG7mWflcCdghBORJaAhD2JzrVERJty/2gl0pIPrJYBGZwZycH6onYf+64XXF9g==}
