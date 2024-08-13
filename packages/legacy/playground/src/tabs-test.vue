@@ -17,7 +17,7 @@ const handleTabSelect = (event: CustomEvent<{ value: string }>) => {
       />
       <div class="p-4">
         <div v-if="selectedTab === 'Tab 2'">
-          <p>BROKEN & REMOVED</p>
+          <p>tab2</p>
         </div>
         <p v-else>{{ selectedTab }}</p>
       </div>
