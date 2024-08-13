@@ -44,6 +44,12 @@ jobs:
           name: npm-blocks-dist
           path: packages/blocks/dist
 
+      - name: Upload npm @viamrobotics/prime-editor artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm-editor-dist
+          path: packages/editor/dist
+
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v1
         with:
@@ -79,6 +85,12 @@ jobs:
         with:
           name: npm-blocks-dist
           path: packages/blocks/dist
+
+      - name: Download @viamrobotics/prime-editor npm artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: npm-editor-dist
+          path: packages/editor/dist
 
       - name: Publish 🚀
         run: pnpm publish -r --ignore-scripts
