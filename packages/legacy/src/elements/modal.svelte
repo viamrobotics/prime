@@ -44,7 +44,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
     }
   )}
   tabindex="0"
-  aria-label={`${title}`}
+  aria-label={title}
   on:click={handleClose}
   on:keyup|preventDefault={handleClose}
 >
