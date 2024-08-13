@@ -3,7 +3,6 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig(({ mode }) => ({
   plugins: [sveltekit()],
-  server: {},
   resolve: {
     conditions: mode === 'test' ? ['browser'] : [],
   },
