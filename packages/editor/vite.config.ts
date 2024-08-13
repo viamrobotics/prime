@@ -3,11 +3,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig(({ mode }) => ({
   plugins: [sveltekit()],
-  server: {
-    fs: {
-      allow: ['prime.css'],
-    },
-  },
+  server: {},
   resolve: {
     conditions: mode === 'test' ? ['browser'] : [],
   },
