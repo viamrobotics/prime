@@ -183,7 +183,9 @@ $: debugMode = $environment === 'debug';
   <li
     class="group sticky bottom-0 z-10 bg-white pt-4"
     on:mouseenter={() => {
-      $hovered = selectedObstacle.name;
+      if (selectedObstacle) {
+        $hovered = selectedObstacle.name;
+      }
     }}
   >
     <div class="flex items-end gap-1.5 pb-2">
