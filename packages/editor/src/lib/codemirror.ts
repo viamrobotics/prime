@@ -86,7 +86,7 @@ const setDiffOriginal = (
  *
  */
 
-export const createJSONExtensions = (
+export const createJsonExtensions = (
   options: ExtensionOptions
 ): readonly Extension[] => {
   const extensions = [

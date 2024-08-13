@@ -28,10 +28,10 @@ Once installed, you can use the components in your app:
 
 ```html
 <script lang="ts">
-  import { JSONEditor } from '@viamrobotics/prime-editor';
+  import { JsonEditor } from '@viamrobotics/prime-editor';
 </script>
 
-<JSONEditor
+<JsonEditor
   initialValue={'{"a": "b"}'}
   label="editor"
   onChange={(e) => console.log(e)}

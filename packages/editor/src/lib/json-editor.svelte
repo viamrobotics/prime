@@ -63,7 +63,7 @@ const handleBlur = () => {
   debouncedOnChange?.flush();
 };
 
-const extensions = CodeMirror.createJSONExtensions({
+const extensions = CodeMirror.createJsonExtensions({
   label,
   readonly,
   errorMessageID,

@@ -2,7 +2,7 @@
 import { onDestroy } from 'svelte';
 import { MergeView } from '@codemirror/merge';
 
-import { createJSONExtensions, setLabel } from './codemirror';
+import { createJsonExtensions, setLabel } from './codemirror';
 import EditorWrapper from './editor-wrapper.svelte';
 import classnames from 'classnames';
 
@@ -18,12 +18,12 @@ export let cx: classnames.Argument = '';
 
 let editorParent: HTMLElement | undefined;
 
-const beforeExtensions = createJSONExtensions({
+const beforeExtensions = createJsonExtensions({
   readonly: true,
   label: `${labelPrefix}-before`,
 });
 
-const afterExtensions = createJSONExtensions({
+const afterExtensions = createJsonExtensions({
   readonly: true,
   label: `${labelPrefix}-after`,
 });

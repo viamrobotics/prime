@@ -1,2 +1,2 @@
-export { default as JSONEditor } from './json-editor.svelte';
-export { default as JSONDiff } from './json-diff.svelte';
+export { default as JsonEditor } from './json-editor.svelte';
+export { default as JsonDiff } from './json-diff.svelte';
