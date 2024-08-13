@@ -27,24 +27,27 @@
   },
   "files": [
     "dist",
-    "theme.ts",
-    "plugins.ts",
-    "prime.css",
     "!__tests__"
   ],
   "peerDependencies": {
-    "svelte": ">=4.0.0 <5"
+    "svelte": ">=4.0.0 <5",
+    "@codemirror/lang-json": ">=6 <7",
+    "@codemirror/merge": ">=6 <7",
+    "@codemirror/state": ">=6 <7",
+    "@codemirror/view": ">=6 <7",
+    "classnames": ">=2 <3",
+    "codemirror": ">=6 <7",
+    "lodash-es": ">=4 <5",
+    "@viamrobotics/prime-core": ">=0.0.141"
   },
-  "dependencies": {
+  "devDependencies": {
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/merge": "^6.6.1",
     "@codemirror/state": "^6.3.1",
     "@codemirror/view": "^6.22.0",
     "classnames": "^2.3.2",
     "codemirror": "^6.0.1",
-    "lodash-es": "^4.17.21"
-  },
-  "devDependencies": {
+    "lodash-es": "^4.17.21",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.0.3",
     "@sveltejs/package": "^2.2.3",

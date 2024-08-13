@@ -20,8 +20,6 @@ module.exports = {
     node: true,
   },
   rules: {
-    // TODO(mc, 2023-12-15): remove overrides, fix issues
-    '@typescript-eslint/no-non-null-assertion': 'warn',
     // TODO(mc, 2024-01-03): move to base config?
     'multiline-comment-style': 'off',
   },
