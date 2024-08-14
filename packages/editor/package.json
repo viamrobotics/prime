@@ -1,0 +1,93 @@
+{
+  "name": "@viamrobotics/prime-editor",
+  "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepare": "svelte-kit sync",
+    "dev": "vite dev",
+    "build": "vite build && pnpm run package",
+    "preview": "vite preview",
+    "package": "svelte-kit sync && svelte-package && publint",
+    "check": "concurrently -g pnpm:check-*",
+    "check-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check-lint": "pnpm run _prettier --check && pnpm run _eslint",
+    "format": "pnpm run _prettier --write",
+    "test": "svelte-kit sync && vitest run",
+    "test:watch": "vitest",
+    "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
+    "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\""
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!__tests__"
+  ],
+  "peerDependencies": {
+    "svelte": ">=4.0.0 <5",
+    "@codemirror/lang-json": ">=6 <7",
+    "@codemirror/merge": ">=6 <7",
+    "@codemirror/state": ">=6 <7",
+    "@codemirror/view": ">=6 <7",
+    "classnames": ">=2 <3",
+    "codemirror": ">=6 <7",
+    "lodash-es": ">=4 <5",
+    "@viamrobotics/prime-core": ">=0.0.141"
+  },
+  "devDependencies": {
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/merge": "^6.6.1",
+    "@codemirror/state": "^6.3.1",
+    "@codemirror/view": "^6.22.0",
+    "classnames": "^2.3.2",
+    "codemirror": "^6.0.1",
+    "lodash-es": "^4.17.21",
+    "@sveltejs/adapter-auto": "^3.0.0",
+    "@sveltejs/kit": "^2.0.3",
+    "@sveltejs/package": "^2.2.3",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@testing-library/dom": "^9.3.3",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/svelte": "^4.1.0",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/lodash-es": "^4.17.12",
+    "@types/prismjs": "^1.26.3",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@viamrobotics/eslint-config": "^0.3.0",
+    "@viamrobotics/prettier-config": "^0.3.4",
+    "@viamrobotics/prime-core": "workspace:^",
+    "@viamrobotics/typescript-config": "^0.1.0",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-sonarjs": "^0.23.0",
+    "eslint-plugin-svelte": "^2.35.1",
+    "eslint-plugin-tailwindcss": "^3.13.0",
+    "eslint-plugin-unicorn": "^49.0.0",
+    "jsdom": "^23.0.1",
+    "postcss": "^8.4.32",
+    "prettier": "^3.1.1",
+    "prettier-plugin-svelte": "^3.1.2",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "publint": "^0.2.6",
+    "svelte": "^4.2.8",
+    "svelte-check": "^3.6.2",
+    "tailwindcss": "^3.3.7",
+    "tslib": "^2.6.2",
+    "type-fest": "^4.8.3",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vitest": "^1.1.0"
+  },
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module"
+}
