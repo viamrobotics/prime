@@ -18,6 +18,7 @@ A collection of UI elements.
 
 [legacy]: https://github.com/viamrobotics/prime/tree/main/packages/legacy
 [core]: https://github.com/viamrobotics/prime/tree/main/packages/core
+[editor]: https://github.com/viamrobotics/prime/tree/main/packages/editor
 [blocks]: https://github.com/viamrobotics/prime/tree/main/packages/blocks
 [threlte]: https://threlte.xyz
 
