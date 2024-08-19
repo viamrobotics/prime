@@ -1,3 +1,9 @@
+if (!('createObjectURL' in globalThis.URL)) {
+  throw new Error(
+    '<MapLibre> requires the window.URL.createObjectURL method. If in a testing environment, this must be mocked or stubbed.'
+  );
+}
+
 // Three.js components
 export { default as AxesHelper } from './axes-helper/axes-helper.svelte';
 export { LengthCapsuleGeometry } from './capsule-geometry/capsule-geometry';
