@@ -49,7 +49,7 @@ const handleClose = (event: MouseEvent | KeyboardEvent) => {
   on:keyup|preventDefault={handleClose}
 >
   <div
-    class={cx('relative max-w-lg border border-medium bg-white p-6 shadow-sm', {
+    class={cx('relative border border-medium bg-white p-6 shadow-sm', {
       'max-h-[600px] min-h-[400px] w-[480px]': variant === '',
       'max-h-[320px] w-[400px]': variant === 'small',
     })}
