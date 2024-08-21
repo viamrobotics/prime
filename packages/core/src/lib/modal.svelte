@@ -50,7 +50,7 @@ import { clickOutside } from '$lib';
 export let isOpen: boolean;
 
 /** The variant of the modal. */
-export let variant: 'small' | '' = '';
+export let variant: 'small' | 'medium' | '' = '';
 
 export let role = 'dialog';
 
@@ -85,9 +85,10 @@ $: if (typeof document !== 'undefined') {
     <div
       use:clickOutside={handleCloseModal}
       class={cx(
-        'relative max-w-lg border border-medium bg-white p-6 shadow-sm',
+        'relative border border-medium bg-white p-6 shadow-sm',
         {
-          'max-h-[600px] min-h-[400px] w-[480px]': variant === '',
+          'h-[400px] w-[480px]': variant === '',
+          'h-[600px] w-[800px]': variant === 'medium',
           'max-h-[320px] w-[400px]': variant === 'small',
           'overflow-y-auto': true,
         }
@@ -100,7 +101,7 @@ $: if (typeof document !== 'undefined') {
         on:click={handleCloseModal}
       />
       <div
-        class={cx('flex flex-col gap-2', { 'min-h-[400px]': variant === '' })}
+        class='min-h-full flex flex-col gap-2'
       >
         <h2 class="pr-12 text-lg font-semibold text-default">
           <slot name="title" />

@@ -1126,7 +1126,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <h1 class="text-2xl">Modal</h1>
 
   <div>
-    <Button on:click={handleOpenModal}>Open Modal</Button>
+    <Button on:click={handleOpenModal}>Open modal</Button>
     <Modal
       isOpen={modalOpen}
       on:close={handleCloseModal}
