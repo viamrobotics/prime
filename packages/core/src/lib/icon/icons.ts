@@ -66,6 +66,7 @@ export const paths = {
   'dots-horizontal': MDI.mdiDotsHorizontal,
   download: MDI.mdiDownload,
   earth: MDI.mdiEarth,
+  export: MDI.mdiExport,
   'file-chart-outline': MDI.mdiFileChartOutline,
   'file-download-outline': MDI.mdiFileDownloadOutline,
   'file-swap-outline': MDI.mdiFileSwapOutline,
