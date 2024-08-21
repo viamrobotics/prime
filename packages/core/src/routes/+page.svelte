@@ -1128,6 +1128,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <div>
     <Button on:click={handleOpenModal}>Open modal</Button>
     <Modal
+      variant="medium"
       isOpen={modalOpen}
       on:close={handleCloseModal}
     >
