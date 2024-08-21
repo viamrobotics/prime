@@ -51,9 +51,9 @@ $: handleDisabled = preventHandler(disabled);
       'cursor-not-allowed text-gray-4': disabled,
       'hover:border-medium hover:bg-medium hover:text-gray-7 active:bg-gray-2 active:text-gray-8':
         variant === 'primary' && !disabled,
-      'border-transparent text-default hover:bg-ghost-light active:border-ghost-medium active:bg-ghost-medium':
+      'border border-transparent text-default hover:bg-ghost-light active:border-ghost-medium active:bg-ghost-medium':
         variant === 'ghost' && !disabled,
-      'border-light bg-light hover:border-medium hover:bg-medium active:border-medium active:bg-gray-2':
+      'border border-light bg-light hover:border-medium hover:bg-medium active:border-medium active:bg-gray-2':
         variant === 'secondary' && !disabled,
       'hover:bg-danger-dark hover:bg-opacity-[0.08] hover:text-danger-dark active:bg-[rgba(190,53,54,0.16)] active:text-danger-dark':
         variant === 'danger' && !disabled,
