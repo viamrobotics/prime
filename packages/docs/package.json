@@ -1,0 +1,33 @@
+{
+  "name": "temp",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "format": "prettier --write \"**/*.{ts,svelte,md,mdx}\""
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.8.0",
+    "@astrojs/mdx": "^3.1.2",
+    "@astrojs/starlight": "^0.25.0",
+    "@astrojs/svelte": "^5.6.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "@viamrobotics/prime-core": "^0.0.143",
+    "astro": "^4.11.5",
+    "prettier-plugin-astro": "^0.14.0",
+    "prettier-plugin-svelte": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.6.5",
+    "sharp": "^0.33.4",
+    "svelte": "^4.2.18",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.3"
+  },
+  "packageManager": "pnpm@8.15.6+sha256.01c01eeb990e379b31ef19c03e9d06a14afa5250b82e81303f88721c99ff2e6f",
+  "devDependencies": {
+    "@mdi/js": "^7.4.47"
+  }
+}

@@ -1,0 +1,20 @@
+---
+title: uniqueId
+---
+
+import { uniqueId } from '@viamrobotics/prime-core';
+import UniqueID from '../../../components/unique-id.svelte';
+
+An API for unique IDs with an optional prefix.
+
+## Usage
+
+To create a unique ID, use the `uniqueId` function:
+
+```ts
+import { uniqueId } from '@viamrobotics/prime-core';
+
+const id = uniqueId('my-prefix');
+```
+
+<UniqueID />

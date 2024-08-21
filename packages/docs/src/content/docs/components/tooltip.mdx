@@ -1,0 +1,79 @@
+---
+title: Tooltip
+---
+
+import { Icon, IconButton, tooltipID, Tooltip } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- For providing additional context to the user.
+
+```ts
+import { Tooltip } from '@viamrobotics/prime-core';
+```
+
+### Default
+
+<Example>
+  <div
+    class="flex"
+    slot="component"
+    client:load
+  >
+    <Tooltip client:load>
+      <Icon
+        aria-describedby="exampleID1"
+        name="information-outline"
+        cx="cursor-pointer text-gray-6"
+      />
+      <p slot="description">This is some helpful but not critical information</p>
+    </Tooltip>
+  </div>
+  ```svelte
+  <div class="flex">
+    <Tooltip let:tooltipID>
+      <Icon
+        aria-describedby={tooltipID}
+        name="information-outline"
+        cx="cursor-pointer text-gray-6"
+      />
+      <p slot="description">This is some helpful but not critical information</p>
+    </Tooltip>
+  </div>
+  ```
+</Example>
+
+### Hover delay
+
+<Example>
+  <div
+    slot="component"
+    class="flex"
+  >
+    <Tooltip
+      client:load
+      hoverDelayMS={1000}
+    >
+      <IconButton
+        aria-describedby="exampleID2"
+        icon="dots-horizontal"
+        label="More actions"
+      />
+      <p slot="description">More actions</p>
+    </Tooltip>
+  </div>
+  ```svelte
+  <div class="flex">
+    <Tooltip
+      let:tooltipID
+      hoverDelayMS={1000}
+    >
+      <IconButton
+        aria-describedby={tooltipID}
+        icon="dots-horizontal"
+        label="More actions"
+      />
+      <p slot="description">More actions</p>
+    </Tooltip>
+  </div>
+  ```
+</Example>

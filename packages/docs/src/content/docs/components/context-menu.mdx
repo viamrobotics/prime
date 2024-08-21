@@ -1,0 +1,77 @@
+---
+title: Context menu
+---
+
+import { ContextMenu, ContextMenuItem, ContextMenuSeparator } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+import FloatingMenuComponent from '../../../components/context-menu.svelte';
+import { menuID } from '../../../components/code-snippet';
+
+- To display options for some context. Usually made visible on click (especially right click) and in conjunction with floating-ui.
+
+<Example>
+  <ContextMenu
+    slot="component"
+    id={menuID}
+    cx="max-w-[150px]"
+  >
+    <ContextMenuItem icon="refresh">Restart</ContextMenuItem>
+    <ContextMenuItem icon="open-in-new">View more info</ContextMenuItem>
+    <ContextMenuSeparator />
+    <ContextMenuItem
+      icon="trash-can-outline"
+      variant="danger"
+    >
+      Delete
+    </ContextMenuItem>
+  </ContextMenu>
+  ```svelte
+  <ContextMenu
+    id={menuID}
+    cx="max-w-[150px]"
+  >
+    <ContextMenuItem icon="refresh">Restart</ContextMenuItem>
+    <ContextMenuItem icon="open-in-new">View more info</ContextMenuItem>
+    <ContextMenuSeparator />
+    <ContextMenuItem
+      icon="trash-can-outline"
+      variant="danger"
+    >
+      Delete
+    </ContextMenuItem>
+  </ContextMenu>
+  ```
+</Example>
+
+<Example>
+  <FloatingMenuComponent
+    client:load
+    slot="component"
+  />
+  ```svelte
+  <FloatingMenu
+    placement="bottom-start"
+    offset={4}
+    isOpen={floatingMenuOpen}
+    onChange={setFloatingMenuOpen}
+  >
+    <svelte:fragment slot="control">
+      <IconButton
+        icon="dots-horizontal"
+        label="See more"
+      />
+    </svelte:fragment>
+    <svelte:fragment slot="items">
+      <ContextMenuItem icon="refresh">Restart</ContextMenuItem>
+      <ContextMenuItem icon="open-in-new">View more info</ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem
+        icon="trash-can-outline"
+        variant="danger"
+      >
+        Delete
+      </ContextMenuItem>
+    </svelte:fragment>
+  </FloatingMenu>
+  ```
+</Example>

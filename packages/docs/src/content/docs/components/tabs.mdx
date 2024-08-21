@@ -1,0 +1,68 @@
+---
+title: Tabs
+---
+
+import Example from '../../../components/example.svelte';
+import Tabs from '../../../components/tabs.svelte';
+
+- A clickable element that allows the user to navigate to another page or area.
+
+```ts
+import { TabsBar, Tab } from '@viamrobotics/prime-core';
+```
+
+### Primary
+
+<Example>
+  <Tabs
+    slot="component"
+    client:load
+  />
+  ```svelte
+  <TabsBar aria-label="Tab example -- primary variant">
+    <Tab
+      title="The first tab"
+      href="#first"
+      selected
+    />
+    <Tab
+      title="The second tab"
+      href="#second"
+    />
+    <Tab
+      title="The third tab"
+      href="#third"
+    />
+  </TabsBar>
+  ```
+</Example>
+
+### Secondary
+
+<Example>
+  <Tabs
+    variant="secondary"
+    slot="component"
+    client:load
+  />
+  ```svelte
+  <TabsBar
+    variant="secondary"
+    aria-label="Tab example -- secondary variant"
+  >
+    <Tab
+      title="The first tab"
+      href="#first"
+      selected
+    />
+    <Tab
+      title="The second tab"
+      href="#second"
+    />
+    <Tab
+      title="The third tab"
+      href="#third"
+    />
+  </TabsBar>
+  ```
+</Example>

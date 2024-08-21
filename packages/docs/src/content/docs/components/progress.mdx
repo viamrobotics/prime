@@ -1,0 +1,59 @@
+---
+title: Progress
+---
+
+import { Progress } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+```ts
+import { Progress } from '@viamrobotics/prime-core';
+```
+
+### Default
+
+<Example>
+  <Progress slot="component" />
+  ```svelte
+  <Progress />
+  ```
+</Example>
+
+### Light
+
+<Example>
+  <div
+    slot="component"
+    class="bg-gray-9 p-4"
+  >
+    <Progress variant="light" />
+  </div>
+  ```svelte
+  <div class="bg-gray-9 p-4">
+    <Progress variant="light" />
+  </div>
+  ```
+</Example>
+
+### Medium
+
+<Example>
+  <Progress
+    slot="component"
+    size="medium"
+  />
+  ```svelte
+  <Progress size="medium" />
+  ```
+</Example>
+
+### Large
+
+<Example>
+  <Progress
+    slot="component"
+    size="large"
+  />
+  ```svelte
+  <Progress size="large" />
+  ```
+</Example>

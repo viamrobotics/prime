@@ -1,0 +1,155 @@
+---
+title: Banner
+---
+
+import { Banner } from '@viamrobotics/prime-core';
+import { Button } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- Displays a Banner
+
+```ts
+import { Banner } from '@viamrobotics/prime-core';
+```
+
+### Info
+
+<Example>
+  <Banner
+    slot="component"
+    variant="info"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Info message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+    <svelte:fragment slot="action">
+      <a href="https://prime.viam.com/">View details</a>
+    </svelte:fragment>
+  </Banner>
+  ```svelte
+  <Banner
+    variant="info"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Info message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+    <svelte:fragment slot="action">
+      <a href="https://prime.viam.com/">View details</a>
+    </svelte:fragment>
+  </Banner>
+  ```
+</Example>
+
+### Success
+
+<Example>
+  <Banner
+    slot="component"
+    variant="success"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Success message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+  </Banner>
+  ```svelte
+  <Banner
+    variant="success"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Success message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+  </Banner>
+  ```
+</Example>
+
+### Warning
+
+<Example>
+  <Banner
+    slot="component"
+    variant="warning"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Warning message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+  </Banner>
+  ```svelte
+  <Banner
+    variant="warning"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Warning message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+  </Banner>
+  ```
+</Example>
+
+### Danger
+
+<Example>
+  <Banner
+    slot="component"
+    variant="danger"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Danger message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+  </Banner>
+  ```svelte
+  <Banner
+    variant="danger"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Danger message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+  </Banner>
+  ```
+</Example>
+
+### Danger with button
+
+<Example>
+  <Banner
+    slot="component"
+    variant="danger"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Danger message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+    <svelte:fragment slot="actionEmphasize">
+      <Button variant="dark">Abandon ship</Button>
+    </svelte:fragment>
+  </Banner>
+  ```svelte
+  <Banner
+    variant="danger"
+    cx="max-w-[600px]"
+  >
+    <svelte:fragment slot="title">Danger message</svelte:fragment>
+    <svelte:fragment slot="subtitle">
+      Here is some helpful information. This message should be no longer than three lines of text.
+    </svelte:fragment>
+    <svelte:fragment slot="actionEmphasize">
+      <Button variant="dark">Abandon ship</Button>
+    </svelte:fragment>
+  </Banner>
+  ```
+</Example>

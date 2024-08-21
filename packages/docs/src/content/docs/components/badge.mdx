@@ -1,0 +1,92 @@
+---
+title: Badge
+---
+
+import { Badge } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- Displays status
+
+```ts
+import { Badge } from '@viamrobotics/prime-core';
+```
+
+### Inactive
+
+<Example>
+  <Badge
+    slot="component"
+    variant="inactive"
+    label="Inactive"
+  />
+  ```svelte
+  <Badge
+    variant="inactive"
+    label="Inactive"
+  />
+  ```
+</Example>
+
+### Success
+
+<Example>
+  <Badge
+    slot="component"
+    variant="success"
+    label="Success"
+  />
+  ```svelte
+  <Badge
+    variant="success"
+    label="Success"
+  />
+  ```
+</Example>
+
+### Warning
+
+<Example>
+  <Badge
+    slot="component"
+    variant="warning"
+    label="Warning"
+  />
+  ```svelte
+  <Badge
+    variant="warning"
+    label="Warning"
+  />
+  ```
+</Example>
+
+### Danger
+
+<Example>
+  <Badge
+    slot="component"
+    variant="danger"
+    label="Danger"
+  />
+  ```svelte
+  <Badge
+    variant="danger"
+    label="Danger"
+  />
+  ```
+</Example>
+
+### Neutral
+
+<Example>
+  <Badge
+    slot="component"
+    variant="neutral"
+    label="Neutral"
+  />
+  ```svelte
+  <Badge
+    variant="neutral"
+    label="Neutral"
+  />
+  ```
+</Example>

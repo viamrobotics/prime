@@ -1,0 +1,22 @@
+---
+title: Breadcrumbs
+---
+
+import { Breadcrumbs } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- A navigation aid that helps users easily understand the relation between parents and children.
+
+```ts
+import { Breadcrumbs } from '@viamrobotics/prime-core';
+```
+
+<Example>
+  <Breadcrumbs
+    slot="component"
+    crumbs={['Crumb 1', 'Crumb 2']}
+  />
+  ```svelte
+  <Breadcrumbs crumbs={['Crumb 1', 'Crumb 2']} />
+  ```
+</Example>

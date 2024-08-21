@@ -1,0 +1,58 @@
+---
+title: Switch
+---
+
+import { Label, Switch } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- Used to handle binary input.
+
+```ts
+import { Label, Switch } from '@viamrobotics/prime-core';
+```
+
+### Basic
+
+<Example>
+  <Switch
+    client:load
+    slot="component"
+  />
+  ```svelte
+  <Switch />
+  ```
+</Example>
+
+### Disabled
+
+<Example>
+  <Switch
+    client:load
+    slot="component"
+    disabled
+  />
+  ```svelte
+  <Switch disabled />
+  ```
+</Example>
+
+### With label
+
+<Example>
+  <Label
+    slot="component"
+    position="top"
+  >
+    Enable encryption
+    <Switch
+      client:load
+      slot="input"
+    />
+  </Label>
+  ```svelte
+  <Label position="top">
+    Enable encryption
+    <Switch slot="input" />
+  </Label>
+  ```
+</Example>

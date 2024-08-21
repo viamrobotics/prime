@@ -1,0 +1,169 @@
+---
+title: Input
+---
+
+import {
+  Input,
+  Label,
+  NumericInput,
+  RangeInput,
+  RestrictedTextInput,
+  SliderInput,
+  Tooltip
+} from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+import RestrictTextInputComponent from '../../../components/restrict-input.svelte';
+
+- A simple user input. We use this input to build all of the other input types.
+  This is ideal for text, email, and password fields.
+
+### Placeholder
+
+```ts
+import { Input } from '@viamrobotics/prime-core';
+```
+
+<Example>
+  <Input
+    slot="component"
+    cx="max-w-[200px]"
+    placeholder="Placeholder"
+  />
+  ```svelte
+  <Input
+    cx="max-w-[200px]"
+    placeholder="Placeholder"
+  />
+  ```
+</Example>
+
+### Labels
+
+For accessibility, consider wrapping your `<Input />` in a `<Label />`.
+
+<br />
+Use `slot="input"` to correctly render.
+
+```ts
+import { Input, Label } from '@viamrobotics/prime-core';
+```
+
+<Example>
+  <Label slot="component">
+    Full name
+    <Input
+      slot="input"
+      cx="max-w-[200px]"
+      placeholder="Eliot Horowitz"
+    />
+  </Label>
+  ```svelte
+  <Label>
+    Full name
+    <Input
+      slot="input"
+      cx="max-w-[200px]"
+      placeholder="Eliot Horowitz"
+    />
+  </Label>
+  ```
+</Example>
+
+### Restricted Text Input
+
+An opinionated input for text values that only allows specified regex.
+
+<br />
+The allowed characters are specified by the `restrictInput` function.
+
+```ts
+import { RestrictedTextInput } from '@viamrobotics/prime-core';
+
+const restrictInput = (inputValue: string) => inputValue.replaceAll(/[^a-zA-Z0-9]/gu, '');
+```
+
+<Example>
+  <RestrictTextInputComponent
+    client:load 
+    slot="component" 
+  />
+  ```svelte
+  <Label>
+    Username
+    <div
+      slot="input"
+      class="mb-2 max-w-[200px]"
+    >
+      <RestrictedTextInput
+        value=""
+        {restrictInput}
+        tooltipDescription="Valid characters: letters, numbers"
+        placeholder="funkymonkey89"
+      />
+    </div>
+  </Label>
+  ```
+</Example>
+
+### Numeric Input
+
+A user input for numeric values. This is ideal for number and integer fields.
+The value can be incremented/decremented using the up/down arrow keys.
+
+```ts
+import { NumericInput } from '@viamrobotics/prime-core';
+```
+
+<Example>
+  <NumericInput
+    slot="component"
+    client:load
+    cx="max-w-[80px]"
+  />
+  ```svelte
+  <NumericInput cx="max-w-[80px]" />
+  ```
+</Example>
+
+### Slider Input
+
+A user input for numeric values that allows easy adjustments with a slider.
+This is ideal for number and integer fields you expect the user to tweak often,
+and the value can be incremented/decremented using the up/down arrow keys.
+
+```ts
+import { SliderInput } from '@viamrobotics/prime-core';
+```
+
+<Example>
+  <SliderInput
+    slot="component"
+    client:load
+    cx="max-w-[80px]"
+  />
+  ```svelte
+  <SliderInput cx="max-w-[80px]" />
+  ```
+</Example>
+
+### Range Input
+
+A user input for numeric values within a specified range that allows easy adjustments
+with a slider. This is ideal for number and integer fields you expect the user to tweak often,
+should be restricted between a min and max value, and the value can be incremented/decremented
+using the up/down arrow keys. It also includes a numeric input for direct inputs.
+
+```ts
+import { RangeInput } from '@viamrobotics/prime-core';
+```
+
+<Example>
+  <RangeInput
+    slot="component"
+    client:load
+    cx="max-w-[300px]"
+  />
+  ```svelte
+  <RangeInput cx="max-w-[300px]" />
+  ```
+</Example>
