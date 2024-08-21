@@ -1,0 +1,105 @@
+---
+title: Icon Button
+---
+
+import { IconButton } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- Similar to a button but only an icon is visible.
+
+```ts
+import { IconButton } from '@viamrobotics/prime-core';
+```
+
+### Primary
+
+<Example>
+  <IconButton
+    slot="component"
+    icon="plus"
+    label="Add object"
+  />
+  ```svelte
+  <IconButton
+    slot="component"
+    icon="plus"
+    label="Add object"
+  />
+  ```
+</Example>
+
+### Secondary
+
+<Example>
+  <IconButton
+    slot="component"
+    icon="plus"
+    label="Add secondary object"
+    variant="secondary"
+  />
+  ```svelte
+  <IconButton
+    slot="component"
+    icon="plus"
+    label="Add secondary object"
+    variant="secondary"
+  />
+  ```
+</Example>
+
+### Danger
+
+<Example>
+  <IconButton
+    slot="component"
+    icon="trash-can-outline"
+    label="Delete object"
+    variant="danger"
+  />
+  ```svelte
+  <IconButton
+    slot="component"
+    icon="trash-can-outline"
+    label="Delete object"
+    variant="danger"
+  />
+  ```
+</Example>
+
+### Disabled
+
+<Example>
+  <IconButton
+    slot="component"
+    icon="refresh"
+    label="Restart object"
+    disabled
+  />
+  ```svelte
+  <IconButton
+    slot="component"
+    icon="refresh"
+    label="Restart object"
+    disabled
+  />
+  ```
+</Example>
+
+### Progress
+
+<Example>
+  <IconButton
+    slot="component"
+    icon="refresh"
+    progress="indeterminate"
+    label="Restart object"
+  />
+  ```svelte
+  <IconButton
+    slot="component"
+    icon="refresh"
+    progress="indeterminate"
+    label="Restart object"
+  />
+  ```
+</Example>

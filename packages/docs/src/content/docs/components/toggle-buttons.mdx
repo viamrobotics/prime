@@ -1,0 +1,81 @@
+---
+title: Toggle Buttons
+---
+
+import { Label, ToggleButtons } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- A set of options the user can toggle between.
+
+```ts
+import { ToggleButtons } from '@viamrobotics/prime-core';
+```
+
+### Default
+
+<Example>
+  <Label
+    slot="component"
+    client:load
+  >
+    Favorite animal
+    <div
+      class="w-fit"
+      slot="input"
+    >
+      <ToggleButtons
+        client:load
+        options={['Fan lizard', 'Mountain banshee', 'Buzzard wasp']}
+        selected="Fan lizard"
+      />
+    </div>
+  </Label>
+  ```svelte
+  <Label>
+    Favorite animal
+    <div
+      class="w-fit"
+      slot="input"
+    >
+      <ToggleButtons
+        options={['Fan lizard', 'Mountain banshee', 'Buzzard wasp']}
+        selected="Fan lizard"
+      />
+    </div>
+  </Label>
+  ```
+</Example>
+
+### Disabled
+
+<Example>
+  <Label slot="component">
+    Favorite animal
+    <div
+      class="w-fit"
+      slot="input"
+    >
+      <ToggleButtons
+        client:load
+        options={['Fan lizard', 'Mountain banshee', 'Buzzard wasp']}
+        selected="Fan lizard"
+        disabled
+      />
+    </div>
+  </Label>
+  ```svelte
+  <Label>
+    Favorite animal
+    <div
+      class="w-fit"
+      slot="input"
+    >
+      <ToggleButtons
+        options={['Fan lizard', 'Mountain banshee', 'Buzzard wasp']}
+        selected="Fan lizard"
+        disabled
+      />
+    </div>
+  </Label>
+  ```
+</Example>

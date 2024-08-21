@@ -1,0 +1,187 @@
+---
+title: Button
+---
+
+import { Button } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- For user triggered actions.
+
+```ts
+import { Button } from '@viamrobotics/prime-core';
+```
+
+### Primary
+
+<Example>
+  <Button
+    slot="component"
+    variant="dark"
+  >
+    Primary action
+  </Button>
+  ```svelte
+  <Button variant="dark">Primary action</Button>
+  ```
+</Example>
+
+### Secondary
+
+<Example>
+  <Button slot="component">Secondary action</Button>
+  ```svelte
+  <Button>Secondary action</Button>
+  ```
+</Example>
+
+### Ghost
+
+<Example>
+  <Button
+    slot="component"
+    variant="ghost"
+  >
+    Walk
+  </Button>
+  ```svelte
+  <Button variant="ghost">Walk</Button>
+  ```
+</Example>
+
+### Success
+
+<Example>
+  <Button
+    slot="component"
+    variant="success"
+  >
+    Success
+  </Button>
+  ```svelte
+  <Button variant="success">Success</Button>
+  ```
+</Example>
+
+### Danger
+
+<Example>
+  <Button
+    slot="component"
+    variant="danger"
+  >
+    Stop
+  </Button>
+  ```svelte
+  <Button variant="danger">Stop</Button>
+  ```
+</Example>
+
+### Outline danger
+
+<Example>
+  <Button
+    slot="component"
+    variant="outline-danger"
+  >
+    Slow down
+  </Button>
+  ```svelte
+  <Button variant="outline-danger">Slow down</Button>
+  ```
+</Example>
+
+### Outline danger with icon
+
+<Example>
+  <Button
+    slot="component"
+    variant="outline-danger"
+    icon="trash-can-outline"
+  >
+    Delete component
+  </Button>
+  ```svelte
+  <Button
+    variant="outline-danger"
+    icon="trash-can-outline"
+  >
+    Delete component
+  </Button>
+  ```
+</Example>
+
+### Disabled
+
+<Example>
+  <Button
+    slot="component"
+    disabled
+  >
+    Run
+  </Button>
+  ```svelte
+  <Button disabled>Run</Button>
+  ```
+</Example>
+
+### Title attribute
+
+<Example>
+  <Button
+    slot="component"
+    title="Run this command"
+  >
+    Run
+  </Button>
+  ```svelte
+  <Button title="Run this command">Run</Button>
+  ```
+</Example>
+
+### Icon
+
+<Example>
+  <Button
+    slot="component"
+    icon="refresh"
+  >
+    Refresh
+  </Button>
+  ```svelte
+  <Button icon="refresh">Refresh</Button>
+  ```
+</Example>
+
+### Ghost
+
+<Example>
+  <Button
+    slot="component"
+    variant="ghost"
+    icon="trash-can-outline"
+  >
+    Delete component
+  </Button>
+  ```svelte
+  <Button
+    variant="ghost"
+    icon="trash-can-outline"
+  >
+    Delete component
+  </Button>
+  ```
+</Example>
+
+### Indeterminate
+
+<Example>
+  <Button
+    slot="component"
+    progress="indeterminate"
+  >
+    Loading...
+  </Button>
+  ```svelte
+  <Button progress="indeterminate">Loading...</Button>
+  ```
+</Example>

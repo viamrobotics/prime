@@ -1,0 +1,164 @@
+---
+title: Toast banner
+---
+
+import { ToastBanner, ToastVariant } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- A toast banner message of 5 types: success, info, warn, danger, and neutral.
+
+```ts
+import { ToastBanner } from '@viamrobotics/prime-core';
+```
+
+### Success
+
+<Example>
+  <ToastBanner
+    slot="component"
+    client:load
+    variant={ToastVariant.Success}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```svelte
+  <ToastBanner
+    variant={ToastVariant.Success}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```
+</Example>
+
+### Info
+
+<Example>
+  <ToastBanner
+    slot="component"
+    client:load
+    variant={ToastVariant.Info}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```svelte
+  <ToastBanner
+    variant={ToastVariant.Info}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```
+</Example>
+
+### Danger
+
+<Example>
+  <ToastBanner
+    slot="component"
+    client:load
+    variant={ToastVariant.Danger}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```svelte
+  <ToastBanner
+    variant={ToastVariant.Danger}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```
+</Example>
+
+### Warning
+
+<Example>
+  <ToastBanner
+    slot="component"
+    client:load
+    variant={ToastVariant.Warning}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```svelte
+  <ToastBanner
+    variant={ToastVariant.Warning}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```
+</Example>
+
+### Neutral
+
+<Example>
+  <ToastBanner
+    slot="component"
+    client:load
+    variant={ToastVariant.Neutral}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```svelte
+  <ToastBanner
+    variant={ToastVariant.Neutral}
+    message="Saved configuration"
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+  />
+  ```
+</Example>
+
+### Optional action
+
+<Example>
+  <ToastBanner
+    slot="component"
+    client:load
+    message={`Deleted "my-arm"`}
+    variant={ToastVariant.Success}
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+    action={{
+      text: 'Undo',
+      handler: () => {
+        console.log('Clicked action');
+      }
+    }}
+    cx="max-w-[280px]"
+  />
+  ```svelte
+  <ToastBanner
+    message={`Deleted "my-arm"`}
+    variant={ToastVariant.Success}
+    dismiss={() => {
+      console.log('Clicked close button');
+    }}
+    action={{
+      text: 'Undo',
+      handler: () => {
+        console.log('Clicked action');
+      }
+    }}
+    cx="max-w-[280px]"
+  />
+  ```
+</Example>

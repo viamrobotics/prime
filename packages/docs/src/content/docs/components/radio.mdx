@@ -1,0 +1,196 @@
+---
+title: Radio
+---
+
+import { Radio } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+
+- Displays status
+
+```ts
+import { Radio } from '@viamrobotics/prime-core';
+```
+
+### Basic
+
+<Example>
+  <Radio
+    client:load
+    slot="component"
+    name="basic"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+  />
+  ```svelte
+  <Radio
+    name="basic"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+  />
+  ```
+</Example>
+
+### With legend
+
+<Example>
+  <Radio
+    client:load
+    slot="component"
+    name="legend"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
+  ```svelte
+  <Radio
+    name="legend"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
+  ```
+</Example>
+
+### Required
+
+<Example>
+  <Radio
+    client:load
+    slot="component"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+    required
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
+  ```svelte
+  <Radio
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+    required
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
+  ```
+</Example>
+
+### Disabled
+
+<Example>
+  <Radio
+    client:load
+    slot="component"
+    name="disabled"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+    disabled
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
+  ```svelte
+  <Radio
+    name="disabled"
+    options={['Lion', 'Tiger', 'Bear']}
+    selected="Lion"
+    disabled
+  >
+    <svelte:fragment slot="legend">Favorite animal</svelte:fragment>
+  </Radio>
+  ```
+</Example>
+
+### With description
+
+<Example>
+  <Radio
+    client:load
+    slot="component"
+    name="Upload model"
+    options={[
+      {
+        label: 'New model',
+        value: 'new model',
+        description: 'Upload a new model'
+      },
+      {
+        label: 'New version',
+        value: 'new version',
+        description: 'Upload a new version of a model that already exists in Viam'
+      }
+    ]}
+    selected="new model"
+  >
+    <svelte:fragment slot="legend">Upload model</svelte:fragment>
+  </Radio>
+  ```svelte
+  <Radio
+    name="Upload model"
+    options={[
+      {
+        label: 'New model',
+        value: 'new model',
+        description: 'Upload a new model'
+      },
+      {
+        label: 'New version',
+        value: 'new version',
+        description: 'Upload a new version of a model that already exists in Viam'
+      }
+    ]}
+    selected="new model"
+  >
+    <svelte:fragment slot="legend">Upload model</svelte:fragment>
+  </Radio>
+  ```
+</Example>
+
+### With icon
+
+<Example>
+  <Radio
+    client:load
+    slot="component"
+    name="Visibility"
+    options={[
+      {
+        label: 'Public',
+        value: 'public',
+        description: 'Can be used by external organizations',
+        icon: 'earth'
+      },
+      {
+        label: 'Private',
+        value: 'private',
+        description: 'Only for internal use within this organization',
+        icon: 'lock'
+      }
+    ]}
+    selected="public"
+  >
+    <svelte:fragment slot="legend">Visibility</svelte:fragment>
+  </Radio>
+  ```svelte
+  <Radio
+    name="Visibility"
+    options={[
+      {
+        label: 'Public',
+        value: 'public',
+        description: 'Can be used by external organizations',
+        icon: 'earth'
+      },
+      {
+        label: 'Private',
+        value: 'private',
+        description: 'Only for internal use within this organization',
+        icon: 'lock'
+      }
+    ]}
+    selected="public"
+  >
+    <svelte:fragment slot="legend">Visibility</svelte:fragment>
+  </Radio>
+  ```
+</Example>

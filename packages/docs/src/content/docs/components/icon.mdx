@@ -1,0 +1,57 @@
+---
+title: Icon
+---
+
+import { Icon, Tooltip } from '@viamrobotics/prime-core';
+import Example from '../../../components/example.svelte';
+import AllIcons from '../../../components/all-icons.svelte';
+
+- Small images that have a high symbolic value and can be
+  utilized for the purpose of communication.
+
+```ts
+import { Icon } from '@viamrobotics/prime-core';
+```
+
+### Checkmark
+
+<Example>
+  <Icon
+    slot="component"
+    name="check-circle"
+    cx="text-gray-6"
+  />
+  ```svelte
+  <Icon
+    name="check-circle"
+    cx="text-gray-6"
+  />
+  ```
+</Example>
+
+### Checkmark 2xl
+
+<Example>
+  <Icon
+    slot="component"
+    name="check-circle"
+    size="2xl"
+    cx="text-gray-6"
+  />
+  ```svelte
+  <Icon
+    name="check-circle"
+    size="2xl"
+    cx="text-gray-6"
+  />
+  ```
+</Example>
+
+### All icons
+
+<Example>
+  <AllIcons
+    client:load
+    slot="component"
+  />
+</Example>

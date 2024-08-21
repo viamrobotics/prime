@@ -1,0 +1,33 @@
+---
+title: Label
+---
+
+import { Input, Label } from '@viamrobotics/prime-core';
+
+import Example from '../../../components/example.svelte';
+
+- For labelling inputs.
+
+```ts
+import { Label } from '@viamrobotics/prime-core';
+```
+
+<Example>
+  <Label slot="component">
+    Name:
+    <Input
+      slot="input"
+      cx="max-w-[200px]"
+      placeholder="Placeholder"
+    />
+  </Label>
+  ```svelte
+  <Label>
+    Name:
+    <Input
+      cx="max-w-[200px]"
+      placeholder="Placeholder"
+    />
+  </Label>
+  ```
+</Example>

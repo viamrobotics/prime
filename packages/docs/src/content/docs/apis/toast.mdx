@@ -1,0 +1,196 @@
+---
+title: useToast
+---
+
+import Example from '../../../components/example.svelte';
+import ToastComponent from '../../../components/toast.svelte';
+
+Components and an API for displaying user toast messages.
+
+### Setup
+
+To use toasts, provide the toast context somewhere high your component tree along with the `ToastContainer` component.
+
+The root layout component is probably the best place to set up the context.
+
+```svelte
+<!-- +layout.svelte -->
+<script lang="ts">
+  import { ToastContainer, ToastVariant } from '@viamrobotics/prime-core';
+
+  import PageRoot from '$lib/layout/page-root.svelte';
+  import PageContent from '$lib/layout/page-content.svelte';
+</script>
+
+<PageRoot>
+  <PageContent>
+    <slot />
+  </PageContent>
+  <ToastContainer />
+</PageRoot>
+```
+
+### Usage
+
+To display a toast, first provide access to the Toast context using `provideToast`. Then, you can use the `useToast` function:
+
+```ts
+import { provideToast } from '@viamrobotics/prime-core';
+
+const doSomethingCrazy = () => {
+  const toast = provideToast();
+
+  toast({ message: 'Hello, Brooklyn!', variant: ToastVariant.Success });
+};
+```
+
+If the variant is not specified, the default is "success".
+
+An action can also be specified in the params to `useToast`.
+
+```ts
+import { provideToast } from '@viamrobotics/prime-core';
+
+const doSomethingCrazy = () => {
+  const toast = provideToast();
+  const exampleHanderFunction = () => void;
+
+  toast({ message: 'Plain slice please!' });
+  toast({ message: 'Plain slice please!', action: { text: 'action', handler: exampleHandlerFunction } });
+};
+```
+
+### Try it!
+
+<Example>
+  <ToastComponent slot="component" client:load />
+  ```svelte
+  <div class="flex flex-col">
+    <ToastContainer />
+
+    <div class="flex flex-wrap gap-4">
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Success message',
+            variant: ToastVariant.Success,
+          })}
+      >
+        Success
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Info message',
+            variant: ToastVariant.Info,
+          })}
+      >
+        Info
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Danger message',
+            variant: ToastVariant.Danger,
+          })}
+      >
+        Danger
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Warning message',
+            variant: ToastVariant.Warning,
+          })}
+      >
+        Warning
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Neutral message',
+            variant: ToastVariant.Neutral,
+          })}
+      >
+        Neutral
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Success message',
+            variant: ToastVariant.Success,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Success with action
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Info message',
+            variant: ToastVariant.Info,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Info with action
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Danger message',
+            variant: ToastVariant.Danger,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Danger with action
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Warning message',
+            variant: ToastVariant.Warning,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Warning with action
+      </Button>
+      <Button
+        on:click={() =>
+          toast({
+            message: 'Neutral message',
+            variant: ToastVariant.Neutral,
+            action: {
+              text: 'action',
+              handler: () => {
+                console.log('Clicked action');
+              },
+            },
+          })}
+      >
+        Neutral with action
+      </Button>
+    </div>
+
+  </div>
+  ```
+</Example>
