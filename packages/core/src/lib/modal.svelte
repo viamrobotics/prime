@@ -84,12 +84,15 @@ $: if (typeof document !== 'undefined') {
   >
     <div
       use:clickOutside={handleCloseModal}
-      class={cx('relative border border-medium bg-white p-6 shadow-sm', {
-        'h-[400px] w-[480px]': variant === '',
-        'h-[600px] w-[800px]': variant === 'medium',
-        'max-h-[320px] w-[400px]': variant === 'small',
-        'overflow-y-auto': true,
-      })}
+      class={cx(
+        'relative min-w-[400px] border border-medium bg-white p-6 shadow-sm',
+        {
+          'max-h-[400px] max-w-[480px]': variant === '',
+          'max-h-[600px] max-w-[800px]': variant === 'medium',
+          'max-h-[320px] max-w-[400px]': variant === 'small',
+          'overflow-y-auto': true,
+        }
+      )}
     >
       <IconButton
         cx="absolute right-4 top-4 text-gray-6"
