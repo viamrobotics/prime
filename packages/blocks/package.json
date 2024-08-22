@@ -40,7 +40,7 @@
     "maplibre-gl": ">=4",
     "svelte": ">=4 <5",
     "tailwindcss": ">=3",
-    "three": ">=0.159"
+    "three": ">=0.167.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
@@ -51,8 +51,8 @@
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/svelte": "^4.1.0",
     "@threlte/core": "^7.3.1",
-    "@threlte/extras": "^8.11.4",
-    "@types/three": "^0.166.0",
+    "@threlte/extras": "^8.11.5",
+    "@types/three": "^0.167.2",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "@viamrobotics/eslint-config": "^0.3.0",
@@ -79,7 +79,7 @@
     "svelte": "^4.2.8",
     "svelte-check": "^3.6.2",
     "tailwindcss": "^3.3.7",
-    "three": "^0.166.1",
+    "three": "^0.167.1",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3",
     "vite": "^5.0.10",
