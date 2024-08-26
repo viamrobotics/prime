@@ -66,7 +66,6 @@ jobs:
         uses: viamrobotics/js-config/.github/actions/setup@main
         with:
           registry-url: https://registry.npmjs.org
-          node-version: "18"
 
       - name: Download @viamrobotics/prime npm artifacts
         uses: actions/download-artifact@v3
