@@ -1,14 +1,14 @@
 {
   "name": "@viamrobotics/prime",
   "version": "0.5.10",
+  "homepage": "https://prime.viam.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viamrobotics/prime.git",
+    "directory": "packages/legacy"
+  },
   "license": "Apache-2.0",
   "type": "module",
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/prime.umd.cjs",
-  "module": "./dist/prime.js",
-  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
       "types": "./dist/main.d.ts",
@@ -17,26 +17,29 @@
     },
     "./prime.css": "./dist/prime.css"
   },
-  "homepage": "http://viamrobotics.github.io/prime",
-  "repository": "git://github.com/viamrobotics/prime.git",
-  "packageManager": "pnpm@8.6.3",
+  "main": "./dist/prime.umd.cjs",
+  "module": "./dist/prime.js",
+  "types": "./dist/main.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "start": "vite dev",
+    "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\"",
+    "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
     "build": "pnpm run build-bundles && pnpm run build-types",
     "build-bundles": "vite build --mode production",
     "build-types": "tsc --project tsconfig.build.json",
-    "serve": "vite preview --host",
     "check": "concurrently -g pnpm:check-*",
+    "check-format": "pnpm run _prettier --check",
+    "check-lint": "eslint --quiet \"./**/*.@(js|cjs|ts|svelte)\"",
     "check-svelte": "svelte-check --tsconfig ./tsconfig.json",
     "check-vue": "vue-tsc --project ./playground/tsconfig.json",
-    "check-lint": "eslint --quiet \"./**/*.@(js|cjs|ts|svelte)\"",
-    "check-format": "pnpm run _prettier --check",
     "format": "pnpm run _prettier --write",
-    "test": "playwright test",
-    "test-dev": "playwright test --debug",
     "playwright-install": "playwright install",
-    "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
-    "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\""
+    "serve": "vite preview --host",
+    "start": "vite dev",
+    "test": "playwright test",
+    "test-dev": "playwright test --debug"
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.2.6",

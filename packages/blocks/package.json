@@ -1,24 +1,12 @@
 {
   "name": "@viamrobotics/prime-blocks",
   "version": "0.1.4",
-  "publishConfig": {
-    "access": "public"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viamrobotics/prime.git",
+    "directory": "packages/blocks"
   },
-  "scripts": {
-    "prepare": "svelte-kit sync",
-    "dev": "vite dev",
-    "build": "vite build && npm run package",
-    "preview": "vite preview",
-    "package": "svelte-kit sync && svelte-package && publint",
-    "check": "concurrently -g pnpm:check-*",
-    "check-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check-lint": "pnpm run _prettier --check && pnpm run _eslint",
-    "format": "pnpm run _prettier --write",
-    "test": "svelte-kit sync && vitest run",
-    "test:watch": "vitest",
-    "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
-    "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\""
-  },
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -26,21 +14,28 @@
     },
     "./prime.css": "./prime.css"
   },
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*",
     "prime.css"
   ],
-  "peerDependencies": {
-    "@threlte/core": ">=7 <8",
-    "@threlte/extras": ">=8 <9",
-    "@viamrobotics/prime-core": ">=0.0.48",
-    "@viamrobotics/three": ">=0.0.3",
-    "maplibre-gl": ">=4",
-    "svelte": ">=4 <5",
-    "tailwindcss": ">=3",
-    "three": ">=0.167.0"
+  "scripts": {
+    "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\"",
+    "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
+    "build": "vite build && npm run package",
+    "check": "concurrently -g pnpm:check-*",
+    "check-lint": "pnpm run _prettier --check && pnpm run _eslint",
+    "check-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "dev": "vite dev",
+    "format": "pnpm run _prettier --write",
+    "package": "svelte-kit sync && svelte-package && publint",
+    "prepare": "svelte-kit sync",
+    "preview": "vite preview",
+    "test": "svelte-kit sync && vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
@@ -85,7 +80,17 @@
     "vite": "^5.0.10",
     "vitest": "^1.1.0"
   },
-  "svelte": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "type": "module"
+  "peerDependencies": {
+    "@threlte/core": ">=7 <8",
+    "@threlte/extras": ">=8 <9",
+    "@viamrobotics/prime-core": ">=0.0.48",
+    "@viamrobotics/three": ">=0.0.3",
+    "maplibre-gl": ">=4",
+    "svelte": ">=4 <5",
+    "tailwindcss": ">=3",
+    "three": ">=0.167.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

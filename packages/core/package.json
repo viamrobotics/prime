@@ -1,24 +1,13 @@
 {
   "name": "@viamrobotics/prime-core",
   "version": "0.0.146",
-  "publishConfig": {
-    "access": "public"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viamrobotics/prime.git",
+    "directory": "packages/core"
   },
-  "scripts": {
-    "prepare": "svelte-kit sync",
-    "dev": "vite dev",
-    "build": "vite build && pnpm run package",
-    "preview": "vite preview",
-    "package": "svelte-kit sync && svelte-package && publint",
-    "check": "concurrently -g pnpm:check-*",
-    "check-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check-lint": "pnpm run _prettier --check && pnpm run _eslint",
-    "format": "pnpm run _prettier --write",
-    "test": "svelte-kit sync && vitest run",
-    "test:watch": "vitest",
-    "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
-    "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\""
-  },
+  "license": "Apache-2.0",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -32,6 +21,8 @@
     "./plugins": "./plugins.ts",
     "./theme": "./theme.ts"
   },
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "theme.ts",
@@ -39,8 +30,20 @@
     "prime.css",
     "!__tests__"
   ],
-  "peerDependencies": {
-    "svelte": ">=4.0.0 <5"
+  "scripts": {
+    "_eslint": "eslint \".*.cjs\" \"**/*.{js,cjs,ts,svelte}\"",
+    "_prettier": "prettier \"**/*.{js,cjs,ts,svelte,css,json,yml,yaml,md,mdx}\"",
+    "build": "vite build && pnpm run package",
+    "check": "concurrently -g pnpm:check-*",
+    "check-lint": "pnpm run _prettier --check && pnpm run _eslint",
+    "check-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "dev": "vite dev",
+    "format": "pnpm run _prettier --write",
+    "package": "svelte-kit sync && svelte-package && publint",
+    "prepare": "svelte-kit sync",
+    "preview": "vite preview",
+    "test": "svelte-kit sync && vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.5.3",
@@ -90,7 +93,10 @@
     "vite": "^5.0.10",
     "vitest": "^1.1.0"
   },
-  "svelte": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "type": "module"
+  "peerDependencies": {
+    "svelte": ">=4.0.0 <5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
