@@ -61,7 +61,7 @@ $: handleDisabled = preventHandler(disabled);
   {title}
   aria-disabled={disabled ? true : undefined}
   class={cx(
-    'inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap border',
+    'inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap border text-default',
     {
       'flex w-full': width === 'full',
       'inline-flex': width !== 'full',

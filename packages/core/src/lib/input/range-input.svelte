@@ -113,7 +113,7 @@ $: if (value > max) {
 
 <svelte:window on:resize={() => positionIndicator(value)} />
 
-<div class={cx('grid w-full grid-cols-[3rem_1fr] gap-2', extraClasses)}>
+<div class={cx('grid w-full grid-cols-[3rem_1fr] gap-2 bg-white', extraClasses)}>
   <NumericInput
     bind:value
     {min}
