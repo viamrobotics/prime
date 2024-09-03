@@ -51,7 +51,7 @@ $: {
   <T.Line2 renderOrder={renderOrder.motionPath}>
     <T.LineMaterial
       color="#FF0047"
-      linewidth={0.005}
+      linewidth={1}
     />
     <T is={geometry} />
   </T.Line2>
