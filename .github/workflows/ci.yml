@@ -68,25 +68,25 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Download @viamrobotics/prime npm artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: npm-legacy-dist
           path: packages/legacy/dist
 
       - name: Download @viamrobotics/prime-core npm artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: npm-core-dist
           path: packages/core/dist
 
       - name: Download @viamrobotics/prime-blocks npm artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: npm-blocks-dist
           path: packages/blocks/dist
 
       - name: Download @viamrobotics/prime-editor npm artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: npm-editor-dist
           path: packages/editor/dist
