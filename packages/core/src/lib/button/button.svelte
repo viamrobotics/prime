@@ -61,7 +61,7 @@ $: handleDisabled = preventHandler(disabled);
   {title}
   aria-disabled={disabled ? true : undefined}
   class={cx(
-    'inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap border text-default',
+    'inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap border',
     {
       'flex w-full': width === 'full',
       'inline-flex': width !== 'full',
@@ -69,7 +69,7 @@ $: handleDisabled = preventHandler(disabled);
       'pl-2 pr-3': icon,
       'cursor-not-allowed !border-disabled-light !bg-disabled-light text-disabled-dark':
         disabled,
-      'border-light bg-light hover:border-medium hover:bg-medium active:bg-gray-2':
+      'border-light bg-light text-default hover:border-medium hover:bg-medium active:bg-gray-2':
         variant === 'primary' && !disabled,
       'border-gray-9 bg-gray-9 text-white hover:border-black hover:bg-black active:bg-[#000]':
         variant === 'dark' && !disabled,
