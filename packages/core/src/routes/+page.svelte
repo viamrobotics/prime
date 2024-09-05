@@ -48,6 +48,7 @@ import {
   RangeInput,
   Progress,
 } from '$lib';
+import AgGridTable from '$lib/table/ag-grid-table.svelte';
 import { uniqueId } from 'lodash-es';
 
 provideNotify();
@@ -458,6 +459,96 @@ const onHoverDelayMsInput = (event: Event) => {
 </script>
 
 <NotificationContainer />
+
+<div class="container mx-auto my-4 flex flex-col gap-8 p-4">
+  <AgGridTable
+    style="height: 500px"
+    options={{
+      defaultColDef: {
+        flex: 1,
+      },
+      columnDefs: [
+        { field: 'id', headerName: 'ID' },
+        { field: 'first_name', headerName: 'First name' },
+        { field: 'last_name', headerName: 'Last name' },
+        { field: 'email', headerName: 'Email' },
+        { field: 'ip_address', headerName: 'IP address' },
+      ],
+      rowData: [
+        {
+          id: 1,
+          first_name: 'Bobette',
+          last_name: 'Dankov',
+          email: 'bdankov0@cloudflare.com',
+          ip_address: '212.10.172.113',
+        },
+        {
+          id: 2,
+          first_name: 'Jack',
+          last_name: 'Biaggelli',
+          email: 'jbiaggelli1@ibm.com',
+          ip_address: '147.246.244.8',
+        },
+        {
+          id: 3,
+          first_name: 'Dalli',
+          last_name: 'Spain',
+          email: 'dspain2@webs.com',
+          ip_address: '230.60.71.89',
+        },
+        {
+          id: 4,
+          first_name: 'Berte',
+          last_name: 'Simonard',
+          email: 'bsimonard3@livejournal.com',
+          ip_address: '249.139.115.176',
+        },
+        {
+          id: 5,
+          first_name: 'Desirae',
+          last_name: 'Kondratyuk',
+          email: 'dkondratyuk4@a8.net',
+          ip_address: '37.201.201.199',
+        },
+        {
+          id: 6,
+          first_name: 'Susannah',
+          last_name: 'Ilchuk',
+          email: 'silchuk5@tinyurl.com',
+          ip_address: '129.106.9.65',
+        },
+        {
+          id: 7,
+          first_name: 'Koren',
+          last_name: 'Priditt',
+          email: 'kpriditt6@histats.com',
+          ip_address: '133.252.171.244',
+        },
+        {
+          id: 8,
+          first_name: 'Silvano',
+          last_name: 'Dell Casa',
+          email: 'sdellcasa7@51.la',
+          ip_address: '100.135.33.162',
+        },
+        {
+          id: 9,
+          first_name: 'Jens',
+          last_name: 'Darthe',
+          email: 'jdarthe8@vinaora.com',
+          ip_address: '240.64.233.124',
+        },
+        {
+          id: 10,
+          first_name: 'Lynett',
+          last_name: 'Brakewell',
+          email: 'lbrakewell9@ucsd.edu',
+          ip_address: '235.217.168.168',
+        },
+      ],
+    }}
+  />
+</div>
 
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
   <!-- Badge -->
