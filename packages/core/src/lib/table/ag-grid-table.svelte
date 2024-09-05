@@ -7,27 +7,20 @@ import {
   type GridApi,
   type GridOptions,
   type GridParams,
-  type Module,
 } from 'ag-grid-community';
 import { onMount } from 'svelte';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import classNames from 'classnames';
 
-type Options = GridOptions<DataType>;
-
-export let options: Options = {};
-export let modules: Module[] = [];
+export let options: GridOptions<DataType> = {};
+export let params: GridParams = {};
 
 let grid: GridApi<DataType>;
 let eGui: HTMLDivElement;
 
 onMount(() => {
-  const gridParams: GridParams = {
-    modules,
-  };
-
-  grid = createGrid(eGui, options, gridParams);
+  grid = createGrid(eGui, options, params);
 
   return () => {
     grid.destroy();
