@@ -136,15 +136,21 @@ importers:
 
   packages/core:
     dependencies:
+      '@ag-grid-community/client-side-row-model':
+        specifier: ^32.1.0
+        version: 32.1.0
+      '@ag-grid-community/core':
+        specifier: ^32.1.0
+        version: 32.1.0
+      '@ag-grid-community/styles':
+        specifier: ^32.1.0
+        version: 32.1.0
       '@floating-ui/dom':
         specifier: ^1.5.3
         version: 1.5.3
       '@mdi/js':
         specifier: ^7.3.67
         version: 7.3.67
-      ag-grid-community:
-        specifier: ^32.1.0
-        version: 32.1.0
       classnames:
         specifier: ^2.3.2
         version: 2.3.2
@@ -719,6 +725,24 @@ packages:
   /@adobe/css-tools@4.3.2:
     resolution: {integrity: sha512-DA5a1C0gD/pLOvhv33YMrbf2FK3oUzwNl9oOJqE4XVjuEtt6XIakRcsd7eLiOSPkp1kTRQGICTA8cKra/vFbjw==}
     dev: true
+
+  /@ag-grid-community/client-side-row-model@32.1.0:
+    resolution: {integrity: sha512-R/IA3chA/w9fy6/EeZhi42PTwVnb6bNjGMah1GWGvuNDTvfbPO4X9r4nhOMj6YH483bO+C7pPb4EoLECx0dfRQ==}
+    dependencies:
+      '@ag-grid-community/core': 32.1.0
+      tslib: 2.6.2
+    dev: false
+
+  /@ag-grid-community/core@32.1.0:
+    resolution: {integrity: sha512-fHpgSZa/aBjg2DdOzooDxILFZqxmxP8vsjRfeZVtqby19mTKwNAclE7Z6rWzOA0GYjgN9s8JwLFcNA5pvfswMg==}
+    dependencies:
+      ag-charts-types: 10.1.0
+      tslib: 2.6.2
+    dev: false
+
+  /@ag-grid-community/styles@32.1.0:
+    resolution: {integrity: sha512-OjakLetS/zr0g5mJWpnjldk/RjGnl7Rv3I/5cGuvtgdmSgS+4FNZMr8ZmyR8Bl34s0RM63OSIphpVaFGlnJM4w==}
+    dev: false
 
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -7907,12 +7931,6 @@ packages:
 
   /ag-charts-types@10.1.0:
     resolution: {integrity: sha512-pk9ft8hbgTXJ/thI/SEUR1BoauNplYExpcHh7tMOqVikoDsta1O15TB1ZL4XWnl4TPIzROBmONKsz7d8a2HBuQ==}
-    dev: false
-
-  /ag-grid-community@32.1.0:
-    resolution: {integrity: sha512-RVvkjRH61nuCXwIqTKQPqNbKR+8cGBKw7S1qmmMXsy0pCBAJaQn4kL3v31hKHxDtV4bPscBXLFKGnKzHuss0GQ==}
-    dependencies:
-      ag-charts-types: 10.1.0
     dev: false
 
   /agent-base@5.1.1:

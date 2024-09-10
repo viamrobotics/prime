@@ -1,5 +1,15 @@
 <script
   lang="ts"
+  context="module"
+>
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
+</script>
+
+<script
+  lang="ts"
   generics="DataType extends unknown"
 >
 import {
@@ -9,10 +19,10 @@ import {
   type GridApi,
   type GridOptions,
   type GridParams,
-} from 'ag-grid-community';
+} from '@ag-grid-community/core';
 import { onMount } from 'svelte';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-quartz.css';
 import cx from 'classnames';
 
 /** Defines the columns to render. */
