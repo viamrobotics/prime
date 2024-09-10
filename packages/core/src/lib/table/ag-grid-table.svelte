@@ -62,7 +62,6 @@ $: classes = cx('ag-theme-quartz rounded-none', extraClasses);
   --ag-borders: none;
   --ag-border-color: theme(borderColor.light);
   --ag-font-family: theme(fontFamily.public-sans);
-  --ag-header-height: 30px;
   --ag-header-foreground-color: theme(textColor.default);
   --ag-header-background-color: transparent;
   --ag-header-cell-hover-background-color: theme(backgroundColor.light);
