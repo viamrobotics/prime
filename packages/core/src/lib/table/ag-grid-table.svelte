@@ -87,13 +87,13 @@ $: classes = cx('ag-theme-quartz rounded-none', extraClasses);
 
 <style>
 .ag-theme-quartz {
-  /* disable all borders */
   --ag-borders: none;
   --ag-border-color: theme(borderColor.light);
   --ag-font-family: theme(fontFamily.public-sans);
-  --ag-header-foreground-color: theme(textColor.default);
-  --ag-header-background-color: transparent;
-  --ag-header-cell-hover-background-color: theme(backgroundColor.light);
-  --ag-header-cell-moving-background-color: theme(backgroundColor.light);
+  --ag-header-foreground-color: #7a7c80;
+  --ag-header-background-color: theme(backgroundColor.light);
+  --ag-header-cell-hover-background-color: theme(backgroundColor.ghost-light);
+  --ag-header-cell-moving-background-color: theme(backgroundColor.ghost-light);
+  --ag-wrapper-border-radius: 0;
 }
 </style>
