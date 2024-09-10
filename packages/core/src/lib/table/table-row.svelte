@@ -12,15 +12,9 @@ A table row.
 -->
 <svelte:options immutable />
 
-<script
-  lang="ts"
-  context="module"
->
-export type TableRowVariant = 'success' | 'disabled' | 'error' | '';
-</script>
-
 <script lang="ts">
 import cx from 'classnames';
+import type { TableRowVariant } from './table-row-variant';
 
 /** The communicated type of the table row. */
 export let variant: TableRowVariant = '';

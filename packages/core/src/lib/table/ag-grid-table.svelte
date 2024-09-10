@@ -1,16 +1,19 @@
+<svelte:options immutable />
+
 <script
   lang="ts"
   context="module"
 >
-import { ModuleRegistry } from '@ag-grid-community/core';
+import { ModuleRegistry, type RowClassRules } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import type { TableRowVariant } from './table-row-variant';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 </script>
 
 <script
   lang="ts"
-  generics="DataType extends unknown"
+  generics="DataType extends ({[key: string]: unknown, variant?: TableRowVariant})"
 >
 import {
   createGrid,
@@ -47,12 +50,28 @@ export { extraClasses as cx };
 let grid: GridApi<DataType>;
 let eGui: HTMLDivElement;
 
+$: rowClassRules = {
+  '!border-red-100 !bg-red-50 !text-red-500': ({ data }) =>
+    data?.variant === 'error',
+  '!border-green-100 !bg-green-50 !text-green-700': ({ data }) =>
+    data?.variant === 'success',
+  '!bg-gray-50 !text-gray-500': ({ data }) => data?.variant === 'disabled',
+  ...options.rowClassRules,
+} as RowClassRules<DataType>;
+
 $: grid?.updateGridOptions({ columnDefs });
 $: grid?.updateGridOptions({ rowData });
-$: grid?.updateGridOptions({ ...options });
+$: grid?.updateGridOptions({
+  ...options,
+  rowClassRules,
+});
 
 onMount(() => {
-  grid = createGrid(eGui, { ...options, columnDefs, rowData }, params);
+  grid = createGrid(
+    eGui,
+    { ...options, columnDefs, rowData, rowClassRules },
+    params
+  );
   return () => grid.destroy();
 });
 

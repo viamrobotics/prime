@@ -471,6 +471,7 @@ let tableData = [
     last_name: 'Biaggelli',
     email: 'jbiaggelli1@ibm.com',
     ip_address: '147.246.244.8',
+    variant: 'error',
   },
   {
     id: 3,
@@ -478,6 +479,7 @@ let tableData = [
     last_name: 'Spain',
     email: 'dspain2@webs.com',
     ip_address: '230.60.71.89',
+    variant: 'success',
   },
   {
     id: 4,
@@ -485,6 +487,7 @@ let tableData = [
     last_name: 'Simonard',
     email: 'bsimonard3@livejournal.com',
     ip_address: '249.139.115.176',
+    variant: 'disabled',
   },
   {
     id: 5,
