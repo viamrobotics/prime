@@ -58,7 +58,7 @@ $: defaultClasses =
   !disabled &&
   !readonly &&
   !isError &&
-  'border-light hover:border-gray-6 focus:border-gray-9';
+  'border-light bg-white hover:border-gray-6 focus:border-gray-9';
 
 $: readonlyClasses =
   readonly && 'bg-light focus:border-gray-9 border-transparent';
@@ -79,7 +79,7 @@ $: errorClasses =
     aria-disabled={disabled ? true : undefined}
     aria-invalid={isError ? true : undefined}
     class={cx(
-      'h-7.5 w-full appearance-none border bg-white px-2 py-1.5 text-xs leading-tight text-default outline-none',
+      'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight text-default outline-none',
       defaultClasses,
       readonlyClasses,
       disabledClasses,
