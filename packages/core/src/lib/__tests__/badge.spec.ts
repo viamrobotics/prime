@@ -69,6 +69,19 @@ describe('Badge', () => {
     );
   });
 
+  it('Renders a progress badge with spinning loader if the variant is specified as progress', () => {
+    render(Badge, { variant: 'progress', label: 'Progress' });
+    const badge = screen.getByText('Progress');
+    const progress = screen.getByLabelText(/progress spinner/iu);
+
+    expect(badge).toHaveClass(
+      'border-info-medium',
+      'bg-info-light',
+      'text-info-dark'
+    );
+    expect(progress).toBeInTheDocument();
+  });
+
   it('Renders with the passed cx classes', () => {
     render(Badge, {
       label: 'Inactive',
