@@ -341,6 +341,7 @@ const handleKeydown = createHandleKey({
     offset={4}
     referenceElement={inputElement}
     size={matchWidth}
+    flip={{}}
     auto
   >
     <ul
