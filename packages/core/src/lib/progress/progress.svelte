@@ -10,6 +10,7 @@ export let variant: 'dark' | 'light' = 'dark';
     'scale-[1.125]': size === 'medium',
     'scale-[1.5]': size === 'large',
   })}
+  aria-label="Progress spinner"
 >
   <div class="translate-x-[-6.5px]">
     {#each { length: 8 } as _, index}

@@ -462,7 +462,7 @@ const onHoverDelayMsInput = (event: Event) => {
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
   <!-- Badge -->
   <h1 class="text-2xl">Badge</h1>
-  <div>
+  <div class="flex items-center gap-2">
     <Badge
       variant="inactive"
       label="Inactive"
@@ -482,6 +482,10 @@ const onHoverDelayMsInput = (event: Event) => {
     <Badge
       variant="neutral"
       label="Neutral"
+    />
+    <Badge
+      variant="progress"
+      label="Progress"
     />
   </div>
 
