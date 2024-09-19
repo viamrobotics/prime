@@ -1091,6 +1091,11 @@ const onHoverDelayMsInput = (event: Event) => {
             'Option 2',
             { value: 'C.) Option', description: 'second' },
             'A really long forth option just in case you need it',
+            {
+              value: 'Option with a long description',
+              description:
+                'usb-Generic_Laptop_Camera_200901010001-video-index0',
+            },
           ]}
           placeholder="Select an option"
           onChange={(value) => {
