@@ -86,8 +86,6 @@ $: errorClasses =
       errorClasses,
       extraClasses
     )}
-    bind:value
-    bind:this={input}
     on:input
     on:input|capture={handleDisabled}
     on:change
@@ -96,6 +94,8 @@ $: errorClasses =
     on:keydown|capture={handleDisabledKeydown}
     on:focus
     on:blur
+    bind:value
+    bind:this={input}
   />
 
   {#if icon}
