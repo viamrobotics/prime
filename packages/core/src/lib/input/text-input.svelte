@@ -38,11 +38,11 @@ export { extraClasses as cx };
   cx={extraClasses}
   {type}
   {...$$restProps}
-  bind:value
-  bind:input
   on:input
   on:change
   on:keydown
   on:focus
   on:blur
+  bind:value
+  bind:input
 />

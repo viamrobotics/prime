@@ -1,4 +1,4 @@
-<!-- 
+<!--
 @component
 
 For text-based user inputs that only allow certain characters. Shows the user a tooltip when they attempt to use disallowed characters.
@@ -15,10 +15,12 @@ For text-based user inputs that only allow certain characters. Shows the user a 
 ```
 -->
 <script lang="ts">
-import type cx from 'classnames';
-import { TextInput } from '$lib';
+import cx from 'classnames';
+
 import { Tooltip, type TooltipVisibility } from '$lib/tooltip';
 import { useTimeout } from '$lib/use-timeout';
+
+import Input from './input.svelte';
 
 /** The value of the input. */
 export let value: string;
@@ -85,11 +87,12 @@ $: tooltipVisibility = validationState === 'hide' ? 'invisible' : 'visible';
   let:tooltipID
 >
   <p slot="description">{tooltipDescription}</p>
-  <TextInput
+  <Input
+    type="text"
     cx={inputCX}
     aria-describedby={tooltipID}
-    {value}
     on:input={handleInput}
+    {value}
     {...$$restProps}
   />
 </Tooltip>
