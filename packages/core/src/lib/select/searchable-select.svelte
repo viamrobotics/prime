@@ -404,8 +404,13 @@ const handleKeydown = createHandleKey({
                 name={option.icon}
               />
             {/if}
-            <div class="flex flex-col [overflow-wrap:anywhere]">
-              <p class="text-sm">
+            <div class="flex flex-col">
+              <p
+                class={cx(
+                  'text-wrap',
+                  option.description ? 'text-sm' : 'text-xs'
+                )}
+              >
                 {#if highlight !== undefined}
                   {@const [prefix, match, suffix] = highlight}
                   {prefix}<span class="bg-yellow-100">{match}</span>{suffix}
