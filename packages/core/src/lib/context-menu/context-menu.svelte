@@ -20,7 +20,7 @@ export let id: string;
 /** Accessible label of the menu. */
 export let label: string | undefined = undefined;
 
-/** ID of the element ID that labels the menu. */
+/** ID of the element that labels the menu. */
 export let labelledBy: string | undefined = undefined;
 
 /** Additional CSS classes to pass to the menu. */
