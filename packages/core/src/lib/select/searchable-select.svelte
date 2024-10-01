@@ -73,8 +73,8 @@ export let otherOptionPrefix = '';
 /** Error message ID, if any. */
 export let errorID = '';
 
-/** ID of the element that labels the SearchableSelect. */
-export let labelledBy: string | undefined = undefined;
+/** ID of the element that describes the SearchableSelect. */
+export let describedBy: string | undefined = undefined;
 
 /**
  * Notify the parent of a value change, after Enter key or blur.
@@ -331,7 +331,7 @@ const handleKeydown = createHandleKey({
   aria-multiselectable={multiple}
   aria-activedescendant={activeID}
   aria-errormessage={errorID}
-  aria-labelledby={labelledBy}
+  aria-describedby={describedBy}
   on:focus={handleFocus}
   on:blur={handleBlur}
   on:keydown={handleKeydown}
