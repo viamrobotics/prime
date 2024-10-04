@@ -451,6 +451,12 @@ const htmlSnippet = `
   <li>Ummm…to eBay?</li>
 </ul>`.trim();
 
+const toggleButtonSelecteds = [undefined, 'Opt 1', 'Opt 1', 'Opt 1'];
+const createHandleToggleButtons =
+  (index: number) => (event: CustomEvent<string>) => {
+    toggleButtonSelecteds[index] = event.detail;
+  };
+
 let hoverDelayMS = 1000;
 const onHoverDelayMsInput = (event: Event) => {
   hoverDelayMS = Number.parseInt((event.target as HTMLInputElement).value, 10);
@@ -1825,31 +1831,32 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="flex items-end gap-4">
     <ToggleButtons
       options={['Opt 1', 'Opt 2', 'Opt 3']}
-      on:input={(event) => {
-        // eslint-disable-next-line no-console
-        console.log('ToggleButtons input', event);
-      }}
+      selected={toggleButtonSelecteds[0]}
+      on:input={createHandleToggleButtons(0)}
     />
 
     <ToggleButtons
       options={['Opt 1', 'Opt 2']}
-      selected="Opt 1"
+      selected={toggleButtonSelecteds[1]}
+      on:input={createHandleToggleButtons(1)}
     >
       <svelte:fragment slot="legend">Preselected toggle</svelte:fragment>
     </ToggleButtons>
 
     <ToggleButtons
       options={['Opt 1', 'Opt 2', 'Opt 3']}
-      selected="Opt 1"
       disabled
+      selected={toggleButtonSelecteds[2]}
+      on:input={createHandleToggleButtons(2)}
     >
       <svelte:fragment slot="legend">Disabled toggle</svelte:fragment>
     </ToggleButtons>
 
     <ToggleButtons
       options={['Opt 1', 'Opt 2', 'Opt 3']}
-      selected="Opt 1"
       cx="w-full"
+      selected={toggleButtonSelecteds[3]}
+      on:input={createHandleToggleButtons(3)}
     >
       <svelte:fragment slot="legend">Full width</svelte:fragment>
     </ToggleButtons>

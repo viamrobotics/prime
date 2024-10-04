@@ -44,8 +44,8 @@ describe('ToggleButtons', () => {
 
     await userEvent.click(button);
 
-    expect(onInput).toHaveBeenCalled();
-    expect(button).toHaveAttribute('aria-pressed', 'true');
+    expect(onInput).toHaveBeenCalledOnce();
+    expect(onInput).toHaveBeenCalledWith(new CustomEvent('input'));
   });
 
   it('Prevents option input if disabled', async () => {
