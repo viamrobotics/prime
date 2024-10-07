@@ -51,7 +51,6 @@ $: getButtonClasses = (option: string) => {
 };
 
 const handleClick = (value: string) => {
-  selected = value;
   dispatch('input', value);
 };
 </script>

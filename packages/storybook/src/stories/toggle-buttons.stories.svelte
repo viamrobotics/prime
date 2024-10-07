@@ -1,6 +1,11 @@
 <script lang="ts">
 import { Meta, Story } from '@storybook/addon-svelte-csf';
 import { Label, ToggleButtons } from '@viamrobotics/prime-core';
+
+let basicSelected = 'Fan lizard';
+const onBasicSelected = (event: CustomEvent<string>) => {
+  basicSelected = event.detail;
+};
 </script>
 
 <Meta title="Elements/ToggleButtons" />
@@ -14,7 +19,8 @@ import { Label, ToggleButtons } from '@viamrobotics/prime-core';
     >
       <ToggleButtons
         options={['Fan lizard', 'Mountain banshee', 'Buzzard wasp']}
-        selected="Fan lizard"
+        selected={basicSelected}
+        on:input={onBasicSelected}
       />
     </div>
   </Label>
