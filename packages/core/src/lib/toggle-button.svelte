@@ -60,8 +60,8 @@ const handleClick = (value: string) => {
   class={cx('flex', extraClasses)}
   {...$$restProps}
 >
-  {#if $$slots.legend}
-    <legend
+  {#if $$slots.label}
+    <label
       class={cx(
         cx('mb-1 flex text-xs', {
           'text-subtle-1': !disabled,
@@ -69,18 +69,18 @@ const handleClick = (value: string) => {
         })
       )}
     >
-      <slot name="legend" />
-    </legend>
+      <slot name="label" />
+    </label>
   {/if}
 
-  <div class="flex w-full flex-nowrap">
+  <div class="flex w-fit flex-nowrap">
     {#each options as option}
       <button
         type="button"
         aria-pressed={isSelected(option)}
         aria-disabled={disabled ? true : undefined}
         class={cx(
-          'h-7.5 w-full whitespace-nowrap border px-3 py-1.5 text-xs',
+          'h-7.5 whitespace-nowrap border px-3 py-1.5 text-xs',
           getButtonClasses(option)
         )}
         on:click={() => handleClick(option)}

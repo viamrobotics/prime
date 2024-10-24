@@ -66,7 +66,7 @@ export { default as TableRow } from './table/table-row.svelte';
 export { default as TableCell } from './table/table-cell.svelte';
 export { default as TabsBar } from './tabs-bar.svelte';
 export { default as Tab } from './tab.svelte';
-export { default as ToggleButtons } from './toggle-buttons.svelte';
+export { default as ToggleButtons } from './toggle-button.svelte';
 
 export {
   Tooltip,
