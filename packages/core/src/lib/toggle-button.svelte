@@ -55,7 +55,7 @@ const handleClick = (value: string) => {
 };
 </script>
 
-<fieldset
+<div
   aria-disabled={disabled ? true : undefined}
   class={cx('flex', extraClasses)}
   {...$$restProps}
@@ -90,4 +90,4 @@ const handleClick = (value: string) => {
       </button>
     {/each}
   </div>
-</fieldset>
+</div>
