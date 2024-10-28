@@ -49,7 +49,10 @@ import {
   TooltipTarget,
   TooltipText,
   VectorInput,
+  BUTTON_LINK_GHOST,
+  BUTTON_LINK_DARK,
 } from '$lib';
+import { twMerge } from 'tailwind-merge';
 
 provideNotify();
 
@@ -466,13 +469,14 @@ const onHoverDelayMsInput = (event: Event) => {
 <NotificationContainer />
 
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
-  <h2 class="h-2">New stuff!</h2>
+  <h2 class="h-2">With a function</h2>
 
   <div class="flex items-center gap-2">
     <p class="text-xs">Check out this cool thing:</p>
     <a
       href="https://design.viam.com"
       target="_blank"
+      rel=""
       class={buttonLinkStyles({})}
     >
       My button link
@@ -497,6 +501,84 @@ const onHoverDelayMsInput = (event: Event) => {
       href="https://design.viam.com"
       target="_blank"
       class={buttonLinkStyles({ extraClasses: 'text-pink-500' })}
+    >
+      My button link
+    </a>
+  </div>
+</div>
+
+<div class="container mx-auto my-4 flex flex-col gap-8 p-4">
+  <h2 class="h-2">With class exports</h2>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this cool thing:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      rel=""
+      class={BUTTON_LINK_GHOST}
+    >
+      My button link
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this cool thing with an icon:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      class={BUTTON_LINK_DARK}
+    >
+      <Icon name="link" />
+      My button link
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this pink thing:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      class={twMerge(BUTTON_LINK_GHOST, 'text-pink-500')}
+    >
+      My button link
+    </a>
+  </div>
+</div>
+
+<div class="container mx-auto my-4 flex flex-col gap-8 p-4">
+  <h2 class="h-2">With class definitions</h2>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this cool thing:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      rel=""
+      class="button-link-ghost"
+    >
+      My button link
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this cool thing with an icon:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      class="button-link-dark"
+    >
+      <Icon name="link" />
+      My button link
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this pink thing:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      class="button-link-ghost !text-pink-500"
     >
       My button link
     </a>

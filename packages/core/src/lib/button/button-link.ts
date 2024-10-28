@@ -6,7 +6,7 @@
  * @function
  */
 
-import { twMerge, type ClassNameValue } from 'tailwind-merge';
+import { twJoin, twMerge, type ClassNameValue } from 'tailwind-merge';
 
 export type ButtonLinkVariant = 'ghost' | 'dark';
 
@@ -23,6 +23,18 @@ const BUTTON_LINK_VARIANT_CLASSES = {
   dark: 'border border-gray-9 bg-gray-9 text-white hover:border-black hover:bg-black active:bg-[#000]',
 } as const;
 
+// Just export the classes option (I can handle overrides myself)
+export const BUTTON_LINK_GHOST = twJoin(
+  BUTTON_LINK_CLASSES,
+  BUTTON_LINK_VARIANT_CLASSES.ghost
+);
+
+export const BUTTON_LINK_DARK = twJoin(
+  BUTTON_LINK_CLASSES,
+  BUTTON_LINK_VARIANT_CLASSES.dark
+);
+
+// Give me a function to generate the classes function (allows overrides)
 export const buttonLinkStyles = ({
   variant = 'ghost',
   extraClasses = '',
