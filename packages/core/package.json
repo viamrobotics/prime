@@ -52,7 +52,8 @@
     "lodash-es": "^4.17.21",
     "nanoid": "^5.0.4",
     "prism-themes": "^1.9.0",
-    "prismjs": "^1.29.0"
+    "prismjs": "^1.29.0",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",

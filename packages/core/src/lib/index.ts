@@ -2,6 +2,11 @@ export { default as Badge } from './badge.svelte';
 export { Banner, BannerVariant, type BannerVariantType } from './banner';
 export { default as Breadcrumbs } from './breadcrumbs.svelte';
 export { default as Button } from './button/button.svelte';
+export {
+  buttonLinkStyles,
+  type ButtonLinkAttributes,
+  type ButtonLinkVariant,
+} from './button/button-link';
 export { default as IconButton } from './button/icon-button.svelte';
 export { clickOutside } from './click-outside';
 export { default as CodeSnippet } from './code-snippet.svelte';

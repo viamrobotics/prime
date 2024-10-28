@@ -1,54 +1,55 @@
 <script lang="ts">
+import { uniqueId } from 'lodash-es';
 import {
+  provideNotify,
+  useNotify,
+  provideToast,
+  ToastVariant,
   Badge,
+  Banner,
   Breadcrumbs,
   Button,
-  IconButton,
+  buttonLinkStyles,
+  CodeSnippet,
   ContextMenu,
   ContextMenuItem,
   ContextMenuSeparator,
   FloatingMenu,
   Icon,
-  Label,
-  Banner,
+  IconButton,
   Input,
+  Label,
+  Modal,
+  Multiselect,
+  NotificationContainer,
+  NumericInput,
   Pill,
-  Switch,
+  Progress,
   Radio,
-  TabsBar,
+  RangeInput,
+  RestrictedTextInput,
+  SearchableSelect,
+  Select,
+  SliderInput,
+  Switch,
   Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+  TabsBar,
+  TextInput,
+  ToastBanner,
+  ToastContainer,
+  ToggleButtons,
   Tooltip,
   TooltipContainer,
   TooltipTarget,
   TooltipText,
-  TextInput,
-  NumericInput,
-  RestrictedTextInput,
-  SliderInput,
   VectorInput,
-  Table,
-  TableBody,
-  TableCell,
-  TableHeaderCell,
-  TableHeader,
-  TableRow,
-  ToastBanner,
-  ToastContainer,
-  ToastVariant,
-  ToggleButtons,
-  Select,
-  SearchableSelect,
-  Multiselect,
-  NotificationContainer,
-  provideNotify,
-  provideToast,
-  useNotify,
-  Modal,
-  CodeSnippet,
-  RangeInput,
-  Progress,
 } from '$lib';
-import { uniqueId } from 'lodash-es';
 
 provideNotify();
 
@@ -193,7 +194,6 @@ console.log(\`The FizzBuzz sequence for n = 15 is:\`);
 console.log(sequence); // Outputs: ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"]`.trim();
 
 const goSnippet = `
-import "fmt"
 
 // FizzBuzz
 //
@@ -464,6 +464,44 @@ const onHoverDelayMsInput = (event: Event) => {
 </script>
 
 <NotificationContainer />
+
+<div class="container mx-auto my-4 flex flex-col gap-8 p-4">
+  <h2 class="h-2">New stuff!</h2>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this cool thing:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      class={buttonLinkStyles({})}
+    >
+      My button link
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this cool thing with an icon:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      class={buttonLinkStyles({ variant: 'dark' })}
+    >
+      <Icon name="link" />
+      My button link
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <p class="text-xs">Check out this pink thing:</p>
+    <a
+      href="https://design.viam.com"
+      target="_blank"
+      class={buttonLinkStyles({ extraClasses: 'text-pink-500' })}
+    >
+      My button link
+    </a>
+  </div>
+</div>
 
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
   <!-- Badge -->
