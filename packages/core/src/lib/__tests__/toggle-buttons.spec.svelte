@@ -1,16 +1,16 @@
 <script lang="ts">
-import ToggleButtons from '$lib/toggle-buttons.svelte';
+import ToggleButton from '$lib/toggle-button.svelte';
 
 export let options: string[];
 export let selected: string | undefined = undefined;
 export let disabled = false;
 </script>
 
-<ToggleButtons
+<ToggleButton
   {options}
   {selected}
   {disabled}
   on:input
 >
-  <svelte:fragment slot="legend">Test toggle buttons</svelte:fragment>
-</ToggleButtons>
+  <svelte:fragment slot="label">Test toggle buttons</svelte:fragment>
+</ToggleButton>
