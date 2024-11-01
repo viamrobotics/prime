@@ -12,5 +12,5 @@ export let disabled = false;
   {disabled}
   on:input
 >
-  <svelte:fragment slot="label">Test toggle buttons</svelte:fragment>
+  <svelte:fragment slot="legend">Test toggle buttons</svelte:fragment>
 </ToggleButton>

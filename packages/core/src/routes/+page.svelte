@@ -1840,7 +1840,7 @@ const onHoverDelayMsInput = (event: Event) => {
       selected={toggleButtonSelecteds[1]}
       on:input={createHandleToggleButtons(1)}
     >
-      <svelte:fragment slot="label">Preselected toggle</svelte:fragment>
+      <svelte:fragment slot="legend">Preselected toggle</svelte:fragment>
     </ToggleButtons>
 
     <ToggleButtons
@@ -1849,7 +1849,7 @@ const onHoverDelayMsInput = (event: Event) => {
       selected={toggleButtonSelecteds[2]}
       on:input={createHandleToggleButtons(2)}
     >
-      <svelte:fragment slot="label">Disabled toggle</svelte:fragment>
+      <svelte:fragment slot="legend">Disabled toggle</svelte:fragment>
     </ToggleButtons>
 
     <ToggleButtons
@@ -1858,7 +1858,7 @@ const onHoverDelayMsInput = (event: Event) => {
       selected={toggleButtonSelecteds[3]}
       on:input={createHandleToggleButtons(3)}
     >
-      <svelte:fragment slot="label">Full width</svelte:fragment>
+      <svelte:fragment slot="legend">Full width</svelte:fragment>
     </ToggleButtons>
   </div>
 

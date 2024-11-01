@@ -60,7 +60,7 @@ const handleClick = (value: string) => {
   class={cx('flex', extraClasses)}
   {...$$restProps}
 >
-  {#if $$slots.label}
+  {#if $$slots.legend}
     <label
       class={cx(
         cx('mb-1 flex text-xs', {
@@ -69,7 +69,7 @@ const handleClick = (value: string) => {
         })
       )}
     >
-      <slot name="label" />
+      <slot name="legend" />
     </label>
   {/if}
 
