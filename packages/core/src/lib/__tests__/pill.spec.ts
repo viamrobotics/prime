@@ -67,6 +67,11 @@ describe('Pill', () => {
     expect(screen.getByText('test').parentElement).toHaveClass(cxTestResults);
   });
 
+  it('Renders with the passed iconCx classes', () => {
+    render(Pill, { value: 'test', icon: 'cog', iconCx: cxTestArguments });
+    expect(screen.getByTestId('icon-cog')).toHaveClass(cxTestResults);
+  });
+
   it('Renders with the passed href', () => {
     render(Pill, { value: 'link', href: 'https://www.viam.com' });
     expect(screen.getByRole('link', { name: 'link' })).toHaveAttribute(

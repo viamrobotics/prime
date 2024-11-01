@@ -40,6 +40,10 @@ export let icon: IconName | undefined = undefined;
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
 
+/** Additional CSS classes to pass to the pill icon. */
+let extraIconClasses: cx.Argument = '';
+export { extraIconClasses as iconCx };
+
 const dispatch = createEventDispatcher<{
   /** When the pill is removed. */
   remove: { value: string };
@@ -71,7 +75,7 @@ const handleRemove = () => {
   {#if icon}
     <Icon
       name={icon}
-      cx="text-gray-6"
+      cx={cx('text-gray-6', extraIconClasses)}
       size="sm"
     />
   {/if}
