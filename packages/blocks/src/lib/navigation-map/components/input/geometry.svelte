@@ -93,7 +93,7 @@ const shapeMap = {
     selected={shapeMap[geometry.type]}
     on:input={handleShapeSelect}
   >
-    <svelte:fragment slot="label">Shape</svelte:fragment>
+    <svelte:fragment slot="legend">Shape</svelte:fragment>
   </ToggleButtons>
 
   {#if geometry.type === 'box'}

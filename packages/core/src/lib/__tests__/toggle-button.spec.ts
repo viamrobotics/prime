@@ -63,15 +63,15 @@ describe('ToggleButtons', () => {
     expect(onInput).not.toHaveBeenCalled();
   });
 
-  it('Renders the legend correctly', () => {
+  it('Renders the label correctly', () => {
     render(ToggleButtons, common);
     expect(screen.getByText('Test toggle buttons')).toBeVisible();
   });
 
-  it('Renders the legend correctly when disabled', () => {
+  it('Renders the label correctly when disabled', () => {
     render(ToggleButtons, { ...common, disabled: true });
 
-    const legend = screen.getByText('Test toggle buttons');
-    expect(legend).toHaveClass('text-disabled-dark cursor-not-allowed');
+    const label = screen.getByText('Test toggle buttons');
+    expect(label).toHaveClass('text-disabled-dark cursor-not-allowed');
   });
 });
