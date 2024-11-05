@@ -12,7 +12,6 @@ For displaying a list of items.
 <script lang="ts">
 import {
   Icon,
-  Tooltip,
   TooltipContainer,
   TooltipTarget,
   TooltipText,
@@ -46,13 +45,13 @@ export let icon: IconName | undefined = undefined;
 /** Tooltip for the icon in the pill */
 export let iconTooltip: string | undefined = undefined;
 
-/** Additional CSS classes to pass to the pill. */
-let extraClasses: cx.Argument = '';
-export { extraClasses as cx };
-
 /** Additional CSS classes to pass to the pill icon. */
 let extraIconClasses: cx.Argument = '';
 export { extraIconClasses as iconCx };
+
+/** Additional CSS classes to pass to the pill. */
+let extraClasses: cx.Argument = '';
+export { extraClasses as cx };
 
 const dispatch = createEventDispatcher<{
   /** When the pill is removed. */
