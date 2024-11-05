@@ -1201,6 +1201,13 @@ const onHoverDelayMsInput = (event: Event) => {
       target="_self"
       removable={false}
     />
+    <Pill
+      value="Robot"
+      icon="broadcast"
+      iconCx="text-success-dark"
+      iconTooltip="Live"
+      removable={true}
+    />
   </div>
 
   <!-- Prevent Handler -->

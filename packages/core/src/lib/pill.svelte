@@ -10,7 +10,14 @@ For displaying a list of items.
 <svelte:options immutable />
 
 <script lang="ts">
-import { Icon, type IconName } from '$lib';
+import {
+  Icon,
+  Tooltip,
+  TooltipContainer,
+  TooltipTarget,
+  TooltipText,
+  type IconName,
+} from '$lib';
 import cx from 'classnames';
 
 import { createEventDispatcher } from 'svelte';
@@ -35,6 +42,9 @@ export let removable = true;
 
 /** The icon shown in the button. */
 export let icon: IconName | undefined = undefined;
+
+/** Tooltip for the icon in the pill */
+export let iconTooltip: string | undefined = undefined;
 
 /** Additional CSS classes to pass to the pill. */
 let extraClasses: cx.Argument = '';
@@ -73,11 +83,21 @@ const handleRemove = () => {
   aria-readonly={readonly ? true : undefined}
 >
   {#if icon}
-    <Icon
-      name={icon}
-      cx={cx('text-gray-6', extraIconClasses)}
-      size="sm"
-    />
+    <TooltipContainer let:tooltipID>
+      <TooltipTarget>
+        <Icon
+          aria-described-by={tooltipID}
+          name={icon}
+          cx={cx('text-gray-6', extraIconClasses)}
+          size="sm"
+        />
+      </TooltipTarget>
+      {#if iconTooltip}
+        <TooltipText>
+          {iconTooltip}
+        </TooltipText>
+      {/if}
+    </TooltipContainer>
   {/if}
   {#if href}
     <a

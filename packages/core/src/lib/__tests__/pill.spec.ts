@@ -1,9 +1,16 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import { Pill } from '$lib';
 import { cxTestArguments, cxTestResults } from './cx-test';
+import userEvent from '@testing-library/user-event';
 
 describe('Pill', () => {
+  let user: ReturnType<typeof userEvent.setup>;
+
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('Renders text within the pill if a value attribute is specified', () => {
     render(Pill, { value: 'test' });
     expect(screen.getByText('test')).toBeVisible();
@@ -78,5 +85,18 @@ describe('Pill', () => {
       'href',
       'https://www.viam.com'
     );
+  });
+
+  it('Renders icon tooltip when hovered', async () => {
+    render(Pill, { value: 'test', icon: 'cog', iconTooltip: 'Live' });
+
+    const icon = screen.getByTestId('icon-cog');
+
+    await user.hover(icon);
+
+    const tooltip = screen.getByRole('tooltip');
+
+    expect(tooltip).not.toHaveClass('hidden');
+    expect(tooltip).toHaveTextContent('Live');
   });
 });
