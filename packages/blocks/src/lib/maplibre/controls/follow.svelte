@@ -12,7 +12,7 @@ export let lng: number | undefined = undefined;
 export let lat: number | undefined = undefined;
 export let onChange: ((following: boolean) => void) | undefined = undefined;
 
-let following = false;
+export let following = false;
 
 const { map } = useMapLibre();
 
