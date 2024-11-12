@@ -8,7 +8,7 @@
 <script lang="ts">
 import * as THREE from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader';
-import { T, createRawEventDispatcher } from '@threlte/core';
+import { T } from '@threlte/core';
 import { renderOrder } from './render-order';
 import { onMount } from 'svelte';
 import { mapColorAttributeGrayscale } from './color-map';
@@ -19,15 +19,11 @@ export let pointcloud: Uint8Array | undefined;
 /** The size of each individual point */
 export let size: number;
 
-interface $$Events extends Record<string, unknown> {
-  /** Dispatched whenever a new .pcd file is parsed. Emits the radius and center of the cloud's bounding sphere. */
-  update: {
-    radius: number;
-    center: { x: number; y: number };
-  };
-}
+export let onUpdate: (payload: {
+  radius: number;
+  center: { x: number; y: number };
+}) => void;
 
-const dispatch = createRawEventDispatcher<$$Events>();
 const loader = new PCDLoader();
 
 let points: THREE.Points;
@@ -55,7 +51,7 @@ const update = (cloud: Uint8Array) => {
     mapColorAttributeGrayscale(color);
   }
 
-  dispatch('update', { center, radius });
+  onUpdate({ center, radius });
 };
 
 $: if (material) {
@@ -66,7 +62,7 @@ $: if (pointcloud) {
 }
 
 onMount(() => {
-  dispatch('update', { center, radius });
+  onUpdate({ center, radius });
 });
 </script>
 

@@ -60,6 +60,8 @@ export let tabs: NavigationTabType[] = [
 /** The pose (Lng,Lat) and rotation of a base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
 
+export let onUpdate: (payload: Obstacle[]) => void;
+
 $: $tabStore = tab;
 $: $tabsStore = tabs;
 $: $waypointsStore = waypoints;
@@ -71,9 +73,9 @@ $: $envStore = environment;
 <Map
   bind:map
   {baseGeoPose}
+  {onUpdate}
   on:add-waypoint
   on:delete-waypoint
-  on:update-obstacles
 >
   <slot
     name="tab"
