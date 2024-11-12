@@ -21,6 +21,7 @@ import {
 import { view } from '../stores';
 import { theme } from '@viamrobotics/prime-core/theme';
 
+/** Fires when a rectangle is drawn. */
 export let onUpdate: (payload: {
   width: number;
   height: number;
