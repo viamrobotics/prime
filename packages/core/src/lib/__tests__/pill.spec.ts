@@ -81,10 +81,20 @@ describe('Pill', () => {
 
   it('Renders with the passed href', () => {
     render(Pill, { value: 'link', href: 'https://www.viam.com' });
-    expect(screen.getByRole('link', { name: 'link' })).toHaveAttribute(
-      'href',
-      'https://www.viam.com'
-    );
+    const anchor = screen.getByRole('link', { name: 'link' });
+
+    expect(anchor).toHaveAttribute('href', 'https://www.viam.com');
+    expect(anchor).not.toHaveAttribute('target');
+  });
+
+  it('May set anchor target', () => {
+    render(Pill, {
+      props: { value: 'link', href: 'https://www.viam.com', target: '_blank' },
+    });
+    const anchor = screen.getByRole('link', { name: 'link' });
+
+    expect(anchor).toHaveAttribute('href', 'https://www.viam.com');
+    expect(anchor).toHaveAttribute('target', '_blank');
   });
 
   it('Renders icon tooltip when hovered', async () => {
