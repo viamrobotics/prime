@@ -19,6 +19,7 @@ export let pointcloud: Uint8Array | undefined;
 /** The size of each individual point */
 export let size: number;
 
+/** Dispatched whenever a new .pcd file is parsed. Emits the radius and center of the cloud's bounding sphere. */
 export let onUpdate: (payload: {
   radius: number;
   center: { x: number; y: number };
