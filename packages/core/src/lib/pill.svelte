@@ -28,7 +28,8 @@ export let value = '';
 export let href = '';
 
 /** Optional target for linked URL. */
-export let target: '_self' | '_blank' | '_parent' | '_top' = '_blank';
+export let target: '_self' | '_blank' | '_parent' | '_top' | undefined =
+  undefined;
 
 /** Whether or not the pill has the aria-readonly attribute. If readonly, there is not a button to remove the pill. */
 export let readonly = false;

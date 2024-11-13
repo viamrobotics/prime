@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
 import type * as THREE from 'three';
-import { T, createRawEventDispatcher } from '@threlte/core';
+import { T } from '@threlte/core';
 import {
   useMapLibreEvent,
   useMapLibre,
@@ -21,12 +21,13 @@ import {
 import { view } from '../stores';
 import { theme } from '@viamrobotics/prime-core/theme';
 
-interface $$Events extends Record<string, unknown> {
-  /** Fires when a rectangle is drawn. */
-  update: { width: number; height: number; center: LngLat };
-}
+/** Fires when a rectangle is drawn. */
+export let onUpdate: (payload: {
+  width: number;
+  height: number;
+  center: LngLat;
+}) => void;
 
-const dispatch = createRawEventDispatcher<$$Events>();
 const { map } = useMapLibre();
 
 let downLngLat = new LngLat(0, 0);
@@ -82,7 +83,7 @@ const handlePointerUp = () => {
 
   const center = downMercator.toLngLat();
 
-  dispatch('update', { width, height, center });
+  onUpdate({ width, height, center });
 
   width = 0;
   height = 0;

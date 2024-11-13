@@ -15,6 +15,7 @@ import RobotMarker from './robot-marker.svelte';
 import Nav from './nav/index.svelte';
 import Waypoints from './waypoints.svelte';
 import ObstaclesLegend from './nav/obstacles-legend.svelte';
+import type { Obstacle } from '../types';
 
 /** The Geo-pose of a robot base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
@@ -23,6 +24,8 @@ const minPitch = 0;
 const maxPitch = 60;
 
 export let map: Map | undefined = undefined;
+
+export let onUpdate: (payload: Obstacle[]) => void;
 
 const handleViewSelect = ({ detail }: CustomEvent<string>) => {
   $view = detail as '2D' | '3D';
@@ -58,7 +61,7 @@ let didHoverTooltip = Boolean(
 
     <SceneLayer
       slot="layer"
-      on:update-obstacles
+      {onUpdate}
     />
 
     <div class="absolute right-12 top-2.5 z-10 flex items-center gap-2">
@@ -113,6 +116,7 @@ let didHoverTooltip = Boolean(
       <FollowControls
         lng={baseGeoPose?.lng}
         lat={baseGeoPose?.lat}
+        following
       />
     </div>
   </MapLibre>
