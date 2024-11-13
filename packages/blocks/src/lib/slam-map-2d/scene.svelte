@@ -101,7 +101,7 @@ $: updateZoom($camera as THREE.OrthographicCamera);
 <Points
   {pointcloud}
   size={pointSize}
-  on:update={handlePointsUpdate}
+  onUpdate={handlePointsUpdate}
 />
 
 <Marker

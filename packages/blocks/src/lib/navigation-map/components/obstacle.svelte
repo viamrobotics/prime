@@ -1,7 +1,7 @@
 <script lang="ts">
 import { theme } from '@viamrobotics/prime-core/theme';
 import * as THREE from 'three';
-import { T, createRawEventDispatcher } from '@threlte/core';
+import { T } from '@threlte/core';
 import type {
   MapMouseEvent,
   MapLayerMouseEvent,
@@ -19,12 +19,9 @@ import { view, hovered, selected, environment, obstacles } from '../stores';
 /** The obstacle name. */
 export let name: string;
 
-interface $$Events extends Record<string, unknown> {
-  /** Fired when obstacles are created, destroyed, or edited. */
-  update: Obstacle;
-}
+/** Fired when obstacles are created, destroyed, or edited. */
+export let onUpdate: (payload: Obstacle) => void;
 
-const dispatch = createRawEventDispatcher<$$Events>();
 const { map } = useMapLibre();
 
 let pointerdownTheta = 0;
@@ -140,7 +137,7 @@ const handlePointerMove = (event: MapMouseEvent) => {
 
   $obstacles = $obstacles;
 
-  dispatch('update', obstacle);
+  onUpdate(obstacle);
 };
 
 const handlePointerUp = () => {

@@ -181,10 +181,10 @@ $: map?.setCenter({ lat: 40.7, lng: -74.17 });
       {obstacles}
       {waypoints}
       {paths}
+      onUpdate={(event) => console.log('update-obstacles', event)}
       on:create={(event) => console.log('create', event)}
       on:add-waypoint={(event) => console.log('add-waypoint', event)}
       on:delete-waypoint={(event) => console.log('delete-waypoint', event)}
-      on:update-obstacles={(event) => console.log('update-obstacles', event)}
     >
       <div slot="tab">
         <Label>

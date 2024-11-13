@@ -1,6 +1,5 @@
 <script lang="ts">
 import { Camera, Plane, Vector3 } from 'three';
-import { createEventDispatcher } from 'svelte';
 import { T, useThrelte } from '@threlte/core';
 import type { LngLat } from 'maplibre-gl';
 import type { Obstacle } from '../types';
@@ -15,9 +14,7 @@ import Drawtool from './draw-tool.svelte';
 import Path from './path.svelte';
 import { theme } from '@viamrobotics/prime-core/theme';
 
-const dispatch = createEventDispatcher<{
-  'update-obstacles': Obstacle[];
-}>();
+export let onUpdate: (payload: Obstacle[]) => void;
 
 computeBoundingPlugin();
 interactivityPlugin();
@@ -32,7 +29,7 @@ useMapLibreThreeRenderer(scene, camera, () => {
 });
 
 const handleUpdate = () => {
-  dispatch('update-obstacles', $obstacles);
+  onUpdate($obstacles);
 };
 
 const handleDraw = ({
@@ -56,7 +53,7 @@ const handleDraw = ({
   $obstacles = [obstacle, ...$obstacles];
   $selected = obstacle.name;
 
-  dispatch('update-obstacles', $obstacles);
+  onUpdate($obstacles);
 };
 
 $: flat = $view === '2D';
@@ -74,7 +71,7 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 {#each $obstacles as obstacle (obstacle.name)}
   <ObstacleGeometries
     name={obstacle.name}
-    on:update={handleUpdate}
+    onUpdate={handleUpdate}
   />
 {/each}
 
@@ -86,5 +83,5 @@ $: renderer.clippingPlanes = flat ? [] : [clippingPlane];
 {/each}
 
 {#if $environment === 'configure'}
-  <Drawtool on:update={handleDraw} />
+  <Drawtool onUpdate={handleDraw} />
 {/if}
