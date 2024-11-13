@@ -106,6 +106,7 @@ export const paths = {
   magnify: MDI.mdiMagnify,
   menu: MDI.mdiMenu,
   minus: MDI.mdiMinus,
+  'monitor-dashboard': MDI.mdiMonitorDashboard,
   'multiplication-box': MDI.mdiMultiplicationBox,
   'navigation-variant-outline': MDI.mdiNavigationVariantOutline,
   'navigation-variant': MDI.mdiNavigationVariant,
