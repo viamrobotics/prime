@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/svelte';
+import { act, render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'svelte';
 import Modal from '../modal.svelte';
@@ -8,8 +8,9 @@ describe('Modal', () => {
   const onClose = vi.fn();
 
   const renderSubject = (props: ComponentProps<Modal>) => {
-    const { component } = render(Modal, props);
-    component.$on('close', onClose);
+    const result = render(Modal, props);
+    result.component.$on('close', onClose);
+    return result;
   };
 
   it('should be visible if open is true', () => {
@@ -76,5 +77,19 @@ describe('Modal', () => {
     const modal = screen.getByRole('alertdialog');
 
     expect(modal).toBeInTheDocument();
+  });
+
+  it('should prevent body scroll', () => {
+    renderSubject({ isOpen: true, role: 'alertdialog' });
+
+    expect(document.body).toHaveClass('overflow-hidden');
+  });
+
+  it('should allow body to scroll on component unmount', async () => {
+    const { unmount } = renderSubject({ isOpen: true, role: 'alertdialog' });
+
+    await act(() => unmount());
+
+    expect(document.body).not.toHaveClass('overflow-hidden');
   });
 });

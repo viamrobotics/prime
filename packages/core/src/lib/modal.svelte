@@ -42,7 +42,7 @@ Creates a modal overlay.
 
 <script lang="ts">
 import cx from 'classnames';
-import { createEventDispatcher } from 'svelte';
+import { createEventDispatcher, onDestroy } from 'svelte';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
 
@@ -72,6 +72,10 @@ const handleEscapePress = (event: KeyboardEvent) => {
 $: if (typeof document !== 'undefined') {
   document.body.classList.toggle('overflow-hidden', isOpen);
 }
+
+onDestroy(() => {
+  document.body.classList.remove('overflow-hidden');
+});
 </script>
 
 <svelte:window on:keydown={isOpen ? handleEscapePress : undefined} />
