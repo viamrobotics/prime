@@ -27,31 +27,31 @@ jobs:
         run: pnpm run test
 
       - name: Upload npm @viamrobotics/prime artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: npm-legacy-dist
           path: packages/legacy/dist
 
       - name: Upload npm @viamrobotics/prime-core artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: npm-core-dist
           path: packages/core/dist
 
       - name: Upload npm @viamrobotics/prime-blocks artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: npm-blocks-dist
           path: packages/blocks/dist
 
       - name: Upload npm @viamrobotics/prime-editor artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: npm-editor-dist
           path: packages/editor/dist
 
       - name: Upload GitHub Pages artifacts
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: packages/storybook/prime
 
@@ -74,19 +74,19 @@ jobs:
           path: packages/legacy/dist
 
       - name: Download @viamrobotics/prime-core npm artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: npm-core-dist
           path: packages/core/dist
 
       - name: Download @viamrobotics/prime-blocks npm artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: npm-blocks-dist
           path: packages/blocks/dist
 
       - name: Download @viamrobotics/prime-editor npm artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: npm-editor-dist
           path: packages/editor/dist
@@ -112,4 +112,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
