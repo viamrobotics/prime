@@ -4,7 +4,7 @@
 
 import PrismPackage from 'prismjs/package.json';
 import Prism from 'prismjs';
-import 'prism-themes/themes/prism-vs.min.css';
+import './viam-prism-theme.css';
 
 /**
  * We use the prism autoloader to handle loading in language grammar files. The
@@ -17,7 +17,7 @@ import 'prism-themes/themes/prism-vs.min.css';
 import 'prismjs/plugins/autoloader/prism-autoloader';
 const grammarsPath = `https://cdnjs.cloudflare.com/ajax/libs/prism/${PrismPackage.version}/components/`;
 
-export const getPrismModule = async (): Promise<typeof import('prismjs')> => {
+export const getPrismModule = (): typeof import('prismjs') => {
   // Make sure the autoloader knows where to find our languages
   (Prism.plugins.autoloader as { languages_path: string }).languages_path =
     grammarsPath;

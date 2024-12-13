@@ -33,7 +33,7 @@ import { createEventDispatcher } from 'svelte';
 import cx from 'classnames';
 
 import { IconButton, type IconName, useTimeout } from '$lib';
-import { highlightCode } from './highlight-code/highlight-code';
+import { highlightCode } from '$lib/highlight-code';
 
 /**
  * The language to use for syntax highlighting. Must be a language supported by
@@ -103,7 +103,7 @@ const copyToClipboard = async () => {
   <div class="flex gap-x-4 bg-light p-4">
     <!-- The formatting here is intentional to preserve the formatting of `code` -->
     <pre
-      class="code-snippet flex-1 overflow-x-auto"
+      class="flex-1 overflow-x-auto"
       use:highlightCode><code
         class="language-{language}"
         data-dependencies={dependencies.join(',')}>{code}</code
@@ -120,22 +120,3 @@ const copyToClipboard = async () => {
     {/if}
   </div>
 </figure>
-
-<style>
-/* Theme overrides */
-pre.code-snippet,
-pre.code-snippet > code[class*='language-'] {
-  margin: 0;
-  border: none;
-  background: inherit;
-}
-
-pre.code-snippet {
-  padding: 0;
-}
-
-pre.code-snippet > code[class*='language-'] {
-  font-family: 'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace;
-  font-size: 1em;
-}
-</style>
