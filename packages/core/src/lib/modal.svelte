@@ -74,7 +74,9 @@ $: if (typeof document !== 'undefined') {
 }
 
 onDestroy(() => {
-  document.body.classList.remove('overflow-hidden');
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('overflow-hidden');
+  }
 });
 </script>
 
