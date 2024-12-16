@@ -96,10 +96,7 @@ const copyToClipboard = async () => {
     <!-- The formatting here is intentional to preserve the formatting of `code` -->
     <pre
       class="flex-1 overflow-x-auto"
-      use:highlightCode><code
-        class="language-{language}"
-    >{code}</code
-    ></pre>
+      use:highlightCode><code class="language-{language}">{code}</code></pre>
 
     {#if showCopyButton}
       <IconButton
