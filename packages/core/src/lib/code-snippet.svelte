@@ -51,14 +51,6 @@ export let code: string;
  */
 export let showCopyButton = true;
 
-/**
- * Some prism languages have dependencies. For example, C++ requires C. If the
- * passed `language` has dependencies, they must be included here to be loaded.
- *
- * See: https://prismjs.com/plugins/autoloader/
- */
-export let dependencies: string[] = [];
-
 /** Additional CSS classes to pass to the aside. */
 let extraClasses: cx.Argument = '';
 export { extraClasses as cx };
@@ -106,8 +98,8 @@ const copyToClipboard = async () => {
       class="flex-1 overflow-x-auto"
       use:highlightCode><code
         class="language-{language}"
-        data-dependencies={dependencies.join(',')}>{code}</code
-      ></pre>
+    >{code}</code
+    ></pre>
 
     {#if showCopyButton}
       <IconButton

@@ -17,7 +17,7 @@ import './viam-prism-theme.css';
 import 'prismjs/plugins/autoloader/prism-autoloader';
 const grammarsPath = `https://cdnjs.cloudflare.com/ajax/libs/prism/${PrismPackage.version}/components/`;
 
-export const getPrismModule = (): typeof import('prismjs') => {
+export const getPrismModule = (): typeof Prism => {
   // Make sure the autoloader knows where to find our languages
   (Prism.plugins.autoloader as { languages_path: string }).languages_path =
     grammarsPath;
