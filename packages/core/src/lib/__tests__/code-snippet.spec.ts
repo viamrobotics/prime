@@ -56,16 +56,6 @@ describe('CodeSnippet', () => {
     expect(button).toBeNull();
   });
 
-  it('Renders with the passed dependencies', () => {
-    render(CodeSnippet, { ...common, dependencies: ['dep1', 'dep2'] });
-
-    const code = screen
-      .getByRole('figure')
-      .querySelector('pre > code.language-json');
-
-    expect(code).toHaveAttribute('data-dependencies', 'dep1,dep2');
-  });
-
   it('Renders with a figcaption when the default slot is provided', () => {
     render(CaptionedCodeSnippet);
 

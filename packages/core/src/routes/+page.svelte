@@ -702,7 +702,6 @@ const onHoverDelayMsInput = (event: Event) => {
   <CodeSnippet
     language="cpp"
     code={cppSnippet}
-    dependencies={['c']}
   />
 
   <h2 class="text-lg text-subtle-1">Dart</h2>

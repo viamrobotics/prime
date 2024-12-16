@@ -124,7 +124,6 @@ log_hello_world()
 <Story name="CPlusPlus">
   <CodeSnippet
     language="cpp"
-    dependencies={['c']}
     code={`
 #include <iostream>
 
