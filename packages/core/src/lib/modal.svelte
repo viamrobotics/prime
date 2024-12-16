@@ -42,7 +42,7 @@ Creates a modal overlay.
 
 <script lang="ts">
 import cx from 'classnames';
-import { createEventDispatcher, onDestroy } from 'svelte';
+import { createEventDispatcher, onMount } from 'svelte';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
 
@@ -73,10 +73,10 @@ $: if (typeof document !== 'undefined') {
   document.body.classList.toggle('overflow-hidden', isOpen);
 }
 
-onDestroy(() => {
-  if (typeof document !== 'undefined') {
+onMount(() => {
+  return () => {
     document.body.classList.remove('overflow-hidden');
-  }
+  };
 });
 </script>
 
