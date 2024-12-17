@@ -61,4 +61,20 @@ describe('CodeSnippet', () => {
 
     expect(screen.getByText('This is the caption text.')).toBeInTheDocument();
   });
+
+  it('Re-renders code block when code prop updates', async () => {
+    const { rerender } = render(CodeSnippet, common);
+
+    const initialCode = screen.getByText(common.code);
+    expect(initialCode).toBeInTheDocument();
+
+    const newCode = '{ their: "json" }';
+    await rerender({
+      ...common,
+      code: newCode,
+    });
+    const updatedCode = screen.getByText(newCode);
+    expect(updatedCode).toBeInTheDocument();
+    expect(screen.queryByText(common.code)).not.toBeInTheDocument();
+  });
 });
