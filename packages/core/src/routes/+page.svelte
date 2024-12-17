@@ -1342,16 +1342,19 @@ const onHoverDelayMsInput = (event: Event) => {
     <SearchableSelect
       exclusive
       options={[
-        { value: 'First Option', description: 'First option' },
+        { value: 'First Option', label: 'First option' },
         'Option 2',
-        { value: 'C.) Option', description: 'second' },
+        { value: 'C.) Option', label: 'second' },
         'A really long forth option just in case you need it',
       ]}
       placeholder="Select an option"
-      onChange={(value) => {
-        // eslint-disable-next-line no-console
-        console.log('Selected', value);
-      }}
+      onBlur={(event) => console.log('blur', event)}
+      onClear={(event) => console.log('clear', event)}
+      onChange={(event) => console.log('change', event)}
+      onFilter={(event) => console.log('filter', event)}
+      onFocus={(event) => console.log('focus', event)}
+      onInput={(event) => console.log('input', event)}
+      onSelect={(event) => console.log('select', event)}
     />
     <SearchableSelect
       exclusive
@@ -1453,7 +1456,7 @@ const onHoverDelayMsInput = (event: Event) => {
           description: 'Seconary Text',
           icon: 'twitter',
         },
-        { value: 'Option 2', description: 'Seconary Text', icon: 'instagram' },
+        { value: 'Option 2', label: 'Secondary Text', icon: 'instagram' },
       ]}
       placeholder="Select an option"
       value="1"
@@ -1496,7 +1499,6 @@ const onHoverDelayMsInput = (event: Event) => {
       ]}
       placeholder="Reducing Select"
       sort="reduce"
-      multiple
     />
   </div>
 
