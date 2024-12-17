@@ -38,6 +38,7 @@ export const paths = {
   'backup-restore': MDI.mdiBackupRestore,
   'broadcast-off': MDI.mdiBroadcastOff,
   bug: MDI.mdiBug,
+  'bug-outline': MDI.mdiBugOutline,
   broadcast: MDI.mdiBroadcast,
   'card-text-outline': MDI.mdiCardTextOutline,
   'camera-flip-outline': MDI.mdiCameraFlipOutline,
