@@ -57,7 +57,7 @@ const handleClick = (value: string) => {
 
 <div
   aria-disabled={disabled ? true : undefined}
-  class={cx('flex', extraClasses)}
+  class={cx('flex-col', extraClasses)}
   {...$$restProps}
 >
   {#if $$slots.legend}
