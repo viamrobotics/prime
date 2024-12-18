@@ -37,7 +37,7 @@ import {
   ToastVariant,
   ToggleButtons,
   Select,
-  SearchableSelect,
+  TypeaheadInput,
   Multiselect,
   NotificationContainer,
   provideNotify,
@@ -1086,21 +1086,19 @@ const onHoverDelayMsInput = (event: Event) => {
         for="targetID"
         cx="whitespace-nowrap"
       >
-        For attribute example with SearchableSelect
+        For attribute example with TypeaheadInput
       </Label>
       <div class="max-w-fit">
-        <SearchableSelect
+        <TypeaheadInput
           id="targetID"
-          exclusive
           options={[
-            { value: 'First Option', description: 'First option' },
+            { value: 'First Option', label: 'First option' },
             'Option 2',
-            { value: 'C.) Option', description: 'second' },
+            { value: 'C.) Option', label: 'second' },
             'A really long forth option just in case you need it',
             {
               value: 'Option with a long description',
-              description:
-                'usb-Generic_Laptop_Camera_200901010001-video-index0',
+              label: 'usb-Generic_Laptop_Camera_200901010001-video-index0',
             },
           ]}
           placeholder="Select an option"
@@ -1335,12 +1333,11 @@ const onHoverDelayMsInput = (event: Event) => {
     </Select>
   </div>
 
-  <!-- Searchable Select -->
-  <h2 class="text-xl">Searchable Select</h2>
+  <!-- Typeahead Input -->
+  <h2 class="text-xl">Typeahead Input</h2>
 
   <div class="flex gap-4">
-    <SearchableSelect
-      exclusive
+    <TypeaheadInput
       options={[
         { value: 'First Option', label: 'First option' },
         'Option 2',
@@ -1356,16 +1353,14 @@ const onHoverDelayMsInput = (event: Event) => {
       onInput={(event) => console.log('input', event)}
       onSelect={(event) => console.log('select', event)}
     />
-    <SearchableSelect
-      exclusive
+    <TypeaheadInput
       options={['First Option', 'Disabled select', 'C.) Option']}
       value="Disabled select"
       disabled
     />
   </div>
   <div class="flex gap-4">
-    <SearchableSelect
-      exclusive
+    <TypeaheadInput
       options={[
         {
           value: 'opt-1',
@@ -1400,30 +1395,30 @@ const onHoverDelayMsInput = (event: Event) => {
           description: 'Seconary Text',
         },
       ]}
-      placeholder="Select an option (exclusive)"
+      placeholder="Select an option"
       onChange={(value) => {
         // eslint-disable-next-line no-console
         console.log('Selected', value);
       }}
     />
-    <SearchableSelect
+    <TypeaheadInput
       options={[
         {
           value: 'opt-1',
           label: 'Option 1',
-          description: 'Seconary Text',
+          description: 'Secondary Text',
           icon: 'twitter',
         },
         {
           value: 'opt-2',
           label: 'Option 2',
-          description: 'Seconary Text',
+          description: 'Secondary Text',
           icon: 'instagram',
         },
         {
           value: 'opt-3',
           label: 'Option 3',
-          description: 'Seconary Text',
+          description: 'Secondary Text',
           icon: 'magnet',
         },
         {
@@ -1431,29 +1426,28 @@ const onHoverDelayMsInput = (event: Event) => {
           label: 'Option 4',
           icon: 'apple',
           description:
-            'Seconary Text. This is an example where the seconary text is really long',
+            'Secondary Text. This is an example where the secondary text is really long',
         },
         { value: 'opt-5', label: 'Option 5', icon: 'earth' },
         { value: 'opt-6', label: 'Option 6 (no icon or desc)' },
         {
           value: 'opt-7',
           label: 'Option 7 (no icon)',
-          description: 'Seconary Text',
+          description: 'Secondary Text',
         },
       ]}
-      placeholder="Select an option (non-exclusive)"
+      placeholder="Select an option"
       onChange={(value) => {
         // eslint-disable-next-line no-console
         console.log('Selected', value);
       }}
     />
-    <SearchableSelect
-      exclusive
+    <TypeaheadInput
       options={[
         {
           value: '1',
           label: 'Disabled Select with Icon',
-          description: 'Seconary Text',
+          description: 'Secondary Text',
           icon: 'twitter',
         },
         { value: 'Option 2', label: 'Secondary Text', icon: 'instagram' },
@@ -1465,40 +1459,15 @@ const onHoverDelayMsInput = (event: Event) => {
   </div>
 
   <div class="flex gap-4">
-    <SearchableSelect
-      exclusive
+    <TypeaheadInput
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="Warn state"
       state="warn"
     />
-    <SearchableSelect
-      exclusive
+    <TypeaheadInput
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="Error state"
       state="error"
-    />
-  </div>
-
-  <div class="flex gap-4">
-    <SearchableSelect
-      options={['First Option', 'Option 2', 'C.) Option']}
-      placeholder="With arbitrary input"
-      otherOptionPrefix="Arbitrary:"
-    />
-    <SearchableSelect
-      exclusive
-      options={[
-        'First Option',
-        'Option 2',
-        'C.) Option',
-        'So',
-        'Many',
-        'More',
-        'Options',
-        'With A Whole Lot Of Spaces',
-      ]}
-      placeholder="Reducing Select"
-      sort="reduce"
     />
   </div>
 

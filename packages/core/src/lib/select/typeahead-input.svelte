@@ -23,9 +23,8 @@ type Option = SelectItem | string;
 interface $$Props extends Omit<ComponentProps<Select>, 'items'> {
   value?: string | string[];
   options: Option[];
-  exclusive?: boolean;
   otherOptionPrefix?: string;
-  state: InputState;
+  state?: InputState;
   onBlur?: (event: Events['blur']['detail']) => void;
   onChange?: (event: Events['change']) => void;
   onClear?: (event: Events['clear']) => void;
@@ -92,12 +91,14 @@ const { colors, borderColor } = theme.extend;
   --chevron-icon-width="1rem"
   --clear-icon-color={colors['gray-6']}
   --clear-icon-width="1rem"
+  --item-height="auto"
+  --item-line-height="auto"
   --item-first-border-radius="0"
   --item-is-active-bg={colors['gray-8']}
   --item-is-active-color="#fff"
   --item-active-background="#f7f7f8"
   --item-hover-bg="#f7f7f8"
-  --item-padding="0 0.5rem"
+  --item-padding="0.5rem"
   --disabled-border-color={colors['disabled-light']}
   --disabled-background={colors['disabled-light']}
   --error-border="1px solid {colors['danger-dark']}"
@@ -120,12 +121,22 @@ const { colors, borderColor } = theme.extend;
   >
     {@const icon = icons[index]}
     {#if icon}
-      <div class="border-wa flex items-center gap-1">
+      <div class="border-wa flex items-center gap-2">
         <Icon name={icon} />
-        {item.label}
+        <div class="flex flex-col flex-wrap">
+          <div>{item.label}</div>
+          {#if item.description}
+            <div class="text-wrap text-[0.6rem]">{item.description}</div>
+          {/if}
+        </div>
       </div>
     {:else}
-      {item.label}
+      <div class="flex flex-col flex-wrap">
+        <div>{item.label}</div>
+        {#if item.description}
+          <div class="text-wrap text-[0.5rem]">{item.description}</div>
+        {/if}
+      </div>
     {/if}
   </div>
   <slot name="clear-icon" />
