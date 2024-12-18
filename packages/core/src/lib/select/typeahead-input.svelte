@@ -120,24 +120,22 @@ const { colors, borderColor } = theme.extend;
     let:index
   >
     {@const icon = icons[index]}
-    {#if icon}
-      <div class="border-wa flex items-center gap-2">
-        <Icon name={icon} />
-        <div class="flex flex-col flex-wrap">
-          <div>{item.label}</div>
-          {#if item.description}
-            <div class="text-wrap text-[0.6rem]">{item.description}</div>
-          {/if}
-        </div>
-      </div>
-    {:else}
-      <div class="flex flex-col flex-wrap">
-        <div>{item.label}</div>
+    <div class="flex items-center gap-2">
+      {#if icon}
+        <Icon
+          cx="flex-shrink-0"
+          name={icon}
+        />
+      {/if}
+      <div class="flex w-full flex-col flex-wrap overflow-x-hidden">
+        <div class="w-full min-w-0 text-wrap break-words">{item.label}</div>
         {#if item.description}
-          <div class="text-wrap text-[0.5rem]">{item.description}</div>
+          <div class="break-word w-full min-w-0 text-wrap text-[0.6rem]">
+            {item.description}
+          </div>
         {/if}
       </div>
-    {/if}
+    </div>
   </div>
   <slot name="clear-icon" />
   <slot name="empty" />

@@ -3,10 +3,9 @@ import { act, render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'svelte';
 
-import { SearchableSelect as Subject, InputStates } from '$lib';
+import { TypeaheadInput as Subject, InputStates } from '$lib';
 
 const onChange = vi.fn();
-const onMultiChange = vi.fn();
 const onFocus = vi.fn();
 const onBlur = vi.fn();
 const detailedOptions = [
@@ -29,7 +28,6 @@ const renderSubject = (props: Partial<ComponentProps<Subject>> = {}) => {
   return render(Subject, {
     options: stringOptions,
     onChange,
-    onMultiChange,
     onFocus,
     onBlur,
     ...props,
@@ -411,7 +409,6 @@ describe('SearchableSelect', () => {
     const user = userEvent.setup();
     renderSubject({
       options: detailedOptions,
-      exclusive: true,
     });
 
     const { search } = getResults();
@@ -480,7 +477,7 @@ describe('SearchableSelect', () => {
 
   it('keeps last selected value if menu is closed with escape (exclusive)', async () => {
     const user = userEvent.setup();
-    renderSubject({ exclusive: true });
+    renderSubject();
 
     const { search } = getResults();
     await user.type(search, 'the other{Enter}');

@@ -1418,12 +1418,12 @@ const onHoverDelayMsInput = (event: Event) => {
         {
           value: 'opt-3',
           label: 'Option 3',
-          description: 'Secondary Text',
+          description: 'usb-Generic_Laptop_Camera_200901010001-video-index0',
           icon: 'magnet',
         },
         {
           value: 'opt-4',
-          label: 'Option 4',
+          label: 'usb-Generic_Laptop_Camera_200901010001-video-index0',
           icon: 'apple',
           description:
             'Secondary Text. This is an example where the secondary text is really long',
