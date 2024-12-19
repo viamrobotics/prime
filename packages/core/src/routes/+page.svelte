@@ -1,5 +1,6 @@
 <script lang="ts">
 import {
+  AutocompleteInput,
   Badge,
   Breadcrumbs,
   Button,
@@ -37,7 +38,6 @@ import {
   ToastVariant,
   ToggleButtons,
   Select,
-  TypeaheadInput,
   Multiselect,
   NotificationContainer,
   provideNotify,
@@ -1089,7 +1089,7 @@ const onHoverDelayMsInput = (event: Event) => {
         For attribute example with TypeaheadInput
       </Label>
       <div class="max-w-fit">
-        <TypeaheadInput
+        <AutocompleteInput
           id="targetID"
           options={[
             { value: 'First Option', label: 'First option' },
@@ -1337,7 +1337,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <h2 class="text-xl">Typeahead Input</h2>
 
   <div class="flex gap-4">
-    <TypeaheadInput
+    <AutocompleteInput
       options={[
         { value: 'First Option', label: 'First option' },
         'Option 2',
@@ -1353,14 +1353,14 @@ const onHoverDelayMsInput = (event: Event) => {
       onInput={(event) => console.log('input', event)}
       onSelect={(event) => console.log('select', event)}
     />
-    <TypeaheadInput
+    <AutocompleteInput
       options={['First Option', 'Disabled select', 'C.) Option']}
       value="Disabled select"
       disabled
     />
   </div>
   <div class="flex gap-4">
-    <TypeaheadInput
+    <AutocompleteInput
       options={[
         {
           value: 'opt-1',
@@ -1401,7 +1401,7 @@ const onHoverDelayMsInput = (event: Event) => {
         console.log('Selected', value);
       }}
     />
-    <TypeaheadInput
+    <AutocompleteInput
       options={[
         {
           value: 'opt-1',
@@ -1442,7 +1442,7 @@ const onHoverDelayMsInput = (event: Event) => {
         console.log('Selected', value);
       }}
     />
-    <TypeaheadInput
+    <AutocompleteInput
       options={[
         {
           value: '1',
@@ -1458,13 +1458,19 @@ const onHoverDelayMsInput = (event: Event) => {
     />
   </div>
 
+  <AutocompleteInput
+    options={['First Option', 'First Option', 'First Option']}
+    placeholder="Duplicate options"
+    state="error"
+  />
+
   <div class="flex gap-4">
-    <TypeaheadInput
+    <AutocompleteInput
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="Warn state"
       state="warn"
     />
-    <TypeaheadInput
+    <AutocompleteInput
       options={['First Option', 'Option 2', 'C.) Option']}
       placeholder="Error state"
       state="error"

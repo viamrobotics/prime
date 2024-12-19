@@ -23,7 +23,6 @@ type Option = SelectItem | string;
 interface $$Props extends Omit<ComponentProps<Select>, 'items'> {
   value?: string | string[];
   options: Option[];
-  otherOptionPrefix?: string;
   state?: InputState;
   onBlur?: (event: Events['blur']['detail']) => void;
   onChange?: (event: Events['change']) => void;

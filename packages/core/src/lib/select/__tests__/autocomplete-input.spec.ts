@@ -3,7 +3,7 @@ import { act, render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'svelte';
 
-import { TypeaheadInput as Subject, InputStates } from '$lib';
+import { AutocompleteInput as Subject, InputStates } from '$lib';
 
 const onChange = vi.fn();
 const onFocus = vi.fn();
@@ -173,7 +173,7 @@ describe('SearchableSelect', () => {
 
   it('closes the listbox if no options', async () => {
     const user = userEvent.setup();
-    renderSubject({ exclusive: true, sort: 'reduce' });
+    renderSubject();
 
     const { search } = getResults();
     await user.type(search, 'asdf');
@@ -360,7 +360,7 @@ describe('SearchableSelect', () => {
 
     // Define new options
     const newOptions = [
-      { value: 'New Option 1' },
+      'New Option 1',
       { value: 'opt1', label: 'New Option 2' },
       { value: 'opt3', label: 'New Option 3', icon: 'apple' as const },
     ];
@@ -384,7 +384,6 @@ describe('SearchableSelect', () => {
     const user = userEvent.setup();
     renderSubject({
       options: detailedOptions,
-      exclusive: true,
     });
 
     const { search } = getResults();
@@ -461,21 +460,7 @@ describe('SearchableSelect', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it('keeps last selected value if menu is closed with escape (non exclusive)', async () => {
-    const user = userEvent.setup();
-    renderSubject();
-
-    const { search } = getResults();
-    await user.type(search, 'testFoo{Enter}');
-    expect(onChange).toHaveBeenCalledWith('testFoo');
-    expect(search).toHaveValue('testFoo');
-    onChange.mockReset();
-    await user.type(search, 'ohNoIMeantToClickElsewhereOops{Escape}{Tab}');
-    expect(search).toHaveValue('testFoo');
-    expect(onChange).not.toHaveBeenCalled();
-  });
-
-  it('keeps last selected value if menu is closed with escape (exclusive)', async () => {
+  it('keeps last selected value if menu is closed with escape', async () => {
     const user = userEvent.setup();
     renderSubject();
 
@@ -487,89 +472,6 @@ describe('SearchableSelect', () => {
     await user.type(search, 'ohNoIMeantToClickElsewhereOops{Escape}{Tab}');
     expect(search).toHaveValue('the other side');
     expect(onChange).not.toHaveBeenCalled();
-  });
-
-  it('has an "other" option when not exclusive', async () => {
-    const user = userEvent.setup();
-    renderSubject();
-
-    const { search } = getResults();
-    await user.type(search, 'hello');
-    const { options } = getResults();
-
-    expect(options).toHaveLength(3);
-    expect(options[0]).toHaveAccessibleName('hello from');
-    expect(options[1]).toHaveAccessibleName('the other side');
-    expect(options[2]).toHaveAccessibleName('hello');
-    expect(options[2]).toHaveAttribute('aria-selected', 'false');
-  });
-
-  it('sets an "other" option as active when no search matches', async () => {
-    const user = userEvent.setup();
-    renderSubject();
-
-    const { search } = getResults();
-    await user.type(search, 'asdf');
-    const { options } = getResults();
-
-    expect(options[2]).toHaveAccessibleName('asdf');
-    expect(options[2]).toHaveAttribute('aria-selected', 'true');
-    expect(search).toHaveAttribute('aria-activedescendant', options[2]?.id);
-  });
-
-  it('has no "other" option when value empty', async () => {
-    const user = userEvent.setup();
-    renderSubject();
-
-    const { search } = getResults();
-    await user.click(search);
-    const { options } = getResults();
-
-    expect(options).toHaveLength(2);
-  });
-
-  it('has no "other" option when value matches', async () => {
-    const user = userEvent.setup();
-    renderSubject();
-
-    const { search } = getResults();
-    await user.type(search, 'hello from');
-    const { options } = getResults();
-
-    expect(options).toHaveLength(2);
-  });
-
-  it('has no "other" option when exclusive', async () => {
-    const user = userEvent.setup();
-    renderSubject({ exclusive: true });
-
-    const { search } = getResults();
-    await user.type(search, 'hello');
-    const { options } = getResults();
-
-    expect(options).toHaveLength(2);
-  });
-
-  it('has an "other" option when value matches exclusivity function', async () => {
-    const user = userEvent.setup();
-    renderSubject({ exclusive: (value: string) => value === 'hello' });
-
-    const { search } = getResults();
-    await user.type(search, 'hello');
-    const { options } = getResults();
-
-    expect(options).toHaveLength(3);
-  });
-
-  it('adds a prefix to the "other" option display text', async () => {
-    const user = userEvent.setup();
-    renderSubject({ otherOptionPrefix: 'You said:' });
-
-    const { search } = getResults();
-    await user.type(search, 'hello');
-    const { options } = getResults();
-
-    expect(options[2]).toHaveAccessibleName('You said: hello');
   });
 
   it('closes listbox on escape', async () => {
