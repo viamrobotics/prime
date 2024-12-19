@@ -22,7 +22,6 @@ module.exports = {
      */
     'plugin:jsx-a11y/recommended',
     'plugin:tailwindcss/recommended',
-    'plugin:storybook/recommended',
     '@viamrobotics/eslint-config',
   ],
   plugins: ['prefer-arrow'],
