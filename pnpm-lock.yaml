@@ -254,9 +254,6 @@ importers:
       svelte-select:
         specifier: ^5.8.3
         version: 5.8.3
-      svelte-tiny-virtual-list:
-        specifier: ^2.1.2
-        version: 2.1.2
       tailwindcss:
         specifier: ^3.3.7
         version: 3.4.3
@@ -599,7 +596,7 @@ importers:
         version: 1.3.7(@types/react@18.2.45)(less@4.2.0)(postcss@8.4.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(webpack@5.89.0(esbuild@0.18.20))
       '@storybook/addon-svelte-csf':
         specifier: ^4.0.13
-        version: 4.0.13(@storybook/svelte@7.6.6(svelte@4.2.17))(@storybook/theming@7.6.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@sveltejs/vite-plugin-svelte@3.0.1(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0)))(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0))
+        version: 4.0.13(@storybook/svelte@7.6.6(svelte@4.2.17))(@storybook/theming@7.6.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@sveltejs/vite-plugin-svelte@2.5.3(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0)))(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0))
       '@storybook/blocks':
         specifier: ^7.6.6
         version: 7.6.6(@types/react@18.2.45)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -7477,9 +7474,6 @@ packages:
   svelte-select@5.8.3:
     resolution: {integrity: sha512-nQsvflWmTCOZjssdrNptzfD1Ok45hHVMTL5IHay5DINk7dfu5Er+8KsVJnZMJdSircqtR0YlT4YkCFlxOUhVPA==}
 
-  svelte-tiny-virtual-list@2.1.2:
-    resolution: {integrity: sha512-jeP/WMvgFUR4mYXHGPiCexjX5DuzSO+3xzHNhxfcsFyy+uYPtnqI5UGb383swpzQAyXB0OBqYfzpYihD/5gxnA==}
-
   svelte2tsx@0.6.27:
     resolution: {integrity: sha512-E1uPW1o6VsbRz+nUk3fznZ2lSmCITAJoNu8AYefWSvIwE2pSB01i5sId4RMbWNzfcwCQl1DcgGShCPcldl4rvg==}
     peerDependencies:
@@ -10458,7 +10452,7 @@ snapshots:
       - sass-embedded
       - supports-color
 
-  '@storybook/addon-svelte-csf@4.0.13(@storybook/svelte@7.6.6(svelte@4.2.17))(@storybook/theming@7.6.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@sveltejs/vite-plugin-svelte@3.0.1(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0)))(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0))':
+  '@storybook/addon-svelte-csf@4.0.13(@storybook/svelte@7.6.6(svelte@4.2.17))(@storybook/theming@7.6.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@sveltejs/vite-plugin-svelte@2.5.3(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0)))(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0))':
     dependencies:
       '@babel/runtime': 7.23.6
       '@storybook/svelte': 7.6.6(svelte@4.2.17)
@@ -10468,7 +10462,7 @@ snapshots:
       magic-string: 0.30.10
       svelte: 4.2.17
     optionalDependencies:
-      '@sveltejs/vite-plugin-svelte': 3.0.1(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0))
+      '@sveltejs/vite-plugin-svelte': 2.5.3(svelte@4.2.17)(vite@5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0))
       vite: 5.2.11(@types/node@20.10.5)(less@4.2.0)(terser@5.26.0)
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -16865,8 +16859,6 @@ snapshots:
   svelte-select@5.8.3:
     dependencies:
       svelte-floating-ui: 1.5.8
-
-  svelte-tiny-virtual-list@2.1.2: {}
 
   svelte2tsx@0.6.27(svelte@4.2.17)(typescript@5.4.5):
     dependencies:
