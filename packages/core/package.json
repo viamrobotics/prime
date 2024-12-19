@@ -19,7 +19,7 @@
     },
     "./prime.css": "./prime.css",
     "./plugins": "./plugins.ts",
-    "./theme": "./theme.ts"
+    "./theme": "./src/theme.ts"
   },
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
