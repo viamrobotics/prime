@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { theme } from './src/theme';
+import { theme } from './src/lib/theme';
 import { plugins } from './plugins';
 
 export default {

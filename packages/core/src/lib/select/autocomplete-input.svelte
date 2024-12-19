@@ -2,7 +2,7 @@
 import cx from 'classnames';
 import Select from 'svelte-select';
 import type { ComponentProps, ComponentEvents } from 'svelte';
-import { theme } from '../../theme';
+import { theme } from '../theme';
 import type { IconName } from '../icon/icons';
 import { InputStates, type InputState } from '../input';
 import Progress from '../progress/progress.svelte';

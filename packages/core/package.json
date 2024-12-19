@@ -19,12 +19,13 @@
     },
     "./prime.css": "./prime.css",
     "./plugins": "./plugins.ts",
-    "./theme": "./src/theme.ts"
+    "./theme": "./src/lib/theme.ts"
   },
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
+    "src/lib/theme.ts",
     "theme.ts",
     "plugins.ts",
     "prime.css",
