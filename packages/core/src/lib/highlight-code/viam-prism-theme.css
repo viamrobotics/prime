@@ -1,0 +1,17 @@
+@import 'prism-themes/themes/prism-vs.min.css';
+
+pre[class*='language-'],
+pre[class*='language-'] > code[class*='language-'] {
+  margin: 0;
+  border: none;
+  background: inherit;
+}
+
+pre[class*='language-'] {
+  padding: 0;
+}
+
+pre[class*='language-'] > code[class*='language-'] {
+  font-family: 'Roboto Mono Variable', 'Roboto Mono', ui-monospace, monospace;
+  font-size: 1em;
+}

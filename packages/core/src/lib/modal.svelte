@@ -42,7 +42,7 @@ Creates a modal overlay.
 
 <script lang="ts">
 import cx from 'classnames';
-import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+import { createEventDispatcher, onMount } from 'svelte';
 import IconButton from './button/icon-button.svelte';
 import { clickOutside } from '$lib';
 

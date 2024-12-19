@@ -56,19 +56,25 @@ describe('CodeSnippet', () => {
     expect(button).toBeNull();
   });
 
-  it('Renders with the passed dependencies', () => {
-    render(CodeSnippet, { ...common, dependencies: ['dep1', 'dep2'] });
-
-    const code = screen
-      .getByRole('figure')
-      .querySelector('pre > code.language-json');
-
-    expect(code).toHaveAttribute('data-dependencies', 'dep1,dep2');
-  });
-
   it('Renders with a figcaption when the default slot is provided', () => {
     render(CaptionedCodeSnippet);
 
     expect(screen.getByText('This is the caption text.')).toBeInTheDocument();
+  });
+
+  it('Re-renders code block when code prop updates', async () => {
+    const { rerender } = render(CodeSnippet, common);
+
+    const initialCode = screen.getByText(common.code);
+    expect(initialCode).toBeInTheDocument();
+
+    const newCode = '{ their: "json" }';
+    await rerender({
+      ...common,
+      code: newCode,
+    });
+    const updatedCode = screen.getByText(newCode);
+    expect(updatedCode).toBeInTheDocument();
+    expect(screen.queryByText(common.code)).not.toBeInTheDocument();
   });
 });
