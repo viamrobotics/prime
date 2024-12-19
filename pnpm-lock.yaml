@@ -251,6 +251,9 @@ importers:
       svelte-check:
         specifier: ^3.6.2
         version: 3.6.2(@babel/core@7.24.6)(less@4.2.0)(postcss-load-config@4.0.2(postcss@8.4.38))(postcss@8.4.38)(svelte@4.2.17)
+      svelte-select:
+        specifier: ^5.8.3
+        version: 5.8.3
       tailwindcss:
         specifier: ^3.3.7
         version: 3.4.3
@@ -4621,11 +4624,13 @@ packages:
   eslint@8.4.1:
     resolution: {integrity: sha512-TxU/p7LB1KxQ6+7aztTnO7K0i+h0tDi81YRY9VzB6Id71kNz+fFYnf5HD5UOQmxkzcoa0TlVZf9dpMtUv0GpWg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   eslint@8.56.0:
     resolution: {integrity: sha512-Go19xM6T9puCOWntie1/P997aXxFsOi37JIHRWI514Hc6ZnaHGKY9xFhrU65RT6CcBEzZoGG1e6Nq+DT04ZtZQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   esm-env@1.0.0:
@@ -7437,6 +7442,9 @@ packages:
       svelte:
         optional: true
 
+  svelte-floating-ui@1.5.8:
+    resolution: {integrity: sha512-dVvJhZ2bT+kQDHlE4Lep8t+sgEc0XD96fXLzAi2DDI2bsaegBbClxXVNMma0C2WsG+n9GJSYx292dTvA8CYRtw==}
+
   svelte-hmr@0.15.3:
     resolution: {integrity: sha512-41snaPswvSf8TJUhlkoJBekRrABDXDMdpNpT2tfHIv4JuhgvHqLMhEPGtaQn0BmbNSTkuz2Ed20DF2eHw0SmBQ==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
@@ -7479,6 +7487,9 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  svelte-select@5.8.3:
+    resolution: {integrity: sha512-nQsvflWmTCOZjssdrNptzfD1Ok45hHVMTL5IHay5DINk7dfu5Er+8KsVJnZMJdSircqtR0YlT4YkCFlxOUhVPA==}
 
   svelte2tsx@0.6.27:
     resolution: {integrity: sha512-E1uPW1o6VsbRz+nUk3fznZ2lSmCITAJoNu8AYefWSvIwE2pSB01i5sId4RMbWNzfcwCQl1DcgGShCPcldl4rvg==}
@@ -16857,6 +16868,11 @@ snapshots:
     optionalDependencies:
       svelte: 4.2.17
 
+  svelte-floating-ui@1.5.8:
+    dependencies:
+      '@floating-ui/core': 1.5.2
+      '@floating-ui/dom': 1.5.3
+
   svelte-hmr@0.15.3(svelte@4.2.17):
     dependencies:
       svelte: 4.2.17
@@ -16875,6 +16891,10 @@ snapshots:
       postcss: 8.4.38
       postcss-load-config: 4.0.2(postcss@8.4.38)
       typescript: 5.4.5
+
+  svelte-select@5.8.3:
+    dependencies:
+      svelte-floating-ui: 1.5.8
 
   svelte2tsx@0.6.27(svelte@4.2.17)(typescript@5.4.5):
     dependencies:
