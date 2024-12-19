@@ -1,12 +1,12 @@
 <script lang="ts">
-import { theme } from '../../theme';
+import cx from 'classnames';
 import Select from 'svelte-select';
 import type { ComponentProps, ComponentEvents } from 'svelte';
-import Icon from '../icon/icon.svelte';
+import { theme } from '../../theme';
 import type { IconName } from '../icon/icons';
-
-import { InputStates, type InputState } from '$lib/input';
-import type classNames from 'classnames';
+import { InputStates, type InputState } from '../input';
+import Progress from '../progress/progress.svelte';
+import Icon from '../icon/icon.svelte';
 
 type Events = ComponentEvents<Select>;
 
@@ -20,10 +20,13 @@ interface SelectItem {
 
 type Option = SelectItem | string;
 
-interface $$Props extends Omit<ComponentProps<Select>, 'items'> {
+type DisallowedProps = 'items' | 'showChevron' | 'hideEmptyState' | 'hasError';
+
+interface $$Props extends Omit<ComponentProps<Select>, DisallowedProps> {
   value?: string | string[];
   options: Option[];
   state?: InputState;
+  cx?: cx.Argument;
   onBlur?: (event: Events['blur']['detail']) => void;
   onChange?: (event: Events['change']) => void;
   onClear?: (event: Events['clear']) => void;
@@ -45,8 +48,11 @@ export let onFocus: $$Props['onFocus'] = undefined;
 export let onInput: $$Props['onInput'] = undefined;
 export let onSelect: $$Props['onSelect'] = undefined;
 
-let className = '';
-export { classNames as class };
+let cxArgument: $$Props['cx'] = '';
+export { cxArgument as cx };
+
+let className: $$Props['class'] = '';
+export { className as class };
 
 $: normalizedOptions = options.map((option) => {
   if (typeof option === 'string') {
@@ -67,8 +73,10 @@ const { colors, borderColor } = theme.extend;
 </script>
 
 <Select
+  showChevron
+  hideEmptyState
   containerStyles="padding-left: 0.375rem {containerStyles}"
-  class="{className} {warnClasses}"
+  class="{cx(cxArgument)} {className} {warnClasses}"
   items={normalizedOptions}
   inputAttributes={{ autocomplete: 'off', ...inputAttributes }}
   hasError={state === InputStates.ERROR}
@@ -136,11 +144,15 @@ const { colors, borderColor } = theme.extend;
       </div>
     </div>
   </div>
-  <slot name="clear-icon" />
-  <slot name="empty" />
-  <slot name="list-prepend" />
-  <slot name="list-append" />
-  <slot name="loading-icon" />
-  <slot name="prepend" />
-  <slot name="selection" />
+  <Icon
+    slot="chevron-icon"
+    name="chevron-down"
+    cx="text-gray-6"
+  />
+  <Icon
+    slot="clear-icon"
+    name="close"
+    cx="text-gray-6"
+  />
+  <Progress slot="loading-icon" />
 </Select>

@@ -1085,7 +1085,7 @@ const onHoverDelayMsInput = (event: Event) => {
         for="targetID"
         cx="whitespace-nowrap"
       >
-        For attribute example with TypeaheadInput
+        For attribute example with Autocomplete Input
       </Label>
       <div class="max-w-fit">
         <AutocompleteInput
@@ -1332,8 +1332,8 @@ const onHoverDelayMsInput = (event: Event) => {
     </Select>
   </div>
 
-  <!-- Typeahead Input -->
-  <h2 class="text-xl">Typeahead Input</h2>
+  <!-- Autocomplete Input -->
+  <h2 class="text-xl">Autocomplete Input</h2>
 
   <div class="flex gap-4">
     <AutocompleteInput
