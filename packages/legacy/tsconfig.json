@@ -7,7 +7,6 @@
   "include": [
     ".*",
     "*",
-    ".storybook/**/*",
     "public/**/*",
     "scripts/**/*",
     "src/**/*",

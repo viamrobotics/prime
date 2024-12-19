@@ -2,17 +2,6 @@
 
 Please follow these instructions for contributing to `PRIME`.
 
-## Getting started
-
-To run the `Storybook` page locally, pull down the project and run:
-
-```bash
-pnpm install
-pnpm -C packages/legacy storybook
-```
-
-More detailed docs exist on [the storybook](https://prime.viam.com).
-
 ## Playground
 
 To use the component playground, run:
