@@ -1087,26 +1087,24 @@ const onHoverDelayMsInput = (event: Event) => {
       >
         For attribute example with Autocomplete Input
       </Label>
-      <div class="max-w-fit">
-        <AutocompleteInput
-          id="targetID"
-          options={[
-            { value: 'First Option', label: 'First option' },
-            'Option 2',
-            { value: 'C.) Option', label: 'second' },
-            'A really long forth option just in case you need it',
-            {
-              value: 'Option with a long description',
-              label: 'usb-Generic_Laptop_Camera_200901010001-video-index0',
-            },
-          ]}
-          placeholder="Select an option"
-          onChange={(value) => {
-            // eslint-disable-next-line no-console
-            console.log('Selected', value);
-          }}
-        />
-      </div>
+      <AutocompleteInput
+        id="targetID"
+        options={[
+          { value: 'First Option', label: 'First option' },
+          'Option 2',
+          { value: 'C.) Option', label: 'second' },
+          'A really long forth option just in case you need it',
+          {
+            value: 'Option with a long description',
+            label: 'usb-Generic_Laptop_Camera_200901010001-video-index0',
+          },
+        ]}
+        placeholder="Select an option"
+        onChange={(value) => {
+          // eslint-disable-next-line no-console
+          console.log('Selected', value);
+        }}
+      />
     </div>
   </div>
 
