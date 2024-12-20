@@ -50,11 +50,6 @@ jobs:
           name: npm-editor-dist
           path: packages/editor/dist
 
-      - name: Upload GitHub Pages artifacts
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: packages/storybook/prime
-
   deploy-npm:
     if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: build
