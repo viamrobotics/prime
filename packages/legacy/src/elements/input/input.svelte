@@ -32,7 +32,7 @@ export let max = '+Infinity';
 export let labelposition: LabelPosition = 'top';
 export let tooltip = '';
 export let state: 'info' | 'warn' | 'error' | 'success' | '' = 'info';
-export let message: '';
+export let message = '';
 export let incrementor: 'buttons' | 'slider' | 'none' = 'none';
 
 // https://github.com/sveltejs/svelte/issues/7596
