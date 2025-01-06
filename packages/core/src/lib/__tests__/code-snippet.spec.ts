@@ -67,7 +67,6 @@ describe('CodeSnippet', () => {
 
     const initialCode = screen.getByText(common.code);
     expect(initialCode).toBeInTheDocument();
-
     const newCode = '{ their: "json" }';
     await rerender({
       ...common,

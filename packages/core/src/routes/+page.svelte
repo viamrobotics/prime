@@ -41,6 +41,7 @@ import {
   CodeSnippet,
   RangeInput,
   Progress,
+  NavDropdown,
 } from '$lib';
 import { uniqueId } from 'lodash-es';
 
@@ -1105,6 +1106,44 @@ const onHoverDelayMsInput = (event: Event) => {
         />
       </div>
     </div>
+  </div>
+
+  <!-- NAV Dropdown -->
+  <h1 class="text-2xl">NAV Dropdown</h1>
+  <div class="flex gap-4">
+    <NavDropdown
+      selectedHref="/v1"
+      options={[
+        {
+          label: 'v1',
+          detail: '1 day ago',
+          description: 'stable',
+          href: '/v1',
+        },
+        {
+          label: 'v2',
+          detail: '5 hours ago',
+          description: 'latest',
+          href: '/v2',
+        },
+        {
+          label: 'v3',
+          detail: '2 weeks ago',
+          href: '/v3',
+        },
+        {
+          label: 'v4',
+          detail: '1 month ago',
+          href: '/v4',
+        },
+        {
+          label: 'v5',
+          detail: '2 months ago',
+          description: 'legacy',
+          href: '/v5',
+        },
+      ]}
+    />
   </div>
 
   <!-- Notify -->
