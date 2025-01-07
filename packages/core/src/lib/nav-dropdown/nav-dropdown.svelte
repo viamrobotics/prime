@@ -83,10 +83,12 @@ const handleKeydown = (event: KeyboardEvent) => {
   use:clickOutside={closeDropdown}
 >
   <button
-    class="relative z-[2] h-7.5 w-full grow appearance-none border py-1.5 pl-2 pr-1 text-xs leading-tight outline-none border-light bg-white group-hover/select-input:border-gray-6"
+    class="relative z-[2] h-7.5 w-full grow appearance-none border border-light bg-white py-1.5 pl-2 pr-1 text-xs leading-tight outline-none group-hover/select-input:border-gray-6"
     on:click={toggleDropdown}
     on:keydown={handleKeydown}
     type="button"
+    aria-haspopup="menu"
+    aria-expanded={isOpen}
   >
     <div class="flex items-center justify-between">
       <span class="block truncate text-xs">
@@ -100,14 +102,19 @@ const handleKeydown = (event: KeyboardEvent) => {
   </button>
 
   {#if isOpen}
-    <nav
+    <div
       class="absolute top-[34px] z-[1] w-full overflow-auto border border-gray-6 bg-white shadow-sm focus:outline-none"
+      role="menu"
     >
       {#each options as { label, timeAgo, description, href }, i}
         <a
           {href}
-          class="relative flex select-none items-center px-2 py-1.5 hover:bg-gray-1 {i === activeIndex ? 'bg-gray-1' : ''}"
+          class="relative flex select-none items-center px-2 py-1.5 hover:bg-gray-1 {i ===
+          activeIndex
+            ? 'bg-gray-1'
+            : ''}"
           role="menuitem"
+          aria-current={i === activeIndex}
           on:click={async () => handleSelect(label, href)}
         >
           <div>
@@ -118,11 +125,13 @@ const handleKeydown = (event: KeyboardEvent) => {
               {/if}
             </div>
             {#if description}
-              <span class="block truncate text-[0.625rem] text-gray-6">{description}</span>
+              <span class="block truncate text-[0.625rem] text-gray-6"
+                >{description}</span
+              >
             {/if}
           </div>
         </a>
       {/each}
-    </nav>
+    </div>
   {/if}
 </div>
