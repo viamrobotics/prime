@@ -97,11 +97,11 @@ describe('NavDropdown', () => {
 
   it('shows the selected option in the button', async () => {
     const user = userEvent.setup();
-    render(Subject, { 
-      props: { 
+    render(Subject, {
+      props: {
         options: versionOptions,
-        selectedOption: 'Version 2'
-      }
+        selectedOption: 'Version 2',
+      },
     });
 
     const button = screen.getByRole('button');
