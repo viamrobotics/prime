@@ -53,8 +53,8 @@ describe('NavDropdown', () => {
     const button = screen.getByRole('button');
     await user.click(button);
 
-    const menuitem = screen.getByRole('menuitem', { name: /Version 1/ });
-    expect(within(menuitem).getByText(/1 day ago/)).toBeInTheDocument();
+    const menuitem = screen.getByRole('menuitem', { name: /Version 1/u });
+    expect(within(menuitem).getByText(/1 day ago/u)).toBeInTheDocument();
     expect(within(menuitem).getByText('stable')).toBeInTheDocument();
   });
 
@@ -64,7 +64,7 @@ describe('NavDropdown', () => {
 
     const button = screen.getByRole('button');
     await user.click(button);
-    const menuitem = screen.getByRole('menuitem', { name: /Version 1/ });
+    const menuitem = screen.getByRole('menuitem', { name: /Version 1/u });
     await user.click(menuitem);
 
     expect(goto).toHaveBeenCalledWith('/v1');
