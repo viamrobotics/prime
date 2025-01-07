@@ -62,14 +62,13 @@ describe('CodeSnippet', () => {
     expect(screen.getByText('This is the caption text.')).toBeInTheDocument();
   });
 
-  it('Re-renders code block when code prop updates', async () => {
+  it('Re-renders code block when code prop updates', () => {
     const { rerender } = render(CodeSnippet, common);
 
     const initialCode = screen.getByText(common.code);
     expect(initialCode).toBeInTheDocument();
-
     const newCode = '{ their: "json" }';
-    await rerender({
+    rerender({
       ...common,
       code: newCode,
     });
