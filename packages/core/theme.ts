@@ -26,7 +26,7 @@ export const theme = {
       'code-line-number': '#4b758d',
       'code-null': '#708',
       'code-number': '#2f6447',
-      'code-property-keys': '#000000',
+      'code-property-keys': '#000',
       'code-string': '#9c251d',
     },
     borderColor: {
