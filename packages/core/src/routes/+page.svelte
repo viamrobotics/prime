@@ -47,8 +47,8 @@ import {
   CodeSnippet,
   RangeInput,
   Progress,
+  NavDropdown,
 } from '$lib';
-import NavDropdown from '$lib/nav-dropdown/nav-dropdown.svelte';
 import { uniqueId } from 'lodash-es';
 
 provideNotify();
