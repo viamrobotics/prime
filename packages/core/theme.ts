@@ -20,6 +20,14 @@ export const theme = {
       'subtle-2': '#7a7c80',
       disabled: '#9c9ca4',
       link: '#0066cc',
+
+      // Code colors
+      'code-boolean': '#201293',
+      'code-line-number': '#4b758d',
+      'code-null': '#708',
+      'code-number': '#2f6447',
+      'code-property-keys': '#000',
+      'code-string': '#9c251d',
     },
     borderColor: {
       light: '#e4e4e6',
