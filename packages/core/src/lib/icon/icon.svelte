@@ -30,7 +30,7 @@ const sizes: Record<Size, string> = {
 
 <script lang="ts">
 import cx from 'classnames';
-import { paths, type IconName, type CustomIcon } from './icons';
+import { IconPathsByName, type IconName, type CustomIcon } from './icons';
 
 /** The name of the icon. */
 export let name: IconName;
@@ -45,7 +45,7 @@ export { extraClasses as cx };
 let allPaths: CustomIcon[] = [];
 
 $: {
-  const pathValue = paths[name];
+  const pathValue = IconPathsByName[name];
 
   if (typeof pathValue === 'string') {
     allPaths = [{ path: pathValue }];
