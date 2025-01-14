@@ -1,19 +1,19 @@
 import * as MDI from '@mdi/js';
 
-type Path = string;
+export type SimpleIconPath = string;
 
 export interface CustomIcon {
   path: string;
   opacity?: number | undefined;
 }
 
-export type IconPath = Path | CustomIcon[];
+export type IconPath = SimpleIconPath | CustomIcon[];
 
 /**
  * Keys should match MDI name
  * e.g. 'account-multiple' for MDI.mdiAccountMultiple
  */
-export const paths = {
+export const IconPathsByName = {
   'account-group-outline': MDI.mdiAccountGroupOutline,
   'account-multiple': MDI.mdiAccountMultiple,
   'alert-circle-outline': MDI.mdiAlertCircleOutline,
@@ -179,9 +179,9 @@ export const paths = {
   'view-dashboard-outline': MDI.mdiViewDashboardOutline,
   webhook: MDI.mdiWebhook,
   windows: MDI.mdiMicrosoftWindows,
-} as const;
+} satisfies Record<string, IconPath>;
 
 /**
  * The possible icon names that can be rendered. This is good for typing props.
  */
-export type IconName = keyof typeof paths;
+export type IconName = keyof typeof IconPathsByName;
