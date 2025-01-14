@@ -33,31 +33,50 @@ export const clickOutside: Action<
   ClickOutsideHandler | undefined
 > = (node, handler) => {
   let handleClickOutside = handler;
+  let isMouseDown = false;
 
-  const handleWindowClick = (event: MouseEvent): void => {
-    if (!node || !handleClickOutside) {
-      return;
-    }
+  const getOutsideTarget = (event: MouseEvent): Element | undefined => {
+    const { target } = event;
 
-    const target = event.target as Element;
-
-    if (
+    return node &&
+      target instanceof Element &&
       window.document.contains(target) &&
-      !node.contains(target) &&
-      !event.defaultPrevented
-    ) {
-      handleClickOutside(target);
+      !node.contains(target)
+      ? target
+      : undefined;
+  };
+
+  const handleMouseDown = (event: MouseEvent): void => {
+    const target = getOutsideTarget(event);
+
+    if (target) {
+      isMouseDown = true;
     }
   };
 
-  window.document.addEventListener('click', handleWindowClick, true);
+  const handleMouseUp = (event: MouseEvent): void => {
+    const previousIsMouseDown = isMouseDown;
+    const target = getOutsideTarget(event);
+    isMouseDown = false;
+
+    if (target && previousIsMouseDown) {
+      handleClickOutside?.(target);
+    }
+  };
+
+  // Listen to mousedown and mouseup rather than click
+  // so don't trigger if the click starts inside the element and moves out.
+  // TODO(mc, 2025-01-14): investigate whether these need to be in the capture phase
+  window.document.addEventListener('mousedown', handleMouseDown, true);
+  window.document.addEventListener('mouseup', handleMouseUp, true);
 
   return {
     update: (nextHandler: ClickOutsideHandler | undefined) => {
       handleClickOutside = nextHandler;
     },
     destroy: () => {
-      window.document.removeEventListener('click', handleWindowClick, true);
+      window.document.removeEventListener('mousedown', handleMouseDown, true);
+      window.document.removeEventListener('mouseup', handleMouseUp, true);
     },
   };
 };
