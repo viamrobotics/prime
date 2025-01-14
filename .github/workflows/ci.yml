@@ -90,21 +90,3 @@ jobs:
         run: pnpm publish -r --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  deploy-pages:
-    if: ${{ github.repository == 'viamrobotics/prime' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: build
-    runs-on: ubuntu-latest
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
