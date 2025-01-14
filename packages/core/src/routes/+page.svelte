@@ -1120,29 +1120,29 @@ const onHoverDelayMsInput = (event: Event) => {
       options={[
         {
           label: 'v1',
-          timeAgo: '1 day ago',
+          detail: '1 day ago',
           description: 'stable',
           href: '/v1',
         },
         {
           label: 'v2',
-          timeAgo: '5 hours ago',
+          detail: '5 hours ago',
           description: 'latest',
           href: '/v2',
         },
         {
           label: 'v3',
-          timeAgo: '2 weeks ago',
+          detail: '2 weeks ago',
           href: '/v3',
         },
         {
           label: 'v4',
-          timeAgo: '1 month ago',
+          detail: '1 month ago',
           href: '/v4',
         },
         {
           label: 'v5',
-          timeAgo: '2 months ago',
+          detail: '2 months ago',
           description: 'legacy',
           href: '/v5',
         },

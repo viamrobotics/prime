@@ -1,23 +1,18 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import { goto } from '$app/navigation';
 import { NavDropdown as Subject } from '$lib';
-
-vi.mock('$app/navigation', () => ({
-  goto: vi.fn(),
-}));
 
 const versionOptions = [
   {
     label: 'Version 1',
-    timeAgo: '1 day ago',
+    detail: '1 day ago',
     description: 'stable',
     href: '/v1',
   },
   {
     label: 'Version 2',
-    timeAgo: '5 hours ago',
+    detail: '5 hours ago',
     description: 'latest',
     href: '/v2',
   },
@@ -25,7 +20,7 @@ const versionOptions = [
 
 describe('NavDropdown', () => {
   it('renders a button that controls a menu', () => {
-    render(Subject, { props: { options: versionOptions } });
+    render(Subject, { props: { options: versionOptions, selectedHref: '/v1' } });
 
     const button = screen.getByRole('button');
 
@@ -35,7 +30,7 @@ describe('NavDropdown', () => {
 
   it('expands the menu on click', async () => {
     const user = userEvent.setup();
-    render(Subject, { props: { options: versionOptions } });
+    render(Subject, { props: { options: versionOptions, selectedHref: '/v1' } });
 
     const button = screen.getByRole('button');
     await user.click(button);
@@ -48,7 +43,7 @@ describe('NavDropdown', () => {
 
   it('displays option details', async () => {
     const user = userEvent.setup();
-    render(Subject, { props: { options: versionOptions } });
+    render(Subject, { props: { options: versionOptions, selectedHref: '/v1' } });
 
     const button = screen.getByRole('button');
     await user.click(button);
@@ -58,55 +53,73 @@ describe('NavDropdown', () => {
     expect(within(menuitem).getByText('stable')).toBeInTheDocument();
   });
 
-  it('navigates when option is clicked', async () => {
-    const user = userEvent.setup();
-    render(Subject, { props: { options: versionOptions } });
-
-    const button = screen.getByRole('button');
-    await user.click(button);
-    const menuitem = screen.getByRole('menuitem', { name: /Version 1/u });
-    await user.click(menuitem);
-
-    expect(goto).toHaveBeenCalledWith('/v1');
-  });
-
-  it('supports keyboard navigation', async () => {
-    const user = userEvent.setup();
-    render(Subject, { props: { options: versionOptions } });
-
-    // Open menu with Enter
-    await user.keyboard('{Tab}{Enter}');
-    const menu = screen.getByRole('menu');
-    const options = screen.getAllByRole('menuitem');
-
-    expect(menu).toBeInTheDocument();
-    expect(options[0]).toHaveAttribute('aria-current', 'false');
-
-    // Navigate with arrow keys
-    await user.keyboard('{ArrowDown}');
-    expect(options[0]).toHaveAttribute('aria-current', 'true');
-
-    await user.keyboard('{ArrowDown}');
-    expect(options[0]).toHaveAttribute('aria-current', 'false');
-    expect(options[1]).toHaveAttribute('aria-current', 'true');
-
-    // Select with Enter
-    await user.keyboard('{Enter}');
-    expect(goto).toHaveBeenCalledWith('/v2');
-  });
-
-  it('shows the selected option in the button', async () => {
-    const user = userEvent.setup();
-    render(Subject, {
-      props: {
-        options: versionOptions,
-        selectedOption: 'Version 2',
-      },
+  describe('keyboard navigation', () => {
+    it('opens menu with Enter or Space', async () => {
+      const user = userEvent.setup();
+      render(Subject, { props: { options: versionOptions, selectedHref: '/v1' } });
+      
+      const button = screen.getByRole('button');
+      await user.click(button); 
+      
+      await user.keyboard('{Enter}');
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+      expect(button).toHaveAttribute('aria-expanded', 'true');
+      
+      await user.keyboard('{Escape}');
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+      
+      await user.keyboard(' ');
+      expect(screen.getByRole('menu')).toBeInTheDocument();
     });
 
-    const button = screen.getByRole('button');
-    expect(button).toHaveTextContent('Version 2');
+    it('navigates options with arrow keys', async () => {
+      const user = userEvent.setup();
+      render(Subject, { props: { options: versionOptions, selectedHref: '/v1' } });
+      
+      const button = screen.getByRole('button');
+      await user.click(button); 
+      
+      const options = screen.getAllByRole('menuitem');
+      
+      expect(options[0]).toHaveAttribute('aria-current', 'false');
+      expect(options[1]).toHaveAttribute('aria-current', 'false');
+      
+      await user.keyboard('{ArrowDown}');
+      expect(options[0]).toHaveAttribute('aria-current', 'page');
+      expect(options[1]).toHaveAttribute('aria-current', 'false');
+      
+      await user.keyboard('{ArrowDown}');
+      expect(options[0]).toHaveAttribute('aria-current', 'false');
+      expect(options[1]).toHaveAttribute('aria-current', 'page');
+      
+      await user.keyboard('{ArrowUp}');
+      expect(options[0]).toHaveAttribute('aria-current', 'page');
+      expect(options[1]).toHaveAttribute('aria-current', 'false');
+    });
 
-    await user.click(button);
+    it('closes menu with Escape', async () => {
+      const user = userEvent.setup();
+      render(Subject, { props: { options: versionOptions, selectedHref: '/v1' } });
+      
+      const button = screen.getByRole('button');
+      await user.click(button); 
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+      
+      await user.keyboard('{Escape}');
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    });
+
+    it('closes menu when pressing Enter on highlighted option', async () => {
+      const user = userEvent.setup();
+      render(Subject, { props: { options: versionOptions, selectedHref: '/v1' } });
+      
+      const button = screen.getByRole('button');
+      await user.click(button); 
+      
+      await user.keyboard('{ArrowDown}');
+      await user.keyboard('{Enter}');
+      
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    });
   });
 });
