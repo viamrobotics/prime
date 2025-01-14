@@ -18,7 +18,8 @@ let isOpen = false;
 let activeIndex = -1;
 let buttonElement: HTMLButtonElement;
 
-$: selected = options.find(opt => opt.href === selectedHref)?.label ?? 'Latest Version';
+$: selected =
+  options.find((opt) => opt.href === selectedHref)?.label ?? 'Latest Version';
 
 const toggleDropdown = () => {
   isOpen = !isOpen;
@@ -61,7 +62,7 @@ const handleKeydown = createHandleKey({
     } else {
       isOpen = true;
     }
-  }
+  },
 });
 </script>
 
@@ -115,7 +116,9 @@ const handleKeydown = createHandleKey({
                 {/if}
               </div>
               {#if description}
-                <span class="block truncate text-[0.625rem] text-gray-6">{description}</span>
+                <span class="block truncate text-[0.625rem] text-gray-6"
+                  >{description}</span
+                >
               {/if}
             </div>
           </a>
