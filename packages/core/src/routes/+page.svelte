@@ -1117,6 +1117,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <h1 class="text-2xl">NAV Dropdown</h1>
   <div class="flex gap-4">
     <NavDropdown
+      selectedHref="/v1"
       options={[
         {
           label: 'v1',
