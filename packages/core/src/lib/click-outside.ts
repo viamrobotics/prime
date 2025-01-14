@@ -41,8 +41,7 @@ export const clickOutside: Action<
     return node &&
       target instanceof Element &&
       window.document.contains(target) &&
-      !node.contains(target) &&
-      !event.defaultPrevented
+      !node.contains(target)
       ? target
       : undefined;
   };
@@ -67,6 +66,7 @@ export const clickOutside: Action<
 
   // Listen to mousedown and mouseup rather than click
   // so don't trigger if the click starts inside the element and moves out.
+  // TODO(mc, 2025-01-14): investigate whether these need to be in the capture phase
   window.document.addEventListener('mousedown', handleMouseDown, true);
   window.document.addEventListener('mouseup', handleMouseUp, true);
 

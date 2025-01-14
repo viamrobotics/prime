@@ -57,4 +57,21 @@ describe('use:clickOutside', () => {
 
     expect(onClickOutside).not.toHaveBeenCalled();
   });
+
+  it('should not trigger if click starts outside element and moves in', async () => {
+    const user = userEvent.setup();
+    render(Subject, { onClickOutside });
+
+    const insideButton = screen.getByTestId('inside');
+    const outsideButton = screen.getByTestId('outside');
+
+    // 1. press the left mouse button on the inside button
+    // 2. release the left mouse button on the outside button
+    await user.pointer([
+      { keys: '[MouseLeft>]', target: outsideButton },
+      { keys: '[/MouseLeft]', target: insideButton },
+    ]);
+
+    expect(onClickOutside).not.toHaveBeenCalled();
+  });
 });
