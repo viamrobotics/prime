@@ -34,7 +34,11 @@ const handleKeydown = createHandleKey({
     if (!isOpen) {
       isOpen = true;
     } else if (activeIndex >= 0) {
-      closeDropdown();
+      const selectedOption = options[activeIndex];
+      if (selectedOption) {
+        window.location.href = selectedOption.href;
+        closeDropdown();
+      }
     }
   },
   ' ': () => {
@@ -69,7 +73,7 @@ const handleKeydown = createHandleKey({
 <div class="group/select-input flex w-48">
   <button
     bind:this={buttonElement}
-    class="relative z-[2] h-7.5 w-full grow appearance-none border border-light bg-white py-1.5 pl-2 pr-1 text-xs leading-tight outline-none group-hover/select-input:border-gray-6"
+    class="relative z-[2] h-7.5 w-full grow appearance-none border border-light bg-white py-1.5 pl-2 pr-1 text-xs leading-tight outline-none group-hover:border-gray-6"
     on:click={toggleDropdown}
     on:keydown={handleKeydown}
     type="button"
