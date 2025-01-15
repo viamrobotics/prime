@@ -55,6 +55,7 @@ export { preventHandler, preventKeyboardHandler } from './prevent-handler';
 
 export * from './select';
 
+export { default as NavDropdown } from './nav-dropdown/nav-dropdown.svelte';
 export { default as Progress } from './progress/progress.svelte';
 export { default as Switch } from './switch.svelte';
 export { default as Radio } from './radio.svelte';
