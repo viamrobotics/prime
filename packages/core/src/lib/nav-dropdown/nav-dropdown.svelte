@@ -112,7 +112,7 @@ const handleKeydown = createHandleKey({
             role="menuitem"
             aria-current={i === activeIndex ? 'page' : 'false'}
           >
-            <div>
+            <div class="flex flex-col">
               <div class="flex items-center text-xs">
                 <span class="block truncate font-normal">{label}</span>
                 {#if detail}
