@@ -81,3 +81,6 @@ export { useTimeout } from './use-timeout';
 export { uniqueId } from './unique-id';
 export { default as VectorInput } from './vector-input.svelte';
 export { highlightCode } from './highlight-code';
+
+export { default as ListTable } from './new_table_lists/list-table.svelte';
+export { default as ListTableCell } from './new_table_lists/list-table-cell.svelte';

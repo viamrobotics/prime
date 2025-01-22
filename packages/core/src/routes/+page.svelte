@@ -32,6 +32,8 @@ import {
   TableHeaderCell,
   TableHeader,
   TableRow,
+  ListTable,
+  ListTableCell,
   ToastBanner,
   ToastContainer,
   ToastVariant,
@@ -461,11 +463,118 @@ let hoverDelayMS = 1000;
 const onHoverDelayMsInput = (event: Event) => {
   hoverDelayMS = Number.parseInt((event.target as HTMLInputElement).value, 10);
 };
+
+const variant = 'fixed';
+const columns = ['16%', '15%', '13%', '16%', '16%', '1fr', 'auto'];
 </script>
 
 <NotificationContainer />
 
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
+  <!-- New table component -->
+
+  <h1 class="text-2xl">New table component</h1>
+  <ListTable
+    {variant}
+    cols={columns}
+    cx="overflow-hidden border border-b-0 border-light text-sm"
+  >
+    <!-- Header Row -->
+    <li class="list-table-row">
+      <ListTableCell header={true}>Text w/ link</ListTableCell>
+      <ListTableCell header={true}>Text w/o link</ListTableCell>
+      <ListTableCell header={true}>Mono text</ListTableCell>
+      <ListTableCell header={true}>Pill</ListTableCell>
+      <ListTableCell header={true}>Tag</ListTableCell>
+      <ListTableCell header={true}>Breadcrumbs</ListTableCell>
+      <ListTableCell header={true}>Icon</ListTableCell>
+    </li>
+    <!-- Data Rows -->
+    <li class="list-table-row hover:bg-extralight">
+      <ListTableCell>
+        <a
+          class="flex items-center font-medium hover:underline"
+          href="a link"
+          style="align-items: center; width: 100%; height: 100%;"
+        >
+          machine-name
+        </a>
+      </ListTableCell>
+      <ListTableCell>1/22/2025</ListTableCell>
+      <ListTableCell
+        ><span class="font-roboto-mono text-link">0.3.4</span></ListTableCell
+      >
+      <ListTableCell
+        ><Pill
+          value="my-machine-123"
+          icon="multiplication-box"
+          href="https://i.imgur.com/aQCBxdr.png"
+          removable={false}
+        /></ListTableCell
+      >
+      <ListTableCell>
+        <Pill
+          value="labels.txt"
+          target="_self"
+          removable={true}
+        /></ListTableCell
+      >
+      <ListTableCell>
+        <Breadcrumbs crumbs={['module']} /></ListTableCell
+      >
+      <ListTableCell
+        ><IconButton
+          label="close"
+          icon="close"
+        /></ListTableCell
+      >
+    </li>
+    <li class="list-table-row hover:bg-extralight">
+      <ListTableCell>
+        <a
+          class="flex items-center font-medium hover:underline"
+          href="a link"
+          style="align-items: center; width: 100%; height: 100%;"
+        >
+          machine-name
+        </a>
+      </ListTableCell>
+      <ListTableCell>viam-dev</ListTableCell>
+      <ListTableCell
+        ><span class="font-roboto-mono text-link">0.3.4</span></ListTableCell
+      >
+      <ListTableCell
+        ><Pill
+          value="my-machine-123"
+          icon="multiplication-box"
+          href="https://i.imgur.com/aQCBxdr.png"
+          removable={false}
+        /></ListTableCell
+      >
+      <ListTableCell
+        ><Pill
+          value="something.txt"
+          target="_self"
+          removable={false}
+        /><Pill
+          value="another.txt"
+          target="_self"
+          removable={false}
+        /></ListTableCell
+      >
+      <ListTableCell>
+        <Breadcrumbs crumbs={['encoder']} />
+        <Breadcrumbs crumbs={['camera']} /></ListTableCell
+      >
+      <ListTableCell
+        ><IconButton
+          label="dots-horizontal"
+          icon="dots-horizontal"
+        /></ListTableCell
+      >
+    </li>
+  </ListTable>
+
   <!-- Badge -->
   <h1 class="text-2xl">Badge</h1>
   <div class="flex items-center gap-2">
