@@ -26,7 +26,7 @@ export { extraClasses as cx };
 <ul
   role="table"
   class={cx(
-    'w-full border border-light bg-white',
+    'w-full border border-light',
     {
       'list-table-fixed': variant === 'fixed',
       'list-table-auto': variant === 'auto',
@@ -46,5 +46,6 @@ export { extraClasses as cx };
    line up in the parent’s single grid. */
 :global(.list-table-row) {
   display: contents;
+  background-color: transparent;
 }
 </style>
