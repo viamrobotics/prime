@@ -51,6 +51,7 @@ import {
   Progress,
 } from '$lib';
 import { uniqueId } from 'lodash-es';
+import '../lib/new_table/table.css';
 
 provideNotify();
 
@@ -471,13 +472,313 @@ const columns = ['16%', '15%', '13%', '16%', '16%', '1fr', 'auto'];
 <NotificationContainer />
 
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
+  <!-- table using <table> -->
+  <h1 class="text-2xl">Table using <code>&lt;table&gt;</code></h1>
+
+  <table class="table">
+    <colgroup>
+      <col class="w-[16%]" />
+      <col class="w-[15%]" />
+      <col class="w-[10%]" />
+      <col class="w-[16%]" />
+      <col class="w-[20%]" />
+      <col class="w-full" />
+      <col class="w-auto" />
+    </colgroup>
+    <thead class="table-header">
+      <tr class="table-row">
+        <th class="table-cell">Text w/ link</th>
+        <th class="table-cell">Text w/o link</th>
+        <th class="table-cell">Mono text</th>
+        <th class="table-cell">Pill</th>
+        <th class="table-cell">Tag</th>
+        <th class="table-cell">Breadcrumbs</th>
+        <th class="table-cell">Icon</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data Row 1 -->
+      <tr class="table-row">
+        <td class="table-cell">
+          <a
+            class="table-cell-link"
+            href="a link">machine-name</a
+          >
+        </td>
+        <td class="table-cell"> 1/22/2025 </td>
+        <td class="table-cell">
+          <span class="font-roboto-mono text-link">0.3.4</span>
+        </td>
+        <td class="table-cell">
+          <Pill
+            value="my-machine-123"
+            icon="multiplication-box"
+            href="https://i.imgur.com/aQCBxdr.png"
+            removable={false}
+          />
+        </td>
+        <td class="table-cell">
+          <span class="table-cell-flex">
+            <Pill
+              value="something.txt"
+              target="_self"
+              removable={true}
+            />
+            <Pill
+              value="labels.txt"
+              target="_self"
+              removable={true}
+            />
+          </span>
+        </td>
+        <td class="table-cell">
+          <Breadcrumbs crumbs={['module']} />
+        </td>
+        <td class="table-cell">
+          <IconButton
+            label="close"
+            icon="close"
+          />
+        </td>
+      </tr>
+      <!-- Data Row 2 -->
+      <tr class="table-row">
+        <td class="table-cell">
+          <a
+            class="table-cell-link"
+            href="a link">machine-name</a
+          >
+        </td>
+        <td class="table-cell">viam-dev</td>
+        <td class="table-cell"
+          ><span class="font-roboto-mono text-link">0.3.4</span>
+        </td>
+        <td class="table-cell"
+          ><Pill
+            value="my-machine-123"
+            icon="multiplication-box"
+            href="https://i.imgur.com/aQCBxdr.png"
+            removable={false}
+          /></td
+        >
+        <td class="table-cell">
+          <span class="table-cell-flex"
+            ><Pill
+              value="something.txt"
+              target="_self"
+              removable={false}
+            /><Pill
+              value="another.txt"
+              target="_self"
+              removable={false}
+            /></span
+          ></td
+        >
+        <td class="table-cell">
+          <span class="table-cell-flex">
+            <Breadcrumbs crumbs={['encoder']} />
+            <Breadcrumbs crumbs={['camera']} />
+          </span>
+        </td>
+        <td class="table-cell">
+          <IconButton
+            label="dots-horizontal"
+            icon="dots-horizontal"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- table using <ul> -->
+  <h1 class="text-2xl">Table using <code>&lt;ul&gt;</code></h1>
+  <ul
+    role="table"
+    class="table"
+  >
+    <!-- Header Row -->
+    <li
+      role="row"
+      class="table-header table-row"
+    >
+      <span
+        role="columnheader"
+        class="table-cell w-[16%]">Text w/ link</span
+      >
+      <span
+        role="columnheader"
+        class="table-cell w-[15%]">Text w/o link</span
+      >
+      <span
+        role="columnheader"
+        class="table-cell w-[10%]">Mono text</span
+      >
+      <span
+        role="columnheader"
+        class="table-cell w-[16%]">Pill</span
+      >
+      <span
+        role="columnheader"
+        class="table-cell w-[20%]">Tag</span
+      >
+      <span
+        role="columnheader"
+        class="table-cell w-full">Breadcrumbs</span
+      >
+      <span
+        role="columnheader"
+        class="table-cell w-auto">Icon</span
+      >
+    </li>
+
+    <!-- Data Row 1 -->
+    <li
+      role="row"
+      class="table-row"
+    >
+      <span
+        role="cell"
+        class="table-cell w-[16%]"
+      >
+        <a
+          class="table-cell-link"
+          href="a link">machine-name</a
+        >
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-[15%]">1/22/2025</span
+      >
+      <span
+        role="cell"
+        class="table-cell w-[10%]"
+      >
+        <span class="font-roboto-mono text-link">0.3.4</span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-[16%]"
+      >
+        <Pill
+          value="my-machine-123"
+          icon="multiplication-box"
+          href="https://i.imgur.com/aQCBxdr.png"
+          removable={false}
+        />
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-[20%]"
+      >
+        <span class="table-cell-flex">
+          <Pill
+            value="something.txt"
+            target="_self"
+            removable={true}
+          />
+          <Pill
+            value="labels.txt"
+            target="_self"
+            removable={true}
+          />
+        </span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-full"
+      >
+        <Breadcrumbs crumbs={['module']} />
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-auto"
+      >
+        <IconButton
+          label="close"
+          icon="close"
+        />
+      </span>
+    </li>
+
+    <!-- Data Row 2 -->
+    <li
+      role="row"
+      class="table-row"
+    >
+      <span
+        role="cell"
+        class="table-cell w-[16%]"
+      >
+        <a
+          class="table-cell-link"
+          href="a link">machine-name</a
+        >
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-[15%]">viam-dev</span
+      >
+      <span
+        role="cell"
+        class="table-cell w-[10%]"
+      >
+        <span class="font-roboto-mono text-link">0.3.4</span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-[16%]"
+      >
+        <Pill
+          value="my-machine-123"
+          icon="multiplication-box"
+          href="https://i.imgur.com/aQCBxdr.png"
+          removable={false}
+        />
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-[20%]"
+      >
+        <span class="table-cell-flex">
+          <Pill
+            value="something.txt"
+            target="_self"
+            removable={false}
+          />
+          <Pill
+            value="another.txt"
+            target="_self"
+            removable={false}
+          />
+        </span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-full"
+      >
+        <span class="table-cell-flex">
+          <Breadcrumbs crumbs={['encoder']} />
+          <Breadcrumbs crumbs={['camera']} />
+        </span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell w-auto"
+      >
+        <IconButton
+          label="dots-horizontal"
+          icon="dots-horizontal"
+        />
+      </span>
+    </li>
+  </ul>
   <!-- New table component -->
 
   <h1 class="text-2xl">New table component</h1>
   <ListTable
     {variant}
     cols={columns}
-    cx="overflow-hidden border border-b-0 border-light text-sm"
+    cx="overflow-hidden border border-b-0 border-light text-sm "
   >
     <!-- Header Row -->
     <li class="list-table-row">
