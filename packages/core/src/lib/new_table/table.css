@@ -1,40 +1,25 @@
-.table {
-  @apply w-full overflow-x-auto border border-b-0 border-light text-sm;
+.grid-container {
+  @apply w-full border border-b-0 border-light text-sm;
 }
 
 .table-header {
-  @apply bg-light;
+  @apply h-8 bg-light text-xs;
 }
 
-.table-header .table-cell {
-  @apply cursor-default text-left font-medium text-subtle-1;
-}
-
-/* Ensure no hover styles for table headers */
-.table-header .table-cell {
-  @apply cursor-default bg-light text-left font-medium text-subtle-1;
-  pointer-events: none; /* Prevent hover interactions */
-}
-
-/* How can i make it where if the class is .table-header, the -table-row:hover doesn't override it, since the header cells shouldn't have a hover state */
-
-/* Hover for rows only (exclude header) */
-.table-row:hover:not(.table-header) .table-cell {
-  @apply bg-extralight;
+.table-header-cell {
+  @apply h-8 min-h-0 content-center items-center truncate border-b border-light p-2 text-subtle-1;
 }
 
 .table-cell {
-  @apply border-b p-2;
+  @apply min-h-12 content-center items-center truncate border-b border-light p-2;
 }
 
+/* Cell with link */
 .table-cell-link {
-  @apply flex items-center font-medium hover:underline;
-  width: 100%;
-  height: 100%;
+  @apply flex h-full w-full items-center hover:underline;
 }
 
-/* How can I make it where if there are two items within a cell, have them have a gap between them? */
-
+/* Cell with flexbox */
 .table-cell-flex {
   @apply flex items-center gap-2;
 }
