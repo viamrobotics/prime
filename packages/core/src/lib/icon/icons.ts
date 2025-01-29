@@ -48,6 +48,8 @@ export const IconPathsByName = {
   'check-circle': MDI.mdiCheckCircle,
   check: MDI.mdiCheck,
   'checkbox-blank-outline': MDI.mdiCheckboxBlankOutline,
+  'checkbox-indeterminate':
+    'M7 13h10v-2H7v2zm-2 8a1.4 1.4 0 01-1.4-1.4V4.4A1.4 1.4 0 015 3h14a1.4 1.4 0 011.4 1.4v15.2A1.4 1.4 0 0119 21H5z',
   'checkbox-marked': MDI.mdiCheckboxMarked,
   'chevron-double-up': MDI.mdiChevronDoubleUp,
   'chevron-down': MDI.mdiChevronDown,
@@ -138,6 +140,7 @@ export const IconPathsByName = {
   'stop-circle-outline': MDI.mdiStopCircleOutline,
   sync: MDI.mdiSync,
   table: MDI.mdiTable,
+  'tag-outline': MDI.mdiTagOutline,
   tools: MDI.mdiTools,
   'trash-can-outline': MDI.mdiTrashCanOutline,
   'toggle-switch': MDI.mdiToggleSwitch,
