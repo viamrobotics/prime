@@ -140,6 +140,7 @@ export const IconPathsByName = {
   'stop-circle-outline': MDI.mdiStopCircleOutline,
   sync: MDI.mdiSync,
   table: MDI.mdiTable,
+  'tag-outline': MDI.mdiTagOutline,
   tools: MDI.mdiTools,
   'trash-can-outline': MDI.mdiTrashCanOutline,
   'toggle-switch': MDI.mdiToggleSwitch,
