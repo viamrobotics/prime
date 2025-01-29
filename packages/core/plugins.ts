@@ -318,7 +318,6 @@ export const plugins = [
       { values: theme('cursor') }
     );
 
-
     /* Table style guide with custom classes */
     addComponents({
       '.grid-container': {
@@ -332,7 +331,8 @@ export const plugins = [
           {},
       },
       '.table-cell': {
-        '@apply min-h-12 content-center items-center truncate border-b border-light p-2': {},
+        '@apply min-h-12 content-center items-center truncate border-b border-light p-2':
+          {},
       },
       '.table-cell-link': {
         '@apply flex h-full w-full items-center hover:underline': {},
