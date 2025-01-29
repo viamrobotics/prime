@@ -26,14 +26,6 @@ import {
   RestrictedTextInput,
   SliderInput,
   VectorInput,
-  Table,
-  TableBody,
-  TableCell,
-  TableHeaderCell,
-  TableHeader,
-  TableRow,
-  ListTable,
-  ListTableCell,
   ToastBanner,
   ToastContainer,
   ToastVariant,
@@ -51,7 +43,6 @@ import {
   Progress,
 } from '$lib';
 import { uniqueId } from 'lodash-es';
-import '../lib/new_table/table.css';
 
 provideNotify();
 
@@ -464,418 +455,11 @@ let hoverDelayMS = 1000;
 const onHoverDelayMsInput = (event: Event) => {
   hoverDelayMS = Number.parseInt((event.target as HTMLInputElement).value, 10);
 };
-
-const variant = 'fixed';
-const columns = ['16%', '15%', '13%', '16%', '16%', '1fr', 'auto'];
 </script>
 
 <NotificationContainer />
 
 <div class="container mx-auto my-4 flex flex-col gap-8 p-4">
-  <!-- table using <table> -->
-  <h1 class="text-2xl">Table using <code>&lt;table&gt;</code></h1>
-
-  <table class="table">
-    <colgroup>
-      <col class="w-[16%]" />
-      <col class="w-[15%]" />
-      <col class="w-[10%]" />
-      <col class="w-[16%]" />
-      <col class="w-[20%]" />
-      <col class="w-full" />
-      <col class="w-auto" />
-    </colgroup>
-    <thead class="table-header">
-      <tr class="table-row">
-        <th class="table-cell">Text w/ link</th>
-        <th class="table-cell">Text w/o link</th>
-        <th class="table-cell">Mono text</th>
-        <th class="table-cell">Pill</th>
-        <th class="table-cell">Tag</th>
-        <th class="table-cell">Breadcrumbs</th>
-        <th class="table-cell">Icon</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Data Row 1 -->
-      <tr class="table-row">
-        <td class="table-cell">
-          <a
-            class="table-cell-link"
-            href="a link">machine-name</a
-          >
-        </td>
-        <td class="table-cell"> 1/22/2025 </td>
-        <td class="table-cell">
-          <span class="font-roboto-mono text-link">0.3.4</span>
-        </td>
-        <td class="table-cell">
-          <Pill
-            value="my-machine-123"
-            icon="multiplication-box"
-            href="https://i.imgur.com/aQCBxdr.png"
-            removable={false}
-          />
-        </td>
-        <td class="table-cell">
-          <span class="table-cell-flex">
-            <Pill
-              value="something.txt"
-              target="_self"
-              removable={true}
-            />
-            <Pill
-              value="labels.txt"
-              target="_self"
-              removable={true}
-            />
-          </span>
-        </td>
-        <td class="table-cell">
-          <Breadcrumbs crumbs={['module']} />
-        </td>
-        <td class="table-cell">
-          <IconButton
-            label="close"
-            icon="close"
-          />
-        </td>
-      </tr>
-      <!-- Data Row 2 -->
-      <tr class="table-row">
-        <td class="table-cell">
-          <a
-            class="table-cell-link"
-            href="a link">machine-name</a
-          >
-        </td>
-        <td class="table-cell">viam-dev</td>
-        <td class="table-cell"
-          ><span class="font-roboto-mono text-link">0.3.4</span>
-        </td>
-        <td class="table-cell"
-          ><Pill
-            value="my-machine-123"
-            icon="multiplication-box"
-            href="https://i.imgur.com/aQCBxdr.png"
-            removable={false}
-          /></td
-        >
-        <td class="table-cell">
-          <span class="table-cell-flex"
-            ><Pill
-              value="something.txt"
-              target="_self"
-              removable={false}
-            /><Pill
-              value="another.txt"
-              target="_self"
-              removable={false}
-            /></span
-          ></td
-        >
-        <td class="table-cell">
-          <span class="table-cell-flex">
-            <Breadcrumbs crumbs={['encoder']} />
-            <Breadcrumbs crumbs={['camera']} />
-          </span>
-        </td>
-        <td class="table-cell">
-          <IconButton
-            label="dots-horizontal"
-            icon="dots-horizontal"
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- table using <ul> -->
-  <h1 class="text-2xl">Table using <code>&lt;ul&gt;</code></h1>
-  <ul
-    role="table"
-    class="table"
-  >
-    <!-- Header Row -->
-    <li
-      role="row"
-      class="table-header table-row"
-    >
-      <span
-        role="columnheader"
-        class="table-cell w-[16%]">Text w/ link</span
-      >
-      <span
-        role="columnheader"
-        class="table-cell w-[15%]">Text w/o link</span
-      >
-      <span
-        role="columnheader"
-        class="table-cell w-[10%]">Mono text</span
-      >
-      <span
-        role="columnheader"
-        class="table-cell w-[16%]">Pill</span
-      >
-      <span
-        role="columnheader"
-        class="table-cell w-[20%]">Tag</span
-      >
-      <span
-        role="columnheader"
-        class="table-cell w-full">Breadcrumbs</span
-      >
-      <span
-        role="columnheader"
-        class="table-cell w-auto">Icon</span
-      >
-    </li>
-
-    <!-- Data Row 1 -->
-    <li
-      role="row"
-      class="table-row"
-    >
-      <span
-        role="cell"
-        class="table-cell w-[16%]"
-      >
-        <a
-          class="table-cell-link"
-          href="a link">machine-name</a
-        >
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-[15%]">1/22/2025</span
-      >
-      <span
-        role="cell"
-        class="table-cell w-[10%]"
-      >
-        <span class="font-roboto-mono text-link">0.3.4</span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-[16%]"
-      >
-        <Pill
-          value="my-machine-123"
-          icon="multiplication-box"
-          href="https://i.imgur.com/aQCBxdr.png"
-          removable={false}
-        />
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-[20%]"
-      >
-        <span class="table-cell-flex">
-          <Pill
-            value="something.txt"
-            target="_self"
-            removable={true}
-          />
-          <Pill
-            value="labels.txt"
-            target="_self"
-            removable={true}
-          />
-        </span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-full"
-      >
-        <Breadcrumbs crumbs={['module']} />
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-auto"
-      >
-        <IconButton
-          label="close"
-          icon="close"
-        />
-      </span>
-    </li>
-
-    <!-- Data Row 2 -->
-    <li
-      role="row"
-      class="table-row"
-    >
-      <span
-        role="cell"
-        class="table-cell w-[16%]"
-      >
-        <a
-          class="table-cell-link"
-          href="a link">machine-name</a
-        >
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-[15%]">viam-dev</span
-      >
-      <span
-        role="cell"
-        class="table-cell w-[10%]"
-      >
-        <span class="font-roboto-mono text-link">0.3.4</span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-[16%]"
-      >
-        <Pill
-          value="my-machine-123"
-          icon="multiplication-box"
-          href="https://i.imgur.com/aQCBxdr.png"
-          removable={false}
-        />
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-[20%]"
-      >
-        <span class="table-cell-flex">
-          <Pill
-            value="something.txt"
-            target="_self"
-            removable={false}
-          />
-          <Pill
-            value="another.txt"
-            target="_self"
-            removable={false}
-          />
-        </span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-full"
-      >
-        <span class="table-cell-flex">
-          <Breadcrumbs crumbs={['encoder']} />
-          <Breadcrumbs crumbs={['camera']} />
-        </span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell w-auto"
-      >
-        <IconButton
-          label="dots-horizontal"
-          icon="dots-horizontal"
-        />
-      </span>
-    </li>
-  </ul>
-  <!-- New table component -->
-
-  <h1 class="text-2xl">New table component</h1>
-  <ListTable
-    {variant}
-    cols={columns}
-    cx="overflow-hidden border border-b-0 border-light text-sm "
-  >
-    <!-- Header Row -->
-    <li class="list-table-row">
-      <ListTableCell header={true}>Text w/ link</ListTableCell>
-      <ListTableCell header={true}>Text w/o link</ListTableCell>
-      <ListTableCell header={true}>Mono text</ListTableCell>
-      <ListTableCell header={true}>Pill</ListTableCell>
-      <ListTableCell header={true}>Tag</ListTableCell>
-      <ListTableCell header={true}>Breadcrumbs</ListTableCell>
-      <ListTableCell header={true}>Icon</ListTableCell>
-    </li>
-    <!-- Data Rows -->
-    <li class="list-table-row hover:bg-extralight">
-      <ListTableCell>
-        <a
-          class="flex items-center font-medium hover:underline"
-          href="a link"
-          style="align-items: center; width: 100%; height: 100%;"
-        >
-          machine-name
-        </a>
-      </ListTableCell>
-      <ListTableCell>1/22/2025</ListTableCell>
-      <ListTableCell
-        ><span class="font-roboto-mono text-link">0.3.4</span></ListTableCell
-      >
-      <ListTableCell
-        ><Pill
-          value="my-machine-123"
-          icon="multiplication-box"
-          href="https://i.imgur.com/aQCBxdr.png"
-          removable={false}
-        /></ListTableCell
-      >
-      <ListTableCell>
-        <Pill
-          value="labels.txt"
-          target="_self"
-          removable={true}
-        /></ListTableCell
-      >
-      <ListTableCell>
-        <Breadcrumbs crumbs={['module']} /></ListTableCell
-      >
-      <ListTableCell
-        ><IconButton
-          label="close"
-          icon="close"
-        /></ListTableCell
-      >
-    </li>
-    <li class="list-table-row hover:bg-extralight">
-      <ListTableCell>
-        <a
-          class="flex items-center font-medium hover:underline"
-          href="a link"
-          style="align-items: center; width: 100%; height: 100%;"
-        >
-          machine-name
-        </a>
-      </ListTableCell>
-      <ListTableCell>viam-dev</ListTableCell>
-      <ListTableCell
-        ><span class="font-roboto-mono text-link">0.3.4</span></ListTableCell
-      >
-      <ListTableCell
-        ><Pill
-          value="my-machine-123"
-          icon="multiplication-box"
-          href="https://i.imgur.com/aQCBxdr.png"
-          removable={false}
-        /></ListTableCell
-      >
-      <ListTableCell
-        ><Pill
-          value="something.txt"
-          target="_self"
-          removable={false}
-        /><Pill
-          value="another.txt"
-          target="_self"
-          removable={false}
-        /></ListTableCell
-      >
-      <ListTableCell>
-        <Breadcrumbs crumbs={['encoder']} />
-        <Breadcrumbs crumbs={['camera']} /></ListTableCell
-      >
-      <ListTableCell
-        ><IconButton
-          label="dots-horizontal"
-          icon="dots-horizontal"
-        /></ListTableCell
-      >
-    </li>
-  </ListTable>
-
   <!-- Badge -->
   <h1 class="text-2xl">Badge</h1>
   <div class="flex items-center gap-2">
@@ -947,6 +531,7 @@ const columns = ['16%', '15%', '13%', '16%', '16%', '1fr', 'auto'];
   <Breadcrumbs crumbs={['Chocolate Chip', 'Oatmeal Raisin']} />
 
   <!-- Progress -->
+  <h1 class="text-2xl">Progress</h1>
   <Progress size="small" />
   <Progress size="medium" />
   <Progress size="large" />
@@ -1326,7 +911,7 @@ const columns = ['16%', '15%', '13%', '16%', '16%', '1fr', 'auto'];
     />
   </div>
 
-  <!-- Restricted Text Input -->
+  <!-- Restricted Text Input: TO BE REMOVED -->
   <h2 class="text-xl">Restricted Text Input</h2>
 
   <div class="flex gap-4">
@@ -2001,36 +1586,546 @@ const columns = ['16%', '15%', '13%', '16%', '16%', '1fr', 'auto'];
     </Switch>
   </div>
 
-  <!-- Table -->
+  <!-- table using <ul> -->
   <h1 class="text-2xl">Table</h1>
-  <Table cols={['10%', '90%']}>
-    <TableHeader>
-      <TableHeaderCell
-        >headerheaderheader (mario underwater theme)</TableHeaderCell
+  <ul
+    role="table"
+    class="grid-container grid gap-0"
+  >
+    <!-- Header Row -->
+    <li
+      role="row"
+      class="table-header grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
+    >
+      <span
+        role="columnheader"
+        class="table-header-cell">Text w/ link</span
       >
-      <TableHeaderCell>Another header</TableHeaderCell>
-    </TableHeader>
-    <TableBody cx="text-center">
-      <TableRow>
-        <TableCell
-          >the mitochondria is the powerhouse of the tablecell</TableCell
+      <span
+        role="columnheader"
+        class="table-header-cell">Text w/o link</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Mono text</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Pill</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Tag</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Breadcrumbs</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Icon</span
+      >
+    </li>
+
+    <!-- Data Row 1 -->
+    <li
+      role="row"
+      class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
+    >
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <a
+          class="table-cell-link"
+          href="a link">machine-name</a
         >
-        <TableCell>stuffs</TableCell>
-      </TableRow>
-      <TableRow variant="success">
-        <TableCell>stuff</TableCell>
-        <TableCell>stuffs</TableCell>
-      </TableRow>
-      <TableRow variant="error">
-        <TableCell>stuff</TableCell>
-        <TableCell>stuffs</TableCell>
-      </TableRow>
-      <TableRow variant="disabled">
-        <TableCell>stuff</TableCell>
-        <TableCell>stuffs</TableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
+      </span>
+      <span
+        role="cell"
+        class="table-cell">1/22/2025</span
+      >
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="font-roboto-mono text-link">0.3.4</span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <Pill
+          value="my-machine-123"
+          icon="multiplication-box"
+          removable={false}
+        />
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="table-cell-flex">
+          <Pill
+            value="something.txt"
+            removable={true}
+          />
+          <Pill
+            value="labels.txt"
+            removable={true}
+          />
+        </span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <Breadcrumbs crumbs={['module']} />
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <IconButton
+          label="close"
+          icon="close"
+        />
+      </span>
+    </li>
+
+    <!-- Data Row 2 -->
+    <li
+      role="row"
+      class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
+    >
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <a
+          class="table-cell-link"
+          href="a link">machine-name</a
+        >
+      </span>
+      <span
+        role="cell"
+        class="table-cell">viam-dev</span
+      >
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="font-roboto-mono text-link">0.3.4</span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <Pill
+          value="my-machine-123"
+          icon="multiplication-box"
+          removable={false}
+        />
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="table-cell-flex">
+          <Pill
+            value="something.txt"
+            removable={false}
+          />
+          <Pill
+            value="another.txt"
+            removable={false}
+          />
+        </span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="table-cell-flex">
+          <Breadcrumbs crumbs={['encoder']} />
+          <Breadcrumbs crumbs={['camera']} />
+        </span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <IconButton
+          label="dots-horizontal"
+          icon="dots-horizontal"
+        />
+      </span>
+    </li>
+    <li
+      role="row"
+      class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
+    >
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <a
+          class="table-cell-link"
+          href="a link">machine-name</a
+        >
+      </span>
+      <span
+        role="cell"
+        class="table-cell">viam-dev</span
+      >
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="font-roboto-mono text-link">0.3.4</span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        testing
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="table-cell-flex"> min </span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="table-cell-flex"> width </span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+      </span>
+    </li>
+  </ul>
+
+  <!-- example table design guide for all machines dashboard -->
+  <h1 class="text-xl">Example: All machines dashboard</h1>
+
+  <ul
+    role="table"
+    class="grid-container grid gap-0"
+  >
+    <!-- header row -->
+    <li
+      role="row"
+      class=" table-header grid grid-cols-[12.5%_12.5%_12.5%_12.5%_12.5%_12.5%_12.5%_12.5%]"
+    >
+      <span
+        role="columnheader"
+        class="table-header-cell">Location</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Machine</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Part</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Fragments</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Status</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Viam server version</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Viam agent version</span
+      >
+      <span
+        role="columnheader"
+        class="table-header-cell">Architecture</span
+      >
+    </li>
+
+    <!-- data row 1 -->
+    <li
+      role="row"
+      class="grid grid-cols-[12.5%_12.5%_12.5%_12.5%_12.5%_12.5%_12.5%_12.5%]"
+    >
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <Pill
+          value="officetemp"
+          icon="domain"
+          removable={false}
+        />
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <Pill
+          value="1"
+          icon="broadcast"
+          removable={false}
+        />
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <Pill
+          value="1-main"
+          icon="multiplication-box"
+          removable={false}
+        />
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <Pill
+          value="microtemp"
+          icon="viam-fragment"
+          removable={false}
+        />
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <a
+          href="/"
+          class="group flex items-center gap-1 hover:underline"
+        >
+          <span class="shrink-0"><Icon name="broadcast" /> </span>
+          <span> Awaiting setup </span>
+          <Icon
+            name="open-in-new"
+            cx="shrink-0 text-gray-6 group-hover:text-gray-7"
+          />
+        </a>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        <span class="font-roboto-mono text-link">0.3.4</span>
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        -
+      </span>
+      <span
+        role="cell"
+        class="table-cell"
+      >
+        Darwin > Arm64
+      </span>
+    </li>
+  </ul>
+
+  <!-- example table design guide for all machines dashboard -->
+  <h1 class="text-xl">Example: Teleop workspaces</h1>
+
+  <div class="w-[80%] align-middle">
+    <ul
+      role="table"
+      class="grid-container grid gap-0"
+    >
+      <!-- header row -->
+      <li
+        role="row"
+        class=" table-header grid grid-cols-[60%_1fr_auto]"
+      >
+        <span
+          role="columnheader"
+          class="table-header-cell">Name</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Last edited</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell"
+        ></span>
+      </li>
+
+      <!-- data row 1 -->
+      <li
+        role="row"
+        class="grid grid-cols-[60%_1fr_auto]"
+      >
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            class="table-cell-link"
+            href="https://app.viam.com/teleop/679a5a2df41212a99dec7168"
+            >av-pi4-beye</a
+          >
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          1/29/2025
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <IconButton
+            label="dots-horizontal"
+            icon="dots-horizontal"
+          />
+        </span>
+      </li>
+
+      <!-- data row 2 -->
+      <li
+        role="row"
+        class="grid grid-cols-[60%_1fr_auto]"
+      >
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            class="table-cell-link"
+            href="https://app.viam.com/teleop/679a5a2df41212a99dec7168"
+            >1900 Broadway 6 Floor Temperature Sensors</a
+          >
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          1/22/2025
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <IconButton
+            label="dots-horizontal"
+            icon="dots-horizontal"
+          />
+        </span>
+      </li>
+
+      <!-- data row 3 -->
+      <li
+        role="row"
+        class="grid grid-cols-[60%_1fr_auto]"
+      >
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            class="table-cell-link"
+            href="https://app.viam.com/teleop/679a5a2df41212a99dec7168"
+            >bend air quality</a
+          >
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          1/22/2025
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <IconButton
+            label="dots-horizontal"
+            icon="dots-horizontal"
+          />
+        </span>
+      </li>
+
+      <!-- data row 4 -->
+      <li
+        role="row"
+        class="grid grid-cols-[60%_1fr_auto]"
+      >
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            class="table-cell-link"
+            href="https://app.viam.com/teleop/679a5a2df41212a99dec7168"
+            >untitled-workspace 5</a
+          >
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          1/22/2025
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <IconButton
+            label="dots-horizontal"
+            icon="dots-horizontal"
+          />
+        </span>
+      </li>
+
+      <!-- data row 5 -->
+      <li
+        role="row"
+        class="grid grid-cols-[60%_1fr_auto]"
+      >
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            class="table-cell-link"
+            href="https://app.viam.com/teleop/679a5a2df41212a99dec7168"
+            >🚢 air quality</a
+          >
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          1/22/2025
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <IconButton
+            label="dots-horizontal"
+            icon="dots-horizontal"
+          />
+        </span>
+      </li>
+    </ul>
+  </div>
 
   <!-- Tabs -->
   <h1 class="text-2xl">Tabs</h1>
