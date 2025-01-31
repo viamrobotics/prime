@@ -1,3 +1,18 @@
+<script
+  lang="ts"
+  context="module"
+>
+export interface AutocompleteInputItem {
+  value: string;
+  label: string;
+  description?: string;
+  icon?: string;
+  group?: string;
+}
+
+type Option = AutocompleteInputItem | string;
+</script>
+
 <script lang="ts">
 import cx from 'classnames';
 import Select from 'svelte-select';
@@ -10,16 +25,6 @@ import Icon from '../icon/icon.svelte';
 
 type Events = ComponentEvents<Select>;
 
-interface SelectItem {
-  value: string;
-  label: string;
-  description?: string;
-  icon?: string;
-  group?: string;
-}
-
-type Option = SelectItem | string;
-
 type DisallowedProps = 'items' | 'showChevron' | 'hideEmptyState' | 'hasError';
 
 interface $$Props extends Omit<ComponentProps<Select>, DisallowedProps> {
@@ -27,7 +32,7 @@ interface $$Props extends Omit<ComponentProps<Select>, DisallowedProps> {
   options: Option[];
   state?: InputState;
   cx?: cx.Argument;
-  onBlur?: (event: Events['blur']['detail']) => void;
+  onBlur?: (event: CustomEvent<string>) => void;
   onChange?: (event: Events['change']) => void;
   onClear?: (event: Events['clear']) => void;
   onFilter?: (event: Events['filter']) => void;
@@ -70,15 +75,22 @@ $: icons = normalizedOptions.map((option) => option.icon) as (
 $: warnClasses = state === InputStates.WARN ? 'border-warning-bright' : '';
 
 const { colors, borderColor } = theme.extend;
+
+let listOpen = false;
 </script>
 
 <Select
+  bind:listOpen
   showChevron
   hideEmptyState
   containerStyles="padding-left: 0.375rem {containerStyles}"
   class="{cx(cxArgument)} {className} {warnClasses}"
   items={normalizedOptions}
-  inputAttributes={{ autocomplete: 'off', ...inputAttributes }}
+  inputAttributes={{
+    autocomplete: 'off',
+    'aria-expanded': listOpen,
+    ...inputAttributes,
+  }}
   hasError={state === InputStates.ERROR}
   --border="1px solid {state === InputStates.WARN
     ? colors['warning-medium']
@@ -126,6 +138,8 @@ const { colors, borderColor } = theme.extend;
     let:item
     let:index
   >
+    <!-- @todo remove all eslint-disable once Svelte 5 eslint improvements land -->
+    <!-- eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -->
     {@const icon = icons[index]}
     <div class="flex items-center gap-2">
       {#if icon}
@@ -135,15 +149,19 @@ const { colors, borderColor } = theme.extend;
         />
       {/if}
       <div class="flex w-full flex-col flex-wrap overflow-x-hidden">
+        <!-- eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -->
         <div class="w-full min-w-0 text-wrap break-words">{item.label}</div>
+        <!-- eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -->
         {#if item.description}
           <div class="break-word w-full min-w-0 text-wrap text-[0.6rem]">
+            <!-- eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -->
             {item.description}
           </div>
         {/if}
       </div>
     </div>
   </div>
+
   <Icon
     slot="chevron-icon"
     name="chevron-down"

@@ -37,4 +37,7 @@ if (!global.PointerEvent) {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   global.PointerEvent = PointerEvent as any;
+
+  // @TODO(mp): remove once in app with vitest browser mode enabled
+  Element.prototype.scrollIntoView = () => null;
 }

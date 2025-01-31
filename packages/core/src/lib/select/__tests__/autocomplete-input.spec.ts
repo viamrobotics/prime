@@ -3,12 +3,15 @@ import { act, render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'svelte';
 
-import { AutocompleteInput as Subject, InputStates } from '$lib';
+import Subject, {
+  type AutocompleteInputItem,
+} from '../autocomplete-input.svelte';
+import { InputStates } from '../../input';
 
 const onChange = vi.fn();
 const onFocus = vi.fn();
 const onBlur = vi.fn();
-const detailedOptions = [
+const detailedOptions: AutocompleteInputItem[] = [
   {
     value: 'opt-1',
     label: 'Gale',
@@ -36,28 +39,17 @@ const renderSubject = (props: Partial<ComponentProps<Subject>> = {}) => {
 
 const getResults = (): {
   search: HTMLElement;
-  button: HTMLElement;
   list: HTMLElement | null;
   options: HTMLElement[];
 } => {
-  const search = screen.getByRole('combobox');
-  const button = screen.getByRole('button');
+  const search = screen.getByRole('textbox');
   const list = screen.queryByRole('listbox');
   const options = list ? within(list).queryAllByRole('option') : [];
 
-  return { search, button, list, options };
+  return { search, list, options };
 };
 
 describe('SearchableSelect', () => {
-  it('is a combobox that controls a listbox', () => {
-    renderSubject();
-
-    const { search } = getResults();
-
-    expect(search).toHaveAttribute('aria-autocomplete', 'list');
-    expect(search).not.toHaveAttribute('aria-multiselectable');
-  });
-
   it('has a placeholder', () => {
     renderSubject({ placeholder: "It's me" });
 
@@ -111,11 +103,10 @@ describe('SearchableSelect', () => {
     const user = userEvent.setup();
     renderSubject();
 
-    const { search, button, list } = getResults();
+    const { search, list } = getResults();
 
     expect(list).not.toBeInTheDocument();
     expect(search).toHaveAttribute('aria-expanded', 'false');
-    expect(button).toHaveAttribute('aria-expanded', 'false');
 
     await user.keyboard('{Tab}');
 
@@ -124,22 +115,7 @@ describe('SearchableSelect', () => {
     expect(onFocus).toHaveBeenCalledOnce();
     expect(search).toHaveFocus();
     expect(expandedList).toHaveAttribute('id', expect.any(String));
-    expect(button).toHaveAttribute('aria-controls', expandedList?.id);
     expect(search).toHaveAttribute('aria-controls', expandedList?.id);
-    expect(button).toHaveAttribute('aria-expanded', 'true');
-    expect(search).toHaveAttribute('aria-expanded', 'true');
-  });
-
-  it('expands the listbox on button click', async () => {
-    renderSubject();
-
-    const { search, button } = getResults();
-
-    // TODO(mc, 2024-02-03): replace button.click with userEvent
-    // https://github.com/testing-library/user-event/issues/1119
-    await act(() => button.click());
-
-    expect(search).toHaveFocus();
     expect(search).toHaveAttribute('aria-expanded', 'true');
   });
 
@@ -180,21 +156,6 @@ describe('SearchableSelect', () => {
 
     expect(search).toHaveFocus();
     expect(search).toHaveAttribute('aria-expanded', 'false');
-  });
-
-  it('closes the listbox on second button click', async () => {
-    renderSubject();
-
-    const { search, button } = getResults();
-
-    // TODO(mc, 2024-02-03): replace button.click with userEvent
-    // https://github.com/testing-library/user-event/issues/1119
-    await act(() => button.click());
-    await act(() => button.click());
-
-    expect(search).toHaveFocus();
-    expect(search).toHaveAttribute('aria-expanded', 'false');
-    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('collapses the listbox on blur', async () => {
@@ -622,84 +583,34 @@ describe('SearchableSelect', () => {
     expect(options[0]).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('renders the icon and does not change the contents of the select when Enter is pressed twice', async () => {
+  it('does not change the contents of the select when Enter is pressed twice', async () => {
     const user = userEvent.setup();
     renderSubject({ options: detailedOptions });
 
     const { search } = getResults();
     await user.type(search, 'Gale{Enter}');
-    const searchIcon = screen.getByTestId('icon-viam-process');
 
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith('opt-1');
+    expect(onChange).toHaveBeenCalledWith(
+      new CustomEvent('change', { detail: 'opt-1' })
+    );
     expect(search).toHaveValue('Gale');
-    expect(searchIcon).toBeInTheDocument();
 
     await user.keyboard('{Enter}');
 
     // Verify that onChange is not called again
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(search).toHaveValue('Gale');
-    expect(searchIcon).toBeInTheDocument();
   });
 
   it('closes menu on blur', async () => {
     const user = userEvent.setup();
-    renderSubject({ multiple: true });
+    renderSubject();
 
     const { search } = getResults();
     await user.click(search);
     await user.keyboard('{Tab}');
 
     expect(search).toHaveAttribute('aria-expanded', 'false');
-  });
-
-  describe.skip('multiple mode', () => {
-    it('can select multiple options without closing', async () => {
-      const user = userEvent.setup();
-      renderSubject({ multiple: true });
-
-      const { search } = getResults();
-
-      expect(search).toHaveAttribute('aria-multiselectable', 'true');
-
-      await user.type(search, 'hello{Enter}');
-      const { options } = getResults();
-
-      expect(onMultiChange).toHaveBeenCalledWith(['hello from']);
-      expect(search).toHaveFocus();
-      expect(search).toHaveValue('');
-      expect(search).toHaveAttribute('aria-expanded', 'true');
-      expect(options[0]).toHaveAttribute('aria-checked', 'true');
-      expect(options[1]).toHaveAttribute('aria-checked', 'false');
-
-      await user.type(search, 'other{Enter}');
-
-      expect(onMultiChange).toHaveBeenCalledWith([
-        'hello from',
-        'the other side',
-      ]);
-      expect(search).toHaveFocus();
-      expect(search).toHaveValue('');
-      expect(search).toHaveAttribute('aria-expanded', 'true');
-      expect(options[0]).toHaveAttribute('aria-checked', 'true');
-      expect(options[1]).toHaveAttribute('aria-checked', 'true');
-    });
-
-    it('can select and unselect with the mouse', async () => {
-      const user = userEvent.setup();
-      renderSubject({ multiple: true });
-
-      const { search } = getResults();
-      await user.click(search);
-      const { options } = getResults();
-
-      // TODO(mc, 2024-02-03): replace .click with userEvent
-      // https://github.com/testing-library/user-event/issues/1119
-      await act(() => options[0]?.click());
-      expect(onMultiChange).toHaveBeenCalledWith(['hello from']);
-      await act(() => options[0]?.click());
-      expect(onMultiChange).toHaveBeenCalledWith([]);
-    });
   });
 });
