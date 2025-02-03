@@ -57,6 +57,7 @@ export const IconPathsByName = {
   'chevron-right': MDI.mdiChevronRight,
   'chevron-up': MDI.mdiChevronUp,
   'circle-md': MDI.mdiCircleMedium,
+  'clock-outline': MDI.mdiClockOutline,
   close: MDI.mdiClose,
   'code-braces': MDI.mdiCodeBraces,
   'code-json': MDI.mdiCodeJson,
