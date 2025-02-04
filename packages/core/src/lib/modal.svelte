@@ -50,7 +50,7 @@ import { clickOutside } from '$lib';
 export let isOpen: boolean;
 
 /** The variant of the modal. */
-export let variant: 'small' | 'medium' | '' = '';
+export let variant: 'small' | 'medium' | 'fit' | '' = '';
 
 export let role = 'dialog';
 
@@ -96,6 +96,7 @@ onMount(() => {
           'max-h-[400px] max-w-[480px]': variant === '',
           'max-h-[600px] max-w-[800px]': variant === 'medium',
           'max-h-[320px] max-w-[400px]': variant === 'small',
+          // no max size for variant === 'fit'. Sized from content.
           'overflow-y-auto': true,
         }
       )}
