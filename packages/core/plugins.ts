@@ -321,7 +321,8 @@ export const plugins = [
     /* Table style guide with custom classes */
     addComponents({
       '.grid-container': {
-        '@apply w-full min-w-[1200px] border border-b-0 border-light text-sm': {},
+        '@apply w-full min-w-[1200px] border border-b-0 border-light text-sm':
+          {},
       },
       '.table-header': {
         '@apply h-8 bg-light text-xs': {},
