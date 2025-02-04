@@ -50,7 +50,7 @@
     "@mdi/js": "^7.3.67",
     "classnames": "^2.3.2",
     "lodash-es": "^4.17.21",
-    "nanoid": "^5.0.4",
+    "nanoid": "^5.0.9",
     "prism-themes": "^1.9.0",
     "prismjs": "^1.29.0"
   },
