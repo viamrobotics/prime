@@ -321,24 +321,24 @@ export const plugins = [
     /* Table style guide with custom classes */
     addComponents({
       '.grid-container': {
-        '@apply w-full border border-b-0 border-light text-sm': {},
+        '@apply w-full min-w-[1200px] border border-b-0 border-light text-sm': {},
       },
       '.table-header': {
         '@apply h-8 bg-light text-xs': {},
       },
       '.table-header-cell': {
-        '@apply h-8 min-h-0 content-center items-center truncate border-b border-light p-2 text-subtle-1':
+        '@apply h-8 min-h-0 content-center items-center border-b border-light p-2 text-subtle-1 whitespace-normal break-words':
           {},
       },
       '.table-cell': {
-        '@apply min-h-12 content-center items-center truncate border-b border-light p-2':
+        '@apply min-h-12 content-center items-center border-b border-light p-2 whitespace-normal break-words':
           {},
       },
       '.table-cell-link': {
         '@apply flex h-full w-full items-center hover:underline': {},
       },
       '.table-cell-flex': {
-        '@apply flex items-center gap-2': {},
+        '@apply flex items-center gap-2 flex-wrap': {},
       },
     });
   }),

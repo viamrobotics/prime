@@ -539,13 +539,13 @@ const onHoverDelayMsInput = (event: Event) => {
   <!-- Button -->
   <h1 class="text-2xl">Button</h1>
 
-  <div class="flex gap-4">
+  <div class="flex max-w-full gap-4 overflow-x-auto">
     <Button on:click={() => (buttonClickedTimes += 1)}>
       Clicked {buttonClickedTimes} times!
     </Button>
   </div>
 
-  <div class="flex gap-4">
+  <div class="flex max-w-full gap-4 overflow-x-auto">
     <Button>Primary</Button>
     <Button
       disabled
@@ -563,7 +563,7 @@ const onHoverDelayMsInput = (event: Event) => {
     <Button variant="outline-danger">Outline Danger</Button>
   </div>
 
-  <div class="flex gap-4">
+  <div class="flex max-w-full gap-4 overflow-x-auto">
     <Button icon="camera-outline">Primary</Button>
     <Button
       disabled
@@ -1040,7 +1040,7 @@ const onHoverDelayMsInput = (event: Event) => {
 
   <!-- Label -->
   <h1 class="text-2xl">Label</h1>
-  <div class="flex gap-4">
+  <div class="flex max-w-full gap-4 overflow-x-auto">
     <Label>
       Default
       <Input
@@ -1163,7 +1163,7 @@ const onHoverDelayMsInput = (event: Event) => {
 
   <!-- Pill -->
   <h1 class="text-2xl">Pill</h1>
-  <div class="flex gap-4">
+  <div class="flex max-w-full gap-4 overflow-x-auto">
     <Pill />
     <Pill value="Foo" />
     <Pill
@@ -1588,360 +1588,364 @@ const onHoverDelayMsInput = (event: Event) => {
 
   <!-- table using <ul> -->
   <h1 class="text-2xl">Table</h1>
-  <ul
-    role="table"
-    class="grid-container grid gap-0"
-  >
-    <!-- Header Row -->
-    <li
-      role="row"
-      class="table-header grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
+  <div class="max-w-full overflow-x-auto">
+    <ul
+      role="table"
+      class="grid-container grid gap-0"
     >
-      <span
-        role="columnheader"
-        class="table-header-cell">Text w/ link</span
+      <!-- Header Row -->
+      <li
+        role="row"
+        class="table-header grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
       >
-      <span
-        role="columnheader"
-        class="table-header-cell">Text w/o link</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Mono text</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Pill</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Tag</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Breadcrumbs</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Icon</span
-      >
-    </li>
-
-    <!-- Data Row 1 -->
-    <li
-      role="row"
-      class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
-    >
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <a
-          class="table-cell-link"
-          href="a link">machine-name</a
+        <span
+          role="columnheader"
+          class="table-header-cell">Text w/ link</span
         >
-      </span>
-      <span
-        role="cell"
-        class="table-cell">1/22/2025</span
+        <span
+          role="columnheader"
+          class="table-header-cell">Text w/o link</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Mono text</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Pill</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Tag</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Breadcrumbs</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Icon</span
+        >
+      </li>
+
+      <!-- Data Row 1 -->
+      <li
+        role="row"
+        class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
       >
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <span class="font-roboto-mono text-link">0.3.4</span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <Pill
-          value="my-machine-123"
-          icon="multiplication-box"
-          removable={false}
-        />
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <span class="table-cell-flex">
-          <Pill
-            value="something.txt"
-            removable={true}
-          />
-          <Pill
-            value="labels.txt"
-            removable={true}
-          />
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            class="table-cell-link"
+            href="a link">machine-name</a
+          >
         </span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <Breadcrumbs crumbs={['module']} />
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <IconButton
-          label="close"
-          icon="close"
-        />
-      </span>
-    </li>
-
-    <!-- Data Row 2 -->
-    <li
-      role="row"
-      class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
-    >
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <a
-          class="table-cell-link"
-          href="a link">machine-name</a
+        <span
+          role="cell"
+          class="table-cell">1/22/2025</span
         >
-      </span>
-      <span
-        role="cell"
-        class="table-cell">viam-dev</span
-      >
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <span class="font-roboto-mono text-link">0.3.4</span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <Pill
-          value="my-machine-123"
-          icon="multiplication-box"
-          removable={false}
-        />
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <span class="table-cell-flex">
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <span class="font-roboto-mono text-link">0.3.4</span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
           <Pill
-            value="something.txt"
-            removable={false}
-          />
-          <Pill
-            value="another.txt"
+            value="my-machine-123"
+            icon="multiplication-box"
             removable={false}
           />
         </span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <span class="table-cell-flex">
-          <Breadcrumbs crumbs={['encoder']} />
-          <Breadcrumbs crumbs={['camera']} />
-        </span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <IconButton
-          label="dots-horizontal"
-          icon="dots-horizontal"
-        />
-      </span>
-    </li>
-    <li
-      role="row"
-      class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
-    >
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <a
-          class="table-cell-link"
-          href="a link">machine-name</a
+        <span
+          role="cell"
+          class="table-cell"
         >
-      </span>
-      <span
-        role="cell"
-        class="table-cell">viam-dev</span
+          <span class="table-cell-flex">
+            <Pill
+              value="something.txt"
+              removable={true}
+            />
+            <Pill
+              value="labels.txt"
+              removable={true}
+            />
+          </span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <Breadcrumbs crumbs={['module']} />
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <IconButton
+            label="close"
+            icon="close"
+          />
+        </span>
+      </li>
+
+      <!-- Data Row 2 -->
+      <li
+        role="row"
+        class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
       >
-      <span
-        role="cell"
-        class="table-cell"
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            class="table-cell-link"
+            href="a link">machine-name</a
+          >
+        </span>
+        <span
+          role="cell"
+          class="table-cell">viam-dev</span
+        >
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <span class="font-roboto-mono text-link">0.3.4</span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <Pill
+            value="my-machine-123"
+            icon="multiplication-box"
+            removable={false}
+          />
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <span class="table-cell-flex">
+            <Pill
+              value="something.txt"
+              removable={false}
+            />
+            <Pill
+              value="another.txt"
+              removable={false}
+            />
+          </span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <span class="table-cell-flex">
+            <Breadcrumbs crumbs={['encoder']} />
+            <Breadcrumbs crumbs={['camera']} />
+          </span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <IconButton
+            label="dots-horizontal"
+            icon="dots-horizontal"
+          />
+        </span>
+      </li>
+      <li
+        role="row"
+        class=" grid grid-cols-[16%_13%_10%_16%_20%_20%_auto]"
       >
-        <span class="font-roboto-mono text-link">0.3.4</span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        testing
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <span class="table-cell-flex"> min </span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <span class="table-cell-flex"> width </span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-      </span>
-    </li>
-  </ul>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            class="table-cell-link"
+            href="a link">machine-name</a
+          >
+        </span>
+        <span
+          role="cell"
+          class="table-cell">viam-dev</span
+        >
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <span class="font-roboto-mono text-link">0.3.4</span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          testing
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <span class="table-cell-flex"> min </span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <span class="table-cell-flex"> width </span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+        </span>
+      </li>
+    </ul>
+  </div>
 
   <!-- example table design guide for all machines dashboard -->
   <h1 class="text-xl">Example: All machines dashboard</h1>
 
-  <ul
-    role="table"
-    class="grid-container grid gap-0"
-  >
-    <!-- header row -->
-    <li
-      role="row"
-      class=" table-header grid grid-cols-[12.5%_12.5%_12.5%_12.5%_12.5%_12.5%_12.5%_12.5%]"
+  <div class="max-w-full overflow-x-auto">
+    <ul
+      role="table"
+      class="grid-container grid gap-0"
     >
-      <span
-        role="columnheader"
-        class="table-header-cell">Location</span
+      <!-- header row -->
+      <li
+        role="row"
+        class=" table-header grid grid-cols-[11%_12%_12%_12.5%_15%_12.5%_12.5%_12.5%]"
       >
-      <span
-        role="columnheader"
-        class="table-header-cell">Machine</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Part</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Fragments</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Status</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Viam server version</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Viam agent version</span
-      >
-      <span
-        role="columnheader"
-        class="table-header-cell">Architecture</span
-      >
-    </li>
-
-    <!-- data row 1 -->
-    <li
-      role="row"
-      class="grid grid-cols-[12.5%_12.5%_12.5%_12.5%_12.5%_12.5%_12.5%_12.5%]"
-    >
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <Pill
-          value="officetemp"
-          icon="domain"
-          removable={false}
-        />
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <Pill
-          value="1"
-          icon="broadcast"
-          removable={false}
-        />
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <Pill
-          value="1-main"
-          icon="multiplication-box"
-          removable={false}
-        />
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <Pill
-          value="microtemp"
-          icon="viam-fragment"
-          removable={false}
-        />
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <a
-          href="/"
-          class="group flex items-center gap-1 hover:underline"
+        <span
+          role="columnheader"
+          class="table-header-cell">Location</span
         >
-          <span class="shrink-0"><Icon name="broadcast" /> </span>
-          <span> Awaiting setup </span>
-          <Icon
-            name="open-in-new"
-            cx="shrink-0 text-gray-6 group-hover:text-gray-7"
+        <span
+          role="columnheader"
+          class="table-header-cell">Machine</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Part</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Fragments</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Status</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Viam server version</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Viam agent version</span
+        >
+        <span
+          role="columnheader"
+          class="table-header-cell">Architecture</span
+        >
+      </li>
+
+      <!-- data row 1 -->
+      <li
+        role="row"
+        class="grid grid-cols-[11%_12%_12%_12.5%_15%_12.5%_12.5%_12.5%]"
+      >
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <Pill
+            value="officetemp"
+            icon="domain"
+            removable={false}
           />
-        </a>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        <span class="font-roboto-mono text-link">0.3.4</span>
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        -
-      </span>
-      <span
-        role="cell"
-        class="table-cell"
-      >
-        Darwin > Arm64
-      </span>
-    </li>
-  </ul>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <Pill
+            value="1"
+            icon="broadcast"
+            removable={false}
+          />
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <Pill
+            value="1-main"
+            icon="multiplication-box"
+            removable={false}
+          />
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <Pill
+            value="microtemp"
+            icon="viam-fragment"
+            removable={false}
+          />
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <a
+            href="/"
+            class="group flex items-center gap-1 hover:underline"
+          >
+            <span class="shrink-0"><Icon name="broadcast" /> </span>
+            <span> Awaiting setup </span>
+            <Icon
+              name="open-in-new"
+              cx="shrink-0 text-gray-6 group-hover:text-gray-7"
+            />
+          </a>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          <span class="font-roboto-mono text-link">0.3.4</span>
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          -
+        </span>
+        <span
+          role="cell"
+          class="table-cell"
+        >
+          Darwin > Arm64
+        </span>
+      </li>
+    </ul>
+  </div>
 
   <!-- example table design guide for all machines dashboard -->
   <h1 class="text-xl">Example: Teleop workspaces</h1>
 
-  <div class="w-[80%] align-middle">
+  <div class="max-w-full overflow-x-auto">
     <ul
       role="table"
       class="grid-container grid gap-0"
@@ -2188,7 +2192,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <!-- Toast Banner -->
   <h1 class="text-2xl">Toast Banner</h1>
 
-  <div class="flex gap-4">
+  <div class="flex max-w-full gap-4 overflow-x-auto">
     <ToastBanner
       message="Test Message"
       variant={ToastVariant.Success}
@@ -2225,7 +2229,7 @@ const onHoverDelayMsInput = (event: Event) => {
       }}
     />
   </div>
-  <div class="flex gap-4">
+  <div class="flex max-w-full gap-4 overflow-x-auto">
     <ToastBanner
       message="Test Message"
       variant={ToastVariant.Success}
@@ -2296,7 +2300,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <!-- Toast Container -->
   <h1 class="text-2xl">Toast Container</h1>
 
-  <div class="flex gap-4">
+  <div class="flex max-w-full gap-4 overflow-x-auto">
     <ToastContainer />
     <div>
       <Button
@@ -2339,7 +2343,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <!-- Toggle Buttons -->
   <h1 class="text-2xl">Toggle Buttons</h1>
 
-  <div class="flex items-end gap-4">
+  <div class="flex max-w-full items-end gap-4 overflow-x-auto">
     <ToggleButtons
       options={['Opt 1', 'Opt 2', 'Opt 3']}
       selected={toggleButtonSelecteds[0]}
@@ -2375,7 +2379,7 @@ const onHoverDelayMsInput = (event: Event) => {
 
   <!-- Tooltip -->
   <h1 class="text-2xl">Tooltip</h1>
-  <div class="flex flex-wrap items-start gap-4">
+  <div class="flex max-w-full flex-wrap items-start gap-4 overflow-x-auto">
     <Tooltip let:tooltipID>
       <p aria-describedby={tooltipID}>This element has a top tooltip.</p>
       <p slot="description">
