@@ -142,6 +142,7 @@ export const IconPathsByName = {
   sync: MDI.mdiSync,
   table: MDI.mdiTable,
   'tag-outline': MDI.mdiTagOutline,
+  'text-search': MDI.mdiTextSearch,
   tools: MDI.mdiTools,
   'trash-can-outline': MDI.mdiTrashCanOutline,
   'toggle-switch': MDI.mdiToggleSwitch,
