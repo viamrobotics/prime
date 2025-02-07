@@ -320,15 +320,15 @@ export const plugins = [
 
     /* Table style guide with custom classes */
     addComponents({
-      '.grid-container': {
+      '.table-container': {
         '@apply w-full min-w-[1200px] border border-b-0 border-light text-sm':
           {},
       },
       '.table-header': {
-        '@apply h-8 bg-light text-xs': {},
+        '@apply h-6 bg-light text-xs': {},
       },
       '.table-header-cell': {
-        '@apply h-8 min-h-0 content-center items-center border-b border-light p-2 text-subtle-1 whitespace-normal break-words':
+        '@apply h-6 min-h-0 content-center items-center border-b border-light px-2 text-subtle-1 whitespace-normal break-words':
           {},
       },
       '.table-cell': {

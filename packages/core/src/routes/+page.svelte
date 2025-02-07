@@ -1591,7 +1591,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="max-w-full overflow-x-auto">
     <ul
       role="table"
-      class="grid-container grid gap-0"
+      class="table-container grid gap-0"
     >
       <!-- Header Row -->
       <li
@@ -1818,7 +1818,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="max-w-full overflow-x-auto">
     <ul
       role="table"
-      class="grid-container grid gap-0"
+      class="table-container grid gap-0"
     >
       <!-- header row -->
       <li
@@ -1948,7 +1948,7 @@ const onHoverDelayMsInput = (event: Event) => {
   <div class="max-w-full overflow-x-auto">
     <ul
       role="table"
-      class="grid-container grid gap-0"
+      class="table-container grid gap-0"
     >
       <!-- header row -->
       <li
