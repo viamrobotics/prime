@@ -2,7 +2,7 @@ import plugin from 'tailwindcss/plugin';
 import type { OptionalConfig } from 'tailwindcss/types/config';
 
 export const plugins = [
-  plugin(({ addUtilities, matchUtilities, theme }) => {
+  plugin(({ addUtilities, matchUtilities, theme, addComponents }) => {
     addUtilities({
       '.scrollbar-thin': {
         'scrollbar-width': 'thin',
@@ -317,5 +317,30 @@ export const plugins = [
       },
       { values: theme('cursor') }
     );
+
+    /* Table style guide with custom classes */
+    addComponents({
+      '.table-container': {
+        '@apply w-full min-w-[1200px] border border-b-0 border-light text-sm':
+          {},
+      },
+      '.table-header': {
+        '@apply h-6 bg-light text-xs': {},
+      },
+      '.table-header-cell': {
+        '@apply h-6 min-h-0 content-center items-center border-b border-light px-2 text-subtle-1 whitespace-normal break-words':
+          {},
+      },
+      '.table-cell': {
+        '@apply min-h-12 content-center items-center border-b border-light p-2 whitespace-normal break-words':
+          {},
+      },
+      '.table-cell-link': {
+        '@apply flex h-full w-full items-center hover:underline': {},
+      },
+      '.table-cell-flex': {
+        '@apply flex items-center gap-2 flex-wrap': {},
+      },
+    });
   }),
 ] satisfies OptionalConfig['plugins'];
