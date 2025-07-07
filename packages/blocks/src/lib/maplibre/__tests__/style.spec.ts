@@ -1,4 +1,20 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+// Mock maplibre-gl module to avoid URL.createObjectURL issues
+vi.mock('maplibre-gl', () => ({
+  LngLat: class {
+    constructor(
+      public lng: number,
+      public lat: number
+    ) {}
+  },
+  Map: vi.fn(),
+  NavigationControl: vi.fn(),
+  GeolocateControl: vi.fn(),
+  FullscreenControl: vi.fn(),
+  ScaleControl: vi.fn(),
+}));
+
 import { getStyleSpecification } from '../style';
 import { MapProviders } from '../types';
 
@@ -21,7 +37,7 @@ describe('MapLibre Provider', () => {
 
       expect(style.version).toBe(8);
       expect(style.sources).toHaveProperty('google-maps');
-      expect(style.sources).toHaveProperty('google-satellite');
+      expect(style.sources).toHaveProperty('satellite');
       expect(style.layers).toHaveLength(2);
     });
 
