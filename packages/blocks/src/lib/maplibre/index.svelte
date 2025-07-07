@@ -6,7 +6,13 @@
   Children will mount once the map is fully loaded.
 
   ```svelte
-    <MapLibre>
+    <MapLibre provider="open-street">
+      <MapLibreMarker lngLat={{ lng: 0, lat: 0 }} />
+    </MapLibre>
+  ```
+
+  ```svelte
+    <MapLibre provider="google-maps">
       <MapLibreMarker lngLat={{ lng: 0, lat: 0 }} />
     </MapLibre>
   ```
@@ -18,8 +24,9 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { onMount, tick } from 'svelte';
 import { provideMapContext } from './hooks';
 import { Map, type MapOptions } from 'maplibre-gl';
-import { style } from './style';
+import { getStyleSpecification } from './style';
 import { LngLat } from '$lib';
+import type { MapProvider } from './types';
 
 /** The minimum camera pitch. */
 export let minPitch = 0;
@@ -48,6 +55,20 @@ export let center: LngLat = new LngLat(-73.984_421, 40.771_811_6);
 export let map: Map | undefined = undefined;
 
 export let options: Partial<MapOptions> | undefined = undefined;
+
+/**
+ * The map provider to use.
+ *
+ * @default 'open-street'
+ */
+export let provider: MapProvider = 'open-street';
+
+/**
+ * The API key for the map provider.
+ *
+ * @default undefined
+ */
+export let providerAPIKey: string | undefined = undefined;
 
 /** Fired after the map has been created. */
 export let onCreate: undefined | ((map: Map) => void) = undefined;
@@ -109,7 +130,7 @@ onMount(() => {
   map = new Map({
     antialias: true,
     container,
-    style,
+    style: getStyleSpecification(provider, providerAPIKey),
     center,
     zoom,
     minPitch,
@@ -136,6 +157,7 @@ $: map?.setMinPitch(minPitch);
 $: map?.setMaxPitch(maxPitch);
 $: map?.setZoom(zoom);
 $: map?.setCenter(center);
+$: map?.setStyle(getStyleSpecification(provider, providerAPIKey));
 </script>
 
 {#if created}

@@ -1,9 +1,3 @@
-if (!('createObjectURL' in globalThis.URL)) {
-  throw new Error(
-    '<MapLibre> requires the window.URL.createObjectURL method. If in a testing environment, this must be mocked or stubbed.'
-  );
-}
-
 // Three.js components
 export { default as AxesHelper } from './axes-helper/axes-helper.svelte';
 export { LengthCapsuleGeometry } from './capsule-geometry/capsule-geometry';
@@ -28,7 +22,12 @@ export {
   cartesianToLngLat,
   cartesianToMercator,
 } from './maplibre/math';
-export { GeoPose, Waypoint } from './maplibre/types';
+export {
+  GeoPose,
+  Waypoint,
+  type MapProvider,
+  MapProviders,
+} from './maplibre/types';
 
 // Slam components
 export { default as SlamMap2D } from './slam-map-2d/index.svelte';
