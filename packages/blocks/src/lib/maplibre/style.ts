@@ -85,7 +85,7 @@ export const getStyleSpecification = (
   apiKey?: string
 ): StyleSpecification => {
   switch (provider) {
-    case 'google-maps': {
+    case MapProviders.googleMaps: {
       if (!apiKey) {
         // eslint-disable-next-line no-console
         console.warn('Google Maps API key is required');
@@ -93,7 +93,7 @@ export const getStyleSpecification = (
       }
       return getGoogleMapsStyle(apiKey);
     }
-    case 'open-street': {
+    case MapProviders.openStreet: {
       return getOpenStreetMapStyle();
     }
   }

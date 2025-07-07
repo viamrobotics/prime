@@ -26,7 +26,7 @@ import { provideMapContext } from './hooks';
 import { Map, type MapOptions } from 'maplibre-gl';
 import { getStyleSpecification } from './style';
 import { LngLat } from '$lib';
-import type { MapProvider } from './types';
+import { MapProviders, type MapProvider } from './types';
 
 /** The minimum camera pitch. */
 export let minPitch = 0;
@@ -61,7 +61,7 @@ export let options: Partial<MapOptions> | undefined = undefined;
  *
  * @default 'open-street'
  */
-export let provider: MapProvider = 'open-street';
+export let provider: MapProvider = MapProviders.openStreet;
 
 /**
  * The API key for the map provider.
