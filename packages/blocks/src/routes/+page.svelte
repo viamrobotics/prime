@@ -31,8 +31,6 @@ const path = () =>
       return [];
     })
   );
-
-$: console.log(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
 </script>
 
 <div class="m-auto flex max-w-6xl flex-col gap-6 py-6">
