@@ -98,6 +98,3 @@ export const getStyleSpecification = (
     }
   }
 };
-
-// Legacy export for backward compatibility
-export const style = getOpenStreetMapStyle();
