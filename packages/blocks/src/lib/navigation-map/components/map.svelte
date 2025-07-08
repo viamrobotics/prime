@@ -23,10 +23,10 @@ import type { Obstacle } from '../types';
 export let baseGeoPose: GeoPose | undefined = undefined;
 
 /** The map provider to use. */
-export let provider: MapProvider = MapProviders.openStreet;
+export let mapProvider: MapProvider = MapProviders.openStreet;
 
 /** The API key for the map provider. */
-export let providerAPIKey: string | undefined = undefined;
+export let mapProviderKey: string | undefined = undefined;
 
 const minPitch = 0;
 const maxPitch = 60;
@@ -50,8 +50,8 @@ let didHoverTooltip = Boolean(
     {minPitch}
     maxPitch={$view === '3D' ? maxPitch : minPitch}
     minZoom={6}
-    {provider}
-    {providerAPIKey}
+    {mapProvider}
+    {mapProviderKey}
     bind:map
   >
     <NavigationControls showZoom={false} />

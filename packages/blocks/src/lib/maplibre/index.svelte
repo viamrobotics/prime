@@ -61,14 +61,14 @@ export let options: Partial<MapOptions> | undefined = undefined;
  *
  * @default 'open-street'
  */
-export let provider: MapProvider = MapProviders.openStreet;
+export let mapProvider: MapProvider = MapProviders.openStreet;
 
 /**
  * The API key for the map provider.
  *
  * @default undefined
  */
-export let providerAPIKey: string | undefined = undefined;
+export let mapProviderKey: string | undefined = undefined;
 
 /** Fired after the map has been created. */
 export let onCreate: undefined | ((map: Map) => void) = undefined;
@@ -130,7 +130,7 @@ onMount(() => {
   map = new Map({
     antialias: true,
     container,
-    style: getStyleSpecification(provider, providerAPIKey),
+    style: getStyleSpecification(mapProvider, mapProviderKey),
     center,
     zoom,
     minPitch,
@@ -157,7 +157,7 @@ $: map?.setMinPitch(minPitch);
 $: map?.setMaxPitch(maxPitch);
 $: map?.setZoom(zoom);
 $: map?.setCenter(center);
-$: map?.setStyle(getStyleSpecification(provider, providerAPIKey));
+$: map?.setStyle(getStyleSpecification(mapProvider, mapProviderKey));
 </script>
 
 {#if created}

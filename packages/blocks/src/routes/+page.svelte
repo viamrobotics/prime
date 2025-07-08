@@ -61,8 +61,8 @@ const path = () =>
   <div class="px-12">
     <div class="relative aspect-video w-full border border-gray-200 pt-0">
       <MapLibre
-        provider="google-maps"
-        providerAPIKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+        mapProvider="google-maps"
+        mapProviderKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
       >
         <NavigationControls />
         <SatelliteControls />

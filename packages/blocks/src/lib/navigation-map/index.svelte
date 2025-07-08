@@ -66,10 +66,10 @@ export let tabs: NavigationTabType[] = [
 export let baseGeoPose: GeoPose | undefined = undefined;
 
 /** The map provider to use. */
-export let provider: MapProvider = MapProviders.openStreet;
+export let mapProvider: MapProvider = MapProviders.openStreet;
 
 /** The API key for the map provider. */
-export let providerAPIKey: string | undefined = undefined;
+export let mapProviderKey: string | undefined = undefined;
 
 export let onUpdate: (payload: Obstacle[]) => void;
 
@@ -84,8 +84,8 @@ $: $envStore = environment;
 <Map
   bind:map
   {baseGeoPose}
-  {provider}
-  {providerAPIKey}
+  {mapProvider}
+  {mapProviderKey}
   {onUpdate}
   on:add-waypoint
   on:delete-waypoint
