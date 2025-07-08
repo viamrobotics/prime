@@ -6,13 +6,13 @@
   Children will mount once the map is fully loaded.
 
   ```svelte
-    <MapLibre provider="open-street">
+    <MapLibre mapProvider="open-street">
       <MapLibreMarker lngLat={{ lng: 0, lat: 0 }} />
     </MapLibre>
   ```
 
   ```svelte
-    <MapLibre provider="google-maps">
+    <MapLibre mapProvider="google-maps" mapProviderKey="mycoolkey">
       <MapLibreMarker lngLat={{ lng: 0, lat: 0 }} />
     </MapLibre>
   ```
