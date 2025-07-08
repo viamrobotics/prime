@@ -1,7 +1,12 @@
 <script lang="ts">
 import pointcloudUrl from '$lib/assets/pointcloud.pcd?url';
 import motionPath from '$lib/assets/cbirrtsmooth800.txt?raw';
-import { MapLibre, NavigationControls, SlamMap2D } from '$lib';
+import {
+  MapLibre,
+  NavigationControls,
+  SatelliteControls,
+  SlamMap2D,
+} from '$lib';
 import NavigationMap from './navigation-map.svelte';
 import FollowingMarker from './following-marker.svelte';
 
@@ -49,6 +54,18 @@ const path = () =>
     <div class="relative aspect-video w-full border border-gray-200 pt-0">
       <MapLibre>
         <NavigationControls />
+      </MapLibre>
+    </div>
+  </div>
+
+  <div class="px-12">
+    <div class="relative aspect-video w-full border border-gray-200 pt-0">
+      <MapLibre
+        mapProvider="google-maps"
+        mapProviderKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+      >
+        <NavigationControls />
+        <SatelliteControls />
       </MapLibre>
     </div>
   </div>

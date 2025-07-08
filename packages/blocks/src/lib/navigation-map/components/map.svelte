@@ -4,6 +4,8 @@ import type { Map } from 'maplibre-gl';
 import {
   MapLibre,
   type GeoPose,
+  type MapProvider,
+  MapProviders,
   NavigationControls,
   SatelliteControls,
   FollowControls,
@@ -19,6 +21,12 @@ import type { Obstacle } from '../types';
 
 /** The Geo-pose of a robot base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
+
+/** The map provider to use. */
+export let mapProvider: MapProvider = MapProviders.openStreet;
+
+/** The API key for the map provider. */
+export let mapProviderKey: string | undefined = undefined;
 
 const minPitch = 0;
 const maxPitch = 60;
@@ -42,6 +50,8 @@ let didHoverTooltip = Boolean(
     {minPitch}
     maxPitch={$view === '3D' ? maxPitch : minPitch}
     minZoom={6}
+    {mapProvider}
+    {mapProviderKey}
     bind:map
   >
     <NavigationControls showZoom={false} />

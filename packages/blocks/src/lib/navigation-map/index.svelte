@@ -31,7 +31,12 @@ import {
   tab as tabStore,
   tabs as tabsStore,
 } from './stores';
-import type { GeoPose, Waypoint } from '$lib';
+import {
+  type GeoPose,
+  type Waypoint,
+  type MapProvider,
+  MapProviders,
+} from '$lib';
 
 /** The map environment. "debug" assumes the robot is on and connected. */
 export let environment: 'debug' | 'configure' = 'debug';
@@ -60,6 +65,12 @@ export let tabs: NavigationTabType[] = [
 /** The pose (Lng,Lat) and rotation of a base. */
 export let baseGeoPose: GeoPose | undefined = undefined;
 
+/** The map provider to use. */
+export let mapProvider: MapProvider = MapProviders.openStreet;
+
+/** The API key for the map provider. */
+export let mapProviderKey: string | undefined = undefined;
+
 export let onUpdate: (payload: Obstacle[]) => void;
 
 $: $tabStore = tab;
@@ -73,6 +84,8 @@ $: $envStore = environment;
 <Map
   bind:map
   {baseGeoPose}
+  {mapProvider}
+  {mapProviderKey}
   {onUpdate}
   on:add-waypoint
   on:delete-waypoint
