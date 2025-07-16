@@ -27,6 +27,7 @@ import { Map, type MapOptions } from 'maplibre-gl';
 import { getStyleSpecification } from './style';
 import { LngLat } from '$lib';
 import { MapProviders, type MapProvider } from './types';
+import { DEFAULT_MAX_ZOOM } from './zoom';
 
 /** The minimum camera pitch. */
 export let minPitch = 0;
@@ -41,7 +42,7 @@ export let zoom = 9;
 export let minZoom = 0;
 
 /** The maximum zoom level of the map (0-24). */
-export let maxZoom = 22;
+export let maxZoom = DEFAULT_MAX_ZOOM;
 
 /**
  * The map center.
@@ -130,7 +131,7 @@ onMount(() => {
   map = new Map({
     antialias: true,
     container,
-    style: getStyleSpecification(mapProvider, mapProviderKey),
+    style: getStyleSpecification(mapProvider, mapProviderKey, maxZoom),
     center,
     zoom,
     minPitch,
