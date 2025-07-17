@@ -1,10 +1,13 @@
 import type { StyleSpecification } from 'maplibre-gl';
 import { MapProviders, type MapProvider } from './types';
+import { DEFAULT_MAX_ZOOM } from './zoom';
 
 const tileSize = 256;
-const maxzoom = 20;
 
-const getGoogleMapsStyle = (apiKey: string): StyleSpecification => ({
+const getGoogleMapsStyle = (
+  apiKey: string,
+  maxzoom: number
+): StyleSpecification => ({
   version: 8,
   sources: {
     [MapProviders.googleMaps]: {
@@ -43,7 +46,7 @@ const getGoogleMapsStyle = (apiKey: string): StyleSpecification => ({
   ],
 });
 
-const getOpenStreetMapStyle = (): StyleSpecification => ({
+const getOpenStreetMapStyle = (maxzoom: number): StyleSpecification => ({
   version: 8,
   sources: {
     osm: {
@@ -82,19 +85,21 @@ const getOpenStreetMapStyle = (): StyleSpecification => ({
 
 export const getStyleSpecification = (
   provider: MapProvider,
-  apiKey?: string
+  apiKey?: string,
+  maxZoom?: number
 ): StyleSpecification => {
+  const maxzoom = maxZoom ?? DEFAULT_MAX_ZOOM;
   switch (provider) {
     case MapProviders.googleMaps: {
       if (!apiKey) {
         // eslint-disable-next-line no-console
         console.warn('Google Maps API key is required');
-        return getOpenStreetMapStyle();
+        return getOpenStreetMapStyle(maxzoom);
       }
-      return getGoogleMapsStyle(apiKey);
+      return getGoogleMapsStyle(apiKey, maxzoom);
     }
     case MapProviders.openStreet: {
-      return getOpenStreetMapStyle();
+      return getOpenStreetMapStyle(maxzoom);
     }
   }
 };
