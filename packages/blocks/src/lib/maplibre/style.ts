@@ -13,6 +13,7 @@ const getGoogleMapsStyle = (
     [MapProviders.googleMaps]: {
       type: 'raster',
       tiles: [
+        // The apiKey is not actually needed here for some reason. TODO: Update to use the google maps tile api ASAP.
         `https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&key=${apiKey}`,
       ],
       tileSize,
@@ -22,6 +23,7 @@ const getGoogleMapsStyle = (
     satellite: {
       type: 'raster',
       tiles: [
+        // The apiKey is not actually needed here for some reason. TODO: Update to use the google maps tile api ASAP.
         `https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}&key=${apiKey}`,
       ],
       tileSize: 256,

@@ -32,6 +32,11 @@ You can now use the components in your app:
 
 [sveltekit]: https://kit.svelte.dev/
 
+## Environment Variables
+
+Google maps requires an API key `VITE_GOOGLE_MAPS_API_KEY` to be defined in .env
+We support Google Maps for rendering maps. If no API key is provided, we fall back to OpenStreet even if Google Maps is selected
+
 ## Playground
 
 The playground can be used during development but is not used outside of the package.
