@@ -32,6 +32,7 @@ const path = () =>
     })
   );
 </script>
+
 <div class="m-auto flex max-w-6xl flex-col gap-6 py-6">
   <div class="px-12">
     <div class="relative aspect-video w-full border border-gray-200">
@@ -63,10 +64,10 @@ const path = () =>
         mapProvider="google-maps"
         mapProviderKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
       >
-      <div class="absolute right-12 top-2.5 z-10 flex items-center gap-2">
-        <NavigationControls  />
-        <SatelliteControls  />
-      </div>
+        <div class="absolute right-12 top-2.5 z-10 flex items-center gap-2">
+          <NavigationControls />
+          <SatelliteControls />
+        </div>
       </MapLibre>
     </div>
   </div>
