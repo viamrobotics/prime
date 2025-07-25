@@ -44,15 +44,18 @@ onMount(() => {
     map.off('mousedown', stop);
   };
 });
+
+const handleClick = (event: MouseEvent) => {
+  event.stopPropagation();
+  following = !following;
+  onChange?.(following);
+};
 </script>
 
 <Button
   disabled={lng === undefined || lat === undefined}
-  on:click={(event) => {
-    event.stopPropagation();
-    following = !following;
-    onChange?.(following);
-  }}
+  on:click={handleClick}
+  onclick={handleClick}
 >
   <Icon
     name={following ? 'navigation-variant' : 'navigation-variant-outline'}
