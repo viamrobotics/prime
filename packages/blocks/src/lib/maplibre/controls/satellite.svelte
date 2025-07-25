@@ -20,6 +20,9 @@ const onClick = () => {
 };
 </script>
 
-<Button onclick={onClick} on:click={onClick}>
+<Button
+  onclick={onClick}
+  on:click={onClick}
+>
   {satellite ? 'Map' : 'Satellite'}
 </Button>
