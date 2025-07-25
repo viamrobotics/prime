@@ -64,11 +64,12 @@ const path = () =>
         mapProvider="google-maps"
         mapProviderKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
       >
-        <NavigationControls />
-        <SatelliteControls />
+        <div class="absolute right-12 top-2.5 z-10 flex items-center gap-2">
+          <NavigationControls />
+          <SatelliteControls />
+        </div>
       </MapLibre>
     </div>
   </div>
-
   <FollowingMarker />
 </div>
