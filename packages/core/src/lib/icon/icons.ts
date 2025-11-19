@@ -36,6 +36,7 @@ export const IconPathsByName = {
   article: MDI.mdiTextBoxOutline,
   'axis-arrow': MDI.mdiAxisArrow,
   'backup-restore': MDI.mdiBackupRestore,
+  'bookmark-outline': MDI.mdiBookmarkOutline,
   'broadcast-off': MDI.mdiBroadcastOff,
   bug: MDI.mdiBug,
   'bug-outline': MDI.mdiBugOutline,
