@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This repository is in the process of being retired, and is no longer actively maintained. If you are looking for the current prime project, see: https://github.com/viamrobotics/app/blob/main/prime/README.md
+
 # P.R.I.M.E.
 
 Pretty Rad Interactive Modular Elements
