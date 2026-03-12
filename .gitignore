@@ -26,3 +26,7 @@ prime
 /test-results/
 playwright-report
 playwright/.cache
+
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
