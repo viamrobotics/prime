@@ -1,5 +1,5 @@
-> [!CAUTION]
-> This repository is in the process of being retired, and is no longer actively maintained. If you are looking for the current prime project, see: https://github.com/viamrobotics/app/blob/main/prime/README.md
+> [!NOTE]
+> This repository is in the process of being updated to the home of prime v2, check back soon for more!
 
 # P.R.I.M.E.
 
@@ -7,47 +7,10 @@ Pretty Rad Interactive Modular Elements
 
 Made with ❤️ at Viam
 
-A collection of UI elements.
-
-## Packages
-
-[`@viamrobotics/prime`][legacy] - Legacy web components
-
-[`@viamrobotics/prime-core`][core] - Core components. Exported as Svelte components.
-
-[`@viamrobotics/prime-editor`][editor] - Text-editing components over libraries like [codemirror](https://codemirror.net/). Exported as Svelte components.
-
-[`@viamrobotics/prime-blocks`][blocks] - Large blocks of UI that often have dependencies like [Threlte][threlte]. Exported as Svelte components.
-
-[legacy]: https://github.com/viamrobotics/prime/tree/main/packages/legacy
-[core]: https://github.com/viamrobotics/prime/tree/main/packages/core
-[editor]: https://github.com/viamrobotics/prime/tree/main/packages/editor
-[blocks]: https://github.com/viamrobotics/prime/tree/main/packages/blocks
-[threlte]: https://threlte.xyz
-
-## Building
-
-```bash
-pnpm build
-```
-
-## Linting
-
-```bash
-pnpm check
-pnpm format
-```
-
-## Testing
-
-```bash
-pnpm -C packages/legacy playwright-install
-pnpm test
-```
+A collection of UI components for Viam applications.
 
 ## License
 
 Copyright 2021-2023 Viam Inc.
 
 Apache 2.0 - See [LICENSE](https://github.com/viamrobotics/prime/blob/main/LICENSE) file
-
