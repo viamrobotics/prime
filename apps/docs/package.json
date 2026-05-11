@@ -7,22 +7,38 @@
 		"dev": "astro dev",
 		"build": "node scripts/build-playgrounds.mjs && astro build",
 		"build:playgrounds": "node scripts/build-playgrounds.mjs",
-		"preview": "astro preview"
+		"preview": "astro preview",
+		"lint": "prettier --check . && eslint .",
+		"format": "prettier --write ."
 	},
 	"dependencies": {
 		"@astrojs/starlight": "0.38.4",
+		"@astrojs/svelte": "^8.1.0",
 		"@tailwindcss/vite": "4.2.4",
 		"astro": "6.2.0",
 		"sharp": "0.34.2",
 		"starlight-theme-nova": "0.11.9",
+		"svelte": "^5.55.5",
 		"tailwindcss": "4.2.4"
 	},
 	"devDependencies": {
+		"@eslint/compat": "^2.0.4",
+		"@eslint/js": "^10.0.1",
 		"@fontsource-variable/public-sans": "^5.2.7",
 		"@fontsource-variable/roboto-mono": "^5.2.9",
 		"@viamrobotics/prime-ui": "workspace:^",
 		"@viamrobotics/tailwind-config": "workspace:^",
+		"eslint": "^10.2.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-astro": "^1.7.0",
+		"eslint-plugin-svelte": "^3.17.0",
+		"globals": "^17.4.0",
+		"prettier": "^3.8.1",
+		"prettier-plugin-astro": "^0.14.1",
+		"prettier-plugin-svelte": "^3.5.1",
+		"prettier-plugin-tailwindcss": "^0.7.2",
 		"typescript": "^5.9.2",
+		"typescript-eslint": "^8.58.1",
 		"vite": "^7.3.0"
 	}
 }

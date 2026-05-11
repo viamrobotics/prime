@@ -15,20 +15,20 @@ hero:
       icon: external
 ---
 
-import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import '@viamrobotics/tailwind-config/fonts';
 
-Prime is Viam's design-system implementation: a set of npm packages that share design tokens (`@viamrobotics/tailwind-config`) and ship Svelte 5 components on top of them (`@viamrobotics/prime-ui`). This site documents what's available and embeds a live playground for each library package.
+PRIME is Viam's design-system implementation: a set of npm packages that share design principles from [our design system](https://design.viam.com/).
 
 ## Packages
 
 <CardGrid>
-  <Card title="@viamrobotics/prime-ui" icon="seti:svelte">
-    Viam's Svelte 5 component library. See the [package
-    docs](./packages/prime-ui/) for usage and component references, or the [live
-    playground](./playground/prime-ui/) to test out components.
-  </Card>
-  <Card title="@viamrobotics/tailwind-config" icon="seti:css">
-    Shared Tailwind CSS v4 design tokens and fonts. See the [package
-    docs](./packages/tailwind-config/) for usage and token references.
-  </Card>
+	<Card title="@viamrobotics/prime-ui" icon="seti:svelte">
+		Viam's Svelte 5 component library. See the [package docs](./packages/prime-ui/) for usage and
+		component references, and live playgrounds to test out components.
+	</Card>
+	<Card title="@viamrobotics/tailwind-config" icon="seti:css">
+		Shared Tailwind CSS v4 design tokens and fonts. See the [package
+		docs](./packages/tailwind-config/) for usage and token references.
+	</Card>
 </CardGrid>

@@ -1,0 +1,31 @@
+---
+title: Icon
+description: Small images that have a high symbolic value and can be utilized for the purpose of communication.
+---
+
+import IconPlayground from '../../../components/IconPlayground.svelte';
+
+Small images that have a high symbolic value and can be utilized for the purpose of communication. Icons are SVGs sourced from the [Material Design Icons](https://pictogrammers.com/library/mdi/) library, with a handful of Viam-specific additions.
+
+```ts
+import { Icon } from '@viamrobotics/prime-ui';
+```
+
+## Playground
+
+Use the controls below to browse every available icon and preview each at the eight named sizes.
+
+<IconPlayground client:load />
+
+## Sizing
+
+`size` accepts one of eight named sizes and maps to a specific tailwind `size-*` utility.
+
+## Color
+
+`Icon` paints with `currentColor`, so use the `text-*` utility on the icon or any ancestor:
+
+```svelte
+<Icon name="alert-circle" class="text-danger-dark" />
+<Icon name="check-circle" class="text-success-dark" />
+```

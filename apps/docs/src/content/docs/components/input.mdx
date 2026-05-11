@@ -1,0 +1,40 @@
+---
+title: Input
+description: A simple user input. Ideal for text, email, and password fields, and the base for all other input types.
+---
+
+import InputPlayground from '../../../components/InputPlayground.svelte';
+import { Input } from '@viamrobotics/prime-ui';
+
+A simple user input. We use this input to build all of the other input types — it's ideal for text, email, and password fields.
+
+`Input` is a compound component. Use `Input.Root` for the field itself and `Input.Icon` for status iconography. For accessible labelling, see the dedicated [Label](../label/) page.
+
+```ts
+import { Input } from '@viamrobotics/prime-ui';
+```
+
+## Playground
+
+<InputPlayground client:load />
+
+## State
+
+`state` accepts `none` (default), `info`, `warn`, or `error`. Pair with `<Input.Icon />` as a child of `<Input.Root>` to surface the matching status icon — it reads the state from context:
+
+```svelte
+<Input.Root state="error" value="/">
+	<Input.Icon />
+</Input.Root>
+```
+
+## Error messaging
+
+When vertical space allows, render the error message directly below the input:
+
+```svelte
+<Input.Root state="error" value="">
+	<Input.Icon />
+</Input.Root>
+<p class="mt-1 text-xs text-danger-dark">This field can't be left blank.</p>
+```

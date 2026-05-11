@@ -142,11 +142,11 @@ render(UserProfile, {
 });
 ```
 
-For complex context trees, create a `__fixtures__/` wrapper component that provides all required contexts and accepts the component under test as a snippet.
+For complex context trees, create a wrapper component that provides all required contexts and accepts the component under test as a snippet.
 
 ### Hook Tests (`.svelte.spec.ts`)
 
-Hooks using runes (`.svelte.ts`) must be tested inside a Svelte component boundary. Create a minimal fixture component in `__fixtures__/` that instantiates the hook and exposes its state for assertions.
+Hooks using runes (`.svelte.ts`) must be tested inside a Svelte component boundary. Create a minimal fixture component in `__tests__/` that instantiates the hook and exposes its state for assertions.
 
 ### Browser Mode
 

@@ -54,3 +54,32 @@ All routes must be prerenderable — `src/routes/+layout.ts` enforces this with 
 - Components use Tailwind utility classes that reference tokens declared in `@viamrobotics/tailwind-config` (e.g. `bg-power-button`, `text-heading`). Never hard-code colors or spacing — use the design tokens.
 - New design tokens belong in `@viamrobotics/tailwind-config`'s `tailwind-config.css`, not in components.
 - Token values and component patterns must match the Viam design system at https://design.viam.com/. See [.claude/rules/viam-context.md](../../.claude/rules/viam-context.md).
+
+## Public API & tree-shaking
+
+The package ships a single entry (`./dist/index.js`) and depends on bundlers dropping unused exports. Two things keep that working:
+
+1. **`"sideEffects": ["**/\*.css"]`\*\* in [package.json](package.json) declares every JS/TS/Svelte module import-pure. Don't widen this list.
+2. **Every module in `src/lib/` must be import-pure** — evaluating it on import must do nothing beyond declarations.
+
+[src/lib/index.ts](src/lib/index.ts) uses `export * as Input from './Input/Input.ts'` so consumers can write `<Input.Root>`. This namespace shape is tree-shakable _only_ if (1) and (2) hold.
+
+### Import-pure rules
+
+At module top level, allow only `import` / `export` statements, `type` / `interface` declarations, and `const` / `let` whose initializer is a literal, a function definition, `Symbol(...)`, or another import binding.
+
+Don't, at top level:
+
+- Call functions that register, log, mutate globals, or instantiate stateful objects.
+- Use side-effect-only imports (`import 'some-polyfill'`) — except `.css`.
+- Use `import * as X from 'big-lib'` — namespace imports defeat tree-shaking inside the dependency (this was the original `@mdi/js` bug). Import bindings by name.
+- Put real work in `<script module>` blocks — declarations only.
+
+Per-component `<script>` bodies in `.svelte` files run on instantiation, not on import, so they don't count as import-time side effects.
+
+### Verify
+
+```bash
+rg -n "^import ['\"][^'\"]+['\"];?$" src/lib                    # expect zero, or only .css
+rg -n --multiline 'script\s+(module|context="module")' src/lib  # audit each hit
+```

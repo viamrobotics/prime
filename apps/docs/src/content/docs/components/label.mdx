@@ -1,0 +1,51 @@
+---
+title: Label
+description: For labelling inputs.
+---
+
+import LabelPlayground from '../../../components/LabelPlayground.svelte';
+
+For labelling inputs. `Label.Root` wraps [bits-ui's `Label.Root`](https://bits-ui.com/docs/components/label) so clicking the label text focuses the linked input. `Label.Detail` renders muted supplemental text — typically `(optional)` markers, units, or short hints.
+
+```ts
+import { Label } from "@viamrobotics/prime-ui";
+```
+
+## Playground
+
+<LabelPlayground client:load />
+
+## Pairing with an Input
+
+Link the label to the input via `for` / `id`:
+
+```svelte
+<Label.Root for="email">Email</Label.Root>
+<Input.Root id="email" type="email" />
+```
+
+## Required
+
+Pass `required` to surface a danger-colored asterisk after the label text.
+
+```svelte
+<Label.Root for="email" required>Email</Label.Root>
+<Input.Root id="email" type="email" />
+```
+
+## Disabled
+
+Pass `disabled` to mute the label text alongside a disabled input.
+
+```svelte
+<Label.Root for="frozen" disabled>Frozen field</Label.Root>
+<Input.Root id="frozen" disabled value="Read-only value" />
+```
+
+## Helper text
+
+```svelte
+<Label.Root for="phone">Phone</Label.Root>
+<p class="text-xs text-gray-6">(optional)</p>
+<Input.Root id="phone" />
+```
