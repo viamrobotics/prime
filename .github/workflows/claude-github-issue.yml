@@ -1,0 +1,95 @@
+name: Claude GitHub Issue
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  call-github-issue:
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    if: >-
+      github.repository_owner == 'viamrobotics' && (
+        (
+          github.event_name == 'issues' &&
+          contains(github.event.issue.body, '@claude') &&
+          (
+            contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association) ||
+            github.event.issue.user.login == 'github-actions[bot]' ||
+            github.event.issue.user.login == 'claude[bot]'
+          )
+        ) ||
+        (
+          github.event_name == 'issue_comment' &&
+          !github.event.issue.pull_request &&
+          contains(github.event.comment.body, '@claude') &&
+          contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+        )
+      )
+    # viamrobotics/claude-ci-workflows@v2.0.0
+    uses: viamrobotics/claude-ci-workflows/.github/workflows/claude-github-issue.yml@aa76787c145ed43f8f7b9bae4d978da4f9850001
+    with:
+      issue_number: ${{ github.event.issue.number }}
+      title: ${{ github.event.issue.title }}
+      body: ${{ github.event.issue.body }}
+      issue_author: ${{ github.event.issue.user.login }}
+      install_command: |
+        NODE24_BIN=$(ls -d /opt/hostedtoolcache/node/24.*/x64/bin | tail -1)
+        echo "$NODE24_BIN" >> "$GITHUB_PATH"
+        export PATH="$NODE24_BIN:$PATH"
+        corepack enable
+        pnpm install
+      task_complexity: small
+      allowed_tools:
+        "Edit,Read,Write,Glob,Grep,WebFetch,Bash(pnpm *),Bash(npx *),Bash(node
+        *),Bash(ls *),Bash(find *),Bash(git config *),Bash(git add *),Bash(git
+        commit *),Bash(git push *),Bash(git status*),Bash(git diff*),Bash(git
+        log*),Bash(git checkout *),Bash(git branch *),Bash(git rev-parse
+        *),Bash(git fetch *),Bash(gh pr create*),Bash(gh pr edit*),Bash(gh pr
+        view*),Bash(gh pr diff*),Bash(gh issue comment*),Bash(gh issue view*),Bash(gh run view*),Bash(gh run list*)"
+      extra_prompt: |
+        - If the issue is unclear, missing critical detail, or you need a decision from the reporter before you can proceed, DO NOT open a PR. Instead, post ONE comment on the issue using `gh issue comment ${{ github.event.issue.number }}` that:
+          - Opens by tagging the reporter with `@${{ github.event.issue.user.login }}`
+          - Lists your specific questions as a bullet list (be concrete: which file, which behavior, which edge case)
+          - States that you will resume once they reply with the needed info
+          Then exit successfully without creating a branch or PR.
+        - Otherwise, implement the issue following the standard flow: branch `claude/<short-desc>`, commit, push, open a PR with `Closes #${{ github.event.issue.number }}` in the body.
+        - Every PR that changes runtime behavior in a published package MUST include a new changeset file, committed alongside the code change:
+          - First, read the last ~3 entries of `CHANGELOG.md` (if any) and any existing files in `.changeset/` to mirror the wording style (short, imperative, single-line, backticks for code identifiers).
+          - Create a new file `.changeset/<short-kebab-description>.md` containing YAML frontmatter listing every published package whose runtime behavior changes, followed by a blank line and a one-line description. Example:
+              ---
+              '@viamrobotics/<package-a>': <patch|minor|major>
+              '@viamrobotics/<package-b>': <patch|minor|major>
+              ---
+          - The workspace root `@viamrobotics/prime-repo` is `private: true` and is NEVER listed in a changeset.
+          - DO NOT edit `.changeset/config.json`, `.changeset/README.md`, or any pre-existing changeset file. Only add a new one.
+          - Choose the semver bump per standard rules:
+            - `patch` — bug fixes, docs, internal refactors, dependency bumps, or any change that does not alter the public exports or their observable behavior.
+            - `minor` — new features, new exports, or additions to the public API that are backward compatible.
+            - `major` — breaking changes: removed or renamed exports, changed component prop shapes, or changed runtime behavior that callers may depend on.
+          - If the change is workspace-only (CI, root tooling, docs), skip the changeset.
+          - `git add` the new changeset file along with your code changes before committing.
+        - Only run verification commands relevant to the files you changed:
+          - Svelte / TS / JS files (.svelte, .ts, .js): `pnpm lint`, `pnpm check`, and `pnpm test`
+        - Prefer `pnpm --filter @viamrobotics/<package> <script>` to scope a command to a single package when only that package changed.
+        - Before editing code, read 1-2 similar functions or components in the same file or package to follow existing patterns and conventions.
+        - This repo uses Svelte 5 runes. Consult the Svelte MCP server when editing `.svelte` / `.svelte.ts` / `.svelte.js` files.
+      extra_system_prompt: >-
+        This is a pnpm monorepo of Svelte 5 component packages (workspace root: `@viamrobotics/prime-repo`, private).
+        It is verifiable with `pnpm lint`, `pnpm check`, `pnpm test`, and `pnpm build` at the workspace root,
+        or scoped with `pnpm --filter @viamrobotics/<package> <script>`.
+        Do NOT modify `dist/**` (generated) or `pnpm-lock.yaml` (regenerated by pnpm).
+        Do NOT edit existing files under `.changeset/**`, but you MUST create a new changeset file for every PR
+        that changes runtime behavior in a published package (see the task prompt for the exact format and semver rules).
+        Package manager: pnpm. Node: 24.
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      SLACK_AI_WORKFLOW_ALERT_WEBHOOK_URL: ${{ secrets.SLACK_AI_WORKFLOW_ALERT_WEBHOOK_URL }}

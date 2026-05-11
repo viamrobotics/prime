@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}

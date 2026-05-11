@@ -1,0 +1,54 @@
+name: Claude Dependabot Sweep
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Every Monday at 9:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  call-dependabot-sweep:
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    if: github.repository_owner == 'viamrobotics'
+    # viamrobotics/claude-ci-workflows@v2.0.0
+    uses: viamrobotics/claude-ci-workflows/.github/workflows/claude-dependabot-sweep.yml@aa76787c145ed43f8f7b9bae4d978da4f9850001
+    with:
+      install_command: |
+        NODE24_BIN=$(ls -d /opt/hostedtoolcache/node/24.*/x64/bin | tail -1)
+        echo "$NODE24_BIN" >> "$GITHUB_PATH"
+        export PATH="$NODE24_BIN:$PATH"
+        corepack enable
+        pnpm install
+      allowed_tools: "Edit,Read,Write,Glob,Grep,Bash(pnpm install*),Bash(pnpm add*),Bash(pnpm update*),Bash(pnpm outdated*),Bash(pnpm ls*),Bash(pnpm why*),Bash(pnpm *),Bash(npx *),Bash(node *),Bash(ls *),Bash(find *),Bash(git config *),Bash(git add *),Bash(git commit *),Bash(git push *),Bash(git status*),Bash(git diff*),Bash(git log*),Bash(git checkout *),Bash(git branch *),Bash(git rev-parse *),Bash(git fetch *),Bash(gh pr create*),Bash(gh pr view*),Bash(gh issue comment*),Bash(gh issue view*)"
+      extra_system_prompt: |
+        ### Updating JavaScript/TypeScript dependencies (pnpm)
+        - This is a pnpm monorepo of Svelte 5 component packages (workspace root: `@viamrobotics/prime-repo`, private).
+        - To update a workspace-wide dev dependency: `pnpm update <package>@<version> -w`.
+        - To update a dependency in a single package: `pnpm --filter @viamrobotics/<package> update <package>@<version>`.
+        - To check installed version: `pnpm ls <package>` (add `-r` to recurse the workspace).
+        - To check why a package is installed: `pnpm why <package>`.
+        - After updating, `pnpm install` regenerates `pnpm-lock.yaml`.
+        - Peer dependencies in any published package declare lower bounds for consumers. Keep peer ranges backwards-compatible when possible; only widen the lower bound when a security fix requires it.
+
+        ### Build & verify
+        - Only run verification commands relevant to the files you changed:
+          - Svelte / TS / JS files (.svelte, .ts, .js): `pnpm lint`, `pnpm check`, and `pnpm test`
+          - Build regressions: `pnpm build`
+        - Scope a command to a single package with `pnpm --filter @viamrobotics/<package> <script>` when only that package changed.
+        - Do NOT run unrelated commands, they waste turns and time.
+        - Do NOT modify `dist/**` (generated), `.changeset/**` (versioning), or `.github/**` (workflows).
+
+        ### Framework constraints
+        - Svelte 5 runes. Consult the Svelte MCP server when editing `.svelte` / `.svelte.ts` / `.svelte.js` files.
+        - Package manager: pnpm. Node: 24.
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      CI_GITHUB_APP_ID: ${{ secrets.CI_GITHUB_APP_ID }}
+      CI_GITHUB_APP_PRIVATE_KEY: ${{ secrets.CI_GITHUB_APP_PRIVATE_KEY }}
+      SLACK_AI_WORKFLOW_ALERT_WEBHOOK_URL: ${{ secrets.SLACK_AI_WORKFLOW_ALERT_WEBHOOK_URL }}
