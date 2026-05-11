@@ -1,0 +1,29 @@
+{
+  "name": "@viamrobotics/tailwind-config",
+  "version": "1.0.1",
+  "description": "Viam's shared Tailwind CSS v4 configuration.",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viamrobotics/prime.git",
+    "directory": "packages/tailwind-config"
+  },
+  "keywords": ["tailwind", "tailwindcss"],
+  "exports": {
+    ".": "./tailwind-config.css",
+    "./fonts": "./fonts.js"
+  },
+  "files": ["fonts.js", "tailwind-config.css"],
+  "dependencies": {
+    "@fontsource-variable/public-sans": "^5.2.7",
+    "@fontsource-variable/roboto-mono": "^5.2.9",
+    "@fontsource-variable/space-grotesk": "^5.2.10"
+  },
+  "peerDependencies": {
+    "tailwindcss": ">=4 <5"
+  }
+}

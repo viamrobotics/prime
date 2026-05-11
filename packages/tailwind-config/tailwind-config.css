@@ -1,0 +1,442 @@
+@theme {
+  /* Font families */
+  --font-space-grotesk:
+    "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
+  --font-roboto-mono:
+    "Roboto Mono Variable", "Roboto Mono", ui-monospace, monospace;
+  --font-public-sans: "Public Sans Variable", "Public Sans", sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.06);
+
+  /* Text colors */
+  --color-heading: #131414;
+  --color-default: #282829;
+  --color-subtle-1: #4e4f52;
+  --color-subtle-2: #7a7c80;
+  --color-disabled: #9c9ca4;
+  --color-link: #0066cc;
+
+  /* Code colors */
+  --color-code-boolean: #201293;
+  --color-code-line-number: #4b758d;
+  --color-code-null: #708;
+  --color-code-number: #2f6447;
+  --color-code-property-keys: #000;
+  --color-code-string: #9c251d;
+
+  /* Grayscale */
+  --color-black: #131414;
+  --color-white: #fff;
+  --color-gray-9: #282829;
+  --color-gray-8: #4e4f52;
+  --color-gray-7: #7a7c80;
+  --color-gray-6: #9c9ca4;
+  --color-gray-5: #c5c6cc;
+  --color-gray-4: #d7d7d9;
+  --color-gray-3: #e4e4e6;
+  --color-gray-2: #edeef0;
+  --color-gray-1: #f7f7f8;
+
+  /* Semantic colors */
+  --color-danger-dark: #be3536;
+  --color-danger-light: #fcecea;
+  --color-danger-medium: #edc0bf;
+  --color-warning-dark: #b88a09;
+  --color-warning-light: #fef3e0;
+  --color-warning-medium: #e9c89d;
+  --color-warning-bright: #ddab3f;
+  --color-success-dark: #3d7d3f;
+  --color-success-light: #e0fae3;
+  --color-success-medium: #b9dcbc;
+  --color-info-dark: #2e67d3;
+  --color-info-light: #e1f3ff;
+  --color-info-medium: #b6d1f4;
+
+  /* Disabled colors */
+  --color-disabled-dark: #9c9ca4;
+  --color-disabled-light: #f2f2f4;
+
+  /* Ghost colors (partial fills for hover states) */
+  --color-ghost-light: rgba(0, 0, 0, 0.04);
+  --color-ghost-medium: rgba(0, 0, 0, 0.08);
+
+  /* Brand design colors */
+  --color-power-wire: #ff0047;
+  --color-pcb: #00501f;
+  --color-power-button: #00ef83;
+  --color-solar-power: #ffd400;
+  --color-mars-rover: #ff7d80;
+  --color-raspberry: #9f0049;
+  --color-hologram: #00e8e8;
+  --color-yoshimi: #ff79ff;
+  --color-cyberpunk: #a51aff;
+  --color-hyperlink: #0000ea;
+
+  /* Brand design colors - extensions */
+  --color-power-button-light: #00ef8314;
+  --color-power-button-medium: #009b5880;
+  --color-power-button-dark: #009b58;
+  --color-cyberpunk-light: #a51aff0f;
+  --color-cyberpunk-medium: #a51aff80;
+  --color-cyberpunk-dark: #a51aff;
+  --color-mars-rover-light: #ff808219;
+  --color-mars-rover-medium: #fb5053b2;
+  --color-mars-rover-dark: #fb5054;
+
+  /* Illustration colors - pixel colors */
+  --color-pixel-red: #a3332b;
+  --color-pixel-green: #2f6447;
+  --color-pixel-teal: #4b758d;
+  --color-pixel-blue: #201293;
+
+  /* Spacing */
+  --spacing-7_5: 1.875rem;
+
+  /* Transition properties */
+  --transition-property-expand-vertical: max-height, visibility;
+
+  /* Z-index */
+  --z-max: 1000;
+
+  /* Animations */
+  --animate-wiggle: wiggle 0.25s;
+  --animate-blink: blink 1.7s ease-in-out infinite;
+}
+
+@utility bg-extralight {
+  background-color: #fbfbfc;
+}
+
+@utility bg-light {
+  background-color: #f7f7f8;
+}
+
+@utility bg-medium {
+  background-color: #f1f1f4;
+}
+
+@utility bg-dark {
+  background-color: #7a7a7a;
+}
+
+@utility border-light {
+  border-color: #e4e4e6;
+}
+
+@utility border-medium {
+  border-color: #d7d7d9;
+}
+
+@utility border-dark {
+  border-color: #4e4e4e;
+}
+
+/* Scrollbar */
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+@utility scrollbar-* {
+  scrollbar-color: --value(--color-*);
+}
+
+@utility scrollbar-w-* {
+  &::-webkit-scrollbar {
+    width: --value(--spacing-*);
+  }
+}
+
+@utility scrollbar-track-* {
+  &::-webkit-scrollbar-track {
+    background: --value(--color-*);
+  }
+}
+
+@utility scrollbar-thumb-* {
+  &::-webkit-scrollbar-thumb {
+    background-color: --value(--color-*);
+  }
+}
+
+@utility scrollbar-thumb-border-* {
+  &::-webkit-scrollbar-thumb {
+    border-radius: --value(--radius-*);
+  }
+}
+
+@utility scrollbar-thumb-border-* {
+  &::-webkit-scrollbar-thumb {
+    border-width: --value(--border-width-*);
+  }
+}
+
+@utility scrollbar-thumb-border-* {
+  &::-webkit-scrollbar-thumb {
+    border-color: --value(--color-*);
+  }
+}
+
+/* Slider track */
+
+@utility slider-track-* {
+  &::-webkit-slider-runnable-track {
+    background: --value(--color-*);
+  }
+  &::-moz-range-track {
+    background: --value(--color-*);
+  }
+}
+
+@utility slider-track-w-* {
+  &::-webkit-slider-runnable-track {
+    width: --value(--spacing-*);
+  }
+  &::-moz-range-track {
+    width: --value(--spacing-*);
+  }
+}
+
+@utility slider-track-h-* {
+  &::-webkit-slider-runnable-track {
+    height: --value(--spacing-*);
+  }
+  &::-moz-range-track {
+    height: --value(--spacing-*);
+  }
+}
+
+@utility slider-track-cursor-* {
+  &::-webkit-slider-runnable-track {
+    cursor: --value(
+      "auto",
+      "default",
+      "pointer",
+      "grab",
+      "grabbing",
+      "move",
+      "not-allowed",
+      "text",
+      "crosshair",
+      "wait",
+      "progress",
+      "help",
+      "none"
+    );
+    cursor: --value([*]);
+  }
+  &::-moz-range-track {
+    cursor: --value(
+      "auto",
+      "default",
+      "pointer",
+      "grab",
+      "grabbing",
+      "move",
+      "not-allowed",
+      "text",
+      "crosshair",
+      "wait",
+      "progress",
+      "help",
+      "none"
+    );
+    cursor: --value([*]);
+  }
+}
+
+/* Slider thumb */
+
+@utility slider-thumb-* {
+  &::-webkit-slider-thumb {
+    background: --value(--color-*);
+  }
+  &::-moz-range-thumb {
+    background: --value(--color-*);
+  }
+}
+
+@utility slider-thumb-w-* {
+  &::-webkit-slider-thumb {
+    width: --value(--spacing-*);
+  }
+  &::-moz-range-thumb {
+    width: --value(--spacing-*);
+  }
+}
+
+@utility slider-thumb-h-* {
+  &::-webkit-slider-thumb {
+    height: --value(--spacing-*);
+    margin-top: calc(--value(--spacing-*) / -2);
+  }
+  &::-moz-range-thumb {
+    height: --value(--spacing-*);
+  }
+}
+
+/*
+ * The default border properties were causing rendering issues, so we
+ * split the width utility into its own class to avoid that
+ */
+@utility slider-thumb-border-* {
+  &::-webkit-slider-thumb {
+    border-width: --value(--border-width-*);
+  }
+  &::-moz-range-thumb {
+    border-width: --value(--border-width-*);
+  }
+}
+
+@utility slider-thumb-border-* {
+  &::-webkit-slider-thumb {
+    border-style: --value(
+      "none",
+      "solid",
+      "dashed",
+      "dotted",
+      "double",
+      "groove",
+      "ridge",
+      "inset",
+      "outset",
+      "hidden"
+    );
+    border-style: --value([*]);
+  }
+  &::-moz-range-thumb {
+    border-style: --value(
+      "none",
+      "solid",
+      "dashed",
+      "dotted",
+      "double",
+      "groove",
+      "ridge",
+      "inset",
+      "outset",
+      "hidden"
+    );
+    border-style: --value([*]);
+  }
+}
+
+@utility slider-thumb-border-* {
+  &::-webkit-slider-thumb {
+    border-color: --value(--color-*);
+  }
+  &::-moz-range-thumb {
+    border-color: --value(--color-*);
+  }
+}
+
+@utility slider-thumb-border-* {
+  &::-webkit-slider-thumb {
+    border-radius: --value(--radius-*);
+  }
+  &::-moz-range-thumb {
+    border-radius: --value(--radius-*);
+  }
+}
+
+/* Default slider-thumb-border applies solid style, light border color, and full radius */
+@utility slider-thumb-border {
+  &::-webkit-slider-thumb {
+    border-style: solid;
+    border-color: #e4e4e6;
+    border-radius: 9999px;
+  }
+  &::-moz-range-thumb {
+    border-style: solid;
+    border-color: #e4e4e6;
+    border-radius: 9999px;
+  }
+}
+
+@utility slider-thumb-cursor-* {
+  &::-webkit-slider-thumb {
+    cursor: --value(
+      "auto",
+      "default",
+      "pointer",
+      "grab",
+      "grabbing",
+      "move",
+      "not-allowed",
+      "text",
+      "crosshair",
+      "wait",
+      "progress",
+      "help",
+      "none"
+    );
+    cursor: --value([*]);
+  }
+  &::-moz-range-thumb {
+    cursor: --value(
+      "auto",
+      "default",
+      "pointer",
+      "grab",
+      "grabbing",
+      "move",
+      "not-allowed",
+      "text",
+      "crosshair",
+      "wait",
+      "progress",
+      "help",
+      "none"
+    );
+    cursor: --value([*]);
+  }
+}
+
+/* Table components */
+
+@utility table-container {
+  @apply w-full min-w-300 border border-b-0 border-light text-sm;
+}
+
+@utility table-header {
+  @apply h-6 bg-light text-xs;
+}
+
+@utility table-header-cell {
+  @apply h-6 min-h-0 content-center items-center border-b border-light px-2 text-subtle-1 whitespace-normal wrap-break-word;
+}
+
+@utility table-cell {
+  @apply min-h-12 content-center items-center border-b border-light p-2 whitespace-normal wrap-break-word;
+}
+
+@utility table-cell-link {
+  @apply flex h-full w-full items-center hover:underline;
+}
+
+@utility table-cell-flex {
+  @apply flex items-center gap-2 flex-wrap;
+}
+
+@keyframes wiggle {
+  25% {
+    transform: translateX(2px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+@keyframes blink {
+  29% {
+    opacity: 1;
+  }
+  60%,
+  72% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}

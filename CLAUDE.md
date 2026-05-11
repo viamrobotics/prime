@@ -6,6 +6,12 @@ Pretty Rad Interactive Modular Elements — Viam's Svelte 5 component-library mo
 
 Component packages live under `packages/<name>/`. Each package owns its own `package.json`, build config, tests, and `CLAUDE.md` describing its specific stack and commands. The workspace root holds shared tooling (lint, format, changesets, CI).
 
+## Packages
+
+| Package                                                               | Purpose                                                             |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md) | Viam's shared Tailwind CSS v4 configuration: design tokens + fonts. |
+
 ## Tech stack (workspace-level)
 
 | Layer           | Technology       |
