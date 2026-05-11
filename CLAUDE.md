@@ -4,13 +4,29 @@ Pretty Rad Interactive Modular Elements — Viam's Svelte 5 component-library mo
 
 ## Monorepo layout
 
-Component packages live under `packages/<name>/`. Each package owns its own `package.json`, build config, tests, and `CLAUDE.md` describing its specific stack and commands. The workspace root holds shared tooling (lint, format, changesets, CI).
+Two top-level workspaces:
+
+- `packages/<name>/` — published-to-npm libraries and configs. Each owns its `package.json`, build, tests, and `CLAUDE.md`.
+- `apps/<name>/` — deployable apps that consume the packages. Always `private: true`. Currently just the docs site.
+
+The workspace root holds shared tooling (lint, format, changesets, CI).
 
 ## Packages
 
 | Package                                                               | Purpose                                                             |
 | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [`@viamrobotics/prime-ui`](packages/prime-ui/CLAUDE.md)               | Svelte 5 component library — the v2 of prime.                       |
 | [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md) | Viam's shared Tailwind CSS v4 configuration: design tokens + fonts. |
+
+## Apps
+
+| App                                       | Purpose                                                                                                  |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [`prime-docs`](apps/docs/CLAUDE.md)       | Astro Starlight documentation site + embedded playgrounds for each library package. Deployed to GitHub Pages. |
+
+### Playground convention
+
+Each library package's existing SvelteKit `src/routes/` _is_ its playground. The docs site (`apps/docs/`) builds each package's playground as a static bundle, mounts each under `/playground/<package-name>/`, and links to them from the Starlight sidebar. To add a playground for a new library, give it a static SvelteKit app under `src/routes/`, then add it to the docs build orchestration in [apps/docs/scripts/build-playgrounds.mjs](apps/docs/scripts/build-playgrounds.mjs).
 
 ## Tech stack (workspace-level)
 

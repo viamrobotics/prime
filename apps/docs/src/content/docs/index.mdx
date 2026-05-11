@@ -1,0 +1,34 @@
+---
+title: Viam Prime
+description: Component libraries and design system documentation for Viam apps.
+template: splash
+hero:
+  title: Viam Prime
+  tagline: Component libraries and design system documentation for Viam apps.
+  actions:
+    - text: Explore prime-ui
+      link: ./packages/prime-ui/
+      icon: right-arrow
+      variant: primary
+    - text: Open the prime-ui playground
+      link: ./playground/prime-ui/
+      icon: external
+---
+
+import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Prime is Viam's design-system implementation: a set of npm packages that share design tokens (`@viamrobotics/tailwind-config`) and ship Svelte 5 components on top of them (`@viamrobotics/prime-ui`). This site documents what's available and embeds a live playground for each library package.
+
+## Packages
+
+<CardGrid>
+  <Card title="@viamrobotics/prime-ui" icon="seti:svelte">
+    Viam's Svelte 5 component library. See the [package
+    docs](./packages/prime-ui/) for usage and component references, or the [live
+    playground](./playground/prime-ui/) to test out components.
+  </Card>
+  <Card title="@viamrobotics/tailwind-config" icon="seti:css">
+    Shared Tailwind CSS v4 design tokens and fonts. See the [package
+    docs](./packages/tailwind-config/) for usage and token references.
+  </Card>
+</CardGrid>
