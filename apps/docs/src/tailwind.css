@@ -1,0 +1,44 @@
+@import "tailwindcss";
+@import "@viamrobotics/tailwind-config";
+@import "starlight-theme-nova/tailwind.css";
+
+:root {
+  --sl-font: var(--font-public-sans);
+  --sl-font-mono: var(--font-roboto-mono);
+}
+
+/* Light mode: map Starlight grays to Viam's gray-1..9 scale and use Viam link blue. */
+:root[data-theme="light"] {
+  --sl-color-white: #131414;
+  --sl-color-gray-1: #282829;
+  --sl-color-gray-2: #4e4f52;
+  --sl-color-gray-3: #7a7c80;
+  --sl-color-gray-4: #9c9ca4;
+  --sl-color-gray-5: #c5c6cc;
+  --sl-color-gray-6: #e4e4e6;
+  --sl-color-gray-7: #f7f7f8;
+  --sl-color-black: #ffffff;
+
+  --sl-color-accent-low: #e1f3ff;
+  --sl-color-accent: #0066cc;
+  --sl-color-accent-high: #003d7a;
+
+  --sl-color-bg-inline-code: #f7f7f8;
+  --sl-color-border-inline-code: #e4e4e6;
+}
+
+/* Dark mode: lift the link/accent toward Viam blue while keeping nova's dark grays. */
+:root {
+  --sl-color-accent-low: #001e3d;
+  --sl-color-accent: #4d8fdf;
+  --sl-color-accent-high: #c2dcff;
+}
+
+/* Hero action buttons: smaller padding, sharper corners, smaller text — closer to
+   Viam's prime button sizing than nova's default rounded-xl px-6 py-3. */
+.hero .actions a {
+  padding: 0.5rem 1rem;
+  border-radius: 0.125rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}

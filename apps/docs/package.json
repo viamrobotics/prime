@@ -1,0 +1,28 @@
+{
+	"name": "@viamrobotics/prime-docs",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "node scripts/build-playgrounds.mjs && astro build",
+		"build:playgrounds": "node scripts/build-playgrounds.mjs",
+		"preview": "astro preview"
+	},
+	"dependencies": {
+		"@astrojs/starlight": "0.38.4",
+		"@tailwindcss/vite": "4.2.4",
+		"astro": "6.2.0",
+		"sharp": "0.34.2",
+		"starlight-theme-nova": "0.11.9",
+		"tailwindcss": "4.2.4"
+	},
+	"devDependencies": {
+		"@fontsource-variable/public-sans": "^5.2.7",
+		"@fontsource-variable/roboto-mono": "^5.2.9",
+		"@viamrobotics/prime-ui": "workspace:^",
+		"@viamrobotics/tailwind-config": "workspace:^",
+		"typescript": "^5.9.2",
+		"vite": "^7.3.0"
+	}
+}

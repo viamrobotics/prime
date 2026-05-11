@@ -7,6 +7,7 @@
   "repository": "git://github.com/viamrobotics/prime.git",
   "packageManager": "pnpm@10.33.4",
   "scripts": {
+    "app:docs": "pnpm --filter @viamrobotics/prime-docs dev",
     "build": "pnpm -r run --if-present build",
     "check": "pnpm -r run --if-present check",
     "lint": "pnpm -r run --if-present lint",

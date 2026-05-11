@@ -1,0 +1,59 @@
+name: PR Preview
+
+# Builds the docs site (including embedded playgrounds) from the PR branch and
+# publishes it as a static site under gh-pages:pr-preview/pr-<N>/. Reviewers get
+# a public URL to inspect both the docs and any playground changes the PR makes.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pr-preview-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.pull_request.title, 'Version Packages') }}
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        if: github.event.action != 'closed'
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Setup Node
+        if: github.event.action != 'closed'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        if: github.event.action != 'closed'
+        run: pnpm install
+
+      - name: Build docs site (includes playgrounds)
+        if: github.event.action != 'closed'
+        env:
+          DOCS_BASE: /prime/pr-preview/pr-${{ github.event.number }}/
+          DOCS_SITE: https://viamrobotics.github.io
+        run: pnpm --filter @viamrobotics/prime-docs build
+
+      - name: Deploy / cleanup preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: apps/docs/dist
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
