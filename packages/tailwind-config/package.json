@@ -12,12 +12,23 @@
     "url": "git+https://github.com/viamrobotics/prime.git",
     "directory": "packages/tailwind-config"
   },
-  "keywords": ["tailwind", "tailwindcss"],
+  "keywords": [
+    "tailwind",
+    "tailwindcss"
+  ],
   "exports": {
     ".": "./tailwind-config.css",
     "./fonts": "./fonts.js"
   },
-  "files": ["fonts.js", "tailwind-config.css"],
+  "files": [
+    "fonts.js",
+    "tailwind-config.css"
+  ],
+  "dependencies": {
+    "@fontsource-variable/public-sans": "^5.2.7",
+    "@fontsource-variable/roboto-mono": "^5.2.9",
+    "@fontsource-variable/space-grotesk": "^5.2.10"
+  },
   "peerDependencies": {
     "tailwindcss": ">=4 <5"
   }

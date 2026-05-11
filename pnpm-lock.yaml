@@ -139,7 +139,17 @@ importers:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.59.2))(vitest@4.1.6)
 
-  packages/tailwind-config: {}
+  packages/tailwind-config:
+    dependencies:
+      '@fontsource-variable/public-sans':
+        specifier: ^5.2.7
+        version: 5.2.7
+      '@fontsource-variable/roboto-mono':
+        specifier: ^5.2.9
+        version: 5.2.9
+      '@fontsource-variable/space-grotesk':
+        specifier: ^5.2.10
+        version: 5.2.10
 
 packages:
 
@@ -517,6 +527,9 @@ packages:
 
   '@fontsource-variable/roboto-mono@5.2.9':
     resolution: {integrity: sha512-OzFO2AXlSGcXl/NcXS3CGjImb6rczCByPJ1C+Dzp9kkYOrUPyrGTuAtqPcmA/d+nZGX5oyOWKXLk5BrwVLYqkw==}
+
+  '@fontsource-variable/space-grotesk@5.2.10':
+    resolution: {integrity: sha512-yJQO/o35/hAP3CFnpdFTwQku2yzJOae2HIpBmqkOVoxhhXJaQP3g+b6Jrz7u+eI7A5ZdCIf88uMWpBJdFiGr5w==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -4093,6 +4106,8 @@ snapshots:
   '@fontsource-variable/public-sans@5.2.7': {}
 
   '@fontsource-variable/roboto-mono@5.2.9': {}
+
+  '@fontsource-variable/space-grotesk@5.2.10': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

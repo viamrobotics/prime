@@ -28,6 +28,12 @@ The workspace root holds shared tooling (lint, format, changesets, CI).
 
 Each library package's existing SvelteKit `src/routes/` _is_ its playground. The docs site (`apps/docs/`) builds each package's playground as a static bundle, mounts each under `/playground/<package-name>/`, and links to them from the Starlight sidebar. To add a playground for a new library, give it a static SvelteKit app under `src/routes/`, then add it to the docs build orchestration in [apps/docs/scripts/build-playgrounds.mjs](apps/docs/scripts/build-playgrounds.mjs).
 
+## Packages
+
+| Package                                                               | Purpose                                                             |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md) | Viam's shared Tailwind CSS v4 configuration: design tokens + fonts. |
+
 ## Tech stack (workspace-level)
 
 | Layer           | Technology       |
