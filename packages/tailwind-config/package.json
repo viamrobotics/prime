@@ -18,6 +18,11 @@
     "./fonts": "./fonts.js"
   },
   "files": ["fonts.js", "tailwind-config.css"],
+  "dependencies": {
+    "@fontsource-variable/public-sans": "^5.2.7",
+    "@fontsource-variable/roboto-mono": "^5.2.9",
+    "@fontsource-variable/space-grotesk": "^5.2.10"
+  },
   "peerDependencies": {
     "tailwindcss": ">=4 <5"
   }
