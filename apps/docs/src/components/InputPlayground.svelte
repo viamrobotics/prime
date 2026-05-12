@@ -4,10 +4,6 @@
 	import Playground from './Playground.svelte';
 	import type { Control } from './playground-controls.ts';
 
-	interface Props {
-		controls: readonly Control[];
-	}
-
 	const controls: readonly Control[] = [
 		{
 			name: 'state',
