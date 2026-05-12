@@ -5,8 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "astro dev",
-		"build": "node scripts/build-playgrounds.mjs && astro build",
-		"build:playgrounds": "node scripts/build-playgrounds.mjs",
+		"build": "astro build",
 		"preview": "astro preview",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."

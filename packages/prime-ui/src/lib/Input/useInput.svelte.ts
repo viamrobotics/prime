@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import { InputStates, type InputState } from './input-state.ts';
+import { InputStates, type InputState } from './input-state';
 
 const CONTEXT_KEY = Symbol('input-context');
 

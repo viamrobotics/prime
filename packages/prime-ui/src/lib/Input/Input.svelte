@@ -14,7 +14,7 @@ NumberInput or DateInput are preferable.
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
-	import { type InputState, InputStates } from './input-state.ts';
+	import { type InputState, InputStates } from './input-state';
 	import { provideInput } from './useInput.svelte.ts';
 
 	/** Additional CSS classes to pass to the input. */

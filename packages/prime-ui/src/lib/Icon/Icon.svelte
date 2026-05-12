@@ -19,7 +19,7 @@ A component that renders SVG icons from the @mdi/js package
 		IconPathsByName,
 		type IconSize,
 		IconSizes
-	} from './icons.ts';
+	} from './icons';
 
 	interface Props extends HTMLAttributes<SVGElement> {
 		/** The name of the icon. */
