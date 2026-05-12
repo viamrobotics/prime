@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 import starlight from '@astrojs/starlight';
 import svelte from '@astrojs/svelte';
 import tailwindcss from '@tailwindcss/vite';
@@ -6,6 +8,14 @@ import starlightThemeNova from 'starlight-theme-nova';
 
 const base = process.env.DOCS_BASE ?? '/prime/';
 const site = process.env.DOCS_SITE ?? 'https://viamrobotics.github.io';
+
+// Resolve workspace component libraries from source rather than from their
+// built `dist/`. This lets the docs site build without first running
+// `svelte-package` in each library, and means the docs always reflect the
+// current source.
+const primeUiSrc = fileURLToPath(
+	new URL('../../packages/prime-ui/src/lib/index.ts', import.meta.url)
+);
 
 export default defineConfig({
 	site,
@@ -56,6 +66,11 @@ export default defineConfig({
 		svelte()
 	],
 	vite: {
-		plugins: [tailwindcss()]
+		plugins: [tailwindcss()],
+		resolve: {
+			alias: {
+				'@viamrobotics/prime-ui': primeUiSrc
+			}
+		}
 	}
 });

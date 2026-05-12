@@ -18,6 +18,8 @@ The documentation site for the prime monorepo. Astro + Starlight, with one MDX p
 - `src/components/` — Svelte components mounted from MDX pages: the generic `Playground.svelte` shell, the per-component `<X>Playground.svelte` configs, and `playground-controls.ts` with the typed knob schema.
 - `src/tailwind.css` — pulls in Tailwind + tokens; referenced from `customCss` in `astro.config.mjs`. `@source` directives there scan both this app's components and `packages/prime-ui/src/lib/**/*.svelte` so utility classes inside imported library components make it into the build.
 
+The Vite config in `astro.config.mjs` aliases `@viamrobotics/prime-ui` to `packages/prime-ui/src/lib/index.ts`, so the docs site consumes prime-ui's source rather than its built `dist/`. This means the docs build and dev server work without first running `svelte-package` in prime-ui, and docs always reflect the current library source. The npm-publish flow (`svelte-package` via `prepack`) is unaffected and still produces `dist/` for real consumers.
+
 ## Commands
 
 ```bash
