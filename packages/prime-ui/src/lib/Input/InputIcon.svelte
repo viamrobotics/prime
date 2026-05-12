@@ -3,21 +3,9 @@
 	import { useInput } from './useInput.svelte.ts';
 
 	const input = useInput();
-
-	const icon = $derived.by(() => {
-		if (input.isInfo) {
-			return 'information';
-		} else if (input.isWarn) {
-			return 'alert';
-		} else if (input.isError) {
-			return 'alert-circle';
-		} else {
-			return undefined;
-		}
-	});
 </script>
 
-{#if icon}
+{#if input.icon}
 	<Icon
 		class={[
 			'absolute top-1.5 right-2',
@@ -27,6 +15,6 @@
 				'text-danger-dark': input.isError
 			}
 		]}
-		name={icon}
+		name={input.icon}
 	/>
 {/if}

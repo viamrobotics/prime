@@ -22,7 +22,7 @@
 
 <Playground componentName="Label" {controls} {code}>
 	{#snippet preview(values)}
-		<div class={['w-full max-w-xs']}>
+		<div class="w-full max-w-xs">
 			<Label
 				for="playground-label-example"
 				required={values.required as boolean}

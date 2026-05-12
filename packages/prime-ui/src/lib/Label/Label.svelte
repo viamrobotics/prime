@@ -4,10 +4,8 @@
   For labelling inputs.
 
 ```svelte
-<InputLabel for="email">
-  Email: <InputLabelDetail>(optional)</InputLabelDetail>
-</InputLabel>
-<Input id="email" type="email" />
+<Label for="email">Email</Label>
+<Input.Root id="email" type="email" />
 ```
  -->
 

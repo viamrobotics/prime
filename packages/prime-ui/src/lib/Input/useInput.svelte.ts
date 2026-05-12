@@ -1,5 +1,6 @@
 import { getContext, setContext } from 'svelte';
 import { InputStates, type InputState } from './input-state';
+import { type IconName } from '$lib/Icon/icons';
 
 const CONTEXT_KEY = Symbol('input-context');
 
@@ -8,6 +9,18 @@ export const provideInput = (state: () => InputState) => {
 	const isInfo = $derived(current === InputStates.INFO);
 	const isWarn = $derived(current === InputStates.WARN);
 	const isError = $derived(current === InputStates.ERROR);
+
+	const icon = $derived.by<IconName | undefined>(() => {
+		if (isInfo) {
+			return 'information';
+		} else if (isWarn) {
+			return 'alert';
+		} else if (isError) {
+			return 'alert-circle';
+		} else {
+			return undefined;
+		}
+	});
 
 	return setContext(CONTEXT_KEY, {
 		get state() {
@@ -21,6 +34,9 @@ export const provideInput = (state: () => InputState) => {
 		},
 		get isError() {
 			return isError;
+		},
+		get icon() {
+			return icon;
 		}
 	});
 };

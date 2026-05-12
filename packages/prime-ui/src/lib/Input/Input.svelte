@@ -69,6 +69,7 @@ NumberInput or DateInput are preferable.
 		aria-invalid={input.isError ? true : undefined}
 		class={[
 			'h-7.5 w-full appearance-none border px-2 py-1.5 text-xs leading-tight text-default outline-none',
+			input.icon && 'pr-7',
 			defaultClasses,
 			readonlyClasses,
 			disabledClasses,

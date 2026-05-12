@@ -1,7 +1,8 @@
 <!--
 @component
 
-A component that renders SVG icons from the @mdi/js package
+Renders SVG icons by name. Most icons come from `@mdi/js`; a few entries are
+custom Svelte components (e.g. PyTorch, TensorFlow).
 ```svelte
   <Icon
     name='camera-outline'
@@ -10,16 +11,9 @@ A component that renders SVG icons from the @mdi/js package
 ```
 -->
 <script lang="ts">
-	import type { Component } from 'svelte';
-	import type { HTMLAttributes, SVGAttributes } from 'svelte/elements';
+	import type { HTMLAttributes } from 'svelte/elements';
 
-	import {
-		type CustomIcon,
-		type IconName,
-		IconPathsByName,
-		type IconSize,
-		IconSizes
-	} from './icons';
+	import { type IconName, IconPathsByName, type IconSize, IconSizes } from './icons';
 
 	interface Props extends HTMLAttributes<SVGElement> {
 		/** The name of the icon. */
@@ -30,24 +24,23 @@ A component that renders SVG icons from the @mdi/js package
 
 	const { name, size = 'base', class: extraClasses, ...restProps }: Props = $props();
 
-	let allPaths = $state<CustomIcon[]>([]);
-	let IconComponent = $state<Component<SVGAttributes<SVGElement>>>();
+	const pathValue = $derived(IconPathsByName[name]);
 
-	$effect.pre(() => {
-		const pathValue = IconPathsByName[name];
+	const IconComponent = $derived.by(() =>
+		typeof pathValue === 'function' ? pathValue : undefined
+	);
+
+	const allPaths = $derived.by(() => {
 		if (typeof pathValue === 'string') {
-			allPaths = [{ path: pathValue }];
-			IconComponent = undefined;
-		} else if (Array.isArray(pathValue)) {
-			allPaths = pathValue.map((icon) => ({
+			return [{ path: pathValue, opacity: undefined }];
+		}
+		if (Array.isArray(pathValue)) {
+			return pathValue.map((icon) => ({
 				path: icon.path,
 				opacity: 'opacity' in icon ? icon.opacity : undefined
 			}));
-			IconComponent = undefined;
-		} else if (typeof pathValue === 'function') {
-			IconComponent = pathValue;
-			allPaths = [];
 		}
+		return [];
 	});
 </script>
 
@@ -56,7 +49,7 @@ A component that renders SVG icons from the @mdi/js package
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
 {#if IconComponent}
-	<IconComponent class={[IconSizes[size], extraClasses]} />
+	<IconComponent class={[IconSizes[size], extraClasses]} {...restProps} />
 {:else}
 	<svg
 		class={[IconSizes[size], extraClasses]}
@@ -65,7 +58,8 @@ A component that renders SVG icons from the @mdi/js package
 		focusable="false"
 		{...restProps}
 	>
-		{#each allPaths as { path: dAttribute, opacity }, path (path)}
+		<!-- index is safe to key, `allPaths` is rebuilt when `name` changes. -->
+		{#each allPaths as { path: dAttribute, opacity }, index (index)}
 			<path d={dAttribute} {opacity} fill-rule="evenodd" fill="currentColor" />
 		{/each}
 	</svg>

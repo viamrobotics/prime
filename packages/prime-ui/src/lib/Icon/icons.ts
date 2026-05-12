@@ -182,7 +182,7 @@ export type IconPath = string | CustomIcon[];
  * Keys should match MDI name
  * e.g. 'account-multiple' for mdiAccountMultiple
  */
-export const IconPathsByName: Record<string, IconPath | Component<SVGAttributes<SVGElement>>> = {
+export const IconPathsByName = {
 	'account-plus-outline': mdiAccountPlusOutline,
 	'account-group-outline': mdiAccountGroupOutline,
 	'account-multiple': mdiAccountMultiple,
@@ -413,7 +413,7 @@ export const IconPathsByName: Record<string, IconPath | Component<SVGAttributes<
 	'widgets-outline': mdiWidgetsOutline,
 	windows: mdiMicrosoftWindows,
 	'wrench-outline': mdiWrenchOutline
-} as const;
+} as const satisfies Record<string, IconPath | Component<SVGAttributes<SVGElement>>>;
 
 /**
  * The possible icon names that can be rendered. This is good for typing props.
