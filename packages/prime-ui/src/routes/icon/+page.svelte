@@ -12,11 +12,11 @@
 
 	<section class="space-y-3">
 		<h2 class="text-sm font-semibold tracking-wide uppercase">Sizes</h2>
-		<div class="border-light flex items-end gap-6 rounded border bg-white p-6">
+		<div class="flex items-end gap-6 rounded border border-light bg-white p-6">
 			{#each sizes as size (size)}
 				<div class="flex flex-col items-center gap-2">
 					<Icon name="rocket-launch-outline" {size} />
-					<span class="text-subtle-1 font-mono text-[11px]">{size}</span>
+					<span class="font-mono text-[11px] text-subtle-1">{size}</span>
 				</div>
 			{/each}
 		</div>
@@ -24,7 +24,7 @@
 
 	<section class="space-y-3">
 		<h2 class="text-sm font-semibold tracking-wide uppercase">Color via currentColor</h2>
-		<div class="border-light flex gap-6 rounded border bg-white p-6">
+		<div class="flex gap-6 rounded border border-light bg-white p-6">
 			<Icon name="alert-circle" size="xl" class="text-danger-dark" />
 			<Icon name="alert" size="xl" class="text-warning-dark" />
 			<Icon name="information" size="xl" class="text-info-dark" />
@@ -38,7 +38,7 @@
 			All icons ({allNames.length})
 		</h2>
 		<div
-			class="border-light grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-2 rounded border bg-white p-3"
+			class="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-2 rounded border border-light bg-white p-3"
 		>
 			{#each allNames as name (name)}
 				<div class="flex items-center gap-2 rounded p-2 hover:bg-light">

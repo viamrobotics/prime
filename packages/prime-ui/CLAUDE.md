@@ -10,16 +10,16 @@ Viam's Svelte 5 component library — the v2 of prime. Components live in `src/l
 
 ## Stack
 
-| Layer       | Tool                                                                      |
-| ----------- | ------------------------------------------------------------------------- |
-| Framework   | Svelte 5 (runes) via SvelteKit                                            |
-| Adapter     | `@sveltejs/adapter-static` (so the local dev sandbox prerenders cleanly)  |
-| Bundler     | Vite                                                                      |
-| Styles      | Tailwind CSS v4                                                           |
-| Tokens      | `@viamrobotics/tailwind-config`                                           |
-| Tests       | Vitest (browser mode for `.svelte`)                                       |
-| Typecheck   | `svelte-check`                                                            |
-| Lint/format | ESLint + Prettier                                                         |
+| Layer       | Tool                                                                     |
+| ----------- | ------------------------------------------------------------------------ |
+| Framework   | Svelte 5 (runes) via SvelteKit                                           |
+| Adapter     | `@sveltejs/adapter-static` (so the local dev sandbox prerenders cleanly) |
+| Bundler     | Vite                                                                     |
+| Styles      | Tailwind CSS v4                                                          |
+| Tokens      | `@viamrobotics/tailwind-config`                                          |
+| Tests       | Vitest (browser mode for `.svelte`)                                      |
+| Typecheck   | `svelte-check`                                                           |
+| Lint/format | ESLint + Prettier                                                        |
 
 ## Workspace deps
 

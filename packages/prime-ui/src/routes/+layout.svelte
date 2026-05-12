@@ -17,10 +17,10 @@
 </script>
 
 <div class="flex min-h-screen text-default">
-	<aside class="border-light w-56 shrink-0 border-r bg-light">
-		<div class="border-light border-b p-4">
+	<aside class="w-56 shrink-0 border-r border-light bg-light">
+		<div class="border-b border-light p-4">
 			<a href={base || '/'} class="font-semibold tracking-tight no-underline">prime-ui</a>
-			<p class="text-subtle-1 text-xs">dev sandbox</p>
+			<p class="text-xs text-subtle-1">dev sandbox</p>
 		</div>
 		<nav class="flex flex-col p-2">
 			{#each components as { name, href } (href)}

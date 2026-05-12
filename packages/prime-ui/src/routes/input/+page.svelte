@@ -9,7 +9,7 @@
 
 	<section class="space-y-3">
 		<h2 class="text-sm font-semibold tracking-wide uppercase">Basics</h2>
-		<div class="border-light grid max-w-md grid-cols-1 gap-3 rounded border bg-white p-6">
+		<div class="grid max-w-md grid-cols-1 gap-3 rounded border border-light bg-white p-6">
 			<Input.Root placeholder="Empty with placeholder" />
 			<Input.Root value="Filled value" />
 			<Input.Root placeholder="Disabled" disabled />
@@ -21,7 +21,7 @@
 
 	<section class="space-y-3">
 		<h2 class="text-sm font-semibold tracking-wide uppercase">States (with Icon)</h2>
-		<div class="border-light grid max-w-md grid-cols-1 gap-3 rounded border bg-white p-6">
+		<div class="grid max-w-md grid-cols-1 gap-3 rounded border border-light bg-white p-6">
 			<Input.Root state="info" value="state=info">
 				<Input.Icon />
 			</Input.Root>
