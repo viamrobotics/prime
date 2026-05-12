@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Input, Label } from '@viamrobotics/prime-ui';
 
-	import Playground from './Playground.svelte';
 	import type { Control, ControlValues } from './playground-controls.ts';
+
+	import Playground from './Playground.svelte';
 
 	const controls: readonly Control[] = [
 		{ name: 'text', type: 'string', default: 'Full name' },

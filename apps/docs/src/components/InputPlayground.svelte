@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Input, type InputState } from '@viamrobotics/prime-ui';
 
-	import Playground from './Playground.svelte';
 	import type { Control } from './playground-controls.ts';
+
+	import Playground from './Playground.svelte';
 
 	const controls: readonly Control[] = [
 		{

@@ -1,6 +1,7 @@
 import { getContext, setContext } from 'svelte';
+
+import { type IconName } from '../Icon/icons';
 import { InputStates, type InputState } from './input-state';
-import { type IconName } from '$lib/Icon/icons';
 
 const CONTEXT_KEY = Symbol('input-context');
 

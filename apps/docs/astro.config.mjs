@@ -1,9 +1,8 @@
-import { fileURLToPath } from 'node:url';
-
 import starlight from '@astrojs/starlight';
 import svelte from '@astrojs/svelte';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
+import { fileURLToPath } from 'node:url';
 import starlightThemeNova from 'starlight-theme-nova';
 
 const base = process.env.DOCS_BASE ?? '/prime/';

@@ -17,9 +17,8 @@ local component development.
 ```
 -->
 <script lang="ts">
-	import { untrack, type Snippet } from 'svelte';
-
 	import { Input, Label } from '@viamrobotics/prime-ui';
+	import { untrack, type Snippet } from 'svelte';
 
 	import {
 		type Control,

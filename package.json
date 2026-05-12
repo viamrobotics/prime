@@ -8,6 +8,7 @@
   "packageManager": "pnpm@10.33.4",
   "scripts": {
     "app:docs": "pnpm --filter @viamrobotics/prime-docs dev",
+    "packages:ui": "pnpm --filter @viamrobotics/prime-ui dev",
     "build": "pnpm -r run --if-present build",
     "check": "pnpm -r run --if-present check",
     "lint": "dprint check && pnpm -r run --if-present lint",
