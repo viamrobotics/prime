@@ -26,6 +26,7 @@
 		"@eslint/js": "^10.0.1",
 		"@fontsource-variable/public-sans": "^5.2.7",
 		"@fontsource-variable/roboto-mono": "^5.2.9",
+		"@fontsource-variable/space-grotesk": "^5.2.10",
 		"@viamrobotics/prime-ui": "workspace:^",
 		"@viamrobotics/tailwind-config": "workspace:^",
 		"eslint": "^10.2.0",

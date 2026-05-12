@@ -25,7 +25,12 @@ export default defineConfig({
 					href: 'https://github.com/viamrobotics/prime'
 				}
 			],
-			customCss: ['./src/tailwind.css'],
+			customCss: [
+				'@fontsource-variable/public-sans',
+				'@fontsource-variable/roboto-mono',
+				'@fontsource-variable/space-grotesk',
+				'./src/tailwind.css'
+			],
 			sidebar: [
 				{ label: 'Introduction', link: '/' },
 				{

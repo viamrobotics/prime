@@ -10,14 +10,20 @@
     "app:docs": "pnpm --filter @viamrobotics/prime-docs dev",
     "build": "pnpm -r run --if-present build",
     "check": "pnpm -r run --if-present check",
-    "lint": "pnpm -r run --if-present lint",
+    "lint": "dprint check && pnpm -r run --if-present lint",
     "test": "pnpm -r run --if-present test",
-    "format": "pnpm -r run --if-present format",
+    "format": "dprint fmt && pnpm -r run --if-present format",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.0"
+    "@changesets/cli": "^2.27.0",
+    "dprint": "^0.54.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "dprint"
+    ]
   }
 }

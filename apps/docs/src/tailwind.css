@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-@import '@viamrobotics/tailwind-config';
 @import 'starlight-theme-nova/tailwind.css';
+@import '@viamrobotics/tailwind-config';
 
 @source '../../../packages/prime-ui/src/lib/**/*.{svelte,ts}';
 @source '../components/**/*.svelte';

@@ -1,6 +1,6 @@
 # Viam's Tailwind Config
 
-This module contains [Viam][]'s shared [Tailwind CSS][] v4 configuration.
+This module contains [Viam][Viam]'s shared [Tailwind CSS][Tailwind CSS] v4 configuration.
 
 [viam]: https://www.viam.com/
 [tailwind css]: https://tailwindcss.com/

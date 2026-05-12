@@ -9,3 +9,8 @@ bun.lockb
 /dist/
 /.astro/
 /public/playground/
+
+# MDX is formatted by dprint + dprint-plugin-markdown (see dprint.json at the
+# repo root). Prettier's MDX list-item indent logic mangles Starlight <Steps>
+# blocks; dprint handles them correctly.
+*.mdx

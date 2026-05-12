@@ -3,16 +3,7 @@ title: '@viamrobotics/prime-ui'
 description: Viam's Svelte 5 component library.
 ---
 
-import {
-	Aside,
-	Card,
-	CardGrid,
-	Code,
-	LinkCard,
-	Steps,
-	Tabs,
-	TabItem
-} from '@astrojs/starlight/components';
+import { Aside, Card, CardGrid, Code, LinkCard, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 
 `@viamrobotics/prime-ui` is Viam's Svelte 5 component library. Components are built on top of design tokens from [`@viamrobotics/tailwind-config`](../tailwind-config/) and styled with Tailwind CSS v4.
 
@@ -28,24 +19,15 @@ import {
 1. Install the package and its peers:
 
    <Tabs syncKey="pkg">
-   	<TabItem label="pnpm">
-   		<Code
-   			code="pnpm add @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss"
-   			lang="sh"
-   		/>
-   	</TabItem>
-   	<TabItem label="npm">
-   		<Code
-   			code="npm install @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss"
-   			lang="sh"
-   		/>
-   	</TabItem>
-   	<TabItem label="yarn">
-   		<Code
-   			code="yarn add @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss"
-   			lang="sh"
-   		/>
-   	</TabItem>
+     <TabItem label="pnpm">
+       <Code code="pnpm add @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss" lang="sh" />
+     </TabItem>
+     <TabItem label="npm">
+       <Code code="npm install @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss" lang="sh" />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code code="yarn add @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss" lang="sh" />
+     </TabItem>
    </Tabs>
 
 2. In your app's main CSS, import the Tailwind config so token classes resolve:
@@ -56,8 +38,7 @@ import {
 
 ## Components
 
-Each component page has an interactive playground for browsing variants
-and copying the resulting code.
+Each component page has an interactive playground for browsing variants and copying the resulting code.
 
 <CardGrid>
 	<LinkCard
