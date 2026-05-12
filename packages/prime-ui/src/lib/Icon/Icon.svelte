@@ -22,7 +22,7 @@ custom Svelte components (e.g. PyTorch, TensorFlow).
 		size?: IconSize;
 	}
 
-	const { name, size = 'base', class: extraClasses, ...restProps }: Props = $props();
+	const { name, size = 'base', class: extraClasses, ...rest }: Props = $props();
 
 	const pathValue = $derived(IconPathsByName[name]);
 
@@ -49,14 +49,14 @@ custom Svelte components (e.g. PyTorch, TensorFlow).
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
 -->
 {#if IconComponent}
-	<IconComponent class={[IconSizes[size], extraClasses]} {...restProps} />
+	<IconComponent class={[IconSizes[size], extraClasses]} {...rest} />
 {:else}
 	<svg
 		class={[IconSizes[size], extraClasses]}
 		viewBox="0 0 24 24"
 		aria-hidden="true"
 		focusable="false"
-		{...restProps}
+		{...rest}
 	>
 		<!-- index is safe to key, `allPaths` is rebuilt when `name` changes. -->
 		{#each allPaths as { path: dAttribute, opacity }, index (index)}
