@@ -1,0 +1,83 @@
+---
+title: "@viamrobotics/tweakpane-config"
+description: Viam-themed Theme preset for svelte-tweakpane-ui.
+---
+
+import {
+  Aside,
+  Code,
+  LinkButton,
+  Steps,
+  Tabs,
+  TabItem,
+} from "@astrojs/starlight/components";
+
+`@viamrobotics/tweakpane-config` exposes a `Theme` preset that matches Viam's design system. Drop it into [`svelte-tweakpane-ui`](https://kitschpatrol.com/svelte-tweakpane-ui)'s `ThemeUtils.setGlobalDefaultTheme` and every component on the page renders with Viam's palette and typography.
+
+## Installation
+
+<Steps>
+
+1. Install the package and its peer:
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add @viamrobotics/tweakpane-config svelte-tweakpane-ui"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install @viamrobotics/tweakpane-config svelte-tweakpane-ui"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add @viamrobotics/tweakpane-config svelte-tweakpane-ui"
+         lang="sh"
+       />
+     </TabItem>
+   </Tabs>
+
+2. Apply `primeTheme` as the global default near the top of your app. Refer to the [svelte-tweakpane-ui themes documentation](https://kitschpatrol.com/svelte-tweakpane-ui/docs/themes) for the supported usage patterns (global default, per-component `theme` prop, partial overrides).
+
+   ```svelte
+   <script lang="ts">
+     import { primeTheme } from '@viamrobotics/tweakpane-config';
+     import { ThemeUtils } from 'svelte-tweakpane-ui';
+
+     ThemeUtils.setGlobalDefaultTheme(primeTheme);
+   </script>
+   ```
+
+</Steps>
+
+## Extending the theme
+
+`primeTheme` is a plain `Theme` object, so it composes with the spread operator:
+
+```ts
+import { primeTheme } from "@viamrobotics/tweakpane-config";
+import { ThemeUtils, type Theme } from "svelte-tweakpane-ui";
+
+const compactTheme: Theme = {
+  ...primeTheme,
+  containerUnitSize: "20px",
+};
+
+ThemeUtils.setGlobalDefaultTheme(compactTheme);
+```
+
+## Fonts
+
+The theme references `Public Sans Variable`. Load it via [`@viamrobotics/tailwind-config`](../tailwind-config/) or directly from `@fontsource-variable/public-sans`. If the font isn't loaded, browsers fall back to the system sans-serif.
+
+## Playground
+
+The playground showcases representative `svelte-tweakpane-ui` components — `Slider`, `List`, `Color`, `Checkbox`, `Point`, `RotationEuler`, `TabGroup` / `TabPage`, `Button`, and `Monitor` — all rendered through the Prime theme.
+
+<LinkButton href="../../playground/tweakpane-config/" icon="external">
+  Open the tweakpane-config playground
+</LinkButton>

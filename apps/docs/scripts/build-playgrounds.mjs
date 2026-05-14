@@ -13,7 +13,12 @@ const repoRoot = resolve(docsRoot, '..', '..');
 // build a static SvelteKit app to <pkgDir>/build/ when `vite build` is invoked
 // with BASE_PATH set.
 const playgrounds = [
-	{ name: 'prime-ui', filter: '@viamrobotics/prime-ui', pkgDir: 'packages/prime-ui' }
+	{ name: 'prime-ui', filter: '@viamrobotics/prime-ui', pkgDir: 'packages/prime-ui' },
+	{
+		name: 'tweakpane-config',
+		filter: '@viamrobotics/tweakpane-config',
+		pkgDir: 'packages/tweakpane-config'
+	}
 ];
 
 const docsBase = (process.env.DOCS_BASE ?? '/prime/').replace(/\/$/, '');
