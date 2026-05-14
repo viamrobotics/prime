@@ -1,4 +1,0 @@
-import{P as u,L as f,b as m}from"./Playground.B0dfixlK.js";import{n as b,c,b as x,t as g,d as $,s as v,a as n,e as y,r as _,f as L}from"./snippet.DOhsaf_j.js";var h=L('<div class="w-full max-w-xs"><!> <!></div>');function j(s){const d=[{name:"text",type:"string",default:"Full name"},{name:"required",type:"boolean",default:!1},{name:"disabled",type:"boolean",default:!1}];u(s,{componentName:"Label",get controls(){return d},code:t=>{const a=String(t.text??""),e=['for="example"'];return t.required&&e.push("required"),t.disabled&&e.push("disabled"),`<Label ${e.join(" ")}>
-  ${a}
-</Label>
-<Input.Root id="example" />`},preview:(a,e=b)=>{var r=h(),o=c(r);f(o,{for:"playground-label-example",get required(){return e().required},get disabled(){return e().disabled},children:(p,w)=>{x();var l=g();$(()=>v(l,e().text)),n(p,l)},$$slots:{default:!0}});var i=y(o,2);m(i,{id:"playground-label-example"}),_(r),n(a,r)},$$slots:{preview:!0}})}export{j as default};
