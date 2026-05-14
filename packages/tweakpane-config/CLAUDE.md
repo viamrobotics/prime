@@ -33,4 +33,6 @@ Viam-themed configuration for [`svelte-tweakpane-ui`](https://kitschpatrol.com/s
 pnpm --filter @viamrobotics/tweakpane-config dev      # start playground dev server
 pnpm --filter @viamrobotics/tweakpane-config build    # tsc library + vite build playground
 pnpm --filter @viamrobotics/tweakpane-config check    # svelte-check
+pnpm --filter @viamrobotics/tweakpane-config format   # prettier formatter
+pnpm --filter @viamrobotics/tweakpane-config lint     # eslint
 ```
