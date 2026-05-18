@@ -39,11 +39,18 @@ export default defineConfig({
               label: "@viamrobotics/tailwind-config",
               link: "/packages/tailwind-config/",
             },
+            {
+              label: "@viamrobotics/tweakpane-config",
+              link: "/packages/tweakpane-config/",
+            },
           ],
         },
         {
           label: "Playgrounds",
-          items: [{ label: "prime-ui", link: "/playground/prime-ui/" }],
+          items: [
+            { label: "prime-ui", link: "/playground/prime-ui/" },
+            { label: "tweakpane-config", link: "/playground/tweakpane-config/" },
+          ],
         },
       ],
     }),
