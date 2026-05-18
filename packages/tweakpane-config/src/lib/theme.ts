@@ -23,7 +23,7 @@ export const primeTheme: Theme = {
   containerBackgroundColorActive: "#d7d7d9",
   containerForegroundColor: "#282829",
   containerHorizontalPadding: "8px",
-  containerUnitSize: "24px",
+  containerUnitSize: "20px",
   containerUnitSpacing: "4px",
   containerVerticalPadding: "6px",
 
