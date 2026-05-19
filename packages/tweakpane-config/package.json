@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/tweakpane-config",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Viam-themed configuration for svelte-tweakpane-ui.",
   "license": "Apache-2.0",
   "publishConfig": {
