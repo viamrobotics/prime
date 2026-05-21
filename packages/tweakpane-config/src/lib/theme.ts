@@ -18,8 +18,8 @@ export const primeTheme: Theme = {
   containerBackgroundColorActive: "#d7d7d9",
   containerForegroundColor: "#282829",
 
-  inputBackgroundColor: "#ffffff",
-  inputBackgroundColorHover: "#f7f7f8",
+  inputBackgroundColor: "#edeef0",
+  inputBackgroundColorHover: "#e4e4e6",
   inputBackgroundColorFocus: "#e1f3ff",
   inputBackgroundColorActive: "#b6d1f4",
   inputForegroundColor: "#282829",
