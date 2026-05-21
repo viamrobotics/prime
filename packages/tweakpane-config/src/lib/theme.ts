@@ -4,12 +4,7 @@ import type { Theme } from "svelte-tweakpane-ui";
 export const primeTheme: Theme = {
   baseBackgroundColor: "#ffffff",
   baseShadowColor: "rgba(0, 0, 0, 0.06)",
-  baseBorderRadius: "2px",
   baseFontFamily: '"Public Sans Variable", "Public Sans", sans-serif',
-
-  bladeBorderRadius: "2px",
-  bladeHorizontalPadding: "8px",
-  bladeValueWidth: "160px",
 
   buttonBackgroundColor: "#e4e4e6",
   buttonBackgroundColorHover: "#d7d7d9",
@@ -22,10 +17,6 @@ export const primeTheme: Theme = {
   containerBackgroundColorFocus: "#e4e4e6",
   containerBackgroundColorActive: "#d7d7d9",
   containerForegroundColor: "#282829",
-  containerHorizontalPadding: "8px",
-  containerUnitSize: "20px",
-  containerUnitSpacing: "4px",
-  containerVerticalPadding: "6px",
 
   inputBackgroundColor: "#ffffff",
   inputBackgroundColorHover: "#f7f7f8",
