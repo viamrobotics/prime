@@ -1,5 +1,11 @@
 # @viamrobotics/tweakpane-config
 
+## 0.1.1
+
+### Patch Changes
+
+- 6770601: Remove size options from config
+
 ## 0.1.0
 
 ### Minor Changes
