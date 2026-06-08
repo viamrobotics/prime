@@ -3,7 +3,7 @@ title: '@viamrobotics/tailwind-config'
 description: Viam's shared Tailwind CSS v4 configuration.
 ---
 
-import { Aside, Code, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 
 `@viamrobotics/tailwind-config` is Viam's shared Tailwind CSS v4 configuration. It exposes design tokens as Tailwind v4 theme values in an `@theme {}` block plus an optional `./fonts` entry point that side-effect imports the variable-font packages.
 
@@ -37,11 +37,24 @@ import { Aside, Code, Steps, Tabs, TabItem } from '@astrojs/starlight/components
 
    <Code code="import '@viamrobotics/tailwind-config/fonts';" lang="ts" />
 
+4. (Optional) Enable the dark theme by importing it _after_ the base config:
+
+   <Code code={`@import '@viamrobotics/tailwind-config';\n@import '@viamrobotics/tailwind-config/dark';`} lang="css" />
+
 </Steps>
 
 ## What it ships
 
 - `tailwind-config.css` — the `@theme {}` block: colors, spacing, fonts, shadows, z-index tokens.
+- `tailwind-config-dark.css` (`./dark`) — optional dark theme. Follows `prefers-color-scheme` by default; a `.light`/`.dark` ancestor forces the mode (class wins).
 - `fonts.js` — three `import '@fontsource-variable/*'` lines for Space Grotesk, Roboto Mono, and Public Sans.
 
 Token values match the [Viam design system](https://design.viam.com/). Don't invent values; copy from the published guides.
+
+## Playground
+
+The playground renders every token and utility — color swatches, typography, buttons, form controls, alerts, a table, and code colors — with a light/dark toggle so you can preview both themes.
+
+<LinkButton href="../../playground/tailwind-config/" icon="external">
+  Open the tailwind-config playground
+</LinkButton>

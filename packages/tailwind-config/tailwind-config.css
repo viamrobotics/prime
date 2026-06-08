@@ -104,32 +104,39 @@
   --animate-blink: blink 1.7s ease-in-out infinite;
 }
 
+/*
+ * These reference the grayscale tokens (rather than hardcoded hex) so they
+ * follow the dark-theme overrides in tailwind-config-dark.css. Light-mode values
+ * are unchanged except where noted: bg-medium/bg-dark/border-dark snap to the
+ * nearest gray token (imperceptible shift). bg-extralight has no matching token,
+ * so it stays literal and does not adapt to dark mode.
+ */
 @utility bg-extralight {
   background-color: #fbfbfc;
 }
 
 @utility bg-light {
-  background-color: #f7f7f8;
+  background-color: var(--color-gray-1);
 }
 
 @utility bg-medium {
-  background-color: #f1f1f4;
+  background-color: var(--color-gray-2);
 }
 
 @utility bg-dark {
-  background-color: #7a7a7a;
+  background-color: var(--color-gray-7);
 }
 
 @utility border-light {
-  border-color: #e4e4e6;
+  border-color: var(--color-gray-3);
 }
 
 @utility border-medium {
-  border-color: #d7d7d9;
+  border-color: var(--color-gray-4);
 }
 
 @utility border-dark {
-  border-color: #4e4e4e;
+  border-color: var(--color-gray-8);
 }
 
 /* Scrollbar */
@@ -344,12 +351,12 @@
 @utility slider-thumb-border {
   &::-webkit-slider-thumb {
     border-style: solid;
-    border-color: #e4e4e6;
+    border-color: var(--color-gray-3);
     border-radius: 9999px;
   }
   &::-moz-range-thumb {
     border-style: solid;
-    border-color: #e4e4e6;
+    border-color: var(--color-gray-3);
     border-radius: 9999px;
   }
 }

@@ -1,1 +1,1 @@
-export { primeTheme } from "./theme.js";
+export { primeTheme, primeThemeDark } from "./theme.js";

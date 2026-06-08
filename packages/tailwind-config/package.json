@@ -16,14 +16,26 @@
     "tailwind",
     "tailwindcss"
   ],
+  "type": "module",
   "exports": {
     ".": "./tailwind-config.css",
+    "./dark": "./tailwind-config-dark.css",
     "./fonts": "./fonts.js"
   },
   "files": [
     "fonts.js",
-    "tailwind-config.css"
+    "tailwind-config.css",
+    "tailwind-config-dark.css"
   ],
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "format": "prettier --write .",
+    "lint": "eslint ."
+  },
   "dependencies": {
     "@fontsource-variable/public-sans": "^5.2.7",
     "@fontsource-variable/roboto-mono": "^5.2.9",
@@ -31,5 +43,25 @@
   },
   "peerDependencies": {
     "tailwindcss": ">=4 <5"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.1.0",
+    "@eslint/js": "^10.0.1",
+    "@sveltejs/adapter-static": "^3.0.10",
+    "@sveltejs/kit": "^2.57.0",
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^24",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-svelte": "^3.17.1",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
+    "svelte": "^5.55.2",
+    "svelte-check": "^4.4.6",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^8.0.7"
   }
 }

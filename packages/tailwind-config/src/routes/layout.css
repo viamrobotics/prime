@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "../../tailwind-config.css";
+@import "../../tailwind-config-dark.css";
+
+/*
+ * The swatch grids build `bg-<token>` class names dynamically at runtime, which
+ * Tailwind can't see at build time. Without this safelist it tree-shakes the
+ * brand/illustration tokens (no static utility uses them) and their CSS variables
+ * never reach :root, leaving the swatches transparent. Safelist every swatch
+ * background so the utilities — and their `--color-*` variables — are generated.
+ */
+@source inline("bg-{white,black}");
+@source inline("bg-gray-{1..9}");
+@source inline("bg-{danger,success,info}-{light,medium,dark}");
+@source inline("bg-warning-{light,medium,bright,dark}");
+@source inline("bg-disabled-{light,dark}");
+@source inline("bg-{power-button,cyberpunk,mars-rover}-{light,medium,dark}");
+@source inline("bg-{power-wire,pcb,power-button,solar-power,mars-rover,raspberry,hologram,yoshimi,cyberpunk,hyperlink}");
+@source inline("bg-pixel-{red,green,teal,blue}");
+@source inline("text-{heading,default,subtle-1,subtle-2,disabled,link}");
+@source inline("text-{xs,sm,base,lg,xl,2xl,3xl,4xl,5xl}");
+@source inline("font-{space-grotesk,roboto-mono,public-sans}");
+
+body {
+  font-family: var(--font-public-sans);
+  color: var(--color-default);
+}

@@ -4,7 +4,8 @@ Viam-themed configuration for [`svelte-tweakpane-ui`](https://kitschpatrol.com/s
 
 ## Surface
 
-- `primeTheme` — the Prime `Theme` object. Pass it to `ThemeUtils.setGlobalDefaultTheme(...)` or to any component's `theme` prop. See the [`svelte-tweakpane-ui` themes docs](https://kitschpatrol.com/svelte-tweakpane-ui/docs/themes) for the usage patterns.
+- `primeTheme` — the Prime `Theme` object (light). Pass it to `ThemeUtils.setGlobalDefaultTheme(...)` or to any component's `theme` prop. See the [`svelte-tweakpane-ui` themes docs](https://kitschpatrol.com/svelte-tweakpane-ui/docs/themes) for the usage patterns.
+- `primeThemeDark` — optional dark variant of `primeTheme`. Same shape; values mirror the dark tokens in `@viamrobotics/tailwind-config/dark`. Because tweakpane themes are applied via JS (not CSS), there is no automatic `prefers-color-scheme` / `.dark` activation — the consumer decides which theme to pass to `ThemeUtils.setGlobalDefaultTheme` (for example, by watching a `matchMedia('(prefers-color-scheme: dark)')` listener).
 - `Theme` — re-exported from `svelte-tweakpane-ui` for convenience.
 
 ## Layout
