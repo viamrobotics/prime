@@ -1,0 +1,205 @@
+/*
+ * Optional dark theme for @viamrobotics/tailwind-config.
+ *
+ * Import AFTER the base config:
+ *   @import "@viamrobotics/tailwind-config";
+ *   @import "@viamrobotics/tailwind-config/dark";
+ *
+ * Activation follows the OS by default (prefers-color-scheme: dark). A `.light`
+ * ancestor forces light; a `.dark` ancestor forces dark — the class always wins.
+ *
+ * Mechanism: Tailwind v4 utilities resolve through `var(--color-*)`, so reassigning
+ * those custom properties under a dark scope flips existing components with no markup
+ * changes. The dark palette is defined once below as `--dark-*` variables and applied
+ * (reassigned) in both the system-preference and class scopes.
+ *
+ * NOTE: the Viam design system does not publish a dark palette; these values are
+ * derived from the light tokens. The grayscale ramp (and `white`/`black`) is inverted
+ * so surface/text utilities adapt automatically — `--color-white` is therefore no
+ * longer literally white in dark mode.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Canonical dark palette — defined once, applied in the scopes below. */
+
+  /* Text colors */
+  --dark-color-heading: #f7f7f8;
+  --dark-color-default: #e4e4e6;
+  --dark-color-subtle-1: #c5c6cc;
+  --dark-color-subtle-2: #9c9ca4;
+  --dark-color-disabled: #7a7c80;
+  --dark-color-link: #4d8fdf;
+
+  /* Shadows */
+  --dark-shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.4);
+
+  /* Code colors */
+  --dark-color-code-boolean: #a9a1ff;
+  --dark-color-code-line-number: #7fa9c0;
+  --dark-color-code-null: #e29ce2;
+  --dark-color-code-number: #7fc99a;
+  --dark-color-code-property-keys: #e4e4e6;
+  --dark-color-code-string: #f0a8a2;
+
+  /* Grayscale — inverted ramp */
+  --dark-color-black: #f7f7f8;
+  --dark-color-white: #131414;
+  --dark-color-gray-9: #e4e4e6;
+  --dark-color-gray-8: #c5c6cc;
+  --dark-color-gray-7: #9c9ca4;
+  --dark-color-gray-6: #7a7c80;
+  --dark-color-gray-5: #4e4f52;
+  --dark-color-gray-4: #3a3a3d;
+  --dark-color-gray-3: #2d2d30;
+  --dark-color-gray-2: #242426;
+  --dark-color-gray-1: #1c1c1e;
+
+  /* Semantic colors */
+  --dark-color-danger-dark: #f08a8a;
+  --dark-color-danger-light: #3a2120;
+  --dark-color-danger-medium: #6e3c3a;
+  --dark-color-warning-dark: #e0b84d;
+  --dark-color-warning-light: #3a2f1a;
+  --dark-color-warning-medium: #6e5a38;
+  --dark-color-warning-bright: #f0c668;
+  --dark-color-success-dark: #6fc072;
+  --dark-color-success-light: #1c3320;
+  --dark-color-success-medium: #4a6e4d;
+  --dark-color-info-dark: #6f9ee8;
+  --dark-color-info-light: #16293a;
+  --dark-color-info-medium: #3d5a7a;
+
+  /* Disabled colors */
+  --dark-color-disabled-dark: #6b6b73;
+  --dark-color-disabled-light: #2a2a2c;
+
+  /* Ghost colors (partial fills for hover states) */
+  --dark-color-ghost-light: rgba(255, 255, 255, 0.05);
+  --dark-color-ghost-medium: rgba(255, 255, 255, 0.1);
+}
+
+/*
+ * Apply the dark palette. CSS cannot share one declaration body across a media-query
+ * scope and a class scope, so the assignment list appears twice; the values stay
+ * single-source in the `--dark-*` definitions above.
+ */
+
+/* System preference — unless an ancestor forces light. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    /* Text colors */
+    --color-heading: var(--dark-color-heading);
+    --color-default: var(--dark-color-default);
+    --color-subtle-1: var(--dark-color-subtle-1);
+    --color-subtle-2: var(--dark-color-subtle-2);
+    --color-disabled: var(--dark-color-disabled);
+    --color-link: var(--dark-color-link);
+
+    /* Shadows */
+    --shadow-sm: var(--dark-shadow-sm);
+
+    /* Code colors */
+    --color-code-boolean: var(--dark-color-code-boolean);
+    --color-code-line-number: var(--dark-color-code-line-number);
+    --color-code-null: var(--dark-color-code-null);
+    --color-code-number: var(--dark-color-code-number);
+    --color-code-property-keys: var(--dark-color-code-property-keys);
+    --color-code-string: var(--dark-color-code-string);
+
+    /* Grayscale */
+    --color-black: var(--dark-color-black);
+    --color-white: var(--dark-color-white);
+    --color-gray-9: var(--dark-color-gray-9);
+    --color-gray-8: var(--dark-color-gray-8);
+    --color-gray-7: var(--dark-color-gray-7);
+    --color-gray-6: var(--dark-color-gray-6);
+    --color-gray-5: var(--dark-color-gray-5);
+    --color-gray-4: var(--dark-color-gray-4);
+    --color-gray-3: var(--dark-color-gray-3);
+    --color-gray-2: var(--dark-color-gray-2);
+    --color-gray-1: var(--dark-color-gray-1);
+
+    /* Semantic colors */
+    --color-danger-dark: var(--dark-color-danger-dark);
+    --color-danger-light: var(--dark-color-danger-light);
+    --color-danger-medium: var(--dark-color-danger-medium);
+    --color-warning-dark: var(--dark-color-warning-dark);
+    --color-warning-light: var(--dark-color-warning-light);
+    --color-warning-medium: var(--dark-color-warning-medium);
+    --color-warning-bright: var(--dark-color-warning-bright);
+    --color-success-dark: var(--dark-color-success-dark);
+    --color-success-light: var(--dark-color-success-light);
+    --color-success-medium: var(--dark-color-success-medium);
+    --color-info-dark: var(--dark-color-info-dark);
+    --color-info-light: var(--dark-color-info-light);
+    --color-info-medium: var(--dark-color-info-medium);
+
+    /* Disabled colors */
+    --color-disabled-dark: var(--dark-color-disabled-dark);
+    --color-disabled-light: var(--dark-color-disabled-light);
+
+    /* Ghost colors */
+    --color-ghost-light: var(--dark-color-ghost-light);
+    --color-ghost-medium: var(--dark-color-ghost-medium);
+  }
+}
+
+/* Explicit class override — wins over system preference. */
+.dark {
+  /* Text colors */
+  --color-heading: var(--dark-color-heading);
+  --color-default: var(--dark-color-default);
+  --color-subtle-1: var(--dark-color-subtle-1);
+  --color-subtle-2: var(--dark-color-subtle-2);
+  --color-disabled: var(--dark-color-disabled);
+  --color-link: var(--dark-color-link);
+
+  /* Shadows */
+  --shadow-sm: var(--dark-shadow-sm);
+
+  /* Code colors */
+  --color-code-boolean: var(--dark-color-code-boolean);
+  --color-code-line-number: var(--dark-color-code-line-number);
+  --color-code-null: var(--dark-color-code-null);
+  --color-code-number: var(--dark-color-code-number);
+  --color-code-property-keys: var(--dark-color-code-property-keys);
+  --color-code-string: var(--dark-color-code-string);
+
+  /* Grayscale */
+  --color-black: var(--dark-color-black);
+  --color-white: var(--dark-color-white);
+  --color-gray-9: var(--dark-color-gray-9);
+  --color-gray-8: var(--dark-color-gray-8);
+  --color-gray-7: var(--dark-color-gray-7);
+  --color-gray-6: var(--dark-color-gray-6);
+  --color-gray-5: var(--dark-color-gray-5);
+  --color-gray-4: var(--dark-color-gray-4);
+  --color-gray-3: var(--dark-color-gray-3);
+  --color-gray-2: var(--dark-color-gray-2);
+  --color-gray-1: var(--dark-color-gray-1);
+
+  /* Semantic colors */
+  --color-danger-dark: var(--dark-color-danger-dark);
+  --color-danger-light: var(--dark-color-danger-light);
+  --color-danger-medium: var(--dark-color-danger-medium);
+  --color-warning-dark: var(--dark-color-warning-dark);
+  --color-warning-light: var(--dark-color-warning-light);
+  --color-warning-medium: var(--dark-color-warning-medium);
+  --color-warning-bright: var(--dark-color-warning-bright);
+  --color-success-dark: var(--dark-color-success-dark);
+  --color-success-light: var(--dark-color-success-light);
+  --color-success-medium: var(--dark-color-success-medium);
+  --color-info-dark: var(--dark-color-info-dark);
+  --color-info-light: var(--dark-color-info-light);
+  --color-info-medium: var(--dark-color-info-medium);
+
+  /* Disabled colors */
+  --color-disabled-dark: var(--dark-color-disabled-dark);
+  --color-disabled-light: var(--dark-color-disabled-light);
+
+  /* Ghost colors */
+  --color-ghost-light: var(--dark-color-ghost-light);
+  --color-ghost-medium: var(--dark-color-ghost-medium);
+}

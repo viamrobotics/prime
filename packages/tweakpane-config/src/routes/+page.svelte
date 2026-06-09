@@ -46,7 +46,8 @@
 			Viam-themed defaults for
 			<a class="text-link underline" href="https://kitschpatrol.com/svelte-tweakpane-ui">
 				svelte-tweakpane-ui
-			</a>. Every component below is rendered through <code>primeTheme</code>.
+			</a>. Every component below is rendered through <code>primeTheme</code> /
+			<code>primeThemeDark</code> &mdash; use the toggle to switch.
 		</p>
 	</header>
 
