@@ -48,8 +48,10 @@ export default defineConfig({
         {
           label: "Playgrounds",
           items: [
+            { label: "Overview", link: "/playground/" },
             { label: "prime-ui", link: "/playground/prime-ui/" },
             { label: "tweakpane-config", link: "/playground/tweakpane-config/" },
+            { label: "tailwind-config", link: "/playground/tailwind-config/" },
           ],
         },
       ],

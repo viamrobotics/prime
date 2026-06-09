@@ -1,0 +1,28 @@
+---
+title: Playgrounds
+description: Live, interactive playgrounds for each Prime library package.
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+export const base = import.meta.env.BASE_URL;
+
+Each library package ships a live playground — a static SvelteKit app embedded in this site. Use them to explore components, tokens, and themes without checking out the repo.
+
+<CardGrid>
+  <LinkCard
+    title="prime-ui"
+    href={`${base}playground/prime-ui/`}
+    description="Svelte 5 component library. Inspect components and their variants in isolation."
+  />
+  <LinkCard
+    title="tailwind-config"
+    href={`${base}playground/tailwind-config/`}
+    description="Design-token theme preview: color swatches, typography, and utilities, with a light/dark toggle."
+  />
+  <LinkCard
+    title="tweakpane-config"
+    href={`${base}playground/tweakpane-config/`}
+    description="Viam-themed svelte-tweakpane-ui controls, with a light/dark theme toggle."
+  />
+</CardGrid>
