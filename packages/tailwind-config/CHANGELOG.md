@@ -1,5 +1,11 @@
 # @viamrobotics/tailwind-config
 
+## 1.1.0
+
+### Minor Changes
+
+- d95d7d9: Add an opt-in dark theme via the new `@viamrobotics/tailwind-config/dark` export
+
 ## 1.0.2
 
 ### Patch Changes
