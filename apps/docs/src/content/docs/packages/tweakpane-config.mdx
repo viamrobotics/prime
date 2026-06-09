@@ -70,6 +70,61 @@ const compactTheme: Theme = {
 ThemeUtils.setGlobalDefaultTheme(compactTheme);
 ```
 
+## Dark mode
+
+`primeThemeDark` is the dark variant of `primeTheme` — same shape, with values mirroring the dark tokens in [`@viamrobotics/tailwind-config`](../tailwind-config/).
+
+<Aside type="caution">
+  Tweakpane themes are applied via JS, not CSS, so there is no automatic
+  `prefers-color-scheme` / `.dark` activation. The consumer decides which theme
+  to pass to `ThemeUtils.setGlobalDefaultTheme` and when.
+</Aside>
+
+Wire it to the OS preference yourself. This is consumer-owned glue, not a package export:
+
+<Tabs syncKey="framework">
+  <TabItem label="TypeScript">
+
+```ts
+import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
+import { ThemeUtils } from "svelte-tweakpane-ui";
+
+const query = window.matchMedia("(prefers-color-scheme: dark)");
+const apply = () =>
+  ThemeUtils.setGlobalDefaultTheme(query.matches ? primeThemeDark : primeTheme);
+
+apply();
+query.addEventListener("change", apply);
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { onMount } from "svelte";
+  import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
+  import { ThemeUtils } from "svelte-tweakpane-ui";
+
+  let mode = $state<"light" | "dark">("light");
+
+  // Seed from the OS preference on first client load; a toggle can take over after.
+  onMount(() => {
+    mode = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  });
+
+  // $effect runs only on the client, dodging window access during prerender.
+  $effect(() => {
+    ThemeUtils.setGlobalDefaultTheme(mode === "dark" ? primeThemeDark : primeTheme);
+  });
+</script>
+```
+
+  </TabItem>
+</Tabs>
+
 ## Fonts
 
 The theme references `Public Sans Variable`. Load it via [`@viamrobotics/tailwind-config`](../tailwind-config/) or directly from `@fontsource-variable/public-sans`. If the font isn't loaded, browsers fall back to the system sans-serif.
