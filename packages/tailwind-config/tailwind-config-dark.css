@@ -56,23 +56,33 @@
   --dark-color-gray-2: #242426;
   --dark-color-gray-1: #1c1c1e;
 
-  /* Semantic colors */
+  /* Semantic colors. `medium-light` interpolates ~30% from the dark `light` fill
+   * toward dark `medium`; the pending palette mirrors the other status hues. All
+   * derived for dark mode — confirm against the design system / Figma. */
   --dark-color-danger-dark: #f08a8a;
   --dark-color-danger-light: #3a2120;
+  --dark-color-danger-medium-light: #4a2928;
   --dark-color-danger-medium: #6e3c3a;
   --dark-color-danger-bright: #ff5c63;
   --dark-color-warning-dark: #e0b84d;
   --dark-color-warning-light: #3a2f1a;
+  --dark-color-warning-medium-light: #4a3c23;
   --dark-color-warning-medium: #6e5a38;
   --dark-color-warning-bright: #ffb52e;
   --dark-color-success-dark: #6fc072;
   --dark-color-success-light: #1c3320;
+  --dark-color-success-medium-light: #2a452e;
   --dark-color-success-medium: #4a6e4d;
   --dark-color-success-bright: #3ee651;
   --dark-color-info-dark: #6f9ee8;
   --dark-color-info-light: #16293a;
+  --dark-color-info-medium-light: #22384d;
   --dark-color-info-medium: #3d5a7a;
   --dark-color-info-bright: #5ca8ff;
+  --dark-color-pending-dark: #b794e8;
+  --dark-color-pending-light: #2a1f3d;
+  --dark-color-pending-medium-light: #382c4f;
+  --dark-color-pending-medium: #5a4a7a;
 
   /* Disabled colors */
   --dark-color-disabled-dark: #6b6b73;
@@ -127,20 +137,28 @@
     /* Semantic colors */
     --color-danger-dark: var(--dark-color-danger-dark);
     --color-danger-light: var(--dark-color-danger-light);
+    --color-danger-medium-light: var(--dark-color-danger-medium-light);
     --color-danger-medium: var(--dark-color-danger-medium);
     --color-danger-bright: var(--dark-color-danger-bright);
     --color-warning-dark: var(--dark-color-warning-dark);
     --color-warning-light: var(--dark-color-warning-light);
+    --color-warning-medium-light: var(--dark-color-warning-medium-light);
     --color-warning-medium: var(--dark-color-warning-medium);
     --color-warning-bright: var(--dark-color-warning-bright);
     --color-success-dark: var(--dark-color-success-dark);
     --color-success-light: var(--dark-color-success-light);
+    --color-success-medium-light: var(--dark-color-success-medium-light);
     --color-success-medium: var(--dark-color-success-medium);
     --color-success-bright: var(--dark-color-success-bright);
     --color-info-dark: var(--dark-color-info-dark);
     --color-info-light: var(--dark-color-info-light);
+    --color-info-medium-light: var(--dark-color-info-medium-light);
     --color-info-medium: var(--dark-color-info-medium);
     --color-info-bright: var(--dark-color-info-bright);
+    --color-pending-dark: var(--dark-color-pending-dark);
+    --color-pending-light: var(--dark-color-pending-light);
+    --color-pending-medium-light: var(--dark-color-pending-medium-light);
+    --color-pending-medium: var(--dark-color-pending-medium);
 
     /* Disabled colors */
     --color-disabled-dark: var(--dark-color-disabled-dark);
@@ -189,20 +207,28 @@
   /* Semantic colors */
   --color-danger-dark: var(--dark-color-danger-dark);
   --color-danger-light: var(--dark-color-danger-light);
+  --color-danger-medium-light: var(--dark-color-danger-medium-light);
   --color-danger-medium: var(--dark-color-danger-medium);
   --color-danger-bright: var(--dark-color-danger-bright);
   --color-warning-dark: var(--dark-color-warning-dark);
   --color-warning-light: var(--dark-color-warning-light);
+  --color-warning-medium-light: var(--dark-color-warning-medium-light);
   --color-warning-medium: var(--dark-color-warning-medium);
   --color-warning-bright: var(--dark-color-warning-bright);
   --color-success-dark: var(--dark-color-success-dark);
   --color-success-light: var(--dark-color-success-light);
+  --color-success-medium-light: var(--dark-color-success-medium-light);
   --color-success-medium: var(--dark-color-success-medium);
   --color-success-bright: var(--dark-color-success-bright);
   --color-info-dark: var(--dark-color-info-dark);
   --color-info-light: var(--dark-color-info-light);
+  --color-info-medium-light: var(--dark-color-info-medium-light);
   --color-info-medium: var(--dark-color-info-medium);
   --color-info-bright: var(--dark-color-info-bright);
+  --color-pending-dark: var(--dark-color-pending-dark);
+  --color-pending-light: var(--dark-color-pending-light);
+  --color-pending-medium-light: var(--dark-color-pending-medium-light);
+  --color-pending-medium: var(--dark-color-pending-medium);
 
   /* Disabled colors */
   --color-disabled-dark: var(--dark-color-disabled-dark);
