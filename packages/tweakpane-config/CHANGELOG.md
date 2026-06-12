@@ -1,5 +1,17 @@
 # @viamrobotics/tweakpane-config
 
+## 0.2.1
+
+### Patch Changes
+
+- 2cb9a71: Fix control backgrounds to match container background colors
+
+## 0.2.0
+
+### Minor Changes
+
+- d95d7d9: Add an opt-in `primeThemeDark` dark theme variant
+
 ## 0.1.1
 
 ### Patch Changes

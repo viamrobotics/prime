@@ -20,10 +20,14 @@
 	];
 
 	const semantic = [
-		{ group: 'Danger', tokens: ['danger-light', 'danger-medium', 'danger-dark'] },
-		{ group: 'Warning', tokens: ['warning-light', 'warning-medium', 'warning-bright', 'warning-dark'] },
-		{ group: 'Success', tokens: ['success-light', 'success-medium', 'success-dark'] },
-		{ group: 'Info', tokens: ['info-light', 'info-medium', 'info-dark'] },
+		{ group: 'Danger', tokens: ['danger-light', 'danger-medium-light', 'danger-medium', 'danger-dark'] },
+		{ group: 'Success', tokens: ['success-light', 'success-medium-light', 'success-medium', 'success-dark'] },
+		{ group: 'Info', tokens: ['info-light', 'info-medium-light', 'info-medium', 'info-dark'] },
+		{
+			group: 'Warning',
+			tokens: ['warning-light', 'warning-medium-light', 'warning-medium', 'warning-bright', 'warning-dark']
+		},
+		{ group: 'Pending', tokens: ['pending-light', 'pending-medium-light', 'pending-medium', 'pending-dark'] },
 		{ group: 'Disabled', tokens: ['disabled-light', 'disabled-dark'] }
 	];
 
@@ -63,6 +67,14 @@
 	];
 
 	const textSizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'];
+
+	const vehicles = [
+		{ id: 1, make: 'BMW', model: 'M6', year: 2008, vin: 'WA1VMAFE5DD146017' },
+		{ id: 2, make: 'GMC', model: 'Savana', year: 2009, vin: '2C3CA1CV7AH145612' },
+		{ id: 3, make: 'Ford', model: 'Fusion', year: 2013, vin: '1G6KD57Y59U958937' },
+		{ id: 4, make: 'Mercedes-Benz', model: 'G-Class', year: 2010, vin: '5N1BA0ND0FN963537' },
+		{ id: 5, make: 'Dodge', model: 'Ram Wagon B250', year: 1992, vin: 'JHMFA3F28BS566074' }
+	];
 </script>
 
 {#snippet swatch(token: string)}
@@ -193,15 +205,39 @@
 			</button>
 			<button
 				type="button"
-				class="bg-light border-medium text-default hover:bg-medium rounded border px-4 py-1.5 text-sm font-medium"
+				class="bg-light border-medium hover:bg-medium rounded border px-4 py-1.5 text-sm font-medium"
 			>
 				Secondary
 			</button>
 			<button
 				type="button"
-				class="bg-danger-dark hover:bg-danger-medium hover:text-danger-dark rounded px-4 py-1.5 text-sm font-medium text-white"
+				class="bg-danger-light hover:bg-danger-medium-light active:bg-danger-medium rounded px-4 py-1.5 text-sm font-medium text-danger-dark border border-danger-medium"
 			>
 				Danger
+			</button>
+			<button
+				type="button"
+				class="bg-success-light hover:bg-success-medium-light active:bg-success-medium rounded px-4 py-1.5 text-sm font-medium text-success-dark border border-success-medium"
+			>
+				Success
+			</button>
+			<button
+				type="button"
+				class="bg-info-light hover:bg-info-medium-light active:bg-info-medium rounded px-4 py-1.5 text-sm font-medium text-info-dark border border-info-medium"
+			>
+				Info
+			</button>
+			<button
+				type="button"
+				class="bg-warning-light hover:bg-warning-medium-light active:bg-warning-medium rounded px-4 py-1.5 text-sm font-medium text-warning-dark border border-warning-medium"
+			>
+				Warning
+			</button>
+			<button
+				type="button"
+				class="bg-pending-light hover:bg-pending-medium-light active:bg-pending-medium rounded px-4 py-1.5 text-sm font-medium text-pending-dark border border-pending-medium"
+			>
+				Pending
 			</button>
 			<button
 				type="button"
@@ -216,6 +252,39 @@
 			>
 				Disabled
 			</button>
+		</div>
+	</section>
+
+	<!-- Feedback -->
+	<section class="flex flex-col gap-4">
+		{@render section('Alerts')}
+		<div class="flex flex-col gap-3">
+			<div class="border-danger-medium bg-danger-light text-danger-dark rounded border p-3 text-sm">
+				Danger — something went wrong.
+			</div>
+			<div class="border-success-medium bg-success-light text-success-dark rounded border p-3 text-sm">
+				Success — your changes were saved.
+			</div>
+			<div class="border-info-medium bg-info-light text-info-dark rounded border p-3 text-sm">
+				Info — here is something to note.
+			</div>
+			<div class="border-warning-medium bg-warning-light text-warning-dark rounded border p-3 text-sm">
+				Warning — double-check this action.
+			</div>
+			<div class="border-pending-medium bg-pending-light text-pending-dark rounded border p-3 text-sm">
+				Pending — this is a pending action.
+			</div>
+		</div>
+	</section>
+
+	<section class="flex flex-col gap-4">
+		{@render section('Badges')}
+		<div class="flex flex-wrap gap-2">
+			<span class="bg-danger-light text-danger-dark rounded-full px-2 py-0.5 text-xs font-medium">Danger</span>
+			<span class="bg-success-light text-success-dark rounded-full px-2 py-0.5 text-xs font-medium">Success</span>
+			<span class="bg-info-light text-info-dark rounded-full px-2 py-0.5 text-xs font-medium">Info</span>
+			<span class="bg-warning-light text-warning-dark rounded-full px-2 py-0.5 text-xs font-medium">Warning</span>
+			<span class="bg-pending-light text-pending-dark rounded-full px-2 py-0.5 text-xs font-medium">Pending</span>
 		</div>
 	</section>
 
@@ -282,35 +351,6 @@
 		</div>
 	</section>
 
-	<!-- Feedback -->
-	<section class="flex flex-col gap-4">
-		{@render section('Alerts')}
-		<div class="flex flex-col gap-3">
-			<div class="border-danger-medium bg-danger-light text-danger-dark rounded border p-3 text-sm">
-				Danger — something went wrong.
-			</div>
-			<div class="border-warning-medium bg-warning-light text-warning-dark rounded border p-3 text-sm">
-				Warning — double-check this action.
-			</div>
-			<div class="border-success-medium bg-success-light text-success-dark rounded border p-3 text-sm">
-				Success — your changes were saved.
-			</div>
-			<div class="border-info-medium bg-info-light text-info-dark rounded border p-3 text-sm">
-				Info — here is something to note.
-			</div>
-		</div>
-	</section>
-
-	<section class="flex flex-col gap-4">
-		{@render section('Badges')}
-		<div class="flex flex-wrap gap-2">
-			<span class="bg-danger-light text-danger-dark rounded-full px-2 py-0.5 text-xs font-medium">Danger</span>
-			<span class="bg-warning-light text-warning-dark rounded-full px-2 py-0.5 text-xs font-medium">Warning</span>
-			<span class="bg-success-light text-success-dark rounded-full px-2 py-0.5 text-xs font-medium">Success</span>
-			<span class="bg-info-light text-info-dark rounded-full px-2 py-0.5 text-xs font-medium">Info</span>
-		</div>
-	</section>
-
 	<!-- Table -->
 	<section id="table" class="flex flex-col gap-4">
 		{@render section('Table', 'table-container / table-header / table-cell utilities')}
@@ -318,33 +358,25 @@
 			<table class="table-container border-collapse">
 				<thead>
 					<tr class="table-header">
-						<th class="table-header-cell text-left">Component</th>
-						<th class="table-header-cell text-left">Status</th>
-						<th class="table-header-cell text-left">Owner</th>
+						<th class="table-header-cell text-left">ID</th>
+						<th class="table-header-cell text-left">Make</th>
+						<th class="table-header-cell text-left">Model</th>
+						<th class="table-header-cell text-left">Model year</th>
+						<th class="table-header-cell text-left">VIN</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class="table-cell"><a href="#table" class="table-cell-link">Button</a></td>
-						<td class="table-cell">
-							<span class="bg-success-light text-success-dark rounded-full px-2 py-0.5 text-xs">Stable</span>
-						</td>
-						<td class="table-cell">prime-ui</td>
-					</tr>
-					<tr>
-						<td class="table-cell"><a href="#table" class="table-cell-link">Slider</a></td>
-						<td class="table-cell">
-							<span class="bg-warning-light text-warning-dark rounded-full px-2 py-0.5 text-xs">Beta</span>
-						</td>
-						<td class="table-cell">prime-ui</td>
-					</tr>
-					<tr>
-						<td class="table-cell"><a href="#table" class="table-cell-link">Tweakpane</a></td>
-						<td class="table-cell">
-							<span class="bg-info-light text-info-dark rounded-full px-2 py-0.5 text-xs">Preview</span>
-						</td>
-						<td class="table-cell">tweakpane-config</td>
-					</tr>
+					{#each vehicles as vehicle (vehicle.id)}
+						<tr>
+							<td class="table-cell">{vehicle.id}</td>
+							<td class="table-cell">
+								<a href="#table" class="table-cell-link">{vehicle.make}</a>
+							</td>
+							<td class="table-cell">{vehicle.model}</td>
+							<td class="table-cell">{vehicle.year}</td>
+							<td class="table-cell font-mono text-xs">{vehicle.vin}</td>
+						</tr>
+					{/each}
 				</tbody>
 			</table>
 		</div>
