@@ -34,8 +34,8 @@ jobs:
           contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
         )
       )
-    # viamrobotics/claude-ci-workflows@v2.0.0
-    uses: viamrobotics/claude-ci-workflows/.github/workflows/claude-github-issue.yml@aa76787c145ed43f8f7b9bae4d978da4f9850001
+    # viamrobotics/claude-ci-workflows@v2.1.0
+    uses: viamrobotics/claude-ci-workflows/.github/workflows/claude-github-issue.yml@97b61edeb3aebf3b9bfc93129ac9beae053e5aab
     with:
       issue_number: ${{ github.event.issue.number }}
       title: ${{ github.event.issue.title }}
