@@ -1,5 +1,11 @@
 # @viamrobotics/tweakpane-config
 
+## 0.2.2
+
+### Patch Changes
+
+- 7254404: Extend preset themes.
+
 ## 0.2.1
 
 ### Patch Changes
