@@ -1,7 +1,9 @@
-import type { Theme } from "svelte-tweakpane-ui";
+import { type Theme, ThemeUtils } from "svelte-tweakpane-ui";
 
 // Hex values mirror tokens declared in @viamrobotics/tailwind-config
 export const primeTheme: Theme = {
+  ...ThemeUtils.presets.light,
+
   baseBackgroundColor: "#f7f7f8",
   baseShadowColor: "rgba(0, 0, 0, 0.06)",
   baseFontFamily: '"Public Sans Variable", "Public Sans", sans-serif',
@@ -38,6 +40,8 @@ export const primeTheme: Theme = {
 // `.dark` activation: the consumer chooses which theme to pass to
 // ThemeUtils.setGlobalDefaultTheme (e.g. from a media-query listener).
 export const primeThemeDark: Theme = {
+  ...ThemeUtils.presets.standard,
+
   baseBackgroundColor: "#1c1c1e",
   baseShadowColor: "rgba(0, 0, 0, 0.4)",
   baseFontFamily: '"Public Sans Variable", "Public Sans", sans-serif',
