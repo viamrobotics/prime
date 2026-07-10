@@ -4,7 +4,7 @@ import { type Theme, ThemeUtils } from "svelte-tweakpane-ui";
 export const primeTheme: Theme = {
   ...ThemeUtils.presets.light,
 
-  baseBackgroundColor: "#ffffff",
+  baseBackgroundColor: "#f7f7f8",
   baseShadowColor: "rgba(0, 0, 0, 0.06)",
   baseFontFamily: '"Public Sans Variable", "Public Sans", sans-serif',
 
@@ -42,7 +42,7 @@ export const primeTheme: Theme = {
 export const primeThemeDark: Theme = {
   ...ThemeUtils.presets.standard,
 
-  baseBackgroundColor: "#131414",
+  baseBackgroundColor: "#1c1c1e",
   baseShadowColor: "rgba(0, 0, 0, 0.4)",
   baseFontFamily: '"Public Sans Variable", "Public Sans", sans-serif',
 

@@ -1,5 +1,11 @@
 # @viamrobotics/tweakpane-config
 
+## 0.2.1
+
+### Patch Changes
+
+- 2cb9a71: Fix control backgrounds to match container background colors
+
 ## 0.2.0
 
 ### Minor Changes
