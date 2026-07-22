@@ -1,5 +1,11 @@
 # @viamrobotics/tailwind-config
 
+## 1.2.0
+
+### Minor Changes
+
+- a547b07: Add `danger`/`success`/`info` `bright` color tokens (with derived dark variants), a `popup-enter` animation token, a `button` pointer-cursor base style, and arbitrary-value support to the slider/scrollbar sizing utilities. Also updates `warning-bright` from `#ddab3f` to `#efa300`.
+
 ## 1.1.0
 
 ### Minor Changes
