@@ -11,7 +11,7 @@
  */
 @source inline("bg-{white,black}");
 @source inline("bg-gray-{1..9}");
-@source inline("bg-{danger,success,info}-{light,medium,dark}");
+@source inline("bg-{danger,success,info}-{light,medium,bright,dark}");
 @source inline("bg-warning-{light,medium,bright,dark}");
 @source inline("bg-disabled-{light,dark}");
 @source inline("bg-{power-button,cyberpunk,mars-rover}-{light,medium,dark}");
