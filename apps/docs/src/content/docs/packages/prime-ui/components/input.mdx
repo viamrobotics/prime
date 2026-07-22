@@ -1,0 +1,28 @@
+---
+title: Input
+description: A native text input with Viam validation chrome.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+import InputDemo from "./input/InputDemo.svelte";
+import InputShowcase from "./input/InputShowcase.svelte";
+
+<ComponentIntro name="input" />
+
+<InputDemo client:visible />
+
+## Props
+
+<PropsTable name="input" />
+
+`value` follows the [state modes](../state/). Native handlers such as `oninput` and `onblur` pass through to the `<input>`.
+
+## Parts
+
+<PartsDoc name="input" />
+
+## Examples
+
+<InputShowcase client:visible />

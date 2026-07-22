@@ -1,0 +1,24 @@
+---
+title: Checkbox
+description: A checkbox with an indeterminate state.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import CheckboxDemo from "./checkbox/CheckboxDemo.svelte";
+import CheckboxShowcase from "./checkbox/CheckboxShowcase.svelte";
+
+<ComponentIntro name="checkbox" />
+
+<CheckboxDemo client:visible />
+
+## Props
+
+<PropsTable name="checkbox" />
+
+`checked` and `indeterminate` follow the [state modes](../state/).
+
+## Examples
+
+<CheckboxShowcase client:visible />

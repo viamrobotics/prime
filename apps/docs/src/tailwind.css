@@ -2,6 +2,11 @@
 @import "@viamrobotics/tailwind-config";
 @import "starlight-theme-nova/tailwind.css";
 
+/* prime-ui components live in the workspace package (node_modules symlink), which
+   Tailwind's automatic content detection skips, so their utility classes on the
+   hydrated islands would not be generated. Point at the library source explicitly. */
+@source "../../../packages/prime-ui/src/lib";
+
 :root {
   --sl-font: var(--font-public-sans);
   --sl-font-mono: var(--font-roboto-mono);

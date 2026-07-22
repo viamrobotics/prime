@@ -1,0 +1,28 @@
+---
+title: NumberInput
+description: A native numeric input built on Input.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+import NumberInputDemo from "./number-input/NumberInputDemo.svelte";
+import NumberInputShowcase from "./number-input/NumberInputShowcase.svelte";
+
+<ComponentIntro name="number-input" />
+
+<NumberInputDemo client:visible />
+
+## Props
+
+<PropsTable name="number-input" />
+
+`value` follows the [state modes](../state/). The browser handles stepping, spin buttons, mouse wheel, and min/max/step clamping.
+
+## Parts
+
+<PartsDoc name="number-input" />
+
+## Examples
+
+<NumberInputShowcase client:visible />

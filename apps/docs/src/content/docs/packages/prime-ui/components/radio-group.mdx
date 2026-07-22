@@ -1,0 +1,28 @@
+---
+title: RadioGroup
+description: A composable radio group.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+import RadioGroupDemo from "./radio-group/RadioGroupDemo.svelte";
+import RadioGroupShowcase from "./radio-group/RadioGroupShowcase.svelte";
+
+<ComponentIntro name="radio-group" />
+
+<RadioGroupDemo client:visible />
+
+## Props
+
+<PropsTable name="radio-group" />
+
+`value` follows the [state modes](../state/). bits-ui handles roving focus, arrow-key navigation, and form submission.
+
+## Parts
+
+<PartsDoc name="radio-group" />
+
+## Examples
+
+<RadioGroupShowcase client:visible />

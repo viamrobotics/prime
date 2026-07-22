@@ -31,12 +31,9 @@
 		"**/*.css"
 	],
 	"scripts": {
-		"dev": "vite dev",
-		"preview": "vite preview",
 		"prepare": "pnpm run sync || echo ''",
 		"sync": "wireit",
 		"build": "wireit",
-		"vite-build": "wireit",
 		"package": "wireit",
 		"prepack": "wireit",
 		"check": "wireit",
@@ -71,38 +68,7 @@
 		},
 		"build": {
 			"dependencies": [
-				"vite-build",
 				"package"
-			]
-		},
-		"vite-build": {
-			"command": "vite build",
-			"dependencies": [
-				"sync"
-			],
-			"files": [
-				"src/**",
-				"static/**",
-				"vite.config.ts",
-				"svelte.config.js",
-				"tsconfig.json",
-				"package.json",
-				"../tailwind-config/tailwind-config.css",
-				"../tailwind-config/tailwind-config-dark.css",
-				"../tailwind-config/fonts.js"
-			],
-			"output": [
-				"build/**",
-				".svelte-kit/output/**"
-			],
-			"env": {
-				"DOCS_BASE": {
-					"external": true
-				}
-			},
-			"packageLocks": [
-				"pnpm-lock.yaml",
-				"pnpm-workspace.yaml"
 			]
 		},
 		"package": {
@@ -155,7 +121,6 @@
 			],
 			"files": [
 				"src/**",
-				"static/**",
 				"vite.config.ts",
 				"tsconfig.json",
 				"svelte.config.js",
@@ -213,7 +178,7 @@
 	"devDependencies": {
 		"@eslint/compat": "catalog:",
 		"@eslint/js": "catalog:",
-		"@sveltejs/adapter-static": "catalog:",
+		"@lucide/svelte": "^1.17.0",
 		"@sveltejs/kit": "catalog:",
 		"@sveltejs/package": "^2.5.7",
 		"@sveltejs/vite-plugin-svelte": "catalog:",
@@ -223,9 +188,9 @@
 		"@vitest/browser-playwright": "^4.1.3",
 		"eslint": "catalog:",
 		"eslint-config-prettier": "catalog:",
+		"eslint-plugin-perfectionist": "^5.10.0",
 		"eslint-plugin-svelte": "catalog:",
 		"globals": "catalog:",
-		"mdsvex": "^0.12.7",
 		"playwright": "^1.59.1",
 		"prettier": "catalog:",
 		"prettier-plugin-svelte": "^3.5.1",
@@ -234,6 +199,7 @@
 		"svelte": "catalog:",
 		"svelte-check": "catalog:",
 		"tailwindcss": "catalog:",
+		"type-fest": "^5.8.0",
 		"typescript": "catalog:",
 		"typescript-eslint": "catalog:",
 		"vite": "catalog:",
@@ -242,5 +208,10 @@
 	},
 	"keywords": [
 		"svelte"
-	]
+	],
+	"dependencies": {
+		"@internationalized/date": "^3.12.2",
+		"@mdi/js": "^7.4.47",
+		"bits-ui": "^2.18.1"
+	}
 }

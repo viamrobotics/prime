@@ -1,0 +1,23 @@
+---
+title: Icon
+description: Curated Viam icons, or any Svelte icon component.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+import IconDemo from "./icon/IconDemo.svelte";
+import IconShowcase from "./icon/IconShowcase.svelte";
+
+<ComponentIntro name="icon" />
+
+<IconDemo client:visible />
+
+## Props
+
+<PropsTable name="icon" />
+
+Curated names render inline SVG. Components render as-is. Color follows `currentColor`.
+
+## Examples
+
+<IconShowcase client:visible />

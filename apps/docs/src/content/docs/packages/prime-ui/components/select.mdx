@@ -1,0 +1,30 @@
+---
+title: Select
+description: A composable dropdown select.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+import SelectDemo from "./select/SelectDemo.svelte";
+import SelectShowcase from "./select/SelectShowcase.svelte";
+
+<ComponentIntro name="select" />
+
+<SelectDemo client:visible />
+
+## Props
+
+<PropsTable name="select" />
+
+`value` follows the [state modes](../state/).
+
+## Parts
+
+<PartsDoc name="select" />
+
+## Examples
+
+Add `Select.ScrollUpButton` and `Select.ScrollDownButton` around the viewport for a long list.
+
+<SelectShowcase client:visible />
