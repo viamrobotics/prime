@@ -29,8 +29,13 @@ jobs:
           cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Update npm
-        run: npm install -g npm@latest
+      # Pin to npm 11, not @latest: npm 12 changed `npm info --json` to a top-level
+      # array and dropped `error.code` from publish errors, which breaks
+      # @changesets/cli@2.31's already-published detection (it republishes and
+      # hard-fails). npm 11 keeps the old shape and still supports OIDC trusted
+      # publishing (requires >= 11.5.1). Revisit when changesets 3.0 ships stable.
+      - name: Pin npm
+        run: npm install -g npm@11
 
       - name: Install and Build 🔧
         run: |
