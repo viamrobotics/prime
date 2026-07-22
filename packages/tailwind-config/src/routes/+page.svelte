@@ -20,9 +20,15 @@
 	];
 
 	const semantic = [
-		{ group: 'Danger', tokens: ['danger-light', 'danger-medium-light', 'danger-medium', 'danger-dark'] },
-		{ group: 'Success', tokens: ['success-light', 'success-medium-light', 'success-medium', 'success-dark'] },
-		{ group: 'Info', tokens: ['info-light', 'info-medium-light', 'info-medium', 'info-dark'] },
+		{
+			group: 'Danger',
+			tokens: ['danger-light', 'danger-medium-light', 'danger-medium', 'danger-bright', 'danger-dark']
+		},
+		{
+			group: 'Success',
+			tokens: ['success-light', 'success-medium-light', 'success-medium', 'success-bright', 'success-dark']
+		},
+		{ group: 'Info', tokens: ['info-light', 'info-medium-light', 'info-medium', 'info-bright', 'info-dark'] },
 		{
 			group: 'Warning',
 			tokens: ['warning-light', 'warning-medium-light', 'warning-medium', 'warning-bright', 'warning-dark']
