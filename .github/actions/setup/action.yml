@@ -1,0 +1,32 @@
+name: Setup
+description: Install pnpm + Node, wire up wireit GitHub Actions caching, install deps
+
+inputs:
+  registry-url:
+    description: npm registry URL (set when the job needs to publish / use OIDC)
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Install pnpm 🔧
+      uses: pnpm/action-setup@v6
+      with:
+        run_install: false
+
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: .nvmrc
+        registry-url: ${{ inputs.registry-url }}
+        cache: "pnpm"
+
+    # Sets WIREIT_CACHE=github so wireit restores/saves task outputs from the
+    # GitHub Actions cache. Must run before the first pnpm command.
+    - name: Set up wireit caching
+      uses: google/wireit@setup-github-actions-caching/v2
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile

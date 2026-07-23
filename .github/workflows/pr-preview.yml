@@ -26,22 +26,9 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
+      - name: Setup
         if: github.event.action != 'closed'
-        uses: pnpm/action-setup@v6
-        with:
-          run_install: false
-
-      - name: Setup Node
-        if: github.event.action != 'closed'
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        if: github.event.action != 'closed'
-        run: pnpm install
+        uses: ./.github/actions/setup
 
       - name: Build docs site (includes playgrounds)
         if: github.event.action != 'closed'

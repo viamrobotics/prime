@@ -20,6 +20,8 @@ Viam's shared Tailwind CSS v4 configuration. A pure-data package: design tokens 
 
 `src/routes/` is a SvelteKit theme-preview app (the package's playground) that renders every token and utility with a light/dark toggle. It is **dev-only**: it is gitignored out of the published artifact (`files` ships only the CSS and `fonts.js`), and its SvelteKit/Vite/ESLint tooling lives in `devDependencies`. Build it with `pnpm --filter @viamrobotics/tailwind-config build` (static output to `build/`); the docs site embeds it via [apps/docs/scripts/build-playgrounds.mjs](../../apps/docs/scripts/build-playgrounds.mjs). The playground imports the tokens by relative path (`../../tailwind-config.css`), not the package name.
 
+The `build`/`check`/`lint` scripts are orchestrated (and cached) by [wireit](https://github.com/google/wireit), and `svelte.config.js` derives its base path from `DOCS_BASE` + a `/playground/tailwind-config` segment (empty base locally), matching the other packages. Note this package's `build` produces **only** the playground — the published CSS/`fonts.js` are committed static files with no build step.
+
 ## Conventions
 
 The **published** package is intentionally lean: pure CSS + `fonts.js`, no build step for the shipped files, no tests, no compiled TypeScript. Keep it that way — the SvelteKit playground above is the only tooling, and it stays dev-only. New design tokens go inside the existing `@theme {}` block in `tailwind-config.css`.

@@ -29,39 +29,129 @@
   ],
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
     "preview": "vite preview",
-    "prepare": "svelte-kit sync || echo ''",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "format": "prettier --write .",
-    "lint": "eslint . --concurrency auto"
+    "prepare": "pnpm run sync || echo ''",
+    "sync": "wireit",
+    "build": "wireit",
+    "check": "wireit",
+    "lint": "wireit",
+    "format": "prettier --write ."
+  },
+  "wireit": {
+    "sync": {
+      "command": "svelte-kit sync",
+      "files": [
+        "svelte.config.js",
+        "tsconfig.json",
+        "src/**",
+        "package.json"
+      ],
+      "output": [
+        ".svelte-kit/generated/**",
+        ".svelte-kit/types/**",
+        ".svelte-kit/ambient.d.ts",
+        ".svelte-kit/non-ambient.d.ts",
+        ".svelte-kit/tsconfig.json"
+      ],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    },
+    "build": {
+      "command": "vite build",
+      "dependencies": [
+        "sync"
+      ],
+      "files": [
+        "src/**",
+        "tailwind-config.css",
+        "tailwind-config-dark.css",
+        "fonts.js",
+        "vite.config.ts",
+        "svelte.config.js",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "output": [
+        "build/**",
+        ".svelte-kit/output/**"
+      ],
+      "env": {
+        "DOCS_BASE": {
+          "external": true
+        }
+      },
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    },
+    "check": {
+      "command": "svelte-check --tsconfig ./tsconfig.json",
+      "dependencies": [
+        "sync"
+      ],
+      "files": [
+        "src/**",
+        "tsconfig.json",
+        "svelte.config.js",
+        "package.json"
+      ],
+      "output": [],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    },
+    "lint": {
+      "command": "eslint . --concurrency auto",
+      "dependencies": [
+        "sync"
+      ],
+      "files": [
+        "**/*.{js,mjs,cjs,ts,svelte}",
+        "!build/**",
+        "!.svelte-kit/**",
+        "!.wireit/**",
+        "eslint.config.js",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "output": [],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    }
   },
   "dependencies": {
-    "@fontsource-variable/public-sans": "^5.2.7",
-    "@fontsource-variable/roboto-mono": "^5.2.9",
+    "@fontsource-variable/public-sans": "catalog:",
+    "@fontsource-variable/roboto-mono": "catalog:",
     "@fontsource-variable/space-grotesk": "^5.2.10"
   },
   "peerDependencies": {
     "tailwindcss": ">=4 <5"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.1.0",
-    "@eslint/js": "^10.0.1",
-    "@sveltejs/adapter-static": "^3.0.10",
-    "@sveltejs/kit": "^2.57.0",
-    "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "@tailwindcss/vite": "^4.2.2",
-    "@types/node": "^24",
-    "eslint": "^10.3.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-svelte": "^3.17.1",
-    "globals": "^17.6.0",
-    "prettier": "^3.8.3",
-    "svelte": "^5.55.2",
-    "svelte-check": "^4.4.6",
-    "tailwindcss": "^4.2.2",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.7"
+    "@eslint/compat": "catalog:",
+    "@eslint/js": "catalog:",
+    "@sveltejs/adapter-static": "catalog:",
+    "@sveltejs/kit": "catalog:",
+    "@sveltejs/vite-plugin-svelte": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-plugin-svelte": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "svelte": "catalog:",
+    "svelte-check": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
+    "vite": "catalog:",
+    "wireit": "catalog:"
   }
 }

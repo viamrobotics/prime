@@ -5,24 +5,82 @@
 	"type": "module",
 	"scripts": {
 		"dev": "astro dev",
-		"build": "node scripts/build-playgrounds.mjs && astro build",
-		"build:playgrounds": "node scripts/build-playgrounds.mjs",
+		"build": "wireit",
+		"build:playgrounds": "wireit",
 		"preview": "astro preview"
+	},
+	"wireit": {
+		"build:playgrounds": {
+			"command": "node scripts/build-playgrounds.mjs",
+			"dependencies": [
+				"../../packages/prime-ui:vite-build",
+				"../../packages/tailwind-config:build",
+				"../../packages/tweakpane-config:vite-build"
+			],
+			"files": [
+				"scripts/build-playgrounds.mjs",
+				"../../packages/prime-ui/build/**",
+				"../../packages/tailwind-config/build/**",
+				"../../packages/tweakpane-config/build/**"
+			],
+			"output": [
+				"public/playground/**"
+			],
+			"env": {
+				"DOCS_BASE": {
+					"external": true
+				}
+			},
+			"packageLocks": [
+				"pnpm-lock.yaml",
+				"pnpm-workspace.yaml"
+			]
+		},
+		"build": {
+			"command": "astro build",
+			"dependencies": [
+				"build:playgrounds"
+			],
+			"files": [
+				"src/**",
+				"public/**",
+				"astro.config.mjs",
+				"tsconfig.json",
+				"package.json"
+			],
+			"output": [
+				"dist/**",
+				".astro/**"
+			],
+			"env": {
+				"DOCS_BASE": {
+					"external": true
+				},
+				"DOCS_SITE": {
+					"external": true
+				}
+			},
+			"packageLocks": [
+				"pnpm-lock.yaml",
+				"pnpm-workspace.yaml"
+			]
+		}
 	},
 	"dependencies": {
 		"@astrojs/starlight": "0.38.4",
-		"@tailwindcss/vite": "4.2.4",
+		"@tailwindcss/vite": "catalog:",
 		"astro": "6.2.0",
 		"sharp": "0.34.2",
 		"starlight-theme-nova": "0.11.9",
-		"tailwindcss": "4.2.4"
+		"tailwindcss": "catalog:"
 	},
 	"devDependencies": {
-		"@fontsource-variable/public-sans": "^5.2.7",
-		"@fontsource-variable/roboto-mono": "^5.2.9",
+		"@fontsource-variable/public-sans": "catalog:",
+		"@fontsource-variable/roboto-mono": "catalog:",
 		"@viamrobotics/prime-ui": "workspace:^",
 		"@viamrobotics/tailwind-config": "workspace:^",
 		"typescript": "^5.9.2",
-		"vite": "^7.3.0"
+		"vite": "^7.3.0",
+		"wireit": "catalog:"
 	}
 }
