@@ -8,16 +8,44 @@
   "packageManager": "pnpm@10.34.5",
   "scripts": {
     "app:docs": "pnpm --filter @viamrobotics/prime-docs dev",
-    "build": "pnpm -r run --if-present build",
-    "check": "pnpm -r run --if-present check",
-    "lint": "pnpm -r run --if-present lint",
-    "test": "pnpm -r run --if-present test",
+    "build": "wireit",
+    "check": "wireit",
+    "lint": "wireit",
+    "test": "wireit",
     "format": "pnpm -r run --if-present format",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish"
   },
+  "wireit": {
+    "build": {
+      "dependencies": [
+        "./packages/tailwind-config:build",
+        "./packages/prime-ui:build",
+        "./packages/tweakpane-config:build",
+        "./apps/docs:build"
+      ]
+    },
+    "check": {
+      "dependencies": [
+        "./packages/tailwind-config:check",
+        "./packages/prime-ui:check",
+        "./packages/tweakpane-config:check"
+      ]
+    },
+    "lint": {
+      "dependencies": [
+        "./packages/tailwind-config:lint",
+        "./packages/prime-ui:lint",
+        "./packages/tweakpane-config:lint"
+      ]
+    },
+    "test": {
+      "dependencies": ["./packages/prime-ui:test"]
+    }
+  },
   "devDependencies": {
-    "@changesets/cli": "^2.31.0"
+    "@changesets/cli": "^2.31.0",
+    "wireit": "catalog:"
   }
 }

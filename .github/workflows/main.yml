@@ -17,16 +17,11 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
+      # Also primes the wireit GitHub Actions cache on every main push, so PR
+      # branches get cache hits for unchanged packages.
+      - name: Setup
+        uses: ./.github/actions/setup
         with:
-          run_install: false
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
 
       # Pin to npm 11, not @latest: npm 12 changed `npm info --json` to a top-level
@@ -37,10 +32,8 @@ jobs:
       - name: Pin npm
         run: npm install -g npm@11
 
-      - name: Install and Build 🔧
-        run: |
-          pnpm i
-          pnpm build
+      - name: Build 🔧
+        run: pnpm build
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets

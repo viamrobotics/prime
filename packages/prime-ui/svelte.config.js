@@ -1,6 +1,11 @@
 import adapter from '@sveltejs/adapter-static';
 import { mdsvex } from 'mdsvex';
 
+// The docs site embeds this playground under <DOCS_BASE>/playground/prime-ui; each
+// package supplies its own segment. Falls back to BASE_PATH, then '' (local/npm).
+const docsBase = process.env.DOCS_BASE?.replace(/\/$/, '');
+const base = docsBase ? `${docsBase}/playground/prime-ui` : (process.env.BASE_PATH ?? '');
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	compilerOptions: {
@@ -12,7 +17,7 @@ const config = {
 			fallback: 'index.html'
 		}),
 		paths: {
-			base: process.env.BASE_PATH ?? ''
+			base
 		}
 	},
 	preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],

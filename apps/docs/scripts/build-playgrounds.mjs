@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { execSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,42 +7,27 @@ const here = dirname(fileURLToPath(import.meta.url));
 const docsRoot = resolve(here, "..");
 const repoRoot = resolve(docsRoot, "..", "..");
 
-// Add an entry here for each library package whose src/routes/ should be embedded
-// as a playground under /playground/<name>/ in the docs site. Each package must
-// build a static SvelteKit app to <pkgDir>/build/ when `vite build` is invoked
-// with BASE_PATH set.
+// Each library package builds a static SvelteKit playground to <pkgDir>/build/ via
+// its own `vite-build`/`build` wireit script, which reads DOCS_BASE to compute the
+// right base path. Those scripts are declared as dependencies of the docs
+// `build:playgrounds` script, so wireit builds them (with the correct DOCS_BASE)
+// before this runs. This script only copies the finished output into place.
+// To embed a new package: add it here and to the `build:playgrounds` wireit
+// dependencies in apps/docs/package.json, then add a sidebar entry.
 const playgrounds = [
-  {
-    name: "prime-ui",
-    filter: "@viamrobotics/prime-ui",
-    pkgDir: "packages/prime-ui",
-  },
-  {
-    name: "tailwind-config",
-    filter: "@viamrobotics/tailwind-config",
-    pkgDir: "packages/tailwind-config",
-  },
-  {
-    name: "tweakpane-config",
-    filter: "@viamrobotics/tweakpane-config",
-    pkgDir: "packages/tweakpane-config",
-  },
+  { name: "prime-ui", pkgDir: "packages/prime-ui" },
+  { name: "tailwind-config", pkgDir: "packages/tailwind-config" },
+  { name: "tweakpane-config", pkgDir: "packages/tweakpane-config" },
 ];
 
-const docsBase = (process.env.DOCS_BASE ?? "/prime/").replace(/\/$/, "");
-
-for (const { name, filter, pkgDir } of playgrounds) {
-  const basePath = `${docsBase}/playground/${name}`;
-  console.log(`[playgrounds] building ${name} with BASE_PATH=${basePath}`);
-
-  execSync(`pnpm --filter ${filter} exec vite build`, {
-    cwd: repoRoot,
-    env: { ...process.env, BASE_PATH: basePath },
-    stdio: "inherit",
-  });
-
+for (const { name, pkgDir } of playgrounds) {
   const src = resolve(repoRoot, pkgDir, "build");
   const dest = resolve(docsRoot, "public", "playground", name);
+  if (!existsSync(src)) {
+    throw new Error(
+      `[playgrounds] ${pkgDir}/build/ not found — the ${name} playground build must run first`,
+    );
+  }
   if (existsSync(dest)) rmSync(dest, { recursive: true });
   mkdirSync(dirname(dest), { recursive: true });
   cpSync(src, dest, { recursive: true });

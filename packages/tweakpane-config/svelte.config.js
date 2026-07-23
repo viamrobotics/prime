@@ -1,5 +1,12 @@
 import adapter from "@sveltejs/adapter-static";
 
+// The docs site embeds this playground under <DOCS_BASE>/playground/tweakpane-config;
+// each package supplies its own segment. Falls back to BASE_PATH, then '' (local/npm).
+const docsBase = process.env.DOCS_BASE?.replace(/\/$/, "");
+const base = docsBase
+  ? `${docsBase}/playground/tweakpane-config`
+  : (process.env.BASE_PATH ?? "");
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   compilerOptions: {
@@ -12,7 +19,7 @@ const config = {
       fallback: "index.html",
     }),
     paths: {
-      base: process.env.BASE_PATH ?? "",
+      base,
     },
   },
 };

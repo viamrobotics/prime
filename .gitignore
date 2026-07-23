@@ -12,6 +12,9 @@ dist
 *.local
 .svelte-kit
 
+# wireit task cache/state
+.wireit
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
