@@ -37,13 +37,16 @@ For active component development on a library package, run that package's own de
 
 ## How URLs work
 
-Two env vars control deploy paths:
+A single `DOCS_BASE` env var drives all deploy paths:
 
-- `DOCS_BASE` — Starlight's `base`. Defaults to `/prime/`. The PR preview workflow sets it to `/prime/pr-preview/pr-<N>/`.
-- `BASE_PATH` (per-playground) — set by `build-playgrounds.mjs` to `${DOCS_BASE}/playground/<name>`. SvelteKit reads it from `process.env.BASE_PATH` in each package's `svelte.config.js`.
+- Starlight's `base` (in `astro.config.mjs`) reads `DOCS_BASE`, defaulting to `/prime/`. The PR-preview workflow sets it to `/prime/pr-preview/pr-<N>/`.
+- Each library's `svelte.config.js` also reads `DOCS_BASE` and appends its own `/playground/<name>` segment for `paths.base` — so one value configures the whole build. Unset (local dev / npm) means base `/`. A raw `BASE_PATH` still works as a per-package fallback override.
+- `DOCS_SITE` sets Starlight's `site`.
+
+The playground library builds run first as wireit dependencies of `build:playgrounds` (which then only copies their `build/` output into `public/playground/<name>/`), so `DOCS_BASE` propagates to them automatically.
 
 ## Adding a playground for a new package
 
-1. Make sure the package builds a static SvelteKit app: `@sveltejs/adapter-static` with `paths.base` reading from `process.env.BASE_PATH`.
-2. Add the package to the `playgrounds` array in `scripts/build-playgrounds.mjs`.
+1. Make sure the package builds a static SvelteKit app (`@sveltejs/adapter-static`) whose `svelte.config.js` derives `paths.base` from `DOCS_BASE` + a `/playground/<name>` segment (copy the pattern from an existing package).
+2. Add the package's playground build script (e.g. `../../packages/<name>:vite-build`) to the `build:playgrounds` wireit `dependencies` in [package.json](package.json), and add the package to the `playgrounds` array in `scripts/build-playgrounds.mjs`.
 3. Add a sidebar entry under `Playgrounds` in `astro.config.mjs`.

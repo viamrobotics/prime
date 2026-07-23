@@ -42,9 +42,11 @@ pnpm --filter @viamrobotics/prime-ui format       # prettier --write
 
 The root scripts (`pnpm build`, `pnpm check`, `pnpm lint`, `pnpm test`) fan these out across the workspace.
 
+`build`/`check`/`lint`/`test` (and the internal `sync`/`vite-build`/`package` steps) are orchestrated by [wireit](https://github.com/google/wireit): each declares its inputs/outputs so unchanged work is skipped or restored from cache, locally and in CI. `sync` (`svelte-kit sync`) is a dependency of the others. To force a real re-run, prefix with `WIREIT_CACHE=none`.
+
 ## Static build / playground deployment
 
-`svelte.config.js` reads `BASE_PATH` from the environment so the same build works at multiple deploy paths. Locally and on npm: empty (`/`). On GitHub Pages main deploy: `/prime/playground/prime-ui`. On PR previews: `/prime/pr-preview/pr-<N>/playground/prime-ui`. The docs site sets this for you via [apps/docs/scripts/build-playgrounds.mjs](../../apps/docs/scripts/build-playgrounds.mjs); no manual env wrangling needed for normal development.
+`svelte.config.js` derives `paths.base` from the `DOCS_BASE` env var, appending this package's own `/playground/prime-ui` segment. So the same build works at multiple deploy paths: locally and on npm (`DOCS_BASE` unset) it's empty (`/`); on the GitHub Pages main deploy (`DOCS_BASE=/prime/`) it's `/prime/playground/prime-ui`; on PR previews (`DOCS_BASE=/prime/pr-preview/pr-<N>/`) it's `/prime/pr-preview/pr-<N>/playground/prime-ui`. The docs build sets `DOCS_BASE` for you and builds this playground first (it's a wireit dependency of the docs `build:playgrounds` script), then [apps/docs/scripts/build-playgrounds.mjs](../../apps/docs/scripts/build-playgrounds.mjs) copies the output into place. (A raw `BASE_PATH` still works as a fallback override.)
 
 All routes must be prerenderable — `src/routes/+layout.ts` enforces this with `export const prerender = true`. If you add a route that can't prerender, the static build will fail; either make it prerenderable or rethink whether it belongs in the playground.
 
