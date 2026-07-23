@@ -26,6 +26,7 @@ catalog:
   typescript: ^6.0.2
   typescript-eslint: ^8.59.2
   vite: ^8.0.7
+  vitest: ^4.1.3
   # Tailwind — unified repo-wide
   "@tailwindcss/vite": ^4.2.4
   tailwindcss: ^4.2.4

@@ -23,6 +23,7 @@
         "./packages/tailwind-config:build",
         "./packages/prime-ui:build",
         "./packages/tweakpane-config:build",
+        "./packages/claude-config:build",
         "./apps/docs:build"
       ]
     },
@@ -30,18 +31,20 @@
       "dependencies": [
         "./packages/tailwind-config:check",
         "./packages/prime-ui:check",
-        "./packages/tweakpane-config:check"
+        "./packages/tweakpane-config:check",
+        "./packages/claude-config:check"
       ]
     },
     "lint": {
       "dependencies": [
         "./packages/tailwind-config:lint",
         "./packages/prime-ui:lint",
-        "./packages/tweakpane-config:lint"
+        "./packages/tweakpane-config:lint",
+        "./packages/claude-config:lint"
       ]
     },
     "test": {
-      "dependencies": ["./packages/prime-ui:test"]
+      "dependencies": ["./packages/prime-ui:test", "./packages/claude-config:test"]
     }
   },
   "devDependencies": {

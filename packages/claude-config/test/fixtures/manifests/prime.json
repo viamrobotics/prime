@@ -1,0 +1,46 @@
+{
+  "repo": {
+    "name": "prime",
+    "monorepo": true,
+    "packageManager": "pnpm",
+    "nodeVersion": "24",
+    "packageScope": "@viamrobotics",
+    "workspaceRootPackage": "@viamrobotics/prime-repo",
+    "wireit": true
+  },
+  "rules": {
+    "modules": {
+      "svelte": true,
+      "typescript": true,
+      "testingFrontend": true,
+      "changesets": true,
+      "prDescription": true,
+      "go": false,
+      "testingGo": false
+    }
+  },
+  "mcp": { "svelteTransport": "stdio", "vscode": true },
+  "outputStyle": { "terse": "default" },
+  "hooks": { "sessionStart": true },
+  "ci": { "setupAction": true, "weeklyDependencyUpdate": true },
+  "verify": {
+    "lint": "pnpm lint",
+    "check": "pnpm check",
+    "test": "pnpm test",
+    "build": "pnpm build"
+  },
+  "workflows": {
+    "teamMention": null,
+    "goTools": false,
+    "secrets": {
+      "slackAlertWebhook": true,
+      "gitAccessToken": true,
+      "githubApp": true,
+      "jira": true
+    },
+    "overrides": {
+      "ci-fix": { "maxTurns": 50 },
+      "pr-assistant": { "maxTurns": 50 }
+    }
+  }
+}

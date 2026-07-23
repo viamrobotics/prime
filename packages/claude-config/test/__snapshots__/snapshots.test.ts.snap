@@ -1,0 +1,2821 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildPlan snapshots > renders the prime plan 1`] = `
+"--- .claude/rules/svelte.md (full, rule:svelte) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+---
+
+# Svelte 5 Best Practices
+
+We use Svelte 5 with runes. See the [Svelte 5 Documentation](https://svelte.dev/docs/svelte) and [Runes Guide](https://svelte.dev/docs/svelte/what-are-runes).
+
+## Component Structure
+
+\`\`\`svelte
+<script lang="ts">
+import type { HTMLButtonAttributes } from 'svelte/elements';
+
+interface Props extends HTMLButtonAttributes {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+const {
+  variant = 'primary',
+  disabled = false,
+  children,
+  ...restProps
+}: Props = $props();
+const classes = $derived(['btn', \`btn-\${variant}\`, disabled && 'btn-disabled']);
+</script>
+
+<button
+  {...restProps}
+  aria-disabled={disabled || undefined}
+  class={classes}
+>
+  {@render children?.()}
+</button>
+\`\`\`
+
+We use Svelte 5 runes throughout — no Svelte 4 syntax. See the [Svelte 5 docs](https://svelte.dev/docs/svelte).
+
+**Component conventions:** typed \`Props\` interface (extend the relevant HTML attributes type when wrapping a native element); \`$props()\` with defaults and rest spread passed to the element; \`$derived\` for computed values; \`{@render children?.()}\` for composition. Never use \`<slot>\` — always snippets.
+
+Use \`$state.raw\` for values without deep reactivity (large arrays replaced wholesale, Three.js class instances). Use \`untrack(() => value)\` to read reactive state without registering a dependency.
+
+**Never use \`$effect\` to derive state** — use \`$derived\`. \`$effect\` is for side effects only (DOM mutations, subscriptions).
+
+## Context Providers
+
+Use \`.svelte.ts\` files with \`getContext\`/\`setContext\` for reactive shared state. **ALWAYS** use \`Symbol\` keys.
+
+\`\`\`typescript
+// theme-context.svelte.ts
+import { getContext, setContext } from "svelte";
+
+const key = Symbol("theme");
+
+interface ThemeContext {
+  readonly current: "light" | "dark";
+  toggle: () => void;
+}
+
+export const provideTheme = () => {
+  let theme = $state<"light" | "dark">("light");
+  const context: ThemeContext = {
+    get current() {
+      return theme;
+    },
+    toggle: () => {
+      theme = theme === "light" ? "dark" : "light";
+    },
+  };
+  setContext(key, context);
+  return context;
+};
+
+export const useTheme = (): ThemeContext => getContext(key);
+\`\`\`
+
+**Key conventions:**
+
+- \`.svelte.ts\` extension for files using runes outside \`.svelte\` components
+- \`Symbol()\` for context keys — prevents accidental collisions
+- Return objects with **getters**, not plain properties, to preserve reactivity
+- Naming: \`provide*\` to inject into context, \`use*\` or \`create*\` to consume
+
+## Accessibility
+
+- Use semantic elements and correct ARIA roles; label all interactive elements.
+- Hide decorative icons with \`aria-hidden="true"\`.
+- Use \`aria-disabled\` instead of \`disabled\` when the element must remain focusable.
+
+## Styling
+
+Use array/object syntax for conditional classes:
+
+\`\`\`svelte
+<button class={[
+  'inline-flex items-center font-medium rounded',
+  { 'bg-blue-600': variant === 'primary', 'bg-red-600': variant === 'danger' },
+  disabled && 'opacity-50 cursor-not-allowed',
+]}>
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check across the workspace
+pnpm lint     # prettier + eslint
+\`\`\`
+
+
+--- .claude/rules/typescript.md (full, rule:typescript) ---
+---
+paths:
+  - "**/*.ts"
+---
+
+# TypeScript Best Practices
+
+Use TypeScript with \`strict: true\`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/).
+
+## Type Definitions
+
+Prefer \`interface\` for object shapes (extendable), \`type\` for unions and computed types:
+
+\`\`\`typescript
+interface ButtonOptions {
+  variant: "primary" | "secondary" | "danger";
+  disabled?: boolean;
+}
+
+type ConnectionStatus = "connected" | "disconnected" | "connecting";
+\`\`\`
+
+## NEVER Use \`any\` — Use \`unknown\`
+
+**NEVER** use \`any\` for untyped external data. Use \`unknown\` and narrow with type guards:
+
+\`\`\`typescript
+// BAD
+const data: any = JSON.parse(raw);
+
+// GOOD
+const data: unknown = JSON.parse(raw);
+if (isPayload(data)) {
+  console.log(data.name); // safely typed
+}
+\`\`\`
+
+## Utility Functions
+
+Write pure functions with JSDoc \`@param\`, \`@returns\`, and \`@example\` for non-obvious utilities:
+
+\`\`\`typescript
+/**
+ * Safely parses a string as an integer.
+ * @param value - String to parse
+ * @returns Parsed integer or undefined if invalid
+ * @example safeParseInt('42') // 42
+ */
+export const safeParseInt = (value: string): number | undefined => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
+---
+paths:
+  - "**/*.spec.ts"
+---
+
+# Frontend Testing (Vitest)
+
+## Static Analysis
+
+Run on every commit:
+
+| Language   | Tools                                                                                |
+| ---------- | ------------------------------------------------------------------------------------ |
+| TypeScript | ESLint (\`@typescript-eslint\`), Prettier — run via \`pnpm lint\`                        |
+| Svelte     | \`svelte-check\`, ESLint (\`eslint-plugin-svelte\`) — run via \`pnpm check\` / \`pnpm lint\` |
+
+## TypeScript Unit Tests
+
+Test pure functions, business logic, and utilities in isolation. Use real implementations for pure functions — mock only I/O boundaries.
+
+\`\`\`typescript
+import { describe, expect, it } from "vitest";
+import * as Subject from "../calculate";
+
+describe("calculateTotal", () => {
+  it("returns 0 for empty input", () => {
+    expect(Subject.calculateTotal([])).toBe(0);
+  });
+
+  it.each([
+    { input: [1, 2], expected: 3 },
+    { input: [-1, 1], expected: 0 },
+    { input: [10], expected: 10 },
+  ])("returns $expected for $input", ({ input, expected }) => {
+    expect(Subject.calculateTotal(input)).toBe(expected);
+  });
+});
+\`\`\`
+
+## TypeScript Integration Tests
+
+Integration tests verify multiple modules working together. Use real implementations; mock only external I/O boundaries (network, file system, time).
+
+\`\`\`typescript
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createApiClient } from "../api-client";
+import { userStore } from "../user-store";
+
+describe("login flow", () => {
+  beforeEach(() => {
+    userStore.reset();
+    vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("populates the user store after a successful login", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ id: "123", name: "Alice" }), {
+        status: 200,
+      }),
+    );
+
+    await createApiClient().login("alice@example.com", "password");
+
+    expect(userStore.get()).toEqual({ id: "123", name: "Alice" });
+  });
+
+  it("leaves the user store empty on auth failure", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 401 }));
+
+    await expect(
+      createApiClient().login("alice@example.com", "wrong"),
+    ).rejects.toThrow();
+    expect(userStore.get()).toBeNull();
+  });
+});
+\`\`\`
+
+### Mocking
+
+\`\`\`typescript
+vi.mock("../api-client", () => ({ fetchUser: vi.fn() }));
+vi.spyOn(object, "method").mockReturnValue("result");
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000);
+vi.useRealTimers();
+\`\`\`
+
+Reset mocks between tests with \`vi.clearAllMocks()\` in \`beforeEach\`, or configure \`clearMocks: true\` in \`vitest.config.ts\`.
+
+## Svelte Component Tests (\`*.svelte.spec.ts\`)
+
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro) for component testing.
+
+\`\`\`typescript
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
+import { expect, it, vi } from "vitest";
+import Counter from "../Counter.svelte";
+import MyForm from "../MyForm.svelte";
+
+it("increments count on click", async () => {
+  const user = userEvent.setup();
+  render(Counter);
+
+  await user.click(screen.getByRole("button", { name: /increment/i }));
+  expect(screen.getByText("1")).toBeInTheDocument();
+});
+
+it("calls onSubmit when the form is submitted", async () => {
+  const onSubmit = vi.fn();
+  const user = userEvent.setup();
+  render(MyForm, { props: { onSubmit } });
+
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  expect(onSubmit).toHaveBeenCalledOnce();
+});
+\`\`\`
+
+### Query Priority
+
+1. \`getByRole\` — **preferred**; mirrors how users and assistive technology see the page
+2. \`getByLabelText\` — form inputs
+3. \`getByPlaceholderText\` — inputs without a label (avoid if possible)
+4. \`getByText\` — non-interactive elements
+5. \`getByTestId\` — **last resort only**; add \`data-testid\` when no semantic selector exists
+
+### Injecting Context
+
+Pass a \`context\` map when the component under test depends on Svelte context:
+
+\`\`\`typescript
+import { render } from "@testing-library/svelte";
+import UserProfile from "../UserProfile.svelte";
+import { USER_CONTEXT_KEY } from "../user-context.svelte";
+
+render(UserProfile, {
+  context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
+});
+\`\`\`
+
+For complex context trees, create a \`__fixtures__/\` wrapper component that provides all required contexts and accepts the component under test as a snippet.
+
+### Hook Tests (\`.svelte.spec.ts\`)
+
+Hooks using runes (\`.svelte.ts\`) must be tested inside a Svelte component boundary. Create a minimal fixture component in \`__fixtures__/\` that instantiates the hook and exposes its state for assertions.
+
+### Browser Mode
+
+Not currently adopted. If you need real browser APIs unavailable in jsdom (\`ResizeObserver\`, \`IntersectionObserver\`, \`canvas\`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file \`*.browser.spec.ts\`.
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/pr-description.md (full, rule:pr-description) ---
+---
+paths:
+  - ".changeset/**"
+---
+
+# PR Description Format
+
+Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
+
+## Opening Paragraph
+
+One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
+
+\`\`\`
+Adds a \`ghost\` variant to Button so consumers can use a tertiary button style
+that matches the design system's low-emphasis treatment.
+\`\`\`
+
+## Layer-by-Layer Breakdown
+
+Break changes into sections that match the architecture layers they touch. Use headings that match the actual layers in the affected package(s); common ones below. Omit any section with no changes.
+
+| Heading        | What it covers                                           |
+| -------------- | -------------------------------------------------------- |
+| **Components** | Changes to \`.svelte\` components in \`packages/<pkg>/src/\` |
+| **Primitives** | Changes to headless primitives or shared building blocks |
+| **Types**      | New or changed exported types in a package's public API  |
+| **Tests**      | New or changed test files                                |
+
+Within each section:
+
+- Use a bulleted list.
+- Each bullet starts with the symbol being changed (component, primitive, prop, type) in backticks or bold, then describes **what** changed.
+- Be specific: name the new component, the new export, the changed prop — don't just say "updated the package".
+- Keep bullets to one or two sentences.
+
+\`\`\`markdown
+### Components
+
+- \`Button\` adds a \`variant="ghost"\` value and updates focus styles for it.
+- \`IconButton\` re-exports the new variant through its \`variant\` prop.
+\`\`\`
+
+## Why?
+
+Include a **Why?** section when the PR involves non-obvious design decisions. Format each decision as a bold question followed by a paragraph answer.
+
+\`\`\`markdown
+### Why?
+
+**Why a new variant instead of a \`subtle\` prop?**
+
+The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
+\`\`\`
+
+Skip this section for straightforward PRs where the "what" is self-explanatory.
+
+## Testing
+
+End with a **Testing** section listing which test suites were run and any new tests added.
+
+\`\`\`markdown
+### Testing
+
+Ran \`pnpm --filter @viamrobotics/<pkg> test\` and \`pnpm lint\`. Added a new spec for the ghost variant focus state.
+\`\`\`
+
+Name the specific test commands — don't just say "tests pass".
+
+## Style Rules
+
+- Use \`###\` (h3) for each section heading.
+- Use GitHub-flavoured Markdown — backtick-fenced code, bullet lists, bold.
+- Do **not** add a \`## Summary\` or \`## Description\` wrapper heading; the opening paragraph stands on its own.
+- Do **not** include auto-generated changelogs, file lists, or diff stats — reviewers can see those in the Files tab.
+- Keep the tone direct and technical. Write in first person when explaining rationale ("I tested this with..."). Use present tense for describing behaviour ("\`Button\` adds...").
+- When renaming or deprecating something, call out both the old and new names explicitly.
+- If the PR depends on or stacks on another PR, note the base branch and link the parent PR in the opening paragraph.
+
+
+--- .claude/rules/changesets.md (full, rule:changesets) ---
+---
+paths:
+  - '.changeset/**'
+  - 'CHANGELOG.md'
+---
+
+# Changesets
+
+Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. prime is a pnpm monorepo; a single changeset can bump one or many packages under \`packages/*\`. See [CHANGELOG.md](../../CHANGELOG.md) for voice and existing \`.changeset/*.md\` files for format.
+
+## Creating a Changeset
+
+Run \`pnpm changeset\` — it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
+
+The frontmatter lists each affected package and its semver bump:
+
+\`\`\`markdown
+---
+'@viamrobotics/<package-a>': minor
+'@viamrobotics/<package-b>': patch
+---
+
+Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
+\`\`\`
+
+## Bump Types
+
+Bump types follow semver:
+
+- \`major\` — breaking public API changes (rare; coordinate before merging).
+- \`minor\` — additive features, new capabilities (new components, props, or exports).
+- \`patch\` — bug fixes, perf, security, dependency bumps, internal refactors.
+
+## Summary Voice
+
+Summary is one imperative phrase matching the changelog voice. Examples:
+
+- \`Fix focus ring on disabled Button\`
+- \`Add ghost variant to Button\`
+- \`sec: update tar dependency\`
+- \`Make Dialog expose explicit open and close methods\`
+
+## When to Skip
+
+Skip a changeset only for changes that don't affect consumers of any package: CI config, test-only edits, docs-only edits, internal tooling, and changes scoped entirely to the workspace root (which is \`private: true\`).
+
+
+--- .claude/rules/code-comments.md (full, rule:code-comments) ---
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/*.go"
+  - "**/*.py"
+  - "**/*.rs"
+---
+
+# Code Comments
+
+These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
+
+## Rule — follow without deliberation
+
+- **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
+- **Only comment for two reasons:**
+  1. **Divergence from convention** — the code intentionally departs from the repo's normal patterns, a language idiom, or an obvious implementation. Explain _why_ the divergence is necessary (e.g. a bug workaround, a perf constraint, an external API quirk, a reactivity requirement).
+  2. **Non-obvious domain logic** — the code encodes a business rule, invariant, or domain concept that a new reader would not infer from the code itself. Briefly catalog the rule so future readers can find and trust it.
+- **Hard cap: 200 characters per comment.** If you cannot explain it in 200 characters, the comment is probably documenting too much; split it, link to a doc/ticket, or rewrite the code to be clearer.
+- **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`. These are noise.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
+- **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+
+## Examples
+
+**Bad — narrating obvious code:**
+
+\`\`\`ts
+// Get the user from the store
+const user = userStore.get();
+if (!user) {
+  // Return early
+  return;
+}
+
+// Loop over the parts
+for (const part of parts) {
+  // Add it to the result
+  result.push(part);
+}
+\`\`\`
+
+**Bad — explaining the change instead of the code:**
+
+\`\`\`ts
+// Switched to structuredClone because the old spread didn't deep-copy
+const copy = structuredClone(config);
+\`\`\`
+
+**Bad — comment longer than 200 chars restating what the code shows:**
+
+\`\`\`ts
+// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+function activePartConfigs(robot: Robot): PartConfig[] { ... }
+\`\`\`
+
+**Good — divergence from convention, with the reason (frontend):**
+
+\`\`\`ts
+// $state.raw: this buffer is replaced wholesale each frame; deep reactivity would tank render perf.
+let points = $state.raw(new Float32Array());
+\`\`\`
+
+**Good — divergence from convention, with the reason (backend):**
+
+\`\`\`go
+// 5s buffer absorbs clock skew between app servers and the DB primary — see APP-8026.
+startTime = startTime.Add(-5 * time.Second)
+\`\`\`
+
+**Good — cataloging non-obvious domain logic:**
+
+\`\`\`ts
+// Viam resource names are case-insensitive but must round-trip with their original
+// casing, so we key by the original and compare lowercased.
+const key = name.toLowerCase();
+\`\`\`
+
+**Good — no comment needed, the name carries the meaning:**
+
+\`\`\`ts
+const activeParts = filterActiveParts(robot.parts);
+\`\`\`
+
+
+--- .claude/rules/editing-discipline.md (full, rule:editing-discipline) ---
+# Editing Discipline
+
+How to make changes safely, applies every session.
+
+- **Work from the file's current state, not a stale view.** Re-read a file right before you edit it when your knowledge of it is second-hand (an earlier snapshot, a build or lint error, another tool's output) or the user may be editing it at the same time. For example, it's open in their editor. A tool's report and the file's current bytes can disagree within seconds; trust the bytes.
+- **Don't rewrite what isn't yours to change.** When the user presents a file as their own finished work, or has it open mid-edit, don't silently "fix" it. Surface the problem and let them decide. Stay within the scope you were asked to touch.
+
+
+--- .claude/rules/verification.md (full, rule:verification) ---
+# Verify Your Work
+
+After finishing a batch of edits but before telling the user the work is done, reconcile the code:
+
+1. **Format.** Run the repo's format command; it rewrites files in place, so there's no need to eyeball formatting.
+2. **Lint with autofix.** Run lint so mechanical issues self-correct and only real problems remain.
+3. **Type-check and test** the package(s) you touched.
+
+Prefer package-scoped commands so you rebuild only what changed: \`pnpm --filter <pkg> run <script>\`.
+
+Report honestly:
+
+- If a step surfaces errors that don't auto-resolve, say so and show them. Never claim success over a failing or unrun check.
+- "Done" means every check passed, not that the edits were made.
+
+This is the always-on habit; the per-language "Verify Your Work" notes name the exact commands for each stack.
+
+
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Design System Context
+
+prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
+
+The design system lives at **https://design.viam.com/guides/intro/** — start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components that prime is expected to mirror.
+
+## When to look things up
+
+- Adding a new component or variant — confirm the design system documents an existing pattern before inventing one.
+- Naming a prop, variant, or component — match the design system's vocabulary so consumers don't have to learn two names for the same thing.
+- A review comment needs to describe expected visual or interaction behavior — quote the design system rather than approximating.
+
+## How to look things up
+
+Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2–3 per session to avoid wasting turns.
+
+
+--- .claude/settings.ci.json (full, settings-ci) ---
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}
+
+
+--- .mcp.json (full, mcp) ---
+{
+  "mcpServers": {
+    "svelte": {
+      "type": "stdio",
+      "command": "npx",
+      "env": {},
+      "args": ["-y", "@sveltejs/mcp"]
+    }
+  }
+}
+
+
+--- .vscode/mcp.json (full, mcp) ---
+{
+	"servers": {
+		"svelte": {
+			"command": "npx",
+			"args": ["-y", "@sveltejs/mcp"]
+		}
+	}
+}
+
+
+--- .claude/output-styles/Terse.md (full, output-style) ---
+---
+name: Terse
+description: Token-lean responses: fragments over prose, zero filler, code and paths byte-exact.
+keep-coding-instructions: true
+---
+
+<!--
+  Adapted from the caveman project (https://github.com/JuliusBrussee/caveman),
+  (c) Julius Brussee, MIT license. Vendored by claude-config with style-level changes; "why use many token when few token do trick."
+-->
+
+# Terse output
+
+Compress every response. Substance intact, packaging minimal.
+
+## Rules
+
+- Sentence fragments over sentences. Drop subjects, articles, connective filler
+  ("essentially", "in order to", "it's worth noting").
+- One line where three would do. No restating the question, no summarizing what you
+  just said, no "let me know if".
+- Never compress content that must be exact: code, commands, file paths, URLs,
+  identifiers, numbers, error messages — byte-preserved, always.
+- Keep the user's language; compress style, not meaning.
+- Lists: bare fragments, no trailing prose.
+- Explanations: cause → effect → fix, one line each.
+  Example: "New object ref each render. Inline prop = new ref = re-render. Wrap in \`useMemo\`."
+- When precision and terseness conflict, precision wins.
+
+## Unchanged
+
+Code quality, correctness checks, and safety behavior are NOT compressed — only the
+words around them.
+
+
+--- .claude/settings.json (json, output-style) ---
+{"outputStyle":"Terse"}
+
+--- .claude/hooks/session-start.mjs (full, hooks) ---
+#!/usr/bin/env node
+// SessionStart hook (@viamrobotics/claude-config): a tiny git orientation header so the agent skips a full \`git status\`. Keep stdout small.
+
+import { execFileSync } from "node:child_process";
+
+// Returns RAW output — \`git status --porcelain\` lines are position-sensitive
+// (2 status chars + space); a global trim would eat the first line's prefix.
+function git(args) {
+  try {
+    return execFileSync("git", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+  } catch {
+    return null;
+  }
+}
+
+try {
+  const root = git(["rev-parse", "--show-toplevel"])?.trim();
+  if (root) {
+    const lines = [];
+    const branch = git(["rev-parse", "--abbrev-ref", "HEAD"])?.trim();
+    let tracking = "";
+    const counts = git(["rev-list", "--left-right", "--count", "@{upstream}...HEAD"])?.trim();
+    if (counts) {
+      const [behind, ahead] = counts.split(/\\s+/).map(Number);
+      const bits = [ahead ? \`ahead \${ahead}\` : null, behind ? \`behind \${behind}\` : null].filter(
+        Boolean,
+      );
+      if (bits.length) tracking = \` (\${bits.join(", ")})\`;
+    }
+    lines.push(\`[repo] branch: \${branch ?? "(no commits yet)"}\${tracking}\`);
+
+    const status = git(["status", "--porcelain"]) ?? "";
+    const changed = status
+      .split("\\n")
+      .filter(Boolean)
+      .map((l) => l.slice(3).trim());
+    if (changed.length) {
+      const byArea = new Map();
+      for (const path of changed) {
+        const match = /^(packages|apps)\\/([^/]+)\\//.exec(path);
+        if (match) {
+          const area = \`\${match[1]}/\${match[2]}\`;
+          byArea.set(area, (byArea.get(area) ?? 0) + 1);
+        }
+      }
+      if (changed.length > 25) {
+        const summary = [...byArea.entries()].map(([n, c]) => \`\${n} (\${c})\`).join(", ");
+        lines.push(\`[repo] uncommitted: \${changed.length} files\${summary ? \` — \${summary}\` : ""}\`);
+      } else {
+        const shown = changed.slice(0, 10).join(", ");
+        lines.push(
+          \`[repo] uncommitted (\${changed.length}): \${shown}\${changed.length > 10 ? ", …" : ""}\`,
+        );
+        if (byArea.size) lines.push(\`[repo] areas touched: \${[...byArea.keys()].join(", ")}\`);
+      }
+    }
+    console.log(lines.join("\\n"));
+  }
+} catch {
+  // Never block session start.
+}
+process.exit(0);
+
+
+--- .claude/settings.json (json, hooks) ---
+{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
+
+--- .nvmrc (full, nvmrc) ---
+24
+
+
+--- .gitignore (region, gitignore-block) ---
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+
+
+--- CLAUDE.md (region, claude-md) ---
+| Rule                    | Loads when                                          |
+| ----------------------- | --------------------------------------------------- |
+| \`svelte.md\`             | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`       |
+| \`typescript.md\`         | editing \`.ts\`                                       |
+| \`testing-frontend.md\`   | editing test files (\`**/*.spec.ts\`)                 |
+| \`pr-description.md\`     | editing files under \`.changeset/\`                   |
+| \`changesets.md\`         | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`code-comments.md\`      | editing any code file                               |
+| \`editing-discipline.md\` | every session (edit from current state, in scope)   |
+| \`verification.md\`       | every session (verify before reporting done)        |
+| \`viam-context.md\`       | every session (design system context)               |"
+`;
+
+exports[`buildPlan snapshots > renders the test-widgets plan 1`] = `
+"--- .claude/rules/svelte.md (full, rule:svelte) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+---
+
+# Svelte 5 Best Practices
+
+We use Svelte 5 with runes. See the [Svelte 5 Documentation](https://svelte.dev/docs/svelte) and [Runes Guide](https://svelte.dev/docs/svelte/what-are-runes).
+
+## Component Structure
+
+\`\`\`svelte
+<script lang="ts">
+import type { HTMLButtonAttributes } from 'svelte/elements';
+
+interface Props extends HTMLButtonAttributes {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+const {
+  variant = 'primary',
+  disabled = false,
+  children,
+  ...restProps
+}: Props = $props();
+const classes = $derived(['btn', \`btn-\${variant}\`, disabled && 'btn-disabled']);
+</script>
+
+<button
+  {...restProps}
+  aria-disabled={disabled || undefined}
+  class={classes}
+>
+  {@render children?.()}
+</button>
+\`\`\`
+
+We use Svelte 5 runes throughout — no Svelte 4 syntax. See the [Svelte 5 docs](https://svelte.dev/docs/svelte).
+
+**Component conventions:** typed \`Props\` interface (extend the relevant HTML attributes type when wrapping a native element); \`$props()\` with defaults and rest spread passed to the element; \`$derived\` for computed values; \`{@render children?.()}\` for composition. Never use \`<slot>\` — always snippets.
+
+Use \`$state.raw\` for values without deep reactivity (large arrays replaced wholesale, Three.js class instances). Use \`untrack(() => value)\` to read reactive state without registering a dependency.
+
+**Never use \`$effect\` to derive state** — use \`$derived\`. \`$effect\` is for side effects only (DOM mutations, subscriptions).
+
+## Context Providers
+
+Use \`.svelte.ts\` files with \`getContext\`/\`setContext\` for reactive shared state. **ALWAYS** use \`Symbol\` keys.
+
+\`\`\`typescript
+// theme-context.svelte.ts
+import { getContext, setContext } from "svelte";
+
+const key = Symbol("theme");
+
+interface ThemeContext {
+  readonly current: "light" | "dark";
+  toggle: () => void;
+}
+
+export const provideTheme = () => {
+  let theme = $state<"light" | "dark">("light");
+  const context: ThemeContext = {
+    get current() {
+      return theme;
+    },
+    toggle: () => {
+      theme = theme === "light" ? "dark" : "light";
+    },
+  };
+  setContext(key, context);
+  return context;
+};
+
+export const useTheme = (): ThemeContext => getContext(key);
+\`\`\`
+
+**Key conventions:**
+
+- \`.svelte.ts\` extension for files using runes outside \`.svelte\` components
+- \`Symbol()\` for context keys — prevents accidental collisions
+- Return objects with **getters**, not plain properties, to preserve reactivity
+- Naming: \`provide*\` to inject into context, \`use*\` or \`create*\` to consume
+
+## Accessibility
+
+- Use semantic elements and correct ARIA roles; label all interactive elements.
+- Hide decorative icons with \`aria-hidden="true"\`.
+- Use \`aria-disabled\` instead of \`disabled\` when the element must remain focusable.
+
+## Styling
+
+Use array/object syntax for conditional classes:
+
+\`\`\`svelte
+<button class={[
+  'inline-flex items-center font-medium rounded',
+  { 'bg-blue-600': variant === 'primary', 'bg-red-600': variant === 'danger' },
+  disabled && 'opacity-50 cursor-not-allowed',
+]}>
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check across the workspace
+pnpm lint     # prettier + eslint
+\`\`\`
+
+
+--- .claude/rules/typescript.md (full, rule:typescript) ---
+---
+paths:
+  - "**/*.ts"
+---
+
+# TypeScript Best Practices
+
+Use TypeScript with \`strict: true\`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/).
+
+## Type Definitions
+
+Prefer \`interface\` for object shapes (extendable), \`type\` for unions and computed types:
+
+\`\`\`typescript
+interface ButtonOptions {
+  variant: "primary" | "secondary" | "danger";
+  disabled?: boolean;
+}
+
+type ConnectionStatus = "connected" | "disconnected" | "connecting";
+\`\`\`
+
+## NEVER Use \`any\` — Use \`unknown\`
+
+**NEVER** use \`any\` for untyped external data. Use \`unknown\` and narrow with type guards:
+
+\`\`\`typescript
+// BAD
+const data: any = JSON.parse(raw);
+
+// GOOD
+const data: unknown = JSON.parse(raw);
+if (isPayload(data)) {
+  console.log(data.name); // safely typed
+}
+\`\`\`
+
+## Utility Functions
+
+Write pure functions with JSDoc \`@param\`, \`@returns\`, and \`@example\` for non-obvious utilities:
+
+\`\`\`typescript
+/**
+ * Safely parses a string as an integer.
+ * @param value - String to parse
+ * @returns Parsed integer or undefined if invalid
+ * @example safeParseInt('42') // 42
+ */
+export const safeParseInt = (value: string): number | undefined => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
+---
+paths:
+  - "**/*.spec.ts"
+---
+
+# Frontend Testing (Vitest)
+
+## Static Analysis
+
+Run on every commit:
+
+| Language   | Tools                                                                                |
+| ---------- | ------------------------------------------------------------------------------------ |
+| TypeScript | ESLint (\`@typescript-eslint\`), Prettier — run via \`pnpm lint\`                        |
+| Svelte     | \`svelte-check\`, ESLint (\`eslint-plugin-svelte\`) — run via \`pnpm check\` / \`pnpm lint\` |
+
+## TypeScript Unit Tests
+
+Test pure functions, business logic, and utilities in isolation. Use real implementations for pure functions — mock only I/O boundaries.
+
+\`\`\`typescript
+import { describe, expect, it } from "vitest";
+import * as Subject from "../calculate";
+
+describe("calculateTotal", () => {
+  it("returns 0 for empty input", () => {
+    expect(Subject.calculateTotal([])).toBe(0);
+  });
+
+  it.each([
+    { input: [1, 2], expected: 3 },
+    { input: [-1, 1], expected: 0 },
+    { input: [10], expected: 10 },
+  ])("returns $expected for $input", ({ input, expected }) => {
+    expect(Subject.calculateTotal(input)).toBe(expected);
+  });
+});
+\`\`\`
+
+## TypeScript Integration Tests
+
+Integration tests verify multiple modules working together. Use real implementations; mock only external I/O boundaries (network, file system, time).
+
+\`\`\`typescript
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createApiClient } from "../api-client";
+import { userStore } from "../user-store";
+
+describe("login flow", () => {
+  beforeEach(() => {
+    userStore.reset();
+    vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("populates the user store after a successful login", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ id: "123", name: "Alice" }), {
+        status: 200,
+      }),
+    );
+
+    await createApiClient().login("alice@example.com", "password");
+
+    expect(userStore.get()).toEqual({ id: "123", name: "Alice" });
+  });
+
+  it("leaves the user store empty on auth failure", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 401 }));
+
+    await expect(
+      createApiClient().login("alice@example.com", "wrong"),
+    ).rejects.toThrow();
+    expect(userStore.get()).toBeNull();
+  });
+});
+\`\`\`
+
+### Mocking
+
+\`\`\`typescript
+vi.mock("../api-client", () => ({ fetchUser: vi.fn() }));
+vi.spyOn(object, "method").mockReturnValue("result");
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000);
+vi.useRealTimers();
+\`\`\`
+
+Reset mocks between tests with \`vi.clearAllMocks()\` in \`beforeEach\`, or configure \`clearMocks: true\` in \`vitest.config.ts\`.
+
+## Svelte Component Tests (\`*.svelte.spec.ts\`)
+
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro) for component testing.
+
+\`\`\`typescript
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
+import { expect, it, vi } from "vitest";
+import Counter from "../Counter.svelte";
+import MyForm from "../MyForm.svelte";
+
+it("increments count on click", async () => {
+  const user = userEvent.setup();
+  render(Counter);
+
+  await user.click(screen.getByRole("button", { name: /increment/i }));
+  expect(screen.getByText("1")).toBeInTheDocument();
+});
+
+it("calls onSubmit when the form is submitted", async () => {
+  const onSubmit = vi.fn();
+  const user = userEvent.setup();
+  render(MyForm, { props: { onSubmit } });
+
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  expect(onSubmit).toHaveBeenCalledOnce();
+});
+\`\`\`
+
+### Query Priority
+
+1. \`getByRole\` — **preferred**; mirrors how users and assistive technology see the page
+2. \`getByLabelText\` — form inputs
+3. \`getByPlaceholderText\` — inputs without a label (avoid if possible)
+4. \`getByText\` — non-interactive elements
+5. \`getByTestId\` — **last resort only**; add \`data-testid\` when no semantic selector exists
+
+### Injecting Context
+
+Pass a \`context\` map when the component under test depends on Svelte context:
+
+\`\`\`typescript
+import { render } from "@testing-library/svelte";
+import UserProfile from "../UserProfile.svelte";
+import { USER_CONTEXT_KEY } from "../user-context.svelte";
+
+render(UserProfile, {
+  context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
+});
+\`\`\`
+
+For complex context trees, create a \`__fixtures__/\` wrapper component that provides all required contexts and accepts the component under test as a snippet.
+
+### Hook Tests (\`.svelte.spec.ts\`)
+
+Hooks using runes (\`.svelte.ts\`) must be tested inside a Svelte component boundary. Create a minimal fixture component in \`__fixtures__/\` that instantiates the hook and exposes its state for assertions.
+
+### Browser Mode
+
+Not currently adopted. If you need real browser APIs unavailable in jsdom (\`ResizeObserver\`, \`IntersectionObserver\`, \`canvas\`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file \`*.browser.spec.ts\`.
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/pr-description.md (full, rule:pr-description) ---
+---
+paths:
+  - ".changeset/**"
+---
+
+# PR Description Format
+
+Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
+
+## Opening Paragraph
+
+One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
+
+\`\`\`
+Adds a \`ghost\` variant to Button so consumers can use a tertiary button style
+that matches the design system's low-emphasis treatment.
+\`\`\`
+
+## Layer-by-Layer Breakdown
+
+Break changes into sections that match the architecture layers they touch. Use headings that match the actual layers in the affected package(s); common ones below. Omit any section with no changes.
+
+| Heading        | What it covers                                           |
+| -------------- | -------------------------------------------------------- |
+| **Components** | Changes to \`.svelte\` components in \`packages/<pkg>/src/\` |
+| **Primitives** | Changes to headless primitives or shared building blocks |
+| **Types**      | New or changed exported types in a package's public API  |
+| **Tests**      | New or changed test files                                |
+
+Within each section:
+
+- Use a bulleted list.
+- Each bullet starts with the symbol being changed (component, primitive, prop, type) in backticks or bold, then describes **what** changed.
+- Be specific: name the new component, the new export, the changed prop — don't just say "updated the package".
+- Keep bullets to one or two sentences.
+
+\`\`\`markdown
+### Components
+
+- \`Button\` adds a \`variant="ghost"\` value and updates focus styles for it.
+- \`IconButton\` re-exports the new variant through its \`variant\` prop.
+\`\`\`
+
+## Why?
+
+Include a **Why?** section when the PR involves non-obvious design decisions. Format each decision as a bold question followed by a paragraph answer.
+
+\`\`\`markdown
+### Why?
+
+**Why a new variant instead of a \`subtle\` prop?**
+
+The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
+\`\`\`
+
+Skip this section for straightforward PRs where the "what" is self-explanatory.
+
+## Testing
+
+End with a **Testing** section listing which test suites were run and any new tests added.
+
+\`\`\`markdown
+### Testing
+
+Ran \`pnpm --filter @viamrobotics/<pkg> test\` and \`pnpm lint\`. Added a new spec for the ghost variant focus state.
+\`\`\`
+
+Name the specific test commands — don't just say "tests pass".
+
+## Style Rules
+
+- Use \`###\` (h3) for each section heading.
+- Use GitHub-flavoured Markdown — backtick-fenced code, bullet lists, bold.
+- Do **not** add a \`## Summary\` or \`## Description\` wrapper heading; the opening paragraph stands on its own.
+- Do **not** include auto-generated changelogs, file lists, or diff stats — reviewers can see those in the Files tab.
+- Keep the tone direct and technical. Write in first person when explaining rationale ("I tested this with..."). Use present tense for describing behaviour ("\`Button\` adds...").
+- When renaming or deprecating something, call out both the old and new names explicitly.
+- If the PR depends on or stacks on another PR, note the base branch and link the parent PR in the opening paragraph.
+
+
+--- .claude/rules/changesets.md (full, rule:changesets) ---
+---
+paths:
+  - '.changeset/**'
+  - 'CHANGELOG.md'
+---
+
+# Changesets
+
+Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. prime is a pnpm monorepo; a single changeset can bump one or many packages under \`packages/*\`. See [CHANGELOG.md](../../CHANGELOG.md) for voice and existing \`.changeset/*.md\` files for format.
+
+## Creating a Changeset
+
+Run \`pnpm changeset\` — it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
+
+The frontmatter lists each affected package and its semver bump:
+
+\`\`\`markdown
+---
+'@viamrobotics/<package-a>': minor
+'@viamrobotics/<package-b>': patch
+---
+
+Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
+\`\`\`
+
+## Bump Types
+
+Bump types follow semver:
+
+- \`major\` — breaking public API changes (rare; coordinate before merging).
+- \`minor\` — additive features, new capabilities (new components, props, or exports).
+- \`patch\` — bug fixes, perf, security, dependency bumps, internal refactors.
+
+## Summary Voice
+
+Summary is one imperative phrase matching the changelog voice. Examples:
+
+- \`Fix focus ring on disabled Button\`
+- \`Add ghost variant to Button\`
+- \`sec: update tar dependency\`
+- \`Make Dialog expose explicit open and close methods\`
+
+## When to Skip
+
+Skip a changeset only for changes that don't affect consumers of any package: CI config, test-only edits, docs-only edits, internal tooling, and changes scoped entirely to the workspace root (which is \`private: true\`).
+
+
+--- .claude/rules/code-comments.md (full, rule:code-comments) ---
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/*.go"
+  - "**/*.py"
+  - "**/*.rs"
+---
+
+# Code Comments
+
+These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
+
+## Rule — follow without deliberation
+
+- **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
+- **Only comment for two reasons:**
+  1. **Divergence from convention** — the code intentionally departs from the repo's normal patterns, a language idiom, or an obvious implementation. Explain _why_ the divergence is necessary (e.g. a bug workaround, a perf constraint, an external API quirk, a reactivity requirement).
+  2. **Non-obvious domain logic** — the code encodes a business rule, invariant, or domain concept that a new reader would not infer from the code itself. Briefly catalog the rule so future readers can find and trust it.
+- **Hard cap: 200 characters per comment.** If you cannot explain it in 200 characters, the comment is probably documenting too much; split it, link to a doc/ticket, or rewrite the code to be clearer.
+- **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`. These are noise.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
+- **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+
+## Examples
+
+**Bad — narrating obvious code:**
+
+\`\`\`ts
+// Get the user from the store
+const user = userStore.get();
+if (!user) {
+  // Return early
+  return;
+}
+
+// Loop over the parts
+for (const part of parts) {
+  // Add it to the result
+  result.push(part);
+}
+\`\`\`
+
+**Bad — explaining the change instead of the code:**
+
+\`\`\`ts
+// Switched to structuredClone because the old spread didn't deep-copy
+const copy = structuredClone(config);
+\`\`\`
+
+**Bad — comment longer than 200 chars restating what the code shows:**
+
+\`\`\`ts
+// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+function activePartConfigs(robot: Robot): PartConfig[] { ... }
+\`\`\`
+
+**Good — divergence from convention, with the reason (frontend):**
+
+\`\`\`ts
+// $state.raw: this buffer is replaced wholesale each frame; deep reactivity would tank render perf.
+let points = $state.raw(new Float32Array());
+\`\`\`
+
+**Good — divergence from convention, with the reason (backend):**
+
+\`\`\`go
+// 5s buffer absorbs clock skew between app servers and the DB primary — see APP-8026.
+startTime = startTime.Add(-5 * time.Second)
+\`\`\`
+
+**Good — cataloging non-obvious domain logic:**
+
+\`\`\`ts
+// Viam resource names are case-insensitive but must round-trip with their original
+// casing, so we key by the original and compare lowercased.
+const key = name.toLowerCase();
+\`\`\`
+
+**Good — no comment needed, the name carries the meaning:**
+
+\`\`\`ts
+const activeParts = filterActiveParts(robot.parts);
+\`\`\`
+
+
+--- .claude/rules/editing-discipline.md (full, rule:editing-discipline) ---
+# Editing Discipline
+
+How to make changes safely, applies every session.
+
+- **Work from the file's current state, not a stale view.** Re-read a file right before you edit it when your knowledge of it is second-hand (an earlier snapshot, a build or lint error, another tool's output) or the user may be editing it at the same time. For example, it's open in their editor. A tool's report and the file's current bytes can disagree within seconds; trust the bytes.
+- **Don't rewrite what isn't yours to change.** When the user presents a file as their own finished work, or has it open mid-edit, don't silently "fix" it. Surface the problem and let them decide. Stay within the scope you were asked to touch.
+
+
+--- .claude/rules/verification.md (full, rule:verification) ---
+# Verify Your Work
+
+After finishing a batch of edits but before telling the user the work is done, reconcile the code:
+
+1. **Format.** Run the repo's format command; it rewrites files in place, so there's no need to eyeball formatting.
+2. **Lint with autofix.** Run lint so mechanical issues self-correct and only real problems remain.
+3. **Type-check and test** the package(s) you touched.
+
+Prefer package-scoped commands so you rebuild only what changed: \`pnpm --filter <pkg> run <script>\`.
+
+Report honestly:
+
+- If a step surfaces errors that don't auto-resolve, say so and show them. Never claim success over a failing or unrun check.
+- "Done" means every check passed, not that the edits were made.
+
+This is the always-on habit; the per-language "Verify Your Work" notes name the exact commands for each stack.
+
+
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Design System Context
+
+prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
+
+The design system lives at **https://design.viam.com/guides/intro/** — start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components that prime is expected to mirror.
+
+## When to look things up
+
+- Adding a new component or variant — confirm the design system documents an existing pattern before inventing one.
+- Naming a prop, variant, or component — match the design system's vocabulary so consumers don't have to learn two names for the same thing.
+- A review comment needs to describe expected visual or interaction behavior — quote the design system rather than approximating.
+
+## How to look things up
+
+Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2–3 per session to avoid wasting turns.
+
+
+--- .claude/settings.ci.json (full, settings-ci) ---
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}
+
+
+--- .mcp.json (full, mcp) ---
+{
+  "mcpServers": {
+    "svelte": {
+      "type": "http",
+      "url": "https://mcp.svelte.dev/mcp"
+    }
+  }
+}
+
+
+--- .claude/output-styles/Terse.md (full, output-style) ---
+---
+name: Terse
+description: Token-lean responses: fragments over prose, zero filler, code and paths byte-exact.
+keep-coding-instructions: true
+---
+
+<!--
+  Adapted from the caveman project (https://github.com/JuliusBrussee/caveman),
+  (c) Julius Brussee, MIT license. Vendored by claude-config with style-level changes; "why use many token when few token do trick."
+-->
+
+# Terse output
+
+Compress every response. Substance intact, packaging minimal.
+
+## Rules
+
+- Sentence fragments over sentences. Drop subjects, articles, connective filler
+  ("essentially", "in order to", "it's worth noting").
+- One line where three would do. No restating the question, no summarizing what you
+  just said, no "let me know if".
+- Never compress content that must be exact: code, commands, file paths, URLs,
+  identifiers, numbers, error messages — byte-preserved, always.
+- Keep the user's language; compress style, not meaning.
+- Lists: bare fragments, no trailing prose.
+- Explanations: cause → effect → fix, one line each.
+  Example: "New object ref each render. Inline prop = new ref = re-render. Wrap in \`useMemo\`."
+- When precision and terseness conflict, precision wins.
+
+## Unchanged
+
+Code quality, correctness checks, and safety behavior are NOT compressed — only the
+words around them.
+
+
+--- .claude/settings.json (json, output-style) ---
+{"outputStyle":"Terse"}
+
+--- .claude/settings.json (json, hooks) ---
+{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
+
+--- .nvmrc (full, nvmrc) ---
+22
+
+
+--- .gitignore (region, gitignore-block) ---
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+
+
+--- CLAUDE.md (region, claude-md) ---
+| Rule                    | Loads when                                          |
+| ----------------------- | --------------------------------------------------- |
+| \`svelte.md\`             | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`       |
+| \`typescript.md\`         | editing \`.ts\`                                       |
+| \`testing-frontend.md\`   | editing test files (\`**/*.spec.ts\`)                 |
+| \`pr-description.md\`     | editing files under \`.changeset/\`                   |
+| \`changesets.md\`         | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`code-comments.md\`      | editing any code file                               |
+| \`editing-discipline.md\` | every session (edit from current state, in scope)   |
+| \`verification.md\`       | every session (verify before reporting done)        |
+| \`viam-context.md\`       | every session (design system context)               |"
+`;
+
+exports[`buildPlan snapshots > renders the viam-svelte-sdk plan 1`] = `
+"--- .claude/rules/svelte.md (full, rule:svelte) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+---
+
+# Svelte 5 Best Practices
+
+We use Svelte 5 with runes. See the [Svelte 5 Documentation](https://svelte.dev/docs/svelte) and [Runes Guide](https://svelte.dev/docs/svelte/what-are-runes).
+
+## Component Structure
+
+\`\`\`svelte
+<script lang="ts">
+import type { HTMLButtonAttributes } from 'svelte/elements';
+
+interface Props extends HTMLButtonAttributes {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+const {
+  variant = 'primary',
+  disabled = false,
+  children,
+  ...restProps
+}: Props = $props();
+const classes = $derived(['btn', \`btn-\${variant}\`, disabled && 'btn-disabled']);
+</script>
+
+<button
+  {...restProps}
+  aria-disabled={disabled || undefined}
+  class={classes}
+>
+  {@render children?.()}
+</button>
+\`\`\`
+
+We use Svelte 5 runes throughout — no Svelte 4 syntax. See the [Svelte 5 docs](https://svelte.dev/docs/svelte).
+
+**Component conventions:** typed \`Props\` interface (extend the relevant HTML attributes type when wrapping a native element); \`$props()\` with defaults and rest spread passed to the element; \`$derived\` for computed values; \`{@render children?.()}\` for composition. Never use \`<slot>\` — always snippets.
+
+Use \`$state.raw\` for values without deep reactivity (large arrays replaced wholesale, Three.js class instances). Use \`untrack(() => value)\` to read reactive state without registering a dependency.
+
+**Never use \`$effect\` to derive state** — use \`$derived\`. \`$effect\` is for side effects only (DOM mutations, subscriptions).
+
+## Context Providers
+
+Use \`.svelte.ts\` files with \`getContext\`/\`setContext\` for reactive shared state. **ALWAYS** use \`Symbol\` keys.
+
+\`\`\`typescript
+// theme-context.svelte.ts
+import { getContext, setContext } from "svelte";
+
+const key = Symbol("theme");
+
+interface ThemeContext {
+  readonly current: "light" | "dark";
+  toggle: () => void;
+}
+
+export const provideTheme = () => {
+  let theme = $state<"light" | "dark">("light");
+  const context: ThemeContext = {
+    get current() {
+      return theme;
+    },
+    toggle: () => {
+      theme = theme === "light" ? "dark" : "light";
+    },
+  };
+  setContext(key, context);
+  return context;
+};
+
+export const useTheme = (): ThemeContext => getContext(key);
+\`\`\`
+
+**Key conventions:**
+
+- \`.svelte.ts\` extension for files using runes outside \`.svelte\` components
+- \`Symbol()\` for context keys — prevents accidental collisions
+- Return objects with **getters**, not plain properties, to preserve reactivity
+- Naming: \`provide*\` to inject into context, \`use*\` or \`create*\` to consume
+
+## Accessibility
+
+- Use semantic elements and correct ARIA roles; label all interactive elements.
+- Hide decorative icons with \`aria-hidden="true"\`.
+- Use \`aria-disabled\` instead of \`disabled\` when the element must remain focusable.
+
+## Styling
+
+Use array/object syntax for conditional classes:
+
+\`\`\`svelte
+<button class={[
+  'inline-flex items-center font-medium rounded',
+  { 'bg-blue-600': variant === 'primary', 'bg-red-600': variant === 'danger' },
+  disabled && 'opacity-50 cursor-not-allowed',
+]}>
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check across the workspace
+pnpm lint     # prettier + eslint
+\`\`\`
+
+
+--- .claude/rules/typescript.md (full, rule:typescript) ---
+---
+paths:
+  - "**/*.ts"
+---
+
+# TypeScript Best Practices
+
+Use TypeScript with \`strict: true\`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/).
+
+## Type Definitions
+
+Prefer \`interface\` for object shapes (extendable), \`type\` for unions and computed types:
+
+\`\`\`typescript
+interface ButtonOptions {
+  variant: "primary" | "secondary" | "danger";
+  disabled?: boolean;
+}
+
+type ConnectionStatus = "connected" | "disconnected" | "connecting";
+\`\`\`
+
+## NEVER Use \`any\` — Use \`unknown\`
+
+**NEVER** use \`any\` for untyped external data. Use \`unknown\` and narrow with type guards:
+
+\`\`\`typescript
+// BAD
+const data: any = JSON.parse(raw);
+
+// GOOD
+const data: unknown = JSON.parse(raw);
+if (isPayload(data)) {
+  console.log(data.name); // safely typed
+}
+\`\`\`
+
+## Utility Functions
+
+Write pure functions with JSDoc \`@param\`, \`@returns\`, and \`@example\` for non-obvious utilities:
+
+\`\`\`typescript
+/**
+ * Safely parses a string as an integer.
+ * @param value - String to parse
+ * @returns Parsed integer or undefined if invalid
+ * @example safeParseInt('42') // 42
+ */
+export const safeParseInt = (value: string): number | undefined => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
+---
+paths:
+  - "**/*.spec.ts"
+---
+
+# Frontend Testing (Vitest)
+
+## Static Analysis
+
+Run on every commit:
+
+| Language   | Tools                                                                                |
+| ---------- | ------------------------------------------------------------------------------------ |
+| TypeScript | ESLint (\`@typescript-eslint\`), Prettier — run via \`pnpm lint\`                        |
+| Svelte     | \`svelte-check\`, ESLint (\`eslint-plugin-svelte\`) — run via \`pnpm check\` / \`pnpm lint\` |
+
+## TypeScript Unit Tests
+
+Test pure functions, business logic, and utilities in isolation. Use real implementations for pure functions — mock only I/O boundaries.
+
+\`\`\`typescript
+import { describe, expect, it } from "vitest";
+import * as Subject from "../calculate";
+
+describe("calculateTotal", () => {
+  it("returns 0 for empty input", () => {
+    expect(Subject.calculateTotal([])).toBe(0);
+  });
+
+  it.each([
+    { input: [1, 2], expected: 3 },
+    { input: [-1, 1], expected: 0 },
+    { input: [10], expected: 10 },
+  ])("returns $expected for $input", ({ input, expected }) => {
+    expect(Subject.calculateTotal(input)).toBe(expected);
+  });
+});
+\`\`\`
+
+## TypeScript Integration Tests
+
+Integration tests verify multiple modules working together. Use real implementations; mock only external I/O boundaries (network, file system, time).
+
+\`\`\`typescript
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createApiClient } from "../api-client";
+import { userStore } from "../user-store";
+
+describe("login flow", () => {
+  beforeEach(() => {
+    userStore.reset();
+    vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("populates the user store after a successful login", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ id: "123", name: "Alice" }), {
+        status: 200,
+      }),
+    );
+
+    await createApiClient().login("alice@example.com", "password");
+
+    expect(userStore.get()).toEqual({ id: "123", name: "Alice" });
+  });
+
+  it("leaves the user store empty on auth failure", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 401 }));
+
+    await expect(
+      createApiClient().login("alice@example.com", "wrong"),
+    ).rejects.toThrow();
+    expect(userStore.get()).toBeNull();
+  });
+});
+\`\`\`
+
+### Mocking
+
+\`\`\`typescript
+vi.mock("../api-client", () => ({ fetchUser: vi.fn() }));
+vi.spyOn(object, "method").mockReturnValue("result");
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000);
+vi.useRealTimers();
+\`\`\`
+
+Reset mocks between tests with \`vi.clearAllMocks()\` in \`beforeEach\`, or configure \`clearMocks: true\` in \`vitest.config.ts\`.
+
+## Svelte Component Tests (\`*.svelte.spec.ts\`)
+
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro) for component testing.
+
+\`\`\`typescript
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
+import { expect, it, vi } from "vitest";
+import Counter from "../Counter.svelte";
+import MyForm from "../MyForm.svelte";
+
+it("increments count on click", async () => {
+  const user = userEvent.setup();
+  render(Counter);
+
+  await user.click(screen.getByRole("button", { name: /increment/i }));
+  expect(screen.getByText("1")).toBeInTheDocument();
+});
+
+it("calls onSubmit when the form is submitted", async () => {
+  const onSubmit = vi.fn();
+  const user = userEvent.setup();
+  render(MyForm, { props: { onSubmit } });
+
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  expect(onSubmit).toHaveBeenCalledOnce();
+});
+\`\`\`
+
+### Query Priority
+
+1. \`getByRole\` — **preferred**; mirrors how users and assistive technology see the page
+2. \`getByLabelText\` — form inputs
+3. \`getByPlaceholderText\` — inputs without a label (avoid if possible)
+4. \`getByText\` — non-interactive elements
+5. \`getByTestId\` — **last resort only**; add \`data-testid\` when no semantic selector exists
+
+### Injecting Context
+
+Pass a \`context\` map when the component under test depends on Svelte context:
+
+\`\`\`typescript
+import { render } from "@testing-library/svelte";
+import UserProfile from "../UserProfile.svelte";
+import { USER_CONTEXT_KEY } from "../user-context.svelte";
+
+render(UserProfile, {
+  context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
+});
+\`\`\`
+
+For complex context trees, create a \`__fixtures__/\` wrapper component that provides all required contexts and accepts the component under test as a snippet.
+
+### Hook Tests (\`.svelte.spec.ts\`)
+
+Hooks using runes (\`.svelte.ts\`) must be tested inside a Svelte component boundary. Create a minimal fixture component in \`__fixtures__/\` that instantiates the hook and exposes its state for assertions.
+
+### Browser Mode
+
+Not currently adopted. If you need real browser APIs unavailable in jsdom (\`ResizeObserver\`, \`IntersectionObserver\`, \`canvas\`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file \`*.browser.spec.ts\`.
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/pr-description.md (full, rule:pr-description) ---
+---
+paths:
+  - ".changeset/**"
+---
+
+# PR Description Format
+
+Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
+
+## Opening Paragraph
+
+One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
+
+\`\`\`
+Adds a \`ghost\` variant to Button so consumers can use a tertiary button style
+that matches the design system's low-emphasis treatment.
+\`\`\`
+
+## Layer-by-Layer Breakdown
+
+Break changes into sections that match the architecture layers they touch. Use headings that match the actual layers in the affected package(s); common ones below. Omit any section with no changes.
+
+| Heading        | What it covers                                           |
+| -------------- | -------------------------------------------------------- |
+| **Components** | Changes to \`.svelte\` components in \`packages/<pkg>/src/\` |
+| **Primitives** | Changes to headless primitives or shared building blocks |
+| **Types**      | New or changed exported types in a package's public API  |
+| **Tests**      | New or changed test files                                |
+
+Within each section:
+
+- Use a bulleted list.
+- Each bullet starts with the symbol being changed (component, primitive, prop, type) in backticks or bold, then describes **what** changed.
+- Be specific: name the new component, the new export, the changed prop — don't just say "updated the package".
+- Keep bullets to one or two sentences.
+
+\`\`\`markdown
+### Components
+
+- \`Button\` adds a \`variant="ghost"\` value and updates focus styles for it.
+- \`IconButton\` re-exports the new variant through its \`variant\` prop.
+\`\`\`
+
+## Why?
+
+Include a **Why?** section when the PR involves non-obvious design decisions. Format each decision as a bold question followed by a paragraph answer.
+
+\`\`\`markdown
+### Why?
+
+**Why a new variant instead of a \`subtle\` prop?**
+
+The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
+\`\`\`
+
+Skip this section for straightforward PRs where the "what" is self-explanatory.
+
+## Testing
+
+End with a **Testing** section listing which test suites were run and any new tests added.
+
+\`\`\`markdown
+### Testing
+
+Ran \`pnpm --filter @viamrobotics/<pkg> test\` and \`pnpm lint\`. Added a new spec for the ghost variant focus state.
+\`\`\`
+
+Name the specific test commands — don't just say "tests pass".
+
+## Style Rules
+
+- Use \`###\` (h3) for each section heading.
+- Use GitHub-flavoured Markdown — backtick-fenced code, bullet lists, bold.
+- Do **not** add a \`## Summary\` or \`## Description\` wrapper heading; the opening paragraph stands on its own.
+- Do **not** include auto-generated changelogs, file lists, or diff stats — reviewers can see those in the Files tab.
+- Keep the tone direct and technical. Write in first person when explaining rationale ("I tested this with..."). Use present tense for describing behaviour ("\`Button\` adds...").
+- When renaming or deprecating something, call out both the old and new names explicitly.
+- If the PR depends on or stacks on another PR, note the base branch and link the parent PR in the opening paragraph.
+
+
+--- .claude/rules/changesets.md (full, rule:changesets) ---
+---
+paths:
+  - '.changeset/**'
+  - 'CHANGELOG.md'
+---
+
+# Changesets
+
+Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. prime is a pnpm monorepo; a single changeset can bump one or many packages under \`packages/*\`. See [CHANGELOG.md](../../CHANGELOG.md) for voice and existing \`.changeset/*.md\` files for format.
+
+## Creating a Changeset
+
+Run \`pnpm changeset\` — it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
+
+The frontmatter lists each affected package and its semver bump:
+
+\`\`\`markdown
+---
+'@viamrobotics/<package-a>': minor
+'@viamrobotics/<package-b>': patch
+---
+
+Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
+\`\`\`
+
+## Bump Types
+
+Bump types follow semver:
+
+- \`major\` — breaking public API changes (rare; coordinate before merging).
+- \`minor\` — additive features, new capabilities (new components, props, or exports).
+- \`patch\` — bug fixes, perf, security, dependency bumps, internal refactors.
+
+## Summary Voice
+
+Summary is one imperative phrase matching the changelog voice. Examples:
+
+- \`Fix focus ring on disabled Button\`
+- \`Add ghost variant to Button\`
+- \`sec: update tar dependency\`
+- \`Make Dialog expose explicit open and close methods\`
+
+## When to Skip
+
+Skip a changeset only for changes that don't affect consumers of any package: CI config, test-only edits, docs-only edits, internal tooling, and changes scoped entirely to the workspace root (which is \`private: true\`).
+
+
+--- .claude/rules/code-comments.md (full, rule:code-comments) ---
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/*.go"
+  - "**/*.py"
+  - "**/*.rs"
+---
+
+# Code Comments
+
+These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
+
+## Rule — follow without deliberation
+
+- **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
+- **Only comment for two reasons:**
+  1. **Divergence from convention** — the code intentionally departs from the repo's normal patterns, a language idiom, or an obvious implementation. Explain _why_ the divergence is necessary (e.g. a bug workaround, a perf constraint, an external API quirk, a reactivity requirement).
+  2. **Non-obvious domain logic** — the code encodes a business rule, invariant, or domain concept that a new reader would not infer from the code itself. Briefly catalog the rule so future readers can find and trust it.
+- **Hard cap: 200 characters per comment.** If you cannot explain it in 200 characters, the comment is probably documenting too much; split it, link to a doc/ticket, or rewrite the code to be clearer.
+- **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`. These are noise.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
+- **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+
+## Examples
+
+**Bad — narrating obvious code:**
+
+\`\`\`ts
+// Get the user from the store
+const user = userStore.get();
+if (!user) {
+  // Return early
+  return;
+}
+
+// Loop over the parts
+for (const part of parts) {
+  // Add it to the result
+  result.push(part);
+}
+\`\`\`
+
+**Bad — explaining the change instead of the code:**
+
+\`\`\`ts
+// Switched to structuredClone because the old spread didn't deep-copy
+const copy = structuredClone(config);
+\`\`\`
+
+**Bad — comment longer than 200 chars restating what the code shows:**
+
+\`\`\`ts
+// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+function activePartConfigs(robot: Robot): PartConfig[] { ... }
+\`\`\`
+
+**Good — divergence from convention, with the reason (frontend):**
+
+\`\`\`ts
+// $state.raw: this buffer is replaced wholesale each frame; deep reactivity would tank render perf.
+let points = $state.raw(new Float32Array());
+\`\`\`
+
+**Good — divergence from convention, with the reason (backend):**
+
+\`\`\`go
+// 5s buffer absorbs clock skew between app servers and the DB primary — see APP-8026.
+startTime = startTime.Add(-5 * time.Second)
+\`\`\`
+
+**Good — cataloging non-obvious domain logic:**
+
+\`\`\`ts
+// Viam resource names are case-insensitive but must round-trip with their original
+// casing, so we key by the original and compare lowercased.
+const key = name.toLowerCase();
+\`\`\`
+
+**Good — no comment needed, the name carries the meaning:**
+
+\`\`\`ts
+const activeParts = filterActiveParts(robot.parts);
+\`\`\`
+
+
+--- .claude/rules/editing-discipline.md (full, rule:editing-discipline) ---
+# Editing Discipline
+
+How to make changes safely, applies every session.
+
+- **Work from the file's current state, not a stale view.** Re-read a file right before you edit it when your knowledge of it is second-hand (an earlier snapshot, a build or lint error, another tool's output) or the user may be editing it at the same time. For example, it's open in their editor. A tool's report and the file's current bytes can disagree within seconds; trust the bytes.
+- **Don't rewrite what isn't yours to change.** When the user presents a file as their own finished work, or has it open mid-edit, don't silently "fix" it. Surface the problem and let them decide. Stay within the scope you were asked to touch.
+
+
+--- .claude/rules/verification.md (full, rule:verification) ---
+# Verify Your Work
+
+After finishing a batch of edits but before telling the user the work is done, reconcile the code:
+
+1. **Format.** Run the repo's format command; it rewrites files in place, so there's no need to eyeball formatting.
+2. **Lint with autofix.** Run lint so mechanical issues self-correct and only real problems remain.
+3. **Type-check and test** the package(s) you touched.
+
+Prefer package-scoped commands so you rebuild only what changed: \`pnpm --filter <pkg> run <script>\`.
+
+Report honestly:
+
+- If a step surfaces errors that don't auto-resolve, say so and show them. Never claim success over a failing or unrun check.
+- "Done" means every check passed, not that the edits were made.
+
+This is the always-on habit; the per-language "Verify Your Work" notes name the exact commands for each stack.
+
+
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Design System Context
+
+prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
+
+The design system lives at **https://design.viam.com/guides/intro/** — start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components that prime is expected to mirror.
+
+## When to look things up
+
+- Adding a new component or variant — confirm the design system documents an existing pattern before inventing one.
+- Naming a prop, variant, or component — match the design system's vocabulary so consumers don't have to learn two names for the same thing.
+- A review comment needs to describe expected visual or interaction behavior — quote the design system rather than approximating.
+
+## How to look things up
+
+Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2–3 per session to avoid wasting turns.
+
+
+--- .claude/settings.ci.json (full, settings-ci) ---
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}
+
+
+--- .mcp.json (full, mcp) ---
+{
+  "mcpServers": {
+    "svelte": {
+      "type": "stdio",
+      "command": "npx",
+      "env": {},
+      "args": ["-y", "@sveltejs/mcp"]
+    }
+  }
+}
+
+
+--- .claude/output-styles/Terse.md (full, output-style) ---
+---
+name: Terse
+description: Token-lean responses: fragments over prose, zero filler, code and paths byte-exact.
+keep-coding-instructions: true
+---
+
+<!--
+  Adapted from the caveman project (https://github.com/JuliusBrussee/caveman),
+  (c) Julius Brussee, MIT license. Vendored by claude-config with style-level changes; "why use many token when few token do trick."
+-->
+
+# Terse output
+
+Compress every response. Substance intact, packaging minimal.
+
+## Rules
+
+- Sentence fragments over sentences. Drop subjects, articles, connective filler
+  ("essentially", "in order to", "it's worth noting").
+- One line where three would do. No restating the question, no summarizing what you
+  just said, no "let me know if".
+- Never compress content that must be exact: code, commands, file paths, URLs,
+  identifiers, numbers, error messages — byte-preserved, always.
+- Keep the user's language; compress style, not meaning.
+- Lists: bare fragments, no trailing prose.
+- Explanations: cause → effect → fix, one line each.
+  Example: "New object ref each render. Inline prop = new ref = re-render. Wrap in \`useMemo\`."
+- When precision and terseness conflict, precision wins.
+
+## Unchanged
+
+Code quality, correctness checks, and safety behavior are NOT compressed — only the
+words around them.
+
+
+--- .claude/settings.json (json, output-style) ---
+{"outputStyle":"Terse"}
+
+--- .claude/settings.json (json, hooks) ---
+{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
+
+--- .nvmrc (full, nvmrc) ---
+24
+
+
+--- .gitignore (region, gitignore-block) ---
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+
+
+--- CLAUDE.md (region, claude-md) ---
+| Rule                    | Loads when                                          |
+| ----------------------- | --------------------------------------------------- |
+| \`svelte.md\`             | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`       |
+| \`typescript.md\`         | editing \`.ts\`                                       |
+| \`testing-frontend.md\`   | editing test files (\`**/*.spec.ts\`)                 |
+| \`pr-description.md\`     | editing files under \`.changeset/\`                   |
+| \`changesets.md\`         | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`code-comments.md\`      | editing any code file                               |
+| \`editing-discipline.md\` | every session (edit from current state, in scope)   |
+| \`verification.md\`       | every session (verify before reporting done)        |
+| \`viam-context.md\`       | every session (design system context)               |"
+`;
+
+exports[`buildPlan snapshots > renders the visualization plan 1`] = `
+"--- .claude/rules/svelte.md (full, rule:svelte) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+---
+
+# Svelte 5 Best Practices
+
+We use Svelte 5 with runes. See the [Svelte 5 Documentation](https://svelte.dev/docs/svelte) and [Runes Guide](https://svelte.dev/docs/svelte/what-are-runes).
+
+## Component Structure
+
+\`\`\`svelte
+<script lang="ts">
+import type { HTMLButtonAttributes } from 'svelte/elements';
+
+interface Props extends HTMLButtonAttributes {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+const {
+  variant = 'primary',
+  disabled = false,
+  children,
+  ...restProps
+}: Props = $props();
+const classes = $derived(['btn', \`btn-\${variant}\`, disabled && 'btn-disabled']);
+</script>
+
+<button
+  {...restProps}
+  aria-disabled={disabled || undefined}
+  class={classes}
+>
+  {@render children?.()}
+</button>
+\`\`\`
+
+We use Svelte 5 runes throughout — no Svelte 4 syntax. See the [Svelte 5 docs](https://svelte.dev/docs/svelte).
+
+**Component conventions:** typed \`Props\` interface (extend the relevant HTML attributes type when wrapping a native element); \`$props()\` with defaults and rest spread passed to the element; \`$derived\` for computed values; \`{@render children?.()}\` for composition. Never use \`<slot>\` — always snippets.
+
+Use \`$state.raw\` for values without deep reactivity (large arrays replaced wholesale, Three.js class instances). Use \`untrack(() => value)\` to read reactive state without registering a dependency.
+
+**Never use \`$effect\` to derive state** — use \`$derived\`. \`$effect\` is for side effects only (DOM mutations, subscriptions).
+
+## Context Providers
+
+Use \`.svelte.ts\` files with \`getContext\`/\`setContext\` for reactive shared state. **ALWAYS** use \`Symbol\` keys.
+
+\`\`\`typescript
+// theme-context.svelte.ts
+import { getContext, setContext } from "svelte";
+
+const key = Symbol("theme");
+
+interface ThemeContext {
+  readonly current: "light" | "dark";
+  toggle: () => void;
+}
+
+export const provideTheme = () => {
+  let theme = $state<"light" | "dark">("light");
+  const context: ThemeContext = {
+    get current() {
+      return theme;
+    },
+    toggle: () => {
+      theme = theme === "light" ? "dark" : "light";
+    },
+  };
+  setContext(key, context);
+  return context;
+};
+
+export const useTheme = (): ThemeContext => getContext(key);
+\`\`\`
+
+**Key conventions:**
+
+- \`.svelte.ts\` extension for files using runes outside \`.svelte\` components
+- \`Symbol()\` for context keys — prevents accidental collisions
+- Return objects with **getters**, not plain properties, to preserve reactivity
+- Naming: \`provide*\` to inject into context, \`use*\` or \`create*\` to consume
+
+## Accessibility
+
+- Use semantic elements and correct ARIA roles; label all interactive elements.
+- Hide decorative icons with \`aria-hidden="true"\`.
+- Use \`aria-disabled\` instead of \`disabled\` when the element must remain focusable.
+
+## Styling
+
+Use array/object syntax for conditional classes:
+
+\`\`\`svelte
+<button class={[
+  'inline-flex items-center font-medium rounded',
+  { 'bg-blue-600': variant === 'primary', 'bg-red-600': variant === 'danger' },
+  disabled && 'opacity-50 cursor-not-allowed',
+]}>
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check across the workspace
+pnpm lint     # prettier + eslint
+\`\`\`
+
+
+--- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
+---
+paths:
+  - "**/*.spec.ts"
+---
+
+# Frontend Testing (Vitest)
+
+## Static Analysis
+
+Run on every commit:
+
+| Language   | Tools                                                                                |
+| ---------- | ------------------------------------------------------------------------------------ |
+| TypeScript | ESLint (\`@typescript-eslint\`), Prettier — run via \`pnpm lint\`                        |
+| Svelte     | \`svelte-check\`, ESLint (\`eslint-plugin-svelte\`) — run via \`pnpm check\` / \`pnpm lint\` |
+
+## TypeScript Unit Tests
+
+Test pure functions, business logic, and utilities in isolation. Use real implementations for pure functions — mock only I/O boundaries.
+
+\`\`\`typescript
+import { describe, expect, it } from "vitest";
+import * as Subject from "../calculate";
+
+describe("calculateTotal", () => {
+  it("returns 0 for empty input", () => {
+    expect(Subject.calculateTotal([])).toBe(0);
+  });
+
+  it.each([
+    { input: [1, 2], expected: 3 },
+    { input: [-1, 1], expected: 0 },
+    { input: [10], expected: 10 },
+  ])("returns $expected for $input", ({ input, expected }) => {
+    expect(Subject.calculateTotal(input)).toBe(expected);
+  });
+});
+\`\`\`
+
+## TypeScript Integration Tests
+
+Integration tests verify multiple modules working together. Use real implementations; mock only external I/O boundaries (network, file system, time).
+
+\`\`\`typescript
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createApiClient } from "../api-client";
+import { userStore } from "../user-store";
+
+describe("login flow", () => {
+  beforeEach(() => {
+    userStore.reset();
+    vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("populates the user store after a successful login", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ id: "123", name: "Alice" }), {
+        status: 200,
+      }),
+    );
+
+    await createApiClient().login("alice@example.com", "password");
+
+    expect(userStore.get()).toEqual({ id: "123", name: "Alice" });
+  });
+
+  it("leaves the user store empty on auth failure", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 401 }));
+
+    await expect(
+      createApiClient().login("alice@example.com", "wrong"),
+    ).rejects.toThrow();
+    expect(userStore.get()).toBeNull();
+  });
+});
+\`\`\`
+
+### Mocking
+
+\`\`\`typescript
+vi.mock("../api-client", () => ({ fetchUser: vi.fn() }));
+vi.spyOn(object, "method").mockReturnValue("result");
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000);
+vi.useRealTimers();
+\`\`\`
+
+Reset mocks between tests with \`vi.clearAllMocks()\` in \`beforeEach\`, or configure \`clearMocks: true\` in \`vitest.config.ts\`.
+
+## Svelte Component Tests (\`*.svelte.spec.ts\`)
+
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro) for component testing.
+
+\`\`\`typescript
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
+import { expect, it, vi } from "vitest";
+import Counter from "../Counter.svelte";
+import MyForm from "../MyForm.svelte";
+
+it("increments count on click", async () => {
+  const user = userEvent.setup();
+  render(Counter);
+
+  await user.click(screen.getByRole("button", { name: /increment/i }));
+  expect(screen.getByText("1")).toBeInTheDocument();
+});
+
+it("calls onSubmit when the form is submitted", async () => {
+  const onSubmit = vi.fn();
+  const user = userEvent.setup();
+  render(MyForm, { props: { onSubmit } });
+
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  expect(onSubmit).toHaveBeenCalledOnce();
+});
+\`\`\`
+
+### Query Priority
+
+1. \`getByRole\` — **preferred**; mirrors how users and assistive technology see the page
+2. \`getByLabelText\` — form inputs
+3. \`getByPlaceholderText\` — inputs without a label (avoid if possible)
+4. \`getByText\` — non-interactive elements
+5. \`getByTestId\` — **last resort only**; add \`data-testid\` when no semantic selector exists
+
+### Injecting Context
+
+Pass a \`context\` map when the component under test depends on Svelte context:
+
+\`\`\`typescript
+import { render } from "@testing-library/svelte";
+import UserProfile from "../UserProfile.svelte";
+import { USER_CONTEXT_KEY } from "../user-context.svelte";
+
+render(UserProfile, {
+  context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
+});
+\`\`\`
+
+For complex context trees, create a \`__fixtures__/\` wrapper component that provides all required contexts and accepts the component under test as a snippet.
+
+### Hook Tests (\`.svelte.spec.ts\`)
+
+Hooks using runes (\`.svelte.ts\`) must be tested inside a Svelte component boundary. Create a minimal fixture component in \`__fixtures__/\` that instantiates the hook and exposes its state for assertions.
+
+### Browser Mode
+
+Not currently adopted. If you need real browser APIs unavailable in jsdom (\`ResizeObserver\`, \`IntersectionObserver\`, \`canvas\`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file \`*.browser.spec.ts\`.
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/pr-description.md (full, rule:pr-description) ---
+---
+paths:
+  - ".changeset/**"
+---
+
+# PR Description Format
+
+Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
+
+## Opening Paragraph
+
+One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
+
+\`\`\`
+Adds a \`ghost\` variant to Button so consumers can use a tertiary button style
+that matches the design system's low-emphasis treatment.
+\`\`\`
+
+## Layer-by-Layer Breakdown
+
+Break changes into sections that match the architecture layers they touch. Use headings that match the actual layers in the affected package(s); common ones below. Omit any section with no changes.
+
+| Heading        | What it covers                                           |
+| -------------- | -------------------------------------------------------- |
+| **Components** | Changes to \`.svelte\` components in \`packages/<pkg>/src/\` |
+| **Primitives** | Changes to headless primitives or shared building blocks |
+| **Types**      | New or changed exported types in a package's public API  |
+| **Tests**      | New or changed test files                                |
+
+Within each section:
+
+- Use a bulleted list.
+- Each bullet starts with the symbol being changed (component, primitive, prop, type) in backticks or bold, then describes **what** changed.
+- Be specific: name the new component, the new export, the changed prop — don't just say "updated the package".
+- Keep bullets to one or two sentences.
+
+\`\`\`markdown
+### Components
+
+- \`Button\` adds a \`variant="ghost"\` value and updates focus styles for it.
+- \`IconButton\` re-exports the new variant through its \`variant\` prop.
+\`\`\`
+
+## Why?
+
+Include a **Why?** section when the PR involves non-obvious design decisions. Format each decision as a bold question followed by a paragraph answer.
+
+\`\`\`markdown
+### Why?
+
+**Why a new variant instead of a \`subtle\` prop?**
+
+The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
+\`\`\`
+
+Skip this section for straightforward PRs where the "what" is self-explanatory.
+
+## Testing
+
+End with a **Testing** section listing which test suites were run and any new tests added.
+
+\`\`\`markdown
+### Testing
+
+Ran \`pnpm --filter @viamrobotics/<pkg> test\` and \`pnpm lint\`. Added a new spec for the ghost variant focus state.
+\`\`\`
+
+Name the specific test commands — don't just say "tests pass".
+
+## Style Rules
+
+- Use \`###\` (h3) for each section heading.
+- Use GitHub-flavoured Markdown — backtick-fenced code, bullet lists, bold.
+- Do **not** add a \`## Summary\` or \`## Description\` wrapper heading; the opening paragraph stands on its own.
+- Do **not** include auto-generated changelogs, file lists, or diff stats — reviewers can see those in the Files tab.
+- Keep the tone direct and technical. Write in first person when explaining rationale ("I tested this with..."). Use present tense for describing behaviour ("\`Button\` adds...").
+- When renaming or deprecating something, call out both the old and new names explicitly.
+- If the PR depends on or stacks on another PR, note the base branch and link the parent PR in the opening paragraph.
+
+
+--- .claude/rules/changesets.md (full, rule:changesets) ---
+---
+paths:
+  - '.changeset/**'
+  - 'CHANGELOG.md'
+---
+
+# Changesets
+
+Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. prime is a pnpm monorepo; a single changeset can bump one or many packages under \`packages/*\`. See [CHANGELOG.md](../../CHANGELOG.md) for voice and existing \`.changeset/*.md\` files for format.
+
+## Creating a Changeset
+
+Run \`pnpm changeset\` — it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
+
+The frontmatter lists each affected package and its semver bump:
+
+\`\`\`markdown
+---
+'@viamrobotics/<package-a>': minor
+'@viamrobotics/<package-b>': patch
+---
+
+Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
+\`\`\`
+
+## Bump Types
+
+Bump types follow semver:
+
+- \`major\` — breaking public API changes (rare; coordinate before merging).
+- \`minor\` — additive features, new capabilities (new components, props, or exports).
+- \`patch\` — bug fixes, perf, security, dependency bumps, internal refactors.
+
+## Summary Voice
+
+Summary is one imperative phrase matching the changelog voice. Examples:
+
+- \`Fix focus ring on disabled Button\`
+- \`Add ghost variant to Button\`
+- \`sec: update tar dependency\`
+- \`Make Dialog expose explicit open and close methods\`
+
+## When to Skip
+
+Skip a changeset only for changes that don't affect consumers of any package: CI config, test-only edits, docs-only edits, internal tooling, and changes scoped entirely to the workspace root (which is \`private: true\`).
+
+
+--- .claude/rules/code-comments.md (full, rule:code-comments) ---
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/*.go"
+  - "**/*.py"
+  - "**/*.rs"
+---
+
+# Code Comments
+
+These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
+
+## Rule — follow without deliberation
+
+- **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
+- **Only comment for two reasons:**
+  1. **Divergence from convention** — the code intentionally departs from the repo's normal patterns, a language idiom, or an obvious implementation. Explain _why_ the divergence is necessary (e.g. a bug workaround, a perf constraint, an external API quirk, a reactivity requirement).
+  2. **Non-obvious domain logic** — the code encodes a business rule, invariant, or domain concept that a new reader would not infer from the code itself. Briefly catalog the rule so future readers can find and trust it.
+- **Hard cap: 200 characters per comment.** If you cannot explain it in 200 characters, the comment is probably documenting too much; split it, link to a doc/ticket, or rewrite the code to be clearer.
+- **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`. These are noise.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
+- **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+
+## Examples
+
+**Bad — narrating obvious code:**
+
+\`\`\`ts
+// Get the user from the store
+const user = userStore.get();
+if (!user) {
+  // Return early
+  return;
+}
+
+// Loop over the parts
+for (const part of parts) {
+  // Add it to the result
+  result.push(part);
+}
+\`\`\`
+
+**Bad — explaining the change instead of the code:**
+
+\`\`\`ts
+// Switched to structuredClone because the old spread didn't deep-copy
+const copy = structuredClone(config);
+\`\`\`
+
+**Bad — comment longer than 200 chars restating what the code shows:**
+
+\`\`\`ts
+// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+function activePartConfigs(robot: Robot): PartConfig[] { ... }
+\`\`\`
+
+**Good — divergence from convention, with the reason (frontend):**
+
+\`\`\`ts
+// $state.raw: this buffer is replaced wholesale each frame; deep reactivity would tank render perf.
+let points = $state.raw(new Float32Array());
+\`\`\`
+
+**Good — divergence from convention, with the reason (backend):**
+
+\`\`\`go
+// 5s buffer absorbs clock skew between app servers and the DB primary — see APP-8026.
+startTime = startTime.Add(-5 * time.Second)
+\`\`\`
+
+**Good — cataloging non-obvious domain logic:**
+
+\`\`\`ts
+// Viam resource names are case-insensitive but must round-trip with their original
+// casing, so we key by the original and compare lowercased.
+const key = name.toLowerCase();
+\`\`\`
+
+**Good — no comment needed, the name carries the meaning:**
+
+\`\`\`ts
+const activeParts = filterActiveParts(robot.parts);
+\`\`\`
+
+
+--- .claude/rules/editing-discipline.md (full, rule:editing-discipline) ---
+# Editing Discipline
+
+How to make changes safely, applies every session.
+
+- **Work from the file's current state, not a stale view.** Re-read a file right before you edit it when your knowledge of it is second-hand (an earlier snapshot, a build or lint error, another tool's output) or the user may be editing it at the same time. For example, it's open in their editor. A tool's report and the file's current bytes can disagree within seconds; trust the bytes.
+- **Don't rewrite what isn't yours to change.** When the user presents a file as their own finished work, or has it open mid-edit, don't silently "fix" it. Surface the problem and let them decide. Stay within the scope you were asked to touch.
+
+
+--- .claude/rules/verification.md (full, rule:verification) ---
+# Verify Your Work
+
+After finishing a batch of edits but before telling the user the work is done, reconcile the code:
+
+1. **Format.** Run the repo's format command; it rewrites files in place, so there's no need to eyeball formatting.
+2. **Lint with autofix.** Run lint so mechanical issues self-correct and only real problems remain.
+3. **Type-check and test** the package(s) you touched.
+
+Prefer package-scoped commands so you rebuild only what changed: \`pnpm --filter <pkg> run <script>\`.
+
+Report honestly:
+
+- If a step surfaces errors that don't auto-resolve, say so and show them. Never claim success over a failing or unrun check.
+- "Done" means every check passed, not that the edits were made.
+
+This is the always-on habit; the per-language "Verify Your Work" notes name the exact commands for each stack.
+
+
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Design System Context
+
+prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
+
+The design system lives at **https://design.viam.com/guides/intro/** — start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components that prime is expected to mirror.
+
+## When to look things up
+
+- Adding a new component or variant — confirm the design system documents an existing pattern before inventing one.
+- Naming a prop, variant, or component — match the design system's vocabulary so consumers don't have to learn two names for the same thing.
+- A review comment needs to describe expected visual or interaction behavior — quote the design system rather than approximating.
+
+## How to look things up
+
+Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2–3 per session to avoid wasting turns.
+
+
+--- .claude/settings.ci.json (full, settings-ci) ---
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}
+
+
+--- .claude/output-styles/Terse.md (full, output-style) ---
+---
+name: Terse
+description: Token-lean responses: fragments over prose, zero filler, code and paths byte-exact.
+keep-coding-instructions: true
+---
+
+<!--
+  Adapted from the caveman project (https://github.com/JuliusBrussee/caveman),
+  (c) Julius Brussee, MIT license. Vendored by claude-config with style-level changes; "why use many token when few token do trick."
+-->
+
+# Terse output
+
+Compress every response. Substance intact, packaging minimal.
+
+## Rules
+
+- Sentence fragments over sentences. Drop subjects, articles, connective filler
+  ("essentially", "in order to", "it's worth noting").
+- One line where three would do. No restating the question, no summarizing what you
+  just said, no "let me know if".
+- Never compress content that must be exact: code, commands, file paths, URLs,
+  identifiers, numbers, error messages — byte-preserved, always.
+- Keep the user's language; compress style, not meaning.
+- Lists: bare fragments, no trailing prose.
+- Explanations: cause → effect → fix, one line each.
+  Example: "New object ref each render. Inline prop = new ref = re-render. Wrap in \`useMemo\`."
+- When precision and terseness conflict, precision wins.
+
+## Unchanged
+
+Code quality, correctness checks, and safety behavior are NOT compressed — only the
+words around them.
+
+
+--- .claude/settings.json (json, output-style) ---
+{"outputStyle":"Terse"}
+
+--- .claude/settings.json (json, hooks) ---
+{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
+
+--- .nvmrc (full, nvmrc) ---
+22
+
+
+--- .gitignore (region, gitignore-block) ---
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+
+
+--- CLAUDE.md (region, claude-md) ---
+| Rule                    | Loads when                                          |
+| ----------------------- | --------------------------------------------------- |
+| \`svelte.md\`             | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`       |
+| \`testing-frontend.md\`   | editing test files (\`**/*.spec.ts\`)                 |
+| \`pr-description.md\`     | editing files under \`.changeset/\`                   |
+| \`changesets.md\`         | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`code-comments.md\`      | editing any code file                               |
+| \`editing-discipline.md\` | every session (edit from current state, in scope)   |
+| \`verification.md\`       | every session (verify before reporting done)        |
+| \`viam-context.md\`       | every session (design system context)               |"
+`;

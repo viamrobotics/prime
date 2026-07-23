@@ -1,0 +1,40 @@
+{
+  "repo": {
+    "name": "visualization",
+    "monorepo": false,
+    "packageManager": "pnpm",
+    "nodeVersion": "22",
+    "packageScope": "@viamrobotics",
+    "workspaceRootPackage": "@viamrobotics/motion-tools",
+    "wireit": true
+  },
+  "rules": {
+    "modules": {
+      "svelte": true,
+      "typescript": false,
+      "testingFrontend": true,
+      "changesets": true,
+      "prDescription": true,
+      "go": false,
+      "testingGo": false
+    }
+  },
+  "mcp": { "svelteTransport": "none", "vscode": false },
+  "ci": { "setupAction": true, "weeklyDependencyUpdate": false },
+  "verify": {
+    "lint": "pnpm lint",
+    "check": "pnpm check",
+    "test": "pnpm test",
+    "build": "pnpm build"
+  },
+  "workflows": {
+    "teamMention": "@viamrobotics/team-viz",
+    "goTools": true,
+    "secrets": {
+      "slackAlertWebhook": true,
+      "gitAccessToken": true,
+      "githubApp": true,
+      "jira": false
+    }
+  }
+}

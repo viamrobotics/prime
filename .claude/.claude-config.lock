@@ -1,0 +1,42 @@
+{
+  "templateVersion": "0.1.0",
+  "workflowsRef": "97b61edeb3aebf3b9bfc93129ac9beae053e5aab",
+  "modules": [
+    "claude-md",
+    "gitignore-block",
+    "hooks",
+    "mcp",
+    "nvmrc",
+    "output-style",
+    "rule:changesets",
+    "rule:code-comments",
+    "rule:editing-discipline",
+    "rule:pr-description",
+    "rule:svelte",
+    "rule:testing-frontend",
+    "rule:typescript",
+    "rule:verification",
+    "rule:viam-context",
+    "settings-ci"
+  ],
+  "files": {
+    ".claude/rules/svelte.md": "sha256-7cb3982b0a1ce4f48062e3e52ca01aadc420b387e06d7866ea591e721d699d18",
+    ".claude/rules/typescript.md": "sha256-865f7e46313b233b1d0394d6f4be27bccc196a660975615b0561d680ac4c64af",
+    ".claude/rules/testing-frontend.md": "sha256-88f05aae4db2f66f8be714887c245b86e9089e1a7653e473ef921ab4f8330a52",
+    ".claude/rules/pr-description.md": "sha256-8bdd9241ec1df8999de151bb13ed0de9cb718ceb1f321c1031efbc9d9ea2bdc7",
+    ".claude/rules/changesets.md": "sha256-fe554a63f692a59455bb9a7d108d82130dd83c18f0c00f4a05d323af0987b17b",
+    ".claude/rules/code-comments.md": "sha256-3fbb40c70bb6aeacb87df63b924c13d96deb3b3a4a0f1abe48e8d44979c02740",
+    ".claude/rules/editing-discipline.md": "sha256-714a06603c6fed479c0596b0c589d8e62f27d135a66b46783cf67e4c3951d75a",
+    ".claude/rules/verification.md": "sha256-54b6148ed36b1121820f54261d90a125dc173504866e9198b5c9fa92ef9392e9",
+    ".claude/rules/viam-context.md": "sha256-c91435dd1ba155c1a58395acaacceb7305408746f03c1f73dd9473a0af5764d5",
+    ".claude/settings.ci.json": "sha256-b6a21552d285335aadc8579da821b056febba252cfeb9abe14cb02b934e14930",
+    ".mcp.json": "sha256-2125ce807be24d4380c8bc5f00f700ed73ab2239d4f2d0dca459036a477e5103",
+    ".vscode/mcp.json": "sha256-38898e6e070f319e82fb6cb7e4c28152bfa8e368ebeb8995766119a6888838ff",
+    ".claude/output-styles/Terse.md": "sha256-cf9a9574852051ac9ec7bf7506af11cd35c464aa100e7413929ab33a952cf731",
+    ".claude/settings.json": "sha256-9de033f034b0e468505889ad4bc32186d64d75012ee16ed96651ea6898851db6",
+    ".claude/hooks/session-start.mjs": "sha256-4d1a16821a8efc9d77f25a7f733668b87b62b58cbf5bff07f449d45d2259e78b",
+    ".nvmrc": "sha256-68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53",
+    ".gitignore": "sha256-552007575b4411a940038d8f3ad4a5c7b9c861000d810a7d659bee74ab231435",
+    "CLAUDE.md": "sha256-28edb149bda7b090e0fbbda7797fb787bb59709d81b340c9c9485c066bae49eb"
+  }
+}
