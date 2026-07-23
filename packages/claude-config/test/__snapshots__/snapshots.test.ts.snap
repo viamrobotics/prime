@@ -351,6 +351,12 @@ paths:
 
 Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
 
+## Output
+
+By default, return the finished PR description to the user as raw markdown so it can be pasted straight into the GitHub PR body, rather than as rendered prose. Wrap it in a fenced code block; if the description itself contains code fences, use a longer outer fence (four or more backticks) so the nested fences survive.
+
+Only create or update the PR yourself when the user explicitly asks (for example with \`gh pr create\`); then pass the markdown as the PR body instead of printing it.
+
 ## Opening Paragraph
 
 One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
@@ -592,7 +598,7 @@ Report honestly:
 This is the always-on habit; the per-language "Verify Your Work" notes name the exact commands for each stack.
 
 
---- .claude/rules/viam-context.md (full, rule:viam-context) ---
+--- .claude/rules/design-system.md (full, rule:design-system) ---
 # Viam Design System Context
 
 prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
@@ -781,7 +787,7 @@ process.exit(0);
 | \`code-comments.md\`      | editing any code file                               |
 | \`editing-discipline.md\` | every session (edit from current state, in scope)   |
 | \`verification.md\`       | every session (verify before reporting done)        |
-| \`viam-context.md\`       | every session (design system context)               |"
+| \`design-system.md\`      | every session (design system context)               |"
 `;
 
 exports[`buildPlan snapshots > renders the test-widgets plan 1`] = `
@@ -1135,6 +1141,12 @@ paths:
 
 Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
 
+## Output
+
+By default, return the finished PR description to the user as raw markdown so it can be pasted straight into the GitHub PR body, rather than as rendered prose. Wrap it in a fenced code block; if the description itself contains code fences, use a longer outer fence (four or more backticks) so the nested fences survive.
+
+Only create or update the PR yourself when the user explicitly asks (for example with \`gh pr create\`); then pass the markdown as the PR body instead of printing it.
+
 ## Opening Paragraph
 
 One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
@@ -1376,7 +1388,7 @@ Report honestly:
 This is the always-on habit; the per-language "Verify Your Work" notes name the exact commands for each stack.
 
 
---- .claude/rules/viam-context.md (full, rule:viam-context) ---
+--- .claude/rules/design-system.md (full, rule:design-system) ---
 # Viam Design System Context
 
 prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
@@ -1484,7 +1496,7 @@ words around them.
 | \`code-comments.md\`      | editing any code file                               |
 | \`editing-discipline.md\` | every session (edit from current state, in scope)   |
 | \`verification.md\`       | every session (verify before reporting done)        |
-| \`viam-context.md\`       | every session (design system context)               |"
+| \`design-system.md\`      | every session (design system context)               |"
 `;
 
 exports[`buildPlan snapshots > renders the viam-svelte-sdk plan 1`] = `
@@ -1838,6 +1850,12 @@ paths:
 
 Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
 
+## Output
+
+By default, return the finished PR description to the user as raw markdown so it can be pasted straight into the GitHub PR body, rather than as rendered prose. Wrap it in a fenced code block; if the description itself contains code fences, use a longer outer fence (four or more backticks) so the nested fences survive.
+
+Only create or update the PR yourself when the user explicitly asks (for example with \`gh pr create\`); then pass the markdown as the PR body instead of printing it.
+
 ## Opening Paragraph
 
 One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
@@ -2079,7 +2097,7 @@ Report honestly:
 This is the always-on habit; the per-language "Verify Your Work" notes name the exact commands for each stack.
 
 
---- .claude/rules/viam-context.md (full, rule:viam-context) ---
+--- .claude/rules/design-system.md (full, rule:design-system) ---
 # Viam Design System Context
 
 prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
@@ -2189,7 +2207,7 @@ words around them.
 | \`code-comments.md\`      | editing any code file                               |
 | \`editing-discipline.md\` | every session (edit from current state, in scope)   |
 | \`verification.md\`       | every session (verify before reporting done)        |
-| \`viam-context.md\`       | every session (design system context)               |"
+| \`design-system.md\`      | every session (design system context)               |"
 `;
 
 exports[`buildPlan snapshots > renders the visualization plan 1`] = `
@@ -2480,6 +2498,12 @@ paths:
 
 Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
 
+## Output
+
+By default, return the finished PR description to the user as raw markdown so it can be pasted straight into the GitHub PR body, rather than as rendered prose. Wrap it in a fenced code block; if the description itself contains code fences, use a longer outer fence (four or more backticks) so the nested fences survive.
+
+Only create or update the PR yourself when the user explicitly asks (for example with \`gh pr create\`); then pass the markdown as the PR body instead of printing it.
+
 ## Opening Paragraph
 
 One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
@@ -2721,7 +2745,7 @@ Report honestly:
 This is the always-on habit; the per-language "Verify Your Work" notes name the exact commands for each stack.
 
 
---- .claude/rules/viam-context.md (full, rule:viam-context) ---
+--- .claude/rules/design-system.md (full, rule:design-system) ---
 # Viam Design System Context
 
 prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
@@ -2817,5 +2841,5 @@ words around them.
 | \`code-comments.md\`      | editing any code file                               |
 | \`editing-discipline.md\` | every session (edit from current state, in scope)   |
 | \`verification.md\`       | every session (verify before reporting done)        |
-| \`viam-context.md\`       | every session (design system context)               |"
+| \`design-system.md\`      | every session (design system context)               |"
 `;

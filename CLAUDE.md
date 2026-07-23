@@ -65,7 +65,7 @@ Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude 
 | `code-comments.md`      | editing any code file                               |
 | `editing-discipline.md` | every session (edit from current state, in scope)   |
 | `verification.md`       | every session (verify before reporting done)        |
-| `viam-context.md`       | every session (design system context)               |
+| `design-system.md`      | every session (design system context)               |
 <!-- claude-config:rules-table end -->
 
 ---

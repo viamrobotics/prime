@@ -7,6 +7,12 @@ paths:
 
 Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
 
+## Output
+
+By default, return the finished PR description to the user as raw markdown so it can be pasted straight into the GitHub PR body, rather than as rendered prose. Wrap it in a fenced code block; if the description itself contains code fences, use a longer outer fence (four or more backticks) so the nested fences survive.
+
+Only create or update the PR yourself when the user explicitly asks (for example with `gh pr create`); then pass the markdown as the PR body instead of printing it.
+
 ## Opening Paragraph
 
 One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.

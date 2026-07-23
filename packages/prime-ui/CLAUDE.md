@@ -55,4 +55,4 @@ All routes must be prerenderable — `src/routes/+layout.ts` enforces this with 
 - Svelte 5 runes only — no Svelte 4 syntax. See [.claude/rules/svelte.md](../../.claude/rules/svelte.md).
 - Components use Tailwind utility classes that reference tokens declared in `@viamrobotics/tailwind-config` (e.g. `bg-power-button`, `text-heading`). Never hard-code colors or spacing — use the design tokens.
 - New design tokens belong in `@viamrobotics/tailwind-config`'s `tailwind-config.css`, not in components.
-- Token values and component patterns must match the Viam design system at https://design.viam.com/. See [.claude/rules/viam-context.md](../../.claude/rules/viam-context.md).
+- Token values and component patterns must match the Viam design system at https://design.viam.com/. See [.claude/rules/design-system.md](../../.claude/rules/design-system.md).

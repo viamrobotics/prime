@@ -7,7 +7,7 @@ export interface RuleModuleDef {
   loadsWhen: string;
 }
 
-/** Rules installed in every repo regardless of the manifest; viam-context stays last. */
+/** Rules installed in every repo regardless of the manifest; design-system stays last. */
 export const BASE_RULES: readonly { file: string; loadsWhen: string }[] = [
   { file: "code-comments.md", loadsWhen: "editing any code file" },
   {
@@ -19,7 +19,7 @@ export const BASE_RULES: readonly { file: string; loadsWhen: string }[] = [
     loadsWhen: "every session (verify before reporting done)",
   },
   {
-    file: "viam-context.md",
+    file: "design-system.md",
     loadsWhen: "every session (design system context)",
   },
 ];
