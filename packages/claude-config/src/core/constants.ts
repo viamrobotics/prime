@@ -11,6 +11,17 @@ export const LOCKFILE_PATH = ".claude/.claude-config.lock";
 
 export const SETTINGS_PATH = ".claude/settings.json";
 
+/**
+ * Files a repo owns that we only manage a region or a few keys of. They must never be
+ * orphan-pruned: a stale lockfile entry would otherwise delete the repo's own content.
+ */
+export const SHARED_HOST_FILES: readonly string[] = [
+  SETTINGS_PATH,
+  ".gitignore",
+  ".prettierignore",
+  "CLAUDE.md",
+];
+
 export const MARKERS = {
   gitignore: {
     start: "# >>> claude-config (managed) >>>",

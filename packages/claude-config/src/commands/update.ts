@@ -1,5 +1,5 @@
 import { applyPlan } from "../core/apply.js";
-import { WORKFLOWS_REF } from "../core/constants.js";
+import { SHARED_HOST_FILES, WORKFLOWS_REF } from "../core/constants.js";
 import { buildLockfile, readLockfile } from "../core/lockfile.js";
 import { packageVersion } from "../core/pkg.js";
 import { TargetRepo } from "../core/fs-target.js";
@@ -24,7 +24,7 @@ export function update({ cwd, dryRun }: CommandContext): number {
     (path) => path in previousFiles && previousFiles[path] !== nextFiles[path],
   );
   const removed = Object.keys(previousFiles).filter(
-    (path) => !(path in nextFiles),
+    (path) => !(path in nextFiles) && !SHARED_HOST_FILES.includes(path),
   );
 
   const repo = new TargetRepo(cwd, dryRun);

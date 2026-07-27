@@ -30,11 +30,14 @@ export class TargetRepo {
     return existsSync(this.path(relativePath));
   }
 
-  write(relativePath: string, content: string): void {
-    if (this.dryRun) return;
+  /** Returns false when the file already holds this content, so mtimes stay put. */
+  write(relativePath: string, content: string): boolean {
+    if (this.dryRun) return true;
+    if (this.read(relativePath) === content) return false;
     const absolute = this.path(relativePath);
     mkdirSync(dirname(absolute), { recursive: true });
     writeFileSync(absolute, content);
+    return true;
   }
 
   remove(relativePath: string): void {

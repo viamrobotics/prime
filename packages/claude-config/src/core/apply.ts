@@ -50,15 +50,15 @@ export function applyPlan(
   for (const item of plan.items) {
     if (paths && !paths.has(item.path)) continue;
 
-    let wrote = true;
+    let wrote: boolean;
     if (item.kind === "full") {
-      repo.write(item.path, item.content);
+      wrote = repo.write(item.path, item.content);
     } else if (item.kind === "json") {
       wrote = applyJson(repo, item);
     } else {
       const existing = repo.read(item.path);
       const { content } = upsertRegion(existing, item.content, item.region!);
-      repo.write(item.path, content);
+      wrote = repo.write(item.path, content);
     }
 
     if (wrote) written.push(item.path);

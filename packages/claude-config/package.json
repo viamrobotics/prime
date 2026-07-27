@@ -16,13 +16,7 @@
   "bin": {
     "claude-config": "./dist/cli.js"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
     "./schema": "./schema/manifest.schema.json"
   },
   "files": [

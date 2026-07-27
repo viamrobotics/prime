@@ -148,6 +148,11 @@ function hooksItems({ hooks }: ResolvedManifest): PlanItem[] {
   return items;
 }
 
+/**
+ * Consumes `rules`, `mcp`, `outputStyle`, `hooks`, and `repo.nodeVersion`. The manifest's
+ * `ci`, `verify`, and `workflows` sections are validated but produce no files until the
+ * workflow caller-stubs land.
+ */
 export function buildPlan(manifest: ResolvedManifest): RenderPlan {
   const rules = enabledRules(manifest);
   const items: PlanItem[] = [

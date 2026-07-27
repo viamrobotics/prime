@@ -40,6 +40,12 @@ describe("install + doctor round-trip", () => {
     expect(isClean(computeDrift(repo, planFor()))).toBe(true);
   });
 
+  it("writes nothing on a second apply", () => {
+    const repo = new TargetRepo(dir, false);
+    applyPlan(repo, planFor(), "0.0.0-test");
+    expect(applyPlan(repo, planFor(), "0.0.0-test").written).toEqual([]);
+  });
+
   it("detects a modified managed file", () => {
     const repo = new TargetRepo(dir, false);
     applyPlan(repo, planFor(), "0.0.0-test");

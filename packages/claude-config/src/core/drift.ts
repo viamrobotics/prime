@@ -1,3 +1,4 @@
+import { SHARED_HOST_FILES } from "./constants.js";
 import { unifiedDiff } from "./diff.js";
 import { TargetRepo } from "./fs-target.js";
 import { deepMerge, deepRemove, parseJsonObject } from "./json-merge.js";
@@ -28,6 +29,7 @@ function regionDrift(repo: TargetRepo, item: PlanItem): FileDrift {
 
   const body = extractBody(onDisk, item.region!);
   if (body === null) return drift(item, "no-marker");
+  // Trimmed, not byte-exact: a padded region keeps blank lines inside its markers.
   if (body.trim() === item.content.trim()) return drift(item, "ok");
   return drift(item, "modified", unifiedDiff(body, item.content));
 }
@@ -76,6 +78,7 @@ export function computeDrift(
   const lock = readLockfile(repo.cwd);
   if (lock) {
     for (const path of Object.keys(lock.files)) {
+      if (SHARED_HOST_FILES.includes(path)) continue;
       if (!managed.has(path) && repo.exists(path)) {
         files.push({ path, status: "orphaned" });
       }

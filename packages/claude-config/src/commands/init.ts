@@ -50,6 +50,21 @@ const LOCKFILE_MANAGERS: readonly [file: string, manager: PackageManager][] = [
   ["package-lock.json", "npm"],
 ];
 
+/** An existing `.mcp.json` records the transport already in use; otherwise infer from deps. */
+function sniffSvelteTransport(
+  cwd: string,
+  hasSvelte: boolean,
+): "stdio" | "http" | "none" {
+  const mcpJson = readJson(join(cwd, ".mcp.json"));
+  const servers = isObject(mcpJson) ? mcpJson.mcpServers : undefined;
+  const svelteServer = isObject(servers) ? servers.svelte : undefined;
+  if (svelteServer !== undefined) {
+    const type = isObject(svelteServer) ? svelteServer.type : undefined;
+    return type === "http" ? "http" : "stdio";
+  }
+  return hasSvelte ? "stdio" : "none";
+}
+
 function sniff(cwd: string) {
   const pkgRaw = readJson(join(cwd, "package.json"));
   const pkg = (isObject(pkgRaw) ? pkgRaw : {}) as PkgJson;
@@ -79,16 +94,7 @@ function sniff(cwd: string) {
     Array.isArray(pkg.workspaces);
 
   const isGo = hasFile("go.mod");
-  const mcpJson = readJson(join(cwd, ".mcp.json"));
-  let svelteTransport: "stdio" | "http" | "none" = "none";
-  if (isObject(mcpJson)) {
-    const servers = mcpJson.mcpServers;
-    const svelteServer = isObject(servers) ? servers.svelte : undefined;
-    const type = isObject(svelteServer) ? svelteServer.type : undefined;
-    svelteTransport = type === "http" ? "http" : "stdio";
-  } else if (has("svelte")) {
-    svelteTransport = "stdio";
-  }
+  const svelteTransport = sniffSvelteTransport(cwd, has("svelte"));
 
   return {
     $schema: `./node_modules/@viamrobotics/claude-config/schema/${MANIFEST_FILENAME.replace(".json", ".schema.json")}`,
@@ -104,6 +110,7 @@ function sniff(cwd: string) {
     rules: {
       modules: {
         svelte: has("svelte"),
+        three: has("three"),
         typescript: has("typescript") || hasFile("tsconfig.json"),
         testingFrontend: has("vitest"),
         changesets: hasFile(".changeset"),
