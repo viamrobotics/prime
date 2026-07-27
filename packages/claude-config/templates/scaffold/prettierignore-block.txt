@@ -1,0 +1,3 @@
+# Claude Code (managed by claude-config; byte-diffed by `claude-config doctor`)
+.claude/
+.mcp.json

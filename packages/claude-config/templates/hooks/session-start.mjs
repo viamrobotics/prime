@@ -28,7 +28,7 @@ try {
       const bits = [ahead ? `ahead ${ahead}` : null, behind ? `behind ${behind}` : null].filter(
         Boolean,
       );
-      if (bits.length) tracking = ` (${bits.join(", ")})`;
+      if (bits.length > 0) tracking = ` (${bits.join(", ")})`;
     }
     lines.push(`[repo] branch: ${branch ?? "(no commits yet)"}${tracking}`);
 
@@ -37,7 +37,7 @@ try {
       .split("\n")
       .filter(Boolean)
       .map((l) => l.slice(3).trim());
-    if (changed.length) {
+    if (changed.length > 0) {
       const byArea = new Map();
       for (const path of changed) {
         const match = /^(packages|apps)\/([^/]+)\//.exec(path);
@@ -54,7 +54,7 @@ try {
         lines.push(
           `[repo] uncommitted (${changed.length}): ${shown}${changed.length > 10 ? ", …" : ""}`,
         );
-        if (byArea.size) lines.push(`[repo] areas touched: ${[...byArea.keys()].join(", ")}`);
+        if (byArea.size > 0) lines.push(`[repo] areas touched: ${[...byArea.keys()].join(", ")}`);
       }
     }
     console.log(lines.join("\n"));

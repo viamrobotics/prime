@@ -55,6 +55,7 @@ prime implements the Viam design system. The source of truth lives at **https://
 Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude reads matching files; rules without `paths` load every session.
 
 <!-- claude-config:rules-table start -->
+
 | Rule                    | Loads when                                          |
 | ----------------------- | --------------------------------------------------- |
 | `svelte.md`             | editing `.svelte`, `.svelte.ts`, `.svelte.js`       |
@@ -66,6 +67,7 @@ Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude 
 | `editing-discipline.md` | every session (edit from current state, in scope)   |
 | `verification.md`       | every session (verify before reporting done)        |
 | `design-system.md`      | every session (design system context)               |
+
 <!-- claude-config:rules-table end -->
 
 ---

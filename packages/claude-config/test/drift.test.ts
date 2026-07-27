@@ -9,6 +9,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { applyPlan } from "../src/core/apply.js";
+import { MARKERS } from "../src/core/constants.js";
 import { computeDrift, isClean } from "../src/core/drift.js";
 import { TargetRepo } from "../src/core/fs-target.js";
 import { parseManifest } from "../src/core/manifest.js";
@@ -81,6 +82,13 @@ describe("install + doctor round-trip", () => {
       "ok",
     );
     expect(report.files.find((f) => f.path === "CLAUDE.md")?.status).toBe("ok");
+
+    // Markdown region gets blank-line padding (so Prettier leaves it stable); ignore-file blocks stay tight.
+    const claudeMd = readFileSync(join(dir, "CLAUDE.md"), "utf8");
+    expect(claudeMd).toContain(`${MARKERS.claudeMdRulesTable.start}\n\n`);
+    const gitignore = readFileSync(join(dir, ".gitignore"), "utf8");
+    expect(gitignore).toContain(`${MARKERS.gitignore.start}\n`);
+    expect(gitignore).not.toContain(`${MARKERS.gitignore.start}\n\n`);
   });
 
   it("merges outputStyle into settings.json, preserving other keys", () => {

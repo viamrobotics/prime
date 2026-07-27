@@ -38,6 +38,18 @@ describe("parseManifest", () => {
     ).toThrow(/nope/);
   });
 
+  it("accepts the opt-in three rule module (default off)", () => {
+    expect(parse({ repo: { name: "x", nodeVersion: "22" } }).rules.three).toBe(
+      false,
+    );
+    expect(
+      parse({
+        repo: { name: "x", nodeVersion: "22" },
+        rules: { modules: { three: true } },
+      }).rules.three,
+    ).toBe(true);
+  });
+
   it("rejects an invalid enum value", () => {
     expect(() =>
       parse({

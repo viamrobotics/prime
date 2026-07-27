@@ -437,11 +437,11 @@ paths:
 
 # Changesets
 
-Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. prime is a pnpm monorepo; a single changeset can bump one or many packages under \`packages/*\`. See [CHANGELOG.md](../../CHANGELOG.md) for voice and existing \`.changeset/*.md\` files for format.
+Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. A changeset records which package(s) change and the semver bump for each: in a monorepo one changeset can bump several packages, in a single-package repo it bumps the one package. See existing \`.changeset/*.md\` files for format and the repo's CHANGELOG.md for voice.
 
 ## Creating a Changeset
 
-Run \`pnpm changeset\` — it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
+Run \`pnpm changeset\`; it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
 
 The frontmatter lists each affected package and its semver bump:
 
@@ -458,9 +458,9 @@ Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
 
 Bump types follow semver:
 
-- \`major\` — breaking public API changes (rare; coordinate before merging).
-- \`minor\` — additive features, new capabilities (new components, props, or exports).
-- \`patch\` — bug fixes, perf, security, dependency bumps, internal refactors.
+- \`major\`: breaking public API changes (rare; coordinate before merging).
+- \`minor\`: additive features, new capabilities (new components, props, or exports).
+- \`patch\`: bug fixes, perf, security, dependency bumps, internal refactors.
 
 ## Summary Voice
 
@@ -473,7 +473,7 @@ Summary is one imperative phrase matching the changelog voice. Examples:
 
 ## When to Skip
 
-Skip a changeset only for changes that don't affect consumers of any package: CI config, test-only edits, docs-only edits, internal tooling, and changes scoped entirely to the workspace root (which is \`private: true\`).
+Skip a changeset only for changes that don't affect consumers of any published package: CI config, test-only edits, docs-only edits, and internal tooling.
 
 
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
@@ -601,19 +601,19 @@ This is the always-on habit; the per-language "Verify Your Work" notes name the 
 --- .claude/rules/design-system.md (full, rule:design-system) ---
 # Viam Design System Context
 
-prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
+The Viam design system is the source of truth for component visuals, naming, and interaction patterns. Before writing or reviewing UI, verify its visual treatment, behavior, and naming against that source rather than guessing.
 
-The design system lives at **https://design.viam.com/guides/intro/** — start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components that prime is expected to mirror.
+The design system lives at **https://design.viam.com/guides/intro/**; start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror.
 
 ## When to look things up
 
-- Adding a new component or variant — confirm the design system documents an existing pattern before inventing one.
-- Naming a prop, variant, or component — match the design system's vocabulary so consumers don't have to learn two names for the same thing.
-- A review comment needs to describe expected visual or interaction behavior — quote the design system rather than approximating.
+- Adding a new component or variant: confirm the design system documents an existing pattern before inventing one.
+- Naming a prop, variant, or component: match the design system's vocabulary so consumers don't have to learn two names for the same thing.
+- A review comment needs to describe expected visual or interaction behavior: quote the design system rather than approximating.
 
 ## How to look things up
 
-Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2–3 per session to avoid wasting turns.
+Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2 or 3 per session to avoid wasting turns.
 
 
 --- .claude/settings.ci.json (full, settings-ci) ---
@@ -726,7 +726,7 @@ try {
       const bits = [ahead ? \`ahead \${ahead}\` : null, behind ? \`behind \${behind}\` : null].filter(
         Boolean,
       );
-      if (bits.length) tracking = \` (\${bits.join(", ")})\`;
+      if (bits.length > 0) tracking = \` (\${bits.join(", ")})\`;
     }
     lines.push(\`[repo] branch: \${branch ?? "(no commits yet)"}\${tracking}\`);
 
@@ -735,7 +735,7 @@ try {
       .split("\\n")
       .filter(Boolean)
       .map((l) => l.slice(3).trim());
-    if (changed.length) {
+    if (changed.length > 0) {
       const byArea = new Map();
       for (const path of changed) {
         const match = /^(packages|apps)\\/([^/]+)\\//.exec(path);
@@ -752,7 +752,7 @@ try {
         lines.push(
           \`[repo] uncommitted (\${changed.length}): \${shown}\${changed.length > 10 ? ", …" : ""}\`,
         );
-        if (byArea.size) lines.push(\`[repo] areas touched: \${[...byArea.keys()].join(", ")}\`);
+        if (byArea.size > 0) lines.push(\`[repo] areas touched: \${[...byArea.keys()].join(", ")}\`);
       }
     }
     console.log(lines.join("\\n"));
@@ -774,6 +774,12 @@ process.exit(0);
 # Claude Code
 .claude/worktrees
 .claude/settings.local.json
+
+
+--- .prettierignore (region, prettierignore-block) ---
+# Claude Code (managed by claude-config; byte-diffed by \`claude-config doctor\`)
+.claude/
+.mcp.json
 
 
 --- CLAUDE.md (region, claude-md) ---
@@ -1227,11 +1233,11 @@ paths:
 
 # Changesets
 
-Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. prime is a pnpm monorepo; a single changeset can bump one or many packages under \`packages/*\`. See [CHANGELOG.md](../../CHANGELOG.md) for voice and existing \`.changeset/*.md\` files for format.
+Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. A changeset records which package(s) change and the semver bump for each: in a monorepo one changeset can bump several packages, in a single-package repo it bumps the one package. See existing \`.changeset/*.md\` files for format and the repo's CHANGELOG.md for voice.
 
 ## Creating a Changeset
 
-Run \`pnpm changeset\` — it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
+Run \`pnpm changeset\`; it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
 
 The frontmatter lists each affected package and its semver bump:
 
@@ -1248,9 +1254,9 @@ Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
 
 Bump types follow semver:
 
-- \`major\` — breaking public API changes (rare; coordinate before merging).
-- \`minor\` — additive features, new capabilities (new components, props, or exports).
-- \`patch\` — bug fixes, perf, security, dependency bumps, internal refactors.
+- \`major\`: breaking public API changes (rare; coordinate before merging).
+- \`minor\`: additive features, new capabilities (new components, props, or exports).
+- \`patch\`: bug fixes, perf, security, dependency bumps, internal refactors.
 
 ## Summary Voice
 
@@ -1263,7 +1269,7 @@ Summary is one imperative phrase matching the changelog voice. Examples:
 
 ## When to Skip
 
-Skip a changeset only for changes that don't affect consumers of any package: CI config, test-only edits, docs-only edits, internal tooling, and changes scoped entirely to the workspace root (which is \`private: true\`).
+Skip a changeset only for changes that don't affect consumers of any published package: CI config, test-only edits, docs-only edits, and internal tooling.
 
 
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
@@ -1391,19 +1397,19 @@ This is the always-on habit; the per-language "Verify Your Work" notes name the 
 --- .claude/rules/design-system.md (full, rule:design-system) ---
 # Viam Design System Context
 
-prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
+The Viam design system is the source of truth for component visuals, naming, and interaction patterns. Before writing or reviewing UI, verify its visual treatment, behavior, and naming against that source rather than guessing.
 
-The design system lives at **https://design.viam.com/guides/intro/** — start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components that prime is expected to mirror.
+The design system lives at **https://design.viam.com/guides/intro/**; start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror.
 
 ## When to look things up
 
-- Adding a new component or variant — confirm the design system documents an existing pattern before inventing one.
-- Naming a prop, variant, or component — match the design system's vocabulary so consumers don't have to learn two names for the same thing.
-- A review comment needs to describe expected visual or interaction behavior — quote the design system rather than approximating.
+- Adding a new component or variant: confirm the design system documents an existing pattern before inventing one.
+- Naming a prop, variant, or component: match the design system's vocabulary so consumers don't have to learn two names for the same thing.
+- A review comment needs to describe expected visual or interaction behavior: quote the design system rather than approximating.
 
 ## How to look things up
 
-Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2–3 per session to avoid wasting turns.
+Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2 or 3 per session to avoid wasting turns.
 
 
 --- .claude/settings.ci.json (full, settings-ci) ---
@@ -1483,6 +1489,12 @@ words around them.
 # Claude Code
 .claude/worktrees
 .claude/settings.local.json
+
+
+--- .prettierignore (region, prettierignore-block) ---
+# Claude Code (managed by claude-config; byte-diffed by \`claude-config doctor\`)
+.claude/
+.mcp.json
 
 
 --- CLAUDE.md (region, claude-md) ---
@@ -1936,11 +1948,11 @@ paths:
 
 # Changesets
 
-Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. prime is a pnpm monorepo; a single changeset can bump one or many packages under \`packages/*\`. See [CHANGELOG.md](../../CHANGELOG.md) for voice and existing \`.changeset/*.md\` files for format.
+Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. A changeset records which package(s) change and the semver bump for each: in a monorepo one changeset can bump several packages, in a single-package repo it bumps the one package. See existing \`.changeset/*.md\` files for format and the repo's CHANGELOG.md for voice.
 
 ## Creating a Changeset
 
-Run \`pnpm changeset\` — it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
+Run \`pnpm changeset\`; it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
 
 The frontmatter lists each affected package and its semver bump:
 
@@ -1957,9 +1969,9 @@ Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
 
 Bump types follow semver:
 
-- \`major\` — breaking public API changes (rare; coordinate before merging).
-- \`minor\` — additive features, new capabilities (new components, props, or exports).
-- \`patch\` — bug fixes, perf, security, dependency bumps, internal refactors.
+- \`major\`: breaking public API changes (rare; coordinate before merging).
+- \`minor\`: additive features, new capabilities (new components, props, or exports).
+- \`patch\`: bug fixes, perf, security, dependency bumps, internal refactors.
 
 ## Summary Voice
 
@@ -1972,7 +1984,7 @@ Summary is one imperative phrase matching the changelog voice. Examples:
 
 ## When to Skip
 
-Skip a changeset only for changes that don't affect consumers of any package: CI config, test-only edits, docs-only edits, internal tooling, and changes scoped entirely to the workspace root (which is \`private: true\`).
+Skip a changeset only for changes that don't affect consumers of any published package: CI config, test-only edits, docs-only edits, and internal tooling.
 
 
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
@@ -2100,19 +2112,19 @@ This is the always-on habit; the per-language "Verify Your Work" notes name the 
 --- .claude/rules/design-system.md (full, rule:design-system) ---
 # Viam Design System Context
 
-prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
+The Viam design system is the source of truth for component visuals, naming, and interaction patterns. Before writing or reviewing UI, verify its visual treatment, behavior, and naming against that source rather than guessing.
 
-The design system lives at **https://design.viam.com/guides/intro/** — start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components that prime is expected to mirror.
+The design system lives at **https://design.viam.com/guides/intro/**; start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror.
 
 ## When to look things up
 
-- Adding a new component or variant — confirm the design system documents an existing pattern before inventing one.
-- Naming a prop, variant, or component — match the design system's vocabulary so consumers don't have to learn two names for the same thing.
-- A review comment needs to describe expected visual or interaction behavior — quote the design system rather than approximating.
+- Adding a new component or variant: confirm the design system documents an existing pattern before inventing one.
+- Naming a prop, variant, or component: match the design system's vocabulary so consumers don't have to learn two names for the same thing.
+- A review comment needs to describe expected visual or interaction behavior: quote the design system rather than approximating.
 
 ## How to look things up
 
-Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2–3 per session to avoid wasting turns.
+Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2 or 3 per session to avoid wasting turns.
 
 
 --- .claude/settings.ci.json (full, settings-ci) ---
@@ -2194,6 +2206,12 @@ words around them.
 # Claude Code
 .claude/worktrees
 .claude/settings.local.json
+
+
+--- .prettierignore (region, prettierignore-block) ---
+# Claude Code (managed by claude-config; byte-diffed by \`claude-config doctor\`)
+.claude/
+.mcp.json
 
 
 --- CLAUDE.md (region, claude-md) ---
@@ -2323,6 +2341,101 @@ Use array/object syntax for conditional classes:
 pnpm check    # svelte-check across the workspace
 pnpm lint     # prettier + eslint
 \`\`\`
+
+
+--- .claude/rules/three.md (full, rule:three) ---
+---
+paths:
+  - "**/three/**"
+  - "**/*.three.ts"
+---
+
+# Three.js Extension Patterns
+
+Code in a repo's Three.js layer (for example \`src/lib/three/\`) should be **pure Three.js**: no framework bindings, no Svelte or React. It extends Three.js classes or builds reusable geometry and material utilities that framework components consume (in Threlte, via \`<T is={obj} />\`).
+
+## Extend Three.js classes directly
+
+Subclass the closest Three.js type rather than wrapping it, so the result can be handed straight to a renderer or framework binding:
+
+\`\`\`typescript
+import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
+
+export class OBBHelper extends LineSegments2 {
+  update(obb: OBB) {
+    // ...
+  }
+}
+\`\`\`
+
+## Pre-allocate temporaries at module scope
+
+Avoid allocating \`Vector3\`, \`Color\`, \`Matrix4\`, and similar inside hot-path methods. Allocate once at module scope and reuse:
+
+\`\`\`typescript
+const _axis = new Vector3();
+const _object3d = new Object3D();
+
+export class BatchedArrow {
+  updateArrow(id: number, origin: Vector3, direction: Vector3) {
+    _object3d.position.copy(origin);
+    _axis.set(direction.z, 0, -direction.x).normalize();
+    // ...
+  }
+}
+\`\`\`
+
+## BatchedMesh or instancing for many objects
+
+Use \`BatchedMesh\` (many geometries, many instances) or \`InstancedMesh\` (one geometry, many instances) instead of individual meshes when rendering dozens or more of the same object. Use a free list to reuse instance slots without resizing:
+
+\`\`\`typescript
+class BatchedArrow {
+  private pool: number[] = [];
+
+  addArrow() {
+    const id = this.pool.pop() ?? this.mesh.addInstance(this.geometryId);
+    // ...
+    return id;
+  }
+
+  removeArrow(id: number) {
+    this.mesh.setVisibleAt(id, false);
+    this.pool.push(id);
+  }
+}
+\`\`\`
+
+## Custom BufferGeometry
+
+Set typed-array attributes directly; do not use the legacy \`geometry.vertices\` API:
+
+\`\`\`typescript
+import { BufferAttribute, BufferGeometry } from "three";
+
+const geometry = new BufferGeometry();
+geometry.setAttribute("position", new BufferAttribute(new Float32Array([]), 3));
+geometry.setIndex([]);
+\`\`\`
+
+For instanced data that changes per frame, use \`InstancedBufferAttribute\` with \`DynamicDrawUsage\`.
+
+## Custom shaders
+
+Import GLSL as strings (via a bundler raw import) and pick the material base for the control you need: \`RawShaderMaterial\` for full control, \`ShaderMaterial\` to inherit Three.js uniforms.
+
+\`\`\`typescript
+import fragmentShader from "./fragment.glsl";
+import vertexShader from "./vertex.glsl";
+
+const material = new RawShaderMaterial({ vertexShader, fragmentShader });
+\`\`\`
+
+Keep vertex and fragment shaders in sibling \`vertex.glsl\` and \`fragment.glsl\` files.
+
+## Custom raycasting
+
+Override \`raycast\` on a \`Mesh\` or \`Object3D\` subclass when the default sphere or box test is wrong for your geometry. Push hits to \`intersects\`, or return early to opt out entirely.
 
 
 --- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
@@ -2584,11 +2697,11 @@ paths:
 
 # Changesets
 
-Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. prime is a pnpm monorepo; a single changeset can bump one or many packages under \`packages/*\`. See [CHANGELOG.md](../../CHANGELOG.md) for voice and existing \`.changeset/*.md\` files for format.
+Every PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. A changeset records which package(s) change and the semver bump for each: in a monorepo one changeset can bump several packages, in a single-package repo it bumps the one package. See existing \`.changeset/*.md\` files for format and the repo's CHANGELOG.md for voice.
 
 ## Creating a Changeset
 
-Run \`pnpm changeset\` — it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
+Run \`pnpm changeset\`; it prompts for which packages to bump, the bump type, and writes \`.changeset/<random-name>.md\` with the right frontmatter.
 
 The frontmatter lists each affected package and its semver bump:
 
@@ -2605,9 +2718,9 @@ Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
 
 Bump types follow semver:
 
-- \`major\` — breaking public API changes (rare; coordinate before merging).
-- \`minor\` — additive features, new capabilities (new components, props, or exports).
-- \`patch\` — bug fixes, perf, security, dependency bumps, internal refactors.
+- \`major\`: breaking public API changes (rare; coordinate before merging).
+- \`minor\`: additive features, new capabilities (new components, props, or exports).
+- \`patch\`: bug fixes, perf, security, dependency bumps, internal refactors.
 
 ## Summary Voice
 
@@ -2620,7 +2733,190 @@ Summary is one imperative phrase matching the changelog voice. Examples:
 
 ## When to Skip
 
-Skip a changeset only for changes that don't affect consumers of any package: CI config, test-only edits, docs-only edits, internal tooling, and changes scoped entirely to the workspace root (which is \`private: true\`).
+Skip a changeset only for changes that don't affect consumers of any published package: CI config, test-only edits, docs-only edits, and internal tooling.
+
+
+--- .claude/rules/go.md (full, rule:go) ---
+---
+paths:
+  - '**/*.go'
+---
+
+# Go
+
+Follow [Effective Go](https://go.dev/doc/effective_go) and [Go Code Review Comments](https://go.dev/wiki/CodeReviewComments).
+
+## RPC / Service Handler Pattern
+
+Follow **Validate → Execute → Respond** for all service methods:
+
+\`\`\`go
+func (s *drawServer) GetEntity(ctx context.Context, req *connect.Request[drawv1.GetEntityRequest]) (*connect.Response[drawv1.GetEntityResponse], error) {
+    if req.Msg.GetId() == "" {
+        return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("id is required"))
+    }
+
+    entity, err := s.svc.GetEntity(ctx, req.Msg.GetId())
+    if err != nil {
+        if errors.Is(err, ErrNotFound) {
+            return nil, connect.NewError(connect.CodeNotFound, errors.New("entity not found"))
+        }
+        return nil, connect.NewError(connect.CodeInternal, err)
+    }
+
+    return connect.NewResponse(&drawv1.GetEntityResponse{Entity: entityToProto(entity)}), nil
+}
+\`\`\`
+
+## Error Handling
+
+- Wrap errors with context: \`fmt.Errorf("loading entity %s: %w", id, err)\`
+- Use \`errors.Is\` / \`errors.As\` — never string-match error messages.
+- Define sentinel errors as package-level vars: \`var ErrNotFound = errors.New("not found")\`
+- Return Connect status codes from handlers, not raw Go errors.
+
+## Dependency Injection
+
+Define narrow interfaces and verify compliance at compile time:
+
+\`\`\`go
+var _ drawv1connect.DrawServiceHandler = (*drawServer)(nil)
+\`\`\`
+
+## Logging
+
+Use the stdlib \`log\` package (\`log.Printf\`, \`log.Fatal\`) — no third-party logging libraries.
+
+## Concurrency
+
+- All public entry points accept \`context.Context\`; propagate it and cancel on shutdown.
+- Guard shared state with a mutex or channel — pick one per type, don't mix.
+- Never leave goroutines running without a shutdown path; tie lifetimes to a context.
+
+## Verify Your Work
+
+\`\`\`
+go vet ./...
+go test ./draw/... -count=1
+go test ./client/... -count=1
+golangci-lint run ./draw/... ./client/...
+\`\`\`
+
+
+--- .claude/rules/testing-go.md (full, rule:testing-go) ---
+---
+paths:
+  - '**/*_test.go'
+---
+
+# Go Testing
+
+Prefer tests with real dependencies over mocked ones. Mock only at I/O boundaries (network, filesystem). Each test must be fully independent — no shared mutable state.
+
+## Assertions
+
+Use \`test.That(t, actual, matcher, ...expected)\` from [\`go.viam.com/test\`](https://pkg.go.dev/go.viam.com/test) — not \`testify\`:
+
+\`\`\`go
+import "go.viam.com/test"
+
+test.That(t, err, test.ShouldBeNil)
+test.That(t, got, test.ShouldEqual, expected)
+test.That(t, result, test.ShouldResemble, expected)
+test.That(t, result, test.ShouldHaveLength, 3)
+test.That(t, msg, test.ShouldContainSubstring, "not found")
+\`\`\`
+
+## Table-Driven Tests
+
+Use table-driven tests for functions with multiple cases:
+
+\`\`\`go
+func TestCalculateTotal(t *testing.T) {
+    tests := []struct {
+        name     string
+        input    []int
+        expected int
+    }{
+        {"empty slice returns zero", []int{}, 0},
+        {"sums positive numbers", []int{1, 2, 3}, 6},
+    }
+    for _, tc := range tests {
+        t.Run(tc.name, func(t *testing.T) {
+            test.That(t, CalculateTotal(tc.input), test.ShouldEqual, tc.expected)
+        })
+    }
+}
+\`\`\`
+
+## Integration Tests: Real Connect-RPC Servers
+
+Spin up a real h2c server per test — no mocking the transport layer:
+
+\`\`\`go
+func newTestServer(t *testing.T, svc *DrawService) drawv1connect.DrawServiceClient {
+    t.Helper()
+
+    mux := http.NewServeMux()
+    path, handler := drawv1connect.NewDrawServiceHandler(svc)
+    mux.Handle(path, handler)
+
+    srv := httptest.NewUnstartedServer(h2c.NewHandler(mux, &http2.Server{}))
+    srv.Start()
+    t.Cleanup(srv.Close)
+
+    h2cTransport := &http2.Transport{
+        AllowHTTP: true,
+        DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
+            return (&net.Dialer{}).DialContext(ctx, network, addr)
+        },
+    }
+
+    return drawv1connect.NewDrawServiceClient(
+        &http.Client{Transport: h2cTransport},
+        srv.URL,
+        connect.WithGRPC(),
+    )
+}
+\`\`\`
+
+## Asserting Connect Errors
+
+\`\`\`go
+var connectErr *connect.Error
+test.That(t, errors.As(err, &connectErr), test.ShouldBeTrue)
+test.That(t, connectErr.Code(), test.ShouldEqual, connect.CodeNotFound)
+\`\`\`
+
+## Async Assertions — Never \`time.Sleep\`
+
+Poll with a deadline instead:
+
+\`\`\`go
+func waitFor(t *testing.T, timeout time.Duration, condition func() bool) {
+    t.Helper()
+    deadline := time.After(timeout)
+    for {
+        if condition() {
+            return
+        }
+        select {
+        case <-deadline:
+            t.Fatal("condition not met within timeout")
+        case <-time.After(10 * time.Millisecond):
+        }
+    }
+}
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+go vet ./...
+go test ./draw/... -count=1
+go test ./client/... -count=1
+golangci-lint run ./draw/... ./client/...
+\`\`\`
 
 
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
@@ -2748,19 +3044,19 @@ This is the always-on habit; the per-language "Verify Your Work" notes name the 
 --- .claude/rules/design-system.md (full, rule:design-system) ---
 # Viam Design System Context
 
-prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.
+The Viam design system is the source of truth for component visuals, naming, and interaction patterns. Before writing or reviewing UI, verify its visual treatment, behavior, and naming against that source rather than guessing.
 
-The design system lives at **https://design.viam.com/guides/intro/** — start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components that prime is expected to mirror.
+The design system lives at **https://design.viam.com/guides/intro/**; start there. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror.
 
 ## When to look things up
 
-- Adding a new component or variant — confirm the design system documents an existing pattern before inventing one.
-- Naming a prop, variant, or component — match the design system's vocabulary so consumers don't have to learn two names for the same thing.
-- A review comment needs to describe expected visual or interaction behavior — quote the design system rather than approximating.
+- Adding a new component or variant: confirm the design system documents an existing pattern before inventing one.
+- Naming a prop, variant, or component: match the design system's vocabulary so consumers don't have to learn two names for the same thing.
+- A review comment needs to describe expected visual or interaction behavior: quote the design system rather than approximating.
 
 ## How to look things up
 
-Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2–3 per session to avoid wasting turns.
+Use \`WebFetch\` on \`https://design.viam.com/guides/intro/\` (or deeper pages under \`https://design.viam.com/\`) to retrieve the relevant guidance. Limit lookups to 2 or 3 per session to avoid wasting turns.
 
 
 --- .claude/settings.ci.json (full, settings-ci) ---
@@ -2818,6 +3114,74 @@ words around them.
 --- .claude/settings.json (json, output-style) ---
 {"outputStyle":"Terse"}
 
+--- .claude/hooks/session-start.mjs (full, hooks) ---
+#!/usr/bin/env node
+// SessionStart hook (@viamrobotics/claude-config): a tiny git orientation header so the agent skips a full \`git status\`. Keep stdout small.
+
+import { execFileSync } from "node:child_process";
+
+// Returns RAW output — \`git status --porcelain\` lines are position-sensitive
+// (2 status chars + space); a global trim would eat the first line's prefix.
+function git(args) {
+  try {
+    return execFileSync("git", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+  } catch {
+    return null;
+  }
+}
+
+try {
+  const root = git(["rev-parse", "--show-toplevel"])?.trim();
+  if (root) {
+    const lines = [];
+    const branch = git(["rev-parse", "--abbrev-ref", "HEAD"])?.trim();
+    let tracking = "";
+    const counts = git(["rev-list", "--left-right", "--count", "@{upstream}...HEAD"])?.trim();
+    if (counts) {
+      const [behind, ahead] = counts.split(/\\s+/).map(Number);
+      const bits = [ahead ? \`ahead \${ahead}\` : null, behind ? \`behind \${behind}\` : null].filter(
+        Boolean,
+      );
+      if (bits.length > 0) tracking = \` (\${bits.join(", ")})\`;
+    }
+    lines.push(\`[repo] branch: \${branch ?? "(no commits yet)"}\${tracking}\`);
+
+    const status = git(["status", "--porcelain"]) ?? "";
+    const changed = status
+      .split("\\n")
+      .filter(Boolean)
+      .map((l) => l.slice(3).trim());
+    if (changed.length > 0) {
+      const byArea = new Map();
+      for (const path of changed) {
+        const match = /^(packages|apps)\\/([^/]+)\\//.exec(path);
+        if (match) {
+          const area = \`\${match[1]}/\${match[2]}\`;
+          byArea.set(area, (byArea.get(area) ?? 0) + 1);
+        }
+      }
+      if (changed.length > 25) {
+        const summary = [...byArea.entries()].map(([n, c]) => \`\${n} (\${c})\`).join(", ");
+        lines.push(\`[repo] uncommitted: \${changed.length} files\${summary ? \` — \${summary}\` : ""}\`);
+      } else {
+        const shown = changed.slice(0, 10).join(", ");
+        lines.push(
+          \`[repo] uncommitted (\${changed.length}): \${shown}\${changed.length > 10 ? ", …" : ""}\`,
+        );
+        if (byArea.size > 0) lines.push(\`[repo] areas touched: \${[...byArea.keys()].join(", ")}\`);
+      }
+    }
+    console.log(lines.join("\\n"));
+  }
+} catch {
+  // Never block session start.
+}
+process.exit(0);
+
+
 --- .claude/settings.json (json, hooks) ---
 {"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
 
@@ -2831,15 +3195,24 @@ words around them.
 .claude/settings.local.json
 
 
+--- .prettierignore (region, prettierignore-block) ---
+# Claude Code (managed by claude-config; byte-diffed by \`claude-config doctor\`)
+.claude/
+.mcp.json
+
+
 --- CLAUDE.md (region, claude-md) ---
-| Rule                    | Loads when                                          |
-| ----------------------- | --------------------------------------------------- |
-| \`svelte.md\`             | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`       |
-| \`testing-frontend.md\`   | editing test files (\`**/*.spec.ts\`)                 |
-| \`pr-description.md\`     | editing files under \`.changeset/\`                   |
-| \`changesets.md\`         | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
-| \`code-comments.md\`      | editing any code file                               |
-| \`editing-discipline.md\` | every session (edit from current state, in scope)   |
-| \`verification.md\`       | every session (verify before reporting done)        |
-| \`design-system.md\`      | every session (design system context)               |"
+| Rule                    | Loads when                                             |
+| ----------------------- | ------------------------------------------------------ |
+| \`svelte.md\`             | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`          |
+| \`three.md\`              | editing Three.js code (\`**/three/**\`, \`**/*.three.ts\`) |
+| \`testing-frontend.md\`   | editing test files (\`**/*.spec.ts\`)                    |
+| \`pr-description.md\`     | editing files under \`.changeset/\`                      |
+| \`changesets.md\`         | editing files under \`.changeset/\` or \`CHANGELOG.md\`    |
+| \`go.md\`                 | editing \`.go\`                                          |
+| \`testing-go.md\`         | editing Go tests (\`**/*_test.go\`)                      |
+| \`code-comments.md\`      | editing any code file                                  |
+| \`editing-discipline.md\` | every session (edit from current state, in scope)      |
+| \`verification.md\`       | every session (verify before reporting done)           |
+| \`design-system.md\`      | every session (design system context)                  |"
 `;

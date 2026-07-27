@@ -3,6 +3,7 @@ export type SvelteTransport = "stdio" | "http" | "none";
 
 export type RuleModuleName =
   | "svelte"
+  | "three"
   | "typescript"
   | "testingFrontend"
   | "changesets"
@@ -84,6 +85,8 @@ export interface RegionSpec {
   start: string;
   end: string;
   anchor: RegionAnchor;
+  /** Surround the body with blank lines so Prettier leaves a markdown region stable. */
+  pad?: boolean;
 }
 
 export interface PlanItem {

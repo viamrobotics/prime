@@ -31,6 +31,11 @@ export const RULE_MODULES: readonly RuleModuleDef[] = [
     file: "svelte.md",
     loadsWhen: "editing `.svelte`, `.svelte.ts`, `.svelte.js`",
   },
+  {
+    name: "three",
+    file: "three.md",
+    loadsWhen: "editing Three.js code (`**/three/**`, `**/*.three.ts`)",
+  },
   { name: "typescript", file: "typescript.md", loadsWhen: "editing `.ts`" },
   {
     name: "testingFrontend",

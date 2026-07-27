@@ -180,6 +180,18 @@ export function buildPlan(manifest: ResolvedManifest): RenderPlan {
       },
     },
     {
+      path: ".prettierignore",
+      module: "prettierignore-block",
+      kind: "region",
+      content: readTemplate("scaffold/prettierignore-block.txt"),
+      region: {
+        id: "prettierignore",
+        start: MARKERS.prettierignore.start,
+        end: MARKERS.prettierignore.end,
+        anchor: "eof",
+      },
+    },
+    {
       path: "CLAUDE.md",
       module: "claude-md",
       kind: "region",
@@ -189,6 +201,7 @@ export function buildPlan(manifest: ResolvedManifest): RenderPlan {
         start: MARKERS.claudeMdRulesTable.start,
         end: MARKERS.claudeMdRulesTable.end,
         anchor: "after-h1",
+        pad: true,
       },
     },
   ];

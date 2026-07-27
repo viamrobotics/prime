@@ -2,8 +2,9 @@ import type { RegionSpec } from "../types.js";
 
 export type UpsertStatus = "created" | "replaced" | "inserted";
 
-function buildBlock(body: string, { start, end }: RegionSpec): string {
-  return `${start}\n${body.trimEnd()}\n${end}`;
+function buildBlock(body: string, { start, end, pad }: RegionSpec): string {
+  const sep = pad ? "\n\n" : "\n";
+  return `${start}${sep}${body.trimEnd()}${sep}${end}`;
 }
 
 interface Located {

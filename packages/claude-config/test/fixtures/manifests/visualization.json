@@ -11,15 +11,18 @@
   "rules": {
     "modules": {
       "svelte": true,
+      "three": true,
       "typescript": false,
       "testingFrontend": true,
       "changesets": true,
       "prDescription": true,
-      "go": false,
-      "testingGo": false
+      "go": true,
+      "testingGo": true
     }
   },
   "mcp": { "svelteTransport": "none", "vscode": false },
+  "outputStyle": { "terse": "default" },
+  "hooks": { "sessionStart": true },
   "ci": { "setupAction": true, "weeklyDependencyUpdate": false },
   "verify": {
     "lint": "pnpm lint",

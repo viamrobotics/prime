@@ -16,6 +16,10 @@ export const MARKERS = {
     start: "# >>> claude-config (managed) >>>",
     end: "# <<< claude-config (managed) <<<",
   },
+  prettierignore: {
+    start: "# >>> claude-config (managed) >>>",
+    end: "# <<< claude-config (managed) <<<",
+  },
   claudeMdRulesTable: {
     start: "<!-- claude-config:rules-table start -->",
     end: "<!-- claude-config:rules-table end -->",
