@@ -110,6 +110,7 @@ function sniff(cwd: string) {
     rules: {
       modules: {
         svelte: has("svelte"),
+        frontendAesthetics: has("svelte") || has("tailwindcss"),
         three: has("three"),
         typescript: has("typescript") || hasFile("tsconfig.json"),
         testingFrontend: has("vitest"),

@@ -1,5 +1,5 @@
 {
-  "templateVersion": "0.1.0",
+  "templateVersion": "0.0.0",
   "workflowsRef": "97b61edeb3aebf3b9bfc93129ac9beae053e5aab",
   "modules": [
     "claude-md",
@@ -13,6 +13,7 @@
     "rule:code-comments",
     "rule:design-system",
     "rule:editing-discipline",
+    "rule:frontend-aesthetics",
     "rule:pr-description",
     "rule:svelte",
     "rule:testing-frontend",
@@ -22,6 +23,7 @@
   ],
   "files": {
     ".claude/rules/svelte.md": "sha256-fea6c0e5287172f2679135cb16cf01c90c0a38172bfc69c88cd52189fc56a4bd",
+    ".claude/rules/frontend-aesthetics.md": "sha256-f1a48f8264b44d12265d2cf1cce45a5afdc731387f9619afe95ac53cd86e703b",
     ".claude/rules/typescript.md": "sha256-7f4f98ed3588c464ab28f84a3540363466446add2914034a21d3ec061a5f1a90",
     ".claude/rules/testing-frontend.md": "sha256-235a6bd78b58b50b1cdafd334b75f47e80a09aedc98c37c112f5f13ea34c811b",
     ".claude/rules/pr-description.md": "sha256-818a3bdec4e8cbe59af4551afbaf0044dcb2eb9370a07c1247625349f9e2da88",
@@ -39,6 +41,6 @@
     ".nvmrc": "sha256-68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53",
     ".gitignore": "sha256-552007575b4411a940038d8f3ad4a5c7b9c861000d810a7d659bee74ab231435",
     ".prettierignore": "sha256-c988ec8a894170edf145d60d4b50d7daf03473071b3fb1f2c7fb7a6af0254dc7",
-    "CLAUDE.md": "sha256-beadeddce02e0d1cc5f416762e2cb71d377a4ee6ba4fde53a0e24fa36366888b"
+    "CLAUDE.md": "sha256-791174359a09a342957940a56bc44583d548df5bee95f9a0ff3dda3a48060437"
   }
 }

@@ -84,6 +84,7 @@ Every command takes `--cwd <dir>` to target another repo root and `--dry-run` to
   "rules": {
     "modules": {
       "svelte": true,
+      "frontendAesthetics": true,
       "typescript": true,
       "testingFrontend": true,
       "changesets": true,
@@ -112,16 +113,17 @@ Only `repo.name` and `repo.nodeVersion` are required. Every other section falls 
 
 Four rules install everywhere: `code-comments.md`, `editing-discipline.md`, `verification.md`, and `design-system.md`. The rest are opt-in per repo, so a Go service never ships Svelte guidance and a component library never ships Go guidance.
 
-| Module            | Rule file             | Loads when Claude reads               |
-| ----------------- | --------------------- | ------------------------------------- |
-| `svelte`          | `svelte.md`           | `.svelte`, `.svelte.ts`, `.svelte.js` |
-| `three`           | `three.md`            | `**/three/**`, `**/*.three.ts`        |
-| `typescript`      | `typescript.md`       | `.ts`                                 |
-| `testingFrontend` | `testing-frontend.md` | `**/*.spec.ts`                        |
-| `prDescription`   | `pr-description.md`   | `.changeset/**`                       |
-| `changesets`      | `changesets.md`       | `.changeset/**`, `CHANGELOG.md`       |
-| `go`              | `go.md`               | `.go`                                 |
-| `testingGo`       | `testing-go.md`       | `**/*_test.go`                        |
+| Module               | Rule file                | Loads when Claude reads               |
+| -------------------- | ------------------------ | ------------------------------------- |
+| `svelte`             | `svelte.md`              | `.svelte`, `.svelte.ts`, `.svelte.js` |
+| `frontendAesthetics` | `frontend-aesthetics.md` | `.svelte`, `.css`                     |
+| `three`              | `three.md`               | `**/three/**`, `**/*.three.ts`        |
+| `typescript`         | `typescript.md`          | `.ts`                                 |
+| `testingFrontend`    | `testing-frontend.md`    | `**/*.spec.ts`                        |
+| `prDescription`      | `pr-description.md`      | `.changeset/**`                       |
+| `changesets`         | `changesets.md`          | `.changeset/**`, `CHANGELOG.md`       |
+| `go`                 | `go.md`                  | `.go`                                 |
+| `testingGo`          | `testing-go.md`          | `**/*_test.go`                        |
 
 Path-scoped rules cost nothing until Claude opens a matching file, so enabling one your repo rarely touches is cheap.
 

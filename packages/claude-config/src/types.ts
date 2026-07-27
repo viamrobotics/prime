@@ -3,6 +3,7 @@ export type SvelteTransport = "stdio" | "http" | "none";
 
 export type RuleModuleName =
   | "svelte"
+  | "frontendAesthetics"
   | "three"
   | "typescript"
   | "testingFrontend"

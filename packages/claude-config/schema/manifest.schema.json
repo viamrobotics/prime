@@ -43,6 +43,7 @@
           "description": "Toggle shared rule modules. design-system and code-comments are always installed.",
           "properties": {
             "svelte": { "type": "boolean" },
+            "frontendAesthetics": { "type": "boolean" },
             "three": { "type": "boolean" },
             "typescript": { "type": "boolean" },
             "testingFrontend": { "type": "boolean" },

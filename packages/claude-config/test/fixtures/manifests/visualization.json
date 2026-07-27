@@ -11,6 +11,7 @@
   "rules": {
     "modules": {
       "svelte": true,
+      "frontendAesthetics": true,
       "three": true,
       "typescript": false,
       "testingFrontend": true,
