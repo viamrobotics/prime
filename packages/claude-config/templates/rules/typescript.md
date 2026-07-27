@@ -35,6 +35,15 @@ if (isPayload(data)) {
 }
 ```
 
+## Doc Comments
+
+`code-comments.md` decides _whether_ to comment; TSDoc decides the shape when you do.
+
+- `/** */` on exported API, `//` for inline rationale. Editors surface the former on hover, so it is documentation, not narration.
+- Never restate a type in prose. `@param value - the string to parse` adds nothing over `value: string`; describe the constraint or the failure mode instead.
+- Reach for `@param` / `@returns` / `@example` when the signature leaves something open (units, ranges, thrown errors, a non-obvious return of `undefined`), not by default.
+- `@deprecated` on anything consumers still import, with the replacement named.
+
 ## Utility Functions
 
 Write pure functions with JSDoc `@param`, `@returns`, and `@example` for non-obvious utilities:

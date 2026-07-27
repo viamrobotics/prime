@@ -50,6 +50,14 @@ Use \`$state.raw\` for values without deep reactivity (large arrays replaced who
 
 **Never use \`$effect\` to derive state** — use \`$derived\`. \`$effect\` is for side effects only (DOM mutations, subscriptions).
 
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment; these are the Svelte-specific shapes.
+
+- \`/** */\` on each \`Props\` member that isn't self-evident. It is the component's public API: editors show it on hover and doc tooling reads it.
+- \`<!-- @component -->\` at the top of a \`.svelte\` file for component-level docs, when the component needs any.
+- A rune whose choice is non-obvious carries its reason inline, since the alternative looks equivalent: \`$state.raw\` over \`$state\`, \`untrack\` around a read, an \`$effect\` that could be mistaken for derived state.
+
 ## Context Providers
 
 Use \`.svelte.ts\` files with \`getContext\`/\`setContext\` for reactive shared state. **ALWAYS** use \`Symbol\` keys.
@@ -152,6 +160,15 @@ if (isPayload(data)) {
   console.log(data.name); // safely typed
 }
 \`\`\`
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment; TSDoc decides the shape when you do.
+
+- \`/** */\` on exported API, \`//\` for inline rationale. Editors surface the former on hover, so it is documentation, not narration.
+- Never restate a type in prose. \`@param value - the string to parse\` adds nothing over \`value: string\`; describe the constraint or the failure mode instead.
+- Reach for \`@param\` / \`@returns\` / \`@example\` when the signature leaves something open (units, ranges, thrown errors, a non-obvious return of \`undefined\`), not by default.
+- \`@deprecated\` on anything consumers still import, with the replacement named.
 
 ## Utility Functions
 
@@ -497,6 +514,8 @@ paths:
 
 These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
 
+This rule decides _whether_ to comment. When the answer is yes, the matching language rule (\`typescript.md\`, \`go.md\`, \`svelte.md\`) gives the doc-comment shape for that language.
+
 ## Rule — follow without deliberation
 
 - **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
@@ -507,6 +526,7 @@ These principles are language-agnostic — they hold for every language in the r
 - **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`. These are noise.
 - **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
 - **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+- **Use the language's doc-comment syntax for symbol docs.** Anything documenting a type, function, or member is a doc comment: \`/** */\` in TypeScript, JavaScript, and Svelte; \`//\` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
 
 ## Examples
 
@@ -537,8 +557,24 @@ const copy = structuredClone(config);
 **Bad — comment longer than 200 chars restating what the code shows:**
 
 \`\`\`ts
-// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+/**
+ * This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+ */
 function activePartConfigs(robot: Robot): PartConfig[] { ... }
+\`\`\`
+
+**Bad — line comment where a doc comment belongs:**
+
+\`\`\`ts
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+\`\`\`
+
+**Good — doc comment carrying what the signature cannot:**
+
+\`\`\`ts
+/** Returns undefined when the part has no config; that is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
 \`\`\`
 
 **Good — divergence from convention, with the reason (frontend):**
@@ -846,6 +882,14 @@ Use \`$state.raw\` for values without deep reactivity (large arrays replaced who
 
 **Never use \`$effect\` to derive state** — use \`$derived\`. \`$effect\` is for side effects only (DOM mutations, subscriptions).
 
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment; these are the Svelte-specific shapes.
+
+- \`/** */\` on each \`Props\` member that isn't self-evident. It is the component's public API: editors show it on hover and doc tooling reads it.
+- \`<!-- @component -->\` at the top of a \`.svelte\` file for component-level docs, when the component needs any.
+- A rune whose choice is non-obvious carries its reason inline, since the alternative looks equivalent: \`$state.raw\` over \`$state\`, \`untrack\` around a read, an \`$effect\` that could be mistaken for derived state.
+
 ## Context Providers
 
 Use \`.svelte.ts\` files with \`getContext\`/\`setContext\` for reactive shared state. **ALWAYS** use \`Symbol\` keys.
@@ -948,6 +992,15 @@ if (isPayload(data)) {
   console.log(data.name); // safely typed
 }
 \`\`\`
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment; TSDoc decides the shape when you do.
+
+- \`/** */\` on exported API, \`//\` for inline rationale. Editors surface the former on hover, so it is documentation, not narration.
+- Never restate a type in prose. \`@param value - the string to parse\` adds nothing over \`value: string\`; describe the constraint or the failure mode instead.
+- Reach for \`@param\` / \`@returns\` / \`@example\` when the signature leaves something open (units, ranges, thrown errors, a non-obvious return of \`undefined\`), not by default.
+- \`@deprecated\` on anything consumers still import, with the replacement named.
 
 ## Utility Functions
 
@@ -1293,6 +1346,8 @@ paths:
 
 These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
 
+This rule decides _whether_ to comment. When the answer is yes, the matching language rule (\`typescript.md\`, \`go.md\`, \`svelte.md\`) gives the doc-comment shape for that language.
+
 ## Rule — follow without deliberation
 
 - **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
@@ -1303,6 +1358,7 @@ These principles are language-agnostic — they hold for every language in the r
 - **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`. These are noise.
 - **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
 - **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+- **Use the language's doc-comment syntax for symbol docs.** Anything documenting a type, function, or member is a doc comment: \`/** */\` in TypeScript, JavaScript, and Svelte; \`//\` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
 
 ## Examples
 
@@ -1333,8 +1389,24 @@ const copy = structuredClone(config);
 **Bad — comment longer than 200 chars restating what the code shows:**
 
 \`\`\`ts
-// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+/**
+ * This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+ */
 function activePartConfigs(robot: Robot): PartConfig[] { ... }
+\`\`\`
+
+**Bad — line comment where a doc comment belongs:**
+
+\`\`\`ts
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+\`\`\`
+
+**Good — doc comment carrying what the signature cannot:**
+
+\`\`\`ts
+/** Returns undefined when the part has no config; that is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
 \`\`\`
 
 **Good — divergence from convention, with the reason (frontend):**
@@ -1561,6 +1633,14 @@ Use \`$state.raw\` for values without deep reactivity (large arrays replaced who
 
 **Never use \`$effect\` to derive state** — use \`$derived\`. \`$effect\` is for side effects only (DOM mutations, subscriptions).
 
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment; these are the Svelte-specific shapes.
+
+- \`/** */\` on each \`Props\` member that isn't self-evident. It is the component's public API: editors show it on hover and doc tooling reads it.
+- \`<!-- @component -->\` at the top of a \`.svelte\` file for component-level docs, when the component needs any.
+- A rune whose choice is non-obvious carries its reason inline, since the alternative looks equivalent: \`$state.raw\` over \`$state\`, \`untrack\` around a read, an \`$effect\` that could be mistaken for derived state.
+
 ## Context Providers
 
 Use \`.svelte.ts\` files with \`getContext\`/\`setContext\` for reactive shared state. **ALWAYS** use \`Symbol\` keys.
@@ -1663,6 +1743,15 @@ if (isPayload(data)) {
   console.log(data.name); // safely typed
 }
 \`\`\`
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment; TSDoc decides the shape when you do.
+
+- \`/** */\` on exported API, \`//\` for inline rationale. Editors surface the former on hover, so it is documentation, not narration.
+- Never restate a type in prose. \`@param value - the string to parse\` adds nothing over \`value: string\`; describe the constraint or the failure mode instead.
+- Reach for \`@param\` / \`@returns\` / \`@example\` when the signature leaves something open (units, ranges, thrown errors, a non-obvious return of \`undefined\`), not by default.
+- \`@deprecated\` on anything consumers still import, with the replacement named.
 
 ## Utility Functions
 
@@ -2008,6 +2097,8 @@ paths:
 
 These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
 
+This rule decides _whether_ to comment. When the answer is yes, the matching language rule (\`typescript.md\`, \`go.md\`, \`svelte.md\`) gives the doc-comment shape for that language.
+
 ## Rule — follow without deliberation
 
 - **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
@@ -2018,6 +2109,7 @@ These principles are language-agnostic — they hold for every language in the r
 - **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`. These are noise.
 - **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
 - **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+- **Use the language's doc-comment syntax for symbol docs.** Anything documenting a type, function, or member is a doc comment: \`/** */\` in TypeScript, JavaScript, and Svelte; \`//\` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
 
 ## Examples
 
@@ -2048,8 +2140,24 @@ const copy = structuredClone(config);
 **Bad — comment longer than 200 chars restating what the code shows:**
 
 \`\`\`ts
-// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+/**
+ * This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+ */
 function activePartConfigs(robot: Robot): PartConfig[] { ... }
+\`\`\`
+
+**Bad — line comment where a doc comment belongs:**
+
+\`\`\`ts
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+\`\`\`
+
+**Good — doc comment carrying what the signature cannot:**
+
+\`\`\`ts
+/** Returns undefined when the part has no config; that is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
 \`\`\`
 
 **Good — divergence from convention, with the reason (frontend):**
@@ -2277,6 +2385,14 @@ We use Svelte 5 runes throughout — no Svelte 4 syntax. See the [Svelte 5 docs]
 Use \`$state.raw\` for values without deep reactivity (large arrays replaced wholesale, Three.js class instances). Use \`untrack(() => value)\` to read reactive state without registering a dependency.
 
 **Never use \`$effect\` to derive state** — use \`$derived\`. \`$effect\` is for side effects only (DOM mutations, subscriptions).
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment; these are the Svelte-specific shapes.
+
+- \`/** */\` on each \`Props\` member that isn't self-evident. It is the component's public API: editors show it on hover and doc tooling reads it.
+- \`<!-- @component -->\` at the top of a \`.svelte\` file for component-level docs, when the component needs any.
+- A rune whose choice is non-obvious carries its reason inline, since the alternative looks equivalent: \`$state.raw\` over \`$state\`, \`untrack\` around a read, an \`$effect\` that could be mistaken for derived state.
 
 ## Context Providers
 
@@ -2783,6 +2899,23 @@ Define narrow interfaces and verify compliance at compile time:
 var _ drawv1connect.DrawServiceHandler = (*drawServer)(nil)
 \`\`\`
 
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment; godoc decides the shape when you do.
+
+- Every exported identifier gets a doc comment that starts with its name and reads as a sentence: \`// ParseConfig reads a manifest from disk.\` Tools and \`go doc\` rely on that prefix.
+- One package comment per package, on a single file: \`// Package draw serves the drawing API.\`
+- Unexported identifiers follow the general rule: comment only for divergence or non-obvious domain logic.
+- Mark known gaps with \`// TODO(username):\` so \`go vet\` and reviewers can find them.
+
+\`\`\`go
+// EntityStore persists drawing entities. Implementations must be safe for
+// concurrent use by multiple goroutines.
+type EntityStore interface {
+    Get(ctx context.Context, id string) (*Entity, error)
+}
+\`\`\`
+
 ## Logging
 
 Use the stdlib \`log\` package (\`log.Printf\`, \`log.Fatal\`) — no third-party logging libraries.
@@ -2940,6 +3073,8 @@ paths:
 
 These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
 
+This rule decides _whether_ to comment. When the answer is yes, the matching language rule (\`typescript.md\`, \`go.md\`, \`svelte.md\`) gives the doc-comment shape for that language.
+
 ## Rule — follow without deliberation
 
 - **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
@@ -2950,6 +3085,7 @@ These principles are language-agnostic — they hold for every language in the r
 - **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`. These are noise.
 - **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
 - **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+- **Use the language's doc-comment syntax for symbol docs.** Anything documenting a type, function, or member is a doc comment: \`/** */\` in TypeScript, JavaScript, and Svelte; \`//\` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
 
 ## Examples
 
@@ -2980,8 +3116,24 @@ const copy = structuredClone(config);
 **Bad — comment longer than 200 chars restating what the code shows:**
 
 \`\`\`ts
-// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+/**
+ * This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+ */
 function activePartConfigs(robot: Robot): PartConfig[] { ... }
+\`\`\`
+
+**Bad — line comment where a doc comment belongs:**
+
+\`\`\`ts
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+\`\`\`
+
+**Good — doc comment carrying what the signature cannot:**
+
+\`\`\`ts
+/** Returns undefined when the part has no config; that is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
 \`\`\`
 
 **Good — divergence from convention, with the reason (frontend):**

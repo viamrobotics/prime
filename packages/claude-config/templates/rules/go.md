@@ -44,6 +44,23 @@ Define narrow interfaces and verify compliance at compile time:
 var _ drawv1connect.DrawServiceHandler = (*drawServer)(nil)
 ```
 
+## Doc Comments
+
+`code-comments.md` decides _whether_ to comment; godoc decides the shape when you do.
+
+- Every exported identifier gets a doc comment that starts with its name and reads as a sentence: `// ParseConfig reads a manifest from disk.` Tools and `go doc` rely on that prefix.
+- One package comment per package, on a single file: `// Package draw serves the drawing API.`
+- Unexported identifiers follow the general rule: comment only for divergence or non-obvious domain logic.
+- Mark known gaps with `// TODO(username):` so `go vet` and reviewers can find them.
+
+```go
+// EntityStore persists drawing entities. Implementations must be safe for
+// concurrent use by multiple goroutines.
+type EntityStore interface {
+    Get(ctx context.Context, id string) (*Entity, error)
+}
+```
+
 ## Logging
 
 Use the stdlib `log` package (`log.Printf`, `log.Fatal`) — no third-party logging libraries.

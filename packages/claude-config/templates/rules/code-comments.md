@@ -18,6 +18,8 @@ paths:
 
 These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
 
+This rule decides _whether_ to comment. When the answer is yes, the matching language rule (`typescript.md`, `go.md`, `svelte.md`) gives the doc-comment shape for that language.
+
 ## Rule — follow without deliberation
 
 - **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
@@ -28,6 +30,7 @@ These principles are language-agnostic — they hold for every language in the r
 - **Never narrate the code.** No `// increment counter`, `// loop over users`, `// return result`, `// import the package`, `// handle error`. These are noise.
 - **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
 - **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
+- **Use the language's doc-comment syntax for symbol docs.** Anything documenting a type, function, or member is a doc comment: `/** */` in TypeScript, JavaScript, and Svelte; `//` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
 
 ## Examples
 
@@ -58,8 +61,24 @@ const copy = structuredClone(config);
 **Bad — comment longer than 200 chars restating what the code shows:**
 
 ```ts
-// This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+/**
+ * This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
+ */
 function activePartConfigs(robot: Robot): PartConfig[] { ... }
+```
+
+**Bad — line comment where a doc comment belongs:**
+
+```ts
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+```
+
+**Good — doc comment carrying what the signature cannot:**
+
+```ts
+/** Returns undefined when the part has no config; that is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
 ```
 
 **Good — divergence from convention, with the reason (frontend):**

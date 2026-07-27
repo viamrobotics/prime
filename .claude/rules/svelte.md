@@ -46,6 +46,14 @@ Use `$state.raw` for values without deep reactivity (large arrays replaced whole
 
 **Never use `$effect` to derive state** — use `$derived`. `$effect` is for side effects only (DOM mutations, subscriptions).
 
+## Doc Comments
+
+`code-comments.md` decides _whether_ to comment; these are the Svelte-specific shapes.
+
+- `/** */` on each `Props` member that isn't self-evident. It is the component's public API: editors show it on hover and doc tooling reads it.
+- `<!-- @component -->` at the top of a `.svelte` file for component-level docs, when the component needs any.
+- A rune whose choice is non-obvious carries its reason inline, since the alternative looks equivalent: `$state.raw` over `$state`, `untrack` around a read, an `$effect` that could be mistaken for derived state.
+
 ## Context Providers
 
 Use `.svelte.ts` files with `getContext`/`setContext` for reactive shared state. **ALWAYS** use `Symbol` keys.

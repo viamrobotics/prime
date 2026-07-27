@@ -21,12 +21,12 @@
     "settings-ci"
   ],
   "files": {
-    ".claude/rules/svelte.md": "sha256-7cb3982b0a1ce4f48062e3e52ca01aadc420b387e06d7866ea591e721d699d18",
-    ".claude/rules/typescript.md": "sha256-865f7e46313b233b1d0394d6f4be27bccc196a660975615b0561d680ac4c64af",
+    ".claude/rules/svelte.md": "sha256-31f0c2b7030f1e2114260efa2ce26685ece80c04793e920000668c2ab8d40279",
+    ".claude/rules/typescript.md": "sha256-30fd6124f550dac1d426e5ded26f9e0cce6e1561467c8ff7bd10723771f6a453",
     ".claude/rules/testing-frontend.md": "sha256-88f05aae4db2f66f8be714887c245b86e9089e1a7653e473ef921ab4f8330a52",
     ".claude/rules/pr-description.md": "sha256-25bb3c9f8b2cb8b4e7e8c9fcf67a76eb5206b94e133cfdda64bd54270b33dd72",
     ".claude/rules/changesets.md": "sha256-80db85f405389aaccdf8ec2a96bae99530ca81c066162d215e49dc841ae92d23",
-    ".claude/rules/code-comments.md": "sha256-3fbb40c70bb6aeacb87df63b924c13d96deb3b3a4a0f1abe48e8d44979c02740",
+    ".claude/rules/code-comments.md": "sha256-f26ed9a55db51f04681d295c44aefa13403884a68f6f79e3f2dd80f006fbc174",
     ".claude/rules/editing-discipline.md": "sha256-714a06603c6fed479c0596b0c589d8e62f27d135a66b46783cf67e4c3951d75a",
     ".claude/rules/verification.md": "sha256-54b6148ed36b1121820f54261d90a125dc173504866e9198b5c9fa92ef9392e9",
     ".claude/rules/design-system.md": "sha256-333169fad6a2f914173987a7daef1bb2baba1acfa64982f9eac1de9342557a4b",
