@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/claude-config",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "CLI that installs, updates, and doctors Viam's shared Claude agent tooling across repos.",
   "license": "Apache-2.0",
   "publishConfig": {
