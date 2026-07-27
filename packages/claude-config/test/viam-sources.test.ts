@@ -48,6 +48,13 @@ describe("detectViamSources", () => {
     expect(found.typescriptSdk).toBe(false);
   });
 
+  it("treats any SDK as implying the protos behind it", () => {
+    const found = detectViamSources(
+      evidence({ npm: new Set(["@viamrobotics/sdk"]) }),
+    );
+    expect(found.api).toBe(true);
+  });
+
   it("detects Go modules from go.mod text", () => {
     const found = detectViamSources(
       evidence({ goText: "require (\n\tgo.viam.com/rdk v0.1.0\n)" }),

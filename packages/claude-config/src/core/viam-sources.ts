@@ -28,7 +28,11 @@ export const VIAM_SOURCES: readonly ViamSourceDef[] = [
     docs: null,
     bestFor:
       "Canonical `.proto` definitions. Prefer over `rdk` for RPC contracts.",
+    // Every SDK ships generated proto code, so consuming one means the protos are
+    // the real contract behind it.
+    npm: ["@viamrobotics/sdk", "@viamrobotics/svelte-sdk"],
     go: ["go.viam.com/api"],
+    pypi: ["viam-sdk"],
   },
   {
     id: "rdk",
