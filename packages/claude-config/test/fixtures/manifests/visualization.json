@@ -18,7 +18,19 @@
       "changesets": true,
       "prDescription": true,
       "go": true,
-      "testingGo": true
+      "testingGo": true,
+      "viamContext": true
+    }
+  },
+  "viamContext": {
+    "sources": {
+      "api": true,
+      "rdk": true,
+      "typescriptSdk": true,
+      "svelteSdk": true,
+      "testWidgets": true,
+      "motionTools": true,
+      "primeCore": true
     }
   },
   "mcp": { "svelteTransport": "none", "vscode": false },

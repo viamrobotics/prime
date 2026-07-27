@@ -4,6 +4,7 @@ import { MANIFEST_FILENAME } from "./constants.js";
 import { HOOK_IDS } from "./hooks.js";
 import { RULE_MODULE_NAMES } from "./modules.js";
 import { OUTPUT_STYLES, OUTPUT_STYLE_IDS } from "./output-styles.js";
+import { VIAM_SOURCE_IDS } from "./viam-sources.js";
 import type {
   HookId,
   OutputStyleId,
@@ -12,6 +13,7 @@ import type {
   ResolvedManifest,
   RuleModuleName,
   SvelteTransport,
+  ViamSourceId,
 } from "../types.js";
 
 const PACKAGE_MANAGERS: readonly PackageManager[] = [
@@ -190,6 +192,28 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     ]),
   ) as Record<RuleModuleName, boolean>;
 
+  const viamRaw = isObject(root.viamContext) ? root.viamContext : {};
+  if (root.viamContext !== undefined && !isObject(root.viamContext)) {
+    problems.push("viamContext must be an object");
+  }
+  const sourcesRaw = isObject(viamRaw.sources) ? viamRaw.sources : {};
+  if (viamRaw.sources !== undefined && !isObject(viamRaw.sources)) {
+    problems.push("viamContext.sources must be an object");
+  }
+  for (const key of Object.keys(sourcesRaw)) {
+    if (!VIAM_SOURCE_IDS.includes(key as ViamSourceId)) {
+      problems.push(`viamContext.sources.${key} is not a known Viam source`);
+    }
+  }
+  const viamContext = {
+    sources: Object.fromEntries(
+      VIAM_SOURCE_IDS.map((id) => [
+        id,
+        bool(sourcesRaw[id], `viamContext.sources.${id}`, problems, false),
+      ]),
+    ) as Record<ViamSourceId, boolean>,
+  };
+
   const mcpRaw = isObject(root.mcp) ? root.mcp : {};
   if (root.mcp !== undefined && !isObject(root.mcp)) {
     problems.push("mcp must be an object");
@@ -343,5 +367,15 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     overrides,
   };
 
-  return { repo, rules, mcp, outputStyle, hooks, ci, verify, workflows };
+  return {
+    repo,
+    rules,
+    viamContext,
+    mcp,
+    outputStyle,
+    hooks,
+    ci,
+    verify,
+    workflows,
+  };
 }

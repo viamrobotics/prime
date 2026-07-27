@@ -63,6 +63,11 @@ export const RULE_MODULES: readonly RuleModuleDef[] = [
     file: "testing-go.md",
     loadsWhen: "editing Go tests (`**/*_test.go`)",
   },
+  {
+    name: "viamContext",
+    file: "viam-context.md",
+    loadsWhen: "every session (Viam API and SDK sources)",
+  },
 ];
 
 export const RULE_MODULE_NAMES: readonly RuleModuleName[] = RULE_MODULES.map(

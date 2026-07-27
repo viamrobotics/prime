@@ -3,6 +3,8 @@ import { BASE_RULES, RULE_MODULES } from "./modules.js";
 import { OUTPUT_STYLES, OUTPUT_STYLE_IDS } from "./output-styles.js";
 import { HOOKS, HOOK_IDS, hookSettingsPatch } from "./hooks.js";
 import { readTemplate } from "./templates.js";
+import { render } from "./render.js";
+import { VIAM_SOURCES, sourcesTable } from "./viam-sources.js";
 import type { PlanItem, RenderPlan, ResolvedManifest } from "../types.js";
 
 const RULES_DIR = ".claude/rules";
@@ -42,13 +44,32 @@ function rulesTable(rules: RuleEntry[]): string {
   ].join("\n");
 }
 
-function ruleItem(file: string): PlanItem {
+function ruleItem(file: string, content?: string): PlanItem {
   return {
     path: `${RULES_DIR}/${file}`,
     module: `rule:${file.replace(/\.md$/, "")}`,
     kind: "full",
-    content: readTemplate(`rules/${file}`),
+    content: content ?? readTemplate(`rules/${file}`),
   };
+}
+
+/**
+ * The one rule rendered rather than copied: which ecosystem sources a repo gets
+ * pointed at is per-repo, so the table is built from the manifest.
+ */
+function viamContextRule({ viamContext }: ResolvedManifest): string {
+  const enabled = VIAM_SOURCES.filter(
+    (source) => viamContext.sources[source.id],
+  );
+  const rendered = render(readTemplate("rules/viam-context.md.tmpl"), {
+    sources:
+      enabled.length > 0
+        ? sourcesTable(enabled)
+        : "No repo sources enabled. Add them under `viamContext.sources` in `claude-config.json`.",
+    hasRdk: enabled.some((source) => source.id === "rdk"),
+  });
+  // A dropped conditional leaves the trailing blank line behind.
+  return `${rendered.trimEnd()}\n`;
 }
 
 function mcpItems({ mcp }: ResolvedManifest): PlanItem[] {
@@ -149,14 +170,18 @@ function hooksItems({ hooks }: ResolvedManifest): PlanItem[] {
 }
 
 /**
- * Consumes `rules`, `mcp`, `outputStyle`, `hooks`, and `repo.nodeVersion`. The manifest's
- * `ci`, `verify`, and `workflows` sections are validated but produce no files until the
- * workflow caller-stubs land.
+ * Consumes `rules`, `viamContext`, `mcp`, `outputStyle`, `hooks`, and `repo.nodeVersion`.
+ * The manifest's `ci`, `verify`, and `workflows` sections are validated but produce no
+ * files until the workflow caller-stubs land.
  */
 export function buildPlan(manifest: ResolvedManifest): RenderPlan {
   const rules = enabledRules(manifest);
   const items: PlanItem[] = [
-    ...rules.map((rule) => ruleItem(rule.file)),
+    ...rules.map((rule) =>
+      rule.file === "viam-context.md"
+        ? ruleItem(rule.file, viamContextRule(manifest))
+        : ruleItem(rule.file),
+    ),
     {
       path: ".claude/settings.ci.json",
       module: "settings-ci",

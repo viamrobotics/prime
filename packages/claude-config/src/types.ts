@@ -10,7 +10,20 @@ export type RuleModuleName =
   | "changesets"
   | "prDescription"
   | "go"
-  | "testingGo";
+  | "testingGo"
+  | "viamContext";
+
+/** A Viam ecosystem repo or reference site the `viam-context` rule can point at. */
+export type ViamSourceId =
+  | "api"
+  | "rdk"
+  | "typescriptSdk"
+  | "svelteSdk"
+  | "testWidgets"
+  | "motionTools"
+  | "primeCore"
+  | "primeUi"
+  | "pythonSdk";
 
 export interface RepoConfig {
   name: string;
@@ -64,10 +77,15 @@ export interface WorkflowsConfig {
   overrides: Record<string, WorkflowOverride>;
 }
 
+export interface ViamContextConfig {
+  sources: Record<ViamSourceId, boolean>;
+}
+
 /** A manifest with every field present and defaults applied. */
 export interface ResolvedManifest {
   repo: RepoConfig;
   rules: Record<RuleModuleName, boolean>;
+  viamContext: ViamContextConfig;
   mcp: McpConfig;
   outputStyle: Record<OutputStyleId, OutputStyleState>;
   hooks: Record<HookId, boolean>;

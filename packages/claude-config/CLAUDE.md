@@ -27,7 +27,7 @@ Those assets are copy-pasted between repos today and drift: rules referencing te
 
 - **Zero runtime dependencies.** Everything uses `node:*`. This tool writes into many repos, so keep it supply-chain-minimal and runnable on Node 20+ (`engines.node: ">=20"`, and repos run Node 22 and 24).
 - **No template loops.** The renderer supports only `{{var}}` and `{{#if flag}}…{{/if}}` / `{{^flag}}…{{/if}}`. Build lists such as allowed-tools and secret blocks in TypeScript with correct indentation and inject them as string vars. YAML whitespace is the one real correctness risk.
-- **Rules are static.** A shared rule is one canonical file copied byte-for-byte. Per-repo variation lives in the manifest, never in a hand-edit. That discipline is what prevents rot.
+- **Rules are static.** A shared rule is one canonical file copied byte-for-byte. Per-repo variation lives in the manifest, never in a hand-edit. That discipline is what prevents rot. The one exception is `viam-context.md.tmpl`, whose source table is per-repo and so is rendered from `viamContext.sources`. Keep it the exception.
 - **One place for the pin.** The `claude-ci-workflows` SHA lives in `src/core/constants.ts` as `WORKFLOWS_REF`, never in a manifest. Bumping it and publishing propagates to every repo on `update`.
 
 ## Commands

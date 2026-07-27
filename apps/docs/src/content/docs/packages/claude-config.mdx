@@ -101,13 +101,14 @@ Every command takes `--cwd <dir>` to target another repo root and `--dry-run` to
 
 Only `repo.name` and `repo.nodeVersion` are required. Every other section falls back to a sensible default.
 
-| Section       | Controls                                                                                         |
-| ------------- | ------------------------------------------------------------------------------------------------ |
-| `repo`        | Repo name, Node major version, package manager, npm scope, monorepo and wireit flags.            |
-| `rules`       | Which optional rule modules install. See the table below.                                        |
-| `mcp`         | Svelte MCP server transport (`stdio`, `http`, or `none`) and whether to emit `.vscode/mcp.json`. |
-| `outputStyle` | Output styles to install. `"default"` also sets the repo default in `.claude/settings.json`.     |
-| `hooks`       | Opt-in Claude Code hooks. `sessionStart` prints a git orientation header when a session opens.   |
+| Section       | Controls                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------- |
+| `repo`        | Repo name, Node major version, package manager, npm scope, monorepo and wireit flags.             |
+| `rules`       | Which optional rule modules install. See the table below.                                         |
+| `viamContext` | Which Viam ecosystem sources the `viam-context` rule points at. Read only when that module is on. |
+| `mcp`         | Svelte MCP server transport (`stdio`, `http`, or `none`) and whether to emit `.vscode/mcp.json`.  |
+| `outputStyle` | Output styles to install. `"default"` also sets the repo default in `.claude/settings.json`.      |
+| `hooks`       | Opt-in Claude Code hooks. `sessionStart` prints a git orientation header when a session opens.    |
 
 ## Rule modules
 
@@ -124,8 +125,39 @@ Four rules install everywhere: `code-comments.md`, `editing-discipline.md`, `ver
 | `changesets`         | `changesets.md`          | `.changeset/**`, `CHANGELOG.md`       |
 | `go`                 | `go.md`                  | `.go`                                 |
 | `testingGo`          | `testing-go.md`          | `**/*_test.go`                        |
+| `viamContext`        | `viam-context.md`        | every session                         |
 
 Path-scoped rules cost nothing until Claude opens a matching file, so enabling one your repo rarely touches is cheap.
+
+### Viam context
+
+`viam-context.md` is the one rule rendered per repo rather than copied. It always points at https://docs.viam.com, and adds a table of the Viam ecosystem sources your repo actually uses so Claude verifies against the proto or the SDK instead of guessing at a method name.
+
+`init` fills this in by scanning every `package.json`, `go.mod`, and Python manifest in the repo, workspace members included. Detection is a starting point, not the contract. The manifest is what renders, so correct it by hand when a guess is wrong:
+
+```json
+"viamContext": {
+  "sources": {
+    "api": true,
+    "rdk": true,
+    "typescriptSdk": true
+  }
+}
+```
+
+| Source          | Detected from                | Points at                                               |
+| --------------- | ---------------------------- | ------------------------------------------------------- |
+| `api`           | `go.viam.com/api`            | `viamrobotics/api`                                      |
+| `rdk`           | `go.viam.com/rdk`            | `viamrobotics/rdk`                                      |
+| `typescriptSdk` | `@viamrobotics/sdk`          | `viamrobotics/viam-typescript-sdk`, https://ts.viam.dev |
+| `svelteSdk`     | `@viamrobotics/svelte-sdk`   | `viamrobotics/viam-svelte-sdk`                          |
+| `testWidgets`   | `@viamrobotics/test-widgets` | `viamrobotics/test-widgets`                             |
+| `motionTools`   | `@viamrobotics/motion-tools` | `viamrobotics/visualization`                            |
+| `primeCore`     | `@viamrobotics/prime-core`   | `viamrobotics/prime`, https://design.viam.com           |
+| `primeUi`       | `@viamrobotics/prime-ui`     | `viamrobotics/prime`, https://design.viam.com           |
+| `pythonSdk`     | `viam-sdk`                   | `viamrobotics/viam-python-sdk`, https://python.viam.dev |
+
+Enabling `rdk` also adds a note that GitHub code search cannot follow Go interface implementations across packages, and to read the proto instead.
 
 ## What gets managed
 

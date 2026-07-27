@@ -1360,6 +1360,38 @@ The summary is one imperative phrase in changelog voice:
 Skip a changeset only when nothing reaches consumers: CI config, test-only, docs-only, internal tooling.
 
 
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Context
+
+Verify against the authoritative source before commenting on or changing code that touches Viam APIs or SDK types. Guessing at a method name, a field, or an RPC contract is the failure mode here. Cap lookups at 2 or 3 per session.
+
+\`WebFetch\` https://docs.viam.com for what a resource type (arm, camera, sensor, and so on) is supposed to do: RPC semantics, method signatures, expected behavior.
+
+## Sources
+
+| Source                                                  | Best for                                                             |
+| ------------------------------------------------------- | -------------------------------------------------------------------- |
+| \`viamrobotics/api\`                                      | Canonical \`.proto\` definitions. Prefer over \`rdk\` for RPC contracts. |
+| \`viamrobotics/viam-typescript-sdk\`, https://ts.viam.dev | TypeScript types, client patterns, exported API surface.             |
+| \`viamrobotics/viam-svelte-sdk\`                          | Svelte stores and utilities wrapping the TypeScript SDK.             |
+| \`viamrobotics/test-widgets\`                             | Prebaked UI components for testing machine SDK APIs.                 |
+| \`viamrobotics/prime\`, https://design.viam.com           | v1 Svelte component library. Superseded by prime-ui.                 |
+
+Fetch a file or search code with \`gh api\`:
+
+\`\`\`bash
+gh api repos/viamrobotics/<repo>/contents/<path> --jq '.content' | base64 -d
+gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.path): \\(.text_matches[0].fragment // "")"'
+\`\`\`
+
+## When to look something up
+
+- Code uses an SDK type or method and the usage looks wrong. Verify the exported API in the source repo.
+- A change adds or modifies a widget for a resource type. Check the resource's \`.proto\` for field names and RPC signatures.
+- A name or field looks inconsistent with Viam conventions. Check the proto definition.
+- A review comment needs to state what a resource method does. Fetch the docs rather than guessing.
+
+
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
 ---
 paths:
@@ -1561,6 +1593,7 @@ words around them.
 | \`testing-frontend.md\`    | editing test files (\`**/*.spec.ts\`)                 |
 | \`pr-description.md\`      | editing files under \`.changeset/\`                   |
 | \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`viam-context.md\`        | every session (Viam API and SDK sources)            |
 | \`code-comments.md\`       | editing any code file                               |
 | \`editing-discipline.md\`  | every session (edit from current state, in scope)   |
 | \`verification.md\`        | every session (verify before reporting done)        |
@@ -2103,6 +2136,36 @@ The summary is one imperative phrase in changelog voice:
 Skip a changeset only when nothing reaches consumers: CI config, test-only, docs-only, internal tooling.
 
 
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Context
+
+Verify against the authoritative source before commenting on or changing code that touches Viam APIs or SDK types. Guessing at a method name, a field, or an RPC contract is the failure mode here. Cap lookups at 2 or 3 per session.
+
+\`WebFetch\` https://docs.viam.com for what a resource type (arm, camera, sensor, and so on) is supposed to do: RPC semantics, method signatures, expected behavior.
+
+## Sources
+
+| Source                                                  | Best for                                                             |
+| ------------------------------------------------------- | -------------------------------------------------------------------- |
+| \`viamrobotics/api\`                                      | Canonical \`.proto\` definitions. Prefer over \`rdk\` for RPC contracts. |
+| \`viamrobotics/viam-typescript-sdk\`, https://ts.viam.dev | TypeScript types, client patterns, exported API surface.             |
+| \`viamrobotics/viam-svelte-sdk\`                          | Svelte stores and utilities wrapping the TypeScript SDK.             |
+
+Fetch a file or search code with \`gh api\`:
+
+\`\`\`bash
+gh api repos/viamrobotics/<repo>/contents/<path> --jq '.content' | base64 -d
+gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.path): \\(.text_matches[0].fragment // "")"'
+\`\`\`
+
+## When to look something up
+
+- Code uses an SDK type or method and the usage looks wrong. Verify the exported API in the source repo.
+- A change adds or modifies a widget for a resource type. Check the resource's \`.proto\` for field names and RPC signatures.
+- A name or field looks inconsistent with Viam conventions. Check the proto definition.
+- A review comment needs to state what a resource method does. Fetch the docs rather than guessing.
+
+
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
 ---
 paths:
@@ -2306,6 +2369,7 @@ words around them.
 | \`testing-frontend.md\`    | editing test files (\`**/*.spec.ts\`)                 |
 | \`pr-description.md\`      | editing files under \`.changeset/\`                   |
 | \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`viam-context.md\`        | every session (Viam API and SDK sources)            |
 | \`code-comments.md\`       | editing any code file                               |
 | \`editing-discipline.md\`  | every session (edit from current state, in scope)   |
 | \`verification.md\`        | every session (verify before reporting done)        |
@@ -3077,6 +3141,44 @@ golangci-lint run ./draw/... ./client/...
 \`\`\`
 
 
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Context
+
+Verify against the authoritative source before commenting on or changing code that touches Viam APIs or SDK types. Guessing at a method name, a field, or an RPC contract is the failure mode here. Cap lookups at 2 or 3 per session.
+
+\`WebFetch\` https://docs.viam.com for what a resource type (arm, camera, sensor, and so on) is supposed to do: RPC semantics, method signatures, expected behavior.
+
+## Sources
+
+| Source                                                  | Best for                                                             |
+| ------------------------------------------------------- | -------------------------------------------------------------------- |
+| \`viamrobotics/api\`                                      | Canonical \`.proto\` definitions. Prefer over \`rdk\` for RPC contracts. |
+| \`viamrobotics/rdk\`                                      | Go service interface signatures and constants.                       |
+| \`viamrobotics/viam-typescript-sdk\`, https://ts.viam.dev | TypeScript types, client patterns, exported API surface.             |
+| \`viamrobotics/viam-svelte-sdk\`                          | Svelte stores and utilities wrapping the TypeScript SDK.             |
+| \`viamrobotics/test-widgets\`                             | Prebaked UI components for testing machine SDK APIs.                 |
+| \`viamrobotics/visualization\`                            | Visualization tools for motion and spatial data.                     |
+| \`viamrobotics/prime\`, https://design.viam.com           | v1 Svelte component library. Superseded by prime-ui.                 |
+
+Fetch a file or search code with \`gh api\`:
+
+\`\`\`bash
+gh api repos/viamrobotics/<repo>/contents/<path> --jq '.content' | base64 -d
+gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.path): \\(.text_matches[0].fragment // "")"'
+\`\`\`
+
+## When to look something up
+
+- Code uses an SDK type or method and the usage looks wrong. Verify the exported API in the source repo.
+- A change adds or modifies a widget for a resource type. Check the resource's \`.proto\` for field names and RPC signatures.
+- A name or field looks inconsistent with Viam conventions. Check the proto definition.
+- A review comment needs to state what a resource method does. Fetch the docs rather than guessing.
+
+## Go search limits
+
+\`viamrobotics/rdk\` code search is keyword-only and cannot follow interface implementations across packages. Search for the exact declaration, for example \`type ArmService interface\`. For anything needing runtime or type-system reasoning, read the \`.proto\` in \`viamrobotics/api\` instead.
+
+
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
 ---
 paths:
@@ -3337,6 +3439,7 @@ process.exit(0);
 | \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\`    |
 | \`go.md\`                  | editing \`.go\`                                          |
 | \`testing-go.md\`          | editing Go tests (\`**/*_test.go\`)                      |
+| \`viam-context.md\`        | every session (Viam API and SDK sources)               |
 | \`code-comments.md\`       | editing any code file                                  |
 | \`editing-discipline.md\`  | every session (edit from current state, in scope)      |
 | \`verification.md\`        | every session (verify before reporting done)           |

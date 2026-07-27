@@ -1,6 +1,7 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { MANIFEST_FILENAME } from "../core/constants.js";
+import { detectViamSources } from "../core/viam-sources.js";
 import type { PackageManager } from "../types.js";
 import type { InitContext } from "./context.js";
 import * as log from "./log.js";
@@ -40,6 +41,73 @@ function readJson(path: string): unknown {
 function majorFrom(value: string | undefined): string | null {
   const match = value?.match(/(\d+)/);
   return match ? match[1] : null;
+}
+
+const SKIP_DIRS = new Set([
+  "node_modules",
+  ".git",
+  ".wireit",
+  ".svelte-kit",
+  ".venv",
+  "__pycache__",
+  "vendor",
+  "dist",
+  "build",
+  "target",
+]);
+
+const PY_MANIFESTS =
+  /^(pyproject\.toml|setup\.py|setup\.cfg|requirements.*\.txt)$/;
+
+/**
+ * Walks the repo collecting dependency manifests from every workspace member, not
+ * just the root, so a monorepo with one Go module or one SDK consumer is detected.
+ * Depth is capped because the answer never lives deep in a tree.
+ */
+function collectDependencyEvidence(cwd: string) {
+  const npm = new Set<string>();
+  const goParts: string[] = [];
+  const pyParts: string[] = [];
+
+  const visit = (dir: string, depth: number): void => {
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (
+          depth > 0 &&
+          !SKIP_DIRS.has(entry.name) &&
+          !entry.name.startsWith(".")
+        ) {
+          visit(path, depth - 1);
+        }
+        continue;
+      }
+      if (entry.name === "package.json") {
+        const parsed = readJson(path);
+        const pkg = (isObject(parsed) ? parsed : {}) as PkgJson;
+        for (const key of Object.keys({
+          ...pkg.dependencies,
+          ...pkg.devDependencies,
+          ...pkg.peerDependencies,
+        })) {
+          npm.add(key);
+        }
+      } else if (entry.name === "go.mod") {
+        goParts.push(readText(path) ?? "");
+      } else if (PY_MANIFESTS.test(entry.name)) {
+        pyParts.push(readText(path) ?? "");
+      }
+    }
+  };
+
+  visit(cwd, 5);
+  return { npm, goText: goParts.join("\n"), pyText: pyParts.join("\n") };
 }
 
 const LOCKFILE_MANAGERS: readonly [file: string, manager: PackageManager][] = [
@@ -95,6 +163,8 @@ function sniff(cwd: string) {
 
   const isGo = hasFile("go.mod");
   const svelteTransport = sniffSvelteTransport(cwd, has("svelte"));
+  const viamSources = detectViamSources(collectDependencyEvidence(cwd));
+  const usesViam = Object.values(viamSources).some(Boolean);
 
   return {
     $schema: `./node_modules/@viamrobotics/claude-config/schema/${MANIFEST_FILENAME.replace(".json", ".schema.json")}`,
@@ -118,8 +188,10 @@ function sniff(cwd: string) {
         prDescription: hasFile(".changeset"),
         go: isGo,
         testingGo: isGo,
+        viamContext: usesViam,
       },
     },
+    viamContext: { sources: viamSources },
     mcp: { svelteTransport, vscode: hasFile(".vscode") },
     outputStyle: { terse: "default" },
     hooks: { sessionStart: false },

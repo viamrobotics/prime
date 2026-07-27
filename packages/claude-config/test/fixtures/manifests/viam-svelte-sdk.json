@@ -15,7 +15,15 @@
       "typescript": true,
       "testingFrontend": true,
       "changesets": true,
-      "prDescription": true
+      "prDescription": true,
+      "viamContext": true
+    }
+  },
+  "viamContext": {
+    "sources": {
+      "api": true,
+      "typescriptSdk": true,
+      "svelteSdk": true
     }
   },
   "mcp": { "svelteTransport": "stdio", "vscode": false },

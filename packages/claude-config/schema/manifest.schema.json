@@ -50,7 +50,57 @@
             "changesets": { "type": "boolean" },
             "prDescription": { "type": "boolean" },
             "go": { "type": "boolean" },
-            "testingGo": { "type": "boolean" }
+            "testingGo": { "type": "boolean" },
+            "viamContext": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "viamContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Which Viam ecosystem sources the viam-context rule points at. Only read when rules.modules.viamContext is true. docs.viam.com is always included.",
+      "properties": {
+        "sources": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api": {
+              "type": "boolean",
+              "description": "viamrobotics/api protobuf definitions."
+            },
+            "rdk": {
+              "type": "boolean",
+              "description": "viamrobotics/rdk Go service interfaces."
+            },
+            "typescriptSdk": {
+              "type": "boolean",
+              "description": "@viamrobotics/sdk."
+            },
+            "svelteSdk": {
+              "type": "boolean",
+              "description": "@viamrobotics/svelte-sdk."
+            },
+            "testWidgets": {
+              "type": "boolean",
+              "description": "@viamrobotics/test-widgets."
+            },
+            "motionTools": {
+              "type": "boolean",
+              "description": "@viamrobotics/motion-tools."
+            },
+            "primeCore": {
+              "type": "boolean",
+              "description": "@viamrobotics/prime-core, the v1 component library."
+            },
+            "primeUi": {
+              "type": "boolean",
+              "description": "@viamrobotics/prime-ui, the v2 component library."
+            },
+            "pythonSdk": {
+              "type": "boolean",
+              "description": "viam-sdk on PyPI."
+            }
           }
         }
       }
