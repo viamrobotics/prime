@@ -163,6 +163,7 @@
       "properties": {
         "teamMention": {
           "type": ["string", "null"],
+          "pattern": "^@[\\w-]+/[\\w-]+$",
           "description": "GitHub team to @-mention, e.g. \"@viamrobotics/team-viz\"."
         },
         "goTools": {

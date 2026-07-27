@@ -24,6 +24,9 @@ const PACKAGE_MANAGERS: readonly PackageManager[] = [
 ];
 const TRANSPORTS: readonly SvelteTransport[] = ["stdio", "http", "none"];
 
+/** GitHub team handle, as the workflow stubs will paste it into a YAML prompt. */
+const TEAM_MENTION = /^@[\w-]+\/[\w-]+$/;
+
 export class ManifestError extends Error {
   constructor(readonly problems: string[]) {
     super(
@@ -341,7 +344,9 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     teamMention:
       wfRaw.teamMention === undefined || wfRaw.teamMention === null
         ? null
-        : str(wfRaw.teamMention, "workflows.teamMention", problems),
+        : str(wfRaw.teamMention, "workflows.teamMention", problems, {
+            pattern: TEAM_MENTION,
+          }),
     goTools: bool(wfRaw.goTools, "workflows.goTools", problems, false),
     secrets: {
       slackAlertWebhook: bool(

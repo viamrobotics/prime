@@ -37,7 +37,15 @@ export function buildLockfile(
   templateVersion: string,
 ): Lockfile {
   const files: Record<string, string> = {};
-  for (const item of items) files[item.path] = sha256(item.content);
+  // One path can have several plan items: settings.json takes a patch per output
+  // style and per hook. Chain their hashes so a change in any contributor shows up,
+  // rather than letting the last item overwrite the entry and hide the rest.
+  for (const item of items) {
+    const previous = files[item.path];
+    files[item.path] = sha256(
+      previous === undefined ? item.content : previous + item.content,
+    );
+  }
   const modules = [...new Set(items.map((item) => item.module))].sort();
   return { templateVersion, workflowsRef: WORKFLOWS_REF, modules, files };
 }

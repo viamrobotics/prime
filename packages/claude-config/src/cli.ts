@@ -7,26 +7,30 @@ import { install } from "./commands/install.js";
 import { update } from "./commands/update.js";
 import { packageVersion } from "./core/pkg.js";
 
-const HELP = `claude-config — install, update, and doctor Viam's shared Claude tooling
+const HELP = `claude-config: install, update, and doctor Viam's shared Claude tooling
 
 Usage:
   claude-config <command> [options]
 
 Commands:
-  init       Sniff the repo and scaffold claude-config.json
-  install    Render the manifest and write every managed file
-  update     Re-render after a version bump and report the delta
-  doctor     Check for drift (exit 1 on drift); --fix reconciles
+  init      Sniff the repo and scaffold claude-config.json
+    --force        Overwrite an existing manifest
+
+  install   Render the manifest and write every managed file
+
+  update    Re-render after a version bump and report the delta
+
+  doctor    Check for drift. Exits 0 clean, 1 on drift, 2 on a bad manifest
+    --fix          Reconcile drift to canonical
+    --prune        Also delete orphaned managed files (needs --fix)
+    --json         Machine-readable report
 
 Options:
-  --cwd <dir>   Target repo root (default: current directory)
-  --dry-run     Show what would change without writing
-  --json        Machine-readable output (doctor)
-  --fix         Reconcile drift to canonical (doctor)
-  --prune       Delete orphaned managed files (doctor --fix)
-  --force       Overwrite an existing manifest (init)
-  -h, --help    Show this help
-  -v, --version Show the version`;
+  --cwd <dir>      Target repo root (default: current directory)
+  --dry-run        Show what would change without writing
+
+  -h, --help       Show this help
+  -v, --version    Show the version`;
 
 function main(): number {
   const { values, positionals } = parseArgs({
@@ -49,9 +53,15 @@ function main(): number {
   }
 
   const command = positionals[0];
-  if (values.help || command === undefined) {
+  if (values.help) {
     console.log(HELP);
-    return command === undefined ? 1 : 0;
+    return 0;
+  }
+  // Usage errors belong on stderr so CI logs and pipelines do not mix help text
+  // into real output. Only an explicit --help goes to stdout.
+  if (command === undefined) {
+    console.error(HELP);
+    return 1;
   }
 
   const base = {

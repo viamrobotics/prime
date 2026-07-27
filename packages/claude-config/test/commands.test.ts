@@ -1,7 +1,14 @@
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { doctor } from "../src/commands/doctor.js";
 import { init } from "../src/commands/init.js";
 import { install } from "../src/commands/install.js";
 import { update } from "../src/commands/update.js";
@@ -171,5 +178,88 @@ describe("update", () => {
     expect(output).toContain("- .mcp.json");
     expect(output).not.toContain("- CLAUDE.md");
     expect(output).not.toContain("- .gitignore");
+  });
+
+  it("reports settings.json when only the output-style patch changes", () => {
+    write(MANIFEST_FILENAME, {
+      ...manifest,
+      outputStyle: { terse: "default" },
+    });
+    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+
+    write(MANIFEST_FILENAME, { ...manifest, outputStyle: { terse: false } });
+    const { output } = capture(() =>
+      update({ cwd: dir, dryRun: false, json: false }),
+    );
+    expect(output).toContain("~ .claude/settings.json");
+  });
+});
+
+describe("doctor", () => {
+  const manifest = {
+    repo: { name: "tmp", nodeVersion: "22" },
+    rules: { modules: { svelte: true } },
+  };
+
+  function installed(): void {
+    write(MANIFEST_FILENAME, manifest);
+    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+  }
+
+  function run(options: { fix?: boolean; prune?: boolean } = {}) {
+    return capture(() =>
+      doctor({
+        cwd: dir,
+        dryRun: false,
+        json: false,
+        fix: options.fix ?? false,
+        prune: options.prune ?? false,
+      }),
+    );
+  }
+
+  it("exits 0 when the repo matches the plan", () => {
+    installed();
+    expect(run().code).toBe(0);
+  });
+
+  it("exits 1 on drift and 0 once --fix reconciles it", () => {
+    installed();
+    write(".claude/rules/svelte.md", "tampered\n");
+
+    const drifted = run();
+    expect(drifted.code).toBe(1);
+    expect(drifted.output).toContain("modified");
+
+    expect(run({ fix: true }).code).toBe(0);
+    expect(
+      readFileSync(join(dir, ".claude/rules/svelte.md"), "utf8"),
+    ).toContain("Svelte 5");
+  });
+
+  it("exits 2 when the manifest is missing", () => {
+    expect(run().code).toBe(2);
+  });
+
+  it("restores a managed file that was deleted", () => {
+    installed();
+    rmSync(join(dir, ".claude/rules/svelte.md"));
+    expect(run().code).toBe(1);
+    expect(run({ fix: true }).code).toBe(0);
+  });
+
+  it("leaves an orphan in place until --prune", () => {
+    write(MANIFEST_FILENAME, {
+      ...manifest,
+      mcp: { svelteTransport: "stdio" },
+    });
+    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+
+    write(MANIFEST_FILENAME, { ...manifest, mcp: { svelteTransport: "none" } });
+    expect(run().output).toContain("orphaned");
+    expect(existsSync(join(dir, ".mcp.json"))).toBe(true);
+
+    run({ fix: true, prune: true });
+    expect(existsSync(join(dir, ".mcp.json"))).toBe(false);
   });
 });

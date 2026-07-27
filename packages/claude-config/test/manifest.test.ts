@@ -130,6 +130,17 @@ describe("parseManifest", () => {
     ).toThrow(/overrides\.ci-fix/);
   });
 
+  it("accepts a well-formed team mention and rejects a malformed one", () => {
+    const repo = { name: "x", nodeVersion: "22" };
+    expect(
+      parse({ repo, workflows: { teamMention: "@viamrobotics/team-viz" } })
+        .workflows.teamMention,
+    ).toBe("@viamrobotics/team-viz");
+    expect(() =>
+      parse({ repo, workflows: { teamMention: "team viz" } }),
+    ).toThrow(/workflows\.teamMention/);
+  });
+
   it("reports all problems at once", () => {
     try {
       parse({ repo: { nodeVersion: 22 } });
