@@ -9,7 +9,7 @@ Follow [Effective Go](https://go.dev/doc/effective_go) and [Go Code Review Comme
 
 ## RPC / Service Handler Pattern
 
-Follow **Validate → Execute → Respond** for all service methods:
+Every service method goes **Validate, Execute, Respond**:
 
 ```go
 func (s *drawServer) GetEntity(ctx context.Context, req *connect.Request[drawv1.GetEntityRequest]) (*connect.Response[drawv1.GetEntityResponse], error) {
@@ -31,10 +31,10 @@ func (s *drawServer) GetEntity(ctx context.Context, req *connect.Request[drawv1.
 
 ## Error Handling
 
-- Wrap errors with context: `fmt.Errorf("loading entity %s: %w", id, err)`
-- Use `errors.Is` / `errors.As` — never string-match error messages.
-- Define sentinel errors as package-level vars: `var ErrNotFound = errors.New("not found")`
-- Return Connect status codes from handlers, not raw Go errors.
+- Wrap with context: `fmt.Errorf("loading entity %s: %w", id, err)`
+- Use `errors.Is` and `errors.As`. Never string-match error messages.
+- Sentinel errors are package-level vars: `var ErrNotFound = errors.New("not found")`
+- Handlers return Connect status codes, not raw Go errors.
 
 ## Dependency Injection
 
@@ -46,12 +46,12 @@ var _ drawv1connect.DrawServiceHandler = (*drawServer)(nil)
 
 ## Doc Comments
 
-`code-comments.md` decides _whether_ to comment; godoc decides the shape when you do.
+`code-comments.md` decides _whether_ to comment. Godoc decides the shape.
 
-- Every exported identifier gets a doc comment that starts with its name and reads as a sentence: `// ParseConfig reads a manifest from disk.` Tools and `go doc` rely on that prefix.
+- Every exported identifier gets a doc comment starting with its name, reading as a sentence: `// ParseConfig reads a manifest from disk.` Tools and `go doc` rely on that prefix.
 - One package comment per package, on a single file: `// Package draw serves the drawing API.`
-- Unexported identifiers follow the general rule: comment only for divergence or non-obvious domain logic.
-- Mark known gaps with `// TODO(username):` so `go vet` and reviewers can find them.
+- Unexported identifiers follow the general rule: divergence or non-obvious domain logic only.
+- Mark known gaps with `// TODO(username):` so `go vet` and reviewers find them.
 
 ```go
 // EntityStore persists drawing entities. Implementations must be safe for
@@ -63,13 +63,13 @@ type EntityStore interface {
 
 ## Logging
 
-Use the stdlib `log` package (`log.Printf`, `log.Fatal`) — no third-party logging libraries.
+Stdlib `log` only (`log.Printf`, `log.Fatal`). No third-party logging libraries.
 
 ## Concurrency
 
-- All public entry points accept `context.Context`; propagate it and cancel on shutdown.
-- Guard shared state with a mutex or channel — pick one per type, don't mix.
-- Never leave goroutines running without a shutdown path; tie lifetimes to a context.
+- Public entry points accept `context.Context`. Propagate it and cancel on shutdown.
+- Guard shared state with a mutex or a channel. Pick one per type, do not mix.
+- Never leave a goroutine without a shutdown path. Tie its lifetime to a context.
 
 ## Verify Your Work
 

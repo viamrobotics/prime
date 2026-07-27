@@ -5,11 +5,11 @@ paths:
 
 # Go Testing
 
-Prefer tests with real dependencies over mocked ones. Mock only at I/O boundaries (network, filesystem). Each test must be fully independent — no shared mutable state.
+Prefer real dependencies over mocks. Mock only at I/O boundaries (network, filesystem). Every test is independent, with no shared mutable state.
 
 ## Assertions
 
-Use `test.That(t, actual, matcher, ...expected)` from [`go.viam.com/test`](https://pkg.go.dev/go.viam.com/test) — not `testify`:
+Use `test.That(t, actual, matcher, ...expected)` from [`go.viam.com/test`](https://pkg.go.dev/go.viam.com/test), not `testify`:
 
 ```go
 import "go.viam.com/test"
@@ -23,7 +23,7 @@ test.That(t, msg, test.ShouldContainSubstring, "not found")
 
 ## Table-Driven Tests
 
-Use table-driven tests for functions with multiple cases:
+Use them for any function with multiple cases:
 
 ```go
 func TestCalculateTotal(t *testing.T) {
@@ -45,7 +45,7 @@ func TestCalculateTotal(t *testing.T) {
 
 ## Integration Tests: Real Connect-RPC Servers
 
-Spin up a real h2c server per test — no mocking the transport layer:
+Spin up a real h2c server per test. Never mock the transport layer.
 
 ```go
 func newTestServer(t *testing.T, svc *DrawService) drawv1connect.DrawServiceClient {
@@ -74,7 +74,7 @@ func newTestServer(t *testing.T, svc *DrawService) drawv1connect.DrawServiceClie
 }
 ```
 
-## Asserting Connect Errors
+Assert Connect errors by code, never by message:
 
 ```go
 var connectErr *connect.Error
@@ -82,9 +82,9 @@ test.That(t, errors.As(err, &connectErr), test.ShouldBeTrue)
 test.That(t, connectErr.Code(), test.ShouldEqual, connect.CodeNotFound)
 ```
 
-## Async Assertions — Never `time.Sleep`
+## Async Assertions
 
-Poll with a deadline instead:
+Never `time.Sleep`. Poll with a deadline:
 
 ```go
 func waitFor(t *testing.T, timeout time.Duration, condition func() bool) {

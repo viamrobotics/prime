@@ -5,26 +5,26 @@ paths:
 
 # PR Description Format
 
-Follow the structure and tone used in this repository. PR descriptions are technical documents aimed at reviewers who already know the codebase — be precise, not verbose. Do not use em dashes. Use American English.
+PR descriptions are technical documents for reviewers who already know the codebase. Be precise, not verbose. American English, no em dashes.
 
 ## Output
 
-By default, return the finished PR description to the user as raw markdown so it can be pasted straight into the GitHub PR body, rather than as rendered prose. Wrap it in a fenced code block; if the description itself contains code fences, use a longer outer fence (four or more backticks) so the nested fences survive.
+Return the finished description as raw markdown wrapped in a fenced code block so it pastes straight into the GitHub PR body. If the description itself contains code fences, use four or more backticks for the outer fence.
 
-Only create or update the PR yourself when the user explicitly asks (for example with `gh pr create`); then pass the markdown as the PR body instead of printing it.
+Create or update the PR yourself only when the user asks (for example `gh pr create`). Then pass the markdown as the PR body instead of printing it.
 
 ## Opening Paragraph
 
-One to two sentences summarizing **what** the PR adds or changes and **why** it matters. Mention the user-facing capability, not implementation details.
+One or two sentences on **what** the PR changes and **why** it matters. Name the user-facing capability, not the implementation. It stands on its own, with no `## Summary` or `## Description` wrapper heading.
 
 ```
 Adds a `ghost` variant to Button so consumers can use a tertiary button style
 that matches the design system's low-emphasis treatment.
 ```
 
-## Layer-by-Layer Breakdown
+## Layer Sections
 
-Break changes into sections that match the architecture layers they touch. Use headings that match the actual layers in the affected package(s); common ones below. Omit any section with no changes.
+One section per architecture layer the PR touches, using the layers that exist in the affected packages. Omit sections with no changes. Common headings:
 
 | Heading        | What it covers                                           |
 | -------------- | -------------------------------------------------------- |
@@ -33,12 +33,7 @@ Break changes into sections that match the architecture layers they touch. Use h
 | **Types**      | New or changed exported types in a package's public API  |
 | **Tests**      | New or changed test files                                |
 
-Within each section:
-
-- Use a bulleted list.
-- Each bullet starts with the symbol being changed (component, primitive, prop, type) in backticks or bold, then describes **what** changed.
-- Be specific: name the new component, the new export, the changed prop — don't just say "updated the package".
-- Keep bullets to one or two sentences.
+Each bullet opens with the changed symbol (component, primitive, prop, type) in backticks or bold, then says what changed in one or two sentences. Name the export or prop, never just "updated the package".
 
 ```markdown
 ### Components
@@ -49,7 +44,7 @@ Within each section:
 
 ## Why?
 
-Include a **Why?** section when the PR involves non-obvious design decisions. Format each decision as a bold question followed by a paragraph answer.
+Include this section only when the PR makes non-obvious design decisions. Each decision is a bold question followed by a paragraph.
 
 ```markdown
 ### Why?
@@ -59,11 +54,9 @@ Include a **Why?** section when the PR involves non-obvious design decisions. Fo
 The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
 ```
 
-Skip this section for straightforward PRs where the "what" is self-explanatory.
-
 ## Testing
 
-End with a **Testing** section listing which test suites were run and any new tests added.
+Always last. Name the exact commands run and any tests added. "Tests pass" is not enough.
 
 ```markdown
 ### Testing
@@ -71,14 +64,10 @@ End with a **Testing** section listing which test suites were run and any new te
 Ran `pnpm --filter @viamrobotics/<pkg> test` and `pnpm lint`. Added a new spec for the ghost variant focus state.
 ```
 
-Name the specific test commands — don't just say "tests pass".
+## Style
 
-## Style Rules
-
-- Use `###` (h3) for each section heading.
-- Use GitHub-flavoured Markdown — backtick-fenced code, bullet lists, bold.
-- Do **not** add a `## Summary` or `## Description` wrapper heading; the opening paragraph stands on its own.
-- Do **not** include auto-generated changelogs, file lists, or diff stats — reviewers can see those in the Files tab.
-- Keep the tone direct and technical. Write in first person when explaining rationale ("I tested this with..."). Use present tense for describing behaviour ("`Button` adds...").
-- When renaming or deprecating something, call out both the old and new names explicitly.
-- If the PR depends on or stacks on another PR, note the base branch and link the parent PR in the opening paragraph.
+- `###` (h3) for every section heading. GitHub-flavored Markdown: fenced code, bullets, bold.
+- No auto-generated changelogs, file lists, or diff stats. Reviewers have the Files tab.
+- Direct and technical. First person for rationale ("I tested this with..."), present tense for behavior ("`Button` adds...").
+- Name both the old and the new name when renaming or deprecating.
+- If the PR stacks on another, note the base branch and link the parent PR in the opening paragraph.

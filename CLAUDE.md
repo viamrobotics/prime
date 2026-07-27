@@ -1,58 +1,43 @@
 # prime
 
-Pretty Rad Interactive Modular Elements — Viam's Svelte 5 component-library monorepo. See [ROADMAP.md](ROADMAP.md) for the v2 migration plan; the workspace is currently being rebuilt and most packages haven't landed yet.
+Pretty Rad Interactive Modular Elements, Viam's monorepo of frontend libraries: design tokens, Svelte components, and the shared configuration around them. The workspace is mid-rebuild and most packages have not landed yet.
 
-## Monorepo layout
+## Layout
 
-Two top-level workspaces:
+`packages/<name>/` publishes to npm. Each owns its `package.json`, build, tests, and `CLAUDE.md`:
 
-- `packages/<name>/` — published-to-npm libraries and configs. Each owns its `package.json`, build, tests, and `CLAUDE.md`.
-- `apps/<name>/` — deployable apps that consume the packages. Always `private: true`. Currently just the docs site.
+- [`@viamrobotics/prime-ui`](packages/prime-ui/CLAUDE.md) Svelte 5 component library, the v2 of prime.
+- [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md) shared Tailwind CSS v4 config: design tokens and fonts.
+- [`@viamrobotics/tweakpane-config`](packages/tweakpane-config/CLAUDE.md) Viam theme for `svelte-tweakpane-ui`.
+- [`@viamrobotics/claude-config`](packages/claude-config/CLAUDE.md) CLI that installs shared Claude agent tooling into repos.
 
-The workspace root holds shared tooling (lint, format, changesets, CI).
+`apps/<name>/` holds deployable apps, always `private: true`:
 
-## Packages
+- [`prime-docs`](apps/docs/CLAUDE.md) Astro Starlight docs site plus a playground per library package. Deployed to GitHub Pages.
 
-| Package                                                               | Purpose                                                             |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| [`@viamrobotics/prime-ui`](packages/prime-ui/CLAUDE.md)               | Svelte 5 component library — the v2 of prime.                       |
-| [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md) | Viam's shared Tailwind CSS v4 configuration: design tokens + fonts. |
+The workspace root holds shared tooling: lint, format, changesets, CI.
 
-## Apps
+## Tech stack
 
-| App                                 | Purpose                                                                                                       |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [`prime-docs`](apps/docs/CLAUDE.md) | Astro Starlight documentation site + embedded playgrounds for each library package. Deployed to GitHub Pages. |
+pnpm workspaces, Node 24 (`.nvmrc`), Svelte 5 runes, TailwindCSS, Vitest, [wireit](https://github.com/google/wireit), Changesets. Per-package build and test tooling lives in each package's `CLAUDE.md`.
 
-### Playground convention
+**Task orchestration.** `build`, `check`, `lint`, and `test` run through wireit. Each package's script declares its inputs (`files`), outputs, and cross-package `dependencies`, so unchanged work is skipped or restored from cache: locally in `.wireit/` (gitignored) and in CI through the GitHub Actions cache that the `.github/actions/setup` composite sets up. Run `pnpm <build|check|lint|test>` at the root for the whole workspace in dependency order, or `pnpm --filter <pkg> run <script>` for one package plus its declared deps. `WIREIT_CACHE=none` forces a real re-run. `format` stays a plain recursive command because it mutates files.
 
-Each library package's existing SvelteKit `src/routes/` _is_ its playground. The docs site (`apps/docs/`) builds each package's playground as a static bundle, mounts each under `/playground/<package-name>/`, and links to them from the Starlight sidebar. The docs `build:playgrounds` script declares each library's playground build as a wireit dependency (so they build first, with the shared `DOCS_BASE` env var driving each package's base path) and then copies their output into place — see [apps/docs/scripts/build-playgrounds.mjs](apps/docs/scripts/build-playgrounds.mjs). To add a playground for a new library, give it a static SvelteKit app under `src/routes/`, then wire it into both that script and the `build:playgrounds` dependencies in [apps/docs/package.json](apps/docs/package.json).
+**Shared dependency versions** live in the `catalog:` block of [pnpm-workspace.yaml](pnpm-workspace.yaml). Packages reference them with `"<dep>": "catalog:"`. Bump a shared toolchain version there, not per-package.
 
-## Tech stack (workspace-level)
+## Playground convention
 
-| Layer           | Technology       |
-| --------------- | ---------------- |
-| Package manager | pnpm workspaces  |
-| Node            | 24 (`.nvmrc`)    |
-| Frontend        | Svelte 5 (runes) |
-| Styling         | TailwindCSS      |
-| Testing         | Vitest           |
-| Task runner     | wireit           |
-| Versioning      | Changesets       |
+Each library package's SvelteKit `src/routes/` _is_ its playground. The docs site builds each one as a static bundle, mounts it under `/playground/<package-name>/`, and links it from the Starlight sidebar. The docs `build:playgrounds` script declares every playground build as a wireit dependency so they build first, with the shared `DOCS_BASE` env var driving each base path, then copies the output into place. See [apps/docs/scripts/build-playgrounds.mjs](apps/docs/scripts/build-playgrounds.mjs).
 
-Per-package testing/build tooling is documented in each package's `CLAUDE.md`.
-
-**Task orchestration.** `build`/`check`/`lint`/`test` are run through [wireit](https://github.com/google/wireit): each package's script declares its inputs (`files`), outputs, and cross-package `dependencies`, so unchanged work is skipped or restored from cache — locally (`.wireit/`, gitignored) and in CI (GitHub Actions cache, set up by the `.github/actions/setup` composite). Run `pnpm <build|check|lint|test>` at the root (whole workspace, in dependency order) or `pnpm --filter <pkg> run <script>` for one package plus its declared deps. `WIREIT_CACHE=none` forces a real re-run. `format` stays a plain (non-wireit) recursive command since it mutates files.
-
-**Shared dependency versions** live in the `catalog:` block of [pnpm-workspace.yaml](pnpm-workspace.yaml); packages reference them with `"<dep>": "catalog:"`. Bump a shared toolchain version there, not per-package.
+To add one: give the package a static SvelteKit app under `src/routes/`, then wire it into that script and into the `build:playgrounds` dependencies in [apps/docs/package.json](apps/docs/package.json).
 
 ## Design system
 
-prime implements the Viam design system. The source of truth lives at **https://design.viam.com/guides/intro/**. Verify visual treatment, naming, and interaction patterns there before inventing new ones.
+prime implements the Viam design system. Source of truth: **https://design.viam.com/guides/intro/**. Verify visual treatment, naming, and interaction patterns there before inventing new ones.
 
 ## Topic-specific rules
 
-Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude reads matching files; rules without `paths` load every session.
+Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude reads a matching file. Rules without `paths` load every session.
 
 <!-- claude-config:rules-table start -->
 
@@ -69,29 +54,3 @@ Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude 
 | `design-system.md`      | every session (design system context)               |
 
 <!-- claude-config:rules-table end -->
-
----
-
-You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
-
-## Available MCP Tools:
-
-### 1. list-sections
-
-Use this FIRST to discover all available documentation sections. Returns a structured list with titles, use_cases, and paths.
-When asked about Svelte or SvelteKit topics, ALWAYS use this tool at the start of the chat to find relevant sections.
-
-### 2. get-documentation
-
-Retrieves full documentation content for specific sections. Accepts single or multiple sections.
-After calling the list-sections tool, you MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
-
-### 3. svelte-autofixer
-
-Analyzes Svelte code and returns issues and suggestions.
-You MUST use this tool whenever writing Svelte code before sending it to the user. Keep calling it until no issues or suggestions are returned.
-
-### 4. playground-link
-
-Generates a Svelte Playground link with the provided code.
-After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.

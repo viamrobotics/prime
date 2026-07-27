@@ -16,95 +16,52 @@ paths:
 
 # Code Comments
 
-These principles are language-agnostic — they hold for every language in the repo (TypeScript, Svelte, Go, Python, and so on). The examples below are illustrative, not language-specific.
+Applies to every language in the repo. This rule decides _whether_ to comment. When the answer is yes, the language rule (`typescript.md`, `go.md`, `svelte.md`) gives the shape.
 
-This rule decides _whether_ to comment. When the answer is yes, the matching language rule (`typescript.md`, `go.md`, `svelte.md`) gives the doc-comment shape for that language.
+- **Default to no comment.** If the code shows the intent, add nothing.
+- **Comment for exactly two reasons:**
+  1. **Divergence from convention.** The code departs from repo patterns, a language idiom, or the obvious implementation. Say why: bug workaround, perf constraint, external API quirk, reactivity requirement.
+  2. **Non-obvious domain logic.** The code encodes a business rule, invariant, or domain concept a new reader cannot infer. Catalog it so future readers can find and trust it.
+- **Hard cap of 200 characters per comment.** Past that it documents too much. Split it, link a doc or ticket, or make the code clearer.
+- **Never narrate the code.** No `// increment counter`, `// loop over users`, `// return result`, `// import the package`, `// handle error`.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Rationale for a change goes in the commit message or PR description.
+- **Prefer naming over commenting.** If a comment explains what a variable, function, or block does, rename it or extract a well-named function instead.
+- **Use doc-comment syntax for symbol docs.** Anything documenting a type, function, or member: `/** */` in TypeScript, JavaScript, and Svelte, `//` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
 
-## Rule — follow without deliberation
-
-- **Default to no comment.** Self-explanatory code does not need narration. If a reader can understand the intent by reading the code, do not add a comment.
-- **Only comment for two reasons:**
-  1. **Divergence from convention** — the code intentionally departs from the repo's normal patterns, a language idiom, or an obvious implementation. Explain _why_ the divergence is necessary (e.g. a bug workaround, a perf constraint, an external API quirk, a reactivity requirement).
-  2. **Non-obvious domain logic** — the code encodes a business rule, invariant, or domain concept that a new reader would not infer from the code itself. Briefly catalog the rule so future readers can find and trust it.
-- **Hard cap: 200 characters per comment.** If you cannot explain it in 200 characters, the comment is probably documenting too much; split it, link to a doc/ticket, or rewrite the code to be clearer.
-- **Never narrate the code.** No `// increment counter`, `// loop over users`, `// return result`, `// import the package`, `// handle error`. These are noise.
-- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Put rationale for a change in the commit message or PR description, not in the source.
-- **Prefer naming over commenting.** If a comment is needed to explain what a variable, function, or block does, first try renaming it or extracting a function with a descriptive name.
-- **Use the language's doc-comment syntax for symbol docs.** Anything documenting a type, function, or member is a doc comment: `/** */` in TypeScript, JavaScript, and Svelte; `//` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
-
-## Examples
-
-**Bad — narrating obvious code:**
+## Bad
 
 ```ts
 // Get the user from the store
 const user = userStore.get();
-if (!user) {
-  // Return early
-  return;
-}
 
-// Loop over the parts
-for (const part of parts) {
-  // Add it to the result
-  result.push(part);
-}
-```
-
-**Bad — explaining the change instead of the code:**
-
-```ts
 // Switched to structuredClone because the old spread didn't deep-copy
 const copy = structuredClone(config);
-```
 
-**Bad — comment longer than 200 chars restating what the code shows:**
-
-```ts
-/**
- * This function takes the list of robot parts, filters out the ones that are not currently active, then maps each remaining part to its config object and returns the resulting array of configs to the caller for rendering.
- */
-function activePartConfigs(robot: Robot): PartConfig[] { ... }
-```
-
-**Bad — line comment where a doc comment belongs:**
-
-```ts
 // Throws when the part is offline.
 export function readPose(part: Part): Pose { ... }
 ```
 
-**Good — doc comment carrying what the signature cannot:**
+Narration, then diff history, then a line comment where a doc comment belongs.
+
+## Good
 
 ```ts
-/** Returns undefined when the part has no config; that is expected, not an error. */
+/** Returns undefined when the part has no config. That is expected, not an error. */
 export function partConfig(part: Part): PartConfig | undefined { ... }
-```
 
-**Good — divergence from convention, with the reason (frontend):**
-
-```ts
-// $state.raw: this buffer is replaced wholesale each frame; deep reactivity would tank render perf.
+// $state.raw: this buffer is replaced wholesale each frame, deep reactivity would tank render perf.
 let points = $state.raw(new Float32Array());
-```
 
-**Good — divergence from convention, with the reason (backend):**
-
-```go
-// 5s buffer absorbs clock skew between app servers and the DB primary — see APP-8026.
-startTime = startTime.Add(-5 * time.Second)
-```
-
-**Good — cataloging non-obvious domain logic:**
-
-```ts
 // Viam resource names are case-insensitive but must round-trip with their original
 // casing, so we key by the original and compare lowercased.
 const key = name.toLowerCase();
+
+const activeParts = filterActiveParts(robot.parts);
 ```
 
-**Good — no comment needed, the name carries the meaning:**
+A doc comment carrying what the signature cannot, a divergence with its reason, non-obvious domain logic, and a name that needs no comment at all.
 
-```ts
-const activeParts = filterActiveParts(robot.parts);
+```go
+// 5s buffer absorbs clock skew between app servers and the DB primary. See APP-8026.
+startTime = startTime.Add(-5 * time.Second)
 ```

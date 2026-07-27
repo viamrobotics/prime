@@ -5,18 +5,13 @@ paths:
 
 # Frontend Testing (Vitest)
 
-## Static Analysis
+Real implementations by default. Mock only I/O boundaries: network, file system, time.
 
-Run on every commit:
+Static analysis runs on every commit. TypeScript uses ESLint (`@typescript-eslint`) and Prettier via `pnpm lint`. Svelte adds `svelte-check` and `eslint-plugin-svelte` via `pnpm check` and `pnpm lint`.
 
-| Language   | Tools                                                                                |
-| ---------- | ------------------------------------------------------------------------------------ |
-| TypeScript | ESLint (`@typescript-eslint`), Prettier — run via `pnpm lint`                        |
-| Svelte     | `svelte-check`, ESLint (`eslint-plugin-svelte`) — run via `pnpm check` / `pnpm lint` |
+## Unit Tests
 
-## TypeScript Unit Tests
-
-Test pure functions, business logic, and utilities in isolation. Use real implementations for pure functions — mock only I/O boundaries.
+Pure functions, business logic, and utilities in isolation. Use `it.each` for case tables.
 
 ```typescript
 import { describe, expect, it } from "vitest";
@@ -30,16 +25,15 @@ describe("calculateTotal", () => {
   it.each([
     { input: [1, 2], expected: 3 },
     { input: [-1, 1], expected: 0 },
-    { input: [10], expected: 10 },
   ])("returns $expected for $input", ({ input, expected }) => {
     expect(Subject.calculateTotal(input)).toBe(expected);
   });
 });
 ```
 
-## TypeScript Integration Tests
+## Integration Tests
 
-Integration tests verify multiple modules working together. Use real implementations; mock only external I/O boundaries (network, file system, time).
+Multiple modules working together, with the I/O boundary mocked. Cover the failure path as well as the happy one.
 
 ```typescript
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -89,11 +83,11 @@ vi.advanceTimersByTime(1000);
 vi.useRealTimers();
 ```
 
-Reset mocks between tests with `vi.clearAllMocks()` in `beforeEach`, or configure `clearMocks: true` in `vitest.config.ts`.
+Reset with `vi.clearAllMocks()` in `beforeEach`, or `clearMocks: true` in `vitest.config.ts`.
 
-## Svelte Component Tests (`*.svelte.spec.ts`)
+## Component Tests (`*.svelte.spec.ts`)
 
-Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro) for component testing.
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro).
 
 ```typescript
 import { render, screen } from "@testing-library/svelte";
@@ -120,37 +114,31 @@ it("calls onSubmit when the form is submitted", async () => {
 });
 ```
 
-### Query Priority
+Query priority, highest first:
 
-1. `getByRole` — **preferred**; mirrors how users and assistive technology see the page
-2. `getByLabelText` — form inputs
-3. `getByPlaceholderText` — inputs without a label (avoid if possible)
-4. `getByText` — non-interactive elements
-5. `getByTestId` — **last resort only**; add `data-testid` when no semantic selector exists
+1. `getByRole`, **preferred**, mirrors how users and assistive technology see the page
+2. `getByLabelText` for form inputs
+3. `getByPlaceholderText` for inputs without a label, avoid if possible
+4. `getByText` for non-interactive elements
+5. `getByTestId`, **last resort**, add `data-testid` only when no semantic selector exists
 
 ### Injecting Context
 
-Pass a `context` map when the component under test depends on Svelte context:
-
 ```typescript
-import { render } from "@testing-library/svelte";
-import UserProfile from "../UserProfile.svelte";
-import { USER_CONTEXT_KEY } from "../user-context.svelte";
-
 render(UserProfile, {
   context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
 });
 ```
 
-For complex context trees, create a `__fixtures__/` wrapper component that provides all required contexts and accepts the component under test as a snippet.
+For complex context trees, add a `__fixtures__/` wrapper component that provides every required context and takes the component under test as a snippet.
 
 ### Hook Tests (`.svelte.spec.ts`)
 
-Hooks using runes (`.svelte.ts`) must be tested inside a Svelte component boundary. Create a minimal fixture component in `__fixtures__/` that instantiates the hook and exposes its state for assertions.
+Runes in `.svelte.ts` only work inside a component boundary. Add a minimal `__fixtures__/` component that instantiates the hook and exposes its state for assertions.
 
 ### Browser Mode
 
-Not currently adopted. If you need real browser APIs unavailable in jsdom (`ResizeObserver`, `IntersectionObserver`, `canvas`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file `*.browser.spec.ts`.
+Not adopted. If a test needs real browser APIs that jsdom lacks (`ResizeObserver`, `IntersectionObserver`, `canvas`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file `*.browser.spec.ts`.
 
 ## Verify Your Work
 

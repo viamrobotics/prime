@@ -5,11 +5,11 @@ paths:
 
 # TypeScript Best Practices
 
-Use TypeScript with `strict: true`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/).
+`strict: true`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/).
 
 ## Type Definitions
 
-Prefer `interface` for object shapes (extendable), `type` for unions and computed types:
+`interface` for object shapes, since they extend. `type` for unions and computed types.
 
 ```typescript
 interface ButtonOptions {
@@ -20,9 +20,9 @@ interface ButtonOptions {
 type ConnectionStatus = "connected" | "disconnected" | "connecting";
 ```
 
-## NEVER Use `any` — Use `unknown`
+## NEVER Use `any`
 
-**NEVER** use `any` for untyped external data. Use `unknown` and narrow with type guards:
+**NEVER** type untyped external data as `any`. Use `unknown` and narrow with a type guard:
 
 ```typescript
 // BAD
@@ -37,22 +37,16 @@ if (isPayload(data)) {
 
 ## Doc Comments
 
-`code-comments.md` decides _whether_ to comment; TSDoc decides the shape when you do.
+`code-comments.md` decides _whether_ to comment. TSDoc decides the shape.
 
 - `/** */` on exported API, `//` for inline rationale. Editors surface the former on hover, so it is documentation, not narration.
-- Never restate a type in prose. `@param value - the string to parse` adds nothing over `value: string`; describe the constraint or the failure mode instead.
-- Reach for `@param` / `@returns` / `@example` when the signature leaves something open (units, ranges, thrown errors, a non-obvious return of `undefined`), not by default.
-- `@deprecated` on anything consumers still import, with the replacement named.
-
-## Utility Functions
-
-Write pure functions with JSDoc `@param`, `@returns`, and `@example` for non-obvious utilities:
+- Never restate a type in prose. `@param value - the string to parse` adds nothing over `value: string`. Describe the constraint or the failure mode instead.
+- Reach for `@param`, `@returns`, or `@example` when the signature leaves something open: units, ranges, thrown errors, a non-obvious `undefined` return. Not by default.
+- `@deprecated` on anything consumers still import, naming the replacement.
 
 ```typescript
 /**
- * Safely parses a string as an integer.
- * @param value - String to parse
- * @returns Parsed integer or undefined if invalid
+ * @returns undefined when `value` is not a base-10 integer.
  * @example safeParseInt('42') // 42
  */
 export const safeParseInt = (value: string): number | undefined => {
@@ -64,6 +58,6 @@ export const safeParseInt = (value: string): number | undefined => {
 ## Verify Your Work
 
 ```
-pnpm check    # svelte-check
-pnpm test     # vitest unit tests
+pnpm check
+pnpm test
 ```
