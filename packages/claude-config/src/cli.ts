@@ -13,14 +13,14 @@ Usage:
   claude-config <command> [options]
 
 Commands:
-  init      Sniff the repo and scaffold claude-config.json
+  init      Sniff the repo and scaffold claude-config.json. Exits 3 if one exists
     --force        Overwrite an existing manifest
 
   install   Render the manifest and write every managed file
 
   update    Re-render after a version bump and report the delta
 
-  doctor    Check for drift. Exits 0 clean, 1 on drift, 2 on a bad manifest
+  doctor    Check for drift. Exits 0 clean, 1 on drift
     --fix          Reconcile drift to canonical
     --prune        Also delete orphaned managed files (needs --fix)
     --json         Machine-readable report
@@ -30,7 +30,9 @@ Options:
   --dry-run        Show what would change without writing
 
   -h, --help       Show this help
-  -v, --version    Show the version`;
+  -v, --version    Show the version
+
+Every command exits 2 on an invalid or missing claude-config.json, 1 on error.`;
 
 function main(): number {
   const { values, positionals } = parseArgs({

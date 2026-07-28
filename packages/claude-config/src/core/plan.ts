@@ -4,6 +4,7 @@ import { OUTPUT_STYLES, OUTPUT_STYLE_IDS } from "./output-styles.js";
 import { HOOKS, HOOK_IDS, hookSettingsPatch } from "./hooks.js";
 import { readTemplate } from "./templates.js";
 import { render } from "./render.js";
+import { markdownTable } from "./table.js";
 import { VIAM_SOURCES, sourcesTable } from "./viam-sources.js";
 import type { PlanItem, RenderPlan, ResolvedManifest } from "../types.js";
 
@@ -26,22 +27,10 @@ function enabledRules({ rules }: ResolvedManifest): RuleEntry[] {
 }
 
 function rulesTable(rules: RuleEntry[]): string {
-  const names = rules.map((rule) => `\`${rule.file}\``);
-  const col1 = Math.max("Rule".length, ...names.map((name) => name.length));
-  const col2 = Math.max(
-    "Loads when".length,
-    ...rules.map((rule) => rule.loadsWhen.length),
+  return markdownTable(
+    ["Rule", "Loads when"],
+    rules.map((rule) => [`\`${rule.file}\``, rule.loadsWhen]),
   );
-  const pad = (text: string, width: number): string =>
-    text + " ".repeat(width - text.length);
-  return [
-    `| ${pad("Rule", col1)} | ${pad("Loads when", col2)} |`,
-    `| ${"-".repeat(col1)} | ${"-".repeat(col2)} |`,
-    ...rules.map(
-      (rule, index) =>
-        `| ${pad(names[index], col1)} | ${pad(rule.loadsWhen, col2)} |`,
-    ),
-  ].join("\n");
 }
 
 function ruleItem(file: string, content?: string): PlanItem {

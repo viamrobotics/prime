@@ -6,13 +6,7 @@ import ts from "typescript-eslint";
 
 export default defineConfig(
   {
-    ignores: [
-      "dist/**",
-      ".wireit/**",
-      "templates/**",
-      "test/__snapshots__/**",
-      "test/fixtures/repos/**",
-    ],
+    ignores: ["dist/**", ".wireit/**", "templates/**", "test/__snapshots__/**"],
   },
   js.configs.recommended,
   ts.configs.recommended,

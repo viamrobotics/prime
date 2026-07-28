@@ -97,6 +97,41 @@ describe("install + doctor round-trip", () => {
     expect(gitignore).not.toContain(`${MARKERS.gitignore.start}\n\n`);
   });
 
+  it("flags a CLAUDE.md without markers and inserts the block after the H1", () => {
+    const repo = new TargetRepo(dir, false);
+    applyPlan(repo, planFor(), "0.0.0-test");
+    writeFileSync(join(dir, "CLAUDE.md"), "# my repo\n\nprose\n");
+
+    const report = computeDrift(repo, planFor());
+    expect(report.files.find((f) => f.path === "CLAUDE.md")?.status).toBe(
+      "no-marker",
+    );
+
+    applyPlan(repo, planFor(), "0.0.0-test", {
+      paths: new Set(["CLAUDE.md"]),
+    });
+    const after = readFileSync(join(dir, "CLAUDE.md"), "utf8");
+    expect(after.split("\n")[0]).toBe("# my repo");
+    expect(after).toContain("prose");
+    expect(isClean(computeDrift(repo, planFor()))).toBe(true);
+  });
+
+  it("reports settings.json once though several patches target it", () => {
+    const repo = new TargetRepo(dir, false);
+    const plan = planFor({ hooks: { sessionStart: true } });
+    const patches = plan.items.filter(
+      (item) => item.path === ".claude/settings.json",
+    );
+    expect(patches.length).toBeGreaterThan(1);
+
+    applyPlan(repo, plan, "0.0.0-test");
+    const entries = computeDrift(repo, plan).files.filter(
+      (file) => file.path === ".claude/settings.json",
+    );
+    expect(entries).toHaveLength(1);
+    expect(entries[0].status).toBe("ok");
+  });
+
   it("merges outputStyle into settings.json, preserving other keys", () => {
     const repo = new TargetRepo(dir, false);
     mkdirSync(join(dir, ".claude"), { recursive: true });

@@ -1,3 +1,4 @@
+import { markdownTable } from "./table.js";
 import type { ViamSourceId } from "../types.js";
 
 export interface ViamSourceDef {
@@ -121,10 +122,6 @@ export function detectViamSources(
   ) as Record<ViamSourceId, boolean>;
 }
 
-function pad(text: string, width: number): string {
-  return text + " ".repeat(width - text.length);
-}
-
 function reference(source: ViamSourceDef): string {
   const parts: string[] = [];
   if (source.repo !== null) parts.push(`\`viamrobotics/${source.repo}\``);
@@ -137,18 +134,8 @@ function reference(source: ViamSourceDef): string {
  * because the renderer has no loops.
  */
 export function sourcesTable(enabled: readonly ViamSourceDef[]): string {
-  const refs = enabled.map(reference);
-  const col1 = Math.max("Source".length, ...refs.map((ref) => ref.length));
-  const col2 = Math.max(
-    "Best for".length,
-    ...enabled.map((source) => source.bestFor.length),
+  return markdownTable(
+    ["Source", "Best for"],
+    enabled.map((source) => [reference(source), source.bestFor]),
   );
-  return [
-    `| ${pad("Source", col1)} | ${pad("Best for", col2)} |`,
-    `| ${"-".repeat(col1)} | ${"-".repeat(col2)} |`,
-    ...enabled.map(
-      (source, index) =>
-        `| ${pad(refs[index], col1)} | ${pad(source.bestFor, col2)} |`,
-    ),
-  ].join("\n");
 }

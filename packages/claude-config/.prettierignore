@@ -2,4 +2,3 @@ dist/
 .wireit/
 templates/
 test/__snapshots__/
-test/fixtures/repos/

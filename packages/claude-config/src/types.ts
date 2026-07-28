@@ -82,6 +82,24 @@ export interface ViamContextConfig {
   sources: Record<ViamSourceId, boolean>;
 }
 
+/**
+ * The manifest as `init` writes it: every section spelled out, unlike the on-disk
+ * form `parseManifest` accepts, where any section may be omitted. Typing the
+ * scaffold means a new rule module or hook fails to compile until `init` emits it.
+ */
+export interface ManifestFile {
+  $schema: string;
+  repo: RepoConfig;
+  rules: { modules: Record<RuleModuleName, boolean> };
+  viamContext: ViamContextConfig;
+  mcp: McpConfig;
+  outputStyle: Record<OutputStyleId, OutputStyleState>;
+  hooks: Record<HookId, boolean>;
+  ci: CiConfig;
+  verify: VerifyConfig;
+  workflows: WorkflowsConfig;
+}
+
 /** A manifest with every field present and defaults applied. */
 export interface ResolvedManifest {
   repo: RepoConfig;

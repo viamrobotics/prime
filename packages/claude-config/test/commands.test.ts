@@ -1,5 +1,6 @@
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
@@ -13,7 +14,8 @@ import { init } from "../src/commands/init.js";
 import { install } from "../src/commands/install.js";
 import { update } from "../src/commands/update.js";
 import { LOCKFILE_PATH, MANIFEST_FILENAME } from "../src/core/constants.js";
-import type { Lockfile } from "../src/types.js";
+import { parseManifest } from "../src/core/manifest.js";
+import type { Lockfile, ManifestFile } from "../src/types.js";
 
 let dir: string;
 beforeEach(() => {
@@ -44,20 +46,16 @@ function capture(run: () => number): { code: number; output: string } {
   }
 }
 
-interface Scaffolded {
-  repo: { name: string; packageManager: string; nodeVersion: string };
-  rules: { modules: Record<string, boolean> };
-  mcp: { svelteTransport: string };
-}
-
-function scaffold(): Scaffolded {
+function scaffold(): ManifestFile {
   const { code } = capture(() =>
     init({ cwd: dir, dryRun: false, json: false, force: false }),
   );
   expect(code).toBe(0);
-  return JSON.parse(
-    readFileSync(join(dir, MANIFEST_FILENAME), "utf8"),
-  ) as Scaffolded;
+  const raw = readFileSync(join(dir, MANIFEST_FILENAME), "utf8");
+  // The scaffold has to satisfy the CLI's own validator, or `init` hands back a repo
+  // that `install` rejects on the next command.
+  expect(() => parseManifest(raw)).not.toThrow();
+  return JSON.parse(raw) as ManifestFile;
 }
 
 describe("init", () => {
@@ -122,6 +120,53 @@ describe("init", () => {
     expect(readFileSync(join(dir, MANIFEST_FILENAME), "utf8")).toContain(
       "keep",
     );
+  });
+});
+
+describe("install", () => {
+  const manifest = {
+    repo: { name: "tmp", nodeVersion: "22" },
+    rules: { modules: { svelte: true } },
+  };
+
+  it("plans nothing when a dry run follows a real install", () => {
+    write(MANIFEST_FILENAME, manifest);
+    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+
+    const { code, output } = capture(() =>
+      install({ cwd: dir, dryRun: true, json: false }),
+    );
+    expect(code).toBe(0);
+    expect(output).toContain("0 file(s) planned");
+  });
+
+  it("touches no files on a dry run of a fresh repo", () => {
+    write(MANIFEST_FILENAME, manifest);
+    const { output } = capture(() =>
+      install({ cwd: dir, dryRun: true, json: false }),
+    );
+    expect(output).toContain("would write");
+    expect(existsSync(join(dir, ".claude"))).toBe(false);
+  });
+
+  it("names the file when a managed host file holds invalid JSON", () => {
+    write(MANIFEST_FILENAME, manifest);
+    mkdirSync(join(dir, ".claude"), { recursive: true });
+    write(".claude/settings.json", "{ oops: }");
+    expect(() => install({ cwd: dir, dryRun: false, json: false })).toThrow(
+      /\.claude\/settings\.json is not a valid JSON object/,
+    );
+  });
+
+  it("merges into a blank settings.json rather than calling it corrupt", () => {
+    write(MANIFEST_FILENAME, manifest);
+    mkdirSync(join(dir, ".claude"), { recursive: true });
+    write(".claude/settings.json", "\n");
+    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+    const settings = JSON.parse(
+      readFileSync(join(dir, ".claude/settings.json"), "utf8"),
+    ) as Record<string, unknown>;
+    expect(settings.outputStyle).toBe("Terse");
   });
 });
 

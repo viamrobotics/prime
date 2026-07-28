@@ -98,7 +98,7 @@
       ]
     },
     "test": {
-      "command": "vitest run --passWithNoTests",
+      "command": "vitest run",
       "files": [
         "src/**",
         "test/**",

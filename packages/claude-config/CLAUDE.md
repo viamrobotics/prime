@@ -1,6 +1,8 @@
 # @viamrobotics/claude-config
 
-CLI that installs, updates, and doctors Viam's shared Claude agent tooling across repos. Managed assets: `.claude/` rules and `settings.ci.json`, `.mcp.json`, the opt-out `Terse` output style, the `CLAUDE.md` scaffold, the `# Claude Code` gitignore and prettierignore blocks, the five `claude-*.yml` workflow caller-stubs, the composite `setup` action, and `weekly-dependency-update.yml`.
+CLI that installs, updates, and doctors Viam's shared Claude agent tooling across repos. Managed assets: `.claude/` rules and `settings.ci.json`, `.mcp.json` (plus `.vscode/mcp.json`), the opt-out `Terse` output style, the opt-in `SessionStart` hook, `.nvmrc`, the `CLAUDE.md` rules table, and the `# Claude Code` gitignore and prettierignore blocks.
+
+The manifest's `ci`, `verify`, and `workflows` sections are validated but emit nothing yet. They are the inputs for the five `claude-*.yml` caller-stubs, the composite `setup` action, and `weekly-dependency-update.yml`, which have not landed. `WORKFLOWS_REF` therefore only reaches the lockfile and the `update` delta report.
 
 Those assets are copy-pasted between repos today and drift: rules referencing tech a repo does not use, mismatched MCP config, a workflow pin that is hard to bump everywhere. claude-config makes them **canonical, versioned, and rendered per-repo from a manifest**, so a hand-edit to a managed file becomes CI-visible drift.
 

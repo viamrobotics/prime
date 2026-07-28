@@ -11,6 +11,12 @@ export function parseJsonObject(text: string): Record<string, unknown> {
   return value;
 }
 
+/** A host file we only manage a few keys of. Blank counts as `{}`, so a `touch`ed
+ * settings.json is merged into rather than reported as corrupt. */
+export function parseHostJson(text: string): Record<string, unknown> {
+  return text.trim() === "" ? {} : parseJsonObject(text);
+}
+
 /** JSON with object keys sorted, so structural equality ignores a repo's key order. */
 function stableJson(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;

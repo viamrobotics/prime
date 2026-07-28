@@ -1,7 +1,12 @@
 import { SHARED_HOST_FILES } from "./constants.js";
 import { unifiedDiff } from "./diff.js";
 import { TargetRepo } from "./fs-target.js";
-import { deepMerge, deepRemove, parseJsonObject } from "./json-merge.js";
+import {
+  deepMerge,
+  deepRemove,
+  parseHostJson,
+  parseJsonObject,
+} from "./json-merge.js";
 import { readLockfile } from "./lockfile.js";
 import { extractBody } from "./regions.js";
 import type {
@@ -34,30 +39,44 @@ function regionDrift(repo: TargetRepo, item: PlanItem): FileDrift {
   return drift(item, "modified", unifiedDiff(body, item.content));
 }
 
-function jsonDrift(repo: TargetRepo, item: PlanItem): FileDrift {
-  const patch = parseJsonObject(item.content);
-  const mode = item.jsonMode ?? "merge";
-  const onDisk = repo.read(item.path);
+function isMerge(item: PlanItem): boolean {
+  return (item.jsonMode ?? "merge") === "merge";
+}
+
+/**
+ * One verdict for every patch aimed at the same host file, folded in plan order.
+ * Judging each patch alone would report the path once per patch and diff each one
+ * against a document that ignores the others.
+ */
+function jsonDrift(repo: TargetRepo, items: PlanItem[]): FileDrift {
+  const head: PlanItem = {
+    ...items[0],
+    module: [...new Set(items.map((item) => item.module))].join(", "),
+  };
+  const onDisk = repo.read(head.path);
   if (onDisk === null) {
-    const needsFile = mode === "merge" && Object.keys(patch).length > 0;
-    return drift(item, needsFile ? "missing" : "ok");
+    const needsFile = items.some(
+      (item) =>
+        isMerge(item) && Object.keys(parseJsonObject(item.content)).length > 0,
+    );
+    return drift(head, needsFile ? "missing" : "ok");
   }
 
-  let current: Record<string, unknown>;
+  let next: Record<string, unknown>;
   try {
-    current = parseJsonObject(onDisk);
+    next = parseHostJson(onDisk);
   } catch {
-    return drift(item, "modified", "  (invalid JSON)");
+    return drift(head, "modified", "  (invalid JSON)");
   }
 
-  const before = JSON.stringify(current);
-  const next =
-    mode === "merge"
-      ? deepMerge(structuredClone(current), patch)
-      : deepRemove(structuredClone(current), patch);
-  if (JSON.stringify(next) === before) return drift(item, "ok");
+  const before = JSON.stringify(next);
+  for (const item of items) {
+    const patch = parseJsonObject(item.content);
+    next = isMerge(item) ? deepMerge(next, patch) : deepRemove(next, patch);
+  }
+  if (JSON.stringify(next) === before) return drift(head, "ok");
   return drift(
-    item,
+    head,
     "modified",
     unifiedDiff(onDisk, `${JSON.stringify(next, null, 2)}\n`),
   );
@@ -68,12 +87,27 @@ export function computeDrift(
   { items }: RenderPlan,
 ): DriftReport {
   const managed = new Set<string>();
-  const files: FileDrift[] = items.map((item) => {
+  const jsonGroups = new Map<string, PlanItem[]>();
+  for (const item of items) {
+    if (item.kind !== "json") continue;
+    const group = jsonGroups.get(item.path);
+    if (group) group.push(item);
+    else jsonGroups.set(item.path, [item]);
+  }
+
+  const files: FileDrift[] = [];
+  for (const item of items) {
     managed.add(item.path);
-    if (item.kind === "full") return fullFileDrift(repo, item);
-    if (item.kind === "json") return jsonDrift(repo, item);
-    return regionDrift(repo, item);
-  });
+    if (item.kind === "full") {
+      files.push(fullFileDrift(repo, item));
+    } else if (item.kind === "region") {
+      files.push(regionDrift(repo, item));
+    } else {
+      const group = jsonGroups.get(item.path);
+      // Report the whole group once, at its first item's position.
+      if (group && group[0] === item) files.push(jsonDrift(repo, group));
+    }
+  }
 
   const lock = readLockfile(repo.cwd);
   if (lock) {

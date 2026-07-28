@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { MANIFEST_FILENAME } from "./constants.js";
 import { HOOK_IDS } from "./hooks.js";
+import { isPlainObject } from "./json-merge.js";
 import { RULE_MODULE_NAMES } from "./modules.js";
 import { OUTPUT_STYLES, OUTPUT_STYLE_IDS } from "./output-styles.js";
 import { VIAM_SOURCE_IDS } from "./viam-sources.js";
@@ -26,6 +27,52 @@ const TRANSPORTS: readonly SvelteTransport[] = ["stdio", "http", "none"];
 
 /** GitHub team handle, as the workflow stubs will paste it into a YAML prompt. */
 const TEAM_MENTION = /^@[\w-]+\/[\w-]+$/;
+
+/**
+ * Every key each manifest section accepts. Drives unknown-key rejection here and is
+ * asserted against `schema/manifest.schema.json` in test/schema.test.ts, so the
+ * validator and the schema cannot drift apart.
+ */
+export const MANIFEST_KEYS = {
+  "": [
+    "$schema",
+    "repo",
+    "rules",
+    "viamContext",
+    "mcp",
+    "outputStyle",
+    "hooks",
+    "ci",
+    "verify",
+    "workflows",
+  ],
+  repo: [
+    "name",
+    "monorepo",
+    "packageManager",
+    "nodeVersion",
+    "packageScope",
+    "workspaceRootPackage",
+    "wireit",
+  ],
+  rules: ["modules"],
+  "rules.modules": RULE_MODULE_NAMES,
+  viamContext: ["sources"],
+  "viamContext.sources": VIAM_SOURCE_IDS,
+  mcp: ["svelteTransport", "vscode"],
+  outputStyle: OUTPUT_STYLE_IDS,
+  hooks: HOOK_IDS,
+  ci: ["setupAction", "weeklyDependencyUpdate"],
+  verify: ["lint", "check", "test", "build"],
+  workflows: ["teamMention", "goTools", "secrets", "overrides"],
+  "workflows.secrets": [
+    "slackAlertWebhook",
+    "gitAccessToken",
+    "githubApp",
+    "jira",
+  ],
+  "workflows.overrides.*": ["maxTurns"],
+} as const satisfies Record<string, readonly string[]>;
 
 export class ManifestError extends Error {
   constructor(readonly problems: string[]) {
@@ -63,10 +110,6 @@ export function parseManifest(raw: string): ResolvedManifest {
   const resolved = resolve(data, problems);
   if (problems.length > 0) throw new ManifestError(problems);
   return resolved;
-}
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 interface StrOpts {
@@ -124,70 +167,184 @@ function oneOf<T extends string>(
   return value as T;
 }
 
-function resolve(data: unknown, problems: string[]): ResolvedManifest {
-  if (!isObject(data)) {
-    problems.push("root must be an object");
-    data = {};
+/** A nested object, defaulting to empty. Flags a present-but-wrong-typed section. */
+function section(
+  value: unknown,
+  path: string,
+  problems: string[],
+): Record<string, unknown> {
+  if (value === undefined) return {};
+  if (!isPlainObject(value)) {
+    problems.push(`${path} must be an object`);
+    return {};
   }
-  const root = data as Record<string, unknown>;
+  return value;
+}
 
-  if (root.repo !== undefined && !isObject(root.repo)) {
-    problems.push("repo must be an object");
+/** Mirrors the schema's `additionalProperties: false`, so a typo is an error rather
+ * than a silently applied default. */
+function rejectUnknown(
+  raw: Record<string, unknown>,
+  path: keyof typeof MANIFEST_KEYS,
+  problems: string[],
+  noun = "field",
+): void {
+  const allowed: readonly string[] = MANIFEST_KEYS[path];
+  const prefix = path === "" ? "" : `${path}.`;
+  for (const key of Object.keys(raw)) {
+    if (!allowed.includes(key)) {
+      problems.push(`${prefix}${key} is not a known ${noun}`);
+    }
   }
-  const repoRaw = isObject(root.repo) ? root.repo : {};
+}
+
+function resolveRepo(root: Record<string, unknown>, problems: string[]) {
   if (root.repo === undefined) problems.push("repo is required");
+  const raw = section(root.repo, "repo", problems);
+  rejectUnknown(raw, "repo", problems);
 
-  const name = str(repoRaw.name, "repo.name", problems, { required: true });
-  const nodeVersion = str(repoRaw.nodeVersion, "repo.nodeVersion", problems, {
-    required: true,
-    pattern: /^\d+$/,
-  });
+  const name = str(raw.name, "repo.name", problems, { required: true });
   const packageManager = oneOf(
-    repoRaw.packageManager,
+    raw.packageManager,
     PACKAGE_MANAGERS,
     "repo.packageManager",
     problems,
     "pnpm",
   );
-  const packageScope = str(
-    repoRaw.packageScope,
-    "repo.packageScope",
-    problems,
-    {
-      fallback: "@viamrobotics",
-    },
-  );
-  const repo = {
+  const packageScope = str(raw.packageScope, "repo.packageScope", problems, {
+    fallback: "@viamrobotics",
+  });
+  return {
     name,
-    monorepo: bool(repoRaw.monorepo, "repo.monorepo", problems, false),
+    monorepo: bool(raw.monorepo, "repo.monorepo", problems, false),
     packageManager,
-    nodeVersion,
+    nodeVersion: str(raw.nodeVersion, "repo.nodeVersion", problems, {
+      required: true,
+      pattern: /^\d+$/,
+    }),
     packageScope,
     workspaceRootPackage: str(
-      repoRaw.workspaceRootPackage,
+      raw.workspaceRootPackage,
       "repo.workspaceRootPackage",
       problems,
       { fallback: name ? `${packageScope}/${name}` : "" },
     ),
-    wireit: bool(repoRaw.wireit, "repo.wireit", problems, false),
+    wireit: bool(raw.wireit, "repo.wireit", problems, false),
   };
+}
 
-  const rulesRaw = isObject(root.rules) ? root.rules : {};
-  if (root.rules !== undefined && !isObject(root.rules)) {
-    problems.push("rules must be an object");
-  }
+function resolveOutputStyle(
+  root: Record<string, unknown>,
+  problems: string[],
+): Record<OutputStyleId, OutputStyleState> {
+  const raw = section(root.outputStyle, "outputStyle", problems);
+  rejectUnknown(raw, "outputStyle", problems, "output style");
 
-  const modulesRaw = isObject(rulesRaw.modules) ? rulesRaw.modules : {};
-  if (rulesRaw.modules !== undefined && !isObject(rulesRaw.modules)) {
-    problems.push("rules.modules must be an object");
-  }
-
-  for (const key of Object.keys(modulesRaw)) {
-    if (!RULE_MODULE_NAMES.includes(key as RuleModuleName)) {
-      problems.push(`rules.modules.${key} is not a known rule module`);
+  const resolved = {} as Record<OutputStyleId, OutputStyleState>;
+  let defaults = 0;
+  for (const id of OUTPUT_STYLE_IDS) {
+    const value = raw[id];
+    let state: OutputStyleState;
+    if (value === undefined) {
+      state = OUTPUT_STYLES[id].defaultState;
+    } else if (value === true || value === false || value === "default") {
+      state = value;
+    } else {
+      problems.push(`outputStyle.${id} must be true, false, or "default"`);
+      state = false;
     }
+    if (state === "default") defaults++;
+    resolved[id] = state;
   }
+  if (defaults > 1) problems.push('only one outputStyle may be "default"');
+  return resolved;
+}
 
+function resolveOverrides(
+  raw: Record<string, unknown>,
+  problems: string[],
+): Record<string, { maxTurns?: number }> {
+  const overrides: Record<string, { maxTurns?: number }> = {};
+  for (const [stub, value] of Object.entries(raw)) {
+    const path = `workflows.overrides.${stub}`;
+    if (!isPlainObject(value)) {
+      problems.push(`${path} must be an object`);
+      continue;
+    }
+    rejectUnknown(value, "workflows.overrides.*", problems);
+    const entry: { maxTurns?: number } = {};
+    if (value.maxTurns !== undefined) {
+      if (
+        typeof value.maxTurns !== "number" ||
+        !Number.isInteger(value.maxTurns) ||
+        value.maxTurns <= 0
+      ) {
+        problems.push(`${path}.maxTurns must be a positive integer`);
+      } else {
+        entry.maxTurns = value.maxTurns;
+      }
+    }
+    overrides[stub] = entry;
+  }
+  return overrides;
+}
+
+function resolveWorkflows(root: Record<string, unknown>, problems: string[]) {
+  const raw = section(root.workflows, "workflows", problems);
+  rejectUnknown(raw, "workflows", problems);
+  const secrets = section(raw.secrets, "workflows.secrets", problems);
+  rejectUnknown(secrets, "workflows.secrets", problems);
+
+  return {
+    teamMention:
+      raw.teamMention === undefined || raw.teamMention === null
+        ? null
+        : str(raw.teamMention, "workflows.teamMention", problems, {
+            pattern: TEAM_MENTION,
+          }),
+    goTools: bool(raw.goTools, "workflows.goTools", problems, false),
+    secrets: {
+      slackAlertWebhook: bool(
+        secrets.slackAlertWebhook,
+        "workflows.secrets.slackAlertWebhook",
+        problems,
+        false,
+      ),
+      gitAccessToken: bool(
+        secrets.gitAccessToken,
+        "workflows.secrets.gitAccessToken",
+        problems,
+        false,
+      ),
+      githubApp: bool(
+        secrets.githubApp,
+        "workflows.secrets.githubApp",
+        problems,
+        false,
+      ),
+      jira: bool(secrets.jira, "workflows.secrets.jira", problems, false),
+    },
+    overrides: resolveOverrides(
+      section(raw.overrides, "workflows.overrides", problems),
+      problems,
+    ),
+  };
+}
+
+function resolve(data: unknown, problems: string[]): ResolvedManifest {
+  if (!isPlainObject(data)) {
+    problems.push("root must be an object");
+    data = {};
+  }
+  const root = data as Record<string, unknown>;
+  rejectUnknown(root, "", problems);
+
+  const repo = resolveRepo(root, problems);
+
+  const rulesRaw = section(root.rules, "rules", problems);
+  rejectUnknown(rulesRaw, "rules", problems);
+  const modulesRaw = section(rulesRaw.modules, "rules.modules", problems);
+  rejectUnknown(modulesRaw, "rules.modules", problems, "rule module");
   const rules = Object.fromEntries(
     RULE_MODULE_NAMES.map((mod) => [
       mod,
@@ -195,19 +352,10 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     ]),
   ) as Record<RuleModuleName, boolean>;
 
-  const viamRaw = isObject(root.viamContext) ? root.viamContext : {};
-  if (root.viamContext !== undefined && !isObject(root.viamContext)) {
-    problems.push("viamContext must be an object");
-  }
-  const sourcesRaw = isObject(viamRaw.sources) ? viamRaw.sources : {};
-  if (viamRaw.sources !== undefined && !isObject(viamRaw.sources)) {
-    problems.push("viamContext.sources must be an object");
-  }
-  for (const key of Object.keys(sourcesRaw)) {
-    if (!VIAM_SOURCE_IDS.includes(key as ViamSourceId)) {
-      problems.push(`viamContext.sources.${key} is not a known Viam source`);
-    }
-  }
+  const viamRaw = section(root.viamContext, "viamContext", problems);
+  rejectUnknown(viamRaw, "viamContext", problems);
+  const sourcesRaw = section(viamRaw.sources, "viamContext.sources", problems);
+  rejectUnknown(sourcesRaw, "viamContext.sources", problems, "Viam source");
   const viamContext = {
     sources: Object.fromEntries(
       VIAM_SOURCE_IDS.map((id) => [
@@ -217,11 +365,8 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     ) as Record<ViamSourceId, boolean>,
   };
 
-  const mcpRaw = isObject(root.mcp) ? root.mcp : {};
-  if (root.mcp !== undefined && !isObject(root.mcp)) {
-    problems.push("mcp must be an object");
-  }
-
+  const mcpRaw = section(root.mcp, "mcp", problems);
+  rejectUnknown(mcpRaw, "mcp", problems);
   const mcp = {
     svelteTransport: oneOf(
       mcpRaw.svelteTransport,
@@ -233,42 +378,8 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     vscode: bool(mcpRaw.vscode, "mcp.vscode", problems, false),
   };
 
-  const osRaw = isObject(root.outputStyle) ? root.outputStyle : {};
-  if (root.outputStyle !== undefined && !isObject(root.outputStyle)) {
-    problems.push("outputStyle must be an object");
-  }
-  for (const key of Object.keys(osRaw)) {
-    if (!OUTPUT_STYLE_IDS.includes(key as OutputStyleId)) {
-      problems.push(`outputStyle.${key} is not a known output style`);
-    }
-  }
-  const outputStyle = {} as Record<OutputStyleId, OutputStyleState>;
-  let defaults = 0;
-  for (const id of OUTPUT_STYLE_IDS) {
-    const raw = osRaw[id];
-    let state: OutputStyleState;
-    if (raw === undefined) {
-      state = OUTPUT_STYLES[id].defaultState;
-    } else if (raw === true || raw === false || raw === "default") {
-      state = raw;
-    } else {
-      problems.push(`outputStyle.${id} must be true, false, or "default"`);
-      state = false;
-    }
-    if (state === "default") defaults++;
-    outputStyle[id] = state;
-  }
-  if (defaults > 1) problems.push('only one outputStyle may be "default"');
-
-  const hooksRaw = isObject(root.hooks) ? root.hooks : {};
-  if (root.hooks !== undefined && !isObject(root.hooks)) {
-    problems.push("hooks must be an object");
-  }
-  for (const key of Object.keys(hooksRaw)) {
-    if (!HOOK_IDS.includes(key as HookId)) {
-      problems.push(`hooks.${key} is not a known hook`);
-    }
-  }
+  const hooksRaw = section(root.hooks, "hooks", problems);
+  rejectUnknown(hooksRaw, "hooks", problems, "hook");
   const hooks = Object.fromEntries(
     HOOK_IDS.map((id) => [
       id,
@@ -276,10 +387,8 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     ]),
   ) as Record<HookId, boolean>;
 
-  const ciRaw = isObject(root.ci) ? root.ci : {};
-  if (root.ci !== undefined && !isObject(root.ci)) {
-    problems.push("ci must be an object");
-  }
+  const ciRaw = section(root.ci, "ci", problems);
+  rejectUnknown(ciRaw, "ci", problems);
   const ci = {
     setupAction: bool(ciRaw.setupAction, "ci.setupAction", problems, false),
     weeklyDependencyUpdate: bool(
@@ -290,86 +399,21 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     ),
   };
 
-  const verifyRaw = isObject(root.verify) ? root.verify : {};
-  if (root.verify !== undefined && !isObject(root.verify)) {
-    problems.push("verify must be an object");
-  }
+  const verifyRaw = section(root.verify, "verify", problems);
+  rejectUnknown(verifyRaw, "verify", problems);
   const verify = {
     lint: str(verifyRaw.lint, "verify.lint", problems, {
-      fallback: `${packageManager} lint`,
+      fallback: `${repo.packageManager} lint`,
     }),
     check: str(verifyRaw.check, "verify.check", problems, {
-      fallback: `${packageManager} check`,
+      fallback: `${repo.packageManager} check`,
     }),
     test: str(verifyRaw.test, "verify.test", problems, {
-      fallback: `${packageManager} test`,
+      fallback: `${repo.packageManager} test`,
     }),
     build: str(verifyRaw.build, "verify.build", problems, {
-      fallback: `${packageManager} build`,
+      fallback: `${repo.packageManager} build`,
     }),
-  };
-
-  const wfRaw = isObject(root.workflows) ? root.workflows : {};
-  if (root.workflows !== undefined && !isObject(root.workflows)) {
-    problems.push("workflows must be an object");
-  }
-  const secretsRaw = isObject(wfRaw.secrets) ? wfRaw.secrets : {};
-  if (wfRaw.overrides !== undefined && !isObject(wfRaw.overrides)) {
-    problems.push("workflows.overrides must be an object");
-  }
-  const overridesRaw = isObject(wfRaw.overrides) ? wfRaw.overrides : {};
-  const overrides: Record<string, { maxTurns?: number }> = {};
-  for (const [stub, value] of Object.entries(overridesRaw)) {
-    if (!isObject(value)) {
-      problems.push(`workflows.overrides.${stub} must be an object`);
-      continue;
-    }
-    const entry: { maxTurns?: number } = {};
-    if (value.maxTurns !== undefined) {
-      if (
-        typeof value.maxTurns !== "number" ||
-        !Number.isInteger(value.maxTurns) ||
-        value.maxTurns <= 0
-      ) {
-        problems.push(
-          `workflows.overrides.${stub}.maxTurns must be a positive integer`,
-        );
-      } else {
-        entry.maxTurns = value.maxTurns;
-      }
-    }
-    overrides[stub] = entry;
-  }
-  const workflows = {
-    teamMention:
-      wfRaw.teamMention === undefined || wfRaw.teamMention === null
-        ? null
-        : str(wfRaw.teamMention, "workflows.teamMention", problems, {
-            pattern: TEAM_MENTION,
-          }),
-    goTools: bool(wfRaw.goTools, "workflows.goTools", problems, false),
-    secrets: {
-      slackAlertWebhook: bool(
-        secretsRaw.slackAlertWebhook,
-        "workflows.secrets.slackAlertWebhook",
-        problems,
-        false,
-      ),
-      gitAccessToken: bool(
-        secretsRaw.gitAccessToken,
-        "workflows.secrets.gitAccessToken",
-        problems,
-        false,
-      ),
-      githubApp: bool(
-        secretsRaw.githubApp,
-        "workflows.secrets.githubApp",
-        problems,
-        false,
-      ),
-      jira: bool(secretsRaw.jira, "workflows.secrets.jira", problems, false),
-    },
-    overrides,
   };
 
   return {
@@ -377,10 +421,10 @@ function resolve(data: unknown, problems: string[]): ResolvedManifest {
     rules,
     viamContext,
     mcp,
-    outputStyle,
+    outputStyle: resolveOutputStyle(root, problems),
     hooks,
     ci,
     verify,
-    workflows,
+    workflows: resolveWorkflows(root, problems),
   };
 }

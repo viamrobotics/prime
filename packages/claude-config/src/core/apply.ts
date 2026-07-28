@@ -1,12 +1,21 @@
 import { buildLockfile, writeLockfile } from "./lockfile.js";
-import { deepMerge, deepRemove, parseJsonObject } from "./json-merge.js";
+import {
+  deepMerge,
+  deepRemove,
+  parseHostJson,
+  parseJsonObject,
+} from "./json-merge.js";
 import { upsertRegion } from "./regions.js";
 import { TargetRepo } from "./fs-target.js";
 import type { PlanItem, RenderPlan } from "../types.js";
 
 /** Deep-merges or deep-removes a JSON fragment (creating the file only when merging
  * non-empty content). Compares semantically, so a repo's own formatting is left alone
- * when nothing actually changes. Returns false when nothing changed. */
+ * when nothing actually changes. Returns false when nothing changed.
+ *
+ * @throws when the host file exists but is not a JSON object. `doctor` reports that
+ * as drift, so `--fix` must fail with the path rather than a bare parser error.
+ */
 function applyJson(
   repo: TargetRepo,
   { content, jsonMode, path }: PlanItem,
@@ -21,7 +30,14 @@ function applyJson(
     return false;
   }
 
-  const base = existing ? parseJsonObject(existing) : {};
+  let base: Record<string, unknown>;
+  try {
+    base = existing === null ? {} : parseHostJson(existing);
+  } catch {
+    throw new Error(
+      `${path} is not a valid JSON object; fix or delete it, then re-run`,
+    );
+  }
   const before = JSON.stringify(base);
   const next =
     mode === "merge" ? deepMerge(base, patch) : deepRemove(base, patch);
@@ -64,9 +80,7 @@ export function applyPlan(
     if (wrote) written.push(item.path);
   }
 
-  if (!repo.dryRun) {
-    writeLockfile(repo.cwd, buildLockfile(plan, templateVersion));
-  }
+  writeLockfile(repo, buildLockfile(plan, templateVersion));
 
   return { written: [...new Set(written)] };
 }

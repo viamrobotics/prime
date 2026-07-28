@@ -30,10 +30,11 @@ export class TargetRepo {
     return existsSync(this.path(relativePath));
   }
 
-  /** Returns false when the file already holds this content, so mtimes stay put. */
+  /** Returns false when the file already holds this content, so mtimes stay put and
+   * `--dry-run` reports only the files a real run would touch. */
   write(relativePath: string, content: string): boolean {
-    if (this.dryRun) return true;
     if (this.read(relativePath) === content) return false;
+    if (this.dryRun) return true;
     const absolute = this.path(relativePath);
     mkdirSync(dirname(absolute), { recursive: true });
     writeFileSync(absolute, content);

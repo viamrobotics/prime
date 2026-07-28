@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { LOCKFILE_PATH, WORKFLOWS_REF } from "./constants.js";
+import { TargetRepo } from "./fs-target.js";
 import { isPlainObject } from "./json-merge.js";
 import type { Lockfile, RenderPlan } from "../types.js";
 
@@ -50,8 +51,6 @@ export function buildLockfile(
   return { templateVersion, workflowsRef: WORKFLOWS_REF, modules, files };
 }
 
-export function writeLockfile(cwd: string, lock: Lockfile): void {
-  const absolute = lockfilePath(cwd);
-  mkdirSync(dirname(absolute), { recursive: true });
-  writeFileSync(absolute, `${JSON.stringify(lock, null, 2)}\n`);
+export function writeLockfile(repo: TargetRepo, lock: Lockfile): void {
+  repo.write(LOCKFILE_PATH, `${JSON.stringify(lock, null, 2)}\n`);
 }

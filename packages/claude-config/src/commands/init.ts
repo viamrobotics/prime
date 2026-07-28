@@ -1,8 +1,10 @@
-import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
-import { MANIFEST_FILENAME } from "../core/constants.js";
+import { MANIFEST_FILENAME, SCHEMA_FILENAME } from "../core/constants.js";
+import { TargetRepo } from "../core/fs-target.js";
+import { isPlainObject } from "../core/json-merge.js";
 import { detectViamSources } from "../core/viam-sources.js";
-import type { PackageManager } from "../types.js";
+import type { ManifestFile, PackageManager } from "../types.js";
 import type { InitContext } from "./context.js";
 import * as log from "./log.js";
 
@@ -14,10 +16,6 @@ interface PkgJson {
   peerDependencies?: Record<string, string>;
   workspaces?: string[];
   wireit?: unknown;
-}
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function readText(path: string): string | null {
@@ -90,7 +88,7 @@ function collectDependencyEvidence(cwd: string) {
       }
       if (entry.name === "package.json") {
         const parsed = readJson(path);
-        const pkg = (isObject(parsed) ? parsed : {}) as PkgJson;
+        const pkg = (isPlainObject(parsed) ? parsed : {}) as PkgJson;
         for (const key of Object.keys({
           ...pkg.dependencies,
           ...pkg.devDependencies,
@@ -124,18 +122,18 @@ function sniffSvelteTransport(
   hasSvelte: boolean,
 ): "stdio" | "http" | "none" {
   const mcpJson = readJson(join(cwd, ".mcp.json"));
-  const servers = isObject(mcpJson) ? mcpJson.mcpServers : undefined;
-  const svelteServer = isObject(servers) ? servers.svelte : undefined;
+  const servers = isPlainObject(mcpJson) ? mcpJson.mcpServers : undefined;
+  const svelteServer = isPlainObject(servers) ? servers.svelte : undefined;
   if (svelteServer !== undefined) {
-    const type = isObject(svelteServer) ? svelteServer.type : undefined;
+    const type = isPlainObject(svelteServer) ? svelteServer.type : undefined;
     return type === "http" ? "http" : "stdio";
   }
   return hasSvelte ? "stdio" : "none";
 }
 
-function sniff(cwd: string) {
+function sniff(cwd: string): ManifestFile {
   const pkgRaw = readJson(join(cwd, "package.json"));
-  const pkg = (isObject(pkgRaw) ? pkgRaw : {}) as PkgJson;
+  const pkg = (isPlainObject(pkgRaw) ? pkgRaw : {}) as PkgJson;
   const deps = {
     ...pkg.dependencies,
     ...pkg.devDependencies,
@@ -168,7 +166,7 @@ function sniff(cwd: string) {
   const usesViam = Object.values(viamSources).some(Boolean);
 
   return {
-    $schema: `./node_modules/@viamrobotics/claude-config/schema/${MANIFEST_FILENAME.replace(".json", ".schema.json")}`,
+    $schema: `./node_modules/@viamrobotics/claude-config/schema/${SCHEMA_FILENAME}`,
     repo: {
       name,
       monorepo,
@@ -224,8 +222,8 @@ function sniff(cwd: string) {
 }
 
 export function init({ cwd, dryRun, force }: InitContext): number {
-  const target = join(cwd, MANIFEST_FILENAME);
-  if (existsSync(target) && !force) {
+  const repo = new TargetRepo(cwd, dryRun);
+  if (repo.exists(MANIFEST_FILENAME) && !force) {
     log.error(
       `${MANIFEST_FILENAME} already exists — pass --force to overwrite.`,
     );
@@ -239,7 +237,7 @@ export function init({ cwd, dryRun, force }: InitContext): number {
     return 0;
   }
 
-  writeFileSync(target, content);
+  repo.write(MANIFEST_FILENAME, content);
   log.message(
     `Wrote ${MANIFEST_FILENAME}. Review it (especially nodeVersion, secrets, teamMention), then run "claude-config install".`,
   );
