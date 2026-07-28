@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { MANIFEST_KEYS, parseManifest } from "../src/core/manifest.js";
+import { buildJsonSchema, parseManifest } from "../src/core/manifest.js";
 
 function read(relativePath: string): string {
   return readFileSync(
@@ -10,52 +10,29 @@ function read(relativePath: string): string {
   );
 }
 
-const schema = JSON.parse(read("../schema/manifest.schema.json")) as Record<
-  string,
-  unknown
->;
-
-/** Walks `properties`/`additionalProperties` to the section a MANIFEST_KEYS path names. */
-function schemaSection(path: string): Record<string, unknown> {
-  let node = schema;
-  if (path === "") return node;
-  for (const segment of path.split(".")) {
-    const properties = node.properties as
-      | Record<string, Record<string, unknown>>
-      | undefined;
-    node =
-      segment === "*"
-        ? (node.additionalProperties as Record<string, unknown>)
-        : properties![segment];
-    expect(node, `schema is missing ${path}`).toBeDefined();
-  }
-  return node;
-}
-
-function schemaKeys(path: string): string[] {
-  const properties = schemaSection(path).properties as Record<string, unknown>;
-  return Object.keys(properties ?? {});
-}
-
-describe("schema matches the validator", () => {
-  const paths = Object.keys(MANIFEST_KEYS);
-
-  it.each(paths)("accepts the same keys as MANIFEST_KEYS at %s", (path) => {
-    const allowed: readonly string[] =
-      MANIFEST_KEYS[path as keyof typeof MANIFEST_KEYS];
-    expect(new Set(schemaKeys(path))).toEqual(new Set(allowed));
+describe("published JSON Schema", () => {
+  it("is up to date with the zod schema", () => {
+    const committed: unknown = JSON.parse(
+      read("../schema/manifest.schema.json"),
+    );
+    expect(
+      committed,
+      'stale — run "pnpm --filter @viamrobotics/claude-config run schema"',
+    ).toEqual(buildJsonSchema());
   });
 
-  it.each(paths)("closes %s to unknown keys", (path) => {
-    expect(schemaSection(path).additionalProperties).toBe(false);
+  it("closes the root to unknown keys", () => {
+    expect(buildJsonSchema().additionalProperties).toBe(false);
   });
 
   it("leaves workflows.overrides open, since stub names are arbitrary", () => {
-    const overrides = schemaSection("workflows").properties as Record<
+    const properties = buildJsonSchema().properties as Record<
       string,
-      Record<string, unknown>
+      { properties: Record<string, Record<string, unknown>> }
     >;
-    expect(overrides.overrides.additionalProperties).not.toBe(false);
+    expect(
+      properties.workflows.properties.overrides.additionalProperties,
+    ).not.toBe(false);
   });
 });
 

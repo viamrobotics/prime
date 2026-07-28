@@ -728,6 +728,8 @@ words around them.
 
 import { execFileSync } from "node:child_process";
 
+const AREA = /^(packages|apps)\\/([^/]+)\\//;
+
 // Returns RAW output — \`git status --porcelain\` lines are position-sensitive
 // (2 status chars + space); a global trim would eat the first line's prefix.
 function git(args) {
@@ -763,16 +765,14 @@ try {
       .filter(Boolean)
       .map((l) => l.slice(3).trim());
     if (changed.length > 0) {
-      const byArea = new Map();
-      for (const path of changed) {
-        const match = /^(packages|apps)\\/([^/]+)\\//.exec(path);
-        if (match) {
-          const area = \`\${match[1]}/\${match[2]}\`;
-          byArea.set(area, (byArea.get(area) ?? 0) + 1);
-        }
-      }
+      const byArea = Map.groupBy(
+        changed.filter((path) => AREA.test(path)),
+        (path) => AREA.exec(path).slice(1, 3).join("/"),
+      );
       if (changed.length > 25) {
-        const summary = [...byArea.entries()].map(([n, c]) => \`\${n} (\${c})\`).join(", ");
+        const summary = [...byArea.entries()]
+          .map(([n, paths]) => \`\${n} (\${paths.length})\`)
+          .join(", ");
         lines.push(\`[repo] uncommitted: \${changed.length} files\${summary ? \` — \${summary}\` : ""}\`);
       } else {
         const shown = changed.slice(0, 10).join(", ");
@@ -3347,6 +3347,8 @@ words around them.
 
 import { execFileSync } from "node:child_process";
 
+const AREA = /^(packages|apps)\\/([^/]+)\\//;
+
 // Returns RAW output — \`git status --porcelain\` lines are position-sensitive
 // (2 status chars + space); a global trim would eat the first line's prefix.
 function git(args) {
@@ -3382,16 +3384,14 @@ try {
       .filter(Boolean)
       .map((l) => l.slice(3).trim());
     if (changed.length > 0) {
-      const byArea = new Map();
-      for (const path of changed) {
-        const match = /^(packages|apps)\\/([^/]+)\\//.exec(path);
-        if (match) {
-          const area = \`\${match[1]}/\${match[2]}\`;
-          byArea.set(area, (byArea.get(area) ?? 0) + 1);
-        }
-      }
+      const byArea = Map.groupBy(
+        changed.filter((path) => AREA.test(path)),
+        (path) => AREA.exec(path).slice(1, 3).join("/"),
+      );
       if (changed.length > 25) {
-        const summary = [...byArea.entries()].map(([n, c]) => \`\${n} (\${c})\`).join(", ");
+        const summary = [...byArea.entries()]
+          .map(([n, paths]) => \`\${n} (\${paths.length})\`)
+          .join(", ");
         lines.push(\`[repo] uncommitted: \${changed.length} files\${summary ? \` — \${summary}\` : ""}\`);
       } else {
         const shown = changed.slice(0, 10).join(", ");

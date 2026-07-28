@@ -25,12 +25,13 @@
     "schema"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "build": "wireit",
     "package": "wireit",
     "prepack": "wireit",
+    "schema": "wireit",
     "check": "wireit",
     "lint": "wireit",
     "test": "wireit",
@@ -40,7 +41,20 @@
   "wireit": {
     "build": {
       "dependencies": [
+        "package",
+        "schema"
+      ]
+    },
+    "schema": {
+      "command": "node scripts/generate-schema.mjs",
+      "dependencies": [
         "package"
+      ],
+      "files": [
+        "scripts/generate-schema.mjs"
+      ],
+      "output": [
+        "schema/manifest.schema.json"
       ]
     },
     "package": {
@@ -48,7 +62,6 @@
       "files": [
         "src/**",
         "templates/**",
-        "schema/**",
         "tsconfig.build.json",
         "tsconfig.json",
         "package.json"
@@ -63,7 +76,7 @@
     },
     "prepack": {
       "dependencies": [
-        "package"
+        "build"
       ]
     },
     "check": {
@@ -115,7 +128,13 @@
       ]
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "commander": "catalog:",
+    "dequal": "catalog:",
+    "diff": "catalog:",
+    "markdown-table": "catalog:",
+    "zod": "catalog:"
+  },
   "devDependencies": {
     "@eslint/js": "catalog:",
     "@types/node": "catalog:",

@@ -87,13 +87,10 @@ export function computeDrift(
   { items }: RenderPlan,
 ): DriftReport {
   const managed = new Set<string>();
-  const jsonGroups = new Map<string, PlanItem[]>();
-  for (const item of items) {
-    if (item.kind !== "json") continue;
-    const group = jsonGroups.get(item.path);
-    if (group) group.push(item);
-    else jsonGroups.set(item.path, [item]);
-  }
+  const jsonGroups = Map.groupBy(
+    items.filter((item) => item.kind === "json"),
+    (item) => item.path,
+  );
 
   const files: FileDrift[] = [];
   for (const item of items) {

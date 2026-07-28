@@ -1,3 +1,5 @@
+import { dequal } from "dequal";
+
 export function isPlainObject(
   value: unknown,
 ): value is Record<string, unknown> {
@@ -17,22 +19,6 @@ export function parseHostJson(text: string): Record<string, unknown> {
   return text.trim() === "" ? {} : parseJsonObject(text);
 }
 
-/** JSON with object keys sorted, so structural equality ignores a repo's key order. */
-function stableJson(value: unknown): string {
-  if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
-  if (isPlainObject(value)) {
-    const entries = Object.keys(value)
-      .sort()
-      .map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`);
-    return `{${entries.join(",")}}`;
-  }
-  return JSON.stringify(value) ?? "null";
-}
-
-function sameElement(a: unknown, b: unknown): boolean {
-  return stableJson(a) === stableJson(b);
-}
-
 /**
  * Deep-merges `patch` into `target` (mutating it): nested objects recurse, arrays union
  * by structural equality (so repeated merges are idempotent), scalars overwrite.
@@ -47,7 +33,7 @@ export function deepMerge(
       deepMerge(current, patchValue);
     } else if (Array.isArray(current) && Array.isArray(patchValue)) {
       for (const element of patchValue) {
-        if (!current.some((existing) => sameElement(existing, element)))
+        if (!current.some((existing) => dequal(existing, element)))
           current.push(element);
       }
     } else {
@@ -73,7 +59,7 @@ export function deepRemove(
       if (Object.keys(current).length === 0) delete target[key];
     } else if (Array.isArray(current) && Array.isArray(patchValue)) {
       const kept = current.filter(
-        (el) => !patchValue.some((p) => sameElement(p, el)),
+        (el) => !patchValue.some((p) => dequal(p, el)),
       );
       if (kept.length === 0) delete target[key];
       else target[key] = kept;

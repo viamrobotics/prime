@@ -4,194 +4,187 @@
   "title": "claude-config manifest",
   "description": "Per-repo configuration for @viamrobotics/claude-config.",
   "type": "object",
-  "additionalProperties": false,
-  "required": ["repo"],
   "properties": {
     "$schema": { "type": "string" },
     "repo": {
       "type": "object",
-      "additionalProperties": false,
-      "required": ["name", "nodeVersion"],
       "properties": {
         "name": {
           "type": "string",
           "minLength": 1,
           "description": "Short repo name (no scope)."
         },
-        "monorepo": { "type": "boolean" },
-        "packageManager": { "enum": ["pnpm", "npm", "yarn", "bun"] },
+        "monorepo": { "default": false, "type": "boolean" },
+        "packageManager": {
+          "default": "pnpm",
+          "type": "string",
+          "enum": ["pnpm", "npm", "yarn", "bun"]
+        },
         "nodeVersion": {
           "type": "string",
           "pattern": "^\\d+$",
           "description": "Major Node version, e.g. \"22\"."
         },
         "packageScope": {
-          "type": "string",
-          "description": "npm scope, e.g. \"@viamrobotics\"."
+          "default": "@viamrobotics",
+          "description": "npm scope, e.g. \"@viamrobotics\".",
+          "type": "string"
         },
-        "workspaceRootPackage": { "type": "string" },
-        "wireit": { "type": "boolean" }
-      }
+        "workspaceRootPackage": {
+          "description": "Defaults to `<packageScope>/<name>`.",
+          "type": "string"
+        },
+        "wireit": { "default": false, "type": "boolean" }
+      },
+      "required": ["name", "nodeVersion"],
+      "additionalProperties": false
     },
     "rules": {
+      "default": {},
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "modules": {
+          "default": {},
           "type": "object",
-          "additionalProperties": false,
-          "description": "Toggle shared rule modules. code-comments, editing-discipline, and verification are always installed.",
           "properties": {
-            "svelte": { "type": "boolean" },
-            "frontendAesthetics": { "type": "boolean" },
-            "three": { "type": "boolean" },
-            "typescript": { "type": "boolean" },
-            "testingFrontend": { "type": "boolean" },
-            "prDescription": { "type": "boolean" },
-            "changesets": { "type": "boolean" },
-            "go": { "type": "boolean" },
-            "testingGo": { "type": "boolean" },
-            "viamContext": { "type": "boolean" },
-            "designSystem": { "type": "boolean" }
-          }
+            "svelte": { "default": false, "type": "boolean" },
+            "frontendAesthetics": { "default": false, "type": "boolean" },
+            "three": { "default": false, "type": "boolean" },
+            "typescript": { "default": false, "type": "boolean" },
+            "testingFrontend": { "default": false, "type": "boolean" },
+            "prDescription": { "default": false, "type": "boolean" },
+            "changesets": { "default": false, "type": "boolean" },
+            "go": { "default": false, "type": "boolean" },
+            "testingGo": { "default": false, "type": "boolean" },
+            "viamContext": { "default": false, "type": "boolean" },
+            "designSystem": { "default": false, "type": "boolean" }
+          },
+          "additionalProperties": false,
+          "description": "Toggle shared rule modules. code-comments, editing-discipline, and verification are always installed."
         }
-      }
+      },
+      "additionalProperties": false
     },
     "viamContext": {
+      "default": {},
       "type": "object",
-      "additionalProperties": false,
-      "description": "Which Viam ecosystem sources the viam-context rule points at. Only read when rules.modules.viamContext is true. docs.viam.com is always included.",
       "properties": {
         "sources": {
+          "default": {},
           "type": "object",
-          "additionalProperties": false,
           "properties": {
-            "api": {
-              "type": "boolean",
-              "description": "viamrobotics/api protobuf definitions."
-            },
-            "rdk": {
-              "type": "boolean",
-              "description": "viamrobotics/rdk Go service interfaces."
-            },
-            "typescriptSdk": {
-              "type": "boolean",
-              "description": "@viamrobotics/sdk."
-            },
-            "svelteSdk": {
-              "type": "boolean",
-              "description": "@viamrobotics/svelte-sdk."
-            },
-            "testWidgets": {
-              "type": "boolean",
-              "description": "@viamrobotics/test-widgets."
-            },
-            "motionTools": {
-              "type": "boolean",
-              "description": "@viamrobotics/motion-tools."
-            },
-            "primeCore": {
-              "type": "boolean",
-              "description": "@viamrobotics/prime-core, the v1 component library."
-            },
-            "primeUi": {
-              "type": "boolean",
-              "description": "@viamrobotics/prime-ui, the v2 component library."
-            },
-            "pythonSdk": {
-              "type": "boolean",
-              "description": "viam-sdk on PyPI."
-            }
-          }
+            "api": { "default": false, "type": "boolean" },
+            "rdk": { "default": false, "type": "boolean" },
+            "typescriptSdk": { "default": false, "type": "boolean" },
+            "svelteSdk": { "default": false, "type": "boolean" },
+            "testWidgets": { "default": false, "type": "boolean" },
+            "motionTools": { "default": false, "type": "boolean" },
+            "primeCore": { "default": false, "type": "boolean" },
+            "primeUi": { "default": false, "type": "boolean" },
+            "pythonSdk": { "default": false, "type": "boolean" }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "additionalProperties": false
     },
     "mcp": {
+      "default": {},
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "svelteTransport": {
-          "enum": ["stdio", "http", "none"],
-          "description": "Svelte MCP server transport (\"none\" disables MCP)."
+          "default": "none",
+          "type": "string",
+          "enum": ["stdio", "http", "none"]
         },
-        "vscode": {
-          "type": "boolean",
-          "description": "Also emit .vscode/mcp.json."
-        }
-      }
+        "vscode": { "default": false, "type": "boolean" }
+      },
+      "additionalProperties": false
     },
     "outputStyle": {
+      "default": {},
       "type": "object",
-      "additionalProperties": false,
-      "description": "Output styles keyed by id: false = not installed, true = installed, \"default\" = installed and set as the repo's default in .claude/settings.json (at most one may be \"default\").",
       "properties": {
-        "terse": { "enum": [true, false, "default"] }
-      }
+        "terse": {
+          "default": "default",
+          "anyOf": [
+            { "type": "boolean" },
+            { "type": "string", "const": "default" }
+          ]
+        }
+      },
+      "additionalProperties": false
     },
     "hooks": {
+      "default": {},
       "type": "object",
-      "additionalProperties": false,
-      "description": "Opt-in Claude Code hooks keyed by id (default off).",
-      "properties": {
-        "sessionStart": {
-          "type": "boolean",
-          "description": "Print a git orientation header at session start."
-        }
-      }
+      "properties": { "sessionStart": { "default": false, "type": "boolean" } },
+      "additionalProperties": false
     },
     "ci": {
+      "default": {},
       "type": "object",
-      "additionalProperties": false,
       "properties": {
-        "setupAction": { "type": "boolean" },
-        "weeklyDependencyUpdate": { "type": "boolean" }
-      }
+        "setupAction": { "default": false, "type": "boolean" },
+        "weeklyDependencyUpdate": { "default": false, "type": "boolean" }
+      },
+      "additionalProperties": false
     },
     "verify": {
+      "description": "Defaults to `<packageManager> <script>` for each script.",
+      "default": {},
       "type": "object",
-      "additionalProperties": false,
-      "description": "Verification commands injected into workflow prompts.",
       "properties": {
         "lint": { "type": "string" },
         "check": { "type": "string" },
         "test": { "type": "string" },
         "build": { "type": "string" }
-      }
+      },
+      "additionalProperties": false
     },
     "workflows": {
+      "default": {},
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "teamMention": {
-          "type": ["string", "null"],
-          "pattern": "^@[\\w-]+/[\\w-]+$",
-          "description": "GitHub team to @-mention, e.g. \"@viamrobotics/team-viz\"."
+          "default": null,
+          "anyOf": [
+            { "type": "string", "pattern": "^@[\\w-]+\\/[\\w-]+$" },
+            { "type": "null" }
+          ]
         },
-        "goTools": {
-          "type": "boolean",
-          "description": "Append go test/build/vet + make to allowed_tools."
-        },
+        "goTools": { "default": false, "type": "boolean" },
         "secrets": {
+          "default": {},
           "type": "object",
-          "additionalProperties": false,
           "properties": {
-            "slackAlertWebhook": { "type": "boolean" },
-            "gitAccessToken": { "type": "boolean" },
-            "githubApp": { "type": "boolean" },
-            "jira": { "type": "boolean" }
-          }
+            "slackAlertWebhook": { "default": false, "type": "boolean" },
+            "gitAccessToken": { "default": false, "type": "boolean" },
+            "githubApp": { "default": false, "type": "boolean" },
+            "jira": { "default": false, "type": "boolean" }
+          },
+          "additionalProperties": false
         },
         "overrides": {
+          "default": {},
           "type": "object",
+          "propertyNames": { "type": "string" },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": false,
             "properties": {
-              "maxTurns": { "type": "integer", "exclusiveMinimum": 0 }
-            }
+              "maxTurns": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "additionalProperties": false
           }
         }
-      }
+      },
+      "additionalProperties": false
     }
-  }
+  },
+  "required": ["repo"],
+  "additionalProperties": false
 }

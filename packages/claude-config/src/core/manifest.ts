@@ -1,78 +1,188 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { z } from "zod";
 import { MANIFEST_FILENAME } from "./constants.js";
 import { HOOK_IDS } from "./hooks.js";
-import { isPlainObject } from "./json-merge.js";
 import { RULE_MODULE_NAMES } from "./modules.js";
 import { OUTPUT_STYLES, OUTPUT_STYLE_IDS } from "./output-styles.js";
 import { VIAM_SOURCE_IDS } from "./viam-sources.js";
-import type {
-  HookId,
-  OutputStyleId,
-  OutputStyleState,
-  PackageManager,
-  ResolvedManifest,
-  RuleModuleName,
-  SvelteTransport,
-  ViamSourceId,
-} from "../types.js";
-
-const PACKAGE_MANAGERS: readonly PackageManager[] = [
-  "pnpm",
-  "npm",
-  "yarn",
-  "bun",
-];
-const TRANSPORTS: readonly SvelteTransport[] = ["stdio", "http", "none"];
+import type { OutputStyleId, ResolvedManifest } from "../types.js";
 
 /** GitHub team handle, as the workflow stubs will paste it into a YAML prompt. */
 const TEAM_MENTION = /^@[\w-]+\/[\w-]+$/;
 
+/** A section of independent switches, all defaulting off. */
+function toggles<K extends string>(keys: readonly K[]) {
+  const shape = Object.fromEntries(
+    keys.map((key) => [key, z.boolean().default(false)]),
+  ) as Record<K, z.ZodDefault<z.ZodBoolean>>;
+  return z.strictObject(shape);
+}
+
+const OUTPUT_STYLE_STATE = z.union([z.boolean(), z.literal("default")]);
+
+function outputStyleSection() {
+  const shape = Object.fromEntries(
+    OUTPUT_STYLE_IDS.map((id) => [
+      id,
+      OUTPUT_STYLE_STATE.default(OUTPUT_STYLES[id].defaultState),
+    ]),
+  ) as Record<OutputStyleId, z.ZodDefault<typeof OUTPUT_STYLE_STATE>>;
+  return z
+    .strictObject(shape)
+    .prefault({})
+    .superRefine((styles, ctx) => {
+      const defaults = Object.values(styles).filter(
+        (state) => state === "default",
+      );
+      if (defaults.length > 1) {
+        ctx.addIssue({
+          code: "custom",
+          message: 'only one outputStyle may be "default"',
+        });
+      }
+    });
+}
+
 /**
- * Every key each manifest section accepts. Drives unknown-key rejection here and is
- * asserted against `schema/manifest.schema.json` in test/schema.test.ts, so the
- * validator and the schema cannot drift apart.
+ * The manifest as written on disk. Every section is optional; defaults are filled in
+ * here, except the few that depend on another field and so are resolved afterwards.
+ * `schema/manifest.schema.json` is generated from this, so the two cannot drift.
+ *
+ * Sections use `prefault({})` rather than `default({})`: a zod `default` short-circuits
+ * parsing and would hand back a literal `{}`, leaving every switch inside it undefined.
  */
-export const MANIFEST_KEYS = {
-  "": [
-    "$schema",
-    "repo",
-    "rules",
-    "viamContext",
-    "mcp",
-    "outputStyle",
-    "hooks",
-    "ci",
-    "verify",
-    "workflows",
-  ],
-  repo: [
-    "name",
-    "monorepo",
-    "packageManager",
-    "nodeVersion",
-    "packageScope",
-    "workspaceRootPackage",
-    "wireit",
-  ],
-  rules: ["modules"],
-  "rules.modules": RULE_MODULE_NAMES,
-  viamContext: ["sources"],
-  "viamContext.sources": VIAM_SOURCE_IDS,
-  mcp: ["svelteTransport", "vscode"],
-  outputStyle: OUTPUT_STYLE_IDS,
-  hooks: HOOK_IDS,
-  ci: ["setupAction", "weeklyDependencyUpdate"],
-  verify: ["lint", "check", "test", "build"],
-  workflows: ["teamMention", "goTools", "secrets", "overrides"],
-  "workflows.secrets": [
-    "slackAlertWebhook",
-    "gitAccessToken",
-    "githubApp",
-    "jira",
-  ],
-  "workflows.overrides.*": ["maxTurns"],
-} as const satisfies Record<string, readonly string[]>;
+export const ManifestSchema = z.strictObject({
+  $schema: z.string().optional(),
+  repo: z.strictObject({
+    name: z.string().min(1).describe("Short repo name (no scope)."),
+    monorepo: z.boolean().default(false),
+    packageManager: z.enum(["pnpm", "npm", "yarn", "bun"]).default("pnpm"),
+    nodeVersion: z
+      .string()
+      .regex(/^\d+$/)
+      .describe('Major Node version, e.g. "22".'),
+    packageScope: z
+      .string()
+      .default("@viamrobotics")
+      .describe('npm scope, e.g. "@viamrobotics".'),
+    workspaceRootPackage: z
+      .string()
+      .optional()
+      .describe("Defaults to `<packageScope>/<name>`."),
+    wireit: z.boolean().default(false),
+  }),
+  rules: z
+    .strictObject({
+      modules: toggles(RULE_MODULE_NAMES)
+        .describe(
+          "Toggle shared rule modules. code-comments, editing-discipline, and verification are always installed.",
+        )
+        .prefault({}),
+    })
+    .prefault({}),
+  viamContext: z
+    .strictObject({ sources: toggles(VIAM_SOURCE_IDS).prefault({}) })
+    .prefault({}),
+  mcp: z
+    .strictObject({
+      svelteTransport: z.enum(["stdio", "http", "none"]).default("none"),
+      vscode: z.boolean().default(false),
+    })
+    .prefault({}),
+  outputStyle: outputStyleSection(),
+  hooks: toggles(HOOK_IDS).prefault({}),
+  ci: toggles(["setupAction", "weeklyDependencyUpdate"] as const).prefault({}),
+  verify: z
+    .strictObject({
+      lint: z.string().optional(),
+      check: z.string().optional(),
+      test: z.string().optional(),
+      build: z.string().optional(),
+    })
+    .prefault({})
+    .describe("Defaults to `<packageManager> <script>` for each script."),
+  workflows: z
+    .strictObject({
+      teamMention: z.string().regex(TEAM_MENTION).nullable().default(null),
+      goTools: z.boolean().default(false),
+      secrets: toggles([
+        "slackAlertWebhook",
+        "gitAccessToken",
+        "githubApp",
+        "jira",
+      ] as const).prefault({}),
+      overrides: z
+        .record(
+          z.string(),
+          z.strictObject({ maxTurns: z.int().positive().optional() }),
+        )
+        .prefault({}),
+    })
+    .prefault({}),
+});
+
+/**
+ * The published JSON Schema, which powers editor IntelliSense via `$schema`.
+ * `io: "input"` so defaulted fields stay optional, which is what a hand-written
+ * manifest looks like; the identity fields zod does not emit are supplied here.
+ */
+export function buildJsonSchema(): Record<string, unknown> {
+  const { $schema, ...body } = z.toJSONSchema(ManifestSchema, { io: "input" });
+  return {
+    $schema,
+    $id: "https://viamrobotics.github.io/prime/claude-config/manifest.schema.json",
+    title: "claude-config manifest",
+    description: "Per-repo configuration for @viamrobotics/claude-config.",
+    ...body,
+  };
+}
+
+/** Sections whose unknown keys are not "fields": the message names what they hold. */
+const UNKNOWN_KEY_NOUNS: Record<string, string> = {
+  "rules.modules": "rule module",
+  "viamContext.sources": "Viam source",
+  outputStyle: "output style",
+  hooks: "hook",
+};
+
+function problemsFrom(error: z.ZodError): string[] {
+  return error.issues.flatMap((issue) => {
+    const path = issue.path.join(".");
+    if (issue.code === "unrecognized_keys") {
+      const noun = UNKNOWN_KEY_NOUNS[path] ?? "field";
+      const prefix = path === "" ? "" : `${path}.`;
+      return issue.keys.map((key) => `${prefix}${key} is not a known ${noun}`);
+    }
+    if (issue.code === "custom") return [issue.message];
+    return [path === "" ? issue.message : `${path} ${issue.message}`];
+  });
+}
+
+/** Fills the defaults that read another field, which zod cannot express in the schema. */
+function resolve(file: z.infer<typeof ManifestSchema>): ResolvedManifest {
+  const { repo, verify } = file;
+  return {
+    repo: {
+      ...repo,
+      workspaceRootPackage:
+        repo.workspaceRootPackage ?? `${repo.packageScope}/${repo.name}`,
+    },
+    rules: file.rules.modules,
+    viamContext: file.viamContext,
+    mcp: file.mcp,
+    outputStyle: file.outputStyle,
+    hooks: file.hooks,
+    ci: file.ci,
+    verify: {
+      lint: verify.lint ?? `${repo.packageManager} lint`,
+      check: verify.check ?? `${repo.packageManager} check`,
+      test: verify.test ?? `${repo.packageManager} test`,
+      build: verify.build ?? `${repo.packageManager} build`,
+    },
+    workflows: file.workflows,
+  };
+}
 
 export class ManifestError extends Error {
   constructor(readonly problems: string[]) {
@@ -106,325 +216,14 @@ export function parseManifest(raw: string): ResolvedManifest {
   } catch (error) {
     throw new ManifestError([`not valid JSON: ${(error as Error).message}`]);
   }
-  const problems: string[] = [];
-  const resolved = resolve(data, problems);
-  if (problems.length > 0) throw new ManifestError(problems);
-  return resolved;
-}
-
-interface StrOpts {
-  required?: boolean;
-  pattern?: RegExp;
-  fallback?: string;
-}
-
-function str(
-  value: unknown,
-  path: string,
-  problems: string[],
-  { required, pattern, fallback }: StrOpts = {},
-): string {
-  if (value === undefined) {
-    if (required) problems.push(`${path} is required`);
-    return fallback ?? "";
-  }
-  if (typeof value !== "string") {
-    problems.push(`${path} must be a string`);
-    return fallback ?? "";
-  }
-  if (pattern && !pattern.test(value)) {
-    problems.push(`${path} must match ${pattern}`);
-  }
-  return value;
-}
-
-function bool(
-  value: unknown,
-  path: string,
-  problems: string[],
-  fallback: boolean,
-): boolean {
-  if (value === undefined) return fallback;
-  if (typeof value !== "boolean") {
-    problems.push(`${path} must be a boolean`);
-    return fallback;
-  }
-  return value;
-}
-
-function oneOf<T extends string>(
-  value: unknown,
-  allowed: readonly T[],
-  path: string,
-  problems: string[],
-  fallback: T,
-): T {
-  if (value === undefined) return fallback;
-  if (typeof value !== "string" || !allowed.includes(value as T)) {
-    problems.push(`${path} must be one of: ${allowed.join(", ")}`);
-    return fallback;
-  }
-  return value as T;
-}
-
-/** A nested object, defaulting to empty. Flags a present-but-wrong-typed section. */
-function section(
-  value: unknown,
-  path: string,
-  problems: string[],
-): Record<string, unknown> {
-  if (value === undefined) return {};
-  if (!isPlainObject(value)) {
-    problems.push(`${path} must be an object`);
-    return {};
-  }
-  return value;
-}
-
-/** Mirrors the schema's `additionalProperties: false`, so a typo is an error rather
- * than a silently applied default. */
-function rejectUnknown(
-  raw: Record<string, unknown>,
-  path: keyof typeof MANIFEST_KEYS,
-  problems: string[],
-  noun = "field",
-): void {
-  const allowed: readonly string[] = MANIFEST_KEYS[path];
-  const prefix = path === "" ? "" : `${path}.`;
-  for (const key of Object.keys(raw)) {
-    if (!allowed.includes(key)) {
-      problems.push(`${prefix}${key} is not a known ${noun}`);
-    }
-  }
-}
-
-function resolveRepo(root: Record<string, unknown>, problems: string[]) {
-  if (root.repo === undefined) problems.push("repo is required");
-  const raw = section(root.repo, "repo", problems);
-  rejectUnknown(raw, "repo", problems);
-
-  const name = str(raw.name, "repo.name", problems, { required: true });
-  const packageManager = oneOf(
-    raw.packageManager,
-    PACKAGE_MANAGERS,
-    "repo.packageManager",
-    problems,
-    "pnpm",
-  );
-  const packageScope = str(raw.packageScope, "repo.packageScope", problems, {
-    fallback: "@viamrobotics",
+  const result = ManifestSchema.safeParse(data, {
+    // Only the callback sees `input`, so a missing field can be told apart from a
+    // wrong-typed one here but not from the issue list afterwards.
+    error: (issue) =>
+      issue.code === "invalid_type" && issue.input === undefined
+        ? "is required"
+        : undefined,
   });
-  return {
-    name,
-    monorepo: bool(raw.monorepo, "repo.monorepo", problems, false),
-    packageManager,
-    nodeVersion: str(raw.nodeVersion, "repo.nodeVersion", problems, {
-      required: true,
-      pattern: /^\d+$/,
-    }),
-    packageScope,
-    workspaceRootPackage: str(
-      raw.workspaceRootPackage,
-      "repo.workspaceRootPackage",
-      problems,
-      { fallback: name ? `${packageScope}/${name}` : "" },
-    ),
-    wireit: bool(raw.wireit, "repo.wireit", problems, false),
-  };
-}
-
-function resolveOutputStyle(
-  root: Record<string, unknown>,
-  problems: string[],
-): Record<OutputStyleId, OutputStyleState> {
-  const raw = section(root.outputStyle, "outputStyle", problems);
-  rejectUnknown(raw, "outputStyle", problems, "output style");
-
-  const resolved = {} as Record<OutputStyleId, OutputStyleState>;
-  let defaults = 0;
-  for (const id of OUTPUT_STYLE_IDS) {
-    const value = raw[id];
-    let state: OutputStyleState;
-    if (value === undefined) {
-      state = OUTPUT_STYLES[id].defaultState;
-    } else if (value === true || value === false || value === "default") {
-      state = value;
-    } else {
-      problems.push(`outputStyle.${id} must be true, false, or "default"`);
-      state = false;
-    }
-    if (state === "default") defaults++;
-    resolved[id] = state;
-  }
-  if (defaults > 1) problems.push('only one outputStyle may be "default"');
-  return resolved;
-}
-
-function resolveOverrides(
-  raw: Record<string, unknown>,
-  problems: string[],
-): Record<string, { maxTurns?: number }> {
-  const overrides: Record<string, { maxTurns?: number }> = {};
-  for (const [stub, value] of Object.entries(raw)) {
-    const path = `workflows.overrides.${stub}`;
-    if (!isPlainObject(value)) {
-      problems.push(`${path} must be an object`);
-      continue;
-    }
-    rejectUnknown(value, "workflows.overrides.*", problems);
-    const entry: { maxTurns?: number } = {};
-    if (value.maxTurns !== undefined) {
-      if (
-        typeof value.maxTurns !== "number" ||
-        !Number.isInteger(value.maxTurns) ||
-        value.maxTurns <= 0
-      ) {
-        problems.push(`${path}.maxTurns must be a positive integer`);
-      } else {
-        entry.maxTurns = value.maxTurns;
-      }
-    }
-    overrides[stub] = entry;
-  }
-  return overrides;
-}
-
-function resolveWorkflows(root: Record<string, unknown>, problems: string[]) {
-  const raw = section(root.workflows, "workflows", problems);
-  rejectUnknown(raw, "workflows", problems);
-  const secrets = section(raw.secrets, "workflows.secrets", problems);
-  rejectUnknown(secrets, "workflows.secrets", problems);
-
-  return {
-    teamMention:
-      raw.teamMention === undefined || raw.teamMention === null
-        ? null
-        : str(raw.teamMention, "workflows.teamMention", problems, {
-            pattern: TEAM_MENTION,
-          }),
-    goTools: bool(raw.goTools, "workflows.goTools", problems, false),
-    secrets: {
-      slackAlertWebhook: bool(
-        secrets.slackAlertWebhook,
-        "workflows.secrets.slackAlertWebhook",
-        problems,
-        false,
-      ),
-      gitAccessToken: bool(
-        secrets.gitAccessToken,
-        "workflows.secrets.gitAccessToken",
-        problems,
-        false,
-      ),
-      githubApp: bool(
-        secrets.githubApp,
-        "workflows.secrets.githubApp",
-        problems,
-        false,
-      ),
-      jira: bool(secrets.jira, "workflows.secrets.jira", problems, false),
-    },
-    overrides: resolveOverrides(
-      section(raw.overrides, "workflows.overrides", problems),
-      problems,
-    ),
-  };
-}
-
-function resolve(data: unknown, problems: string[]): ResolvedManifest {
-  if (!isPlainObject(data)) {
-    problems.push("root must be an object");
-    data = {};
-  }
-  const root = data as Record<string, unknown>;
-  rejectUnknown(root, "", problems);
-
-  const repo = resolveRepo(root, problems);
-
-  const rulesRaw = section(root.rules, "rules", problems);
-  rejectUnknown(rulesRaw, "rules", problems);
-  const modulesRaw = section(rulesRaw.modules, "rules.modules", problems);
-  rejectUnknown(modulesRaw, "rules.modules", problems, "rule module");
-  const rules = Object.fromEntries(
-    RULE_MODULE_NAMES.map((mod) => [
-      mod,
-      bool(modulesRaw[mod], `rules.modules.${mod}`, problems, false),
-    ]),
-  ) as Record<RuleModuleName, boolean>;
-
-  const viamRaw = section(root.viamContext, "viamContext", problems);
-  rejectUnknown(viamRaw, "viamContext", problems);
-  const sourcesRaw = section(viamRaw.sources, "viamContext.sources", problems);
-  rejectUnknown(sourcesRaw, "viamContext.sources", problems, "Viam source");
-  const viamContext = {
-    sources: Object.fromEntries(
-      VIAM_SOURCE_IDS.map((id) => [
-        id,
-        bool(sourcesRaw[id], `viamContext.sources.${id}`, problems, false),
-      ]),
-    ) as Record<ViamSourceId, boolean>,
-  };
-
-  const mcpRaw = section(root.mcp, "mcp", problems);
-  rejectUnknown(mcpRaw, "mcp", problems);
-  const mcp = {
-    svelteTransport: oneOf(
-      mcpRaw.svelteTransport,
-      TRANSPORTS,
-      "mcp.svelteTransport",
-      problems,
-      "none",
-    ),
-    vscode: bool(mcpRaw.vscode, "mcp.vscode", problems, false),
-  };
-
-  const hooksRaw = section(root.hooks, "hooks", problems);
-  rejectUnknown(hooksRaw, "hooks", problems, "hook");
-  const hooks = Object.fromEntries(
-    HOOK_IDS.map((id) => [
-      id,
-      bool(hooksRaw[id], `hooks.${id}`, problems, false),
-    ]),
-  ) as Record<HookId, boolean>;
-
-  const ciRaw = section(root.ci, "ci", problems);
-  rejectUnknown(ciRaw, "ci", problems);
-  const ci = {
-    setupAction: bool(ciRaw.setupAction, "ci.setupAction", problems, false),
-    weeklyDependencyUpdate: bool(
-      ciRaw.weeklyDependencyUpdate,
-      "ci.weeklyDependencyUpdate",
-      problems,
-      false,
-    ),
-  };
-
-  const verifyRaw = section(root.verify, "verify", problems);
-  rejectUnknown(verifyRaw, "verify", problems);
-  const verify = {
-    lint: str(verifyRaw.lint, "verify.lint", problems, {
-      fallback: `${repo.packageManager} lint`,
-    }),
-    check: str(verifyRaw.check, "verify.check", problems, {
-      fallback: `${repo.packageManager} check`,
-    }),
-    test: str(verifyRaw.test, "verify.test", problems, {
-      fallback: `${repo.packageManager} test`,
-    }),
-    build: str(verifyRaw.build, "verify.build", problems, {
-      fallback: `${repo.packageManager} build`,
-    }),
-  };
-
-  return {
-    repo,
-    rules,
-    viamContext,
-    mcp,
-    outputStyle: resolveOutputStyle(root, problems),
-    hooks,
-    ci,
-    verify,
-    workflows: resolveWorkflows(root, problems),
-  };
+  if (!result.success) throw new ManifestError(problemsFrom(result.error));
+  return resolve(result.data);
 }

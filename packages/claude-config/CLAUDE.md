@@ -18,16 +18,16 @@ Those assets are copy-pasted between repos today and drift: rules referencing te
 
 ## Layout
 
-- `src/cli.ts` the `#!/usr/bin/env node` entry, dispatching through `node:util` `parseArgs`.
+- `src/cli.ts` the `#!/usr/bin/env node` entry, dispatching through `commander`. Flags are scoped per subcommand, so `install --fix` is an error rather than a silent no-op.
 - `src/commands/` one file per command.
 - `src/core/` `render` (micro-renderer), `modules` (registry), `plan` (manifest to RenderPlan), `drift` (doctor engine), `regions`, `lockfile`, `manifest`, `templates`, `constants`.
 - `templates/` canonical assets. `.md` rules are copied verbatim, `*.tmpl` files interpolate.
-- `schema/manifest.schema.json` the manifest JSON Schema, which also powers editor IntelliSense via `$schema`.
-- `test/` vitest, pure Node. `test/fixtures/` holds the four repo manifests plus a deliberately-rotted fixture proving `doctor` catches rot.
+- `schema/manifest.schema.json` is **generated** from the zod schema in `src/core/manifest.ts` by `pnpm run schema`, and powers editor IntelliSense via `$schema`. Never hand-edit it; `test/schema.test.ts` fails when it falls out of sync.
+- `test/` vitest, pure Node. `test/fixtures/manifests/` holds four repo manifests that drive the `buildPlan` snapshots. Rot is proven in the tests themselves, not in a fixture: `drift.test.ts` installs into a temp repo, tampers with a managed file, and asserts `doctor` reports it and `--fix` restores it; `snapshots.test.ts` asserts no foreign tech leaks into a rule set.
 
 ## Conventions
 
-- **Zero runtime dependencies.** Everything uses `node:*`. This tool writes into many repos, so keep it supply-chain-minimal and runnable on Node 20+ (`engines.node: ">=20"`, and repos run Node 22 and 24).
+- **Zero-transitive-dependency runtime deps.** Prefer `node:*`. A runtime dependency is allowed only if the package has no dependencies of its own, so the install graph stays flat and auditable. This tool writes into many repos, so supply-chain surface is a feature, not an oversight. That bar is what rules out `tinyglobby` (pulls `fdir`, `picomatch`), `ajv` (4 packages), and all of thi.ng (everything pulls `@thi.ng/api`). The current set is `zod`, `commander`, `diff`, `markdown-table`, and `dequal`. Runs on Node 22+ (`engines.node: ">=22"`).
 - **No template loops.** The renderer supports only `{{var}}` and `{{#if flag}}…{{/if}}` / `{{^flag}}…{{/if}}`. Build lists such as allowed-tools and secret blocks in TypeScript with correct indentation and inject them as string vars. YAML whitespace is the one real correctness risk.
 - **Rules are static.** A shared rule is one canonical file copied byte-for-byte. Per-repo variation lives in the manifest, never in a hand-edit. That discipline is what prevents rot. The one exception is `viam-context.md.tmpl`, whose source table is per-repo and so is rendered from `viamContext.sources`. Keep it the exception.
 - **One place for the pin.** The `claude-ci-workflows` SHA lives in `src/core/constants.ts` as `WORKFLOWS_REF`, never in a manifest. Bumping it and publishing propagates to every repo on `update`.
@@ -35,7 +35,8 @@ Those assets are copy-pasted between repos today and drift: rules referencing te
 ## Commands
 
 ```bash
-pnpm --filter @viamrobotics/claude-config build   # tsc -> dist + publint
+pnpm --filter @viamrobotics/claude-config build   # tsc -> dist + publint, then schema
+pnpm --filter @viamrobotics/claude-config schema  # regenerate schema/manifest.schema.json
 pnpm --filter @viamrobotics/claude-config test    # vitest (node)
 pnpm --filter @viamrobotics/claude-config check   # tsc --noEmit
 pnpm --filter @viamrobotics/claude-config lint    # eslint

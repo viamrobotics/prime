@@ -1,7 +1,6 @@
 export interface CommandContext {
   cwd: string;
   dryRun: boolean;
-  json: boolean;
 }
 
 export interface InitContext extends CommandContext {
@@ -9,6 +8,7 @@ export interface InitContext extends CommandContext {
 }
 
 export interface DoctorContext extends CommandContext {
+  json: boolean;
   fix: boolean;
   prune: boolean;
 }

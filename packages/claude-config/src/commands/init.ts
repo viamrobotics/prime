@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, globSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { MANIFEST_FILENAME, SCHEMA_FILENAME } from "../core/constants.js";
 import { TargetRepo } from "../core/fs-target.js";
@@ -54,57 +54,56 @@ const SKIP_DIRS = new Set([
   "target",
 ]);
 
-const PY_MANIFESTS =
-  /^(pyproject\.toml|setup\.py|setup\.cfg|requirements.*\.txt)$/;
+const MANIFEST_GLOBS = [
+  "**/package.json",
+  "**/go.mod",
+  "**/pyproject.toml",
+  "**/setup.py",
+  "**/setup.cfg",
+  "**/requirements*.txt",
+];
+
+const MAX_DEPTH = 5;
 
 /**
- * Walks the repo collecting dependency manifests from every workspace member, not
- * just the root, so a monorepo with one Go module or one SDK consumer is detected.
- * Depth is capped because the answer never lives deep in a tree.
+ * Collects dependency manifests from every workspace member, not just the root, so a
+ * monorepo with one Go module or one SDK consumer is detected. Depth is capped because
+ * the answer never lives deep in a tree.
  */
 function collectDependencyEvidence(cwd: string) {
   const npm = new Set<string>();
   const goParts: string[] = [];
   const pyParts: string[] = [];
 
-  const visit = (dir: string, depth: number): void => {
-    let entries;
-    try {
-      entries = readdirSync(dir, { withFileTypes: true });
-    } catch {
-      return;
-    }
-    for (const entry of entries) {
-      const path = join(dir, entry.name);
-      if (entry.isDirectory()) {
-        if (
-          depth > 0 &&
-          !SKIP_DIRS.has(entry.name) &&
-          !entry.name.startsWith(".")
-        ) {
-          visit(path, depth - 1);
-        }
-        continue;
-      }
-      if (entry.name === "package.json") {
-        const parsed = readJson(path);
-        const pkg = (isPlainObject(parsed) ? parsed : {}) as PkgJson;
-        for (const key of Object.keys({
-          ...pkg.dependencies,
-          ...pkg.devDependencies,
-          ...pkg.peerDependencies,
-        })) {
-          npm.add(key);
-        }
-      } else if (entry.name === "go.mod") {
-        goParts.push(readText(path) ?? "");
-      } else if (PY_MANIFESTS.test(entry.name)) {
-        pyParts.push(readText(path) ?? "");
-      }
-    }
-  };
+  const matches = globSync(MANIFEST_GLOBS, {
+    cwd,
+    exclude: (path) => {
+      const name = basename(path);
+      if (SKIP_DIRS.has(name) || name.startsWith(".")) return true;
+      return path.split(/[\\/]/).length > MAX_DEPTH;
+    },
+  });
 
-  visit(cwd, 5);
+  for (const relative of matches) {
+    const path = join(cwd, relative);
+    const name = basename(relative);
+    if (name === "package.json") {
+      const parsed = readJson(path);
+      const pkg = (isPlainObject(parsed) ? parsed : {}) as PkgJson;
+      for (const key of Object.keys({
+        ...pkg.dependencies,
+        ...pkg.devDependencies,
+        ...pkg.peerDependencies,
+      })) {
+        npm.add(key);
+      }
+    } else if (name === "go.mod") {
+      goParts.push(readText(path) ?? "");
+    } else {
+      pyParts.push(readText(path) ?? "");
+    }
+  }
+
   return { npm, goText: goParts.join("\n"), pyText: pyParts.join("\n") };
 }
 
