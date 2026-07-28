@@ -28,19 +28,19 @@
     ".claude/rules/testing-frontend.md": "sha256-235a6bd78b58b50b1cdafd334b75f47e80a09aedc98c37c112f5f13ea34c811b",
     ".claude/rules/pr-description.md": "sha256-818a3bdec4e8cbe59af4551afbaf0044dcb2eb9370a07c1247625349f9e2da88",
     ".claude/rules/changesets.md": "sha256-878f805a795f1fe89242231b19654d695ca1887954e272c229ac6763f68c29a5",
+    ".claude/rules/design-system.md": "sha256-bcb2fea76f041946c74e6cbee7241b487e32f566af962433353b114ae2cafd4d",
     ".claude/rules/code-comments.md": "sha256-bb122bc46a91e4a34f33a86ef8f80bcac531516731126011342779a7e8b0e3a0",
     ".claude/rules/editing-discipline.md": "sha256-aa1c5f5c35568ad32b439108fb188e4a59329b8171a73feb4f663168f14add10",
     ".claude/rules/verification.md": "sha256-b5a4974cea33fdd22e3654934cff7c402fabfbfa18445a28ff18b005e0a8ca23",
-    ".claude/rules/design-system.md": "sha256-bcb2fea76f041946c74e6cbee7241b487e32f566af962433353b114ae2cafd4d",
     ".claude/settings.ci.json": "sha256-b6a21552d285335aadc8579da821b056febba252cfeb9abe14cb02b934e14930",
     ".mcp.json": "sha256-2125ce807be24d4380c8bc5f00f700ed73ab2239d4f2d0dca459036a477e5103",
     ".vscode/mcp.json": "sha256-38898e6e070f319e82fb6cb7e4c28152bfa8e368ebeb8995766119a6888838ff",
     ".claude/output-styles/Terse.md": "sha256-cf9a9574852051ac9ec7bf7506af11cd35c464aa100e7413929ab33a952cf731",
-    ".claude/settings.json": "sha256-9de033f034b0e468505889ad4bc32186d64d75012ee16ed96651ea6898851db6",
+    ".claude/settings.json": "sha256-063a4292c64d6644722ca1a91afdd1628fe171d86b771ada7890f6e91966c121",
     ".claude/hooks/session-start.mjs": "sha256-d8926df6b1fcb4a80aca470825060d0aaf5e2c646f75505ac321793a545253da",
     ".nvmrc": "sha256-68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53",
     ".gitignore": "sha256-552007575b4411a940038d8f3ad4a5c7b9c861000d810a7d659bee74ab231435",
     ".prettierignore": "sha256-c988ec8a894170edf145d60d4b50d7daf03473071b3fb1f2c7fb7a6af0254dc7",
-    "CLAUDE.md": "sha256-791174359a09a342957940a56bc44583d548df5bee95f9a0ff3dda3a48060437"
+    "CLAUDE.md": "sha256-c28848b2229f9a404bae97fa6a2244591fed398f9cc03a7d03b73241dc2f45c2"
   }
 }

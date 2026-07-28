@@ -162,6 +162,7 @@ function sniff(cwd: string) {
     Array.isArray(pkg.workspaces);
 
   const isGo = hasFile("go.mod");
+  const hasUi = has("svelte") || has("react") || has("tailwindcss");
   const svelteTransport = sniffSvelteTransport(cwd, has("svelte"));
   const viamSources = detectViamSources(collectDependencyEvidence(cwd));
   const usesViam = Object.values(viamSources).some(Boolean);
@@ -189,6 +190,7 @@ function sniff(cwd: string) {
         go: isGo,
         testingGo: isGo,
         viamContext: usesViam,
+        designSystem: hasUi,
       },
     },
     viamContext: { sources: viamSources },

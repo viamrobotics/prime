@@ -536,6 +536,20 @@ The summary is one imperative phrase in changelog voice:
 Skip a changeset only when nothing reaches consumers: CI config, test-only, docs-only, internal tooling.
 
 
+--- .claude/rules/design-system.md (full, rule:design-system) ---
+# Viam Design System
+
+**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
+
+Look something up when:
+
+- Adding a component or variant. Confirm the pattern exists before inventing one.
+- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
+- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
+
+Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
+
+
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
 ---
 paths:
@@ -627,20 +641,6 @@ Scope commands to what changed: \`pnpm --filter <pkg> run <script>\`.
 Report honestly. If a step surfaces errors that do not auto-resolve, say so and show them. Never claim success over a failing or unrun check. "Done" means every check passed, not that the edits were made.
 
 Each language rule has a "Verify Your Work" section with the exact commands for that stack.
-
-
---- .claude/rules/design-system.md (full, rule:design-system) ---
-# Viam Design System
-
-**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
-
-Look something up when:
-
-- Adding a component or variant. Confirm the pattern exists before inventing one.
-- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
-- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
-
-Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
 
 
 --- .claude/settings.ci.json (full, settings-ci) ---
@@ -818,10 +818,10 @@ process.exit(0);
 | \`testing-frontend.md\`    | editing test files (\`**/*.spec.ts\`)                 |
 | \`pr-description.md\`      | editing files under \`.changeset/\`                   |
 | \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`design-system.md\`       | every session (design system context)               |
 | \`code-comments.md\`       | editing any code file                               |
 | \`editing-discipline.md\`  | every session (edit from current state, in scope)   |
-| \`verification.md\`        | every session (verify before reporting done)        |
-| \`design-system.md\`       | every session (design system context)               |"
+| \`verification.md\`        | every session (verify before reporting done)        |"
 `;
 
 exports[`buildPlan snapshots > renders the test-widgets plan 1`] = `
@@ -1392,6 +1392,20 @@ gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.pat
 - A review comment needs to state what a resource method does. Fetch the docs rather than guessing.
 
 
+--- .claude/rules/design-system.md (full, rule:design-system) ---
+# Viam Design System
+
+**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
+
+Look something up when:
+
+- Adding a component or variant. Confirm the pattern exists before inventing one.
+- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
+- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
+
+Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
+
+
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
 ---
 paths:
@@ -1483,20 +1497,6 @@ Scope commands to what changed: \`pnpm --filter <pkg> run <script>\`.
 Report honestly. If a step surfaces errors that do not auto-resolve, say so and show them. Never claim success over a failing or unrun check. "Done" means every check passed, not that the edits were made.
 
 Each language rule has a "Verify Your Work" section with the exact commands for that stack.
-
-
---- .claude/rules/design-system.md (full, rule:design-system) ---
-# Viam Design System
-
-**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
-
-Look something up when:
-
-- Adding a component or variant. Confirm the pattern exists before inventing one.
-- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
-- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
-
-Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
 
 
 --- .claude/settings.ci.json (full, settings-ci) ---
@@ -1594,10 +1594,10 @@ words around them.
 | \`pr-description.md\`      | editing files under \`.changeset/\`                   |
 | \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
 | \`viam-context.md\`        | every session (Viam API and SDK sources)            |
+| \`design-system.md\`       | every session (design system context)               |
 | \`code-comments.md\`       | editing any code file                               |
 | \`editing-discipline.md\`  | every session (edit from current state, in scope)   |
-| \`verification.md\`        | every session (verify before reporting done)        |
-| \`design-system.md\`       | every session (design system context)               |"
+| \`verification.md\`        | every session (verify before reporting done)        |"
 `;
 
 exports[`buildPlan snapshots > renders the viam-svelte-sdk plan 1`] = `
@@ -2166,6 +2166,20 @@ gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.pat
 - A review comment needs to state what a resource method does. Fetch the docs rather than guessing.
 
 
+--- .claude/rules/design-system.md (full, rule:design-system) ---
+# Viam Design System
+
+**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
+
+Look something up when:
+
+- Adding a component or variant. Confirm the pattern exists before inventing one.
+- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
+- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
+
+Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
+
+
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
 ---
 paths:
@@ -2257,20 +2271,6 @@ Scope commands to what changed: \`pnpm --filter <pkg> run <script>\`.
 Report honestly. If a step surfaces errors that do not auto-resolve, say so and show them. Never claim success over a failing or unrun check. "Done" means every check passed, not that the edits were made.
 
 Each language rule has a "Verify Your Work" section with the exact commands for that stack.
-
-
---- .claude/rules/design-system.md (full, rule:design-system) ---
-# Viam Design System
-
-**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
-
-Look something up when:
-
-- Adding a component or variant. Confirm the pattern exists before inventing one.
-- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
-- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
-
-Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
 
 
 --- .claude/settings.ci.json (full, settings-ci) ---
@@ -2370,10 +2370,10 @@ words around them.
 | \`pr-description.md\`      | editing files under \`.changeset/\`                   |
 | \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
 | \`viam-context.md\`        | every session (Viam API and SDK sources)            |
+| \`design-system.md\`       | every session (design system context)               |
 | \`code-comments.md\`       | editing any code file                               |
 | \`editing-discipline.md\`  | every session (edit from current state, in scope)   |
-| \`verification.md\`        | every session (verify before reporting done)        |
-| \`design-system.md\`       | every session (design system context)               |"
+| \`verification.md\`        | every session (verify before reporting done)        |"
 `;
 
 exports[`buildPlan snapshots > renders the visualization plan 1`] = `
@@ -3179,6 +3179,20 @@ gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.pat
 \`viamrobotics/rdk\` code search is keyword-only and cannot follow interface implementations across packages. Search for the exact declaration, for example \`type ArmService interface\`. For anything needing runtime or type-system reasoning, read the \`.proto\` in \`viamrobotics/api\` instead.
 
 
+--- .claude/rules/design-system.md (full, rule:design-system) ---
+# Viam Design System
+
+**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
+
+Look something up when:
+
+- Adding a component or variant. Confirm the pattern exists before inventing one.
+- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
+- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
+
+Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
+
+
 --- .claude/rules/code-comments.md (full, rule:code-comments) ---
 ---
 paths:
@@ -3270,20 +3284,6 @@ Scope commands to what changed: \`pnpm --filter <pkg> run <script>\`.
 Report honestly. If a step surfaces errors that do not auto-resolve, say so and show them. Never claim success over a failing or unrun check. "Done" means every check passed, not that the edits were made.
 
 Each language rule has a "Verify Your Work" section with the exact commands for that stack.
-
-
---- .claude/rules/design-system.md (full, rule:design-system) ---
-# Viam Design System
-
-**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
-
-Look something up when:
-
-- Adding a component or variant. Confirm the pattern exists before inventing one.
-- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
-- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
-
-Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
 
 
 --- .claude/settings.ci.json (full, settings-ci) ---
@@ -3440,8 +3440,8 @@ process.exit(0);
 | \`go.md\`                  | editing \`.go\`                                          |
 | \`testing-go.md\`          | editing Go tests (\`**/*_test.go\`)                      |
 | \`viam-context.md\`        | every session (Viam API and SDK sources)               |
+| \`design-system.md\`       | every session (design system context)                  |
 | \`code-comments.md\`       | editing any code file                                  |
 | \`editing-discipline.md\`  | every session (edit from current state, in scope)      |
-| \`verification.md\`        | every session (verify before reporting done)           |
-| \`design-system.md\`       | every session (design system context)                  |"
+| \`verification.md\`        | every session (verify before reporting done)           |"
 `;

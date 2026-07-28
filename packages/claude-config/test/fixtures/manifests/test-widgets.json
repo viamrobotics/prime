@@ -16,7 +16,8 @@
       "testingFrontend": true,
       "changesets": true,
       "prDescription": true,
-      "viamContext": true
+      "viamContext": true,
+      "designSystem": true
     }
   },
   "viamContext": {

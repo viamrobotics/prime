@@ -40,7 +40,7 @@
         "modules": {
           "type": "object",
           "additionalProperties": false,
-          "description": "Toggle shared rule modules. design-system and code-comments are always installed.",
+          "description": "Toggle shared rule modules. code-comments, editing-discipline, and verification are always installed.",
           "properties": {
             "svelte": { "type": "boolean" },
             "frontendAesthetics": { "type": "boolean" },
@@ -51,7 +51,8 @@
             "prDescription": { "type": "boolean" },
             "go": { "type": "boolean" },
             "testingGo": { "type": "boolean" },
-            "viamContext": { "type": "boolean" }
+            "viamContext": { "type": "boolean" },
+            "designSystem": { "type": "boolean" }
           }
         }
       }

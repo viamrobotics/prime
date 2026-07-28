@@ -17,7 +17,8 @@
       "changesets": true,
       "prDescription": true,
       "go": false,
-      "testingGo": false
+      "testingGo": false,
+      "designSystem": true
     }
   },
   "mcp": { "svelteTransport": "stdio", "vscode": true },

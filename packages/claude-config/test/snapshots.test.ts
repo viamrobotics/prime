@@ -41,4 +41,18 @@ describe("anti-rot", () => {
       );
     }
   });
+
+  it("omits design-system from a repo with no UI", () => {
+    const plan = buildPlan(
+      parseManifest(
+        JSON.stringify({
+          repo: { name: "rdk", nodeVersion: "22" },
+          rules: { modules: { go: true, testingGo: true } },
+        }),
+      ),
+    );
+    expect(plan.items.map((item) => item.path)).not.toContain(
+      ".claude/rules/design-system.md",
+    );
+  });
 });

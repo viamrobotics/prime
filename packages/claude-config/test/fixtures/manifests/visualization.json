@@ -19,7 +19,8 @@
       "prDescription": true,
       "go": true,
       "testingGo": true,
-      "viamContext": true
+      "viamContext": true,
+      "designSystem": true
     }
   },
   "viamContext": {

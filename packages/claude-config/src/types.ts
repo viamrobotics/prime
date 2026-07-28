@@ -11,7 +11,8 @@ export type RuleModuleName =
   | "prDescription"
   | "go"
   | "testingGo"
-  | "viamContext";
+  | "viamContext"
+  | "designSystem";
 
 /** A Viam ecosystem repo or reference site the `viam-context` rule can point at. */
 export type ViamSourceId =
