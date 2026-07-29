@@ -48,7 +48,7 @@ function capture(run: () => number): { code: number; output: string } {
 
 function scaffold(): ManifestFile {
   const { code } = capture(() =>
-    init({ cwd: dir, dryRun: false, json: false, force: false }),
+    init({ cwd: dir, dryRun: false, force: false }),
   );
   expect(code).toBe(0);
   const raw = readFileSync(join(dir, MANIFEST_FILENAME), "utf8");
@@ -113,7 +113,7 @@ describe("init", () => {
   it("refuses to overwrite an existing manifest without --force", () => {
     write(MANIFEST_FILENAME, { repo: { name: "keep" } });
     const { code, output } = capture(() =>
-      init({ cwd: dir, dryRun: false, json: false, force: false }),
+      init({ cwd: dir, dryRun: false, force: false }),
     );
     expect(code).toBe(3);
     expect(output).toContain("--force");
@@ -131,10 +131,10 @@ describe("install", () => {
 
   it("plans nothing when a dry run follows a real install", () => {
     write(MANIFEST_FILENAME, manifest);
-    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+    capture(() => install({ cwd: dir, dryRun: false }));
 
     const { code, output } = capture(() =>
-      install({ cwd: dir, dryRun: true, json: false }),
+      install({ cwd: dir, dryRun: true }),
     );
     expect(code).toBe(0);
     expect(output).toContain("0 file(s) planned");
@@ -143,7 +143,7 @@ describe("install", () => {
   it("touches no files on a dry run of a fresh repo", () => {
     write(MANIFEST_FILENAME, manifest);
     const { output } = capture(() =>
-      install({ cwd: dir, dryRun: true, json: false }),
+      install({ cwd: dir, dryRun: true }),
     );
     expect(output).toContain("would write");
     expect(existsSync(join(dir, ".claude"))).toBe(false);
@@ -153,7 +153,7 @@ describe("install", () => {
     write(MANIFEST_FILENAME, manifest);
     mkdirSync(join(dir, ".claude"), { recursive: true });
     write(".claude/settings.json", "{ oops: }");
-    expect(() => install({ cwd: dir, dryRun: false, json: false })).toThrow(
+    expect(() => install({ cwd: dir, dryRun: false })).toThrow(
       /\.claude\/settings\.json is not a valid JSON object/,
     );
   });
@@ -162,7 +162,7 @@ describe("install", () => {
     write(MANIFEST_FILENAME, manifest);
     mkdirSync(join(dir, ".claude"), { recursive: true });
     write(".claude/settings.json", "\n");
-    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+    capture(() => install({ cwd: dir, dryRun: false }));
     const settings = JSON.parse(
       readFileSync(join(dir, ".claude/settings.json"), "utf8"),
     ) as Record<string, unknown>;
@@ -179,13 +179,13 @@ describe("update", () => {
 
   function installed(): void {
     write(MANIFEST_FILENAME, manifest);
-    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+    capture(() => install({ cwd: dir, dryRun: false }));
   }
 
   it("reports no file changes when nothing moved", () => {
     installed();
     const { code, output } = capture(() =>
-      update({ cwd: dir, dryRun: false, json: false }),
+      update({ cwd: dir, dryRun: false }),
     );
     expect(code).toBe(0);
     expect(output).toContain("(no file changes)");
@@ -201,7 +201,7 @@ describe("update", () => {
     writeFileSync(lockPath, `${JSON.stringify(lock, null, 2)}\n`);
 
     const { output } = capture(() =>
-      update({ cwd: dir, dryRun: false, json: false }),
+      update({ cwd: dir, dryRun: false }),
     );
     expect(output).toContain("+ .claude/rules/typescript.md");
     expect(output).toContain("~ .claude/rules/svelte.md");
@@ -218,7 +218,7 @@ describe("update", () => {
 
     write(MANIFEST_FILENAME, { ...manifest, mcp: { svelteTransport: "none" } });
     const { output } = capture(() =>
-      update({ cwd: dir, dryRun: false, json: false }),
+      update({ cwd: dir, dryRun: false }),
     );
     expect(output).toContain("- .mcp.json");
     expect(output).not.toContain("- CLAUDE.md");
@@ -230,11 +230,11 @@ describe("update", () => {
       ...manifest,
       outputStyle: { terse: "default" },
     });
-    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+    capture(() => install({ cwd: dir, dryRun: false }));
 
     write(MANIFEST_FILENAME, { ...manifest, outputStyle: { terse: false } });
     const { output } = capture(() =>
-      update({ cwd: dir, dryRun: false, json: false }),
+      update({ cwd: dir, dryRun: false }),
     );
     expect(output).toContain("~ .claude/settings.json");
   });
@@ -248,7 +248,7 @@ describe("doctor", () => {
 
   function installed(): void {
     write(MANIFEST_FILENAME, manifest);
-    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+    capture(() => install({ cwd: dir, dryRun: false }));
   }
 
   function run(options: { fix?: boolean; prune?: boolean } = {}) {
@@ -298,7 +298,7 @@ describe("doctor", () => {
       ...manifest,
       mcp: { svelteTransport: "stdio" },
     });
-    capture(() => install({ cwd: dir, dryRun: false, json: false }));
+    capture(() => install({ cwd: dir, dryRun: false }));
 
     write(MANIFEST_FILENAME, { ...manifest, mcp: { svelteTransport: "none" } });
     expect(run().output).toContain("orphaned");
