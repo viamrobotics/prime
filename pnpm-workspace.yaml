@@ -1,6 +1,12 @@
 packages:
   - apps/*
   - packages/*
+# vitest resolves its own `vite` when left to itself, which puts a second copy in the
+# tree and makes prime-ui's vite.config.ts type-check against two rollup/rolldown APIs.
+# Scoped to vitest so Astro (apps/docs) keeps the vite major it builds with.
+overrides:
+  vitest>vite: "catalog:"
+  "@vitest/mocker>vite": "catalog:"
 onlyBuiltDependencies:
   - "@tailwindcss/oxide"
   - esbuild
@@ -26,6 +32,13 @@ catalog:
   typescript: ^6.0.2
   typescript-eslint: ^8.59.2
   vite: ^8.0.7
+  vitest: ^4.1.3
+  # CLI runtime deps (claude-config) — all must be zero-transitive-dependency
+  commander: ^15.0.0
+  dequal: ^2.0.3
+  diff: ^9.0.0
+  markdown-table: ^3.0.4
+  zod: ^4.4.3
   # Tailwind — unified repo-wide
   "@tailwindcss/vite": ^4.2.4
   tailwindcss: ^4.2.4

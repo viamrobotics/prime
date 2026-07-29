@@ -1,0 +1,4 @@
+dist/
+.wireit/
+templates/
+test/__snapshots__/

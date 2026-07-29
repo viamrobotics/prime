@@ -1,0 +1,57 @@
+{
+  "repo": {
+    "name": "visualization",
+    "monorepo": false,
+    "packageManager": "pnpm",
+    "nodeVersion": "22",
+    "packageScope": "@viamrobotics",
+    "workspaceRootPackage": "@viamrobotics/motion-tools",
+    "wireit": true
+  },
+  "rules": {
+    "modules": {
+      "svelte": true,
+      "frontendAesthetics": true,
+      "three": true,
+      "typescript": false,
+      "testingFrontend": true,
+      "changesets": true,
+      "prDescription": true,
+      "go": true,
+      "testingGo": true,
+      "viamContext": true,
+      "designSystem": true
+    }
+  },
+  "viamContext": {
+    "sources": {
+      "api": true,
+      "rdk": true,
+      "typescriptSdk": true,
+      "svelteSdk": true,
+      "testWidgets": true,
+      "motionTools": true,
+      "primeCore": true
+    }
+  },
+  "mcp": { "svelteTransport": "none", "vscode": false },
+  "outputStyle": { "terse": "default" },
+  "hooks": { "sessionStart": true },
+  "ci": { "setupAction": true, "weeklyDependencyUpdate": false },
+  "verify": {
+    "lint": "pnpm lint",
+    "check": "pnpm check",
+    "test": "pnpm test",
+    "build": "pnpm build"
+  },
+  "workflows": {
+    "teamMention": "@viamrobotics/team-viz",
+    "goTools": true,
+    "secrets": {
+      "slackAlertWebhook": true,
+      "gitAccessToken": true,
+      "githubApp": true,
+      "jira": false
+    }
+  }
+}

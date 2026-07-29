@@ -1,0 +1,49 @@
+{
+  "repo": {
+    "name": "test-widgets",
+    "monorepo": false,
+    "packageManager": "pnpm",
+    "nodeVersion": "22",
+    "packageScope": "@viamrobotics",
+    "workspaceRootPackage": "@viamrobotics/test-widgets",
+    "wireit": true
+  },
+  "rules": {
+    "modules": {
+      "svelte": true,
+      "frontendAesthetics": true,
+      "typescript": true,
+      "testingFrontend": true,
+      "changesets": true,
+      "prDescription": true,
+      "viamContext": true,
+      "designSystem": true
+    }
+  },
+  "viamContext": {
+    "sources": {
+      "api": true,
+      "typescriptSdk": true,
+      "svelteSdk": true,
+      "testWidgets": true,
+      "primeCore": true
+    }
+  },
+  "mcp": { "svelteTransport": "http", "vscode": false },
+  "ci": { "setupAction": true, "weeklyDependencyUpdate": true },
+  "verify": {
+    "lint": "pnpm lint",
+    "check": "pnpm check",
+    "test": "pnpm test",
+    "build": "pnpm build"
+  },
+  "workflows": {
+    "goTools": false,
+    "secrets": {
+      "slackAlertWebhook": true,
+      "gitAccessToken": true,
+      "githubApp": false,
+      "jira": false
+    }
+  }
+}

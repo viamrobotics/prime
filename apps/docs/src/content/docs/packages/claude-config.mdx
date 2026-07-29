@@ -1,0 +1,193 @@
+---
+title: "@viamrobotics/claude-config"
+description: CLI that installs and maintains Viam's shared Claude Code configuration across repos.
+---
+
+import {
+  Aside,
+  Code,
+  Steps,
+  Tabs,
+  TabItem,
+} from "@astrojs/starlight/components";
+
+`@viamrobotics/claude-config` Coding rules, MCP config, output styles, and the `CLAUDE.md` scaffold live as canonical templates in the package. Each repo declares its stack in a `claude-config.json` manifest, and the CLI renders the templates against that manifest. A hand-edit to a managed file becomes drift that CI can catch.
+
+<Aside type="caution" title="Pre-1.0">
+  The manifest schema is still settling. Expect breaking changes to
+  `claude-config.json` until 1.0.
+</Aside>
+
+## Setup
+
+<Steps>
+
+1. Install the CLI as a dev dependency:
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code code="pnpm add --save-dev @viamrobotics/claude-config" lang="sh" />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install --save-dev @viamrobotics/claude-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code code="yarn add --dev @viamrobotics/claude-config" lang="sh" />
+     </TabItem>
+   </Tabs>
+
+2. Scaffold a manifest. `init` reads your `package.json`, lockfile, and any existing `.mcp.json` to guess the package manager, Node version, and which rule modules apply:
+
+   <Code code="pnpm claude-config init" lang="sh" />
+
+3. Review the generated `claude-config.json`, then write the managed files:
+
+   <Code code="pnpm claude-config install" lang="sh" />
+
+4. Add a drift check to CI so managed files cannot rot:
+
+   <Code code="pnpm claude-config doctor" lang="sh" />
+
+</Steps>
+
+## Commands
+
+| Command                 | What it does                                                                              |
+| ----------------------- | ----------------------------------------------------------------------------------------- |
+| `claude-config init`    | Sniffs the repo and scaffolds `claude-config.json`. `--force` overwrites an existing one. |
+| `claude-config install` | Renders the manifest and writes every managed file. Idempotent.                           |
+| `claude-config update`  | Re-renders after a version bump and reports what changed.                                 |
+| `claude-config doctor`  | Read-only drift check. `--fix` reconciles, `--prune` also deletes orphaned managed files. |
+
+Every command takes `--cwd <dir>` to target another repo root and `--dry-run` to preview without writing. `doctor` also takes `--json` for machine-readable output.
+
+`doctor` exits `0` when clean, `1` on drift, and `2` when the manifest is missing or invalid. That makes the CI step a one-liner with no extra scripting.
+
+## The manifest
+
+`claude-config.json` is the only file you hand-edit. Everything else is generated from it. The `$schema` reference gives you completion and validation in any editor with JSON schema support.
+
+```json
+{
+  "$schema": "./node_modules/@viamrobotics/claude-config/schema/manifest.schema.json",
+  "repo": {
+    "name": "prime",
+    "monorepo": true,
+    "packageManager": "pnpm",
+    "nodeVersion": "24",
+    "packageScope": "@viamrobotics",
+    "wireit": true
+  },
+  "rules": {
+    "modules": {
+      "svelte": true,
+      "frontendAesthetics": true,
+      "typescript": true,
+      "testingFrontend": true,
+      "changesets": true,
+      "prDescription": true,
+      "go": false,
+      "testingGo": false
+    }
+  },
+  "mcp": { "svelteTransport": "stdio", "vscode": true },
+  "outputStyle": { "terse": "default" },
+  "hooks": { "sessionStart": true }
+}
+```
+
+Only `repo.name` and `repo.nodeVersion` are required. Every other section falls back to a sensible default.
+
+| Section       | Controls                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------- |
+| `repo`        | Repo name, Node major version, package manager, npm scope, monorepo and wireit flags.             |
+| `rules`       | Which optional rule modules install. See the table below.                                         |
+| `viamContext` | Which Viam ecosystem sources the `viam-context` rule points at. Read only when that module is on. |
+| `mcp`         | Svelte MCP server transport (`stdio`, `http`, or `none`) and whether to emit `.vscode/mcp.json`.  |
+| `outputStyle` | Output styles to install. `"default"` also sets the repo default in `.claude/settings.json`.      |
+| `hooks`       | Opt-in Claude Code hooks. `sessionStart` prints a git orientation header when a session opens.    |
+
+## Rule modules
+
+Four rules install everywhere: `code-comments.md`, `editing-discipline.md`, `verification.md`, and `design-system.md`. The rest are opt-in per repo, so a Go service never ships Svelte guidance and a component library never ships Go guidance.
+
+| Module               | Rule file                | Loads when Claude reads               |
+| -------------------- | ------------------------ | ------------------------------------- |
+| `svelte`             | `svelte.md`              | `.svelte`, `.svelte.ts`, `.svelte.js` |
+| `frontendAesthetics` | `frontend-aesthetics.md` | `.svelte`, `.css`                     |
+| `three`              | `three.md`               | `**/three/**`, `**/*.three.ts`        |
+| `typescript`         | `typescript.md`          | `.ts`                                 |
+| `testingFrontend`    | `testing-frontend.md`    | `**/*.spec.ts`                        |
+| `prDescription`      | `pr-description.md`      | `.changeset/**`                       |
+| `changesets`         | `changesets.md`          | `.changeset/**`, `CHANGELOG.md`       |
+| `go`                 | `go.md`                  | `.go`                                 |
+| `testingGo`          | `testing-go.md`          | `**/*_test.go`                        |
+| `viamContext`        | `viam-context.md`        | every session                         |
+
+Path-scoped rules cost nothing until Claude opens a matching file, so enabling one your repo rarely touches is cheap.
+
+### Viam context
+
+`viam-context.md` is the one rule rendered per repo rather than copied. It always points at https://docs.viam.com, and adds a table of the Viam ecosystem sources your repo actually uses so Claude verifies against the proto or the SDK instead of guessing at a method name.
+
+`init` fills this in by scanning every `package.json`, `go.mod`, and Python manifest in the repo, workspace members included. Detection is a starting point, not the contract. The manifest is what renders, so correct it by hand when a guess is wrong:
+
+```json
+"viamContext": {
+  "sources": {
+    "api": true,
+    "rdk": true,
+    "typescriptSdk": true
+  }
+}
+```
+
+| Source          | Detected from                | Points at                                               |
+| --------------- | ---------------------------- | ------------------------------------------------------- |
+| `api`           | `go.viam.com/api`            | `viamrobotics/api`                                      |
+| `rdk`           | `go.viam.com/rdk`            | `viamrobotics/rdk`                                      |
+| `typescriptSdk` | `@viamrobotics/sdk`          | `viamrobotics/viam-typescript-sdk`, https://ts.viam.dev |
+| `svelteSdk`     | `@viamrobotics/svelte-sdk`   | `viamrobotics/viam-svelte-sdk`                          |
+| `testWidgets`   | `@viamrobotics/test-widgets` | `viamrobotics/test-widgets`                             |
+| `motionTools`   | `@viamrobotics/motion-tools` | `viamrobotics/visualization`                            |
+| `primeCore`     | `@viamrobotics/prime-core`   | `viamrobotics/prime`, https://design.viam.com           |
+| `primeUi`       | `@viamrobotics/prime-ui`     | `viamrobotics/prime`, https://design.viam.com           |
+| `pythonSdk`     | `viam-sdk`                   | `viamrobotics/viam-python-sdk`, https://python.viam.dev |
+
+Enabling `rdk` also adds a note that GitHub code search cannot follow Go interface implementations across packages, and to read the proto instead.
+
+## What gets managed
+
+`install` writes these, and `doctor` watches them:
+
+- `.claude/rules/*.md` the enabled rule set, copied byte-for-byte from the package.
+- `.claude/settings.ci.json` the settings Claude uses in CI runs.
+- `.claude/output-styles/` installed output styles, plus an `outputStyle` key merged into `.claude/settings.json`.
+- `.claude/hooks/` enabled hook scripts, plus their registration in `.claude/settings.json`.
+- `.mcp.json` and optionally `.vscode/mcp.json` the Svelte MCP server config.
+- `.nvmrc` the Node major version from the manifest.
+- `.gitignore` and `.prettierignore` a marked block, leaving the rest of each file alone.
+- `CLAUDE.md` a marked region holding the generated rules table, leaving your own content alone.
+
+Files that a repo owns and claude-config only writes part of (`CLAUDE.md`, `.gitignore`, `.prettierignore`, `.claude/settings.json`) are never pruned. `--prune` only removes fully-generated files that dropped out of the manifest. `.claude/.claude-config.lock` records what was written and at which version.
+
+<Aside title="Change the manifest, not the output">
+  Editing a managed file directly works until the next `install` or `doctor
+  --fix` overwrites it. If a repo needs something different, change
+  `claude-config.json`. If every repo needs it, change the template in the
+  package.
+</Aside>
+
+## Staying current
+
+Bump the dependency, then run `update`. It re-renders every managed file against the new templates and prints the delta, so a rule rewrite or a config fix lands everywhere with one command per repo.
+
+<Code
+  code={`pnpm add --save-dev @viamrobotics/claude-config@latest\npnpm claude-config update`}
+  lang="sh"
+/>
+
+The package has zero runtime dependencies, uses only `node:*` built-ins, and runs on Node 20 or newer.

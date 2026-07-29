@@ -1,0 +1,47 @@
+{
+  "repo": {
+    "name": "viam-svelte-sdk",
+    "monorepo": false,
+    "packageManager": "pnpm",
+    "nodeVersion": "24",
+    "packageScope": "@viamrobotics",
+    "workspaceRootPackage": "@viamrobotics/viam-svelte-sdk",
+    "wireit": false
+  },
+  "rules": {
+    "modules": {
+      "svelte": true,
+      "frontendAesthetics": true,
+      "typescript": true,
+      "testingFrontend": true,
+      "changesets": true,
+      "prDescription": true,
+      "viamContext": true,
+      "designSystem": true
+    }
+  },
+  "viamContext": {
+    "sources": {
+      "api": true,
+      "typescriptSdk": true,
+      "svelteSdk": true
+    }
+  },
+  "mcp": { "svelteTransport": "stdio", "vscode": false },
+  "ci": { "setupAction": true, "weeklyDependencyUpdate": true },
+  "verify": {
+    "lint": "pnpm lint",
+    "check": "pnpm check",
+    "test": "pnpm test",
+    "build": "pnpm build"
+  },
+  "workflows": {
+    "goTools": false,
+    "secrets": {
+      "slackAlertWebhook": true,
+      "gitAccessToken": true,
+      "githubApp": false,
+      "jira": false
+    }
+  }
+}

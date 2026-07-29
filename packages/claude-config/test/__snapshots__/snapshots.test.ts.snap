@@ -1,0 +1,3447 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildPlan snapshots > renders the prime plan 1`] = `
+"--- .claude/rules/svelte.md (full, rule:svelte) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+---
+
+# Svelte 5 Best Practices
+
+Svelte 5 with runes throughout. No Svelte 4 syntax. See the [Svelte 5 docs](https://svelte.dev/docs/svelte) and [Runes Guide](https://svelte.dev/docs/svelte/what-are-runes).
+
+## Svelte MCP Server
+
+When the \`svelte\` MCP server is available, use it instead of recalling API details:
+
+- \`svelte-autofixer\`: **required** on any Svelte code you write, before handing it over. Re-run until it reports no issues.
+- \`list-sections\`, then \`get-documentation\`: when a Svelte or SvelteKit API is uncertain. Fetch only the sections whose \`use_cases\` match the task.
+
+## Component Structure
+
+\`\`\`svelte
+<script lang="ts">
+import type { HTMLButtonAttributes } from 'svelte/elements';
+
+interface Props extends HTMLButtonAttributes {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+const {
+  variant = 'primary',
+  disabled = false,
+  children,
+  ...restProps
+}: Props = $props();
+const classes = $derived(['btn', \`btn-\${variant}\`, disabled && 'btn-disabled']);
+</script>
+
+<button
+  {...restProps}
+  aria-disabled={disabled || undefined}
+  class={classes}
+>
+  {@render children?.()}
+</button>
+\`\`\`
+
+- Typed \`Props\` interface, extending the relevant HTML attributes type when wrapping a native element.
+- \`$props()\` with defaults and a rest spread onto the element.
+- \`$derived\` for computed values. **Never derive state in an \`$effect\`.** \`$effect\` is for side effects only: DOM mutations, subscriptions.
+- \`{@render children?.()}\` for composition. Never \`<slot>\`, always snippets.
+- \`$state.raw\` for values that need no deep reactivity (large arrays replaced wholesale, Three.js class instances). \`untrack(() => value)\` to read reactive state without taking a dependency.
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment. These are the Svelte shapes.
+
+- \`/** */\` on each \`Props\` member that is not self-evident. Props are the component's public API and editors show these on hover.
+- \`<!-- @component -->\` at the top of a \`.svelte\` file when the component needs file-level docs.
+- A non-obvious rune choice carries its reason inline, because the alternative looks equivalent: \`$state.raw\` over \`$state\`, \`untrack\` around a read, an \`$effect\` that could be mistaken for derived state.
+
+## Context Providers
+
+Reactive shared state lives in \`.svelte.ts\` files using \`getContext\` and \`setContext\`. **ALWAYS** use \`Symbol\` keys.
+
+\`\`\`typescript
+// theme-context.svelte.ts
+import { getContext, setContext } from "svelte";
+
+const key = Symbol("theme");
+
+interface ThemeContext {
+  readonly current: "light" | "dark";
+  toggle: () => void;
+}
+
+export const provideTheme = () => {
+  let theme = $state<"light" | "dark">("light");
+  const context: ThemeContext = {
+    get current() {
+      return theme;
+    },
+    toggle: () => {
+      theme = theme === "light" ? "dark" : "light";
+    },
+  };
+  setContext(key, context);
+  return context;
+};
+
+export const useTheme = (): ThemeContext => getContext(key);
+\`\`\`
+
+- \`.svelte.ts\` for any file using runes outside a \`.svelte\` component.
+- \`Symbol()\` keys prevent collisions.
+- Return **getters**, not plain properties, to preserve reactivity.
+- Name \`provide*\` to inject, \`use*\` or \`create*\` to consume.
+
+## Accessibility
+
+- Semantic elements and correct ARIA roles. Label every interactive element.
+- \`aria-hidden="true"\` on decorative icons.
+- \`aria-disabled\` instead of \`disabled\` when the element must stay focusable.
+
+## Styling
+
+Array and object syntax for conditional classes:
+
+\`\`\`svelte
+<button class={[
+  'inline-flex items-center font-medium rounded',
+  { 'bg-blue-600': variant === 'primary', 'bg-red-600': variant === 'danger' },
+  disabled && 'opacity-50 cursor-not-allowed',
+]}>
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check across the workspace
+pnpm lint     # prettier + eslint
+\`\`\`
+
+
+--- .claude/rules/frontend-aesthetics.md (full, rule:frontend-aesthetics) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.css"
+---
+
+# Frontend Aesthetics
+
+Every UI change should look intentional and high-craft. The failure mode is "AI slop": hardcoded hex instead of tokens, inconsistent spacing and density, hand-rolled versions of components that already exist, missing interaction states, weak hierarchy. Never introduce new fonts, color schemes, gradients, or creative layouts.
+
+Tokens and utilities come from \`@viamrobotics/tailwind-config\`, the tweakpane theme from \`@viamrobotics/tweakpane-config\`, both implementing https://design.viam.com. \`svelte.md\` owns Svelte conventions, ARIA, and semantics. \`three.md\` owns Three.js rendering.
+
+## Components
+
+- Check the design system for an existing pattern before adding a parallel one, and extend rather than duplicate. That cuts both ways: in an app, reach for the library component instead of hand-rolling a control. In the library, extend an existing primitive instead of shipping a second one that overlaps it.
+- Control panels (sliders, points, color, rotation) go through \`svelte-tweakpane-ui\`, themed globally with \`primeTheme\` via \`ThemeUtils.setGlobalDefaultTheme(primeTheme)\`, set once on the client. Never restyle tweakpane ad hoc, fix the theme.
+
+## Color and tokens
+
+Use the semantic tokens. **Never hardcode hex for UI chrome.**
+
+- Text: \`text-heading\`, \`text-default\`, \`text-subtle-1\`, \`text-subtle-2\`, \`text-disabled\`, \`text-link\`.
+- Surfaces: \`bg-extralight\`, \`bg-light\`, \`bg-medium\`, \`bg-dark\`. Hover fills: \`ghost-light\`, \`ghost-medium\`.
+- Borders: \`border-light\`, \`border-medium\`, \`border-dark\`.
+- Grayscale \`gray-1\` (lightest) through \`gray-9\` (darkest) when a raw step is genuinely needed.
+- Status: \`danger\`, \`warning\`, \`success\`, \`info\`, each with \`-bright\`, \`-dark\`, \`-medium\`, and \`-light\` steps. Use them for meaning, never decoration.
+- \`shadow-sm\` for elevation, \`z-max\` for top-layer overlays.
+- Not \`style="color:#4e4f52"\` or \`class="text-[#7a7c80]"\`. Use \`class="text-subtle-1"\`.
+- Brand and illustration colors (\`power-button\`, \`power-wire\`, \`cyberpunk\`, \`mars-rover\`, \`solar-power\`, \`hologram\`, \`raspberry\`, \`pcb\`, \`yoshimi\`, \`pixel-*\`) belong to illustration, 3D, and brand art. Never to UI chrome.
+- Raw hex is legitimate where Tailwind cannot reach: shader and WebGL code, \`<canvas>\` fills, gradient stops in a slider track. Do not flag those.
+
+## Typography
+
+- \`font-space-grotesk\` for display and headings.
+- \`font-public-sans\` for body and UI text.
+- \`font-roboto-mono\` for numbers and data: poses, coordinates, IDs, table cells.
+- A repo's global \`body\` font is often plain \`system-ui\`, so the prime families are not inherited everywhere. Set the family explicitly where it matters.
+- Build hierarchy from weight, size, and color tokens, never an invented type scale.
+
+## Spacing, layout, density
+
+- Stay on the Tailwind spacing scale. Do not sprinkle arbitrary pixel values where a scale step fits.
+- Match the density of neighboring panels. Viam tooling UI is dense, not a marketing page.
+- Reuse the layout idioms already in the app instead of inventing one.
+- Hierarchy comes from \`text-heading\` and \`text-default\` against \`text-subtle-1\` and \`text-subtle-2\`, not from size alone.
+
+## States
+
+A control is not done until every state is handled. Missing states is the most common slop tell.
+
+- hover, focus-visible, active, and disabled on every interactive element.
+- loading and empty states for anything async or list-shaped. A placeholder or skeleton, not a blank box.
+- Disabled must read as disabled: \`text-disabled\` and reduced affordance. Prefer \`aria-disabled\` when the element has to stay focusable, see \`svelte.md\`.
+
+## Motion
+
+- Restrained and purposeful. CSS transitions on hover, focus, and expand.
+- Prefer the config's \`animate-wiggle\` (nudge or error), \`animate-blink\` (attention), and \`animate-popup-enter\` over bespoke keyframes.
+- Respect \`prefers-reduced-motion\`.
+
+## Visual accessibility
+
+- Pair text tokens with surfaces that hold contrast. Never \`text-subtle-2\` on \`bg-medium\`.
+- Keep a visible \`focus-visible\` ring. Never remove a focus outline without replacing it.
+- Hit targets large enough to use comfortably.
+
+## Before finishing a UI change
+
+- [ ] Reused an existing design-system pattern instead of adding a parallel one.
+- [ ] Semantic tokens only. No hardcoded hex for chrome, no brand colors as chrome.
+- [ ] Correct font role, family set explicitly where it does not inherit.
+- [ ] Spacing and density match neighbors, hierarchy is clear.
+- [ ] hover, focus-visible, active, and disabled handled. loading and empty for async or lists.
+- [ ] Motion restrained, \`prefers-reduced-motion\` respected.
+- [ ] Contrast holds, focus stays visible, hit targets are adequate.
+- [ ] Matches design.viam.com and looks intentional.
+
+
+--- .claude/rules/typescript.md (full, rule:typescript) ---
+---
+paths:
+  - "**/*.ts"
+---
+
+# TypeScript Best Practices
+
+\`strict: true\`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/).
+
+## Type Definitions
+
+\`interface\` for object shapes, since they extend. \`type\` for unions and computed types.
+
+\`\`\`typescript
+interface ButtonOptions {
+  variant: "primary" | "secondary" | "danger";
+  disabled?: boolean;
+}
+
+type ConnectionStatus = "connected" | "disconnected" | "connecting";
+\`\`\`
+
+## NEVER Use \`any\`
+
+**NEVER** type untyped external data as \`any\`. Use \`unknown\` and narrow with a type guard:
+
+\`\`\`typescript
+// BAD
+const data: any = JSON.parse(raw);
+
+// GOOD
+const data: unknown = JSON.parse(raw);
+if (isPayload(data)) {
+  console.log(data.name); // safely typed
+}
+\`\`\`
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment. TSDoc decides the shape.
+
+- \`/** */\` on exported API, \`//\` for inline rationale. Editors surface the former on hover, so it is documentation, not narration.
+- Never restate a type in prose. \`@param value - the string to parse\` adds nothing over \`value: string\`. Describe the constraint or the failure mode instead.
+- Reach for \`@param\`, \`@returns\`, or \`@example\` when the signature leaves something open: units, ranges, thrown errors, a non-obvious \`undefined\` return. Not by default.
+- \`@deprecated\` on anything consumers still import, naming the replacement.
+
+\`\`\`typescript
+/**
+ * @returns undefined when \`value\` is not a base-10 integer.
+ * @example safeParseInt('42') // 42
+ */
+export const safeParseInt = (value: string): number | undefined => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check
+pnpm test
+\`\`\`
+
+
+--- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
+---
+paths:
+  - "**/*.spec.ts"
+---
+
+# Frontend Testing (Vitest)
+
+Real implementations by default. Mock only I/O boundaries: network, file system, time.
+
+Static analysis runs on every commit. TypeScript uses ESLint (\`@typescript-eslint\`) and Prettier via \`pnpm lint\`. Svelte adds \`svelte-check\` and \`eslint-plugin-svelte\` via \`pnpm check\` and \`pnpm lint\`.
+
+## Unit Tests
+
+Pure functions, business logic, and utilities in isolation. Use \`it.each\` for case tables.
+
+\`\`\`typescript
+import { describe, expect, it } from "vitest";
+import * as Subject from "../calculate";
+
+describe("calculateTotal", () => {
+  it("returns 0 for empty input", () => {
+    expect(Subject.calculateTotal([])).toBe(0);
+  });
+
+  it.each([
+    { input: [1, 2], expected: 3 },
+    { input: [-1, 1], expected: 0 },
+  ])("returns $expected for $input", ({ input, expected }) => {
+    expect(Subject.calculateTotal(input)).toBe(expected);
+  });
+});
+\`\`\`
+
+## Integration Tests
+
+Multiple modules working together, with the I/O boundary mocked. Cover the failure path as well as the happy one.
+
+\`\`\`typescript
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createApiClient } from "../api-client";
+import { userStore } from "../user-store";
+
+describe("login flow", () => {
+  beforeEach(() => {
+    userStore.reset();
+    vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("populates the user store after a successful login", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ id: "123", name: "Alice" }), {
+        status: 200,
+      }),
+    );
+
+    await createApiClient().login("alice@example.com", "password");
+
+    expect(userStore.get()).toEqual({ id: "123", name: "Alice" });
+  });
+
+  it("leaves the user store empty on auth failure", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 401 }));
+
+    await expect(
+      createApiClient().login("alice@example.com", "wrong"),
+    ).rejects.toThrow();
+    expect(userStore.get()).toBeNull();
+  });
+});
+\`\`\`
+
+### Mocking
+
+\`\`\`typescript
+vi.mock("../api-client", () => ({ fetchUser: vi.fn() }));
+vi.spyOn(object, "method").mockReturnValue("result");
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000);
+vi.useRealTimers();
+\`\`\`
+
+Reset with \`vi.clearAllMocks()\` in \`beforeEach\`, or \`clearMocks: true\` in \`vitest.config.ts\`.
+
+## Component Tests (\`*.svelte.spec.ts\`)
+
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro).
+
+\`\`\`typescript
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
+import { expect, it, vi } from "vitest";
+import Counter from "../Counter.svelte";
+import MyForm from "../MyForm.svelte";
+
+it("increments count on click", async () => {
+  const user = userEvent.setup();
+  render(Counter);
+
+  await user.click(screen.getByRole("button", { name: /increment/i }));
+  expect(screen.getByText("1")).toBeInTheDocument();
+});
+
+it("calls onSubmit when the form is submitted", async () => {
+  const onSubmit = vi.fn();
+  const user = userEvent.setup();
+  render(MyForm, { props: { onSubmit } });
+
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  expect(onSubmit).toHaveBeenCalledOnce();
+});
+\`\`\`
+
+Query priority, highest first:
+
+1. \`getByRole\`, **preferred**, mirrors how users and assistive technology see the page
+2. \`getByLabelText\` for form inputs
+3. \`getByPlaceholderText\` for inputs without a label, avoid if possible
+4. \`getByText\` for non-interactive elements
+5. \`getByTestId\`, **last resort**, add \`data-testid\` only when no semantic selector exists
+
+### Injecting Context
+
+\`\`\`typescript
+render(UserProfile, {
+  context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
+});
+\`\`\`
+
+For complex context trees, add a \`__fixtures__/\` wrapper component that provides every required context and takes the component under test as a snippet.
+
+### Hook Tests (\`.svelte.spec.ts\`)
+
+Runes in \`.svelte.ts\` only work inside a component boundary. Add a minimal \`__fixtures__/\` component that instantiates the hook and exposes its state for assertions.
+
+### Browser Mode
+
+Not adopted. If a test needs real browser APIs that jsdom lacks (\`ResizeObserver\`, \`IntersectionObserver\`, \`canvas\`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file \`*.browser.spec.ts\`.
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/pr-description.md (full, rule:pr-description) ---
+---
+paths:
+  - ".changeset/**"
+---
+
+# PR Description Format
+
+PR descriptions are technical documents for reviewers who already know the codebase. Be precise, not verbose. American English, no em dashes.
+
+## Output
+
+Return the finished description as raw markdown wrapped in a fenced code block so it pastes straight into the GitHub PR body. If the description itself contains code fences, use four or more backticks for the outer fence.
+
+Create or update the PR yourself only when the user asks (for example \`gh pr create\`). Then pass the markdown as the PR body instead of printing it.
+
+## Opening Paragraph
+
+One or two sentences on **what** the PR changes and **why** it matters. Name the user-facing capability, not the implementation. It stands on its own, with no \`## Summary\` or \`## Description\` wrapper heading.
+
+\`\`\`
+Adds a \`ghost\` variant to Button so consumers can use a tertiary button style
+that matches the design system's low-emphasis treatment.
+\`\`\`
+
+## Layer Sections
+
+One section per architecture layer the PR touches, using the layers that exist in the affected packages. Omit sections with no changes. Common headings:
+
+| Heading        | What it covers                                           |
+| -------------- | -------------------------------------------------------- |
+| **Components** | Changes to \`.svelte\` components in \`packages/<pkg>/src/\` |
+| **Primitives** | Changes to headless primitives or shared building blocks |
+| **Types**      | New or changed exported types in a package's public API  |
+| **Tests**      | New or changed test files                                |
+
+Each bullet opens with the changed symbol (component, primitive, prop, type) in backticks or bold, then says what changed in one or two sentences. Name the export or prop, never just "updated the package".
+
+\`\`\`markdown
+### Components
+
+- \`Button\` adds a \`variant="ghost"\` value and updates focus styles for it.
+- \`IconButton\` re-exports the new variant through its \`variant\` prop.
+\`\`\`
+
+## Why?
+
+Include this section only when the PR makes non-obvious design decisions. Each decision is a bold question followed by a paragraph.
+
+\`\`\`markdown
+### Why?
+
+**Why a new variant instead of a \`subtle\` prop?**
+
+The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
+\`\`\`
+
+## Testing
+
+Always last. Name the exact commands run and any tests added. "Tests pass" is not enough.
+
+\`\`\`markdown
+### Testing
+
+Ran \`pnpm --filter @viamrobotics/<pkg> test\` and \`pnpm lint\`. Added a new spec for the ghost variant focus state.
+\`\`\`
+
+## Style
+
+- \`###\` (h3) for every section heading. GitHub-flavored Markdown: fenced code, bullets, bold.
+- No auto-generated changelogs, file lists, or diff stats. Reviewers have the Files tab.
+- Direct and technical. First person for rationale ("I tested this with..."), present tense for behavior ("\`Button\` adds...").
+- Name both the old and the new name when renaming or deprecating.
+- If the PR stacks on another, note the base branch and link the parent PR in the opening paragraph.
+
+
+--- .claude/rules/changesets.md (full, rule:changesets) ---
+---
+paths:
+  - '.changeset/**'
+  - 'CHANGELOG.md'
+---
+
+# Changesets
+
+Any PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. One changeset can bump several packages.
+
+Run \`pnpm changeset\`. It prompts for the packages and bump type, then writes \`.changeset/<random-name>.md\`:
+
+\`\`\`markdown
+---
+'@viamrobotics/<package-a>': minor
+'@viamrobotics/<package-b>': patch
+---
+
+Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
+\`\`\`
+
+Bump types:
+
+- \`major\`: breaking public API change. Rare, coordinate before merging.
+- \`minor\`: new component, prop, export, or capability.
+- \`patch\`: bug fix, perf, security, dependency bump, internal refactor.
+
+The summary is one imperative phrase in changelog voice:
+
+- \`Fix focus ring on disabled Button\`
+- \`Add ghost variant to Button\`
+- \`sec: update tar dependency\`
+- \`Make Dialog expose explicit open and close methods\`
+
+Skip a changeset only when nothing reaches consumers: CI config, test-only, docs-only, internal tooling.
+
+
+--- .claude/rules/design-system.md (full, rule:design-system) ---
+# Viam Design System
+
+**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
+
+Look something up when:
+
+- Adding a component or variant. Confirm the pattern exists before inventing one.
+- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
+- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
+
+Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
+
+
+--- .claude/rules/code-comments.md (full, rule:code-comments) ---
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/*.go"
+  - "**/*.py"
+  - "**/*.rs"
+---
+
+# Code Comments
+
+Applies to every language in the repo. This rule decides _whether_ to comment. When the answer is yes, the language rule (\`typescript.md\`, \`go.md\`, \`svelte.md\`) gives the shape.
+
+- **Default to no comment.** If the code shows the intent, add nothing.
+- **Comment for exactly two reasons:**
+  1. **Divergence from convention.** The code departs from repo patterns, a language idiom, or the obvious implementation. Say why: bug workaround, perf constraint, external API quirk, reactivity requirement.
+  2. **Non-obvious domain logic.** The code encodes a business rule, invariant, or domain concept a new reader cannot infer. Catalog it so future readers can find and trust it.
+- **Hard cap of 200 characters per comment.** Past that it documents too much. Split it, link a doc or ticket, or make the code clearer.
+- **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Rationale for a change goes in the commit message or PR description.
+- **Prefer naming over commenting.** If a comment explains what a variable, function, or block does, rename it or extract a well-named function instead.
+- **Use doc-comment syntax for symbol docs.** Anything documenting a type, function, or member: \`/** */\` in TypeScript, JavaScript, and Svelte, \`//\` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
+
+## Bad
+
+\`\`\`ts
+// Get the user from the store
+const user = userStore.get();
+
+// Switched to structuredClone because the old spread didn't deep-copy
+const copy = structuredClone(config);
+
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+\`\`\`
+
+Narration, then diff history, then a line comment where a doc comment belongs.
+
+## Good
+
+\`\`\`ts
+/** Returns undefined when the part has no config. That is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
+
+// $state.raw: this buffer is replaced wholesale each frame, deep reactivity would tank render perf.
+let points = $state.raw(new Float32Array());
+
+// Viam resource names are case-insensitive but must round-trip with their original
+// casing, so we key by the original and compare lowercased.
+const key = name.toLowerCase();
+
+const activeParts = filterActiveParts(robot.parts);
+\`\`\`
+
+A doc comment carrying what the signature cannot, a divergence with its reason, non-obvious domain logic, and a name that needs no comment at all.
+
+\`\`\`go
+// 5s buffer absorbs clock skew between app servers and the DB primary. See APP-8026.
+startTime = startTime.Add(-5 * time.Second)
+\`\`\`
+
+
+--- .claude/rules/editing-discipline.md (full, rule:editing-discipline) ---
+# Editing Discipline
+
+- **Work from the file's current state, not a stale view.** Re-read a file right before editing it when your knowledge of it is second-hand (an earlier snapshot, a build or lint error, another tool's output) or the user may be editing it too, for example it is open in their editor. A tool's report and the file's current bytes can disagree within seconds. Trust the bytes.
+- **Don't rewrite what isn't yours to change.** When the user presents a file as their own finished work, or has it open mid-edit, surface the problem and let them decide instead of silently fixing it. Stay within the scope you were asked to touch.
+
+
+--- .claude/rules/verification.md (full, rule:verification) ---
+# Verify Your Work
+
+Before reporting a batch of edits as done:
+
+1. **Format.** Run the repo's format command. It rewrites files in place, so there is no need to eyeball formatting.
+2. **Lint with autofix.** Mechanical issues self-correct and only real problems remain.
+3. **Type-check and test** the packages you touched.
+
+Scope commands to what changed: \`pnpm --filter <pkg> run <script>\`.
+
+Report honestly. If a step surfaces errors that do not auto-resolve, say so and show them. Never claim success over a failing or unrun check. "Done" means every check passed, not that the edits were made.
+
+Each language rule has a "Verify Your Work" section with the exact commands for that stack.
+
+
+--- .claude/settings.ci.json (full, settings-ci) ---
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}
+
+
+--- .mcp.json (full, mcp) ---
+{
+  "mcpServers": {
+    "svelte": {
+      "type": "stdio",
+      "command": "npx",
+      "env": {},
+      "args": ["-y", "@sveltejs/mcp"]
+    }
+  }
+}
+
+
+--- .vscode/mcp.json (full, mcp) ---
+{
+	"servers": {
+		"svelte": {
+			"command": "npx",
+			"args": ["-y", "@sveltejs/mcp"]
+		}
+	}
+}
+
+
+--- .claude/output-styles/Terse.md (full, output-style) ---
+---
+name: Terse
+description: Token-lean responses: fragments over prose, zero filler, code and paths byte-exact.
+keep-coding-instructions: true
+---
+
+<!--
+  Adapted from the caveman project (https://github.com/JuliusBrussee/caveman),
+  (c) Julius Brussee, MIT license. Vendored by claude-config with style-level changes; "why use many token when few token do trick."
+-->
+
+# Terse output
+
+Compress every response. Substance intact, packaging minimal.
+
+## Rules
+
+- Sentence fragments over sentences. Drop subjects, articles, connective filler
+  ("essentially", "in order to", "it's worth noting").
+- One line where three would do. No restating the question, no summarizing what you
+  just said, no "let me know if".
+- Never compress content that must be exact: code, commands, file paths, URLs,
+  identifiers, numbers, error messages — byte-preserved, always.
+- Keep the user's language; compress style, not meaning.
+- Lists: bare fragments, no trailing prose.
+- Explanations: cause → effect → fix, one line each.
+  Example: "New object ref each render. Inline prop = new ref = re-render. Wrap in \`useMemo\`."
+- When precision and terseness conflict, precision wins.
+
+## Unchanged
+
+Code quality, correctness checks, and safety behavior are NOT compressed — only the
+words around them.
+
+
+--- .claude/settings.json (json, output-style) ---
+{"outputStyle":"Terse"}
+
+--- .claude/hooks/session-start.mjs (full, hooks) ---
+#!/usr/bin/env node
+// SessionStart hook (@viamrobotics/claude-config): a tiny git orientation header so the agent skips a full \`git status\`. Keep stdout small.
+
+import { execFileSync } from "node:child_process";
+
+const AREA = /^(packages|apps)\\/([^/]+)\\//;
+
+// Returns RAW output — \`git status --porcelain\` lines are position-sensitive
+// (2 status chars + space); a global trim would eat the first line's prefix.
+function git(args) {
+  try {
+    return execFileSync("git", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+  } catch {
+    return null;
+  }
+}
+
+try {
+  const root = git(["rev-parse", "--show-toplevel"])?.trim();
+  if (root) {
+    const lines = [];
+    const branch = git(["rev-parse", "--abbrev-ref", "HEAD"])?.trim();
+    let tracking = "";
+    const counts = git(["rev-list", "--left-right", "--count", "@{upstream}...HEAD"])?.trim();
+    if (counts) {
+      const [behind, ahead] = counts.split(/\\s+/).map(Number);
+      const bits = [ahead ? \`ahead \${ahead}\` : null, behind ? \`behind \${behind}\` : null].filter(
+        Boolean,
+      );
+      if (bits.length > 0) tracking = \` (\${bits.join(", ")})\`;
+    }
+    lines.push(\`[repo] branch: \${branch ?? "(no commits yet)"}\${tracking}\`);
+
+    const status = git(["status", "--porcelain"]) ?? "";
+    const changed = status
+      .split("\\n")
+      .filter(Boolean)
+      .map((l) => l.slice(3).trim());
+    if (changed.length > 0) {
+      const byArea = Map.groupBy(
+        changed.filter((path) => AREA.test(path)),
+        (path) => AREA.exec(path).slice(1, 3).join("/"),
+      );
+      if (changed.length > 25) {
+        const summary = [...byArea.entries()]
+          .map(([n, paths]) => \`\${n} (\${paths.length})\`)
+          .join(", ");
+        lines.push(\`[repo] uncommitted: \${changed.length} files\${summary ? \` — \${summary}\` : ""}\`);
+      } else {
+        const shown = changed.slice(0, 10).join(", ");
+        lines.push(
+          \`[repo] uncommitted (\${changed.length}): \${shown}\${changed.length > 10 ? ", …" : ""}\`,
+        );
+        if (byArea.size > 0) lines.push(\`[repo] areas touched: \${[...byArea.keys()].join(", ")}\`);
+      }
+    }
+    console.log(lines.join("\\n"));
+  }
+} catch {
+  // Never block session start.
+}
+process.exit(0);
+
+
+--- .claude/settings.json (json, hooks) ---
+{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
+
+--- .nvmrc (full, nvmrc) ---
+24
+
+
+--- .gitignore (region, gitignore-block) ---
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+
+
+--- .prettierignore (region, prettierignore-block) ---
+# Claude Code (managed by claude-config; byte-diffed by \`claude-config doctor\`)
+.claude/
+.mcp.json
+
+
+--- CLAUDE.md (region, claude-md) ---
+| Rule                     | Loads when                                          |
+| ------------------------ | --------------------------------------------------- |
+| \`svelte.md\`              | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`       |
+| \`frontend-aesthetics.md\` | editing \`.svelte\` or \`.css\`                         |
+| \`typescript.md\`          | editing \`.ts\`                                       |
+| \`testing-frontend.md\`    | editing test files (\`**/*.spec.ts\`)                 |
+| \`pr-description.md\`      | editing files under \`.changeset/\`                   |
+| \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`design-system.md\`       | every session (design system context)               |
+| \`code-comments.md\`       | editing any code file                               |
+| \`editing-discipline.md\`  | every session (edit from current state, in scope)   |
+| \`verification.md\`        | every session (verify before reporting done)        |"
+`;
+
+exports[`buildPlan snapshots > renders the test-widgets plan 1`] = `
+"--- .claude/rules/svelte.md (full, rule:svelte) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+---
+
+# Svelte 5 Best Practices
+
+Svelte 5 with runes throughout. No Svelte 4 syntax. See the [Svelte 5 docs](https://svelte.dev/docs/svelte) and [Runes Guide](https://svelte.dev/docs/svelte/what-are-runes).
+
+## Svelte MCP Server
+
+When the \`svelte\` MCP server is available, use it instead of recalling API details:
+
+- \`svelte-autofixer\`: **required** on any Svelte code you write, before handing it over. Re-run until it reports no issues.
+- \`list-sections\`, then \`get-documentation\`: when a Svelte or SvelteKit API is uncertain. Fetch only the sections whose \`use_cases\` match the task.
+
+## Component Structure
+
+\`\`\`svelte
+<script lang="ts">
+import type { HTMLButtonAttributes } from 'svelte/elements';
+
+interface Props extends HTMLButtonAttributes {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+const {
+  variant = 'primary',
+  disabled = false,
+  children,
+  ...restProps
+}: Props = $props();
+const classes = $derived(['btn', \`btn-\${variant}\`, disabled && 'btn-disabled']);
+</script>
+
+<button
+  {...restProps}
+  aria-disabled={disabled || undefined}
+  class={classes}
+>
+  {@render children?.()}
+</button>
+\`\`\`
+
+- Typed \`Props\` interface, extending the relevant HTML attributes type when wrapping a native element.
+- \`$props()\` with defaults and a rest spread onto the element.
+- \`$derived\` for computed values. **Never derive state in an \`$effect\`.** \`$effect\` is for side effects only: DOM mutations, subscriptions.
+- \`{@render children?.()}\` for composition. Never \`<slot>\`, always snippets.
+- \`$state.raw\` for values that need no deep reactivity (large arrays replaced wholesale, Three.js class instances). \`untrack(() => value)\` to read reactive state without taking a dependency.
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment. These are the Svelte shapes.
+
+- \`/** */\` on each \`Props\` member that is not self-evident. Props are the component's public API and editors show these on hover.
+- \`<!-- @component -->\` at the top of a \`.svelte\` file when the component needs file-level docs.
+- A non-obvious rune choice carries its reason inline, because the alternative looks equivalent: \`$state.raw\` over \`$state\`, \`untrack\` around a read, an \`$effect\` that could be mistaken for derived state.
+
+## Context Providers
+
+Reactive shared state lives in \`.svelte.ts\` files using \`getContext\` and \`setContext\`. **ALWAYS** use \`Symbol\` keys.
+
+\`\`\`typescript
+// theme-context.svelte.ts
+import { getContext, setContext } from "svelte";
+
+const key = Symbol("theme");
+
+interface ThemeContext {
+  readonly current: "light" | "dark";
+  toggle: () => void;
+}
+
+export const provideTheme = () => {
+  let theme = $state<"light" | "dark">("light");
+  const context: ThemeContext = {
+    get current() {
+      return theme;
+    },
+    toggle: () => {
+      theme = theme === "light" ? "dark" : "light";
+    },
+  };
+  setContext(key, context);
+  return context;
+};
+
+export const useTheme = (): ThemeContext => getContext(key);
+\`\`\`
+
+- \`.svelte.ts\` for any file using runes outside a \`.svelte\` component.
+- \`Symbol()\` keys prevent collisions.
+- Return **getters**, not plain properties, to preserve reactivity.
+- Name \`provide*\` to inject, \`use*\` or \`create*\` to consume.
+
+## Accessibility
+
+- Semantic elements and correct ARIA roles. Label every interactive element.
+- \`aria-hidden="true"\` on decorative icons.
+- \`aria-disabled\` instead of \`disabled\` when the element must stay focusable.
+
+## Styling
+
+Array and object syntax for conditional classes:
+
+\`\`\`svelte
+<button class={[
+  'inline-flex items-center font-medium rounded',
+  { 'bg-blue-600': variant === 'primary', 'bg-red-600': variant === 'danger' },
+  disabled && 'opacity-50 cursor-not-allowed',
+]}>
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check across the workspace
+pnpm lint     # prettier + eslint
+\`\`\`
+
+
+--- .claude/rules/frontend-aesthetics.md (full, rule:frontend-aesthetics) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.css"
+---
+
+# Frontend Aesthetics
+
+Every UI change should look intentional and high-craft. The failure mode is "AI slop": hardcoded hex instead of tokens, inconsistent spacing and density, hand-rolled versions of components that already exist, missing interaction states, weak hierarchy. Never introduce new fonts, color schemes, gradients, or creative layouts.
+
+Tokens and utilities come from \`@viamrobotics/tailwind-config\`, the tweakpane theme from \`@viamrobotics/tweakpane-config\`, both implementing https://design.viam.com. \`svelte.md\` owns Svelte conventions, ARIA, and semantics. \`three.md\` owns Three.js rendering.
+
+## Components
+
+- Check the design system for an existing pattern before adding a parallel one, and extend rather than duplicate. That cuts both ways: in an app, reach for the library component instead of hand-rolling a control. In the library, extend an existing primitive instead of shipping a second one that overlaps it.
+- Control panels (sliders, points, color, rotation) go through \`svelte-tweakpane-ui\`, themed globally with \`primeTheme\` via \`ThemeUtils.setGlobalDefaultTheme(primeTheme)\`, set once on the client. Never restyle tweakpane ad hoc, fix the theme.
+
+## Color and tokens
+
+Use the semantic tokens. **Never hardcode hex for UI chrome.**
+
+- Text: \`text-heading\`, \`text-default\`, \`text-subtle-1\`, \`text-subtle-2\`, \`text-disabled\`, \`text-link\`.
+- Surfaces: \`bg-extralight\`, \`bg-light\`, \`bg-medium\`, \`bg-dark\`. Hover fills: \`ghost-light\`, \`ghost-medium\`.
+- Borders: \`border-light\`, \`border-medium\`, \`border-dark\`.
+- Grayscale \`gray-1\` (lightest) through \`gray-9\` (darkest) when a raw step is genuinely needed.
+- Status: \`danger\`, \`warning\`, \`success\`, \`info\`, each with \`-bright\`, \`-dark\`, \`-medium\`, and \`-light\` steps. Use them for meaning, never decoration.
+- \`shadow-sm\` for elevation, \`z-max\` for top-layer overlays.
+- Not \`style="color:#4e4f52"\` or \`class="text-[#7a7c80]"\`. Use \`class="text-subtle-1"\`.
+- Brand and illustration colors (\`power-button\`, \`power-wire\`, \`cyberpunk\`, \`mars-rover\`, \`solar-power\`, \`hologram\`, \`raspberry\`, \`pcb\`, \`yoshimi\`, \`pixel-*\`) belong to illustration, 3D, and brand art. Never to UI chrome.
+- Raw hex is legitimate where Tailwind cannot reach: shader and WebGL code, \`<canvas>\` fills, gradient stops in a slider track. Do not flag those.
+
+## Typography
+
+- \`font-space-grotesk\` for display and headings.
+- \`font-public-sans\` for body and UI text.
+- \`font-roboto-mono\` for numbers and data: poses, coordinates, IDs, table cells.
+- A repo's global \`body\` font is often plain \`system-ui\`, so the prime families are not inherited everywhere. Set the family explicitly where it matters.
+- Build hierarchy from weight, size, and color tokens, never an invented type scale.
+
+## Spacing, layout, density
+
+- Stay on the Tailwind spacing scale. Do not sprinkle arbitrary pixel values where a scale step fits.
+- Match the density of neighboring panels. Viam tooling UI is dense, not a marketing page.
+- Reuse the layout idioms already in the app instead of inventing one.
+- Hierarchy comes from \`text-heading\` and \`text-default\` against \`text-subtle-1\` and \`text-subtle-2\`, not from size alone.
+
+## States
+
+A control is not done until every state is handled. Missing states is the most common slop tell.
+
+- hover, focus-visible, active, and disabled on every interactive element.
+- loading and empty states for anything async or list-shaped. A placeholder or skeleton, not a blank box.
+- Disabled must read as disabled: \`text-disabled\` and reduced affordance. Prefer \`aria-disabled\` when the element has to stay focusable, see \`svelte.md\`.
+
+## Motion
+
+- Restrained and purposeful. CSS transitions on hover, focus, and expand.
+- Prefer the config's \`animate-wiggle\` (nudge or error), \`animate-blink\` (attention), and \`animate-popup-enter\` over bespoke keyframes.
+- Respect \`prefers-reduced-motion\`.
+
+## Visual accessibility
+
+- Pair text tokens with surfaces that hold contrast. Never \`text-subtle-2\` on \`bg-medium\`.
+- Keep a visible \`focus-visible\` ring. Never remove a focus outline without replacing it.
+- Hit targets large enough to use comfortably.
+
+## Before finishing a UI change
+
+- [ ] Reused an existing design-system pattern instead of adding a parallel one.
+- [ ] Semantic tokens only. No hardcoded hex for chrome, no brand colors as chrome.
+- [ ] Correct font role, family set explicitly where it does not inherit.
+- [ ] Spacing and density match neighbors, hierarchy is clear.
+- [ ] hover, focus-visible, active, and disabled handled. loading and empty for async or lists.
+- [ ] Motion restrained, \`prefers-reduced-motion\` respected.
+- [ ] Contrast holds, focus stays visible, hit targets are adequate.
+- [ ] Matches design.viam.com and looks intentional.
+
+
+--- .claude/rules/typescript.md (full, rule:typescript) ---
+---
+paths:
+  - "**/*.ts"
+---
+
+# TypeScript Best Practices
+
+\`strict: true\`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/).
+
+## Type Definitions
+
+\`interface\` for object shapes, since they extend. \`type\` for unions and computed types.
+
+\`\`\`typescript
+interface ButtonOptions {
+  variant: "primary" | "secondary" | "danger";
+  disabled?: boolean;
+}
+
+type ConnectionStatus = "connected" | "disconnected" | "connecting";
+\`\`\`
+
+## NEVER Use \`any\`
+
+**NEVER** type untyped external data as \`any\`. Use \`unknown\` and narrow with a type guard:
+
+\`\`\`typescript
+// BAD
+const data: any = JSON.parse(raw);
+
+// GOOD
+const data: unknown = JSON.parse(raw);
+if (isPayload(data)) {
+  console.log(data.name); // safely typed
+}
+\`\`\`
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment. TSDoc decides the shape.
+
+- \`/** */\` on exported API, \`//\` for inline rationale. Editors surface the former on hover, so it is documentation, not narration.
+- Never restate a type in prose. \`@param value - the string to parse\` adds nothing over \`value: string\`. Describe the constraint or the failure mode instead.
+- Reach for \`@param\`, \`@returns\`, or \`@example\` when the signature leaves something open: units, ranges, thrown errors, a non-obvious \`undefined\` return. Not by default.
+- \`@deprecated\` on anything consumers still import, naming the replacement.
+
+\`\`\`typescript
+/**
+ * @returns undefined when \`value\` is not a base-10 integer.
+ * @example safeParseInt('42') // 42
+ */
+export const safeParseInt = (value: string): number | undefined => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check
+pnpm test
+\`\`\`
+
+
+--- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
+---
+paths:
+  - "**/*.spec.ts"
+---
+
+# Frontend Testing (Vitest)
+
+Real implementations by default. Mock only I/O boundaries: network, file system, time.
+
+Static analysis runs on every commit. TypeScript uses ESLint (\`@typescript-eslint\`) and Prettier via \`pnpm lint\`. Svelte adds \`svelte-check\` and \`eslint-plugin-svelte\` via \`pnpm check\` and \`pnpm lint\`.
+
+## Unit Tests
+
+Pure functions, business logic, and utilities in isolation. Use \`it.each\` for case tables.
+
+\`\`\`typescript
+import { describe, expect, it } from "vitest";
+import * as Subject from "../calculate";
+
+describe("calculateTotal", () => {
+  it("returns 0 for empty input", () => {
+    expect(Subject.calculateTotal([])).toBe(0);
+  });
+
+  it.each([
+    { input: [1, 2], expected: 3 },
+    { input: [-1, 1], expected: 0 },
+  ])("returns $expected for $input", ({ input, expected }) => {
+    expect(Subject.calculateTotal(input)).toBe(expected);
+  });
+});
+\`\`\`
+
+## Integration Tests
+
+Multiple modules working together, with the I/O boundary mocked. Cover the failure path as well as the happy one.
+
+\`\`\`typescript
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createApiClient } from "../api-client";
+import { userStore } from "../user-store";
+
+describe("login flow", () => {
+  beforeEach(() => {
+    userStore.reset();
+    vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("populates the user store after a successful login", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ id: "123", name: "Alice" }), {
+        status: 200,
+      }),
+    );
+
+    await createApiClient().login("alice@example.com", "password");
+
+    expect(userStore.get()).toEqual({ id: "123", name: "Alice" });
+  });
+
+  it("leaves the user store empty on auth failure", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 401 }));
+
+    await expect(
+      createApiClient().login("alice@example.com", "wrong"),
+    ).rejects.toThrow();
+    expect(userStore.get()).toBeNull();
+  });
+});
+\`\`\`
+
+### Mocking
+
+\`\`\`typescript
+vi.mock("../api-client", () => ({ fetchUser: vi.fn() }));
+vi.spyOn(object, "method").mockReturnValue("result");
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000);
+vi.useRealTimers();
+\`\`\`
+
+Reset with \`vi.clearAllMocks()\` in \`beforeEach\`, or \`clearMocks: true\` in \`vitest.config.ts\`.
+
+## Component Tests (\`*.svelte.spec.ts\`)
+
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro).
+
+\`\`\`typescript
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
+import { expect, it, vi } from "vitest";
+import Counter from "../Counter.svelte";
+import MyForm from "../MyForm.svelte";
+
+it("increments count on click", async () => {
+  const user = userEvent.setup();
+  render(Counter);
+
+  await user.click(screen.getByRole("button", { name: /increment/i }));
+  expect(screen.getByText("1")).toBeInTheDocument();
+});
+
+it("calls onSubmit when the form is submitted", async () => {
+  const onSubmit = vi.fn();
+  const user = userEvent.setup();
+  render(MyForm, { props: { onSubmit } });
+
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  expect(onSubmit).toHaveBeenCalledOnce();
+});
+\`\`\`
+
+Query priority, highest first:
+
+1. \`getByRole\`, **preferred**, mirrors how users and assistive technology see the page
+2. \`getByLabelText\` for form inputs
+3. \`getByPlaceholderText\` for inputs without a label, avoid if possible
+4. \`getByText\` for non-interactive elements
+5. \`getByTestId\`, **last resort**, add \`data-testid\` only when no semantic selector exists
+
+### Injecting Context
+
+\`\`\`typescript
+render(UserProfile, {
+  context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
+});
+\`\`\`
+
+For complex context trees, add a \`__fixtures__/\` wrapper component that provides every required context and takes the component under test as a snippet.
+
+### Hook Tests (\`.svelte.spec.ts\`)
+
+Runes in \`.svelte.ts\` only work inside a component boundary. Add a minimal \`__fixtures__/\` component that instantiates the hook and exposes its state for assertions.
+
+### Browser Mode
+
+Not adopted. If a test needs real browser APIs that jsdom lacks (\`ResizeObserver\`, \`IntersectionObserver\`, \`canvas\`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file \`*.browser.spec.ts\`.
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/pr-description.md (full, rule:pr-description) ---
+---
+paths:
+  - ".changeset/**"
+---
+
+# PR Description Format
+
+PR descriptions are technical documents for reviewers who already know the codebase. Be precise, not verbose. American English, no em dashes.
+
+## Output
+
+Return the finished description as raw markdown wrapped in a fenced code block so it pastes straight into the GitHub PR body. If the description itself contains code fences, use four or more backticks for the outer fence.
+
+Create or update the PR yourself only when the user asks (for example \`gh pr create\`). Then pass the markdown as the PR body instead of printing it.
+
+## Opening Paragraph
+
+One or two sentences on **what** the PR changes and **why** it matters. Name the user-facing capability, not the implementation. It stands on its own, with no \`## Summary\` or \`## Description\` wrapper heading.
+
+\`\`\`
+Adds a \`ghost\` variant to Button so consumers can use a tertiary button style
+that matches the design system's low-emphasis treatment.
+\`\`\`
+
+## Layer Sections
+
+One section per architecture layer the PR touches, using the layers that exist in the affected packages. Omit sections with no changes. Common headings:
+
+| Heading        | What it covers                                           |
+| -------------- | -------------------------------------------------------- |
+| **Components** | Changes to \`.svelte\` components in \`packages/<pkg>/src/\` |
+| **Primitives** | Changes to headless primitives or shared building blocks |
+| **Types**      | New or changed exported types in a package's public API  |
+| **Tests**      | New or changed test files                                |
+
+Each bullet opens with the changed symbol (component, primitive, prop, type) in backticks or bold, then says what changed in one or two sentences. Name the export or prop, never just "updated the package".
+
+\`\`\`markdown
+### Components
+
+- \`Button\` adds a \`variant="ghost"\` value and updates focus styles for it.
+- \`IconButton\` re-exports the new variant through its \`variant\` prop.
+\`\`\`
+
+## Why?
+
+Include this section only when the PR makes non-obvious design decisions. Each decision is a bold question followed by a paragraph.
+
+\`\`\`markdown
+### Why?
+
+**Why a new variant instead of a \`subtle\` prop?**
+
+The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
+\`\`\`
+
+## Testing
+
+Always last. Name the exact commands run and any tests added. "Tests pass" is not enough.
+
+\`\`\`markdown
+### Testing
+
+Ran \`pnpm --filter @viamrobotics/<pkg> test\` and \`pnpm lint\`. Added a new spec for the ghost variant focus state.
+\`\`\`
+
+## Style
+
+- \`###\` (h3) for every section heading. GitHub-flavored Markdown: fenced code, bullets, bold.
+- No auto-generated changelogs, file lists, or diff stats. Reviewers have the Files tab.
+- Direct and technical. First person for rationale ("I tested this with..."), present tense for behavior ("\`Button\` adds...").
+- Name both the old and the new name when renaming or deprecating.
+- If the PR stacks on another, note the base branch and link the parent PR in the opening paragraph.
+
+
+--- .claude/rules/changesets.md (full, rule:changesets) ---
+---
+paths:
+  - '.changeset/**'
+  - 'CHANGELOG.md'
+---
+
+# Changesets
+
+Any PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. One changeset can bump several packages.
+
+Run \`pnpm changeset\`. It prompts for the packages and bump type, then writes \`.changeset/<random-name>.md\`:
+
+\`\`\`markdown
+---
+'@viamrobotics/<package-a>': minor
+'@viamrobotics/<package-b>': patch
+---
+
+Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
+\`\`\`
+
+Bump types:
+
+- \`major\`: breaking public API change. Rare, coordinate before merging.
+- \`minor\`: new component, prop, export, or capability.
+- \`patch\`: bug fix, perf, security, dependency bump, internal refactor.
+
+The summary is one imperative phrase in changelog voice:
+
+- \`Fix focus ring on disabled Button\`
+- \`Add ghost variant to Button\`
+- \`sec: update tar dependency\`
+- \`Make Dialog expose explicit open and close methods\`
+
+Skip a changeset only when nothing reaches consumers: CI config, test-only, docs-only, internal tooling.
+
+
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Context
+
+Verify against the authoritative source before commenting on or changing code that touches Viam APIs or SDK types. Guessing at a method name, a field, or an RPC contract is the failure mode here. Cap lookups at 2 or 3 per session.
+
+\`WebFetch\` https://docs.viam.com for what a resource type (arm, camera, sensor, and so on) is supposed to do: RPC semantics, method signatures, expected behavior.
+
+## Sources
+
+| Source                                                  | Best for                                                             |
+| ------------------------------------------------------- | -------------------------------------------------------------------- |
+| \`viamrobotics/api\`                                      | Canonical \`.proto\` definitions. Prefer over \`rdk\` for RPC contracts. |
+| \`viamrobotics/viam-typescript-sdk\`, https://ts.viam.dev | TypeScript types, client patterns, exported API surface.             |
+| \`viamrobotics/viam-svelte-sdk\`                          | Svelte stores and utilities wrapping the TypeScript SDK.             |
+| \`viamrobotics/test-widgets\`                             | Prebaked UI components for testing machine SDK APIs.                 |
+| \`viamrobotics/prime\`, https://design.viam.com           | v1 Svelte component library. Superseded by prime-ui.                 |
+
+Fetch a file or search code with \`gh api\`:
+
+\`\`\`bash
+gh api repos/viamrobotics/<repo>/contents/<path> --jq '.content' | base64 -d
+gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.path): \\(.text_matches[0].fragment // "")"'
+\`\`\`
+
+## When to look something up
+
+- Code uses an SDK type or method and the usage looks wrong. Verify the exported API in the source repo.
+- A change adds or modifies a widget for a resource type. Check the resource's \`.proto\` for field names and RPC signatures.
+- A name or field looks inconsistent with Viam conventions. Check the proto definition.
+- A review comment needs to state what a resource method does. Fetch the docs rather than guessing.
+
+
+--- .claude/rules/design-system.md (full, rule:design-system) ---
+# Viam Design System
+
+**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
+
+Look something up when:
+
+- Adding a component or variant. Confirm the pattern exists before inventing one.
+- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
+- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
+
+Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
+
+
+--- .claude/rules/code-comments.md (full, rule:code-comments) ---
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/*.go"
+  - "**/*.py"
+  - "**/*.rs"
+---
+
+# Code Comments
+
+Applies to every language in the repo. This rule decides _whether_ to comment. When the answer is yes, the language rule (\`typescript.md\`, \`go.md\`, \`svelte.md\`) gives the shape.
+
+- **Default to no comment.** If the code shows the intent, add nothing.
+- **Comment for exactly two reasons:**
+  1. **Divergence from convention.** The code departs from repo patterns, a language idiom, or the obvious implementation. Say why: bug workaround, perf constraint, external API quirk, reactivity requirement.
+  2. **Non-obvious domain logic.** The code encodes a business rule, invariant, or domain concept a new reader cannot infer. Catalog it so future readers can find and trust it.
+- **Hard cap of 200 characters per comment.** Past that it documents too much. Split it, link a doc or ticket, or make the code clearer.
+- **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Rationale for a change goes in the commit message or PR description.
+- **Prefer naming over commenting.** If a comment explains what a variable, function, or block does, rename it or extract a well-named function instead.
+- **Use doc-comment syntax for symbol docs.** Anything documenting a type, function, or member: \`/** */\` in TypeScript, JavaScript, and Svelte, \`//\` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
+
+## Bad
+
+\`\`\`ts
+// Get the user from the store
+const user = userStore.get();
+
+// Switched to structuredClone because the old spread didn't deep-copy
+const copy = structuredClone(config);
+
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+\`\`\`
+
+Narration, then diff history, then a line comment where a doc comment belongs.
+
+## Good
+
+\`\`\`ts
+/** Returns undefined when the part has no config. That is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
+
+// $state.raw: this buffer is replaced wholesale each frame, deep reactivity would tank render perf.
+let points = $state.raw(new Float32Array());
+
+// Viam resource names are case-insensitive but must round-trip with their original
+// casing, so we key by the original and compare lowercased.
+const key = name.toLowerCase();
+
+const activeParts = filterActiveParts(robot.parts);
+\`\`\`
+
+A doc comment carrying what the signature cannot, a divergence with its reason, non-obvious domain logic, and a name that needs no comment at all.
+
+\`\`\`go
+// 5s buffer absorbs clock skew between app servers and the DB primary. See APP-8026.
+startTime = startTime.Add(-5 * time.Second)
+\`\`\`
+
+
+--- .claude/rules/editing-discipline.md (full, rule:editing-discipline) ---
+# Editing Discipline
+
+- **Work from the file's current state, not a stale view.** Re-read a file right before editing it when your knowledge of it is second-hand (an earlier snapshot, a build or lint error, another tool's output) or the user may be editing it too, for example it is open in their editor. A tool's report and the file's current bytes can disagree within seconds. Trust the bytes.
+- **Don't rewrite what isn't yours to change.** When the user presents a file as their own finished work, or has it open mid-edit, surface the problem and let them decide instead of silently fixing it. Stay within the scope you were asked to touch.
+
+
+--- .claude/rules/verification.md (full, rule:verification) ---
+# Verify Your Work
+
+Before reporting a batch of edits as done:
+
+1. **Format.** Run the repo's format command. It rewrites files in place, so there is no need to eyeball formatting.
+2. **Lint with autofix.** Mechanical issues self-correct and only real problems remain.
+3. **Type-check and test** the packages you touched.
+
+Scope commands to what changed: \`pnpm --filter <pkg> run <script>\`.
+
+Report honestly. If a step surfaces errors that do not auto-resolve, say so and show them. Never claim success over a failing or unrun check. "Done" means every check passed, not that the edits were made.
+
+Each language rule has a "Verify Your Work" section with the exact commands for that stack.
+
+
+--- .claude/settings.ci.json (full, settings-ci) ---
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}
+
+
+--- .mcp.json (full, mcp) ---
+{
+  "mcpServers": {
+    "svelte": {
+      "type": "http",
+      "url": "https://mcp.svelte.dev/mcp"
+    }
+  }
+}
+
+
+--- .claude/output-styles/Terse.md (full, output-style) ---
+---
+name: Terse
+description: Token-lean responses: fragments over prose, zero filler, code and paths byte-exact.
+keep-coding-instructions: true
+---
+
+<!--
+  Adapted from the caveman project (https://github.com/JuliusBrussee/caveman),
+  (c) Julius Brussee, MIT license. Vendored by claude-config with style-level changes; "why use many token when few token do trick."
+-->
+
+# Terse output
+
+Compress every response. Substance intact, packaging minimal.
+
+## Rules
+
+- Sentence fragments over sentences. Drop subjects, articles, connective filler
+  ("essentially", "in order to", "it's worth noting").
+- One line where three would do. No restating the question, no summarizing what you
+  just said, no "let me know if".
+- Never compress content that must be exact: code, commands, file paths, URLs,
+  identifiers, numbers, error messages — byte-preserved, always.
+- Keep the user's language; compress style, not meaning.
+- Lists: bare fragments, no trailing prose.
+- Explanations: cause → effect → fix, one line each.
+  Example: "New object ref each render. Inline prop = new ref = re-render. Wrap in \`useMemo\`."
+- When precision and terseness conflict, precision wins.
+
+## Unchanged
+
+Code quality, correctness checks, and safety behavior are NOT compressed — only the
+words around them.
+
+
+--- .claude/settings.json (json, output-style) ---
+{"outputStyle":"Terse"}
+
+--- .claude/settings.json (json, hooks) ---
+{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
+
+--- .nvmrc (full, nvmrc) ---
+22
+
+
+--- .gitignore (region, gitignore-block) ---
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+
+
+--- .prettierignore (region, prettierignore-block) ---
+# Claude Code (managed by claude-config; byte-diffed by \`claude-config doctor\`)
+.claude/
+.mcp.json
+
+
+--- CLAUDE.md (region, claude-md) ---
+| Rule                     | Loads when                                          |
+| ------------------------ | --------------------------------------------------- |
+| \`svelte.md\`              | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`       |
+| \`frontend-aesthetics.md\` | editing \`.svelte\` or \`.css\`                         |
+| \`typescript.md\`          | editing \`.ts\`                                       |
+| \`testing-frontend.md\`    | editing test files (\`**/*.spec.ts\`)                 |
+| \`pr-description.md\`      | editing files under \`.changeset/\`                   |
+| \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`viam-context.md\`        | every session (Viam API and SDK sources)            |
+| \`design-system.md\`       | every session (design system context)               |
+| \`code-comments.md\`       | editing any code file                               |
+| \`editing-discipline.md\`  | every session (edit from current state, in scope)   |
+| \`verification.md\`        | every session (verify before reporting done)        |"
+`;
+
+exports[`buildPlan snapshots > renders the viam-svelte-sdk plan 1`] = `
+"--- .claude/rules/svelte.md (full, rule:svelte) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+---
+
+# Svelte 5 Best Practices
+
+Svelte 5 with runes throughout. No Svelte 4 syntax. See the [Svelte 5 docs](https://svelte.dev/docs/svelte) and [Runes Guide](https://svelte.dev/docs/svelte/what-are-runes).
+
+## Svelte MCP Server
+
+When the \`svelte\` MCP server is available, use it instead of recalling API details:
+
+- \`svelte-autofixer\`: **required** on any Svelte code you write, before handing it over. Re-run until it reports no issues.
+- \`list-sections\`, then \`get-documentation\`: when a Svelte or SvelteKit API is uncertain. Fetch only the sections whose \`use_cases\` match the task.
+
+## Component Structure
+
+\`\`\`svelte
+<script lang="ts">
+import type { HTMLButtonAttributes } from 'svelte/elements';
+
+interface Props extends HTMLButtonAttributes {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+const {
+  variant = 'primary',
+  disabled = false,
+  children,
+  ...restProps
+}: Props = $props();
+const classes = $derived(['btn', \`btn-\${variant}\`, disabled && 'btn-disabled']);
+</script>
+
+<button
+  {...restProps}
+  aria-disabled={disabled || undefined}
+  class={classes}
+>
+  {@render children?.()}
+</button>
+\`\`\`
+
+- Typed \`Props\` interface, extending the relevant HTML attributes type when wrapping a native element.
+- \`$props()\` with defaults and a rest spread onto the element.
+- \`$derived\` for computed values. **Never derive state in an \`$effect\`.** \`$effect\` is for side effects only: DOM mutations, subscriptions.
+- \`{@render children?.()}\` for composition. Never \`<slot>\`, always snippets.
+- \`$state.raw\` for values that need no deep reactivity (large arrays replaced wholesale, Three.js class instances). \`untrack(() => value)\` to read reactive state without taking a dependency.
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment. These are the Svelte shapes.
+
+- \`/** */\` on each \`Props\` member that is not self-evident. Props are the component's public API and editors show these on hover.
+- \`<!-- @component -->\` at the top of a \`.svelte\` file when the component needs file-level docs.
+- A non-obvious rune choice carries its reason inline, because the alternative looks equivalent: \`$state.raw\` over \`$state\`, \`untrack\` around a read, an \`$effect\` that could be mistaken for derived state.
+
+## Context Providers
+
+Reactive shared state lives in \`.svelte.ts\` files using \`getContext\` and \`setContext\`. **ALWAYS** use \`Symbol\` keys.
+
+\`\`\`typescript
+// theme-context.svelte.ts
+import { getContext, setContext } from "svelte";
+
+const key = Symbol("theme");
+
+interface ThemeContext {
+  readonly current: "light" | "dark";
+  toggle: () => void;
+}
+
+export const provideTheme = () => {
+  let theme = $state<"light" | "dark">("light");
+  const context: ThemeContext = {
+    get current() {
+      return theme;
+    },
+    toggle: () => {
+      theme = theme === "light" ? "dark" : "light";
+    },
+  };
+  setContext(key, context);
+  return context;
+};
+
+export const useTheme = (): ThemeContext => getContext(key);
+\`\`\`
+
+- \`.svelte.ts\` for any file using runes outside a \`.svelte\` component.
+- \`Symbol()\` keys prevent collisions.
+- Return **getters**, not plain properties, to preserve reactivity.
+- Name \`provide*\` to inject, \`use*\` or \`create*\` to consume.
+
+## Accessibility
+
+- Semantic elements and correct ARIA roles. Label every interactive element.
+- \`aria-hidden="true"\` on decorative icons.
+- \`aria-disabled\` instead of \`disabled\` when the element must stay focusable.
+
+## Styling
+
+Array and object syntax for conditional classes:
+
+\`\`\`svelte
+<button class={[
+  'inline-flex items-center font-medium rounded',
+  { 'bg-blue-600': variant === 'primary', 'bg-red-600': variant === 'danger' },
+  disabled && 'opacity-50 cursor-not-allowed',
+]}>
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check across the workspace
+pnpm lint     # prettier + eslint
+\`\`\`
+
+
+--- .claude/rules/frontend-aesthetics.md (full, rule:frontend-aesthetics) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.css"
+---
+
+# Frontend Aesthetics
+
+Every UI change should look intentional and high-craft. The failure mode is "AI slop": hardcoded hex instead of tokens, inconsistent spacing and density, hand-rolled versions of components that already exist, missing interaction states, weak hierarchy. Never introduce new fonts, color schemes, gradients, or creative layouts.
+
+Tokens and utilities come from \`@viamrobotics/tailwind-config\`, the tweakpane theme from \`@viamrobotics/tweakpane-config\`, both implementing https://design.viam.com. \`svelte.md\` owns Svelte conventions, ARIA, and semantics. \`three.md\` owns Three.js rendering.
+
+## Components
+
+- Check the design system for an existing pattern before adding a parallel one, and extend rather than duplicate. That cuts both ways: in an app, reach for the library component instead of hand-rolling a control. In the library, extend an existing primitive instead of shipping a second one that overlaps it.
+- Control panels (sliders, points, color, rotation) go through \`svelte-tweakpane-ui\`, themed globally with \`primeTheme\` via \`ThemeUtils.setGlobalDefaultTheme(primeTheme)\`, set once on the client. Never restyle tweakpane ad hoc, fix the theme.
+
+## Color and tokens
+
+Use the semantic tokens. **Never hardcode hex for UI chrome.**
+
+- Text: \`text-heading\`, \`text-default\`, \`text-subtle-1\`, \`text-subtle-2\`, \`text-disabled\`, \`text-link\`.
+- Surfaces: \`bg-extralight\`, \`bg-light\`, \`bg-medium\`, \`bg-dark\`. Hover fills: \`ghost-light\`, \`ghost-medium\`.
+- Borders: \`border-light\`, \`border-medium\`, \`border-dark\`.
+- Grayscale \`gray-1\` (lightest) through \`gray-9\` (darkest) when a raw step is genuinely needed.
+- Status: \`danger\`, \`warning\`, \`success\`, \`info\`, each with \`-bright\`, \`-dark\`, \`-medium\`, and \`-light\` steps. Use them for meaning, never decoration.
+- \`shadow-sm\` for elevation, \`z-max\` for top-layer overlays.
+- Not \`style="color:#4e4f52"\` or \`class="text-[#7a7c80]"\`. Use \`class="text-subtle-1"\`.
+- Brand and illustration colors (\`power-button\`, \`power-wire\`, \`cyberpunk\`, \`mars-rover\`, \`solar-power\`, \`hologram\`, \`raspberry\`, \`pcb\`, \`yoshimi\`, \`pixel-*\`) belong to illustration, 3D, and brand art. Never to UI chrome.
+- Raw hex is legitimate where Tailwind cannot reach: shader and WebGL code, \`<canvas>\` fills, gradient stops in a slider track. Do not flag those.
+
+## Typography
+
+- \`font-space-grotesk\` for display and headings.
+- \`font-public-sans\` for body and UI text.
+- \`font-roboto-mono\` for numbers and data: poses, coordinates, IDs, table cells.
+- A repo's global \`body\` font is often plain \`system-ui\`, so the prime families are not inherited everywhere. Set the family explicitly where it matters.
+- Build hierarchy from weight, size, and color tokens, never an invented type scale.
+
+## Spacing, layout, density
+
+- Stay on the Tailwind spacing scale. Do not sprinkle arbitrary pixel values where a scale step fits.
+- Match the density of neighboring panels. Viam tooling UI is dense, not a marketing page.
+- Reuse the layout idioms already in the app instead of inventing one.
+- Hierarchy comes from \`text-heading\` and \`text-default\` against \`text-subtle-1\` and \`text-subtle-2\`, not from size alone.
+
+## States
+
+A control is not done until every state is handled. Missing states is the most common slop tell.
+
+- hover, focus-visible, active, and disabled on every interactive element.
+- loading and empty states for anything async or list-shaped. A placeholder or skeleton, not a blank box.
+- Disabled must read as disabled: \`text-disabled\` and reduced affordance. Prefer \`aria-disabled\` when the element has to stay focusable, see \`svelte.md\`.
+
+## Motion
+
+- Restrained and purposeful. CSS transitions on hover, focus, and expand.
+- Prefer the config's \`animate-wiggle\` (nudge or error), \`animate-blink\` (attention), and \`animate-popup-enter\` over bespoke keyframes.
+- Respect \`prefers-reduced-motion\`.
+
+## Visual accessibility
+
+- Pair text tokens with surfaces that hold contrast. Never \`text-subtle-2\` on \`bg-medium\`.
+- Keep a visible \`focus-visible\` ring. Never remove a focus outline without replacing it.
+- Hit targets large enough to use comfortably.
+
+## Before finishing a UI change
+
+- [ ] Reused an existing design-system pattern instead of adding a parallel one.
+- [ ] Semantic tokens only. No hardcoded hex for chrome, no brand colors as chrome.
+- [ ] Correct font role, family set explicitly where it does not inherit.
+- [ ] Spacing and density match neighbors, hierarchy is clear.
+- [ ] hover, focus-visible, active, and disabled handled. loading and empty for async or lists.
+- [ ] Motion restrained, \`prefers-reduced-motion\` respected.
+- [ ] Contrast holds, focus stays visible, hit targets are adequate.
+- [ ] Matches design.viam.com and looks intentional.
+
+
+--- .claude/rules/typescript.md (full, rule:typescript) ---
+---
+paths:
+  - "**/*.ts"
+---
+
+# TypeScript Best Practices
+
+\`strict: true\`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/).
+
+## Type Definitions
+
+\`interface\` for object shapes, since they extend. \`type\` for unions and computed types.
+
+\`\`\`typescript
+interface ButtonOptions {
+  variant: "primary" | "secondary" | "danger";
+  disabled?: boolean;
+}
+
+type ConnectionStatus = "connected" | "disconnected" | "connecting";
+\`\`\`
+
+## NEVER Use \`any\`
+
+**NEVER** type untyped external data as \`any\`. Use \`unknown\` and narrow with a type guard:
+
+\`\`\`typescript
+// BAD
+const data: any = JSON.parse(raw);
+
+// GOOD
+const data: unknown = JSON.parse(raw);
+if (isPayload(data)) {
+  console.log(data.name); // safely typed
+}
+\`\`\`
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment. TSDoc decides the shape.
+
+- \`/** */\` on exported API, \`//\` for inline rationale. Editors surface the former on hover, so it is documentation, not narration.
+- Never restate a type in prose. \`@param value - the string to parse\` adds nothing over \`value: string\`. Describe the constraint or the failure mode instead.
+- Reach for \`@param\`, \`@returns\`, or \`@example\` when the signature leaves something open: units, ranges, thrown errors, a non-obvious \`undefined\` return. Not by default.
+- \`@deprecated\` on anything consumers still import, naming the replacement.
+
+\`\`\`typescript
+/**
+ * @returns undefined when \`value\` is not a base-10 integer.
+ * @example safeParseInt('42') // 42
+ */
+export const safeParseInt = (value: string): number | undefined => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check
+pnpm test
+\`\`\`
+
+
+--- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
+---
+paths:
+  - "**/*.spec.ts"
+---
+
+# Frontend Testing (Vitest)
+
+Real implementations by default. Mock only I/O boundaries: network, file system, time.
+
+Static analysis runs on every commit. TypeScript uses ESLint (\`@typescript-eslint\`) and Prettier via \`pnpm lint\`. Svelte adds \`svelte-check\` and \`eslint-plugin-svelte\` via \`pnpm check\` and \`pnpm lint\`.
+
+## Unit Tests
+
+Pure functions, business logic, and utilities in isolation. Use \`it.each\` for case tables.
+
+\`\`\`typescript
+import { describe, expect, it } from "vitest";
+import * as Subject from "../calculate";
+
+describe("calculateTotal", () => {
+  it("returns 0 for empty input", () => {
+    expect(Subject.calculateTotal([])).toBe(0);
+  });
+
+  it.each([
+    { input: [1, 2], expected: 3 },
+    { input: [-1, 1], expected: 0 },
+  ])("returns $expected for $input", ({ input, expected }) => {
+    expect(Subject.calculateTotal(input)).toBe(expected);
+  });
+});
+\`\`\`
+
+## Integration Tests
+
+Multiple modules working together, with the I/O boundary mocked. Cover the failure path as well as the happy one.
+
+\`\`\`typescript
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createApiClient } from "../api-client";
+import { userStore } from "../user-store";
+
+describe("login flow", () => {
+  beforeEach(() => {
+    userStore.reset();
+    vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("populates the user store after a successful login", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ id: "123", name: "Alice" }), {
+        status: 200,
+      }),
+    );
+
+    await createApiClient().login("alice@example.com", "password");
+
+    expect(userStore.get()).toEqual({ id: "123", name: "Alice" });
+  });
+
+  it("leaves the user store empty on auth failure", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 401 }));
+
+    await expect(
+      createApiClient().login("alice@example.com", "wrong"),
+    ).rejects.toThrow();
+    expect(userStore.get()).toBeNull();
+  });
+});
+\`\`\`
+
+### Mocking
+
+\`\`\`typescript
+vi.mock("../api-client", () => ({ fetchUser: vi.fn() }));
+vi.spyOn(object, "method").mockReturnValue("result");
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000);
+vi.useRealTimers();
+\`\`\`
+
+Reset with \`vi.clearAllMocks()\` in \`beforeEach\`, or \`clearMocks: true\` in \`vitest.config.ts\`.
+
+## Component Tests (\`*.svelte.spec.ts\`)
+
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro).
+
+\`\`\`typescript
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
+import { expect, it, vi } from "vitest";
+import Counter from "../Counter.svelte";
+import MyForm from "../MyForm.svelte";
+
+it("increments count on click", async () => {
+  const user = userEvent.setup();
+  render(Counter);
+
+  await user.click(screen.getByRole("button", { name: /increment/i }));
+  expect(screen.getByText("1")).toBeInTheDocument();
+});
+
+it("calls onSubmit when the form is submitted", async () => {
+  const onSubmit = vi.fn();
+  const user = userEvent.setup();
+  render(MyForm, { props: { onSubmit } });
+
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  expect(onSubmit).toHaveBeenCalledOnce();
+});
+\`\`\`
+
+Query priority, highest first:
+
+1. \`getByRole\`, **preferred**, mirrors how users and assistive technology see the page
+2. \`getByLabelText\` for form inputs
+3. \`getByPlaceholderText\` for inputs without a label, avoid if possible
+4. \`getByText\` for non-interactive elements
+5. \`getByTestId\`, **last resort**, add \`data-testid\` only when no semantic selector exists
+
+### Injecting Context
+
+\`\`\`typescript
+render(UserProfile, {
+  context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
+});
+\`\`\`
+
+For complex context trees, add a \`__fixtures__/\` wrapper component that provides every required context and takes the component under test as a snippet.
+
+### Hook Tests (\`.svelte.spec.ts\`)
+
+Runes in \`.svelte.ts\` only work inside a component boundary. Add a minimal \`__fixtures__/\` component that instantiates the hook and exposes its state for assertions.
+
+### Browser Mode
+
+Not adopted. If a test needs real browser APIs that jsdom lacks (\`ResizeObserver\`, \`IntersectionObserver\`, \`canvas\`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file \`*.browser.spec.ts\`.
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/pr-description.md (full, rule:pr-description) ---
+---
+paths:
+  - ".changeset/**"
+---
+
+# PR Description Format
+
+PR descriptions are technical documents for reviewers who already know the codebase. Be precise, not verbose. American English, no em dashes.
+
+## Output
+
+Return the finished description as raw markdown wrapped in a fenced code block so it pastes straight into the GitHub PR body. If the description itself contains code fences, use four or more backticks for the outer fence.
+
+Create or update the PR yourself only when the user asks (for example \`gh pr create\`). Then pass the markdown as the PR body instead of printing it.
+
+## Opening Paragraph
+
+One or two sentences on **what** the PR changes and **why** it matters. Name the user-facing capability, not the implementation. It stands on its own, with no \`## Summary\` or \`## Description\` wrapper heading.
+
+\`\`\`
+Adds a \`ghost\` variant to Button so consumers can use a tertiary button style
+that matches the design system's low-emphasis treatment.
+\`\`\`
+
+## Layer Sections
+
+One section per architecture layer the PR touches, using the layers that exist in the affected packages. Omit sections with no changes. Common headings:
+
+| Heading        | What it covers                                           |
+| -------------- | -------------------------------------------------------- |
+| **Components** | Changes to \`.svelte\` components in \`packages/<pkg>/src/\` |
+| **Primitives** | Changes to headless primitives or shared building blocks |
+| **Types**      | New or changed exported types in a package's public API  |
+| **Tests**      | New or changed test files                                |
+
+Each bullet opens with the changed symbol (component, primitive, prop, type) in backticks or bold, then says what changed in one or two sentences. Name the export or prop, never just "updated the package".
+
+\`\`\`markdown
+### Components
+
+- \`Button\` adds a \`variant="ghost"\` value and updates focus styles for it.
+- \`IconButton\` re-exports the new variant through its \`variant\` prop.
+\`\`\`
+
+## Why?
+
+Include this section only when the PR makes non-obvious design decisions. Each decision is a bold question followed by a paragraph.
+
+\`\`\`markdown
+### Why?
+
+**Why a new variant instead of a \`subtle\` prop?**
+
+The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
+\`\`\`
+
+## Testing
+
+Always last. Name the exact commands run and any tests added. "Tests pass" is not enough.
+
+\`\`\`markdown
+### Testing
+
+Ran \`pnpm --filter @viamrobotics/<pkg> test\` and \`pnpm lint\`. Added a new spec for the ghost variant focus state.
+\`\`\`
+
+## Style
+
+- \`###\` (h3) for every section heading. GitHub-flavored Markdown: fenced code, bullets, bold.
+- No auto-generated changelogs, file lists, or diff stats. Reviewers have the Files tab.
+- Direct and technical. First person for rationale ("I tested this with..."), present tense for behavior ("\`Button\` adds...").
+- Name both the old and the new name when renaming or deprecating.
+- If the PR stacks on another, note the base branch and link the parent PR in the opening paragraph.
+
+
+--- .claude/rules/changesets.md (full, rule:changesets) ---
+---
+paths:
+  - '.changeset/**'
+  - 'CHANGELOG.md'
+---
+
+# Changesets
+
+Any PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. One changeset can bump several packages.
+
+Run \`pnpm changeset\`. It prompts for the packages and bump type, then writes \`.changeset/<random-name>.md\`:
+
+\`\`\`markdown
+---
+'@viamrobotics/<package-a>': minor
+'@viamrobotics/<package-b>': patch
+---
+
+Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
+\`\`\`
+
+Bump types:
+
+- \`major\`: breaking public API change. Rare, coordinate before merging.
+- \`minor\`: new component, prop, export, or capability.
+- \`patch\`: bug fix, perf, security, dependency bump, internal refactor.
+
+The summary is one imperative phrase in changelog voice:
+
+- \`Fix focus ring on disabled Button\`
+- \`Add ghost variant to Button\`
+- \`sec: update tar dependency\`
+- \`Make Dialog expose explicit open and close methods\`
+
+Skip a changeset only when nothing reaches consumers: CI config, test-only, docs-only, internal tooling.
+
+
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Context
+
+Verify against the authoritative source before commenting on or changing code that touches Viam APIs or SDK types. Guessing at a method name, a field, or an RPC contract is the failure mode here. Cap lookups at 2 or 3 per session.
+
+\`WebFetch\` https://docs.viam.com for what a resource type (arm, camera, sensor, and so on) is supposed to do: RPC semantics, method signatures, expected behavior.
+
+## Sources
+
+| Source                                                  | Best for                                                             |
+| ------------------------------------------------------- | -------------------------------------------------------------------- |
+| \`viamrobotics/api\`                                      | Canonical \`.proto\` definitions. Prefer over \`rdk\` for RPC contracts. |
+| \`viamrobotics/viam-typescript-sdk\`, https://ts.viam.dev | TypeScript types, client patterns, exported API surface.             |
+| \`viamrobotics/viam-svelte-sdk\`                          | Svelte stores and utilities wrapping the TypeScript SDK.             |
+
+Fetch a file or search code with \`gh api\`:
+
+\`\`\`bash
+gh api repos/viamrobotics/<repo>/contents/<path> --jq '.content' | base64 -d
+gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.path): \\(.text_matches[0].fragment // "")"'
+\`\`\`
+
+## When to look something up
+
+- Code uses an SDK type or method and the usage looks wrong. Verify the exported API in the source repo.
+- A change adds or modifies a widget for a resource type. Check the resource's \`.proto\` for field names and RPC signatures.
+- A name or field looks inconsistent with Viam conventions. Check the proto definition.
+- A review comment needs to state what a resource method does. Fetch the docs rather than guessing.
+
+
+--- .claude/rules/design-system.md (full, rule:design-system) ---
+# Viam Design System
+
+**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
+
+Look something up when:
+
+- Adding a component or variant. Confirm the pattern exists before inventing one.
+- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
+- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
+
+Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
+
+
+--- .claude/rules/code-comments.md (full, rule:code-comments) ---
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/*.go"
+  - "**/*.py"
+  - "**/*.rs"
+---
+
+# Code Comments
+
+Applies to every language in the repo. This rule decides _whether_ to comment. When the answer is yes, the language rule (\`typescript.md\`, \`go.md\`, \`svelte.md\`) gives the shape.
+
+- **Default to no comment.** If the code shows the intent, add nothing.
+- **Comment for exactly two reasons:**
+  1. **Divergence from convention.** The code departs from repo patterns, a language idiom, or the obvious implementation. Say why: bug workaround, perf constraint, external API quirk, reactivity requirement.
+  2. **Non-obvious domain logic.** The code encodes a business rule, invariant, or domain concept a new reader cannot infer. Catalog it so future readers can find and trust it.
+- **Hard cap of 200 characters per comment.** Past that it documents too much. Split it, link a doc or ticket, or make the code clearer.
+- **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Rationale for a change goes in the commit message or PR description.
+- **Prefer naming over commenting.** If a comment explains what a variable, function, or block does, rename it or extract a well-named function instead.
+- **Use doc-comment syntax for symbol docs.** Anything documenting a type, function, or member: \`/** */\` in TypeScript, JavaScript, and Svelte, \`//\` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
+
+## Bad
+
+\`\`\`ts
+// Get the user from the store
+const user = userStore.get();
+
+// Switched to structuredClone because the old spread didn't deep-copy
+const copy = structuredClone(config);
+
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+\`\`\`
+
+Narration, then diff history, then a line comment where a doc comment belongs.
+
+## Good
+
+\`\`\`ts
+/** Returns undefined when the part has no config. That is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
+
+// $state.raw: this buffer is replaced wholesale each frame, deep reactivity would tank render perf.
+let points = $state.raw(new Float32Array());
+
+// Viam resource names are case-insensitive but must round-trip with their original
+// casing, so we key by the original and compare lowercased.
+const key = name.toLowerCase();
+
+const activeParts = filterActiveParts(robot.parts);
+\`\`\`
+
+A doc comment carrying what the signature cannot, a divergence with its reason, non-obvious domain logic, and a name that needs no comment at all.
+
+\`\`\`go
+// 5s buffer absorbs clock skew between app servers and the DB primary. See APP-8026.
+startTime = startTime.Add(-5 * time.Second)
+\`\`\`
+
+
+--- .claude/rules/editing-discipline.md (full, rule:editing-discipline) ---
+# Editing Discipline
+
+- **Work from the file's current state, not a stale view.** Re-read a file right before editing it when your knowledge of it is second-hand (an earlier snapshot, a build or lint error, another tool's output) or the user may be editing it too, for example it is open in their editor. A tool's report and the file's current bytes can disagree within seconds. Trust the bytes.
+- **Don't rewrite what isn't yours to change.** When the user presents a file as their own finished work, or has it open mid-edit, surface the problem and let them decide instead of silently fixing it. Stay within the scope you were asked to touch.
+
+
+--- .claude/rules/verification.md (full, rule:verification) ---
+# Verify Your Work
+
+Before reporting a batch of edits as done:
+
+1. **Format.** Run the repo's format command. It rewrites files in place, so there is no need to eyeball formatting.
+2. **Lint with autofix.** Mechanical issues self-correct and only real problems remain.
+3. **Type-check and test** the packages you touched.
+
+Scope commands to what changed: \`pnpm --filter <pkg> run <script>\`.
+
+Report honestly. If a step surfaces errors that do not auto-resolve, say so and show them. Never claim success over a failing or unrun check. "Done" means every check passed, not that the edits were made.
+
+Each language rule has a "Verify Your Work" section with the exact commands for that stack.
+
+
+--- .claude/settings.ci.json (full, settings-ci) ---
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}
+
+
+--- .mcp.json (full, mcp) ---
+{
+  "mcpServers": {
+    "svelte": {
+      "type": "stdio",
+      "command": "npx",
+      "env": {},
+      "args": ["-y", "@sveltejs/mcp"]
+    }
+  }
+}
+
+
+--- .claude/output-styles/Terse.md (full, output-style) ---
+---
+name: Terse
+description: Token-lean responses: fragments over prose, zero filler, code and paths byte-exact.
+keep-coding-instructions: true
+---
+
+<!--
+  Adapted from the caveman project (https://github.com/JuliusBrussee/caveman),
+  (c) Julius Brussee, MIT license. Vendored by claude-config with style-level changes; "why use many token when few token do trick."
+-->
+
+# Terse output
+
+Compress every response. Substance intact, packaging minimal.
+
+## Rules
+
+- Sentence fragments over sentences. Drop subjects, articles, connective filler
+  ("essentially", "in order to", "it's worth noting").
+- One line where three would do. No restating the question, no summarizing what you
+  just said, no "let me know if".
+- Never compress content that must be exact: code, commands, file paths, URLs,
+  identifiers, numbers, error messages — byte-preserved, always.
+- Keep the user's language; compress style, not meaning.
+- Lists: bare fragments, no trailing prose.
+- Explanations: cause → effect → fix, one line each.
+  Example: "New object ref each render. Inline prop = new ref = re-render. Wrap in \`useMemo\`."
+- When precision and terseness conflict, precision wins.
+
+## Unchanged
+
+Code quality, correctness checks, and safety behavior are NOT compressed — only the
+words around them.
+
+
+--- .claude/settings.json (json, output-style) ---
+{"outputStyle":"Terse"}
+
+--- .claude/settings.json (json, hooks) ---
+{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
+
+--- .nvmrc (full, nvmrc) ---
+24
+
+
+--- .gitignore (region, gitignore-block) ---
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+
+
+--- .prettierignore (region, prettierignore-block) ---
+# Claude Code (managed by claude-config; byte-diffed by \`claude-config doctor\`)
+.claude/
+.mcp.json
+
+
+--- CLAUDE.md (region, claude-md) ---
+| Rule                     | Loads when                                          |
+| ------------------------ | --------------------------------------------------- |
+| \`svelte.md\`              | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`       |
+| \`frontend-aesthetics.md\` | editing \`.svelte\` or \`.css\`                         |
+| \`typescript.md\`          | editing \`.ts\`                                       |
+| \`testing-frontend.md\`    | editing test files (\`**/*.spec.ts\`)                 |
+| \`pr-description.md\`      | editing files under \`.changeset/\`                   |
+| \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\` |
+| \`viam-context.md\`        | every session (Viam API and SDK sources)            |
+| \`design-system.md\`       | every session (design system context)               |
+| \`code-comments.md\`       | editing any code file                               |
+| \`editing-discipline.md\`  | every session (edit from current state, in scope)   |
+| \`verification.md\`        | every session (verify before reporting done)        |"
+`;
+
+exports[`buildPlan snapshots > renders the visualization plan 1`] = `
+"--- .claude/rules/svelte.md (full, rule:svelte) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+---
+
+# Svelte 5 Best Practices
+
+Svelte 5 with runes throughout. No Svelte 4 syntax. See the [Svelte 5 docs](https://svelte.dev/docs/svelte) and [Runes Guide](https://svelte.dev/docs/svelte/what-are-runes).
+
+## Svelte MCP Server
+
+When the \`svelte\` MCP server is available, use it instead of recalling API details:
+
+- \`svelte-autofixer\`: **required** on any Svelte code you write, before handing it over. Re-run until it reports no issues.
+- \`list-sections\`, then \`get-documentation\`: when a Svelte or SvelteKit API is uncertain. Fetch only the sections whose \`use_cases\` match the task.
+
+## Component Structure
+
+\`\`\`svelte
+<script lang="ts">
+import type { HTMLButtonAttributes } from 'svelte/elements';
+
+interface Props extends HTMLButtonAttributes {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+const {
+  variant = 'primary',
+  disabled = false,
+  children,
+  ...restProps
+}: Props = $props();
+const classes = $derived(['btn', \`btn-\${variant}\`, disabled && 'btn-disabled']);
+</script>
+
+<button
+  {...restProps}
+  aria-disabled={disabled || undefined}
+  class={classes}
+>
+  {@render children?.()}
+</button>
+\`\`\`
+
+- Typed \`Props\` interface, extending the relevant HTML attributes type when wrapping a native element.
+- \`$props()\` with defaults and a rest spread onto the element.
+- \`$derived\` for computed values. **Never derive state in an \`$effect\`.** \`$effect\` is for side effects only: DOM mutations, subscriptions.
+- \`{@render children?.()}\` for composition. Never \`<slot>\`, always snippets.
+- \`$state.raw\` for values that need no deep reactivity (large arrays replaced wholesale, Three.js class instances). \`untrack(() => value)\` to read reactive state without taking a dependency.
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment. These are the Svelte shapes.
+
+- \`/** */\` on each \`Props\` member that is not self-evident. Props are the component's public API and editors show these on hover.
+- \`<!-- @component -->\` at the top of a \`.svelte\` file when the component needs file-level docs.
+- A non-obvious rune choice carries its reason inline, because the alternative looks equivalent: \`$state.raw\` over \`$state\`, \`untrack\` around a read, an \`$effect\` that could be mistaken for derived state.
+
+## Context Providers
+
+Reactive shared state lives in \`.svelte.ts\` files using \`getContext\` and \`setContext\`. **ALWAYS** use \`Symbol\` keys.
+
+\`\`\`typescript
+// theme-context.svelte.ts
+import { getContext, setContext } from "svelte";
+
+const key = Symbol("theme");
+
+interface ThemeContext {
+  readonly current: "light" | "dark";
+  toggle: () => void;
+}
+
+export const provideTheme = () => {
+  let theme = $state<"light" | "dark">("light");
+  const context: ThemeContext = {
+    get current() {
+      return theme;
+    },
+    toggle: () => {
+      theme = theme === "light" ? "dark" : "light";
+    },
+  };
+  setContext(key, context);
+  return context;
+};
+
+export const useTheme = (): ThemeContext => getContext(key);
+\`\`\`
+
+- \`.svelte.ts\` for any file using runes outside a \`.svelte\` component.
+- \`Symbol()\` keys prevent collisions.
+- Return **getters**, not plain properties, to preserve reactivity.
+- Name \`provide*\` to inject, \`use*\` or \`create*\` to consume.
+
+## Accessibility
+
+- Semantic elements and correct ARIA roles. Label every interactive element.
+- \`aria-hidden="true"\` on decorative icons.
+- \`aria-disabled\` instead of \`disabled\` when the element must stay focusable.
+
+## Styling
+
+Array and object syntax for conditional classes:
+
+\`\`\`svelte
+<button class={[
+  'inline-flex items-center font-medium rounded',
+  { 'bg-blue-600': variant === 'primary', 'bg-red-600': variant === 'danger' },
+  disabled && 'opacity-50 cursor-not-allowed',
+]}>
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check across the workspace
+pnpm lint     # prettier + eslint
+\`\`\`
+
+
+--- .claude/rules/frontend-aesthetics.md (full, rule:frontend-aesthetics) ---
+---
+paths:
+  - "**/*.svelte"
+  - "**/*.css"
+---
+
+# Frontend Aesthetics
+
+Every UI change should look intentional and high-craft. The failure mode is "AI slop": hardcoded hex instead of tokens, inconsistent spacing and density, hand-rolled versions of components that already exist, missing interaction states, weak hierarchy. Never introduce new fonts, color schemes, gradients, or creative layouts.
+
+Tokens and utilities come from \`@viamrobotics/tailwind-config\`, the tweakpane theme from \`@viamrobotics/tweakpane-config\`, both implementing https://design.viam.com. \`svelte.md\` owns Svelte conventions, ARIA, and semantics. \`three.md\` owns Three.js rendering.
+
+## Components
+
+- Check the design system for an existing pattern before adding a parallel one, and extend rather than duplicate. That cuts both ways: in an app, reach for the library component instead of hand-rolling a control. In the library, extend an existing primitive instead of shipping a second one that overlaps it.
+- Control panels (sliders, points, color, rotation) go through \`svelte-tweakpane-ui\`, themed globally with \`primeTheme\` via \`ThemeUtils.setGlobalDefaultTheme(primeTheme)\`, set once on the client. Never restyle tweakpane ad hoc, fix the theme.
+
+## Color and tokens
+
+Use the semantic tokens. **Never hardcode hex for UI chrome.**
+
+- Text: \`text-heading\`, \`text-default\`, \`text-subtle-1\`, \`text-subtle-2\`, \`text-disabled\`, \`text-link\`.
+- Surfaces: \`bg-extralight\`, \`bg-light\`, \`bg-medium\`, \`bg-dark\`. Hover fills: \`ghost-light\`, \`ghost-medium\`.
+- Borders: \`border-light\`, \`border-medium\`, \`border-dark\`.
+- Grayscale \`gray-1\` (lightest) through \`gray-9\` (darkest) when a raw step is genuinely needed.
+- Status: \`danger\`, \`warning\`, \`success\`, \`info\`, each with \`-bright\`, \`-dark\`, \`-medium\`, and \`-light\` steps. Use them for meaning, never decoration.
+- \`shadow-sm\` for elevation, \`z-max\` for top-layer overlays.
+- Not \`style="color:#4e4f52"\` or \`class="text-[#7a7c80]"\`. Use \`class="text-subtle-1"\`.
+- Brand and illustration colors (\`power-button\`, \`power-wire\`, \`cyberpunk\`, \`mars-rover\`, \`solar-power\`, \`hologram\`, \`raspberry\`, \`pcb\`, \`yoshimi\`, \`pixel-*\`) belong to illustration, 3D, and brand art. Never to UI chrome.
+- Raw hex is legitimate where Tailwind cannot reach: shader and WebGL code, \`<canvas>\` fills, gradient stops in a slider track. Do not flag those.
+
+## Typography
+
+- \`font-space-grotesk\` for display and headings.
+- \`font-public-sans\` for body and UI text.
+- \`font-roboto-mono\` for numbers and data: poses, coordinates, IDs, table cells.
+- A repo's global \`body\` font is often plain \`system-ui\`, so the prime families are not inherited everywhere. Set the family explicitly where it matters.
+- Build hierarchy from weight, size, and color tokens, never an invented type scale.
+
+## Spacing, layout, density
+
+- Stay on the Tailwind spacing scale. Do not sprinkle arbitrary pixel values where a scale step fits.
+- Match the density of neighboring panels. Viam tooling UI is dense, not a marketing page.
+- Reuse the layout idioms already in the app instead of inventing one.
+- Hierarchy comes from \`text-heading\` and \`text-default\` against \`text-subtle-1\` and \`text-subtle-2\`, not from size alone.
+
+## States
+
+A control is not done until every state is handled. Missing states is the most common slop tell.
+
+- hover, focus-visible, active, and disabled on every interactive element.
+- loading and empty states for anything async or list-shaped. A placeholder or skeleton, not a blank box.
+- Disabled must read as disabled: \`text-disabled\` and reduced affordance. Prefer \`aria-disabled\` when the element has to stay focusable, see \`svelte.md\`.
+
+## Motion
+
+- Restrained and purposeful. CSS transitions on hover, focus, and expand.
+- Prefer the config's \`animate-wiggle\` (nudge or error), \`animate-blink\` (attention), and \`animate-popup-enter\` over bespoke keyframes.
+- Respect \`prefers-reduced-motion\`.
+
+## Visual accessibility
+
+- Pair text tokens with surfaces that hold contrast. Never \`text-subtle-2\` on \`bg-medium\`.
+- Keep a visible \`focus-visible\` ring. Never remove a focus outline without replacing it.
+- Hit targets large enough to use comfortably.
+
+## Before finishing a UI change
+
+- [ ] Reused an existing design-system pattern instead of adding a parallel one.
+- [ ] Semantic tokens only. No hardcoded hex for chrome, no brand colors as chrome.
+- [ ] Correct font role, family set explicitly where it does not inherit.
+- [ ] Spacing and density match neighbors, hierarchy is clear.
+- [ ] hover, focus-visible, active, and disabled handled. loading and empty for async or lists.
+- [ ] Motion restrained, \`prefers-reduced-motion\` respected.
+- [ ] Contrast holds, focus stays visible, hit targets are adequate.
+- [ ] Matches design.viam.com and looks intentional.
+
+
+--- .claude/rules/three.md (full, rule:three) ---
+---
+paths:
+  - "**/three/**"
+  - "**/*.three.ts"
+---
+
+# Three.js Extension Patterns
+
+A repo's Three.js layer (for example \`src/lib/three/\`) is **pure Three.js**: no framework bindings, no Svelte, no React. It extends Three.js classes or builds reusable geometry and material utilities that framework components consume, in Threlte via \`<T is={obj} />\`.
+
+## Extend Three.js classes directly
+
+Subclass the closest Three.js type instead of wrapping it, so the result hands straight to a renderer or framework binding:
+
+\`\`\`typescript
+import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
+
+export class OBBHelper extends LineSegments2 {
+  update(obb: OBB) {
+    // ...
+  }
+}
+\`\`\`
+
+## Pre-allocate temporaries at module scope
+
+Never allocate \`Vector3\`, \`Color\`, \`Matrix4\`, or similar inside a hot-path method. Allocate once at module scope and reuse:
+
+\`\`\`typescript
+const _axis = new Vector3();
+const _object3d = new Object3D();
+
+export class BatchedArrow {
+  updateArrow(id: number, origin: Vector3, direction: Vector3) {
+    _object3d.position.copy(origin);
+    _axis.set(direction.z, 0, -direction.x).normalize();
+    // ...
+  }
+}
+\`\`\`
+
+## BatchedMesh or instancing for many objects
+
+Past a few dozen copies of the same object, use \`BatchedMesh\` (many geometries, many instances) or \`InstancedMesh\` (one geometry, many instances) instead of individual meshes. A free list reuses instance slots without resizing:
+
+\`\`\`typescript
+class BatchedArrow {
+  private pool: number[] = [];
+
+  addArrow() {
+    const id = this.pool.pop() ?? this.mesh.addInstance(this.geometryId);
+    // ...
+    return id;
+  }
+
+  removeArrow(id: number) {
+    this.mesh.setVisibleAt(id, false);
+    this.pool.push(id);
+  }
+}
+\`\`\`
+
+## Custom BufferGeometry
+
+Set typed-array attributes directly. The legacy \`geometry.vertices\` API is gone.
+
+\`\`\`typescript
+import { BufferAttribute, BufferGeometry } from "three";
+
+const geometry = new BufferGeometry();
+geometry.setAttribute("position", new BufferAttribute(new Float32Array([]), 3));
+geometry.setIndex([]);
+\`\`\`
+
+For instanced data that changes per frame, use \`InstancedBufferAttribute\` with \`DynamicDrawUsage\`.
+
+## Custom shaders
+
+Import GLSL as strings through a bundler raw import. Pick the material base by how much control you need: \`RawShaderMaterial\` for full control, \`ShaderMaterial\` to inherit Three.js uniforms.
+
+\`\`\`typescript
+import fragmentShader from "./fragment.glsl";
+import vertexShader from "./vertex.glsl";
+
+const material = new RawShaderMaterial({ vertexShader, fragmentShader });
+\`\`\`
+
+Keep the pair in sibling \`vertex.glsl\` and \`fragment.glsl\` files.
+
+## Custom raycasting
+
+Override \`raycast\` on a \`Mesh\` or \`Object3D\` subclass when the default sphere or box test is wrong for the geometry. Push hits to \`intersects\`, or return early to opt out.
+
+
+--- .claude/rules/testing-frontend.md (full, rule:testing-frontend) ---
+---
+paths:
+  - "**/*.spec.ts"
+---
+
+# Frontend Testing (Vitest)
+
+Real implementations by default. Mock only I/O boundaries: network, file system, time.
+
+Static analysis runs on every commit. TypeScript uses ESLint (\`@typescript-eslint\`) and Prettier via \`pnpm lint\`. Svelte adds \`svelte-check\` and \`eslint-plugin-svelte\` via \`pnpm check\` and \`pnpm lint\`.
+
+## Unit Tests
+
+Pure functions, business logic, and utilities in isolation. Use \`it.each\` for case tables.
+
+\`\`\`typescript
+import { describe, expect, it } from "vitest";
+import * as Subject from "../calculate";
+
+describe("calculateTotal", () => {
+  it("returns 0 for empty input", () => {
+    expect(Subject.calculateTotal([])).toBe(0);
+  });
+
+  it.each([
+    { input: [1, 2], expected: 3 },
+    { input: [-1, 1], expected: 0 },
+  ])("returns $expected for $input", ({ input, expected }) => {
+    expect(Subject.calculateTotal(input)).toBe(expected);
+  });
+});
+\`\`\`
+
+## Integration Tests
+
+Multiple modules working together, with the I/O boundary mocked. Cover the failure path as well as the happy one.
+
+\`\`\`typescript
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createApiClient } from "../api-client";
+import { userStore } from "../user-store";
+
+describe("login flow", () => {
+  beforeEach(() => {
+    userStore.reset();
+    vi.spyOn(globalThis, "fetch");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("populates the user store after a successful login", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ id: "123", name: "Alice" }), {
+        status: 200,
+      }),
+    );
+
+    await createApiClient().login("alice@example.com", "password");
+
+    expect(userStore.get()).toEqual({ id: "123", name: "Alice" });
+  });
+
+  it("leaves the user store empty on auth failure", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 401 }));
+
+    await expect(
+      createApiClient().login("alice@example.com", "wrong"),
+    ).rejects.toThrow();
+    expect(userStore.get()).toBeNull();
+  });
+});
+\`\`\`
+
+### Mocking
+
+\`\`\`typescript
+vi.mock("../api-client", () => ({ fetchUser: vi.fn() }));
+vi.spyOn(object, "method").mockReturnValue("result");
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000);
+vi.useRealTimers();
+\`\`\`
+
+Reset with \`vi.clearAllMocks()\` in \`beforeEach\`, or \`clearMocks: true\` in \`vitest.config.ts\`.
+
+## Component Tests (\`*.svelte.spec.ts\`)
+
+Use [@testing-library/svelte](https://testing-library.com/docs/svelte-testing-library/intro).
+
+\`\`\`typescript
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
+import { expect, it, vi } from "vitest";
+import Counter from "../Counter.svelte";
+import MyForm from "../MyForm.svelte";
+
+it("increments count on click", async () => {
+  const user = userEvent.setup();
+  render(Counter);
+
+  await user.click(screen.getByRole("button", { name: /increment/i }));
+  expect(screen.getByText("1")).toBeInTheDocument();
+});
+
+it("calls onSubmit when the form is submitted", async () => {
+  const onSubmit = vi.fn();
+  const user = userEvent.setup();
+  render(MyForm, { props: { onSubmit } });
+
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  expect(onSubmit).toHaveBeenCalledOnce();
+});
+\`\`\`
+
+Query priority, highest first:
+
+1. \`getByRole\`, **preferred**, mirrors how users and assistive technology see the page
+2. \`getByLabelText\` for form inputs
+3. \`getByPlaceholderText\` for inputs without a label, avoid if possible
+4. \`getByText\` for non-interactive elements
+5. \`getByTestId\`, **last resort**, add \`data-testid\` only when no semantic selector exists
+
+### Injecting Context
+
+\`\`\`typescript
+render(UserProfile, {
+  context: new Map([[USER_CONTEXT_KEY, { name: "Alice", role: "admin" }]]),
+});
+\`\`\`
+
+For complex context trees, add a \`__fixtures__/\` wrapper component that provides every required context and takes the component under test as a snippet.
+
+### Hook Tests (\`.svelte.spec.ts\`)
+
+Runes in \`.svelte.ts\` only work inside a component boundary. Add a minimal \`__fixtures__/\` component that instantiates the hook and exposes its state for assertions.
+
+### Browser Mode
+
+Not adopted. If a test needs real browser APIs that jsdom lacks (\`ResizeObserver\`, \`IntersectionObserver\`, \`canvas\`), use [Vitest Browser Mode](https://vitest.dev/guide/browser/) and name the file \`*.browser.spec.ts\`.
+
+## Verify Your Work
+
+\`\`\`
+pnpm check    # svelte-check
+pnpm test     # vitest unit tests
+\`\`\`
+
+
+--- .claude/rules/pr-description.md (full, rule:pr-description) ---
+---
+paths:
+  - ".changeset/**"
+---
+
+# PR Description Format
+
+PR descriptions are technical documents for reviewers who already know the codebase. Be precise, not verbose. American English, no em dashes.
+
+## Output
+
+Return the finished description as raw markdown wrapped in a fenced code block so it pastes straight into the GitHub PR body. If the description itself contains code fences, use four or more backticks for the outer fence.
+
+Create or update the PR yourself only when the user asks (for example \`gh pr create\`). Then pass the markdown as the PR body instead of printing it.
+
+## Opening Paragraph
+
+One or two sentences on **what** the PR changes and **why** it matters. Name the user-facing capability, not the implementation. It stands on its own, with no \`## Summary\` or \`## Description\` wrapper heading.
+
+\`\`\`
+Adds a \`ghost\` variant to Button so consumers can use a tertiary button style
+that matches the design system's low-emphasis treatment.
+\`\`\`
+
+## Layer Sections
+
+One section per architecture layer the PR touches, using the layers that exist in the affected packages. Omit sections with no changes. Common headings:
+
+| Heading        | What it covers                                           |
+| -------------- | -------------------------------------------------------- |
+| **Components** | Changes to \`.svelte\` components in \`packages/<pkg>/src/\` |
+| **Primitives** | Changes to headless primitives or shared building blocks |
+| **Types**      | New or changed exported types in a package's public API  |
+| **Tests**      | New or changed test files                                |
+
+Each bullet opens with the changed symbol (component, primitive, prop, type) in backticks or bold, then says what changed in one or two sentences. Name the export or prop, never just "updated the package".
+
+\`\`\`markdown
+### Components
+
+- \`Button\` adds a \`variant="ghost"\` value and updates focus styles for it.
+- \`IconButton\` re-exports the new variant through its \`variant\` prop.
+\`\`\`
+
+## Why?
+
+Include this section only when the PR makes non-obvious design decisions. Each decision is a bold question followed by a paragraph.
+
+\`\`\`markdown
+### Why?
+
+**Why a new variant instead of a \`subtle\` prop?**
+
+The design system treats variant as a single closed enum so that visual treatments stay consistent across the library. ...
+\`\`\`
+
+## Testing
+
+Always last. Name the exact commands run and any tests added. "Tests pass" is not enough.
+
+\`\`\`markdown
+### Testing
+
+Ran \`pnpm --filter @viamrobotics/<pkg> test\` and \`pnpm lint\`. Added a new spec for the ghost variant focus state.
+\`\`\`
+
+## Style
+
+- \`###\` (h3) for every section heading. GitHub-flavored Markdown: fenced code, bullets, bold.
+- No auto-generated changelogs, file lists, or diff stats. Reviewers have the Files tab.
+- Direct and technical. First person for rationale ("I tested this with..."), present tense for behavior ("\`Button\` adds...").
+- Name both the old and the new name when renaming or deprecating.
+- If the PR stacks on another, note the base branch and link the parent PR in the opening paragraph.
+
+
+--- .claude/rules/changesets.md (full, rule:changesets) ---
+---
+paths:
+  - '.changeset/**'
+  - 'CHANGELOG.md'
+---
+
+# Changesets
+
+Any PR that changes runtime behavior in a published package needs a changeset in \`.changeset/\`. One changeset can bump several packages.
+
+Run \`pnpm changeset\`. It prompts for the packages and bump type, then writes \`.changeset/<random-name>.md\`:
+
+\`\`\`markdown
+---
+'@viamrobotics/<package-a>': minor
+'@viamrobotics/<package-b>': patch
+---
+
+Add \`variant="ghost"\` to \`Button\` and fix focus ring on disabled state.
+\`\`\`
+
+Bump types:
+
+- \`major\`: breaking public API change. Rare, coordinate before merging.
+- \`minor\`: new component, prop, export, or capability.
+- \`patch\`: bug fix, perf, security, dependency bump, internal refactor.
+
+The summary is one imperative phrase in changelog voice:
+
+- \`Fix focus ring on disabled Button\`
+- \`Add ghost variant to Button\`
+- \`sec: update tar dependency\`
+- \`Make Dialog expose explicit open and close methods\`
+
+Skip a changeset only when nothing reaches consumers: CI config, test-only, docs-only, internal tooling.
+
+
+--- .claude/rules/go.md (full, rule:go) ---
+---
+paths:
+  - '**/*.go'
+---
+
+# Go
+
+Follow [Effective Go](https://go.dev/doc/effective_go) and [Go Code Review Comments](https://go.dev/wiki/CodeReviewComments).
+
+## RPC / Service Handler Pattern
+
+Every service method goes **Validate, Execute, Respond**:
+
+\`\`\`go
+func (s *drawServer) GetEntity(ctx context.Context, req *connect.Request[drawv1.GetEntityRequest]) (*connect.Response[drawv1.GetEntityResponse], error) {
+    if req.Msg.GetId() == "" {
+        return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("id is required"))
+    }
+
+    entity, err := s.svc.GetEntity(ctx, req.Msg.GetId())
+    if err != nil {
+        if errors.Is(err, ErrNotFound) {
+            return nil, connect.NewError(connect.CodeNotFound, errors.New("entity not found"))
+        }
+        return nil, connect.NewError(connect.CodeInternal, err)
+    }
+
+    return connect.NewResponse(&drawv1.GetEntityResponse{Entity: entityToProto(entity)}), nil
+}
+\`\`\`
+
+## Error Handling
+
+- Wrap with context: \`fmt.Errorf("loading entity %s: %w", id, err)\`
+- Use \`errors.Is\` and \`errors.As\`. Never string-match error messages.
+- Sentinel errors are package-level vars: \`var ErrNotFound = errors.New("not found")\`
+- Handlers return Connect status codes, not raw Go errors.
+
+## Dependency Injection
+
+Define narrow interfaces and verify compliance at compile time:
+
+\`\`\`go
+var _ drawv1connect.DrawServiceHandler = (*drawServer)(nil)
+\`\`\`
+
+## Doc Comments
+
+\`code-comments.md\` decides _whether_ to comment. Godoc decides the shape.
+
+- Every exported identifier gets a doc comment starting with its name, reading as a sentence: \`// ParseConfig reads a manifest from disk.\` Tools and \`go doc\` rely on that prefix.
+- One package comment per package, on a single file: \`// Package draw serves the drawing API.\`
+- Unexported identifiers follow the general rule: divergence or non-obvious domain logic only.
+- Mark known gaps with \`// TODO(username):\` so \`go vet\` and reviewers find them.
+
+\`\`\`go
+// EntityStore persists drawing entities. Implementations must be safe for
+// concurrent use by multiple goroutines.
+type EntityStore interface {
+    Get(ctx context.Context, id string) (*Entity, error)
+}
+\`\`\`
+
+## Logging
+
+Stdlib \`log\` only (\`log.Printf\`, \`log.Fatal\`). No third-party logging libraries.
+
+## Concurrency
+
+- Public entry points accept \`context.Context\`. Propagate it and cancel on shutdown.
+- Guard shared state with a mutex or a channel. Pick one per type, do not mix.
+- Never leave a goroutine without a shutdown path. Tie its lifetime to a context.
+
+## Verify Your Work
+
+\`\`\`
+go vet ./...
+go test ./draw/... -count=1
+go test ./client/... -count=1
+golangci-lint run ./draw/... ./client/...
+\`\`\`
+
+
+--- .claude/rules/testing-go.md (full, rule:testing-go) ---
+---
+paths:
+  - '**/*_test.go'
+---
+
+# Go Testing
+
+Prefer real dependencies over mocks. Mock only at I/O boundaries (network, filesystem). Every test is independent, with no shared mutable state.
+
+## Assertions
+
+Use \`test.That(t, actual, matcher, ...expected)\` from [\`go.viam.com/test\`](https://pkg.go.dev/go.viam.com/test), not \`testify\`:
+
+\`\`\`go
+import "go.viam.com/test"
+
+test.That(t, err, test.ShouldBeNil)
+test.That(t, got, test.ShouldEqual, expected)
+test.That(t, result, test.ShouldResemble, expected)
+test.That(t, result, test.ShouldHaveLength, 3)
+test.That(t, msg, test.ShouldContainSubstring, "not found")
+\`\`\`
+
+## Table-Driven Tests
+
+Use them for any function with multiple cases:
+
+\`\`\`go
+func TestCalculateTotal(t *testing.T) {
+    tests := []struct {
+        name     string
+        input    []int
+        expected int
+    }{
+        {"empty slice returns zero", []int{}, 0},
+        {"sums positive numbers", []int{1, 2, 3}, 6},
+    }
+    for _, tc := range tests {
+        t.Run(tc.name, func(t *testing.T) {
+            test.That(t, CalculateTotal(tc.input), test.ShouldEqual, tc.expected)
+        })
+    }
+}
+\`\`\`
+
+## Integration Tests: Real Connect-RPC Servers
+
+Spin up a real h2c server per test. Never mock the transport layer.
+
+\`\`\`go
+func newTestServer(t *testing.T, svc *DrawService) drawv1connect.DrawServiceClient {
+    t.Helper()
+
+    mux := http.NewServeMux()
+    path, handler := drawv1connect.NewDrawServiceHandler(svc)
+    mux.Handle(path, handler)
+
+    srv := httptest.NewUnstartedServer(h2c.NewHandler(mux, &http2.Server{}))
+    srv.Start()
+    t.Cleanup(srv.Close)
+
+    h2cTransport := &http2.Transport{
+        AllowHTTP: true,
+        DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
+            return (&net.Dialer{}).DialContext(ctx, network, addr)
+        },
+    }
+
+    return drawv1connect.NewDrawServiceClient(
+        &http.Client{Transport: h2cTransport},
+        srv.URL,
+        connect.WithGRPC(),
+    )
+}
+\`\`\`
+
+Assert Connect errors by code, never by message:
+
+\`\`\`go
+var connectErr *connect.Error
+test.That(t, errors.As(err, &connectErr), test.ShouldBeTrue)
+test.That(t, connectErr.Code(), test.ShouldEqual, connect.CodeNotFound)
+\`\`\`
+
+## Async Assertions
+
+Never \`time.Sleep\`. Poll with a deadline:
+
+\`\`\`go
+func waitFor(t *testing.T, timeout time.Duration, condition func() bool) {
+    t.Helper()
+    deadline := time.After(timeout)
+    for {
+        if condition() {
+            return
+        }
+        select {
+        case <-deadline:
+            t.Fatal("condition not met within timeout")
+        case <-time.After(10 * time.Millisecond):
+        }
+    }
+}
+\`\`\`
+
+## Verify Your Work
+
+\`\`\`
+go vet ./...
+go test ./draw/... -count=1
+go test ./client/... -count=1
+golangci-lint run ./draw/... ./client/...
+\`\`\`
+
+
+--- .claude/rules/viam-context.md (full, rule:viam-context) ---
+# Viam Context
+
+Verify against the authoritative source before commenting on or changing code that touches Viam APIs or SDK types. Guessing at a method name, a field, or an RPC contract is the failure mode here. Cap lookups at 2 or 3 per session.
+
+\`WebFetch\` https://docs.viam.com for what a resource type (arm, camera, sensor, and so on) is supposed to do: RPC semantics, method signatures, expected behavior.
+
+## Sources
+
+| Source                                                  | Best for                                                             |
+| ------------------------------------------------------- | -------------------------------------------------------------------- |
+| \`viamrobotics/api\`                                      | Canonical \`.proto\` definitions. Prefer over \`rdk\` for RPC contracts. |
+| \`viamrobotics/rdk\`                                      | Go service interface signatures and constants.                       |
+| \`viamrobotics/viam-typescript-sdk\`, https://ts.viam.dev | TypeScript types, client patterns, exported API surface.             |
+| \`viamrobotics/viam-svelte-sdk\`                          | Svelte stores and utilities wrapping the TypeScript SDK.             |
+| \`viamrobotics/test-widgets\`                             | Prebaked UI components for testing machine SDK APIs.                 |
+| \`viamrobotics/visualization\`                            | Visualization tools for motion and spatial data.                     |
+| \`viamrobotics/prime\`, https://design.viam.com           | v1 Svelte component library. Superseded by prime-ui.                 |
+
+Fetch a file or search code with \`gh api\`:
+
+\`\`\`bash
+gh api repos/viamrobotics/<repo>/contents/<path> --jq '.content' | base64 -d
+gh api "search/code?q=<term>+repo:viamrobotics/<repo>" --jq '.items[] | "\\(.path): \\(.text_matches[0].fragment // "")"'
+\`\`\`
+
+## When to look something up
+
+- Code uses an SDK type or method and the usage looks wrong. Verify the exported API in the source repo.
+- A change adds or modifies a widget for a resource type. Check the resource's \`.proto\` for field names and RPC signatures.
+- A name or field looks inconsistent with Viam conventions. Check the proto definition.
+- A review comment needs to state what a resource method does. Fetch the docs rather than guessing.
+
+## Go search limits
+
+\`viamrobotics/rdk\` code search is keyword-only and cannot follow interface implementations across packages. Search for the exact declaration, for example \`type ArmService interface\`. For anything needing runtime or type-system reasoning, read the \`.proto\` in \`viamrobotics/api\` instead.
+
+
+--- .claude/rules/design-system.md (full, rule:design-system) ---
+# Viam Design System
+
+**https://design.viam.com/guides/intro/** is the source of truth for component visuals, naming, and interaction patterns. It documents tokens (color, spacing, typography), interaction patterns, and the canonical components to mirror. Check it instead of guessing.
+
+Look something up when:
+
+- Adding a component or variant. Confirm the pattern exists before inventing one.
+- Naming a prop, variant, or component. Reuse its vocabulary so consumers learn one name, not two.
+- Describing expected visual or interaction behavior in a review. Quote it, do not approximate.
+
+Use \`WebFetch\` on that URL or a deeper page under \`https://design.viam.com/\`. Cap at 2 or 3 lookups per session.
+
+
+--- .claude/rules/code-comments.md (full, rule:code-comments) ---
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/*.go"
+  - "**/*.py"
+  - "**/*.rs"
+---
+
+# Code Comments
+
+Applies to every language in the repo. This rule decides _whether_ to comment. When the answer is yes, the language rule (\`typescript.md\`, \`go.md\`, \`svelte.md\`) gives the shape.
+
+- **Default to no comment.** If the code shows the intent, add nothing.
+- **Comment for exactly two reasons:**
+  1. **Divergence from convention.** The code departs from repo patterns, a language idiom, or the obvious implementation. Say why: bug workaround, perf constraint, external API quirk, reactivity requirement.
+  2. **Non-obvious domain logic.** The code encodes a business rule, invariant, or domain concept a new reader cannot infer. Catalog it so future readers can find and trust it.
+- **Hard cap of 200 characters per comment.** Past that it documents too much. Split it, link a doc or ticket, or make the code clearer.
+- **Never narrate the code.** No \`// increment counter\`, \`// loop over users\`, \`// return result\`, \`// import the package\`, \`// handle error\`.
+- **Never explain the change you just made.** Comments describe the code as it exists, not its diff history. Rationale for a change goes in the commit message or PR description.
+- **Prefer naming over commenting.** If a comment explains what a variable, function, or block does, rename it or extract a well-named function instead.
+- **Use doc-comment syntax for symbol docs.** Anything documenting a type, function, or member: \`/** */\` in TypeScript, JavaScript, and Svelte, \`//\` starting with the identifier name in Go. Line comments are for inline rationale next to the code they explain.
+
+## Bad
+
+\`\`\`ts
+// Get the user from the store
+const user = userStore.get();
+
+// Switched to structuredClone because the old spread didn't deep-copy
+const copy = structuredClone(config);
+
+// Throws when the part is offline.
+export function readPose(part: Part): Pose { ... }
+\`\`\`
+
+Narration, then diff history, then a line comment where a doc comment belongs.
+
+## Good
+
+\`\`\`ts
+/** Returns undefined when the part has no config. That is expected, not an error. */
+export function partConfig(part: Part): PartConfig | undefined { ... }
+
+// $state.raw: this buffer is replaced wholesale each frame, deep reactivity would tank render perf.
+let points = $state.raw(new Float32Array());
+
+// Viam resource names are case-insensitive but must round-trip with their original
+// casing, so we key by the original and compare lowercased.
+const key = name.toLowerCase();
+
+const activeParts = filterActiveParts(robot.parts);
+\`\`\`
+
+A doc comment carrying what the signature cannot, a divergence with its reason, non-obvious domain logic, and a name that needs no comment at all.
+
+\`\`\`go
+// 5s buffer absorbs clock skew between app servers and the DB primary. See APP-8026.
+startTime = startTime.Add(-5 * time.Second)
+\`\`\`
+
+
+--- .claude/rules/editing-discipline.md (full, rule:editing-discipline) ---
+# Editing Discipline
+
+- **Work from the file's current state, not a stale view.** Re-read a file right before editing it when your knowledge of it is second-hand (an earlier snapshot, a build or lint error, another tool's output) or the user may be editing it too, for example it is open in their editor. A tool's report and the file's current bytes can disagree within seconds. Trust the bytes.
+- **Don't rewrite what isn't yours to change.** When the user presents a file as their own finished work, or has it open mid-edit, surface the problem and let them decide instead of silently fixing it. Stay within the scope you were asked to touch.
+
+
+--- .claude/rules/verification.md (full, rule:verification) ---
+# Verify Your Work
+
+Before reporting a batch of edits as done:
+
+1. **Format.** Run the repo's format command. It rewrites files in place, so there is no need to eyeball formatting.
+2. **Lint with autofix.** Mechanical issues self-correct and only real problems remain.
+3. **Type-check and test** the packages you touched.
+
+Scope commands to what changed: \`pnpm --filter <pkg> run <script>\`.
+
+Report honestly. If a step surfaces errors that do not auto-resolve, say so and show them. Never claim success over a failing or unrun check. "Done" means every check passed, not that the edits were made.
+
+Each language rule has a "Verify Your Work" section with the exact commands for that stack.
+
+
+--- .claude/settings.ci.json (full, settings-ci) ---
+{
+  "permissions": {
+    "deny": [
+      "Edit(file_path=.github/**)",
+      "Write(file_path=.github/**)",
+      "Edit(file_path=pnpm-lock.yaml)",
+      "Write(file_path=pnpm-lock.yaml)",
+      "Edit(file_path=dist/**)",
+      "Write(file_path=dist/**)",
+      "Edit(file_path=.changeset/**)"
+    ]
+  }
+}
+
+
+--- .claude/output-styles/Terse.md (full, output-style) ---
+---
+name: Terse
+description: Token-lean responses: fragments over prose, zero filler, code and paths byte-exact.
+keep-coding-instructions: true
+---
+
+<!--
+  Adapted from the caveman project (https://github.com/JuliusBrussee/caveman),
+  (c) Julius Brussee, MIT license. Vendored by claude-config with style-level changes; "why use many token when few token do trick."
+-->
+
+# Terse output
+
+Compress every response. Substance intact, packaging minimal.
+
+## Rules
+
+- Sentence fragments over sentences. Drop subjects, articles, connective filler
+  ("essentially", "in order to", "it's worth noting").
+- One line where three would do. No restating the question, no summarizing what you
+  just said, no "let me know if".
+- Never compress content that must be exact: code, commands, file paths, URLs,
+  identifiers, numbers, error messages — byte-preserved, always.
+- Keep the user's language; compress style, not meaning.
+- Lists: bare fragments, no trailing prose.
+- Explanations: cause → effect → fix, one line each.
+  Example: "New object ref each render. Inline prop = new ref = re-render. Wrap in \`useMemo\`."
+- When precision and terseness conflict, precision wins.
+
+## Unchanged
+
+Code quality, correctness checks, and safety behavior are NOT compressed — only the
+words around them.
+
+
+--- .claude/settings.json (json, output-style) ---
+{"outputStyle":"Terse"}
+
+--- .claude/hooks/session-start.mjs (full, hooks) ---
+#!/usr/bin/env node
+// SessionStart hook (@viamrobotics/claude-config): a tiny git orientation header so the agent skips a full \`git status\`. Keep stdout small.
+
+import { execFileSync } from "node:child_process";
+
+const AREA = /^(packages|apps)\\/([^/]+)\\//;
+
+// Returns RAW output — \`git status --porcelain\` lines are position-sensitive
+// (2 status chars + space); a global trim would eat the first line's prefix.
+function git(args) {
+  try {
+    return execFileSync("git", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+  } catch {
+    return null;
+  }
+}
+
+try {
+  const root = git(["rev-parse", "--show-toplevel"])?.trim();
+  if (root) {
+    const lines = [];
+    const branch = git(["rev-parse", "--abbrev-ref", "HEAD"])?.trim();
+    let tracking = "";
+    const counts = git(["rev-list", "--left-right", "--count", "@{upstream}...HEAD"])?.trim();
+    if (counts) {
+      const [behind, ahead] = counts.split(/\\s+/).map(Number);
+      const bits = [ahead ? \`ahead \${ahead}\` : null, behind ? \`behind \${behind}\` : null].filter(
+        Boolean,
+      );
+      if (bits.length > 0) tracking = \` (\${bits.join(", ")})\`;
+    }
+    lines.push(\`[repo] branch: \${branch ?? "(no commits yet)"}\${tracking}\`);
+
+    const status = git(["status", "--porcelain"]) ?? "";
+    const changed = status
+      .split("\\n")
+      .filter(Boolean)
+      .map((l) => l.slice(3).trim());
+    if (changed.length > 0) {
+      const byArea = Map.groupBy(
+        changed.filter((path) => AREA.test(path)),
+        (path) => AREA.exec(path).slice(1, 3).join("/"),
+      );
+      if (changed.length > 25) {
+        const summary = [...byArea.entries()]
+          .map(([n, paths]) => \`\${n} (\${paths.length})\`)
+          .join(", ");
+        lines.push(\`[repo] uncommitted: \${changed.length} files\${summary ? \` — \${summary}\` : ""}\`);
+      } else {
+        const shown = changed.slice(0, 10).join(", ");
+        lines.push(
+          \`[repo] uncommitted (\${changed.length}): \${shown}\${changed.length > 10 ? ", …" : ""}\`,
+        );
+        if (byArea.size > 0) lines.push(\`[repo] areas touched: \${[...byArea.keys()].join(", ")}\`);
+      }
+    }
+    console.log(lines.join("\\n"));
+  }
+} catch {
+  // Never block session start.
+}
+process.exit(0);
+
+
+--- .claude/settings.json (json, hooks) ---
+{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"node \\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs\\""}]}]}}
+
+--- .nvmrc (full, nvmrc) ---
+22
+
+
+--- .gitignore (region, gitignore-block) ---
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+
+
+--- .prettierignore (region, prettierignore-block) ---
+# Claude Code (managed by claude-config; byte-diffed by \`claude-config doctor\`)
+.claude/
+.mcp.json
+
+
+--- CLAUDE.md (region, claude-md) ---
+| Rule                     | Loads when                                             |
+| ------------------------ | ------------------------------------------------------ |
+| \`svelte.md\`              | editing \`.svelte\`, \`.svelte.ts\`, \`.svelte.js\`          |
+| \`frontend-aesthetics.md\` | editing \`.svelte\` or \`.css\`                            |
+| \`three.md\`               | editing Three.js code (\`**/three/**\`, \`**/*.three.ts\`) |
+| \`testing-frontend.md\`    | editing test files (\`**/*.spec.ts\`)                    |
+| \`pr-description.md\`      | editing files under \`.changeset/\`                      |
+| \`changesets.md\`          | editing files under \`.changeset/\` or \`CHANGELOG.md\`    |
+| \`go.md\`                  | editing \`.go\`                                          |
+| \`testing-go.md\`          | editing Go tests (\`**/*_test.go\`)                      |
+| \`viam-context.md\`        | every session (Viam API and SDK sources)               |
+| \`design-system.md\`       | every session (design system context)                  |
+| \`code-comments.md\`       | editing any code file                                  |
+| \`editing-discipline.md\`  | every session (edit from current state, in scope)      |
+| \`verification.md\`        | every session (verify before reporting done)           |"
+`;

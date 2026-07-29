@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://viamrobotics.github.io/prime/claude-config/manifest.schema.json",
+  "title": "claude-config manifest",
+  "description": "Per-repo configuration for @viamrobotics/claude-config.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "repo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Short repo name (no scope)."
+        },
+        "monorepo": { "default": false, "type": "boolean" },
+        "packageManager": {
+          "default": "pnpm",
+          "type": "string",
+          "enum": ["pnpm", "npm", "yarn", "bun"]
+        },
+        "nodeVersion": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Major Node version, e.g. \"22\"."
+        },
+        "packageScope": {
+          "default": "@viamrobotics",
+          "description": "npm scope, e.g. \"@viamrobotics\".",
+          "type": "string"
+        },
+        "workspaceRootPackage": {
+          "description": "Defaults to `<packageScope>/<name>`.",
+          "type": "string"
+        },
+        "wireit": { "default": false, "type": "boolean" }
+      },
+      "required": ["name", "nodeVersion"],
+      "additionalProperties": false
+    },
+    "rules": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "modules": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "svelte": { "default": false, "type": "boolean" },
+            "frontendAesthetics": { "default": false, "type": "boolean" },
+            "three": { "default": false, "type": "boolean" },
+            "typescript": { "default": false, "type": "boolean" },
+            "testingFrontend": { "default": false, "type": "boolean" },
+            "prDescription": { "default": false, "type": "boolean" },
+            "changesets": { "default": false, "type": "boolean" },
+            "go": { "default": false, "type": "boolean" },
+            "testingGo": { "default": false, "type": "boolean" },
+            "viamContext": { "default": false, "type": "boolean" },
+            "designSystem": { "default": false, "type": "boolean" }
+          },
+          "additionalProperties": false,
+          "description": "Toggle shared rule modules. code-comments, editing-discipline, and verification are always installed."
+        }
+      },
+      "additionalProperties": false
+    },
+    "viamContext": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "sources": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "api": { "default": false, "type": "boolean" },
+            "rdk": { "default": false, "type": "boolean" },
+            "typescriptSdk": { "default": false, "type": "boolean" },
+            "svelteSdk": { "default": false, "type": "boolean" },
+            "testWidgets": { "default": false, "type": "boolean" },
+            "motionTools": { "default": false, "type": "boolean" },
+            "primeCore": { "default": false, "type": "boolean" },
+            "primeUi": { "default": false, "type": "boolean" },
+            "pythonSdk": { "default": false, "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "mcp": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "svelteTransport": {
+          "default": "none",
+          "type": "string",
+          "enum": ["stdio", "http", "none"]
+        },
+        "vscode": { "default": false, "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "outputStyle": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "terse": {
+          "default": "default",
+          "anyOf": [
+            { "type": "boolean" },
+            { "type": "string", "const": "default" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "hooks": {
+      "default": {},
+      "type": "object",
+      "properties": { "sessionStart": { "default": false, "type": "boolean" } },
+      "additionalProperties": false
+    },
+    "ci": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "setupAction": { "default": false, "type": "boolean" },
+        "weeklyDependencyUpdate": { "default": false, "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "verify": {
+      "description": "Defaults to `<packageManager> <script>` for each script.",
+      "default": {},
+      "type": "object",
+      "properties": {
+        "lint": { "type": "string" },
+        "check": { "type": "string" },
+        "test": { "type": "string" },
+        "build": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "workflows": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "teamMention": {
+          "default": null,
+          "anyOf": [
+            { "type": "string", "pattern": "^@[\\w-]+\\/[\\w-]+$" },
+            { "type": "null" }
+          ]
+        },
+        "goTools": { "default": false, "type": "boolean" },
+        "secrets": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "slackAlertWebhook": { "default": false, "type": "boolean" },
+            "gitAccessToken": { "default": false, "type": "boolean" },
+            "githubApp": { "default": false, "type": "boolean" },
+            "jira": { "default": false, "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "overrides": {
+          "default": {},
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "maxTurns": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["repo"],
+  "additionalProperties": false
+}

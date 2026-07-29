@@ -1,0 +1,156 @@
+{
+  "name": "@viamrobotics/claude-config",
+  "version": "0.0.0",
+  "description": "CLI that installs, updates, and doctors Viam's shared Claude agent tooling across repos.",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viamrobotics/prime.git",
+    "directory": "packages/claude-config"
+  },
+  "type": "module",
+  "bin": {
+    "claude-config": "./dist/cli.js"
+  },
+  "exports": {
+    "./schema": "./schema/manifest.schema.json"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "schema"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "wireit",
+    "package": "wireit",
+    "prepack": "wireit",
+    "schema": "wireit",
+    "check": "wireit",
+    "lint": "wireit",
+    "test": "wireit",
+    "format": "prettier --write .",
+    "lint:fix": "eslint . --fix"
+  },
+  "wireit": {
+    "build": {
+      "dependencies": [
+        "package",
+        "schema"
+      ]
+    },
+    "schema": {
+      "command": "node scripts/generate-schema.mjs",
+      "dependencies": [
+        "package"
+      ],
+      "files": [
+        "scripts/generate-schema.mjs"
+      ],
+      "output": [
+        "schema/manifest.schema.json"
+      ]
+    },
+    "package": {
+      "command": "tsc -p tsconfig.build.json && publint",
+      "files": [
+        "src/**",
+        "templates/**",
+        "tsconfig.build.json",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "output": [
+        "dist/**"
+      ],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    },
+    "prepack": {
+      "dependencies": [
+        "build"
+      ]
+    },
+    "check": {
+      "command": "tsc --noEmit -p tsconfig.json",
+      "files": [
+        "src/**",
+        "test/**",
+        "tsconfig.json",
+        "tsconfig.build.json",
+        "package.json"
+      ],
+      "output": [],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    },
+    "lint": {
+      "command": "eslint . --concurrency auto",
+      "files": [
+        "**/*.{js,mjs,cjs,ts}",
+        "!dist/**",
+        "!.wireit/**",
+        "eslint.config.js",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "output": [],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    },
+    "test": {
+      "command": "vitest run",
+      "files": [
+        "src/**",
+        "test/**",
+        "templates/**",
+        "schema/**",
+        "vitest.config.ts",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "output": [],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    }
+  },
+  "dependencies": {
+    "commander": "catalog:",
+    "dequal": "catalog:",
+    "diff": "catalog:",
+    "markdown-table": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "publint": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
+    "vitest": "catalog:"
+  },
+  "keywords": [
+    "viam",
+    "claude",
+    "cli",
+    "config"
+  ]
+}
