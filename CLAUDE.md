@@ -75,7 +75,7 @@ The tokens themselves are the `@theme` blocks in [`packages/tailwind-config`](pa
 node .claude/scripts/design.mjs <query> --theme packages/prime-ui/src/routes/layout.css
 ```
 
-That one resolves `@viamrobotics/tailwind-config`, so it is the only entry that sees the Viam tokens. Without `--theme` the script picks `apps/docs/src/tailwind.css`, which is the Starlight site theme and does not compile outside Astro.
+All four reach the same 74 Viam tokens, but only two compile under standalone Tailwind: the `src/routes/layout.css` entries in `prime-ui` and `tailwind-config`. The other two import paths that Vite and Astro resolve and standalone Tailwind does not (`starlight-theme-nova/tailwind.css` in docs, the `@viamrobotics/tailwind-config/dark` export subpath in tweakpane-config), so they exit 1. Without `--theme` the script takes the first in directory-walk order, `apps/docs/src/tailwind.css`, which is one of the two that fail.
 
 ## Topic-specific rules
 
