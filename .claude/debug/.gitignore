@@ -1,0 +1,4 @@
+# Throwaway trace logs written by the /debug-session skill. Not for commit.
+# The directory stays so instrumentation always has somewhere to append.
+*
+!.gitignore

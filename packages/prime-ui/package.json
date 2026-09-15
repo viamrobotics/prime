@@ -42,9 +42,9 @@
 		"check": "wireit",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "wireit",
-		"lint:eslint": "wireit",
-		"lint:prettier": "wireit",
-		"format": "prettier --write .",
+		"lint:fix": "eslint . --fix --concurrency auto",
+		"format": "wireit",
+		"format:fix": "prettier --write .",
 		"test:unit": "vitest",
 		"test": "wireit"
 	},
@@ -169,12 +169,6 @@
 			]
 		},
 		"lint": {
-			"dependencies": [
-				"lint:eslint",
-				"lint:prettier"
-			]
-		},
-		"lint:eslint": {
 			"command": "eslint . --concurrency auto",
 			"dependencies": [
 				"sync"
@@ -196,7 +190,7 @@
 				"pnpm-workspace.yaml"
 			]
 		},
-		"lint:prettier": {
+		"format": {
 			"command": "prettier --check .",
 			"files": [
 				"**",

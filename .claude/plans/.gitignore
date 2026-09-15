@@ -1,0 +1,5 @@
+# Plan workspaces written by the /plan-project skill (PLAN.md, ROADMAP.md, phase sub-plans).
+# Gitignored by default: living project state, high-churn, local to your working copy.
+# To share a plan, force-add it (git add -f .claude/plans/<name>/) or delete this file.
+*
+!.gitignore

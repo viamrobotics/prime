@@ -1,0 +1,104 @@
+{
+  "outputStyle": "Prose",
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(node .claude/scripts/verify-changed.mjs:*)",
+      "Bash(node .claude/scripts/prose-lint.mjs:*)",
+      "Bash(node .claude/scripts/pr-description-lint.mjs:*)",
+      "Bash(node .claude/scripts/svelte-lint.mjs:*)",
+      "Bash(node .claude/scripts/test-layout.mjs:*)",
+      "Bash(node .claude/scripts/test-config.mjs:*)",
+      "Bash(node .claude/scripts/changeset-write.mjs:*)",
+      "Bash(node .claude/scripts/design.mjs:*)",
+      "Bash(node .claude/scripts/wcag.mjs:*)",
+      "Bash(node .claude/scripts/a11y-markup.mjs:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" || { echo \"[houserules] guard-bash.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" || { echo \"[houserules] guard-read.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/ledger-inject.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/ledger-inject.mjs\" || { echo \"[houserules] ledger-inject.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" || { echo \"[houserules] lint-format-fix.mjs missing. Run: npx houserules update\" >&2; exit 1; }",
+            "statusMessage": "Running lint/format auto-fix",
+            "timeout": 120
+          },
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-check.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-check.mjs\" || { echo \"[houserules] changeset-check.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+          },
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-gate.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-gate.mjs\" || { echo \"[houserules] changeset-gate.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" || { echo \"[houserules] lint-format-fix.mjs missing. Run: npx houserules update\" >&2; exit 1; }",
+            "statusMessage": "Running lint/format auto-fix",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" || { echo \"[houserules] session-context.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+          },
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" || { echo \"[houserules] debug-session-check.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/statusline.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/statusline.mjs\" || { echo \"[houserules] statusline.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+  }
+}

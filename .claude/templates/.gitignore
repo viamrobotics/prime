@@ -1,0 +1,5 @@
+# Reference scaffolding staged by houserules, refreshed by `npx houserules update`.
+# The artifacts you build from these (agents, guardrail docs, CLAUDE.md) live
+# elsewhere and are yours to commit — these skeletons are not meant to be.
+*
+!.gitignore

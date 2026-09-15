@@ -12,7 +12,9 @@
     "check": "wireit",
     "lint": "wireit",
     "test": "wireit",
-    "format": "pnpm -r run --if-present format",
+    "format": "wireit",
+    "lint:fix": "pnpm -r run --if-present lint:fix",
+    "format:fix": "pnpm -r run --if-present format:fix",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish"
@@ -41,11 +43,31 @@
       ]
     },
     "test": {
-      "dependencies": ["./packages/prime-ui:test"]
+      "dependencies": [
+        "./packages/prime-ui:test"
+      ]
+    },
+    "format": {
+      "dependencies": [
+        "./packages/tailwind-config:format",
+        "./packages/prime-ui:format",
+        "./packages/tweakpane-config:format"
+      ]
     }
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
+    "@houserules/cli": "^0.6.1",
+    "@houserules/plugin-accessibility": "^0.1.4",
+    "@houserules/plugin-changesets": "^0.2.4",
+    "@houserules/plugin-design": "^0.2.3",
+    "@houserules/plugin-prose": "^0.2.0",
+    "@houserules/plugin-svelte": "^0.1.2",
+    "@houserules/plugin-testing": "^0.3.1",
+    "@houserules/plugin-typescript": "^0.1.2",
+    "@tailwindcss/oxide": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
     "wireit": "catalog:"
   }
 }

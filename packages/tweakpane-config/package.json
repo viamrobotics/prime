@@ -35,7 +35,9 @@
     "prepack": "wireit",
     "check": "wireit",
     "lint": "wireit",
-    "format": "prettier --write ."
+    "lint:fix": "eslint . --fix --concurrency auto",
+    "format": "wireit",
+    "format:fix": "prettier --write ."
   },
   "wireit": {
     "sync": {
@@ -144,6 +146,21 @@
         "eslint.config.js",
         "tsconfig.json",
         "package.json"
+      ],
+      "output": [],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    },
+    "format": {
+      "command": "prettier --check .",
+      "files": [
+        "**",
+        "!build/**",
+        "!dist/**",
+        "!.svelte-kit/**",
+        "!.wireit/**"
       ],
       "output": [],
       "packageLocks": [

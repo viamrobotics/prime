@@ -1,3 +1,12 @@
+---
+paths:
+  - '**/*.svelte'
+  - '**/*.svelte.ts'
+  - '**/*.css'
+  - '**/*.astro'
+  - '**/*.mdx'
+---
+
 # Viam Design System Context
 
 prime implements the Viam design system as a Svelte component library. Before writing or reviewing a component, verify its visual treatment, behavior, and naming against the authoritative source rather than guessing.

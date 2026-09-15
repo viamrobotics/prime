@@ -1,0 +1,4 @@
+# Per-repo hook state (e.g. the last changeset nudge). Never for commit.
+# The directory stays so hooks always have somewhere to persist.
+*
+!.gitignore

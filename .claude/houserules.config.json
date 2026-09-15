@@ -1,0 +1,103 @@
+{
+  "$schema": "../node_modules/@houserules/cli/schema/houserules.config.schema.json",
+  "version": 2,
+  "packageManager": "pnpm",
+  "plugins": [
+    { "name": "@houserules/plugin-prose", "alias": "prose" },
+    { "name": "@houserules/plugin-typescript", "alias": "ts" },
+    { "name": "@houserules/plugin-svelte", "alias": "svelte" },
+    { "name": "@houserules/plugin-testing", "alias": "testing" },
+    { "name": "@houserules/plugin-changesets", "alias": "changesets" },
+    { "name": "@houserules/plugin-design", "alias": "design" },
+    { "name": "@houserules/plugin-accessibility", "alias": "accessibility" }
+  ],
+  "fix": {
+    "runner": "pnpm",
+    "filterFlag": "--filter",
+    "runScriptPrefix": ["run"],
+    "commands": ["lint:fix", "format:fix"],
+    "onSubagentStop": false
+  },
+  "verify": {
+    "runner": "pnpm",
+    "filterFlag": "--filter",
+    "runScriptPrefix": ["run"],
+    "commands": ["check", "lint", "format", "test"]
+  },
+  "lintableExtensions": [
+    "ts",
+    "tsx",
+    "js",
+    "jsx",
+    "mjs",
+    "cjs",
+    "svelte",
+    "astro",
+    "md",
+    "json",
+    "css",
+    "html"
+  ],
+  "generatedFilePattern": "/CHANGELOG\\.md$",
+  "guard": {
+    "gitCommit": true,
+    "gitPush": true,
+    "gitStash": true,
+    "prCreate": true,
+    "custom": []
+  },
+  "changesets": {
+    "enabled": true,
+    "stopCheck": true,
+    "baseBranch": "main"
+  },
+  "ledger": { "enabled": false },
+  "targets": [
+    {
+      "name": "prime-ui",
+      "prefix": "PRIME_UI",
+      "packageName": "@viamrobotics/prime-ui",
+      "pathPrefix": "packages/prime-ui/",
+      "sourcePath": "packages/prime-ui/src",
+      "label": "Prime UI",
+      "fixCommands": ["lint:fix", "format:fix"],
+      "verifyCommands": ["check", "lint", "format", "test"]
+    },
+    {
+      "name": "tailwind-config",
+      "prefix": "TAILWIND_CONFIG",
+      "packageName": "@viamrobotics/tailwind-config",
+      "pathPrefix": "packages/tailwind-config/",
+      "sourcePath": "packages/tailwind-config/src",
+      "label": "Tailwind Config",
+      "fixCommands": ["lint:fix", "format:fix"],
+      "verifyCommands": ["check", "lint", "format"]
+    },
+    {
+      "name": "tweakpane-config",
+      "prefix": "TWEAKPANE_CONFIG",
+      "packageName": "@viamrobotics/tweakpane-config",
+      "pathPrefix": "packages/tweakpane-config/",
+      "sourcePath": "packages/tweakpane-config/src",
+      "label": "Tweakpane Config",
+      "fixCommands": ["lint:fix", "format:fix"],
+      "verifyCommands": ["check", "lint", "format"]
+    },
+    {
+      "name": "docs",
+      "prefix": "DOCS",
+      "packageName": "@viamrobotics/prime-docs",
+      "pathPrefix": "apps/docs/",
+      "sourcePath": "apps/docs/src",
+      "label": "Docs",
+      "fixCommands": [],
+      "verifyCommands": ["build"]
+    }
+  ],
+  "moduleOptions": {
+    "orchestrate": ["low", "xhigh"],
+    "svelte/svelte": [],
+    "testing/testing": ["typescript", "svelte"],
+    "accessibility/accessibility": ["html", "svelte"]
+  }
+}

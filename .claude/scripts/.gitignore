@@ -1,0 +1,4 @@
+# Compiled hook scripts, refreshed by `npx houserules update`.
+# Build output, not source — not meant to be committed.
+*
+!.gitignore
