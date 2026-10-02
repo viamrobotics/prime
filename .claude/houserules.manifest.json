@@ -1,6 +1,6 @@
 {
   "kitVersion": "0.6.1",
-  "installedAt": "2026-09-15T16:54:05.938Z",
+  "installedAt": "2026-10-02T22:52:39.726Z",
   "modules": [
     "core",
     "lint-fix",
@@ -242,49 +242,5 @@
       "allow:Bash(node .claude/scripts/wcag.mjs:*)",
       "allow:Bash(node .claude/scripts/a11y-markup.mjs:*)"
     ]
-  },
-  "plugins": [
-    {
-      "name": "@houserules/plugin-prose",
-      "alias": "prose",
-      "version": "0.2.0",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-prose@0.2.0_@houserules+api@0.4.1/node_modules/@houserules/plugin-prose"
-    },
-    {
-      "name": "@houserules/plugin-typescript",
-      "alias": "ts",
-      "version": "0.1.2",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-typescript@0.1.2_@houserules+api@0.4.1/node_modules/@houserules/plugin-typescript"
-    },
-    {
-      "name": "@houserules/plugin-svelte",
-      "alias": "svelte",
-      "version": "0.1.2",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-svelte@0.1.2_@houserules+api@0.4.1/node_modules/@houserules/plugin-svelte"
-    },
-    {
-      "name": "@houserules/plugin-testing",
-      "alias": "testing",
-      "version": "0.3.1",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-testing@0.3.1_@houserules+api@0.4.1/node_modules/@houserules/plugin-testing"
-    },
-    {
-      "name": "@houserules/plugin-changesets",
-      "alias": "changesets",
-      "version": "0.2.4",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-changesets@0.2.4_@houserules+api@0.4.1/node_modules/@houserules/plugin-changesets"
-    },
-    {
-      "name": "@houserules/plugin-design",
-      "alias": "design",
-      "version": "0.2.3",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-design@0.2.3_@houserules+api@0.4.1/node_modules/@houserules/plugin-design"
-    },
-    {
-      "name": "@houserules/plugin-accessibility",
-      "alias": "accessibility",
-      "version": "0.1.4",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-accessibility@0.1.4_@houserules+api@0.4.1/node_modules/@houserules/plugin-accessibility"
-    }
-  ]
+  }
 }
