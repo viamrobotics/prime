@@ -1,6 +1,6 @@
 {
   "name": "@viamrobotics/tailwind-config",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Viam's shared Tailwind CSS v4 configuration.",
   "license": "Apache-2.0",
   "publishConfig": {
