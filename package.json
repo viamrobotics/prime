@@ -7,7 +7,7 @@
   "repository": "git://github.com/viamrobotics/prime.git",
   "packageManager": "pnpm@10.34.5",
   "scripts": {
-    "app:docs": "pnpm --filter @viamrobotics/prime-docs dev",
+    "app:docs": "pnpm -C apps/docs dev",
     "build": "wireit",
     "check": "wireit",
     "lint": "wireit",

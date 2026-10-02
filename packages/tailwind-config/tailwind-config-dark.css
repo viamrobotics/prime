@@ -83,6 +83,7 @@
   --dark-color-pending-light: #2a1f3d;
   --dark-color-pending-medium-light: #382c4f;
   --dark-color-pending-medium: #5a4a7a;
+  --dark-color-pending-bright: #ad5cff;
 
   /* Disabled colors */
   --dark-color-disabled-dark: #6b6b73;
@@ -159,6 +160,7 @@
     --color-pending-light: var(--dark-color-pending-light);
     --color-pending-medium-light: var(--dark-color-pending-medium-light);
     --color-pending-medium: var(--dark-color-pending-medium);
+    --color-pending-bright: var(--dark-color-pending-bright);
 
     /* Disabled colors */
     --color-disabled-dark: var(--dark-color-disabled-dark);
@@ -229,6 +231,7 @@
   --color-pending-light: var(--dark-color-pending-light);
   --color-pending-medium-light: var(--dark-color-pending-medium-light);
   --color-pending-medium: var(--dark-color-pending-medium);
+  --color-pending-bright: var(--dark-color-pending-bright);
 
   /* Disabled colors */
   --color-disabled-dark: var(--dark-color-disabled-dark);

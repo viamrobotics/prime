@@ -33,7 +33,10 @@
 			group: 'Warning',
 			tokens: ['warning-light', 'warning-medium-light', 'warning-medium', 'warning-bright', 'warning-dark']
 		},
-		{ group: 'Pending', tokens: ['pending-light', 'pending-medium-light', 'pending-medium', 'pending-dark'] },
+		{
+			group: 'Pending',
+			tokens: ['pending-light', 'pending-medium-light', 'pending-medium', 'pending-bright', 'pending-dark']
+		},
 		{ group: 'Disabled', tokens: ['disabled-light', 'disabled-dark'] }
 	];
 

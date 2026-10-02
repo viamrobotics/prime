@@ -66,6 +66,7 @@
   --color-pending-light: #f5ebff;
   --color-pending-medium-light: #ebd8ff;
   --color-pending-medium: #d3c1f6;
+  --color-pending-bright: #9429ff; /* derived */
 
   /* Disabled colors */
   --color-disabled-dark: #9c9ca4;
