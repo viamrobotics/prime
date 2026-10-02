@@ -1,5 +1,11 @@
 # @viamrobotics/tailwind-config
 
+## 1.3.0
+
+### Minor Changes
+
+- 9e0d60e: Add `pending` semantic color and a `medium-light` tier for every semantic color
+
 ## 1.2.0
 
 ### Minor Changes
