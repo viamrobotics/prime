@@ -38,23 +38,35 @@
   --color-gray-2: #edeef0;
   --color-gray-1: #f7f7f8;
 
-  /* Semantic colors */
+  /* Semantic colors. `medium-light` is the hover/active fill for outline buttons,
+   * sitting between `light` and `medium`. Values marked "derived" had no published
+   * hex; they are interpolated ~30% from light toward medium and should be confirmed
+   * against the design system / Figma. */
   --color-danger-dark: #be3536;
   --color-danger-light: #fcecea;
+  --color-danger-medium-light: #f5dfdc;
   --color-danger-medium: #edc0bf;
   --color-danger-bright: #fb2c36;
   --color-warning-dark: #b88a09;
   --color-warning-light: #fef3e0;
+  --color-warning-medium-light: #f8e6cc; /* derived */
   --color-warning-medium: #e9c89d;
   --color-warning-bright: #efa300;
   --color-success-dark: #3d7d3f;
   --color-success-light: #e0fae3;
+  --color-success-medium-light: #d9f2e4;
   --color-success-medium: #b9dcbc;
   --color-success-bright: #00c907;
   --color-info-dark: #2e67d3;
   --color-info-light: #e1f3ff;
+  --color-info-medium-light: #d4e9fc; /* derived */
   --color-info-medium: #b6d1f4;
   --color-info-bright: #2b95ff;
+  --color-pending-dark: #7c2fca;
+  --color-pending-light: #f5ebff;
+  --color-pending-medium-light: #ebd8ff;
+  --color-pending-medium: #d3c1f6;
+  --color-pending-bright: #9429ff; /* derived */
 
   /* Disabled colors */
   --color-disabled-dark: #9c9ca4;
