@@ -4,9 +4,19 @@ Renders the selected option's label inside a
 [`Select.Trigger`](./SelectTrigger.svelte), falling back to `placeholder`.
 -->
 <script lang="ts">
+	import type { HTMLAttributes } from 'svelte/elements';
+
 	import { Select } from 'bits-ui';
 
-	const { class: extraClasses, ...restProps }: Select.ValueProps = $props();
+	interface Props extends HTMLAttributes<HTMLSpanElement> {
+		/** Id of the element. bits-ui requires a string, so `null` is not accepted. */
+		id?: string;
+
+		/** Shown while nothing is selected. */
+		placeholder?: string;
+	}
+
+	const { class: extraClasses, ...restProps }: Props = $props();
 </script>
 
 <Select.Value {...restProps} class={['truncate', extraClasses]} />

@@ -6,21 +6,46 @@ sidebar:
 ---
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
+
 import FieldDemo from "./field/FieldDemo.svelte";
 import FieldShowcase from "./field/FieldShowcase.svelte";
+import Basic from "./field/Basic.svelte";
+import basicSource from "./field/Basic.svelte?raw";
 
 <ComponentIntro name="field" />
 
 <FieldDemo client:visible />
 
-## Props
+- Generates the control's `id` and hands it to the label's `for` and the control.
+- Collects every `Hint` into the control's `aria-describedby`, and names a `RadioGroup` from the label.
+- `disabled`, `required`, and `state` set once here reach every part.
+- A prop passed to a part directly always wins over the field's value.
 
-<PropsTable name="field" />
+## Anatomy
 
-`Field` renders a plain `<div>` and takes no layout stance, so pass `class` to stack or inline its parts. `id` is the control's id, not the wrapper's, so a known id still works for an external `<label for>` or a test selector.
+A field is a plain `<div>` around one control, with any number of labels and hints in any order.
 
-## Examples
+```svelte
+<Field>
+  <Label />
+  <Input /> <!-- or NumberInput, Checkbox, RadioGroup, Select -->
+  <Hint />
+</Field>
+```
+
+## Usage
+
+### A labeled input with a hint
+
+Nothing in this example names an id, yet the label, the input, and the hint are associated.
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+### Every control
 
 <FieldShowcase client:visible />
 
@@ -35,8 +60,6 @@ import FieldShowcase from "./field/FieldShowcase.svelte";
 | `RadioGroup`                | `id`, `disabled`, `required`, `aria-labelledby`, `aria-describedby`         |
 | `Select` / `Select.Trigger` | `disabled`, `required` on the root; `id`, `aria-describedby` on the trigger |
 
-A prop passed to a part directly always wins over the field's value.
-
 ## Without a field
 
 Every part still works on its own. Wire it by hand with `for`, `id`, and `aria-describedby`:
@@ -46,3 +69,11 @@ Every part still works on its own. Wire it by hand with `for`, `id`, and `aria-d
 <Input id="email" aria-describedby="email-hint" required />
 <Hint id="email-hint">We'll never share it.</Hint>
 ```
+
+## Styling
+
+`Field` renders a bare `<div>` and takes no layout stance, so pass `class` to stack or inline its parts. `id` is the control's id, not the wrapper's, so a known id still works for an external `<label for>` or a test selector.
+
+## API
+
+<PropsTable name="field" />

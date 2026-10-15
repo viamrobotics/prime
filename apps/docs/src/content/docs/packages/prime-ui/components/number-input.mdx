@@ -4,25 +4,47 @@ description: A native numeric input built on Input.
 ---
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
+
 import NumberInputDemo from "./number-input/NumberInputDemo.svelte";
 import NumberInputShowcase from "./number-input/NumberInputShowcase.svelte";
+import TwoWay from "./number-input/TwoWay.svelte";
+import twoWaySource from "./number-input/TwoWay.svelte?raw";
 
 <ComponentIntro name="number-input" />
 
 <NumberInputDemo client:visible />
 
-## Props
+- [`Input`](../input/) with `type="number"`, so it shares the frame, the states, and the `StateIcon`.
+- `value` is a `number`, or `undefined` while the field is empty. No string parsing on your side.
+- `min`, `max`, and `step` are the native attributes. The browser owns stepping, spin buttons, and the wheel.
+
+## Usage
+
+### Two-way binding
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+For the controlled mode, where your setter can clamp or decline a value, see [State & binding](../state/).
+
+### States
+
+<NumberInputShowcase client:visible />
+
+## Styling
+
+Same as [`Input`](../input/#styling): `class` lands on the frame, and `NumberInput.StateIcon` takes `class` on its `<svg>`.
+
+## Keyboard
+
+Native number input behavior: <kbd>ArrowUp</kbd> and <kbd>ArrowDown</kbd> step by `step` within `min` and `max`. Nothing is added or intercepted.
+
+## API
 
 <PropsTable name="number-input" />
 
-`value` follows the [state modes](../state/). The browser handles stepping, spin buttons, mouse wheel, and min/max/step clamping.
-
-## Parts
-
 <PartsDoc name="number-input" />
-
-## Examples
-
-<NumberInputShowcase client:visible />

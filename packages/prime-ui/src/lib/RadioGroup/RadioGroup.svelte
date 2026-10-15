@@ -66,10 +66,10 @@ Built on [bits-ui `RadioGroup`](https://bits-ui.com/docs/components/radio-group)
 	required={required ?? field?.required ?? false}
 	aria-labelledby={labelledBy ?? field?.labelledBy}
 	aria-describedby={describedBy ?? field?.describedBy}
-	{...restProps}
 	id={id ?? field?.id ?? uid}
-	class={[orientation === 'vertical' ? 'flex flex-col gap-2' : 'flex flex-row gap-4', extraClasses]}
+	class={['flex', orientation === 'vertical' ? 'flex-col' : 'flex-row', extraClasses]}
 	loop
+	{...restProps}
 >
 	{@render children?.()}
 </RadioGroup.Root>

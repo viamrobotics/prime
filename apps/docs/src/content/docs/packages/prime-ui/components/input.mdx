@@ -4,25 +4,68 @@ description: A native text input with Viam validation chrome.
 ---
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
+
 import InputDemo from "./input/InputDemo.svelte";
 import InputShowcase from "./input/InputShowcase.svelte";
+import TwoWay from "./input/TwoWay.svelte";
+import twoWaySource from "./input/TwoWay.svelte?raw";
+import Validated from "./input/Validated.svelte";
+import validatedSource from "./input/Validated.svelte?raw";
 
 <ComponentIntro name="input" />
 
 <InputDemo client:visible />
 
-## Props
+- A real `<input>`, so every native attribute and event handler passes straight through.
+- `bind:value` plus `oninput`, `onchange`, `onblur`, and the rest, side by side.
+- Four contextual states, `none`, `info`, `warn`, and `error`, with a matching `Input.StateIcon`.
+- Reads `id`, `disabled`, `required`, `state`, and `aria-describedby` from an enclosing [`Field`](../field/).
+
+## Anatomy
+
+```svelte
+<Input>
+  <Input.StateIcon />
+</Input>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the input. Inside a `Field` the label and hint wire themselves to it.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Validation on blur
+
+The input is native, so `onblur` and the other handlers work alongside the binding. Set `state` on the field and the input frame, the hint, and the `StateIcon` all follow it.
+
+<Example code={validatedSource} title="Validated.svelte">
+  <Validated client:visible />
+</Example>
+
+For the controlled mode, where your setter can decline a keystroke, see [State & binding](../state/).
+
+### States
+
+<InputShowcase client:visible />
+
+## Styling
+
+`class` lands on the bordered frame, which is the visible control. The frame carries the state border and the disabled and read-only backgrounds. `Input.StateIcon` takes `class` on its `<svg>`, merged with the state color. The input sets `aria-invalid` in the error state, so `aria-invalid:` variants work on the inner element.
+
+## Keyboard
+
+Native text input behavior. Nothing is added or intercepted.
+
+## API
 
 <PropsTable name="input" />
 
-`value` follows the [state modes](../state/). Native handlers such as `oninput` and `onblur` pass through to the `<input>`.
-
-## Parts
-
 <PartsDoc name="input" />
-
-## Examples
-
-<InputShowcase client:visible />

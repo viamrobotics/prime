@@ -85,4 +85,13 @@ describe('Input.StateIcon', () => {
 		const { container } = render(WithStateIcon, { props: { state: InputStates.None } });
 		expect(container.querySelector('svg')).toBeFalsy();
 	});
+
+	it('merges a passed class with the state color instead of replacing it', () => {
+		const { container } = render(WithStateIcon, {
+			props: { state: InputStates.Error, iconClass: 'size-6' }
+		});
+		const classes = container.querySelector('svg')?.getAttribute('class');
+		expect(classes).toContain('size-6');
+		expect(classes).toContain('text-danger-dark');
+	});
 });

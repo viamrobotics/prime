@@ -20,6 +20,7 @@ On its own, associate it with `for`:
 ```
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { HTMLLabelAttributes } from 'svelte/elements';
 
 	import { Label } from 'bits-ui';
@@ -32,6 +33,9 @@ On its own, associate it with `for`:
 
 		/** Dim the label and show a not-allowed cursor. Defaults to the enclosing field's `disabled`. */
 		disabled?: boolean;
+
+		/** Replaces the required asterisk. Rendered only when required. */
+		indicator?: Snippet;
 	}
 
 	const {
@@ -40,6 +44,7 @@ On its own, associate it with `for`:
 		required,
 		disabled,
 		class: extraClasses,
+		indicator,
 		children,
 		...restProps
 	}: Props = $props();
@@ -54,6 +59,10 @@ On its own, associate it with `for`:
 	$effect(() => field?.label(labelId));
 </script>
 
+{#snippet asterisk()}
+	<span class="text-danger-dark" aria-hidden="true">*</span>
+{/snippet}
+
 <Label.Root
 	{...restProps}
 	id={labelId}
@@ -66,6 +75,7 @@ On its own, associate it with `for`:
 >
 	<span>{@render children?.()}</span>
 	{#if isRequired}
-		<span class="text-danger-dark" aria-hidden="true">*</span>
+		{@const suffix = indicator ?? asterisk}
+		{@render suffix()}
 	{/if}
 </Label.Root>

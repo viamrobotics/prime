@@ -4,20 +4,39 @@ description: Curated Viam icons, or any Svelte icon component.
 ---
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
+
 import IconDemo from "./icon/IconDemo.svelte";
 import IconShowcase from "./icon/IconShowcase.svelte";
+import CustomComponent from "./icon/CustomComponent.svelte";
+import customComponentSource from "./icon/CustomComponent.svelte?raw";
 
 <ComponentIntro name="icon" />
 
 <IconDemo client:visible />
 
-## Props
+- A curated name renders inline SVG from the Viam set.
+- Any Svelte icon component renders as-is, so a Lucide icon tree-shakes to only what you import.
+- Eight sizes on the design-system scale. Color follows `currentColor`.
+- Decorative by default: `aria-hidden` and not focusable. Add an `aria-label` when it stands alone.
 
-<PropsTable name="icon" />
+## Usage
 
-Curated names render inline SVG. Components render as-is. Color follows `currentColor`.
+### By name, by component, by color
 
-## Examples
+<Example code={customComponentSource} title="CustomComponent.svelte">
+  <CustomComponent client:visible />
+</Example>
+
+### Sizes and the curated set
 
 <IconShowcase client:visible />
+
+## Styling
+
+`class` lands on the `<svg>`, next to the size class. Set color with a `text-*` token, since the paths fill with `currentColor`.
+
+## API
+
+<PropsTable name="icon" />

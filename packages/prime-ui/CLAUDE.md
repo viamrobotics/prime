@@ -53,7 +53,11 @@ Follow [.claude/rules/svelte.md](../../.claude/rules/svelte.md) (runes only; typ
 
 ### Public API — never leak the headless library
 
-The public surface stays in **native / web-standard vocabulary**. Never surface a bits-ui prop or callback name (`onCheckedChange`, `onValueChange`, …): a consumer shouldn't need to learn bits-ui, and swapping the headless lib must not break the API. Extend the matching `svelte/elements` attribute type and `Omit` what you re-type or drop, e.g. `interface Props extends Omit<HTMLButtonAttributes, 'value'>`.
+The public surface stays in **native / web-standard vocabulary**. Never surface a bits-ui prop or callback name (`onCheckedChange`, `onValueChange`, …): a consumer shouldn't need to learn bits-ui, and swapping the headless lib must not break the API. Extend the matching `svelte/elements` attribute type and `Omit` what you re-type or drop, e.g. `interface Props extends Omit<HTMLButtonAttributes, 'value'>`. This applies to every part of a compound too: never type a part's props as `Select.TriggerProps` or another bits-ui export. bits-ui requires `id` to be a string and floating content's `dir` to be `ltr` or `rtl`, so a part that spreads onto a bits-ui element narrows those two fields in its `Props` with a one-line doc saying why.
+
+### One `class`, one root — decoration is a snippet
+
+A component is atomic: `class` lands on its root element and that is the only class prop. Never add a second class prop for an inner element (`inputClass`, `iconClass`, …). An internal decoration the consumer may want to resize, recolor, or replace (a checkbox or radio icon, a trigger chevron, a required asterisk) is an optional snippet prop with the default rendered in its `{:else}`: `indicator?: Snippet<[{ checked: boolean }]>` on `RadioGroup.Item`, `indicator?: Snippet` on `Select.Trigger` and `Label`, `children` on `Checkbox` since it has nothing else inside. Render the default inline in the `{:else}` branch. Do not declare a `{#snippet}` inside an `{#if}` to pass it to a bits-ui component: a snippet is only a prop of the component when it is a direct child of its tag, anywhere else it is a local declaration nothing renders, with untyped parameters.
 
 ### State & binding (settled decision — don't regress)
 
@@ -116,7 +120,7 @@ Open each component `.svelte` with an `@component` block: one-sentence descripti
 
 - Write the block as markdown. Fenced ` ```svelte ` blocks become code samples.
 - Link to a sibling component as `[`Select.Trigger`](./SelectTrigger.svelte)` or `[`Field`](../Field/Field.svelte)`. The loader rewrites those to docs links; they also work on editor hover.
-- Name the interface `Props`. A part that takes an external type straight (`Select.TriggerProps = $props()`) is documented as "Takes `Select.TriggerProps` as its props" with no table.
+- Name the interface `Props`. The loader only recognizes an `interface`, so a part with no own props still declares one (the `id` narrowing above gives it a member, which also keeps `@typescript-eslint/no-empty-object-type` quiet).
 - A new root export in `index.ts` gets a collection entry automatically. The docs page under `apps/docs/src/content/docs/packages/prime-ui/components/` is still yours to add.
 
 ## Tests

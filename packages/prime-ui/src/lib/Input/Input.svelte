@@ -57,7 +57,7 @@ it takes its `id`, `disabled`, `required`, `state`, and `aria-describedby` from 
 		aria-describedby={describedBy ?? field?.describedBy}
 		aria-invalid={currentState === InputStates.Error || undefined}
 		class={[
-			'w-full bg-transparent outline-none placeholder:text-subtle-2',
+			'size-full bg-transparent outline-none placeholder:text-subtle-2',
 			isDisabled ? 'text-disabled-dark' : 'text-default'
 		]}
 	/>

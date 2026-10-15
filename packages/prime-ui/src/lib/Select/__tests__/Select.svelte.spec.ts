@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 
 import BoundSelect from './BoundSelect.svelte';
 import ControlledSelect from './ControlledSelect.svelte';
+import IndicatorSelect from './IndicatorSelect.svelte';
 
 const openAndPick = async (trigger: HTMLElement, label: string) => {
 	await userEvent.click(trigger);
@@ -21,6 +22,13 @@ describe('Select', () => {
 	it('renders a trigger showing the current selection', () => {
 		const { container } = render(BoundSelect);
 		expect(container.querySelector('button')?.textContent).toContain('Small');
+	});
+
+	it('renders a passed trigger indicator instead of the chevron', () => {
+		const { container } = render(IndicatorSelect);
+
+		expect(container.querySelector('[data-testid="indicator"]')?.textContent).toBe('v');
+		expect(container.querySelector('[data-testid="icon-chevron-down"]')).toBeNull();
 	});
 
 	it('opens on click and lists the options', async () => {

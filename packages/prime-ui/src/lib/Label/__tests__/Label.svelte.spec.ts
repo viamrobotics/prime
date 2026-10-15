@@ -24,6 +24,23 @@ describe('Label', () => {
 		expect(required.container.textContent).toContain('*');
 	});
 
+	it('renders a passed indicator in place of the asterisk when required', () => {
+		const { container } = render(Label, {
+			props: { required: true, children: text('Name'), indicator: text('(req)') }
+		});
+
+		expect(container.textContent).toContain('(req)');
+		expect(container.textContent).not.toContain('*');
+	});
+
+	it('renders no indicator when not required', () => {
+		const { container } = render(Label, {
+			props: { children: text('Name'), indicator: text('(req)') }
+		});
+
+		expect(container.textContent).not.toContain('(req)');
+	});
+
 	it('marks the label not-allowed when disabled', () => {
 		const { container } = render(Label, {
 			props: { disabled: true, children: text('Name') }

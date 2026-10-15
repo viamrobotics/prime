@@ -9,7 +9,7 @@ Shows the validation-state icon for the enclosing [`Input`](./Input.svelte).
 	import { InputStates, stateIcon } from './state.ts';
 	import { useInput } from './useInput.svelte.ts';
 
-	const props: SVGAttributes<SVGElement> = $props();
+	const { class: extraClasses, ...restProps }: SVGAttributes<SVGElement> = $props();
 
 	const input = useInput();
 
@@ -17,5 +17,5 @@ Shows the validation-state icon for the enclosing [`Input`](./Input.svelte).
 </script>
 
 {#if icon}
-	<Icon {...props} {...icon} />
+	<Icon {...restProps} icon={icon.icon} class={[icon.class, extraClasses]} />
 {/if}

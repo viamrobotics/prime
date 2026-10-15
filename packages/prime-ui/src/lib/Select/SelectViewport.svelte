@@ -4,9 +4,16 @@ The scrollable region inside a [`Select.Content`](./SelectContent.svelte) that
 holds the items.
 -->
 <script lang="ts">
+	import type { HTMLAttributes } from 'svelte/elements';
+
 	import { Select } from 'bits-ui';
 
-	const { class: extraClasses, children, ...restProps }: Select.ViewportProps = $props();
+	interface Props extends HTMLAttributes<HTMLDivElement> {
+		/** Id of the element. bits-ui requires a string, so `null` is not accepted. */
+		id?: string;
+	}
+
+	const { class: extraClasses, children, ...restProps }: Props = $props();
 </script>
 
 <Select.Viewport {...restProps} class={['p-1', extraClasses]}>

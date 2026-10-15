@@ -15,12 +15,12 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
-	import { Checkbox } from 'bits-ui';
+	import { Checkbox, type CheckboxRootProps } from 'bits-ui';
 
 	import { useField } from '../Field/useField.svelte.ts';
 	import Icon from '../Icon/Icon.svelte';
 
-	interface Props extends Omit<HTMLButtonAttributes, 'value'> {
+	interface Props extends Omit<HTMLButtonAttributes, 'children' | 'value'> {
 		/** Checked state. @default false */
 		checked?: boolean;
 		/** Indeterminate ("mixed") state. Wins over `checked` visually. @default false */
@@ -29,6 +29,8 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 		value?: string;
 		/** Require the box to be checked for form submission. Defaults to the enclosing field's `required`. */
 		required?: boolean;
+		/** Custom content instead of the default checkbox icon. */
+		children?: CheckboxRootProps['children'];
 	}
 
 	let {
@@ -39,6 +41,7 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 		required,
 		'aria-describedby': describedBy,
 		class: extraClasses,
+		children,
 		...restProps
 	}: Props = $props();
 
@@ -69,15 +72,16 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 	aria-describedby={describedBy ?? field?.describedBy}
 	{...restProps}
 >
-	{#snippet children({ checked: isChecked, indeterminate: isIndeterminate })}
+	{#if children}
+		{@render children({ checked, indeterminate })}
+	{:else}
 		<Icon
-			icon={boxIcon(isChecked, isIndeterminate)}
-			size="lg"
+			icon={boxIcon(checked, indeterminate)}
 			class={{
 				'text-disabled-dark': isDisabled,
-				'text-default': !isDisabled && (isChecked || isIndeterminate),
-				'text-subtle-2': !isDisabled && !isChecked && !isIndeterminate
+				'text-default': !isDisabled && (checked || indeterminate),
+				'text-subtle-2': !isDisabled && !checked && !indeterminate
 			}}
 		/>
-	{/snippet}
+	{/if}
 </Checkbox.Root>

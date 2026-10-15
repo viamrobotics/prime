@@ -5,34 +5,57 @@ The button that opens a [`Select`](./Select.svelte). Inside a
 
 Add a [`Select.Value`](./SelectValue.svelte) child to show the current selection.
 
-The trailing chevron is added for you.
+A trailing chevron is rendered by default. Pass an `indicator` snippet to replace it:
+
+```svelte
+<Select.Trigger>
+	<Select.Value placeholder="Pick one" />
+	{#snippet indicator()}
+		<Icon icon="chevron-down" size="lg" />
+	{/snippet}
+</Select.Trigger>
+```
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+
 	import { Select } from 'bits-ui';
 
 	import { useField } from '../Field/useField.svelte.ts';
 	import Icon from '../Icon/Icon.svelte';
 
+	interface Props extends HTMLButtonAttributes {
+		/** Replaces the trailing chevron. */
+		indicator?: Snippet;
+	}
+
 	const {
 		id,
 		'aria-describedby': describedBy,
 		class: extraClasses,
+		indicator,
 		children,
 		...restProps
-	}: Select.TriggerProps = $props();
+	}: Props = $props();
 
 	const field = useField();
 </script>
 
+{#snippet chevron()}
+	<Icon icon="chevron-down" size="sm" class="shrink-0 text-subtle-2" />
+{/snippet}
+
 <Select.Trigger
-	{...restProps}
 	id={id ?? field?.id}
 	aria-describedby={describedBy ?? field?.describedBy}
 	class={[
 		'flex w-full items-center justify-between gap-2 rounded border border-light bg-white px-2 py-1.5 text-sm text-default transition-colors hover:border-gray-6 focus-visible:border-gray-9 focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:bg-disabled-light data-disabled:text-disabled-dark data-[state=open]:border-gray-9',
 		extraClasses
 	]}
+	{...restProps}
 >
 	{@render children?.()}
-	<Icon icon="chevron-down" size="sm" class="shrink-0 text-subtle-2" />
+	{@const suffix = indicator ?? chevron}
+	{@render suffix()}
 </Select.Trigger>

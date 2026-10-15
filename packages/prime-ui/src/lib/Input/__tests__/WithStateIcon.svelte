@@ -4,9 +4,9 @@
 	import Root from '../Input.svelte';
 	import StateIcon from '../StateIcon.svelte';
 
-	const { state }: { state?: InputState } = $props();
+	const { state, iconClass }: { state?: InputState; iconClass?: string } = $props();
 </script>
 
 <Root {state}>
-	<StateIcon />
+	<StateIcon class={iconClass} />
 </Root>
