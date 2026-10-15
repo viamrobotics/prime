@@ -93,41 +93,41 @@ An item renders its `label` and a check when selected. Pass children to replace 
 
 ## Styling
 
-Each part takes `class` on its own element. `Select` itself renders no element, so it takes none. The panel width follows the trigger through `--bits-select-anchor-width`, and its max height through `--bits-select-content-available-height`, both set by bits-ui. bits-ui sets these data attributes for Tailwind variants.
+Each part takes `class` on its own element. `Select` itself renders no element, so it takes no `class` and no event handlers. `onfocus`, `onblur`, `onkeydown`, and the rest go on `Select.Trigger`, the real `<button>`. The panel width follows the trigger through `--bits-select-anchor-width`, and its max height through `--bits-select-content-available-height`, both set by bits-ui. bits-ui sets these data attributes for Tailwind variants.
 
-| Part      | Attribute          | Value                              |
-| --------- | ------------------ | ---------------------------------- |
-| `Trigger` | `data-state`       | `open` or `closed`                 |
-| `Trigger` | `data-disabled`    | present when disabled              |
-| `Trigger` | `data-placeholder` | present while nothing is selected  |
-| `Value`   | `data-placeholder` | present while nothing is selected  |
-| `Content` | `data-state`       | `open` or `closed`                 |
-| `Item`    | `data-selected`    | present when selected              |
-| `Item`    | `data-highlighted` | present under the pointer or keys  |
-| `Item`    | `data-disabled`    | present when disabled              |
-| `Item`    | `data-value`       | the item's `value`                 |
+| Part      | Attribute          | Value                             |
+| --------- | ------------------ | --------------------------------- |
+| `Trigger` | `data-state`       | `open` or `closed`                |
+| `Trigger` | `data-disabled`    | present when disabled             |
+| `Trigger` | `data-placeholder` | present while nothing is selected |
+| `Value`   | `data-placeholder` | present while nothing is selected |
+| `Content` | `data-state`       | `open` or `closed`                |
+| `Item`    | `data-selected`    | present when selected             |
+| `Item`    | `data-highlighted` | present under the pointer or keys |
+| `Item`    | `data-disabled`    | present when disabled             |
+| `Item`    | `data-value`       | the item's `value`                |
 
 ## Keyboard
 
 With focus on the trigger:
 
-| Key                                                                  | Action                                  |
-| -------------------------------------------------------------------- | --------------------------------------- |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Opens the panel.                        |
-| Printable characters                                                 | Opens and highlights the first match.   |
+| Key                                                                             | Action                                |
+| ------------------------------------------------------------------------------- | ------------------------------------- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Opens the panel.                      |
+| Printable characters                                                            | Opens and highlights the first match. |
 
 With the panel open:
 
-| Key                                             | Action                                                 |
-| ----------------------------------------------- | ------------------------------------------------------ |
-| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd>       | Highlights the next or previous item.                  |
-| <kbd>Home</kbd> / <kbd>End</kbd>                | Highlights the first or last item.                     |
-| <kbd>PageDown</kbd> / <kbd>PageUp</kbd>         | Highlights the item a page away.                       |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>             | Selects the highlighted item and closes.               |
-| <kbd>Alt</kbd> + <kbd>ArrowUp</kbd>             | Selects the highlighted item and closes.               |
-| Printable characters                            | Typeahead: highlights the next item matching the text. |
-| <kbd>Escape</kbd>                               | Closes without changing the value.                     |
-| <kbd>Tab</kbd>                                  | Closes and moves focus on.                             |
+| Key                                       | Action                                                 |
+| ----------------------------------------- | ------------------------------------------------------ |
+| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Highlights the next or previous item.                  |
+| <kbd>Home</kbd> / <kbd>End</kbd>          | Highlights the first or last item.                     |
+| <kbd>PageDown</kbd> / <kbd>PageUp</kbd>   | Highlights the item a page away.                       |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>       | Selects the highlighted item and closes.               |
+| <kbd>Alt</kbd> + <kbd>ArrowUp</kbd>       | Selects the highlighted item and closes.               |
+| Printable characters                      | Typeahead: highlights the next item matching the text. |
+| <kbd>Escape</kbd>                         | Closes without changing the value.                     |
+| <kbd>Tab</kbd>                            | Closes and moves focus on.                             |
 
 ## API
 

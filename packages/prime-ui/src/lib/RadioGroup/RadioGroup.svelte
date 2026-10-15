@@ -6,6 +6,9 @@ Inside a [`Field`](../Field/Field.svelte) it takes `id`, `disabled`, `required`,
 
 Built on [bits-ui `RadioGroup`](https://bits-ui.com/docs/components/radio-group).
 
+The group `<div>` is never focused and `focus`/`blur` do not bubble, so listen with
+`onfocusin`/`onfocusout` here, or `onfocus`/`onblur` on an item.
+
 ```svelte
 <Field class="flex flex-col gap-1">
 	<Label>Size</Label>

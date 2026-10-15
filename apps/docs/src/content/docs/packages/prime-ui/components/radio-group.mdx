@@ -69,26 +69,36 @@ Pass an `indicator` snippet to an item to replace the radio icon. It receives `c
 
 `class` on `RadioGroup` lands on the group `<div>`, which is `flex` with `flex-col` or `flex-row` by orientation, so add the gap you want. `class` on `RadioGroup.Item` lands on the item button. bits-ui sets these data attributes for Tailwind variants.
 
-| Element | Attribute          | Value                        |
-| ------- | ------------------ | ---------------------------- |
-| group   | `data-orientation` | `vertical` or `horizontal`   |
-| group   | `data-disabled`    | present when disabled        |
-| item    | `data-state`       | `checked` or `unchecked`     |
-| item    | `data-value`       | the item's `value`           |
-| item    | `data-disabled`    | present when disabled        |
-| item    | `data-orientation` | `vertical` or `horizontal`   |
+| Element | Attribute          | Value                      |
+| ------- | ------------------ | -------------------------- |
+| group   | `data-orientation` | `vertical` or `horizontal` |
+| group   | `data-disabled`    | present when disabled      |
+| item    | `data-state`       | `checked` or `unchecked`   |
+| item    | `data-value`       | the item's `value`         |
+| item    | `data-disabled`    | present when disabled      |
+| item    | `data-orientation` | `vertical` or `horizontal` |
 
 ## Keyboard
 
 Focus moves between items, and moving focus with the arrow keys also selects the newly focused item.
 
-| Key                                                            | Action                                              |
-| -------------------------------------------------------------- | --------------------------------------------------- |
-| <kbd>Tab</kbd>                                                 | Focuses the checked item, or the first if none is.  |
-| <kbd>ArrowDown</kbd> / <kbd>ArrowRight</kbd>                   | Moves to and selects the next item, wrapping around. |
-| <kbd>ArrowUp</kbd> / <kbd>ArrowLeft</kbd>                      | Moves to and selects the previous item, wrapping.   |
-| <kbd>Home</kbd> / <kbd>End</kbd>                               | Moves to and selects the first or last item.        |
-| <kbd>Space</kbd>                                               | Selects the focused item.                           |
+| Key                                          | Action                                               |
+| -------------------------------------------- | ---------------------------------------------------- |
+| <kbd>Tab</kbd>                               | Focuses the checked item, or the first if none is.   |
+| <kbd>ArrowDown</kbd> / <kbd>ArrowRight</kbd> | Moves to and selects the next item, wrapping around. |
+| <kbd>ArrowUp</kbd> / <kbd>ArrowLeft</kbd>    | Moves to and selects the previous item, wrapping.    |
+| <kbd>Home</kbd> / <kbd>End</kbd>             | Moves to and selects the first or last item.         |
+| <kbd>Space</kbd>                             | Selects the focused item.                            |
+
+## Events
+
+Each `RadioGroup.Item` is a real `<button>`, so `onfocus`, `onblur`, `onclick`, and `onkeydown` on an item land on it. The group `<div>` is never focused itself, and `focus` and `blur` do not bubble, so to know when focus enters or leaves the group as a whole use `onfocusin` and `onfocusout` on `RadioGroup`, the same as on a native `<fieldset>`.
+
+```svelte
+<RadioGroup bind:value onfocusout={() => (touched = true)}>
+```
+
+No `change` event fires, since no native control changes. React to the value with the binding, as described in [State & binding](../state/).
 
 ## API
 

@@ -27,13 +27,13 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 ```
 -->
 <script lang="ts">
-	import type { HTMLSelectAttributes } from 'svelte/elements';
+	import type { Snippet } from 'svelte';
 
 	import { Select } from 'bits-ui';
 
 	import { useField } from '../Field/useField.svelte.ts';
 
-	interface Props extends Omit<HTMLSelectAttributes, 'value' | 'onchange'> {
+	interface Props {
 		/**
 		 * The options.
 		 *
@@ -53,18 +53,21 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 		/** Make selection required. Defaults to the enclosing field's `required`. */
 		required?: boolean;
 
-		/** Allow clicking the selected item again to clear it. */
+		/** Allow clicking the selected item again to clear it. @default false */
 		allowDeselect?: boolean;
+
+		/** The `Select.*` parts. */
+		children?: Snippet;
 	}
 
 	let {
 		items,
 		value = $bindable(''),
+		name,
 		allowDeselect = false,
 		disabled,
 		required,
-		children,
-		...restProps
+		children
 	}: Props = $props();
 
 	const field = useField();
@@ -73,10 +76,10 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 <Select.Root
 	bind:value
 	{items}
+	{name}
 	{allowDeselect}
 	disabled={disabled ?? field?.disabled ?? false}
 	required={required ?? field?.required ?? false}
-	{...restProps}
 	type="single"
 >
 	{@render children?.()}

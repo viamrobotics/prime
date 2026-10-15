@@ -44,10 +44,21 @@ $effect(() => console.log("checked is now", checked));
 
 `NumberInput`'s value is `number | null` (an empty field is `null`); the others use `string`.
 
-## Native inputs
+## Native event handlers
 
-`Input` and `NumberInput` render a real `<input>`, so alongside `bind:value` they also accept the native event handlers — `oninput`, `onchange`, `onblur`, `onfocus`, … — for side effects and focus handling. (The `Checkbox`/`RadioGroup`/`Select` widgets aren't native elements, so they don't; use the function binding or `$effect`.)
+`Input` and `NumberInput` render a real `<input>`, so alongside `bind:value` they accept every native handler, `oninput`, `onchange`, `onblur`, `onfocus`, and the rest, for side effects and focus handling.
 
 ```svelte
 <Input bind:value onblur={() => validate(value)} />
 ```
+
+`Checkbox`, `RadioGroup.Item`, and `Select.Trigger` render a real `<button>` too, so `onfocus`, `onblur`, `onclick`, `onkeydown`, and the other DOM handlers land on it and run before the widget's own handling. Calling `preventDefault()` in yours stops the widget's. What these never fire is `change` or `input`, because no native control changes underneath. To react to a value change, use the function binding above or `$effect`.
+
+```svelte
+<Checkbox bind:checked onblur={() => (touched = true)} />
+```
+
+Two things to know, both plain DOM behavior:
+
+- `focus` and `blur` do not bubble. An `onblur` on the `RadioGroup` root `<div>` never fires, since the div itself is never focused. Use `onfocusin` and `onfocusout` on the group, exactly as you would on a native `<fieldset>`.
+- `Select` renders no element, so it takes no handlers and no `class`. Put them on `Select.Trigger`.
