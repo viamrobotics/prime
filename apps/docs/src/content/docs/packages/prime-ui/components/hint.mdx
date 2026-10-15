@@ -1,0 +1,43 @@
+---
+title: Hint
+description: Muted helper text for a form field.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import HintDemo from "./hint/HintDemo.svelte";
+import HintShowcase from "./hint/HintShowcase.svelte";
+import Standalone from "./hint/Standalone.svelte";
+import standaloneSource from "./hint/Standalone.svelte?raw";
+
+<ComponentIntro name="hint" />
+
+<HintDemo client:visible />
+
+- A `<p>` of helper text that a screen reader announces with the control.
+- Inside a [`Field`](../field/) it joins the control's `aria-describedby` on its own. Several hints stack.
+- Follows the field's `disabled` and `state`, turning red for `error`.
+
+## Usage
+
+### On its own
+
+Outside a field, give it an `id` and name it in the control's `aria-describedby`.
+
+<Example code={standaloneSource} title="Standalone.svelte">
+  <Standalone client:visible />
+</Example>
+
+### States
+
+<HintShowcase client:visible />
+
+## Styling
+
+`class` lands on the `<p>`, alongside the size and the state color. Two Tailwind text colors on one element resolve by stylesheet order, not class order, so to change the color reliably pass `state` rather than fighting it.
+
+## API
+
+<PropsTable name="hint" />

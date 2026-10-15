@@ -1,0 +1,79 @@
+---
+title: Field
+description: Groups a label, a control, and hints, and wires their ids and ARIA for you.
+sidebar:
+  order: 1
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import FieldDemo from "./field/FieldDemo.svelte";
+import FieldShowcase from "./field/FieldShowcase.svelte";
+import Basic from "./field/Basic.svelte";
+import basicSource from "./field/Basic.svelte?raw";
+
+<ComponentIntro name="field" />
+
+<FieldDemo client:visible />
+
+- Generates the control's `id` and hands it to the label's `for` and the control.
+- Collects every `Hint` into the control's `aria-describedby`, and names a `RadioGroup` from the label.
+- `disabled`, `required`, and `state` set once here reach every part.
+- A prop passed to a part directly always wins over the field's value.
+
+## Anatomy
+
+A field is a plain `<div>` around one control, with any number of labels and hints in any order.
+
+```svelte
+<Field>
+  <Label />
+  <Input /> <!-- or NumberInput, Checkbox, RadioGroup, Select -->
+  <Hint />
+</Field>
+```
+
+## Usage
+
+### A labeled input with a hint
+
+Nothing in this example names an id, yet the label, the input, and the hint are associated.
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+### Every control
+
+<FieldShowcase client:visible />
+
+## What the parts take from the field
+
+| Part                        | Reads from `Field`                                                          |
+| --------------------------- | --------------------------------------------------------------------------- |
+| `Label`                     | `for` (the control id), `required`, `disabled`                              |
+| `Hint`                      | `disabled`, `state` (error text turns red), and registers itself            |
+| `Input`, `NumberInput`      | `id`, `disabled`, `required`, `state`, `aria-describedby`                   |
+| `Checkbox`                  | `id`, `disabled`, `required`, `aria-describedby`                            |
+| `RadioGroup`                | `id`, `disabled`, `required`, `aria-labelledby`, `aria-describedby`         |
+| `Select` / `Select.Trigger` | `disabled`, `required` on the root; `id`, `aria-describedby` on the trigger |
+
+## Without a field
+
+Every part still works on its own. Wire it by hand with `for`, `id`, and `aria-describedby`:
+
+```svelte
+<Label for="email" required>Email</Label>
+<Input id="email" aria-describedby="email-hint" required />
+<Hint id="email-hint">We'll never share it.</Hint>
+```
+
+## Styling
+
+`Field` renders a bare `<div>` and takes no layout stance, so pass `class` to stack or inline its parts. `id` is the control's id, not the wrapper's, so a known id still works for an external `<label for>` or a test selector.
+
+## API
+
+<PropsTable name="field" />

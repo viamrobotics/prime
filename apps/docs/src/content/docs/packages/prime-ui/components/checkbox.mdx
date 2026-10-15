@@ -1,0 +1,90 @@
+---
+title: Checkbox
+description: A checkbox with an indeterminate state.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import CheckboxDemo from "./checkbox/CheckboxDemo.svelte";
+import CheckboxShowcase from "./checkbox/CheckboxShowcase.svelte";
+import TwoWay from "./checkbox/TwoWay.svelte";
+import twoWaySource from "./checkbox/TwoWay.svelte?raw";
+import Controlled from "./checkbox/Controlled.svelte";
+import controlledSource from "./checkbox/Controlled.svelte?raw";
+import CustomIcon from "./checkbox/CustomIcon.svelte";
+import customIconSource from "./checkbox/CustomIcon.svelte?raw";
+import InField from "./checkbox/InField.svelte";
+import inFieldSource from "./checkbox/InField.svelte?raw";
+
+<ComponentIntro name="checkbox" />
+
+<CheckboxDemo client:visible />
+
+- Three states: unchecked, checked, and indeterminate, each bindable on its own.
+- Keyboard and screen reader behavior from the WAI-ARIA checkbox pattern, via bits-ui.
+- Submits with the form through a hidden `<input>` when given a `name`.
+- The icon is a snippet, so size and color are yours to change.
+
+## Usage
+
+### Two-way binding
+
+`bind:checked` keeps your state and the box in sync. This is the default mode and the right one for most forms.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Give `bind:checked` a getter and a setter. The setter is the only thing that writes, so it can transform the next value or decline it by not writing. Here the box can be turned on but never off.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+Both modes are explained in [State & binding](../state/).
+
+### Custom icon
+
+Pass children to replace the icon. The snippet receives the current `checked` and `indeterminate`, so it can pick a glyph, a size, and a color per state.
+
+<Example code={customIconSource} title="CustomIcon.svelte">
+  <CustomIcon client:visible />
+</Example>
+
+### In a field
+
+Inside a [`Field`](../field/) the checkbox takes `id`, `disabled`, `required`, and `aria-describedby` from the field, and the label and hint wire themselves to it. `name` and `value` make it part of the enclosing form.
+
+<Example code={inFieldSource} title="InField.svelte">
+  <InField client:visible />
+</Example>
+
+### States
+
+<CheckboxShowcase client:visible />
+
+## Styling
+
+`class` lands on the root button, which is the whole component. bits-ui sets these data attributes on it, so Tailwind variants like `data-[state=checked]:bg-light` work without a wrapper.
+
+| Attribute       | Value                                      |
+| --------------- | ------------------------------------------ |
+| `data-state`    | `checked`, `unchecked`, or `indeterminate` |
+| `data-disabled` | present when disabled                      |
+
+The icon is styled through the children snippet above, not through `class`.
+
+## Keyboard
+
+| Key              | Action                                                       |
+| ---------------- | ------------------------------------------------------------ |
+| <kbd>Space</kbd> | Toggles the checkbox.                                        |
+| <kbd>Enter</kbd> | Swallowed, so pressing it on the box never submits the form. |
+
+## API
+
+<PropsTable name="checkbox" />

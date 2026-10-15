@@ -1,0 +1,53 @@
+---
+title: State & binding
+description: How prime-ui form controls manage their value — two-way binding and fully controlled.
+sidebar:
+  order: 0
+---
+
+Every prime-ui value control — `Checkbox`, `Input`, `NumberInput`, `RadioGroup`, `Select` — manages its value with standard Svelte 5 bindings. There are two modes; the examples use `Checkbox`, but the same applies to `value` on the others.
+
+## Two-way binding
+
+`bind:` the value and the component keeps your state in sync. This is the simplest option and the right default.
+
+```svelte
+<script lang="ts">
+  import { Checkbox } from "@viamrobotics/prime-ui";
+
+  let checked = $state(false);
+</script>
+
+<Checkbox bind:checked />
+```
+
+## Fully controlled
+
+Give `bind:` a **function binding** — a getter and a setter. Your setter is the single source of truth, so it can transform or **veto** a change: if it doesn't update the state, nothing changes. It also runs on every user-initiated change, so it doubles as an "on change" hook.
+
+```svelte
+<script lang="ts">
+  import { Checkbox } from "@viamrobotics/prime-ui";
+
+  let checked = $state(false);
+</script>
+
+<!-- only allow turning it on, never off -->
+<Checkbox bind:checked={() => checked, (next) => { if (next) checked = next; }} />
+```
+
+To simply _react_ to changes (including programmatic ones) without controlling them, use `$effect`:
+
+```svelte
+$effect(() => console.log("checked is now", checked));
+```
+
+`NumberInput`'s value is `number | null` (an empty field is `null`); the others use `string`.
+
+## Native inputs
+
+`Input` and `NumberInput` render a real `<input>`, so alongside `bind:value` they also accept the native event handlers — `oninput`, `onchange`, `onblur`, `onfocus`, … — for side effects and focus handling. (The `Checkbox`/`RadioGroup`/`Select` widgets aren't native elements, so they don't; use the function binding or `$effect`.)
+
+```svelte
+<Input bind:value onblur={() => validate(value)} />
+```

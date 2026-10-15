@@ -1,14 +1,22 @@
 ---
-title: '@viamrobotics/tailwind-config'
+title: "@viamrobotics/tailwind-config"
 description: Viam's shared Tailwind CSS v4 configuration.
 ---
 
-import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+import {
+  Aside,
+  Code,
+  LinkButton,
+  Steps,
+  Tabs,
+  TabItem,
+} from "@astrojs/starlight/components";
 
 `@viamrobotics/tailwind-config` is Viam's shared Tailwind CSS v4 configuration. It exposes design tokens as Tailwind v4 theme values in an `@theme {}` block plus an optional `./fonts` entry point that side-effect imports the variable-font packages.
 
 <Aside title="Requires Tailwind v4">
-	A Tailwind v4 bundler integration is required (`@tailwindcss/vite` or `@tailwindcss/postcss`). v3 is not supported.
+  A Tailwind v4 bundler integration is required (`@tailwindcss/vite` or
+  `@tailwindcss/postcss`). v3 is not supported.
 </Aside>
 
 ## Installation
@@ -18,15 +26,24 @@ import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from '@astrojs/starligh
 1. Install the package alongside Tailwind:
 
    <Tabs syncKey="pkg">
-   	<TabItem label="pnpm">
-   		<Code code="pnpm add --save-dev tailwindcss @viamrobotics/tailwind-config" lang="sh" />
-   	</TabItem>
-   	<TabItem label="npm">
-   		<Code code="npm install --save-dev tailwindcss @viamrobotics/tailwind-config" lang="sh" />
-   	</TabItem>
-   	<TabItem label="yarn">
-   		<Code code="yarn add --dev tailwindcss @viamrobotics/tailwind-config" lang="sh" />
-   	</TabItem>
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add --save-dev tailwindcss @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install --save-dev tailwindcss @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add --dev tailwindcss @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
    </Tabs>
 
 2. Import it from your app's main CSS:
@@ -39,7 +56,10 @@ import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from '@astrojs/starligh
 
 4. (Optional) Enable the dark theme by importing it _after_ the base config:
 
-   <Code code={`@import '@viamrobotics/tailwind-config';\n@import '@viamrobotics/tailwind-config/dark';`} lang="css" />
+   <Code
+     code={`@import '@viamrobotics/tailwind-config';\n@import '@viamrobotics/tailwind-config/dark';`}
+     lang="css"
+   />
 
 </Steps>
 

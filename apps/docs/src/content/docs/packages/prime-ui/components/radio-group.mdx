@@ -1,0 +1,97 @@
+---
+title: RadioGroup
+description: A composable radio group.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import RadioGroupDemo from "./radio-group/RadioGroupDemo.svelte";
+import RadioGroupShowcase from "./radio-group/RadioGroupShowcase.svelte";
+import TwoWay from "./radio-group/TwoWay.svelte";
+import twoWaySource from "./radio-group/TwoWay.svelte?raw";
+import Controlled from "./radio-group/Controlled.svelte";
+import controlledSource from "./radio-group/Controlled.svelte?raw";
+import CustomIndicator from "./radio-group/CustomIndicator.svelte";
+import customIndicatorSource from "./radio-group/CustomIndicator.svelte?raw";
+
+<ComponentIntro name="radio-group" />
+
+<RadioGroupDemo client:visible />
+
+- One `value` for the whole group, bindable, with each `RadioGroup.Item` naming the value it selects.
+- Roving focus and arrow-key navigation from the WAI-ARIA radio group pattern, via bits-ui.
+- Vertical by default, horizontal with `orientation`.
+- Submits with the form through a hidden `<input>` when given a `name`.
+
+## Anatomy
+
+```svelte
+<RadioGroup>
+  <RadioGroup.Item value="…">label</RadioGroup.Item>
+  <RadioGroup.Item value="…">label</RadioGroup.Item>
+</RadioGroup>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the group. The items need no binding of their own.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+A function binding makes your setter the only writer, so it can decline a selection. Both modes are explained in [State & binding](../state/).
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Custom indicator
+
+Pass an `indicator` snippet to an item to replace the radio icon. It receives `checked`. The item's children stay the label.
+
+<Example code={customIndicatorSource} title="CustomIndicator.svelte">
+  <CustomIndicator client:visible />
+</Example>
+
+### States
+
+<RadioGroupShowcase client:visible />
+
+## Styling
+
+`class` on `RadioGroup` lands on the group `<div>`, which is `flex` with `flex-col` or `flex-row` by orientation, so add the gap you want. `class` on `RadioGroup.Item` lands on the item button. bits-ui sets these data attributes for Tailwind variants.
+
+| Element | Attribute          | Value                        |
+| ------- | ------------------ | ---------------------------- |
+| group   | `data-orientation` | `vertical` or `horizontal`   |
+| group   | `data-disabled`    | present when disabled        |
+| item    | `data-state`       | `checked` or `unchecked`     |
+| item    | `data-value`       | the item's `value`           |
+| item    | `data-disabled`    | present when disabled        |
+| item    | `data-orientation` | `vertical` or `horizontal`   |
+
+## Keyboard
+
+Focus moves between items, and moving focus with the arrow keys also selects the newly focused item.
+
+| Key                                                            | Action                                              |
+| -------------------------------------------------------------- | --------------------------------------------------- |
+| <kbd>Tab</kbd>                                                 | Focuses the checked item, or the first if none is.  |
+| <kbd>ArrowDown</kbd> / <kbd>ArrowRight</kbd>                   | Moves to and selects the next item, wrapping around. |
+| <kbd>ArrowUp</kbd> / <kbd>ArrowLeft</kbd>                      | Moves to and selects the previous item, wrapping.   |
+| <kbd>Home</kbd> / <kbd>End</kbd>                               | Moves to and selects the first or last item.        |
+| <kbd>Space</kbd>                                               | Selects the focused item.                           |
+
+## API
+
+<PropsTable name="radio-group" />
+
+<PartsDoc name="radio-group" />

@@ -1,15 +1,40 @@
 import starlight from "@astrojs/starlight";
+import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
+import { fileURLToPath } from "node:url";
 import starlightThemeNova from "starlight-theme-nova";
 
 const base = process.env.DOCS_BASE ?? "/prime/";
 const site = process.env.DOCS_SITE ?? "https://viamrobotics.github.io";
 
+// `astro dev` resolves prime-ui to its source so component edits hot-reload into
+// the docs with no `dist` build. `astro build` keeps the package's `svelte` export
+// (dist), so the published site renders what npm consumers get.
+const primeUiSourceInDev = {
+  name: "prime-ui-source-in-dev",
+  config(_, { command }) {
+    if (command !== "serve") return;
+    return {
+      resolve: {
+        alias: {
+          "@viamrobotics/prime-ui": fileURLToPath(
+            new URL(
+              "../../packages/prime-ui/src/lib/index.ts",
+              import.meta.url,
+            ),
+          ),
+        },
+      },
+    };
+  },
+};
+
 export default defineConfig({
   site,
   base,
   integrations: [
+    svelte(),
     starlight({
       plugins: [starlightThemeNova()],
       // starlight-theme-nova defaults expressiveCode to false; re-enable so
@@ -34,7 +59,16 @@ export default defineConfig({
         {
           label: "Packages",
           items: [
-            { label: "@viamrobotics/prime-ui", link: "/packages/prime-ui/" },
+            {
+              label: "@viamrobotics/prime-ui",
+              items: [
+                { label: "Overview", link: "/packages/prime-ui/" },
+                {
+                  label: "Components",
+                  autogenerate: { directory: "packages/prime-ui/components" },
+                },
+              ],
+            },
             {
               label: "@viamrobotics/tailwind-config",
               link: "/packages/tailwind-config/",
@@ -49,8 +83,10 @@ export default defineConfig({
           label: "Playgrounds",
           items: [
             { label: "Overview", link: "/playground/" },
-            { label: "prime-ui", link: "/playground/prime-ui/" },
-            { label: "tweakpane-config", link: "/playground/tweakpane-config/" },
+            {
+              label: "tweakpane-config",
+              link: "/playground/tweakpane-config/",
+            },
             { label: "tailwind-config", link: "/playground/tailwind-config/" },
           ],
         },
@@ -58,6 +94,6 @@ export default defineConfig({
     }),
   ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), primeUiSourceInDev],
   },
 });

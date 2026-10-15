@@ -1,0 +1,4 @@
+/* Tooling entry point only: prettier-plugin-tailwindcss sorts classes against it and
+   houserules' design.mjs reads tokens through it. Nothing imports it at runtime. */
+@import 'tailwindcss';
+@import '@viamrobotics/tailwind-config';

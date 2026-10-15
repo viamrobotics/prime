@@ -1,0 +1,53 @@
+---
+title: Label
+description: A form label with required and disabled states.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import LabelDemo from "./label/LabelDemo.svelte";
+import LabelShowcase from "./label/LabelShowcase.svelte";
+import Standalone from "./label/Standalone.svelte";
+import standaloneSource from "./label/Standalone.svelte?raw";
+import CustomIndicator from "./label/CustomIndicator.svelte";
+import customIndicatorSource from "./label/CustomIndicator.svelte?raw";
+
+<ComponentIntro name="label" />
+
+<LabelDemo client:visible />
+
+- A real `<label>`, so clicking it focuses the control it points at.
+- Inside a [`Field`](../field/) it finds the control, mirrors `required` and `disabled`, and names a `RadioGroup` through `aria-labelledby`.
+- The required asterisk is a snippet, so it can be any mark you like.
+
+## Usage
+
+### On its own
+
+Outside a field, point it at the control with `for`.
+
+<Example code={standaloneSource} title="Standalone.svelte">
+  <Standalone client:visible />
+</Example>
+
+### Custom required indicator
+
+Pass an `indicator` snippet to replace the asterisk. It renders only while the label is required.
+
+<Example code={customIndicatorSource} title="CustomIndicator.svelte">
+  <CustomIndicator client:visible />
+</Example>
+
+### States
+
+<LabelShowcase client:visible />
+
+## Styling
+
+`class` lands on the `<label>`, an inline flex row with a small gap between the text and the indicator. The asterisk is `aria-hidden`, so it never reaches the accessible name. Set the real requirement on the control.
+
+## API
+
+<PropsTable name="label" />

@@ -1,0 +1,32 @@
+---
+/**
+ * The compound parts of a root component (`Select.Trigger`, `Select.Item`, …), each
+ * with its doc block and props table. `name` is the root's collection id.
+ */
+import { getCollection, render } from "astro:content";
+
+import PropsTable from "./PropsTable.astro";
+
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const parts = await getCollection(
+  "components",
+  (entry) => entry.data.root === name && !entry.data.isRoot,
+);
+const rendered = await Promise.all(
+  parts.map(async (part) => ({ part, Content: (await render(part)).Content })),
+);
+---
+
+{
+  rendered.map(({ part, Content }) => (
+    <>
+      <h3 id={part.id.replace("/", "-")}>{part.data.name}</h3>
+      <Content />
+      <PropsTable name={part.id} />
+    </>
+  ))
+}
