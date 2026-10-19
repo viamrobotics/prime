@@ -18,4 +18,23 @@ describe('Hint', () => {
 		});
 		expect(container.querySelector('#email-hint')).toBeTruthy();
 	});
+
+	it.each([
+		{ state: 'error', color: 'text-danger-dark' },
+		{ state: 'warn', color: 'text-warning-dark' },
+		{ state: 'info', color: 'text-info-dark' },
+		{ state: 'none', color: 'text-subtle-1' }
+	] as const)('colors the text $color for the $state state', ({ state, color }) => {
+		const { container } = render(Hint, { props: { state, children: text('hint') } });
+		expect(container.querySelector('p')?.getAttribute('class')).toContain(color);
+	});
+
+	it('dims the text over the error color when disabled', () => {
+		const { container } = render(Hint, {
+			props: { disabled: true, state: 'error', children: text('hint') }
+		});
+		const classes = container.querySelector('p')?.getAttribute('class');
+		expect(classes).toContain('text-disabled');
+		expect(classes).not.toContain('text-danger-dark');
+	});
 });

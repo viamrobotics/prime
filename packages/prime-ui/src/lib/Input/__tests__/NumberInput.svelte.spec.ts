@@ -6,7 +6,7 @@ import NumberInput from '../NumberInput.svelte';
 import BoundNumberInput from './BoundNumberInput.svelte';
 import ControlledNumberInput from './ControlledNumberInput.svelte';
 
-describe('Input.Number', () => {
+describe('NumberInput', () => {
 	it('renders a native number input with the given value', () => {
 		const { container } = render(NumberInput, { props: { value: 5 } });
 		const input = container.querySelector('input');
@@ -17,6 +17,31 @@ describe('Input.Number', () => {
 	it('marks aria-invalid in the error state', () => {
 		const { container } = render(NumberInput, { props: { value: 1, state: 'error' } });
 		expect(container.querySelector('input')?.getAttribute('aria-invalid')).toBe('true');
+	});
+
+	it('renders the input as the only element', () => {
+		const { container } = render(NumberInput, { props: {} });
+		expect(container.children).toHaveLength(1);
+		expect(container.firstElementChild?.tagName).toBe('INPUT');
+	});
+
+	it('puts a passed class on the input and leaves width to the consumer', () => {
+		const { container } = render(NumberInput, { props: { class: 'w-24' } });
+		const classes = container.querySelector('input')!.classList;
+		expect(classes.contains('w-24')).toBe(true);
+		expect(classes.contains('w-full')).toBe(false);
+	});
+
+	it('sets data-state in the error state and omits it for none', () => {
+		const { container: errored } = render(NumberInput, { props: { state: 'error' } });
+		const { container: plain } = render(NumberInput, { props: { state: 'none' } });
+		expect(errored.querySelector('input')?.getAttribute('data-state')).toBe('error');
+		expect(plain.querySelector('input')?.hasAttribute('data-state')).toBe(false);
+	});
+
+	it('disables the native input', () => {
+		const { container } = render(NumberInput, { props: { disabled: true } });
+		expect(container.querySelector('input')?.disabled).toBe(true);
 	});
 
 	it('forwards min, max and step to the native input', () => {

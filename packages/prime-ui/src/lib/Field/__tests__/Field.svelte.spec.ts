@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { InputStates } from '../../Input/state.ts';
+import { FieldStates } from '../state.ts';
 import InputField from './InputField.svelte';
 import WidgetFields from './WidgetFields.svelte';
 
@@ -19,10 +19,16 @@ describe('Field', () => {
 		expect(label.getAttribute('for')).toBe(input.id);
 	});
 
-	it('uses the given id for the control, not the wrapper', () => {
-		const { container } = render(InputField, { props: { id: 'email' } });
+	it('puts controlId on the control', () => {
+		const { container } = render(InputField, { props: { controlId: 'email' } });
 		expect(container.querySelector('input')?.id).toBe('email');
 		expect(container.querySelector('div')?.id).toBe('');
+	});
+
+	it('puts id on the wrapper', () => {
+		const { container } = render(InputField, { props: { id: 'email-field' } });
+		expect(container.querySelector('div')?.id).toBe('email-field');
+		expect(container.querySelector('input')?.id).not.toBe('email-field');
 	});
 
 	it('describes the control by every hint', async () => {
@@ -57,7 +63,7 @@ describe('Field', () => {
 
 	it('cascades the error state to the control and hint', () => {
 		const { input, hints } = parts(
-			render(InputField, { props: { state: InputStates.Error } }).container
+			render(InputField, { props: { state: FieldStates.Error } }).container
 		);
 		expect(input.getAttribute('aria-invalid')).toBe('true');
 		expect(hints[0]?.getAttribute('class')).toContain('text-danger-dark');
@@ -65,7 +71,7 @@ describe('Field', () => {
 
 	it('lets a prop on the part override the field', () => {
 		const { label, input } = parts(
-			render(InputField, { props: { id: 'email', inputId: 'custom' } }).container
+			render(InputField, { props: { controlId: 'email', inputId: 'custom' } }).container
 		);
 		expect(input.id).toBe('custom');
 		expect(label.getAttribute('for')).toBe('email');
@@ -96,6 +102,17 @@ describe('Field with widgets', () => {
 			expect(group.getAttribute('aria-labelledby')).toBe(scope.querySelector('label')?.id);
 			expect(group.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
 		});
+	});
+
+	it('marks every radio item disabled when the field is disabled', () => {
+		const scope = field(
+			render(WidgetFields, { props: { disabled: true } }).container,
+			'radio-field'
+		);
+		const items = [...scope.querySelectorAll('[role="radio"]')];
+		const enabled = items.filter((item) => !item.hasAttribute('data-disabled'));
+		expect(items.length).toBe(2);
+		expect(enabled.length).toBe(0);
 	});
 
 	it('wires a select trigger', async () => {

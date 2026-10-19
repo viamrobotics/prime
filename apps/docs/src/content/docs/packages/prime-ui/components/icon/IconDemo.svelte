@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Icon } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+  import { mdiCog } from "@mdi/js";
+  import { Icon } from "@viamrobotics/prime-ui";
 </script>
 
 <Sandbox
@@ -8,10 +9,9 @@
   component={Icon}
   controls={{
     icon: {
-      kind: "select",
-      label: "Icon",
-      default: "cog",
-      options: ["cog", "alert-circle", "information", "check-circle", "viam-service", "ask-ai"],
+      kind: "text",
+      label: "Icon (SVG path)",
+      default: mdiCog,
     },
     size: {
       kind: "select",

@@ -1,8 +1,7 @@
 <!--
 @component
-A select. Composed from the other `Select.*` parts. Inside a
-[`Field`](../Field/Field.svelte) it takes `disabled` and `required` from there, and
-[`Select.Trigger`](./SelectTrigger.svelte) takes the field's `id` and `aria-describedby`.
+A select. Render `Select.Trigger`, `Select.Portal`, `Select.Content`, `Select.Viewport`, and `Select.Items` inside it. Inside a
+[`Field`](../Field/Field.svelte) it takes `disabled` and `required` from there,.
 
 Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 
@@ -16,9 +15,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 		<Select.Portal>
 			<Select.Content>
 				<Select.Viewport>
-					{#each sizes as size (size.value)}
-						<Select.Item value={size.value} label={size.label} />
-					{/each}
+					<Select.Items />
 				</Select.Viewport>
 			</Select.Content>
 		</Select.Portal>
@@ -31,15 +28,19 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 
 	import { Select } from 'bits-ui';
 
+	import type { SelectOption } from './option.ts';
+
 	import { useField } from '../Field/useField.svelte.ts';
+	import { provideSelect } from './useSelect.svelte.ts';
 
 	interface Props {
 		/**
-		 * The options.
-		 *
-		 * bits-ui resolves the trigger's selected label from here while the list is closed.
+		 * The options, and the single source of truth for the select.
+		 * [`Select.Items`](./SelectItems.svelte) renders one option per entry. The closed trigger
+		 * shows the selected entry's label. Typing while the list is closed selects the matching
+		 * entry without opening it.
 		 */
-		items?: { value: string; label: string; disabled?: boolean }[];
+		items?: SelectOption[];
 
 		/** The selected value. Two-way bindable. */
 		value?: string;
@@ -62,7 +63,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 
 	let {
 		items,
-		value = $bindable(''),
+		value = $bindable(),
 		name,
 		allowDeselect = false,
 		disabled,
@@ -71,10 +72,12 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 	}: Props = $props();
 
 	const field = useField();
+
+	provideSelect(() => items);
 </script>
 
 <Select.Root
-	bind:value
+	bind:value={() => value ?? '', (next) => (value = next)}
 	{items}
 	{name}
 	{allowDeselect}

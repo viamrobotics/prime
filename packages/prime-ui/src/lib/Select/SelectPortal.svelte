@@ -1,7 +1,7 @@
 <!--
 @component
 Portals a [`Select.Content`](./SelectContent.svelte) out to the body so it
-escapes overflow/stacking contexts.
+escapes overflow clipping and stacking contexts.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -12,6 +12,7 @@ escapes overflow/stacking contexts.
 		/** Where to render the content. An element or a selector. @default document.body */
 		to?: Element | string;
 
+		/** The panel. */
 		children?: Snippet;
 	}
 

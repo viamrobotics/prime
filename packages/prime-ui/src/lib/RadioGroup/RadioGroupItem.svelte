@@ -9,9 +9,13 @@ A single option within a [`RadioGroup`](./RadioGroup.svelte). Its children are t
 Pass an `indicator` snippet to replace the radio icon:
 
 ```svelte
+<script>
+	import { mdiRadioboxBlank, mdiRadioboxMarked } from '@mdi/js';
+</script>
+
 <RadioGroup.Item value="sm">
 	{#snippet indicator({ checked })}
-		<Icon icon={checked ? 'radiobox-marked' : 'radiobox-blank'} size="lg" />
+		<Icon icon={checked ? mdiRadioboxMarked : mdiRadioboxBlank} size="lg" />
 	{/snippet}
 	Small
 </RadioGroup.Item>
@@ -21,22 +25,24 @@ Pass an `indicator` snippet to replace the radio icon:
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
+	import { mdiRadioboxBlank, mdiRadioboxMarked } from '@mdi/js';
 	import { RadioGroup } from 'bits-ui';
 
+	import { FOCUS_RING } from '../focus-ring.ts';
 	import Icon from '../Icon/Icon.svelte';
 
 	interface Props extends Omit<HTMLButtonAttributes, 'value'> {
 		/** The value this item selects when chosen. */
 		value: string;
 
-		/** Replaces the radio icon. Receives the current state. */
+		/** Replaces the radio icon. Receives `{ checked }`. */
 		indicator?: Snippet<[{ checked: boolean }]>;
 	}
 
 	const {
 		id,
 		value,
-		disabled = false,
+		disabled,
 		class: extraClasses,
 		indicator,
 		children: label,
@@ -48,12 +54,11 @@ Pass an `indicator` snippet to replace the radio icon:
 
 {#snippet radio({ checked }: { checked: boolean })}
 	<Icon
-		icon={checked ? 'radiobox-marked' : 'radiobox-blank'}
-		class={{
-			'text-disabled-dark': disabled,
-			'text-default': !disabled && checked,
-			'text-subtle-2': !disabled && !checked
-		}}
+		icon={checked ? mdiRadioboxMarked : mdiRadioboxBlank}
+		class={[
+			'group-aria-invalid:text-danger-dark group-data-disabled:text-disabled-dark',
+			{ 'text-default': checked, 'text-subtle-2': !checked }
+		]}
 	/>
 {/snippet}
 
@@ -63,8 +68,9 @@ Pass an `indicator` snippet to replace the radio icon:
 	{...restProps}
 	id={id ?? uid}
 	class={[
-		'inline-flex items-center gap-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-power-button-dark',
-		disabled ? 'cursor-not-allowed text-disabled-dark' : 'cursor-pointer text-default',
+		'group inline-flex items-center gap-2 text-sm',
+		FOCUS_RING,
+		'cursor-pointer text-default data-disabled:cursor-not-allowed data-disabled:text-disabled-dark',
 		extraClasses
 	]}
 >

@@ -95,8 +95,9 @@
 	"devDependencies": {
 		"@astrojs/svelte": "^8.1.2",
 		"@fontsource-variable/public-sans": "catalog:",
-		"@lucide/svelte": "^1.17.0",
 		"@fontsource-variable/roboto-mono": "catalog:",
+		"@lucide/svelte": "^1.17.0",
+		"@mdi/js": "^7.4.47",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@viamrobotics/prime-ui": "workspace:^",
 		"@viamrobotics/tailwind-config": "workspace:^",

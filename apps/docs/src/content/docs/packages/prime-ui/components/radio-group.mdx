@@ -24,6 +24,7 @@ import customIndicatorSource from "./radio-group/CustomIndicator.svelte?raw";
 - One `value` for the whole group, bindable, with each `RadioGroup.Item` naming the value it selects.
 - Roving focus and arrow-key navigation from the WAI-ARIA radio group pattern, via bits-ui.
 - Vertical by default, horizontal with `orientation`.
+- Takes `state` from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` on the `role="radiogroup"` root and turns each item's default icon red.
 - Submits with the form through a hidden `<input>` when given a `name`.
 
 ## Anatomy
@@ -47,7 +48,7 @@ import customIndicatorSource from "./radio-group/CustomIndicator.svelte?raw";
 
 ### Fully controlled
 
-A function binding makes your setter the only writer, so it can decline a selection. Both modes are explained in [State & binding](../state/).
+Pass `bind:value` a getter and a setter. [State & binding](../state/) explains both modes.
 
 <Example code={controlledSource} title="Controlled.svelte">
   <Controlled client:visible />
@@ -73,6 +74,7 @@ Pass an `indicator` snippet to an item to replace the radio icon. It receives `c
 | ------- | ------------------ | -------------------------- |
 | group   | `data-orientation` | `vertical` or `horizontal` |
 | group   | `data-disabled`    | present when disabled      |
+| group   | `aria-invalid`     | `true` when `state` is `error` |
 | item    | `data-state`       | `checked` or `unchecked`   |
 | item    | `data-value`       | the item's `value`         |
 | item    | `data-disabled`    | present when disabled      |
@@ -92,13 +94,13 @@ Focus moves between items, and moving focus with the arrow keys also selects the
 
 ## Events
 
-Each `RadioGroup.Item` is a real `<button>`, so `onfocus`, `onblur`, `onclick`, and `onkeydown` on an item land on it. The group `<div>` is never focused itself, and `focus` and `blur` do not bubble, so to know when focus enters or leaves the group as a whole use `onfocusin` and `onfocusout` on `RadioGroup`, the same as on a native `<fieldset>`.
+Each `RadioGroup.Item` is a real `<button>`, so `onfocus`, `onblur`, `onclick`, and `onkeydown` on an item land on it. For the whole group, use `onfocusin` and `onfocusout` on `RadioGroup`, as on a native `<fieldset>`. The reason is in [State & binding](../state/).
 
 ```svelte
 <RadioGroup bind:value onfocusout={() => (touched = true)}>
 ```
 
-No `change` event fires, since no native control changes. React to the value with the binding, as described in [State & binding](../state/).
+No `change` event fires, since no native control changes. React to the value with `$effect` or a function binding, as described in [State & binding](../state/).
 
 ## API
 

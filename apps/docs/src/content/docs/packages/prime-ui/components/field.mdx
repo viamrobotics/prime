@@ -7,30 +7,42 @@ sidebar:
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
 import FieldDemo from "./field/FieldDemo.svelte";
 import FieldShowcase from "./field/FieldShowcase.svelte";
 import Basic from "./field/Basic.svelte";
 import basicSource from "./field/Basic.svelte?raw";
+import WithStateIcon from "./field/WithStateIcon.svelte";
+import withStateIconSource from "./field/WithStateIcon.svelte?raw";
 
 <ComponentIntro name="field" />
 
 <FieldDemo client:visible />
 
-- Generates the control's `id` and hands it to the label's `for` and the control.
+- Generates the control's id (`controlId`) and hands it to the label's `for` and the control.
 - Collects every `Hint` into the control's `aria-describedby`, and names a `RadioGroup` from the label.
 - `disabled`, `required`, and `state` set once here reach every part.
 - A prop passed to a part directly always wins over the field's value.
 
 ## Anatomy
 
-A field is a plain `<div>` around one control, with any number of labels and hints in any order.
+A field is a plain `<div>` around one control, with any number of labels and hints in any order. Its one part is `Field.StateIcon`, which shows the field's `state` as an icon.
 
 ```svelte
 <Field>
   <Label />
   <Input /> <!-- or NumberInput, Checkbox, RadioGroup, Select -->
+  <Hint />
+</Field>
+
+<Field>
+  <Label />
+  <Input.Group>
+    <Input />
+    <Field.StateIcon />
+  </Input.Group>
   <Hint />
 </Field>
 ```
@@ -45,20 +57,29 @@ Nothing in this example names an id, yet the label, the input, and the hint are 
   <Basic client:visible />
 </Example>
 
+### A state icon inside the input
+
+`Field.StateIcon` reads the field's `state` and renders nothing for `none`. Place it after the input inside an `Input.Group` to put the icon inside the border.
+
+<Example code={withStateIconSource} title="WithStateIcon.svelte">
+  <WithStateIcon client:visible />
+</Example>
+
 ### Every control
 
 <FieldShowcase client:visible />
 
 ## What the parts take from the field
 
-| Part                        | Reads from `Field`                                                          |
-| --------------------------- | --------------------------------------------------------------------------- |
-| `Label`                     | `for` (the control id), `required`, `disabled`                              |
-| `Hint`                      | `disabled`, `state` (error text turns red), and registers itself            |
-| `Input`, `NumberInput`      | `id`, `disabled`, `required`, `state`, `aria-describedby`                   |
-| `Checkbox`                  | `id`, `disabled`, `required`, `aria-describedby`                            |
-| `RadioGroup`                | `id`, `disabled`, `required`, `aria-labelledby`, `aria-describedby`         |
-| `Select` / `Select.Trigger` | `disabled`, `required` on the root; `id`, `aria-describedby` on the trigger |
+| Part                        | Reads from `Field`                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------------------- |
+| `Label`                     | `for` (the control id), `required`, `disabled`                                                    |
+| `Hint`                      | `disabled`, `state` (error turns red, `warn` and `info` are colored too), and joins the control's `aria-describedby` |
+| `Input`, `NumberInput`      | `controlId`, `disabled`, `required`, `state`, `aria-describedby`                                  |
+| `Checkbox`                  | `controlId`, `disabled`, `required`, `state`, `aria-describedby`                                  |
+| `RadioGroup`                | `controlId`, `disabled`, `required`, `state`, `aria-labelledby`, `aria-describedby`               |
+| `Select` / `Select.Trigger` | `disabled` and `required` on the root, and `controlId`, `state`, and `aria-describedby` on the trigger       |
+| `Field.StateIcon`           | `state`, and renders nothing for `none`                                                           |
 
 ## Without a field
 
@@ -72,8 +93,10 @@ Every part still works on its own. Wire it by hand with `for`, `id`, and `aria-d
 
 ## Styling
 
-`Field` renders a bare `<div>` and takes no layout stance, so pass `class` to stack or inline its parts. `id` is the control's id, not the wrapper's, so a known id still works for an external `<label for>` or a test selector.
+`Field` renders a bare `<div>` and takes no layout stance, so pass `class` to stack or inline its parts. `controlId` is the id the field assigns to the control. Pass your own to point an external `<label for>` or a test selector at it. A plain `id` lands on the wrapper `<div>`.
 
 ## API
 
 <PropsTable name="field" />
+
+<PartsDoc name="field" />

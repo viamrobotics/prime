@@ -49,7 +49,7 @@
 <div class="not-content">
   <div class="max-w-xs">
     <Select items={characters} bind:value={character}>
-      <Select.Trigger aria-label="Character">
+      <Select.Trigger class="w-64" aria-label="Character">
         <Select.Value placeholder="Pick a character" />
       </Select.Trigger>
       <Select.Portal>

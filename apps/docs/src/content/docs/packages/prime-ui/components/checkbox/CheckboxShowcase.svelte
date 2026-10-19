@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Checkbox } from "@viamrobotics/prime-ui";
+  import { Checkbox, Field, Label } from "@viamrobotics/prime-ui";
 
   const states = [
     { label: "unchecked", checked: false, indeterminate: false, disabled: false },
@@ -17,4 +17,8 @@
       <span class="text-xs text-subtle-2">{label}</span>
     </span>
   {/each}
+  <Field state="error" class="flex items-center gap-2">
+    <Checkbox name="terms-error" />
+    <Label>error</Label>
+  </Field>
 </div>

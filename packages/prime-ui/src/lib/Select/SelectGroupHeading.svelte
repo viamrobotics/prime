@@ -8,7 +8,7 @@ A non-selectable heading for a [`Select.Group`](./SelectGroup.svelte).
 	import { Select } from 'bits-ui';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
-		/** Id of the element. bits-ui requires a string, so `null` is not accepted. */
+		/** Element id. `null` is not accepted. */
 		id?: string;
 	}
 

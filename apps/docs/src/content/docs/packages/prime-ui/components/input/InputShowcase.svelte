@@ -1,21 +1,24 @@
 <script lang="ts">
-  import { Input } from "@viamrobotics/prime-ui";
+  import { Field, Input } from "@viamrobotics/prime-ui";
 </script>
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Validation states, with StateIcon</p>
+    <p class="text-xs font-medium text-subtle-2 uppercase">Validation states, with Field.StateIcon</p>
     <div class="grid max-w-md gap-3">
       <Input placeholder="Default (none)" aria-label="Default" />
-      <Input state="info" placeholder="Info" aria-label="Info">
-        <Input.StateIcon />
-      </Input>
-      <Input state="warn" placeholder="Warning" aria-label="Warning">
-        <Input.StateIcon />
-      </Input>
-      <Input state="error" placeholder="Error" aria-label="Error">
-        <Input.StateIcon />
-      </Input>
+      <Input.Group>
+        <Input state="info" placeholder="Info" aria-label="Info" />
+        <Field.StateIcon state="info" />
+      </Input.Group>
+      <Input.Group>
+        <Input state="warn" placeholder="Warning" aria-label="Warning" />
+        <Field.StateIcon state="warn" />
+      </Input.Group>
+      <Input.Group>
+        <Input state="error" placeholder="Error" aria-label="Error" />
+        <Field.StateIcon state="error" />
+      </Input.Group>
     </div>
   </div>
 

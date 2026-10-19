@@ -1,6 +1,6 @@
 import Root from './Input.svelte';
-import StateIcon from './StateIcon.svelte';
+import Group from './InputGroup.svelte';
 
-export const Input: typeof Root & { StateIcon: typeof StateIcon } = Object.assign(Root, {
-	StateIcon
+export const Input: typeof Root & { Group: typeof Group } = Object.assign(Root, {
+	Group
 });

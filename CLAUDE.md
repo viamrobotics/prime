@@ -79,6 +79,8 @@ node .claude/scripts/design.mjs <query> --theme packages/prime-ui/tailwind.css
 
 All four reach the same 74 Viam tokens, but only two compile under standalone Tailwind: `packages/prime-ui/tailwind.css` (a tooling-only entry point, also used by prettier-plugin-tailwindcss) and `src/routes/layout.css` in `tailwind-config`. The other two import paths that Vite and Astro resolve and standalone Tailwind does not (`starlight-theme-nova/tailwind.css` in docs, the `@viamrobotics/tailwind-config/dark` export subpath in tweakpane-config), so they exit 1. Without `--theme` the script takes the first in directory-walk order, `apps/docs/src/tailwind.css`, which is one of the two that fail.
 
+`packages/prime-ui/styles.css` is a fifth stylesheet with a different job: it is the entry prime-ui **ships** (`exports["./styles.css"]`) so a consumer's Tailwind scans the package's compiled components, which automatic content detection skips under `node_modules`. It imports the tokens and holds an `@source`, with no `@import "tailwindcss"`, so a consumer writes one import after `tailwindcss` and it is not a `--theme` candidate.
+
 ## Topic-specific rules
 
 Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude reads matching files; rules without `paths` load every session. The svelte, typescript, testing, design, accessibility, code-comments, prose-voice, and code-cleanliness rules are installed and documented by houserules, see the block below. The one repo-owned rule:

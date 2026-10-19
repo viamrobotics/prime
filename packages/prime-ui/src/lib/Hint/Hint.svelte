@@ -1,7 +1,8 @@
 <!--
 @component
 Muted helper text for a form field. Inside a [`Field`](../Field/Field.svelte) it joins
-the control's `aria-describedby` and follows the field's `disabled` and `state`.
+the control's `aria-describedby` and follows the field's `disabled` and `state`. A disabled hint is dimmed whatever its state. Otherwise `error`, `warn`, and `info` each
+set a color.
 
 ```svelte
 <Field class="flex flex-col gap-1">
@@ -22,16 +23,17 @@ On its own, associate it with `aria-describedby`:
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import { FieldStates, type FieldState } from '../Field/state.ts';
 	import { useField } from '../Field/useField.svelte.ts';
-	import { InputStates, type InputState } from '../Input/state.ts';
 
 	interface Props extends HTMLAttributes<HTMLParagraphElement> {
 		/** Dim the text. Defaults to the enclosing field's `disabled`. */
 		disabled?: boolean;
 
-		/** Color the text for a contextual state. Defaults to the enclosing field's `state`. */
-		state?: InputState;
+		/** Color the text for a contextual state: `error`, `warn`, or `info`. Defaults to the enclosing field's `state`. */
+		state?: FieldState;
 
+		/** The hint text. */
 		children: Snippet;
 	}
 
@@ -42,11 +44,12 @@ On its own, associate it with `aria-describedby`:
 
 	const hintId = $derived(id ?? uid);
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
-	const currentState = $derived(state ?? field?.state ?? InputStates.None);
-
+	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
 	const color = $derived.by(() => {
 		if (isDisabled) return 'text-disabled';
-		if (currentState === InputStates.Error) return 'text-danger-dark';
+		if (currentState === FieldStates.Error) return 'text-danger-dark';
+		if (currentState === FieldStates.Warn) return 'text-warning-dark';
+		if (currentState === FieldStates.Info) return 'text-info-dark';
 		return 'text-subtle-1';
 	});
 

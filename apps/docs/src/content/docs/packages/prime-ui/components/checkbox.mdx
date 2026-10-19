@@ -22,7 +22,7 @@ import inFieldSource from "./checkbox/InField.svelte?raw";
 
 <CheckboxDemo client:visible />
 
-- Three states: unchecked, checked, and indeterminate, each bindable on its own.
+- Three states, unchecked, checked, and indeterminate, driven by two bindable props: `checked` and `indeterminate`.
 - Keyboard and screen reader behavior from the WAI-ARIA checkbox pattern, via bits-ui.
 - Submits with the form through a hidden `<input>` when given a `name`.
 - The icon is a snippet, so size and color are yours to change.
@@ -31,7 +31,7 @@ import inFieldSource from "./checkbox/InField.svelte?raw";
 
 ### Two-way binding
 
-`bind:checked` keeps your state and the box in sync. This is the default mode and the right one for most forms.
+`bind:checked` keeps your state and the box in sync. [State & binding](../state/) covers both modes.
 
 <Example code={twoWaySource} title="TwoWay.svelte">
   <TwoWay client:visible />
@@ -39,13 +39,11 @@ import inFieldSource from "./checkbox/InField.svelte?raw";
 
 ### Fully controlled
 
-Give `bind:checked` a getter and a setter. The setter is the only thing that writes, so it can transform the next value or decline it by not writing. Here the box can be turned on but never off.
+Give `bind:checked` a getter and a setter. Here the box can be turned on but never off. [State & binding](../state/) has the rule.
 
 <Example code={controlledSource} title="Controlled.svelte">
   <Controlled client:visible />
 </Example>
-
-Both modes are explained in [State & binding](../state/).
 
 ### Custom icon
 
@@ -57,7 +55,7 @@ Pass children to replace the icon. The snippet receives the current `checked` an
 
 ### In a field
 
-Inside a [`Field`](../field/) the checkbox takes `id`, `disabled`, `required`, and `aria-describedby` from the field, and the label and hint wire themselves to it. `name` and `value` make it part of the enclosing form.
+Inside a [`Field`](../field/) the checkbox takes `controlId`, `disabled`, `required`, `state`, and `aria-describedby` from the field, and the label and hint wire themselves to it. `name` and `value` make it part of the enclosing form. A `state` of `error` sets `aria-invalid="true"` and turns the default icon red. Pass `state` directly to override the field's.
 
 <Example code={inFieldSource} title="InField.svelte">
   <InField client:visible />
@@ -75,8 +73,7 @@ Inside a [`Field`](../field/) the checkbox takes `id`, `disabled`, `required`, a
 | --------------- | ------------------------------------------ |
 | `data-state`    | `checked`, `unchecked`, or `indeterminate` |
 | `data-disabled` | present when disabled                      |
-
-The icon is styled through the children snippet above, not through `class`.
+| `aria-invalid`  | `true` when `state` is `error`             |
 
 ## Keyboard
 

@@ -4,7 +4,9 @@ import { userEvent } from 'vitest/browser';
 
 import BoundSelect from './BoundSelect.svelte';
 import ControlledSelect from './ControlledSelect.svelte';
+import ErrorSelect from './ErrorSelect.svelte';
 import IndicatorSelect from './IndicatorSelect.svelte';
+import UndefinedSelect from './UndefinedSelect.svelte';
 
 const openAndPick = async (trigger: HTMLElement, label: string) => {
 	await userEvent.click(trigger);
@@ -28,7 +30,7 @@ describe('Select', () => {
 		const { container } = render(IndicatorSelect);
 
 		expect(container.querySelector('[data-testid="indicator"]')?.textContent).toBe('v');
-		expect(container.querySelector('[data-testid="icon-chevron-down"]')).toBeNull();
+		expect(container.querySelector('svg')).toBeNull();
 	});
 
 	it('opens on click and lists the options', async () => {
@@ -50,6 +52,25 @@ describe('Select', () => {
 		);
 	});
 
+	it('renders when the bound state starts undefined', () => {
+		const { container } = render(UndefinedSelect);
+
+		expect(container.querySelector('button')?.textContent).toContain('Pick a size');
+		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('undefined');
+	});
+
+	it('writes the picked value back to undefined state', async () => {
+		const { container } = render(UndefinedSelect);
+		const trigger = container.querySelector('button')!;
+
+		await openAndPick(trigger, 'Medium');
+
+		await vi.waitFor(() =>
+			expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('md')
+		);
+		expect(trigger.textContent).toContain('Medium');
+	});
+
 	it('controlled: a function-binding setter can veto the selection', async () => {
 		const { container } = render(ControlledSelect, { props: { accept: false } });
 		const trigger = container.querySelector('button')!;
@@ -58,5 +79,28 @@ describe('Select', () => {
 			expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('sm')
 		);
 		expect(trigger.textContent).toContain('Small');
+	});
+
+	it('is invalid with an error border inside an error field', () => {
+		const { container } = render(ErrorSelect);
+		const trigger = container.querySelector('button')!;
+		expect(trigger.getAttribute('aria-invalid')).toBe('true');
+		expect(trigger.classList.contains('border-danger-dark')).toBe(true);
+	});
+
+	it('wears the focus ring and leaves width to the consumer', () => {
+		const { container } = render(BoundSelect);
+		const classes = container.querySelector('button')!.classList;
+		expect(classes.contains('focus-visible:outline-2')).toBe(true);
+		expect(classes.contains('w-full')).toBe(false);
+	});
+
+	it('keeps the error border on an open trigger', async () => {
+		const { container } = render(ErrorSelect);
+		const trigger = container.querySelector('button')!;
+		await userEvent.click(trigger);
+		await vi.waitFor(() => expect(trigger.getAttribute('data-state')).toBe('open'));
+		expect(trigger.classList.contains('border-danger-dark')).toBe(true);
+		expect(trigger.classList.contains('data-[state=open]:border-gray-9')).toBe(false);
 	});
 });

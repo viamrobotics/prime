@@ -1,27 +1,42 @@
 <!--
 @component
-An input field with optional contextual state. Inside a [`Field`](../Field/Field.svelte)
-it takes its `id`, `disabled`, `required`, `state`, and `aria-describedby` from there.
+A native text input with the Viam border and padding. Inside a [`Field`](../Field/Field.svelte)
+it takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `aria-describedby` from there. An
+`error` state sets `aria-invalid` and the error border. See [`Field`](../Field/Field.svelte) for
+pairing it with a `Hint` or a `Field.StateIcon`.
 
 ```svelte
 <Field class="flex flex-col gap-1">
 	<Label>Email</Label>
-	<Input type="email" bind:value>
-		<Input.StateIcon />
-	</Input>
+	<Input type="email" class="w-64" bind:value />
+</Field>
+```
+
+To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.svelte). See
+[`Input.Group`](./InputGroup.svelte).
+
+```svelte
+<Field state="error">
+	<Input.Group>
+		<Input type="email" bind:value />
+		<Field.StateIcon />
+	</Input.Group>
 </Field>
 ```
 -->
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
-	import { useField } from '../Field/useField.svelte.ts';
-	import { inputClasses, InputStates, type InputState } from './state.ts';
-	import { provideInput } from './useInput.svelte.ts';
+	import type { FieldState } from '../Field/state.ts';
 
-	interface Props extends HTMLInputAttributes {
+	import { useInputControl } from './useInputControl.svelte.ts';
+
+	interface Props extends Omit<HTMLInputAttributes, 'value' | 'children'> {
+		/** The text in the input. */
+		value?: string;
+
 		/** Contextual state. Defaults to the enclosing field's `state`. */
-		state?: InputState;
+		state?: FieldState;
 	}
 
 	let {
@@ -30,37 +45,32 @@ it takes its `id`, `disabled`, `required`, `state`, and `aria-describedby` from 
 		state,
 		disabled,
 		required,
-		readonly = false,
+		readonly,
 		'aria-describedby': describedBy,
 		class: extraClasses,
-		children,
 		...restProps
 	}: Props = $props();
 
-	const field = useField();
-
-	const currentState = $derived(state ?? field?.state ?? InputStates.None);
-	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
-	const isRequired = $derived(required ?? field?.required ?? false);
-
-	provideInput(() => currentState);
+	const control = useInputControl({
+		id: () => id,
+		disabled: () => disabled,
+		required: () => required,
+		readonly: () => readonly,
+		state: () => state,
+		describedBy: () => describedBy,
+		extraClasses: () => extraClasses
+	});
 </script>
 
-<div class={[...inputClasses(currentState, { disabled: isDisabled, readonly }), extraClasses]}>
-	<input
-		{...restProps}
-		bind:value
-		id={id ?? field?.id}
-		disabled={isDisabled}
-		required={isRequired}
-		{readonly}
-		aria-describedby={describedBy ?? field?.describedBy}
-		aria-invalid={currentState === InputStates.Error || undefined}
-		class={[
-			'size-full bg-transparent outline-none placeholder:text-subtle-2',
-			isDisabled ? 'text-disabled-dark' : 'text-default'
-		]}
-	/>
-
-	{@render children?.()}
-</div>
+<input
+	{...restProps}
+	bind:value
+	id={control.id}
+	class={control.classes}
+	disabled={control.disabled}
+	required={control.required}
+	{readonly}
+	aria-describedby={control.describedBy}
+	aria-invalid={control.invalid}
+	data-state={control.dataState}
+/>

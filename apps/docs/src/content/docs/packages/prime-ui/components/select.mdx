@@ -16,21 +16,26 @@ import Controlled from "./select/Controlled.svelte";
 import controlledSource from "./select/Controlled.svelte?raw";
 import Grouped from "./select/Grouped.svelte";
 import groupedSource from "./select/Grouped.svelte?raw";
+import Placed from "./select/Placed.svelte";
+import placedSource from "./select/Placed.svelte?raw";
 import CustomItem from "./select/CustomItem.svelte";
 import customItemSource from "./select/CustomItem.svelte?raw";
+import ManualItems from "./select/ManualItems.svelte";
+import manualItemsSource from "./select/ManualItems.svelte?raw";
 
 <ComponentIntro name="select" />
 
 <SelectDemo client:visible />
 
 - Composed from parts, so the trigger, the panel, and each item are yours to arrange.
-- One `value`, bindable. `items` gives the closed trigger its label.
+- One `value`, bindable. `items` is the single source of truth for the options: it gives the closed trigger its label, drives typeahead while the list is closed, and `Select.Items` renders it.
 - Keyboard navigation, typeahead, and the WAI-ARIA listbox pattern, via bits-ui.
+- `Select.Trigger` takes `state` from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` and a red border. `warn` sets a warning border. Both match [`Input`](../input/).
 - The panel floats in a portal, positioned to the trigger, and scrolls when the list is long.
 
 ## Anatomy
 
-Every part is a property on `Select`. `Portal` and `Content` are required for the panel to float. `Viewport` is the scrolling region and is required for the scroll buttons. `Group` and `GroupHeading` are optional.
+Every part is a property on `Select`. `Portal` and `Content` are required for the panel to float. `Viewport` is the scrolling region, and `Content` should contain one. `Items` renders every entry of `items` as a `Select.Item`, and renders no element of its own. `Group` and `GroupHeading` are optional.
 
 ```svelte
 <Select>
@@ -40,6 +45,24 @@ Every part is a property on `Select`. `Portal` and `Content` are required for th
   <Select.Portal>
     <Select.Content>
       <Select.ScrollUpButton />
+      <Select.Viewport>
+        <Select.Items />
+      </Select.Viewport>
+      <Select.ScrollDownButton />
+    </Select.Content>
+  </Select.Portal>
+</Select>
+```
+
+To arrange items by hand, for example under group headings, compose `Select.Item` instead. `items` is still required on `Select` for the closed label.
+
+```svelte
+<Select items={options}>
+  <Select.Trigger>
+    <Select.Value />
+  </Select.Trigger>
+  <Select.Portal>
+    <Select.Content>
       <Select.Viewport>
         <Select.Item />
         <Select.Group>
@@ -57,7 +80,7 @@ Every part is a property on `Select`. `Portal` and `Content` are required for th
 
 ### Two-way binding
 
-`bind:value` on the root. Pass the same list as `items` so the trigger can show the selected label while the panel is closed.
+`bind:value` on the root. Pass the options as `items` and render them with `<Select.Items />`.
 
 <Example code={twoWaySource} title="TwoWay.svelte">
   <TwoWay client:visible />
@@ -65,26 +88,52 @@ Every part is a property on `Select`. `Portal` and `Content` are required for th
 
 ### Fully controlled
 
-A function binding makes your setter the only writer, so it can decline a selection. Both modes are explained in [State & binding](../state/).
+Pass `bind:value` a getter and a setter. [State & binding](../state/) explains both modes.
 
 <Example code={controlledSource} title="Controlled.svelte">
   <Controlled client:visible />
 </Example>
 
+### Rendering the options
+
+Three ways turn `items` into rows. All three keep `items` on the root, which the closed trigger and typeahead read. The difference is who writes the loop.
+
+| Approach                                  | Use it when                                                                                                                                               |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<Select.Items />`                        | Every option is its `label` plus a check when selected. The default, shown in the two-way example above.                                                 |
+| `Select.Items` with a `children` snippet  | Every option shares one custom layout. The snippet receives `{ item, selected, highlighted }`, with `item` the entry from `items`.                       |
+| `{#each}` over `Select.Item`              | The rows need something `items` cannot carry: extra data per row, groups, scroll buttons, or rows that are not one-to-one with `items`.                  |
+
+### One snippet for every option
+
+Pass `children` to `Select.Items`. The trigger's chevron is an `indicator` snippet on `Select.Trigger` in the same way.
+
+<Example code={customItemSource} title="CustomItem.svelte">
+  <CustomItem client:visible />
+</Example>
+
+### Items by hand
+
+Loop over your own data and render a `Select.Item` per entry. `Select.Item` takes the same `children` snippet without `item`, since the loop already has the entry in scope. `items` stays on the root so the closed trigger can show the selected label.
+
+<Example code={manualItemsSource} title="ManualItems.svelte">
+  <ManualItems client:visible />
+</Example>
+
 ### Groups and scroll buttons
 
-Wrap related items in `Select.Group` with a `Select.GroupHeading`. For a list taller than the panel, put `Select.ScrollUpButton` and `Select.ScrollDownButton` around the viewport. They appear only when there is more to scroll in that direction.
+The by-hand form is also how you add structure. Wrap related items in `Select.Group` with a `Select.GroupHeading`. For a list taller than the panel, put `Select.ScrollUpButton` and `Select.ScrollDownButton` around the viewport. They appear only when there is more to scroll in that direction.
 
 <Example code={groupedSource} title="Grouped.svelte">
   <Grouped client:visible />
 </Example>
 
-### Custom item content and trigger indicator
+### Placement
 
-An item renders its `label` and a check when selected. Pass children to replace that. The snippet receives `selected` and `highlighted`. The trigger's chevron is an `indicator` snippet in the same way.
+`Select.Content` takes `side` and `align` to place the panel, and `sideOffset` and `alignOffset` to nudge it. The API table lists each option and its default. The panel flips to the other side when there is no room.
 
-<Example code={customItemSource} title="CustomItem.svelte">
-  <CustomItem client:visible />
+<Example code={placedSource} title="Placed.svelte">
+  <Placed client:visible />
 </Example>
 
 ### States
@@ -93,15 +142,18 @@ An item renders its `label` and a check when selected. Pass children to replace 
 
 ## Styling
 
-Each part takes `class` on its own element. `Select` itself renders no element, so it takes no `class` and no event handlers. `onfocus`, `onblur`, `onkeydown`, and the rest go on `Select.Trigger`, the real `<button>`. The panel width follows the trigger through `--bits-select-anchor-width`, and its max height through `--bits-select-content-available-height`, both set by bits-ui. bits-ui sets these data attributes for Tailwind variants.
+Every part that renders an element takes `class` on that element. `Select.Trigger` carries no width of its own, so set one with a class such as `w-64` or `w-full`. Focus shows as the same 2px ring every prime control uses. `Select` and `Select.Items` render no element, so they take no `class`, and `Select` takes no event handlers. `onfocus`, `onblur`, `onkeydown`, and the rest go on `Select.Trigger`, the real `<button>`. The panel width follows the trigger through `--bits-select-anchor-width`. Its max height follows `--bits-select-content-available-height`. bits-ui sets both variables. bits-ui also sets the data attributes in the table below.
 
 | Part      | Attribute          | Value                             |
 | --------- | ------------------ | --------------------------------- |
 | `Trigger` | `data-state`       | `open` or `closed`                |
 | `Trigger` | `data-disabled`    | present when disabled             |
 | `Trigger` | `data-placeholder` | present while nothing is selected |
+| `Trigger` | `aria-invalid`     | `true` when `state` is `error`    |
 | `Value`   | `data-placeholder` | present while nothing is selected |
 | `Content` | `data-state`       | `open` or `closed`                |
+| `Content` | `data-side`        | the resolved side of the trigger  |
+| `Content` | `data-align`       | the resolved alignment            |
 | `Item`    | `data-selected`    | present when selected             |
 | `Item`    | `data-highlighted` | present under the pointer or keys |
 | `Item`    | `data-disabled`    | present when disabled             |
@@ -114,7 +166,7 @@ With focus on the trigger:
 | Key                                                                             | Action                                |
 | ------------------------------------------------------------------------------- | ------------------------------------- |
 | <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Opens the panel.                      |
-| Printable characters                                                            | Opens and highlights the first match. |
+| Printable characters                                                            | Selects the next item from `items` matching the text, without opening. |
 
 With the panel open:
 

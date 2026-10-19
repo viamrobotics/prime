@@ -16,6 +16,13 @@ describe('Label', () => {
 		expect(label?.textContent).toContain('Email');
 	});
 
+	it('renders a native <label> whose `for` points at the given id', () => {
+		const { container } = render(Label, { props: { for: 'name', children: text('Name') } });
+		const label = container.firstElementChild!;
+		expect(label.tagName).toBe('LABEL');
+		expect(label.getAttribute('for')).toBe('name');
+	});
+
 	it('shows a required asterisk only when required', () => {
 		const plain = render(Label, { props: { children: text('Name') } });
 		expect(plain.container.textContent).not.toContain('*');

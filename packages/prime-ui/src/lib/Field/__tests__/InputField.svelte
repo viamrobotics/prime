@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { InputState } from '../../Input/state.ts';
+	import type { FieldState } from '../state.ts';
 
 	import Hint from '../../Hint/Hint.svelte';
 	import Input from '../../Input/Input.svelte';
@@ -7,6 +7,7 @@
 	import Field from '../Field.svelte';
 
 	const {
+		controlId,
 		id,
 		disabled,
 		required,
@@ -14,16 +15,17 @@
 		inputId,
 		hintCount = 1
 	}: {
+		controlId?: string;
 		id?: string;
 		disabled?: boolean;
 		required?: boolean;
-		state?: InputState;
+		state?: FieldState;
 		inputId?: string;
 		hintCount?: number;
 	} = $props();
 </script>
 
-<Field {id} {disabled} {required} {state}>
+<Field {controlId} {id} {disabled} {required} {state}>
 	<Label>Email</Label>
 	<Input id={inputId} type="email" />
 	{#each { length: hintCount }, index (index)}

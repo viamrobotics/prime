@@ -9,11 +9,26 @@ export default defineConfig({
     // Resolve prime-ui to its source so the Sandbox spec doesn't depend on a
     // prior `dist` build. The astro build still uses the package's `svelte`
     // export (dist).
-    alias: {
-      "@viamrobotics/prime-ui": fileURLToPath(
-        new URL("../../packages/prime-ui/src/lib/index.ts", import.meta.url),
-      ),
-    },
+    alias: [
+      {
+        find: "@viamrobotics/prime-ui/icons",
+        replacement: fileURLToPath(
+          new URL("../../packages/prime-ui/src/lib/icons/index.ts", import.meta.url),
+        ),
+      },
+      {
+        find: "@viamrobotics/prime-ui/styles.css",
+        replacement: fileURLToPath(
+          new URL("../../packages/prime-ui/styles.css", import.meta.url),
+        ),
+      },
+      {
+        find: /^@viamrobotics\/prime-ui$/,
+        replacement: fileURLToPath(
+          new URL("../../packages/prime-ui/src/lib/index.ts", import.meta.url),
+        ),
+      },
+    ],
   },
   test: {
     expect: { requireAssertions: true },

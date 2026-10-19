@@ -1,6 +1,6 @@
 ---
 title: Icon
-description: Curated Viam icons, or any Svelte icon component.
+description: Render an SVG path or any Svelte icon component.
 ---
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
@@ -16,26 +16,284 @@ import customComponentSource from "./icon/CustomComponent.svelte?raw";
 
 <IconDemo client:visible />
 
-- A curated name renders inline SVG from the Viam set.
-- Any Svelte icon component renders as-is, so a Lucide icon tree-shakes to only what you import.
-- Eight sizes on the design-system scale. Color follows `currentColor`.
+`icon` accepts an SVG path string or a Svelte component. A string is the `d` attribute of a path on a 24 by 24 viewBox, which is what every `@mdi/js` export is. A component renders as is, so any icon library that ships Svelte components works.
+
+- `size` takes one of eight tokens, `xs` through `4xl`, from `iconSizes` in `packages/prime-ui/src/lib/Icon/icon.ts`. Color follows `currentColor`.
 - Decorative by default: `aria-hidden` and not focusable. Add an `aria-label` when it stands alone.
+- `Icon` bundles no paths of its own. Your bundler keeps only the icons you import.
 
 ## Usage
 
-### By name, by component, by color
+### An `@mdi/js` path
+
+```svelte
+<script lang="ts">
+  import { mdiAlert } from "@mdi/js";
+  import { Icon } from "@viamrobotics/prime-ui";
+</script>
+
+<Icon icon={mdiAlert} />
+```
+
+### A component
+
+```svelte
+<script lang="ts">
+  import Rocket from "@lucide/svelte/icons/rocket";
+  import { Icon } from "@viamrobotics/prime-ui";
+</script>
+
+<Icon icon={Rocket} />
+```
+
+### A Viam glyph
+
+The glyphs `mdi` has no equivalent for live at `@viamrobotics/prime-ui/icons`. Each is a Svelte component, so it works as `icon` or on its own.
+
+```svelte
+<script lang="ts">
+  import { Icon } from "@viamrobotics/prime-ui";
+  import { ViamService } from "@viamrobotics/prime-ui/icons";
+</script>
+
+<Icon icon={ViamService} />
+<ViamService class="size-6" />
+```
+
+### By path, component, and color
 
 <Example code={customComponentSource} title="CustomComponent.svelte">
   <CustomComponent client:visible />
 </Example>
 
-### Sizes and the curated set
+### Sizes and sources
 
 <IconShowcase client:visible />
+
+### An informative icon
+
+An icon with no visible text next to it needs a name. Pass `aria-label` or `aria-labelledby`, and the icon gets `role="img"` and stops being hidden from assistive technology.
+
+```svelte
+<Icon icon={mdiAlert} aria-label="Warning" />
+```
+
+## Why there is no icon set
+
+prime ships no general icon set. It ships only the Viam glyphs, under `@viamrobotics/prime-ui/icons`. For everything else, bring `@mdi/js` or another library and import only what you render.
 
 ## Styling
 
 `class` lands on the `<svg>`, next to the size class. Set color with a `text-*` token, since the paths fill with `currentColor`.
+
+## Migrating from the curated names
+
+Before this release `Icon` took a curated kebab-case name such as `icon="cog"`. Names are gone, so replace each with the import below.
+
+### Names backed by `@mdi/js`
+
+Import the export from `@mdi/js` and pass it as `icon`.
+
+| Old name | `@mdi/js` export |
+| --- | --- |
+| `account-group-outline` | `mdiAccountGroupOutline` |
+| `account-multiple` | `mdiAccountMultiple` |
+| `account-plus-outline` | `mdiAccountPlusOutline` |
+| `alert` | `mdiAlert` |
+| `alert-circle` | `mdiAlertCircle` |
+| `alert-circle-outline` | `mdiAlertCircleOutline` |
+| `alert-outline` | `mdiAlertOutline` |
+| `apple` | `mdiApple` |
+| `apple-keyboard-command` | `mdiAppleKeyboardCommand` |
+| `application-outline` | `mdiApplicationOutline` |
+| `arrow-collapse` | `mdiArrowCollapse` |
+| `arrow-collapse-left` | `mdiArrowCollapseLeft` |
+| `arrow-collapse-right` | `mdiArrowCollapseRight` |
+| `arrow-expand-all` | `mdiArrowExpandAll` |
+| `arrow-expand-left` | `mdiArrowExpandLeft` |
+| `arrow-expand-right` | `mdiArrowExpandRight` |
+| `arrow-left` | `mdiArrowLeft` |
+| `arrow-right` | `mdiArrowRight` |
+| `arrow-top-right` | `mdiArrowTopRight` |
+| `arrow-top-right-bottom-left` | `mdiArrowTopRightBottomLeft` |
+| `arrow-up` | `mdiArrowUp` |
+| `article` | `mdiTextBoxOutline` |
+| `auto-renew` | `mdiAutorenew` |
+| `axis-arrow` | `mdiAxisArrow` |
+| `backup-restore` | `mdiBackupRestore` |
+| `block` | `mdiBlockHelper` |
+| `book-open` | `mdiBookOpenVariantOutline` |
+| `bookmark-outline` | `mdiBookmarkOutline` |
+| `broadcast` | `mdiBroadcast` |
+| `broadcast-off` | `mdiBroadcastOff` |
+| `bug` | `mdiBug` |
+| `bug-outline` | `mdiBugOutline` |
+| `calendar-blank` | `mdiCalendarBlank` |
+| `camera-flip-outline` | `mdiCameraFlipOutline` |
+| `camera-outline` | `mdiCameraOutline` |
+| `cancel` | `mdiCancel` |
+| `card-text-outline` | `mdiCardTextOutline` |
+| `chart-line` | `mdiChartLine` |
+| `check` | `mdiCheck` |
+| `check-circle` | `mdiCheckCircle` |
+| `check-circle-outline` | `mdiCheckCircleOutline` |
+| `check-decagram` | `mdiCheckDecagram` |
+| `checkbox-blank-outline` | `mdiCheckboxBlankOutline` |
+| `checkbox-marked` | `mdiCheckboxMarked` |
+| `chevron-double-up` | `mdiChevronDoubleUp` |
+| `chevron-down` | `mdiChevronDown` |
+| `chevron-left` | `mdiChevronLeft` |
+| `chevron-right` | `mdiChevronRight` |
+| `chevron-up` | `mdiChevronUp` |
+| `circle-md` | `mdiCircleMedium` |
+| `clock-outline` | `mdiClockOutline` |
+| `close` | `mdiClose` |
+| `close-circle-outline` | `mdiCloseCircleOutline` |
+| `code-braces` | `mdiCodeBraces` |
+| `code-json` | `mdiCodeJson` |
+| `code-tags` | `mdiCodeTags` |
+| `cog` | `mdiCog` |
+| `console` | `mdiConsole` |
+| `content-copy` | `mdiContentCopy` |
+| `content-duplicate` | `mdiContentDuplicate` |
+| `content-paste` | `mdiContentPaste` |
+| `content-save-outline` | `mdiContentSaveOutline` |
+| `credit-card-outline` | `mdiCreditCardOutline` |
+| `crop-free` | `mdiCropFree` |
+| `database-outline` | `mdiDatabaseOutline` |
+| `dock-right` | `mdiDockRight` |
+| `domain` | `mdiDomain` |
+| `dots-horizontal` | `mdiDotsHorizontal` |
+| `download` | `mdiDownload` |
+| `drag` | `mdiDrag` |
+| `earth` | `mdiEarth` |
+| `export` | `mdiExport` |
+| `eye-off-outline` | `mdiEyeOffOutline` |
+| `eye-outline` | `mdiEyeOutline` |
+| `file-chart-outline` | `mdiFileChartOutline` |
+| `file-download-outline` | `mdiFileDownloadOutline` |
+| `file-outline` | `mdiFileOutline` |
+| `file-swap-outline` | `mdiFileSwapOutline` |
+| `filter-sliders` | `mdiTune` |
+| `folder` | `mdiFolderOutline` |
+| `format-list-bulleted` | `mdiFormatListBulleted` |
+| `gamepad` | `mdiGamepad` |
+| `github` | `mdiGithub` |
+| `help-circle-outline` | `mdiHelpCircleOutline` |
+| `history` | `mdiHistory` |
+| `image-filter-center-focus` | `mdiImageFilterCenterFocus` |
+| `inbox` | `mdiInboxOutline` |
+| `information` | `mdiInformation` |
+| `information-outline` | `mdiInformationOutline` |
+| `instagram` | `mdiInstagram` |
+| `keyboard-return` | `mdiKeyboardReturn` |
+| `lan-connect` | `mdiLanConnect` |
+| `language-go` | `mdiLanguageGo` |
+| `language-python` | `mdiLanguagePython` |
+| `language-typescript` | `mdiLanguageTypescript` |
+| `laptop` | `mdiLaptop` |
+| `layers-triple-outline` | `mdiLayersTripleOutline` |
+| `lightning-bolt-outline` | `mdiLightningBoltOutline` |
+| `link` | `mdiLink` |
+| `link-variant` | `mdiLinkVariant` |
+| `linkedin` | `mdiLinkedin` |
+| `linux` | `mdiLinux` |
+| `lock` | `mdiLockOutline` |
+| `logout` | `mdiLogout` |
+| `magnify` | `mdiMagnify` |
+| `markdown` | `mdiLanguageMarkdownOutline` |
+| `megaphone` | `mdiBullhornVariantOutline` |
+| `memory` | `mdiMemory` |
+| `menu` | `mdiMenu` |
+| `merge` | `mdiMerge` |
+| `minus` | `mdiMinus` |
+| `monitor-dashboard` | `mdiMonitorDashboard` |
+| `multiplication-box` | `mdiMultiplicationBox` |
+| `navigation-variant` | `mdiNavigationVariant` |
+| `navigation-variant-outline` | `mdiNavigationVariantOutline` |
+| `network-outline` | `mdiNetworkOutline` |
+| `note-outline` | `mdiNoteOutline` |
+| `open-in-new` | `mdiOpenInNew` |
+| `package-variant-closed` | `mdiPackageVariantClosed` |
+| `package-variant-closed-check` | `mdiPackageVariantClosedCheck` |
+| `pause` | `mdiPause` |
+| `pause-circle-outline` | `mdiPauseCircleOutline` |
+| `pencil-outline` | `mdiPencilOutline` |
+| `picture-in-picture-top-right` | `mdiPictureInPictureTopRight` |
+| `play-circle-outline` | `mdiPlayCircleOutline` |
+| `plus` | `mdiPlus` |
+| `qrcode` | `mdiQrcode` |
+| `radiobox-blank` | `mdiRadioboxBlank` |
+| `radiobox-indeterminate-variant` | `mdiRadioboxIndeterminateVariant` |
+| `radiobox-marked` | `mdiRadioboxMarked` |
+| `refresh` | `mdiRefresh` |
+| `robot-industrial-outline` | `mdiRobotIndustrialOutline` |
+| `robot-outline` | `mdiRobotOutline` |
+| `rocket-launch-outline` | `mdiRocketLaunchOutline` |
+| `script-text-outline` | `mdiScriptTextOutline` |
+| `selection-drag` | `mdiSelectionDrag` |
+| `selection-ellipse` | `mdiSelectionEllipse` |
+| `send` | `mdiSend` |
+| `shield-key-outline` | `mdiShieldKeyOutline` |
+| `source-merge` | `mdiSourceMerge` |
+| `stop-circle-outline` | `mdiStopCircleOutline` |
+| `subdirectory-arrow-right` | `mdiSubdirectoryArrowRight` |
+| `sync` | `mdiSync` |
+| `table` | `mdiTable` |
+| `tag-outline` | `mdiTagOutline` |
+| `text-search` | `mdiTextSearch` |
+| `toggle-switch` | `mdiToggleSwitch` |
+| `toggle-switch-off` | `mdiToggleSwitchOff` |
+| `toggle-switch-off-outline` | `mdiToggleSwitchOffOutline` |
+| `toggle-switch-outline` | `mdiToggleSwitchOutline` |
+| `tools` | `mdiTools` |
+| `trash-can-outline` | `mdiTrashCanOutline` |
+| `twitter` | `mdiTwitter` |
+| `undo` | `mdiUndo` |
+| `unfold-less-horizontal` | `mdiUnfoldLessHorizontal` |
+| `unfold-more-horizontal` | `mdiUnfoldMoreHorizontal` |
+| `unfold-more-vertical` | `mdiUnfoldMoreVertical` |
+| `upload` | `mdiUpload` |
+| `video-outline` | `mdiVideoOutline` |
+| `view-dashboard-outline` | `mdiViewDashboardOutline` |
+| `webcam` | `mdiWebcam` |
+| `webhook` | `mdiWebhook` |
+| `widgets-outline` | `mdiWidgetsOutline` |
+| `windows` | `mdiMicrosoftWindows` |
+| `wrench-outline` | `mdiWrenchOutline` |
+
+### Viam glyphs and other replacements
+
+Names that were drawn by hand are now components. `checkbox-indeterminate` is an `@mdi/js` export.
+
+| Old name | Now |
+| --- | --- |
+| `ask-ai` | `AskAi` from `@viamrobotics/prime-ui/icons` |
+| `cursor-move` | `CursorMove` from `@viamrobotics/prime-ui/icons` |
+| `external-arrow` | `ExternalArrow` from `@viamrobotics/prime-ui/icons` |
+| `filter-outline` | `FilterOutline` from `@viamrobotics/prime-ui/icons` |
+| `grid-orthographic` | `GridOrthographic` from `@viamrobotics/prime-ui/icons` |
+| `grid-perspective` | `GridPerspective` from `@viamrobotics/prime-ui/icons` |
+| `language-cpp` | `LanguageCpp` from `@viamrobotics/prime-ui/icons` |
+| `magnet` | `Magnet` from `@viamrobotics/prime-ui/icons` |
+| `magnet-off` | `MagnetOff` from `@viamrobotics/prime-ui/icons` |
+| `maintenance` | `Maintenance` from `@viamrobotics/prime-ui/icons` |
+| `manage-history` | `ManageHistory` from `@viamrobotics/prime-ui/icons` |
+| `pulse` | `Pulse` from `@viamrobotics/prime-ui/icons` |
+| `resize` | `Resize` from `@viamrobotics/prime-ui/icons` |
+| `sparkles` | `Sparkles` from `@viamrobotics/prime-ui/icons` |
+| `viam-component` | `ViamComponent` from `@viamrobotics/prime-ui/icons` |
+| `viam-flutter` | `ViamFlutter` from `@viamrobotics/prime-ui/icons` |
+| `viam-fragment` | `ViamFragment` from `@viamrobotics/prime-ui/icons` |
+| `viam-local-module` | `ViamLocalModule` from `@viamrobotics/prime-ui/icons` |
+| `viam-mixed-part-status` | `ViamMixedPartStatus` from `@viamrobotics/prime-ui/icons` |
+| `viam-ml-model` | `ViamMlModel` from `@viamrobotics/prime-ui/icons` |
+| `viam-process` | `ViamProcess` from `@viamrobotics/prime-ui/icons` |
+| `viam-registry-module` | `ViamRegistryModule` from `@viamrobotics/prime-ui/icons` |
+| `viam-remote-part` | `ViamRemotePart` from `@viamrobotics/prime-ui/icons` |
+| `viam-service` | `ViamService` from `@viamrobotics/prime-ui/icons` |
+| `view-agenda-outline` | `ViewAgendaOutline` from `@viamrobotics/prime-ui/icons` |
+| `checkbox-indeterminate` | `mdiCheckboxIntermediate` from `@mdi/js` |
 
 ## API
 

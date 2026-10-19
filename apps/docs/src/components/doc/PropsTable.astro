@@ -35,8 +35,8 @@ const inlineCode = (text: string) =>
         {props.map((prop) => (
           <tr>
             <td>
-              <code>{prop.name}</code>
               {prop.bindable && <span class="prop-flag">bind:</span>}
+              <code>{prop.name}</code>
             </td>
             <td>
               <code>{prop.type}</code>

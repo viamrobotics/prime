@@ -10,8 +10,9 @@
 
 <Field class="not-content flex max-w-xs flex-col gap-1" {state}>
   <Label>Machine name</Label>
-  <Input bind:value={name} onblur={() => (touched = true)}>
-    <Input.StateIcon />
-  </Input>
+  <Input.Group>
+    <Input bind:value={name} onblur={() => (touched = true)} />
+    <Field.StateIcon />
+  </Input.Group>
   <Hint>Lowercase letters, numbers, and dashes. Validated on blur.</Hint>
 </Field>

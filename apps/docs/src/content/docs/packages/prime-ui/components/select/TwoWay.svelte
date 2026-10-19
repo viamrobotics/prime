@@ -20,9 +20,7 @@
       <Select.Portal>
         <Select.Content>
           <Select.Viewport>
-            {#each sizes as item (item.value)}
-              <Select.Item value={item.value} label={item.label} />
-            {/each}
+            <Select.Items />
           </Select.Viewport>
         </Select.Content>
       </Select.Portal>

@@ -1,9 +1,7 @@
 <!--
 @component
 A form label. Inside a [`Field`](../Field/Field.svelte) it points at the control and
-mirrors the field's `required` and `disabled` on its own.
-
-Built on [bits-ui `Label`](https://bits-ui.com/docs/components/label).
+takes the field's `required` and `disabled`.
 
 ```svelte
 <Field class="flex flex-col gap-1" required>
@@ -22,8 +20,6 @@ On its own, associate it with `for`:
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLLabelAttributes } from 'svelte/elements';
-
-	import { Label } from 'bits-ui';
 
 	import { useField } from '../Field/useField.svelte.ts';
 
@@ -63,10 +59,10 @@ On its own, associate it with `for`:
 	<span class="text-danger-dark" aria-hidden="true">*</span>
 {/snippet}
 
-<Label.Root
+<label
 	{...restProps}
 	id={labelId}
-	for={htmlFor ?? field?.id}
+	for={htmlFor ?? field?.controlId}
 	class={[
 		'inline-flex items-center gap-1 text-sm text-default',
 		isDisabled && 'cursor-not-allowed text-disabled-dark',
@@ -78,4 +74,4 @@ On its own, associate it with `for`:
 		{@const suffix = indicator ?? asterisk}
 		{@render suffix()}
 	{/if}
-</Label.Root>
+</label>

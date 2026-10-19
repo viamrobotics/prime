@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { mdiUnfoldMoreVertical } from "@mdi/js";
   import { Icon, Select } from "@viamrobotics/prime-ui";
 
   const machines = [
@@ -12,31 +13,30 @@
 
 <div class="not-content max-w-xs">
   <Select items={machines} bind:value={machine}>
-    <Select.Trigger aria-label="Machine">
+    <Select.Trigger class="w-64" aria-label="Machine">
       <Select.Value placeholder="Pick a machine" />
       {#snippet indicator()}
-        <Icon icon="unfold-more-vertical" size="base" class="shrink-0 text-subtle-2" />
+        <Icon icon={mdiUnfoldMoreVertical} size="base" class="shrink-0 text-subtle-2" />
       {/snippet}
     </Select.Trigger>
     <Select.Portal>
       <Select.Content>
         <Select.Viewport>
-          {#each machines as item (item.value)}
-            <Select.Item value={item.value} label={item.label}>
-              {#snippet children({ selected })}
-                <span class="flex items-center gap-2">
-                  <span
-                    class={[
-                      "size-2 rounded-full",
-                      item.status === "online" ? "bg-success-dark" : "bg-danger-dark",
-                    ]}
-                  ></span>
-                  <span class={{ "font-medium": selected }}>{item.label}</span>
-                </span>
-                <span class="text-xs text-subtle-2">{item.status}</span>
-              {/snippet}
-            </Select.Item>
-          {/each}
+          <Select.Items>
+            {#snippet children({ item, selected })}
+              {@const status = machines.find((m) => m.value === item.value)?.status}
+              <span class="flex items-center gap-2">
+                <span
+                  class={[
+                    "size-2 rounded-full",
+                    status === "online" ? "bg-success-dark" : "bg-danger-dark",
+                  ]}
+                ></span>
+                <span class={{ "font-medium": selected }}>{item.label}</span>
+              </span>
+              <span class="text-xs text-subtle-2">{status}</span>
+            {/snippet}
+          </Select.Items>
         </Select.Viewport>
       </Select.Content>
     </Select.Portal>

@@ -15,8 +15,8 @@ import {
 `@viamrobotics/prime-ui` is Viam's Svelte 5 component library. Components are built on top of design tokens from [`@viamrobotics/tailwind-config`](../tailwind-config/) and styled with Tailwind CSS v4.
 
 <Aside type="caution" title="Pre-1.0">
-  The v2 of prime is under active development. The public API is unstable;
-  expect breaking changes until 1.0.
+  The v2 of prime is under active development. The public API is unstable.
+  Expect breaking changes until 1.0.
 </Aside>
 
 ## Installation
@@ -46,9 +46,14 @@ import {
      </TabItem>
    </Tabs>
 
-2. In your app's main CSS, import the Tailwind config so token classes resolve:
+2. In your app's main CSS, import Tailwind and the prime-ui stylesheet:
 
-   <Code code="@import '@viamrobotics/tailwind-config';" lang="css" />
+   <Code
+     code={`@import "tailwindcss";\n@import "@viamrobotics/prime-ui/styles.css";`}
+     lang="css"
+   />
+
+   Tailwind v4 skips `node_modules` when it detects which classes to generate, so the package ships a stylesheet that points Tailwind at its compiled components. It also imports the tokens from `@viamrobotics/tailwind-config`. If you prefer to manage this yourself, import `@viamrobotics/tailwind-config` and add your own `@source` pointing at `node_modules/@viamrobotics/prime-ui/dist`.
 
 </Steps>
 
@@ -56,15 +61,24 @@ import {
 
 ```svelte
 <script lang="ts">
-  import { Button } from '@viamrobotics/prime-ui';
+  import { Field, Input, Label } from '@viamrobotics/prime-ui';
+
+  let value = $state('');
 </script>
 
-<Button variant="primary">Click me</Button>
+<Field>
+  <Label>Email</Label>
+  <Input bind:value />
+</Field>
 ```
+
+## Icons
+
+`Icon` takes an SVG path string or a Svelte icon component. Install `@mdi/js` for the Material Design icons, and import the Viam glyphs from `@viamrobotics/prime-ui/icons`.
 
 ## Components
 
-Every component has a page with a live sandbox, usage snippets, and its states rendered from the published package.
+Every component has a page with a live sandbox, usage snippets, and its states, rendered from source in dev and from the built package on deploy.
 
 <LinkButton href="./components/field/" icon="right-arrow">
   Browse the components

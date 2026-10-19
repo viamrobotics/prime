@@ -13,8 +13,9 @@
   }}
 >
   <Label>Robot name</Label>
-  <Input placeholder="rover-1">
-    <Input.StateIcon />
-  </Input>
+  <Input.Group>
+    <Input placeholder="rover-1" />
+    <Field.StateIcon />
+  </Input.Group>
   <Hint>Lowercase letters, numbers, and dashes.</Hint>
 </Sandbox>

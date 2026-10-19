@@ -1,6 +1,6 @@
 <!--
 @component
-Groups related [`Select.Item`](./SelectItem.svelte)s, optionally labelled by a
+Groups related [`Select.Item`](./SelectItem.svelte)s, optionally labeled by a
 [`Select.GroupHeading`](./SelectGroupHeading.svelte).
 -->
 <script lang="ts">
@@ -9,7 +9,7 @@ Groups related [`Select.Item`](./SelectItem.svelte)s, optionally labelled by a
 	import { Select } from 'bits-ui';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
-		/** Id of the element. bits-ui requires a string, so `null` is not accepted. */
+		/** Element id. `null` is not accepted. */
 		id?: string;
 	}
 

@@ -1,18 +1,19 @@
 <!--
 @component
-Scrolls a long [`Select.Content`](./SelectContent.svelte) downward.
+A button that scrolls a long [`Select.Content`](./SelectContent.svelte) down.
 
-Shown only when there's content below the viewport. Children replace the default chevron.
+Appears only when items are hidden below the visible list. Children replace the default chevron.
 -->
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import { mdiChevronDown } from '@mdi/js';
 	import { Select } from 'bits-ui';
 
 	import Icon from '../Icon/Icon.svelte';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
-		/** Id of the element. bits-ui requires a string, so `null` is not accepted. */
+		/** Element id. `null` is not accepted. */
 		id?: string;
 	}
 
@@ -20,11 +21,11 @@ Shown only when there's content below the viewport. Children replace the default
 </script>
 
 {#snippet chevron()}
-	<Icon icon="chevron-down" size="sm" />
+	<Icon icon={mdiChevronDown} size="sm" />
 {/snippet}
 
 <Select.ScrollDownButton
-	class={['flex w-full items-center justify-center py-1 text-subtle-2', extraClasses]}
+	class={['flex items-center justify-center py-1 text-subtle-2', extraClasses]}
 	{...restProps}
 >
 	{@const content = children ?? chevron}

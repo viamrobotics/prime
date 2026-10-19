@@ -3,6 +3,7 @@ import Content from './SelectContent.svelte';
 import Group from './SelectGroup.svelte';
 import GroupHeading from './SelectGroupHeading.svelte';
 import Item from './SelectItem.svelte';
+import Items from './SelectItems.svelte';
 import Portal from './SelectPortal.svelte';
 import ScrollDownButton from './SelectScrollDownButton.svelte';
 import ScrollUpButton from './SelectScrollUpButton.svelte';
@@ -17,6 +18,7 @@ export const Select: typeof Root & {
 	Content: typeof Content;
 	Viewport: typeof Viewport;
 	Item: typeof Item;
+	Items: typeof Items;
 	Group: typeof Group;
 	GroupHeading: typeof GroupHeading;
 	ScrollUpButton: typeof ScrollUpButton;
@@ -28,6 +30,7 @@ export const Select: typeof Root & {
 	Content,
 	Viewport,
 	Item,
+	Items,
 	Group,
 	GroupHeading,
 	ScrollUpButton,

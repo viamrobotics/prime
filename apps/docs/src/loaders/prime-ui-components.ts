@@ -31,7 +31,7 @@ export const componentSchema = z.object({
 
 type ComponentData = z.infer<typeof componentSchema>;
 
-interface Root {
+export interface Root {
   name: string;
   file: string;
   parts: { name: string; file: string }[];
@@ -43,6 +43,7 @@ const kebab = (name: string) =>
 const SINGLE_EXPORT =
   /export \{ default as (\w+) \} from '\.\/([\w-]+)\/(\w+)\.svelte'/g;
 const COMPOUND_EXPORT = /export \{ (\w+) \} from '\.\/([\w-]+)\/([\w-]+)\.ts'/g;
+const TYPE_EXPORT = /^export type \{[^}]*\}.*$/gm;
 const BARREL_IMPORT = /import (\w+) from '\.\/(\w+)\.svelte'/g;
 const BARREL_ASSIGN = /Object\.assign\((\w+),\s*\{([^}]*)\}/;
 
@@ -51,7 +52,7 @@ const readCompoundRoot = async (
   name: string,
   folder: string,
   barrel: string,
-): Promise<Root> => {
+): Promise<Root | undefined> => {
   const source = await readFile(join(lib, folder, `${barrel}.ts`), "utf8");
   const imports = new Map(
     [...source.matchAll(BARREL_IMPORT)].map((match) => [
@@ -60,8 +61,7 @@ const readCompoundRoot = async (
     ]),
   );
   const assign = BARREL_ASSIGN.exec(source);
-  if (!assign)
-    throw new Error(`${folder}/${barrel}.ts has no Object.assign compound`);
+  if (!assign) return undefined;
   const rootFile = imports.get(assign[1]);
   if (!rootFile)
     throw new Error(
@@ -80,9 +80,13 @@ const readCompoundRoot = async (
   return { name, file: rootFile, parts };
 };
 
-/** Every public component, in `index.ts` export order, with its compound parts. */
-const readRoots = async (lib: string): Promise<Root[]> => {
-  const index = await readFile(join(lib, "index.ts"), "utf8");
+/**
+ * Every public component, in `index.ts` export order, with its compound parts.
+ * Type exports and value exports of modules without an `Object.assign` barrel are skipped.
+ */
+export const readRoots = async (lib: string): Promise<Root[]> => {
+  const source = await readFile(join(lib, "index.ts"), "utf8");
+  const index = source.replace(TYPE_EXPORT, "");
   const roots: Root[] = [];
   for (const match of index.matchAll(SINGLE_EXPORT)) {
     roots.push({
@@ -92,7 +96,8 @@ const readRoots = async (lib: string): Promise<Root[]> => {
     });
   }
   for (const match of index.matchAll(COMPOUND_EXPORT)) {
-    roots.push(await readCompoundRoot(lib, match[1], match[2], match[3]));
+    const root = await readCompoundRoot(lib, match[1], match[2], match[3]);
+    if (root) roots.push(root);
   }
   return roots;
 };

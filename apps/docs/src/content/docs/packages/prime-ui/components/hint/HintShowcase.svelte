@@ -9,6 +9,8 @@
       <Hint>We'll only use this to send you deploy notifications.</Hint>
       <Hint disabled>Unavailable while the field is disabled.</Hint>
       <Hint state="error">That name is already taken.</Hint>
+      <Hint state="warn">This name is similar to an existing robot.</Hint>
+      <Hint state="info">Names can be changed later.</Hint>
     </div>
   </div>
 

@@ -1,7 +1,10 @@
 <!--
 @component
 A checkbox with an optional indeterminate state. Inside a [`Field`](../Field/Field.svelte)
-it takes its `id`, `disabled`, `required`, and `aria-describedby` from there.
+it takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and
+`aria-describedby` from there.
+An `error` state sets `aria-invalid` and colors the default icon. See
+[`Field`](../Field/Field.svelte) for pairing it with a `Hint`.
 
 Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 
@@ -13,11 +16,15 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 ```
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
-	import { Checkbox, type CheckboxRootProps } from 'bits-ui';
+	import { mdiCheckboxBlankOutline, mdiCheckboxIntermediate, mdiCheckboxMarked } from '@mdi/js';
+	import { Checkbox } from 'bits-ui';
 
+	import { fieldState, FieldStates, type FieldState } from '../Field/state.ts';
 	import { useField } from '../Field/useField.svelte.ts';
+	import { FOCUS_RING } from '../focus-ring.ts';
 	import Icon from '../Icon/Icon.svelte';
 
 	interface Props extends Omit<HTMLButtonAttributes, 'children' | 'value'> {
@@ -29,16 +36,19 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 		value?: string;
 		/** Require the box to be checked for form submission. Defaults to the enclosing field's `required`. */
 		required?: boolean;
-		/** Custom content instead of the default checkbox icon. */
-		children?: CheckboxRootProps['children'];
+		/** Contextual state. Defaults to the enclosing field's `state`. */
+		state?: FieldState;
+		/** Custom content instead of the default icon. Receives `{ checked, indeterminate }`. */
+		children?: Snippet<[{ checked: boolean; indeterminate: boolean }]>;
 	}
 
 	let {
 		id,
-		checked = $bindable(false),
-		indeterminate = $bindable(false),
+		checked = $bindable(),
+		indeterminate = $bindable(),
 		disabled,
 		required,
+		state,
 		'aria-describedby': describedBy,
 		class: extraClasses,
 		children,
@@ -51,36 +61,44 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
 	const isRequired = $derived(required ?? field?.required ?? false);
 
-	const boxIcon = (isChecked: boolean, isIndeterminate: boolean) => {
-		if (isIndeterminate) return 'checkbox-indeterminate';
-		if (isChecked) return 'checkbox-marked';
-		return 'checkbox-blank-outline';
-	};
+	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	const isError = $derived(fieldState.isError(currentState));
+
+	const isChecked = $derived(checked ?? false);
+	const isIndeterminate = $derived(indeterminate ?? false);
+	const boxIcon = $derived.by(() => {
+		if (isIndeterminate) return mdiCheckboxIntermediate;
+		if (isChecked) return mdiCheckboxMarked;
+		return mdiCheckboxBlankOutline;
+	});
 </script>
 
 <Checkbox.Root
-	bind:checked
-	bind:indeterminate
-	id={id ?? field?.id ?? uid}
+	bind:checked={() => checked ?? false, (next) => (checked = next)}
+	bind:indeterminate={() => indeterminate ?? false, (next) => (indeterminate = next)}
+	id={id ?? field?.controlId ?? uid}
 	class={[
-		'rounded outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-power-button-dark',
+		'rounded-sm',
+		FOCUS_RING,
 		isDisabled ? 'cursor-not-allowed' : 'cursor-pointer',
 		extraClasses
 	]}
 	disabled={isDisabled}
 	required={isRequired}
+	aria-invalid={isError || undefined}
 	aria-describedby={describedBy ?? field?.describedBy}
 	{...restProps}
 >
 	{#if children}
-		{@render children({ checked, indeterminate })}
+		{@render children({ checked: isChecked, indeterminate: isIndeterminate })}
 	{:else}
 		<Icon
-			icon={boxIcon(checked, indeterminate)}
+			icon={boxIcon}
 			class={{
 				'text-disabled-dark': isDisabled,
-				'text-default': !isDisabled && (checked || indeterminate),
-				'text-subtle-2': !isDisabled && !checked && !indeterminate
+				'text-danger-dark': !isDisabled && isError,
+				'text-default': !isDisabled && !isError && (isChecked || isIndeterminate),
+				'text-subtle-2': !isDisabled && !isError && !isChecked && !isIndeterminate
 			}}
 		/>
 	{/if}

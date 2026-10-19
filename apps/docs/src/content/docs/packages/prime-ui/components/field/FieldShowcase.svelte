@@ -24,9 +24,10 @@
       </Field>
       <Field class="flex flex-col gap-1" state="error">
         <Label>Robot name</Label>
-        <Input value="Rover 1">
-          <Input.StateIcon />
-        </Input>
+        <Input.Group>
+          <Input value="Rover 1" />
+          <Field.StateIcon />
+        </Input.Group>
         <Hint>Lowercase letters, numbers, and dashes.</Hint>
         <Hint>Spaces and capitals are not allowed.</Hint>
       </Field>

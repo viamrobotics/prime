@@ -1,23 +1,23 @@
 import { getContext, setContext, untrack } from 'svelte';
 
-import { InputStates, type InputState } from '../Input/state.ts';
+import { FieldStates, type FieldState } from './state.ts';
 
 const key = Symbol('Field');
 
 interface FieldOptions {
-	id: () => string;
+	controlId: () => string;
 	disabled: () => boolean;
 	required: () => boolean;
-	state: () => InputState | undefined;
+	state: () => FieldState | undefined;
 }
 
 /** What a `Field` shares with the label, control, and hints inside it. */
 export interface FieldContext {
-	/** Id for the control. `Label` points its `for` here. */
-	readonly id: string;
+	/** Id the field assigns to its control. `Label` points its `for` here. */
+	readonly controlId: string;
 	readonly disabled: boolean;
 	readonly required: boolean;
-	readonly state: InputState;
+	readonly state: FieldState;
 	/** Space-joined ids of the registered labels, for `aria-labelledby`. */
 	readonly labelledBy: string | undefined;
 	/** Space-joined ids of the registered hints, for `aria-describedby`. */
@@ -54,11 +54,11 @@ const createRegistry = () => {
 export const provideField = (options: FieldOptions): FieldContext => {
 	const labels = createRegistry();
 	const hints = createRegistry();
-	const currentState = $derived(options.state() ?? InputStates.None);
+	const currentState = $derived(options.state() ?? FieldStates.None);
 
 	return setContext<FieldContext>(key, {
-		get id() {
-			return options.id();
+		get controlId() {
+			return options.controlId();
 		},
 		get disabled() {
 			return options.disabled();

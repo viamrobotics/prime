@@ -17,14 +17,34 @@ const primeUiSourceInDev = {
     if (command !== "serve") return;
     return {
       resolve: {
-        alias: {
-          "@viamrobotics/prime-ui": fileURLToPath(
-            new URL(
-              "../../packages/prime-ui/src/lib/index.ts",
-              import.meta.url,
+        // Each subpath gets its own entry and the bare specifier is anchored, so a
+        // subpath such as `/styles.css` is never rewritten to a path under index.ts.
+        alias: [
+          {
+            find: "@viamrobotics/prime-ui/icons",
+            replacement: fileURLToPath(
+              new URL(
+                "../../packages/prime-ui/src/lib/icons/index.ts",
+                import.meta.url,
+              ),
             ),
-          ),
-        },
+          },
+          {
+            find: "@viamrobotics/prime-ui/styles.css",
+            replacement: fileURLToPath(
+              new URL("../../packages/prime-ui/styles.css", import.meta.url),
+            ),
+          },
+          {
+            find: /^@viamrobotics\/prime-ui$/,
+            replacement: fileURLToPath(
+              new URL(
+                "../../packages/prime-ui/src/lib/index.ts",
+                import.meta.url,
+              ),
+            ),
+          },
+        ],
       },
     };
   },

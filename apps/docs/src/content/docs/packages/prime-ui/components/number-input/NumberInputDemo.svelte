@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { NumberInput } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+
+  import GroupedNumberInput from "./GroupedNumberInput.svelte";
 </script>
 
 <Sandbox
   name="NumberInput"
-  component={NumberInput}
+  component={GroupedNumberInput}
   controls={{
     value: { kind: "number", label: "Value", default: 3 },
     min: { kind: "number", label: "Min", default: 0 },
@@ -18,6 +19,4 @@
       options: ["none", "info", "warn", "error"],
     },
   }}
->
-  <NumberInput.StateIcon />
-</Sandbox>
+/>

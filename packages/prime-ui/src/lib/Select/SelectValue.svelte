@@ -9,7 +9,7 @@ Renders the selected option's label inside a
 	import { Select } from 'bits-ui';
 
 	interface Props extends HTMLAttributes<HTMLSpanElement> {
-		/** Id of the element. bits-ui requires a string, so `null` is not accepted. */
+		/** Element id. `null` is not accepted. */
 		id?: string;
 
 		/** Shown while nothing is selected. */

@@ -46,7 +46,7 @@ export default defineConfig(
 		languageOptions: {
 			parserOptions: {
 				projectService: {
-					allowDefaultProject: ['eslint.config.js', 'svelte.config.js', 'vite.config.ts'],
+					allowDefaultProject: ['eslint.config.js', 'svelte.config.js'],
 					defaultProject: './tsconfig.json'
 				},
 				extraFileExtensions: ['.svelte'],

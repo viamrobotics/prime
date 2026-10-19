@@ -1,6 +1,6 @@
 ---
 title: Input
-description: A native text input with Viam validation chrome.
+description: A native text input with Viam validation chrome, and a group for adornments.
 ---
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
@@ -14,6 +14,8 @@ import TwoWay from "./input/TwoWay.svelte";
 import twoWaySource from "./input/TwoWay.svelte?raw";
 import Validated from "./input/Validated.svelte";
 import validatedSource from "./input/Validated.svelte?raw";
+import Adorned from "./input/Adorned.svelte";
+import adornedSource from "./input/Adorned.svelte?raw";
 
 <ComponentIntro name="input" />
 
@@ -21,15 +23,24 @@ import validatedSource from "./input/Validated.svelte?raw";
 
 - A real `<input>`, so every native attribute and event handler passes straight through.
 - `bind:value` plus `oninput`, `onchange`, `onblur`, and the rest, side by side.
-- Four contextual states, `none`, `info`, `warn`, and `error`, with a matching `Input.StateIcon`.
-- Reads `id`, `disabled`, `required`, `state`, and `aria-describedby` from an enclosing [`Field`](../field/).
+- Three contextual states, `info`, `warn`, and `error`, each with a matching [`Field.StateIcon`](../field/). `none` shows no icon.
+- `Input.Group` frames the input with icons, units, and buttons.
+- Reads `controlId`, `disabled`, `required`, `state`, and `aria-describedby` from an enclosing [`Field`](../field/).
 
 ## Anatomy
 
+`Input` is one bare `<input>` and needs no parts. `Input.Group` is a part for adornments. Inside it the input goes borderless and the group wears the frame. Children go in any order.
+
 ```svelte
-<Input>
-  <Input.StateIcon />
-</Input>
+<Input />
+
+<Input.Group>
+  <Icon />
+  <Input />
+  <span>unit</span>
+  <Field.StateIcon />
+  <button>trailing action</button>
+</Input.Group>
 ```
 
 ## Usage
@@ -44,7 +55,7 @@ import validatedSource from "./input/Validated.svelte?raw";
 
 ### Validation on blur
 
-The input is native, so `onblur` and the other handlers work alongside the binding. Set `state` on the field and the input frame, the hint, and the `StateIcon` all follow it.
+The input is native, so `onblur` and the other handlers work alongside the binding. Set `state` on the field and the input, the hint, and the `Field.StateIcon` all follow it.
 
 <Example code={validatedSource} title="Validated.svelte">
   <Validated client:visible />
@@ -52,13 +63,32 @@ The input is native, so `onblur` and the other handlers work alongside the bindi
 
 For the controlled mode, where your setter can decline a keystroke, see [State & binding](../state/).
 
+### With adornments
+
+A leading `Icon`, the input, and a unit suffix inside an `Input.Group`. You set the width, here with `class="w-64"` on the group. Pressing the group's padding or the icon focuses the input.
+
+<Example code={adornedSource} title="Adorned.svelte">
+  <Adorned client:visible />
+</Example>
+
 ### States
+
+Put a `Field.StateIcon` after the input inside an `Input.Group` to show the icon within the border. Standalone it takes its own `state`, and inside a `Field` it follows the field.
 
 <InputShowcase client:visible />
 
 ## Styling
 
-`class` lands on the bordered frame, which is the visible control. The frame carries the state border and the disabled and read-only backgrounds. `Input.StateIcon` takes `class` on its `<svg>`, merged with the state color. The input sets `aria-invalid` in the error state, so `aria-invalid:` variants work on the inner element.
+`class` lands on the `<input>`. The input has no wrapper and no layout utilities, including no width, so set one yourself or let a flex or grid parent stretch it.
+
+`Input.Group` takes its border, its disabled and read-only backgrounds, and its state colors from the input inside it, through CSS `has-` variants. It takes `class` on its `<div>` and has no layout utilities either, so give it a width.
+
+| Hook                | Where                                          |
+| ------------------- | ---------------------------------------------- |
+| `data-state`        | On the input for `info`, `warn`, and `error`   |
+| `aria-invalid`      | On the input in the `error` state              |
+
+`Field.StateIcon` takes `class` on its `<svg>`, merged with the state color.
 
 ## Keyboard
 

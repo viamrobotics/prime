@@ -18,7 +18,7 @@ import standaloneSource from "./hint/Standalone.svelte?raw";
 
 - A `<p>` of helper text that a screen reader announces with the control.
 - Inside a [`Field`](../field/) it joins the control's `aria-describedby` on its own. Several hints stack.
-- Follows the field's `disabled` and `state`, turning red for `error`.
+- Follows the field's `disabled` and `state`, coloring the text for `error`, `warn`, and `info`. `disabled` wins over all three.
 
 ## Usage
 

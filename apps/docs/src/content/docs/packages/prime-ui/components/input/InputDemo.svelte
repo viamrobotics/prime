@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { Input } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+
+  import GroupedInput from "./GroupedInput.svelte";
 </script>
 
 <Sandbox
   name="Input"
-  component={Input}
+  component={GroupedInput}
   controls={{
     placeholder: { kind: "text", label: "Placeholder", default: "you@viam.com" },
     state: {
@@ -17,6 +18,4 @@
     disabled: { kind: "boolean", label: "Disabled", default: false },
     readonly: { kind: "boolean", label: "Read-only", default: false },
   }}
->
-  <Input.StateIcon />
-</Sandbox>
+/>

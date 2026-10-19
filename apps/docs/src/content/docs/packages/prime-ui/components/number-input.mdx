@@ -1,11 +1,10 @@
 ---
 title: NumberInput
-description: A native numeric input built on Input.
+description: A native numeric input that works inside Input.Group.
 ---
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
-import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
 import NumberInputDemo from "./number-input/NumberInputDemo.svelte";
@@ -17,8 +16,8 @@ import twoWaySource from "./number-input/TwoWay.svelte?raw";
 
 <NumberInputDemo client:visible />
 
-- [`Input`](../input/) with `type="number"`, so it shares the frame, the states, and the `StateIcon`.
-- `value` is a `number`, or `undefined` while the field is empty. No string parsing on your side.
+- Its own native `<input type="number">`. It takes the same `state` as [`Input`](../input/) and works inside an [`Input.Group`](../input/#anatomy) with a [`Field.StateIcon`](../field/).
+- `value` is `number | undefined`. No string parsing on your side.
 - `min`, `max`, and `step` are the native attributes. The browser owns stepping, spin buttons, and the wheel.
 
 ## Usage
@@ -29,7 +28,7 @@ import twoWaySource from "./number-input/TwoWay.svelte?raw";
   <TwoWay client:visible />
 </Example>
 
-For the controlled mode, where your setter can clamp or decline a value, see [State & binding](../state/).
+For the controlled mode, see [State & binding](../state/).
 
 ### States
 
@@ -37,7 +36,7 @@ For the controlled mode, where your setter can clamp or decline a value, see [St
 
 ## Styling
 
-Same as [`Input`](../input/#styling): `class` lands on the frame, and `NumberInput.StateIcon` takes `class` on its `<svg>`.
+Same as [`Input`](../input/#styling): `class` lands on the `<input>`, and it carries no width. Inside an `Input.Group` the input goes borderless and the group carries the border. The input carries `data-state` and `aria-invalid` from `state`.
 
 ## Keyboard
 
@@ -46,5 +45,3 @@ Native number input behavior: <kbd>ArrowUp</kbd> and <kbd>ArrowDown</kbd> step b
 ## API
 
 <PropsTable name="number-input" />
-
-<PartsDoc name="number-input" />

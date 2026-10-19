@@ -1,0 +1,15 @@
+/*
+ * Tailwind v4 entry for consumers of @viamrobotics/prime-ui.
+ *
+ * Tailwind's automatic content detection skips node_modules, so without this file none of the
+ * components' utility classes would be generated. This file pulls in the Viam design tokens and
+ * points Tailwind at the compiled components, so one import after Tailwind is enough:
+ *
+ *   @import "tailwindcss";
+ *   @import "@viamrobotics/prime-ui/styles.css";
+ *
+ * The @source path is relative to this file, which resolves to the package's compiled components
+ * once installed.
+ */
+@import '@viamrobotics/tailwind-config';
+@source './dist';
