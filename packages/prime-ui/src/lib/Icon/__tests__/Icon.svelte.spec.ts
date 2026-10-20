@@ -1,4 +1,5 @@
 import Rocket from '@lucide/svelte/icons/rocket';
+import { mdiAlert } from '@mdi/js';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
@@ -6,7 +7,7 @@ import * as glyphs from '../../icons/index.ts';
 import { ViamService } from '../../icons/index.ts';
 import Icon from '../Icon.svelte';
 
-const ALERT_PATH = 'M13 14H11V10H13M13 18H11V16H13M1 21H23L12 2L1 21Z';
+const ALERT_PATH = mdiAlert;
 
 describe('Icon', () => {
 	it('renders a path string as a single path with that d', () => {

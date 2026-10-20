@@ -81,6 +81,8 @@ Nothing in this example names an id, yet the label, the input, and the hint are 
 | `Select` / `Select.Trigger` | `disabled` and `required` on the root, and `controlId`, `state`, and `aria-describedby` on the trigger       |
 | `Field.StateIcon`           | `state`, and renders nothing for `none`                                                           |
 
+A `Hint` in an `error` field is described by the control, not announced. To have a screen reader read an error the moment it appears, pass `role="alert"` to that `Hint`. It goes straight to the `<p>`.
+
 ## Without a field
 
 Every part still works on its own. Wire it by hand with `for`, `id`, and `aria-describedby`:

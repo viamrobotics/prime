@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
+import { colorOf, textColor } from '../../__tests__/computed-style.ts';
 import BoundRadioGroup from './BoundRadioGroup.svelte';
 import ControlledRadioGroup from './ControlledRadioGroup.svelte';
 import DisabledRadioGroup from './DisabledRadioGroup.svelte';
@@ -88,10 +89,10 @@ describe('RadioGroup', () => {
 		expect(container.querySelector('[role="radiogroup"]')?.getAttribute('aria-invalid')).toBe(
 			'true'
 		);
-		const icons = container.querySelectorAll('[role="radio"] svg');
-		expect(icons.length).toBe(2);
-		for (const icon of icons) {
-			expect(icon.classList.contains('group-aria-invalid:text-danger-dark')).toBe(true);
-		}
+		const colors = [...container.querySelectorAll('[role="radio"] svg')].map(textColor);
+		expect(colors).toEqual([
+			colorOf('text-danger-dark', 'color'),
+			colorOf('text-danger-dark', 'color')
+		]);
 	});
 });

@@ -1,7 +1,7 @@
 <!--
 @component
 A select. Render `Select.Trigger`, `Select.Portal`, `Select.Content`, `Select.Viewport`, and `Select.Items` inside it. Inside a
-[`Field`](../Field/Field.svelte) it takes `disabled` and `required` from there,.
+[`Field`](../Field/Field.svelte) it takes `disabled` and `required` from there.
 
 Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 
@@ -72,8 +72,9 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 	}: Props = $props();
 
 	const field = useField();
+	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
 
-	provideSelect(() => items);
+	provideSelect({ items: () => items, disabled: () => isDisabled });
 </script>
 
 <Select.Root
@@ -81,7 +82,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 	{items}
 	{name}
 	{allowDeselect}
-	disabled={disabled ?? field?.disabled ?? false}
+	disabled={isDisabled}
 	required={required ?? field?.required ?? false}
 	type="single"
 >

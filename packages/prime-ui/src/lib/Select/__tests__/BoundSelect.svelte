@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Select } from '../select.ts';
 
+	const { disabled }: { disabled?: boolean } = $props();
+
 	const items = [
 		{ value: 'sm', label: 'Small' },
 		{ value: 'md', label: 'Medium' },
@@ -10,7 +12,7 @@
 	let value = $state('sm');
 </script>
 
-<Select {items} bind:value>
+<Select {items} {disabled} bind:value>
 	<Select.Trigger>
 		<Select.Value placeholder="Pick a size" />
 	</Select.Trigger>

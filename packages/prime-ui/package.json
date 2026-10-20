@@ -31,7 +31,8 @@
 		"dist",
 		"styles.css",
 		"!dist/**/*.test.*",
-		"!dist/**/*.spec.*"
+		"!dist/**/*.spec.*",
+		"!dist/**/__tests__/**"
 	],
 	"sideEffects": [
 		"**/*.css"

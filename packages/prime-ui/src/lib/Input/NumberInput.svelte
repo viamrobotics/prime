@@ -29,8 +29,11 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 		/** The maximum allowed value. */
 		max?: number;
 
-		/** Step for keyboard or spin-button increments. */
-		step?: number;
+		/**
+		 * Step for keyboard or spin-button increments, and the granularity constraint validation
+		 * enforces. `'any'` accepts every decimal, which no number can express. @default 1
+		 */
+		step?: number | 'any';
 
 		/** Contextual state. Defaults to the enclosing field's `state`. */
 		state?: FieldState;
@@ -62,7 +65,7 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 <input
 	{...restProps}
 	type="number"
-	bind:value
+	bind:value={() => value ?? null, (next) => (value = next ?? undefined)}
 	id={control.id}
 	disabled={control.disabled}
 	required={control.required}

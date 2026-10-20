@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
+import { borderColor, colorOf as colorOfUtility } from '../../__tests__/computed-style.ts';
 import GroupedInput from './GroupedInput.svelte';
-import './tailwind.css';
 
 const pointerDown = (element: Element) => {
 	const event = new PointerEvent('pointerdown', { bubbles: true, cancelable: true });
@@ -13,16 +13,7 @@ const pointerDown = (element: Element) => {
 	return event;
 };
 
-const borderColor = (element: Element) => getComputedStyle(element).borderTopColor;
-
-const colorOf = (utility: string) => {
-	const probe = document.createElement('div');
-	probe.className = `border ${utility}`;
-	document.body.append(probe);
-	const color = borderColor(probe);
-	probe.remove();
-	return color;
-};
+const colorOf = (utility: string) => colorOfUtility(utility, 'borderTopColor');
 
 const setup = (props: ComponentProps<typeof GroupedInput> = {}) => {
 	const { container } = render(GroupedInput, { props });

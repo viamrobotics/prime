@@ -3,9 +3,9 @@
   import { Icon, Select } from "@viamrobotics/prime-ui";
 
   const machines = [
-    { value: "rover-1", label: "rover-1", status: "online" },
-    { value: "rover-2", label: "rover-2", status: "offline" },
-    { value: "arm-1", label: "arm-1", status: "online" },
+    { value: "rover-1", label: "Rover 1" },
+    { value: "rover-2", label: "Rover 2", disabled: true },
+    { value: "arm-1", label: "Arm 1" },
   ];
 
   let machine = $state("rover-1");
@@ -24,17 +24,8 @@
         <Select.Viewport>
           <Select.Items>
             {#snippet children({ item, selected })}
-              {@const status = machines.find((m) => m.value === item.value)?.status}
-              <span class="flex items-center gap-2">
-                <span
-                  class={[
-                    "size-2 rounded-full",
-                    status === "online" ? "bg-success-dark" : "bg-danger-dark",
-                  ]}
-                ></span>
-                <span class={{ "font-medium": selected }}>{item.label}</span>
-              </span>
-              <span class="text-xs text-subtle-2">{status}</span>
+              <span class={{ "font-medium": selected }}>{item.label}</span>
+              <code class="text-xs text-subtle-2">{item.value}</code>
             {/snippet}
           </Select.Items>
         </Select.Viewport>

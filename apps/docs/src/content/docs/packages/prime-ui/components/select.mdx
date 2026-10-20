@@ -106,7 +106,7 @@ Three ways turn `items` into rows. All three keep `items` on the root, which the
 
 ### One snippet for every option
 
-Pass `children` to `Select.Items`. The trigger's chevron is an `indicator` snippet on `Select.Trigger` in the same way.
+Pass `children` to `Select.Items`. The snippet sees `item` as a `SelectOption`, so `value`, `label`, and `disabled`. A row that needs more data per entry is the by-hand loop below. The trigger's chevron is an `indicator` snippet on `Select.Trigger` in the same way.
 
 <Example code={customItemSource} title="CustomItem.svelte">
   <CustomItem client:visible />
@@ -139,6 +139,35 @@ The by-hand form is also how you add structure. Wrap related items in `Select.Gr
 ### States
 
 <SelectShowcase client:visible />
+
+## Migrating from a native select
+
+A prime-core `Select` was a native `<select>` with `<option>` children and an `onchange`. The same control here is `items` plus the six parts, and the value comes through `bind:value` instead of the event.
+
+```svelte
+<!-- before -->
+<Select value={method} onchange={(event) => (method = event.currentTarget.value)}>
+  {#each methods as method (method)}
+    <option>{method}</option>
+  {/each}
+</Select>
+
+<!-- after -->
+<Select items={methods.map((value) => ({ value, label: value }))} bind:value={method}>
+  <Select.Trigger class="w-full">
+    <Select.Value placeholder="Pick a method" />
+  </Select.Trigger>
+  <Select.Portal>
+    <Select.Content>
+      <Select.Viewport>
+        <Select.Items />
+      </Select.Viewport>
+    </Select.Content>
+  </Select.Portal>
+</Select>
+```
+
+`Select.Trigger` has no width of its own, so the `class` that sat on the old wrapper goes there. A `state` that sat on the old `<select>` goes on the trigger too, or on an enclosing `Field`.
 
 ## Styling
 

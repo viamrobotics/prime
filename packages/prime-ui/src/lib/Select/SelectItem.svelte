@@ -63,7 +63,7 @@ Pass a children snippet to render custom content:
 	{disabled}
 	aria-disabled={disabled || undefined}
 	class={[
-		'flex cursor-pointer items-center justify-between gap-2 rounded px-2 py-1.5 text-sm text-default outline-none select-none data-disabled:cursor-not-allowed data-disabled:text-disabled-dark data-highlighted:bg-light',
+		'flex cursor-pointer items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm text-default outline-none select-none data-disabled:cursor-not-allowed data-disabled:text-disabled-dark data-highlighted:bg-light',
 		extraClasses
 	]}
 	{...restProps}

@@ -90,6 +90,8 @@ prime ships no general icon set. It ships only the Viam glyphs, under `@viamrobo
 
 Before this release `Icon` took a curated kebab-case name such as `icon="cog"`. Names are gone, so replace each with the import below.
 
+The tables cover a name written in markup. An icon that arrives as data, such as `name={option.icon}` or a field typed `IconName`, needs a map on your side from your own keys to the imports you use, since `Icon` no longer carries one. Keep that map to the names your app renders.
+
 ### Names backed by `@mdi/js`
 
 Import the export from `@mdi/js` and pass it as `icon`.

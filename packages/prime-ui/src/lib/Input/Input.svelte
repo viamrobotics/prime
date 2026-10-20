@@ -25,15 +25,22 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 ```
 -->
 <script lang="ts">
-	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
 
 	import type { FieldState } from '../Field/state.ts';
 
 	import { useInputControl } from './useInputControl.svelte.ts';
 
-	interface Props extends Omit<HTMLInputAttributes, 'value' | 'children'> {
+	interface Props extends Omit<HTMLInputAttributes, 'value' | 'children' | 'type'> {
 		/** The text in the input. */
 		value?: string;
+
+		/**
+		 * Any native type whose value is a string. `number` and `range` bind a number, so they
+		 * belong to [`NumberInput`](./NumberInput.svelte). `checkbox`, `radio`, and `file` bind
+		 * something other than `value`. @default 'text'
+		 */
+		type?: Exclude<HTMLInputTypeAttribute, 'number' | 'range' | 'checkbox' | 'radio' | 'file'>;
 
 		/** Contextual state. Defaults to the enclosing field's `state`. */
 		state?: FieldState;

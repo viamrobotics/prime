@@ -84,6 +84,25 @@ describe('NumberInput', () => {
 		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('42');
 	});
 
+	it('two-way: clearing the field binds undefined, not NaN or an empty string', async () => {
+		const { container } = render(BoundNumberInput, { props: {} });
+		const input = container.querySelector('input')!;
+		await userEvent.click(input);
+		await userEvent.keyboard('42');
+
+		await userEvent.keyboard('{Backspace}{Backspace}');
+
+		await vi.waitFor(() => expect(input.value).toBe(''));
+		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('undefined');
+	});
+
+	it('forwards step="any" so decimals pass constraint validation', () => {
+		const { container } = render(NumberInput, { props: { step: 'any', value: 0.125 } });
+		const input = container.querySelector('input')!;
+		expect(input.getAttribute('step')).toBe('any');
+		expect(input.validity.stepMismatch).toBe(false);
+	});
+
 	it('controlled: a function-binding setter can veto typing', async () => {
 		const { container } = render(ControlledNumberInput, { props: { accept: false } });
 		const input = container.querySelector('input')!;

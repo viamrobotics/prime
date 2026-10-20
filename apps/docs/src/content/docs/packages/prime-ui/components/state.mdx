@@ -44,6 +44,11 @@ $effect(() => console.log("checked is now", checked));
 
 `NumberInput` binds `number | undefined`, and `undefined` means the field is empty. `Input`, `RadioGroup`, and `Select` bind `string`. `Checkbox` binds `checked`, a `boolean`.
 
+Two things Svelte cannot do for you:
+
+- A component cannot tell whether a prop is bound or merely passed. `<Input value={name} />` renders `name` and lets the user type past it, with nothing written back. If you want the value kept, `bind:` it. If you want it pinned, use the function binding.
+- Native `bind:value` reads the input's runtime `type`, not the TypeScript type. `Input` therefore accepts only the types whose value is a string. `number` and `range` yield a number, so they are `NumberInput`, and `checkbox`, `radio`, and `file` bind something other than `value`.
+
 ## Native event handlers
 
 `Input` and `NumberInput` render a real `<input>`, so alongside `bind:value` they accept every native handler, `oninput`, `onchange`, `onblur`, `onfocus`, and the rest, for side effects and focus handling.

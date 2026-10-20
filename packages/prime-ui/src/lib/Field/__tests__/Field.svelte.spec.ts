@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import { colorOf, textColor } from '../../__tests__/computed-style.ts';
 import { FieldStates } from '../state.ts';
 import InputField from './InputField.svelte';
 import WidgetFields from './WidgetFields.svelte';
@@ -51,8 +52,8 @@ describe('Field', () => {
 			render(InputField, { props: { disabled: true } }).container
 		);
 		expect(input.disabled).toBe(true);
-		expect(label.getAttribute('class')).toContain('cursor-not-allowed');
-		expect(hints[0]?.getAttribute('class')).toContain('text-disabled');
+		expect(getComputedStyle(label).cursor).toBe('not-allowed');
+		expect(textColor(hints[0]!)).toBe(colorOf('text-disabled', 'color'));
 	});
 
 	it('cascades required to the label and control', () => {
@@ -66,7 +67,7 @@ describe('Field', () => {
 			render(InputField, { props: { state: FieldStates.Error } }).container
 		);
 		expect(input.getAttribute('aria-invalid')).toBe('true');
-		expect(hints[0]?.getAttribute('class')).toContain('text-danger-dark');
+		expect(textColor(hints[0]!)).toBe(colorOf('text-danger-dark', 'color'));
 	});
 
 	it('lets a prop on the part override the field', () => {

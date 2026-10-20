@@ -5,4 +5,4 @@
 </script>
 
 <NumberInput bind:value />
-<span data-testid="owner">{value}</span>
+<span data-testid="owner">{String(value)}</span>

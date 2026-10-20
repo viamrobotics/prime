@@ -35,6 +35,7 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	import { FOCUS_RING } from '../focus-ring.ts';
 	import Icon from '../Icon/Icon.svelte';
 	import { frameBorder } from '../Input/frame.ts';
+	import { useSelect } from './useSelect.svelte.ts';
 
 	interface Props extends HTMLButtonAttributes {
 		/** Replaces the trailing chevron. */
@@ -54,7 +55,9 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	}: Props = $props();
 
 	const field = useField();
+	const select = useSelect();
 	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	const isDisabled = $derived(select?.disabled ?? false);
 	const openBorder = $derived(
 		currentState === FieldStates.None ? 'data-[state=open]:border-gray-9' : undefined
 	);
@@ -72,7 +75,7 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 		'flex items-center justify-between gap-2 rounded-sm border bg-white px-2 py-1.5 text-sm text-default transition-colors data-disabled:cursor-not-allowed data-disabled:bg-disabled-light data-disabled:text-disabled-dark',
 		FOCUS_RING,
 		openBorder,
-		frameBorder(currentState),
+		frameBorder(currentState, { disabled: isDisabled }),
 		extraClasses
 	]}
 	{...restProps}

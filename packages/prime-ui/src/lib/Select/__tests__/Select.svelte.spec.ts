@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
+import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
 import BoundSelect from './BoundSelect.svelte';
 import ControlledSelect from './ControlledSelect.svelte';
 import ErrorSelect from './ErrorSelect.svelte';
@@ -102,5 +103,24 @@ describe('Select', () => {
 		await vi.waitFor(() => expect(trigger.getAttribute('data-state')).toBe('open'));
 		expect(trigger.classList.contains('border-danger-dark')).toBe(true);
 		expect(trigger.classList.contains('data-[state=open]:border-gray-9')).toBe(false);
+	});
+
+	it('turns the border transparent when disabled, even on hover, like a disabled Input', async () => {
+		const { container } = render(BoundSelect, { props: { disabled: true } });
+		const trigger = container.querySelector('button')!;
+
+		await userEvent.hover(trigger);
+
+		expect(trigger.disabled).toBe(true);
+		expect(borderColor(trigger)).toBe(colorOf('border-transparent', 'borderTopColor'));
+	});
+
+	it('darkens the border on hover when enabled', async () => {
+		const { container } = render(BoundSelect);
+		const trigger = container.querySelector('button')!;
+
+		await userEvent.hover(trigger);
+
+		expect(borderColor(trigger)).toBe(colorOf('border-gray-6', 'borderTopColor'));
 	});
 });
