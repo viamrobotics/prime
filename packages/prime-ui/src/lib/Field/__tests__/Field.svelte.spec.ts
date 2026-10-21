@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import { colorOf, textColor } from '../../__tests__/computed-style.ts';
-import { FieldStates } from '../state.ts';
 import InputField from './InputField.svelte';
 import WidgetFields from './WidgetFields.svelte';
 
@@ -14,27 +13,26 @@ const parts = (container: Element) => {
 };
 
 describe('Field', () => {
-	it('points the label at the control', () => {
+	it('points the label at the control through a generated id', () => {
 		const { label, input } = parts(render(InputField).container);
-		expect(input.id).toBeTruthy();
+
+		expect(input.id).not.toBe('');
 		expect(label.getAttribute('for')).toBe(input.id);
 	});
 
-	it('puts controlId on the control', () => {
-		const { container } = render(InputField, { props: { controlId: 'email' } });
-		expect(container.querySelector('input')?.id).toBe('email');
-		expect(container.querySelector('div')?.id).toBe('');
-	});
+	it('puts controlId on the control and id on the wrapper', () => {
+		const { container } = render(InputField, {
+			props: { controlId: 'email', id: 'email-field' }
+		});
 
-	it('puts id on the wrapper', () => {
-		const { container } = render(InputField, { props: { id: 'email-field' } });
+		expect(container.querySelector('input')?.id).toBe('email');
 		expect(container.querySelector('div')?.id).toBe('email-field');
-		expect(container.querySelector('input')?.id).not.toBe('email-field');
 	});
 
 	it('describes the control by every hint', async () => {
 		const { container } = render(InputField, { props: { hintCount: 2 } });
 		const { input, hints } = parts(container);
+
 		await vi.waitFor(() => {
 			expect(input.getAttribute('aria-describedby')).toBe(hints.map((hint) => hint.id).join(' '));
 		});
@@ -42,8 +40,9 @@ describe('Field', () => {
 
 	it('leaves aria-describedby off when there are no hints', async () => {
 		const { container } = render(InputField, { props: { hintCount: 0 } });
+
 		await vi.waitFor(() => {
-			expect(container.querySelector('input')?.hasAttribute('aria-describedby')).toBe(false);
+			expect(container.querySelector('input')?.getAttribute('aria-describedby')).toBeNull();
 		});
 	});
 
@@ -51,21 +50,22 @@ describe('Field', () => {
 		const { label, input, hints } = parts(
 			render(InputField, { props: { disabled: true } }).container
 		);
-		expect(input.disabled).toBe(true);
+
+		expect(input.disabled, 'control disabled').toBe(true);
 		expect(getComputedStyle(label).cursor).toBe('not-allowed');
 		expect(textColor(hints[0]!)).toBe(colorOf('text-disabled', 'color'));
 	});
 
 	it('cascades required to the label and control', () => {
 		const { label, input } = parts(render(InputField, { props: { required: true } }).container);
-		expect(input.required).toBe(true);
+
+		expect(input.required, 'control required').toBe(true);
 		expect(label.textContent).toContain('*');
 	});
 
 	it('cascades the error state to the control and hint', () => {
-		const { input, hints } = parts(
-			render(InputField, { props: { state: FieldStates.Error } }).container
-		);
+		const { input, hints } = parts(render(InputField, { props: { state: 'error' } }).container);
+
 		expect(input.getAttribute('aria-invalid')).toBe('true');
 		expect(textColor(hints[0]!)).toBe(colorOf('text-danger-dark', 'color'));
 	});
@@ -74,6 +74,7 @@ describe('Field', () => {
 		const { label, input } = parts(
 			render(InputField, { props: { controlId: 'email', inputId: 'custom' } }).container
 		);
+
 		expect(input.id).toBe('custom');
 		expect(label.getAttribute('for')).toBe('email');
 	});
@@ -89,6 +90,7 @@ describe('Field with widgets', () => {
 			'checkbox-field'
 		);
 		const checkbox = scope.querySelector('button')!;
+
 		expect(scope.querySelector('label')?.getAttribute('for')).toBe(checkbox.id);
 		expect(checkbox.getAttribute('aria-required')).toBe('true');
 		await vi.waitFor(() => {
@@ -99,6 +101,7 @@ describe('Field with widgets', () => {
 	it('names a radio group by its label and describes it by its hint', async () => {
 		const scope = field(render(WidgetFields).container, 'radio-field');
 		const group = scope.querySelector('[role="radiogroup"]')!;
+
 		await vi.waitFor(() => {
 			expect(group.getAttribute('aria-labelledby')).toBe(scope.querySelector('label')?.id);
 			expect(group.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
@@ -110,10 +113,10 @@ describe('Field with widgets', () => {
 			render(WidgetFields, { props: { disabled: true } }).container,
 			'radio-field'
 		);
-		const items = [...scope.querySelectorAll('[role="radio"]')];
-		const enabled = items.filter((item) => !item.hasAttribute('data-disabled'));
-		expect(items.length).toBe(2);
-		expect(enabled.length).toBe(0);
+
+		expect(
+			[...scope.querySelectorAll<HTMLButtonElement>('[role="radio"]')].map((item) => item.disabled)
+		).toEqual([true, true]);
 	});
 
 	it('wires a select trigger', async () => {
@@ -122,10 +125,23 @@ describe('Field with widgets', () => {
 			'select-field'
 		);
 		const trigger = scope.querySelector('button')!;
+
 		expect(scope.querySelector('label')?.getAttribute('for')).toBe(trigger.id);
-		expect(trigger.disabled).toBe(true);
+		expect(trigger.disabled, 'trigger disabled').toBe(true);
 		await vi.waitFor(() => {
 			expect(trigger.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
 		});
+	});
+
+	it('cascades the error state to every widget as aria-invalid', () => {
+		const { container } = render(WidgetFields, { props: { state: 'error' } });
+
+		expect(
+			[
+				field(container, 'checkbox-field').querySelector('[role="checkbox"]'),
+				field(container, 'radio-field').querySelector('[role="radiogroup"]'),
+				field(container, 'select-field').querySelector('button')
+			].map((control) => control?.getAttribute('aria-invalid'))
+		).toEqual(['true', 'true', 'true']);
 	});
 });

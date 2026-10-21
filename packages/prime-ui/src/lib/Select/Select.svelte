@@ -74,7 +74,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 	const field = useField();
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
 
-	provideSelect({ items: () => items, disabled: () => isDisabled });
+	provideSelect({ items: () => items });
 </script>
 
 <Select.Root

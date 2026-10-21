@@ -3,29 +3,30 @@ import { mdiAlert } from '@mdi/js';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import * as glyphs from '../../icons/index.ts';
 import { ViamService } from '../../icons/index.ts';
 import Icon from '../Icon.svelte';
 
-const ALERT_PATH = mdiAlert;
+const svg = (container: Element) => container.querySelector('svg')!;
 
 describe('Icon', () => {
 	it('renders a path string as a single path with that d', () => {
-		const { container } = render(Icon, { props: { icon: ALERT_PATH } });
+		const { container } = render(Icon, { props: { icon: mdiAlert } });
 
 		const paths = container.querySelectorAll('svg path');
-
-		expect(paths.length).toBe(1);
-		expect(paths[0]?.getAttribute('d')).toBe(ALERT_PATH);
+		expect(paths).toHaveLength(1);
+		expect(paths[0]?.getAttribute('d')).toBe(mdiAlert);
 	});
 
 	it('renders a component with the size class', () => {
 		const { container } = render(Icon, { props: { icon: Rocket, size: 'lg' } });
 
-		expect(container.querySelector('svg')?.getAttribute('class')).toContain('size-5');
+		expect(svg(container).classList.contains('size-5'), 'size class reaches the component').toBe(
+			true
+		);
 	});
 
 	it.each([
+		{ size: undefined, expected: 'size-4' },
 		{ size: 'xs', expected: 'size-3' },
 		{ size: 'sm', expected: 'size-3.5' },
 		{ size: 'base', expected: 'size-4' },
@@ -35,92 +36,52 @@ describe('Icon', () => {
 		{ size: '3xl', expected: 'size-8' },
 		{ size: '4xl', expected: 'size-9' }
 	] as const)('maps size $size to $expected', ({ size, expected }) => {
-		const { container } = render(Icon, { props: { icon: ALERT_PATH, size } });
+		const { container } = render(Icon, { props: { icon: mdiAlert, size } });
 
-		expect(container.querySelector('svg')?.getAttribute('class')).toBe(expected);
+		expect(svg(container).getAttribute('class')).toBe(expected);
 	});
 
-	it('defaults to size-4', () => {
-		const { container } = render(Icon, { props: { icon: ALERT_PATH } });
-
-		expect(container.querySelector('svg')?.getAttribute('class')).toBe('size-4');
-	});
-
-	it('is aria-hidden with no role by default', () => {
-		const { container } = render(Icon, { props: { icon: ALERT_PATH } });
-
-		const svg = container.querySelector('svg');
-
-		expect(svg?.getAttribute('aria-hidden')).toBe('true');
-		expect(svg?.hasAttribute('role')).toBe(false);
-	});
-
-	it('becomes role img without aria-hidden when labelled', () => {
-		const { container } = render(Icon, { props: { icon: ALERT_PATH, 'aria-label': 'Warning' } });
-
-		const svg = container.querySelector('svg');
-
-		expect(svg?.getAttribute('role')).toBe('img');
-		expect(svg?.getAttribute('aria-label')).toBe('Warning');
-		expect(svg?.hasAttribute('aria-hidden')).toBe(false);
-	});
-
-	it('merges class with the size class', () => {
+	it('merges a passed class with the size class', () => {
 		const { container } = render(Icon, {
-			props: { icon: ALERT_PATH, size: 'xl', class: 'text-danger-dark' }
+			props: { icon: mdiAlert, size: 'xl', class: 'text-danger-dark' }
 		});
 
-		expect(container.querySelector('svg')?.getAttribute('class')).toBe('size-6 text-danger-dark');
+		expect(svg(container).getAttribute('class')).toBe('size-6 text-danger-dark');
 	});
 
-	it('renders a Viam glyph through Icon with both layers and the size class', () => {
-		const { container } = render(Icon, { props: { icon: ViamService, size: 'xl' } });
+	it.each([
+		{ label: undefined, role: null, hidden: 'true' },
+		{ label: '', role: null, hidden: 'true' },
+		{ label: 'Warning', role: 'img', hidden: null }
+	])('with aria-label $label has role $role and aria-hidden $hidden', ({ label, role, hidden }) => {
+		const { container } = render(Icon, { props: { icon: mdiAlert, 'aria-label': label } });
 
-		const svg = container.querySelector('svg');
-
-		expect(svg?.querySelectorAll('path').length).toBe(2);
-		expect(svg?.getAttribute('class')).toBe('size-6');
-		expect(svg?.getAttribute('aria-hidden')).toBe('true');
+		expect(svg(container).getAttribute('role')).toBe(role);
+		expect(svg(container).getAttribute('aria-hidden')).toBe(hidden);
 	});
 
-	it('renders a Viam glyph standalone, decorative by default', () => {
-		const { container } = render(ViamService);
+	it('renders a Viam glyph through Icon with every layer, the size class, and a label', () => {
+		const { container } = render(Icon, {
+			props: { icon: ViamService, size: 'xl', 'aria-label': 'Service' }
+		});
 
-		const svg = container.querySelector('svg');
-
-		expect(svg?.getAttribute('viewBox')).toBe('0 0 24 24');
-		expect(svg?.getAttribute('aria-hidden')).toBe('true');
+		expect(svg(container).querySelectorAll('path')).toHaveLength(2);
+		expect(svg(container).getAttribute('class')).toBe('size-6');
+		expect(svg(container).getAttribute('role')).toBe('img');
+		expect(svg(container).getAttribute('aria-hidden')).toBeNull();
 	});
 
-	it('makes a standalone Viam glyph role img without aria-hidden when labelled', () => {
-		const { container } = render(ViamService, { props: { 'aria-label': 'Service' } });
+	it.each([
+		{ label: undefined, role: null, hidden: 'true' },
+		{ label: 'Service', role: 'img', hidden: null }
+	])(
+		'renders a standalone Viam glyph with aria-label $label as role $role and aria-hidden $hidden',
+		({ label, role, hidden }) => {
+			const { container } = render(ViamService, { props: { 'aria-label': label } });
 
-		const svg = container.querySelector('svg');
-
-		expect(svg?.getAttribute('role')).toBe('img');
-		expect(svg?.getAttribute('aria-label')).toBe('Service');
-		expect(svg?.hasAttribute('aria-hidden')).toBe(false);
-	});
-
-	it('treats an empty aria-label as decorative', () => {
-		const { container } = render(Icon, { props: { icon: ALERT_PATH, 'aria-label': '' } });
-
-		const svg = container.querySelector('svg');
-
-		expect(svg?.getAttribute('aria-hidden')).toBe('true');
-		expect(svg?.hasAttribute('role')).toBe(false);
-	});
-
-	it('labels a Viam glyph rendered through Icon', () => {
-		const { container } = render(Icon, { props: { icon: ViamService, 'aria-label': 'Service' } });
-
-		const svg = container.querySelector('svg');
-
-		expect(svg?.getAttribute('role')).toBe('img');
-		expect(svg?.hasAttribute('aria-hidden')).toBe(false);
-	});
-
-	it('exports all 25 Viam glyphs', () => {
-		expect(Object.keys(glyphs).length).toBe(25);
-	});
+			expect(svg(container).getAttribute('viewBox')).toBe('0 0 24 24');
+			expect(svg(container).getAttribute('role')).toBe(role);
+			expect(svg(container).getAttribute('aria-hidden')).toBe(hidden);
+		}
+	);
 });

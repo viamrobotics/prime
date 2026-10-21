@@ -2,7 +2,7 @@
 @component
 The button that opens a [`Select`](./Select.svelte). Inside a
 [`Field`](../Field/Field.svelte) it takes its `id` (the field's `controlId`), `state`, and `aria-describedby` from there.
-An `error` state sets `aria-invalid` and the error border. Pair it with a `Hint` or a
+An `error` state sets `aria-invalid` and the error border, and `warn` the warning border, the same `control-frame` an [`Input`](../Input/Input.svelte) wears. Pair it with a `Hint` or a
 `Field.StateIcon` that says what is wrong, since the border color alone is not a signal
 everyone can see.
 
@@ -32,10 +32,7 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 
 	import { FieldStates, type FieldState } from '../Field/state.ts';
 	import { useField } from '../Field/useField.svelte.ts';
-	import { FOCUS_RING } from '../focus-ring.ts';
 	import Icon from '../Icon/Icon.svelte';
-	import { frameBorder } from '../Input/frame.ts';
-	import { useSelect } from './useSelect.svelte.ts';
 
 	interface Props extends HTMLButtonAttributes {
 		/** Replaces the trailing chevron. */
@@ -55,12 +52,7 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	}: Props = $props();
 
 	const field = useField();
-	const select = useSelect();
 	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
-	const isDisabled = $derived(select?.disabled ?? false);
-	const openBorder = $derived(
-		currentState === FieldStates.None ? 'data-[state=open]:border-gray-9' : undefined
-	);
 </script>
 
 {#snippet chevron()}
@@ -71,11 +63,9 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	id={id ?? field?.controlId}
 	aria-describedby={describedBy ?? field?.describedBy}
 	aria-invalid={currentState === FieldStates.Error || undefined}
+	data-field-state={currentState === FieldStates.None ? undefined : currentState}
 	class={[
-		'flex items-center justify-between gap-2 rounded-sm border bg-white px-2 py-1.5 text-sm text-default transition-colors data-disabled:cursor-not-allowed data-disabled:bg-disabled-light data-disabled:text-disabled-dark',
-		FOCUS_RING,
-		openBorder,
-		frameBorder(currentState, { disabled: isDisabled }),
+		'flex control-frame items-center justify-between gap-2 focus-ring data-[state=open]:border-gray-9',
 		extraClasses
 	]}
 	{...restProps}

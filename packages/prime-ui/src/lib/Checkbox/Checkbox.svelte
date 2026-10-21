@@ -24,7 +24,6 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 
 	import { fieldState, FieldStates, type FieldState } from '../Field/state.ts';
 	import { useField } from '../Field/useField.svelte.ts';
-	import { FOCUS_RING } from '../focus-ring.ts';
 	import Icon from '../Icon/Icon.svelte';
 
 	interface Props extends Omit<HTMLButtonAttributes, 'children' | 'value'> {
@@ -78,8 +77,7 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 	bind:indeterminate={() => indeterminate ?? false, (next) => (indeterminate = next)}
 	id={id ?? field?.controlId ?? uid}
 	class={[
-		'rounded-sm',
-		FOCUS_RING,
+		'rounded-sm focus-ring',
 		isDisabled ? 'cursor-not-allowed' : 'cursor-pointer',
 		extraClasses
 	]}

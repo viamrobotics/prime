@@ -53,7 +53,7 @@ import {
      lang="css"
    />
 
-   Tailwind v4 skips `node_modules` when it detects which classes to generate, so the package ships a stylesheet that points Tailwind at its compiled components. It also imports the tokens from `@viamrobotics/tailwind-config`. If you prefer to manage this yourself, import `@viamrobotics/tailwind-config` and add your own `@source` pointing at `node_modules/@viamrobotics/prime-ui/dist`.
+   Tailwind v4 skips `node_modules` when it detects which classes to generate, so the package ships a stylesheet that points Tailwind at its compiled components. It also imports the tokens from `@viamrobotics/tailwind-config` and defines the `focus-ring` utilities described below. Import it even if you also add your own `@source`: an `@source` alone generates the components' classes but not the utilities they rely on, so every control would lose its focus ring.
 
 </Steps>
 
@@ -66,11 +66,26 @@ import {
   let value = $state('');
 </script>
 
-<Field>
+<Field class="flex flex-col gap-1">
   <Label>Email</Label>
-  <Input bind:value />
+  <Input type="email" bind:value />
 </Field>
 ```
+
+## Focus ring
+
+Every prime control shows the same focus indicator: a 2px `power-button-dark` outline, offset 2px, on `:focus-visible`. It is an outline rather than a `ring` box-shadow so it survives Windows forced-colors mode and never collides with a real shadow. The stylesheet defines it as two Tailwind utilities you can reuse on your own controls so they match:
+
+| Utility             | Use it on                                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| `focus-ring`        | The focusable element itself. Also sets `outline: none` so the browser's default ring does not double. |
+| `focus-ring-within` | A frame whose focus lives on a child, the way `Input.Group` wraps an `Input`.                          |
+
+```svelte
+<button class="focus-ring rounded-sm px-2 py-1">Save</button>
+```
+
+Buttons show the ring for keyboard focus only. Text inputs match `:focus-visible` on any focus, so they ring on click too, as native inputs do.
 
 ## Icons
 

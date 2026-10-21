@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { mdiCheckCircle, mdiCircleMedium } from "@mdi/js";
   import { Icon, RadioGroup } from "@viamrobotics/prime-ui";
 
   let value = $state("grid");
@@ -9,7 +10,7 @@
     <RadioGroup.Item value={layout} class="capitalize">
       {#snippet indicator({ checked })}
         <Icon
-          icon={checked ? "check-circle" : "circle-md"}
+          icon={checked ? mdiCheckCircle : mdiCircleMedium}
           size="lg"
           class={checked ? "text-info-dark" : "text-subtle-2"}
         />

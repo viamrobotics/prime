@@ -55,10 +55,8 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 		id: () => id,
 		disabled: () => disabled,
 		required: () => required,
-		readonly: () => readonly,
 		state: () => state,
-		describedBy: () => describedBy,
-		extraClasses: () => extraClasses
+		describedBy: () => describedBy
 	});
 </script>
 
@@ -72,6 +70,6 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 	{readonly}
 	aria-describedby={control.describedBy}
 	aria-invalid={control.invalid}
-	data-state={control.dataState}
-	class={control.classes}
+	data-field-state={control.fieldState}
+	class={['control-frame focus-ring', extraClasses]}
 />

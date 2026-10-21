@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { mdiCheckCircle, mdiCircleMedium } from "@mdi/js";
   import { Checkbox, Field, Icon, Label } from "@viamrobotics/prime-ui";
 
   let checked = $state(true);
@@ -8,7 +9,7 @@
   <Checkbox bind:checked>
     {#snippet children({ checked })}
       <Icon
-        icon={checked ? "check-circle" : "circle-md"}
+        icon={checked ? mdiCheckCircle : mdiCircleMedium}
         size="xl"
         class={checked ? "text-info-dark" : "text-subtle-2"}
       />

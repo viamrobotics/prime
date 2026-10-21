@@ -12,8 +12,7 @@ pairing it with a `Hint` or a `Field.StateIcon`.
 </Field>
 ```
 
-To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.svelte). See
-[`Input.Group`](./InputGroup.svelte).
+To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.svelte).
 
 ```svelte
 <Field state="error">
@@ -25,7 +24,7 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 ```
 -->
 <script lang="ts">
-	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
+	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	import type { FieldState } from '../Field/state.ts';
 
@@ -36,11 +35,25 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 		value?: string;
 
 		/**
-		 * Any native type whose value is a string. `number` and `range` bind a number, so they
+		 * A native type whose value is a string. Listed out, because Svelte's
+		 * `HTMLInputTypeAttribute` admits any string. `number` and `range` bind a number, so they
 		 * belong to [`NumberInput`](./NumberInput.svelte). `checkbox`, `radio`, and `file` bind
 		 * something other than `value`. @default 'text'
 		 */
-		type?: Exclude<HTMLInputTypeAttribute, 'number' | 'range' | 'checkbox' | 'radio' | 'file'>;
+		type?:
+			| 'text'
+			| 'email'
+			| 'password'
+			| 'search'
+			| 'tel'
+			| 'url'
+			| 'date'
+			| 'datetime-local'
+			| 'month'
+			| 'time'
+			| 'week'
+			| 'color'
+			| 'hidden';
 
 		/** Contextual state. Defaults to the enclosing field's `state`. */
 		state?: FieldState;
@@ -62,10 +75,8 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 		id: () => id,
 		disabled: () => disabled,
 		required: () => required,
-		readonly: () => readonly,
 		state: () => state,
-		describedBy: () => describedBy,
-		extraClasses: () => extraClasses
+		describedBy: () => describedBy
 	});
 </script>
 
@@ -73,11 +84,11 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 	{...restProps}
 	bind:value
 	id={control.id}
-	class={control.classes}
+	class={['control-frame focus-ring', extraClasses]}
 	disabled={control.disabled}
 	required={control.required}
 	{readonly}
 	aria-describedby={control.describedBy}
 	aria-invalid={control.invalid}
-	data-state={control.dataState}
+	data-field-state={control.fieldState}
 />

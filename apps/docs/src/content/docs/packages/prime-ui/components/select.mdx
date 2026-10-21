@@ -30,7 +30,7 @@ import manualItemsSource from "./select/ManualItems.svelte?raw";
 - Composed from parts, so the trigger, the panel, and each item are yours to arrange.
 - One `value`, bindable. `items` is the single source of truth for the options: it gives the closed trigger its label, drives typeahead while the list is closed, and `Select.Items` renders it.
 - Keyboard navigation, typeahead, and the WAI-ARIA listbox pattern, via bits-ui.
-- `Select.Trigger` takes `state` from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` and a red border. `warn` sets a warning border. Both match [`Input`](../input/).
+- `Select.Trigger` takes `state` from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` and a red border. `warn` sets a warning border. Both come from the same `control-frame` utility as [`Input`](../input/).
 - The panel floats in a portal, positioned to the trigger, and scrolls when the list is long.
 
 ## Anatomy
@@ -179,6 +179,7 @@ Every part that renders an element takes `class` on that element. `Select.Trigge
 | `Trigger` | `data-disabled`    | present when disabled             |
 | `Trigger` | `data-placeholder` | present while nothing is selected |
 | `Trigger` | `aria-invalid`     | `true` when `state` is `error`    |
+| `Trigger` | `data-field-state` | `info`, `warn`, or `error`, set by prime |
 | `Value`   | `data-placeholder` | present while nothing is selected |
 | `Content` | `data-state`       | `open` or `closed`                |
 | `Content` | `data-side`        | the resolved side of the trigger  |

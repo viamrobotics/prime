@@ -1,5 +1,3 @@
-import type { ValueOf } from 'type-fest';
-
 import { mdiAlert, mdiAlertCircle, mdiInformation } from '@mdi/js';
 
 export const FieldStates = {
@@ -10,7 +8,7 @@ export const FieldStates = {
 } as const;
 
 /** Contextual state a `Field` shares with its control, hints, and state icon. */
-export type FieldState = ValueOf<typeof FieldStates>;
+export type FieldState = (typeof FieldStates)[keyof typeof FieldStates];
 
 /**
  * Type guards for a `FieldState`. Each narrows the value it is given to that one state, so a

@@ -28,7 +28,6 @@ Pass an `indicator` snippet to replace the radio icon:
 	import { mdiRadioboxBlank, mdiRadioboxMarked } from '@mdi/js';
 	import { RadioGroup } from 'bits-ui';
 
-	import { FOCUS_RING } from '../focus-ring.ts';
 	import Icon from '../Icon/Icon.svelte';
 
 	interface Props extends Omit<HTMLButtonAttributes, 'value'> {
@@ -68,8 +67,7 @@ Pass an `indicator` snippet to replace the radio icon:
 	{...restProps}
 	id={id ?? uid}
 	class={[
-		'group inline-flex items-center gap-2 text-sm',
-		FOCUS_RING,
+		'group inline-flex items-center gap-2 text-sm focus-ring',
 		'cursor-pointer text-default data-disabled:cursor-not-allowed data-disabled:text-disabled-dark',
 		extraClasses
 	]}

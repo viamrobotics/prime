@@ -6,93 +6,118 @@ import { userEvent } from 'vitest/browser';
 import { colorOf, textColor } from '../../__tests__/computed-style.ts';
 import BoundRadioGroup from './BoundRadioGroup.svelte';
 import ControlledRadioGroup from './ControlledRadioGroup.svelte';
-import DisabledRadioGroup from './DisabledRadioGroup.svelte';
-import ErrorRadioGroup from './ErrorRadioGroup.svelte';
 import IndicatorRadioGroup from './IndicatorRadioGroup.svelte';
 import UndefinedRadioGroup from './UndefinedRadioGroup.svelte';
 
+const group = (container: Element) => container.querySelector<HTMLElement>('[role="radiogroup"]')!;
+const radios = (container: Element) => [
+	...container.querySelectorAll<HTMLButtonElement>('[role="radio"]')
+];
 const radio = (container: Element, label: string) =>
-	[...container.querySelectorAll('[role="radio"]')].find((r) => r.textContent?.includes(label))!;
+	radios(container).find((item) => item.textContent?.includes(label))!;
+const iconPaths = (container: Element) =>
+	[...container.querySelectorAll('svg path')].map((path) => path.getAttribute('d'));
+const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
 describe('RadioGroup', () => {
-	it('renders a radiogroup with the selected value marked', () => {
-		const { container } = render(BoundRadioGroup, { props: {} });
-		expect(container.querySelector('[role="radiogroup"]')).toBeTruthy();
-		expect(container.querySelectorAll('[role="radio"]').length).toBe(3);
-		expect(
-			[...container.querySelectorAll('svg path')].filter(
-				(path) => path.getAttribute('d') === mdiRadioboxMarked
-			).length
-		).toBe(1);
-		expect(
-			[...container.querySelectorAll('svg path')].filter(
-				(path) => path.getAttribute('d') === mdiRadioboxBlank
-			).length
-		).toBe(2);
+	it('renders one radio per item with only the bound value marked', () => {
+		const { container } = render(BoundRadioGroup);
+
+		expect(radios(container).map((item) => item.getAttribute('aria-checked'))).toEqual([
+			'true',
+			'false',
+			'false'
+		]);
+		expect(iconPaths(container)).toEqual([mdiRadioboxMarked, mdiRadioboxBlank, mdiRadioboxBlank]);
 	});
 
-	it('gives each item the shared focus ring', () => {
-		const { container } = render(BoundRadioGroup, { props: {} });
-		expect(radio(container, 'Small').classList.contains('focus-visible:outline-2')).toBe(true);
+	it('wears the shared focus ring on each item', () => {
+		const { container } = render(BoundRadioGroup);
+
+		expect(radio(container, 'Small').classList.contains('focus-ring'), 'focus-ring utility').toBe(
+			true
+		);
 	});
 
 	it('renders a passed indicator with the checked state instead of the radio icon', () => {
-		const { container } = render(IndicatorRadioGroup, { props: {} });
+		const { container } = render(IndicatorRadioGroup);
 
 		expect(container.querySelector('[data-testid="indicator"]')?.textContent).toBe('on');
-		expect(
-			[...container.querySelectorAll('svg path')].filter(
-				(path) => path.getAttribute('d') === mdiRadioboxMarked
-			).length
-		).toBe(0);
-		expect(
-			[...container.querySelectorAll('svg path')].filter(
-				(path) => path.getAttribute('d') === mdiRadioboxBlank
-			).length
-		).toBe(1);
+		expect(iconPaths(container)).toEqual([mdiRadioboxBlank]);
 	});
 
-	it('two-way: bind:value keeps the owner in sync', async () => {
-		const { container, getByText } = render(BoundRadioGroup, { props: {} });
-		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('sm');
-		await userEvent.click(getByText('Large'));
-		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('lg');
+	it.each([
+		{ orientation: undefined, direction: 'column', attribute: 'vertical' },
+		{ orientation: 'horizontal', direction: 'row', attribute: 'horizontal' }
+	] as const)(
+		'lays items out in a $direction for orientation $orientation',
+		({ orientation, direction, attribute }) => {
+			const { container } = render(BoundRadioGroup, { props: { orientation } });
+
+			expect(group(container).dataset.orientation).toBe(attribute);
+			expect(getComputedStyle(group(container)).flexDirection).toBe(direction);
+		}
+	);
+
+	it('marks every item disabled when the group is disabled', () => {
+		const { container } = render(BoundRadioGroup, { props: { disabled: true } });
+
+		expect(radios(container).map((item) => item.disabled)).toEqual([true, true, true]);
+		expect(radios(container).map((item) => item.dataset.disabled)).toEqual(['', '', '']);
+	});
+
+	it('is invalid and colors every icon danger in the error state', () => {
+		const { container } = render(BoundRadioGroup, { props: { state: 'error' } });
+
+		expect(group(container).getAttribute('aria-invalid')).toBe('true');
+		const danger = colorOf('text-danger-dark', 'color');
+		expect([...container.querySelectorAll('[role="radio"] svg')].map(textColor)).toEqual([
+			danger,
+			danger,
+			danger
+		]);
+	});
+
+	it('renders a hidden form input carrying the value when given a name', () => {
+		const { container } = render(BoundRadioGroup, { props: { name: 'size' } });
+
+		expect(container.querySelector<HTMLInputElement>('input[name="size"]')?.value).toBe('sm');
+	});
+
+	it('two-way: clicking an item writes its value to the owner', async () => {
+		const { container } = render(BoundRadioGroup);
+
+		await userEvent.click(radio(container, 'Large'));
+
+		expect(owner(container)).toBe('lg');
+	});
+
+	it('two-way: ArrowDown moves focus to the next item and selects it', async () => {
+		const { container } = render(BoundRadioGroup);
+		await userEvent.click(radio(container, 'Small'));
+
+		await userEvent.keyboard('{ArrowDown}');
+
+		expect(document.activeElement).toBe(radio(container, 'Medium'));
+		expect(owner(container)).toBe('md');
+	});
+
+	it('two-way: renders nothing checked from undefined state and writes the clicked value', async () => {
+		const { container } = render(UndefinedRadioGroup);
+		expect(container.querySelector('[aria-checked="true"]')).toBeNull();
+		expect(owner(container)).toBe('undefined');
+
+		await userEvent.click(radio(container, 'Medium'));
+
+		expect(owner(container)).toBe('md');
 	});
 
 	it('controlled: a function-binding setter can veto the selection', async () => {
-		const { container, getByText } = render(ControlledRadioGroup, { props: { accept: false } });
-		await userEvent.click(getByText('Large'));
-		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('sm');
+		const { container } = render(ControlledRadioGroup, { props: { accept: false } });
+
+		await userEvent.click(radio(container, 'Large'));
+
+		expect(owner(container)).toBe('sm');
 		expect(radio(container, 'Large').getAttribute('aria-checked')).toBe('false');
-	});
-
-	it('renders an undefined initial binding with nothing checked and writes the clicked value', async () => {
-		const { container, getByText } = render(UndefinedRadioGroup, { props: {} });
-		expect(container.querySelector('[aria-checked="true"]')).toBeNull();
-		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('undefined');
-		await userEvent.click(getByText('Medium'));
-		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('md');
-	});
-
-	it('marks every item disabled when the group is disabled', () => {
-		const { container } = render(DisabledRadioGroup, { props: {} });
-		const items = [...container.querySelectorAll('[role="radio"]')];
-		const enabled = items.filter(
-			(item) => !item.hasAttribute('data-disabled') || !item.hasAttribute('disabled')
-		);
-		expect(items.length).toBe(2);
-		expect(enabled.length).toBe(0);
-	});
-
-	it('is invalid and colors each item icon as an error inside an error field', () => {
-		const { container } = render(ErrorRadioGroup);
-		expect(container.querySelector('[role="radiogroup"]')?.getAttribute('aria-invalid')).toBe(
-			'true'
-		);
-		const colors = [...container.querySelectorAll('[role="radio"] svg')].map(textColor);
-		expect(colors).toEqual([
-			colorOf('text-danger-dark', 'color'),
-			colorOf('text-danger-dark', 'color')
-		]);
 	});
 });

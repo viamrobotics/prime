@@ -1,30 +1,43 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
 import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
 import BoundSelect from './BoundSelect.svelte';
 import ControlledSelect from './ControlledSelect.svelte';
-import ErrorSelect from './ErrorSelect.svelte';
 import IndicatorSelect from './IndicatorSelect.svelte';
 import UndefinedSelect from './UndefinedSelect.svelte';
 
-const openAndPick = async (trigger: HTMLElement, label: string) => {
-	await userEvent.click(trigger);
+const trigger = (container: Element) => container.querySelector('button')!;
+const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
+const listbox = () => document.querySelector('[role="listbox"]');
+const borderOf = (utility: string) => colorOf(utility, 'borderTopColor');
+
+const optionLabeled = async (label: string) => {
 	let option: Element | undefined;
 	await vi.waitFor(() => {
-		option = [...document.querySelectorAll('[role="option"]')].find((o) =>
-			o.textContent?.includes(label)
+		option = [...document.querySelectorAll('[role="option"]')].find((candidate) =>
+			candidate.textContent?.includes(label)
 		);
-		expect(option).toBeTruthy();
+		expect(option, `an option labeled ${label} is listed`).toBeTruthy();
 	});
-	await userEvent.click(option!);
+	return option!;
 };
 
+const openAndPick = async (container: Element, label: string) => {
+	await userEvent.click(trigger(container));
+	await userEvent.click(await optionLabeled(label));
+};
+
+afterEach(async () => {
+	if (listbox()) await userEvent.keyboard('{Escape}');
+});
+
 describe('Select', () => {
-	it('renders a trigger showing the current selection', () => {
+	it('shows the bound value on the closed trigger', () => {
 		const { container } = render(BoundSelect);
-		expect(container.querySelector('button')?.textContent).toContain('Small');
+
+		expect(trigger(container).textContent).toContain('Small');
 	});
 
 	it('renders a passed trigger indicator instead of the chevron', () => {
@@ -34,93 +47,110 @@ describe('Select', () => {
 		expect(container.querySelector('svg')).toBeNull();
 	});
 
-	it('opens on click and lists the options', async () => {
+	it('opens on click and lists the options in order', async () => {
 		const { container } = render(BoundSelect);
-		await userEvent.click(container.querySelector('button')!);
+
+		await userEvent.click(trigger(container));
+
 		await vi.waitFor(() => {
-			const options = [...document.querySelectorAll('[role="option"]')];
-			expect(options.map((o) => o.textContent?.trim())).toEqual(
-				expect.arrayContaining(['Small', 'Medium', 'Large'])
-			);
+			expect(
+				[...document.querySelectorAll('[role="option"]')].map((o) => o.textContent?.trim())
+			).toEqual(['Small', 'Medium', 'Large']);
 		});
 	});
 
-	it('two-way: bind:value keeps the owner in sync', async () => {
+	it('wears the shared focus ring and leaves width to the consumer', () => {
 		const { container } = render(BoundSelect);
-		await openAndPick(container.querySelector('button')!, 'Medium');
-		await vi.waitFor(() =>
-			expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('md')
-		);
+
+		expect(trigger(container).classList.contains('focus-ring'), 'focus-ring utility').toBe(true);
+		expect(trigger(container).classList.contains('w-full'), 'no built-in width').toBe(false);
 	});
 
-	it('renders when the bound state starts undefined', () => {
-		const { container } = render(UndefinedSelect);
+	it('renders a hidden form input carrying the value when given a name', () => {
+		const { container } = render(BoundSelect, { props: { name: 'size' } });
 
-		expect(container.querySelector('button')?.textContent).toContain('Pick a size');
-		expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('undefined');
+		expect(container.querySelector<HTMLInputElement>('input[name="size"]')?.value).toBe('sm');
 	});
 
-	it('writes the picked value back to undefined state', async () => {
+	it('two-way: picking an option writes its value to the owner and the trigger', async () => {
+		const { container } = render(BoundSelect);
+
+		await openAndPick(container, 'Medium');
+
+		await vi.waitFor(() => expect(owner(container)).toBe('md'));
+		expect(trigger(container).textContent).toContain('Medium');
+	});
+
+	it('two-way: ArrowDown opens, ArrowDown highlights the next option, Enter selects it', async () => {
+		const { container } = render(BoundSelect);
+		trigger(container).focus();
+
+		await userEvent.keyboard('{ArrowDown}');
+		await vi.waitFor(() => expect(listbox(), 'list opened').toBeTruthy());
+		await userEvent.keyboard('{ArrowDown}{Enter}');
+
+		await vi.waitFor(() => expect(owner(container)).toBe('md'));
+		expect(listbox(), 'list closed after Enter').toBeNull();
+	});
+
+	it('two-way: Escape closes without changing the value', async () => {
+		const { container } = render(BoundSelect);
+		await userEvent.click(trigger(container));
+		await optionLabeled('Medium');
+
+		await userEvent.keyboard('{ArrowDown}{Escape}');
+
+		await vi.waitFor(() => expect(listbox()).toBeNull());
+		expect(owner(container)).toBe('sm');
+	});
+
+	it('two-way: shows the placeholder from undefined state and writes the picked value back', async () => {
 		const { container } = render(UndefinedSelect);
-		const trigger = container.querySelector('button')!;
+		expect(trigger(container).textContent).toContain('Pick a size');
+		expect(owner(container)).toBe('undefined');
 
-		await openAndPick(trigger, 'Medium');
+		await openAndPick(container, 'Medium');
 
-		await vi.waitFor(() =>
-			expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('md')
-		);
-		expect(trigger.textContent).toContain('Medium');
+		await vi.waitFor(() => expect(owner(container)).toBe('md'));
 	});
 
 	it('controlled: a function-binding setter can veto the selection', async () => {
 		const { container } = render(ControlledSelect, { props: { accept: false } });
-		const trigger = container.querySelector('button')!;
-		await openAndPick(trigger, 'Medium');
-		await vi.waitFor(() =>
-			expect(container.querySelector('[data-testid="owner"]')?.textContent).toBe('sm')
-		);
-		expect(trigger.textContent).toContain('Small');
+
+		await openAndPick(container, 'Medium');
+
+		await vi.waitFor(() => expect(owner(container)).toBe('sm'));
+		expect(trigger(container).textContent).toContain('Small');
 	});
 
-	it('is invalid with an error border inside an error field', () => {
-		const { container } = render(ErrorSelect);
-		const trigger = container.querySelector('button')!;
-		expect(trigger.getAttribute('aria-invalid')).toBe('true');
-		expect(trigger.classList.contains('border-danger-dark')).toBe(true);
-	});
+	describe('trigger border', () => {
+		it('is light at rest and darkens on hover', async () => {
+			const { container } = render(BoundSelect);
+			expect(borderColor(trigger(container))).toBe(borderOf('border-light'));
 
-	it('wears the focus ring and leaves width to the consumer', () => {
-		const { container } = render(BoundSelect);
-		const classes = container.querySelector('button')!.classList;
-		expect(classes.contains('focus-visible:outline-2')).toBe(true);
-		expect(classes.contains('w-full')).toBe(false);
-	});
+			await userEvent.hover(trigger(container));
 
-	it('keeps the error border on an open trigger', async () => {
-		const { container } = render(ErrorSelect);
-		const trigger = container.querySelector('button')!;
-		await userEvent.click(trigger);
-		await vi.waitFor(() => expect(trigger.getAttribute('data-state')).toBe('open'));
-		expect(trigger.classList.contains('border-danger-dark')).toBe(true);
-		expect(trigger.classList.contains('data-[state=open]:border-gray-9')).toBe(false);
-	});
+			expect(borderColor(trigger(container))).toBe(borderOf('border-gray-6'));
+		});
 
-	it('turns the border transparent when disabled, even on hover, like a disabled Input', async () => {
-		const { container } = render(BoundSelect, { props: { disabled: true } });
-		const trigger = container.querySelector('button')!;
+		it('is danger and aria-invalid in the error state, closed or open', async () => {
+			const { container } = render(BoundSelect, { props: { state: 'error' } });
+			expect(trigger(container).getAttribute('aria-invalid')).toBe('true');
+			expect(borderColor(trigger(container))).toBe(borderOf('border-danger-dark'));
 
-		await userEvent.hover(trigger);
+			await userEvent.click(trigger(container));
 
-		expect(trigger.disabled).toBe(true);
-		expect(borderColor(trigger)).toBe(colorOf('border-transparent', 'borderTopColor'));
-	});
+			await vi.waitFor(() => expect(trigger(container).dataset.state).toBe('open'));
+			expect(borderColor(trigger(container))).toBe(borderOf('border-danger-dark'));
+		});
 
-	it('darkens the border on hover when enabled', async () => {
-		const { container } = render(BoundSelect);
-		const trigger = container.querySelector('button')!;
+		it('is transparent when disabled, even on hover', async () => {
+			const { container } = render(BoundSelect, { props: { disabled: true } });
 
-		await userEvent.hover(trigger);
+			await userEvent.hover(trigger(container));
 
-		expect(borderColor(trigger)).toBe(colorOf('border-gray-6', 'borderTopColor'));
+			expect(trigger(container).disabled, 'native disabled attribute').toBe(true);
+			expect(borderColor(trigger(container))).toBe(borderOf('border-transparent'));
+		});
 	});
 });

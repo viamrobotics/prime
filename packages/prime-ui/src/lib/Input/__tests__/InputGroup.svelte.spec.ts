@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { borderColor, colorOf as colorOfUtility } from '../../__tests__/computed-style.ts';
+import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
 import GroupedInput from './GroupedInput.svelte';
 
 const pointerDown = (element: Element) => {
@@ -13,7 +13,15 @@ const pointerDown = (element: Element) => {
 	return event;
 };
 
-const colorOf = (utility: string) => colorOfUtility(utility, 'borderTopColor');
+const borderOf = (utility: string) => colorOf(utility, 'borderTopColor');
+
+type Parts = ReturnType<typeof setup>;
+
+const interactions = {
+	rest: async () => {},
+	hover: ({ group }: Parts) => userEvent.hover(group),
+	focus: ({ input }: Parts) => userEvent.click(input)
+};
 
 const setup = (props: ComponentProps<typeof GroupedInput> = {}) => {
 	const { container } = render(GroupedInput, { props });
@@ -26,151 +34,134 @@ const setup = (props: ComponentProps<typeof GroupedInput> = {}) => {
 };
 
 describe('Input.Group', () => {
-	it('renders a div around its children', () => {
-		const { group, input, suffix } = setup();
-		expect(group.tagName).toBe('DIV');
-		expect(group.contains(input)).toBe(true);
-		expect(group.contains(suffix)).toBe(true);
+	it('wears the frame itself and leaves the input inside borderless', () => {
+		const { group, input } = setup({ groupClass: 'w-64' });
+
+		expect(getComputedStyle(group).borderTopWidth).toBe('1px');
+		expect(getComputedStyle(input).borderTopWidth).toBe('0px');
+		expect(group.classList.contains('w-64'), 'consumer class lands on the group').toBe(true);
 	});
 
-	it('puts the frame on the group and leaves the input borderless', () => {
-		const { group, input } = setup();
-		expect(group.classList.contains('rounded-sm')).toBe(true);
-		expect(group.classList.contains('border')).toBe(true);
-		expect(input.classList.contains('border-0')).toBe(true);
-		expect(input.classList.contains('rounded')).toBe(false);
-	});
-
-	it('carries the has- variants that restyle the group from its input', () => {
-		const { group } = setup();
-		for (const variant of [
-			'has-[input:disabled]:cursor-not-allowed',
-			'has-[input:disabled]:border-transparent',
-			'has-[input:disabled]:bg-disabled-light',
-			'has-[input[readonly]]:border-transparent',
-			'has-[input[readonly]]:bg-light',
-			'has-[input[data-state=error]:not(:disabled):not([readonly])]:border-danger-dark',
-			'has-[input[data-state=warn]:not(:disabled):not([readonly])]:border-warning-bright'
-		]) {
-			expect(group.classList.contains(variant), variant).toBe(true);
-		}
-	});
-
-	it('merges a consumer class with its own', () => {
-		const { group } = setup({ groupClass: 'w-64' });
-		expect(group.classList.contains('w-64')).toBe(true);
-		expect(group.classList.contains('rounded-sm')).toBe(true);
-	});
-
-	it('leaves a disabled inner input disabled', () => {
-		const { input } = setup({ disabled: true });
-		expect(input.disabled).toBe(true);
-	});
-
-	it('focuses the input when non-interactive content is pressed', async () => {
+	it('focuses the input when non-interactive content is pressed, without focusing the group', async () => {
 		const { input, suffix } = setup();
+
 		await userEvent.click(suffix);
+
 		expect(document.activeElement).toBe(input);
+		expect(pointerDown(suffix).defaultPrevented, 'pointer-down canceled').toBe(true);
 	});
 
 	it('focuses the input when the group padding is pressed', async () => {
 		const { group, input } = setup();
+
 		await userEvent.click(group, { position: { x: 2, y: 2 } });
+
 		expect(document.activeElement).toBe(input);
 	});
 
-	it('cancels the pointer-down so focus does not land on the group', () => {
-		const { suffix } = setup();
-		expect(pointerDown(suffix).defaultPrevented).toBe(true);
-	});
-
-	it('leaves interactive content alone', () => {
+	it('leaves interactive content and the input itself alone', () => {
 		const { input, action } = setup();
-		expect(pointerDown(action).defaultPrevented).toBe(false);
+
+		expect(pointerDown(action).defaultPrevented, 'button press passes through').toBe(false);
+		expect(pointerDown(input).defaultPrevented, 'input press passes through').toBe(false);
 		expect(document.activeElement).not.toBe(input);
 	});
 
-	it('leaves the input itself alone', () => {
-		const { input } = setup();
-		expect(pointerDown(input).defaultPrevented).toBe(false);
-	});
-
-	it('calls a consumer onpointerdown first and honors its preventDefault', () => {
+	it('runs a consumer onpointerdown first and honors its preventDefault', () => {
 		const onpointerdown = vi.fn((event: PointerEvent) => event.preventDefault());
 		const { input, suffix } = setup({ onpointerdown });
+
 		pointerDown(suffix);
+
 		expect(onpointerdown).toHaveBeenCalledOnce();
 		expect(document.activeElement).not.toBe(input);
 	});
 
-	describe('styles', () => {
-		it('has the Tailwind theme loaded, so the color checks can tell the states apart', () => {
-			const colors = new Set(
-				['border-light', 'border-danger-dark', 'border-warning-bright', 'border-transparent'].map(
-					colorOf
-				)
-			);
-			expect(colors.size).toBe(4);
+	describe('border color', () => {
+		it('tells the four border tokens apart, so the cases below cannot pass vacuously', () => {
+			const colors = [
+				'border-light',
+				'border-danger-dark',
+				'border-warning-bright',
+				'border-transparent'
+			];
+
+			expect(new Set(colors.map(borderOf)).size).toBe(colors.length);
 		});
 
-		it('darkens the default border on hover', async () => {
-			const { group } = setup();
-			await userEvent.hover(group);
-			expect(borderColor(group)).toBe(colorOf('border-gray-6'));
-		});
+		it.each([
+			{ name: 'light at rest', props: {}, interact: 'rest', border: 'border-light' },
+			{ name: 'gray-6 on hover', props: {}, interact: 'hover', border: 'border-gray-6' },
+			{
+				name: 'gray-6, not darker, while the input is focused',
+				props: {},
+				interact: 'focus',
+				border: 'border-gray-6'
+			},
+			{
+				name: 'transparent for a disabled input, even on hover',
+				props: { disabled: true },
+				interact: 'hover',
+				border: 'border-transparent'
+			},
+			{
+				name: 'transparent for a readonly input, even when focused',
+				props: { readonly: true },
+				interact: 'focus',
+				border: 'border-transparent'
+			},
+			{
+				name: 'transparent when disabled wins over error',
+				props: { disabled: true, state: 'error' },
+				interact: 'rest',
+				border: 'border-transparent'
+			},
+			{
+				name: 'transparent when readonly wins over error',
+				props: { readonly: true, state: 'error' },
+				interact: 'rest',
+				border: 'border-transparent'
+			},
+			{
+				name: 'light when only a trailing button is disabled',
+				props: { actionDisabled: true },
+				interact: 'rest',
+				border: 'border-light'
+			},
+			{
+				name: 'danger for an error input, even on hover',
+				props: { state: 'error' },
+				interact: 'hover',
+				border: 'border-danger-dark'
+			},
+			{
+				name: 'warning for a warn input while focused',
+				props: { state: 'warn' },
+				interact: 'focus',
+				border: 'border-warning-bright'
+			}
+		] as const)('is $name', async ({ props, interact, border }) => {
+			const parts = setup(props);
 
-		it('shows the focus ring on the group and does not darken the border past hover while the input is focused', async () => {
-			const { group, input } = setup();
-			await userEvent.click(input);
-			expect(getComputedStyle(group).outlineWidth).toBe('2px');
-			expect(group.classList.contains('has-[:focus-visible]:outline-2')).toBe(true);
-			expect(borderColor(group)).toBe(colorOf('border-gray-6'));
-		});
+			await interactions[interact](parts);
 
-		it('turns the border transparent for a disabled input, even on hover', async () => {
-			const { group } = setup({ disabled: true });
-			await userEvent.hover(group);
-			expect(borderColor(group)).toBe(colorOf('border-transparent'));
-			expect(getComputedStyle(group).cursor).toBe('not-allowed');
+			expect(borderColor(parts.group)).toBe(borderOf(border));
 		});
+	});
 
-		it('turns the border transparent for a readonly input, even when focused', async () => {
-			const { group, input } = setup({ readonly: true });
-			await userEvent.click(input);
-			expect(borderColor(group)).toBe(colorOf('border-transparent'));
-		});
+	it('shows the focus ring on the group while the input is focused', async () => {
+		const { group, input } = setup();
 
-		it('keeps the disabled border when the state is also error', () => {
-			const { group } = setup({ disabled: true, state: 'error' });
-			expect(borderColor(group)).toBe(colorOf('border-transparent'));
-		});
+		await userEvent.click(input);
 
-		it('keeps the readonly border when the state is also error', () => {
-			const { group } = setup({ readonly: true, state: 'error' });
-			expect(borderColor(group)).toBe(colorOf('border-transparent'));
-		});
+		expect(getComputedStyle(group).outlineWidth).toBe('2px');
+	});
 
-		it('keeps the default border when only a trailing button is disabled', () => {
-			const { group } = setup({ actionDisabled: true });
-			expect(borderColor(group)).toBe(colorOf('border-light'));
-			expect(getComputedStyle(group).cursor).not.toBe('not-allowed');
-		});
+	it('shows the not-allowed cursor for a disabled input and not for a disabled trailing button', () => {
+		const disabledInput = setup({ disabled: true });
+		const disabledAction = setup({ actionDisabled: true });
 
-		it('colors the border danger for an error input, even on hover', async () => {
-			const { group } = setup({ state: 'error' });
-			await userEvent.hover(group);
-			expect(borderColor(group)).toBe(colorOf('border-danger-dark'));
-		});
-
-		it('colors the border warning for a warn input while focused', async () => {
-			const { group, input } = setup({ state: 'warn' });
-			await userEvent.click(input);
-			expect(borderColor(group)).toBe(colorOf('border-warning-bright'));
-		});
-
-		it('uses the default border for an input with no state', () => {
-			const { group } = setup();
-			expect(borderColor(group)).toBe(colorOf('border-light'));
-		});
+		expect(getComputedStyle(disabledInput.group).cursor).toBe('not-allowed');
+		expect(getComputedStyle(disabledAction.group).cursor).not.toBe('not-allowed');
 	});
 });

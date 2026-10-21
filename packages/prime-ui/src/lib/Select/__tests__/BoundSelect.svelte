@@ -1,7 +1,13 @@
 <script lang="ts">
+	import type { FieldState } from '../../Field/state.ts';
+
 	import { Select } from '../select.ts';
 
-	const { disabled }: { disabled?: boolean } = $props();
+	const {
+		disabled,
+		name,
+		state: fieldState
+	}: { disabled?: boolean; name?: string; state?: FieldState } = $props();
 
 	const items = [
 		{ value: 'sm', label: 'Small' },
@@ -12,8 +18,8 @@
 	let value = $state('sm');
 </script>
 
-<Select {items} {disabled} bind:value>
-	<Select.Trigger>
+<Select {items} {disabled} {name} bind:value>
+	<Select.Trigger state={fieldState}>
 		<Select.Value placeholder="Pick a size" />
 	</Select.Trigger>
 	<Select.Portal>
