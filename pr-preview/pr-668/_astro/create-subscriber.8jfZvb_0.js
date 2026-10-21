@@ -1,1 +1,0 @@
-import{a8 as c,g as i,a9 as n,U as f,aa as u,ab as t,_ as o}from"./snippet.aiSQGlAx.js";function _(s){let e=0,r=f(0),a;return()=>{c()&&(i(r),n(()=>(e===0&&(a=u(()=>s(()=>t(r)))),e+=1,()=>{o(()=>{e-=1,e===0&&(a?.(),a=void 0,t(r))})})))}}export{_ as c};
