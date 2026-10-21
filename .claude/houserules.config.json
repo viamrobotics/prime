@@ -84,6 +84,16 @@
       "verifyCommands": ["check", "lint", "format"]
     },
     {
+      "name": "prime-split-view",
+      "prefix": "PRIME_SPLIT_VIEW",
+      "packageName": "@viamrobotics/prime-split-view",
+      "pathPrefix": "packages/prime-split-view/",
+      "sourcePath": "packages/prime-split-view/src",
+      "label": "Prime Split View",
+      "fixCommands": ["lint:fix", "format:fix"],
+      "verifyCommands": ["check", "lint", "format", "test"]
+    },
+    {
       "name": "docs",
       "prefix": "DOCS",
       "packageName": "@viamrobotics/prime-docs",

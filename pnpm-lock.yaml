@@ -163,6 +163,96 @@ importers:
         specifier: 'catalog:'
         version: 0.14.13
 
+  packages/prime-split-view:
+    devDependencies:
+      '@eslint/compat':
+        specifier: 'catalog:'
+        version: 2.1.0(eslint@10.3.0(jiti@2.7.0))
+      '@eslint/js':
+        specifier: 'catalog:'
+        version: 10.0.1(eslint@10.3.0(jiti@2.7.0))
+      '@sveltejs/adapter-static':
+        specifier: 'catalog:'
+        version: 3.0.10(@sveltejs/kit@2.59.1(@sveltejs/vite-plugin-svelte@7.1.2(svelte@5.55.5(@typescript-eslint/types@8.59.2))(vite@8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0)))(svelte@5.55.5(@typescript-eslint/types@8.59.2))(typescript@6.0.3)(vite@8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0)))
+      '@sveltejs/kit':
+        specifier: 'catalog:'
+        version: 2.59.1(@sveltejs/vite-plugin-svelte@7.1.2(svelte@5.55.5(@typescript-eslint/types@8.59.2))(vite@8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0)))(svelte@5.55.5(@typescript-eslint/types@8.59.2))(typescript@6.0.3)(vite@8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0))
+      '@sveltejs/package':
+        specifier: ^2.5.7
+        version: 2.5.7(svelte@5.55.5(@typescript-eslint/types@8.59.2))(typescript@6.0.3)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: 'catalog:'
+        version: 7.1.2(svelte@5.55.5(@typescript-eslint/types@8.59.2))(vite@8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0))
+      '@tailwindcss/vite':
+        specifier: 'catalog:'
+        version: 4.3.0(vite@8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0))
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.12.3
+      '@viamrobotics/tailwind-config':
+        specifier: workspace:^
+        version: link:../tailwind-config
+      '@vitest/browser-playwright':
+        specifier: ^4.1.3
+        version: 4.1.6(playwright@1.59.1)(vite@8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0))(vitest@4.1.6)
+      '@zag-js/splitter':
+        specifier: 1.46.0
+        version: 1.46.0
+      '@zag-js/svelte':
+        specifier: 1.46.0
+        version: 1.46.0(svelte@5.55.5(@typescript-eslint/types@8.59.2))
+      eslint:
+        specifier: 'catalog:'
+        version: 10.3.0(jiti@2.7.0)
+      eslint-config-prettier:
+        specifier: 'catalog:'
+        version: 10.1.8(eslint@10.3.0(jiti@2.7.0))
+      eslint-plugin-svelte:
+        specifier: 'catalog:'
+        version: 3.17.1(eslint@10.3.0(jiti@2.7.0))(svelte@5.55.5(@typescript-eslint/types@8.59.2))
+      globals:
+        specifier: 'catalog:'
+        version: 17.6.0
+      playwright:
+        specifier: ^1.59.1
+        version: 1.59.1
+      prettier:
+        specifier: 'catalog:'
+        version: 3.8.3
+      prettier-plugin-svelte:
+        specifier: ^3.5.1
+        version: 3.5.2(prettier@3.8.3)(svelte@5.55.5(@typescript-eslint/types@8.59.2))
+      prettier-plugin-tailwindcss:
+        specifier: ^0.7.2
+        version: 0.7.4(prettier-plugin-svelte@3.5.2(prettier@3.8.3)(svelte@5.55.5(@typescript-eslint/types@8.59.2)))(prettier@3.8.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.20
+      svelte:
+        specifier: 'catalog:'
+        version: 5.55.5(@typescript-eslint/types@8.59.2)
+      svelte-check:
+        specifier: 'catalog:'
+        version: 4.4.8(picomatch@4.0.4)(svelte@5.55.5(@typescript-eslint/types@8.59.2))(typescript@6.0.3)
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 4.3.0
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      typescript-eslint:
+        specifier: 'catalog:'
+        version: 8.59.2(eslint@10.3.0(jiti@2.7.0))(typescript@6.0.3)
+      vite:
+        specifier: 'catalog:'
+        version: 8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0)
+      vitest:
+        specifier: ^4.1.3
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(esbuild@0.27.7)(jiti@2.7.0))
+      vitest-browser-svelte:
+        specifier: ^2.1.0
+        version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.59.2))(vitest@4.1.6)
+
   packages/prime-ui:
     devDependencies:
       '@eslint/compat':
@@ -1850,20 +1940,43 @@ packages:
   '@vitest/utils@4.1.6':
     resolution: {integrity: sha512-FxIY+U81R3LGKCxaHHFRQ5+g6/iRgGLmeHWdp2Amj4ljQRrEIWHmZyDfDYBRZlpyqA7qKxtS9DD1dhk8RnRIVQ==}
 
+  '@zag-js/anatomy@1.46.0':
+    resolution: {integrity: sha512-geWPKs9FtZ3FihwOyW/swG3IlJxqGydiAEUHRjBq3q45IarxV4gJZfpvWGlv20mVjOhbWkNEG+CDPsUGw4ixow==}
+
+  '@zag-js/core@1.46.0':
+    resolution: {integrity: sha512-zwiTDz9iBi1a/CyzdaeI8TlBADmeLCDNONh930a7x32TpduN8LiY26X58zrgimvCowOu7YIFNzI/vqW7Wp1phA==}
+
   '@zag-js/dismissable@1.40.0':
     resolution: {integrity: sha512-bBkFvPg/zbYn31ZgEfx8not6s2Ekx7zU2sO8tGXb8rYPnHBfGDYEzVQansUStJn0Atzw+y7XR7B3G3u5AFQJKw==}
 
   '@zag-js/dom-query@1.40.0':
     resolution: {integrity: sha512-4J3EO2gHpZ1VZiGLuMlH6G1Tsp4gKB8PPt2yKeNQWYGEXyrHUXrvMhRUzv7Z4/2I1s1tnxlFG4F8ovB3kTpz/Q==}
 
+  '@zag-js/dom-query@1.46.0':
+    resolution: {integrity: sha512-ibkO0VkQ2rLaclrO/O7kunvvwK8ZiW2L78arxsPYOEWmTqdNM6eQh721l9jGREUggh8nGsydNaoJH7lP3z1DUg==}
+
   '@zag-js/interact-outside@1.40.0':
     resolution: {integrity: sha512-Fws+O4uD9vS0I5KVcf3U2tNjLKvqlv+RExFbTywckDLOCJ145M/pMQWTr1FHil04jk5PFyM1iGfsbom8tozHpQ==}
+
+  '@zag-js/splitter@1.46.0':
+    resolution: {integrity: sha512-9WK2eW+EgYw5Z3GAoCNUraoRPFIO+QHodP7Fv9RnESt7LtrpcoPfnKRgemYZgI65GmEaCdnB3jXMrSyP27dyxw==}
+
+  '@zag-js/svelte@1.46.0':
+    resolution: {integrity: sha512-m4AQc0WZYGafvkwccyU2mhxAqlKU+3V9yHsC0C2BdEWt34Y7CsUB9gcOsfR25jKM2R6QRGFP6hfIPpa6kSnAiw==}
+    peerDependencies:
+      svelte: '>=5'
 
   '@zag-js/types@1.40.0':
     resolution: {integrity: sha512-LVvxEyqFv/u9SEe5xdivvG2vYb9cCmbkD+5r6s+IGljpDLaRgv4BYyxEh40ri1ai070tL08ZKmoLfx2/xfvY/A==}
 
+  '@zag-js/types@1.46.0':
+    resolution: {integrity: sha512-HwIvuXCGx/wgCNNXYvKyCJ62e/QmIi02v9GsA0icFxDKxv6i7J2mZmAQ/vF5Nmh3q80Nj5CZ1DdQ7bXYt/Yzww==}
+
   '@zag-js/utils@1.40.0':
     resolution: {integrity: sha512-XUpqDtXfHe7CySjOhLPLj9H8rxbiFUJAGgmBzNdpsGPP4wx12cpOXrpSjRXZ2kMwooMPz/P7RPDBteto8sqhAQ==}
+
+  '@zag-js/utils@1.46.0':
+    resolution: {integrity: sha512-SOKa832hWCoXaYB2Pcdb0c+ZcyNSuAAPpL5YRnVHskuc0BEsHPWOhxSIxuGF1gvz4RsfBKiAHrDoFDl8JLSOEg==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -5501,6 +5614,13 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
+  '@zag-js/anatomy@1.46.0': {}
+
+  '@zag-js/core@1.46.0':
+    dependencies:
+      '@zag-js/dom-query': 1.46.0
+      '@zag-js/utils': 1.46.0
+
   '@zag-js/dismissable@1.40.0':
     dependencies:
       '@zag-js/dom-query': 1.40.0
@@ -5511,16 +5631,41 @@ snapshots:
     dependencies:
       '@zag-js/types': 1.40.0
 
+  '@zag-js/dom-query@1.46.0':
+    dependencies:
+      '@zag-js/types': 1.46.0
+
   '@zag-js/interact-outside@1.40.0':
     dependencies:
       '@zag-js/dom-query': 1.40.0
       '@zag-js/utils': 1.40.0
 
+  '@zag-js/splitter@1.46.0':
+    dependencies:
+      '@zag-js/anatomy': 1.46.0
+      '@zag-js/core': 1.46.0
+      '@zag-js/dom-query': 1.46.0
+      '@zag-js/types': 1.46.0
+      '@zag-js/utils': 1.46.0
+
+  '@zag-js/svelte@1.46.0(svelte@5.55.5(@typescript-eslint/types@8.59.2))':
+    dependencies:
+      '@zag-js/core': 1.46.0
+      '@zag-js/types': 1.46.0
+      '@zag-js/utils': 1.46.0
+      svelte: 5.55.5(@typescript-eslint/types@8.59.2)
+
   '@zag-js/types@1.40.0':
     dependencies:
       csstype: 3.2.3
 
+  '@zag-js/types@1.46.0':
+    dependencies:
+      csstype: 3.2.3
+
   '@zag-js/utils@1.40.0': {}
+
+  '@zag-js/utils@1.46.0': {}
 
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
