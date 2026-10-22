@@ -1,0 +1,499 @@
+---
+title: "@viamrobotics/prime-split-view"
+description: Resizable, rearrangeable split-pane layouts for Svelte 5.
+---
+
+import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
+
+`@viamrobotics/prime-split-view` renders a binary tree of panes that the user can resize by dragging a divider and rearrange by dragging a pane onto another or by using a button. The package owns the layout model. Pane content belongs to you, and the library never reads it.
+
+<Aside type="caution">
+  The public API is unstable until 1.0. Expect breaking changes in minor
+  releases.
+</Aside>
+
+## Installation
+
+<Steps>
+
+1. Install the package and its peers. The `svelte` peer is `^5.29.0` because the pane controls are attachments.
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add @viamrobotics/prime-split-view @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install @viamrobotics/prime-split-view @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add @viamrobotics/prime-split-view @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         lang="sh"
+       />
+     </TabItem>
+   </Tabs>
+
+2. Import the package stylesheet once, after Tailwind. Tailwind skips `node_modules` when it scans for classes, so this file points it at the package's compiled components and pulls in the `@viamrobotics/tailwind-config` tokens.
+
+   ```css
+   @import "tailwindcss";
+   @import "@viamrobotics/prime-split-view/styles.css";
+   ```
+
+</Steps>
+
+## Quick start
+
+```svelte
+<script lang="ts">
+  import { SplitView } from '@viamrobotics/prime-split-view';
+  import type { LayoutNode } from '@viamrobotics/prime-split-view';
+
+  let layout = $state<LayoutNode<{ title: string }> | undefined>({
+    type: 'split',
+    id: 'root',
+    direction: 'row',
+    ratio: 0.6,
+    first: { type: 'pane', id: 'camera', data: { title: 'Camera' } },
+    second: { type: 'pane', id: 'stats', data: { title: 'Stats' } },
+  });
+</script>
+
+<SplitView bind:layout paneLabel={(node) => node.data.title} class="h-screen">
+  {#snippet pane(node, { dragTrigger, moveTrigger })}
+    <div class="size-full">
+      <button
+        type="button"
+        aria-label="Move {node.data.title}"
+        {@attach dragTrigger}
+        {@attach moveTrigger}
+      >
+        ::
+      </button>
+      {node.data.title}
+    </div>
+  {/snippet}
+</SplitView>
+```
+
+`paneLabel` names each pane for the move targets and announcements described in [Moving panes without dragging](#moving-panes-without-dragging). The root element has no default size. Give it one with a `class`, as above, or it collapses to nothing. Every other prop of a `div` passes through to the root.
+
+## The layout model
+
+A layout is a tree of two node types.
+
+```ts
+type SplitDirection = 'row' | 'column';
+
+interface SplitNode<TData> {
+  type: 'split';
+  id: string;
+  direction: SplitDirection;
+  ratio: number;
+  first: LayoutNode<TData>;
+  second: LayoutNode<TData>;
+}
+
+interface PaneNode<TData> {
+  type: 'pane';
+  id: string;
+  data: TData;
+}
+
+type LayoutNode<TData> = SplitNode<TData> | PaneNode<TData>;
+```
+
+- A `SplitNode` divides its area between `first` and `second`.
+- `direction` follows CSS `flex-direction`. In a `row` split, `first` is on the left. In a `column` split, `first` is on top.
+- `ratio` is the share given to `first`. It is strictly between 0 and 1.
+- `id` is unique across the whole layout, splits and panes together.
+- A `PaneNode` is a leaf. Its `data` is any value you choose. It is the generic `TData`, and the `pane` snippet receives it back.
+- A layout of `undefined` is an empty layout.
+
+The types `SplitKey` (`'first' | 'second'`) and `SplitDirection` are exported too.
+
+## Binding the layout
+
+`SplitView` has no change callback. State flows through `bind:layout`, and it works in two modes.
+
+### Two-way binding
+
+Bind a `$state` variable. Every resize and rearrangement updates it.
+
+```svelte
+<SplitView bind:layout class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+</SplitView>
+```
+
+### Function binding
+
+Pass a getter and a setter. The setter receives each proposed layout. It is where you persist the change, and it can veto a change by not assigning the value.
+
+```svelte
+<script lang="ts">
+  interface PaneData {
+    title: string;
+  }
+
+  let layout = $state<LayoutNode<PaneData> | undefined>(initial);
+
+  function propose(next: LayoutNode<PaneData> | undefined) {
+    if (!isAllowed(next)) return;
+    layout = next;
+    void persist(next);
+  }
+</script>
+
+<SplitView bind:layout={() => layout, propose} class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+</SplitView>
+```
+
+A vetoed change leaves the layout where it was. A drag that is vetoed snaps back.
+
+## Panes and the empty state
+
+The `pane` snippet renders one pane. Its first argument is the `PaneNode`, so `node.id` and `node.data` are available. Its second is the pane controls, described in [Rearranging panes](#rearranging-panes). The snippet's content fills the pane, so give it `size-full` or an equivalent.
+
+The optional `empty` snippet renders when `layout` is `undefined`.
+
+```svelte
+<SplitView bind:layout class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+  {#snippet empty()}
+    <p>No panes. Add one to start.</p>
+  {/snippet}
+</SplitView>
+```
+
+## Rearranging panes
+
+Rearranging is on by default. Set `reorderable={false}` to turn it off. Resizing is not affected.
+
+The `pane` snippet receives `(node, { dragTrigger, dragIgnore, moveTrigger })`. Each is an attachment that you place on your own elements with `{@attach}`. The library renders no handle of its own, so you choose the markup, the icon, and the accessible name. The `PaneControls` type describes the second argument.
+
+All three attachments do nothing when `reorderable` is `false`.
+
+### dragTrigger
+
+`dragTrigger` makes an element start a pane drag. Attach it to a grip button, or to a whole header.
+
+- A press on a native control inside the element does not start a drag. The controls are `button`, `a`, `input`, `select`, `textarea`, and `[contenteditable]`.
+- The element that carries the attachment is never ignored, even when it is itself a `button`.
+
+### dragIgnore
+
+`dragIgnore` opts an element out of dragging. Use it on a custom widget inside a `dragTrigger` element, such as a `canvas`, where a press should do something else.
+
+```svelte
+<canvas {@attach dragIgnore}></canvas>
+```
+
+### moveTrigger
+
+`moveTrigger` toggles move mode. See [Moving panes without dragging](#moving-panes-without-dragging). It supports three kinds of element.
+
+| Element                  | Use it for                | Behavior                                                                                                                              |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| A native `button`        | A visible move control    | Its own click, Enter, and Space toggle move mode. It gets `aria-pressed`.                                                             |
+| An element with `role="button"` | A non-button element that looks like a control | The library adds Enter on keydown and Space on keyup. It gets `aria-pressed`. You supply `tabindex="0"` and an accessible name. |
+| An element with `role="menuitem"` | An item in a menu | It toggles through `click`, which Radix-style menus dispatch on Enter and Space. It gets no `aria-pressed`, and the status region announces the state. |
+
+When move mode ends, focus returns to the trigger. If the trigger has unmounted, as with a closed menu, focus goes to the pane itself, which shows a focus outline.
+
+A menu item works like this.
+
+```svelte
+<DropdownMenu.Item role="menuitem" {@attach moveTrigger}>
+  Move pane
+</DropdownMenu.Item>
+```
+
+### Two ways to lay it out
+
+A grip button can carry both triggers. Dragging and the keyboard path then share one element.
+
+```svelte
+{#snippet pane(node, { dragTrigger, moveTrigger })}
+  <header>
+    <button
+      type="button"
+      aria-label="Move {node.data.title}"
+      class="cursor-grab"
+      {@attach dragTrigger}
+      {@attach moveTrigger}
+    >
+      <GripIcon />
+    </button>
+    {node.data.title}
+  </header>
+{/snippet}
+```
+
+A whole header can be the drag surface, with a separate move button inside it. The button is a native control, so a press on it does not start a drag.
+
+```svelte
+{#snippet pane(node, { dragTrigger, moveTrigger })}
+  <header class="cursor-grab" {@attach dragTrigger}>
+    {node.data.title}
+    <button type="button" aria-label="Move {node.data.title}" {@attach moveTrigger}>
+      Move
+    </button>
+  </header>
+{/snippet}
+```
+
+### Accessibility
+
+Dragging alone fails WCAG 2.5.7 (Dragging Movements). Every pane that has a `dragTrigger` needs a `moveTrigger` somewhere, such as a menu item.
+
+In development, the library warns on the first drag from a pane that has never had a `moveTrigger`. A trigger that mounts only on demand, such as inside a menu, still warns until it first mounts.
+
+### Drop regions
+
+While a pane is dragged, the pane under the pointer divides into five regions.
+
+| Region                       | Result                                                                             |
+| ---------------------------- | ---------------------------------------------------------------------------------- |
+| Center (the middle 40%)      | The two panes swap places.                                                         |
+| Left, right, top, or bottom  | The dragged pane leaves its place and splits the target, on the side that you drop. |
+
+Every drop is assigned to `layout`, so a function binding sees it and can veto it.
+
+### Moving panes without dragging
+
+Dragging is not the only way to rearrange. Activate a `moveTrigger` element with a click, Enter, or Space to enter move mode. A button trigger reports it with `aria-pressed`.
+
+In move mode, every other pane shows five target buttons: left, right, top, bottom, and swap. Activating one makes the same change a drop on that region would, and it goes through `layout` the same way, so a function binding can still veto it.
+
+- Escape cancels move mode. So does activating the pressed trigger again.
+- Focus moves to the first target when move mode starts, and returns to the trigger when it ends.
+- A status region announces each step: the start, the placement, a cancel, and a rejected move.
+
+Set `paneLabel` so these read well. The target names and announcements use pane labels, such as "Place Camera left of Stats". `paneLabel` receives the `PaneNode` and returns a string. Without it the labels are pane ids.
+
+```svelte
+<SplitView bind:layout paneLabel={(node) => node.data.title}>
+  {#snippet pane(node)}...{/snippet}
+</SplitView>
+```
+
+## Tree operations
+
+The operations behind the drops are exported, so your own controls can change the layout the same way. Each one is a pure function that takes the root and returns a new root. None of them mutates its input.
+
+| Function                                                         | Does                                                                                                                 |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `setSplitRatio(root, splitId, ratio)`                            | Sets one split's `ratio`.                                                                                            |
+| `swapPanes(root, firstId, secondId)`                             | Exchanges two panes. Each split keeps its `ratio`, so sizes stay with the positions.                                 |
+| `movePane(root, paneId, targetId, direction, key, newSplitId)`   | Moves a pane beside another pane. A new `direction` split with ratio 0.5 and id `newSplitId` holds both.             |
+| `addPaneToUpperRight(root, pane, newSplitId)`                    | Adds a pane beside the upper-right pane. Returns `pane` itself when `root` is `undefined`.                           |
+| `removePane(root, paneId)`                                       | Removes a pane. Its sibling takes its parent split's place. Returns `undefined` when the pane was the only node.     |
+| `updatePaneData(root, paneId, data)`                             | Replaces a pane's `data`. It compares by reference, so a deep comparison is up to you.                               |
+
+When an operation has nothing to change, it returns the same root reference that it received. The cases are an id that names no node, a swap of a pane with itself, and a value that is already set. Compare the result to the input with `===` to know whether anything changed.
+
+```ts
+const next = removePane(layout, 'camera');
+if (next !== layout) {
+  layout = next;
+}
+```
+
+A subtree that an operation did not touch keeps its reference too, so `$derived` values and keyed blocks that depend on it do not rerun.
+
+`removePane`, `swapPanes`, `movePane`, `setSplitRatio`, and `updatePaneData` return `undefined` for an `undefined` root.
+
+## Playground
+
+The playground has a layout you can resize, rearrange, and extend, next to the live layout as JSON.
+
+<LinkButton href="../../playground/prime-split-view/" icon="external">
+  Open the prime-split-view playground
+</LinkButton>
+
+## Persisting a layout
+
+The setter of a function binding is the place to save. This recipe saves like the app's teleop workspaces do.
+
+- A structural change (swap, move, add, or remove) saves immediately.
+- A resize saves after a short pause, because a drag produces many changes.
+- A user without write permission never saves.
+
+To tell the two apart, compare the previous and next trees while ignoring `ratio`. A resize changes nothing else.
+
+```svelte
+<script lang="ts">
+  import { SplitView } from '@viamrobotics/prime-split-view';
+  import type { LayoutNode } from '@viamrobotics/prime-split-view';
+
+  interface PaneData {
+    title: string;
+  }
+
+  type Layout = LayoutNode<PaneData> | undefined;
+
+  interface Props {
+    initial: Layout;
+    canWrite: boolean;
+    save: (layout: Layout) => void;
+  }
+
+  const { initial, canWrite, save }: Props = $props();
+
+  let layout = $state<Layout>(initial);
+
+  let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function saveAfterResize(next: Layout) {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => save(next), 200);
+  }
+
+  function sameStructure(a: Layout, b: Layout): boolean {
+    if (a === b) return true;
+    if (!a || !b) return false;
+    if (a.type === 'pane' || b.type === 'pane') {
+      return a.type === 'pane' && b.type === 'pane' && a.id === b.id && a.data === b.data;
+    }
+    return (
+      a.id === b.id &&
+      a.direction === b.direction &&
+      sameStructure(a.first, b.first) &&
+      sameStructure(a.second, b.second)
+    );
+  }
+
+  function propose(next: Layout) {
+    const resized = sameStructure(layout, next);
+    layout = next;
+
+    if (!canWrite) return;
+
+    if (resized) {
+      saveAfterResize(next);
+    } else {
+      clearTimeout(resizeTimer);
+      save(next);
+    }
+  }
+</script>
+
+<SplitView bind:layout={() => layout, propose} class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+</SplitView>
+```
+
+The structural save cancels a pending resize save first, because the structural tree already holds the latest ratios. The check compares pane `data` by reference. That is safe because the operations never copy a pane they did not edit. If you replace pane data through `updatePaneData`, the tree counts as structurally changed and saves at once.
+
+## Migrating from the app's `nodes.ts`
+
+The app stores a workspace as a protobuf `WorkspaceNode` tree and renders it with `svelte-splitpanes`. The library replaces both the helpers in `nodes.ts` and the recursive `panes.svelte` rendering. The library model has no protobuf semantics, so the conversion lives at your boundary.
+
+### Differences
+
+| Protobuf                                                        | Library                                                            |
+| --------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `WorkspaceNode` with a `nodeId` and a `oneof node`              | `LayoutNode` with a `type` of `'split'` or `'pane'`, and an `id`   |
+| `SplitDirection` enum: `UNSPECIFIED`, `COLUMN`, `ROW`           | `'row'` or `'column'`                                              |
+| `splitPercentage`, where 0 means missing                        | `ratio`, always strictly between 0 and 1                           |
+| A split whose `first` or `second` is `undefined`                | Not representable. A split always has two children.                |
+| Widget content in `oneof node`, such as `camera` or `timeSeries` | `data` on a pane                                                   |
+
+### Function names
+
+| `nodes.ts`                                              | `@viamrobotics/prime-split-view`                         |
+| ------------------------------------------------------- | -------------------------------------------------------- |
+| `addNodeToUpperRight(workspace, node)`                  | `addPaneToUpperRight(root, pane, newSplitId)`            |
+| `removeNode(workspace, nodeId)`                         | `removePane(root, paneId)`                               |
+| `swapNodes(workspace, nodeId1, nodeId2)`                | `swapPanes(root, firstId, secondId)`                     |
+| `moveNode(workspace, nodeId, targetId, direction, key)` | `movePane(root, paneId, targetId, direction, key, newSplitId)` |
+| `setSplitPercentage(workspace, nodeId, percentage)`     | `setSplitRatio(root, splitId, ratio)`                    |
+| `updateNodeContent(workspace, nodeId, content)`         | `updatePaneData(root, paneId, data)`                     |
+
+Two differences matter when you port callers. The `nodes.ts` functions mutate the workspace and return it, or return `undefined` when nothing changed. The library functions never mutate, and they return the same root reference when nothing changed. The library also asks you for the id of any split it creates, where `nodes.ts` calls `crypto.randomUUID()` inside.
+
+### Converting between the formats
+
+This converter reads a protobuf tree into the library model and writes it back. Pane `data` is the `oneof node` content, so widget code keeps working with the protobuf shapes it already knows.
+
+```ts
+import {
+  SplitDirection,
+  type WorkspaceNode,
+} from '@viamrobotics/web-client/teleop/v1/teleop';
+import type { LayoutNode } from '@viamrobotics/prime-split-view';
+
+type WidgetNode = Exclude<WorkspaceNode['node'], { oneofKind: 'split' | undefined }>;
+export type Layout = LayoutNode<WidgetNode> | undefined;
+
+const DEFAULT_RATIO = 0.5;
+
+const readRatio = (splitPercentage: number) =>
+  splitPercentage > 0 && splitPercentage < 1 ? splitPercentage : DEFAULT_RATIO;
+
+export const fromWorkspaceNode = (node: WorkspaceNode | undefined): Layout => {
+  if (!node) return undefined;
+
+  if (node.node.oneofKind === 'split') {
+    const { direction, splitPercentage, first, second } = node.node.split;
+    const firstLayout = fromWorkspaceNode(first);
+    const secondLayout = fromWorkspaceNode(second);
+
+    // A split with one child collapses to the child it has.
+    if (!firstLayout || !secondLayout) return firstLayout ?? secondLayout;
+
+    return {
+      type: 'split',
+      id: node.nodeId,
+      // UNSPECIFIED reads as column.
+      direction: direction === SplitDirection.ROW ? 'row' : 'column',
+      // A stored 0 means missing.
+      ratio: readRatio(splitPercentage),
+      first: firstLayout,
+      second: secondLayout,
+    };
+  }
+
+  if (node.node.oneofKind === undefined) return undefined;
+
+  return { type: 'pane', id: node.nodeId, data: node.node };
+};
+
+export const toWorkspaceNode = (layout: NonNullable<Layout>): WorkspaceNode => {
+  if (layout.type === 'pane') {
+    return { nodeId: layout.id, node: layout.data };
+  }
+
+  return {
+    nodeId: layout.id,
+    node: {
+      oneofKind: 'split',
+      split: {
+        direction:
+          layout.direction === 'row' ? SplitDirection.ROW : SplitDirection.COLUMN,
+        splitPercentage: layout.ratio,
+        first: toWorkspaceNode(layout.first),
+        second: toWorkspaceNode(layout.second),
+      },
+    },
+  };
+};
+```
+
+Use `fromWorkspaceNode(workspace.layoutRoot)` to seed the bound layout. In the persistence recipe, call `toWorkspaceNode` inside `save`, and skip it when the layout is `undefined`. A split with a missing child collapses to the child it has, and a workspace with no `layoutRoot` is an empty layout. An unspecified direction on read becomes `column`, so the first save writes `COLUMN` back. That is a one-time normalization of old data.
+
+## Limitations
+
+- Dragging a pane uses HTML5 drag and drop, which does not fire on touch. The click path in move mode works on touch.
+- Resizing needs a pointer drag on the divider or the separator's arrow keys. It has no click-only path.
+- The five targets crowd each other in a pane smaller than about 100px.
+- Escape cancels move mode only while focus is inside the view.
+- While a divider is dragged, the cursor for the whole page is set by a stylesheet that the splitter injects. That stylesheet takes no `nonce`. Under a strict Content Security Policy it is blocked, so the global resize cursor does not change during a drag. The divider itself still resizes.

@@ -164,6 +164,10 @@ importers:
         version: 0.14.13
 
   packages/prime-split-view:
+    dependencies:
+      esm-env:
+        specifier: ^1.2.2
+        version: 1.2.2
     devDependencies:
       '@eslint/compat':
         specifier: 'catalog:'

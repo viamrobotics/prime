@@ -1,25 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { setSplitRatio } from '../tree.ts';
-import { ids, layoutRoot } from './layout-fixture.ts';
+import { deepFreeze, expectSplit, ids, layoutRoot } from './layout-fixture.ts';
 
-import type { LayoutNode, SplitNode } from '../layout.ts';
+import type { LayoutNode } from '../layout.ts';
 import type { PaneData } from './layout-fixture.ts';
-
-function deepFreeze<TValue>(value: TValue): TValue {
-	if (typeof value === 'object' && value !== null && !Object.isFrozen(value)) {
-		Object.freeze(value);
-		Object.values(value).forEach(deepFreeze);
-	}
-	return value;
-}
-
-function getSplitNode(node: LayoutNode<PaneData> | undefined): SplitNode<PaneData> {
-	if (node?.type !== 'split') {
-		throw new Error('node is not a split');
-	}
-	return node;
-}
 
 function getSplit(root: LayoutNode<PaneData> | undefined, id: string) {
 	const stack = root ? [root] : [];
@@ -63,18 +48,18 @@ describe('setSplitRatio', () => {
 	it('keeps the reference of every subtree off the path', () => {
 		const modified = setSplitRatio(layoutRoot, ids.lowerSplit, 0.9);
 		expect(modified).not.toBe(layoutRoot);
-		const before = getSplitNode(layoutRoot);
-		const after = getSplitNode(modified);
+		const before = expectSplit(layoutRoot);
+		const after = expectSplit(modified);
 		expect(after).not.toBe(before);
 		expect(after.first).toBe(before.first);
 
-		const innerBefore = getSplitNode(before.second);
-		const innerAfter = getSplitNode(after.second);
+		const innerBefore = expectSplit(before.second);
+		const innerAfter = expectSplit(after.second);
 		expect(after.second).not.toBe(before.second);
 		expect(innerAfter.first).toBe(innerBefore.first);
 
-		const lowerBefore = getSplitNode(innerBefore.second);
-		const lowerAfter = getSplitNode(innerAfter.second);
+		const lowerBefore = expectSplit(innerBefore.second);
+		const lowerAfter = expectSplit(innerAfter.second);
 		expect(innerAfter.second).not.toBe(innerBefore.second);
 		expect(lowerAfter.first).toBe(lowerBefore.first);
 		expect(lowerAfter.second).toBe(lowerBefore.second);

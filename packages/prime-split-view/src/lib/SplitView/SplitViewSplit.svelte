@@ -14,17 +14,13 @@
 
 	type Orientation = 'horizontal' | 'vertical';
 
-	/** Keeps `ratio` strictly between 0 and 1, so neither pane can be dragged to nothing. */
 	const PANEL_MIN_SIZE = '2.5rem';
 	const RESIZE_HANDLE_LABEL = 'Resize panes';
 	const FIRST = 'first' satisfies SplitKey;
 	const SECOND = 'second' satisfies SplitKey;
 	const RESIZE_TRIGGER_ID = `${FIRST}:${SECOND}` as const;
-
-	/** Chosen so float noise in zag's percent math is not mistaken for a resize. */
 	const MIN_RATIO_CHANGE = 0.0001;
 
-	/** zag names the axis the panels are laid along, so a `row` of side-by-side panes is `horizontal`. */
 	const ORIENTATION_BY_DIRECTION: Record<SplitDirection, Orientation> = {
 		row: 'horizontal',
 		column: 'vertical'

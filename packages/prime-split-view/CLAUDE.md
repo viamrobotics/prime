@@ -5,8 +5,9 @@ Resizable, rearrangeable split-pane layouts for Svelte 5. It extracts the split-
 ## Layout
 
 - `src/lib/layout.ts`: the tree types `LayoutNode`, `SplitNode`, `PaneNode`, `SplitDirection`, and `SplitKey`. Type only, no runtime code.
+- `src/lib/drop-region.ts`: maps a pointer position over a pane to a drop region (`center`, `left`, `right`, `top`, `bottom`) and the placement `movePane` takes.
 - `src/lib/tree.ts`: immutable tree operations. Each returns the same root reference when nothing changed.
-- `src/lib/SplitView/`: the `SplitView` component, its internal parts, and the context in `useSplitView.svelte.ts`.
+- `src/lib/SplitView/`: the `SplitView` component, its internal parts, and the context in `useSplitView.svelte.ts`. `pane-controls.ts` types the `dragTrigger`, `dragIgnore`, and `moveTrigger` attachments that the `pane` snippet receives. `split-id.ts` creates the ids of splits that a drop makes.
 - `src/lib/**/__tests__/`: tests and test fixtures, excluded from the published package.
 - `src/routes/`: the SvelteKit playground, embedded in the docs site at `/playground/prime-split-view/`. Not published.
 - `styles.css`: the consumer's Tailwind entry. It imports the tokens and points Tailwind at `dist`.
@@ -30,4 +31,5 @@ Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwrig
 - State flows through `bind:layout`, never a change callback. A function binding is the persistence hook and can veto a change.
 - No zag.js names in the public API. Props and parts use web-standard vocabulary.
 - No protobuf semantics. No `oneofKind`, numeric enums, or proto3 default handling. Format conversion belongs to the consumer.
+- The `SplitView` root is unopinionated about layout. It has no default size, display, or styling, and the consumer sizes it with a class.
 - Tailwind classes reference `@viamrobotics/tailwind-config` tokens only.

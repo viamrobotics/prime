@@ -1,4 +1,4 @@
-import type { LayoutNode } from '../layout.ts';
+import type { LayoutNode, SplitNode } from '../layout.ts';
 
 export interface PaneData {
 	label: string;
@@ -36,3 +36,24 @@ export const layoutRoot: LayoutNode<PaneData> = {
 		}
 	}
 };
+
+/** A fresh copy of `layoutRoot`, so a test can never affect another. */
+export function createLayout(): LayoutNode<PaneData> {
+	return structuredClone(layoutRoot);
+}
+
+export function deepFreeze<TValue>(value: TValue): TValue {
+	if (typeof value === 'object' && value !== null && !Object.isFrozen(value)) {
+		Object.freeze(value);
+		Object.values(value).forEach(deepFreeze);
+	}
+	return value;
+}
+
+/** Narrows `node` to a split, failing the test when it is not one. */
+export function expectSplit(node: LayoutNode<PaneData> | undefined): SplitNode<PaneData> {
+	if (node?.type !== 'split') {
+		throw new Error('node is not a split');
+	}
+	return node;
+}

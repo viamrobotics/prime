@@ -12,11 +12,7 @@
 </script>
 
 {#if node.type === 'split'}
-	{#key node.id}
-		<SplitViewSplit {node} />
-	{/key}
+	{#key node.id}<SplitViewSplit {node} />{/key}
 {:else}
-	{#key node.id}
-		<SplitViewPane {node} />
-	{/key}
+	{#key node.id}<SplitViewPane {node} />{/key}
 {/if}

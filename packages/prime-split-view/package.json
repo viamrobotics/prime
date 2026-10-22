@@ -209,11 +209,14 @@
 			]
 		}
 	},
+	"dependencies": {
+		"esm-env": "^1.2.2"
+	},
 	"peerDependencies": {
 		"@viamrobotics/tailwind-config": "workspace:^",
 		"@zag-js/splitter": "^1.46.0",
 		"@zag-js/svelte": "^1.46.0",
-		"svelte": "^5.0.0"
+		"svelte": "^5.29.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "catalog:",

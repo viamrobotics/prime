@@ -7,5 +7,8 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@viamrobotics/prime-ui", "@viamrobotics/prime-split-view"]
+  "ignore": [
+    "@viamrobotics/prime-ui"
+  ],
+  "prettier": false
 }

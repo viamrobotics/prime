@@ -13,7 +13,7 @@
 </script>
 
 <div data-testid="frame" style="width: 800px; height: 600px">
-	<SplitView {layout}>
+	<SplitView {layout} class="size-full">
 		{#snippet pane(node)}
 			<div data-testid="pane" data-pane-id={node.id}>{node.data.label}</div>
 		{/snippet}
