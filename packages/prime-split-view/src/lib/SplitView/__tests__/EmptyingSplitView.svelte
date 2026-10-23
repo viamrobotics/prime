@@ -4,7 +4,7 @@
 	import { layoutRoot } from '../../__tests__/layout-fixture.ts';
 	import type { PaneData } from '../../__tests__/layout-fixture.ts';
 	import type { LayoutNode } from '../../layout.ts';
-	import SplitView from '../SplitView.svelte';
+	import { SplitView } from '../split-view.ts';
 
 	interface Props {
 		/** Renders an `empty` snippet when true. */

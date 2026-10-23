@@ -6,7 +6,8 @@ import { page, userEvent } from 'vitest/browser';
 import { expectSplit, ids, layoutRoot } from '../../__tests__/layout-fixture.ts';
 import BoundSplitView from './BoundSplitView.svelte';
 import ControlledSplitView from './ControlledSplitView.svelte';
-import PaneControlsSplitView from './PaneControlsSplitView.svelte';
+import { dragAfterHold, holdPress } from './hold-to-drag.ts';
+import PanePartsSplitView from './PanePartsSplitView.svelte';
 
 import type { LayoutNode } from '../../layout.ts';
 import type { PaneData } from '../../__tests__/layout-fixture.ts';
@@ -21,17 +22,21 @@ interface Fractions {
 const WIDE_VIEWPORT = { width: 1000, height: 1400 };
 const DEFAULT_VIEWPORT = { width: 414, height: 896 };
 const SEPARATOR_REACH_PX = 2;
-const NATIVE_CONTROLS = [
+const HELD_PRESS_MS = 300;
+const HELD_CONTROLS = [
 	{ name: 'button', selector: 'button' },
 	{ name: 'a', selector: 'a' },
-	{ name: 'input', selector: 'input' },
 	{ name: 'select', selector: 'select' },
+	{ name: 'role-button', selector: '[role="button"]' }
+];
+const TEXT_FIELDS = [
+	{ name: 'input', selector: 'input' },
 	{ name: 'textarea', selector: 'textarea' },
 	{ name: 'contenteditable', selector: '[contenteditable]' }
 ];
-// A link, a select, and a contenteditable start their own native gesture, so a drag from one shows nothing about the guard.
-const CONTROLS_THAT_DRAG_THE_PANE_WHEN_ARMED = NATIVE_CONTROLS.filter(({ name }) =>
-	['button', 'input', 'textarea'].includes(name)
+// A link, a select, and a contenteditable start their own native gesture, so a drag from one shows nothing about the hold.
+const CONTROLS_THAT_DRAG_THE_PANE_WHEN_ARMED = [...HELD_CONTROLS, ...TEXT_FIELDS].filter(
+	({ name }) => ['button', 'input', 'textarea'].includes(name)
 );
 const NO_POINTER_EVENTS = ['none', 'none', 'none', 'none'];
 const ALL_POINTER_EVENTS = ['auto', 'auto', 'auto', 'auto'];
@@ -134,7 +139,7 @@ const dragPaneOnto = (
 	options: { force?: boolean } = {}
 ) => {
 	const target = paneElement(container, targetId);
-	return userEvent.dragAndDrop(handleOf(container, fromLabel), target, {
+	return dragAfterHold(handleOf(container, fromLabel), target, {
 		targetPosition: pointWithin(target, at),
 		...options
 	});
@@ -170,14 +175,23 @@ const pressElement = async (element: Element) => {
 	await tick();
 };
 
-const pressHandle = (container: Element, label: string) => pressElement(handleOf(container, label));
+const pressHandle = (container: Element, label: string) => holdPress(handleOf(container, label));
 
-const releaseHandle = async (container: Element, label: string) => {
-	handleOf(container, label).dispatchEvent(
-		new PointerEvent('pointerup', { bubbles: true, button: 0 })
-	);
+const releaseElement = async (element: Element) => {
+	element.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, button: 0 }));
 	await tick();
 };
+
+const releaseHandle = (container: Element, label: string) =>
+	releaseElement(handleOf(container, label));
+
+const cancelPress = async (element: Element) => {
+	element.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, button: 0 }));
+	await tick();
+};
+
+const pressControl = (container: Element, name: string) =>
+	pressElement(controlOf(container, 'Camera', name));
 
 const startDragFrom = async (container: Element, label: string, paneId: string) => {
 	await pressHandle(container, label);
@@ -186,6 +200,13 @@ const startDragFrom = async (container: Element, label: string, paneId: string) 
 	dispatchDrag('dragstart', source, { dataTransfer });
 	await tick();
 	return { source, dataTransfer };
+};
+
+const startPaneDrag = async (container: Element, paneId: string) => {
+	const dataTransfer = new DataTransfer();
+	const event = dispatchDrag('dragstart', wrapperOf(container, paneId), { dataTransfer });
+	await tick();
+	return { event, dataTransfer };
 };
 
 const dragCameraOverTimeSeries = async (container: Element) => {
@@ -478,7 +499,7 @@ describe('SplitView drag and drop: a drag that never reaches a pane', () => {
 		});
 		const duringDrag = sampleDuring('dragend', () => overlayPointerEvents(container));
 
-		await userEvent.dragAndDrop(handleOf(container, 'Camera'), getByTestId('owner'));
+		await dragAfterHold(handleOf(container, 'Camera'), getByTestId('owner'));
 		await nextFrames();
 
 		expect(duringDrag.value, 'overlays took pointer events while the drag lasted').toEqual(
@@ -619,7 +640,7 @@ describe('SplitView drag and drop: a drag this view did not start', () => {
 		const bystanderIndicators = sampleDuring('dragover', () => indicatorIn(bystander));
 		const target = paneElement(bystander, ids.mytimeseries);
 
-		await userEvent.dragAndDrop(handleOf(source, 'Camera'), target, {
+		await dragAfterHold(handleOf(source, 'Camera'), target, {
 			targetPosition: pointWithin(target, RIGHT)
 		});
 		await nextFrames();
@@ -640,7 +661,7 @@ describe('SplitView drag and drop: dropping next to a separator', () => {
 		});
 		const target = paneElement(container, ids.mytimeseries);
 
-		await userEvent.dragAndDrop(handleOf(container, 'Camera'), target, {
+		await dragAfterHold(handleOf(container, 'Camera'), target, {
 			targetPosition: { x: sizeOf(target).width / 2, y: SEPARATOR_REACH_PX },
 			force: true
 		});
@@ -671,7 +692,7 @@ describe('SplitView drag and drop: dropping next to a separator', () => {
 		});
 		const target = paneElement(container, ids.mycam);
 
-		await userEvent.dragAndDrop(handleOf(container, 'Time series'), target, {
+		await dragAfterHold(handleOf(container, 'Time series'), target, {
 			targetPosition: {
 				x: sizeOf(target).width / 2,
 				y: sizeOf(target).height - SEPARATOR_REACH_PX
@@ -699,8 +720,8 @@ describe('SplitView drag and drop: dropping next to a separator', () => {
 	});
 });
 
-describe('SplitView drag and drop: the dragTrigger', () => {
-	it('makes only the pressed handle pane draggable', async () => {
+describe('SplitView.DragTrigger: a held handle', () => {
+	it('makes only the held handle pane draggable', async () => {
 		const { container } = render(ControlledSplitView, {
 			props: { accept: true, handles: true }
 		});
@@ -710,7 +731,7 @@ describe('SplitView drag and drop: the dragTrigger', () => {
 		expect(draggableWrappers(container)).toEqual([wrapperOf(container, ids.mytimeseries)]);
 	});
 
-	it('makes no pane draggable again once the handle is released', async () => {
+	it('makes no pane draggable again once the held handle is released', async () => {
 		const { container } = render(ControlledSplitView, {
 			props: { accept: true, handles: true }
 		});
@@ -721,7 +742,7 @@ describe('SplitView drag and drop: the dragTrigger', () => {
 		expect(draggableWrappers(container)).toEqual([]);
 	});
 
-	it('makes no pane draggable once the pointer is released off the handle without a drag', async () => {
+	it('makes no pane draggable once the pointer is released off the held handle without a drag', async () => {
 		const { container } = render(ControlledSplitView, {
 			props: { accept: true, handles: true }
 		});
@@ -806,9 +827,9 @@ describe('SplitView drag payload', () => {
 	});
 });
 
-describe('SplitView drag and drop: a dragTrigger on a whole header', () => {
+describe('SplitView.DragTrigger: a header around plain text', () => {
 	it('moves the pane beside the target when dragged from the header text', async () => {
-		const { container, component } = render(PaneControlsSplitView, {
+		const { container, component } = render(PanePartsSplitView, {
 			props: { variant: 'header' }
 		});
 		const target = paneElement(container, ids.mytimeseries);
@@ -820,8 +841,8 @@ describe('SplitView drag and drop: a dragTrigger on a whole header', () => {
 		await expect.poll(() => component.getLayout()).toEqual(CAMERA_RIGHT_OF_TIME_SERIES);
 	});
 
-	it('makes only the pressed header pane draggable', async () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'header' } });
+	it('makes only the pane of the pressed header draggable at once', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
 
 		await pressElement(headerTextOf(container, 'Time series'));
 
@@ -829,11 +850,111 @@ describe('SplitView drag and drop: a dragTrigger on a whole header', () => {
 	});
 });
 
-describe('SplitView drag and drop: native controls inside a dragTrigger', () => {
-	it.each(NATIVE_CONTROLS)('arms no pane when a press starts on $selector', async ({ name }) => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'header' } });
+describe('SplitView.DragTrigger: a press that starts on a control', () => {
+	afterEach(() => vi.useRealTimers());
 
-		await pressElement(controlOf(container, 'Camera', name));
+	it.each(HELD_CONTROLS)(
+		'makes the pane draggable at once on a press on $selector',
+		async ({ name }) => {
+			const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+
+			await pressControl(container, name);
+
+			expect(draggableWrappers(container)).toEqual([wrapperOf(container, ids.mycam)]);
+		}
+	);
+
+	it.each(HELD_CONTROLS)('vetoes dragstart 249ms into a press on $selector', async ({ name }) => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, name);
+		vi.advanceTimersByTime(249);
+		await tick();
+
+		const { event, dataTransfer } = await startPaneDrag(container, ids.mycam);
+
+		expect(event.defaultPrevented, 'dragstart was not vetoed').toBe(true);
+		expect(dataTransfer.getData('text/plain')).toBe('');
+		expect(overlayPointerEvents(container)).toEqual(NO_POINTER_EVENTS);
+	});
+
+	it.each(HELD_CONTROLS)('allows dragstart 250ms into a press on $selector', async ({ name }) => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, name);
+		vi.advanceTimersByTime(250);
+		await tick();
+
+		const { event, dataTransfer } = await startPaneDrag(container, ids.mycam);
+
+		expect(event.defaultPrevented, 'dragstart was vetoed').toBe(false);
+		expect(dataTransfer.getData('text/plain')).toBe(ids.mycam);
+		expect(overlayPointerEvents(container)).toEqual(ALL_POINTER_EVENTS);
+	});
+
+	it('makes no pane draggable when the press is released before the hold ends', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, 'button');
+		vi.advanceTimersByTime(100);
+
+		await releaseElement(controlOf(container, 'Camera', 'button'));
+		vi.advanceTimersByTime(1000);
+		await tick();
+
+		expect(draggableWrappers(container)).toEqual([]);
+	});
+
+	it('makes no pane draggable when the press is canceled before the hold ends', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, 'button');
+		vi.advanceTimersByTime(100);
+
+		await cancelPress(controlOf(container, 'Camera', 'button'));
+		vi.advanceTimersByTime(1000);
+		await tick();
+
+		expect(draggableWrappers(container)).toEqual([]);
+	});
+
+	it('keeps the pane draggable when the press is canceled after the hold ends', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, 'button');
+		vi.advanceTimersByTime(250);
+		await tick();
+
+		await cancelPress(controlOf(container, 'Camera', 'button'));
+
+		expect(draggableWrappers(container)).toEqual([wrapperOf(container, ids.mycam)]);
+	});
+
+	it('makes no pane draggable again once a held control is released', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, 'button');
+		vi.advanceTimersByTime(250);
+		await tick();
+		expect(draggableWrappers(container), 'the hold armed the pane').toHaveLength(1);
+
+		await releaseElement(controlOf(container, 'Camera', 'button'));
+
+		expect(draggableWrappers(container)).toEqual([]);
+	});
+
+	it('makes no pane draggable when the drag trigger unmounts during the hold', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'removable' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressElement(
+			container.querySelector<HTMLElement>('[data-header="Camera"] [data-control="button"]')!
+		);
+		container.querySelector<HTMLElement>('[aria-label="Remove header of Camera"]')!.click();
+		await tick();
+		expect(container.querySelector('[data-header="Camera"]'), 'the header was removed').toBeNull();
+
+		vi.advanceTimersByTime(1000);
+		await tick();
 
 		expect(draggableWrappers(container)).toEqual([]);
 	});
@@ -841,7 +962,7 @@ describe('SplitView drag and drop: native controls inside a dragTrigger', () => 
 	it.each(CONTROLS_THAT_DRAG_THE_PANE_WHEN_ARMED)(
 		'moves no pane when $selector is dragged onto another pane',
 		async ({ name }) => {
-			const { container, component } = render(PaneControlsSplitView, {
+			const { container, component } = render(PanePartsSplitView, {
 				props: { variant: 'header' }
 			});
 			const target = paneElement(container, ids.mytimeseries);
@@ -855,11 +976,24 @@ describe('SplitView drag and drop: native controls inside a dragTrigger', () => 
 		}
 	);
 
-	it.each(NATIVE_CONTROLS)(
+	it('moves the pane when a button is held and then dragged onto another pane', async () => {
+		const { container, component } = render(PanePartsSplitView, {
+			props: { variant: 'header' }
+		});
+		const target = paneElement(container, ids.mytimeseries);
+
+		await dragAfterHold(controlOf(container, 'Camera', 'button'), target, {
+			targetPosition: pointWithin(target, RIGHT)
+		});
+
+		await expect.poll(() => component.getLayout()).toEqual(CAMERA_RIGHT_OF_TIME_SERIES);
+	});
+
+	it.each([...HELD_CONTROLS, ...TEXT_FIELDS])(
 		'still delivers a click on $selector to its handler',
 		async ({ name }) => {
 			const onControlClick = vi.fn();
-			const { container } = render(PaneControlsSplitView, {
+			const { container } = render(PanePartsSplitView, {
 				props: { variant: 'header', onControlClick }
 			});
 
@@ -870,9 +1004,107 @@ describe('SplitView drag and drop: native controls inside a dragTrigger', () => 
 	);
 });
 
-describe('SplitView drag and drop: a dragIgnore element inside a dragTrigger', () => {
+describe('SplitView.DragTrigger: the click after a held press', () => {
+	afterEach(() => vi.useRealTimers());
+
+	const moveButtonOf = (container: Element) => handleOf(container, 'Camera');
+	const isMoveActive = (container: Element) =>
+		moveButtonOf(container).getAttribute('aria-pressed') === 'true';
+
+	it('does not enter move mode when a held move button is released', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+
+		await userEvent.click(moveButtonOf(container), { delay: HELD_PRESS_MS });
+
+		expect(isMoveActive(container)).toBe(false);
+	});
+
+	it('does not run a consumer click handler when a held control is released', async () => {
+		const onControlClick = vi.fn();
+		const { container } = render(PanePartsSplitView, {
+			props: { variant: 'header', onControlClick }
+		});
+
+		await userEvent.click(controlOf(container, 'Camera', 'button'), { delay: HELD_PRESS_MS });
+
+		expect(onControlClick).not.toHaveBeenCalled();
+	});
+
+	it('still enters move mode on a quick click of the move button', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+
+		await userEvent.click(moveButtonOf(container));
+
+		expect(isMoveActive(container)).toBe(true);
+	});
+
+	it('still enters move mode with Enter after a held move button is released', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		await userEvent.click(moveButtonOf(container), { delay: HELD_PRESS_MS });
+		expect(isMoveActive(container), 'the held release entered move mode').toBe(false);
+
+		await userEvent.keyboard('{Enter}');
+
+		expect(isMoveActive(container)).toBe(true);
+	});
+
+	it('still enters move mode on a quick click after a held move button is released', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		await userEvent.click(moveButtonOf(container), { delay: HELD_PRESS_MS });
+		expect(isMoveActive(container), 'the held release entered move mode').toBe(false);
+
+		await userEvent.click(moveButtonOf(container));
+
+		expect(isMoveActive(container)).toBe(true);
+	});
+
+	it('lets a click through once the task that released the held press has ended', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressElement(moveButtonOf(container));
+		vi.advanceTimersByTime(250);
+		await releaseElement(moveButtonOf(container));
+		vi.advanceTimersByTime(1);
+
+		moveButtonOf(container).click();
+		await tick();
+
+		expect(isMoveActive(container)).toBe(true);
+	});
+
+	it('delivers a click on a text field that was held', async () => {
+		const onControlClick = vi.fn();
+		const { container } = render(PanePartsSplitView, {
+			props: { variant: 'header', onControlClick }
+		});
+
+		await userEvent.click(controlOf(container, 'Camera', 'input'), { delay: HELD_PRESS_MS });
+
+		expect(onControlClick).toHaveBeenCalledExactlyOnceWith('input');
+	});
+});
+
+describe('SplitView.DragTrigger: a press that starts on a text field', () => {
+	afterEach(() => vi.useRealTimers());
+
+	it.each(TEXT_FIELDS)(
+		'arms no pane when a press on $selector is held for 1000ms',
+		async ({ name }) => {
+			const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+			vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
+			await pressControl(container, name);
+			vi.advanceTimersByTime(1000);
+			await tick();
+
+			expect(draggableWrappers(container)).toEqual([]);
+		}
+	);
+});
+
+describe('SplitView dragIgnore: an element inside a SplitView.DragTrigger', () => {
 	it('arms no pane when a press starts on it', async () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'header' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
 
 		await pressElement(ignoredElementOf(container, 'Camera'));
 
@@ -880,7 +1112,7 @@ describe('SplitView drag and drop: a dragIgnore element inside a dragTrigger', (
 	});
 
 	it('moves no pane when it is dragged onto another pane', async () => {
-		const { container, component } = render(PaneControlsSplitView, {
+		const { container, component } = render(PanePartsSplitView, {
 			props: { variant: 'header' }
 		});
 		const target = paneElement(container, ids.mytimeseries);
@@ -891,5 +1123,77 @@ describe('SplitView drag and drop: a dragIgnore element inside a dragTrigger', (
 		await nextFrames();
 
 		expect(component.getLayout()).toEqual(layoutRoot);
+	});
+});
+
+describe('SplitView: the armed indicator', () => {
+	afterEach(() => vi.useRealTimers());
+
+	const armed = (container: Element, id: string) =>
+		wrapperOf(container, id).hasAttribute('data-drag-armed');
+	const outlineStyle = (container: Element, id: string) =>
+		getComputedStyle(wrapperOf(container, id)).outlineStyle;
+
+	it('shows at once on a press on plain header text and clears on release', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		const text = headerTextOf(container, 'Camera');
+
+		await pressElement(text);
+		expect(armed(container, ids.mycam)).toBe(true);
+		expect(outlineStyle(container, ids.mycam)).toBe('solid');
+
+		await releaseElement(text);
+		expect(armed(container, ids.mycam)).toBe(false);
+		expect(outlineStyle(container, ids.mycam)).toBe('none');
+	});
+
+	it('shows on a press on a control only once the hold arms', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, 'button');
+		vi.advanceTimersByTime(249);
+		await tick();
+		expect(armed(container, ids.mycam)).toBe(false);
+
+		vi.advanceTimersByTime(1);
+		await tick();
+		expect(armed(container, ids.mycam)).toBe(true);
+	});
+
+	it('never shows when a press on a control is released before the hold ends', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, 'button');
+		vi.advanceTimersByTime(100);
+		await releaseElement(controlOf(container, 'Camera', 'button'));
+		vi.advanceTimersByTime(1000);
+		await tick();
+
+		expect(armed(container, ids.mycam)).toBe(false);
+	});
+
+	it('never shows when reorderable is false', async () => {
+		const { container } = render(PanePartsSplitView, {
+			props: { variant: 'header', reorderable: false }
+		});
+
+		await pressElement(headerTextOf(container, 'Camera'));
+
+		expect(armed(container, ids.mycam)).toBe(false);
+	});
+
+	it('stays through dragstart and clears on dragend', async () => {
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		await pressControl(container, 'button');
+		vi.advanceTimersByTime(250);
+		await tick();
+
+		await startPaneDrag(container, ids.mycam);
+		expect(armed(container, ids.mycam)).toBe(true);
+
+		dispatchDrag('dragend', wrapperOf(container, ids.mycam));
+		await tick();
+		expect(armed(container, ids.mycam)).toBe(false);
 	});
 });

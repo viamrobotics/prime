@@ -3,7 +3,7 @@ import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
 import { ids } from '../../__tests__/layout-fixture.ts';
-import PaneControlsSplitView from './PaneControlsSplitView.svelte';
+import PanePartsSplitView from './PanePartsSplitView.svelte';
 
 vi.mock('esm-env', () => ({ DEV: false, BROWSER: true }));
 
@@ -14,10 +14,10 @@ beforeAll(() => page.viewport(WIDE_VIEWPORT.width, WIDE_VIEWPORT.height));
 
 afterAll(() => page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height));
 
-describe('SplitView pane controls: a production build', () => {
-	it('logs no warning when a pane with no moveTrigger is dragged', async () => {
+describe('SplitView.MoveTrigger: a production build', () => {
+	it('logs no warning when a pane with no SplitView.MoveTrigger is dragged', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'drag-only' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'drag-only' } });
 		const target = container.querySelector<HTMLElement>(`[data-pane-id="${ids.mytimeseries}"]`)!;
 		const rect = target.getBoundingClientRect();
 

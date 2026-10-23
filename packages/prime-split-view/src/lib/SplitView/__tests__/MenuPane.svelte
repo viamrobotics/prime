@@ -1,38 +1,35 @@
 <script lang="ts">
-	import type { PaneControls } from '../pane-controls.ts';
+	import { SplitView } from '../split-view.ts';
 
 	interface Props {
 		label: string;
-		controls: PaneControls;
 	}
 
-	const { label, controls }: Props = $props();
+	const { label }: Props = $props();
 
 	let isOpen = $state(false);
 </script>
 
-<header
-	data-header={label}
-	class="absolute top-0 left-0 z-10 flex items-center gap-1 bg-light p-1"
-	{@attach controls.dragTrigger}
->
-	<span data-header-text={label}>{label}</span>
-	<button
-		type="button"
-		aria-label="Menu for {label}"
-		aria-expanded={isOpen}
-		onclick={() => (isOpen = !isOpen)}
+<SplitView.DragTrigger>
+	<header
+		data-header={label}
+		class="absolute top-0 left-0 z-10 flex items-center gap-1 bg-light p-1"
 	>
-		...
-	</button>
-	{#if isOpen}
+		<span data-header-text={label}>{label}</span>
 		<button
 			type="button"
-			aria-label="Move {label}"
-			onclick={() => (isOpen = false)}
-			{@attach controls.moveTrigger}
+			aria-label="Menu for {label}"
+			aria-expanded={isOpen}
+			onclick={() => (isOpen = !isOpen)}
 		>
-			Move
+			...
 		</button>
-	{/if}
-</header>
+		{#if isOpen}
+			<SplitView.MoveTrigger onclick={() => (isOpen = false)}>
+				{#snippet child({ props })}
+					<div role="menuitem" tabindex="-1" aria-label="Move {label}" {...props}>Move</div>
+				{/snippet}
+			</SplitView.MoveTrigger>
+		{/if}
+	</header>
+</SplitView.DragTrigger>

@@ -5,7 +5,8 @@ import { page, userEvent } from 'vitest/browser';
 
 import { ids, layoutRoot } from '../../__tests__/layout-fixture.ts';
 import BoundSplitView from './BoundSplitView.svelte';
-import PaneControlsSplitView from './PaneControlsSplitView.svelte';
+import { dragAfterHold } from './hold-to-drag.ts';
+import PanePartsSplitView from './PanePartsSplitView.svelte';
 
 const WIDE_VIEWPORT = { width: 1000, height: 1400 };
 const DEFAULT_VIEWPORT = { width: 414, height: 896 };
@@ -13,7 +14,7 @@ const DESTINATION_COUNT = 3;
 const RIGHT = { x: 0.9, y: 0.5 };
 
 const warningFor = (label: string) =>
-	`SplitView: pane "${label}" was dragged but has no moveTrigger. Dragging alone fails WCAG 2.5.7 (Dragging Movements), so attach moveTrigger to an element that moves the pane without dragging. A moveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.`;
+	`SplitView: pane "${label}" was dragged but has no SplitView.MoveTrigger. Dragging alone fails WCAG 2.5.7 (Dragging Movements), so render a SplitView.MoveTrigger in the pane to move it without dragging. A SplitView.MoveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.`;
 
 const handleOf = (container: Element, label: string) =>
 	container.querySelector<HTMLElement>(`[aria-label="Move ${label}"]`)!;
@@ -55,17 +56,25 @@ const dragOnto = (source: HTMLElement, container: Element, targetId: string) => 
 const dragOntoTimeSeries = (source: HTMLElement, container: Element) =>
 	dragOnto(source, container, ids.mytimeseries);
 
+const dragHeldHandleOntoTimeSeries = (source: HTMLElement, container: Element) => {
+	const target = paneElement(container, ids.mytimeseries);
+	const rect = target.getBoundingClientRect();
+	return dragAfterHold(source, target, {
+		targetPosition: { x: rect.width * RIGHT.x, y: rect.height * RIGHT.y }
+	});
+};
+
 beforeAll(() => page.viewport(WIDE_VIEWPORT.width, WIDE_VIEWPORT.height));
 
 afterAll(() => page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height));
 
 afterEach(() => vi.restoreAllMocks());
 
-describe('SplitView pane controls: one element carrying dragTrigger and moveTrigger', () => {
-	it('moves the pane beside the target when dragged', async () => {
+describe('SplitView.DragTrigger around a SplitView.MoveTrigger: one handle', () => {
+	it('moves the pane beside the target when held and dragged', async () => {
 		const { container } = render(BoundSplitView, { props: { handles: true } });
 
-		await dragOntoTimeSeries(handleOf(container, 'Camera'), container);
+		await dragHeldHandleOntoTimeSeries(handleOf(container, 'Camera'), container);
 
 		await expect
 			.poll(() => paneIds(container))
@@ -82,18 +91,18 @@ describe('SplitView pane controls: one element carrying dragTrigger and moveTrig
 	});
 });
 
-describe('SplitView pane controls: dragging a pane that has no moveTrigger', () => {
+describe('SplitView.MoveTrigger: dragging a pane that has none', () => {
 	it('logs no warning before any drag', () => {
 		const warn = warnSpy();
 
-		render(PaneControlsSplitView, { props: { variant: 'drag-only' } });
+		render(PanePartsSplitView, { props: { variant: 'drag-only' } });
 
 		expect(warn).not.toHaveBeenCalled();
 	});
 
 	it('warns on the first drag, naming the pane label', async () => {
 		const warn = warnSpy();
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'drag-only' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'drag-only' } });
 
 		await dragOntoTimeSeries(headerTextOf(container, 'Camera'), container);
 
@@ -102,7 +111,7 @@ describe('SplitView pane controls: dragging a pane that has no moveTrigger', () 
 
 	it('warns for the dragged pane and no other', async () => {
 		const warn = warnSpy();
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'drag-only' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'drag-only' } });
 
 		await dragOntoTimeSeries(headerTextOf(container, 'Camera'), container);
 
@@ -111,7 +120,7 @@ describe('SplitView pane controls: dragging a pane that has no moveTrigger', () 
 
 	it('does not warn again on a second drag from the same pane, even after it remounted', async () => {
 		const warn = warnSpy();
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'drag-only' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'drag-only' } });
 		await dragOntoTimeSeries(headerTextOf(container, 'Camera'), container);
 		expect(warningsMentioning(warn, 'Camera'), 'the first drag').toHaveLength(1);
 
@@ -121,18 +130,18 @@ describe('SplitView pane controls: dragging a pane that has no moveTrigger', () 
 		expect(warningsMentioning(warn, 'Camera'), 'the second drag').toHaveLength(1);
 	});
 
-	it('does not warn when the pane has a moveTrigger', async () => {
+	it('does not warn when the pane has a SplitView.MoveTrigger', async () => {
 		const warn = warnSpy();
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'header' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
 
 		await dragOntoTimeSeries(headerTextOf(container, 'Camera'), container);
 
 		expect(warn).not.toHaveBeenCalled();
 	});
 
-	it('does not warn when the moveTrigger mounted and unmounted before the drag', async () => {
+	it('does not warn when the SplitView.MoveTrigger mounted and unmounted before the drag', async () => {
 		const warn = warnSpy();
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'menu' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'menu' } });
 		await userEvent.click(menuButtonOf(container, 'Camera'));
 		expect(handleOf(container, 'Camera'), 'the menu opened').not.toBeNull();
 		await userEvent.click(menuButtonOf(container, 'Camera'));
@@ -143,9 +152,9 @@ describe('SplitView pane controls: dragging a pane that has no moveTrigger', () 
 		expect(warn).not.toHaveBeenCalled();
 	});
 
-	it('warns on a drag when the menu holding the moveTrigger was never opened', async () => {
+	it('warns on a drag when the menu holding the SplitView.MoveTrigger was never opened', async () => {
 		const warn = warnSpy();
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'menu' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'menu' } });
 
 		await dragOntoTimeSeries(headerTextOf(container, 'Camera'), container);
 
@@ -153,9 +162,9 @@ describe('SplitView pane controls: dragging a pane that has no moveTrigger', () 
 	});
 });
 
-describe('SplitView pane controls: a view that is not reorderable', () => {
-	it('arms no pane when a press starts inside a dragTrigger', async () => {
-		const { container } = render(PaneControlsSplitView, {
+describe('SplitView parts: a view that is not reorderable', () => {
+	it('arms no pane when a press starts inside a SplitView.DragTrigger', async () => {
+		const { container } = render(PanePartsSplitView, {
 			props: { variant: 'header', reorderable: false }
 		});
 
@@ -167,8 +176,8 @@ describe('SplitView pane controls: a view that is not reorderable', () => {
 		expect(draggableWrappers(container)).toEqual([]);
 	});
 
-	it('moves no pane when dragged from a dragTrigger', async () => {
-		const { container, component } = render(PaneControlsSplitView, {
+	it('moves no pane when dragged from a SplitView.DragTrigger', async () => {
+		const { container, component } = render(PanePartsSplitView, {
 			props: { variant: 'header', reorderable: false }
 		});
 
@@ -178,8 +187,8 @@ describe('SplitView pane controls: a view that is not reorderable', () => {
 		expect(component.getLayout()).toEqual(layoutRoot);
 	});
 
-	it('enters no move mode when a moveTrigger is clicked', async () => {
-		const { container } = render(PaneControlsSplitView, {
+	it('enters no move mode when a SplitView.MoveTrigger is clicked', async () => {
+		const { container } = render(PanePartsSplitView, {
 			props: { variant: 'header', reorderable: false }
 		});
 
@@ -188,8 +197,8 @@ describe('SplitView pane controls: a view that is not reorderable', () => {
 		expect(moveTargetsIn(container)).toEqual([]);
 	});
 
-	it('reports no moveTrigger as pressed after one is clicked', async () => {
-		const { container } = render(PaneControlsSplitView, {
+	it('reports no SplitView.MoveTrigger as pressed after one is clicked', async () => {
+		const { container } = render(PanePartsSplitView, {
 			props: { variant: 'header', reorderable: false }
 		});
 

@@ -7,7 +7,7 @@
 	import type { PaneData } from '../../__tests__/layout-fixture.ts';
 	import type { LayoutNode } from '../../layout.ts';
 	import { setSplitRatio } from '../../tree.ts';
-	import SplitView from '../SplitView.svelte';
+	import { SplitView } from '../split-view.ts';
 	import UpdateProbePane from './UpdateProbePane.svelte';
 	import type { UpdateProbe } from './update-probe.ts';
 
@@ -22,7 +22,7 @@
 		probe?: UpdateProbe;
 		/** Passed to `SplitView`. */
 		reorderable?: boolean;
-		/** Renders a grip button carrying `dragTrigger` and `moveTrigger` in every pane. */
+		/** Renders a grip button inside a `SplitView.DragTrigger`, as a `SplitView.MoveTrigger`, in every pane. */
 		handles?: boolean;
 		/** Names panes by their `label`. When false, `SplitView` falls back to the pane id. */
 		labelPanes?: boolean;
@@ -69,18 +69,17 @@
 		paneLabel={labelPanes ? (node) => node.data.label : undefined}
 		class="size-full"
 	>
-		{#snippet pane(node, controls)}
+		{#snippet pane(node)}
 			{#if handles}
-				<button
-					type="button"
-					aria-label="Move {node.data.label}"
-					class="absolute top-2 left-2 size-6 border border-medium"
-					{@attach controls.dragTrigger}
-					{@attach controls.moveTrigger}
-					{...handleProps}
-				>
-					::
-				</button>
+				<SplitView.DragTrigger>
+					<SplitView.MoveTrigger
+						aria-label="Move {node.data.label}"
+						class="absolute top-2 left-2 size-6 border border-medium"
+						{...handleProps}
+					>
+						::
+					</SplitView.MoveTrigger>
+				</SplitView.DragTrigger>
 			{/if}
 			<div data-testid="pane" data-pane-id={node.id} class="size-full">{node.data.label}</div>
 			{#if probe}

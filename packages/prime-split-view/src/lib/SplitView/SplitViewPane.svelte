@@ -1,7 +1,5 @@
 <script lang="ts" generics="TData">
 	import { onMount } from 'svelte';
-	import type { Attachment } from 'svelte/attachments';
-	import { on } from 'svelte/events';
 
 	import { getDropRegion } from '../drop-region.ts';
 	import type { DropRegion } from '../drop-region.ts';
@@ -11,7 +9,6 @@
 	import { createAttachedElements } from './attached-elements.ts';
 	import { INDICATOR_CLASSES_BY_REGION } from './indicator-geometry.ts';
 	import { movingNotice } from './move-wording.ts';
-	import type { PaneControls } from './pane-controls.ts';
 	import SplitViewMoveTarget from './SplitViewMoveTarget.svelte';
 	import { providePane, useSplitView } from './useSplitView.svelte.ts';
 
@@ -19,7 +16,6 @@
 		node: PaneNode<TData>;
 	}
 
-	const NATIVE_CONTROLS = 'button, a, input, select, textarea, [contenteditable]';
 	const ARROW_KEY_CONTROLS = 'input, select, textarea, [contenteditable]';
 
 	const { node }: Props = $props();
@@ -34,55 +30,13 @@
 			: context.labelFor(context.movingId)
 	);
 	const isDestination = $derived(movingLabel !== undefined);
+	const dragPress = $derived(context.dragPress?.paneId === node.id ? context.dragPress : undefined);
 
 	let isOver = $state(false);
 	let region = $state<DropRegion>('center');
 	let wrapper = $state<HTMLElement>();
 
-	const dragIgnores = createAttachedElements();
 	const moveTriggers = createAttachedElements();
-
-	providePane({
-		get id() {
-			return node.id;
-		}
-	});
-
-	function startsOnIgnoredElement(event: Event, trigger: HTMLElement) {
-		const path = event.composedPath();
-		const insideTrigger = path.slice(0, path.indexOf(trigger));
-		return (
-			path.some((element) => dragIgnores.includes(element)) ||
-			insideTrigger.some(
-				(element) => element instanceof Element && element.matches(NATIVE_CONTROLS)
-			)
-		);
-	}
-
-	const dragTrigger: Attachment<HTMLElement> = (trigger) => {
-		let stopWatchingRelease: (() => void) | undefined;
-
-		// A press released off the trigger never reaches it, which would leave the pane draggable.
-		// Capture sees the release even when a handler in between stops propagation.
-		const stopListening = on(trigger, 'pointerdown', (event) => {
-			if (startsOnIgnoredElement(event, trigger)) {
-				return;
-			}
-			context.armDrag(node.id);
-			stopWatchingRelease?.();
-			stopWatchingRelease = on(window, 'pointerup', () => context.disarmDrag(), {
-				once: true,
-				capture: true
-			});
-		});
-
-		return () => {
-			stopListening();
-			stopWatchingRelease?.();
-		};
-	};
-
-	const dragIgnore: Attachment<HTMLElement> = (ignored) => dragIgnores.attach(ignored);
 
 	function toggleMove() {
 		if (context.movingId === node.id) {
@@ -92,58 +46,23 @@
 		}
 	}
 
-	function toggleMoveWithKeyboard(trigger: HTMLElement) {
-		// preventDefault stops Space scrolling the page. On Enter it keeps a link from also clicking.
-		const stopKeydown = on(trigger, 'keydown', (event) => {
-			if (event.key === 'Enter') {
-				event.preventDefault();
-				if (!event.repeat) toggleMove();
-			} else if (event.key === ' ') {
-				event.preventDefault();
-			}
-		});
-		const stopKeyup = on(trigger, 'keyup', (event) => {
-			if (event.key === ' ') {
-				toggleMove();
-			}
-		});
-
-		return () => {
-			stopKeydown();
-			stopKeyup();
-		};
-	}
-
-	const moveTrigger: Attachment<HTMLElement> = (trigger) => {
-		const detach = moveTriggers.attach(trigger);
-		context.recordMoveTrigger(node.id);
-		const stopListening = on(trigger, 'click', toggleMove);
-		// Focus stays on the trigger after it starts a move, so holding Enter would otherwise click it again.
-		const stopRepeating = on(trigger, 'keydown', (event) => {
-			if (event.key === 'Enter' && event.repeat) event.preventDefault();
-		});
-		const isNativeButton = trigger.localName === 'button';
-		const isButton = isNativeButton || trigger.getAttribute('role') === 'button';
-		const stopKeyboard = isNativeButton || !isButton ? undefined : toggleMoveWithKeyboard(trigger);
-
-		if (isButton) {
-			$effect(() => {
-				trigger.setAttribute('aria-pressed', String(context.movingId === node.id));
-			});
+	providePane({
+		get isMoving() {
+			return isMoving;
+		},
+		get isDragArmed() {
+			return dragPress?.phase === 'armed';
+		},
+		holdDrag: () => context.holdDrag(node.id),
+		armDrag: () => context.armDrag(node.id),
+		disarmDrag: context.disarmDrag,
+		toggleMove,
+		registerMoveTrigger(trigger) {
+			const detach = moveTriggers.attach(trigger);
+			context.recordMoveTrigger(node.id);
+			return detach;
 		}
-
-		return () => {
-			stopListening();
-			stopRepeating();
-			stopKeyboard?.();
-			if (isButton) {
-				trigger.removeAttribute('aria-pressed');
-			}
-			detach();
-		};
-	};
-
-	const controls: PaneControls = { dragTrigger, dragIgnore, moveTrigger };
+	});
 
 	onMount(() =>
 		context.registerPane(node.id, {
@@ -170,7 +89,14 @@
 	}
 
 	function handleDragStart(event: DragEvent & { currentTarget: HTMLElement }) {
-		if (event.target !== event.currentTarget || !event.dataTransfer) {
+		if (event.target !== event.currentTarget) {
+			return;
+		}
+		if (dragPress?.phase === 'held') {
+			event.preventDefault();
+			return;
+		}
+		if (!event.dataTransfer) {
 			return;
 		}
 		event.dataTransfer.setData('text/plain', node.id);
@@ -214,20 +140,21 @@
 </script>
 
 <div class="relative size-full min-h-0 min-w-0">
-	<!-- The consumer's dragTrigger is the control. This element only receives native drag events and the arrow keys that leave the moving pane. -->
+	<!-- The consumer's SplitView.DragTrigger is the control. This element only receives native drag events and the arrow keys that leave the moving pane. -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={wrapper}
 		tabindex="-1"
 		data-moving={isMoving ? '' : undefined}
+		data-drag-armed={dragPress?.phase === 'armed' ? '' : undefined}
 		inert={isDestination}
-		class="peer relative size-full min-h-0 min-w-0 outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid data-moving:focus:outline-2 data-moving:focus:-outline-offset-2 data-moving:focus:outline-solid"
-		draggable={context.armedId === node.id}
+		class="peer relative size-full min-h-0 min-w-0 outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid data-drag-armed:outline-2 data-drag-armed:-outline-offset-2 data-drag-armed:outline-solid data-moving:focus:outline-2 data-moving:focus:-outline-offset-2 data-moving:focus:outline-solid"
+		draggable={dragPress !== undefined}
 		ondragstart={handleDragStart}
 		ondragend={context.clearDrag}
 		onkeydown={handleKeydown}
 	>
-		{@render context.pane(node, controls)}
+		{@render context.pane(node)}
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			data-drop-overlay

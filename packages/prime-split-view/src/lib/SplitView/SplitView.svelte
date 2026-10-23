@@ -3,7 +3,6 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { LayoutNode, PaneNode } from '../layout.ts';
 
-	import type { PaneControls } from './pane-controls.ts';
 	import SplitViewNode from './SplitViewNode.svelte';
 	import { provideSplitView } from './useSplitView.svelte.ts';
 
@@ -12,17 +11,17 @@
 		layout?: LayoutNode<TData> | undefined;
 
 		/**
-		 * Renders one pane's content. The second argument holds the attachments that make an element of
-		 * yours start a drag, ignore one, or enter move mode.
+		 * Renders one pane's content. Place `SplitView.DragTrigger` and `SplitView.MoveTrigger` inside it
+		 * to make the pane draggable and movable without dragging.
 		 */
-		pane: Snippet<[PaneNode<TData>, PaneControls]>;
+		pane: Snippet<[PaneNode<TData>]>;
 
 		/** Renders when `layout` is `undefined`. */
 		empty?: Snippet;
 
 		/**
-		 * Whether panes can be rearranged, by dragging from a `dragTrigger` or by activating a
-		 * `moveTrigger` to pick a destination. Every rearrangement is assigned to `layout`, so a
+		 * Whether panes can be rearranged, by dragging from a `SplitView.DragTrigger` or by activating a
+		 * `SplitView.MoveTrigger` to pick a destination. Every rearrangement is assigned to `layout`, so a
 		 * function binding can reject it. Resizing is unaffected.
 		 */
 		reorderable?: boolean;

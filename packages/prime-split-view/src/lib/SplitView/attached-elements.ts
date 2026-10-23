@@ -6,9 +6,6 @@ export function createAttachedElements() {
 			elements.add(element);
 			return () => elements.delete(element);
 		},
-		includes(candidate: EventTarget) {
-			return [...elements].some((element) => element === candidate);
-		},
 		get latest() {
 			return [...elements].at(-1);
 		}

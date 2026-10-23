@@ -7,6 +7,7 @@ import { ids, layoutRoot } from '../../__tests__/layout-fixture.ts';
 import { getDropRegion } from '../../drop-region.ts';
 import BoundSplitView from './BoundSplitView.svelte';
 import ControlledSplitView from './ControlledSplitView.svelte';
+import { dragAfterHold } from './hold-to-drag.ts';
 
 import type { DropRegion } from '../../drop-region.ts';
 import type { LayoutNode } from '../../layout.ts';
@@ -206,7 +207,7 @@ const dragOnto = (
 ) => {
 	const target = paneElement(container, targetId);
 	const { x, y } = pointIn(target, region);
-	return userEvent.dragAndDrop(source, target, { targetPosition: { x, y } });
+	return dragAfterHold(source, target, { targetPosition: { x, y } });
 };
 
 const dispatchEnter = (type: 'keyDown' | 'keyUp', isRepeat: boolean) =>

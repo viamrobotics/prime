@@ -3,7 +3,7 @@ import { render } from 'svelte/server';
 import { describe, expect, it } from 'vitest';
 
 import { layoutRoot } from '../../__tests__/layout-fixture.ts';
-import SplitView from '../SplitView.svelte';
+import { SplitView } from '../split-view.ts';
 
 import type { PaneData } from '../../__tests__/layout-fixture.ts';
 import type { PaneNode } from '../../layout.ts';

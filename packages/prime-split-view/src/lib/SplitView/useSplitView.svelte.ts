@@ -16,7 +16,6 @@ import {
 	startedMessage,
 	targetName
 } from './move-wording.ts';
-import type { PaneControls } from './pane-controls.ts';
 import { createSplitId } from './split-id.ts';
 import { findNeighbor } from './spatial-neighbor.ts';
 import type { PaneBounds } from './spatial-neighbor.ts';
@@ -27,15 +26,22 @@ export interface RegisteredPane {
 	bounds: () => PaneBounds | undefined;
 }
 
+export interface DragPress {
+	paneId: string;
+	/** `held` makes the pane draggable but vetoes `dragstart`. `armed` lets the drag start. */
+	phase: 'held' | 'armed';
+}
+
 export interface SplitViewContext<TData> {
 	readonly idPrefix: string;
-	readonly pane: Snippet<[PaneNode<TData>, PaneControls]>;
+	readonly pane: Snippet<[PaneNode<TData>]>;
 	readonly reorderable: boolean;
 	readonly draggedId: string | undefined;
-	readonly armedId: string | undefined;
+	readonly dragPress: DragPress | undefined;
 	readonly movingId: string | undefined;
 	readonly announcement: string;
 	update: (transform: (root: LayoutNode<TData>) => LayoutNode<TData> | undefined) => boolean;
+	holdDrag: (paneId: string) => void;
 	armDrag: (paneId: string) => void;
 	disarmDrag: () => void;
 	startDrag: (paneId: string) => void;
@@ -57,7 +63,13 @@ export interface SplitViewContext<TData> {
 }
 
 export interface PaneContext {
-	readonly id: string;
+	readonly isMoving: boolean;
+	readonly isDragArmed: boolean;
+	holdDrag: () => void;
+	armDrag: () => void;
+	disarmDrag: () => void;
+	toggleMove: () => void;
+	registerMoveTrigger: (trigger: HTMLElement) => () => void;
 }
 
 const CONTEXT_KEY = Symbol('split-view');
@@ -69,12 +81,12 @@ export function provideSplitView<TData>(
 		get: () => LayoutNode<TData> | undefined;
 		set: (next: LayoutNode<TData> | undefined) => void;
 	},
-	pane: () => Snippet<[PaneNode<TData>, PaneControls]>,
+	pane: () => Snippet<[PaneNode<TData>]>,
 	reorderable: () => boolean,
 	paneLabel: () => (pane: PaneNode<TData>) => string
 ): SplitViewContext<TData> {
 	let draggedId = $state<string>();
-	let armedId = $state<string>();
+	let dragPress = $state<DragPress>();
 	let movingPaneId = $state<string>();
 	let announcement = $state('');
 	let selectedRegions = $state<Record<string, DropRegion>>({});
@@ -114,7 +126,7 @@ export function provideSplitView<TData>(
 
 	function clearDrag() {
 		draggedId = undefined;
-		armedId = undefined;
+		dragPress = undefined;
 	}
 
 	function labelFor(paneId: string) {
@@ -159,7 +171,7 @@ export function provideSplitView<TData>(
 
 		warnedPaneIds = [...warnedPaneIds, paneId];
 		console.warn(
-			`SplitView: pane "${labelFor(paneId)}" was dragged but has no moveTrigger. Dragging alone fails WCAG 2.5.7 (Dragging Movements), so attach moveTrigger to an element that moves the pane without dragging. A moveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.`
+			`SplitView: pane "${labelFor(paneId)}" was dragged but has no SplitView.MoveTrigger. Dragging alone fails WCAG 2.5.7 (Dragging Movements), so render a SplitView.MoveTrigger in the pane to move it without dragging. A SplitView.MoveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.`
 		);
 	}
 
@@ -174,8 +186,8 @@ export function provideSplitView<TData>(
 		get draggedId() {
 			return draggedId;
 		},
-		get armedId() {
-			return armedId;
+		get dragPress() {
+			return dragPress;
 		},
 		get movingId() {
 			return movingId;
@@ -189,11 +201,14 @@ export function provideSplitView<TData>(
 		abandonMove,
 		labelFor,
 		selectedRegionFor,
+		holdDrag(paneId) {
+			if (reorderable()) dragPress = { paneId, phase: 'held' };
+		},
 		armDrag(paneId) {
-			if (reorderable()) armedId = paneId;
+			if (reorderable()) dragPress = { paneId, phase: 'armed' };
 		},
 		disarmDrag() {
-			armedId = undefined;
+			dragPress = undefined;
 		},
 		startDrag(paneId) {
 			if (reorderable()) {

@@ -1,5 +1,5 @@
-export { default as SplitView } from './SplitView/SplitView.svelte';
-export type { PaneControls } from './SplitView/pane-controls.ts';
+export { dragIgnore } from './SplitView/drag-ignore.ts';
+export { SplitView } from './SplitView/split-view.ts';
 export type { LayoutNode, PaneNode, SplitDirection, SplitKey, SplitNode } from './layout.ts';
 export {
 	addPaneToUpperRight,

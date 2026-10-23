@@ -97,45 +97,43 @@
 					No panes. Add one to start.
 				</div>
 			{/snippet}
-			{#snippet pane(node, controls)}
+			{#snippet pane(node)}
 				<div class="flex size-full flex-col border border-light bg-white text-sm text-default">
 					{#if variant === 'grip'}
 						<header class="flex items-center gap-1 border-b border-light px-1 py-1">
-							<button
-								type="button"
-								aria-label="Move {node.data.label}"
-								class="inline-flex size-6 cursor-grab items-center justify-center text-subtle-1 active:cursor-grabbing"
-								{@attach controls.dragTrigger}
-								{@attach controls.moveTrigger}
-							>
-								<svg viewBox="0 0 16 16" class="size-4" fill="currentColor" aria-hidden="true">
-									<circle cx="5.5" cy="3.5" r="1.25" />
-									<circle cx="10.5" cy="3.5" r="1.25" />
-									<circle cx="5.5" cy="8" r="1.25" />
-									<circle cx="10.5" cy="8" r="1.25" />
-									<circle cx="5.5" cy="12.5" r="1.25" />
-									<circle cx="10.5" cy="12.5" r="1.25" />
-								</svg>
-							</button>
+							<SplitView.DragTrigger>
+								<SplitView.MoveTrigger
+									aria-label="Move {node.data.label}"
+									class="inline-flex size-6 cursor-grab items-center justify-center text-subtle-1 active:cursor-grabbing"
+								>
+									<svg viewBox="0 0 16 16" class="size-4" fill="currentColor" aria-hidden="true">
+										<circle cx="5.5" cy="3.5" r="1.25" />
+										<circle cx="10.5" cy="3.5" r="1.25" />
+										<circle cx="5.5" cy="8" r="1.25" />
+										<circle cx="10.5" cy="8" r="1.25" />
+										<circle cx="5.5" cy="12.5" r="1.25" />
+										<circle cx="10.5" cy="12.5" r="1.25" />
+									</svg>
+								</SplitView.MoveTrigger>
+							</SplitView.DragTrigger>
 							<h2 class="text-xs font-semibold">{node.data.label}</h2>
 							{@render removeButton(node)}
 						</header>
 					{:else}
-						<header
-							class="flex cursor-grab items-center gap-1 border-b border-light px-1 py-1 active:cursor-grabbing"
-							{@attach controls.dragTrigger}
-						>
-							<h2 class="px-1 text-xs font-semibold">{node.data.label}</h2>
-							<button
-								type="button"
-								aria-label="Move {node.data.label}"
-								class="ml-auto border border-medium bg-white px-2 py-0.5 text-xs"
-								{@attach controls.moveTrigger}
+						<SplitView.DragTrigger>
+							<header
+								class="flex cursor-grab items-center gap-1 border-b border-light px-1 py-1 active:cursor-grabbing"
 							>
-								Move
-							</button>
-							{@render removeButton(node)}
-						</header>
+								<h2 class="px-1 text-xs font-semibold">{node.data.label}</h2>
+								<SplitView.MoveTrigger
+									aria-label="Move {node.data.label}"
+									class="ml-auto border border-medium bg-white px-2 py-0.5 text-xs"
+								>
+									Move
+								</SplitView.MoveTrigger>
+								{@render removeButton(node)}
+							</header>
+						</SplitView.DragTrigger>
 					{/if}
 					<div class="flex min-h-0 flex-1 items-center justify-center text-subtle-2">
 						{node.id}

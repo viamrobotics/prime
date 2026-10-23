@@ -7,7 +7,8 @@ import { ids, layoutRoot } from '../../__tests__/layout-fixture.ts';
 import BoundSplitView from './BoundSplitView.svelte';
 import ControlledSplitView from './ControlledSplitView.svelte';
 import EmptyingSplitView from './EmptyingSplitView.svelte';
-import PaneControlsSplitView from './PaneControlsSplitView.svelte';
+import { dragAfterHold, holdPress } from './hold-to-drag.ts';
+import PanePartsSplitView from './PanePartsSplitView.svelte';
 import SinglePaneSplitView from './SinglePaneSplitView.svelte';
 
 import type { DropRegion } from '../../drop-region.ts';
@@ -619,10 +620,7 @@ describe('SplitView move mode: state', () => {
 		await startMoveWithPointer(container, 'Camera');
 		expect(destinationsIn(container), 'move mode is on').toHaveLength(DESTINATION_COUNT);
 
-		handleOf(container, 'Time series').dispatchEvent(
-			new PointerEvent('pointerdown', { bubbles: true, button: 0 })
-		);
-		await tick();
+		await holdPress(handleOf(container, 'Time series'));
 		wrapperOf(container, ids.mytimeseries).dispatchEvent(
 			new DragEvent('dragstart', {
 				bubbles: true,
@@ -640,7 +638,7 @@ describe('SplitView move mode: state', () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 		const target = paneElement(container, ids.mytimeseries);
 
-		await userEvent.dragAndDrop(handleOf(container, 'Camera'), target, {
+		await dragAfterHold(handleOf(container, 'Camera'), target, {
 			targetPosition: pointWithin(target)
 		});
 		await nextFrames();
@@ -662,9 +660,9 @@ describe('SplitView move mode: state', () => {
 	});
 });
 
-describe('SplitView move mode: a moveTrigger that is not a button', () => {
+describe('SplitView.MoveTrigger: a child that is not a button', () => {
 	it('has no aria-pressed before move mode', () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'div-move' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'div-move' } });
 
 		expect(
 			moveDivOf(container, 'Camera').hasAttribute('aria-pressed'),
@@ -673,7 +671,7 @@ describe('SplitView move mode: a moveTrigger that is not a button', () => {
 	});
 
 	it('has no aria-pressed in move mode, and still enters it when clicked', async () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'div-move' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'div-move' } });
 
 		await userEvent.click(moveDivOf(container, 'Camera'));
 
@@ -685,7 +683,7 @@ describe('SplitView move mode: a moveTrigger that is not a button', () => {
 	});
 });
 
-describe('SplitView move mode: a moveTrigger that is a native button', () => {
+describe('SplitView.MoveTrigger: the default native button', () => {
 	it('toggles move mode once when pressed with Enter', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
@@ -708,9 +706,9 @@ describe('SplitView move mode: a moveTrigger that is a native button', () => {
 	});
 });
 
-describe('SplitView move mode: a moveTrigger with role="button" that is not a native button', () => {
+describe('SplitView.MoveTrigger: a child with role="button" that is not a native button', () => {
 	const renderRoleButton = () =>
-		render(PaneControlsSplitView, { props: { variant: 'div-move', moveRole: 'button' } });
+		render(PanePartsSplitView, { props: { variant: 'div-move', moveRole: 'button' } });
 	const pressedStateOf = (container: Element) =>
 		moveDivOf(container, 'Camera').getAttribute('aria-pressed');
 
@@ -787,7 +785,7 @@ describe('SplitView move mode: a moveTrigger with role="button" that is not a na
 	});
 
 	it('toggles move mode once when it is a link and Enter is pressed', async () => {
-		const { container } = render(PaneControlsSplitView, {
+		const { container } = render(PanePartsSplitView, {
 			props: { variant: 'div-move', moveTag: 'a', moveRole: 'button' }
 		});
 		moveDivOf(container, 'Camera').focus();
@@ -798,9 +796,9 @@ describe('SplitView move mode: a moveTrigger with role="button" that is not a na
 	});
 });
 
-describe('SplitView move mode: a moveTrigger with role="menuitem"', () => {
+describe('SplitView.MoveTrigger: a child with role="menuitem"', () => {
 	const renderMenuItem = () =>
-		render(PaneControlsSplitView, { props: { variant: 'div-move', moveRole: 'menuitem' } });
+		render(PanePartsSplitView, { props: { variant: 'div-move', moveRole: 'menuitem' } });
 
 	it('enters move mode when clicked', async () => {
 		const { container } = renderMenuItem();
@@ -830,6 +828,16 @@ describe('SplitView move mode: a moveTrigger with role="menuitem"', () => {
 		).toBe(false);
 	});
 
+	it('gets focus back when move mode is canceled', async () => {
+		const { container } = renderMenuItem();
+		await userEvent.click(moveDivOf(container, 'Camera'));
+		expect(destinationsIn(container), 'move mode is on').toHaveLength(DESTINATION_COUNT);
+
+		await userEvent.keyboard('{Escape}');
+
+		await expect.poll(() => document.activeElement).toBe(moveDivOf(container, 'Camera'));
+	});
+
 	it('leaves keyboard activation to the menu that dispatches its click', async () => {
 		const { container } = renderMenuItem();
 		moveDivOf(container, 'Camera').focus();
@@ -840,9 +848,9 @@ describe('SplitView move mode: a moveTrigger with role="menuitem"', () => {
 	});
 });
 
-describe('SplitView move mode: a moveTrigger that unmounted before move mode ended', () => {
+describe('SplitView.MoveTrigger: unmounted before move mode ended', () => {
 	it('focuses the moved pane wrapper after a placement', async () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'menu' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'menu' } });
 		await startMoveFromMenu(container, 'Camera');
 		expect(handleOf(container, 'Camera'), 'the menu item unmounted').toBeNull();
 
@@ -852,7 +860,7 @@ describe('SplitView move mode: a moveTrigger that unmounted before move mode end
 	});
 
 	it('focuses the moved pane wrapper after Escape', async () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'menu' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'menu' } });
 		await startMoveFromMenu(container, 'Camera');
 
 		await userEvent.keyboard('{Escape}');
@@ -861,7 +869,7 @@ describe('SplitView move mode: a moveTrigger that unmounted before move mode end
 	});
 
 	it('shows a focus outline on the wrapper that takes the fallback focus', async () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'menu' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'menu' } });
 		await startMoveFromMenu(container, 'Camera');
 		await userEvent.keyboard('{Escape}');
 		await expect.poll(() => document.activeElement).toBe(wrapperOf(container, ids.mycam));
@@ -874,7 +882,7 @@ describe('SplitView move mode: a moveTrigger that unmounted before move mode end
 	});
 
 	it('gives the pane wrapper tabindex -1 so script can focus it', () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'menu' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'menu' } });
 
 		expect(wrapperOf(container, ids.mycam).getAttribute('tabindex')).toBe('-1');
 	});

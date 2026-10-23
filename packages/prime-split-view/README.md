@@ -36,23 +36,20 @@ Requires `svelte` `^5.29.0`, because the pane controls are attachments. Import t
 </script>
 
 <SplitView bind:layout paneLabel={(node) => node.data.title} class="h-screen">
-	{#snippet pane(node, { dragTrigger, moveTrigger })}
+	{#snippet pane(node)}
 		<div class="size-full">
-			<button
-				type="button"
-				aria-label="Move {node.data.title}"
-				{@attach dragTrigger}
-				{@attach moveTrigger}
-			>
-				::
-			</button>
-			{node.data.title}
+			<SplitView.DragTrigger>
+				<header>
+					{node.data.title}
+					<SplitView.MoveTrigger aria-label="Move {node.data.title}">Move</SplitView.MoveTrigger>
+				</header>
+			</SplitView.DragTrigger>
 		</div>
 	{/snippet}
 </SplitView>
 ```
 
-The `pane` snippet receives `dragTrigger`, `dragIgnore`, and `moveTrigger` attachments. `dragTrigger` starts a pane drag from any element. `moveTrigger` toggles move mode on a `button`, an element with `role="button"`, or a `role="menuitem"` item, which rearranges panes without dragging. Every pane with a `dragTrigger` needs a `moveTrigger` to meet WCAG 2.5.7. In move mode, focus stays on the moving pane's trigger, and the arrow keys move spatially into the adjacent pane and across its left, center, and right or top, center, and bottom regions, crossing to the next pane on screen past the far edge. Tab moves between destinations. Place with a click, a second tap, or Enter or Space. Escape cancels. Moving focus out of the view cancels. `paneLabel` names panes in previews and announcements. The root element has no default size, so size it with a class.
+The `pane` snippet receives `node`. `SplitView.DragTrigger` starts a pane drag from the elements inside it. A press on a plain area drags at once, a press on a control drags after a 250ms hold so a quick click still clicks, and a press on a text field never drags. `dragIgnore`, an attachment exported from the package root, keeps a press inside a custom element from dragging. `SplitView.MoveTrigger` renders a button that toggles move mode, which rearranges panes without dragging. Its `child` snippet receives `{ props }` to spread on your own element, such as a menu item. Every pane with a `SplitView.DragTrigger` needs a `SplitView.MoveTrigger` to meet WCAG 2.5.7. In move mode, focus stays on the moving pane's trigger, and the arrow keys move spatially into the adjacent pane and across its left, center, and right or top, center, and bottom regions, crossing to the next pane on screen past the far edge. Tab moves between destinations. Place with a click, a second tap, or Enter or Space. Escape cancels. Moving focus out of the view cancels. `paneLabel` names panes in previews and announcements. The root element has no default size, so size it with a class.
 
 ## Documentation
 

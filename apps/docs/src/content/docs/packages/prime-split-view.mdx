@@ -66,17 +66,14 @@ import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from "@astrojs/starligh
 </script>
 
 <SplitView bind:layout paneLabel={(node) => node.data.title} class="h-screen">
-  {#snippet pane(node, { dragTrigger, moveTrigger })}
+  {#snippet pane(node)}
     <div class="size-full">
-      <button
-        type="button"
-        aria-label="Move {node.data.title}"
-        {@attach dragTrigger}
-        {@attach moveTrigger}
-      >
-        ::
-      </button>
-      {node.data.title}
+      <SplitView.DragTrigger>
+        <header class="cursor-grab">
+          {node.data.title}
+          <SplitView.MoveTrigger aria-label="Move {node.data.title}">::</SplitView.MoveTrigger>
+        </header>
+      </SplitView.DragTrigger>
     </div>
   {/snippet}
 </SplitView>
@@ -177,84 +174,107 @@ The optional `empty` snippet renders when `layout` is `undefined`.
 
 Rearranging is on by default. Set `reorderable={false}` to turn it off. Resizing is not affected.
 
-The `pane` snippet receives `(node, { dragTrigger, dragIgnore, moveTrigger })`. Each is an attachment that you place on your own elements with `{@attach}`. The library renders no handle of its own, so you choose the markup, the icon, and the accessible name. The `PaneControls` type describes the second argument.
+The `pane` snippet receives only `node`. Two parts that you place inside it, `SplitView.DragTrigger` and `SplitView.MoveTrigger`, connect your markup to the pane. The library renders no handle of its own, so you choose the markup, the icon, and the accessible name.
 
-All three attachments do nothing when `reorderable` is `false`.
+Both parts do nothing when `reorderable` is `false`.
 
-### dragTrigger
+### SplitView.DragTrigger
 
-`dragTrigger` makes an element start a pane drag. Attach it to a grip button, or to a whole header.
+`SplitView.DragTrigger` makes the elements inside it start a pane drag. Wrap a grip button, or a whole header.
 
-- A press on a native control inside the element does not start a drag. The controls are `button`, `a`, `input`, `select`, `textarea`, and `[contenteditable]`.
-- The element that carries the attachment is never ignored, even when it is itself a `button`.
+```svelte
+<SplitView.DragTrigger>
+  <header class="cursor-grab">{node.data.title}</header>
+</SplitView.DragTrigger>
+```
+
+It renders a `display: contents` wrapper, so it does not change layout. What a press does depends on where it lands.
+
+| Press on                                                       | Result                                                                  |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| A plain area                                                   | Drags at once.                                                          |
+| A control: `button`, `a`, `select`, or `[role="button"]`       | Drags only after a 250ms hold, so a quick click still clicks.           |
+| A text field: `input`, `textarea`, or `[contenteditable]`      | Never drags.                                                            |
+
+Once a hold on a control is long enough to drag, releasing it without dragging does not click the control. Keyboard activation is unaffected.
+
+While a pane is ready to drag, it shows a blue outline and its wrapper carries `data-drag-armed`. Style your own markup from it with a selector such as `[data-drag-armed] header`, or with Tailwind's `in-data-drag-armed:` variant.
 
 ### dragIgnore
 
-`dragIgnore` opts an element out of dragging. Use it on a custom widget inside a `dragTrigger` element, such as a `canvas`, where a press should do something else.
+`dragIgnore` opts an element out of dragging. Import it from the package root. It is an attachment that needs no context. Use it on a custom widget inside a `SplitView.DragTrigger`, such as a `canvas`, where a press should do something else.
 
 ```svelte
+<script lang="ts">
+  import { dragIgnore } from '@viamrobotics/prime-split-view';
+</script>
+
 <canvas {@attach dragIgnore}></canvas>
 ```
 
-### moveTrigger
+### SplitView.MoveTrigger
 
-`moveTrigger` toggles move mode. See [Moving panes without dragging](#moving-panes-without-dragging). It supports three kinds of element.
+`SplitView.MoveTrigger` toggles move mode. See [Moving panes without dragging](#moving-panes-without-dragging). By default it renders `<button type="button">` around `children` and takes button attributes. The button gets `aria-pressed`.
 
-| Element                  | Use it for                | Behavior                                                                                                                              |
-| ------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| A native `button`        | A visible move control    | Its own click, Enter, and Space toggle move mode. It gets `aria-pressed`.                                                             |
-| An element with `role="button"` | A non-button element that looks like a control | The library adds Enter on keydown and Space on keyup. It gets `aria-pressed`. You supply `tabindex="0"` and an accessible name. |
-| An element with `role="menuitem"` | An item in a menu | It toggles through `click`, which Radix-style menus dispatch on Enter and Space. It gets no `aria-pressed`, and the status region announces the state. |
+```svelte
+<SplitView.MoveTrigger aria-label="Move {node.data.title}">Move</SplitView.MoveTrigger>
+```
+
+The optional `child` snippet replaces the button with your own element. It receives `{ props }`, which you spread on that element. Use a `button`, an element with `role="button"`, or a menu item whose menu dispatches `click`.
+
+| Element                           | Behavior                                                                                                                                              |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A native `button`                 | Its own click, Enter, and Space toggle move mode. It gets `aria-pressed`.                                                                             |
+| An element with `role="button"`   | The library adds Enter on keydown and Space on keyup. It gets `aria-pressed`. You supply `tabindex="0"` and an accessible name.                       |
+| An element with `role="menuitem"` | It toggles through `click`, which Radix-style menus dispatch on Enter and Space. It gets no `aria-pressed`, and the status region announces the state. |
 
 When move mode ends, focus returns to the trigger. If the trigger has unmounted, as with a closed menu, focus goes to the pane itself, which shows a focus outline.
 
 A menu item works like this.
 
 ```svelte
-<DropdownMenu.Item role="menuitem" {@attach moveTrigger}>
-  Move pane
-</DropdownMenu.Item>
+<SplitView.MoveTrigger>
+  {#snippet child({ props })}
+    <DropdownMenu.Item role="menuitem" {...props}>Move pane</DropdownMenu.Item>
+  {/snippet}
+</SplitView.MoveTrigger>
 ```
 
 ### Two ways to lay it out
 
-A grip button can carry both triggers. Dragging and the keyboard path then share one element.
+A grip can sit inside a `SplitView.DragTrigger` as a `SplitView.MoveTrigger`. Dragging and the keyboard path then share one element. The button is a control, so it drags after a hold and moves on a click.
 
 ```svelte
-{#snippet pane(node, { dragTrigger, moveTrigger })}
+{#snippet pane(node)}
   <header>
-    <button
-      type="button"
-      aria-label="Move {node.data.title}"
-      class="cursor-grab"
-      {@attach dragTrigger}
-      {@attach moveTrigger}
-    >
-      <GripIcon />
-    </button>
+    <SplitView.DragTrigger>
+      <SplitView.MoveTrigger aria-label="Move {node.data.title}" class="cursor-grab">
+        <GripIcon />
+      </SplitView.MoveTrigger>
+    </SplitView.DragTrigger>
     {node.data.title}
   </header>
 {/snippet}
 ```
 
-A whole header can be the drag surface, with a separate move button inside it. The button is a native control, so a press on it does not start a drag.
+A whole header can be the drag surface, with a separate move button inside it. A press on the header drags at once, and a quick click on the button still moves.
 
 ```svelte
-{#snippet pane(node, { dragTrigger, moveTrigger })}
-  <header class="cursor-grab" {@attach dragTrigger}>
-    {node.data.title}
-    <button type="button" aria-label="Move {node.data.title}" {@attach moveTrigger}>
-      Move
-    </button>
-  </header>
+{#snippet pane(node)}
+  <SplitView.DragTrigger>
+    <header class="cursor-grab">
+      {node.data.title}
+      <SplitView.MoveTrigger aria-label="Move {node.data.title}">Move</SplitView.MoveTrigger>
+    </header>
+  </SplitView.DragTrigger>
 {/snippet}
 ```
 
 ### Accessibility
 
-Dragging alone fails WCAG 2.5.7 (Dragging Movements). Every pane that has a `dragTrigger` needs a `moveTrigger` somewhere, such as a menu item.
+Dragging alone fails WCAG 2.5.7 (Dragging Movements). Every pane that has a `SplitView.DragTrigger` needs a `SplitView.MoveTrigger` somewhere, such as a menu item.
 
-In development, the library warns on the first drag from a pane that has never had a `moveTrigger`. A trigger that mounts only on demand, such as inside a menu, still warns until it first mounts.
+In development, the library warns on the first drag from a pane that has never had a `SplitView.MoveTrigger`. A trigger that mounts only on demand, such as inside a menu, still warns until it first mounts.
 
 ### Drop regions
 
@@ -269,7 +289,7 @@ Every drop is assigned to `layout`, so a function binding sees it and can veto i
 
 ### Moving panes without dragging
 
-Dragging is not the only way to rearrange. Activate a `moveTrigger` element with a click, Enter, or Space to enter move mode. A button trigger reports it with `aria-pressed`.
+Dragging is not the only way to rearrange. Activate a `SplitView.MoveTrigger` element with a click, Enter, or Space to enter move mode. A button trigger reports it with `aria-pressed`.
 
 Activating the trigger moves focus to the moving pane, which shows a blue focus outline, a light gray wash over its content, and "Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape." Every other pane becomes a destination that shows nothing until it is hovered or focused. A placement makes the same change a drop on that region would, and it goes through `layout` the same way, so a function binding can still veto it.
 

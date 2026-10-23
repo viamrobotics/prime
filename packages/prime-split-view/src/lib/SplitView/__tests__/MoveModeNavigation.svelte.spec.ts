@@ -7,7 +7,8 @@ import { ids, layoutRoot } from '../../__tests__/layout-fixture.ts';
 import BoundSplitView from './BoundSplitView.svelte';
 import ControlledSplitView from './ControlledSplitView.svelte';
 import ExternalChangeSplitView from './ExternalChangeSplitView.svelte';
-import PaneControlsSplitView from './PaneControlsSplitView.svelte';
+import { dragAfterHold } from './hold-to-drag.ts';
+import PanePartsSplitView from './PanePartsSplitView.svelte';
 
 import type { LayoutNode } from '../../layout.ts';
 import type { PaneData } from '../../__tests__/layout-fixture.ts';
@@ -57,7 +58,7 @@ const startMoveWithPointer = (container: Element, label: string) =>
 const dragOntoLeftSideOf = (container: Element, label: string, targetId: string) => {
 	const target = paneElement(container, targetId);
 	const { width, height } = target.getBoundingClientRect();
-	return userEvent.dragAndDrop(handleOf(container, label), target, {
+	return dragAfterHold(handleOf(container, label), target, {
 		targetPosition: { x: width * 0.1, y: height * 0.5 }
 	});
 };
@@ -177,7 +178,7 @@ describe('SplitView move mode: arrow navigation from the moving pane', () => {
 	});
 
 	it('does not move on an arrow typed in a text field inside the moving pane', async () => {
-		const { container } = render(PaneControlsSplitView, { props: { variant: 'header' } });
+		const { container } = render(PanePartsSplitView, { props: { variant: 'header' } });
 		await startMoveWithKeyboard(container, 'Camera');
 		const field = container.querySelector<HTMLInputElement>('[aria-label="Note for Camera"]')!;
 		field.focus();
