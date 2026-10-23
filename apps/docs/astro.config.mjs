@@ -36,6 +36,10 @@ export default defineConfig({
           items: [
             { label: "@viamrobotics/prime-ui", link: "/packages/prime-ui/" },
             {
+              label: "@viamrobotics/prime-split-view",
+              link: "/packages/prime-split-view/",
+            },
+            {
               label: "@viamrobotics/tailwind-config",
               link: "/packages/tailwind-config/",
             },
@@ -50,6 +54,7 @@ export default defineConfig({
           items: [
             { label: "Overview", link: "/playground/" },
             { label: "prime-ui", link: "/playground/prime-ui/" },
+            { label: "prime-split-view", link: "/playground/prime-split-view/" },
             { label: "tweakpane-config", link: "/playground/tweakpane-config/" },
             { label: "tailwind-config", link: "/playground/tailwind-config/" },
           ],

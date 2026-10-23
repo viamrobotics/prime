@@ -14,12 +14,14 @@
 			"command": "node scripts/build-playgrounds.mjs",
 			"dependencies": [
 				"../../packages/prime-ui:vite-build",
+				"../../packages/prime-split-view:vite-build",
 				"../../packages/tailwind-config:build",
 				"../../packages/tweakpane-config:vite-build"
 			],
 			"files": [
 				"scripts/build-playgrounds.mjs",
 				"../../packages/prime-ui/build/**",
+				"../../packages/prime-split-view/build/**",
 				"../../packages/tailwind-config/build/**",
 				"../../packages/tweakpane-config/build/**"
 			],

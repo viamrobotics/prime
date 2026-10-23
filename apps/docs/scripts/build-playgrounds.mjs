@@ -16,6 +16,7 @@ const repoRoot = resolve(docsRoot, "..", "..");
 // dependencies in apps/docs/package.json, then add a sidebar entry.
 const playgrounds = [
   { name: "prime-ui", pkgDir: "packages/prime-ui" },
+  { name: "prime-split-view", pkgDir: "packages/prime-split-view" },
   { name: "tailwind-config", pkgDir: "packages/tailwind-config" },
   { name: "tweakpane-config", pkgDir: "packages/tweakpane-config" },
 ];
