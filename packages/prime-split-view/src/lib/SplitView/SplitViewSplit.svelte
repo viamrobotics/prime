@@ -74,8 +74,9 @@
 		{...api.getResizeTriggerProps({ id: RESIZE_TRIGGER_ID })}
 		aria-label={RESIZE_HANDLE_LABEL}
 		aria-orientation={separatorOrientation}
+		inert={context.movingId !== undefined}
 		class={[
-			'relative z-10 outline-power-button-dark after:absolute after:bg-gray-6 after:opacity-0 hover:after:opacity-100 focus-visible:outline-2 focus-visible:outline-solid data-dragging:after:opacity-100',
+			'relative z-10 outline-info-dark after:absolute after:bg-gray-6 after:opacity-0 hover:after:opacity-100 focus-visible:outline-2 focus-visible:outline-solid data-dragging:after:opacity-100',
 			TRIGGER_CLASSES_BY_ORIENTATION[orientation]
 		]}
 	></div>

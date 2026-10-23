@@ -9,7 +9,7 @@ import PaneControlsSplitView from './PaneControlsSplitView.svelte';
 
 const WIDE_VIEWPORT = { width: 1000, height: 1400 };
 const DEFAULT_VIEWPORT = { width: 414, height: 896 };
-const ALL_TARGET_COUNT = 15;
+const DESTINATION_COUNT = 3;
 const RIGHT = { x: 0.9, y: 0.5 };
 
 const warningFor = (label: string) =>
@@ -77,7 +77,7 @@ describe('SplitView pane controls: one element carrying dragTrigger and moveTrig
 
 		await userEvent.click(handleOf(container, 'Camera'));
 
-		expect(moveTargetsIn(container)).toHaveLength(ALL_TARGET_COUNT);
+		expect(moveTargetsIn(container)).toHaveLength(DESTINATION_COUNT);
 		expect(handleOf(container, 'Camera').getAttribute('aria-pressed')).toBe('true');
 	});
 });

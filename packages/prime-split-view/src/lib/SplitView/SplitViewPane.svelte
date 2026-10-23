@@ -7,47 +7,33 @@
 	import type { DropRegion } from '../drop-region.ts';
 	import type { PaneNode } from '../layout.ts';
 
+	import { edgeOfArrow } from './arrow-regions.ts';
 	import { createAttachedElements } from './attached-elements.ts';
-	import { targetName } from './move-wording.ts';
+	import { INDICATOR_CLASSES_BY_REGION } from './indicator-geometry.ts';
+	import { movingNotice } from './move-wording.ts';
 	import type { PaneControls } from './pane-controls.ts';
+	import SplitViewMoveTarget from './SplitViewMoveTarget.svelte';
 	import { providePane, useSplitView } from './useSplitView.svelte.ts';
 
 	interface Props {
 		node: PaneNode<TData>;
 	}
 
-	const INDICATOR_CLASSES_BY_REGION = {
-		center: 'top-0 left-0 h-full w-full',
-		left: 'top-0 left-0 h-full w-1/2',
-		right: 'top-0 left-1/2 h-full w-1/2',
-		top: 'top-0 left-0 h-1/2 w-full',
-		bottom: 'top-1/2 left-0 h-1/2 w-full'
-	} as const satisfies Record<DropRegion, string>;
-
-	const MOVE_TARGETS = [
-		{ region: 'left', classes: 'top-1/2 left-2 -translate-y-1/2', glyph: '\u2190' },
-		{ region: 'right', classes: 'top-1/2 right-2 -translate-y-1/2', glyph: '\u2192' },
-		{ region: 'top', classes: 'top-2 left-1/2 -translate-x-1/2', glyph: '\u2191' },
-		{ region: 'bottom', classes: 'bottom-2 left-1/2 -translate-x-1/2', glyph: '\u2193' },
-		{
-			region: 'center',
-			classes: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-			glyph: '\u21C4'
-		}
-	] as const satisfies readonly { region: DropRegion; classes: string; glyph: string }[];
-
 	const NATIVE_CONTROLS = 'button, a, input, select, textarea, [contenteditable]';
+	const ARROW_KEY_CONTROLS = 'input, select, textarea, [contenteditable]';
 
 	const { node }: Props = $props();
 
 	const context = useSplitView();
 
-	const targetLabel = $derived(context.labelFor(node.id));
+	const label = $derived(context.labelFor(node.id));
+	const isMoving = $derived(context.movingId === node.id);
 	const movingLabel = $derived(
 		context.movingId === undefined || context.movingId === node.id
 			? undefined
 			: context.labelFor(context.movingId)
 	);
+	const isDestination = $derived(movingLabel !== undefined);
 
 	let isOver = $state(false);
 	let region = $state<DropRegion>('center');
@@ -107,12 +93,11 @@
 	}
 
 	function toggleMoveWithKeyboard(trigger: HTMLElement) {
-		// preventDefault stops Space scrolling the page. On Enter it keeps a link from also clicking,
-		// and keeps the keypress from reaching the move target that move mode focuses.
+		// preventDefault stops Space scrolling the page. On Enter it keeps a link from also clicking.
 		const stopKeydown = on(trigger, 'keydown', (event) => {
 			if (event.key === 'Enter') {
 				event.preventDefault();
-				toggleMove();
+				if (!event.repeat) toggleMove();
 			} else if (event.key === ' ') {
 				event.preventDefault();
 			}
@@ -133,6 +118,10 @@
 		const detach = moveTriggers.attach(trigger);
 		context.recordMoveTrigger(node.id);
 		const stopListening = on(trigger, 'click', toggleMove);
+		// Focus stays on the trigger after it starts a move, so holding Enter would otherwise click it again.
+		const stopRepeating = on(trigger, 'keydown', (event) => {
+			if (event.key === 'Enter' && event.repeat) event.preventDefault();
+		});
 		const isNativeButton = trigger.localName === 'button';
 		const isButton = isNativeButton || trigger.getAttribute('role') === 'button';
 		const stopKeyboard = isNativeButton || !isButton ? undefined : toggleMoveWithKeyboard(trigger);
@@ -145,6 +134,7 @@
 
 		return () => {
 			stopListening();
+			stopRepeating();
 			stopKeyboard?.();
 			if (isButton) {
 				trigger.removeAttribute('aria-pressed');
@@ -155,7 +145,22 @@
 
 	const controls: PaneControls = { dragTrigger, dragIgnore, moveTrigger };
 
-	onMount(() => context.registerPane(node.id, () => (moveTriggers.latest ?? wrapper)?.focus()));
+	onMount(() =>
+		context.registerPane(node.id, {
+			focus: () => (moveTriggers.latest ?? wrapper)?.focus(),
+			focusWrapper: () => wrapper?.focus(),
+			bounds: () => wrapper?.getBoundingClientRect()
+		})
+	);
+
+	function handleKeydown(event: KeyboardEvent) {
+		const edge = edgeOfArrow(event);
+		if (!isMoving || edge === undefined || event.defaultPrevented) return;
+		// An arrow inside a control that reads it, such as a text field, is the control's.
+		if (event.target instanceof Element && event.target.closest(ARROW_KEY_CONTROLS)) return;
+
+		if (context.crossToNeighbor(node.id, edge)) event.preventDefault();
+	}
 
 	function regionAt(event: DragEvent & { currentTarget: HTMLElement }): DropRegion {
 		if (context.draggedId === node.id) {
@@ -208,49 +213,56 @@
 	}
 </script>
 
-<!-- The consumer's dragTrigger is the control. These elements only receive native drag events. -->
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-	bind:this={wrapper}
-	tabindex="-1"
-	class="relative size-full min-h-0 min-w-0 outline-power-button-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid"
-	draggable={context.armedId === node.id}
-	ondragstart={handleDragStart}
-	ondragend={context.clearDrag}
->
-	{@render context.pane(node, controls)}
+<div class="relative size-full min-h-0 min-w-0">
+	<!-- The consumer's dragTrigger is the control. This element only receives native drag events and the arrow keys that leave the moving pane. -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		data-drop-overlay
-		class={['absolute inset-0 z-20', { 'pointer-events-none': context.draggedId === undefined }]}
-		ondragenter={handleDragEnter}
-		ondragleave={handleDragLeave}
-		ondragover={handleDragOver}
-		ondrop={handleDrop}
-	></div>
-	{#if movingLabel !== undefined}
-		{#each MOVE_TARGETS as { region, classes, glyph } (region)}
-			<button
-				type="button"
-				data-move-target={region}
-				aria-label={targetName(region, movingLabel, targetLabel)}
-				class={[
-					'absolute z-30 inline-flex size-8 items-center justify-center bg-info-dark text-white outline-power-button-dark hover:bg-info-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
-					classes
-				]}
-				onclick={() => context.place(node.id, region)}
-			>
-				<span aria-hidden="true">{glyph}</span>
-			</button>
-		{/each}
-	{/if}
-	{#if isOver}
+		bind:this={wrapper}
+		tabindex="-1"
+		data-moving={isMoving ? '' : undefined}
+		inert={isDestination}
+		class="peer relative size-full min-h-0 min-w-0 outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid data-moving:focus:outline-2 data-moving:focus:-outline-offset-2 data-moving:focus:outline-solid"
+		draggable={context.armedId === node.id}
+		ondragstart={handleDragStart}
+		ondragend={context.clearDrag}
+		onkeydown={handleKeydown}
+	>
+		{@render context.pane(node, controls)}
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
-			data-drop-indicator={region}
-			class={[
-				'pointer-events-none absolute z-20 bg-info-medium/50 motion-safe:transition-all',
-				INDICATOR_CLASSES_BY_REGION[region]
-			]}
+			data-drop-overlay
+			class={['absolute inset-0 z-20', { 'pointer-events-none': context.draggedId === undefined }]}
+			ondragenter={handleDragEnter}
+			ondragleave={handleDragLeave}
+			ondragover={handleDragOver}
+			ondrop={handleDrop}
 		></div>
+		{#if isOver}
+			<div
+				data-drop-indicator={region}
+				class={[
+					'pointer-events-none absolute z-20 bg-info-medium/50 motion-safe:transition-all',
+					INDICATOR_CLASSES_BY_REGION[region]
+				]}
+			></div>
+		{/if}
+	</div>
+	{#if isMoving}
+		<!-- The wash gives way by the outline's width while the wrapper is focused, so it does not tint the outline. -->
+		<div
+			data-moving-wash
+			class="pointer-events-none absolute inset-0 z-30 bg-gray-2/80 peer-focus:inset-0.5"
+		></div>
+		<div
+			data-moving-notice
+			class="pointer-events-none absolute inset-0 z-30 flex items-center justify-center p-2"
+		>
+			<p class="max-w-full bg-info-light px-2 py-1 text-center text-xs text-info-dark">
+				{movingNotice(label)}
+			</p>
+		</div>
+	{/if}
+	{#if movingLabel !== undefined}
+		<SplitViewMoveTarget paneId={node.id} {label} {movingLabel} />
 	{/if}
 </div>

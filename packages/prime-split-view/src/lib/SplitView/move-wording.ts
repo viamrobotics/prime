@@ -9,10 +9,15 @@ const EDGE_PHRASE_BY_REGION = {
 
 export const CANCELED_MESSAGE = 'Move canceled.';
 
+export const movingNotice = (moving: string) =>
+	`Moving ${moving}. Choose a destination with the pointer or arrow keys, or press Escape.`;
+
 export const startedMessage = (moving: string) =>
-	`Moving ${moving}. Choose a target, or press Escape to cancel.`;
+	`${movingNotice(moving)} The arrow keys move between sides and panes, Tab moves between destinations, Enter places the pane, and Escape cancels.`;
 
 export const rejectedMessage = (moving: string) => `${moving} was not moved.`;
+
+export const destinationName = (moving: string, target: string) => `Move ${moving} to ${target}`;
 
 export function targetName(region: DropRegion, moving: string, target: string): string {
 	if (region === 'center') {

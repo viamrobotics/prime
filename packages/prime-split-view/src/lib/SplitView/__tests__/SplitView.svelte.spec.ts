@@ -171,7 +171,7 @@ describe('SplitView resize trigger', () => {
 		expect(getComputedStyle(trigger, '::after').opacity).toBe('1');
 	});
 
-	it('shows a 2px power-button-dark outline on keyboard focus', async () => {
+	it('shows a 2px info-dark outline on keyboard focus', async () => {
 		const { container, getByRole } = render(BoundSplitView);
 		await userEvent.click(getByRole('button'));
 		await userEvent.tab();
@@ -181,7 +181,7 @@ describe('SplitView resize trigger', () => {
 		const outline = getComputedStyle(trigger);
 		expect(outline.outlineStyle).toBe('solid');
 		expect(outline.outlineWidth).toBe('2px');
-		expect(outline.outlineColor).toBe(backgroundOf('bg-power-button-dark'));
+		expect(outline.outlineColor).toBe(backgroundOf('bg-info-dark'));
 	});
 });
 

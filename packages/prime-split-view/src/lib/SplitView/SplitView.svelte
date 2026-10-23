@@ -22,13 +22,13 @@
 
 		/**
 		 * Whether panes can be rearranged, by dragging from a `dragTrigger` or by activating a
-		 * `moveTrigger` to pick a target. Every rearrangement is assigned to `layout`, so a function
-		 * binding can reject it. Resizing is unaffected.
+		 * `moveTrigger` to pick a destination. Every rearrangement is assigned to `layout`, so a
+		 * function binding can reject it. Resizing is unaffected.
 		 */
 		reorderable?: boolean;
 
 		/**
-		 * Names a pane for assistive technology: the move targets that appear while a pane is being
+		 * Names a pane for assistive technology: the destinations that appear while a pane is being
 		 * moved without dragging, and the announcements made as it moves. Defaults to the pane's `id`.
 		 */
 		paneLabel?: (pane: PaneNode<TData>) => string;
@@ -41,6 +41,8 @@
 		reorderable = true,
 		paneLabel = (labeled) => labeled.id,
 		onkeydown,
+		onfocusout,
+		onpointerdown,
 		...rest
 	}: Props = $props();
 
@@ -53,13 +55,9 @@
 		() => paneLabel
 	);
 
-	let root = $state<HTMLDivElement>();
+	let isPressingInside = false;
 
-	$effect(() => {
-		if (context.movingId !== undefined) {
-			root?.querySelector<HTMLElement>('[data-move-target]')?.focus();
-		}
-	});
+	const isMoving = $derived(context.movingId !== undefined);
 
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLDivElement }) {
 		onkeydown?.(event);
@@ -67,9 +65,47 @@
 			context.cancelMove();
 		}
 	}
+
+	function handlePointerDown(event: PointerEvent & { currentTarget: HTMLDivElement }) {
+		onpointerdown?.(event);
+		isPressingInside = true;
+	}
+
+	// Safari and Firefox on macOS leave focus on nothing when a button is pressed, which is not leaving the view.
+	function handleFocusOut(event: FocusEvent & { currentTarget: HTMLDivElement }) {
+		onfocusout?.(event);
+		const next = event.relatedTarget;
+		if (next instanceof Node && event.currentTarget.contains(next)) return;
+		if (next === null && isPressingInside) return;
+		if (next !== null || !(event.target instanceof Node)) {
+			context.abandonMove();
+			return;
+		}
+
+		// Removing the focused element, such as a menu item that starts the move, also reports focus going nowhere. Whether the element is still in the page tells the two apart.
+		const lost = event.target;
+		queueMicrotask(() => {
+			if (lost.isConnected) {
+				context.abandonMove();
+			} else {
+				void context.focusMovingPane();
+			}
+		});
+	}
 </script>
 
-<div {...rest} bind:this={root} onkeydown={handleKeydown}>
+<svelte:window
+	onpointerup={() => (isPressingInside = false)}
+	onpointercancel={() => (isPressingInside = false)}
+/>
+
+<div
+	{...rest}
+	data-move-mode={isMoving ? '' : undefined}
+	onkeydown={handleKeydown}
+	onfocusout={handleFocusOut}
+	onpointerdown={handlePointerDown}
+>
 	{#if layout}
 		<SplitViewNode node={layout} />
 	{:else}

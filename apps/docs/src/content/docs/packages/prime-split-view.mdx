@@ -82,7 +82,7 @@ import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from "@astrojs/starligh
 </SplitView>
 ```
 
-`paneLabel` names each pane for the move targets and announcements described in [Moving panes without dragging](#moving-panes-without-dragging). The root element has no default size. Give it one with a `class`, as above, or it collapses to nothing. Every other prop of a `div` passes through to the root.
+`paneLabel` names each pane for the move notice, previews, and announcements described in [Moving panes without dragging](#moving-panes-without-dragging). The root element has no default size. Give it one with a `class`, as above, or it collapses to nothing. Every other prop of a `div` passes through to the root.
 
 ## The layout model
 
@@ -271,13 +271,23 @@ Every drop is assigned to `layout`, so a function binding sees it and can veto i
 
 Dragging is not the only way to rearrange. Activate a `moveTrigger` element with a click, Enter, or Space to enter move mode. A button trigger reports it with `aria-pressed`.
 
-In move mode, every other pane shows five target buttons: left, right, top, bottom, and swap. Activating one makes the same change a drop on that region would, and it goes through `layout` the same way, so a function binding can still veto it.
+Activating the trigger moves focus to the moving pane, which shows a blue focus outline, a light gray wash over its content, and "Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape." Every other pane becomes a destination that shows nothing until it is hovered or focused. A placement makes the same change a drop on that region would, and it goes through `layout` the same way, so a function binding can still veto it.
 
+- With a pointer, the region under the pointer previews with the drag indicator and the moving pane's label. A click places.
+- On touch, a first tap previews a region and a second tap on the same region places.
+- With the keyboard, focus stays on the moving pane's trigger. An arrow key there moves into the adjacent pane, entering at its near edge. Each destination is a labeled group with one Tab stop. Within a pane, the horizontal arrows step left, center (swap), and right, and the vertical arrows step top, center, and bottom. Past the far edge, an arrow crosses into the next pane on screen, so panes that do not touch are reachable. The moving pane is skipped, and nothing wraps at the outer edge. Enter or Space places, and Tab moves between destinations.
+- Arrows inside a text field in the moving pane stay with the field.
+- Clicking an edge bar places the moving pane on that side.
+- A screen reader in browse mode can reach and activate each side button.
 - Escape cancels move mode. So does activating the pressed trigger again.
-- Focus moves to the first target when move mode starts, and returns to the trigger when it ends.
+- Destination content is inert during move mode.
+- A keyboard-started move keeps focus on the trigger, and focus returns to it when move mode ends.
+- Moving focus out of the view cancels move mode. Focus stays where it moved.
 - A status region announces each step: the start, the placement, a cancel, and a rejected move.
 
-Set `paneLabel` so these read well. The target names and announcements use pane labels, such as "Place Camera left of Stats". `paneLabel` receives the `PaneNode` and returns a string. Without it the labels are pane ids.
+To restyle move mode, use `data-move-mode` on the root, which is present while move mode is active, and `data-moving` on the moving pane.
+
+Set `paneLabel` so these read well. The notice, previews, and announcements use pane labels, such as "Camera placed left of Stats.". `paneLabel` receives the `PaneNode` and returns a string. Without it the labels are pane ids.
 
 ```svelte
 <SplitView bind:layout paneLabel={(node) => node.data.title}>
@@ -492,8 +502,9 @@ Use `fromWorkspaceNode(workspace.layoutRoot)` to seed the bound layout. In the p
 
 ## Limitations
 
-- Dragging a pane uses HTML5 drag and drop, which does not fire on touch. The click path in move mode works on touch.
+- Dragging a pane uses HTML5 drag and drop, which does not fire on touch. Move mode works on touch.
 - Resizing needs a pointer drag on the divider or the separator's arrow keys. It has no click-only path.
-- The five targets crowd each other in a pane smaller than about 100px.
 - Escape cancels move mode only while focus is inside the view.
+- Edge buttons crowd in panes narrower than about 72px.
+- Switching browser windows during move mode cancels it.
 - While a divider is dragged, the cursor for the whole page is set by a stylesheet that the splitter injects. That stylesheet takes no `nonce`. Under a strict Content Security Policy it is blocked, so the global resize cursor does not change during a drag. The divider itself still resizes.

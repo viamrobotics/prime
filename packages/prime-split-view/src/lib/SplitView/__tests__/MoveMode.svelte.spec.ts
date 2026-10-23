@@ -10,6 +10,7 @@ import EmptyingSplitView from './EmptyingSplitView.svelte';
 import PaneControlsSplitView from './PaneControlsSplitView.svelte';
 import SinglePaneSplitView from './SinglePaneSplitView.svelte';
 
+import type { DropRegion } from '../../drop-region.ts';
 import type { LayoutNode } from '../../layout.ts';
 import type { PaneData } from '../../__tests__/layout-fixture.ts';
 
@@ -17,12 +18,19 @@ type Received = (LayoutNode<PaneData> | undefined)[];
 
 const WIDE_VIEWPORT = { width: 1000, height: 1400 };
 const DEFAULT_VIEWPORT = { width: 414, height: 896 };
-const MIN_TARGET_SIZE_PX = 24;
-const TARGETS_PER_PANE = 5;
-const OTHER_PANE_COUNT = 3;
-const ALL_TARGET_COUNT = TARGETS_PER_PANE * OTHER_PANE_COUNT;
+const MIN_DESTINATION_SIZE_PX = 24;
+const DESTINATION_COUNT = 3;
 
-const STARTED_CAMERA = 'Moving Camera. Choose a target, or press Escape to cancel.';
+const STARTED_CAMERA =
+	'Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape. The arrow keys move between sides and panes, Tab moves between destinations, Enter places the pane, and Escape cancels.';
+
+const REGION_POINTS = {
+	left: { x: 0.1, y: 0.5 },
+	right: { x: 0.9, y: 0.5 },
+	top: { x: 0.5, y: 0.1 },
+	bottom: { x: 0.5, y: 0.9 },
+	center: { x: 0.5, y: 0.5 }
+} as const satisfies Record<DropRegion, { x: number; y: number }>;
 
 const pane = (id: string, label: string) => ({ type: 'pane', id, data: { label } });
 const CAMERA = pane(ids.mycam, 'Camera');
@@ -74,14 +82,22 @@ const menuButtonOf = (container: Element, label: string) =>
 	container.querySelector<HTMLElement>(`[aria-label="Menu for ${label}"]`)!;
 const moveDivOf = (container: Element, label: string) =>
 	container.querySelector<HTMLElement>(`[data-move-div="${label}"]`)!;
-const targetNamed = (container: Element, name: string) =>
-	container.querySelector<HTMLElement>(`[data-move-target][aria-label="${name}"]`)!;
-const targetsIn = (element: Element) => [
+const buttonNamed = (container: Element, name: string) =>
+	container.querySelector<HTMLElement>(`[data-move-button][aria-label="${name}"]`)!;
+const destinationsIn = (element: Element) => [
 	...element.querySelectorAll<HTMLElement>('[data-move-target]')
 ];
 const paneElement = (container: Element, id: string) =>
 	container.querySelector<HTMLElement>(`[data-pane-id="${id}"]`)!;
 const wrapperOf = (container: Element, id: string) => paneElement(container, id).parentElement!;
+const destinationOf = (container: Element, id: string) =>
+	wrapperOf(container, id).parentElement!.querySelector<HTMLElement>('[data-move-target]')!;
+const swapButtonOf = (container: Element, id: string) =>
+	destinationOf(container, id).querySelector<HTMLElement>('[data-move-button="center"]')!;
+const boxOf = (element: Element) => {
+	const { left, top, width, height } = element.getBoundingClientRect();
+	return { left, top, width, height };
+};
 const pressedStates = (container: Element) =>
 	[...container.querySelectorAll<HTMLButtonElement>('button[aria-label^="Move "]')].map((handle) =>
 		handle.getAttribute('aria-pressed')
@@ -105,9 +121,29 @@ const pointWithin = (element: HTMLElement) => {
 	return { x: rect.width * 0.5, y: rect.height * 0.5 };
 };
 
+const clickRegion = (destination: HTMLElement, region: DropRegion) => {
+	const { width, height } = destination.getBoundingClientRect();
+	const point = REGION_POINTS[region];
+	return userEvent.click(destination, { position: { x: width * point.x, y: height * point.y } });
+};
+
+const tabThrough = async (count: number) => {
+	const visited: (Element | null)[] = [];
+	for (let step = 0; step < count; step += 1) {
+		await userEvent.keyboard('{Tab}');
+		visited.push(document.activeElement);
+	}
+	return visited;
+};
+
 const startMoveWithKeyboard = async (container: Element, label: string) => {
 	handleOf(container, label).focus();
 	await userEvent.keyboard('{Enter}');
+};
+
+const startMoveOnFirstDestination = async (container: Element, label: string) => {
+	await startMoveWithKeyboard(container, label);
+	await userEvent.keyboard('{Tab}{Tab}');
 };
 
 const startMoveWithPointer = (container: Element, label: string) =>
@@ -123,28 +159,41 @@ beforeAll(() => page.viewport(WIDE_VIEWPORT.width, WIDE_VIEWPORT.height));
 afterAll(() => page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height));
 
 describe('SplitView move mode: keyboard', () => {
-	it('places the pane beside the target, giving the layout an edge drop makes', async () => {
+	it('places the pane beside the destination, giving the layout an edge drop makes', async () => {
 		const { container, component } = render(BoundSplitView, { props: { handles: true } });
 
-		await startMoveWithKeyboard(container, 'Camera');
-		await userEvent.keyboard('{Tab}');
-		expect(document.activeElement, 'Tab did not reach the right-of target').toBe(
-			targetNamed(container, 'Place Camera right of Time series')
+		await startMoveOnFirstDestination(container, 'Camera');
+		await userEvent.keyboard('{ArrowRight}');
+		expect(document.activeElement, 'ArrowRight did not select the right-of placement').toBe(
+			buttonNamed(container, 'Place Camera right of Time series')
 		);
 		await userEvent.keyboard('{Enter}');
 
 		await expect.poll(() => component.getLayout()).toEqual(CAMERA_RIGHT_OF_TIME_SERIES);
 	});
 
-	it('swaps the pane with the target at the center', async () => {
+	it('swaps the pane with the destination that Tab focuses first', async () => {
 		const received: Received = [];
 		const { container } = render(ControlledSplitView, {
 			props: { accept: true, received, handles: true }
 		});
 
-		await startMoveWithKeyboard(container, 'Camera');
-		targetNamed(container, 'Swap Camera with Time series').focus();
+		await startMoveOnFirstDestination(container, 'Camera');
 		await userEvent.keyboard('{Enter}');
+
+		await expect.poll(() => received.at(-1)).toEqual(CAMERA_SWAPPED_WITH_TIME_SERIES);
+	});
+
+	it('places the pane when Space is released on a destination', async () => {
+		const received: Received = [];
+		const { container } = render(ControlledSplitView, {
+			props: { accept: true, received, handles: true }
+		});
+		await startMoveOnFirstDestination(container, 'Camera');
+
+		await userEvent.keyboard('{Space>}');
+		expect(received, 'while Space is held').toEqual([]);
+		await userEvent.keyboard('{/Space}');
 
 		await expect.poll(() => received.at(-1)).toEqual(CAMERA_SWAPPED_WITH_TIME_SERIES);
 	});
@@ -158,38 +207,51 @@ describe('SplitView move mode: keyboard', () => {
 		expect(pressedStates(container)).toEqual(['true', 'false', 'false', 'false']);
 	});
 
-	it('moves focus to the first target on entering move mode', async () => {
+	it('moves focus to the moving pane wrapper on entering move mode', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
 		await startMoveWithKeyboard(container, 'Camera');
+		await nextFrames();
 
-		await expect
-			.poll(() => document.activeElement)
-			.toBe(targetNamed(container, 'Place Camera left of Time series'));
+		expect(document.activeElement).toBe(wrapperOf(container, ids.mycam));
 	});
 
-	it('offers the targets in the order left, right, above, below, swap', async () => {
+	it('gives each destination one tab stop, visited in layout order after the moving pane handle', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
-
 		await startMoveWithKeyboard(container, 'Camera');
 
-		expect(
-			targetsIn(wrapperOf(container, ids.mytimeseries)).map((target) => target.ariaLabel)
-		).toEqual([
-			'Place Camera left of Time series',
-			'Place Camera right of Time series',
-			'Place Camera above Time series',
-			'Place Camera below Time series',
-			'Swap Camera with Time series'
+		const visited = await tabThrough(4);
+
+		expect(visited).toEqual([
+			handleOf(container, 'Camera'),
+			swapButtonOf(container, ids.mytimeseries),
+			swapButtonOf(container, ids.mysensor),
+			swapButtonOf(container, ids.mycam2)
 		]);
+		expect(
+			destinationsIn(container).map(
+				(destination) =>
+					[...destination.querySelectorAll<HTMLElement>('button')].filter(
+						(button) => button.tabIndex === 0
+					).length
+			)
+		).toEqual([1, 1, 1]);
+	});
+
+	it('moves back from the first destination to the moving pane handle with Shift+Tab', async () => {
+		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
+		await startMoveOnFirstDestination(container, 'Camera');
+
+		await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+
+		expect(document.activeElement).toBe(handleOf(container, 'Camera'));
 	});
 
 	it('returns focus to the moved pane handle after placing', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
-		await startMoveWithKeyboard(container, 'Camera');
-		targetNamed(container, 'Place Camera right of Time series').focus();
-		await userEvent.keyboard('{Enter}');
+		await startMoveOnFirstDestination(container, 'Camera');
+		await userEvent.keyboard('{ArrowRight}{Enter}');
 
 		await expect.poll(() => document.activeElement).toBe(handleOf(container, 'Camera'));
 	});
@@ -197,44 +259,42 @@ describe('SplitView move mode: keyboard', () => {
 	it('returns focus to the moved pane handle after a swap', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
-		await startMoveWithKeyboard(container, 'Camera');
-		targetNamed(container, 'Swap Camera with Time series').focus();
+		await startMoveOnFirstDestination(container, 'Camera');
 		await userEvent.keyboard('{Enter}');
 
 		await expect.poll(() => document.activeElement).toBe(handleOf(container, 'Camera'));
 	});
 
-	it('shows a focus outline on a focused target', async () => {
+	it('shows a focus outline on a focused destination', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
-		await startMoveWithKeyboard(container, 'Camera');
-		await userEvent.keyboard('{Tab}');
+		await startMoveOnFirstDestination(container, 'Camera');
 
 		const outline = getComputedStyle(document.activeElement!);
 		expect(outline.outlineStyle).toBe('solid');
 		expect(outline.outlineWidth).toBe('2px');
-		expect(outline.outlineColor).toBe(outlineColorOf('outline-power-button-dark'));
+		expect(outline.outlineColor).toBe(outlineColorOf('outline-info-dark'));
 	});
 });
 
 describe('SplitView move mode: pointer only', () => {
-	it('places the pane beside the target with clicks', async () => {
+	it('places the pane beside the destination with a click on its right side', async () => {
 		const { container, component } = render(BoundSplitView, { props: { handles: true } });
 
 		await startMoveWithPointer(container, 'Camera');
-		await userEvent.click(targetNamed(container, 'Place Camera right of Time series'));
+		await clickRegion(destinationOf(container, ids.mytimeseries), 'right');
 
 		await expect.poll(() => component.getLayout()).toEqual(CAMERA_RIGHT_OF_TIME_SERIES);
 	});
 
-	it('swaps the pane with the target with clicks', async () => {
+	it('swaps the pane with the destination with a click on its center', async () => {
 		const received: Received = [];
 		const { container } = render(ControlledSplitView, {
 			props: { accept: true, received, handles: true }
 		});
 
 		await startMoveWithPointer(container, 'Camera');
-		await userEvent.click(targetNamed(container, 'Swap Camera with Time series'));
+		await clickRegion(destinationOf(container, ids.mytimeseries), 'center');
 
 		await expect.poll(() => received.at(-1)).toEqual(CAMERA_SWAPPED_WITH_TIME_SERIES);
 	});
@@ -246,7 +306,7 @@ describe('SplitView move mode: pointer only', () => {
 		});
 
 		await startMoveWithPointer(container, 'Camera');
-		await userEvent.click(targetNamed(container, 'Place Camera right of Time series'));
+		await clickRegion(destinationOf(container, ids.mytimeseries), 'right');
 
 		await expect.poll(() => received.length).toBe(1);
 		const created = (received[0] as { first: { id: string } }).first.id;
@@ -254,27 +314,42 @@ describe('SplitView move mode: pointer only', () => {
 		expect(Object.values(ids)).not.toContain(created);
 	});
 
-	it('makes every target at least 24 by 24 pixels', async () => {
+	it('covers each destination pane', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
 		await startMoveWithPointer(container, 'Camera');
 
-		const sizes = targetsIn(container).map((target) => target.getBoundingClientRect());
-		expect(sizes).toHaveLength(ALL_TARGET_COUNT);
-		expect(Math.min(...sizes.map((size) => size.width))).toBeGreaterThanOrEqual(MIN_TARGET_SIZE_PX);
-		expect(Math.min(...sizes.map((size) => size.height))).toBeGreaterThanOrEqual(
-			MIN_TARGET_SIZE_PX
+		const paneIds = [ids.mytimeseries, ids.mysensor, ids.mycam2];
+		expect(paneIds.map((id) => boxOf(destinationOf(container, id)))).toEqual(
+			paneIds.map((id) => boxOf(wrapperOf(container, id)))
 		);
 	});
 
-	it('stacks the targets above the drop overlay', async () => {
+	it('makes every destination at least 24 by 24 pixels', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
 		await startMoveWithPointer(container, 'Camera');
 
-		const target = targetNamed(container, 'Place Camera right of Time series');
+		const sizes = destinationsIn(container).map((destination) =>
+			destination.getBoundingClientRect()
+		);
+		expect(sizes).toHaveLength(DESTINATION_COUNT);
+		expect(Math.min(...sizes.map((size) => size.width))).toBeGreaterThanOrEqual(
+			MIN_DESTINATION_SIZE_PX
+		);
+		expect(Math.min(...sizes.map((size) => size.height))).toBeGreaterThanOrEqual(
+			MIN_DESTINATION_SIZE_PX
+		);
+	});
+
+	it('stacks the destinations above the drop overlay', async () => {
+		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
+
+		await startMoveWithPointer(container, 'Camera');
+
+		const destination = destinationOf(container, ids.mytimeseries);
 		const overlay = wrapperOf(container, ids.mytimeseries).querySelector('[data-drop-overlay]')!;
-		expect(Number(getComputedStyle(target).zIndex)).toBeGreaterThan(
+		expect(Number(getComputedStyle(destination).zIndex)).toBeGreaterThan(
 			Number(getComputedStyle(overlay).zIndex)
 		);
 	});
@@ -294,19 +369,19 @@ describe('SplitView move mode: canceling', () => {
 		await expect.poll(() => document.activeElement).toBe(handleOf(container, 'Camera'));
 		expect(received).toEqual([]);
 		expect(component.getLayout()).toBe(layoutRoot);
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 		expect(pressedStates(container)).toEqual(['false', 'false', 'false', 'false']);
 	});
 
-	it('cancels when Escape is pressed on another handle in the view', async () => {
+	it('cancels when Escape is pressed with focus on the moving pane handle', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 		await startMoveWithPointer(container, 'Camera');
-		handleOf(container, 'Time series').focus();
+		handleOf(container, 'Camera').focus();
 
 		await userEvent.keyboard('{Escape}');
 
-		await expect.poll(() => document.activeElement).toBe(handleOf(container, 'Camera'));
-		expect(targetsIn(container)).toEqual([]);
+		await expect.poll(() => destinationsIn(container)).toEqual([]);
+		expect(document.activeElement).toBe(handleOf(container, 'Camera'));
 	});
 
 	it('does nothing when Escape is pressed outside move mode', async () => {
@@ -331,7 +406,7 @@ describe('SplitView move mode: canceling', () => {
 		await userEvent.click(handleOf(container, 'Camera'));
 
 		expect(pressedStates(container)).toEqual(['false', 'false', 'false', 'false']);
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 		expect(received).toEqual([]);
 		expect(component.getLayout()).toBe(layoutRoot);
 	});
@@ -346,16 +421,6 @@ describe('SplitView move mode: canceling', () => {
 		expect(pressedStates(container)).toEqual(['false', 'false', 'false', 'false']);
 		await expect.poll(() => document.activeElement).toBe(handleOf(container, 'Camera'));
 	});
-
-	it('moves another pane when a different handle is activated', async () => {
-		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
-		await startMoveWithPointer(container, 'Camera');
-
-		await userEvent.click(handleOf(container, 'Time series'));
-
-		expect(pressedStates(container)).toEqual(['false', 'true', 'false', 'false']);
-		expect(targetNamed(container, 'Place Time series left of Camera')).not.toBeNull();
-	});
 });
 
 describe('SplitView move mode: announcements', () => {
@@ -365,7 +430,7 @@ describe('SplitView move mode: announcements', () => {
 		expect(announcementIn(container)).toBe('');
 	});
 
-	it('announces entering move mode', async () => {
+	it('announces entering move mode, naming the keys', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
 		await startMoveWithPointer(container, 'Camera');
@@ -377,7 +442,7 @@ describe('SplitView move mode: announcements', () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 		await startMoveWithPointer(container, 'Camera');
 
-		await userEvent.click(targetNamed(container, 'Place Camera right of Time series'));
+		await clickRegion(destinationOf(container, ids.mytimeseries), 'right');
 
 		expect(announcementIn(container)).toBe('Camera placed right of Time series.');
 	});
@@ -386,7 +451,7 @@ describe('SplitView move mode: announcements', () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 		await startMoveWithPointer(container, 'Camera');
 
-		await userEvent.click(targetNamed(container, 'Swap Camera with Time series'));
+		await clickRegion(destinationOf(container, ids.mytimeseries), 'center');
 
 		expect(announcementIn(container)).toBe('Camera swapped with Time series.');
 	});
@@ -404,9 +469,21 @@ describe('SplitView move mode: announcements', () => {
 		const { container } = render(ControlledSplitView, { props: { accept: false, handles: true } });
 		await startMoveWithPointer(container, 'Camera');
 
-		await userEvent.click(targetNamed(container, 'Place Camera right of Time series'));
+		await clickRegion(destinationOf(container, ids.mytimeseries), 'right');
 
 		expect(announcementIn(container)).toBe('Camera was not moved.');
+	});
+
+	it('leaves the status text alone when an arrow key selects a placement, since the focused button names it', async () => {
+		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
+		await startMoveOnFirstDestination(container, 'Camera');
+
+		await userEvent.keyboard('{ArrowRight}');
+
+		expect(announcementIn(container)).toBe(STARTED_CAMERA);
+		expect(document.activeElement).toBe(
+			page.getByRole('button', { name: 'Place Camera right of Time series', exact: true }).element()
+		);
 	});
 
 	it('keeps the status region when the layout is empty', async () => {
@@ -426,9 +503,9 @@ describe('SplitView move mode: announcements', () => {
 		await startMoveWithPointer(container, 'Camera');
 
 		expect(announcementIn(container)).toBe(
-			'Moving mycam. Choose a target, or press Escape to cancel.'
+			'Moving mycam. Choose a destination with the pointer or arrow keys, or press Escape. The arrow keys move between sides and panes, Tab moves between destinations, Enter places the pane, and Escape cancels.'
 		);
-		expect(targetNamed(container, 'Place mycam right of mytimeseries')).not.toBeNull();
+		expect(buttonNamed(container, 'Swap mycam with mytimeseries')).not.toBeNull();
 	});
 });
 
@@ -439,16 +516,15 @@ describe('SplitView move mode: a binding that rejects the change', () => {
 			props: { accept: false, received, handles: true }
 		});
 
-		await startMoveWithKeyboard(container, 'Camera');
-		targetNamed(container, 'Place Camera right of Time series').focus();
-		await userEvent.keyboard('{Enter}');
+		await startMoveOnFirstDestination(container, 'Camera');
+		await userEvent.keyboard('{ArrowRight}{Enter}');
 
 		await expect.poll(() => received.length).toBe(1);
 		expect(received[0], 'the setter was offered a different layout').not.toBe(layoutRoot);
 		await nextFrames();
 		expect(component.getLayout()).toBe(layoutRoot);
 		expect(pressedStates(container)).toEqual(['false', 'false', 'false', 'false']);
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 		expect(document.activeElement).toBe(handleOf(container, 'Camera'));
 	});
 });
@@ -470,22 +546,22 @@ describe('SplitView move mode: state', () => {
 		expect(pressedStates(container), 'after cancel').toEqual(['false', 'false', 'false', 'false']);
 	});
 
-	it('shows targets on every pane but the moving one', async () => {
+	it('renders one destination on every pane but the moving one', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
 		await startMoveWithPointer(container, 'Camera');
 
 		expect(
 			[ids.mycam, ids.mytimeseries, ids.mysensor, ids.mycam2].map(
-				(id) => targetsIn(wrapperOf(container, id)).length
+				(id) => destinationsIn(wrapperOf(container, id).parentElement!).length
 			)
-		).toEqual([0, TARGETS_PER_PANE, TARGETS_PER_PANE, TARGETS_PER_PANE]);
+		).toEqual([0, 1, 1, 1]);
 	});
 
-	it('shows no target before move mode', () => {
+	it('shows no destination before move mode', () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 	});
 
 	it('enters no move mode in a view that is not reorderable', async () => {
@@ -496,7 +572,7 @@ describe('SplitView move mode: state', () => {
 		handleOf(container, 'Camera').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 		await tick();
 
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 		expect(announcementIn(container)).toBe('');
 	});
 
@@ -505,11 +581,11 @@ describe('SplitView move mode: state', () => {
 			props: { accept: true, handles: true }
 		});
 		await startMoveWithPointer(container, 'Camera');
-		expect(targetsIn(container), 'move mode is on').toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container), 'move mode is on').toHaveLength(DESTINATION_COUNT);
 
 		await rerender({ reorderable: false });
 
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 		expect(pressedStates(container)).toEqual(['false', 'false', 'false', 'false']);
 	});
 
@@ -519,7 +595,7 @@ describe('SplitView move mode: state', () => {
 		});
 		await startMoveWithPointer(container, 'Camera');
 		await rerender({ handles: false });
-		await userEvent.click(targetNamed(container, 'Place Camera right of Time series'));
+		await clickRegion(destinationOf(container, ids.mytimeseries), 'right');
 		await tick();
 
 		await rerender({ handles: true });
@@ -534,14 +610,14 @@ describe('SplitView move mode: state', () => {
 		await userEvent.click(handleOf(container, 'Only'));
 
 		expect(pressedStates(container)).toEqual(['false']);
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 		expect(announcementIn(container)).toBe('');
 	});
 
 	it('leaves move mode when a drag starts from a handle', async () => {
 		const { container } = render(ControlledSplitView, { props: { accept: true, handles: true } });
 		await startMoveWithPointer(container, 'Camera');
-		expect(targetsIn(container), 'move mode is on').toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container), 'move mode is on').toHaveLength(DESTINATION_COUNT);
 
 		handleOf(container, 'Time series').dispatchEvent(
 			new PointerEvent('pointerdown', { bubbles: true, button: 0 })
@@ -556,7 +632,7 @@ describe('SplitView move mode: state', () => {
 		);
 		await tick();
 
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 		expect(pressedStates(container)).toEqual(['false', 'false', 'false', 'false']);
 	});
 
@@ -570,7 +646,7 @@ describe('SplitView move mode: state', () => {
 		await nextFrames();
 
 		expect(pressedStates(container)).toEqual(['false', 'false', 'false', 'false']);
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 	});
 
 	it('still runs the consumer click handler and enters move mode', async () => {
@@ -601,7 +677,7 @@ describe('SplitView move mode: a moveTrigger that is not a button', () => {
 
 		await userEvent.click(moveDivOf(container, 'Camera'));
 
-		expect(targetsIn(container), 'move mode is on').toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container), 'move mode is on').toHaveLength(DESTINATION_COUNT);
 		expect(
 			moveDivOf(container, 'Camera').hasAttribute('aria-pressed'),
 			'aria-pressed is set in move mode'
@@ -615,7 +691,7 @@ describe('SplitView move mode: a moveTrigger that is a native button', () => {
 
 		await startMoveWithKeyboard(container, 'Camera');
 
-		expect(targetsIn(container)).toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container)).toHaveLength(DESTINATION_COUNT);
 		expect(pressedStates(container)).toEqual(['true', 'false', 'false', 'false']);
 	});
 
@@ -644,7 +720,21 @@ describe('SplitView move mode: a moveTrigger with role="button" that is not a na
 
 		await userEvent.keyboard('{Enter}');
 
-		expect(targetsIn(container)).toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container)).toHaveLength(DESTINATION_COUNT);
+	});
+
+	it('ignores Enter repeating from the key that entered move mode', async () => {
+		const { container } = renderRoleButton();
+		moveDivOf(container, 'Camera').focus();
+		await userEvent.keyboard('{Enter}');
+		expect(destinationsIn(container), 'before the repeat').toHaveLength(DESTINATION_COUNT);
+
+		moveDivOf(container, 'Camera').dispatchEvent(
+			new KeyboardEvent('keydown', { key: 'Enter', repeat: true, bubbles: true, cancelable: true })
+		);
+		await tick();
+
+		expect(destinationsIn(container)).toHaveLength(DESTINATION_COUNT);
 	});
 
 	it('enters move mode on Space', async () => {
@@ -653,7 +743,7 @@ describe('SplitView move mode: a moveTrigger with role="button" that is not a na
 
 		await userEvent.keyboard(' ');
 
-		expect(targetsIn(container)).toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container)).toHaveLength(DESTINATION_COUNT);
 	});
 
 	it('enters move mode on Space only when the key is released', async () => {
@@ -661,10 +751,10 @@ describe('SplitView move mode: a moveTrigger with role="button" that is not a na
 		moveDivOf(container, 'Camera').focus();
 
 		await userEvent.keyboard('{Space>}');
-		expect(targetsIn(container), 'while Space is held').toEqual([]);
+		expect(destinationsIn(container), 'while Space is held').toEqual([]);
 
 		await userEvent.keyboard('{/Space}');
-		expect(targetsIn(container), 'after Space is released').toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container), 'after Space is released').toHaveLength(DESTINATION_COUNT);
 	});
 
 	it('cancels the Space keydown so the page does not scroll', () => {
@@ -681,7 +771,7 @@ describe('SplitView move mode: a moveTrigger with role="button" that is not a na
 
 		await userEvent.click(moveDivOf(container, 'Camera'));
 
-		expect(targetsIn(container)).toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container)).toHaveLength(DESTINATION_COUNT);
 	});
 
 	it('reports move mode with aria-pressed', async () => {
@@ -704,7 +794,7 @@ describe('SplitView move mode: a moveTrigger with role="button" that is not a na
 
 		await userEvent.keyboard('{Enter}');
 
-		expect(targetsIn(container)).toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container)).toHaveLength(DESTINATION_COUNT);
 	});
 });
 
@@ -717,7 +807,7 @@ describe('SplitView move mode: a moveTrigger with role="menuitem"', () => {
 
 		await userEvent.click(moveDivOf(container, 'Camera'));
 
-		expect(targetsIn(container)).toHaveLength(ALL_TARGET_COUNT);
+		expect(destinationsIn(container)).toHaveLength(DESTINATION_COUNT);
 	});
 
 	it('leaves move mode when clicked again', async () => {
@@ -726,7 +816,7 @@ describe('SplitView move mode: a moveTrigger with role="menuitem"', () => {
 
 		await userEvent.click(moveDivOf(container, 'Camera'));
 
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 	});
 
 	it('has no aria-pressed in move mode', async () => {
@@ -746,7 +836,7 @@ describe('SplitView move mode: a moveTrigger with role="menuitem"', () => {
 
 		await userEvent.keyboard('{Enter}');
 
-		expect(targetsIn(container)).toEqual([]);
+		expect(destinationsIn(container)).toEqual([]);
 	});
 });
 
@@ -756,7 +846,7 @@ describe('SplitView move mode: a moveTrigger that unmounted before move mode end
 		await startMoveFromMenu(container, 'Camera');
 		expect(handleOf(container, 'Camera'), 'the menu item unmounted').toBeNull();
 
-		await userEvent.click(targetNamed(container, 'Place Camera right of Time series'));
+		await clickRegion(destinationOf(container, ids.mytimeseries), 'right');
 
 		await expect.poll(() => document.activeElement).toBe(wrapperOf(container, ids.mycam));
 	});
@@ -780,7 +870,7 @@ describe('SplitView move mode: a moveTrigger that unmounted before move mode end
 
 		expect(outline.outlineStyle).toBe('solid');
 		expect(outline.outlineWidth).toBe('2px');
-		expect(outline.outlineColor).toBe(outlineColorOf('outline-power-button-dark'));
+		expect(outline.outlineColor).toBe(outlineColorOf('outline-info-dark'));
 	});
 
 	it('gives the pane wrapper tabindex -1 so script can focus it', () => {

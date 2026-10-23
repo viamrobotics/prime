@@ -52,7 +52,7 @@ Requires `svelte` `^5.29.0`, because the pane controls are attachments. Import t
 </SplitView>
 ```
 
-The `pane` snippet receives `dragTrigger`, `dragIgnore`, and `moveTrigger` attachments. `dragTrigger` starts a pane drag from any element. `moveTrigger` toggles move mode on a `button`, an element with `role="button"`, or a `role="menuitem"` item, which rearranges panes without dragging. Every pane with a `dragTrigger` needs a `moveTrigger` to meet WCAG 2.5.7. `paneLabel` names panes in its targets and announcements. The root element has no default size, so size it with a class.
+The `pane` snippet receives `dragTrigger`, `dragIgnore`, and `moveTrigger` attachments. `dragTrigger` starts a pane drag from any element. `moveTrigger` toggles move mode on a `button`, an element with `role="button"`, or a `role="menuitem"` item, which rearranges panes without dragging. Every pane with a `dragTrigger` needs a `moveTrigger` to meet WCAG 2.5.7. In move mode, focus stays on the moving pane's trigger, and the arrow keys move spatially into the adjacent pane and across its left, center, and right or top, center, and bottom regions, crossing to the next pane on screen past the far edge. Tab moves between destinations. Place with a click, a second tap, or Enter or Space. Escape cancels. Moving focus out of the view cancels. `paneLabel` names panes in previews and announcements. The root element has no default size, so size it with a class.
 
 ## Documentation
 
