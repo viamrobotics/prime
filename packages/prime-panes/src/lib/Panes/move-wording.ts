@@ -13,6 +13,12 @@ export interface TabPosition {
 	total: number;
 }
 
+const DOCK_PHRASE_BY_REGION = {
+	...EDGE_PHRASE_BY_REGION,
+	center: 'swapped with',
+	stack: 'stacked with'
+} as const satisfies Record<DropRegion, string>;
+
 const LABEL_LIST_FORMAT = new Intl.ListFormat('en', { type: 'conjunction' });
 
 export const CANCELED_MESSAGE = 'Move canceled.';
@@ -29,10 +35,16 @@ export const MISSING_MOVE_TRIGGER_WARNING = {
 	pane: (label) =>
 		`Panes: a drag started in pane "${label}", which has no Panes.MoveTrigger. Dragging alone fails WCAG 2.5.7 (Dragging Movements), so render a Panes.MoveTrigger in the pane to move it without dragging. A Panes.MoveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.`,
 	stack: (label) =>
-		`Panes: a stack drag started in pane "${label}", which has no Panes.MoveTrigger with target="stack". Dragging alone fails WCAG 2.5.7 (Dragging Movements), so render a Panes.MoveTrigger with target="stack" in the pane to move its stack without dragging. A Panes.MoveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.`
-} as const satisfies Record<'pane' | 'stack', (label: string) => string>;
+		`Panes: a stack drag started in pane "${label}", which has no Panes.MoveTrigger with target="stack". Dragging alone fails WCAG 2.5.7 (Dragging Movements), so render a Panes.MoveTrigger with target="stack" in the pane to move its stack without dragging. A Panes.MoveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.`,
+	float: (label) =>
+		`Panes: a window drag started in pane "${label}", which has no Panes.MoveTrigger with target="float". Dragging alone fails WCAG 2.5.7 (Dragging Movements), so render a Panes.MoveTrigger with target="float" in the pane to dock its window without dragging, and controls that call setFloatRect to move or resize it. A Panes.MoveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.`
+} as const satisfies Record<'pane' | 'stack' | 'float', (label: string) => string>;
 
 export const rejectedMessage = (moving: string) => `${moving} was not moved.`;
+
+export const floatName = (moving: string) => `Float ${moving}`;
+
+export const floatedMessage = (moving: string) => `Floated ${moving}.`;
 
 export const destinationName = (moving: string, target: string) => `Move ${moving} to ${target}`;
 
@@ -69,3 +81,6 @@ export function placedMessage(region: DropRegion, moving: string, target: string
 	}
 	return `${moving} placed ${EDGE_PHRASE_BY_REGION[region]} ${target}.`;
 }
+
+export const dockedMessage = (region: DropRegion, moving: string, target: string) =>
+	`Docked ${moving} ${DOCK_PHRASE_BY_REGION[region]} ${target}.`;

@@ -1,3 +1,4 @@
+import { floatAdapter } from './FloatPanes/float-adapter.ts';
 import type { LayoutNode, PaneNode, StackNode } from './layout.ts';
 import { splitAdapter } from './SplitPanes/split-adapter.ts';
 import { stackAdapter } from './stack-adapter.ts';
@@ -21,7 +22,7 @@ export interface ContainerAdapter<TKind extends ContainerKind> {
 		node: ContainerOfKind<TData, TKind>,
 		children: readonly LayoutNode<TData>[]
 	): ContainerNode<TData>;
-	// A split collapses to its other child, a stack left with one pane to that pane. `undefined` when the node leaves too.
+	// A split collapses to its other child, a stack left with one pane to that pane, a float node left with no entries to its base. `undefined` when the node leaves too.
 	removeChild<TData>(
 		node: ContainerOfKind<TData, TKind>,
 		index: number
@@ -30,7 +31,8 @@ export interface ContainerAdapter<TKind extends ContainerKind> {
 
 const ADAPTERS: { [TKind in ContainerKind]: ContainerAdapter<TKind> } = {
 	split: splitAdapter,
-	stack: stackAdapter
+	stack: stackAdapter,
+	float: floatAdapter
 };
 
 // The registry pairs each kind with its own adapter, so the adapter at `node.type` accepts `node`.

@@ -155,3 +155,50 @@ describe('addPaneToUpperRight with stacks', () => {
 		expect(created.second).toBe(stack);
 	});
 });
+
+describe('addPaneToUpperRight with float nodes', () => {
+	it('makes the new pane the base of a float node root with no base', () => {
+		const root = deepFreeze<LayoutNode<PaneData>>({
+			type: 'float',
+			id: 'f',
+			floats: [{ id: 'e', rect: { x: 0, y: 0, width: 10, height: 10 }, content: pane('p') }]
+		});
+		const added = pane('added');
+		const result = addPaneToUpperRight(root, added, 'new-split');
+		expect(result).toEqual({ ...root, base: added });
+	});
+
+	it('makes the new pane the base of a base-less float node reached through a split', () => {
+		const float: LayoutNode<PaneData> = {
+			type: 'float',
+			id: 'f',
+			floats: [{ id: 'e', rect: { x: 0, y: 0, width: 10, height: 10 }, content: pane('p') }]
+		};
+		const root = deepFreeze<LayoutNode<PaneData>>({
+			type: 'split',
+			id: 's',
+			direction: 'row',
+			ratio: 0.5,
+			first: pane('left'),
+			second: float
+		});
+		const added = pane('added');
+		const result = expectSplit(addPaneToUpperRight(root, added, 'new-split'));
+		expect(result.second).toEqual({ ...float, base: added });
+		expect(result.first).toBe(expectSplit(root).first);
+	});
+
+	it('still adds beside the base pane of a float node with a base', () => {
+		const root = deepFreeze<LayoutNode<PaneData>>({
+			type: 'float',
+			id: 'f',
+			base: pane('b'),
+			floats: [{ id: 'e', rect: { x: 0, y: 0, width: 10, height: 10 }, content: pane('p') }]
+		});
+		const result = addPaneToUpperRight(root, pane('added'), 'new-split');
+		expect(result).toMatchObject({
+			type: 'float',
+			base: { type: 'split', id: 'new-split', first: { id: 'b' }, second: { id: 'added' } }
+		});
+	});
+});

@@ -1,4 +1,4 @@
-import type { LayoutNode, PaneNode, SplitNode, StackNode } from '../src/lib/layout.ts';
+import type { FloatNode, LayoutNode, PaneNode, SplitNode, StackNode } from '../src/lib/layout.ts';
 
 export interface PaneData {
 	label: string;
@@ -161,3 +161,86 @@ export const TWO_STACKS: SplitNode<PaneData> = {
 	first: STACK_A,
 	second: STACK_B
 };
+
+export const floatIds = {
+	float: 'float',
+	base: 'float-base',
+	baseLeft: 'float-base-left',
+	baseRight: 'float-base-right',
+	entryA: 'entry-a',
+	entryB: 'entry-b',
+	paneA: 'float-pane-a',
+	paneB: 'float-pane-b'
+};
+
+export const FLOAT_RECT = { x: 10, y: 20, width: 300, height: 200 };
+
+export function createFloatLayout(): LayoutNode<PaneData> {
+	return {
+		type: 'float',
+		id: floatIds.float,
+		base: {
+			type: 'split',
+			id: floatIds.base,
+			direction: 'row',
+			ratio: 0.5,
+			first: labeledPane(floatIds.baseLeft),
+			second: labeledPane(floatIds.baseRight)
+		},
+		floats: [
+			{
+				id: floatIds.entryA,
+				rect: { x: 0, y: 0, width: 100, height: 80 },
+				content: labeledPane(floatIds.paneA)
+			},
+			{
+				id: floatIds.entryB,
+				rect: { x: 50, y: 50, width: 120, height: 90 },
+				content: labeledPane(floatIds.paneB)
+			}
+		]
+	};
+}
+
+export function expectFloat(node: LayoutNode<PaneData> | undefined): FloatNode<PaneData> {
+	if (node?.type !== 'float') {
+		throw new Error('node is not a float');
+	}
+	return node;
+}
+
+export const nestedFloatIds = {
+	splitFirst: 'nested-first',
+	splitSecond: 'nested-second',
+	stackFirst: 'nested-stack-first',
+	stackSecond: 'nested-stack-second'
+};
+
+export function createNestedFloatLayout(): LayoutNode<PaneData> {
+	const layout = expectFloat(createFloatLayout());
+	return {
+		...layout,
+		floats: [
+			{
+				...layout.floats[0]!,
+				content: {
+					type: 'split',
+					id: 'nested-split',
+					direction: 'row',
+					ratio: 0.5,
+					first: labeledPane(nestedFloatIds.splitFirst),
+					second: labeledPane(nestedFloatIds.splitSecond)
+				}
+			},
+			{
+				...layout.floats[1]!,
+				content: {
+					type: 'stack',
+					id: 'nested-stack',
+					panes: [labeledPane(nestedFloatIds.stackFirst), labeledPane(nestedFloatIds.stackSecond)],
+					activeId: nestedFloatIds.stackFirst
+				}
+			}
+		]
+	};
+}

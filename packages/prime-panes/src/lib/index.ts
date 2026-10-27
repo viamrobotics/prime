@@ -4,6 +4,9 @@ export type { PaneState } from './Panes/pane-state.ts';
 export { Panes } from './Panes/panes.ts';
 export { setSplitRatio } from './SplitPanes/set-split-ratio.ts';
 export type {
+	FloatEntry,
+	FloatNode,
+	FloatRect,
 	LayoutNode,
 	PaneNode,
 	SplitDirection,
@@ -13,11 +16,16 @@ export type {
 } from './layout.ts';
 export {
 	addPaneToUpperRight,
+	floatPane,
+	floatStack,
 	movePane,
 	moveStack,
+	raiseFloat,
+	removeFloat,
 	removePane,
 	reorderPane,
 	selectPane,
+	setFloatRect,
 	stackPanes,
 	swapPanes,
 	swapSlots,

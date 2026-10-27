@@ -3,6 +3,7 @@
 
 	import type { LayoutNode } from '../layout.ts';
 
+	import FloatPanes from '../FloatPanes/FloatPanes.svelte';
 	import PaneFrame from './PaneFrame.svelte';
 	import SplitPanes from '../SplitPanes/SplitPanes.svelte';
 	import PaneStack from './PaneStack.svelte';
@@ -22,6 +23,8 @@
 				return SplitPanes as NodeRenderer;
 			case 'stack':
 				return PaneStack as NodeRenderer;
+			case 'float':
+				return FloatPanes as NodeRenderer;
 			case 'pane':
 				return PaneFrame as NodeRenderer;
 			default:

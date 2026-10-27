@@ -1,12 +1,15 @@
-import { describe, expect, it, onTestFinished } from 'vitest';
+import { beforeEach, describe, expect, it, onTestFinished } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 
 import { ids } from '../../../../test/layouts.ts';
 import ControlledPanes from '../../../../test/fixtures/ControlledPanes.svelte';
 import PanePartsPanes from '../../../../test/fixtures/PanePartsPanes.svelte';
 
 const DESTINATION_COUNT = 3;
+const OUTSIDE_EVERY_FIXTURE = { x: '99%', y: '99%' } as const;
+
+beforeEach(() => commands.mouseMove('html', OUTSIDE_EVERY_FIXTURE));
 
 const trigger = (label: string) => page.getByRole('button', { name: `Move ${label}`, exact: true });
 const mark = (name: string) => page.getByRole('button', { name, exact: true });

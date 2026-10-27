@@ -21,19 +21,19 @@ import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from "@astrojs/starligh
    <Tabs syncKey="pkg">
      <TabItem label="pnpm">
        <Code
-         code="pnpm add @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         code="pnpm add @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/floating-panel @zag-js/svelte"
          lang="sh"
        />
      </TabItem>
      <TabItem label="npm">
        <Code
-         code="npm install @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         code="npm install @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/floating-panel @zag-js/svelte"
          lang="sh"
        />
      </TabItem>
      <TabItem label="yarn">
        <Code
-         code="yarn add @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         code="yarn add @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/floating-panel @zag-js/svelte"
          lang="sh"
        />
      </TabItem>
@@ -187,6 +187,9 @@ The `pane` snippet's second argument is a `PaneState`. Its values are reactive, 
 | `isStacked`   | The pane shares its slot with other panes in a stack.       | `data-stacked`    |
 | `isMoving`    | The pane, or its whole stack, is being moved in move mode.  | `data-moving`     |
 | `isDragArmed` | A press has armed the pane to drag.                         | `data-drag-armed` |
+| `isFloating`  | The pane is inside a float entry, at any depth.             | `data-floating`   |
+
+`floatEntryId` is the id of the innermost float entry that holds the pane, for `removeFloat` and `raiseFloat`. It is `undefined` outside a float.
 
 Each value also appears as an attribute on the pane's wrapper. Use the attribute to restyle, and the argument when markup or logic depends on the state. In a stack, the tabs can stand in for the pane's title.
 
@@ -552,7 +555,7 @@ Over another pane's `Panes.TabListDropRegion`, the preview tab shows at the poin
 
 ### Moving a whole stack
 
-The empty area of a `Panes.TabList` drags the whole stack. So does a `Panes.DragTrigger` with `target="stack"`. A `Panes.MoveTrigger` with `target="stack"` moves the whole stack in move mode. Both take `target` as `'pane' | 'stack'`, and the default is `'pane'`. On a pane that is not stacked, `target="stack"` acts as `target="pane"`.
+The empty area of a `Panes.TabList` drags the whole stack. So does a `Panes.DragTrigger` with `target="stack"`. A `Panes.MoveTrigger` with `target="stack"` moves the whole stack in move mode. Both take `target` as `'pane' | 'stack'`, and the default is `'pane'`. On a pane that is not stacked, `target="stack"` acts as `target="pane"`. Inside a floating window, `Panes.MoveTrigger` also takes `target="float"`, which moves the window's pane or stack. See [Keyboard and assistive technology](#keyboard-and-assistive-technology).
 
 ```svelte
 <Panes.MoveTrigger target="stack">Move stack</Panes.MoveTrigger>
@@ -577,6 +580,237 @@ A whole-stack drag needs a non-drag path to meet WCAG 2.5.7 (Dragging Movements)
 ```text
 Panes: a stack drag started in pane "Camera A", which has no Panes.MoveTrigger with target="stack". Dragging alone fails WCAG 2.5.7 (Dragging Movements), so render a Panes.MoveTrigger with target="stack" in the pane to move its stack without dragging. A Panes.MoveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.
 ```
+
+## Floating panes
+
+A float node draws windows over a base layout, such as a small camera view that sits above a dashboard.
+
+### The float node
+
+```ts
+interface FloatNode<TData> {
+  type: 'float';
+  id: string;
+  base?: LayoutNode<TData>;
+  floats: FloatEntry<TData>[];
+}
+
+interface FloatEntry<TData> {
+  id: string;
+  rect: FloatRect;
+  content: LayoutNode<TData>;
+}
+
+interface FloatRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+```
+
+- A float node draws its windows over `base`, inside the float node's own box. Nothing portals out of that box.
+- `base` fills the box behind the windows. It is absent once its last pane leaves.
+- Each entry in `floats` is one window. Its `content` is any layout node, so a window can hold a pane, a stack, or a split.
+- `rect` is in pixels, relative to the float node's box.
+- Stacking order is array order. The last entry is on top.
+- A rect that reaches past the box renders clamped to it. The stored rect never changes.
+- An entry's `id` is unique within the layout. It stays the same when a drop replaces the entry's `content`.
+- A float node holds at least one entry. When its last entry leaves, the float node collapses to its `base`.
+
+```ts
+const layout: LayoutNode<PaneData> = {
+  type: 'float',
+  id: 'dashboard',
+  base: { type: 'pane', id: 'map', data: { label: 'Map' } },
+  floats: [
+    {
+      id: 'camera-window',
+      rect: { x: 24, y: 24, width: 320, height: 200 },
+      content: { type: 'pane', id: 'camera', data: { label: 'Camera' } },
+    },
+  ],
+};
+```
+
+### Float operations
+
+Five operations edit float nodes. Like the other tree operations, each is immutable, returns the same root reference when nothing changed, and returns `undefined` for an `undefined` root.
+
+```ts
+floatPane(root, paneId, rect, newEntryId, newFloatId, hostId?)
+floatStack(root, stackId, rect, newEntryId, newFloatId, hostId?)
+setFloatRect(root, entryId, rect)
+raiseFloat(root, entryId)
+removeFloat(root, entryId)
+```
+
+- `floatPane` moves a pane out of its slot into a new window. `newEntryId` is the id of the new entry.
+- `floatStack` does the same for a whole stack, which becomes the window's `content`.
+- `hostId` is the node whose box the window floats over. It defaults to the root. When the host is not a float node, `floatPane` and `floatStack` wrap it in a new float node with the id `newFloatId`. When the host is a float node, the window joins it and `newFloatId` goes unused.
+- `setFloatRect` replaces an entry's rect. It also takes an updater, `(rect) => rect`, that receives the current rect.
+- `raiseFloat` moves an entry to the top of its float node's stacking order.
+- `removeFloat` removes an entry and everything in it.
+
+The operations never create ids. Create them at the call site.
+
+```ts
+function popOut(paneId: string) {
+  layout = floatPane(
+    layout,
+    paneId,
+    { x: 24, y: 24, width: 320, height: 200 },
+    crypto.randomUUID(),
+    crypto.randomUUID(),
+  );
+}
+```
+
+Docking needs no operation. Dragging a floating pane onto a base pane is a `movePane` drop, so `movePane` and the other move operations take a pane out of a window like any other slot.
+
+### Moving and resizing windows
+
+Wrap a window's title bar in `Panes.DragTrigger` with `target="float"` to make it a handle for the window that holds the pane.
+
+```svelte
+{#snippet pane(node, state)}
+  <header>
+    {#if state.isFloating}
+      <Panes.DragTrigger target="float">
+        <h2>{node.data.label}</h2>
+      </Panes.DragTrigger>
+    {:else}
+      <h2>{node.data.label}</h2>
+    {/if}
+  </header>
+{/snippet}
+```
+
+The window moves live under the pointer. No ghost and no drop regions appear, and `layout` receives the new rect once, on release. A function binding that vetoes the write snaps the window back.
+
+`target="pane"` and `target="stack"` keep their meaning inside a window. They drag the pane or stack out with the ghost, so it can dock.
+
+Shift inverts a drag. In a window, a `target="float"` drag with Shift held docks instead. It shows the ghost and the drop regions, and docks the window's pane or stack. From the base, a drag with Shift held floats the pane or stack over the root at its current size, where it is released, instead of docking it.
+
+Every window has eight resize handles, on its edges and corners. Each carries `data-float-resize` with its axis, one of `n`, `e`, `s`, `w`, `ne`, `nw`, `se`, or `sw`, so you can style them. A resize writes the rect once, on release.
+
+```css
+[data-float-resize]:hover {
+  background-color: var(--color-info-light);
+}
+```
+
+`floatMinSize` is a prop of `Panes`. It receives the window's `FloatEntry` and returns the smallest size the window can have. It defaults to 160 by 120 pixels.
+
+```svelte
+<Panes
+  bind:layout
+  {pane}
+  floatMinSize={(entry) =>
+    entry.content.type === 'stack' ? { width: 320, height: 200 } : { width: 240, height: 160 }}
+/>
+```
+
+Resizing stops at that size, and a window is never drawn smaller than it, unless the float node's box is smaller.
+
+### Keyboard and assistive technology
+
+Each window is a non-modal `role="dialog"` and can take focus. Its name is `paneLabel` of the panes it holds. A stack's labels are joined, as they are in the drag ghost.
+
+With the window itself focused, the keyboard moves and resizes it.
+
+| Key                               | Result                                                                                        |
+| --------------------------------- | --------------------------------------------------------------------------------------------- |
+| Arrow                             | Moves the window 10 pixels.                                                                   |
+| Shift+Arrow                       | Moves the window 100 pixels.                                                                  |
+| Alt+ArrowRight, Alt+ArrowDown     | Grows the right or bottom edge by 10 pixels, or 100 with Shift.                               |
+| Alt+ArrowLeft, Alt+ArrowUp        | Shrinks the right or bottom edge by 10 pixels, or 100 with Shift. It stops at `floatMinSize`. |
+
+Each key press writes `layout` once, so a function binding can veto it. Keys typed in a control inside the window stay with that control. Keyboard moves and resizes announce nothing.
+
+In move mode, a pane or stack in the base has a "Float" destination on its own target. It floats the pane or stack in place, 10 pixels down and right of where it was. A floating pane's destinations include the base panes, which dock it, and the panes of other windows. A `Panes.MoveTrigger` with `target="float"` moves the window's pane or stack.
+
+```svelte
+{#if state.isFloating}
+  <Panes.MoveTrigger target="float">Move window</Panes.MoveTrigger>
+{/if}
+```
+
+The arrow keys in move mode stay within one layer, which is the base or one window. F6 moves to the next layer, the base first and then each window, and Shift+F6 moves back. On a Mac laptop, F6 needs the Fn key.
+
+The status region announces "Floated Camera." and "Docked Camera left of Map.", with the placement, as it does for other move-mode messages.
+
+#### Moving and resizing without dragging
+
+WCAG 2.5.7 (Dragging Movements) asks that everything a drag does can also be done with single clicks. Arrow keys do not count, since they are not a pointer. The package draws no window chrome, so this click path is yours to render: buttons that move and resize a window. `setFloatRect` also takes an updater, `(rect) => rect`, for those buttons.
+
+```svelte
+{#snippet pane(node, state)}
+  <header>
+    <h2>{node.data.label}</h2>
+    {#if state.isFloating}
+      <button
+        onclick={() =>
+          (layout = setFloatRect(layout, state.floatEntryId!, (rect) => ({
+            ...rect,
+            width: rect.width + 40,
+          })))}
+      >
+        Wider
+      </button>
+      <button
+        onclick={() =>
+          (layout = setFloatRect(layout, state.floatEntryId!, (rect) => ({
+            ...rect,
+            width: rect.width - 40,
+          })))}
+      >
+        Narrower
+      </button>
+      <button
+        onclick={() =>
+          (layout = setFloatRect(layout, state.floatEntryId!, (rect) => ({
+            ...rect,
+            x: rect.x + 40,
+          })))}
+      >
+        Move right
+      </button>
+    {/if}
+  </header>
+{/snippet}
+```
+
+Render the same for each direction you need. Make each button at least 24 by 24 pixels. Those buttons are also what exempts the 8-pixel resize handles from WCAG 2.5.8 (Target Size).
+
+A few more things keep a page with windows accessible:
+
+- Give every pane a label through `paneLabel`. A window's name comes from the labels of its panes, and an unlabeled pane leaves the window unnamed.
+- A window clips at its edges. Give a focusable control that sits flush against an edge an inset focus outline, or the edge hides it.
+- Place windows so they do not cover a focusable base control entirely when the page loads.
+- The arrow keys move a window only while the window itself has focus. A screen reader in browse mode may keep those keys for itself, so the buttons above matter there too.
+
+### Closing a window
+
+A pane in a window reads `state.isFloating` and `state.floatEntryId`, so it can offer a close button that calls `removeFloat`.
+
+```svelte
+{#snippet pane(node, state)}
+  <header>
+    <h2>{node.data.label}</h2>
+    {#if state.isFloating}
+      <button
+        aria-label="Close {node.data.label}"
+        onclick={() => (layout = removeFloat(layout, state.floatEntryId!))}
+      >
+        Close
+      </button>
+    {/if}
+  </header>
+{/snippet}
+```
+
+`removePane` also closes a window when it removes the window's only pane. The pane's wrapper carries `data-floating` while it is in a window, so styling can use `in-data-floating:` without script.
 
 ## Nesting views
 
