@@ -1,6 +1,7 @@
 export { dragIgnore } from './Panes/drag-ignore.ts';
 export type { DragPreview } from './Panes/drag-preview.ts';
 export type { PaneState } from './Panes/pane-state.ts';
+export { Panes } from './Panes/panes.ts';
 export { setSplitRatio } from './SplitPanes/set-split-ratio.ts';
 export type {
 	LayoutNode,

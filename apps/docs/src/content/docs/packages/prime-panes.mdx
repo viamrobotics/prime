@@ -3,11 +3,818 @@ title: "@viamrobotics/prime-panes"
 description: Resizable, rearrangeable split-pane layouts for Svelte 5.
 ---
 
-import { Aside } from "@astrojs/starlight/components"
+import { Aside, Code, LinkButton, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
 
-`@viamrobotics/prime-panes` renders a binary tree of panes that the user can resize and rearrange. The package is being set up, and its components and usage docs land in the pull requests that follow.
+`@viamrobotics/prime-panes` renders a binary tree of panes that the user can resize by dragging a divider and rearrange by dragging a pane onto another or by using a button. The package owns the layout model. Pane content belongs to you, and the library never reads it.
 
 <Aside type="caution">
   The public API is unstable until 1.0. Expect breaking changes in minor
   releases.
 </Aside>
+
+## Installation
+
+<Steps>
+
+1. Install the package and its peers. The `svelte` peer is `^5.29.0` because the pane controls are attachments.
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add @viamrobotics/prime-panes @viamrobotics/tailwind-config @zag-js/splitter @zag-js/svelte"
+         lang="sh"
+       />
+     </TabItem>
+   </Tabs>
+
+2. Import the package stylesheet once, after Tailwind. Tailwind skips `node_modules` when it scans for classes, so this file points it at the package's compiled components and pulls in the `@viamrobotics/tailwind-config` tokens.
+
+   ```css
+   @import "tailwindcss";
+   @import "@viamrobotics/prime-panes/styles.css";
+   ```
+
+</Steps>
+
+## Quick start
+
+```svelte
+<script lang="ts">
+  import { Panes } from '@viamrobotics/prime-panes';
+  import type { LayoutNode } from '@viamrobotics/prime-panes';
+
+  let layout = $state<LayoutNode<{ title: string }> | undefined>({
+    type: 'split',
+    id: 'root',
+    direction: 'row',
+    ratio: 0.6,
+    first: { type: 'pane', id: 'camera', data: { title: 'Camera' } },
+    second: { type: 'pane', id: 'stats', data: { title: 'Stats' } },
+  });
+</script>
+
+<Panes bind:layout paneLabel={(node) => node.data.title} class="h-screen">
+  {#snippet pane(node)}
+    <div class="size-full">
+      <Panes.DragTrigger>
+        <header class="cursor-grab">
+          {node.data.title}
+          <Panes.MoveTrigger aria-label="Move {node.data.title}">::</Panes.MoveTrigger>
+        </header>
+      </Panes.DragTrigger>
+    </div>
+  {/snippet}
+</Panes>
+```
+
+`paneLabel` names each pane for the move notice, previews, and announcements described in [Moving panes without dragging](#moving-panes-without-dragging). The root element has no default size. Give it one with a `class`, as above, or it collapses to nothing. Every other prop of a `div` passes through to the root.
+
+## The layout model
+
+A layout is a tree of three node types.
+
+```ts
+type SplitDirection = 'row' | 'column';
+
+interface SplitNode<TData> {
+  type: 'split';
+  id: string;
+  direction: SplitDirection;
+  ratio: number;
+  first: LayoutNode<TData>;
+  second: LayoutNode<TData>;
+}
+
+interface PaneNode<TData> {
+  type: 'pane';
+  id: string;
+  data: TData;
+}
+
+interface StackNode<TData> {
+  type: 'stack';
+  id: string;
+  panes: PaneNode<TData>[];
+  activeId: string;
+}
+
+type LayoutNode<TData> = SplitNode<TData> | PaneNode<TData> | StackNode<TData>;
+```
+
+- A `SplitNode` divides its area between `first` and `second`.
+- `direction` follows CSS `flex-direction`. In a `row` split, `first` is on the left. In a `column` split, `first` is on top.
+- `ratio` is the share given to `first`. It is strictly between 0 and 1.
+- `id` is unique across the whole layout, splits, panes, and stacks together.
+- A `PaneNode` is a leaf. Its `data` is any value you choose. It is the generic `TData`, and the `pane` snippet receives it back.
+- A `StackNode` holds several panes in one slot and shows one at a time. See [Stacks](#stacks).
+- A layout of `undefined` is an empty layout.
+
+The types `SplitKey` (`'first' | 'second'`), `SplitDirection`, and `DragPreview` are exported too.
+
+## Binding the layout
+
+`Panes` has no change callback. State flows through `bind:layout`, and it works in two modes.
+
+### Two-way binding
+
+Bind a `$state` variable. Every resize and rearrangement updates it.
+
+```svelte
+<Panes bind:layout class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+</Panes>
+```
+
+### Function binding
+
+Pass a getter and a setter. The setter receives each proposed layout. It is where you persist the change, and it can veto a change by not assigning the value.
+
+```svelte
+<script lang="ts">
+  interface PaneData {
+    title: string;
+  }
+
+  let layout = $state<LayoutNode<PaneData> | undefined>(initial);
+
+  function propose(next: LayoutNode<PaneData> | undefined) {
+    if (!isAllowed(next)) return;
+    layout = next;
+    void persist(next);
+  }
+</script>
+
+<Panes bind:layout={() => layout, propose} class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+</Panes>
+```
+
+A vetoed change leaves the layout where it was. A drag that is vetoed snaps back.
+
+## Panes and the empty state
+
+The `pane` snippet renders one pane. Its first argument is the `PaneNode`, so `node.id` and `node.data` are available. Its second is the pane's `PaneState`, described below. The snippet's content fills the pane, so give it `size-full` or an equivalent.
+
+The optional `empty` snippet renders when `layout` is `undefined`.
+
+```svelte
+<Panes bind:layout class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+  {#snippet empty()}
+    <p>No panes. Add one to start.</p>
+  {/snippet}
+</Panes>
+```
+
+### Pane state
+
+The `pane` snippet's second argument is a `PaneState`. Its values are reactive, so markup that reads them updates in place.
+
+| Value         | True when                                                   | Attribute         |
+| ------------- | ----------------------------------------------------------- | ----------------- |
+| `isStacked`   | The pane shares its slot with other panes in a stack.       | `data-stacked`    |
+| `isMoving`    | The pane, or its whole stack, is being moved in move mode.  | `data-moving`     |
+| `isDragArmed` | A press has armed the pane to drag.                         | `data-drag-armed` |
+
+Each value also appears as an attribute on the pane's wrapper. Use the attribute to restyle, and the argument when markup or logic depends on the state. In a stack, the tabs can stand in for the pane's title.
+
+```svelte
+{#snippet pane(node, state)}
+  <header>
+    {#if !state.isStacked}<h2>{node.data.label}</h2>{/if}
+    <Panes.TabList aria-label="Stacked panes" />
+  </header>
+{/snippet}
+```
+
+With the attribute alone, the same title is `<h2 class="in-data-stacked:hidden">`.
+
+## Rearranging panes
+
+Rearranging is on by default. Set `reorderable={false}` to turn it off. Resizing is not affected.
+
+The `pane` snippet receives only `node`. Two parts that you place inside it, `Panes.DragTrigger` and `Panes.MoveTrigger`, connect your markup to the pane. The library renders no handle of its own, so you choose the markup, the icon, and the accessible name.
+
+Both parts do nothing when `reorderable` is `false`.
+
+### Panes.DragTrigger
+
+`Panes.DragTrigger` makes the elements inside it start a pane drag. Wrap a grip button, or a whole header.
+
+```svelte
+<Panes.DragTrigger>
+  <header class="cursor-grab">{node.data.title}</header>
+</Panes.DragTrigger>
+```
+
+It renders a `display: contents` wrapper, so it does not change layout. What a press does depends on where it lands.
+
+| Press on                                                       | Result                                                                  |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| A plain area                                                   | Drags once the pointer moves 4px.                                       |
+| A `Panes.MoveTrigger`                                      | Drags once the pointer moves 4px. A click without movement still enters move mode. |
+| Another control: `button`, `a`, `select`, or `[role="button"]` | Drags only after a 250ms hold, so a quick click still clicks. Moving 4px before the hold ends drops the press. A tab is the exception. See [Dragging a tab](#dragging-a-tab). |
+| A text field: `input`, `textarea`, or `[contenteditable]`      | Never drags.                                                            |
+
+Drags run on pointer events, so mouse, pen, and touch all drag. While `reorderable` is true, drag triggers, tabs, and grips set `touch-action: none`, so a swipe that starts on one drags instead of scrolling. Keep scrollable content outside `Panes.DragTrigger`.
+
+Once a press on a control lasts 250ms, releasing it without dragging does not click the control. That includes a `Panes.MoveTrigger`. Keyboard activation is unaffected.
+
+While a pane is ready to drag, it shows a blue outline and its wrapper carries `data-drag-armed`. Style your own markup from it with a selector such as `[data-drag-armed] header`, or with Tailwind's `in-data-drag-armed:` variant.
+
+### dragIgnore
+
+`dragIgnore` opts an element out of dragging. Import it from the package root. It is an attachment that needs no context. Use it on a custom widget inside a `Panes.DragTrigger`, such as a `canvas`, where a press should do something else.
+
+```svelte
+<script lang="ts">
+  import { dragIgnore } from '@viamrobotics/prime-panes';
+</script>
+
+<canvas {@attach dragIgnore}></canvas>
+```
+
+### Panes.MoveTrigger
+
+`Panes.MoveTrigger` toggles move mode. See [Moving panes without dragging](#moving-panes-without-dragging). By default it renders `<button type="button">` around `children` and takes button attributes. The button gets `aria-pressed`.
+
+```svelte
+<Panes.MoveTrigger aria-label="Move {node.data.title}">Move</Panes.MoveTrigger>
+```
+
+The optional `child` snippet replaces the button with your own element. It receives `{ props }`, which you spread on that element. Use a `button`, an element with `role="button"`, or a menu item whose menu dispatches `click`.
+
+| Element                           | Behavior                                                                                                                                              |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A native `button`                 | Its own click, Enter, and Space toggle move mode. It gets `aria-pressed`.                                                                             |
+| An element with `role="button"`   | The library adds Enter on keydown and Space on keyup. It gets `aria-pressed`. You supply `tabindex="0"` and an accessible name.                       |
+| An element with `role="menuitem"` | It toggles through `click`, which Radix-style menus dispatch on Enter and Space. It gets no `aria-pressed`, and the status region announces the state. |
+
+When move mode ends, focus returns to the trigger. If the trigger has unmounted, as with a closed menu, focus goes to the pane itself, which shows a focus outline.
+
+A menu item works like this.
+
+```svelte
+<Panes.MoveTrigger>
+  {#snippet child({ props })}
+    <DropdownMenu.Item role="menuitem" {...props}>Move pane</DropdownMenu.Item>
+  {/snippet}
+</Panes.MoveTrigger>
+```
+
+### Two ways to lay it out
+
+A grip can sit inside a `Panes.DragTrigger` as a `Panes.MoveTrigger`. Dragging and the keyboard path then share one element. A press on it drags at once, and a click without movement enters move mode.
+
+```svelte
+{#snippet pane(node)}
+  <header>
+    <Panes.DragTrigger>
+      <Panes.MoveTrigger aria-label="Move {node.data.title}" class="cursor-grab">
+        <GripIcon />
+      </Panes.MoveTrigger>
+    </Panes.DragTrigger>
+    {node.data.title}
+  </header>
+{/snippet}
+```
+
+A whole header can be the drag surface, with a separate move button inside it. A press on the header drags at once, and a quick click on the button still moves.
+
+```svelte
+{#snippet pane(node)}
+  <Panes.DragTrigger>
+    <header class="cursor-grab">
+      {node.data.title}
+      <Panes.MoveTrigger aria-label="Move {node.data.title}">Move</Panes.MoveTrigger>
+    </header>
+  </Panes.DragTrigger>
+{/snippet}
+```
+
+### Accessibility
+
+Dragging alone fails WCAG 2.5.7 (Dragging Movements). Every pane that has a `Panes.DragTrigger` needs a `Panes.MoveTrigger` somewhere, such as a menu item.
+
+In development, the library warns on the first drag from a pane that has never had a `Panes.MoveTrigger`. A trigger that mounts only on demand, such as inside a menu, still warns until it first mounts.
+
+### Drop regions
+
+While a pane is dragged, the pane under the pointer divides into regions.
+
+| Region                       | Result                                                                             |
+| ---------------------------- | ---------------------------------------------------------------------------------- |
+| Center (the middle 40%)      | The two slots swap places. A stack swaps as a whole.                               |
+| Left, right, top, or bottom  | The dragged pane leaves its place and splits the target, on the side that you drop. |
+| `Panes.TabListDropRegion` | The dragged pane stacks with the target. See [Stacks](#stacks).                   |
+
+Every drop is assigned to `layout`, so a function binding sees it and can veto it.
+
+Escape, a pointer cancel, the window losing focus, and a release outside every pane cancel the drag. `layout` stays as it was.
+
+### Drag preview
+
+A ghost follows the pointer during a drag. It shows the pane's label, or a stack's labels joined. The library positions it in the top layer, keeps it from taking pointer events, and makes it `inert` and hidden from assistive technology.
+
+The ghost shows what a drop would make. Over a tab strip or a `Panes.TabListDropRegion`, a drop makes a tab, and the ghost is a tab chip. Anywhere else, a drop makes a pane, and the ghost is a pane card. The ghost root carries `data-form` with the value `tab` or `pane`, so you can style each form.
+
+The `dragPreview` snippet on `Panes` replaces the ghost's content. It receives a `DragPreview` with a `type` of `'pane'` or `'stack'`, a `form` of `'tab'` or `'pane'`, the dragged `panes`, and the `label`. Keep it free of controls, since nothing inside the ghost can take focus.
+
+```svelte
+<Panes bind:layout class="h-screen">
+  {#snippet dragPreview({ form, label, panes })}
+    {#if form === 'tab'}
+      <span class="rounded-t bg-white px-2 py-1 shadow-sm">{label}</span>
+    {:else}
+      <span class="rounded bg-white px-3 py-2 shadow-sm">{label} ({panes.length})</span>
+    {/if}
+  {/snippet}
+</Panes>
+```
+
+While a drag is active, the root carries `data-dragging`, beside `data-move-mode`, for styling.
+
+### Moving panes without dragging
+
+Dragging is not the only way to rearrange. Activate a `Panes.MoveTrigger` element with a click, Enter, or Space to enter move mode. A button trigger reports it with `aria-pressed`.
+
+Activating the trigger moves focus to the moving pane, which shows a blue focus outline, a light gray wash over its content, and "Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape." Every other pane becomes a destination that shows nothing until it is hovered or focused. A placement makes the same change a drop on that region would, and it goes through `layout` the same way, so a function binding can still veto it.
+
+- With a pointer, the region under the pointer previews with the drag indicator and the moving pane's label. A stack onto a stacked pane previews as a tab in its strip instead. A click places.
+- On touch, a first tap previews a region and a second tap on the same region places.
+- With the keyboard, focus stays on the moving pane's trigger. An arrow key there moves into the adjacent pane, entering at its near edge. Each destination is a labeled group with one Tab stop. Within a pane, the horizontal arrows step left, center (swap), and right, and the vertical arrows step top, center, and bottom. Past the far edge, an arrow crosses into the next pane on screen, so panes that do not touch are reachable. The moving pane is skipped, and nothing wraps at the outer edge. Enter or Space places, and Tab moves between destinations.
+- Arrows inside a text field in the moving pane stay with the field.
+- Clicking an edge bar places the moving pane on that side.
+- A screen reader in browse mode can reach and activate each side button.
+- Escape cancels move mode. So does activating the pressed trigger again.
+- Destination content is inert during move mode.
+- A keyboard-started move keeps focus on the trigger, and focus returns to it when move mode ends.
+- Moving focus out of the view cancels move mode. Focus stays where it moved.
+- A status region announces each step: the start, the placement, a cancel, and a rejected move.
+- A stacked pane's own slot offers a reorder placement with positions. See [Reordering tabs](#reordering-tabs).
+
+To restyle move mode, use `data-move-mode` on the root, which is present while move mode is active, and `data-moving` on the moving pane.
+
+Set `paneLabel` so these read well. The notice, previews, and announcements use pane labels, such as "Camera placed left of Stats.". `paneLabel` receives the `PaneNode` and returns a string. Without it the labels are pane ids.
+
+```svelte
+<Panes bind:layout paneLabel={(node) => node.data.title}>
+  {#snippet pane(node)}...{/snippet}
+</Panes>
+```
+
+## Stacks
+
+A stack puts several panes in one slot behind tabs, such as three cameras in one camera area.
+
+### The stack node
+
+```ts
+interface StackNode<TData> {
+  type: 'stack';
+  id: string;
+  panes: PaneNode<TData>[];
+  activeId: string;
+}
+```
+
+- A stack holds at least two panes. A stack that drops to one pane collapses to that pane.
+- A stack holds panes only. It never holds a split or another stack.
+- `panes` is in tab order.
+- `activeId` is the id of the shown pane, and it is one of `panes`. If it names none of them, such as after a pane is renamed in a saved layout, the stack shows its first pane, and selecting a tab repairs `activeId`.
+- The shown tab lives in the layout, so it persists with the rest and goes through `bind:layout`. A function binding can veto a tab change.
+
+A stack renders its active pane through your `pane` snippet. Inactive panes unmount.
+
+```ts
+const layout: LayoutNode<PaneData> = {
+  type: 'stack',
+  id: 'cameras',
+  activeId: 'camera-a',
+  panes: [
+    { type: 'pane', id: 'camera-a', data: { label: 'Camera A' } },
+    { type: 'pane', id: 'camera-b', data: { label: 'Camera B' } },
+    { type: 'pane', id: 'camera-c', data: { label: 'Camera C' } },
+  ],
+};
+```
+
+### Panes.TabList
+
+`Panes.TabList` renders the tabs of the stack that its pane belongs to. Place it in the `pane` snippet, usually in the header. It renders in every pane, so every pane can include it. The `tablist` role and the tabs appear only when the pane is stacked. An unstacked pane still carries the container, so it can be a stack target.
+
+```svelte
+{#snippet pane(node)}
+  <header>
+    <Panes.TabList aria-label="Stacked panes" class="flex gap-1" />
+  </header>
+{/snippet}
+```
+
+Give the list a name with `aria-label`, since a screen reader announces it on entry. Tabs inherit the list's text size, and the selected tab carries `aria-selected` for styling.
+
+Each tab shows the pane's label from `paneLabel`. The optional `tab` snippet replaces that content. It receives the stacked `PaneNode`.
+
+`Panes.TabList` cannot infer `TData`, so an unannotated `tab` snippet receives `PaneNode<unknown>`. Annotate the parameter.
+
+```svelte
+{#snippet tab(item: PaneNode<PaneData>)}
+  {item.data.label}
+{/snippet}
+
+<Panes.TabList {tab} aria-label="Stacked panes" />
+```
+
+The tabs follow the WAI-ARIA tabs pattern. The list has the `tablist` role, and each tab has the `tab` role. A tab panel is opt-in through `Panes.PaneBody`.
+
+| Key            | Result                                                 |
+| -------------- | ------------------------------------------------------ |
+| Tab            | Moves focus into the list on the active tab, then out. |
+| Right arrow    | Selects and focuses the next tab. It wraps at the end. |
+| Left arrow     | Selects and focuses the previous tab. It wraps.        |
+| Home           | Selects and focuses the first tab.                     |
+| End            | Selects and focuses the last tab.                      |
+
+Selecting is automatic, so focusing a tab with the arrows shows its pane. A click selects too.
+
+### Panes.PaneBody
+
+`Panes.PaneBody` marks the part of a pane below its header. In a stacked pane with a `Panes.TabList`, it becomes the `tabpanel` that the tabs control, labeled by the active tab. Screen readers announce the panel on entry, and JAWS can jump from a tab to it. Elsewhere it renders a plain `div`. Its rect also sets the edges and center of the pane's [drop regions](#drop-regions-from-parts).
+
+It is optional. Without it, the tabs still work and nothing claims the `tabpanel` role. Use it when a header holds several controls between the tabs and the content, or when the content has no heading of its own. The `pane` snippet is shared by every pane, so place it once there.
+
+```svelte
+{#snippet pane(node)}
+  <header>
+    <Panes.TabList aria-label="Stacked panes" class="flex gap-1" />
+  </header>
+  <Panes.PaneBody class="flex-1">
+    <CameraFeed {node} />
+  </Panes.PaneBody>
+{/snippet}
+```
+
+### keepInactiveMounted
+
+Inactive panes unmount by default, so their content restarts when its tab is shown again. Set `keepInactiveMounted` on `Panes` to keep them mounted. They stay hidden and `inert`.
+
+```svelte
+<Panes bind:layout keepInactiveMounted class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+</Panes>
+```
+
+The prop applies to every stack in the view. Use it for content that is costly to rebuild, such as a live video stream.
+
+### Forming a stack by drag
+
+Drop a pane onto a pane's `Panes.TabListDropRegion` to stack it there. A pane without one never stacks. On an unstacked pane, the drop indicator covers the region's rect. A stacked pane previews the drop as a tab in its strip instead and leaves the region untinted, so the tab labels stay readable while you place. The center of a pane still swaps, and the edges still split.
+
+Over a stacked target's region, a preview tab shows where the dropped pane will land, and the drop inserts it there. See [Inserting at a position](#inserting-at-a-position).
+#### Panes.TabListDropRegion
+
+`Panes.TabListDropRegion` marks where stacking happens. Place it inside `Panes.TabList`. It renders an `aria-hidden` `div` with `pointer-events-none`, so only its rect matters and it never blocks the tabs under it. Size and position it with `class`.
+
+Three placements work:
+
+- A visible strip over the tabs.
+- A grip area.
+- An edge strip that shows only during a drag.
+
+A region shown only during a drag should also show in move mode, so move mode can stack there. The root's `data-dragging` and `data-move-mode` attributes drive the styles. The first hit test after a drag starts misses a region that was hidden before, and the next pointer move finds it.
+
+The playground's strip sits along the very top edge of the pane. The pane's wrapper is the positioned ancestor.
+
+```svelte
+<Panes.TabList aria-label="Stacked panes" class="flex gap-1">
+  <Panes.TabListDropRegion
+    class="absolute inset-x-0 top-0 hidden h-4 in-data-dragging:block in-data-move-mode:block"
+  />
+</Panes.TabList>
+```
+
+#### Drop regions from parts
+
+`Panes.PaneBody`'s rect sets the edges and center. A point inside the pane but outside the body, such as the header, reads as the nearest edge, so a header above the body reads as the top edge. With no `Panes.PaneBody`, the whole pane applies. The region wins wherever it overlaps the body. Edge and center indicators still cover the whole pane, since the split acts on the whole slot.
+
+Center always swaps whole slots. A tab dropped on another pane's center moves its whole stack, which trades places with the target. To move one tab alone, drop it on an edge or on a region. A pane dropped on a stack's center trades places with the whole stack.
+
+Without a position, the dragged pane joins the end of the target's tab order and becomes the shown pane. If the target is not stacked yet, a new stack holds the target first and the dragged pane second. Dragging a stack onto a region merges the whole stack into the target, and it shows the dragged stack's active pane.
+
+### Forming a stack in move mode
+
+Move mode offers "Stack with" on each destination. See [Moving panes without dragging](#moving-panes-without-dragging). Press the arrow toward the region's side to reach it. The side comes from the region's rect against the `Panes.PaneBody` rect. For the playground's strip that is the up arrow, and a second up arrow crosses to the pane above. "Stack with" is offered wherever a region is mounted.
+
+On a stacked target, "Stack with" takes a position, and the default is the end. The arrows along the strip pick a gap between tabs. At either end of the strip, the next arrow continues to the next region. The button name carries the position, such as "Stack Camera A with Log at position 2 of 4". An unstacked target has one position, so its name carries none.
+
+The wording follows the placement. On an unstacked target the preview reads "Stack Camera with Stats", and the announcement reads "Camera stacked with Stats.".
+
+### Placing on a stacked pane
+
+- Center on a stacked pane swaps the dragged pane with the whole stack. A dragged tab moves its whole stack to the target's center.
+- An edge places the dragged pane beside the whole stack, not beside one tab.
+- Dragging or moving a stacked pane elsewhere removes it from its stack. A stack left with one pane collapses.
+
+### Dragging a tab
+
+A tab drags its own pane once the pointer moves 4px. There is no hold. A press without movement selects the tab, however long it lasts.
+
+### Reordering tabs
+
+Dragging a tab over its own strip lifts it out. A preview tab marks the insertion point, and the other tabs shift to make room. The shift is animated, and it is instant under `prefers-reduced-motion`.
+
+Dropping reorders the stack, and the dropped pane becomes the active pane.
+
+For a keyboard path, press Alt+Shift+ArrowLeft or Alt+Shift+ArrowRight on a focused tab to move it one place. Focus stays on the tab, and a status message announces the move.
+
+In move mode, the own slot of a stacked moving pane offers a reorder placement with positions. See [Forming a stack in move mode](#forming-a-stack-in-move-mode).
+
+### Inserting at a position
+
+Over another pane's `Panes.TabListDropRegion`, the preview tab shows at the pointer's position, and the drop inserts the pane there.
+
+- A region along the top or bottom of the body inserts at the pointer's x.
+- A region along the left or right of the body appends.
+- An unstacked target appends, with no preview.
+- Insertion runs along a horizontal strip only.
+
+### Moving a whole stack
+
+The empty area of a `Panes.TabList` drags the whole stack. So does a `Panes.DragTrigger` with `target="stack"`. A `Panes.MoveTrigger` with `target="stack"` moves the whole stack in move mode. Both take `target` as `'pane' | 'stack'`, and the default is `'pane'`. On a pane that is not stacked, `target="stack"` acts as `target="pane"`.
+
+```svelte
+<Panes.MoveTrigger target="stack">Move stack</Panes.MoveTrigger>
+```
+
+A moving stack is named by its panes' labels, such as "Camera A, Camera B, and Camera C".
+
+| Drop or placement on a target | Result                                                    |
+| ----------------------------- | --------------------------------------------------------- |
+| An edge                       | The stack lands beside the target's slot.                 |
+| Center                        | The stack swaps with the target's whole slot.             |
+| A `Panes.TabListDropRegion` | The stack merges into the target's stack.               |
+
+### Unstacking beside its own stack
+
+Dropping a stacked pane on an edge of its own stack takes it out of the stack and places it beside the rest. In move mode, the own slot of a stacked moving pane offers its four edges, which gives this a keyboard path. It also offers a reorder, one ArrowUp past the top edge, named like "Move Camera A to position 1 of 3". The reorder starts at the pane's current position, and a reorder announces "Camera A moved to position 3 of 3."
+
+### The missing-trigger warning
+
+A whole-stack drag needs a non-drag path to meet WCAG 2.5.7 (Dragging Movements). In development, the library warns when a stack drag starts in a pane that has no `Panes.MoveTrigger` with `target="stack"`. Render one in each pane that can host a stack drag.
+
+```text
+Panes: a stack drag started in pane "Camera A", which has no Panes.MoveTrigger with target="stack". Dragging alone fails WCAG 2.5.7 (Dragging Movements), so render a Panes.MoveTrigger with target="stack" in the pane to move its stack without dragging. A Panes.MoveTrigger that mounts only on demand, such as inside a menu, still triggers this warning until it first mounts.
+```
+
+## Nesting views
+
+A `Panes` can render inside a pane of another `Panes`. A component that owns its own panes, such as a visualizer with tool panels, can then sit in an app's layout. Each view owns its own `bind:layout`, and the two stay independent:
+
+- A press or a drag that starts inside the inner view never drags the outer pane around it, even when that pane's `Panes.DragTrigger` wraps the whole inner view.
+- Focus moving into the inner view counts as leaving the outer view. Outer move mode ends, as it does when focus leaves the page.
+- Keys pressed inside the inner view, such as Escape and the move-mode arrows, act on the inner view only.
+- Each view announces its own moves in its own status region.
+
+The inner view does not stop events from propagating. Your own listeners on the outer view, including its `onkeydown`, `onfocusout`, and `onpointerdown`, still receive every event. Pane ids need to be unique only within one view. A pane cannot move from one view to the other.
+
+## Tree operations
+
+The operations behind the drops are exported, so your own controls can change the layout the same way. Each one is a pure function that takes the root and returns a new root. None of them mutates its input.
+
+| Function                                                         | Does                                                                                                                 |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `setSplitRatio(root, splitId, ratio)`                            | Sets one split's `ratio`.                                                                                            |
+| `swapPanes(root, firstId, secondId)`                             | Exchanges two panes. Each split keeps its `ratio`, so sizes stay with the positions.                                 |
+| `movePane(root, paneId, targetId, direction, key, newSplitId)`   | Moves a pane beside another pane. A new `direction` split with ratio 0.5 and id `newSplitId` holds both.             |
+| `addPaneToUpperRight(root, pane, newSplitId)`                    | Adds a pane beside the upper-right pane. Returns `pane` itself when `root` is `undefined`.                           |
+| `removePane(root, paneId)`                                       | Removes a pane. Its sibling takes its parent split's place. Returns `undefined` when the pane was the only node.     |
+| `updatePaneData(root, paneId, data)`                             | Replaces a pane's `data`. It compares by reference, so a deep comparison is up to you.                               |
+| `selectPane(root, paneId)`                                       | Shows a stacked pane by making it its stack's `activeId`.                                                            |
+| `stackPanes(root, targetPaneId, sourceId, newStackId, index?)`   | Stacks a pane, or every pane of a stack, with the target. `sourceId` names a pane or a stack. `index` is the position in the target's tab order, clamped, and defaults to the end. |
+| `reorderPane(root, paneId, index)`                               | Moves a stacked pane to `index` in its stack's tab order. The stack's `activeId` is unchanged.                       |
+| `moveStack(root, stackId, targetPaneId, direction, key, newSplitId)` | Moves a whole stack beside the target's slot, which is its stack when it is stacked.                              |
+| `swapSlots(root, firstId, secondId)`                             | Exchanges two slots. Each id names a pane or a stack, and a stacked pane stands for its stack.                       |
+
+When an operation has nothing to change, it returns the same root reference that it received. The cases are an id that names no node, a swap of a pane with itself, and a value that is already set. Compare the result to the input with `===` to know whether anything changed.
+
+```ts
+const next = removePane(layout, 'camera');
+if (next !== layout) {
+  layout = next;
+}
+```
+
+A subtree that an operation did not touch keeps its reference too, so `$derived` values and keyed blocks that depend on it do not rerun.
+
+The other operations are stack-aware too.
+
+- `removePane` takes a stacked pane out of its stack. When it was active, the next pane becomes active, or the previous one when it was last.
+- `movePane` places a pane beside the target's stack when the target is stacked. Moving a stacked pane beside one of its own stack's panes takes it out of that stack.
+- `swapPanes` exchanges panes inside stacks too, and `activeId` stays with the position.
+- `updatePaneData` and `addPaneToUpperRight` treat a stack as one slot or find a pane inside it.
+
+`removePane`, `swapPanes`, `movePane`, `setSplitRatio`, `updatePaneData`, `selectPane`, `stackPanes`, `reorderPane`, `moveStack`, and `swapSlots` return `undefined` for an `undefined` root.
+
+## Playground
+
+The playground has a layout you can resize, rearrange, stack, and extend, next to the live layout as JSON. It includes a stack of three cameras and a control for `keepInactiveMounted`.
+
+<LinkButton href="../../playground/prime-panes/" icon="external">
+  Open the prime-panes playground
+</LinkButton>
+
+## Persisting a layout
+
+The setter of a function binding is the place to save. This recipe saves like the app's teleop workspaces do.
+
+- A structural change (swap, move, add, or remove) saves immediately.
+- A resize saves after a short pause, because a drag produces many changes.
+- A user without write permission never saves.
+
+To tell the two apart, compare the previous and next trees while ignoring `ratio`. A resize changes nothing else.
+
+```svelte
+<script lang="ts">
+  import { Panes } from '@viamrobotics/prime-panes';
+  import type { LayoutNode } from '@viamrobotics/prime-panes';
+
+  interface PaneData {
+    title: string;
+  }
+
+  type Layout = LayoutNode<PaneData> | undefined;
+
+  interface Props {
+    initial: Layout;
+    canWrite: boolean;
+    save: (layout: Layout) => void;
+  }
+
+  const { initial, canWrite, save }: Props = $props();
+
+  let layout = $state<Layout>(initial);
+
+  let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function saveAfterResize(next: Layout) {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => save(next), 200);
+  }
+
+  function sameStructure(a: Layout, b: Layout): boolean {
+    if (a === b) return true;
+    if (!a || !b) return false;
+    if (a.type === 'pane' || b.type === 'pane') {
+      return a.type === 'pane' && b.type === 'pane' && a.id === b.id && a.data === b.data;
+    }
+    return (
+      a.id === b.id &&
+      a.direction === b.direction &&
+      sameStructure(a.first, b.first) &&
+      sameStructure(a.second, b.second)
+    );
+  }
+
+  function propose(next: Layout) {
+    const resized = sameStructure(layout, next);
+    layout = next;
+
+    if (!canWrite) return;
+
+    if (resized) {
+      saveAfterResize(next);
+    } else {
+      clearTimeout(resizeTimer);
+      save(next);
+    }
+  }
+</script>
+
+<Panes bind:layout={() => layout, propose} class="h-screen">
+  {#snippet pane(node)}...{/snippet}
+</Panes>
+```
+
+The structural save cancels a pending resize save first, because the structural tree already holds the latest ratios. The check compares pane `data` by reference. That is safe because the operations never copy a pane they did not edit. If you replace pane data through `updatePaneData`, the tree counts as structurally changed and saves at once.
+
+## Migrating from the app's `nodes.ts`
+
+The app stores a workspace as a protobuf `WorkspaceNode` tree and renders it with `svelte-splitpanes`. The library replaces both the helpers in `nodes.ts` and the recursive `panes.svelte` rendering. The library model has no protobuf semantics, so the conversion lives at your boundary.
+
+### Differences
+
+| Protobuf                                                        | Library                                                            |
+| --------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `WorkspaceNode` with a `nodeId` and a `oneof node`              | `LayoutNode` with a `type` of `'split'` or `'pane'`, and an `id`   |
+| `SplitDirection` enum: `UNSPECIFIED`, `COLUMN`, `ROW`           | `'row'` or `'column'`                                              |
+| `splitPercentage`, where 0 means missing                        | `ratio`, always strictly between 0 and 1                           |
+| A split whose `first` or `second` is `undefined`                | Not representable. A split always has two children.                |
+| Widget content in `oneof node`, such as `camera` or `timeSeries` | `data` on a pane                                                   |
+
+### Function names
+
+| `nodes.ts`                                              | `@viamrobotics/prime-panes`                         |
+| ------------------------------------------------------- | -------------------------------------------------------- |
+| `addNodeToUpperRight(workspace, node)`                  | `addPaneToUpperRight(root, pane, newSplitId)`            |
+| `removeNode(workspace, nodeId)`                         | `removePane(root, paneId)`                               |
+| `swapNodes(workspace, nodeId1, nodeId2)`                | `swapPanes(root, firstId, secondId)`                     |
+| `moveNode(workspace, nodeId, targetId, direction, key)` | `movePane(root, paneId, targetId, direction, key, newSplitId)` |
+| `setSplitPercentage(workspace, nodeId, percentage)`     | `setSplitRatio(root, splitId, ratio)`                    |
+| `updateNodeContent(workspace, nodeId, content)`         | `updatePaneData(root, paneId, data)`                     |
+
+The app's format has no stack. A converter must flatten each `StackNode` into its panes or reject it, because `WorkspaceNode` cannot hold one.
+
+Two differences matter when you port callers. The `nodes.ts` functions mutate the workspace and return it, or return `undefined` when nothing changed. The library functions never mutate, and they return the same root reference when nothing changed. The library also asks you for the id of any split it creates, where `nodes.ts` calls `crypto.randomUUID()` inside.
+
+### Converting between the formats
+
+This converter reads a protobuf tree into the library model and writes it back. Pane `data` is the `oneof node` content, so widget code keeps working with the protobuf shapes it already knows.
+
+```ts
+import {
+  SplitDirection,
+  type WorkspaceNode,
+} from '@viamrobotics/web-client/teleop/v1/teleop';
+import type { LayoutNode } from '@viamrobotics/prime-panes';
+
+type WidgetNode = Exclude<WorkspaceNode['node'], { oneofKind: 'split' | undefined }>;
+export type Layout = LayoutNode<WidgetNode> | undefined;
+
+const DEFAULT_RATIO = 0.5;
+
+const readRatio = (splitPercentage: number) =>
+  splitPercentage > 0 && splitPercentage < 1 ? splitPercentage : DEFAULT_RATIO;
+
+export const fromWorkspaceNode = (node: WorkspaceNode | undefined): Layout => {
+  if (!node) return undefined;
+
+  if (node.node.oneofKind === 'split') {
+    const { direction, splitPercentage, first, second } = node.node.split;
+    const firstLayout = fromWorkspaceNode(first);
+    const secondLayout = fromWorkspaceNode(second);
+
+    // A split with one child collapses to the child it has.
+    if (!firstLayout || !secondLayout) return firstLayout ?? secondLayout;
+
+    return {
+      type: 'split',
+      id: node.nodeId,
+      // UNSPECIFIED reads as column.
+      direction: direction === SplitDirection.ROW ? 'row' : 'column',
+      // A stored 0 means missing.
+      ratio: readRatio(splitPercentage),
+      first: firstLayout,
+      second: secondLayout,
+    };
+  }
+
+  if (node.node.oneofKind === undefined) return undefined;
+
+  return { type: 'pane', id: node.nodeId, data: node.node };
+};
+
+export const toWorkspaceNode = (layout: NonNullable<Layout>): WorkspaceNode => {
+  if (layout.type === 'pane') {
+    return { nodeId: layout.id, node: layout.data };
+  }
+
+  return {
+    nodeId: layout.id,
+    node: {
+      oneofKind: 'split',
+      split: {
+        direction:
+          layout.direction === 'row' ? SplitDirection.ROW : SplitDirection.COLUMN,
+        splitPercentage: layout.ratio,
+        first: toWorkspaceNode(layout.first),
+        second: toWorkspaceNode(layout.second),
+      },
+    },
+  };
+};
+```
+
+Use `fromWorkspaceNode(workspace.layoutRoot)` to seed the bound layout. In the persistence recipe, call `toWorkspaceNode` inside `save`, and skip it when the layout is `undefined`. A split with a missing child collapses to the child it has, and a workspace with no `layoutRoot` is an empty layout. An unspecified direction on read becomes `column`, so the first save writes `COLUMN` back. That is a one-time normalization of old data.
+
+## Limitations
+
+- A stack holds panes only. It cannot hold a split or another stack.
+- `keepInactiveMounted` applies to the whole view, not to one stack.
+- A swipe that starts on a drag trigger, tab, or grip drags instead of scrolling while `reorderable` is true.
+- Resizing needs a pointer drag on the divider or the separator's arrow keys. It has no click-only path.
+- Escape cancels move mode only while focus is inside the view.
+- Edge buttons crowd in panes narrower than about 72px.
+- Switching browser windows during move mode cancels it.
+- While a divider is dragged, the cursor for the whole page is set by a stylesheet that the splitter injects. That stylesheet takes no `nonce`. Under a strict Content Security Policy it is blocked, so the global resize cursor does not change during a drag. The divider itself still resizes.
