@@ -135,6 +135,8 @@ export interface PanesContext<TData> {
 	readonly keepInactiveMounted: boolean;
 	// What the drag acts on now. Docking and floating act on a pane or a stack, even when the press named a window.
 	readonly dragSource: DragSource | undefined;
+	// Repositioning a window and floating at the pointer drop onto no pane, so neither counts.
+	readonly isDockDrag: boolean;
 	readonly dragPress: DragPress | undefined;
 	readonly dragPoint: DragPoint | undefined;
 	readonly dragOver: DragOver | undefined;
@@ -830,6 +832,9 @@ export function providePanes<TData>(
 		},
 		get dragSource() {
 			return dragSource;
+		},
+		get isDockDrag() {
+			return dragSource !== undefined && dragMode === 'dock';
 		},
 		get dragPress() {
 			return dragPress;

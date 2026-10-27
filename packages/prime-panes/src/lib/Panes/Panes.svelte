@@ -136,7 +136,7 @@
 	{...rest}
 	{@attach markAsRoot}
 	data-move-mode={isMoving ? '' : undefined}
-	data-dragging={context.dragSource ? '' : undefined}
+	data-dragging={context.isDockDrag ? '' : undefined}
 	onkeydown={handleKeydown}
 	onfocusout={handleFocusOut}
 	onpointerdown={handlePointerDown}

@@ -110,13 +110,13 @@ describe('FloatPointer reposition', () => {
 		expect(component.getWrites()).toBe(1);
 	});
 
-	it('shows no ghost and no drop indicator while the window moves', async () => {
+	it('shows no ghost, no drop indicator, and no data-dragging while the window moves', async () => {
 		renderWindows();
 
 		await dragWindowBy(DRAG_PX, DRAG_PX);
 
 		await expect.element(windowElement()).toHaveStyle(toStyle(MOVED));
-		await expect.element(page.getByDraggingPanes()).toBeInTheDocument();
+		await expect.element(page.getByDraggingPanes()).not.toBeInTheDocument();
 		await expect.element(page.getByDragGhost()).not.toBeInTheDocument();
 		await expect.element(page.getByDropIndicator()).not.toBeInTheDocument();
 		await commands.mouseUp();
