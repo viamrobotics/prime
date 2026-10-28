@@ -41,7 +41,10 @@ export default defineConfig({
             },
             {
               label: "@viamrobotics/tailwind-config",
-              link: "/packages/tailwind-config/",
+              items: [
+                { label: "Overview", link: "/packages/tailwind-config/" },
+                { label: "Chrome", link: "/packages/tailwind-config/chrome/" },
+              ],
             },
             {
               label: "@viamrobotics/tweakpane-config",

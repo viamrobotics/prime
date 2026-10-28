@@ -6,6 +6,30 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 const packageDirectory = path.resolve(import.meta.dirname, "..");
 const DARK_SCHEME_MEDIA = "(prefers-color-scheme: dark)";
+const CHROME_CLASSES = [
+  "button",
+  "button-primary",
+  "button-ghost",
+  "button-danger",
+  "button-outline-danger",
+  "button-success",
+  "icon-button",
+  "icon-button-secondary",
+  "icon-button-danger",
+  "badge",
+  "badge-success",
+  "badge-warning",
+  "badge-danger",
+  "badge-neutral",
+  "pill",
+  "pill-outline",
+  "kbd",
+  "avatar",
+  "progress-dots",
+  "input",
+  "focus-ring",
+  "focus-ring-within",
+];
 const CANDIDATES = [
   "dark:bg-gray-9",
   "bg-extralight",
@@ -14,6 +38,8 @@ const CANDIDATES = [
   "text-code",
   "bg-heading",
   "text-xs",
+  "px-4",
+  ...CHROME_CLASSES,
 ];
 
 const rulesOf = (root: Root, matches: (rule: Rule) => boolean): Rule[] => {
@@ -40,6 +66,14 @@ const declarationsOf = (container: Container): Map<string, string> => {
   });
   return declarations;
 };
+
+const startsWithClass = (rule: Rule, name: string): boolean =>
+  rule.selectors.some((selector) =>
+    new RegExp(`^\\.${name}(?![\\w-])`).test(selector),
+  );
+
+const firstRuleIndex = (root: Root, name: string): number =>
+  rulesOf(root, () => true).findIndex((rule) => startsWithClass(rule, name));
 
 const enclosingMedia = (rule: Rule): string | undefined => {
   let ancestor: Container | undefined = rule.parent;
@@ -198,5 +232,81 @@ describe("theme stylesheets compiled through Tailwind", () => {
     const theme = declarationsOf(onlyRule(unoptimized, ":root, :host"));
     expect(theme.get("--text-xs")).toBe("0.75rem");
     expect(theme.get("--text-xs--line-height")).toBe("calc(1 / 0.75)");
+  });
+
+  it.each(CHROME_CLASSES)("emits at least one rule for .%s", (name) => {
+    const found = rulesOf(emitted, (rule) => startsWithClass(rule, name));
+    expect(found.length, `no rule starts with .${name}`).toBeGreaterThan(0);
+  });
+
+  it("draws the focus ring on .button:focus-visible", () => {
+    const [ring] = rulesOf(
+      emitted,
+      (rule) => rule.selector === ".button:focus-visible",
+    );
+    const declarations = declarationsOf(ring!);
+    expect(declarations.get("outline")).toBe(
+      "2px solid var(--color-power-button-dark)",
+    );
+    expect(declarations.get("outline-offset")).toBe("2px");
+  });
+
+  it("emits .button before .px-4 so a later utility wins", () => {
+    const buttonIndex = firstRuleIndex(emitted, "button");
+    const paddingIndex = firstRuleIndex(emitted, "px-4");
+    expect(buttonIndex).toBeGreaterThanOrEqual(0);
+    expect(paddingIndex).toBeGreaterThan(buttonIndex);
+  });
+
+  it("emits .button-primary after .button so the modifier wins", () => {
+    const buttonIndex = firstRuleIndex(emitted, "button");
+    const modifierIndex = firstRuleIndex(emitted, "button-primary");
+    expect(buttonIndex).toBeGreaterThanOrEqual(0);
+    expect(modifierIndex).toBeGreaterThan(buttonIndex);
+  });
+
+  it("gives .input the danger border when aria-invalid is true", () => {
+    const [invalid] = rulesOf(
+      emitted,
+      (rule) =>
+        rule.selector.startsWith(".input:is(") &&
+        rule.selector.includes('[aria-invalid="true"]'),
+    );
+    expect(declarationsOf(invalid!).get("border-color")).toBe(
+      "var(--color-danger-dark)",
+    );
+  });
+
+  it("gives a disabled .button the not-allowed cursor", () => {
+    const [disabled] = rulesOf(
+      emitted,
+      (rule) =>
+        rule.selector === '.button:is(:disabled, [aria-disabled="true"])',
+    );
+    expect(declarationsOf(disabled!).get("cursor")).toBe("not-allowed");
+  });
+
+  it("emits the progress-dots keyframes with 10 stops", () => {
+    const keyframes: AtRule[] = [];
+    emitted.walkAtRules("keyframes", (atRule) => {
+      if (atRule.params === "progress-dots") keyframes.push(atRule);
+    });
+    expect(keyframes).toHaveLength(1);
+
+    const stops = (keyframes[0]!.nodes ?? [])
+      .filter((node): node is Rule => node.type === "rule")
+      .map((rule) => rule.selector);
+    expect(stops).toStrictEqual([
+      "0%",
+      "10%",
+      "20%",
+      "30%",
+      "40%",
+      "50%",
+      "60%",
+      "70%",
+      "80%",
+      "90%",
+    ]);
   });
 });

@@ -178,6 +178,288 @@
   line-height: var(--text-xs--line-height);
 }
 
+/*
+ * The one focus indicator: a 2px outline offset 2px on `:focus-visible`. An outline survives
+ * forced-colors mode and never collides with a real shadow.
+ */
+@utility focus-ring {
+  outline: none;
+  &:focus-visible {
+    outline: 2px solid var(--color-power-button-dark);
+    outline-offset: 2px;
+  }
+}
+
+/* The same ring on a frame whose focus lives on a child. Reads `:has(:focus-visible)`. */
+@utility focus-ring-within {
+  &:has(:focus-visible) {
+    outline: 2px solid var(--color-power-button-dark);
+    outline-offset: 2px;
+  }
+  & > .focus-ring:focus-visible,
+  & > .input:focus-visible {
+    outline: none;
+  }
+}
+
+/*
+ * Bordered field frame. Reads `:disabled`, `[data-disabled]`, `[readonly]`,
+ * `[aria-invalid="true"]`, and `[data-field-state="warn"]`, on itself or on a child `<input>`.
+ * Later rules win ties: disabled and readonly beat invalid and warn, and every state beats hover.
+ */
+@utility input {
+  @apply rounded-sm border border-light bg-white px-2 py-1.5 text-sm text-default transition-colors focus-ring;
+
+  &:hover {
+    border-color: var(--color-gray-6);
+  }
+  &::placeholder,
+  & ::placeholder {
+    color: var(--color-subtle-2);
+  }
+  &:is([aria-invalid="true"], :has(> input[aria-invalid="true"])) {
+    border-color: var(--color-danger-dark);
+  }
+  &:is([data-field-state="warn"], :has(> input[data-field-state="warn"])) {
+    border-color: var(--color-warning-bright);
+  }
+  &:is([readonly], :has(> input[readonly])) {
+    border-color: transparent;
+    background-color: var(--color-gray-1);
+  }
+  &:is(:disabled, [data-disabled], :has(> input:disabled)) {
+    cursor: not-allowed;
+    border-color: transparent;
+    background-color: var(--color-disabled-light);
+    color: var(--color-disabled-dark);
+  }
+  & > input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+  }
+}
+
+/*
+ * Default button. Modifiers (`button-primary` and so on) only recolor. Reads `:disabled`,
+ * `[aria-disabled="true"]`, and `[aria-busy="true"]`.
+ */
+@utility button {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-sm border border-light bg-light px-3 py-1.5 text-sm whitespace-nowrap text-default transition-colors select-none focus-ring;
+
+  &:hover {
+    border-color: var(--color-gray-4);
+    background-color: var(--color-gray-2);
+  }
+  &:active {
+    background-color: var(--color-gray-2);
+  }
+  &[aria-busy="true"] {
+    cursor: progress;
+  }
+  &:is(:disabled, [aria-disabled="true"]) {
+    cursor: not-allowed;
+    border-color: var(--color-disabled-light);
+    background-color: var(--color-disabled-light);
+    color: var(--color-disabled-dark);
+  }
+}
+
+@utility button-primary {
+  border-color: var(--color-gray-9);
+  background-color: var(--color-gray-9);
+  color: var(--color-white);
+  &:not(:disabled, [aria-disabled="true"]):hover,
+  &:not(:disabled, [aria-disabled="true"]):active {
+    border-color: var(--color-black);
+    background-color: var(--color-black);
+  }
+}
+
+@utility button-ghost {
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--color-default);
+  &:not(:disabled, [aria-disabled="true"]):hover {
+    border-color: transparent;
+    background-color: var(--color-ghost-light);
+  }
+  &:not(:disabled, [aria-disabled="true"]):active {
+    border-color: var(--color-ghost-medium);
+    background-color: var(--color-ghost-medium);
+  }
+}
+
+@utility button-danger {
+  border-color: var(--color-danger-dark);
+  background-color: var(--color-danger-dark);
+  color: var(--color-white);
+  &:not(:disabled, [aria-disabled="true"]):hover,
+  &:not(:disabled, [aria-disabled="true"]):active {
+    border-color: color-mix(in oklab, var(--color-danger-dark) 88%, black);
+    background-color: color-mix(in oklab, var(--color-danger-dark) 88%, black);
+  }
+}
+
+@utility button-outline-danger {
+  border-color: var(--color-danger-medium);
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+  &:not(:disabled, [aria-disabled="true"]):hover,
+  &:not(:disabled, [aria-disabled="true"]):active {
+    border-color: var(--color-danger-medium);
+    background-color: var(--color-danger-medium-light);
+  }
+}
+
+@utility button-success {
+  border-color: var(--color-success-dark);
+  background-color: var(--color-success-dark);
+  color: var(--color-white);
+  &:not(:disabled, [aria-disabled="true"]):hover,
+  &:not(:disabled, [aria-disabled="true"]):active {
+    border-color: color-mix(in oklab, var(--color-success-dark) 88%, black);
+    background-color: color-mix(in oklab, var(--color-success-dark) 88%, black);
+  }
+}
+
+/*
+ * Square icon-only button. Carries `aria-label` or `aria-labelledby`. Reads `:disabled`,
+ * `[aria-disabled="true"]`, and `[aria-busy="true"]`.
+ */
+@utility icon-button {
+  @apply inline-flex size-7.5 items-center justify-center rounded-sm border border-transparent text-gray-6 transition-colors focus-ring;
+
+  &:hover {
+    border-color: var(--color-gray-4);
+    background-color: var(--color-gray-2);
+    color: var(--color-gray-7);
+  }
+  &:active {
+    background-color: var(--color-gray-2);
+    color: var(--color-gray-8);
+  }
+  &[aria-busy="true"] {
+    cursor: progress;
+  }
+  &:is(:disabled, [aria-disabled="true"]) {
+    cursor: not-allowed;
+    color: var(--color-gray-4);
+  }
+}
+
+@utility icon-button-secondary {
+  border-color: var(--color-gray-3);
+  background-color: var(--color-gray-1);
+  &:not(:disabled, [aria-disabled="true"]):hover {
+    border-color: var(--color-gray-4);
+    background-color: var(--color-gray-2);
+  }
+  &:not(:disabled, [aria-disabled="true"]):active {
+    border-color: var(--color-gray-4);
+    background-color: var(--color-gray-2);
+  }
+}
+
+@utility icon-button-danger {
+  &:not(:disabled, [aria-disabled="true"]):hover {
+    border-color: transparent;
+    background-color: color-mix(
+      in srgb,
+      var(--color-danger-dark) 10%,
+      transparent
+    );
+    color: var(--color-danger-dark);
+  }
+  &:not(:disabled, [aria-disabled="true"]):active {
+    border-color: transparent;
+    background-color: color-mix(
+      in srgb,
+      var(--color-danger-dark) 16%,
+      transparent
+    );
+    color: var(--color-danger-dark);
+  }
+}
+
+/* Status badge. Static, reads no attributes. Modifiers recolor. */
+@utility badge {
+  @apply inline-flex items-center gap-1 rounded-full border border-medium bg-light px-2.5 py-0.5 text-xs text-default;
+}
+
+@utility badge-success {
+  border-color: var(--color-success-medium);
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+@utility badge-warning {
+  border-color: var(--color-warning-medium);
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+@utility badge-danger {
+  border-color: var(--color-danger-medium);
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+@utility badge-neutral {
+  border-color: var(--color-info-medium);
+  background-color: var(--color-info-light);
+  color: var(--color-info-dark);
+}
+
+/* Tag pill. Reads `[aria-disabled="true"]` and `[aria-readonly="true"]`. */
+@utility pill {
+  @apply inline-flex max-w-full items-center gap-1 rounded-sm bg-medium px-2 py-0.5 text-xs whitespace-nowrap text-default;
+
+  &:is([aria-disabled="true"], [aria-readonly="true"]) {
+    background-color: var(--color-disabled-light);
+    color: var(--color-disabled-dark);
+  }
+  &[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
+@utility pill-outline {
+  @apply h-6 gap-1.5 border border-medium bg-light pr-2 pl-1.5;
+
+  &:is([aria-disabled="true"], [aria-readonly="true"]) {
+    background-color: var(--color-disabled-light);
+    color: var(--color-disabled-dark);
+  }
+}
+
+/* Keyboard key hint. Static. */
+@utility kbd {
+  @apply pointer-events-none inline-flex h-4 min-w-4 items-center justify-center rounded-xs border border-medium px-0.5 font-sans text-xs leading-none text-subtle-2 select-none;
+}
+
+/* Initials or an `<img>` in a circle. Carries `role="img"` and `aria-label`. */
+@utility avatar {
+  @apply inline-flex size-7.5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-medium text-xs font-medium text-default uppercase select-none;
+}
+
+/* Braille spinner. Carries `role="status"` and a visually hidden label child. */
+@utility progress-dots {
+  @apply inline-flex font-roboto-mono leading-none text-gray-7;
+
+  &::before {
+    content: "⠋";
+    animation: progress-dots 800ms steps(1, end) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+}
+
 /* Scrollbar */
 
 @utility scrollbar-thin {
@@ -503,5 +785,38 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes progress-dots {
+  0% {
+    content: "⠋";
+  }
+  10% {
+    content: "⠙";
+  }
+  20% {
+    content: "⠹";
+  }
+  30% {
+    content: "⠸";
+  }
+  40% {
+    content: "⠼";
+  }
+  50% {
+    content: "⠴";
+  }
+  60% {
+    content: "⠦";
+  }
+  70% {
+    content: "⠧";
+  }
+  80% {
+    content: "⠇";
+  }
+  90% {
+    content: "⠏";
   }
 }

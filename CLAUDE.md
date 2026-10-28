@@ -80,11 +80,12 @@ All four reach the same 74 Viam tokens, but only two compile under standalone Ta
 
 ## Topic-specific rules
 
-Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude reads matching files; rules without `paths` load every session. The svelte, typescript, testing, design, accessibility, code-comments, prose-voice, and code-cleanliness rules are installed and documented by houserules, see the block below. The one repo-owned rule:
+Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude reads matching files; rules without `paths` load every session. The svelte, typescript, testing, design, accessibility, code-comments, prose-voice, and code-cleanliness rules are installed and documented by houserules, see the block below. The repo-owned rules:
 
-| Rule              | Loads when                            |
-| ----------------- | ------------------------------------- |
-| `viam-context.md` | every session (design system context) |
+| Rule                        | Loads when                                                                      |
+| --------------------------- | ------------------------------------------------------------------------------- |
+| `viam-context.md`           | every session (design system context)                                           |
+| `no-internal-references.md` | every session (committed text never names plans, PRs, branches, or local paths) |
 
 <!-- houserules:claude-md start -->
 

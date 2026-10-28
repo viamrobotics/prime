@@ -68,3 +68,21 @@ Dark mode is opt-in. Import it after the base config.
 - `dark:` utilities follow the same rules as the tokens. They apply under a `.dark` ancestor, or under the OS preference, and never inside a `.light` subtree.
 - One level of `.light` inside `.dark` is supported. A `.dark` nested inside that `.light` flips the tokens but not `dark:` utilities.
 - The dark palette is derived from the light tokens and the grayscale ramp is inverted, so `bg-white` is not literally white in dark mode. `bg-extralight` now adapts too, because it reads `gray-0`.
+
+## Chrome classes
+
+The config also ships the design system's chrome as `@utility` classes, so a native element, a bits-ui trigger, or a non-Svelte consumer can wear it. A bare class is the design-system default. A modifier class beside it only recolors. A utility written after the class wins, so `class="button px-4"` keeps the wider padding.
+
+| Class           | Modifiers                                                                                    | Reads                                                                                                            |
+| --------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `button`        | `button-primary`, `button-ghost`, `button-danger`, `button-outline-danger`, `button-success` | `:disabled`, `aria-disabled="true"`, `aria-busy="true"`                                                          |
+| `icon-button`   | `icon-button-secondary`, `icon-button-danger`                                                | the same, and it needs `aria-label` or `aria-labelledby`                                                         |
+| `badge`         | `badge-success`, `badge-warning`, `badge-danger`, `badge-neutral`                            | none                                                                                                             |
+| `pill`          | `pill-outline`                                                                               | `aria-readonly="true"`, `aria-disabled="true"`                                                                   |
+| `kbd`           | none                                                                                         | none                                                                                                             |
+| `avatar`        | none                                                                                         | none, and it needs `role="img"` and `aria-label`                                                                 |
+| `progress-dots` | none                                                                                         | none, and it needs `role="status"` with a visually hidden label                                                  |
+| `input`         | none                                                                                         | `aria-invalid="true"`, `data-field-state="warn"`, `readonly`, `:disabled`, each also on a direct child `<input>` |
+| `focus-ring`    | `focus-ring-within` for a frame whose focus lives on a child                                 | `:focus-visible`                                                                                                 |
+
+Every state is a nested selector on an attribute the element already carries, with no `!important`, so a consumer class can still override anything. Recipes for each class, including leading icons and the busy spinner, are on the docs site under the package's "Chrome" page.

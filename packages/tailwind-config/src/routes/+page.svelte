@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-
 	// Swatches build `bg-<token>` class names dynamically from these lists. Tailwind
 	// can't see dynamic class names, so the swatch backgrounds are safelisted via
 	// `@source inline(...)` in layout.css — that forces the utilities (and their
@@ -86,6 +84,36 @@
 		{ id: 4, make: 'Mercedes-Benz', model: 'G-Class', year: 2010, vin: '5N1BA0ND0FN963537' },
 		{ id: 5, make: 'Dodge', model: 'Ram Wagon B250', year: 1992, vin: 'JHMFA3F28BS566074' }
 	];
+
+	const buttonVariants = [
+		{ name: 'Secondary', modifier: '' },
+		{ name: 'Primary', modifier: 'button-primary' },
+		{ name: 'Ghost', modifier: 'button-ghost' },
+		{ name: 'Danger', modifier: 'button-danger' },
+		{ name: 'Outline danger', modifier: 'button-outline-danger' },
+		{ name: 'Success', modifier: 'button-success' }
+	];
+
+	const iconButtonVariants = [
+		{ name: 'Primary', modifier: '' },
+		{ name: 'Secondary', modifier: 'icon-button-secondary' },
+		{ name: 'Danger', modifier: 'icon-button-danger' }
+	];
+
+	const badgeVariants = [
+		{ name: 'Inactive', modifier: '' },
+		{ name: 'Success', modifier: 'badge-success' },
+		{ name: 'Warning', modifier: 'badge-warning' },
+		{ name: 'Danger', modifier: 'badge-danger' },
+		{ name: 'Neutral', modifier: 'badge-neutral' }
+	];
+
+	const pillVariants = [
+		{ name: 'Default', modifier: '' },
+		{ name: 'Outline', modifier: 'pill-outline' }
+	];
+
+	const surfaces = ['bg-extralight', 'bg-light', 'bg-medium'];
 </script>
 
 {#snippet swatch(token: string)}
@@ -104,6 +132,34 @@
 	</div>
 {/snippet}
 
+{#snippet label(name: string, classes: string)}
+	<div class="flex flex-col">
+		<span class="text-sm font-medium">{name}</span>
+		<code class="text-code text-subtle-2">{classes}</code>
+	</div>
+{/snippet}
+
+{#snippet subsection(title: string, subtitle: string)}
+	<div>
+		<h2 class="text-heading text-sm font-medium tracking-wide uppercase">{title}</h2>
+		<p class="text-subtle-2 mt-1 text-xs">{subtitle}</p>
+	</div>
+{/snippet}
+
+{#snippet plus()}
+	<svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+		<path d="M8 3v10M3 8h10" />
+	</svg>
+{/snippet}
+
+{#snippet contents(label: string)}
+	<p class="font-medium">{label}</p>
+	<p class="text-subtle-1 text-sm">
+		<code class="text-code">dark:</code> is
+		<span class="dark:hidden">inactive</span><span class="hidden dark:inline">active</span>
+	</p>
+{/snippet}
+
 <main class="mx-auto flex max-w-4xl flex-col gap-12 p-8 pt-16">
 	<header>
 		<h1 class="text-heading text-3xl font-medium">@viamrobotics/tailwind-config</h1>
@@ -113,7 +169,6 @@
 			<code class="text-code-string">@viamrobotics/tailwind-config/dark</code> theme — every section
 			below reflects the active theme.
 		</p>
-		<a href={resolve('/dark-mode')} class="text-link mt-2 inline-block underline">Dark mode scoping test</a>
 	</header>
 
 	<!-- Grayscale -->
@@ -208,62 +263,164 @@
 		</div>
 	</section>
 
-	<!-- Buttons -->
-	<section class="flex flex-col gap-4">
-		{@render section('Buttons')}
-		<div class="flex flex-wrap items-center gap-3">
-			<button type="button" class="bg-gray-9 text-white hover:bg-gray-8 rounded px-4 py-1.5 text-sm font-medium">
-				Primary
-			</button>
-			<button
-				type="button"
-				class="bg-light border-medium hover:bg-medium rounded border px-4 py-1.5 text-sm font-medium"
-			>
-				Secondary
-			</button>
-			<button
-				type="button"
-				class="bg-danger-light hover:bg-danger-medium-light active:bg-danger-medium rounded px-4 py-1.5 text-sm font-medium text-danger-dark border border-danger-medium"
-			>
-				Danger
-			</button>
-			<button
-				type="button"
-				class="bg-success-light hover:bg-success-medium-light active:bg-success-medium rounded px-4 py-1.5 text-sm font-medium text-success-dark border border-success-medium"
-			>
-				Success
-			</button>
-			<button
-				type="button"
-				class="bg-info-light hover:bg-info-medium-light active:bg-info-medium rounded px-4 py-1.5 text-sm font-medium text-info-dark border border-info-medium"
-			>
-				Info
-			</button>
-			<button
-				type="button"
-				class="bg-warning-light hover:bg-warning-medium-light active:bg-warning-medium rounded px-4 py-1.5 text-sm font-medium text-warning-dark border border-warning-medium"
-			>
-				Warning
-			</button>
-			<button
-				type="button"
-				class="bg-pending-light hover:bg-pending-medium-light active:bg-pending-medium rounded px-4 py-1.5 text-sm font-medium text-pending-dark border border-pending-medium"
-			>
-				Pending
-			</button>
-			<button
-				type="button"
-				class="text-default hover:bg-ghost-medium rounded px-4 py-1.5 text-sm font-medium"
-			>
-				Ghost
-			</button>
-			<button
-				type="button"
-				disabled
-				class="bg-disabled-light text-disabled-dark cursor-not-allowed rounded px-4 py-1.5 text-sm font-medium"
-			>
-				Disabled
-			</button>
+	<!-- Chrome -->
+	<section id="chrome" class="flex flex-col gap-4">
+		{@render section('Chrome', 'Every component class and every state it reads. Each example shows the class list it wears.')}
+		<div class="flex flex-col gap-4">
+			{@render subsection('Button', 'States read: disabled, aria-disabled, aria-busy.')}
+			{#each buttonVariants as variant (variant.name)}
+				{@const classes = `button ${variant.modifier}`.trim()}
+				<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+					{@render label(variant.name, classes)}
+					<div class="flex flex-wrap items-center gap-3">
+						<button type="button" class={classes}>Normal</button>
+						<button type="button" class={classes} disabled>disabled</button>
+						<button type="button" class={classes} aria-disabled="true">aria-disabled</button>
+						<button type="button" class={classes} aria-busy="true">
+							<span class="progress-dots" aria-hidden="true"></span>
+							aria-busy
+						</button>
+					</div>
+				</div>
+			{/each}
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Leading icon', 'button + inline svg')}
+				<div class="flex flex-wrap items-center gap-3">
+					<button type="button" class="button">
+						{@render plus()}
+						Add item
+					</button>
+					<button type="button" class="button button-primary">
+						{@render plus()}
+						Add item
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-4">
+			{@render subsection('Icon button', 'Carries aria-label. States read: disabled, aria-disabled, aria-busy.')}
+			{#each iconButtonVariants as variant (variant.name)}
+				{@const classes = `icon-button ${variant.modifier}`.trim()}
+				<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+					{@render label(variant.name, classes)}
+					<div class="flex flex-wrap items-center gap-3">
+						<button type="button" class={classes} aria-label="Add {variant.name}">
+							{@render plus()}
+						</button>
+						<button type="button" class={classes} aria-label="Add {variant.name} disabled" disabled>
+							{@render plus()}
+						</button>
+					</div>
+				</div>
+			{/each}
+		</div>
+
+		<div class="flex flex-col gap-4">
+			{@render subsection('Badge', 'No states.')}
+			{#each badgeVariants as variant (variant.name)}
+				{@const classes = `badge ${variant.modifier}`.trim()}
+				<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+					{@render label(variant.name, classes)}
+					<div class="flex flex-wrap items-center gap-3">
+						<span class={classes}>{variant.name}</span>
+					</div>
+				</div>
+			{/each}
+		</div>
+
+		<div class="flex flex-col gap-4">
+			{@render subsection('Pill', 'States read: aria-readonly, aria-disabled.')}
+			{#each pillVariants as variant (variant.name)}
+				{@const classes = `pill ${variant.modifier}`.trim()}
+				<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+					{@render label(variant.name, classes)}
+					<div class="flex flex-wrap items-center gap-3">
+						<span class={classes}>Normal</span>
+						<span class={classes} aria-readonly="true">aria-readonly</span>
+						<span class={classes} aria-disabled="true">aria-disabled</span>
+						<span class={classes}>
+							Removable
+							<button type="button" aria-label="Remove {variant.name} pill">&times;</button>
+						</span>
+					</div>
+				</div>
+			{/each}
+		</div>
+
+		<div class="flex flex-col gap-4">
+			{@render subsection('Kbd', 'No states.')}
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Keys', 'kbd')}
+				<p class="text-sm">
+					Press <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">K</kbd> to search, or <kbd class="kbd">Esc</kbd> to close.
+				</p>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-4">
+			{@render subsection('Avatar', 'Carries role="img" and aria-label.')}
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Initials', 'avatar')}
+				<div class="flex flex-wrap items-center gap-3">
+					<span class="avatar" role="img" aria-label="Ada Lovelace">al</span>
+				</div>
+			</div>
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Image', 'avatar + img')}
+				<div class="flex flex-wrap items-center gap-3">
+					<span class="avatar" role="img" aria-label="Placeholder portrait">
+						<img
+							alt=""
+							src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Crect width='30' height='30' fill='%23888'/%3E%3C/svg%3E"
+						/>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-4">
+			{@render subsection('Progress dots', 'Carries role="status" and a visually hidden label.')}
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Dots', 'progress-dots')}
+				<div class="flex flex-wrap items-center gap-3">
+					<span class="progress-dots" role="status"><span class="sr-only">Loading</span></span>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-4">
+			{@render subsection('Input', 'States read: hover, aria-invalid, data-field-state, readonly, disabled.')}
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Normal', 'input')}
+				<input class="input" aria-label="Normal" />
+			</div>
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Placeholder', 'input')}
+				<input class="input" placeholder="Placeholder" aria-label="Placeholder" />
+			</div>
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Invalid', 'input + aria-invalid')}
+				<input class="input" aria-invalid="true" value="Invalid" aria-label="Invalid" />
+			</div>
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Warn', 'input + data-field-state="warn"')}
+				<input class="input" data-field-state="warn" value="Warn" aria-label="Warn" />
+			</div>
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Readonly', 'input + readonly')}
+				<input class="input" readonly value="Readonly" aria-label="Readonly" />
+			</div>
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Disabled', 'input + disabled')}
+				<input class="input" disabled value="Disabled" aria-label="Disabled" />
+			</div>
+			<div class="grid grid-cols-[12rem_1fr] items-center gap-4">
+				{@render label('Frame', 'input focus-ring-within flex')}
+				<div class="input focus-ring-within flex">
+					<input class="w-full bg-transparent outline-none" placeholder="Bare input in a frame" aria-label="Framed" />
+				</div>
+			</div>
 		</div>
 	</section>
 
@@ -439,5 +596,39 @@
 <span class="text-code-line-number">5</span>    <span class="text-code-property-keys">"deprecated"</span>: <span class="text-code-null">null</span>
 <span class="text-code-line-number">6</span>  &#125;</code
 			></pre>
+	</section>
+
+	<!-- Dark mode scoping -->
+	<section id="dark-mode" class="flex flex-col gap-4">
+		{@render section('Dark mode scoping', 'Use the toggle in the corner to flip the page-level mode and watch which boxes change.')}
+		<section class="border-light bg-white text-default dark:bg-gray-1 flex flex-col gap-2 rounded border p-4">
+			{@render contents('Follows the page')}
+		</section>
+
+		<section class="dark border-light bg-white text-default dark:bg-gray-1 flex flex-col gap-4 rounded border p-4">
+			{@render contents('Forced dark')}
+			<div class="flex gap-4">
+				{#each surfaces as surface (surface)}
+					<div class="border-light text-default flex-1 rounded border p-4 text-sm {surface}">{surface}</div>
+				{/each}
+			</div>
+
+			<div class="light border-light bg-white text-default dark:bg-gray-1 flex flex-col gap-4 rounded border p-4">
+				{@render contents('Forced light inside dark')}
+
+				<div class="dark border-light bg-white text-default dark:bg-gray-1 flex flex-col gap-2 rounded border p-4">
+					{@render contents('Dark re-nested inside light')}
+					<p class="text-subtle-1 text-sm">
+						Tokens flip here, but <code class="text-code">dark:</code> utilities stay inactive. This is a documented
+						limitation.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="flex flex-col gap-2">
+			<p class="text-display">Display 24/26 Space Grotesk 500</p>
+			<code class="text-code">text-code: Roboto Mono at text-xs</code>
+		</section>
 	</section>
 </main>
