@@ -84,6 +84,16 @@
       "verifyCommands": ["check", "lint", "format"]
     },
     {
+      "name": "prime-panes",
+      "prefix": "PRIME_SPLIT_VIEW",
+      "packageName": "@viamrobotics/prime-panes",
+      "pathPrefix": "packages/prime-panes/",
+      "sourcePath": "packages/prime-panes/src",
+      "label": "Prime Panes",
+      "fixCommands": ["lint:fix", "format:fix"],
+      "verifyCommands": ["check", "lint", "format", "test"]
+    },
+    {
       "name": "docs",
       "prefix": "DOCS",
       "packageName": "@viamrobotics/prime-docs",

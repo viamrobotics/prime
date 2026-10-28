@@ -16,6 +16,7 @@ The workspace root holds shared tooling (lint, format, changesets, CI).
 | Package                                                                 | Purpose                                                             |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | [`@viamrobotics/prime-ui`](packages/prime-ui/CLAUDE.md)                 | Svelte 5 component library — the v2 of prime.                       |
+| [`@viamrobotics/prime-panes`](packages/prime-panes/CLAUDE.md)           | Resizable, rearrangeable split-pane layouts for Svelte 5.           |
 | [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md)   | Viam's shared Tailwind CSS v4 configuration: design tokens + fonts. |
 | [`@viamrobotics/tweakpane-config`](packages/tweakpane-config/CLAUDE.md) | Shared Tweakpane theme and helpers for the playgrounds.             |
 
