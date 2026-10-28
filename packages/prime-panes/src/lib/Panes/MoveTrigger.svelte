@@ -21,7 +21,9 @@
 
 		/**
 		 * What the move relocates. `'pane'` moves this pane alone, leaving its stack. `'stack'` moves the
-		 * pane's whole stack, and acts as `'pane'` on a pane that is not stacked.
+		 * pane's whole stack, and acts as `'pane'` on a pane that is not stacked. `'float'` moves what
+		 * the floating window holds, which is its pane or stack, or this pane alone when the window
+		 * holds a split. It acts as `'pane'` on a pane outside a float.
 		 */
 		target?: DragSource['type'];
 	}

@@ -9,4 +9,11 @@ export interface PaneState {
 	readonly isMoving: boolean;
 	/** A press has armed the pane to drag. Matches `data-drag-armed`. */
 	readonly isDragArmed: boolean;
+	/** The pane is inside a float entry, at any depth. Matches `data-floating`. */
+	readonly isFloating: boolean;
+	/**
+	 * The id of the innermost float entry holding the pane, for `removeFloat` and `raiseFloat`.
+	 * `undefined` outside a float.
+	 */
+	readonly floatEntryId: string | undefined;
 }

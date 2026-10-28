@@ -80,6 +80,7 @@ export function watchDragPress(
 
 		const point = pointOf(event);
 		if (stage === 'dragging') {
+			pane.setDragShift(event.shiftKey);
 			pane.moveDrag(point);
 			return;
 		}
@@ -88,8 +89,9 @@ export function watchDragPress(
 		const distance = Math.hypot(point.clientX - origin.clientX, point.clientY - origin.clientY);
 		if (distance < DRAG_START_THRESHOLD_PX) return;
 
+		pane.setDragShift(event.shiftKey);
 		// Moving during the hold is a gesture meant for something else, so the press never becomes a drag.
-		if (stage === 'held' || !pane.startDrag(point)) {
+		if (stage === 'held' || !pane.startDrag(point, origin)) {
 			abandonPress();
 			return;
 		}
@@ -103,6 +105,7 @@ export function watchDragPress(
 		if (event.pointerId !== pointerId) return;
 
 		if (stage === 'dragging') {
+			pane.setDragShift(event.shiftKey);
 			pane.moveDrag(pointOf(event));
 			pane.finishDrag();
 		} else {
@@ -120,7 +123,12 @@ export function watchDragPress(
 		if (event.target === window) abandonPress();
 	}
 
+	function followShift({ key, shiftKey }: KeyboardEvent) {
+		if (key === 'Shift' && stage === 'dragging') pane.setDragShift(shiftKey);
+	}
+
 	function handleKeydown(event: KeyboardEvent) {
+		followShift(event);
 		if (event.key !== 'Escape') return;
 
 		// Consumed here so an enclosing dialog does not close along with the drag.
@@ -140,6 +148,7 @@ export function watchDragPress(
 		window.addEventListener('pointerup', handlePointerup, options);
 		window.addEventListener('pointercancel', handlePointercancel, options);
 		window.addEventListener('keydown', handleKeydown, options);
+		window.addEventListener('keyup', followShift, options);
 		window.addEventListener('blur', handleBlur, options);
 		window.addEventListener('selectstart', veto, options);
 		trigger.addEventListener('dragstart', veto, options);

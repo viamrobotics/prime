@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+	dockedMessage,
+	floatedMessage,
+	floatName,
 	joinLabels,
+	MISSING_MOVE_TRIGGER_WARNING,
 	placedMessage,
 	reorderedMessage,
 	reorderName,
@@ -72,5 +76,39 @@ describe('reorderName and reorderedMessage', () => {
 	])('counts the tab position from one for %j', (tabPosition, phrase) => {
 		expect(reorderName('Cam A', tabPosition)).toBe(`Move Cam A to ${phrase}`);
 		expect(reorderedMessage('Cam A', tabPosition)).toBe(`Cam A moved to ${phrase}.`);
+	});
+});
+
+describe('floatName and floatedMessage', () => {
+	it('names the choice and reports the result', () => {
+		expect(floatName('Cam A')).toBe('Float Cam A');
+		expect(floatedMessage('Cam A')).toBe('Floated Cam A.');
+	});
+});
+
+describe('dockedMessage', () => {
+	it.each<[DropRegion, string]>([
+		['left', 'Docked Cam A left of Cam B.'],
+		['right', 'Docked Cam A right of Cam B.'],
+		['top', 'Docked Cam A above Cam B.'],
+		['bottom', 'Docked Cam A below Cam B.'],
+		['center', 'Docked Cam A swapped with Cam B.'],
+		['stack', 'Docked Cam A stacked with Cam B.']
+	])('reports the %s region', (region, expected) => {
+		expect(dockedMessage(region, 'Cam A', 'Cam B')).toBe(expected);
+	});
+
+	it('uses the placement phrase of placedMessage', () => {
+		const placement = placedMessage('left', 'Cam A', 'Cam B').replace('Cam A placed ', '');
+		expect(dockedMessage('left', 'Cam A', 'Cam B')).toBe(`Docked Cam A ${placement}`);
+	});
+});
+
+describe('MISSING_MOVE_TRIGGER_WARNING', () => {
+	it('names the pane and the float target in the window warning', () => {
+		const warning = MISSING_MOVE_TRIGGER_WARNING.float('Cam A');
+
+		expect(warning).toContain('a window drag started in pane "Cam A"');
+		expect(warning).toContain('Panes.MoveTrigger with target="float"');
 	});
 });

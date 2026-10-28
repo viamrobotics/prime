@@ -16,7 +16,9 @@
 
 		/**
 		 * What the drag moves. `'pane'` moves this pane alone, leaving its stack. `'stack'` moves the
-		 * pane's whole stack, and acts as `'pane'` on a pane that is not stacked.
+		 * pane's whole stack, and acts as `'pane'` on a pane that is not stacked. `'float'` moves the
+		 * floating window that holds the pane, live under the pointer with no ghost, and writes its
+		 * rect once on release. It acts as `'pane'` on a pane outside a float.
 		 */
 		target?: DragSource['type'];
 	}

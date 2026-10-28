@@ -1,6 +1,8 @@
 <script lang="ts" generics="TData">
 	import { onMount, tick } from 'svelte';
 
+	import { useFloatEntryId } from '../FloatPanes/float-entry-context.ts';
+
 	import { getDragRegion, insertionIndexAt, stackSideOf } from '../drop-region.ts';
 	import type { DropRect } from '../drop-region.ts';
 	import type { PaneNode, StackNode } from '../layout.ts';
@@ -8,7 +10,7 @@
 	import { edgeOfArrow } from './arrow-regions.ts';
 	import { createAttachedElements } from './attached-elements.ts';
 	import { INDICATOR_CLASSES_BY_REGION } from './indicator-geometry.ts';
-	import { movingNotice, reorderedMessage } from './move-wording.ts';
+	import { floatName, movingNotice, reorderedMessage } from './move-wording.ts';
 	import type { PaneState } from './pane-state.ts';
 	import MoveTarget from './MoveTarget.svelte';
 	import { isInSameRoot } from './root-scope.ts';
@@ -22,10 +24,12 @@
 	}
 
 	const ARROW_KEY_CONTROLS = 'input, select, textarea, [contenteditable]';
+	const LAYER_SWITCH_KEY = 'F6';
 
 	const { node, stack }: Props = $props();
 
 	const context = usePanes();
+	const floatEntryId = useFloatEntryId();
 
 	let dropRegionCount = $state(0);
 	let tabListCount = $state(0);
@@ -41,7 +45,7 @@
 			case 'pane':
 				return source.id === node.id;
 			default:
-				return source.type satisfies never;
+				return source satisfies never;
 		}
 	});
 	const movingNoticeText = $derived(
@@ -68,6 +72,12 @@
 		},
 		get isDragArmed() {
 			return isDragArmed;
+		},
+		get isFloating() {
+			return floatEntryId !== undefined;
+		},
+		get floatEntryId() {
+			return floatEntryId;
 		}
 	};
 
@@ -85,7 +95,7 @@
 	let moveTriggerElements: HTMLElement[] = [];
 
 	function toggleMove(source: DragSource) {
-		if (context.isMoving(source)) {
+		if (context.isMoving(source, node.id)) {
 			context.cancelMove();
 		} else {
 			context.startMove(node.id, source);
@@ -150,7 +160,7 @@
 			};
 		},
 		registerBody: bodies.attach,
-		isMoving: context.isMoving,
+		isMoving: (source) => context.isMoving(source, node.id),
 		get isDragArmed() {
 			return isDragArmed;
 		},
@@ -160,6 +170,10 @@
 					return stack ? { type, id: stack.id } : { type: 'pane', id: node.id };
 				case 'pane':
 					return { type, id: node.id };
+				case 'float':
+					return floatEntryId === undefined
+						? { type: 'pane', id: node.id }
+						: { type, id: floatEntryId };
 				default:
 					return type satisfies never;
 			}
@@ -171,6 +185,7 @@
 		moveDrag: context.moveDrag,
 		finishDrag: context.finishDrag,
 		cancelDrag: context.cancelDrag,
+		setDragShift: context.setDragShift,
 		toggleMove,
 		registerMoveTrigger(trigger, target) {
 			const detach = moveTriggers.attach(trigger);
@@ -183,11 +198,24 @@
 		}
 	});
 
+	// The root element is the last ancestor whose parent belongs to another root, or to none.
+	function rootBounds() {
+		let element: Element | null = wrapper ?? null;
+		while (element?.parentElement && isInSameRoot(element, element.parentElement)) {
+			element = element.parentElement;
+		}
+		return element?.getBoundingClientRect();
+	}
+
 	onMount(() =>
 		context.registerPane(node.id, {
 			focus: () => (moveTriggers.latest ?? wrapper)?.focus(),
 			focusWrapper: () => wrapper?.focus(),
-			bounds: () => wrapper?.getBoundingClientRect()
+			bounds: () => wrapper?.getBoundingClientRect(),
+			rootBounds,
+			layer: floatEntryId,
+			element: () => wrapper,
+			firstMoveRegion: () => destination?.regions[0]
 		})
 	);
 
@@ -292,6 +320,15 @@
 		if (context.crossToNeighbor(node.id, edge)) event.preventDefault();
 	}
 
+	// Covers the moving pane and its destination controls, so the layer switch works from either.
+	function handleLayerKeydown(event: KeyboardEvent) {
+		if (event.key !== LAYER_SWITCH_KEY || context.movingSource === undefined) return;
+		if (event.defaultPrevented || !isInSameRoot(event.target, event.currentTarget)) return;
+		if (event.target instanceof Element && event.target.closest(ARROW_KEY_CONTROLS)) return;
+
+		if (context.crossToLayer(node.id, event.shiftKey ? -1 : 1)) event.preventDefault();
+	}
+
 	function stackZoneStyleOf(dropRegion: HTMLElement, overlay: HTMLElement) {
 		const zone = dropRegion.getBoundingClientRect();
 		const overlayRect = overlay.getBoundingClientRect();
@@ -314,13 +351,27 @@
 	);
 </script>
 
-<div class="relative size-full min-h-0 min-w-0">
+<!-- This element holds the moving pane and its move targets, so it receives the F6 that crosses layers in move mode. The controls inside are the interactive elements. -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="relative size-full min-h-0 min-w-0" onkeydown={handleLayerKeydown}>
+	<!-- It comes before the wrapper in the DOM, so Tab from the wrapper still reaches the pane's own controls and then the destinations, and Shift+Tab reaches it. -->
+	{#if isMoving && context.isFloatOffered && context.movingLabel !== undefined}
+		<button
+			type="button"
+			aria-label={floatName(context.movingLabel)}
+			class="absolute top-2/3 left-1/2 z-40 min-h-6 min-w-6 -translate-x-1/2 cursor-pointer rounded border border-info-dark bg-info-light px-2 py-1 text-xs text-info-dark outline-info-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid"
+			onclick={() => context.floatMoving()}
+		>
+			Float
+		</button>
+	{/if}
 	<!-- The consumer's Panes.DragTrigger is the control. This element is the pane's drop surface and receives the arrow keys that leave the moving pane. -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={wrapper}
 		tabindex="-1"
 		data-stacked={stack ? '' : undefined}
+		data-floating={floatEntryId === undefined ? undefined : ''}
 		data-moving={isMoving ? '' : undefined}
 		data-drag-armed={isDragArmed ? '' : undefined}
 		inert={destination !== undefined && !isMoving}

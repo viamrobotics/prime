@@ -1,9 +1,11 @@
 <script lang="ts" generics="TData">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import type { LayoutNode, PaneNode } from '../layout.ts';
+	import type { FloatEntry, LayoutNode, PaneNode } from '../layout.ts';
 	import type { DragPreview } from './drag-preview.ts';
 	import type { PaneState } from './pane-state.ts';
+
+	import { DEFAULT_FLOAT_MIN_SIZE } from '../FloatPanes/float-geometry.ts';
 
 	import DragGhost from './DragGhost.svelte';
 	import PanesNode from './PanesNode.svelte';
@@ -50,6 +52,12 @@
 		 * snippet free of controls. Defaults to the dragged pane's label, or a stack's labels joined.
 		 */
 		dragPreview?: Snippet<[DragPreview<TData>]>;
+
+		/**
+		 * The smallest a floating window can be, in pixels, per window. A window resizes no smaller, and
+		 * is drawn no smaller, unless the float's box is itself smaller. Defaults to 160 by 120.
+		 */
+		floatMinSize?: (entry: FloatEntry<TData>) => { width: number; height: number };
 	}
 
 	let {
@@ -60,6 +68,7 @@
 		keepInactiveMounted = false,
 		paneLabel = (labeled) => labeled.id,
 		dragPreview,
+		floatMinSize = () => DEFAULT_FLOAT_MIN_SIZE,
 		onkeydown,
 		onfocusout,
 		onpointerdown,
@@ -73,7 +82,9 @@
 		() => pane,
 		() => reorderable,
 		() => paneLabel,
-		() => keepInactiveMounted
+		() => keepInactiveMounted,
+		() => empty,
+		() => floatMinSize
 	);
 
 	let isPressingInside = false;
@@ -125,7 +136,7 @@
 	{...rest}
 	{@attach markAsRoot}
 	data-move-mode={isMoving ? '' : undefined}
-	data-dragging={context.dragSource ? '' : undefined}
+	data-dragging={context.isDockDrag ? '' : undefined}
 	onkeydown={handleKeydown}
 	onfocusout={handleFocusOut}
 	onpointerdown={handlePointerDown}

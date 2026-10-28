@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { findNeighbor } from '../spatial-neighbor.ts';
-import type { PaneBounds } from '../spatial-neighbor.ts';
+import type { LayeredBounds, PaneBounds } from '../spatial-neighbor.ts';
 
 const bounds = (left: number, top: number, right: number, bottom: number): PaneBounds => ({
 	left,
@@ -10,7 +10,12 @@ const bounds = (left: number, top: number, right: number, bottom: number): PaneB
 	bottom
 });
 
-const panesOf = (entries: Record<string, PaneBounds>) => new Map(Object.entries(entries));
+const panesOf = (entries: Record<string, LayeredBounds>) => new Map(Object.entries(entries));
+
+const inLayer = (layer: string, paneBounds: PaneBounds): LayeredBounds => ({
+	...paneBounds,
+	layer
+});
 
 describe('findNeighbor', () => {
 	it.each([
@@ -178,5 +183,35 @@ describe('findNeighbor', () => {
 		const panes = panesOf({ other: bounds(0, 0, 100, 100) });
 
 		expect(findNeighbor(panes, 'missing', 'right')).toBeUndefined();
+	});
+
+	it('never takes a pane from another layer, even when it is nearer', () => {
+		const panes = panesOf({
+			current: inLayer('window', bounds(0, 0, 100, 100)),
+			baseNear: bounds(100, 0, 200, 100),
+			otherWindowNear: inLayer('other-window', bounds(100, 0, 200, 100)),
+			sameWindowFar: inLayer('window', bounds(400, 0, 500, 100))
+		});
+
+		expect(findNeighbor(panes, 'current', 'right')).toBe('sameWindowFar');
+	});
+
+	it('takes no pane from a window for a base pane', () => {
+		const panes = panesOf({
+			current: bounds(0, 0, 100, 100),
+			windowNear: inLayer('window', bounds(100, 0, 200, 100))
+		});
+
+		expect(findNeighbor(panes, 'current', 'right')).toBeUndefined();
+	});
+
+	it('ranks panes with no layer together, as in a layout with no windows', () => {
+		const panes = panesOf({
+			current: bounds(0, 0, 100, 100),
+			near: bounds(100, 0, 200, 100),
+			far: bounds(300, 0, 400, 100)
+		});
+
+		expect(findNeighbor(panes, 'current', 'right')).toBe('near');
 	});
 });

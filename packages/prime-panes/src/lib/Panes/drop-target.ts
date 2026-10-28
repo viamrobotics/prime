@@ -1,5 +1,6 @@
 import type { DropRegion } from '../drop-region.ts';
 import type { LayoutNode, PaneNode, StackNode } from '../layout.ts';
+import { findNode } from '../tree.ts';
 
 import { listPanes, listSlots, listStacks } from './list-panes.ts';
 import { shownPaneId } from './shown-pane.ts';
@@ -20,8 +21,10 @@ export function resolveDropTarget(
 			return stack?.id === source.id ? undefined : { targetId: node.id, region, index };
 		case 'pane':
 			return resolvePaneDrop(source, node, stack, region, index);
+		case 'float':
+			return undefined;
 		default:
-			return source.type satisfies never;
+			return source satisfies never;
 	}
 }
 
@@ -54,8 +57,10 @@ export function hasDestination<TData>(
 			return listPanes(root).length >= MIN_PANES_TO_MOVE;
 		case 'stack':
 			return listSlots(root).some((slot) => slot.id !== source.id);
+		case 'float':
+			return false;
 		default:
-			return source.type satisfies never;
+			return source satisfies never;
 	}
 }
 
@@ -76,7 +81,29 @@ export function paneIdToSkip<TData>(
 			// The own slot of a stacked moving pane is a destination, so arrows may land on it.
 			return isStacked ? undefined : source.id;
 		}
+		case 'float':
+			return undefined;
 		default:
-			return source.type satisfies never;
+			return source satisfies never;
+	}
+}
+
+/** Whether the pane or stack `nodeId` sits inside a float entry, at any depth. */
+export function isInWindow<TData>(root: LayoutNode<TData> | undefined, nodeId: string): boolean {
+	if (!root) return false;
+
+	switch (root.type) {
+		case 'pane':
+		case 'stack':
+			return false;
+		case 'split':
+			return isInWindow(root.first, nodeId) || isInWindow(root.second, nodeId);
+		case 'float':
+			return (
+				isInWindow(root.base, nodeId) ||
+				root.floats.some((entry) => findNode(entry.content, nodeId) !== undefined)
+			);
+		default:
+			return root satisfies never;
 	}
 }

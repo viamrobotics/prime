@@ -9,6 +9,10 @@ const panesQueries = {
 	getByPaneState: (id: string) => `css=[data-state-of="${id}"]`,
 	getByPaneBody: (id: string) => `css=[data-pane-body="${id}"]`,
 	getByStackPane: (id: string) => `css=[data-stack-pane="${id}"]`,
+	getByFloat: (id: string) => `css=[data-float="${id}"]`,
+	getByFloatEntry: (id: string) => `css=[data-float-entry="${id}"]`,
+	getByFloatResize: (entryId: string, axis: string) =>
+		`css=[data-float-entry="${entryId}"] > [data-float-resize="${axis}"]`,
 	getByDraggingPanes: () => 'css=[data-dragging]',
 	getByPanesInMoveMode: () => 'css=[data-move-mode]',
 	getByDragGhost: () => 'css=[data-drag-ghost]',
