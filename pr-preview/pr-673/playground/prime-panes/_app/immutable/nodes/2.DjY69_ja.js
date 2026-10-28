@@ -1,0 +1,1 @@
+import{f as e,u as t}from"../chunks/CRBxdq1r.js";import"../chunks/DEDqjojZ.js";var n=e(`<main class="mx-auto flex max-w-3xl flex-col gap-2 p-8"><h1 class="text-3xl font-medium text-heading">@viamrobotics/prime-panes</h1> <p class="text-subtle-1">Resizable, rearrangeable split-pane layouts for Svelte 5.</p></main>`);function r(e){t(e,n())}export{r as component};
