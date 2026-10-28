@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+
 	// Swatches build `bg-<token>` class names dynamically from these lists. Tailwind
 	// can't see dynamic class names, so the swatch backgrounds are safelisted via
 	// `@source inline(...)` in layout.css — that forces the utilities (and their
@@ -111,6 +113,7 @@
 			<code class="text-code-string">@viamrobotics/tailwind-config/dark</code> theme — every section
 			below reflects the active theme.
 		</p>
+		<a href={resolve('/dark-mode')} class="text-link mt-2 inline-block underline">Dark mode scoping test</a>
 	</header>
 
 	<!-- Grayscale -->

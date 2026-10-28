@@ -37,6 +37,7 @@
   --color-gray-3: #e4e4e6;
   --color-gray-2: #edeef0;
   --color-gray-1: #f7f7f8;
+  --color-gray-0: #fbfbfc;
 
   /* Semantic colors. `medium-light` is the hover/active fill for outline buttons,
    * sitting between `light` and `medium`. Values marked "derived" had no published
@@ -133,11 +134,11 @@
  * These reference the grayscale tokens (rather than hardcoded hex) so they
  * follow the dark-theme overrides in tailwind-config-dark.css. Light-mode values
  * are unchanged except where noted: bg-medium/bg-dark/border-dark snap to the
- * nearest gray token (imperceptible shift). bg-extralight has no matching token,
- * so it stays literal and does not adapt to dark mode.
+ * nearest gray token (imperceptible shift). bg-extralight reads gray-0, the step
+ * past gray-1 that prime added, so it adapts to dark mode too.
  */
 @utility bg-extralight {
-  background-color: #fbfbfc;
+  background-color: var(--color-gray-0);
 }
 
 @utility bg-light {
@@ -162,6 +163,19 @@
 
 @utility border-dark {
   border-color: var(--color-gray-8);
+}
+
+@utility text-display {
+  font-family: var(--font-space-grotesk);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.625rem;
+}
+
+@utility text-code {
+  font-family: var(--font-roboto-mono);
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
 }
 
 /* Scrollbar */
