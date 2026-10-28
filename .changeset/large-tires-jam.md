@@ -1,0 +1,6 @@
+---
+"@viamrobotics/prime-tree": minor
+"@viamrobotics/prime-docs": patch
+---
+
+Add `@viamrobotics/prime-tree`, a headless tree view for Svelte 5 on `@zag-js/tree-view`. `Tree` takes the root `nodes` and the accessors that read them (`nodeToValue`, `nodeToString`, `nodeToChildren`, `nodeToChildrenCount` for a branch with no children, `isNodeDisabled`), renders every row through a `node` snippet that receives the node and its reactive `TreeNodeState`, and writes expansion and selection through `bind:expanded` and `bind:selected`, so a function binding can persist or veto a change. The compound parts `Tree.Branch`, `Tree.BranchControl`, `Tree.BranchTrigger`, `Tree.BranchContent`, `Tree.Item`, `Tree.Indicator`, and `Tree.IndentGuide` connect the consumer's own markup to the tree's roving focus, keyboard navigation, type-ahead, and `aria-*` attributes. A `children` snippet on `Tree` or `Tree.BranchContent` receives the nodes at that level so the consumer can arrange or virtualize the rows itself with `Tree.Row`. `selectionMode` picks single or multiple selection and `branchClick` decides whether a branch row toggles, selects, or both. A change to `nodes` flows into the tree without a remount. The docs site gains the package page and its playground.

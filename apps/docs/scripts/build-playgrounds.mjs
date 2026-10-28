@@ -17,6 +17,7 @@ const repoRoot = resolve(docsRoot, "..", "..");
 const playgrounds = [
   { name: "prime-ui", pkgDir: "packages/prime-ui" },
   { name: "prime-panes", pkgDir: "packages/prime-panes" },
+  { name: "prime-tree", pkgDir: "packages/prime-tree" },
   { name: "tailwind-config", pkgDir: "packages/tailwind-config" },
   { name: "tweakpane-config", pkgDir: "packages/tweakpane-config" },
 ];
