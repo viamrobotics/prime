@@ -81,7 +81,7 @@ Put a `Field.StateIcon` after the input inside an `Input.Group` to show the icon
 
 `class` lands on the `<input>`. The input has no wrapper and no layout utilities, including no width, so set one yourself or let a flex or grid parent stretch it.
 
-The border, padding, and state colors are the `control-frame` utility from `styles.css`, which `Select.Trigger` wears too. It reads the attributes below, so `Input.Group` takes its border, its disabled and read-only backgrounds, and its state colors from the input directly inside it with no JavaScript. The group takes `class` on its `<div>` and has no layout utilities either, so give it a width.
+The border, padding, and state colors are the `input` [component class](../../tailwind-config/component-classes/) from `@viamrobotics/tailwind-config`, which `Select.Trigger` wears too. It reads the attributes below, so `Input.Group` takes its border, its disabled and read-only backgrounds, and its state colors from the input directly inside it with no JavaScript. The group takes `class` on its `<div>` and has no layout utilities either, so give it a width.
 
 | Hook               | Where                                        |
 | ------------------ | -------------------------------------------- |

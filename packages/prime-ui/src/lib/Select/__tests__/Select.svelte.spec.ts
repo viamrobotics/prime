@@ -62,7 +62,7 @@ describe('Select', () => {
 	it('wears the shared focus ring and leaves width to the consumer', () => {
 		const { container } = render(BoundSelect);
 
-		expect(trigger(container).classList.contains('focus-ring'), 'focus-ring utility').toBe(true);
+		expect(trigger(container).classList.contains('input'), 'input class').toBe(true);
 		expect(trigger(container).classList.contains('w-full'), 'no built-in width').toBe(false);
 	});
 
@@ -121,6 +121,15 @@ describe('Select', () => {
 
 		await vi.waitFor(() => expect(owner(container)).toBe('sm'));
 		expect(trigger(container).textContent).toContain('Small');
+	});
+
+	it('stacks the panel on the popover layer', async () => {
+		const { container } = render(BoundSelect);
+
+		await userEvent.click(trigger(container));
+
+		await vi.waitFor(() => expect(listbox()).toBeTruthy());
+		expect(getComputedStyle(listbox()!).zIndex).toBe('1200');
 	});
 
 	describe('trigger border', () => {

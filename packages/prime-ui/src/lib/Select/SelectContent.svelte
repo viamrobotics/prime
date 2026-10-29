@@ -48,7 +48,7 @@ Render it inside a [`Select.Portal`](./SelectPortal.svelte), with a
 	{sideOffset}
 	{alignOffset}
 	class={[
-		'z-50 max-h-(--bits-select-content-available-height) w-(--bits-select-anchor-width) min-w-(--bits-select-anchor-width) overflow-hidden rounded-sm border border-light bg-white shadow-md',
+		'z-popover max-h-(--bits-select-content-available-height) w-(--bits-select-anchor-width) min-w-(--bits-select-anchor-width) overflow-hidden rounded-sm border border-light bg-white shadow-md',
 		extraClasses
 	]}
 	{...restProps}

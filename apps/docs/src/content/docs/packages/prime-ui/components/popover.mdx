@@ -1,0 +1,111 @@
+---
+title: Popover
+description: A non-modal panel anchored to a trigger.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import PopoverDemo from "./popover/PopoverDemo.svelte";
+import PopoverShowcase from "./popover/PopoverShowcase.svelte";
+import TwoWay from "./popover/TwoWay.svelte";
+import twoWaySource from "./popover/TwoWay.svelte?raw";
+import Controlled from "./popover/Controlled.svelte";
+import controlledSource from "./popover/Controlled.svelte?raw";
+import WithClose from "./popover/WithClose.svelte";
+import withCloseSource from "./popover/WithClose.svelte?raw";
+import Placed from "./popover/Placed.svelte";
+import placedSource from "./popover/Placed.svelte?raw";
+
+<ComponentIntro name="popover" />
+
+<PopoverDemo client:visible />
+
+- Composed from parts, so the trigger, the panel, and the close button are yours to arrange.
+- `open` is bindable, two-way or as a getter and setter. [State & binding](../state/) explains both modes.
+- Non-modal: the page stays interactive while the panel is open.
+- The panel floats in a portal, positioned to the trigger, and flips to the other side when there is no room.
+- Closes on <kbd>Escape</kbd> and on a press outside, and returns focus to the trigger.
+
+## Anatomy
+
+Every part is a property on `Popover`. `Popover` renders no element. `Popover.Content` portals itself to the body. The panel is a dialog, so give `Popover.Content` an `aria-label` or `aria-labelledby`.
+
+```svelte
+<Popover>
+  <Popover.Trigger />
+  <Popover.Content aria-label="Details">
+    ...
+    <Popover.Close />
+  </Popover.Content>
+</Popover>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:open` on the root.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:open` a getter and a setter. The setter can decline a change.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Closing from inside
+
+`Popover.Close` closes the panel. It renders a close icon with `aria-label="Close"` by default. Pass children to replace the icon, and an `aria-label` if the text does not name the action.
+
+<Example code={withCloseSource} title="WithClose.svelte">
+  <WithClose client:visible />
+</Example>
+
+### Placement
+
+`Popover.Content` takes `side` and `align` to place the panel, and `sideOffset` and `alignOffset` to nudge it.
+
+<Example code={placedSource} title="Placed.svelte">
+  <Placed client:visible />
+</Example>
+
+### States
+
+<PopoverShowcase client:visible />
+
+## Not modal
+
+A popover does not lock page scroll, trap focus, or make the rest of the page inert. <kbd>Tab</kbd> moves through the panel and on to the rest of the page. Use a dialog when the user must answer before continuing.
+
+## Styling
+
+Every part that renders an element takes `class` on that element. `Popover.Trigger` is a real `<button>` with no look of its own beyond the focus ring, so add `button` or `icon-button`. `Popover.Close` wears `icon-button`. `Popover` renders no element, so it takes no `class`. bits-ui sets the data attributes below. `Popover.Content` wears `z-popover`; see [z layers](../../tailwind-config/component-classes/#z-layers).
+
+| Part      | Attribute    | Value                            |
+| --------- | ------------ | -------------------------------- |
+| `Trigger` | `data-state` | `open` or `closed`               |
+| `Content` | `data-state` | `open` or `closed`               |
+| `Content` | `data-side`  | the resolved side of the trigger |
+| `Content` | `data-align` | the resolved alignment           |
+
+## Keyboard
+
+| Key                                 | Action                                      |
+| ----------------------------------- | ------------------------------------------- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | On the trigger, opens or closes the panel.  |
+| <kbd>Tab</kbd>                      | Moves focus within the panel, then on.      |
+| <kbd>Escape</kbd>                   | Closes the panel and focuses the trigger.   |
+
+## API
+
+<PropsTable name="popover" />
+
+<PartsDoc name="popover" />

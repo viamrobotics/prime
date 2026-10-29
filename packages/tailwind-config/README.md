@@ -54,6 +54,23 @@ Tailwind v4's default sizes and line heights already match the design system's t
 - `text-display` is Space Grotesk, weight 500, 24px with a 26px line height. It is the only token stock classes cannot express.
 - `text-code` is Roboto Mono at the `text-xs` size and line height, the same as `font-roboto-mono text-xs`.
 
+## Z layers
+
+Named layers order floating UI by who must clear whom. Wear a layer instead of a bare number.
+
+| Class       | Token         | Value | What sits on it                                                          |
+| ----------- | ------------- | ----- | ------------------------------------------------------------------------ |
+| `z-sticky`  | `--z-sticky`  | 100   | Headers and docked bars.                                                 |
+| `z-overlay` | `--z-overlay` | 1000  | A dialog's backdrop.                                                     |
+| `z-dialog`  | `--z-dialog`  | 1100  | The dialog panel.                                                        |
+| `z-popover` | `--z-popover` | 1200  | Popovers, select panels, and comboboxes.                                 |
+| `z-menu`    | `--z-menu`    | 1200  | Menus. Same value as `z-popover`, so a consumer never has to know which. |
+| `z-toast`   | `--z-toast`   | 1300  | Notifications.                                                           |
+| `z-tooltip` | `--z-tooltip` | 1400  | Above everything that can carry a hovered control.                       |
+| `z-max`     | `--z-max`     | 9999  | Reserved. Nothing may cover it.                                          |
+
+Bare numbers such as `z-50` and `z-1150` still work through Tailwind's own utility. Steps of 100 leave room for a bare value between layers.
+
 ## Dark mode
 
 Dark mode is opt-in. Import it after the base config.

@@ -39,8 +39,25 @@ const CANDIDATES = [
   "bg-heading",
   "text-xs",
   "px-4",
+  "z-dialog",
+  "z-tooltip",
+  "z-max",
+  "z-50",
+  "z-1150",
+  "z-nope",
   ...CHROME_CLASSES,
 ];
+
+const Z_LAYERS = [
+  ["sticky", "100"],
+  ["overlay", "1000"],
+  ["dialog", "1100"],
+  ["popover", "1200"],
+  ["menu", "1200"],
+  ["toast", "1300"],
+  ["tooltip", "1400"],
+  ["max", "9999"],
+] as const;
 
 const rulesOf = (root: Root, matches: (rule: Rule) => boolean): Rule[] => {
   const found: Rule[] = [];
@@ -232,6 +249,35 @@ describe("theme stylesheets compiled through Tailwind", () => {
     const theme = declarationsOf(onlyRule(unoptimized, ":root, :host"));
     expect(theme.get("--text-xs")).toBe("0.75rem");
     expect(theme.get("--text-xs--line-height")).toBe("calc(1 / 0.75)");
+  });
+
+  it.each(Z_LAYERS)(
+    "emits z-%s as z-index: var(--z-%s) with the token set to %s",
+    async (name, value) => {
+      const compiler = await compile(
+        `@import "tailwindcss";\n@import "./tailwind-config.css";`,
+        { base: packageDirectory, onDependency() {} },
+      );
+      const built = postcss.parse(compiler.build([`z-${name}`]));
+      const rule = onlyRule(built, `.z-${name}`);
+      expect(declarationsOf(rule).get("z-index")).toBe(`var(--z-${name})`);
+      expect(themeDefaults.get(`--z-${name}`)).toBe(value);
+    },
+  );
+
+  it("emits bare z numbers through Tailwind's own utility", () => {
+    expect(declarationsOf(onlyRule(unoptimized, ".z-50")).get("z-index")).toBe(
+      "50",
+    );
+    expect(
+      declarationsOf(onlyRule(unoptimized, ".z-1150")).get("z-index"),
+    ).toBe("1150");
+  });
+
+  it("emits no rule for an unknown z name", () => {
+    expect(
+      rulesOf(unoptimized, (rule) => startsWithClass(rule, "z-nope")),
+    ).toHaveLength(0);
   });
 
   it.each(CHROME_CLASSES)("emits at least one rule for .%s", (name) => {

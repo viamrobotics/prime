@@ -20,7 +20,7 @@ describe('Input', () => {
 		expect(input(container).type).toBe('email');
 		expect(input(container).placeholder).toBe('you@viam.com');
 		expect(input(container).value).toBe('hi@viam.com');
-		expect([...input(container).classList]).toEqual(expect.arrayContaining(['w-64', 'focus-ring']));
+		expect([...input(container).classList]).toEqual(expect.arrayContaining(['w-64', 'input']));
 		expect(input(container).classList.contains('w-full'), 'no built-in width').toBe(false);
 	});
 

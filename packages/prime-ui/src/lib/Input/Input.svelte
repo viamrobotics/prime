@@ -84,7 +84,7 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 	{...restProps}
 	bind:value
 	id={control.id}
-	class={['control-frame focus-ring', extraClasses]}
+	class={['input', extraClasses]}
 	disabled={control.disabled}
 	required={control.required}
 	{readonly}
