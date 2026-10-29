@@ -1,1 +1,0 @@
-import{w as t,z as i,ak as c,v as f}from"./template.CUyuKTWw.js";import{B as y}from"./branches.COXyDKWH.js";const k=Symbol("NaN");function b(r,e,n){t&&i();var o=new y(r),s=!c();f(()=>{var a=e();a!==a&&(a=k),s&&a!==null&&typeof a=="object"&&(a={}),o.ensure(a,n)})}export{b as k};
