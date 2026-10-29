@@ -13,21 +13,36 @@ The documentation site for the prime monorepo. Astro + Starlight, with playgroun
 
 ## Layout
 
-- `src/content/docs/` — markdown pages, picked up by Starlight's `docsLoader`.
-- `src/tailwind.css` — pulls in Tailwind + tokens; referenced from `customCss` in `astro.config.mjs`.
+- `src/content/docs/` — markdown pages, picked up by Starlight's `docsLoader`. One page per prime-ui component under `packages/prime-ui/components/`, nested under the package so everything about prime-ui sits together. The Components sidebar group autogenerates from that directory; `sidebar.order` in frontmatter pins the page order.
+- `src/loaders/prime-ui-components.ts` — a content-layer loader that turns prime-ui's `src/lib` into the `components` collection: one entry per root export in `index.ts` plus one per compound part (from the `Object.assign` barrels), each with its `@component` block rendered as markdown and its `Props` interface parsed into a props table (`parse-component.ts`, the pure part, has unit tests). Links to sibling `.svelte` files inside a doc block are rewritten to docs links. Reads source, not `dist`, because `svelte-package` strips the TypeScript the props come from.
+- `src/components/doc/` — `ComponentIntro.astro` (the rendered doc block), `PropsTable.astro`, and `PartsDoc.astro` (every part with its own doc and table). Each takes `name`, the collection id: `select`, or `select/trigger` for a part. `Example.astro` wraps a live island with its own source underneath: pass the island in the slot and its file text as `code` via a `?raw` import, so the code a reader copies is the file rendering above it. Pages import them through the `@docs/*` tsconfig alias (`@docs/doc/PropsTable.astro`).
+- `src/components/Sandbox.svelte` — the shared live prop-tweaking shell, imported by demos as `@docs/Sandbox.svelte`.
+- Each component page's islands sit beside it: `packages/prime-ui/components/<slug>/<X>Demo.svelte` configures the Sandbox for that component, and `<X>Showcase.svelte` renders its states. Each is a `.svelte` file hydrated as an Astro island (`client:visible`), since a component cannot be passed as an island prop from MDX. Starlight's loader only picks up `.md`/`.mdx`, so the Svelte files living inside `content/docs` are invisible to it.
+- `src/tailwind.css` — pulls in Tailwind + tokens; referenced from `customCss` in `astro.config.mjs`. Its `@source` points at prime-ui's `src/lib` so island markup gets its utility classes.
 - `scripts/build-playgrounds.mjs` — builds each library package's playground with the right `BASE_PATH` and copies it under `public/playground/<name>/`.
 - `public/playground/` — populated at build time; gitignored.
+
+A component page follows one template, modeled on the bits-ui and Zag docs, in this order:
+
+1. Frontmatter, `<ComponentIntro>`, the Sandbox demo island, then three or four bullets of what the component gives you.
+2. `## Anatomy`, compounds only: a code block of the part tree with no props.
+3. `## Usage`: one `### ` recipe per task (two-way binding, fully controlled, the custom snippet, in a field), each a sentence or two of prose and an `<Example>` whose island lives beside the page as `<slug>/<Recipe>.svelte` and imports only from `@viamrobotics/prime-ui`, so its source is pasteable. The last recipe is `### States`, the showcase island.
+4. `## Styling`: where `class` lands, which snippets replace internal decoration, and a table of the data attributes bits-ui sets, verified against the bits-ui source, not from memory.
+5. `## Keyboard`: a table of keys and actions, verified the same way. Native inputs say so in one line.
+6. `## API`: `<PropsTable>`, then `<PartsDoc>` for compounds.
+
+Prose that is not the component's own contract (how it relates to other components, the state model) stays in the MDX. Everything else comes from the source comments, so fix wording there, not here.
 
 ## Commands
 
 ```bash
-pnpm --filter @viamrobotics/prime-docs dev               # astro dev (no playgrounds; use the package's own dev for component work)
-pnpm --filter @viamrobotics/prime-docs build:playgrounds # build + copy every package playground into public/playground/
-pnpm --filter @viamrobotics/prime-docs build             # build:playgrounds then astro build
+pnpm --filter @viamrobotics/prime-docs dev               # astro dev; prime-ui resolves to its source and hot-reloads
+pnpm --filter @viamrobotics/prime-docs build:playgrounds # build + copy the token package playgrounds into public/playground/
+pnpm --filter @viamrobotics/prime-docs build             # build:playgrounds + prime-ui package, then astro build
 pnpm --filter @viamrobotics/prime-docs preview           # astro preview against dist/
 ```
 
-For active component development on a library package, run that package's own dev server directly (`pnpm --filter @viamrobotics/prime-ui dev`) instead of rebuilding the docs site each time.
+`astro dev` is the prime-ui component dev loop. A Vite plugin in `astro.config.mjs` aliases `@viamrobotics/prime-ui` to `packages/prime-ui/src/lib/index.ts` only under `serve`. `astro build` keeps the package's `svelte` export (`dist`), so the deployed site renders the published artifact. The playgrounds are not served in dev.
 
 ## Content conventions
 

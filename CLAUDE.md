@@ -28,7 +28,9 @@ The workspace root holds shared tooling (lint, format, changesets, CI).
 
 ### Playground convention
 
-Each library package's existing SvelteKit `src/routes/` _is_ its playground. The docs site (`apps/docs/`) builds each package's playground as a static bundle, mounts each under `/playground/<package-name>/`, and links to them from the Starlight sidebar. The docs `build:playgrounds` script declares each library's playground build as a wireit dependency (so they build first, with the shared `DOCS_BASE` env var driving each package's base path) and then copies their output into place — see [apps/docs/scripts/build-playgrounds.mjs](apps/docs/scripts/build-playgrounds.mjs). To add a playground for a new library, give it a static SvelteKit app under `src/routes/`, then wire it into both that script and the `build:playgrounds` dependencies in [apps/docs/package.json](apps/docs/package.json).
+`tailwind-config` and `tweakpane-config` keep a SvelteKit `src/routes/` as their playground. The docs site (`apps/docs/`) builds each as a static bundle, mounts it under `/playground/<package-name>/`, and links to it from the Starlight sidebar. The docs `build:playgrounds` script declares each playground build as a wireit dependency (so they build first, with the shared `DOCS_BASE` env var driving each package's base path) and then copies their output into place — see [apps/docs/scripts/build-playgrounds.mjs](apps/docs/scripts/build-playgrounds.mjs). To add a playground for a new library, give it a static SvelteKit app under `src/routes/`, then wire it into both that script and the `build:playgrounds` dependencies in [apps/docs/package.json](apps/docs/package.json).
+
+`prime-ui` has no playground. Its components are demonstrated on the docs component pages as Svelte islands, and `astro dev` hot-reloads the library source. See [packages/prime-ui/CLAUDE.md](packages/prime-ui/CLAUDE.md).
 
 ## Tech stack (workspace-level)
 
@@ -73,10 +75,12 @@ prime implements the Viam design system. The source of truth lives at **https://
 The tokens themselves are the `@theme` blocks in [`packages/tailwind-config`](packages/tailwind-config/CLAUDE.md). houserules' `design.mjs` reads them through a stylesheet that imports Tailwind, and four files in this workspace do, so **always name the entry point**:
 
 ```
-node .claude/scripts/design.mjs <query> --theme packages/prime-ui/src/routes/layout.css
+node .claude/scripts/design.mjs <query> --theme packages/prime-ui/tailwind.css
 ```
 
-All four reach the same 74 Viam tokens, but only two compile under standalone Tailwind: the `src/routes/layout.css` entries in `prime-ui` and `tailwind-config`. The other two import paths that Vite and Astro resolve and standalone Tailwind does not (`starlight-theme-nova/tailwind.css` in docs, the `@viamrobotics/tailwind-config/dark` export subpath in tweakpane-config), so they exit 1. Without `--theme` the script takes the first in directory-walk order, `apps/docs/src/tailwind.css`, which is one of the two that fail.
+All four reach the same 74 Viam tokens, but only two compile under standalone Tailwind: `packages/prime-ui/tailwind.css` (a tooling-only entry point, also used by prettier-plugin-tailwindcss) and `src/routes/layout.css` in `tailwind-config`. The other two import paths that Vite and Astro resolve and standalone Tailwind does not (`starlight-theme-nova/tailwind.css` in docs, the `@viamrobotics/tailwind-config/dark` export subpath in tweakpane-config), so they exit 1. Without `--theme` the script takes the first in directory-walk order, `apps/docs/src/tailwind.css`, which is one of the two that fail.
+
+`packages/prime-ui/styles.css` is a fifth stylesheet with a different job: it is the entry prime-ui **ships** (`exports["./styles.css"]`) so a consumer's Tailwind scans the package's compiled components, which automatic content detection skips under `node_modules`. It imports the tokens, holds an `@source`, and defines the `focus-ring` and `focus-ring-within` `@utility` classes the components wear, with no `@import "tailwindcss"`, so a consumer writes one import after `tailwindcss` and it is not a `--theme` candidate. The tooling `tailwind.css` imports it, so those utilities resolve for prettier, `design.mjs`, and the browser specs.
 
 ## Topic-specific rules
 

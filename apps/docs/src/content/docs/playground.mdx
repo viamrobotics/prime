@@ -7,14 +7,9 @@ import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
 export const base = import.meta.env.BASE_URL;
 
-Each library package ships a live playground — a static SvelteKit app embedded in this site. Use them to explore components, tokens, and themes without checking out the repo.
+The token and Tweakpane packages ship a live playground, a static SvelteKit app embedded in this site. Use them to explore tokens and themes without checking out the repo. prime-ui components are demonstrated live on their own [component pages](../packages/prime-ui/components/field/) instead.
 
 <CardGrid>
-  <LinkCard
-    title="prime-ui"
-    href={`${base}playground/prime-ui/`}
-    description="Svelte 5 component library. Inspect components and their variants in isolation."
-  />
   <LinkCard
     title="tailwind-config"
     href={`${base}playground/tailwind-config/`}

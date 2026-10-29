@@ -1,10 +1,10 @@
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
-import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: [tailwindcss(), svelte()],
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
@@ -12,6 +12,9 @@ export default defineConfig({
 				extends: './vite.config.ts',
 				test: {
 					name: 'client',
+					// Spec files share one browser page, so parallel files fight over focus
+					// and userEvent.keyboard types into the wrong input.
+					fileParallelism: false,
 					browser: {
 						enabled: true,
 						provider: playwright(),

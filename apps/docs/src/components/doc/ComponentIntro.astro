@@ -1,0 +1,18 @@
+---
+/**
+ * The component's `@component` doc block, rendered from prime-ui source.
+ * `name` is the collection id: a root like `select`, or a part like `select/trigger`.
+ */
+import { getEntry, render } from "astro:content";
+
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const entry = await getEntry("components", name);
+if (!entry) throw new Error(`No prime-ui component entry "${name}"`);
+const { Content } = await render(entry);
+---
+
+<Content />

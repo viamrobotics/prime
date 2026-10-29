@@ -15,7 +15,6 @@ const repoRoot = resolve(docsRoot, "..", "..");
 // To embed a new package: add it here and to the `build:playgrounds` wireit
 // dependencies in apps/docs/package.json, then add a sidebar entry.
 const playgrounds = [
-  { name: "prime-ui", pkgDir: "packages/prime-ui" },
   { name: "prime-panes", pkgDir: "packages/prime-panes" },
   { name: "prime-tree", pkgDir: "packages/prime-tree" },
   { name: "tailwind-config", pkgDir: "packages/tailwind-config" },

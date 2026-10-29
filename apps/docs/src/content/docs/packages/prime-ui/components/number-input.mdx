@@ -1,0 +1,47 @@
+---
+title: NumberInput
+description: A native numeric input that works inside Input.Group.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import NumberInputDemo from "./number-input/NumberInputDemo.svelte";
+import NumberInputShowcase from "./number-input/NumberInputShowcase.svelte";
+import TwoWay from "./number-input/TwoWay.svelte";
+import twoWaySource from "./number-input/TwoWay.svelte?raw";
+
+<ComponentIntro name="number-input" />
+
+<NumberInputDemo client:visible />
+
+- Its own native `<input type="number">`. It takes the same `state` as [`Input`](../input/) and works inside an [`Input.Group`](../input/#anatomy) with a [`Field.StateIcon`](../field/).
+- `value` is `number | undefined`. No string parsing on your side.
+- `min`, `max`, and `step` are the native attributes. The browser owns stepping, spin buttons, and the wheel.
+
+## Usage
+
+### Two-way binding
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+For the controlled mode, see [State & binding](../state/).
+
+### States
+
+<NumberInputShowcase client:visible />
+
+## Styling
+
+Same as [`Input`](../input/#styling): `class` lands on the `<input>`, and it carries no width. Inside an `Input.Group` the input goes borderless and the group carries the border. The input carries `data-field-state` and `aria-invalid` from `state`.
+
+## Keyboard
+
+Native number input behavior: <kbd>ArrowUp</kbd> and <kbd>ArrowDown</kbd> step by `step` within `min` and `max`. Nothing is added or intercepted.
+
+## API
+
+<PropsTable name="number-input" />

@@ -1,0 +1,76 @@
+---
+/**
+ * Props table for one collection entry, built from the `Props` interface JSDoc.
+ * `name` is the collection id: a root like `input`, or a part like `select/trigger`.
+ */
+import { getEntry } from "astro:content";
+
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const entry = await getEntry("components", name);
+if (!entry) throw new Error(`No prime-ui component entry "${name}"`);
+const { props, extends: extendsType, external, propsType } = entry.data;
+
+const escape = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const inlineCode = (text: string) =>
+  escape(text).replace(/`([^`]+)`/g, "<code>$1</code>");
+---
+
+{
+  props.length > 0 && (
+    <table>
+      <thead>
+        <tr>
+          <th>Prop</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {props.map((prop) => (
+          <tr>
+            <td>
+              {prop.bindable && <span class="prop-flag">bind:</span>}
+              <code>{prop.name}</code>
+            </td>
+            <td>
+              <code>{prop.type}</code>
+            </td>
+            <td>{prop.default ? <code>{prop.default}</code> : ""}</td>
+            <td set:html={inlineCode(prop.description)} />
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+{
+  extendsType && (
+    <p>
+      Plus everything in <code>{extendsType}</code>, spread onto the element.
+    </p>
+  )
+}
+
+{
+  external && (
+    <p>
+      Takes <code>{propsType}</code> as its props.
+    </p>
+  )
+}
+
+<style>
+  .prop-flag {
+    margin-left: 0.5rem;
+    font-size: var(--sl-text-xs);
+    font-family: var(--sl-font-mono);
+    color: var(--sl-color-text-accent);
+  }
+</style>

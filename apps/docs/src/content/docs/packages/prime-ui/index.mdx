@@ -1,0 +1,100 @@
+---
+title: "@viamrobotics/prime-ui"
+description: Viam's Svelte 5 component library.
+---
+
+import {
+  Aside,
+  Code,
+  LinkButton,
+  Steps,
+  Tabs,
+  TabItem,
+} from "@astrojs/starlight/components";
+
+`@viamrobotics/prime-ui` is Viam's Svelte 5 component library. Components are built on top of design tokens from [`@viamrobotics/tailwind-config`](../tailwind-config/) and styled with Tailwind CSS v4.
+
+<Aside type="caution" title="Pre-1.0">
+  The v2 of prime is under active development. The public API is unstable.
+  Expect breaking changes until 1.0.
+</Aside>
+
+## Installation
+
+<Steps>
+
+1. Install the package and its peers:
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss"
+         lang="sh"
+       />
+     </TabItem>
+   </Tabs>
+
+2. In your app's main CSS, import Tailwind and the prime-ui stylesheet:
+
+   <Code
+     code={`@import "tailwindcss";\n@import "@viamrobotics/prime-ui/styles.css";`}
+     lang="css"
+   />
+
+   Tailwind v4 skips `node_modules` when it detects which classes to generate, so the package ships a stylesheet that points Tailwind at its compiled components. It also imports the tokens from `@viamrobotics/tailwind-config` and defines the `focus-ring` utilities described below. Import it even if you also add your own `@source`: an `@source` alone generates the components' classes but not the utilities they rely on, so every control would lose its focus ring.
+
+</Steps>
+
+## Usage
+
+```svelte
+<script lang="ts">
+  import { Field, Input, Label } from '@viamrobotics/prime-ui';
+
+  let value = $state('');
+</script>
+
+<Field class="flex flex-col gap-1">
+  <Label>Email</Label>
+  <Input type="email" bind:value />
+</Field>
+```
+
+## Focus ring
+
+Every prime control shows the same focus indicator: a 2px `power-button-dark` outline, offset 2px, on `:focus-visible`. It is an outline rather than a `ring` box-shadow so it survives Windows forced-colors mode and never collides with a real shadow. The stylesheet defines it as two Tailwind utilities you can reuse on your own controls so they match:
+
+| Utility             | Use it on                                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| `focus-ring`        | The focusable element itself. Also sets `outline: none` so the browser's default ring does not double. |
+| `focus-ring-within` | A frame whose focus lives on a child, the way `Input.Group` wraps an `Input`.                          |
+
+```svelte
+<button class="focus-ring rounded-sm px-2 py-1">Save</button>
+```
+
+Buttons show the ring for keyboard focus only. Text inputs match `:focus-visible` on any focus, so they ring on click too, as native inputs do.
+
+## Icons
+
+`Icon` takes an SVG path string or a Svelte icon component. Install `@mdi/js` for the Material Design icons, and import the Viam glyphs from `@viamrobotics/prime-ui/icons`.
+
+## Components
+
+Every component has a page with a live sandbox, usage snippets, and its states, rendered from source in dev and from the built package on deploy.
+
+<LinkButton href="./components/field/" icon="right-arrow">
+  Browse the components
+</LinkButton>

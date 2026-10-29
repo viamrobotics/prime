@@ -1,0 +1,219 @@
+---
+title: Select
+description: A composable dropdown select.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import SelectDemo from "./select/SelectDemo.svelte";
+import SelectShowcase from "./select/SelectShowcase.svelte";
+import TwoWay from "./select/TwoWay.svelte";
+import twoWaySource from "./select/TwoWay.svelte?raw";
+import Controlled from "./select/Controlled.svelte";
+import controlledSource from "./select/Controlled.svelte?raw";
+import Grouped from "./select/Grouped.svelte";
+import groupedSource from "./select/Grouped.svelte?raw";
+import Placed from "./select/Placed.svelte";
+import placedSource from "./select/Placed.svelte?raw";
+import CustomItem from "./select/CustomItem.svelte";
+import customItemSource from "./select/CustomItem.svelte?raw";
+import ManualItems from "./select/ManualItems.svelte";
+import manualItemsSource from "./select/ManualItems.svelte?raw";
+
+<ComponentIntro name="select" />
+
+<SelectDemo client:visible />
+
+- Composed from parts, so the trigger, the panel, and each item are yours to arrange.
+- One `value`, bindable. `items` is the single source of truth for the options: it gives the closed trigger its label, drives typeahead while the list is closed, and `Select.Items` renders it.
+- Keyboard navigation, typeahead, and the WAI-ARIA listbox pattern, via bits-ui.
+- `Select.Trigger` takes `state` from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` and a red border. `warn` sets a warning border. Both come from the same `control-frame` utility as [`Input`](../input/).
+- The panel floats in a portal, positioned to the trigger, and scrolls when the list is long.
+- One value at a time. For several, [`MultiSelect`](../multi-select/) takes the same parts with a `string[]` value.
+
+## Anatomy
+
+Every part is a property on `Select`. `Portal` and `Content` are required for the panel to float. `Viewport` is the scrolling region, and `Content` should contain one. `Items` renders every entry of `items` as a `Select.Item`, and renders no element of its own. `Group` and `GroupHeading` are optional.
+
+```svelte
+<Select>
+  <Select.Trigger>
+    <Select.Value />
+  </Select.Trigger>
+  <Select.Portal>
+    <Select.Content>
+      <Select.ScrollUpButton />
+      <Select.Viewport>
+        <Select.Items />
+      </Select.Viewport>
+      <Select.ScrollDownButton />
+    </Select.Content>
+  </Select.Portal>
+</Select>
+```
+
+To arrange items by hand, for example under group headings, compose `Select.Item` instead. `items` is still required on `Select` for the closed label.
+
+```svelte
+<Select items={options}>
+  <Select.Trigger>
+    <Select.Value />
+  </Select.Trigger>
+  <Select.Portal>
+    <Select.Content>
+      <Select.Viewport>
+        <Select.Item />
+        <Select.Group>
+          <Select.GroupHeading />
+          <Select.Item />
+        </Select.Group>
+      </Select.Viewport>
+      <Select.ScrollDownButton />
+    </Select.Content>
+  </Select.Portal>
+</Select>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the root. Pass the options as `items` and render them with `<Select.Items />`.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:value` a getter and a setter. [State & binding](../state/) explains both modes.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Rendering the options
+
+Three ways turn `items` into rows. All three keep `items` on the root, which the closed trigger and typeahead read. The difference is who writes the loop.
+
+| Approach                                  | Use it when                                                                                                                                               |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<Select.Items />`                        | Every option is its `label` plus a check when selected. The default, shown in the two-way example above.                                                 |
+| `Select.Items` with a `children` snippet  | Every option shares one custom layout. The snippet receives `{ item, selected, highlighted }`, with `item` the entry from `items`.                       |
+| `{#each}` over `Select.Item`              | The rows need something `items` cannot carry: extra data per row, groups, scroll buttons, or rows that are not one-to-one with `items`.                  |
+
+### One snippet for every option
+
+Pass `children` to `Select.Items`. The snippet sees `item` as a `SelectOption`, so `value`, `label`, and `disabled`. A row that needs more data per entry is the by-hand loop below. The trigger's chevron is an `indicator` snippet on `Select.Trigger` in the same way.
+
+<Example code={customItemSource} title="CustomItem.svelte">
+  <CustomItem client:visible />
+</Example>
+
+### Items by hand
+
+Loop over your own data and render a `Select.Item` per entry. `Select.Item` takes the same `children` snippet without `item`, since the loop already has the entry in scope. `items` stays on the root so the closed trigger can show the selected label.
+
+<Example code={manualItemsSource} title="ManualItems.svelte">
+  <ManualItems client:visible />
+</Example>
+
+### Groups and scroll buttons
+
+The by-hand form is also how you add structure. Wrap related items in `Select.Group` with a `Select.GroupHeading`. For a list taller than the panel, put `Select.ScrollUpButton` and `Select.ScrollDownButton` around the viewport. They appear only when there is more to scroll in that direction.
+
+<Example code={groupedSource} title="Grouped.svelte">
+  <Grouped client:visible />
+</Example>
+
+### Placement
+
+`Select.Content` takes `side` and `align` to place the panel, and `sideOffset` and `alignOffset` to nudge it. The API table lists each option and its default. The panel flips to the other side when there is no room.
+
+<Example code={placedSource} title="Placed.svelte">
+  <Placed client:visible />
+</Example>
+
+### States
+
+<SelectShowcase client:visible />
+
+## Migrating from a native select
+
+A prime-core `Select` was a native `<select>` with `<option>` children and an `onchange`. The same control here is `items` plus the six parts, and the value comes through `bind:value` instead of the event.
+
+```svelte
+<!-- before -->
+<Select value={method} onchange={(event) => (method = event.currentTarget.value)}>
+  {#each methods as method (method)}
+    <option>{method}</option>
+  {/each}
+</Select>
+
+<!-- after -->
+<Select items={methods.map((value) => ({ value, label: value }))} bind:value={method}>
+  <Select.Trigger class="w-full">
+    <Select.Value placeholder="Pick a method" />
+  </Select.Trigger>
+  <Select.Portal>
+    <Select.Content>
+      <Select.Viewport>
+        <Select.Items />
+      </Select.Viewport>
+    </Select.Content>
+  </Select.Portal>
+</Select>
+```
+
+`Select.Trigger` has no width of its own, so the `class` that sat on the old wrapper goes there. A `state` that sat on the old `<select>` goes on the trigger too, or on an enclosing `Field`.
+
+## Styling
+
+Every part that renders an element takes `class` on that element. `Select.Trigger` carries no width of its own, so set one with a class such as `w-64` or `w-full`. Focus shows as the same 2px ring every prime control uses. `Select` and `Select.Items` render no element, so they take no `class`, and `Select` takes no event handlers. `onfocus`, `onblur`, `onkeydown`, and the rest go on `Select.Trigger`, the real `<button>`. The panel width follows the trigger through `--bits-select-anchor-width`. Its max height follows `--bits-select-content-available-height`. bits-ui sets both variables. bits-ui also sets the data attributes in the table below.
+
+| Part      | Attribute          | Value                             |
+| --------- | ------------------ | --------------------------------- |
+| `Trigger` | `data-state`       | `open` or `closed`                |
+| `Trigger` | `data-disabled`    | present when disabled             |
+| `Trigger` | `data-placeholder` | present while nothing is selected |
+| `Trigger` | `aria-invalid`     | `true` when `state` is `error`    |
+| `Trigger` | `data-field-state` | `info`, `warn`, or `error`, set by prime |
+| `Value`   | `data-placeholder` | present while nothing is selected |
+| `Content` | `data-state`       | `open` or `closed`                |
+| `Content` | `data-side`        | the resolved side of the trigger  |
+| `Content` | `data-align`       | the resolved alignment            |
+| `Item`    | `data-selected`    | present when selected             |
+| `Item`    | `data-highlighted` | present under the pointer or keys |
+| `Item`    | `data-disabled`    | present when disabled             |
+| `Item`    | `data-value`       | the item's `value`                |
+
+## Keyboard
+
+With focus on the trigger:
+
+| Key                                                                             | Action                                |
+| ------------------------------------------------------------------------------- | ------------------------------------- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Opens the panel.                      |
+| Printable characters                                                            | Selects the next item from `items` matching the text, without opening. |
+
+With the panel open:
+
+| Key                                       | Action                                                 |
+| ----------------------------------------- | ------------------------------------------------------ |
+| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Highlights the next or previous item.                  |
+| <kbd>Home</kbd> / <kbd>End</kbd>          | Highlights the first or last item.                     |
+| <kbd>PageDown</kbd> / <kbd>PageUp</kbd>   | Highlights the item a page away.                       |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>       | Selects the highlighted item and closes.               |
+| <kbd>Alt</kbd> + <kbd>ArrowUp</kbd>       | Selects the highlighted item and closes.               |
+| Printable characters                      | Typeahead: highlights the next item matching the text. |
+| <kbd>Escape</kbd>                         | Closes without changing the value.                     |
+| <kbd>Tab</kbd>                            | Closes and moves focus on.                             |
+
+## API
+
+<PropsTable name="select" />
+
+<PartsDoc name="select" />

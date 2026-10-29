@@ -1,0 +1,69 @@
+---
+title: State & binding
+description: How prime-ui form controls manage their value, with two-way binding or fully controlled.
+sidebar:
+  order: 0
+---
+
+Every prime-ui value control manages its value with standard Svelte 5 bindings: `Checkbox`, `Input`, `NumberInput`, `RadioGroup`, `Select`. There are two modes. The examples use `Checkbox`, but the same applies to `value` on the others.
+
+## Two-way binding
+
+`bind:` the value and the component keeps your state in sync. This is the simplest option and the right default.
+
+```svelte
+<script lang="ts">
+  import { Checkbox } from "@viamrobotics/prime-ui";
+
+  let checked = $state(false);
+</script>
+
+<Checkbox bind:checked />
+```
+
+## Fully controlled
+
+Give `bind:` a **function binding**: a getter and a setter. Your setter is the single source of truth, so it can transform or **veto** a change: if it doesn't update the state, nothing changes. It also runs on every user-initiated change, so it doubles as an "on change" hook.
+
+```svelte
+<script lang="ts">
+  import { Checkbox } from "@viamrobotics/prime-ui";
+
+  let checked = $state(false);
+</script>
+
+<!-- only allow turning it on, never off -->
+<Checkbox bind:checked={() => checked, (next) => { if (next) checked = next; }} />
+```
+
+To react to changes without controlling them, use `$effect`. It also fires on programmatic changes:
+
+```svelte
+$effect(() => console.log("checked is now", checked));
+```
+
+`NumberInput` binds `number | undefined`, and `undefined` means the field is empty. `Input`, `RadioGroup`, and `Select` bind `string`. `Checkbox` binds `checked`, a `boolean`.
+
+Two things Svelte cannot do for you:
+
+- A component cannot tell whether a prop is bound or merely passed. `<Input value={name} />` renders `name` and lets the user type past it, with nothing written back. If you want the value kept, `bind:` it. If you want it pinned, use the function binding.
+- Native `bind:value` reads the input's runtime `type`, not the TypeScript type. `Input` therefore accepts only the types whose value is a string. `number` and `range` yield a number, so they are `NumberInput`, and `checkbox`, `radio`, and `file` bind something other than `value`.
+
+## Native event handlers
+
+`Input` and `NumberInput` render a real `<input>`, so alongside `bind:value` they accept every native handler, `oninput`, `onchange`, `onblur`, `onfocus`, and the rest, for side effects and focus handling.
+
+```svelte
+<Input bind:value onblur={() => validate(value)} />
+```
+
+`Checkbox`, `RadioGroup.Item`, and `Select.Trigger` render a real `<button>`, so `onfocus`, `onblur`, `onclick`, and `onkeydown` land on it. Your handler runs first, and `preventDefault()` in it stops the widget's. These controls never fire `change` or `input`, since no native control changes underneath. React to a value change with the function binding or `$effect`.
+
+```svelte
+<Checkbox bind:checked onblur={() => (touched = true)} />
+```
+
+Two things to know:
+
+- `focus` and `blur` do not bubble. An `onblur` on the `RadioGroup` root `<div>` never fires, since the div itself is never focused. Use `onfocusin` and `onfocusout` on the group, exactly as you would on a native `<fieldset>`.
+- `Select` renders no element, so it takes no handlers and no `class`. Put them on `Select.Trigger`.

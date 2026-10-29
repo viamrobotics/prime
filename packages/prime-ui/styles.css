@@ -1,0 +1,90 @@
+/*
+ * Tailwind v4 entry for consumers of @viamrobotics/prime-ui.
+ *
+ * Tailwind's automatic content detection skips node_modules, so without this file none of the
+ * components' utility classes would be generated. This file pulls in the Viam design tokens,
+ * points Tailwind at the compiled components, and defines the utilities the components rely on,
+ * so one import after Tailwind is enough:
+ *
+ *   @import "tailwindcss";
+ *   @import "@viamrobotics/prime-ui/styles.css";
+ *
+ * The @source path is relative to this file, which resolves to the package's compiled components
+ * once installed.
+ */
+@import '@viamrobotics/tailwind-config';
+@source './dist';
+
+/*
+ * The one focus indicator every prime control shares: a 2px outline, offset 2px, on
+ * `:focus-visible`. An outline rather than a `ring` box-shadow because it survives forced-colors
+ * mode and never collides with a real shadow. Buttons show it for keyboard focus only. Text inputs
+ * match `:focus-visible` on any focus, so they ring on click too, as native inputs do. The design
+ * system documents no focus treatment, so this is prime's. Use it on your own controls to match.
+ */
+@utility focus-ring {
+	outline: none;
+	&:focus-visible {
+		outline: 2px solid var(--color-power-button-dark);
+		outline-offset: 2px;
+	}
+}
+
+/*
+ * The same ring on a frame whose focus lives on a child, such as `Input.Group`. The child's own
+ * `focus-ring` is suppressed so the ring moves to the frame instead of doubling.
+ */
+@utility focus-ring-within {
+	&:has(:focus-visible) {
+		outline: 2px solid var(--color-power-button-dark);
+		outline-offset: 2px;
+	}
+	& > .focus-ring:focus-visible {
+		outline: none;
+	}
+}
+
+/*
+ * The bordered frame shared by `Input`, `NumberInput`, `Input.Group`, and `Select.Trigger`. Its
+ * states read attributes the element already carries, or that an `<input>` directly inside it
+ * carries: `disabled` (bits-ui also sets `data-disabled`), `readonly`, `aria-invalid="true"` for
+ * the error state, and `data-field-state="warn"`. The rules are ordered so a later one wins a
+ * tie: disabled and readonly beat error and warn, and every state beats hover.
+ */
+@utility control-frame {
+	@apply rounded-sm border border-light bg-white px-2 py-1.5 text-sm text-default transition-colors;
+
+	&:hover {
+		border-color: var(--color-gray-6);
+	}
+	&::placeholder,
+	& ::placeholder {
+		color: var(--color-subtle-2);
+	}
+	&:is([aria-invalid='true'], :has(> input[aria-invalid='true'])) {
+		border-color: var(--color-danger-dark);
+	}
+	&:is([data-field-state='warn'], :has(> input[data-field-state='warn'])) {
+		border-color: var(--color-warning-bright);
+	}
+	/* `bg-light` is an alias utility in tailwind-config over the gray-1 token, so the variable is gray-1. */
+	&:is([readonly], :has(> input[readonly])) {
+		border-color: transparent;
+		background-color: var(--color-gray-1);
+	}
+	&:is(:disabled, [data-disabled], :has(> input:disabled)) {
+		cursor: not-allowed;
+		border-color: transparent;
+		background-color: var(--color-disabled-light);
+		color: var(--color-disabled-dark);
+	}
+
+	/* An input directly inside the frame hands its own chrome to the frame. */
+	& > input {
+		flex: 1;
+		min-width: 0;
+		border: 0;
+		background-color: transparent;
+		padding: 0;
+	}
+}
