@@ -1,0 +1,74 @@
+---
+title: Context menu
+description: A menu opened by right-click or long-press on an area.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import ContextMenuDemo from "./context-menu/ContextMenuDemo.svelte";
+import ContextMenuShowcase from "./context-menu/ContextMenuShowcase.svelte";
+import Basic from "./context-menu/Basic.svelte";
+import basicSource from "./context-menu/Basic.svelte?raw";
+
+<ComponentIntro name="context-menu" />
+
+<ContextMenuDemo client:visible />
+
+- Opens at the pointer, on right-click or long-press.
+- Shares every item part with [`Menu`](../menu/), so the item kinds, submenus, and shortcuts are documented there.
+- `open` is bindable, two-way or as a getter and setter. [State & binding](../state/) explains both modes.
+- `disabled` on the trigger lets the browser's own menu show.
+- A context menu is a pointer shortcut. Keyboard and screen reader users cannot open it, so every action in it needs a reachable path elsewhere, such as a `Menu` or a toolbar.
+
+## Anatomy
+
+Every part is a property on `ContextMenu`. `ContextMenu` renders no element. `ContextMenu.Content` portals itself to the body.
+
+```svelte
+<ContextMenu>
+  <ContextMenu.Trigger />
+  <ContextMenu.Content>
+    <ContextMenu.Item />
+    <ContextMenu.Separator />
+  </ContextMenu.Content>
+</ContextMenu>
+```
+
+## Usage
+
+### Basic
+
+Put the area's content in `ContextMenu.Trigger` and the items in `ContextMenu.Content`.
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+### States
+
+<ContextMenuShowcase client:visible />
+
+## Styling
+
+Every part that renders an element takes `class` on that element. `ContextMenu.Trigger` renders a `<div>` with no look of its own, so give the area its own size and border. `ContextMenu.Content` wears `z-menu`; see [z layers](../../tailwind-config/component-classes/#z-layers). The data attributes are the same as on [`Menu`](../menu/#styling).
+
+## Keyboard
+
+| Key                                                    | Action                                                  |
+| ------------------------------------------------------ | ------------------------------------------------------- |
+| Right-click or long-press                              | Opens the menu at the pointer.                          |
+| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd>              | Moves focus to the next or previous item.               |
+| <kbd>Home</kbd> / <kbd>End</kbd>                       | Moves focus to the first or last item.                  |
+| <kbd>ArrowRight</kbd> / <kbd>ArrowLeft</kbd>           | Opens a submenu, or closes it and returns to its parent. |
+| Typed characters                                       | Focuses the next item whose text starts with them.      |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>                    | On an item, activates it and closes the menu.           |
+| <kbd>Escape</kbd>                                      | Closes the menu.                                        |
+
+## API
+
+<PropsTable name="context-menu" />
+
+<PartsDoc name="context-menu" />

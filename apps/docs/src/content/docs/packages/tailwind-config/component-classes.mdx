@@ -1,9 +1,9 @@
 ---
-title: 'Component classes'
+title: "Component classes"
 description: Design-system buttons, badges, pills, inputs, and more as plain Tailwind classes.
 ---
 
-import { Aside, Code } from '@astrojs/starlight/components'
+import { Aside, Code } from "@astrojs/starlight/components";
 
 The component classes are `@utility` classes shipped by `@viamrobotics/tailwind-config`. They style native elements, bits-ui triggers in prime-ui (`<Dialog.Close class="icon-button">`), and markup outside Svelte.
 
@@ -16,136 +16,307 @@ A bare class is the design-system default. A modifier beside it recolors, as in 
 Modifiers: `button-primary`, `button-ghost`, `button-danger`, `button-outline-danger`, and `button-success`.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<button type="button" class="button">Default</button>
-<button type="button" class="button button-primary">Primary</button>
-<button type="button" class="button button-ghost">Ghost</button>
-<button type="button" class="button button-danger">Danger</button>
-<button type="button" class="button button-outline-danger">Outline danger</button>
-<button type="button" class="button button-success">Success</button>
-<button type="button" class="button" disabled>Disabled</button>
+  <button type="button" class="button">
+    Default
+  </button>
+  <button type="button" class="button button-primary">
+    Primary
+  </button>
+  <button type="button" class="button button-ghost">
+    Ghost
+  </button>
+  <button type="button" class="button button-danger">
+    Danger
+  </button>
+  <button type="button" class="button button-outline-danger">
+    Outline danger
+  </button>
+  <button type="button" class="button button-success">
+    Success
+  </button>
+  <button type="button" class="button" disabled>
+    Disabled
+  </button>
 </div>
 
-<Code lang="html" code={`<button type="button" class="button">Default</button>
+<Code
+  lang="html"
+  code={`<button type="button" class="button">Default</button>
 <button type="button" class="button button-primary">Primary</button>
 <button type="button" class="button button-ghost">Ghost</button>
 <button type="button" class="button button-danger">Danger</button>
 <button type="button" class="button button-outline-danger">Outline danger</button>
 <button type="button" class="button button-success">Success</button>
-<button type="button" class="button" disabled>Disabled</button>`} />
+<button type="button" class="button" disabled>Disabled</button>`}
+/>
 
-| State | Attribute | What changes |
-| --- | --- | --- |
+| State    | Attribute                               | What changes                                               |
+| -------- | --------------------------------------- | ---------------------------------------------------------- |
 | Disabled | `:disabled` or `[aria-disabled="true"]` | Disabled colors and a `not-allowed` cursor, with no hover. |
-| Busy | `[aria-busy="true"]` | The cursor becomes `progress`. |
+| Busy     | `[aria-busy="true"]`                    | The cursor becomes `progress`.                             |
 
 Every variant in each state it reads:
 
 <div class="not-content flex flex-col gap-3 rounded-sm border border-light p-4">
-<div class="flex flex-wrap items-center gap-3">
-<button type="button" class="button">Default</button>
-<button type="button" class="button" disabled>:disabled</button>
-<button type="button" class="button" aria-disabled="true">aria-disabled</button>
-<button type="button" class="button" aria-busy="true"><span class="progress-dots" aria-hidden="true"></span>aria-busy</button>
-</div>
-<div class="flex flex-wrap items-center gap-3">
-<button type="button" class="button button-primary">Primary</button>
-<button type="button" class="button button-primary" disabled>:disabled</button>
-<button type="button" class="button button-primary" aria-disabled="true">aria-disabled</button>
-<button type="button" class="button button-primary" aria-busy="true"><span class="progress-dots" aria-hidden="true"></span>aria-busy</button>
-</div>
-<div class="flex flex-wrap items-center gap-3">
-<button type="button" class="button button-ghost">Ghost</button>
-<button type="button" class="button button-ghost" disabled>:disabled</button>
-<button type="button" class="button button-ghost" aria-disabled="true">aria-disabled</button>
-<button type="button" class="button button-ghost" aria-busy="true"><span class="progress-dots" aria-hidden="true"></span>aria-busy</button>
-</div>
-<div class="flex flex-wrap items-center gap-3">
-<button type="button" class="button button-danger">Danger</button>
-<button type="button" class="button button-danger" disabled>:disabled</button>
-<button type="button" class="button button-danger" aria-disabled="true">aria-disabled</button>
-<button type="button" class="button button-danger" aria-busy="true"><span class="progress-dots" aria-hidden="true"></span>aria-busy</button>
-</div>
-<div class="flex flex-wrap items-center gap-3">
-<button type="button" class="button button-outline-danger">Outline danger</button>
-<button type="button" class="button button-outline-danger" disabled>:disabled</button>
-<button type="button" class="button button-outline-danger" aria-disabled="true">aria-disabled</button>
-<button type="button" class="button button-outline-danger" aria-busy="true"><span class="progress-dots" aria-hidden="true"></span>aria-busy</button>
-</div>
-<div class="flex flex-wrap items-center gap-3">
-<button type="button" class="button button-success">Success</button>
-<button type="button" class="button button-success" disabled>:disabled</button>
-<button type="button" class="button button-success" aria-disabled="true">aria-disabled</button>
-<button type="button" class="button button-success" aria-busy="true"><span class="progress-dots" aria-hidden="true"></span>aria-busy</button>
-</div>
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="button" class="button">
+      Default
+    </button>
+    <button type="button" class="button" disabled>
+      :disabled
+    </button>
+    <button type="button" class="button" aria-disabled="true">
+      aria-disabled
+    </button>
+    <button type="button" class="button" aria-busy="true">
+      <span class="progress-dots" aria-hidden="true"></span>aria-busy
+    </button>
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="button" class="button button-primary">
+      Primary
+    </button>
+    <button type="button" class="button button-primary" disabled>
+      :disabled
+    </button>
+    <button type="button" class="button button-primary" aria-disabled="true">
+      aria-disabled
+    </button>
+    <button type="button" class="button button-primary" aria-busy="true">
+      <span class="progress-dots" aria-hidden="true"></span>aria-busy
+    </button>
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="button" class="button button-ghost">
+      Ghost
+    </button>
+    <button type="button" class="button button-ghost" disabled>
+      :disabled
+    </button>
+    <button type="button" class="button button-ghost" aria-disabled="true">
+      aria-disabled
+    </button>
+    <button type="button" class="button button-ghost" aria-busy="true">
+      <span class="progress-dots" aria-hidden="true"></span>aria-busy
+    </button>
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="button" class="button button-danger">
+      Danger
+    </button>
+    <button type="button" class="button button-danger" disabled>
+      :disabled
+    </button>
+    <button type="button" class="button button-danger" aria-disabled="true">
+      aria-disabled
+    </button>
+    <button type="button" class="button button-danger" aria-busy="true">
+      <span class="progress-dots" aria-hidden="true"></span>aria-busy
+    </button>
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="button" class="button button-outline-danger">
+      Outline danger
+    </button>
+    <button type="button" class="button button-outline-danger" disabled>
+      :disabled
+    </button>
+    <button
+      type="button"
+      class="button button-outline-danger"
+      aria-disabled="true"
+    >
+      aria-disabled
+    </button>
+    <button type="button" class="button button-outline-danger" aria-busy="true">
+      <span class="progress-dots" aria-hidden="true"></span>aria-busy
+    </button>
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="button" class="button button-success">
+      Success
+    </button>
+    <button type="button" class="button button-success" disabled>
+      :disabled
+    </button>
+    <button type="button" class="button button-success" aria-disabled="true">
+      aria-disabled
+    </button>
+    <button type="button" class="button button-success" aria-busy="true">
+      <span class="progress-dots" aria-hidden="true"></span>aria-busy
+    </button>
+  </div>
 </div>
 
 A leading icon is an inline `<svg>` placed as the first child.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<button type="button" class="button button-primary">
-  <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10" /></svg>
-  Add machine
-</button>
+  <button type="button" class="button button-primary">
+    <svg
+      aria-hidden="true"
+      class="size-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path d="M8 3v10M3 8h10" />
+    </svg>
+    Add machine
+  </button>
 </div>
 
-<Code lang="html" code={`<button type="button" class="button button-primary">
+<Code
+  lang="html"
+  code={`<button type="button" class="button button-primary">
   <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10" /></svg>
   Add machine
-</button>`} />
+</button>`}
+/>
 
 The busy button sets `aria-busy="true"` and puts a `progress-dots` span first.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<button type="button" class="button" aria-busy="true">
-  <span class="progress-dots" aria-hidden="true"></span>
-  Saving
-</button>
+  <button type="button" class="button" aria-busy="true">
+    <span class="progress-dots" aria-hidden="true"></span>
+    Saving
+  </button>
 </div>
 
-<Code lang="html" code={`<button type="button" class="button" aria-busy="true">
+<Code
+  lang="html"
+  code={`<button type="button" class="button" aria-busy="true">
   <span class="progress-dots" aria-hidden="true"></span>
   Saving
-</button>`} />
+</button>`}
+/>
 
 ## icon-button
 
 Modifiers: `icon-button-secondary` and `icon-button-danger`.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<button type="button" class="icon-button" aria-label="Settings">
-  <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3" /></svg>
-</button>
-<button type="button" class="icon-button icon-button-secondary" aria-label="Settings">
-  <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3" /></svg>
-</button>
-<button type="button" class="icon-button icon-button-danger" aria-label="Delete">
-  <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8" /></svg>
-</button>
-<button type="button" class="icon-button" aria-label="Settings" disabled>
-  <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3" /></svg>
-</button>
+  <button type="button" class="icon-button" aria-label="Settings">
+    <svg
+      aria-hidden="true"
+      class="size-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <circle cx="8" cy="8" r="3" />
+    </svg>
+  </button>
+  <button
+    type="button"
+    class="icon-button icon-button-secondary"
+    aria-label="Settings"
+  >
+    <svg
+      aria-hidden="true"
+      class="size-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <circle cx="8" cy="8" r="3" />
+    </svg>
+  </button>
+  <button
+    type="button"
+    class="icon-button icon-button-danger"
+    aria-label="Delete"
+  >
+    <svg
+      aria-hidden="true"
+      class="size-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </svg>
+  </button>
+  <button type="button" class="icon-button" aria-label="Settings" disabled>
+    <svg
+      aria-hidden="true"
+      class="size-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <circle cx="8" cy="8" r="3" />
+    </svg>
+  </button>
 </div>
 
-<Code lang="html" code={`<button type="button" class="icon-button" aria-label="Settings">
+<Code
+  lang="html"
+  code={`<button type="button" class="icon-button" aria-label="Settings">
   <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3" /></svg>
 </button>
 <button type="button" class="icon-button icon-button-secondary" aria-label="Settings">...</button>
 <button type="button" class="icon-button icon-button-danger" aria-label="Delete">...</button>
-<button type="button" class="icon-button" aria-label="Settings" disabled>...</button>`} />
+<button type="button" class="icon-button" aria-label="Settings" disabled>...</button>`}
+/>
 
-| State | Attribute | What changes |
-| --- | --- | --- |
+| State    | Attribute                               | What changes                               |
+| -------- | --------------------------------------- | ------------------------------------------ |
 | Disabled | `:disabled` or `[aria-disabled="true"]` | Gray icon, `not-allowed` cursor, no hover. |
-| Busy | `[aria-busy="true"]` | The cursor becomes `progress`. |
+| Busy     | `[aria-busy="true"]`                    | The cursor becomes `progress`.             |
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<button type="button" class="icon-button icon-button-secondary" aria-label="Settings" disabled><svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3" /></svg></button>
-<button type="button" class="icon-button icon-button-danger" aria-label="Delete" aria-disabled="true"><svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8" /></svg></button>
-<button type="button" class="icon-button" aria-label="Saving" aria-busy="true"><span class="progress-dots" aria-hidden="true"></span></button>
+  <button
+    type="button"
+    class="icon-button icon-button-secondary"
+    aria-label="Settings"
+    disabled
+  >
+    <svg
+      aria-hidden="true"
+      class="size-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <circle cx="8" cy="8" r="3" />
+    </svg>
+  </button>
+  <button
+    type="button"
+    class="icon-button icon-button-danger"
+    aria-label="Delete"
+    aria-disabled="true"
+  >
+    <svg
+      aria-hidden="true"
+      class="size-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </svg>
+  </button>
+  <button
+    type="button"
+    class="icon-button"
+    aria-label="Saving"
+    aria-busy="true"
+  >
+    <span class="progress-dots" aria-hidden="true"></span>
+  </button>
 </div>
 
 <Aside type="caution" title="Name the button">
-	An `icon-button` has no visible text, so it must carry `aria-label` or `aria-labelledby`.
+  An `icon-button` has no visible text, so it must carry `aria-label` or
+  `aria-labelledby`.
 </Aside>
 
 ## badge
@@ -153,82 +324,106 @@ Modifiers: `icon-button-secondary` and `icon-button-danger`.
 Modifiers: `badge-success`, `badge-warning`, `badge-danger`, and `badge-neutral`. A badge is static and reads no attributes.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<span class="badge">Inactive</span>
-<span class="badge badge-success">Online</span>
-<span class="badge badge-warning">Degraded</span>
-<span class="badge badge-danger">Offline</span>
-<span class="badge badge-neutral">Info</span>
+  <span class="badge">Inactive</span>
+  <span class="badge badge-success">Online</span>
+  <span class="badge badge-warning">Degraded</span>
+  <span class="badge badge-danger">Offline</span>
+  <span class="badge badge-neutral">Info</span>
 </div>
 
-<Code lang="html" code={`<span class="badge">Inactive</span>
+<Code
+  lang="html"
+  code={`<span class="badge">Inactive</span>
 <span class="badge badge-success">Online</span>
 <span class="badge badge-warning">Degraded</span>
 <span class="badge badge-danger">Offline</span>
-<span class="badge badge-neutral">Info</span>`} />
+<span class="badge badge-neutral">Info</span>`}
+/>
 
 ## pill
 
 Modifier: `pill-outline`. A removable pill holds a button child with an accessible name.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<span class="pill">Lion</span>
-<span class="pill pill-outline">Tiger</span>
-<span class="pill">
-  Lion
-  <button type="button" aria-label="Remove Lion">×</button>
-</span>
-<span class="pill" aria-disabled="true">Disabled</span>
-<span class="pill" aria-readonly="true">Read only</span>
+  <span class="pill">Lion</span>
+  <span class="pill pill-outline">Tiger</span>
+  <span class="pill">
+    Lion
+    <button type="button" aria-label="Remove Lion">
+      ×
+    </button>
+  </span>
+  <span class="pill" aria-disabled="true">
+    Disabled
+  </span>
+  <span class="pill" aria-readonly="true">
+    Read only
+  </span>
 </div>
 
 On a plain `<span>`, `aria-disabled` and `aria-readonly` are CSS hooks only. Assistive technology reads no state from them, so a removable pill signals its state through the remove button's own `disabled` attribute.
 
-<Code lang="html" code={`<span class="pill">Lion</span>
+<Code
+  lang="html"
+  code={`<span class="pill">Lion</span>
 <span class="pill pill-outline">Tiger</span>
 <span class="pill">
   Lion
   <button type="button" aria-label="Remove Lion">×</button>
 </span>
 <span class="pill" aria-disabled="true">Disabled</span>
-<span class="pill" aria-readonly="true">Read only</span>`} />
+<span class="pill" aria-readonly="true">Read only</span>`}
+/>
 
-| State | Attribute | What changes |
-| --- | --- | --- |
-| Disabled | `[aria-disabled="true"]` | Disabled colors and a `not-allowed` cursor. |
-| Read only | `[aria-readonly="true"]` | Disabled colors, with the default cursor. |
+| State     | Attribute                | What changes                                |
+| --------- | ------------------------ | ------------------------------------------- |
+| Disabled  | `[aria-disabled="true"]` | Disabled colors and a `not-allowed` cursor. |
+| Read only | `[aria-readonly="true"]` | Disabled colors, with the default cursor.   |
 
 ## kbd
 
 A keyboard key hint. It is static, so it has no states.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<kbd class="kbd">K</kbd>
-<kbd class="kbd">Esc</kbd>
+  <kbd class="kbd">K</kbd>
+  <kbd class="kbd">Esc</kbd>
 </div>
 
-<Code lang="html" code={`<kbd class="kbd">K</kbd>
-<kbd class="kbd">Esc</kbd>`} />
+<Code
+  lang="html"
+  code={`<kbd class="kbd">K</kbd>
+<kbd class="kbd">Esc</kbd>`}
+/>
 
 ## avatar
 
 Initials are the content. An `<img>` child fills the circle.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<span class="avatar" role="img" aria-label="Ada Lovelace">al</span>
-<span class="avatar" role="img" aria-label="Grace Hopper">
-  <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Crect width='4' height='4' fill='%23999'/%3E%3C/svg%3E" />
-</span>
+  <span class="avatar" role="img" aria-label="Ada Lovelace">
+    al
+  </span>
+  <span class="avatar" role="img" aria-label="Grace Hopper">
+    <img
+      alt=""
+      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Crect width='4' height='4' fill='%23999'/%3E%3C/svg%3E"
+    />
+  </span>
 </div>
 
-<Code lang="html" code={`<span class="avatar" role="img" aria-label="Ada Lovelace">al</span>
+<Code
+  lang="html"
+  code={`<span class="avatar" role="img" aria-label="Ada Lovelace">al</span>
 <span class="avatar" role="img" aria-label="Grace Hopper">
   <img alt="" src="/grace.jpg" />
-</span>`} />
+</span>`}
+/>
 
 The avatar has no states.
 
 <Aside type="caution" title="Label the avatar">
-	An `avatar` carries `role="img"` and `aria-label`, because initials alone do not name the person.
+  An `avatar` carries `role="img"` and `aria-label`, because initials alone do
+  not name the person.
 </Aside>
 
 ## progress-dots
@@ -236,15 +431,22 @@ The avatar has no states.
 A braille spinner. It freezes on its first frame under `prefers-reduced-motion: reduce`.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<span class="progress-dots" role="status"><span class="sr-only">Loading</span></span>
+  <span class="progress-dots" role="status">
+    <span class="sr-only">Loading</span>
+  </span>
 </div>
 
-<Code lang="html" code={`<span class="progress-dots" role="status"><span class="sr-only">Loading</span></span>`} />
+<Code
+  lang="html"
+  code={`<span class="progress-dots" role="status"><span class="sr-only">Loading</span></span>`}
+/>
 
 `progress-dots` has no states.
 
 <Aside type="caution" title="Give it a label">
-	`progress-dots` carries `role="status"` and a visually hidden label as a child. Inside a busy button, hide it with `aria-hidden="true"` and let `aria-busy` carry the meaning.
+  `progress-dots` carries `role="status"` and a visually hidden label as a
+  child. Inside a busy button, hide it with `aria-hidden="true"` and let
+  `aria-busy` carry the meaning.
 </Aside>
 
 ## input
@@ -252,19 +454,39 @@ A braille spinner. It freezes on its first frame under `prefers-reduced-motion: 
 The frame for a text field. Put it on a native `<input>`, or on a wrapper around a bare `<input>` to build a group with a leading icon or trailing button.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<input class="input" aria-label="Name" placeholder="Name" />
-<input class="input" aria-label="Invalid" value="Invalid" aria-invalid="true" />
-<input class="input" aria-label="Warning" value="Warning" data-field-state="warn" />
-<input class="input" aria-label="Read only" value="Read only" readonly />
-<input class="input" aria-label="Disabled" value="Disabled" disabled />
-<div class="input focus-ring-within flex">
-  <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4" /><path d="M10 10l3 3" /></svg>
-  <input aria-label="Search" placeholder="Search" />
-</div>
-<select class="input" aria-label="Mode">
-  <option>single</option>
-  <option>multiple</option>
-</select>
+  <input class="input" aria-label="Name" placeholder="Name" />
+  <input
+    class="input"
+    aria-label="Invalid"
+    value="Invalid"
+    aria-invalid="true"
+  />
+  <input
+    class="input"
+    aria-label="Warning"
+    value="Warning"
+    data-field-state="warn"
+  />
+  <input class="input" aria-label="Read only" value="Read only" readonly />
+  <input class="input" aria-label="Disabled" value="Disabled" disabled />
+  <div class="input focus-ring-within flex">
+    <svg
+      aria-hidden="true"
+      class="size-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <circle cx="7" cy="7" r="4" />
+      <path d="M10 10l3 3" />
+    </svg>
+    <input aria-label="Search" placeholder="Search" />
+  </div>
+  <select class="input" aria-label="Mode">
+    <option>single</option>
+    <option>multiple</option>
+  </select>
 </div>
 
 <Code lang="html" code={`<input class="input" aria-label="Name" placeholder="Name" />
@@ -274,7 +496,17 @@ The frame for a text field. Put it on a native `<input>`, or on a wrapper around
 <input class="input" aria-label="Disabled" placeholder="Disabled" disabled />
 
 <div class="input focus-ring-within flex">
-  <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4" /><path d="M10 10l3 3" /></svg>
+  <svg
+    aria-hidden="true"
+    class="size-4"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+  >
+    <circle cx="7" cy="7" r="4" />
+    <path d="M10 10l3 3" />
+  </svg>
   <input aria-label="Search" placeholder="Search" />
 </div>
 
@@ -285,18 +517,19 @@ The frame for a text field. Put it on a native `<input>`, or on a wrapper around
 
 Each state also applies when the attribute sits on a direct child `<input>` of the frame. On a native single `<select>`, the class replaces the browser's arrow with a chevron and pads the right edge for it, so the frame reads the same as a text field.
 
-| State | Attribute | What changes |
-| --- | --- | --- |
-| Hover | `:hover` | A darker border. |
-| Invalid | `[aria-invalid="true"]` | A danger border. |
-| Warning | `[data-field-state="warn"]` | A warning border. |
-| Read only | `[readonly]` | A transparent border and a gray background. |
-| Disabled | `:disabled` or `[data-disabled]` | Disabled colors and a `not-allowed` cursor. |
+| State     | Attribute                        | What changes                                |
+| --------- | -------------------------------- | ------------------------------------------- |
+| Hover     | `:hover`                         | A darker border.                            |
+| Invalid   | `[aria-invalid="true"]`          | A danger border.                            |
+| Warning   | `[data-field-state="warn"]`      | A warning border.                           |
+| Read only | `[readonly]`                     | A transparent border and a gray background. |
+| Disabled  | `:disabled` or `[data-disabled]` | Disabled colors and a `not-allowed` cursor. |
 
 Later states win ties. Disabled and read only beat invalid and warning, and every state beats hover.
 
 <Aside title="Warning state">
-	`input` reads `data-field-state="warn"`. prime-ui's `Field` sets it, and plain markup can set it directly.
+  `input` reads `data-field-state="warn"`. prime-ui's `Field` sets it, and plain
+  markup can set it directly.
 </Aside>
 
 ## focus-ring and focus-ring-within
@@ -304,11 +537,17 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
 `focus-ring` draws a 2px outline offset by 2px on `:focus-visible`. `button`, `icon-button`, and `input` already include it. `focus-ring-within` draws the same ring on a frame whose focus lives on a child, and it silences the child's own ring.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-<a href="#focus-ring-and-focus-ring-within" class="focus-ring rounded-sm">Focusable link</a>
-<div class="focus-ring-within flex gap-2 rounded-sm border border-light p-1">
-  <button type="button" class="button focus-ring">One</button>
-  <button type="button" class="button focus-ring">Two</button>
-</div>
+  <a href="#focus-ring-and-focus-ring-within" class="focus-ring rounded-sm">
+    Focusable link
+  </a>
+  <div class="focus-ring-within flex gap-2 rounded-sm border border-light p-1">
+    <button type="button" class="button focus-ring">
+      One
+    </button>
+    <button type="button" class="button focus-ring">
+      Two
+    </button>
+  </div>
 </div>
 
 <Code lang="html" code={`<a href="/docs" class="focus-ring rounded-sm">Focusable link</a>
@@ -318,25 +557,25 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
   <button type="button" class="button focus-ring">Two</button>
 </div>`} />
 
-| State | Attribute | What changes |
-| --- | --- | --- |
-| Keyboard focus | `:focus-visible` (`focus-ring`) | The outline appears. |
-| Focus inside | `:has(:focus-visible)` (`focus-ring-within`) | The outline appears on the frame. |
+| State          | Attribute                                    | What changes                      |
+| -------------- | -------------------------------------------- | --------------------------------- |
+| Keyboard focus | `:focus-visible` (`focus-ring`)              | The outline appears.              |
+| Focus inside   | `:has(:focus-visible)` (`focus-ring-within`) | The outline appears on the frame. |
 
 ## z layers
 
 The config names the stacking order of floating UI, so a popover opened inside a dialog clears the dialog and a tooltip clears both. Each layer is a `z-*` class backed by a `--z-*` token. Bare numbers such as `z-50` and `z-1150` still work, and steps of 100 leave room for a bare value between layers.
 
-| Class        | Token          | Value | What sits on it                                                  |
-| ------------ | -------------- | ----- | ---------------------------------------------------------------- |
-| `z-sticky`   | `--z-sticky`   | 100   | Headers and docked bars.                                         |
-| `z-overlay`  | `--z-overlay`  | 1000  | A dialog's backdrop.                                             |
-| `z-dialog`   | `--z-dialog`   | 1100  | The dialog panel.                                                |
-| `z-popover`  | `--z-popover`  | 1200  | Popovers, select panels, and comboboxes.                         |
-| `z-menu`     | `--z-menu`     | 1200  | Menus. Same value as `z-popover`, so a consumer never has to know which. |
-| `z-toast`    | `--z-toast`    | 1300  | Notifications.                                                   |
-| `z-tooltip`  | `--z-tooltip`  | 1400  | Above everything that can carry a hovered control.               |
-| `z-max`      | `--z-max`      | 9999  | Reserved. Nothing may cover it.                                  |
+| Class       | Token         | Value | What sits on it                                                          |
+| ----------- | ------------- | ----- | ------------------------------------------------------------------------ |
+| `z-sticky`  | `--z-sticky`  | 100   | Headers and docked bars.                                                 |
+| `z-overlay` | `--z-overlay` | 1000  | A dialog's backdrop.                                                     |
+| `z-dialog`  | `--z-dialog`  | 1100  | The dialog panel.                                                        |
+| `z-popover` | `--z-popover` | 1200  | Popovers, select panels, and comboboxes.                                 |
+| `z-menu`    | `--z-menu`    | 1200  | Menus. Same value as `z-popover`, so a consumer never has to know which. |
+| `z-toast`   | `--z-toast`   | 1300  | Notifications.                                                           |
+| `z-tooltip` | `--z-tooltip` | 1400  | Above everything that can carry a hovered control.                       |
+| `z-max`     | `--z-max`     | 9999  | Reserved. Nothing may cover it.                                          |
 
 <Code lang="html" code={`<div class="z-overlay fixed inset-0 bg-gray-9/50">
   <div class="z-dialog relative mx-auto mt-24 w-96 rounded-sm bg-white p-4">
@@ -345,9 +584,3 @@ The config names the stacking order of floating UI, so a popover opened inside a
 </div>
 
 <div role="tooltip" class="z-tooltip absolute">Tooltip text</div>`} />
-
-## Not shipped
-
-Variants of the `@viamrobotics/prime-core` components that are not on the design-system pages are not included: `button` `ghost-outline`, `outline-success`, `pending`, `disabled-dark`, `width`, `height`, and `textSize`. For `icon-button`, `ghost`, `ghost-outline`, `danger-filled`, `dark`, and `size="large"`. For `badge`, `pending` and `progress`. For `pill`, `dark`, `info`, and `warning`. For `kbd`, `dark`.
-
-The token gallery and the dark theme demo are on the [package overview](../).
