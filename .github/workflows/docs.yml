@@ -23,7 +23,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Build docs site (includes playgrounds)
+      - name: Build docs site
         env:
           DOCS_BASE: /prime/
           DOCS_SITE: https://viamrobotics.github.io

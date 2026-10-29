@@ -25,7 +25,7 @@
 @utility focus-ring {
 	outline: none;
 	&:focus-visible {
-		outline: 2px solid var(--color-power-button-dark);
+		outline: 2px solid var(--color-link);
 		outline-offset: 2px;
 	}
 }
@@ -36,7 +36,7 @@
  */
 @utility focus-ring-within {
 	&:has(:focus-visible) {
-		outline: 2px solid var(--color-power-button-dark);
+		outline: 2px solid var(--color-link);
 		outline-offset: 2px;
 	}
 	& > .focus-ring:focus-visible {

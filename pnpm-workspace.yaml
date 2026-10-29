@@ -8,8 +8,6 @@ catalog:
   # Shared fonts (tailwind-config runtime dep + docs)
   "@fontsource-variable/public-sans": ^5.2.7
   "@fontsource-variable/roboto-mono": ^5.2.9
-  "@sveltejs/adapter-static": ^3.0.10
-  "@sveltejs/kit": ^2.57.0
   "@sveltejs/vite-plugin-svelte": ^7.0.0
   # Tailwind, unified repo-wide
   "@tailwindcss/node": ^4.2.4

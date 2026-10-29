@@ -1,0 +1,263 @@
+---
+/**
+ * Static gallery of the design tokens. Every utility class is written out literally so
+ * Tailwind generates it, including tokens no other utility references.
+ */
+const swatchGroups = [
+  {
+    title: "Grayscale",
+    swatches: [
+    { token: "white", className: "bg-white" },
+    { token: "gray-0", className: "bg-gray-0" },
+    { token: "gray-1", className: "bg-gray-1" },
+    { token: "gray-2", className: "bg-gray-2" },
+    { token: "gray-3", className: "bg-gray-3" },
+    { token: "gray-4", className: "bg-gray-4" },
+    { token: "gray-5", className: "bg-gray-5" },
+    { token: "gray-6", className: "bg-gray-6" },
+    { token: "gray-7", className: "bg-gray-7" },
+    { token: "gray-8", className: "bg-gray-8" },
+    { token: "gray-9", className: "bg-gray-9" },
+    { token: "black", className: "bg-black" },
+    ],
+  },
+  {
+    title: "Danger",
+    swatches: [
+    { token: "danger-light", className: "bg-danger-light" },
+    { token: "danger-medium-light", className: "bg-danger-medium-light" },
+    { token: "danger-medium", className: "bg-danger-medium" },
+    { token: "danger-bright", className: "bg-danger-bright" },
+    { token: "danger-dark", className: "bg-danger-dark" },
+    ],
+  },
+  {
+    title: "Success",
+    swatches: [
+    { token: "success-light", className: "bg-success-light" },
+    { token: "success-medium-light", className: "bg-success-medium-light" },
+    { token: "success-medium", className: "bg-success-medium" },
+    { token: "success-bright", className: "bg-success-bright" },
+    { token: "success-dark", className: "bg-success-dark" },
+    ],
+  },
+  {
+    title: "Info",
+    swatches: [
+    { token: "info-light", className: "bg-info-light" },
+    { token: "info-medium-light", className: "bg-info-medium-light" },
+    { token: "info-medium", className: "bg-info-medium" },
+    { token: "info-bright", className: "bg-info-bright" },
+    { token: "info-dark", className: "bg-info-dark" },
+    ],
+  },
+  {
+    title: "Warning",
+    swatches: [
+    { token: "warning-light", className: "bg-warning-light" },
+    { token: "warning-medium-light", className: "bg-warning-medium-light" },
+    { token: "warning-medium", className: "bg-warning-medium" },
+    { token: "warning-bright", className: "bg-warning-bright" },
+    { token: "warning-dark", className: "bg-warning-dark" },
+    ],
+  },
+  {
+    title: "Pending",
+    swatches: [
+    { token: "pending-light", className: "bg-pending-light" },
+    { token: "pending-medium-light", className: "bg-pending-medium-light" },
+    { token: "pending-medium", className: "bg-pending-medium" },
+    { token: "pending-bright", className: "bg-pending-bright" },
+    { token: "pending-dark", className: "bg-pending-dark" },
+    ],
+  },
+  {
+    title: "Disabled",
+    swatches: [
+    { token: "disabled-light", className: "bg-disabled-light" },
+    { token: "disabled-dark", className: "bg-disabled-dark" },
+    ],
+  },
+  {
+    title: "Ghost",
+    swatches: [
+    { token: "ghost-light", className: "bg-ghost-light" },
+    { token: "ghost-medium", className: "bg-ghost-medium" },
+    ],
+  },
+  {
+    title: "Brand",
+    swatches: [
+    { token: "power-wire", className: "bg-power-wire" },
+    { token: "pcb", className: "bg-pcb" },
+    { token: "power-button", className: "bg-power-button" },
+    { token: "solar-power", className: "bg-solar-power" },
+    { token: "mars-rover", className: "bg-mars-rover" },
+    { token: "raspberry", className: "bg-raspberry" },
+    { token: "hologram", className: "bg-hologram" },
+    { token: "yoshimi", className: "bg-yoshimi" },
+    { token: "cyberpunk", className: "bg-cyberpunk" },
+    { token: "hyperlink", className: "bg-hyperlink" },
+    ],
+  },
+  {
+    title: "Brand extensions",
+    swatches: [
+    { token: "power-button-light", className: "bg-power-button-light" },
+    { token: "power-button-medium", className: "bg-power-button-medium" },
+    { token: "power-button-dark", className: "bg-power-button-dark" },
+    { token: "cyberpunk-light", className: "bg-cyberpunk-light" },
+    { token: "cyberpunk-medium", className: "bg-cyberpunk-medium" },
+    { token: "cyberpunk-dark", className: "bg-cyberpunk-dark" },
+    { token: "mars-rover-light", className: "bg-mars-rover-light" },
+    { token: "mars-rover-medium", className: "bg-mars-rover-medium" },
+    { token: "mars-rover-dark", className: "bg-mars-rover-dark" },
+    ],
+  },
+  {
+    title: "Illustration pixels",
+    swatches: [
+    { token: "pixel-red", className: "bg-pixel-red" },
+    { token: "pixel-green", className: "bg-pixel-green" },
+    { token: "pixel-teal", className: "bg-pixel-teal" },
+    { token: "pixel-blue", className: "bg-pixel-blue" },
+    ],
+  },
+  {
+    title: "Surfaces",
+    swatches: [
+    { token: "bg-extralight", className: "bg-extralight" },
+    { token: "bg-light", className: "bg-light" },
+    { token: "bg-medium", className: "bg-medium" },
+    { token: "bg-dark", className: "bg-dark" },
+    ],
+  },
+];
+
+const borders = [
+  { token: "border-light", className: "border-light" },
+  { token: "border-medium", className: "border-medium" },
+  { token: "border-dark", className: "border-dark" },
+];
+
+const textColors = [
+  { token: "heading", className: "text-heading" },
+  { token: "default", className: "text-default" },
+  { token: "subtle-1", className: "text-subtle-1" },
+  { token: "subtle-2", className: "text-subtle-2" },
+  { token: "disabled", className: "text-disabled" },
+  { token: "link", className: "text-link" },
+];
+
+const codeColors = [
+  { token: "code-property-keys", className: "text-code-property-keys" },
+  { token: "code-string", className: "text-code-string" },
+  { token: "code-number", className: "text-code-number" },
+  { token: "code-boolean", className: "text-code-boolean" },
+  { token: "code-null", className: "text-code-null" },
+  { token: "code-line-number", className: "text-code-line-number" },
+];
+
+const fonts = [
+  { token: "space-grotesk", name: "Space Grotesk", className: "font-space-grotesk" },
+  { token: "roboto-mono", name: "Roboto Mono", className: "font-roboto-mono" },
+  { token: "public-sans", name: "Public Sans", className: "font-public-sans" },
+];
+
+const textSizes = [
+  { token: "xs", className: "text-xs" },
+  { token: "sm", className: "text-sm" },
+  { token: "base", className: "text-base" },
+  { token: "lg", className: "text-lg" },
+  { token: "xl", className: "text-xl" },
+  { token: "2xl", className: "text-2xl" },
+  { token: "3xl", className: "text-3xl" },
+  { token: "4xl", className: "text-4xl" },
+  { token: "5xl", className: "text-5xl" },
+];
+---
+
+<div class="not-content flex flex-col gap-8">
+  {
+    swatchGroups.map((group) => (
+      <section class="flex flex-col gap-2">
+        <h3 class="text-subtle-1 text-xs font-medium tracking-wide uppercase">{group.title}</h3>
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(7rem,1fr))] gap-3">
+          {group.swatches.map(({ token, className }) => (
+            <div class="flex flex-col gap-1">
+              <div class={`border-medium h-12 w-full rounded-sm border ${className}`} />
+              <code class="text-xs">{token}</code>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="flex flex-col gap-2">
+    <h3 class="text-subtle-1 text-xs font-medium tracking-wide uppercase">Borders</h3>
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(7rem,1fr))] gap-3">
+      {
+        borders.map(({ token, className }) => (
+          <div class="flex flex-col gap-1">
+            <div class={`h-12 w-full rounded-sm border-2 ${className}`} />
+            <code class="text-xs">{token}</code>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="flex flex-col gap-2">
+    <h3 class="text-subtle-1 text-xs font-medium tracking-wide uppercase">Text colors</h3>
+    {
+      textColors.map(({ token, className }) => (
+        <p class={`text-lg ${className}`}>
+          {className}: The quick brown fox jumps over the lazy dog
+        </p>
+      ))
+    }
+  </section>
+
+  <section class="flex flex-col gap-2">
+    <h3 class="text-subtle-1 text-xs font-medium tracking-wide uppercase">Code colors</h3>
+    <pre class="bg-gray-1 border-light overflow-x-auto rounded-sm border p-4 font-mono text-sm leading-relaxed"><code><span class="text-code-line-number">1</span>  {"{"}
+<span class="text-code-line-number">2</span>    <span class="text-code-property-keys">"name"</span>: <span class="text-code-string">"prime"</span>,
+<span class="text-code-line-number">3</span>    <span class="text-code-property-keys">"version"</span>: <span class="text-code-number">2</span>,
+<span class="text-code-line-number">4</span>    <span class="text-code-property-keys">"stable"</span>: <span class="text-code-boolean">true</span>,
+<span class="text-code-line-number">5</span>    <span class="text-code-property-keys">"deprecated"</span>: <span class="text-code-null">null</span>
+<span class="text-code-line-number">6</span>  {"}"}</code></pre>
+  </section>
+
+  <section class="flex flex-col gap-2">
+    <h3 class="text-subtle-1 text-xs font-medium tracking-wide uppercase">Font families</h3>
+    {
+      fonts.map(({ name, className }) => (
+        <div>
+          <code class="text-xs">{className}</code>
+          <p class={`text-default text-lg ${className}`}>{name}: Pretty Rad Interactive Modular Elements 0123456789</p>
+        </div>
+      ))
+    }
+  </section>
+
+  <section class="flex flex-col gap-2">
+    <h3 class="text-subtle-1 text-xs font-medium tracking-wide uppercase">Text sizes</h3>
+    {
+      textSizes.map(({ className }) => (
+        <div class="flex items-baseline gap-4">
+          <code class="w-20 shrink-0 text-xs">{className}</code>
+          <span class={`text-default ${className}`}>The quick brown fox</span>
+        </div>
+      ))
+    }
+    <div class="flex items-baseline gap-4">
+      <code class="w-20 shrink-0 text-xs">text-display</code>
+      <span class="text-display">Display 24/26 Space Grotesk 500</span>
+    </div>
+    <div class="flex items-baseline gap-4">
+      <code class="w-20 shrink-0 text-xs">text-code</code>
+      <span class="text-code">Roboto Mono at text-xs</span>
+    </div>
+  </section>
+</div>

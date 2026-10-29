@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { readRoots } from "../prime-ui-components";
+import { readRoots } from "../components";
 
 const INDEX = `export { default as Button } from './Button/Button.svelte';
 export { Select } from './Select/select.ts';

@@ -1,19 +1,22 @@
 ---
 /**
  * The compound parts of a root component (`Select.Trigger`, `Select.Item`, …), each
- * with its doc block and props table. `name` is the root's collection id.
+ * with its doc block and props table. `name` is the root's collection id and
+ * `collection` is the package's component collection, `prime-ui` by default.
  */
 import { getCollection, render } from "astro:content";
 
+import type { ComponentCollection } from "./collection";
 import PropsTable from "./PropsTable.astro";
 
 interface Props {
   name: string;
+  collection?: ComponentCollection;
 }
 
-const { name } = Astro.props;
+const { name, collection = "prime-ui" } = Astro.props;
 const parts = await getCollection(
-  "components",
+  collection,
   (entry) => entry.data.root === name && !entry.data.isRoot,
 );
 const rendered = await Promise.all(
@@ -26,7 +29,7 @@ const rendered = await Promise.all(
     <>
       <h3 id={part.id.replace("/", "-")}>{part.data.name}</h3>
       <Content />
-      <PropsTable name={part.id} />
+      <PropsTable name={part.id} collection={collection} />
     </>
   ))
 }

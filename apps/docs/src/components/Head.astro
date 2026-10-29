@@ -1,0 +1,16 @@
+---
+/**
+ * Starlight's head, plus the script that keeps the islands on the site's theme.
+ * Starlight's theme provider writes `data-theme` on `<html>`, and the token package's
+ * dark variant reads a class, so the bridge mirrors one into the other.
+ */
+import Default from "@astrojs/starlight/components/Head.astro";
+---
+
+<Default><slot /></Default>
+
+<script>
+  import { bridgeTheme } from "../theme-bridge";
+
+  bridgeTheme(document.documentElement);
+</script>

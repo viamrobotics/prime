@@ -15,15 +15,15 @@ Headless tree view for Svelte 5. The package owns behavior and accessibility: ke
 - `src/lib/Tree/tree.ts`: builds the compound `Tree` export from the root and its parts.
 - `src/lib/index.ts`: the public exports.
 - `src/lib/**/__tests__/`: the specs, excluded from the published package.
-- `test/`: shared test infrastructure, never published. `nodes.ts` holds the shared node data and `fixtures/` holds the wrapper components specs render.
-- `src/routes/`: the SvelteKit playground, embedded in the docs site at `/playground/prime-tree/`. Not published.
+- `test/`: shared test infrastructure, never published. `tailwind.css` is the stylesheet the fixtures import, `nodes.ts` holds the shared node data, and `fixtures/` holds the wrapper components specs render.
+- The demos live on the package's page in [apps/docs](../../apps/docs/), under `src/content/docs/packages/prime-tree/`. Run `pnpm --filter @viamrobotics/prime-docs dev` to see them against this package's source.
 - `styles.css`: the consumer's Tailwind entry. It imports the tokens and points Tailwind at `dist`.
 
 ## Commands
 
 ```bash
-pnpm --filter @viamrobotics/prime-tree dev      # playground dev server
-pnpm --filter @viamrobotics/prime-tree build    # vite build + svelte-package + publint
+pnpm --filter @viamrobotics/prime-docs dev    # docs site; this package resolves to its source and hot-reloads
+pnpm --filter @viamrobotics/prime-tree build    # svelte-package + publint
 pnpm --filter @viamrobotics/prime-tree check    # svelte-check
 pnpm --filter @viamrobotics/prime-tree test     # vitest
 pnpm --filter @viamrobotics/prime-tree lint     # eslint

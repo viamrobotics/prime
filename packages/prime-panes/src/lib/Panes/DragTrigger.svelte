@@ -1,3 +1,11 @@
+<!--
+@component
+Makes the elements inside it start a pane drag. Wrap a grip, or a whole header, in the `pane` snippet of [`Panes`](./Panes.svelte). It renders a `display: contents` wrapper, so it does not change layout, and it takes no `class`. It does nothing when `reorderable` is `false`.
+
+What a press does depends on where it lands. A press on a plain area or a [`Panes.MoveTrigger`](./MoveTrigger.svelte) drags once the pointer moves 4px, and a click on a move trigger without movement still enters move mode. A press on another control (`button`, `a`, `select`, or `[role="button"]`) drags only after a 250ms hold, so a quick click still clicks. A press on a text field (`input`, `textarea`, or `[contenteditable]`) never drags. A tab is the exception, since it drags at once. Once a press on a control lasts 250ms, releasing it without dragging does not click the control, a move trigger included. Keyboard activation is unaffected.
+
+Drags run on pointer events, so mouse, pen, and touch all drag. While `reorderable` is `true`, the elements directly inside the wrapper set `touch-action: none`, so a swipe that starts on one drags instead of scrolling. Keep scrollable content outside it.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { Attachment } from 'svelte/attachments';

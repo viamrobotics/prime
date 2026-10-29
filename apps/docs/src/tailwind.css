@@ -1,12 +1,17 @@
 @import "tailwindcss";
 @import "@viamrobotics/tailwind-config";
+@import "@viamrobotics/tailwind-config/dark";
 @import "@viamrobotics/prime-ui/styles.css";
+@import "@viamrobotics/prime-panes/styles.css";
+@import "@viamrobotics/prime-tree/styles.css";
 @import "starlight-theme-nova/tailwind.css";
 
-/* styles.css is the entry consumers use and points at the built dist. Under astro dev the
-   islands hot-reload from library source instead, which dist does not track, so also point
-   Tailwind at the source explicitly. */
+/* Each package's styles.css is the entry consumers use and points at the built dist. Under
+   astro dev the islands hot-reload from library source instead, which dist does not track,
+   so also point Tailwind at every package's source explicitly. */
 @source "../../../packages/prime-ui/src/lib";
+@source "../../../packages/prime-panes/src/lib";
+@source "../../../packages/prime-tree/src/lib";
 
 :root {
   --sl-font: var(--font-public-sans);

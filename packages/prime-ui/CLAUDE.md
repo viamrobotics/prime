@@ -1,6 +1,6 @@
 # @viamrobotics/prime-ui
 
-Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintained **headless** primitives ([bits-ui](https://bits-ui.com)) or native elements, dressed in `@viamrobotics/tailwind-config` design tokens. Source lives in `src/lib/`. There is no app or playground in this package: the docs site ([apps/docs](../../apps/docs/)) is where components are demonstrated and where you look at them while developing.
+Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintained **headless** primitives ([bits-ui](https://bits-ui.com)) or native elements, dressed in `@viamrobotics/tailwind-config` design tokens. Source lives in `src/lib/`. There is no app in this package: the docs site ([apps/docs](../../apps/docs/)) is where components are demonstrated and where you look at them while developing.
 
 ## Layout
 
@@ -9,15 +9,15 @@ Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintai
 
 ## Stack
 
-| Layer         | Tool                                                                                |
-| ------------- | ----------------------------------------------------------------------------------- |
-| Framework     | Svelte 5 (runes). SvelteKit is present only as tooling: `svelte-package` and `sync` |
-| Headless base | [bits-ui](https://bits-ui.com) (styled) + native elements                           |
-| Bundler       | Vite                                                                                |
-| Styles        | Tailwind CSS v4 + `@viamrobotics/tailwind-config` tokens                            |
-| Tests         | Vitest (browser mode for `.svelte`)                                                 |
-| Typecheck     | `svelte-check`                                                                      |
-| Lint/format   | ESLint (+ `eslint-plugin-perfectionist`) + Prettier                                 |
+| Layer         | Tool                                                                    |
+| ------------- | ----------------------------------------------------------------------- |
+| Framework     | Svelte 5 (runes). `svelte-package` builds `dist`, with no app framework |
+| Headless base | [bits-ui](https://bits-ui.com) (styled) + native elements               |
+| Bundler       | Vite                                                                    |
+| Styles        | Tailwind CSS v4 + `@viamrobotics/tailwind-config` tokens                |
+| Tests         | Vitest (browser mode for `.svelte`)                                     |
+| Typecheck     | `svelte-check`                                                          |
+| Lint/format   | ESLint (+ `eslint-plugin-perfectionist`) + Prettier                     |
 
 ## Workspace deps
 
@@ -41,7 +41,7 @@ pnpm --filter @viamrobotics/prime-ui format       # prettier --write
 
 Root scripts (`pnpm build`, `pnpm check`, `pnpm lint`, `pnpm test`) fan these across the workspace.
 
-`build`/`check`/`lint`/`test` (and the internal `sync`/`package` steps) are orchestrated by [wireit](https://github.com/google/wireit): each declares its inputs/outputs so unchanged work is skipped or restored from cache, locally and in CI. `sync` (`svelte-kit sync`) is a dependency of the others. To force a real re-run, prefix with `WIREIT_CACHE=none`.
+`build`/`check`/`lint`/`test` (and the internal `package` step) are orchestrated by [wireit](https://github.com/google/wireit): each declares its inputs/outputs so unchanged work is skipped or restored from cache, locally and in CI. To force a real re-run, prefix with `WIREIT_CACHE=none`.
 
 ## Where components are demonstrated
 
@@ -139,7 +139,7 @@ Open each component `.svelte` with an `@component` block: one-sentence descripti
 
 ## Tests
 
-Co-located `*.svelte.spec.ts`, Vitest **browser mode** (`render` from `vitest-browser-svelte`, `userEvent` from `vitest/browser`, and portaled content like `Select` is queried on `document`). Spec files run serially (`fileParallelism: false` in `vite.config.ts`): they share one browser page, and parallel files fight over focus so `userEvent.keyboard` types into the wrong input. `vite.config.ts` uses the plain `@sveltejs/vite-plugin-svelte` plugin, not `sveltekit()`, which would need an `src/app.html` to serve the test page.
+Co-located `*.svelte.spec.ts`, Vitest **browser mode** (`render` from `vitest-browser-svelte`, `userEvent` from `vitest/browser`, and portaled content like `Select` is queried on `document`). Spec files run serially (`fileParallelism: false` in `vite.config.ts`): they share one browser page, and parallel files fight over focus so `userEvent.keyboard` types into the wrong input. `vite.config.ts` uses the plain `@sveltejs/vite-plugin-svelte` plugin, and the package has no app framework.
 
 A spec earns each case by failing when the behavior breaks, so the suite holds no case that restates a class list, counts exports, or re-tests the browser (a native number input stepping on ArrowUp). The conventions that keep it that way:
 

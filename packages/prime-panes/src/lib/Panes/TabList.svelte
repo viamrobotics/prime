@@ -1,3 +1,19 @@
+<!--
+@component
+Renders the tabs of the stack that its pane belongs to. Place it in the `pane` snippet of [`Panes`](./Panes.svelte), usually in the header. It renders in every pane, so every pane can include it. An unstacked pane still carries the container, which holds a [`Panes.TabListDropRegion`](./TabListDropRegion.svelte), but the `tablist` role and the tabs appear only when the pane is stacked.
+
+Give the list a name with `aria-label`, since a screen reader announces it on entry. Tabs inherit the list's text size, and the shown tab carries `aria-selected` for styling. Each tab shows the pane's label from `paneLabel`, or the content of the `tab` snippet. The tabs follow the WAI-ARIA tabs pattern with automatic selection. The list has the `tablist` role and each tab the `tab` role. A tab panel is opt-in through [`Panes.PaneBody`](./PaneBody.svelte). A tab drags its own pane, and the empty area of the list drags the whole stack.
+
+`Panes.TabList` cannot infer `TData`, so an unannotated `tab` snippet receives `PaneNode<unknown>`. Annotate the parameter.
+
+```svelte
+{#snippet tab(item: PaneNode<PaneData>)}
+	{item.data.label}
+{/snippet}
+
+<Panes.TabList {tab} aria-label="Stacked panes" />
+```
+-->
 <script lang="ts" generics="TData">
 	import { untrack } from 'svelte';
 	import type { Snippet } from 'svelte';

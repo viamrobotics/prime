@@ -17,7 +17,7 @@ hero:
 
 import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
 
-Prime is Viam's design-system implementation: a set of npm packages that share design tokens (`@viamrobotics/tailwind-config`) and ship Svelte 5 components on top of them (`@viamrobotics/prime-ui`). This site documents what's available, with live component demos and a playground for each token package.
+Prime is Viam's design-system implementation: a set of npm packages that share design tokens (`@viamrobotics/tailwind-config`) and ship Svelte 5 components on top of them (`@viamrobotics/prime-ui`). This site documents what's available, with live demos and usage recipes for each package.
 
 ## Packages
 
@@ -29,18 +29,20 @@ Prime is Viam's design-system implementation: a set of npm packages that share d
   </Card>
   <Card title="@viamrobotics/tailwind-config" icon="seti:css">
     Shared Tailwind CSS v4 design tokens and fonts. See the [package
-    docs](./packages/tailwind-config/) for usage and token references, or the
-    [live playground](./playground/tailwind-config/).
+    docs](./packages/tailwind-config/) for usage and token references.
   </Card>
   <Card title="@viamrobotics/tweakpane-config" icon="seti:json">
     Viam-themed preset for
     [`svelte-tweakpane-ui`](https://kitschpatrol.com/svelte-tweakpane-ui). See
-    the [package docs](./packages/tweakpane-config/) for usage, or the [live
-    playground](./playground/tweakpane-config/) to see examples.
+    the [package docs](./packages/tweakpane-config/) for usage.
   </Card>
   <Card title="@viamrobotics/prime-panes" icon="seti:svelte">
     Resizable, rearrangeable split-pane layouts for Svelte 5. See the [package
-    docs](./packages/prime-panes/) for usage and a migration guide, or the
-    [live playground](./playground/prime-panes/) to try it out.
+    docs](./packages/prime-panes/) for usage and a migration guide.
+  </Card>
+  <Card title="@viamrobotics/prime-tree" icon="seti:svelte">
+    Headless tree view for Svelte 5. The package owns behavior and
+    accessibility, and you own every row. See the [package
+    docs](./packages/prime-tree/) for usage and the snippet contract.
   </Card>
 </CardGrid>

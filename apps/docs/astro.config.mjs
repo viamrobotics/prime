@@ -2,51 +2,22 @@ import starlight from "@astrojs/starlight";
 import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
-import { fileURLToPath } from "node:url";
 import starlightThemeNova from "starlight-theme-nova";
+
+import { sourceAliases } from "./source-aliases.mjs";
 
 const base = process.env.DOCS_BASE ?? "/prime/";
 const site = process.env.DOCS_SITE ?? "https://viamrobotics.github.io";
 
-// `astro dev` resolves prime-ui to its source so component edits hot-reload into
-// the docs with no `dist` build. `astro build` keeps the package's `svelte` export
-// (dist), so the published site renders what npm consumers get.
-const primeUiSourceInDev = {
-  name: "prime-ui-source-in-dev",
+// `astro dev` resolves every workspace library to its source so package edits
+// hot-reload into the docs with no `dist` build. `astro build` keeps each
+// package's `svelte` export (dist), so the published site renders what npm
+// consumers get.
+const packagesSourceInDev = {
+  name: "packages-source-in-dev",
   config(_, { command }) {
     if (command !== "serve") return;
-    return {
-      resolve: {
-        // Each subpath gets its own entry and the bare specifier is anchored, so a
-        // subpath such as `/styles.css` is never rewritten to a path under index.ts.
-        alias: [
-          {
-            find: "@viamrobotics/prime-ui/icons",
-            replacement: fileURLToPath(
-              new URL(
-                "../../packages/prime-ui/src/lib/icons/index.ts",
-                import.meta.url,
-              ),
-            ),
-          },
-          {
-            find: "@viamrobotics/prime-ui/styles.css",
-            replacement: fileURLToPath(
-              new URL("../../packages/prime-ui/styles.css", import.meta.url),
-            ),
-          },
-          {
-            find: /^@viamrobotics\/prime-ui$/,
-            replacement: fileURLToPath(
-              new URL(
-                "../../packages/prime-ui/src/lib/index.ts",
-                import.meta.url,
-              ),
-            ),
-          },
-        ],
-      },
-    };
+    return { resolve: { alias: sourceAliases } };
   },
 };
 
@@ -69,6 +40,9 @@ export default defineConfig({
           href: "https://github.com/viamrobotics/prime",
         },
       ],
+      components: {
+        Head: "./src/components/Head.astro",
+      },
       customCss: [
         "@fontsource-variable/public-sans",
         "@fontsource-variable/roboto-mono",
@@ -101,7 +75,10 @@ export default defineConfig({
               label: "@viamrobotics/tailwind-config",
               items: [
                 { label: "Overview", link: "/packages/tailwind-config/" },
-                { label: "Chrome", link: "/packages/tailwind-config/chrome/" },
+                {
+                  label: "Component classes",
+                  link: "/packages/tailwind-config/component-classes/",
+                },
               ],
             },
             {
@@ -110,20 +87,10 @@ export default defineConfig({
             },
           ],
         },
-        {
-          label: "Playgrounds",
-          items: [
-            { label: "Overview", link: "/playground/" },
-            { label: "prime-panes", link: "/playground/prime-panes/" },
-            { label: "prime-tree", link: "/playground/prime-tree/" },
-            { label: "tweakpane-config", link: "/playground/tweakpane-config/" },
-            { label: "tailwind-config", link: "/playground/tailwind-config/" },
-          ],
-        },
       ],
     }),
   ],
   vite: {
-    plugins: [tailwindcss(), primeUiSourceInDev],
+    plugins: [tailwindcss(), packagesSourceInDev],
   },
 });

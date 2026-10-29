@@ -245,9 +245,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
       (rule) => rule.selector === ".button:focus-visible",
     );
     const declarations = declarationsOf(ring!);
-    expect(declarations.get("outline")).toBe(
-      "2px solid var(--color-power-button-dark)",
-    );
+    expect(declarations.get("outline")).toBe("2px solid var(--color-link)");
     expect(declarations.get("outline-offset")).toBe("2px");
   });
 
@@ -274,6 +272,19 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
     expect(declarationsOf(invalid!).get("border-color")).toBe(
       "var(--color-danger-dark)",
+    );
+  });
+
+  it("replaces the native arrow on a single .input select and pads for the chevron", () => {
+    const [select] = rulesOf(
+      emitted,
+      (rule) => rule.selector === ".input:is(select:not([multiple]))",
+    );
+    const declarations = declarationsOf(select!);
+    expect(declarations.get("appearance")).toBe("none");
+    expect(declarations.get("padding-right")).toBe("calc(var(--spacing) * 7)");
+    expect(declarations.get("background-image")).toContain(
+      "var(--color-subtle-2)",
     );
   });
 

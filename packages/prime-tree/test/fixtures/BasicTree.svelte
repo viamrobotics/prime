@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../../src/routes/layout.css';
+	import '../tailwind.css';
 
 	import { Tree } from '../../src/lib/Tree/tree.ts';
 	import { sampleAccessors, sampleNodes } from '../nodes.ts';

@@ -22,7 +22,6 @@
   "wireit": {
     "build": {
       "dependencies": [
-        "./packages/tailwind-config:build",
         "./packages/prime-ui:build",
         "./packages/tweakpane-config:build",
         "./apps/docs:build"
@@ -32,6 +31,8 @@
       "dependencies": [
         "./packages/tailwind-config:check",
         "./packages/prime-ui:check",
+        "./packages/prime-panes:check",
+        "./packages/prime-tree:check",
         "./packages/tweakpane-config:check"
       ]
     },
@@ -39,6 +40,8 @@
       "dependencies": [
         "./packages/tailwind-config:lint",
         "./packages/prime-ui:lint",
+        "./packages/prime-panes:lint",
+        "./packages/prime-tree:lint",
         "./packages/tweakpane-config:lint"
       ]
     },
@@ -46,6 +49,8 @@
       "dependencies": [
         "./packages/tailwind-config:test",
         "./packages/prime-ui:test",
+        "./packages/prime-panes:test",
+        "./packages/prime-tree:test",
         "./apps/docs:test"
       ]
     },
@@ -53,6 +58,8 @@
       "dependencies": [
         "./packages/tailwind-config:format",
         "./packages/prime-ui:format",
+        "./packages/prime-panes:format",
+        "./packages/prime-tree:format",
         "./packages/tweakpane-config:format"
       ]
     }

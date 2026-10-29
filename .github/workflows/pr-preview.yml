@@ -1,8 +1,8 @@
 name: PR Preview
 
-# Builds the docs site (including embedded playgrounds) from the PR branch and
-# publishes it as a static site under gh-pages:pr-preview/pr-<N>/. Reviewers get
-# a public URL to inspect both the docs and any playground changes the PR makes.
+# Builds the docs site from the PR branch and publishes it as a static site
+# under gh-pages:pr-preview/pr-<N>/. Reviewers get a public URL to inspect the
+# docs and every package demo the PR changes.
 
 on:
   pull_request:
@@ -30,7 +30,7 @@ jobs:
         if: github.event.action != 'closed'
         uses: ./.github/actions/setup
 
-      - name: Build docs site (includes playgrounds)
+      - name: Build docs site
         if: github.event.action != 'closed'
         env:
           DOCS_BASE: /prime/pr-preview/pr-${{ github.event.number }}/

@@ -2,16 +2,20 @@
 /**
  * Props table for one collection entry, built from the `Props` interface JSDoc.
  * `name` is the collection id: a root like `input`, or a part like `select/trigger`.
+ * `collection` is the package's component collection, `prime-ui` by default.
  */
 import { getEntry } from "astro:content";
 
+import type { ComponentCollection } from "./collection";
+
 interface Props {
   name: string;
+  collection?: ComponentCollection;
 }
 
-const { name } = Astro.props;
-const entry = await getEntry("components", name);
-if (!entry) throw new Error(`No prime-ui component entry "${name}"`);
+const { name, collection = "prime-ui" } = Astro.props;
+const entry = await getEntry(collection, name);
+if (!entry) throw new Error(`No ${collection} component entry "${name}"`);
 const { props, extends: extendsType, external, propsType } = entry.data;
 
 const escape = (text: string) =>
