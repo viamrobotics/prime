@@ -83,7 +83,7 @@ Full model + the non-obvious gotchas (Svelte cannot detect if a prop is bound, a
 - `Label` → `for`, `required`, `disabled`, and registers its id.
 - `Hint` → `disabled`, `state` (`error`, `warn`, and `info` each color the text), and registers its id.
 - `Field.StateIcon` (`Field/StateIcon.svelte`, the compound part) → `state`, rendering the matching icon or nothing. It takes a `state` prop standalone. Place it where the layout wants it, usually inside an `Input.Group`.
-- `Input` / `NumberInput` / `Checkbox` / `RadioGroup` / `Select` + `Select.Trigger` → `id`, `disabled`, `required`, `state`, `aria-describedby`, and `aria-labelledby` on `RadioGroup` (a `role="radiogroup"` div is not labelable by `for`). Every control sets `aria-invalid` on `error`: the inputs and `Select.Trigger` turn their border through the shared `control-frame` utility, which keys on `aria-invalid` and `data-field-state`, the checkbox and radio indicators turn `text-danger-dark` (radio items through `group-aria-invalid:` off the group root).
+- `Input` / `NumberInput` / `Checkbox` / `RadioGroup` / `Select` / `MultiSelect` + `Select.Trigger` → `id`, `disabled`, `required`, `state`, `aria-describedby`, and `aria-labelledby` on `RadioGroup` (a `role="radiogroup"` div is not labelable by `for`). Every control sets `aria-invalid` on `error`: the inputs and `Select.Trigger` turn their border through the shared `control-frame` utility, which keys on `aria-invalid` and `data-field-state`, the checkbox and radio indicators turn `text-danger-dark` (radio items through `group-aria-invalid:` off the group root).
 
 Rules when adding or changing a form part:
 

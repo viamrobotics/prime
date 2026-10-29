@@ -8,6 +8,7 @@ export { Field } from './Field/field.ts';
 export { Input } from './Input/input.ts';
 export { RadioGroup } from './RadioGroup/radio-group.ts';
 export { Select } from './Select/select.ts';
+export { MultiSelect } from './Select/multi-select.ts';
 
 export type { FieldContext } from './Field/useField.svelte.ts';
 export type { IconSize, IconType } from './Icon/icon.ts';

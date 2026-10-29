@@ -1,0 +1,85 @@
+---
+title: MultiSelect
+description: A composable dropdown select that holds several values.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import MultiSelectDemo from "./multi-select/MultiSelectDemo.svelte";
+import MultiSelectShowcase from "./multi-select/MultiSelectShowcase.svelte";
+import TwoWay from "./multi-select/TwoWay.svelte";
+import twoWaySource from "./multi-select/TwoWay.svelte?raw";
+import Controlled from "./multi-select/Controlled.svelte";
+import controlledSource from "./multi-select/Controlled.svelte?raw";
+
+<ComponentIntro name="multi-select" />
+
+<MultiSelectDemo client:visible />
+
+- The same parts as [`Select`](../select/), under `MultiSelect.*`. The trigger, the panel, and each item are yours to arrange.
+- `value` is a `string[]`, bindable, in the order the values were picked. Picking an item toggles it and the list stays open.
+- The closed trigger shows the selected labels joined by commas, and a `name` submits one hidden input per value.
+- `items` is the single source of truth for the options, as on `Select`. Typing while the list is closed toggles the matching entry.
+- Keyboard navigation, typeahead, and the WAI-ARIA listbox pattern, via bits-ui.
+
+## Anatomy
+
+The parts are the `Select` parts, so the [Select anatomy](../select/#anatomy) applies with `MultiSelect` in place of `Select`. `Portal` and `Content` are required for the panel to float, `Viewport` is the scrolling region, and `Items` renders every entry of `items`.
+
+```svelte
+<MultiSelect>
+  <MultiSelect.Trigger>
+    <MultiSelect.Value />
+  </MultiSelect.Trigger>
+  <MultiSelect.Portal>
+    <MultiSelect.Content>
+      <MultiSelect.Viewport>
+        <MultiSelect.Items />
+      </MultiSelect.Viewport>
+    </MultiSelect.Content>
+  </MultiSelect.Portal>
+</MultiSelect>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the root holds an array. Pass the options as `items` and render them with `<MultiSelect.Items />`.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:value` a getter and a setter. The setter receives the whole next array, so it can cap how many values are held. [State & binding](../state/) explains both modes.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### States
+
+<MultiSelectShowcase client:visible />
+
+## Styling
+
+Everything on the [Select styling](../select/#styling) section applies: `class` lands on each part's element, `MultiSelect.Trigger` carries no width of its own, and bits-ui sets the same data attributes. `MultiSelect.Item` carries `data-selected` on every selected item at once.
+
+## Keyboard
+
+The [Select keyboard table](../select/#keyboard) applies, with two differences while the panel is open:
+
+| Key                                 | Action                                                  |
+| ----------------------------------- | ------------------------------------------------------- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | Toggles the highlighted item. The panel stays open.     |
+| <kbd>Escape</kbd>                   | Closes the panel. The values picked so far are kept.    |
+
+## API
+
+<PropsTable name="multi-select" />
+
+The parts are documented on [`Select`](../select/#api).

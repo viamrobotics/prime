@@ -32,6 +32,7 @@ import manualItemsSource from "./select/ManualItems.svelte?raw";
 - Keyboard navigation, typeahead, and the WAI-ARIA listbox pattern, via bits-ui.
 - `Select.Trigger` takes `state` from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` and a red border. `warn` sets a warning border. Both come from the same `control-frame` utility as [`Input`](../input/).
 - The panel floats in a portal, positioned to the trigger, and scrolls when the list is long.
+- One value at a time. For several, [`MultiSelect`](../multi-select/) takes the same parts with a `string[]` value.
 
 ## Anatomy
 
