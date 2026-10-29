@@ -11,7 +11,7 @@ Viam's Svelte 5 component library.
 pnpm add @viamrobotics/prime-ui @viamrobotics/tailwind-config svelte tailwindcss
 ```
 
-`@viamrobotics/tailwind-config` and `svelte` are peer dependencies, so install them in the consuming app.
+`svelte` is a peer dependency, so install it in the consuming app, with `tailwindcss` to compile the classes. `@viamrobotics/tailwind-config` comes with the package as a dependency, and installing it directly as well gives your own classes the same tokens.
 
 In your app's main CSS, import Tailwind and the prime-ui stylesheet:
 

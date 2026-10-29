@@ -1,6 +1,6 @@
 {
 	"name": "@viamrobotics/prime-tree",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Headless tree view for Svelte 5: the package owns behavior and accessibility, the consumer owns every row.",
 	"license": "Apache-2.0",
 	"publishConfig": {
@@ -138,8 +138,10 @@
 			]
 		}
 	},
+	"dependencies": {
+		"@viamrobotics/tailwind-config": "workspace:^"
+	},
 	"peerDependencies": {
-		"@viamrobotics/tailwind-config": "workspace:^",
 		"@zag-js/svelte": "^1.46.0",
 		"@zag-js/tree-view": "^1.46.0",
 		"svelte": "^5.29.0"
@@ -151,7 +153,6 @@
 		"@sveltejs/vite-plugin-svelte": "catalog:",
 		"@tailwindcss/vite": "catalog:",
 		"@types/node": "catalog:",
-		"@viamrobotics/tailwind-config": "workspace:^",
 		"@vitest/browser-playwright": "^4.1.3",
 		"@zag-js/svelte": "1.46.0",
 		"@zag-js/tree-view": "1.46.0",
