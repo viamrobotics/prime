@@ -112,8 +112,20 @@
   /* Transition properties */
   --transition-property-expand-vertical: max-height, visibility;
 
-  /* Z-index */
-  --z-max: 1000;
+  /*
+   * Z layers, named after what sits on each one and ordered by who must clear whom: a popover
+   * opened inside a dialog clears the dialog, a tooltip clears everything that can carry a hovered
+   * control, and `top` is reserved for what nothing may ever cover. Steps of 100 leave room for a
+   * bare value in between. The `z-*` utility below turns each one into a class.
+   */
+  --z-sticky: 100;
+  --z-overlay: 1000;
+  --z-dialog: 1100;
+  --z-popover: 1200;
+  --z-menu: 1200;
+  --z-toast: 1300;
+  --z-tooltip: 1400;
+  --z-max: 9999;
 
   /* Animations */
   --animate-wiggle: wiggle 0.25s;
@@ -176,6 +188,14 @@
   font-family: var(--font-roboto-mono);
   font-size: var(--text-xs);
   line-height: var(--text-xs--line-height);
+}
+
+/*
+ * `z-dialog`, `z-tooltip`, and the other named layers, from the `--z-*` tokens above. A bare
+ * number such as `z-50` matches no token and falls through to Tailwind's own `z-*`.
+ */
+@utility z-* {
+  z-index: --value(--z-*);
 }
 
 /*

@@ -1,0 +1,112 @@
+---
+title: Tooltip
+description: A short label for a control, shown on hover or focus.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import TooltipDemo from "./tooltip/TooltipDemo.svelte";
+import TooltipShowcase from "./tooltip/TooltipShowcase.svelte";
+import Basic from "./tooltip/Basic.svelte";
+import basicSource from "./tooltip/Basic.svelte?raw";
+import TwoWay from "./tooltip/TwoWay.svelte";
+import twoWaySource from "./tooltip/TwoWay.svelte?raw";
+import Controlled from "./tooltip/Controlled.svelte";
+import controlledSource from "./tooltip/Controlled.svelte?raw";
+import IconTrigger from "./tooltip/IconTrigger.svelte";
+import iconTriggerSource from "./tooltip/IconTrigger.svelte?raw";
+
+<ComponentIntro name="tooltip" />
+
+<TooltipDemo client:visible />
+
+- Composed from three parts. The trigger wraps the control you already have, and the label floats beside it in a portal.
+- Opens when the pointer rests on the trigger for `openDelay`, or at once when the control inside takes keyboard focus. Closes on blur, on Escape, and when the pointer leaves.
+- The trigger is a `<span>`, never a button, so your control keeps its own role and tab stop. While the tooltip is open, that control's `aria-describedby` names the label.
+- `open` is bindable. Bind it to read the state, or give it a getter and setter to decide when the tooltip may open.
+- The label flips to the opposite side when there is no room for `placement`.
+
+## Anatomy
+
+Every part is a property on `Tooltip`. `Tooltip` renders no element of its own. `Tooltip.Trigger` wraps the control and `Tooltip.Content` is the label.
+
+```svelte
+<Tooltip>
+  <Tooltip.Trigger>
+    <button type="button" aria-label="Copy">...</button>
+  </Tooltip.Trigger>
+  <Tooltip.Content>Copy to clipboard</Tooltip.Content>
+</Tooltip>
+```
+
+A tooltip is a supplementary description. Give the control inside its own accessible name, as the `aria-label` above does, because a tooltip never replaces one.
+
+## Usage
+
+### Basic
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+### Two-way binding
+
+`bind:open` on the root. The value follows hover, focus, and Escape.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:open` a getter and a setter. The setter runs on every attempt to open or close, and writing nothing vetoes it. [State & binding](../state/) explains both modes.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Icon trigger
+
+An [`Icon`](../icon/) is `aria-hidden` and not focusable, so a bare icon inside `Tooltip.Trigger` has no keyboard path and no accessible name. The tooltip then opens on hover only, and touch input does not open it either. That is not enough for a tooltip that tells the user something. To make an icon reachable, give it an `aria-label` and `tabindex="0"`. The `aria-label` renders it as `role="img"` with a name, and the `tabindex` makes it the focusable element inside the trigger. Focusing it opens the tooltip, and while the tooltip is open the icon carries the `aria-describedby`.
+
+<Example code={iconTriggerSource} title="IconTrigger.svelte">
+  <IconTrigger client:visible />
+</Example>
+
+### Placement and states
+
+`placement` on `Tooltip.Content` picks the side, and `sideOffset` sets the gap in pixels. `interactive` keeps the tooltip open while the pointer is over the label, so a link inside stays reachable. `disabled` keeps it from opening.
+
+<TooltipShowcase client:visible />
+
+## Styling
+
+`Tooltip` renders no element, so it takes no `class`. `Tooltip.Trigger` and `Tooltip.Content` take `class` on the element they render. The label has a dark background, white `text-xs` text, `max-w-xs`, and square corners, and it wears `z-tooltip`, the top layer; see [z layers](../../tailwind-config/component-classes/#z-layers).
+
+The trigger span is inline, so its box is a line box and not the control's box. Pass `class="inline-flex"` to make the span fit an inline-flex control such as an `icon-button`, which centers the label on the control. bits-ui sets the data attributes in the table below.
+
+| Part      | Attribute       | Value                                                |
+| --------- | --------------- | ---------------------------------------------------- |
+| `Trigger` | `data-state`    | `closed`, `delayed-open`, or `instant-open`          |
+| `Trigger` | `data-disabled` | present when disabled                                |
+| `Content` | `data-state`    | `closed`, `delayed-open`, or `instant-open`          |
+| `Content` | `data-side`     | the resolved side of the trigger                     |
+| `Content` | `data-align`    | the resolved alignment                               |
+
+## Keyboard
+
+| Key                 | Action                                                              |
+| ------------------- | ------------------------------------------------------------------- |
+| <kbd>Tab</kbd>      | Moves focus to the control inside the trigger and opens the tooltip. |
+| <kbd>Escape</kbd>   | Closes the tooltip. Focus stays on the control.                     |
+
+Tabbing away from the control closes the tooltip. The trigger span is never a tab stop.
+
+## API
+
+<PropsTable name="tooltip" />
+
+<PartsDoc name="tooltip" />

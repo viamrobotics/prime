@@ -1,0 +1,122 @@
+---
+title: Dialog
+description: A modal dialog with a focus trap, built from parts.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import DialogDemo from "./dialog/DialogDemo.svelte";
+import DialogShowcase from "./dialog/DialogShowcase.svelte";
+import TwoWay from "./dialog/TwoWay.svelte";
+import twoWaySource from "./dialog/TwoWay.svelte?raw";
+import Controlled from "./dialog/Controlled.svelte";
+import controlledSource from "./dialog/Controlled.svelte?raw";
+import WithForm from "./dialog/WithForm.svelte";
+import withFormSource from "./dialog/WithForm.svelte?raw";
+
+<ComponentIntro name="dialog" />
+
+<DialogDemo client:visible />
+
+- Composed from parts, so the trigger, the title, the body, and the footer are yours to arrange.
+- One `open`, bindable. Closing returns focus to the trigger.
+- Focus is trapped inside while open, Escape closes, and the page behind does not scroll, via bits-ui.
+- The panel floats in a portal over a dimmed overlay. It is labelled by `Dialog.Title` and described by `Dialog.Description`.
+- `Dialog.Content` carries chrome only. Width is the `class` you pass.
+
+## Anatomy
+
+Every part is a property on `Dialog`. `Dialog` renders no element. The body and footer are your own markup inside `Dialog.Content`.
+
+```svelte
+<Dialog>
+  <Dialog.Trigger />
+  <Dialog.Content>
+    <Dialog.Title />
+    <Dialog.Description />
+    <!-- body -->
+    <!-- footer -->
+    <Dialog.Close />
+  </Dialog.Content>
+</Dialog>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:open` on the root.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:open` a getter and a setter. The setter can decline a change. [State & binding](../state/) explains both modes.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Body and footer
+
+`Dialog.Content` is a column flex container with a maximum height. Put a scrolling body between the header and the footer with `min-h-0 overflow-y-auto`, and the footer stays in view. `Dialog.Close` takes children and a `class`, so it can be a labelled secondary button.
+
+<Example code={withFormSource} title="WithForm.svelte">
+  <WithForm client:visible />
+</Example>
+
+### Sizing
+
+`Dialog.Content` has no width of its own. Set one with `class`, the same as any other part.
+
+```svelte
+<Dialog.Content class="w-full max-w-sm">…</Dialog.Content>
+<Dialog.Content class="w-full max-w-md">…</Dialog.Content>
+<Dialog.Content class="w-full max-w-2xl">…</Dialog.Content>
+```
+
+<DialogShowcase client:visible />
+
+## Migrating from prime-core
+
+A prime-core `Dialog` took a `size`. Here the width is a class on `Dialog.Content`.
+
+| prime-core `size` | Class on `Dialog.Content` |
+| ----------------- | ------------------------- |
+| `small`           | `max-w-[25rem]`           |
+| `medium`          | `max-w-[37.5rem]`         |
+| `large`           | `max-w-[50rem]`           |
+| `extra-large`     | `max-w-[60rem]`           |
+
+Pair each with `w-full` so the panel fills the width up to that limit.
+
+## Styling
+
+Every part that renders an element takes `class` on that element. `Dialog` renders no element, so it takes no `class`. `Dialog.Trigger` is a real `<button>` with the shared focus ring and no other style, so add `button` or your own classes. `Dialog.Close` wears `icon-button` and shows a close icon labelled `Close`. Pass children to replace the icon and `aria-label` to replace the label. bits-ui sets the data attributes in the table below. `Dialog.Overlay` wears `z-overlay` and `Dialog.Content` wears `z-dialog`; see [z layers](../../tailwind-config/component-classes/#z-layers).
+
+| Part      | Attribute    | Value              |
+| --------- | ------------ | ------------------ |
+| `Trigger` | `data-state` | `open` or `closed` |
+| `Overlay` | `data-state` | `open` or `closed` |
+| `Content` | `data-state` | `open` or `closed` |
+
+The overlay is part of `Dialog.Content` and takes no class of its own.
+
+## Keyboard
+
+| Key                                                    | Action                                                            |
+| ------------------------------------------------------ | ----------------------------------------------------------------- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>                    | On the trigger, opens the dialog.                                 |
+| <kbd>Escape</kbd>                                      | Closes the dialog and returns focus to the trigger.               |
+| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd>     | Cycles focus inside the dialog, wrapping at either end.           |
+
+## API
+
+<PropsTable name="dialog" />
+
+<PartsDoc name="dialog" />

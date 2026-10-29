@@ -2,7 +2,7 @@
 @component
 The button that opens a [`Select`](./Select.svelte). Inside a
 [`Field`](../Field/Field.svelte) it takes its `id` (the field's `controlId`), `state`, and `aria-describedby` from there.
-An `error` state sets `aria-invalid` and the error border, and `warn` the warning border, the same `control-frame` an [`Input`](../Input/Input.svelte) wears. Pair it with a `Hint` or a
+An `error` state sets `aria-invalid` and the error border, and `warn` the warning border, the same `input` class from `@viamrobotics/tailwind-config` an [`Input`](../Input/Input.svelte) wears. Pair it with a `Hint` or a
 `Field.StateIcon` that says what is wrong, since the border color alone is not a signal
 everyone can see.
 
@@ -65,7 +65,7 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	aria-invalid={currentState === FieldStates.Error || undefined}
 	data-field-state={currentState === FieldStates.None ? undefined : currentState}
 	class={[
-		'flex control-frame items-center justify-between gap-2 focus-ring data-[state=open]:border-gray-9',
+		'flex input items-center justify-between gap-2 data-[state=open]:border-gray-9',
 		extraClasses
 	]}
 	{...restProps}

@@ -323,6 +323,29 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
 | Keyboard focus | `:focus-visible` (`focus-ring`) | The outline appears. |
 | Focus inside | `:has(:focus-visible)` (`focus-ring-within`) | The outline appears on the frame. |
 
+## z layers
+
+The config names the stacking order of floating UI, so a popover opened inside a dialog clears the dialog and a tooltip clears both. Each layer is a `z-*` class backed by a `--z-*` token. Bare numbers such as `z-50` and `z-1150` still work, and steps of 100 leave room for a bare value between layers.
+
+| Class        | Token          | Value | What sits on it                                                  |
+| ------------ | -------------- | ----- | ---------------------------------------------------------------- |
+| `z-sticky`   | `--z-sticky`   | 100   | Headers and docked bars.                                         |
+| `z-overlay`  | `--z-overlay`  | 1000  | A dialog's backdrop.                                             |
+| `z-dialog`   | `--z-dialog`   | 1100  | The dialog panel.                                                |
+| `z-popover`  | `--z-popover`  | 1200  | Popovers, select panels, and comboboxes.                         |
+| `z-menu`     | `--z-menu`     | 1200  | Menus. Same value as `z-popover`, so a consumer never has to know which. |
+| `z-toast`    | `--z-toast`    | 1300  | Notifications.                                                   |
+| `z-tooltip`  | `--z-tooltip`  | 1400  | Above everything that can carry a hovered control.               |
+| `z-max`      | `--z-max`      | 9999  | Reserved. Nothing may cover it.                                  |
+
+<Code lang="html" code={`<div class="z-overlay fixed inset-0 bg-gray-9/50">
+  <div class="z-dialog relative mx-auto mt-24 w-96 rounded-sm bg-white p-4">
+    Dialog panel
+  </div>
+</div>
+
+<div role="tooltip" class="z-tooltip absolute">Tooltip text</div>`} />
+
 ## Not shipped
 
 Variants of the `@viamrobotics/prime-core` components that are not on the design-system pages are not included: `button` `ghost-outline`, `outline-success`, `pending`, `disabled-dark`, `width`, `height`, and `textSize`. For `icon-button`, `ghost`, `ghost-outline`, `danger-filled`, `dark`, and `size="large"`. For `badge`, `pending` and `progress`. For `pill`, `dark`, `info`, and `warning`. For `kbd`, `dark`.

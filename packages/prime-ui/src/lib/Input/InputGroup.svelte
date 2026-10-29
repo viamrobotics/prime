@@ -1,7 +1,7 @@
 <!--
 @component
 Wraps an input with leading or trailing content, such as an icon, a unit suffix, or a state
-icon. The group wears the `control-frame`, and the [`Input`](./Input.svelte) or
+icon. The group wears the `input` class from `@viamrobotics/tailwind-config`, and the [`Input`](./Input.svelte) or
 [`NumberInput`](./NumberInput.svelte) directly inside it hands over its border, padding, and
 focus ring. Clicking the group's padding or any non-interactive content focuses the input.
 
@@ -48,7 +48,7 @@ an `<input>` counts, so a disabled button beside it leaves the group alone.
 	{...restProps}
 	bind:this={group}
 	onpointerdown={focusInput}
-	class={['inline-flex control-frame items-center gap-1 focus-ring-within', extraClasses]}
+	class={['inline-flex input items-center gap-1 focus-ring-within', extraClasses]}
 >
 	{@render children?.()}
 </div>

@@ -53,7 +53,7 @@ import {
      lang="css"
    />
 
-   Tailwind v4 skips `node_modules` when it detects which classes to generate, so the package ships a stylesheet that points Tailwind at its compiled components. It also imports the tokens from `@viamrobotics/tailwind-config` and defines the `focus-ring` utilities described below. Import it even if you also add your own `@source`: an `@source` alone generates the components' classes but not the utilities they rely on, so every control would lose its focus ring.
+   Tailwind v4 skips `node_modules` when it detects which classes to generate, so the package ships a stylesheet that points Tailwind at its compiled components. It also imports the tokens from `@viamrobotics/tailwind-config` and declares the `@source`. Import it even if you also add your own `@source`: the tokens it imports carry the component classes (`input`, `focus-ring`) the controls wear, and an `@source` alone would leave every control without them.
 
 </Steps>
 
@@ -74,9 +74,9 @@ import {
 
 ## Focus ring
 
-Every prime control shows the same focus indicator: a 2px `link` blue outline, offset 2px, on `:focus-visible`. It is an outline rather than a `ring` box-shadow so it survives Windows forced-colors mode and never collides with a real shadow. The stylesheet defines it as two Tailwind utilities you can reuse on your own controls so they match:
+Every prime control shows the same focus indicator: a 2px `link` blue outline, offset 2px, on `:focus-visible`. It is an outline rather than a `ring` box-shadow so it survives Windows forced-colors mode and never collides with a real shadow. The tokens package defines it as two [component classes](../tailwind-config/component-classes/) you can reuse on your own controls so they match:
 
-| Utility             | Use it on                                                                                              |
+| Class               | Use it on                                                                                              |
 | ------------------- | ------------------------------------------------------------------------------------------------------ |
 | `focus-ring`        | The focusable element itself. Also sets `outline: none` so the browser's default ring does not double. |
 | `focus-ring-within` | A frame whose focus lives on a child, the way `Input.Group` wraps an `Input`.                          |

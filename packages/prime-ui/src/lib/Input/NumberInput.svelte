@@ -71,5 +71,5 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 	aria-describedby={control.describedBy}
 	aria-invalid={control.invalid}
 	data-field-state={control.fieldState}
-	class={['control-frame focus-ring', extraClasses]}
+	class={['input', extraClasses]}
 />

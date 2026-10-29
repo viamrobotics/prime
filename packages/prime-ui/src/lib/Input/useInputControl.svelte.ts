@@ -14,7 +14,7 @@ interface InputControlOptions {
 /**
  * What a native `<input>` takes from its enclosing `Field`. A prop passed directly wins over the
  * field. Bind each returned value to the matching attribute on the element so `Input` and
- * `NumberInput` stay in step. Styling is the `control-frame` utility, which reads these attributes.
+ * `NumberInput` stay in step. Styling is the `input` class from `@viamrobotics/tailwind-config`, which reads these attributes.
  */
 export const useInputControl = (options: InputControlOptions) => {
 	const field = useField();
