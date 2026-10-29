@@ -1,0 +1,146 @@
+---
+title: Menu
+description: A list of actions opened from a trigger button.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import MenuDemo from "./menu/MenuDemo.svelte";
+import MenuShowcase from "./menu/MenuShowcase.svelte";
+import TwoWay from "./menu/TwoWay.svelte";
+import twoWaySource from "./menu/TwoWay.svelte?raw";
+import Controlled from "./menu/Controlled.svelte";
+import controlledSource from "./menu/Controlled.svelte?raw";
+import Selection from "./menu/Selection.svelte";
+import selectionSource from "./menu/Selection.svelte?raw";
+import Submenu from "./menu/Submenu.svelte";
+import submenuSource from "./menu/Submenu.svelte?raw";
+import Placed from "./menu/Placed.svelte";
+import placedSource from "./menu/Placed.svelte?raw";
+
+<ComponentIntro name="menu" />
+
+<MenuDemo client:visible />
+
+- Composed from parts, so the trigger, the items, and the separators are yours to arrange.
+- `open` is bindable, two-way or as a getter and setter. [State & binding](../state/) explains both modes.
+- Item activation is the native `onclick`, which fires for a click, <kbd>Enter</kbd>, and <kbd>Space</kbd>. The menu closes after an item is activated.
+- Checkbox and radio items are bind-only: `bind:checked` and `bind:value`, with no change callback.
+- The menu floats in a portal, positioned to the trigger, and flips to the other side when there is no room.
+- Typing characters focuses the item whose text starts with them.
+- <kbd>Escape</kbd> closes the menu and returns focus to the trigger.
+
+## Anatomy
+
+Every part is a property on `Menu`. `Menu` renders no element. `Menu.Content` portals itself to the body.
+
+```svelte
+<Menu>
+  <Menu.Trigger />
+  <Menu.Content>
+    <Menu.Item />
+    <Menu.CheckboxItem />
+    <Menu.RadioGroup>
+      <Menu.RadioItem />
+    </Menu.RadioGroup>
+    <Menu.Separator />
+    <Menu.Group>
+      <Menu.GroupHeading />
+      <Menu.Item>
+        <Menu.Shortcut />
+      </Menu.Item>
+    </Menu.Group>
+    <Menu.Sub>
+      <Menu.SubTrigger />
+      <Menu.SubContent />
+    </Menu.Sub>
+  </Menu.Content>
+</Menu>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:open` on the root.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:open` a getter and a setter. The setter can decline a change.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Checkbox and radio items
+
+`Menu.CheckboxItem` takes `bind:checked`. `Menu.RadioGroup` takes `bind:value`, and each `Menu.RadioItem` has the `value` it selects.
+
+<Example code={selectionSource} title="Selection.svelte">
+  <Selection client:visible />
+</Example>
+
+### Submenus
+
+`Menu.Sub` holds a `Menu.SubTrigger` and a `Menu.SubContent`. <kbd>ArrowRight</kbd> opens it and <kbd>ArrowLeft</kbd> closes it.
+
+<Example code={submenuSource} title="Submenu.svelte">
+  <Submenu client:visible />
+</Example>
+
+### Placement
+
+`Menu.Content` takes `side` and `align` to place the menu, and `sideOffset` and `alignOffset` to nudge it.
+
+<Example code={placedSource} title="Placed.svelte">
+  <Placed client:visible />
+</Example>
+
+### Item kinds
+
+<MenuShowcase client:visible />
+
+## Shortcuts
+
+`Menu.Shortcut` is a hint and nothing more. It is decorative and hidden from assistive technology, so an item's accessible name is its text alone. Binding the key is the app's job.
+
+## Styling
+
+Every part that renders an element takes `class` on that element. `Menu.Trigger` is a real `<button>` with no look of its own beyond the focus ring, so add `button` or `button-ghost`. `Menu` and `Menu.Sub` render no element, so they take no `class`. bits-ui sets the data attributes below. `Menu.Content` wears `z-menu`; see [z layers](../../tailwind-config/component-classes/#z-layers).
+
+| Part         | Attribute          | Value                            |
+| ------------ | ------------------ | -------------------------------- |
+| `Trigger`    | `data-state`       | `open` or `closed`               |
+| `Content`    | `data-state`       | `open` or `closed`               |
+| `Content`    | `data-side`        | the resolved side of the trigger |
+| `Content`    | `data-align`       | the resolved alignment           |
+| `SubTrigger` | `data-state`       | `open` or `closed`               |
+| `SubContent` | `data-state`       | `open` or `closed`               |
+| `Item`       | `data-highlighted` | present while focused or hovered |
+| `Item`       | `data-disabled`    | present when disabled            |
+| `Item`       | `data-variant`     | `default` or `danger`            |
+
+## Keyboard
+
+| Key                                                              | Action                                                  |
+| ---------------------------------------------------------------- | ------------------------------------------------------- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>ArrowDown</kbd>       | On the trigger, opens the menu.                         |
+| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd>                        | Moves focus to the next or previous item.               |
+| <kbd>Home</kbd> / <kbd>End</kbd>                                 | Moves focus to the first or last item.                  |
+| <kbd>ArrowRight</kbd> / <kbd>ArrowLeft</kbd>                     | Opens a submenu, or closes it and returns to its parent. |
+| Typed characters                                                 | Focuses the next item whose text starts with them.      |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>                              | On an item, activates it and closes the menu.           |
+| <kbd>Escape</kbd>                                                | Closes the menu and focuses the trigger.                |
+
+## API
+
+<PropsTable name="menu" />
+
+<PartsDoc name="menu" />
