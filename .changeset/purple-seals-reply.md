@@ -3,4 +3,4 @@
 "@viamrobotics/prime-docs": patch
 ---
 
-Add `prime-ui`.
+Add `prime-ui`, a Svelte 5 component library.

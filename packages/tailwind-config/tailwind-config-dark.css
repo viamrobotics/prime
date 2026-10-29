@@ -6,18 +6,33 @@
  *   @import "@viamrobotics/tailwind-config/dark";
  *
  * Activation follows the OS by default (prefers-color-scheme: dark). A `.light`
- * ancestor forces light; a `.dark` ancestor forces dark — the class always wins.
+ * ancestor forces light and a `.dark` ancestor forces dark. The class always wins.
+ * `.light` works on any element, not only the root. One level of `.light` inside
+ * `.dark` is supported. A `.dark` nested again inside that `.light` flips the tokens
+ * but not `dark:` utilities, which stay light below the first `.light`.
  *
  * Mechanism: Tailwind v4 utilities resolve through `var(--color-*)`, so reassigning
  * those custom properties under a dark scope flips existing components with no markup
  * changes. The dark palette is defined once below as `--dark-*` variables and applied
- * (reassigned) in both the system-preference and class scopes.
+ * (reassigned) in both the system-preference and class scopes. The light defaults are
+ * mirrored as `--light-*` variables so `.light` can restore them under a dark scope.
  *
  * NOTE: the Viam design system does not publish a dark palette; these values are
  * derived from the light tokens. The grayscale ramp (and `white`/`black`) is inverted
- * so surface/text utilities adapt automatically — `--color-white` is therefore no
+ * so surface/text utilities adapt automatically. `--color-white` is therefore no
  * longer literally white in dark mode.
  */
+
+@custom-variant dark {
+  &:where(:is(.dark, .dark *):not(.light, .light *)) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:not(.light, .light *)) {
+      @slot;
+    }
+  }
+}
 
 :root {
   color-scheme: light dark;
@@ -55,6 +70,7 @@
   --dark-color-gray-3: #2d2d30;
   --dark-color-gray-2: #242426;
   --dark-color-gray-1: #1c1c1e;
+  --dark-color-gray-0: #171718;
 
   /* Semantic colors. `medium-light` interpolates ~30% from the dark `light` fill
    * toward dark `medium`; the pending palette mirrors the other status hues. All
@@ -92,6 +108,76 @@
   /* Ghost colors (partial fills for hover states) */
   --dark-color-ghost-light: rgba(255, 255, 255, 0.05);
   --dark-color-ghost-medium: rgba(255, 255, 255, 0.1);
+
+  /* Light defaults — mirror the @theme values in tailwind-config.css. */
+
+  /* Text colors */
+  --light-color-heading: #131414;
+  --light-color-default: #282829;
+  --light-color-subtle-1: #4e4f52;
+  --light-color-subtle-2: #7a7c80;
+  --light-color-disabled: #9c9ca4;
+  --light-color-link: #0066cc;
+
+  /* Shadows */
+  --light-shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.06);
+
+  /* Code colors */
+  --light-color-code-boolean: #201293;
+  --light-color-code-line-number: #4b758d;
+  --light-color-code-null: #708;
+  --light-color-code-number: #2f6447;
+  --light-color-code-property-keys: #000;
+  --light-color-code-string: #9c251d;
+
+  /* Grayscale */
+  --light-color-black: #131414;
+  --light-color-white: #fff;
+  --light-color-gray-9: #282829;
+  --light-color-gray-8: #4e4f52;
+  --light-color-gray-7: #7a7c80;
+  --light-color-gray-6: #9c9ca4;
+  --light-color-gray-5: #c5c6cc;
+  --light-color-gray-4: #d7d7d9;
+  --light-color-gray-3: #e4e4e6;
+  --light-color-gray-2: #edeef0;
+  --light-color-gray-1: #f7f7f8;
+  --light-color-gray-0: #fbfbfc;
+
+  /* Semantic colors */
+  --light-color-danger-dark: #be3536;
+  --light-color-danger-light: #fcecea;
+  --light-color-danger-medium-light: #f5dfdc;
+  --light-color-danger-medium: #edc0bf;
+  --light-color-danger-bright: #fb2c36;
+  --light-color-warning-dark: #b88a09;
+  --light-color-warning-light: #fef3e0;
+  --light-color-warning-medium-light: #f8e6cc;
+  --light-color-warning-medium: #e9c89d;
+  --light-color-warning-bright: #efa300;
+  --light-color-success-dark: #3d7d3f;
+  --light-color-success-light: #e0fae3;
+  --light-color-success-medium-light: #d9f2e4;
+  --light-color-success-medium: #b9dcbc;
+  --light-color-success-bright: #00c907;
+  --light-color-info-dark: #2e67d3;
+  --light-color-info-light: #e1f3ff;
+  --light-color-info-medium-light: #d4e9fc;
+  --light-color-info-medium: #b6d1f4;
+  --light-color-info-bright: #2b95ff;
+  --light-color-pending-dark: #7c2fca;
+  --light-color-pending-light: #f5ebff;
+  --light-color-pending-medium-light: #ebd8ff;
+  --light-color-pending-medium: #d3c1f6;
+  --light-color-pending-bright: #9429ff;
+
+  /* Disabled colors */
+  --light-color-disabled-dark: #9c9ca4;
+  --light-color-disabled-light: #f2f2f4;
+
+  /* Ghost colors */
+  --light-color-ghost-light: rgba(0, 0, 0, 0.04);
+  --light-color-ghost-medium: rgba(0, 0, 0, 0.08);
 }
 
 /*
@@ -134,6 +220,7 @@
     --color-gray-3: var(--dark-color-gray-3);
     --color-gray-2: var(--dark-color-gray-2);
     --color-gray-1: var(--dark-color-gray-1);
+    --color-gray-0: var(--dark-color-gray-0);
 
     /* Semantic colors */
     --color-danger-dark: var(--dark-color-danger-dark);
@@ -205,6 +292,7 @@
   --color-gray-3: var(--dark-color-gray-3);
   --color-gray-2: var(--dark-color-gray-2);
   --color-gray-1: var(--dark-color-gray-1);
+  --color-gray-0: var(--dark-color-gray-0);
 
   /* Semantic colors */
   --color-danger-dark: var(--dark-color-danger-dark);
@@ -240,4 +328,75 @@
   /* Ghost colors */
   --color-ghost-light: var(--dark-color-ghost-light);
   --color-ghost-medium: var(--dark-color-ghost-medium);
+}
+
+/* Explicit class override for light, including inside a `.dark` scope. */
+.light {
+  /* Text colors */
+  --color-heading: var(--light-color-heading);
+  --color-default: var(--light-color-default);
+  --color-subtle-1: var(--light-color-subtle-1);
+  --color-subtle-2: var(--light-color-subtle-2);
+  --color-disabled: var(--light-color-disabled);
+  --color-link: var(--light-color-link);
+
+  /* Shadows */
+  --shadow-sm: var(--light-shadow-sm);
+
+  /* Code colors */
+  --color-code-boolean: var(--light-color-code-boolean);
+  --color-code-line-number: var(--light-color-code-line-number);
+  --color-code-null: var(--light-color-code-null);
+  --color-code-number: var(--light-color-code-number);
+  --color-code-property-keys: var(--light-color-code-property-keys);
+  --color-code-string: var(--light-color-code-string);
+
+  /* Grayscale */
+  --color-black: var(--light-color-black);
+  --color-white: var(--light-color-white);
+  --color-gray-9: var(--light-color-gray-9);
+  --color-gray-8: var(--light-color-gray-8);
+  --color-gray-7: var(--light-color-gray-7);
+  --color-gray-6: var(--light-color-gray-6);
+  --color-gray-5: var(--light-color-gray-5);
+  --color-gray-4: var(--light-color-gray-4);
+  --color-gray-3: var(--light-color-gray-3);
+  --color-gray-2: var(--light-color-gray-2);
+  --color-gray-1: var(--light-color-gray-1);
+  --color-gray-0: var(--light-color-gray-0);
+
+  /* Semantic colors */
+  --color-danger-dark: var(--light-color-danger-dark);
+  --color-danger-light: var(--light-color-danger-light);
+  --color-danger-medium-light: var(--light-color-danger-medium-light);
+  --color-danger-medium: var(--light-color-danger-medium);
+  --color-danger-bright: var(--light-color-danger-bright);
+  --color-warning-dark: var(--light-color-warning-dark);
+  --color-warning-light: var(--light-color-warning-light);
+  --color-warning-medium-light: var(--light-color-warning-medium-light);
+  --color-warning-medium: var(--light-color-warning-medium);
+  --color-warning-bright: var(--light-color-warning-bright);
+  --color-success-dark: var(--light-color-success-dark);
+  --color-success-light: var(--light-color-success-light);
+  --color-success-medium-light: var(--light-color-success-medium-light);
+  --color-success-medium: var(--light-color-success-medium);
+  --color-success-bright: var(--light-color-success-bright);
+  --color-info-dark: var(--light-color-info-dark);
+  --color-info-light: var(--light-color-info-light);
+  --color-info-medium-light: var(--light-color-info-medium-light);
+  --color-info-medium: var(--light-color-info-medium);
+  --color-info-bright: var(--light-color-info-bright);
+  --color-pending-dark: var(--light-color-pending-dark);
+  --color-pending-light: var(--light-color-pending-light);
+  --color-pending-medium-light: var(--light-color-pending-medium-light);
+  --color-pending-medium: var(--light-color-pending-medium);
+  --color-pending-bright: var(--light-color-pending-bright);
+
+  /* Disabled colors */
+  --color-disabled-dark: var(--light-color-disabled-dark);
+  --color-disabled-light: var(--light-color-disabled-light);
+
+  /* Ghost colors */
+  --color-ghost-light: var(--light-color-ghost-light);
+  --color-ghost-medium: var(--light-color-ghost-medium);
 }

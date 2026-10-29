@@ -90,8 +90,19 @@ export default defineConfig({
               ],
             },
             {
+              label: "@viamrobotics/prime-panes",
+              link: "/packages/prime-panes/",
+            },
+            {
+              label: "@viamrobotics/prime-tree",
+              link: "/packages/prime-tree/",
+            },
+            {
               label: "@viamrobotics/tailwind-config",
-              link: "/packages/tailwind-config/",
+              items: [
+                { label: "Overview", link: "/packages/tailwind-config/" },
+                { label: "Chrome", link: "/packages/tailwind-config/chrome/" },
+              ],
             },
             {
               label: "@viamrobotics/tweakpane-config",
@@ -103,10 +114,9 @@ export default defineConfig({
           label: "Playgrounds",
           items: [
             { label: "Overview", link: "/playground/" },
-            {
-              label: "tweakpane-config",
-              link: "/playground/tweakpane-config/",
-            },
+            { label: "prime-panes", link: "/playground/prime-panes/" },
+            { label: "prime-tree", link: "/playground/prime-tree/" },
+            { label: "tweakpane-config", link: "/playground/tweakpane-config/" },
             { label: "tailwind-config", link: "/playground/tailwind-config/" },
           ],
         },

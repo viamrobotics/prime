@@ -15,11 +15,15 @@
 		"build:playgrounds": {
 			"command": "node scripts/build-playgrounds.mjs",
 			"dependencies": [
+				"../../packages/prime-panes:vite-build",
+				"../../packages/prime-tree:vite-build",
 				"../../packages/tailwind-config:build",
 				"../../packages/tweakpane-config:vite-build"
 			],
 			"files": [
 				"scripts/build-playgrounds.mjs",
+				"../../packages/prime-panes/build/**",
+				"../../packages/prime-tree/build/**",
 				"../../packages/tailwind-config/build/**",
 				"../../packages/tweakpane-config/build/**"
 			],

@@ -35,6 +35,8 @@
     "build": "wireit",
     "check": "wireit",
     "lint": "wireit",
+    "test": "wireit",
+    "test:unit": "vitest",
     "lint:fix": "eslint . --fix --concurrency auto",
     "format": "wireit",
     "format:fix": "prettier --write ."
@@ -126,6 +128,21 @@
         "pnpm-workspace.yaml"
       ]
     },
+    "test": {
+      "command": "vitest run",
+      "files": [
+        "tests/**",
+        "tailwind-config.css",
+        "tailwind-config-dark.css",
+        "vitest.config.ts",
+        "package.json"
+      ],
+      "output": [],
+      "packageLocks": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ]
+    },
     "format": {
       "command": "prettier --check .",
       "files": [
@@ -155,12 +172,14 @@
     "@sveltejs/adapter-static": "catalog:",
     "@sveltejs/kit": "catalog:",
     "@sveltejs/vite-plugin-svelte": "catalog:",
+    "@tailwindcss/node": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
     "eslint-plugin-svelte": "catalog:",
     "globals": "catalog:",
+    "postcss": "^8.5.14",
     "prettier": "catalog:",
     "svelte": "catalog:",
     "svelte-check": "catalog:",
@@ -168,6 +187,7 @@
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "vite": "catalog:",
+    "vitest": "catalog:",
     "wireit": "catalog:"
   }
 }
