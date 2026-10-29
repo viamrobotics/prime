@@ -1,6 +1,7 @@
 # @viamrobotics/tailwind-config
 
 ## 1.4.0
+
 ### Minor Changes
 
 - ac91dd1: Add class-driven dark mode with light subtrees, adaptive bg-extralight, and text-display and text-code utilities.

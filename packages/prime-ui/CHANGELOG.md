@@ -1,6 +1,7 @@
 # @viamrobotics/prime-ui
 
 ## 0.1.0
+
 ### Minor Changes
 
 - 8f55970: Add `prime-ui`, a Svelte 5 component library.

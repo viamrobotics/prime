@@ -1,6 +1,7 @@
 # @viamrobotics/prime-panes
 
 ## 0.1.0
+
 ### Minor Changes
 
 - d1f81e7: Add floating panes, windows drawn over a layout through a new `float` node.
