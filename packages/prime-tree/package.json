@@ -1,6 +1,6 @@
 {
 	"name": "@viamrobotics/prime-tree",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Headless tree view for Svelte 5: the package owns behavior and accessibility, the consumer owns every row.",
 	"license": "Apache-2.0",
 	"publishConfig": {
