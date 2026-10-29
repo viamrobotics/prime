@@ -1,5 +1,11 @@
 # @viamrobotics/tailwind-config
 
+## 1.4.0
+### Minor Changes
+
+- ac91dd1: Add class-driven dark mode with light subtrees, adaptive bg-extralight, and text-display and text-code utilities.
+- ac91dd1: Add the design system's chrome as utility classes: button and its variant modifiers, icon-button, badge, pill, kbd, avatar, progress-dots, input, focus-ring, and focus-ring-within, with a playground page and docs recipes.
+
 ## 1.3.0
 
 ### Minor Changes
