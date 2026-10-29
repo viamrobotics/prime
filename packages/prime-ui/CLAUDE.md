@@ -21,7 +21,7 @@ Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintai
 
 ## Workspace deps
 
-`@viamrobotics/tailwind-config` is consumed via `workspace:^`. It's in `peerDependencies` (downstream consumers install it for tokens to resolve) and `devDependencies` (so the package resolves locally). At publish time pnpm rewrites `workspace:^` to a concrete range.
+`@viamrobotics/tailwind-config` is a regular `dependencies` entry at `workspace:^`, which pnpm rewrites to a concrete caret range at publish time. It is not a peer dependency on purpose: changesets bumps a package to major whenever one of its peers gets a minor bump, so a token addition in tailwind-config would major every component package. A consumer that also installs tailwind-config directly dedupes to one copy while the ranges overlap, and a second copy of a tokens-only stylesheet redefines the same custom properties to the same values.
 
 `@internationalized/date` is a bits-ui peer dependency. Nothing in `src/lib` imports it, but it stays in `dependencies` so bits-ui resolves it without every consumer installing it by hand.
 
