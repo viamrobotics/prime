@@ -94,6 +94,16 @@
       "verifyCommands": ["check", "lint", "format", "test"]
     },
     {
+      "name": "prime-tree",
+      "prefix": "PRIME_TREE",
+      "packageName": "@viamrobotics/prime-tree",
+      "pathPrefix": "packages/prime-tree/",
+      "sourcePath": "packages/prime-tree/src",
+      "label": "Prime Tree",
+      "fixCommands": ["lint:fix", "format:fix"],
+      "verifyCommands": ["check", "lint", "format", "test"]
+    },
+    {
       "name": "docs",
       "prefix": "DOCS",
       "packageName": "@viamrobotics/prime-docs",

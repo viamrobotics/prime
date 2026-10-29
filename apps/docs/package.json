@@ -15,6 +15,7 @@
 			"dependencies": [
 				"../../packages/prime-ui:vite-build",
 				"../../packages/prime-panes:vite-build",
+				"../../packages/prime-tree:vite-build",
 				"../../packages/tailwind-config:build",
 				"../../packages/tweakpane-config:vite-build"
 			],
@@ -22,6 +23,7 @@
 				"scripts/build-playgrounds.mjs",
 				"../../packages/prime-ui/build/**",
 				"../../packages/prime-panes/build/**",
+				"../../packages/prime-tree/build/**",
 				"../../packages/tailwind-config/build/**",
 				"../../packages/tweakpane-config/build/**"
 			],

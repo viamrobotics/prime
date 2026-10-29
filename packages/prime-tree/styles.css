@@ -1,0 +1,14 @@
+/*
+ * Tailwind v4 entry for consumers of @viamrobotics/prime-tree.
+ *
+ * Tailwind's automatic content detection skips node_modules, so without this file none of the
+ * components' utility classes would be generated. Import it once, after Tailwind:
+ *
+ *   @import "tailwindcss";
+ *   @import "@viamrobotics/prime-tree/styles.css";
+ *
+ * The @source path is relative to this file, which resolves to the package's compiled components
+ * once installed.
+ */
+@import '@viamrobotics/tailwind-config';
+@source './dist';
