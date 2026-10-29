@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../../src/routes/layout.css';
+	import '../tailwind.css';
 
 	import type { Snippet } from 'svelte';
 	import type { Attachment } from 'svelte/attachments';

@@ -6,11 +6,33 @@ description: Viam-themed Theme preset for svelte-tweakpane-ui.
 import {
   Aside,
   Code,
-  LinkButton,
   Steps,
   Tabs,
   TabItem,
 } from "@astrojs/starlight/components";
+
+import Example from "@docs/doc/Example.astro";
+
+import SliderDemo from "./tweakpane-config/SliderDemo.svelte";
+import sliderSource from "./tweakpane-config/SliderDemo.svelte?raw";
+import ListDemo from "./tweakpane-config/ListDemo.svelte";
+import listSource from "./tweakpane-config/ListDemo.svelte?raw";
+import CheckboxDemo from "./tweakpane-config/CheckboxDemo.svelte";
+import checkboxSource from "./tweakpane-config/CheckboxDemo.svelte?raw";
+import ColorDemo from "./tweakpane-config/ColorDemo.svelte";
+import colorSource from "./tweakpane-config/ColorDemo.svelte?raw";
+import PointDemo from "./tweakpane-config/PointDemo.svelte";
+import pointSource from "./tweakpane-config/PointDemo.svelte?raw";
+import RotationEulerDemo from "./tweakpane-config/RotationEulerDemo.svelte";
+import rotationEulerSource from "./tweakpane-config/RotationEulerDemo.svelte?raw";
+import ButtonDemo from "./tweakpane-config/ButtonDemo.svelte";
+import buttonSource from "./tweakpane-config/ButtonDemo.svelte?raw";
+import MonitorDemo from "./tweakpane-config/MonitorDemo.svelte";
+import monitorSource from "./tweakpane-config/MonitorDemo.svelte?raw";
+import PaneDemo from "./tweakpane-config/PaneDemo.svelte";
+import paneSource from "./tweakpane-config/PaneDemo.svelte?raw";
+import TabsDemo from "./tweakpane-config/TabsDemo.svelte";
+import tabsSource from "./tweakpane-config/TabsDemo.svelte?raw";
 
 `@viamrobotics/tweakpane-config` exposes a `Theme` preset that matches Viam's design system. Drop it into [`svelte-tweakpane-ui`](https://kitschpatrol.com/svelte-tweakpane-ui)'s `ThemeUtils.setGlobalDefaultTheme` and every component on the page renders with Viam's palette and typography.
 
@@ -72,7 +94,7 @@ ThemeUtils.setGlobalDefaultTheme(compactTheme);
 
 ## Dark mode
 
-`primeThemeDark` is the dark variant of `primeTheme` — same shape, with values mirroring the dark tokens in [`@viamrobotics/tailwind-config`](../tailwind-config/).
+`primeThemeDark` is the dark variant of `primeTheme`, with the same shape and values mirroring the dark tokens in [`@viamrobotics/tailwind-config`](../tailwind-config/).
 
 <Aside type="caution">
   Tweakpane themes are applied via JS, not CSS, so there is no automatic
@@ -129,10 +151,66 @@ query.addEventListener("change", apply);
 
 The theme references `Public Sans Variable`. Load it via [`@viamrobotics/tailwind-config`](../tailwind-config/) or directly from `@fontsource-variable/public-sans`. If the font isn't loaded, browsers fall back to the system sans-serif.
 
-## Playground
+## Blades
 
-The playground showcases representative `svelte-tweakpane-ui` components — `Slider`, `List`, `Color`, `Checkbox`, `Point`, `RotationEuler`, `TabGroup` / `TabPage`, `Button`, and `Monitor` — all rendered through the Prime theme.
+Every island below is a live `svelte-tweakpane-ui` component themed with `primeTheme` and `primeThemeDark`. Switch the site theme to see both. Each island sets the global default theme in an `$effect`, which runs only on the client because Tweakpane reads `window`. In an app you set the global default theme once, near the root.
 
-<LinkButton href="../../playground/tweakpane-config/" icon="external">
-  Open the tweakpane-config playground
-</LinkButton>
+### Slider
+
+<Example code={sliderSource} title="SliderDemo.svelte">
+  <SliderDemo client:only="svelte" />
+</Example>
+
+### List
+
+<Example code={listSource} title="ListDemo.svelte">
+  <ListDemo client:only="svelte" />
+</Example>
+
+### Checkbox
+
+<Example code={checkboxSource} title="CheckboxDemo.svelte">
+  <CheckboxDemo client:only="svelte" />
+</Example>
+
+### Color
+
+<Example code={colorSource} title="ColorDemo.svelte">
+  <ColorDemo client:only="svelte" />
+</Example>
+
+### Point (3D)
+
+<Example code={pointSource} title="PointDemo.svelte">
+  <PointDemo client:only="svelte" />
+</Example>
+
+### RotationEuler
+
+<Example code={rotationEulerSource} title="RotationEulerDemo.svelte">
+  <RotationEulerDemo client:only="svelte" />
+</Example>
+
+### Button
+
+<Example code={buttonSource} title="ButtonDemo.svelte">
+  <ButtonDemo client:only="svelte" />
+</Example>
+
+### Monitor
+
+<Example code={monitorSource} title="MonitorDemo.svelte">
+  <MonitorDemo client:only="svelte" />
+</Example>
+
+### Pane
+
+<Example code={paneSource} title="PaneDemo.svelte">
+  <PaneDemo client:only="svelte" />
+</Example>
+
+### TabGroup and TabPage
+
+<Example code={tabsSource} title="TabsDemo.svelte">
+  <TabsDemo client:only="svelte" />
+</Example>

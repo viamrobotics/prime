@@ -1,3 +1,11 @@
+<!--
+@component
+A layout of resizable, rearrangeable panes. `layout` is a tree that this package owns. A `split` divides its area between two children, a `pane` is a leaf that holds your `data`, a `stack` shows one of several panes behind tabs, and a `float` draws windows over a base layout. Every resize and rearrangement is assigned to `layout`, so bind it, or pass a getter and a setter to persist each change or veto it.
+
+The `pane` snippet renders one pane, and the library never reads its content. Place [`Panes.DragTrigger`](./DragTrigger.svelte) and [`Panes.MoveTrigger`](./MoveTrigger.svelte) in it so the pane can be rearranged with a pointer or without one, and [`Panes.TabList`](./TabList.svelte) and [`Panes.PaneBody`](./PaneBody.svelte) so it can stack with other panes.
+
+The root has no default size, display, or styling. Size it with a `class`, or it collapses to nothing. Every other attribute of a `div` passes through to it.
+-->
 <script lang="ts" generics="TData">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -43,6 +51,8 @@
 		/**
 		 * Names a pane for assistive technology: the destinations that appear while a pane is being
 		 * moved without dragging, and the announcements made as it moves. Defaults to the pane's `id`.
+		 *
+		 * @default (pane) => pane.id
 		 */
 		paneLabel?: (pane: PaneNode<TData>) => string;
 
@@ -56,6 +66,8 @@
 		/**
 		 * The smallest a floating window can be, in pixels, per window. A window resizes no smaller, and
 		 * is drawn no smaller, unless the float's box is itself smaller. Defaults to 160 by 120.
+		 *
+		 * @default () => ({ width: 160, height: 120 })
 		 */
 		floatMinSize?: (entry: FloatEntry<TData>) => { width: number; height: number };
 	}

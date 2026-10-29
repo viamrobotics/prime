@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../../src/routes/layout.css';
+	import '../tailwind.css';
 
 	import { createFloatLayout } from '../layouts.ts';
 	import type { PaneData } from '../layouts.ts';

@@ -11,15 +11,15 @@ Resizable, rearrangeable split-pane layouts for Svelte 5. It extracts the split-
 - `src/lib/SplitPanes/`: split-only code. `SplitPanes.svelte` renders a split through the zag.js splitter, `split-adapter.ts` is the split's adapter, and `set-split-ratio.ts` holds `setSplitRatio`.
 - `src/lib/Panes/`: the `Panes` component, its internal parts, and the context in `usePanes.svelte.ts`. `PanesNode.svelte` picks a node's renderer by kind. `panes.ts` builds the compound `Panes` export, with `DragTrigger.svelte`, `MoveTrigger.svelte`, `PaneBody.svelte`, `TabList.svelte`, and `TabListDropRegion.svelte` as its parts. `watch-drag-press.ts` runs drags on pointer events, and `DragGhost.svelte` draws the ghost that follows the pointer. `drag-ignore.ts` holds the `dragIgnore` attachment. `pane-state.ts` holds `PaneState`, the `pane` snippet's second argument. `node-id.ts` creates the ids of the splits and stacks that a drop makes.
 - `src/lib/**/__tests__/`: the specs, excluded from the published package.
-- `test/`: shared test infrastructure, never published. `input-commands.ts` holds the server-side vitest commands that drive real Playwright mouse and CDP touch input. `panes-queries.ts` registers the custom `page.getBy*` queries through `locators.extend`. `layouts.ts` holds the shared layout data. `fixtures/` holds the wrapper components specs render.
-- `src/routes/`: the SvelteKit playground, embedded in the docs site at `/playground/prime-panes/`. Not published.
+- `test/`: shared test infrastructure, never published. `tailwind.css` is the stylesheet the fixtures import. `input-commands.ts` holds the server-side vitest commands that drive real Playwright mouse and CDP touch input. `panes-queries.ts` registers the custom `page.getBy*` queries through `locators.extend`. `layouts.ts` holds the shared layout data. `fixtures/` holds the wrapper components specs render.
+- The demos live on the package's page in [apps/docs](../../apps/docs/), under `src/content/docs/packages/prime-panes/`. Run `pnpm --filter @viamrobotics/prime-docs dev` to see them against this package's source.
 - `styles.css`: the consumer's Tailwind entry. It imports the tokens and points Tailwind at `dist`.
 
 ## Commands
 
 ```bash
-pnpm --filter @viamrobotics/prime-panes dev      # playground dev server
-pnpm --filter @viamrobotics/prime-panes build    # vite build + svelte-package + publint
+pnpm --filter @viamrobotics/prime-docs dev    # docs site; this package resolves to its source and hot-reloads
+pnpm --filter @viamrobotics/prime-panes build    # svelte-package + publint
 pnpm --filter @viamrobotics/prime-panes check    # svelte-check
 pnpm --filter @viamrobotics/prime-panes test     # vitest: client (browser) and server (node) projects
 pnpm --filter @viamrobotics/prime-panes lint     # eslint

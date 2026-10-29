@@ -4,6 +4,22 @@ description: "Headless tree view for Svelte 5: the package owns behavior and acc
 ---
 
 import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+
+import TreeDemo from "./prime-tree/TreeDemo.svelte";
+import TreeShowcase from "./prime-tree/TreeShowcase.svelte";
+import Basic from "./prime-tree/Basic.svelte";
+import basicSource from "./prime-tree/Basic.svelte?raw";
+import TwoWay from "./prime-tree/TwoWay.svelte";
+import twoWaySource from "./prime-tree/TwoWay.svelte?raw";
+import Controlled from "./prime-tree/Controlled.svelte";
+import controlledSource from "./prime-tree/Controlled.svelte?raw";
+import CustomRows from "./prime-tree/CustomRows.svelte";
+import customRowsSource from "./prime-tree/CustomRows.svelte?raw";
+import Branches from "./prime-tree/Branches.svelte";
+import branchesSource from "./prime-tree/Branches.svelte?raw";
 
 `@viamrobotics/prime-tree` renders a tree of your own nodes and is headless. The package owns behavior and accessibility, including keyboard navigation, roving focus, selection, and expansion. You own the markup of every row through the `node` snippet, so the tree draws no chrome.
 
@@ -11,6 +27,13 @@ import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components
   The public API is unstable until 1.0. Expect breaking changes in minor
   releases.
 </Aside>
+
+<TreeDemo client:visible />
+
+- Keyboard navigation, type-ahead, and roving focus from the WAI-ARIA tree pattern, built on Zag.
+- Single or multiple selection and expansion, each a bindable array of node values.
+- A `node` snippet that renders every row, so indentation, icons, and hover styles are yours.
+- Row arrangement hooks for virtual lists and empty-branch placeholders.
 
 ## Installation
 
@@ -48,108 +71,43 @@ import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components
 
 </Steps>
 
-## Quick start
+## Anatomy
 
 ```svelte
-<script lang="ts">
-  import { Tree } from '@viamrobotics/prime-tree';
+<Tree>
+  {#snippet node(item, state)}
+    <Tree.Branch>
+      <Tree.BranchControl>
+        <Tree.BranchTrigger>
+          <Tree.Indicator />
+        </Tree.BranchTrigger>
+      </Tree.BranchControl>
+      <Tree.BranchContent>
+        <Tree.IndentGuide />
+        <Tree.Row />
+      </Tree.BranchContent>
+    </Tree.Branch>
 
-  interface FileNode {
-    path: string;
-    name: string;
-    children?: FileNode[];
-  }
-
-  const files: FileNode[] = [
-    {
-      path: 'src',
-      name: 'src',
-      children: [
-        { path: 'src/index.ts', name: 'index.ts' },
-        { path: 'src/app.svelte', name: 'app.svelte' },
-      ],
-    },
-    { path: 'package.json', name: 'package.json' },
-  ];
-
-  let expanded = $state<string[]>(['src']);
-  let selected = $state<string[]>([]);
-</script>
-
-<Tree
-  nodes={files}
-  nodeToValue={(file) => file.path}
-  nodeToString={(file) => file.name}
-  nodeToChildren={(file) => file.children}
-  bind:expanded
-  bind:selected
-  aria-label="Files"
->
-  {#snippet node(file, state)}
-    {#if state.isBranch}
-      <Tree.Branch>
-        <Tree.BranchControl style="padding-inline-start: calc(var(--depth) * 1rem)">
-          <Tree.BranchTrigger aria-label={state.expanded ? 'Collapse' : 'Expand'}>
-            <Tree.Indicator>{state.expanded ? '▾' : '▸'}</Tree.Indicator>
-          </Tree.BranchTrigger>
-          {file.name}
-        </Tree.BranchControl>
-        <Tree.BranchContent />
-      </Tree.Branch>
-    {:else}
-      <Tree.Item style="padding-inline-start: calc(var(--depth) * 1rem)">
-        {file.name}
-      </Tree.Item>
-    {/if}
+    <Tree.Item />
   {/snippet}
 </Tree>
 ```
 
-## The snippet contract
+## Usage
+
+### Basic rows
 
 `nodes` holds the root nodes and is the single source of truth. A later change to it flows into the tree without a remount. The accessors tell the tree how to read your node type: `nodeToValue` returns a unique id, `nodeToString` returns the label used for type-ahead, and `nodeToChildren` returns the children. `nodeToChildrenCount` and `isNodeDisabled` are optional. Return a number from `nodeToChildrenCount` for a branch that may be empty, such as an empty folder, so it still renders as a branch, and `undefined` for a leaf. Any number, including `0`, makes the node a branch.
 
-`branchClick` decides what a click, Enter, or Space on a branch row does: `'toggle-and-select'` (the default) opens or closes the branch and selects it, `'select'` only selects it and leaves opening to the trigger, and `'toggle'` only opens or closes it, for a tree whose branches are folders rather than choices. The trigger always toggles.
-
 The `node` snippet receives the node and its `TreeNodeState`. It runs once per visible node. Return a `Tree.Branch` for a branch or a `Tree.Item` for a leaf. Inside a branch, `Tree.BranchControl` holds the row you see, and `Tree.BranchContent` renders the children.
 
-The package sets a `--depth` custom property on `Tree.Branch` and `Tree.Item`, and a branch's control inherits it. Use it in a style attribute for indentation, as the quick start does. `state.depth` is the script-side equivalent.
+A collapsed branch never calls the snippet for its children, and indentation is yours: see [Styling](#styling) for `--depth`.
 
-The package renders only what the snippet returns, so the tree adds no wrappers or default styles. A collapsed branch never calls the snippet for its children.
+<Example code={basicSource} title="Basic.svelte" height="12rem">
+  <Basic client:visible />
+</Example>
 
-To arrange the rows yourself, pass a `children` snippet to `Tree` or to `Tree.BranchContent`. It receives the nodes at that level, and you render one `Tree.Row` per node you want shown, with the node's `index` among those nodes. That is how a branch with hundreds of children goes through a virtual list, or how an empty branch shows a placeholder:
-
-```svelte
-<Tree.BranchContent>
-  {#snippet children(rows)}
-    {#if rows.length === 0}
-      <p>Empty folder</p>
-    {/if}
-    {#each rows as row, index (nodeToValue(row))}
-      <Tree.Row node={row} {index} />
-    {/each}
-  {/snippet}
-</Tree.BranchContent>
-```
-
-The nodes a `children` snippet receives are typed `unknown`, since a part cannot see the root's node type. Narrow them once with a helper or a cast.
-
-## Parts
-
-| Part                 | Element | Role and attributes                                                                                           | Placement                                      |
-| -------------------- | ------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `Tree.Branch`        | `div`   | `role="treeitem"`, `aria-expanded`, `aria-selected`, `aria-level`, `aria-posinset`, `aria-setsize`, `--depth` | Root of a branch in the `node` snippet         |
-| `Tree.BranchControl` | `div`   | The branch's focusable row with the roving `tabindex`. A click does what `branchClick` says                  | Inside `Tree.Branch`, holds the label          |
-| `Tree.BranchTrigger` | `span`  | `role="button"`, not in the tab order because the row is, toggles on click                                    | Inside `Tree.BranchControl`                    |
-| `Tree.Indicator`     | `span`  | `aria-hidden`, `data-state` of `open` or `closed`                                                             | Inside `Tree.BranchTrigger`                    |
-| `Tree.BranchContent` | `div`   | `role="group"`, `hidden` while collapsed, renders the child rows or its `children` snippet                    | Inside `Tree.Branch`, after the control        |
-| `Tree.IndentGuide`   | `span`  | `aria-hidden`, `data-depth`, a hook for a vertical guide line                                                 | Inside a `Tree.BranchContent` `children` snippet |
-| `Tree.Row`           | none    | Renders one node through the `node` snippet, at `index` among its siblings                                   | Inside a `children` snippet on `Tree` or `Tree.BranchContent` |
-| `Tree.Item`          | `div`   | `role="treeitem"`, the leaf's focusable row with the roving `tabindex`, `aria-selected`, `aria-level`, `aria-posinset`, `aria-setsize`, `--depth` | Root of a leaf in the `node` snippet |
-
-Each part spreads the attributes you pass over its own, so `class`, `style`, and event handlers all work. Each renders `children`, except that `Tree.BranchContent` treats `children` as the row renderer described above and `Tree.Row` renders no element of its own. `Tree.Item` leaves `aria-current` to you.
-
-## State
+The second argument of the `node` snippet is a `TreeNodeState`.
 
 The second argument of the `node` snippet is a `TreeNodeState`.
 
@@ -164,38 +122,70 @@ The second argument of the `node` snippet is a `TreeNodeState`.
 | `depth`     | `number`             | Nesting depth, starting at 1 for a root node. Matches `aria-level` and `--depth` |
 | `indexPath` | `readonly number[]`  | The index of the node and of each ancestor within its siblings, root first |
 
-Indentation is yours. Use `depth` as in the quick start, or read the `--depth` custom property that each row carries.
+Indentation is yours. Use `depth` as in the recipe above, or read the `--depth` custom property that each row carries.
 
-## Selection and expansion
 
-`bind:expanded` and `bind:selected` hold arrays of node values. Both take the plain `bind:` form. `selectionMode` is `'single'` by default and `'multiple'` allows several selected rows. `expandOnClick` defaults to `true`, so a click on a branch row toggles it.
+### Two-way binding
 
-Both also take a function binding. The setter runs on each change and can refuse it by not assigning. This example keeps a locked folder from closing.
+`bind:expanded` and `bind:selected` hold arrays of node values. `selectionMode` is `'single'` by default and `'multiple'` allows several selected rows. `expandOnClick` defaults to `true`, so a click on a branch row toggles it.
 
-```svelte
-<script lang="ts">
-  let expanded = $state<string[]>(['src', 'locked']);
-</script>
+<Example code={twoWaySource} title="TwoWay.svelte" height="16rem">
+  <TwoWay client:visible />
+</Example>
 
-<Tree
-  {nodes}
-  {nodeToValue}
-  {nodeToString}
-  {nodeToChildren}
-  bind:expanded={
-    () => expanded,
-    (next) => {
-      if (!next.includes('locked')) return;
-      expanded = next;
-    }
-  }
-  aria-label="Files"
->
-  {#snippet node(file, state)}
-    <!-- ... -->
-  {/snippet}
-</Tree>
-```
+### Fully controlled
+
+Both props also take a function binding. The setter runs on each change and can refuse it by not assigning. This tree keeps the locked folder from closing.
+
+<Example code={controlledSource} title="Controlled.svelte" height="14rem">
+  <Controlled client:visible />
+</Example>
+
+### Custom rows
+
+To arrange the rows yourself, pass a `children` snippet to `Tree` or to `Tree.BranchContent`. It receives the nodes at that level, and you render one `Tree.Row` per node you want shown, with the node's `index` among those nodes. That is how a branch with hundreds of children goes through a virtual list, or how an empty branch shows a placeholder. `Tree.IndentGuide` is a hook for a vertical guide line.
+
+The nodes a `children` snippet receives are typed `unknown`, since a part cannot see the root's node type. Narrow them once with a helper or a cast.
+
+<Example code={customRowsSource} title="CustomRows.svelte" height="16rem">
+  <CustomRows client:visible />
+</Example>
+
+### Branch click
+
+`branchClick` decides what a click, Enter, or Space on a branch row does: `'toggle-and-select'` (the default) opens or closes the branch and selects it, `'select'` only selects it and leaves opening to the trigger, and `'toggle'` only opens or closes it, for a tree whose branches are folders rather than choices. The trigger always toggles.
+
+<Example code={branchesSource} title="Branches.svelte" height="14rem">
+  <Branches client:visible />
+</Example>
+
+### States
+
+A row reads its state from the `node` snippet's second argument, and the same state is on the row as data attributes.
+
+<TreeShowcase client:visible />
+
+## Styling
+
+The root renders one element, `role="tree"`, with `tabindex="-1"`. `class` and every other attribute land on it, so size it with a class and make it the scroll container with `overflow-auto` when the tree is taller than its box. To reach the element itself, pass an attachment through the rest props.
+
+Each part spreads the attributes you pass over its own, so `class`, `style`, and event handlers all work on every part. Each renders `children`, except that `Tree.BranchContent` treats `children` as the row renderer and `Tree.Row` renders no element of its own. `Tree.Item` leaves `aria-current` to you. The package renders only what the snippet returns, so it adds no wrappers or default styles.
+
+The package sets a `--depth` custom property on `Tree.Branch` and `Tree.Item`, and a branch's control inherits it. Use it in a style attribute for indentation, as the recipes do. `state.depth` is the script-side equivalent. For the utility classes the recipes wear, such as `focus-ring`, see the [component classes](../tailwind-config/component-classes/).
+
+Zag sets these data attributes, so Tailwind variants like `data-[selected]:bg-medium` work without a wrapper.
+
+| Attribute         | Parts                                            | Value                                          |
+| ----------------- | ------------------------------------------------ | ---------------------------------------------- |
+| `data-part`       | every part                                       | The part name, such as `branch-control`        |
+| `data-value`      | `Branch`, `BranchControl`, `BranchTrigger`, `Item` | The node's value                             |
+| `data-depth`      | `Branch`, `BranchControl`, `Item`, `IndentGuide` | Nesting depth, starting at 1                   |
+| `data-state`      | `Branch`, `BranchControl`, `BranchTrigger`, `Indicator` | `open` or `closed`                      |
+| `data-selected`   | `Branch`, `BranchControl`, `Item`, `Indicator`   | present when selected                          |
+| `data-focus`      | `BranchControl`, `Item`, `Indicator`             | present on the row holding the roving focus    |
+| `data-disabled`   | `Branch`, `BranchControl`, `BranchTrigger`, `Item`, `Indicator` | present when disabled           |
+
+Focus is roving. One row has `tabindex="0"` and the rest are reachable by the arrow keys, so the tree is a single tab stop. Rows carry `aria-expanded`, `aria-selected`, `aria-level`, `aria-setsize`, and `aria-posinset`. A branch row shows expansion with a visual icon, and `Tree.Indicator` is `aria-hidden`, so the label inside the row must name the node. Name the tree itself with `aria-label` or `aria-labelledby`.
 
 ## Keyboard
 
@@ -210,8 +200,8 @@ Both also take a function binding. The setter runs on each change and can refuse
 | `*`                     | Expand every sibling of the focused row                 |
 | Printable characters    | Type-ahead by `nodeToString`                            |
 
-## Accessibility
+## API
 
-The root renders one element, `role="tree"`, with `tabindex="-1"`. Rest props land on it, so name the tree with `aria-label` or `aria-labelledby`, size it with a class, and make it the scroll container with `overflow-auto` when the tree is taller than its box. To reach the element itself, pass an attachment through the rest props.
+<PropsTable name="tree" collection="prime-tree" />
 
-Focus is roving. One row has `tabindex="0"` and the rest are reachable by the arrow keys, so the tree is a single tab stop. Rows carry `aria-expanded`, `aria-selected`, `aria-level`, `aria-setsize`, and `aria-posinset`. A branch row shows expansion with a visual icon, and `Tree.Indicator` is `aria-hidden`, so the label inside the row must name the node.
+<PartsDoc name="tree" collection="prime-tree" />

@@ -1,4 +1,4 @@
-import '../../../routes/layout.css';
+import '../../../../test/tailwind.css';
 import { createRawSnippet } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';

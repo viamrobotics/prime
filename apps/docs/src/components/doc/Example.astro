@@ -10,13 +10,19 @@ interface Props {
   code: string;
   /** Filename shown on the code block. */
   title?: string;
+  /**
+   * A fixed height for the preview, as a CSS length, for a demo that fills its box
+   * instead of sizing to its content, such as a pane layout or a tree. The island
+   * gets the full height to lay out in.
+   */
+  height?: string;
 }
 
-const { code, title } = Astro.props;
+const { code, title, height } = Astro.props;
 ---
 
 <figure class="example">
-  <div class="example-preview not-content">
+  <div class="example-preview not-content" style={height && `height: ${height}`}>
     <slot />
   </div>
   <details class="example-source">
@@ -36,6 +42,15 @@ const { code, title } = Astro.props;
   .example-preview {
     padding: 2rem;
     background: var(--sl-color-bg);
+  }
+  .example-preview[style] {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+  }
+  .example-preview[style] > :global(*) {
+    flex: 1;
+    min-height: 0;
   }
   .example-source {
     border-top: 1px solid var(--sl-color-gray-5);

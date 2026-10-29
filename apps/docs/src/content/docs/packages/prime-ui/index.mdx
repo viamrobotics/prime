@@ -74,10 +74,10 @@ import {
 
 ## Focus ring
 
-Every prime control shows the same focus indicator: a 2px `power-button-dark` outline, offset 2px, on `:focus-visible`. It is an outline rather than a `ring` box-shadow so it survives Windows forced-colors mode and never collides with a real shadow. The stylesheet defines it as two Tailwind utilities you can reuse on your own controls so they match:
+Every prime control shows the same focus indicator: a 2px `link` blue outline, offset 2px, on `:focus-visible`. It is an outline rather than a `ring` box-shadow so it survives Windows forced-colors mode and never collides with a real shadow. The stylesheet defines it as two Tailwind utilities you can reuse on your own controls so they match:
 
-| Utility             | Use it on                                                                                             |
-| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| Utility             | Use it on                                                                                              |
+| ------------------- | ------------------------------------------------------------------------------------------------------ |
 | `focus-ring`        | The focusable element itself. Also sets `outline: none` so the browser's default ring does not double. |
 | `focus-ring-within` | A frame whose focus lives on a child, the way `Input.Group` wraps an `Input`.                          |
 

@@ -38,13 +38,11 @@
 		"**/*.css"
 	],
 	"scripts": {
-		"prepare": "pnpm run sync || echo ''",
-		"sync": "wireit",
 		"build": "wireit",
 		"package": "wireit",
 		"prepack": "wireit",
 		"check": "wireit",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "wireit",
 		"lint:fix": "eslint . --fix --concurrency auto",
 		"format": "wireit",
@@ -53,26 +51,6 @@
 		"test": "wireit"
 	},
 	"wireit": {
-		"sync": {
-			"command": "svelte-kit sync",
-			"files": [
-				"svelte.config.js",
-				"tsconfig.json",
-				"src/**",
-				"package.json"
-			],
-			"output": [
-				".svelte-kit/generated/**",
-				".svelte-kit/types/**",
-				".svelte-kit/ambient.d.ts",
-				".svelte-kit/non-ambient.d.ts",
-				".svelte-kit/tsconfig.json"
-			],
-			"packageLocks": [
-				"pnpm-lock.yaml",
-				"pnpm-workspace.yaml"
-			]
-		},
 		"build": {
 			"dependencies": [
 				"package"
@@ -80,9 +58,6 @@
 		},
 		"package": {
 			"command": "svelte-package && publint",
-			"dependencies": [
-				"sync"
-			],
 			"files": [
 				"src/lib/**",
 				"svelte.config.js",
@@ -104,9 +79,6 @@
 		},
 		"check": {
 			"command": "svelte-check --tsconfig ./tsconfig.json",
-			"dependencies": [
-				"sync"
-			],
 			"files": [
 				"src/**",
 				"tsconfig.json",
@@ -123,9 +95,6 @@
 		},
 		"test": {
 			"command": "vitest run --passWithNoTests",
-			"dependencies": [
-				"sync"
-			],
 			"files": [
 				"src/**",
 				"vite.config.ts",
@@ -142,14 +111,9 @@
 		},
 		"lint": {
 			"command": "eslint . --concurrency auto",
-			"dependencies": [
-				"sync"
-			],
 			"files": [
 				"**/*.{js,mjs,cjs,ts,svelte}",
-				"!build/**",
 				"!dist/**",
-				"!.svelte-kit/**",
 				"!.wireit/**",
 				"eslint.config.js",
 				"tsconfig.json",
@@ -166,9 +130,7 @@
 			"command": "prettier --check .",
 			"files": [
 				"**",
-				"!build/**",
 				"!dist/**",
-				"!.svelte-kit/**",
 				"!.wireit/**"
 			],
 			"output": [],
@@ -186,7 +148,6 @@
 		"@eslint/compat": "catalog:",
 		"@eslint/js": "catalog:",
 		"@lucide/svelte": "^1.17.0",
-		"@sveltejs/kit": "catalog:",
 		"@sveltejs/package": "^2.5.7",
 		"@sveltejs/vite-plugin-svelte": "catalog:",
 		"@tailwindcss/vite": "catalog:",

@@ -1,3 +1,25 @@
+<!--
+@component
+Toggles move mode, the way to rearrange a pane without dragging. Activate it with a click, Enter, or Space, then choose a destination with the pointer or the arrow keys. Dragging alone fails WCAG 2.5.7 (Dragging Movements), so every pane that has a [`Panes.DragTrigger`](./DragTrigger.svelte) needs one. It does nothing when `reorderable` is `false`.
+
+By default it renders a `<button type="button">` around `children`, takes button attributes, and sets `aria-pressed`. The optional `child` snippet renders your own element instead. It receives `{ props }`, which you spread on that element.
+
+| Element                           | Behavior                                                                                                                                              |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A native `button`                 | Its own click, Enter, and Space toggle move mode. It gets `aria-pressed`.                                                                             |
+| An element with `role="button"`   | The library adds Enter on keydown and Space on keyup. It gets `aria-pressed`. You supply `tabindex="0"` and an accessible name.                       |
+| An element with `role="menuitem"` | It toggles through `click`, which Radix-style menus dispatch on Enter and Space. It gets no `aria-pressed`, and the status region announces the state. |
+
+When move mode ends, focus returns to the trigger. If the trigger has unmounted, as with a closed menu, focus goes to the pane itself, which shows a focus outline.
+
+```svelte
+<Panes.MoveTrigger>
+	{#snippet child({ props })}
+		<DropdownMenu.Item role="menuitem" {...props}>Move pane</DropdownMenu.Item>
+	{/snippet}
+</Panes.MoveTrigger>
+```
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { createAttachmentKey } from 'svelte/attachments';
