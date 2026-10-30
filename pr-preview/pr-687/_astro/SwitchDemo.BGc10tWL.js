@@ -1,1 +1,0 @@
-import"./style.5EorJAry.js";import"./legacy.DDGzm-fM.js";import{S as o}from"./Sandbox.D6iTCAan.js";import{S as a}from"./Switch.DL_9tjWb.js";function d(e){o(e,{name:"Switch",get component(){return a},controls:{checked:{kind:"boolean",label:"Checked",default:!1},disabled:{kind:"boolean",label:"Disabled",default:!1}}})}export{d as default};
