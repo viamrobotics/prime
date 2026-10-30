@@ -101,7 +101,7 @@ describe('Popover', () => {
 		expect(getComputedStyle(dialog()!).zIndex).toBe('1200');
 	});
 
-	it('wears the panel chrome', async () => {
+	it('wears the panel styling', async () => {
 		const { container } = render(BoundPopover);
 		await open(container);
 

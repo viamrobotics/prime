@@ -1,7 +1,7 @@
 <!--
 @component
 The strip that holds a [`Tabs`](./Tabs.svelte) root's triggers. Give it an `aria-label` or
-`aria-labelledby`. A strip with one tab is chrome with nothing to switch between, so render it
+`aria-labelledby`. A strip with one tab is a bar with nothing to switch between, so render it
 only when there are two or more.
 -->
 <script lang="ts">

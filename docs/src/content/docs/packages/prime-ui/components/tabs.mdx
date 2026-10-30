@@ -27,7 +27,7 @@ import closableSource from "./tabs/Closable.svelte?raw";
 - `value` on the root is bindable, two-way or as a getter and setter. [State & binding](../state/) explains both modes.
 - Activation is automatic: <kbd>ArrowLeft</kbd>, <kbd>ArrowRight</kbd>, <kbd>Home</kbd>, and <kbd>End</kbd> move focus and select.
 - Each `Tabs.Trigger` is a `role="tab"` element, not a `<button>`, so a control can sit inside it.
-- A strip with one tab is chrome with nothing to switch between. Wrap `Tabs.List` in `{#if}` when the count can drop to one.
+- A strip with one tab is a bar with nothing to switch between. Wrap `Tabs.List` in `{#if}` when the count can drop to one.
 - Navigation tabs, links marked with `aria-current`, are styled anchors, not this component.
 
 ## Anatomy

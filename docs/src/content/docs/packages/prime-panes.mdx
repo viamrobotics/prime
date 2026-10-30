@@ -607,7 +607,7 @@ A few more things keep a page with windows accessible:
 
 #### Moving and resizing without dragging
 
-WCAG 2.5.7 (Dragging Movements) asks that everything a drag does can also be done with single clicks. Arrow keys do not count, since they are not a pointer. The package draws no window chrome, so this click path is yours to render: buttons that move and resize a window, as in the example. `setFloatRect` takes an updater, `(rect) => rect`, for those buttons.
+WCAG 2.5.7 (Dragging Movements) asks that everything a drag does can also be done with single clicks. Arrow keys do not count, since they are not a pointer. The package draws no window frame, so this click path is yours to render: buttons that move and resize a window, as in the example. `setFloatRect` takes an updater, `(rect) => rect`, for those buttons.
 
 ```svelte
 {#snippet pane(node, state)}

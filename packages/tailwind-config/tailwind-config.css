@@ -604,6 +604,133 @@
   }
 }
 
+/*
+ * Notification banner. A white bordered grid of chip, content, inline actions, and dismiss.
+ * Without a `banner-title` it is the compact one-liner. A `banner-title` anywhere inside
+ * switches it to the stacked layout through `:has()`, so the rule holds for any markup.
+ * Column spacing is margins on the parts, because an empty grid track still takes its gap.
+ *
+ * A modifier sets `--banner-light` and `--banner-dark`, and the chip reads them. The info
+ * default sits behind a `:not()` guard so a modifier wins whichever utility is emitted last.
+ */
+@utility banner {
+  @apply relative grid min-h-10 items-center border border-light bg-white p-1.5;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+
+  &:not(.banner-success, .banner-warning, .banner-danger) {
+    --banner-light: var(--color-info-light);
+    --banner-dark: var(--color-info-dark);
+  }
+  &:has(.banner-title) {
+    @apply items-start py-3 pr-3 pl-4;
+  }
+  &:has(.banner-title) .banner-chip {
+    @apply size-8;
+    grid-row: 1 / span 4;
+    & > svg {
+      @apply size-5;
+    }
+  }
+  &:has(.banner-title) .banner-description {
+    @apply mt-0.5 text-subtle-1;
+  }
+  &:not(:has(.banner-title)) .banner-actions {
+    @apply col-start-3 row-start-1 mt-0 ml-4;
+  }
+  &:has(.banner-title) .banner-close {
+    @apply -mt-1.5 -mr-1.5;
+  }
+  &:not(:has(.banner-title)) .banner-close {
+    @apply -my-px;
+  }
+}
+
+@utility banner-info {
+  --banner-light: var(--color-info-light);
+  --banner-dark: var(--color-info-dark);
+}
+
+@utility banner-success {
+  --banner-light: var(--color-success-light);
+  --banner-dark: var(--color-success-dark);
+}
+
+@utility banner-warning {
+  --banner-light: var(--color-warning-light);
+  --banner-dark: var(--color-warning-dark);
+}
+
+@utility banner-danger {
+  --banner-light: var(--color-danger-light);
+  --banner-dark: var(--color-danger-dark);
+}
+
+/* Full-width strip. The doubled class beats the border `banner` declares in any emission order. */
+@utility banner-site {
+  @apply w-full;
+  &.banner {
+    @apply border-x-0 border-t-0;
+  }
+}
+
+/* The icon chip. Its direct `svg` is the glyph. Compact is 28px with a 16px glyph. */
+@utility banner-chip {
+  @apply col-start-1 row-start-1 mr-3 flex size-7 items-center justify-center;
+  background-color: var(--banner-light);
+  color: var(--banner-dark);
+
+  & > svg {
+    @apply size-4;
+  }
+}
+
+@utility banner-title {
+  @apply col-start-2 text-sm font-semibold text-default;
+}
+
+@utility banner-description {
+  @apply col-start-2 text-sm text-default;
+}
+
+@utility banner-actions {
+  @apply col-start-2 mt-2 flex items-center gap-4;
+}
+
+@utility banner-details {
+  @apply col-start-2 mt-2 border-t border-light pt-2;
+}
+
+@utility banner-close {
+  @apply col-start-4 row-start-1 ml-3;
+}
+
+/* Pinned to the bottom edge inside the border. The doubled class beats `progress`'s own `position`. */
+@utility banner-progress {
+  @apply absolute inset-x-0 bottom-0;
+  &.progress {
+    position: absolute;
+  }
+}
+
+/*
+ * Progress bar. The track is the element, the fill is its `.progress-fill` child, which the
+ * consumer sizes with an inline width. Without `aria-valuenow` the bar is indeterminate and
+ * the fill slides, only when the user has not asked for reduced motion.
+ */
+@utility progress {
+  @apply relative block h-0.75 w-full overflow-hidden bg-medium;
+
+  & > .progress-fill {
+    @apply block h-full bg-info-dark;
+  }
+  &:not([aria-valuenow]) > .progress-fill {
+    width: 40%;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: progress-indeterminate 1.5s ease-in-out infinite;
+    }
+  }
+}
+
 /* Scrollbar */
 
 @utility scrollbar-thin {
@@ -962,5 +1089,14 @@
   }
   90% {
     content: "⠏";
+  }
+}
+
+@keyframes progress-indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
   }
 }
