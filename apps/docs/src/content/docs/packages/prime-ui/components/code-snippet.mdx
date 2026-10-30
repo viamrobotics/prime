@@ -1,0 +1,82 @@
+---
+title: CodeSnippet
+description: A read-only block of highlighted code with a copy button.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import CodeSnippetDemo from "./code-snippet/CodeSnippetDemo.svelte";
+import CodeSnippetShowcase from "./code-snippet/CodeSnippetShowcase.svelte";
+import Basic from "./code-snippet/Basic.svelte";
+import basicSource from "./code-snippet/Basic.svelte?raw";
+import Captioned from "./code-snippet/Captioned.svelte";
+import captionedSource from "./code-snippet/Captioned.svelte?raw";
+import WrapLines from "./code-snippet/WrapLines.svelte";
+import wrapLinesSource from "./code-snippet/WrapLines.svelte?raw";
+
+<ComponentIntro name="code-snippet" />
+
+<CodeSnippetDemo client:visible />
+
+- Highlighting is done by prism, synchronously, so the colored code is in the first render. Eight grammars are bundled: bash, dart, go, javascript, json, python, rust, and typescript.
+- The copy button writes `code` to the clipboard and reads `Copied` for two seconds, or `Copy failed` when the browser refuses the write.
+- Token colors come from the code color tokens, which change in dark mode, so dark mode needs nothing extra.
+- Long lines scroll sideways by default. Set `wrapLines` to wrap them instead.
+
+## Usage
+
+### Basic
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+### Captioned
+
+Pass a `caption` snippet as a direct child to show a label beneath the code.
+
+<Example code={captionedSource} title="Captioned.svelte">
+  <Captioned client:visible />
+</Example>
+
+### Wrap lines
+
+`wrapLines` wraps a long line at the edge of the block.
+
+<Example code={wrapLinesSource} title="WrapLines.svelte">
+  <WrapLines client:visible />
+</Example>
+
+### States
+
+One snippet for each language in `codeSnippetLanguages`.
+
+<CodeSnippetShowcase client:visible />
+
+## Styling
+
+`class` and any other attributes land on the `<figure>` root. The `<pre>` wears `text-code` and `bg-light`. Every standard prism token class maps to one code token, grouped as below, so a grammar added later is colored with no new rules. Operators, punctuation, variables, and parameters inherit the text color.
+
+| Prism classes | Color token |
+| --- | --- |
+| `comment`, `prolog`, `doctype`, `cdata`, `shebang`, `hashbang` | `--color-code-comment` |
+| `keyword`, `atrule`, `important` | `--color-code-keyword` |
+| `builtin`, `class-name`, `type-definition`, `generic`, `namespace`, `lifetime-annotation` | `--color-code-type` |
+| `function`, `function-name`, `function-definition`, `macro`, `decorator`, `annotation` | `--color-code-function` |
+| `string`, `char`, `template-string`, `triple-quoted-string`, `string-literal`, `attr-value`, `regex`, `url` | `--color-code-string` |
+| `number`, `constant`, `symbol` | `--color-code-number` |
+| `boolean` | `--color-code-boolean` |
+| `null` | `--color-code-null` |
+| `property`, `attr-name`, `tag`, `selector` | `--color-code-property-keys` |
+
+`CodeSnippet` is native, so it sets no data attributes.
+
+## Keyboard
+
+The copy button is a native button, so <kbd>Tab</kbd> reaches it and <kbd>Enter</kbd> or <kbd>Space</kbd> copies.
+
+## API
+
+<PropsTable name="code-snippet" />

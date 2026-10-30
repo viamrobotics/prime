@@ -1,3 +1,6 @@
+export { default as CodeSnippet } from './CodeSnippet/CodeSnippet.svelte';
+export { codeSnippetLanguages, type CodeSnippetLanguage } from './CodeSnippet/language.ts';
+
 export { default as Icon } from './Icon/Icon.svelte';
 export type { IconSize, IconType } from './Icon/icon.ts';
 

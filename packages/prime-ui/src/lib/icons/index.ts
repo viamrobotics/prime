@@ -1,5 +1,7 @@
 export { default as AskAi } from './AskAi.svelte';
 export { default as CursorMove } from './CursorMove.svelte';
+export { default as DockLeft } from './DockLeft.svelte';
+export { default as DockRight } from './DockRight.svelte';
 export { default as ExternalArrow } from './ExternalArrow.svelte';
 export { default as FilterOutline } from './FilterOutline.svelte';
 export { default as GridOrthographic } from './GridOrthographic.svelte';

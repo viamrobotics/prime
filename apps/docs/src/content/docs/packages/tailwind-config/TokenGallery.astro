@@ -155,6 +155,10 @@ const codeColors = [
   { token: "code-number", className: "text-code-number" },
   { token: "code-boolean", className: "text-code-boolean" },
   { token: "code-null", className: "text-code-null" },
+  { token: "code-keyword", className: "text-code-keyword" },
+  { token: "code-comment", className: "text-code-comment" },
+  { token: "code-type", className: "text-code-type" },
+  { token: "code-function", className: "text-code-function" },
   { token: "code-line-number", className: "text-code-line-number" },
 ];
 
@@ -227,6 +231,9 @@ const textSizes = [
 <span class="text-code-line-number">4</span>    <span class="text-code-property-keys">"stable"</span>: <span class="text-code-boolean">true</span>,
 <span class="text-code-line-number">5</span>    <span class="text-code-property-keys">"deprecated"</span>: <span class="text-code-null">null</span>
 <span class="text-code-line-number">6</span>  {"}"}</code></pre>
+    <pre class="bg-gray-1 border-light overflow-x-auto rounded-sm border p-4 font-mono text-sm leading-relaxed"><code><span class="text-code-line-number">1</span>  <span class="text-code-comment">// a machine on the network</span>
+<span class="text-code-line-number">2</span>  <span class="text-code-keyword">class</span> <span class="text-code-type">Rover</span> {"{"}{"}"}
+<span class="text-code-line-number">3</span>  <span class="text-code-function">drive</span>(<span class="text-code-number">3</span>)</code></pre>
   </section>
 
   <section class="flex flex-col gap-2">

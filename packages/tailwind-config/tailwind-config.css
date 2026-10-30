@@ -19,11 +19,15 @@
 
   /* Code colors */
   --color-code-boolean: #201293;
+  --color-code-comment: #008000;
+  --color-code-function: #795e26;
+  --color-code-keyword: #0000ff;
   --color-code-line-number: #4b758d;
   --color-code-null: #708;
   --color-code-number: #2f6447;
   --color-code-property-keys: #000;
   --color-code-string: #9c251d;
+  --color-code-type: #2b91af;
 
   /* Grayscale */
   --color-black: #131414;
