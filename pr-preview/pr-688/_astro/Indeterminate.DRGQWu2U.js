@@ -1,1 +1,0 @@
-import"./style.CfGBGN8g.js";import"./legacy.Ci45HL22.js";import{c as a,f as e,e as n,r as i}from"./template.COvq6Pn-.js";import{P as s}from"./Progress.CNcsDABe.js";var m=e('<div class="not-content"><!></div>');function l(o){var r=m(),t=n(r);s(t,{label:"Connecting"}),i(r),a(o,r)}export{l as default};
