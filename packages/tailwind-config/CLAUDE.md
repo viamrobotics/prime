@@ -29,6 +29,6 @@ Token values must match the Viam design system at https://design.viam.com/. Don'
 
 A floating component wears a named z layer (`z-dialog`, `z-popover`, `z-tooltip`), never a bare number, and `z-max` is reserved for what nothing may cover.
 
-## History
+## Versioning
 
-Migrated from [viamrobotics/js-config](https://github.com/viamrobotics/js-config/tree/main/packages/tailwind-config) in v1.0.2. Versioning continues from there; consumers see no name change.
+The package name and version line are the ones first published from [viamrobotics/js-config](https://github.com/viamrobotics/js-config/tree/main/packages/tailwind-config), so a consumer upgrades in place.

@@ -48,7 +48,7 @@ On its own, associate it with `aria-describedby`:
 	const color = $derived.by(() => {
 		if (isDisabled) return 'text-disabled';
 		if (currentState === FieldStates.Error) return 'text-danger-dark';
-		if (currentState === FieldStates.Warn) return 'text-warning-dark';
+		if (currentState === FieldStates.Warn) return 'text-warning-text';
 		if (currentState === FieldStates.Info) return 'text-info-dark';
 		return 'text-subtle-1';
 	});

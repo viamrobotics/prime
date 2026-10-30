@@ -19,7 +19,6 @@ The panel of a [`ContextMenu`](./ContextMenu.svelte), portaled to the body and o
 
 	const { id, class: extraClasses, children, ...restProps }: Props = $props();
 
-	// bits-ui puts the content id on its wrapper, but typeahead compares keydowns against the panel's id, so the panel takes the id and the wrapper gives it up.
 	const contentId = $derived(id ?? `context-menu-${uid}`);
 </script>
 
@@ -29,12 +28,6 @@ The panel of a [`ContextMenu`](./ContextMenu.svelte), portaled to the body and o
 		class={['z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-sm', extraClasses]}
 		{...restProps}
 	>
-		{#snippet child({ props, wrapperProps })}
-			<div {...wrapperProps} id={undefined}>
-				<div {...props} id={contentId}>
-					{@render children?.()}
-				</div>
-			</div>
-		{/snippet}
+		{@render children?.()}
 	</ContextMenu.Content>
 </ContextMenu.Portal>

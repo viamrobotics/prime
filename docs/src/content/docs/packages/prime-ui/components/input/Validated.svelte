@@ -5,10 +5,10 @@
   let touched = $state(false);
 
   const isValid = $derived(/^[a-z0-9-]+$/.test(name));
-  const state = $derived(touched && !isValid ? "error" : "none");
+  const fieldState = $derived(touched && !isValid ? "error" : "none");
 </script>
 
-<Field class="not-content flex max-w-xs flex-col gap-1" {state}>
+<Field class="not-content flex max-w-xs flex-col gap-1" state={fieldState}>
   <Label>Machine name</Label>
   <Input.Group>
     <Input bind:value={name} onblur={() => (touched = true)} />

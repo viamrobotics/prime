@@ -32,7 +32,6 @@ The floating panel of a [`Menu.Sub`](./MenuSub.svelte). It opens beside its [`Me
 		...restProps
 	}: Props = $props();
 
-	// bits-ui puts the content id on its wrapper, but typeahead compares keydowns against the panel's id, so the panel takes the id and the wrapper gives it up.
 	const contentId = $derived(id ?? `menu-sub-${uid}`);
 </script>
 
@@ -43,11 +42,5 @@ The floating panel of a [`Menu.Sub`](./MenuSub.svelte). It opens beside its [`Me
 	class={['z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-sm', extraClasses]}
 	{...restProps}
 >
-	{#snippet child({ props, wrapperProps })}
-		<div {...wrapperProps} id={undefined}>
-			<div {...props} id={contentId}>
-				{@render children?.()}
-			</div>
-		</div>
-	{/snippet}
+	{@render children?.()}
 </DropdownMenu.SubContent>

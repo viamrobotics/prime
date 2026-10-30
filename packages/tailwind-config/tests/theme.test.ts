@@ -401,6 +401,29 @@ describe("theme stylesheets compiled through Tailwind", () => {
     },
   );
 
+  it("paints warning text with the text-grade warning token on the badge, the hint color, and the warning button fills", () => {
+    const badge = rulesOf(
+      emitted,
+      (rule) => rule.selector === ".badge-warning",
+    );
+    expect(declarationsOf(badge[0]!).get("color")).toBe(
+      "var(--color-warning-text)",
+    );
+    const warning = rulesOf(
+      emitted,
+      (rule) => rule.selector === ".button-warning",
+    );
+    expect(declarationsOf(warning[0]!).get("--button-text")).toBe(
+      "var(--color-warning-text)",
+    );
+    for (const fill of ["button-outline", "button-ghost"]) {
+      const rule = rulesOf(emitted, (r) => r.selector === `.${fill}`);
+      expect(declarationsOf(rule[0]!).get("color"), fill).toBe(
+        "var(--button-text)",
+      );
+    }
+  });
+
   it("gives a disabled .button the not-allowed cursor", () => {
     const [disabled] = rulesOf(
       emitted,

@@ -40,8 +40,11 @@ Prose that is not the component's own contract (how it relates to other componen
 ```bash
 pnpm --filter @viamrobotics/prime-docs dev       # astro dev; every package resolves to its source and hot-reloads
 pnpm --filter @viamrobotics/prime-docs build     # package builds of prime-ui, prime-panes, prime-tree, and tweakpane-config, then astro build
+pnpm --filter @viamrobotics/prime-docs check     # svelte-check over src against each library's built types
 pnpm --filter @viamrobotics/prime-docs preview   # astro preview against dist/
 ```
+
+`check` runs `astro sync`, which generates the `astro:content` types under `.astro/`, then svelte-check over `src` with each library resolved through its `dist` types, which its wireit dependencies build first. `tsconfig.json` excludes `astro.config.mjs`, since that file imports Starlight's TypeScript sources, which do not typecheck under Astro 6.
 
 `astro dev` is the dev loop for every package. The aliases in `source-aliases.mjs` point each workspace library at its source, and `astro.config.mjs` applies them only under `serve`. `astro build` keeps each package's `svelte` export (`dist`), so the deployed site renders the published artifact. The docs `build` wireit script depends on the `package` build of each library that has one, and `vitest.config.ts` applies the aliases so the docs specs run without a package build.
 

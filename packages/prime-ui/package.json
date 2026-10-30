@@ -143,7 +143,7 @@
 		"@internationalized/date": "^3.12.2",
 		"@mdi/js": "^7.4.47",
 		"@viamrobotics/tailwind-config": "workspace:^",
-		"bits-ui": "^2.18.1",
+		"bits-ui": "^2.20.2",
 		"prismjs": "^1.30.0"
 	},
 	"peerDependencies": {

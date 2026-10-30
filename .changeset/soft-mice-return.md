@@ -1,5 +1,5 @@
 ---
-"@viamrobotics/tailwind-config": major
+"@viamrobotics/tailwind-config": minor
 "@viamrobotics/prime-docs": patch
 ---
 

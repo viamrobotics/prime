@@ -1,6 +1,6 @@
 # prime
 
-Pretty Rad Interactive Modular Elements — Viam's Svelte 5 component-library monorepo. See [ROADMAP.md](ROADMAP.md) for the v2 migration plan; the workspace is currently being rebuilt and most packages haven't landed yet.
+Pretty Rad Interactive Modular Elements, Viam's Svelte 5 component-library monorepo.
 
 ## Monorepo layout
 
@@ -17,6 +17,7 @@ The workspace root holds shared tooling (lint, format, changesets, CI).
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | [`@viamrobotics/prime-ui`](packages/prime-ui/CLAUDE.md)                 | Svelte 5 component library — the v2 of prime.                       |
 | [`@viamrobotics/prime-panes`](packages/prime-panes/CLAUDE.md)           | Resizable, rearrangeable split-pane layouts for Svelte 5.           |
+| [`@viamrobotics/prime-tree`](packages/prime-tree/CLAUDE.md)             | Headless tree view for Svelte 5.                                    |
 | [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md)   | Viam's shared Tailwind CSS v4 configuration: design tokens + fonts. |
 | [`@viamrobotics/tweakpane-config`](packages/tweakpane-config/CLAUDE.md) | Shared Tweakpane theme and helpers for the docs demos.            |
 

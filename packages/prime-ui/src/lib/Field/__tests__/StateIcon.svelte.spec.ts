@@ -11,7 +11,7 @@ const iconPath = (container: Element) => container.querySelector('svg path')?.ge
 describe('Field.StateIcon', () => {
 	it.each([
 		{ state: 'info', icon: mdiInformation, color: 'text-info-dark' },
-		{ state: 'warn', icon: mdiAlert, color: 'text-warning-bright' },
+		{ state: 'warn', icon: mdiAlert, color: 'text-warning-text' },
 		{ state: 'error', icon: mdiAlertCircle, color: 'text-danger-dark' }
 	] as const)('shows the $state icon in $color for a $state field', ({ state, icon, color }) => {
 		const { container } = render(StateIconField, { props: { state } });
