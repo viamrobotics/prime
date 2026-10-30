@@ -1,5 +1,11 @@
 # @viamrobotics/tweakpane-config
 
+## 0.2.3
+### Patch Changes
+
+- 6cc7253: Drop SvelteKit and adapter-static from the package tooling and remove the playground apps. Each package's demo now lives on its docs page. No runtime change: the published files are the same.
+- ad3347a: The README says to call setGlobalDefaultTheme once per theme change, since a repeated call with the same theme turns it off.
+
 ## 0.2.2
 
 ### Patch Changes

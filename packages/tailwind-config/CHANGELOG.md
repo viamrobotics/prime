@@ -1,5 +1,20 @@
 # @viamrobotics/tailwind-config
 
+## 1.5.0
+### Minor Changes
+
+- 17def35: Adds semantic z layer classes: z-sticky, z-overlay, z-dialog, z-popover, z-menu, z-toast, z-tooltip, and z-max. z-max is now 9999.
+- 3e54765: Every brand color is a family with the light, medium-light, medium, bright, and dark variants in both themes, replacing the single values and the three partial extension sets.
+- ad3347a: Buttons compose a color with a fill: button-warning and button-info join the colors, button-outline and button-ghost are the fills, button-dark replaces button-primary, and the icon button takes the same modifiers, replacing button-outline-danger, icon-button-secondary, and icon-button-danger. The bare class is the default and the only neutral outline.
+- 61d65b8: Adds CodeSnippet, highlighted by prism through the code color tokens, which gain comment, function, keyword, and type, and the DockLeft and DockRight glyphs.
+
+### Patch Changes
+
+- 6cc7253: The input class on a native single select replaces the browser's arrow with a chevron in the subtle text color and pads the right edge for it, so the caret no longer sits against the border.
+- 6cc7253: Drop SvelteKit and adapter-static from the package tooling and remove the playground apps. Each package's demo now lives on its docs page. No runtime change: the published files are the same.
+- 3e54765: Adds the warning-text token for readable amber text on light surfaces, used by the warning badge, hint, field state icon, and button fills, moves the input warn border to warning-dark, and darkens the icon button glyph to gray-7.
+- 6cc7253: The focus-ring and focus-ring-within outlines use the link blue instead of the power-button green, which was never the intended focus color.
+
 ## 1.4.0
 
 ### Minor Changes

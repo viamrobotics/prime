@@ -1,6 +1,6 @@
 {
 	"name": "@viamrobotics/prime-ui",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Viam's Svelte 5 component library.",
 	"license": "Apache-2.0",
 	"publishConfig": {
