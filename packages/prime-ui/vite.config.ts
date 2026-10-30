@@ -17,7 +17,9 @@ export default defineConfig({
 					fileParallelism: false,
 					browser: {
 						enabled: true,
-						provider: playwright(),
+						provider: playwright({
+							contextOptions: { permissions: ['clipboard-read', 'clipboard-write'] }
+						}),
 						instances: [{ browser: 'chromium', headless: true }]
 					},
 					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
