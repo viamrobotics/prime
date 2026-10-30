@@ -16,7 +16,7 @@ Headless tree view for Svelte 5. The package owns behavior and accessibility: ke
 - `src/lib/index.ts`: the public exports.
 - `src/lib/**/__tests__/`: the specs, excluded from the published package.
 - `test/`: shared test infrastructure, never published. `tailwind.css` is the stylesheet the fixtures import, `nodes.ts` holds the shared node data, and `fixtures/` holds the wrapper components specs render.
-- The demos live on the package's page in [apps/docs](../../apps/docs/), under `src/content/docs/packages/prime-tree/`. Run `pnpm --filter @viamrobotics/prime-docs dev` to see them against this package's source.
+- The demos live on the package's page in [docs](../../docs/), under `src/content/docs/packages/prime-tree/`. Run `pnpm --filter @viamrobotics/prime-docs dev` to see them against this package's source.
 - `styles.css`: the consumer's Tailwind entry. It imports the tokens and points Tailwind at `dist`.
 
 ## Commands

@@ -107,8 +107,8 @@
       "name": "docs",
       "prefix": "DOCS",
       "packageName": "@viamrobotics/prime-docs",
-      "pathPrefix": "apps/docs/",
-      "sourcePath": "apps/docs/src",
+      "pathPrefix": "docs/",
+      "sourcePath": "docs/src",
       "label": "Docs",
       "fixCommands": [],
       "verifyCommands": ["build"]

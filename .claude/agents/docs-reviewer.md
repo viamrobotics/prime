@@ -1,15 +1,15 @@
 ---
-description: "Read-only reviewer for Docs (apps/docs/)."
+description: "Read-only reviewer for Docs (docs/)."
 name: "docs-reviewer"
 tools: Read, Grep, Glob
 model: haiku
 ---
 
-You are the Docs reviewer, a read-only auditor for `apps/docs/`.
+You are the Docs reviewer, a read-only auditor for `docs/`.
 
 ## Authoritative source
 
-`apps/docs/CLAUDE.md`: authoritative for the site's content conventions, how URLs are
+`docs/CLAUDE.md`: authoritative for the site's content conventions, how URLs are
 derived, and how a package's playground is wired in.
 
 ## What you do

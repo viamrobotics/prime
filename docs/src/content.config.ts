@@ -5,7 +5,7 @@ import { defineCollection } from "astro:content";
 import { componentSchema, packageComponents } from "./loaders/components";
 
 const packageLib = (name: string) =>
-  new URL(`../../../packages/${name}/src/lib/`, import.meta.url);
+  new URL(`../../packages/${name}/src/lib/`, import.meta.url);
 
 const components = (name: string, links: "pages" | "anchors") =>
   defineCollection({

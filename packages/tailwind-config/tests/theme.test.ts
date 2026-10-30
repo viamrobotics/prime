@@ -1,21 +1,21 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { compile, optimize } from "@tailwindcss/node";
-import postcss, { AtRule, type Container, type Root, type Rule } from "postcss";
+import postcss, { AtRule, type Container, type Root, Rule } from "postcss";
 import { beforeAll, describe, expect, it } from "vitest";
 
 const packageDirectory = path.resolve(import.meta.dirname, "..");
 const DARK_SCHEME_MEDIA = "(prefers-color-scheme: dark)";
 const CHROME_CLASSES = [
   "button",
-  "button-primary",
-  "button-ghost",
+  "button-dark",
   "button-danger",
-  "button-outline-danger",
+  "button-warning",
   "button-success",
+  "button-info",
+  "button-outline",
+  "button-ghost",
   "icon-button",
-  "icon-button-secondary",
-  "icon-button-danger",
   "badge",
   "badge-success",
   "badge-warning",
@@ -30,6 +30,14 @@ const CHROME_CLASSES = [
   "focus-ring",
   "focus-ring-within",
 ];
+const BUTTON_COLORS = [
+  "button-dark",
+  "button-danger",
+  "button-warning",
+  "button-success",
+  "button-info",
+];
+
 const CANDIDATES = [
   "dark:bg-gray-9",
   "bg-extralight",
@@ -88,6 +96,21 @@ const startsWithClass = (rule: Rule, name: string): boolean =>
   rule.selectors.some((selector) =>
     new RegExp(`^\\.${name}(?![\\w-])`).test(selector),
   );
+
+// The guard stays nested under its rule or is hoisted around a copy of it, depending on the
+// optimizer, so the declarations are read from whichever node holds them.
+const contrastGuards = (root: Root, name: string): Container[] => {
+  const guards: Container[] = [];
+  root.walkAtRules("supports", (atRule) => {
+    if (!atRule.params.includes("contrast-color(red)")) return;
+    const nested = atRule.parent instanceof Rule;
+    const owner = nested ? atRule.parent : atRule.first;
+    if (owner instanceof Rule && owner.selector.startsWith(`.${name}:`)) {
+      guards.push(nested ? atRule : owner);
+    }
+  });
+  return guards;
+};
 
 const firstRuleIndex = (root: Root, name: string): number =>
   rulesOf(root, () => true).findIndex((rule) => startsWithClass(rule, name));
@@ -302,12 +325,44 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(paddingIndex).toBeGreaterThan(buttonIndex);
   });
 
-  it("emits .button-primary after .button so the modifier wins", () => {
-    const buttonIndex = firstRuleIndex(emitted, "button");
-    const modifierIndex = firstRuleIndex(emitted, "button-primary");
-    expect(buttonIndex).toBeGreaterThanOrEqual(0);
-    expect(modifierIndex).toBeGreaterThan(buttonIndex);
-  });
+  it.each(BUTTON_COLORS)(
+    "emits .%s after .button and .icon-button so the color wins",
+    (name) => {
+      const colorIndex = firstRuleIndex(emitted, name);
+      expect(colorIndex).toBeGreaterThan(firstRuleIndex(emitted, "button"));
+      expect(colorIndex).toBeGreaterThan(
+        firstRuleIndex(emitted, "icon-button"),
+      );
+    },
+  );
+
+  it.each(BUTTON_COLORS)(
+    "paints .%s solid only without a fill modifier and only when enabled",
+    (name) => {
+      const solid = rulesOf(
+        emitted,
+        (rule) =>
+          rule.selector ===
+            `.${name}:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost)` &&
+          !(rule.parent instanceof AtRule && rule.parent.name === "supports"),
+      );
+      expect(solid).toHaveLength(1);
+      expect(declarationsOf(solid[0]!).get("background-color")).toBe(
+        "var(--button-dark)",
+      );
+    },
+  );
+
+  it.each(BUTTON_COLORS)(
+    "paints .%s text with contrast-color behind an @supports guard",
+    (name) => {
+      const guards = contrastGuards(emitted, name);
+      expect(guards).toHaveLength(1);
+      expect(declarationsOf(guards[0]!).get("color")).toBe(
+        "contrast-color(var(--button-dark))",
+      );
+    },
+  );
 
   it("gives .input the danger border when aria-invalid is true", () => {
     const [invalid] = rulesOf(
@@ -333,6 +388,18 @@ describe("theme stylesheets compiled through Tailwind", () => {
       "var(--color-subtle-2)",
     );
   });
+
+  it.each(["button", "icon-button"])(
+    "lets .%s pass its text color to progress-dots inside it",
+    (name) => {
+      const rules = rulesOf(
+        emitted,
+        (rule) => rule.selector === `.${name} .progress-dots`,
+      );
+      expect(rules).toHaveLength(1);
+      expect(declarationsOf(rules[0]!).get("color")).toBe("inherit");
+    },
+  );
 
   it("gives a disabled .button the not-allowed cursor", () => {
     const [disabled] = rulesOf(

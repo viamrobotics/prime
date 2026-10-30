@@ -1,5 +1,5 @@
 packages:
-  - apps/*
+  - docs
   - packages/*
 catalog:
   # Shared frontend toolchain (library packages)

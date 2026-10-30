@@ -1,18 +1,16 @@
 <script lang="ts">
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
-  import { ThemeUtils, Button } from "svelte-tweakpane-ui";
+  import { Button } from "svelte-tweakpane-ui";
   import { theme } from "@docs/theme.svelte.ts";
 
   let clickCount = $state(0);
 
-  $effect(() => {
-    ThemeUtils.setGlobalDefaultTheme(
-      theme.current === "dark" ? primeThemeDark : primeTheme,
-    );
-  });
+  const paneTheme = $derived(
+    theme.current === "dark" ? primeThemeDark : primeTheme,
+  );
 </script>
 
-<Button
+<Button theme={paneTheme}
   title="Clicked {clickCount} times"
   label="Button"
   on:click={() => {

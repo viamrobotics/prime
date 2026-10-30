@@ -16,34 +16,34 @@ const here = (path) => fileURLToPath(new URL(path, import.meta.url));
 export const sourceAliases = [
   {
     find: "@viamrobotics/prime-ui/icons",
-    replacement: here("../../packages/prime-ui/src/lib/icons/index.ts"),
+    replacement: here("../packages/prime-ui/src/lib/Icon/icons/index.ts"),
   },
   {
     find: "@viamrobotics/prime-ui/styles.css",
-    replacement: here("../../packages/prime-ui/styles.css"),
+    replacement: here("../packages/prime-ui/styles.css"),
   },
   {
     find: /^@viamrobotics\/prime-ui$/,
-    replacement: here("../../packages/prime-ui/src/lib/index.ts"),
+    replacement: here("../packages/prime-ui/src/lib/index.ts"),
   },
   {
     find: "@viamrobotics/prime-panes/styles.css",
-    replacement: here("../../packages/prime-panes/styles.css"),
+    replacement: here("../packages/prime-panes/styles.css"),
   },
   {
     find: /^@viamrobotics\/prime-panes$/,
-    replacement: here("../../packages/prime-panes/src/lib/index.ts"),
+    replacement: here("../packages/prime-panes/src/lib/index.ts"),
   },
   {
     find: "@viamrobotics/prime-tree/styles.css",
-    replacement: here("../../packages/prime-tree/styles.css"),
+    replacement: here("../packages/prime-tree/styles.css"),
   },
   {
     find: /^@viamrobotics\/prime-tree$/,
-    replacement: here("../../packages/prime-tree/src/lib/index.ts"),
+    replacement: here("../packages/prime-tree/src/lib/index.ts"),
   },
   {
     find: /^@viamrobotics\/tweakpane-config$/,
-    replacement: here("../../packages/tweakpane-config/src/lib/index.ts"),
+    replacement: here("../packages/tweakpane-config/src/lib/index.ts"),
   },
 ];

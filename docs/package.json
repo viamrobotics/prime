@@ -14,10 +14,10 @@
 		"build": {
 			"command": "astro build",
 			"dependencies": [
-				"../../packages/prime-ui:package",
-				"../../packages/prime-panes:package",
-				"../../packages/prime-tree:package",
-				"../../packages/tweakpane-config:package"
+				"../packages/prime-ui:package",
+				"../packages/prime-panes:package",
+				"../packages/prime-tree:package",
+				"../packages/tweakpane-config:package"
 			],
 			"files": [
 				"src/**",
@@ -26,15 +26,15 @@
 				"source-aliases.mjs",
 				"tsconfig.json",
 				"package.json",
-				"../../packages/prime-ui/dist/**",
-				"../../packages/prime-ui/src/lib/**",
-				"../../packages/prime-panes/dist/**",
-				"../../packages/prime-panes/src/lib/**",
-				"../../packages/prime-tree/dist/**",
-				"../../packages/prime-tree/src/lib/**",
-				"../../packages/tweakpane-config/dist/**",
-				"../../packages/tailwind-config/tailwind-config.css",
-				"../../packages/tailwind-config/tailwind-config-dark.css"
+				"../packages/prime-ui/dist/**",
+				"../packages/prime-ui/src/lib/**",
+				"../packages/prime-panes/dist/**",
+				"../packages/prime-panes/src/lib/**",
+				"../packages/prime-tree/dist/**",
+				"../packages/prime-tree/src/lib/**",
+				"../packages/tweakpane-config/dist/**",
+				"../packages/tailwind-config/tailwind-config.css",
+				"../packages/tailwind-config/tailwind-config-dark.css"
 			],
 			"output": [
 				"dist/**",
@@ -61,12 +61,12 @@
 				"source-aliases.mjs",
 				"tsconfig.json",
 				"package.json",
-				"../../packages/prime-ui/src/lib/**",
-				"../../packages/prime-panes/src/lib/**",
-				"../../packages/prime-tree/src/lib/**",
-				"../../packages/tweakpane-config/src/lib/**",
-				"../../packages/tailwind-config/tailwind-config.css",
-				"../../packages/tailwind-config/tailwind-config-dark.css"
+				"../packages/prime-ui/src/lib/**",
+				"../packages/prime-panes/src/lib/**",
+				"../packages/prime-tree/src/lib/**",
+				"../packages/tweakpane-config/src/lib/**",
+				"../packages/tailwind-config/tailwind-config.css",
+				"../packages/tailwind-config/tailwind-config-dark.css"
 			],
 			"output": [],
 			"packageLocks": [

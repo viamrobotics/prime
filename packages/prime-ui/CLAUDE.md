@@ -1,6 +1,6 @@
 # @viamrobotics/prime-ui
 
-Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintained **headless** primitives ([bits-ui](https://bits-ui.com)) or native elements, dressed in `@viamrobotics/tailwind-config` design tokens. Source lives in `src/lib/`. There is no app in this package: the docs site ([apps/docs](../../apps/docs/)) is where components are demonstrated and where you look at them while developing.
+Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintained **headless** primitives ([bits-ui](https://bits-ui.com)) or native elements, dressed in `@viamrobotics/tailwind-config` design tokens. Source lives in `src/lib/`. There is no app in this package: the docs site ([docs](../../docs/)) is where components are demonstrated and where you look at them while developing.
 
 ## Layout
 
@@ -45,9 +45,9 @@ Root scripts (`pnpm build`, `pnpm check`, `pnpm lint`, `pnpm test`) fan these ac
 
 ## Where components are demonstrated
 
-The docs site is the only consumer of demos. Every component has a page under `apps/docs/src/content/docs/packages/prime-ui/components/<slug>.mdx`, with its `Sandbox` demo and states showcase beside it in `<slug>/`. **A new component is not done until it has a docs page.**
+The docs site is the only consumer of demos. Every component has a page under `docs/src/content/docs/packages/prime-ui/components/<slug>.mdx`, with its `Sandbox` demo and states showcase beside it in `<slug>/`. **A new component is not done until it has a docs page.**
 
-`astro dev` aliases `@viamrobotics/prime-ui` to `src/lib/index.ts`, so edits here hot-reload into the docs with no build. `astro build` uses the package's `svelte` export (`dist`), so the published site renders what npm consumers get. The alias lives in `apps/docs/astro.config.mjs`.
+`astro dev` aliases `@viamrobotics/prime-ui` to `src/lib/index.ts`, so edits here hot-reload into the docs with no build. `astro build` uses the package's `svelte` export (`dist`), so the published site renders what npm consumers get. The alias lives in `docs/astro.config.mjs`.
 
 ## Authoring components
 
@@ -74,7 +74,7 @@ Two component flavors:
 - **native inputs (`Input`, `NumberInput`, `Textarea`) keep native handlers**: each renders one real `<input bind:value>` (or `<textarea>`) with no wrapper, so `oninput`/`onchange`/`onblur`/… pass through via `{...restProps}` for side effects, alongside `bind:value`. `Input.value` is a `string`, and its `type` admits only the native types whose value is a string (`number`, `range`, `checkbox`, `radio`, and `file` are excluded, since Svelte binds them differently). `NumberInput` renders its own `<input type="number">` with `value?: number` and a `step` that admits the native `'any'`. A specialized input component is warranted only when the value type differs (`NumberInput`) or native UI is missing (date and time fields, pin input). Otherwise it is `Input` with a `type`, never a `TextInput` or `PasswordInput` beside it. `Textarea` is the multi-line one, growing with its content through `field-sizing: content` with `rows` as the fallback. An empty `NumberInput` is `undefined`; a string-valued control starts `undefined` and binds `''` once the user has cleared it, which is what Svelte's `bind:value` yields there. All three take their Field wiring from `Input/useInputControl.svelte.ts` so they never drift, and all three wear the `input` class from `@viamrobotics/tailwind-config`, which reads `disabled`, `readonly`, `aria-invalid`, and `data-field-state` off the element. Adornments (a leading icon, a unit suffix, `Field.StateIcon`) go in an `Input.Group` (`Input/InputGroup.svelte`): it wears the same `input` class, whose `& > input` rule strips the inner input's border, padding, and background and whose `:has(> input…)` alternatives restyle the group from the input's attributes, so no context and no JavaScript are involved. It forwards a pointer-down on its padding to the input. No `!important` anywhere: precedence is expressed in the selectors.
 - **widgets still forward DOM handlers.** `Checkbox`, `RadioGroup.Item`, and `Select.Trigger` render a real `<button>`, and bits-ui composes a consumer `onfocus`/`onblur`/`onclick`/`onkeydown` with its own (consumer first, `preventDefault` stops bits-ui's). Verified in the browser. What never fires is `change`/`input`, since no native control changes: that is the reason for bind-only, not a lack of pass-through. `focus`/`blur` do not bubble, so a group-level listener on `RadioGroup` is `onfocusin`/`onfocusout`. `Select` renders no element: its `Props` is a plain interface with no HTML attributes, so a handler or `class` on `<Select>` is a type error instead of a silent drop. They belong on `Select.Trigger`.
 
-Full model + the non-obvious gotchas (Svelte cannot detect if a prop is bound, and native `bind:value` reads the input's runtime `type`) live in [apps/docs/src/content/docs/packages/prime-ui/components/state.mdx](../../apps/docs/src/content/docs/packages/prime-ui/components/state.mdx).
+Full model + the non-obvious gotchas (Svelte cannot detect if a prop is bound, and native `bind:value` reads the input's runtime `type`) live in [docs/src/content/docs/packages/prime-ui/components/state.mdx](../../docs/src/content/docs/packages/prime-ui/components/state.mdx).
 
 ### Field: form parts expect to live in one
 
@@ -122,7 +122,7 @@ bits-ui 2.18.1 puts a menu content's `id` on its wrapper element while its typea
 
 ### Icon
 
-`Icon` takes an `icon` prop: an SVG path string (an `@mdi/js` export, drawn on a 24×24 viewBox) **or** any Svelte icon component, rendered directly. prime ships no icon set: mdi is what the Viam app renders, so consumers bring `@mdi/js`, and internal parts import the few paths they use (`mdiChevronDown`, `mdiCheck`, …) rather than a shared map. The hand-drawn Viam glyphs live in `src/lib/icons/` as components over an internal `Glyph.svelte` base and ship from the `@viamrobotics/prime-ui/icons` subpath (`package.json` `exports["./icons"]`). The docs app aliases that subpath to source in dev, ahead of the bare package alias. `Icon` is `aria-hidden` by default and becomes `role="img"` when given `aria-label` or `aria-labelledby`. It emits no `data-testid`: a spec asserts the rendered `svg path`'s `d` against the same `@mdi/js` export. The old curated names map to `@mdi/js` exports in the migration table on the docs Icon page.
+`Icon` takes an `icon` prop: an SVG path string (an `@mdi/js` export, drawn on a 24×24 viewBox) **or** any Svelte icon component, rendered directly. prime ships no icon set: mdi is what the Viam app renders, so consumers bring `@mdi/js`, and internal parts import the few paths they use (`mdiChevronDown`, `mdiCheck`, …) rather than a shared map. The hand-drawn Viam glyphs live in `src/lib/Icon/icons/` as components over an internal `Glyph.svelte` base and ship from the `@viamrobotics/prime-ui/icons` subpath (`package.json` `exports["./icons"]`). The docs app aliases that subpath to source in dev, ahead of the bare package alias. `Icon` is `aria-hidden` by default and becomes `role="img"` when given `aria-label` or `aria-labelledby`. It emits no `data-testid`: a spec asserts the rendered `svg path`'s `d` against the same `@mdi/js` export. The old curated names map to `@mdi/js` exports in the migration table on the docs Icon page.
 
 ### Styling
 
@@ -140,12 +140,12 @@ Four house rules on top of that:
 
 Open each component `.svelte` with an `@component` block: one-sentence description, a link to the bits-ui component if headless-backed, and a minimal `bind:` example. No prop docs there. Put those as `/** */` JSDoc on each `Props` field, with `@default` where the default is not obvious from the destructuring.
 
-**These comments are the docs site.** The docs loader (`apps/docs/src/loaders/prime-ui-components.ts`) renders the `@component` block as the component page's intro and builds the props table from the `Props` interface JSDoc, so:
+**These comments are the docs site.** The docs loader (`docs/src/loaders/prime-ui-components.ts`) renders the `@component` block as the component page's intro and builds the props table from the `Props` interface JSDoc, so:
 
 - Write the block as markdown. Fenced ` ```svelte ` blocks become code samples.
 - Link to a sibling component as `[`Select.Trigger`](./SelectTrigger.svelte)` or `[`Field`](../Field/Field.svelte)`. The loader rewrites those to docs links; they also work on editor hover.
 - Name the interface `Props`. The loader only recognizes an `interface`, so a part with no own props still declares one (the `id` narrowing above gives it a member, which also keeps `@typescript-eslint/no-empty-object-type` quiet).
-- A new root export in `index.ts` gets a collection entry automatically. The docs page under `apps/docs/src/content/docs/packages/prime-ui/components/` is still yours to add.
+- A new root export in `index.ts` gets a collection entry automatically. The docs page under `docs/src/content/docs/packages/prime-ui/components/` is still yours to add.
 
 ## Tests
 

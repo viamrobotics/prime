@@ -282,21 +282,43 @@
 }
 
 /*
- * Default button. Modifiers (`button-primary` and so on) only recolor. Reads `:disabled`,
+ * Buttons compose a color family with a fill. `button` alone is the neutral family at the
+ * outline fill, which is the default button. A color modifier (`button-danger`,
+ * `button-warning`, `button-success`, `button-info`) assigns the five `--button-*` custom
+ * properties from its family's tokens and paints the solid fill. `button-dark` is the
+ * neutral family at the solid fill. A fill modifier (`button-outline`, `button-ghost`) only
+ * paints from those properties, so it composes with any color. `icon-button` sets the same
+ * properties, so every modifier applies to it too. Every class reads `:disabled`,
  * `[aria-disabled="true"]`, and `[aria-busy="true"]`.
+ *
+ * Solid text is `contrast-color()` of the fill where the browser has it, so a light family
+ * such as warning gets dark text. White is the fallback. The `@supports` probe passes a
+ * literal, `red`, because `var()` parses everywhere and would make the probe true in a
+ * browser that then drops the real declaration. The literal paints nothing.
  */
 @utility button {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-sm border border-light bg-light px-3 py-1.5 text-sm whitespace-nowrap text-default transition-colors select-none focus-ring;
+  --button-dark: var(--color-gray-9);
+  --button-border: var(--color-gray-3);
+  --button-medium: var(--color-gray-4);
+  --button-medium-light: var(--color-gray-2);
+  --button-light: var(--color-gray-1);
+  @apply inline-flex items-center justify-center gap-1.5 rounded-sm border px-3 py-1.5 text-sm whitespace-nowrap transition-colors select-none focus-ring;
+  border-color: var(--button-border);
+  background-color: var(--button-light);
+  color: var(--button-dark);
 
   &:hover {
-    border-color: var(--color-gray-4);
-    background-color: var(--color-gray-2);
+    border-color: var(--button-medium);
+    background-color: var(--button-medium-light);
   }
   &:active {
-    background-color: var(--color-gray-2);
+    background-color: var(--button-medium-light);
   }
   &[aria-busy="true"] {
     cursor: progress;
+  }
+  & .progress-dots {
+    color: inherit;
   }
   &:is(:disabled, [aria-disabled="true"]) {
     cursor: not-allowed;
@@ -306,82 +328,28 @@
   }
 }
 
-@utility button-primary {
-  border-color: var(--color-gray-9);
-  background-color: var(--color-gray-9);
-  color: var(--color-white);
-  &:not(:disabled, [aria-disabled="true"]):hover,
-  &:not(:disabled, [aria-disabled="true"]):active {
-    border-color: var(--color-black);
-    background-color: var(--color-black);
-  }
-}
-
-@utility button-ghost {
-  border-color: transparent;
-  background-color: transparent;
-  color: var(--color-default);
-  &:not(:disabled, [aria-disabled="true"]):hover {
-    border-color: transparent;
-    background-color: var(--color-ghost-light);
-  }
-  &:not(:disabled, [aria-disabled="true"]):active {
-    border-color: var(--color-ghost-medium);
-    background-color: var(--color-ghost-medium);
-  }
-}
-
-@utility button-danger {
-  border-color: var(--color-danger-dark);
-  background-color: var(--color-danger-dark);
-  color: var(--color-white);
-  &:not(:disabled, [aria-disabled="true"]):hover,
-  &:not(:disabled, [aria-disabled="true"]):active {
-    border-color: color-mix(in oklab, var(--color-danger-dark) 88%, black);
-    background-color: color-mix(in oklab, var(--color-danger-dark) 88%, black);
-  }
-}
-
-@utility button-outline-danger {
-  border-color: var(--color-danger-medium);
-  background-color: var(--color-danger-light);
-  color: var(--color-danger-dark);
-  &:not(:disabled, [aria-disabled="true"]):hover,
-  &:not(:disabled, [aria-disabled="true"]):active {
-    border-color: var(--color-danger-medium);
-    background-color: var(--color-danger-medium-light);
-  }
-}
-
-@utility button-success {
-  border-color: var(--color-success-dark);
-  background-color: var(--color-success-dark);
-  color: var(--color-white);
-  &:not(:disabled, [aria-disabled="true"]):hover,
-  &:not(:disabled, [aria-disabled="true"]):active {
-    border-color: color-mix(in oklab, var(--color-success-dark) 88%, black);
-    background-color: color-mix(in oklab, var(--color-success-dark) 88%, black);
-  }
-}
-
-/*
- * Square icon-only button. Carries `aria-label` or `aria-labelledby`. Reads `:disabled`,
- * `[aria-disabled="true"]`, and `[aria-busy="true"]`.
- */
 @utility icon-button {
+  --button-dark: var(--color-gray-9);
+  --button-border: var(--color-gray-3);
+  --button-medium: var(--color-gray-4);
+  --button-medium-light: var(--color-gray-2);
+  --button-light: var(--color-gray-1);
   @apply inline-flex size-7.5 items-center justify-center rounded-sm border border-transparent text-gray-6 transition-colors focus-ring;
 
   &:hover {
-    border-color: var(--color-gray-4);
-    background-color: var(--color-gray-2);
+    border-color: var(--button-medium);
+    background-color: var(--button-medium-light);
     color: var(--color-gray-7);
   }
   &:active {
-    background-color: var(--color-gray-2);
+    background-color: var(--button-medium-light);
     color: var(--color-gray-8);
   }
   &[aria-busy="true"] {
     cursor: progress;
+  }
+  & .progress-dots {
+    color: inherit;
   }
   &:is(:disabled, [aria-disabled="true"]) {
     cursor: not-allowed;
@@ -389,37 +357,138 @@
   }
 }
 
-@utility icon-button-secondary {
-  border-color: var(--color-gray-3);
-  background-color: var(--color-gray-1);
-  &:not(:disabled, [aria-disabled="true"]):hover {
-    border-color: var(--color-gray-4);
-    background-color: var(--color-gray-2);
+@utility button-dark {
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost) {
+    border-color: var(--button-dark);
+    background-color: var(--button-dark);
+    color: var(--color-white);
+    @supports (color: contrast-color(red)) {
+      color: contrast-color(var(--button-dark));
+    }
   }
-  &:not(:disabled, [aria-disabled="true"]):active {
-    border-color: var(--color-gray-4);
-    background-color: var(--color-gray-2);
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost):is(
+      :hover,
+      :active
+    ) {
+    border-color: color-mix(in oklab, var(--button-dark) 88%, black);
+    background-color: color-mix(in oklab, var(--button-dark) 88%, black);
   }
 }
 
-@utility icon-button-danger {
+@utility button-danger {
+  --button-dark: var(--color-danger-dark);
+  --button-border: var(--color-danger-medium);
+  --button-medium: var(--color-danger-medium);
+  --button-medium-light: var(--color-danger-medium-light);
+  --button-light: var(--color-danger-light);
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost) {
+    border-color: var(--button-dark);
+    background-color: var(--button-dark);
+    color: var(--color-white);
+    @supports (color: contrast-color(red)) {
+      color: contrast-color(var(--button-dark));
+    }
+  }
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost):is(
+      :hover,
+      :active
+    ) {
+    border-color: color-mix(in oklab, var(--button-dark) 88%, black);
+    background-color: color-mix(in oklab, var(--button-dark) 88%, black);
+  }
+}
+
+@utility button-warning {
+  --button-dark: var(--color-warning-dark);
+  --button-border: var(--color-warning-medium);
+  --button-medium: var(--color-warning-medium);
+  --button-medium-light: var(--color-warning-medium-light);
+  --button-light: var(--color-warning-light);
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost) {
+    border-color: var(--button-dark);
+    background-color: var(--button-dark);
+    color: var(--color-white);
+    @supports (color: contrast-color(red)) {
+      color: contrast-color(var(--button-dark));
+    }
+  }
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost):is(
+      :hover,
+      :active
+    ) {
+    border-color: color-mix(in oklab, var(--button-dark) 88%, black);
+    background-color: color-mix(in oklab, var(--button-dark) 88%, black);
+  }
+}
+
+@utility button-success {
+  --button-dark: var(--color-success-dark);
+  --button-border: var(--color-success-medium);
+  --button-medium: var(--color-success-medium);
+  --button-medium-light: var(--color-success-medium-light);
+  --button-light: var(--color-success-light);
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost) {
+    border-color: var(--button-dark);
+    background-color: var(--button-dark);
+    color: var(--color-white);
+    @supports (color: contrast-color(red)) {
+      color: contrast-color(var(--button-dark));
+    }
+  }
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost):is(
+      :hover,
+      :active
+    ) {
+    border-color: color-mix(in oklab, var(--button-dark) 88%, black);
+    background-color: color-mix(in oklab, var(--button-dark) 88%, black);
+  }
+}
+
+@utility button-info {
+  --button-dark: var(--color-info-dark);
+  --button-border: var(--color-info-medium);
+  --button-medium: var(--color-info-medium);
+  --button-medium-light: var(--color-info-medium-light);
+  --button-light: var(--color-info-light);
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost) {
+    border-color: var(--button-dark);
+    background-color: var(--button-dark);
+    color: var(--color-white);
+    @supports (color: contrast-color(red)) {
+      color: contrast-color(var(--button-dark));
+    }
+  }
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost):is(
+      :hover,
+      :active
+    ) {
+    border-color: color-mix(in oklab, var(--button-dark) 88%, black);
+    background-color: color-mix(in oklab, var(--button-dark) 88%, black);
+  }
+}
+
+@utility button-outline {
+  border-color: var(--button-border);
+  background-color: var(--button-light);
+  color: var(--button-dark);
+  &:not(:disabled, [aria-disabled="true"]):hover,
+  &:not(:disabled, [aria-disabled="true"]):active {
+    border-color: var(--button-medium);
+    background-color: var(--button-medium-light);
+  }
+}
+
+@utility button-ghost {
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--button-dark);
   &:not(:disabled, [aria-disabled="true"]):hover {
     border-color: transparent;
-    background-color: color-mix(
-      in srgb,
-      var(--color-danger-dark) 10%,
-      transparent
-    );
-    color: var(--color-danger-dark);
+    background-color: color-mix(in srgb, var(--button-dark) 8%, transparent);
   }
   &:not(:disabled, [aria-disabled="true"]):active {
     border-color: transparent;
-    background-color: color-mix(
-      in srgb,
-      var(--color-danger-dark) 16%,
-      transparent
-    );
-    color: var(--color-danger-dark);
+    background-color: color-mix(in srgb, var(--button-dark) 14%, transparent);
   }
 }
 

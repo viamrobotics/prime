@@ -5,153 +5,31 @@ description: Design-system buttons, badges, pills, inputs, and more as plain Tai
 
 import { Aside, Code } from "@astrojs/starlight/components";
 
+import ButtonMatrix from "./ButtonMatrix.astro";
+
 The component classes are `@utility` classes shipped by `@viamrobotics/tailwind-config`. They style native elements, bits-ui triggers in prime-ui (`<Dialog.Close class="icon-button">`), and markup outside Svelte.
 
 Each example below is static HTML wearing the class list it shows. Hover is not rendered statically, so the tables name the hover change in words.
 
-A bare class is the design-system default. A modifier beside it recolors, as in `class="button button-primary"`. Utilities written after the class win, so `class="button px-4"` overrides the padding.
+A bare class is the design-system default. A modifier beside it recolors or changes the fill, as in `class="button button-danger button-outline"`. Utilities written after the class win, so `class="button px-4"` overrides the padding.
 
 ## button
 
-Modifiers: `button-primary`, `button-ghost`, `button-danger`, `button-outline-danger`, and `button-success`.
+Two kinds of modifier compose. A color sets the family: `button-dark` is the neutral family at the solid fill, the design system's `dark` variant, and `button-danger`, `button-warning`, `button-success`, and `button-info` are the semantic solids. A fill changes how the family paints: `button-outline` keeps the light background with the family's border and text, and `button-ghost` drops the background until hover. `button` alone is the default: the neutral family at the outline fill. Solid text picks black or white through `contrast-color()` where the browser supports it, white elsewhere.
 
-<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-  <button type="button" class="button">
-    Default
-  </button>
-  <button type="button" class="button button-primary">
-    Primary
-  </button>
-  <button type="button" class="button button-ghost">
-    Ghost
-  </button>
-  <button type="button" class="button button-danger">
-    Danger
-  </button>
-  <button type="button" class="button button-outline-danger">
-    Outline danger
-  </button>
-  <button type="button" class="button button-success">
-    Success
-  </button>
-  <button type="button" class="button" disabled>
-    Disabled
-  </button>
-</div>
+Every color modifier in every fill and state. The markup below is the grid, cell for cell.
 
-<Code
-  lang="html"
-  code={`<button type="button" class="button">Default</button>
-<button type="button" class="button button-primary">Primary</button>
-<button type="button" class="button button-ghost">Ghost</button>
-<button type="button" class="button button-danger">Danger</button>
-<button type="button" class="button button-outline-danger">Outline danger</button>
-<button type="button" class="button button-success">Success</button>
-<button type="button" class="button" disabled>Disabled</button>`}
-/>
+<ButtonMatrix />
 
 | State    | Attribute                               | What changes                                               |
 | -------- | --------------------------------------- | ---------------------------------------------------------- |
 | Disabled | `:disabled` or `[aria-disabled="true"]` | Disabled colors and a `not-allowed` cursor, with no hover. |
 | Busy     | `[aria-busy="true"]`                    | The cursor becomes `progress`.                             |
 
-Every variant in each state it reads:
-
-<div class="not-content flex flex-col gap-3 rounded-sm border border-light p-4">
-  <div class="flex flex-wrap items-center gap-3">
-    <button type="button" class="button">
-      Default
-    </button>
-    <button type="button" class="button" disabled>
-      :disabled
-    </button>
-    <button type="button" class="button" aria-disabled="true">
-      aria-disabled
-    </button>
-    <button type="button" class="button" aria-busy="true">
-      <span class="progress-dots" aria-hidden="true"></span>aria-busy
-    </button>
-  </div>
-  <div class="flex flex-wrap items-center gap-3">
-    <button type="button" class="button button-primary">
-      Primary
-    </button>
-    <button type="button" class="button button-primary" disabled>
-      :disabled
-    </button>
-    <button type="button" class="button button-primary" aria-disabled="true">
-      aria-disabled
-    </button>
-    <button type="button" class="button button-primary" aria-busy="true">
-      <span class="progress-dots" aria-hidden="true"></span>aria-busy
-    </button>
-  </div>
-  <div class="flex flex-wrap items-center gap-3">
-    <button type="button" class="button button-ghost">
-      Ghost
-    </button>
-    <button type="button" class="button button-ghost" disabled>
-      :disabled
-    </button>
-    <button type="button" class="button button-ghost" aria-disabled="true">
-      aria-disabled
-    </button>
-    <button type="button" class="button button-ghost" aria-busy="true">
-      <span class="progress-dots" aria-hidden="true"></span>aria-busy
-    </button>
-  </div>
-  <div class="flex flex-wrap items-center gap-3">
-    <button type="button" class="button button-danger">
-      Danger
-    </button>
-    <button type="button" class="button button-danger" disabled>
-      :disabled
-    </button>
-    <button type="button" class="button button-danger" aria-disabled="true">
-      aria-disabled
-    </button>
-    <button type="button" class="button button-danger" aria-busy="true">
-      <span class="progress-dots" aria-hidden="true"></span>aria-busy
-    </button>
-  </div>
-  <div class="flex flex-wrap items-center gap-3">
-    <button type="button" class="button button-outline-danger">
-      Outline danger
-    </button>
-    <button type="button" class="button button-outline-danger" disabled>
-      :disabled
-    </button>
-    <button
-      type="button"
-      class="button button-outline-danger"
-      aria-disabled="true"
-    >
-      aria-disabled
-    </button>
-    <button type="button" class="button button-outline-danger" aria-busy="true">
-      <span class="progress-dots" aria-hidden="true"></span>aria-busy
-    </button>
-  </div>
-  <div class="flex flex-wrap items-center gap-3">
-    <button type="button" class="button button-success">
-      Success
-    </button>
-    <button type="button" class="button button-success" disabled>
-      :disabled
-    </button>
-    <button type="button" class="button button-success" aria-disabled="true">
-      aria-disabled
-    </button>
-    <button type="button" class="button button-success" aria-busy="true">
-      <span class="progress-dots" aria-hidden="true"></span>aria-busy
-    </button>
-  </div>
-</div>
-
 A leading icon is an inline `<svg>` placed as the first child.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-  <button type="button" class="button button-primary">
+  <button type="button" class="button button-dark">
     <svg
       aria-hidden="true"
       class="size-4"
@@ -168,7 +46,7 @@ A leading icon is an inline `<svg>` placed as the first child.
 
 <Code
   lang="html"
-  code={`<button type="button" class="button button-primary">
+  code={`<button type="button" class="button button-dark">
   <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10" /></svg>
   Add machine
 </button>`}
@@ -193,126 +71,14 @@ The busy button sets `aria-busy="true"` and puts a `progress-dots` span first.
 
 ## icon-button
 
-Modifiers: `icon-button-secondary` and `icon-button-danger`.
+It takes the same `button-*` color and fill modifiers. `icon-button` alone is the neutral ghost, `icon-button button-outline` is the bordered treatment, and `icon-button button-danger button-ghost` tints the glyph.
 
-<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-  <button type="button" class="icon-button" aria-label="Settings">
-    <svg
-      aria-hidden="true"
-      class="size-4"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-    >
-      <circle cx="8" cy="8" r="3" />
-    </svg>
-  </button>
-  <button
-    type="button"
-    class="icon-button icon-button-secondary"
-    aria-label="Settings"
-  >
-    <svg
-      aria-hidden="true"
-      class="size-4"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-    >
-      <circle cx="8" cy="8" r="3" />
-    </svg>
-  </button>
-  <button
-    type="button"
-    class="icon-button icon-button-danger"
-    aria-label="Delete"
-  >
-    <svg
-      aria-hidden="true"
-      class="size-4"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-    >
-      <path d="M4 4l8 8M12 4l-8 8" />
-    </svg>
-  </button>
-  <button type="button" class="icon-button" aria-label="Settings" disabled>
-    <svg
-      aria-hidden="true"
-      class="size-4"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-    >
-      <circle cx="8" cy="8" r="3" />
-    </svg>
-  </button>
-</div>
-
-<Code
-  lang="html"
-  code={`<button type="button" class="icon-button" aria-label="Settings">
-  <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3" /></svg>
-</button>
-<button type="button" class="icon-button icon-button-secondary" aria-label="Settings">...</button>
-<button type="button" class="icon-button icon-button-danger" aria-label="Delete">...</button>
-<button type="button" class="icon-button" aria-label="Settings" disabled>...</button>`}
-/>
+<ButtonMatrix kind="icon-button" />
 
 | State    | Attribute                               | What changes                               |
 | -------- | --------------------------------------- | ------------------------------------------ |
 | Disabled | `:disabled` or `[aria-disabled="true"]` | Gray icon, `not-allowed` cursor, no hover. |
 | Busy     | `[aria-busy="true"]`                    | The cursor becomes `progress`.             |
-
-<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-  <button
-    type="button"
-    class="icon-button icon-button-secondary"
-    aria-label="Settings"
-    disabled
-  >
-    <svg
-      aria-hidden="true"
-      class="size-4"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-    >
-      <circle cx="8" cy="8" r="3" />
-    </svg>
-  </button>
-  <button
-    type="button"
-    class="icon-button icon-button-danger"
-    aria-label="Delete"
-    aria-disabled="true"
-  >
-    <svg
-      aria-hidden="true"
-      class="size-4"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-    >
-      <path d="M4 4l8 8M12 4l-8 8" />
-    </svg>
-  </button>
-  <button
-    type="button"
-    class="icon-button"
-    aria-label="Saving"
-    aria-busy="true"
-  >
-    <span class="progress-dots" aria-hidden="true"></span>
-  </button>
-</div>
 
 <Aside type="caution" title="Name the button">
   An `icon-button` has no visible text, so it must carry `aria-label` or

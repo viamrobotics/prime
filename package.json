@@ -7,7 +7,7 @@
   "repository": "git://github.com/viamrobotics/prime.git",
   "packageManager": "pnpm@10.34.5",
   "scripts": {
-    "dev": "pnpm -C apps/docs dev",
+    "dev": "pnpm -C docs dev",
     "build": "wireit",
     "check": "wireit",
     "lint": "wireit",
@@ -24,7 +24,7 @@
       "dependencies": [
         "./packages/prime-ui:build",
         "./packages/tweakpane-config:build",
-        "./apps/docs:build"
+        "./docs:build"
       ]
     },
     "check": {
@@ -51,7 +51,7 @@
         "./packages/prime-ui:test",
         "./packages/prime-panes:test",
         "./packages/prime-tree:test",
-        "./apps/docs:test"
+        "./docs:test"
       ]
     },
     "format": {

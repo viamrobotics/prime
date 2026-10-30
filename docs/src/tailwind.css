@@ -9,9 +9,9 @@
 /* Each package's styles.css is the entry consumers use and points at the built dist. Under
    astro dev the islands hot-reload from library source instead, which dist does not track,
    so also point Tailwind at every package's source explicitly. */
-@source "../../../packages/prime-ui/src/lib";
-@source "../../../packages/prime-panes/src/lib";
-@source "../../../packages/prime-tree/src/lib";
+@source "../../packages/prime-ui/src/lib";
+@source "../../packages/prime-panes/src/lib";
+@source "../../packages/prime-tree/src/lib";
 
 :root {
   --sl-font: var(--font-public-sans);
@@ -52,4 +52,10 @@
   border-radius: 0.125rem;
   font-size: 0.875rem;
   font-weight: 500;
+}
+
+/* Sidebar group labels keep their weight but take the link size, so a package with
+   sub-pages does not read as a heading over the pages beside it. */
+#starlight__sidebar .group-label .large {
+  font-size: var(--sl-text-sm);
 }
