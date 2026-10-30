@@ -19,7 +19,7 @@ Viam's shared Tailwind CSS v4 configuration. A pure-data package: design tokens 
 
 ## Docs
 
-The token and class demos live on this package's pages in [apps/docs](../../apps/docs/): the overview and the component classes page. The package has no Svelte tooling and no `build` script, because the published CSS and `fonts.js` are committed static files. Its `check` is `tsc --noEmit`, its ESLint config has no Svelte plugin, and its `tsconfig.json` is standalone. The `check`, `lint`, and `test` scripts are orchestrated (and cached) by [wireit](https://github.com/google/wireit).
+The token and class demos live on this package's pages in [docs](../../docs/): the overview and the component classes page. The package has no Svelte tooling and no `build` script, because the published CSS and `fonts.js` are committed static files. Its `check` is `tsc --noEmit`, its ESLint config has no Svelte plugin, and its `tsconfig.json` is standalone. The `check`, `lint`, and `test` scripts are orchestrated (and cached) by [wireit](https://github.com/google/wireit).
 
 ## Conventions
 

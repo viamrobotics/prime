@@ -1,6 +1,6 @@
 <script lang="ts">
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
-  import { ThemeUtils, Checkbox, Color, Slider, TabGroup, TabPage } from "svelte-tweakpane-ui";
+  import { Checkbox, Color, Slider, TabGroup, TabPage } from "svelte-tweakpane-ui";
   import { theme } from "@docs/theme.svelte.ts";
 
   let accent = $state("#a51aff");
@@ -8,14 +8,12 @@
   let isEnabled = $state(true);
   let selectedIndex = $state(0);
 
-  $effect(() => {
-    ThemeUtils.setGlobalDefaultTheme(
-      theme.current === "dark" ? primeThemeDark : primeTheme,
-    );
-  });
+  const paneTheme = $derived(
+    theme.current === "dark" ? primeThemeDark : primeTheme,
+  );
 </script>
 
-<TabGroup bind:selectedIndex>
+<TabGroup theme={paneTheme} bind:selectedIndex>
   <TabPage title="Color">
     <Color bind:value={accent} label="Accent" />
   </TabPage>

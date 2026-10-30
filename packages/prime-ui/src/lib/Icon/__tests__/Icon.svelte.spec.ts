@@ -3,8 +3,8 @@ import { mdiAlert } from '@mdi/js';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { ViamService } from '../../icons/index.ts';
 import Icon from '../Icon.svelte';
+import { ViamService } from '../icons/index.ts';
 
 const svg = (container: Element) => container.querySelector('svg')!;
 

@@ -33,7 +33,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: apps/docs/dist
+          publish_dir: docs/dist
           publish_branch: gh-pages
           # Preserve pr-preview/* directories deployed by pr-preview.yml.
           keep_files: true

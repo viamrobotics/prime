@@ -1,0 +1,101 @@
+---
+/**
+ * Every color modifier crossed with every fill and state for `button` or `icon-button`, as a
+ * grid with the modifier classes under each cell. Static HTML, so hover is not shown.
+ */
+import { Code } from "@astrojs/starlight/components";
+import { mdiAlert, mdiCheck, mdiCog, mdiDelete, mdiInformation, mdiPencil } from "@mdi/js";
+
+interface Props {
+  kind?: "button" | "icon-button";
+}
+
+const { kind = "button" } = Astro.props;
+
+const rows = [
+  { name: "Neutral", color: "", icon: mdiCog },
+  { name: "Dark", color: "button-dark", icon: mdiPencil },
+  { name: "Danger", color: "button-danger", icon: mdiDelete },
+  { name: "Warning", color: "button-warning", icon: mdiAlert },
+  { name: "Success", color: "button-success", icon: mdiCheck },
+  { name: "Info", color: "button-info", icon: mdiInformation },
+];
+
+const columns = [
+  { name: "Default", fill: "", attrs: {} },
+  { name: "Outline", fill: "button-outline", attrs: {} },
+  { name: "Ghost", fill: "button-ghost", attrs: {} },
+  { name: ":disabled", fill: "", attrs: { disabled: true } },
+  { name: "aria-disabled", fill: "", attrs: { "aria-disabled": "true" } },
+  { name: "aria-busy", fill: "", attrs: { "aria-busy": "true" } },
+];
+
+const attributeText = (attrs: Record<string, string | boolean>) =>
+  Object.entries(attrs)
+    .map(([name, value]) => (value === true ? ` ${name}` : ` ${name}="${value}"`))
+    .join("");
+
+const busyDots = '<span class="progress-dots" aria-hidden="true"></span>';
+
+const cellMarkup = (row: (typeof rows)[number], column: (typeof columns)[number]) => {
+  const classes = [kind, row.color, column.fill].filter(Boolean).join(" ");
+  const busy = "aria-busy" in column.attrs;
+  if (kind === "button") {
+    return `<button type="button" class="${classes}"${attributeText(column.attrs)}>${busy ? busyDots : ""}${row.name}</button>`;
+  }
+  const glyph = busy
+    ? busyDots
+    : '<svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="currentColor"><path d="..." /></svg>';
+  return `<button type="button" class="${classes}" aria-label="${row.name} ${column.name}"${attributeText(column.attrs)}>${glyph}</button>`;
+};
+
+const code = rows
+  .map((row) => [`<!-- ${row.name} -->`, ...columns.map((column) => cellMarkup(row, column))].join("\n"))
+  .join("\n\n");
+---
+
+<div
+  class="not-content grid items-start gap-x-4 gap-y-4 overflow-x-auto rounded-sm border border-light p-4"
+  style={`grid-template-columns: auto repeat(${columns.length}, max-content)`}
+>
+  <span></span>
+  {
+    columns.map((column) => (
+      <p class="text-xs font-medium text-subtle-2 uppercase">{column.name}</p>
+    ))
+  }
+  {
+    rows.map((row) => (
+      <>
+        <p class="self-center text-xs font-medium text-subtle-2 uppercase">{row.name}</p>
+        {columns.map((column) => {
+          const modifiers = [row.color, column.fill].filter(Boolean);
+          const busy = "aria-busy" in column.attrs;
+          return (
+            <div class="flex items-start">
+              <button
+                type="button"
+                class:list={[kind, ...modifiers]}
+                aria-label={kind === "icon-button" ? `${row.name} ${column.name}` : undefined}
+                {...column.attrs}
+              >
+                {busy && kind === "button" && <span class="progress-dots" aria-hidden="true" />}
+                {kind === "button" ? (
+                  row.name
+                ) : busy ? (
+                  <span class="progress-dots" aria-hidden="true" />
+                ) : (
+                  <svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d={row.icon} />
+                  </svg>
+                )}
+              </button>
+            </div>
+          );
+        })}
+      </>
+    ))
+  }
+</div>
+
+<Code lang="html" {code} />

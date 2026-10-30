@@ -1,6 +1,6 @@
 <script lang="ts">
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
-  import { ThemeUtils, List, type ListOptions } from "svelte-tweakpane-ui";
+  import { List, type ListOptions } from "svelte-tweakpane-ui";
   import { theme } from "@docs/theme.svelte.ts";
 
   const options: ListOptions<string> = {
@@ -11,11 +11,9 @@
   };
   let value = $state("cyberpunk");
 
-  $effect(() => {
-    ThemeUtils.setGlobalDefaultTheme(
-      theme.current === "dark" ? primeThemeDark : primeTheme,
-    );
-  });
+  const paneTheme = $derived(
+    theme.current === "dark" ? primeThemeDark : primeTheme,
+  );
 </script>
 
-<List bind:value {options} label="List" />
+<List theme={paneTheme} bind:value {options} label="List" />
