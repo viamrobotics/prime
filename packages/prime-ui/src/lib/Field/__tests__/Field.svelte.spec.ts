@@ -3,6 +3,7 @@ import { render } from 'vitest-browser-svelte';
 
 import { colorOf, textColor } from '../../__tests__/computed-style.ts';
 import InputField from './InputField.svelte';
+import TextareaField from './TextareaField.svelte';
 import WidgetFields from './WidgetFields.svelte';
 
 const parts = (container: Element) => {
@@ -80,6 +81,57 @@ describe('Field', () => {
 	});
 });
 
+describe('Field with a textarea', () => {
+	const textareaParts = (container: Element) => ({
+		label: container.querySelector('label')!,
+		textarea: container.querySelector('textarea')!,
+		hints: [...container.querySelectorAll('p')]
+	});
+
+	it('points the label at the textarea', () => {
+		const { label, textarea } = textareaParts(render(TextareaField).container);
+
+		expect(textarea.id).not.toBe('');
+		expect(label.getAttribute('for')).toBe(textarea.id);
+	});
+
+	it('describes the textarea by every hint', async () => {
+		const { textarea, hints } = textareaParts(
+			render(TextareaField, { props: { hintCount: 2 } }).container
+		);
+
+		await vi.waitFor(() => {
+			expect(textarea.getAttribute('aria-describedby')).toBe(
+				hints.map((hint) => hint.id).join(' ')
+			);
+		});
+	});
+
+	it('cascades disabled, required, and the error state', () => {
+		const disabled = textareaParts(
+			render(TextareaField, { props: { disabled: true } }).container
+		).textarea;
+		const required = textareaParts(
+			render(TextareaField, { props: { required: true } }).container
+		).textarea;
+		const errored = textareaParts(
+			render(TextareaField, { props: { state: 'error' } }).container
+		).textarea;
+
+		expect(disabled.disabled, 'textarea disabled').toBe(true);
+		expect(required.required, 'textarea required').toBe(true);
+		expect(errored.getAttribute('aria-invalid')).toBe('true');
+	});
+
+	it('lets disabled={false} on the textarea override a disabled field', () => {
+		const { container } = render(TextareaField, {
+			props: { disabled: true, textareaDisabled: false }
+		});
+
+		expect(container.querySelector('textarea')?.disabled).toBe(false);
+	});
+});
+
 describe('Field with widgets', () => {
 	const field = (container: Element, testId: string) =>
 		container.querySelector(`[data-testid="${testId}"]`)!;
@@ -133,6 +185,36 @@ describe('Field with widgets', () => {
 		});
 	});
 
+	it('wires a switch', async () => {
+		const scope = field(render(WidgetFields).container, 'switch-field');
+		const control = scope.querySelector('[role="switch"]')!;
+
+		expect(scope.querySelector('label')?.getAttribute('for')).toBe(control.id);
+		await vi.waitFor(() => {
+			expect(control.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
+		});
+	});
+
+	it('names a toggle group by its label and describes it by its hint', async () => {
+		const scope = field(render(WidgetFields).container, 'toggle-field');
+		const group = scope.querySelector('[role="group"]')!;
+
+		await vi.waitFor(() => {
+			expect(group.getAttribute('aria-labelledby')).toBe(scope.querySelector('label')?.id);
+			expect(group.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
+		});
+	});
+
+	it('disables the switch and every toggle item when the field is disabled', () => {
+		const { container } = render(WidgetFields, { props: { disabled: true } });
+		const toggles = [
+			...field(container, 'toggle-field').querySelectorAll<HTMLButtonElement>('[role="radio"]')
+		];
+
+		expect(field(container, 'switch-field').querySelector('button')?.disabled).toBe(true);
+		expect(toggles.map((item) => item.disabled)).toEqual([true, true]);
+	});
+
 	it('cascades the error state to every widget as aria-invalid', () => {
 		const { container } = render(WidgetFields, { props: { state: 'error' } });
 
@@ -140,8 +222,10 @@ describe('Field with widgets', () => {
 			[
 				field(container, 'checkbox-field').querySelector('[role="checkbox"]'),
 				field(container, 'radio-field').querySelector('[role="radiogroup"]'),
-				field(container, 'select-field').querySelector('button')
+				field(container, 'select-field').querySelector('button'),
+				field(container, 'switch-field').querySelector('[role="switch"]'),
+				field(container, 'toggle-field').querySelector('[role="group"]')
 			].map((control) => control?.getAttribute('aria-invalid'))
-		).toEqual(['true', 'true', 'true']);
+		).toEqual(['true', 'true', 'true', 'true', 'true']);
 	});
 });

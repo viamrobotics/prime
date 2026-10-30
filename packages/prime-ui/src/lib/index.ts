@@ -4,8 +4,11 @@ export type { IconSize, IconType } from './Icon/icon.ts';
 export { default as Label } from './Label/Label.svelte';
 export { default as Hint } from './Hint/Hint.svelte';
 export { default as Checkbox } from './Checkbox/Checkbox.svelte';
+export { default as Switch } from './Switch/Switch.svelte';
 export { default as NumberInput } from './Input/NumberInput.svelte';
+export { default as Textarea } from './Input/Textarea.svelte';
 
+export { Collapsible } from './Collapsible/collapsible.ts';
 export { ContextMenu } from './Menu/context-menu.ts';
 export { Dialog } from './Dialog/dialog.ts';
 
@@ -18,7 +21,11 @@ export { Menu } from './Menu/menu.ts';
 export { RadioGroup } from './RadioGroup/radio-group.ts';
 
 export { Select } from './Select/select.ts';
+export { Tabs } from './Tabs/tabs.ts';
 export type { SelectOption } from './Select/option.ts';
+
+export { ToggleButtons } from './ToggleButtons/toggle-buttons.ts';
+export type { ToggleButtonsOption } from './ToggleButtons/option.ts';
 
 export { MultiSelect } from './Select/multi-select.ts';
 export { Popover } from './Popover/popover.ts';

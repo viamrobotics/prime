@@ -1,0 +1,105 @@
+---
+title: Collapsible
+description: A trigger that shows and hides a region of content.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import CollapsibleDemo from "./collapsible/CollapsibleDemo.svelte";
+import CollapsibleShowcase from "./collapsible/CollapsibleShowcase.svelte";
+import TwoWay from "./collapsible/TwoWay.svelte";
+import twoWaySource from "./collapsible/TwoWay.svelte?raw";
+import Controlled from "./collapsible/Controlled.svelte";
+import controlledSource from "./collapsible/Controlled.svelte?raw";
+import Subtitled from "./collapsible/Subtitled.svelte";
+import subtitledSource from "./collapsible/Subtitled.svelte?raw";
+import CustomIndicator from "./collapsible/CustomIndicator.svelte";
+import customIndicatorSource from "./collapsible/CustomIndicator.svelte?raw";
+
+<ComponentIntro name="collapsible" />
+
+<CollapsibleDemo client:visible />
+
+- Composed from a trigger and a content part, so the layout inside each is yours.
+- `open` is bindable, two-way or as a getter and setter. [State & binding](../state/) explains both modes.
+- `Collapsible.Content` is only in the document while open.
+- The trigger carries `data-state="open"` or `closed` and `aria-expanded`.
+- The trigger's children are the title and an optional subtitle. The default chevron turns when open, and `indicator` replaces it.
+
+## Anatomy
+
+Every part is a property on `Collapsible`. The root renders a `<div>`, the trigger a `<button>`.
+
+```svelte
+<Collapsible>
+  <Collapsible.Trigger>title</Collapsible.Trigger>
+  <Collapsible.Content>...</Collapsible.Content>
+</Collapsible>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:open` on the root.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:open` a getter and a setter. The setter can decline a change.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Title and subtitle
+
+The trigger's children are laid out by you, so a title and a subtitle are two elements inside it.
+
+<Example code={subtitledSource} title="Subtitled.svelte">
+  <Subtitled client:visible />
+</Example>
+
+### Custom indicator
+
+Pass an `indicator` snippet to the trigger to replace the chevron. It receives `open`.
+
+<Example code={customIndicatorSource} title="CustomIndicator.svelte">
+  <CustomIndicator client:visible />
+</Example>
+
+### States
+
+<CollapsibleShowcase client:visible />
+
+## Styling
+
+Every part takes `class` on its element. `Collapsible.Trigger` is a full-width `<button>` with the focus ring and no other look, so add the type and spacing you want. bits-ui sets the data attributes below.
+
+| Part      | Attribute       | Value                 |
+| --------- | --------------- | --------------------- |
+| `Root`    | `data-state`    | `open` or `closed`    |
+| `Root`    | `data-disabled` | present when disabled |
+| `Trigger` | `data-state`    | `open` or `closed`    |
+| `Trigger` | `aria-expanded` | `true` or `false`     |
+| `Trigger` | `data-disabled` | present when disabled |
+| `Content` | `data-state`    | `open`                |
+
+## Keyboard
+
+| Key                                 | Action                                  |
+| ----------------------------------- | --------------------------------------- |
+| <kbd>Tab</kbd>                      | Focuses the trigger.                    |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | On the trigger, opens or closes the content. |
+
+## API
+
+<PropsTable name="collapsible" />
+
+<PartsDoc name="collapsible" />

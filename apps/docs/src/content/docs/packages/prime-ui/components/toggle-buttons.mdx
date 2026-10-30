@@ -1,0 +1,111 @@
+---
+title: ToggleButtons
+description: A row of mutually exclusive buttons.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import ToggleButtonsDemo from "./toggle-buttons/ToggleButtonsDemo.svelte";
+import ToggleButtonsShowcase from "./toggle-buttons/ToggleButtonsShowcase.svelte";
+import TwoWay from "./toggle-buttons/TwoWay.svelte";
+import twoWaySource from "./toggle-buttons/TwoWay.svelte?raw";
+import Composed from "./toggle-buttons/Composed.svelte";
+import composedSource from "./toggle-buttons/Composed.svelte?raw";
+import Controlled from "./toggle-buttons/Controlled.svelte";
+import controlledSource from "./toggle-buttons/Controlled.svelte?raw";
+import InField from "./toggle-buttons/InField.svelte";
+import inFieldSource from "./toggle-buttons/InField.svelte?raw";
+
+<ComponentIntro name="toggle-buttons" />
+
+<ToggleButtonsDemo client:visible />
+
+- One `value` for the whole group, bindable. Options come from `items`, or from `ToggleButtons.Item` children.
+- One option is always selected: clicking the selected option does not clear it.
+- Takes `state`, `disabled`, and its labelling from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` on the group.
+- Arrow keys move focus between options without selecting. <kbd>Enter</kbd> or <kbd>Space</kbd> selects.
+- Each option is a `role="radio"` button inside a `role="group"`, and the selected one carries `data-state="on"`.
+
+## Anatomy
+
+Pass `items` for the common case, or compose the options yourself with `ToggleButtons.Item` when they need more than text.
+
+```svelte
+<ToggleButtons items={[{ value: "…", label: "…" }]} />
+
+<ToggleButtons>
+  <ToggleButtons.Item value="…">content</ToggleButtons.Item>
+  <ToggleButtons.Item value="…">content</ToggleButtons.Item>
+</ToggleButtons>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the group. The items need no binding of their own.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Composed options
+
+`ToggleButtons.Item` children hold any content, such as an icon beside the text. Give an icon-only option an `aria-label`.
+
+<Example code={composedSource} title="Composed.svelte">
+  <Composed client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:value` a getter and a setter. The setter can decline a change. [State & binding](../state/) explains both modes.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### In a field
+
+Inside a [`Field`](../field/), the group takes its `id`, `disabled`, `state`, and the `aria-labelledby` and `aria-describedby` from the `Label` and `Hint`.
+
+<Example code={inFieldSource} title="InField.svelte">
+  <InField client:visible />
+</Example>
+
+### States
+
+<ToggleButtonsShowcase client:visible />
+
+## Styling
+
+`class` on `ToggleButtons` lands on the group `<div>`, which is `inline-flex`. `class` on `ToggleButtons.Item` lands on the item button, which wears `button`. bits-ui sets these data attributes for Tailwind variants.
+
+| Element | Attribute       | Value                          |
+| ------- | --------------- | ------------------------------ |
+| group   | `aria-invalid`  | `true` when `state` is `error` |
+| group   | `data-disabled` | present when disabled          |
+| item    | `data-state`    | `on` or `off`                  |
+| item    | `data-value`    | the item's `value`             |
+| item    | `data-disabled` | present when disabled          |
+
+## Keyboard
+
+Arrow keys move focus only. Selecting is a separate key press.
+
+| Key                                          | Action                                           |
+| -------------------------------------------- | ------------------------------------------------ |
+| <kbd>Tab</kbd>                               | Focuses the selected option, or the first.       |
+| <kbd>ArrowRight</kbd> / <kbd>ArrowDown</kbd> | Moves focus to the next option, wrapping around. |
+| <kbd>ArrowLeft</kbd> / <kbd>ArrowUp</kbd>    | Moves focus to the previous option, wrapping.    |
+| <kbd>Home</kbd> / <kbd>End</kbd>             | Moves focus to the first or last option.         |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>          | Selects the focused option.                      |
+
+## API
+
+<PropsTable name="toggle-buttons" />
+
+<PartsDoc name="toggle-buttons" />

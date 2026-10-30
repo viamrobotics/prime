@@ -1,0 +1,104 @@
+---
+title: Tabs
+description: A tab strip with one panel per tab.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import TabsDemo from "./tabs/TabsDemo.svelte";
+import TwoWay from "./tabs/TwoWay.svelte";
+import twoWaySource from "./tabs/TwoWay.svelte?raw";
+import Controlled from "./tabs/Controlled.svelte";
+import controlledSource from "./tabs/Controlled.svelte?raw";
+import WithIcons from "./tabs/WithIcons.svelte";
+import withIconsSource from "./tabs/WithIcons.svelte?raw";
+import Closable from "./tabs/Closable.svelte";
+import closableSource from "./tabs/Closable.svelte?raw";
+
+<ComponentIntro name="tabs" />
+
+<TabsDemo client:visible />
+
+- Composed from parts, so the list, each tab, and each panel are yours to arrange.
+- The first tab is selected until the user picks another. A selection whose tab is removed falls back to the first remaining tab.
+- `value` on the root is bindable, two-way or as a getter and setter. [State & binding](../state/) explains both modes.
+- Activation is automatic: <kbd>ArrowLeft</kbd>, <kbd>ArrowRight</kbd>, <kbd>Home</kbd>, and <kbd>End</kbd> move focus and select.
+- Each `Tabs.Trigger` is a `role="tab"` element, not a `<button>`, so a control can sit inside it.
+- A strip with one tab is chrome with nothing to switch between. Wrap `Tabs.List` in `{#if}` when the count can drop to one.
+- Navigation tabs, links marked with `aria-current`, are styled anchors, not this component.
+
+## Anatomy
+
+Every part is a property on `Tabs`. Pair each `Tabs.Trigger` with a `Tabs.Content` that has the same `value`. Name the strip with `aria-label` or `aria-labelledby` on `Tabs.List`.
+
+```svelte
+<Tabs>
+  <Tabs.List aria-label="Details">
+    <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+    <Tabs.Trigger value="usage">Usage</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Content value="overview">...</Tabs.Content>
+  <Tabs.Content value="usage">...</Tabs.Content>
+</Tabs>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the root holds the `value` of the selected tab.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:value` a getter and a setter. The setter can decline a change.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Icons
+
+A trigger's children are its content, so an icon sits beside the label.
+
+<Example code={withIconsSource} title="WithIcons.svelte">
+  <WithIcons client:visible />
+</Example>
+
+### Controls inside a tab
+
+A control nested in a tab keeps its own key events, so <kbd>Enter</kbd> and <kbd>Space</kbd> reach it. Its click handler should call `event.stopPropagation()`, or the click also selects the tab. Closing the selected tab falls back to the first remaining tab, and the list hides at one tab.
+
+<Example code={closableSource} title="Closable.svelte">
+  <Closable client:visible />
+</Example>
+
+## Styling
+
+The root and every part take `class` on their element.
+
+| Part      | Attribute       | Value                  |
+| --------- | --------------- | ---------------------- |
+| `Trigger` | `data-state`    | `active` or `inactive` |
+| `Trigger` | `data-disabled` | present when disabled  |
+| `Content` | `data-state`    | `active` or `inactive` |
+
+## Keyboard
+
+| Key                                 | Action                                |
+| ----------------------------------- | ------------------------------------- |
+| <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> | Moves focus to the previous or next tab and selects it. |
+| <kbd>Home</kbd> / <kbd>End</kbd>    | Moves focus to the first or last tab and selects it. |
+| <kbd>Tab</kbd>                      | Moves focus into the selected panel.  |
+
+## API
+
+<PropsTable name="tabs" />
+
+<PartsDoc name="tabs" />

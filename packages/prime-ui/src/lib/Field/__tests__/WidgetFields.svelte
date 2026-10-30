@@ -6,6 +6,8 @@
 	import Label from '../../Label/Label.svelte';
 	import { RadioGroup } from '../../RadioGroup/radio-group.ts';
 	import { Select } from '../../Select/select.ts';
+	import Switch from '../../Switch/Switch.svelte';
+	import { ToggleButtons } from '../../ToggleButtons/toggle-buttons.ts';
 	import Field from '../Field.svelte';
 
 	const {
@@ -43,4 +45,16 @@
 		</Select.Trigger>
 	</Select>
 	<Hint>Select hint</Hint>
+</Field>
+
+<Field {disabled} {required} {state} data-testid="switch-field">
+	<Switch />
+	<Label>Notify</Label>
+	<Hint>Switch hint</Hint>
+</Field>
+
+<Field {disabled} {required} {state} data-testid="toggle-field">
+	<Label>Units</Label>
+	<ToggleButtons {items} />
+	<Hint>Toggle hint</Hint>
 </Field>
