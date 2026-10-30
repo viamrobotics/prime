@@ -143,6 +143,9 @@
 		"@internationalized/date": "^3.12.2",
 		"@mdi/js": "^7.4.47",
 		"@viamrobotics/tailwind-config": "workspace:^",
+		"@zag-js/interact-outside": "^1.46.0",
+		"@zag-js/svelte": "^1.46.0",
+		"@zag-js/toast": "^1.46.0",
 		"bits-ui": "^2.20.2",
 		"prismjs": "^1.30.0"
 	},

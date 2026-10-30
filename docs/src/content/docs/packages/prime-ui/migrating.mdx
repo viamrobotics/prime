@@ -1,0 +1,231 @@
+---
+title: Migrating from prime-core
+description: Where each piece of @viamrobotics/prime-core went in prime-ui.
+---
+
+`@viamrobotics/prime-core` shipped Svelte 4 components, actions, and helpers. `@viamrobotics/prime-ui` is Svelte 5 only, and some helpers did not carry over because the platform now covers them or because they were never UI. The table below maps each one to what you use now.
+
+## What to use instead
+
+| Old             | Now                                                                                               | Notes                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `uniqueId`      | `$props.id()`                                                                                     | Per instance and safe under SSR. No shim ships.                                          |
+| `createHandleKey` | [`useHotkey`](../utilities/keybindings/)                                                           | Shortcuts register where the behavior lives and list from one registry.                  |
+| `clickOutside` action | The [`clickOutside`](../utilities/click-outside/) attachment                                 | Use `{@attach clickOutside(handler)}`. Portaled content the element links counts as inside. |
+| `persisted`     | Stays in your app                                                                                 | It is a storage helper and not UI.                                                       |
+| `useToast`      | `provideToast` and `useToast`, see [Toast](../components/toast/)                                   | `provideToast` goes once near the root, and the `Toast` region renders the stack.         |
+| `useNotify`     | `provideNotify` and `useNotify`, see [Notify](../components/notify/)                               | Same provider and consumer split as the toast.                                           |
+| `Banner`        | [`Banner`](../components/banner/)                                                                  | Same name.                                                                               |
+| `Progress`      | [`Progress`](../components/progress/)                                                              | Same name.                                                                               |
+
+## Icons
+
+`@viamrobotics/prime-core`'s `Icon` took a curated kebab-case name such as `icon="cog"`. `Icon` in prime-ui takes an import, so replace each name with the one below.
+
+The tables cover a name written in markup. An icon that arrives as data, such as `name={option.icon}` or a field typed `IconName`, needs a map on your side from your own keys to the imports you use, since `Icon` in prime-ui carries none. Keep that map to the names your app renders.
+
+### Names backed by `@mdi/js`
+
+Import the export from `@mdi/js` and pass it as `icon`.
+
+| Old name | `@mdi/js` export |
+| --- | --- |
+| `account-group-outline` | `mdiAccountGroupOutline` |
+| `account-multiple` | `mdiAccountMultiple` |
+| `account-plus-outline` | `mdiAccountPlusOutline` |
+| `alert` | `mdiAlert` |
+| `alert-circle` | `mdiAlertCircle` |
+| `alert-circle-outline` | `mdiAlertCircleOutline` |
+| `alert-outline` | `mdiAlertOutline` |
+| `apple` | `mdiApple` |
+| `apple-keyboard-command` | `mdiAppleKeyboardCommand` |
+| `application-outline` | `mdiApplicationOutline` |
+| `arrow-collapse` | `mdiArrowCollapse` |
+| `arrow-collapse-left` | `mdiArrowCollapseLeft` |
+| `arrow-collapse-right` | `mdiArrowCollapseRight` |
+| `arrow-expand-all` | `mdiArrowExpandAll` |
+| `arrow-expand-left` | `mdiArrowExpandLeft` |
+| `arrow-expand-right` | `mdiArrowExpandRight` |
+| `arrow-left` | `mdiArrowLeft` |
+| `arrow-right` | `mdiArrowRight` |
+| `arrow-top-right` | `mdiArrowTopRight` |
+| `arrow-top-right-bottom-left` | `mdiArrowTopRightBottomLeft` |
+| `arrow-up` | `mdiArrowUp` |
+| `article` | `mdiTextBoxOutline` |
+| `auto-renew` | `mdiAutorenew` |
+| `axis-arrow` | `mdiAxisArrow` |
+| `backup-restore` | `mdiBackupRestore` |
+| `block` | `mdiBlockHelper` |
+| `book-open` | `mdiBookOpenVariantOutline` |
+| `bookmark-outline` | `mdiBookmarkOutline` |
+| `broadcast` | `mdiBroadcast` |
+| `broadcast-off` | `mdiBroadcastOff` |
+| `bug` | `mdiBug` |
+| `bug-outline` | `mdiBugOutline` |
+| `calendar-blank` | `mdiCalendarBlank` |
+| `camera-flip-outline` | `mdiCameraFlipOutline` |
+| `camera-outline` | `mdiCameraOutline` |
+| `cancel` | `mdiCancel` |
+| `card-text-outline` | `mdiCardTextOutline` |
+| `chart-line` | `mdiChartLine` |
+| `check` | `mdiCheck` |
+| `check-circle` | `mdiCheckCircle` |
+| `check-circle-outline` | `mdiCheckCircleOutline` |
+| `check-decagram` | `mdiCheckDecagram` |
+| `checkbox-blank-outline` | `mdiCheckboxBlankOutline` |
+| `checkbox-marked` | `mdiCheckboxMarked` |
+| `chevron-double-up` | `mdiChevronDoubleUp` |
+| `chevron-down` | `mdiChevronDown` |
+| `chevron-left` | `mdiChevronLeft` |
+| `chevron-right` | `mdiChevronRight` |
+| `chevron-up` | `mdiChevronUp` |
+| `circle-md` | `mdiCircleMedium` |
+| `clock-outline` | `mdiClockOutline` |
+| `close` | `mdiClose` |
+| `close-circle-outline` | `mdiCloseCircleOutline` |
+| `code-braces` | `mdiCodeBraces` |
+| `code-json` | `mdiCodeJson` |
+| `code-tags` | `mdiCodeTags` |
+| `cog` | `mdiCog` |
+| `console` | `mdiConsole` |
+| `content-copy` | `mdiContentCopy` |
+| `content-duplicate` | `mdiContentDuplicate` |
+| `content-paste` | `mdiContentPaste` |
+| `content-save-outline` | `mdiContentSaveOutline` |
+| `credit-card-outline` | `mdiCreditCardOutline` |
+| `crop-free` | `mdiCropFree` |
+| `database-outline` | `mdiDatabaseOutline` |
+| `domain` | `mdiDomain` |
+| `dots-horizontal` | `mdiDotsHorizontal` |
+| `download` | `mdiDownload` |
+| `drag` | `mdiDrag` |
+| `earth` | `mdiEarth` |
+| `export` | `mdiExport` |
+| `eye-off-outline` | `mdiEyeOffOutline` |
+| `eye-outline` | `mdiEyeOutline` |
+| `file-chart-outline` | `mdiFileChartOutline` |
+| `file-download-outline` | `mdiFileDownloadOutline` |
+| `file-outline` | `mdiFileOutline` |
+| `file-swap-outline` | `mdiFileSwapOutline` |
+| `filter-sliders` | `mdiTune` |
+| `folder` | `mdiFolderOutline` |
+| `format-list-bulleted` | `mdiFormatListBulleted` |
+| `gamepad` | `mdiGamepad` |
+| `github` | `mdiGithub` |
+| `help-circle-outline` | `mdiHelpCircleOutline` |
+| `history` | `mdiHistory` |
+| `image-filter-center-focus` | `mdiImageFilterCenterFocus` |
+| `inbox` | `mdiInboxOutline` |
+| `information` | `mdiInformation` |
+| `information-outline` | `mdiInformationOutline` |
+| `instagram` | `mdiInstagram` |
+| `keyboard-return` | `mdiKeyboardReturn` |
+| `lan-connect` | `mdiLanConnect` |
+| `language-go` | `mdiLanguageGo` |
+| `language-python` | `mdiLanguagePython` |
+| `language-typescript` | `mdiLanguageTypescript` |
+| `laptop` | `mdiLaptop` |
+| `layers-triple-outline` | `mdiLayersTripleOutline` |
+| `lightning-bolt-outline` | `mdiLightningBoltOutline` |
+| `link` | `mdiLink` |
+| `link-variant` | `mdiLinkVariant` |
+| `linkedin` | `mdiLinkedin` |
+| `linux` | `mdiLinux` |
+| `lock` | `mdiLockOutline` |
+| `logout` | `mdiLogout` |
+| `magnify` | `mdiMagnify` |
+| `markdown` | `mdiLanguageMarkdownOutline` |
+| `megaphone` | `mdiBullhornVariantOutline` |
+| `memory` | `mdiMemory` |
+| `menu` | `mdiMenu` |
+| `merge` | `mdiMerge` |
+| `minus` | `mdiMinus` |
+| `monitor-dashboard` | `mdiMonitorDashboard` |
+| `multiplication-box` | `mdiMultiplicationBox` |
+| `navigation-variant` | `mdiNavigationVariant` |
+| `navigation-variant-outline` | `mdiNavigationVariantOutline` |
+| `network-outline` | `mdiNetworkOutline` |
+| `note-outline` | `mdiNoteOutline` |
+| `open-in-new` | `mdiOpenInNew` |
+| `package-variant-closed` | `mdiPackageVariantClosed` |
+| `package-variant-closed-check` | `mdiPackageVariantClosedCheck` |
+| `pause` | `mdiPause` |
+| `pause-circle-outline` | `mdiPauseCircleOutline` |
+| `pencil-outline` | `mdiPencilOutline` |
+| `picture-in-picture-top-right` | `mdiPictureInPictureTopRight` |
+| `play-circle-outline` | `mdiPlayCircleOutline` |
+| `plus` | `mdiPlus` |
+| `qrcode` | `mdiQrcode` |
+| `radiobox-blank` | `mdiRadioboxBlank` |
+| `radiobox-indeterminate-variant` | `mdiRadioboxIndeterminateVariant` |
+| `radiobox-marked` | `mdiRadioboxMarked` |
+| `refresh` | `mdiRefresh` |
+| `robot-industrial-outline` | `mdiRobotIndustrialOutline` |
+| `robot-outline` | `mdiRobotOutline` |
+| `rocket-launch-outline` | `mdiRocketLaunchOutline` |
+| `script-text-outline` | `mdiScriptTextOutline` |
+| `selection-drag` | `mdiSelectionDrag` |
+| `selection-ellipse` | `mdiSelectionEllipse` |
+| `send` | `mdiSend` |
+| `shield-key-outline` | `mdiShieldKeyOutline` |
+| `source-merge` | `mdiSourceMerge` |
+| `stop-circle-outline` | `mdiStopCircleOutline` |
+| `subdirectory-arrow-right` | `mdiSubdirectoryArrowRight` |
+| `sync` | `mdiSync` |
+| `table` | `mdiTable` |
+| `tag-outline` | `mdiTagOutline` |
+| `text-search` | `mdiTextSearch` |
+| `toggle-switch` | `mdiToggleSwitch` |
+| `toggle-switch-off` | `mdiToggleSwitchOff` |
+| `toggle-switch-off-outline` | `mdiToggleSwitchOffOutline` |
+| `toggle-switch-outline` | `mdiToggleSwitchOutline` |
+| `tools` | `mdiTools` |
+| `trash-can-outline` | `mdiTrashCanOutline` |
+| `twitter` | `mdiTwitter` |
+| `undo` | `mdiUndo` |
+| `unfold-less-horizontal` | `mdiUnfoldLessHorizontal` |
+| `unfold-more-horizontal` | `mdiUnfoldMoreHorizontal` |
+| `unfold-more-vertical` | `mdiUnfoldMoreVertical` |
+| `upload` | `mdiUpload` |
+| `video-outline` | `mdiVideoOutline` |
+| `view-dashboard-outline` | `mdiViewDashboardOutline` |
+| `webcam` | `mdiWebcam` |
+| `webhook` | `mdiWebhook` |
+| `widgets-outline` | `mdiWidgetsOutline` |
+| `windows` | `mdiMicrosoftWindows` |
+| `wrench-outline` | `mdiWrenchOutline` |
+
+### Viam glyphs and other replacements
+
+Names that were drawn by hand are now components. `checkbox-indeterminate` is an `@mdi/js` export.
+
+| Old name | Now |
+| --- | --- |
+| `ask-ai` | `AskAi` from `@viamrobotics/prime-ui/icons` |
+| `cursor-move` | `CursorMove` from `@viamrobotics/prime-ui/icons` |
+| `dock-left` | `DockLeft` from `@viamrobotics/prime-ui/icons` |
+| `dock-right` | `DockRight` from `@viamrobotics/prime-ui/icons` |
+| `external-arrow` | `ExternalArrow` from `@viamrobotics/prime-ui/icons` |
+| `filter-outline` | `FilterOutline` from `@viamrobotics/prime-ui/icons` |
+| `grid-orthographic` | `GridOrthographic` from `@viamrobotics/prime-ui/icons` |
+| `grid-perspective` | `GridPerspective` from `@viamrobotics/prime-ui/icons` |
+| `language-cpp` | `LanguageCpp` from `@viamrobotics/prime-ui/icons` |
+| `magnet` | `Magnet` from `@viamrobotics/prime-ui/icons` |
+| `magnet-off` | `MagnetOff` from `@viamrobotics/prime-ui/icons` |
+| `maintenance` | `Maintenance` from `@viamrobotics/prime-ui/icons` |
+| `manage-history` | `ManageHistory` from `@viamrobotics/prime-ui/icons` |
+| `pulse` | `Pulse` from `@viamrobotics/prime-ui/icons` |
+| `resize` | `Resize` from `@viamrobotics/prime-ui/icons` |
+| `sparkles` | `Sparkles` from `@viamrobotics/prime-ui/icons` |
+| `viam-component` | `ViamComponent` from `@viamrobotics/prime-ui/icons` |
+| `viam-flutter` | `ViamFlutter` from `@viamrobotics/prime-ui/icons` |
+| `viam-fragment` | `ViamFragment` from `@viamrobotics/prime-ui/icons` |
+| `viam-local-module` | `ViamLocalModule` from `@viamrobotics/prime-ui/icons` |
+| `viam-mixed-part-status` | `ViamMixedPartStatus` from `@viamrobotics/prime-ui/icons` |
+| `viam-ml-model` | `ViamMlModel` from `@viamrobotics/prime-ui/icons` |
+| `viam-process` | `ViamProcess` from `@viamrobotics/prime-ui/icons` |
+| `viam-registry-module` | `ViamRegistryModule` from `@viamrobotics/prime-ui/icons` |
+| `viam-remote-part` | `ViamRemotePart` from `@viamrobotics/prime-ui/icons` |
+| `viam-service` | `ViamService` from `@viamrobotics/prime-ui/icons` |
+| `view-agenda-outline` | `ViewAgendaOutline` from `@viamrobotics/prime-ui/icons` |
+| `checkbox-indeterminate` | `mdiCheckboxIntermediate` from `@mdi/js` |

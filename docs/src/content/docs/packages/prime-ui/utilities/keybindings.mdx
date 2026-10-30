@@ -1,0 +1,77 @@
+---
+title: Keybindings
+description: Declare keyboard shortcuts where the behavior lives and list them from one registry.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import Example from "@docs/doc/Example.astro";
+
+import Basic from "./keybindings/Basic.svelte";
+import basicSource from "./keybindings/Basic.svelte?raw";
+import basicHotkeysSource from "./keybindings/BasicHotkeys.svelte?raw";
+import Listing from "./keybindings/Listing.svelte";
+import listingSource from "./keybindings/Listing.svelte?raw";
+import listingBodySource from "./keybindings/ListingBody.svelte?raw";
+
+`provideKeybindings` goes once near the app root. It creates the registry and owns the single `keydown` listener on the window. `useHotkey` goes in the component where the behavior lives, and the shortcut exists for as long as that component is mounted.
+
+- `when` makes a shortcut conditional. It is read at press time, so it can close over reactive state.
+- A press typed into a field is left to the field unless `mod` is held.
+- Option is never part of a shortcut, because macOS rewrites the character it reports. A press with Option held is ignored.
+- `h` and `Shift+H` are separate shortcuts. `shift` and `mod` are part of the press when set.
+- `mod` is Command on Apple devices and Control elsewhere.
+- Two shortcuts that claim the same press log a warning.
+
+## Usage
+
+### Basic
+
+The provider has to sit above the consumer, so the two halves are separate files. Press <kbd>J</kbd>, <kbd>Shift</kbd> + <kbd>J</kbd>, or the platform's command key with <kbd>S</kbd>. The save shortcut sets `preventDefault`, so the browser's save dialog does not open.
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+<Code code={basicHotkeysSource} lang="svelte" title="BasicHotkeys.svelte" />
+
+### Listing shortcuts
+
+`useKeybindings().bindings` holds every shortcut present right now, in registration order. Group them by `group` and print each with `keybindingParts`, which returns one string per key so each renders as its own `<kbd>`. `useKeybinding` lists a shortcut without running anything, for a key that something else handles.
+
+<Example code={listingSource} title="Listing.svelte">
+  <Listing client:visible />
+</Example>
+
+<Code code={listingBodySource} lang="svelte" title="ListingBody.svelte" />
+
+### Printing a shortcut
+
+`formatKeybinding` prints a shortcut as one string, `⌘⇧Z` on Apple devices and `Ctrl+Shift+Z` elsewhere. Use it where markup does not fit, such as a `title` or `aria-keyshortcuts` attribute. `keybindingParts` returns the same keys as an array, for a chip each. `useHotkey` returns the shortcut, so a button's label and its key cannot drift.
+
+## API
+
+| Function                         | Description                                                                                  |
+| -------------------------------- | -------------------------------------------------------------------------------------------- |
+| `provideKeybindings()`           | Creates the registry, shares it with everything below, and owns the window listener.         |
+| `useKeybindings()`               | Returns the registry from the nearest provider. Throws outside one.                          |
+| `useHotkey(definition)`          | Registers a shortcut and its `run` for as long as the component is mounted. Returns the shortcut. |
+| `useKeybinding(binding)`         | Lists a shortcut without a handler. Returns the shortcut.                                    |
+| `formatKeybinding(binding)`      | The shortcut as one string.                                                                  |
+| `keybindingParts(binding)`       | The shortcut as an array of printed keys.                                                    |
+| `formatKey(key)`                 | One key as printed, so `w` reads `W` and `arrowup` reads `↑`.                                |
+
+The registry has `bindings` (every shortcut present), `register(binding, handler?)` (returns the remover), and `matching(press)`.
+
+### Keybinding
+
+| Field            | Type      | Description                                                                 |
+| ---------------- | --------- | --------------------------------------------------------------------------- |
+| `id`             | `string`  | Unique among the shortcuts present at once.                                 |
+| `description`    | `string`  | What the shortcut does, for the listing.                                    |
+| `group`          | `string`  | The heading a listing files the shortcut under.                             |
+| `key`            | `string`  | `KeyboardEvent.key`, lowercased.                                            |
+| `shift`          | `boolean` | Whether held Shift is part of the press.                                    |
+| `mod`            | `boolean` | Whether Command (Apple) or Control (elsewhere) is part of the press.        |
+| `preventDefault` | `boolean` | Whether to cancel the browser's own response to the press.                  |
+
+`useHotkey` also takes `run`, which runs on the press, and `when`, which returns whether the shortcut applies right now.

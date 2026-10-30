@@ -58,8 +58,16 @@ export default defineConfig({
               items: [
                 { label: "Overview", link: "/packages/prime-ui/" },
                 {
+                  label: "Migrating from prime-core",
+                  link: "/packages/prime-ui/migrating/",
+                },
+                {
                   label: "Components",
                   autogenerate: { directory: "packages/prime-ui/components" },
+                },
+                {
+                  label: "Utilities",
+                  autogenerate: { directory: "packages/prime-ui/utilities" },
                 },
               ],
             },
