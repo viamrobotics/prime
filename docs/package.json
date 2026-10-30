@@ -13,7 +13,7 @@
 	},
 	"wireit": {
 		"check": {
-			"command": "svelte-check --tsconfig ./tsconfig.json",
+			"command": "astro sync && svelte-check --tsconfig ./tsconfig.json",
 			"dependencies": [
 				"../packages/prime-ui:package",
 				"../packages/prime-panes:package",
