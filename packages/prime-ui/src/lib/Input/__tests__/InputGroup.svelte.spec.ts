@@ -82,7 +82,7 @@ describe('Input.Group', () => {
 			const colors = [
 				'border-light',
 				'border-danger-dark',
-				'border-warning-bright',
+				'border-warning-dark',
 				'border-transparent'
 			];
 
@@ -138,7 +138,7 @@ describe('Input.Group', () => {
 				name: 'warning for a warn input while focused',
 				props: { state: 'warn' },
 				interact: 'focus',
-				border: 'border-warning-bright'
+				border: 'border-warning-dark'
 			}
 		] as const)('is $name', async ({ props, interact, border }) => {
 			const parts = setup(props);

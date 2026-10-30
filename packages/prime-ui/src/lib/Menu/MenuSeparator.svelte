@@ -16,9 +16,5 @@ A horizontal rule between groups of items in a [`Menu.Content`](./MenuContent.sv
 </script>
 
 <DropdownMenu.Separator class={['my-1 h-px bg-light', extraClasses]} {...restProps}>
-	{#snippet child({ props })}
-		<div {...props} role="separator">
-			{@render children?.()}
-		</div>
-	{/snippet}
+	{@render children?.()}
 </DropdownMenu.Separator>

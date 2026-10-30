@@ -45,6 +45,15 @@ describe('Popover', () => {
 		expect(trigger(container).dataset.state).toBe('open');
 	});
 
+	it('renders no forcemount attribute on any element while open', async () => {
+		const { container } = render(BoundPopover);
+
+		await open(container);
+
+		expect(dialog()?.textContent).toContain('Details');
+		expect(document.querySelector('[forcemount]')).toBeNull();
+	});
+
 	it('wears the shared focus ring on the trigger', () => {
 		const { container } = render(BoundPopover);
 

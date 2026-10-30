@@ -41,7 +41,6 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		...restProps
 	}: Props = $props();
 
-	// bits-ui puts the content id on its wrapper, but typeahead compares keydowns against the panel's id, so the panel takes the id and the wrapper gives it up.
 	const contentId = $derived(id ?? `menu-${uid}`);
 </script>
 
@@ -55,12 +54,6 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		class={['z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-sm', extraClasses]}
 		{...restProps}
 	>
-		{#snippet child({ props, wrapperProps })}
-			<div {...wrapperProps} id={undefined}>
-				<div {...props} id={contentId}>
-					{@render children?.()}
-				</div>
-			</div>
-		{/snippet}
+		{@render children?.()}
 	</DropdownMenu.Content>
 </DropdownMenu.Portal>

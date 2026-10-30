@@ -57,6 +57,7 @@
   --color-warning-medium-light: #f8e6cc; /* derived */
   --color-warning-medium: #e9c89d;
   --color-warning-bright: #efa300;
+  --color-warning-text: #7a5a00;
   --color-success-dark: #3d7d3f;
   --color-success-light: #e0fae3;
   --color-success-medium-light: #d9f2e4;
@@ -81,28 +82,57 @@
   --color-ghost-light: rgba(0, 0, 0, 0.04);
   --color-ghost-medium: rgba(0, 0, 0, 0.08);
 
-  /* Brand design colors */
-  --color-power-wire: #ff0047;
-  --color-pcb: #00501f;
-  --color-power-button: #00ef83;
-  --color-solar-power: #ffd400;
-  --color-mars-rover: #ff7d80;
-  --color-raspberry: #9f0049;
-  --color-hologram: #00e8e8;
-  --color-yoshimi: #ff79ff;
-  --color-cyberpunk: #a51aff;
-  --color-hyperlink: #0000ea;
-
-  /* Brand design colors - extensions */
-  --color-power-button-light: #00ef8314;
-  --color-power-button-medium: #009b5880;
-  --color-power-button-dark: #009b58;
-  --color-cyberpunk-light: #a51aff0f;
-  --color-cyberpunk-medium: #a51aff80;
-  --color-cyberpunk-dark: #a51aff;
-  --color-mars-rover-light: #ff808219;
-  --color-mars-rover-medium: #fb5053b2;
-  --color-mars-rover-dark: #fb5054;
+  /* Brand colors, each a family with the same five variants as the semantic colors */
+  --color-power-wire-dark: #bf0035;
+  --color-power-wire-light: #ffebf0;
+  --color-power-wire-medium-light: #ffd9e3;
+  --color-power-wire-medium: #ffbfd1;
+  --color-power-wire-bright: #ff0047;
+  --color-pcb-dark: #003c17;
+  --color-pcb-light: #ebf1ed;
+  --color-pcb-medium-light: #d9e5dd;
+  --color-pcb-medium: #bfd3c7;
+  --color-pcb-bright: #00501f;
+  --color-power-button-dark: #00b362;
+  --color-power-button-light: #ebfef5;
+  --color-power-button-medium-light: #d9fdec;
+  --color-power-button-medium: #bffbe0;
+  --color-power-button-bright: #00ef83;
+  --color-solar-power-dark: #bf9f00;
+  --color-solar-power-light: #fffceb;
+  --color-solar-power-medium-light: #fff9d9;
+  --color-solar-power-medium: #fff4bf;
+  --color-solar-power-bright: #ffd400;
+  --color-mars-rover-dark: #bf5e60;
+  --color-mars-rover-light: #fff5f5;
+  --color-mars-rover-medium-light: #ffecec;
+  --color-mars-rover-medium: #ffdfdf;
+  --color-mars-rover-bright: #ff7d80;
+  --color-raspberry-dark: #770037;
+  --color-raspberry-light: #f7ebf0;
+  --color-raspberry-medium-light: #f1d9e4;
+  --color-raspberry-medium: #e7bfd2;
+  --color-raspberry-bright: #9f0049;
+  --color-hologram-dark: #00aeae;
+  --color-hologram-light: #ebfdfd;
+  --color-hologram-medium-light: #d9fcfc;
+  --color-hologram-medium: #bff9f9;
+  --color-hologram-bright: #00e8e8;
+  --color-yoshimi-dark: #bf5bbf;
+  --color-yoshimi-light: #fff4ff;
+  --color-yoshimi-medium-light: #ffebff;
+  --color-yoshimi-medium: #ffdeff;
+  --color-yoshimi-bright: #ff79ff;
+  --color-cyberpunk-dark: #7c14bf;
+  --color-cyberpunk-light: #f8edff;
+  --color-cyberpunk-medium-light: #f2ddff;
+  --color-cyberpunk-medium: #e9c6ff;
+  --color-cyberpunk-bright: #a51aff;
+  --color-hyperlink-dark: #0000b0;
+  --color-hyperlink-light: #ebebfd;
+  --color-hyperlink-medium-light: #d9d9fc;
+  --color-hyperlink-medium: #bfbffa;
+  --color-hyperlink-bright: #0000ea;
 
   /* Illustration colors - pixel colors */
   --color-pixel-red: #a3332b;
@@ -245,7 +275,7 @@
     border-color: var(--color-danger-dark);
   }
   &:is([data-field-state="warn"], :has(> input[data-field-state="warn"])) {
-    border-color: var(--color-warning-bright);
+    border-color: var(--color-warning-dark);
   }
   &:is([readonly], :has(> input[readonly])) {
     border-color: transparent;
@@ -298,6 +328,7 @@
  */
 @utility button {
   --button-dark: var(--color-gray-9);
+  --button-text: var(--color-gray-9);
   --button-border: var(--color-gray-3);
   --button-medium: var(--color-gray-4);
   --button-medium-light: var(--color-gray-2);
@@ -305,7 +336,7 @@
   @apply inline-flex items-center justify-center gap-1.5 rounded-sm border px-3 py-1.5 text-sm whitespace-nowrap transition-colors select-none focus-ring;
   border-color: var(--button-border);
   background-color: var(--button-light);
-  color: var(--button-dark);
+  color: var(--button-text);
 
   &:hover {
     border-color: var(--button-medium);
@@ -330,20 +361,21 @@
 
 @utility icon-button {
   --button-dark: var(--color-gray-9);
+  --button-text: var(--color-gray-9);
   --button-border: var(--color-gray-3);
   --button-medium: var(--color-gray-4);
   --button-medium-light: var(--color-gray-2);
   --button-light: var(--color-gray-1);
-  @apply inline-flex size-7.5 items-center justify-center rounded-sm border border-transparent text-gray-6 transition-colors focus-ring;
+  @apply inline-flex size-7.5 items-center justify-center rounded-sm border border-transparent text-gray-7 transition-colors focus-ring;
 
   &:hover {
     border-color: var(--button-medium);
     background-color: var(--button-medium-light);
-    color: var(--color-gray-7);
+    color: var(--color-gray-8);
   }
   &:active {
     background-color: var(--button-medium-light);
-    color: var(--color-gray-8);
+    color: var(--color-gray-9);
   }
   &[aria-busy="true"] {
     cursor: progress;
@@ -377,6 +409,7 @@
 
 @utility button-danger {
   --button-dark: var(--color-danger-dark);
+  --button-text: var(--color-danger-dark);
   --button-border: var(--color-danger-medium);
   --button-medium: var(--color-danger-medium);
   --button-medium-light: var(--color-danger-medium-light);
@@ -400,6 +433,7 @@
 
 @utility button-warning {
   --button-dark: var(--color-warning-dark);
+  --button-text: var(--color-warning-text);
   --button-border: var(--color-warning-medium);
   --button-medium: var(--color-warning-medium);
   --button-medium-light: var(--color-warning-medium-light);
@@ -423,6 +457,7 @@
 
 @utility button-success {
   --button-dark: var(--color-success-dark);
+  --button-text: var(--color-success-dark);
   --button-border: var(--color-success-medium);
   --button-medium: var(--color-success-medium);
   --button-medium-light: var(--color-success-medium-light);
@@ -446,6 +481,7 @@
 
 @utility button-info {
   --button-dark: var(--color-info-dark);
+  --button-text: var(--color-info-dark);
   --button-border: var(--color-info-medium);
   --button-medium: var(--color-info-medium);
   --button-medium-light: var(--color-info-medium-light);
@@ -470,7 +506,7 @@
 @utility button-outline {
   border-color: var(--button-border);
   background-color: var(--button-light);
-  color: var(--button-dark);
+  color: var(--button-text);
   &:not(:disabled, [aria-disabled="true"]):hover,
   &:not(:disabled, [aria-disabled="true"]):active {
     border-color: var(--button-medium);
@@ -481,7 +517,7 @@
 @utility button-ghost {
   border-color: transparent;
   background-color: transparent;
-  color: var(--button-dark);
+  color: var(--button-text);
   &:not(:disabled, [aria-disabled="true"]):hover {
     border-color: transparent;
     background-color: color-mix(in srgb, var(--button-dark) 8%, transparent);
@@ -506,7 +542,7 @@
 @utility badge-warning {
   border-color: var(--color-warning-medium);
   background-color: var(--color-warning-light);
-  color: var(--color-warning-dark);
+  color: var(--color-warning-text);
 }
 
 @utility badge-danger {

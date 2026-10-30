@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { Field, Input, NumberInput, type FieldState } from "@viamrobotics/prime-ui";
-  import type { HTMLInputAttributes } from "svelte/elements";
+  import { Field, Input, NumberInput } from "@viamrobotics/prime-ui";
+  import type { ComponentProps } from "svelte";
 
-  interface Props extends Omit<HTMLInputAttributes, "value" | "type"> {
-    value?: number;
-    state?: FieldState;
-  }
+  type Props = ComponentProps<typeof NumberInput>;
 
   const { state, ...rest }: Props = $props();
 </script>

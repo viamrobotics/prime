@@ -23,6 +23,8 @@
     "build": {
       "dependencies": [
         "./packages/prime-ui:build",
+        "./packages/prime-panes:build",
+        "./packages/prime-tree:build",
         "./packages/tweakpane-config:build",
         "./docs:build"
       ]
@@ -33,7 +35,8 @@
         "./packages/prime-ui:check",
         "./packages/prime-panes:check",
         "./packages/prime-tree:check",
-        "./packages/tweakpane-config:check"
+        "./packages/tweakpane-config:check",
+        "./docs:check"
       ]
     },
     "lint": {

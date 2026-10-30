@@ -26,7 +26,7 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 	import { useField } from '../Field/useField.svelte.ts';
 	import Icon from '../Icon/Icon.svelte';
 
-	interface Props extends Omit<HTMLButtonAttributes, 'children' | 'value'> {
+	interface Props extends Omit<HTMLButtonAttributes, 'children' | 'form' | 'value'> {
 		/** Checked state. @default false */
 		checked?: boolean;
 		/** Indeterminate ("mixed") state. Wins over `checked` visually. @default false */
@@ -37,6 +37,8 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 		required?: boolean;
 		/** Contextual state. Defaults to the enclosing field's `state`. */
 		state?: FieldState;
+		/** Id of the form to submit with. bits-ui accepts a string only, so `null` is dropped. */
+		form?: string;
 		/** Custom content instead of the default icon. Receives `{ checked, indeterminate }`. */
 		children?: Snippet<[{ checked: boolean; indeterminate: boolean }]>;
 	}

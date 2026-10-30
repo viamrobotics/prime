@@ -20,7 +20,7 @@ describe('Hint', () => {
 
 	it.each([
 		{ state: 'error', color: 'text-danger-dark' },
-		{ state: 'warn', color: 'text-warning-dark' },
+		{ state: 'warn', color: 'text-warning-text' },
 		{ state: 'info', color: 'text-info-dark' },
 		{ state: 'none', color: 'text-subtle-1' }
 	] as const)('colors the text $color for the $state state', ({ state, color }) => {
