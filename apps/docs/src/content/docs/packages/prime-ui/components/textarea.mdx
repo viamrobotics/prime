@@ -1,0 +1,75 @@
+---
+title: Textarea
+description: A native multi-line text input that grows with its content.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import TextareaDemo from "./textarea/TextareaDemo.svelte";
+import TextareaShowcase from "./textarea/TextareaShowcase.svelte";
+import TwoWay from "./textarea/TwoWay.svelte";
+import twoWaySource from "./textarea/TwoWay.svelte?raw";
+import InField from "./textarea/InField.svelte";
+import inFieldSource from "./textarea/InField.svelte?raw";
+import Validated from "./textarea/Validated.svelte";
+import validatedSource from "./textarea/Validated.svelte?raw";
+
+<ComponentIntro name="textarea" />
+
+<TextareaDemo client:visible />
+
+- A real `<textarea>`, so every native attribute and event handler passes straight through.
+- Grows with its content where the browser supports `field-sizing: content`, and shows `rows` lines elsewhere.
+- Three contextual states, `info`, `warn`, and `error`, styled like [`Input`](../input/).
+- Reads `controlId`, `disabled`, `required`, `state`, and `aria-describedby` from an enclosing [`Field`](../field/).
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the textarea, with the native handlers alongside it. [State & binding](../state/) covers both modes.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### In a field
+
+Inside a [`Field`](../field/) the label and hint wire themselves to the textarea. `rows` sets the height where the box cannot grow to its content.
+
+<Example code={inFieldSource} title="InField.svelte">
+  <InField client:visible />
+</Example>
+
+### Validation on blur
+
+Set `state` on the field and the textarea, the hint, and `aria-invalid` all follow it.
+
+<Example code={validatedSource} title="Validated.svelte">
+  <Validated client:visible />
+</Example>
+
+### States
+
+<TextareaShowcase client:visible />
+
+## Styling
+
+`class` lands on the `<textarea>`. It has no wrapper and no width, so set one yourself or let a flex or grid parent stretch it.
+
+The border, padding, and state colors are the `input` [component class](../../tailwind-config/component-classes/) from `@viamrobotics/tailwind-config`, the same one `Input` wears. Height comes from `field-sizing: content`, with `rows` as the fallback in browsers without it.
+
+| Hook               | Where                                            |
+| ------------------ | ------------------------------------------------ |
+| `data-field-state` | On the textarea for `info`, `warn`, and `error`  |
+| `aria-invalid`     | On the textarea in the `error` state             |
+
+## Keyboard
+
+Native textarea behavior. Nothing is added or intercepted.
+
+## API
+
+<PropsTable name="textarea" />

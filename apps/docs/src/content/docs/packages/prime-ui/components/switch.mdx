@@ -1,0 +1,87 @@
+---
+title: Switch
+description: An on/off switch for settings that apply immediately.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import SwitchDemo from "./switch/SwitchDemo.svelte";
+import SwitchShowcase from "./switch/SwitchShowcase.svelte";
+import TwoWay from "./switch/TwoWay.svelte";
+import twoWaySource from "./switch/TwoWay.svelte?raw";
+import Controlled from "./switch/Controlled.svelte";
+import controlledSource from "./switch/Controlled.svelte?raw";
+import InField from "./switch/InField.svelte";
+import inFieldSource from "./switch/InField.svelte?raw";
+import Reveals from "./switch/Reveals.svelte";
+import revealsSource from "./switch/Reveals.svelte?raw";
+
+<ComponentIntro name="switch" />
+
+<SwitchDemo client:visible />
+
+- Two states, on and off, driven by one bindable prop: `checked`.
+- Keyboard and screen reader behavior from the WAI-ARIA switch pattern, via bits-ui.
+- Submits with the form through a hidden `<input>` when given a `name`.
+- The label is static. It describes the setting and does not change when the switch flips.
+
+## Usage
+
+### Two-way binding
+
+`bind:checked` keeps your state and the switch in sync. [State & binding](../state/) covers both modes.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Give `bind:checked` a getter and a setter. Here the switch can be turned on but never off. [State & binding](../state/) has the rule.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### In a field
+
+Put the switch and a [`Label`](../label/) in a [`Field`](../field/). The switch takes `controlId`, `disabled`, `required`, `state`, and `aria-describedby` from the field, and the label and hint wire themselves to it. `name` and `value` make it part of the enclosing form. A `state` of `error` sets `aria-invalid="true"` and turns the track red.
+
+<Example code={inFieldSource} title="InField.svelte">
+  <InField client:visible />
+</Example>
+
+### Revealing content
+
+A switch can show more settings when it is on. Read `checked` and render the extra fields below the switch.
+
+<Example code={revealsSource} title="Reveals.svelte">
+  <Reveals client:visible />
+</Example>
+
+### States
+
+<SwitchShowcase client:visible />
+
+## Styling
+
+`class` lands on the root button, which is the track. The thumb is inside it and is not exposed. bits-ui sets these attributes on the track, so Tailwind variants like `data-[state=checked]:bg-light` work without a wrapper.
+
+| Attribute       | Value                          |
+| --------------- | ------------------------------ |
+| `data-state`    | `checked` or `unchecked`       |
+| `data-disabled` | present when disabled          |
+| `aria-invalid`  | `true` when `state` is `error` |
+
+## Keyboard
+
+| Key              | Action                                                      |
+| ---------------- | ----------------------------------------------------------- |
+| <kbd>Space</kbd> | Toggles the switch.                                         |
+| <kbd>Enter</kbd> | Toggles the switch.                                         |
+
+## API
+
+<PropsTable name="switch" />
