@@ -1,0 +1,139 @@
+---
+title: Banner
+description: A notification strip with a variant chip, content, and an optional dismiss button.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import BannerDemo from "./banner/BannerDemo.svelte";
+import BannerShowcase from "./banner/BannerShowcase.svelte";
+import Stacked from "./banner/Stacked.svelte";
+import stackedSource from "./banner/Stacked.svelte?raw";
+import Compact from "./banner/Compact.svelte";
+import compactSource from "./banner/Compact.svelte?raw";
+import Dismissable from "./banner/Dismissable.svelte";
+import dismissableSource from "./banner/Dismissable.svelte?raw";
+import Pending from "./banner/Pending.svelte";
+import pendingSource from "./banner/Pending.svelte?raw";
+import WithDetails from "./banner/WithDetails.svelte";
+import withDetailsSource from "./banner/WithDetails.svelte?raw";
+import Site from "./banner/Site.svelte";
+import siteSource from "./banner/Site.svelte?raw";
+
+<ComponentIntro name="banner" />
+
+<BannerDemo client:visible />
+
+- `variant` sets the chip color, the glyph, and the live-region role. `info` and `success` are `status`, `warning` and `danger` are `alert`.
+- With no `Banner.Title` the banner is the compact one-liner. A title stacks it.
+- The parts give you the layout. Each lands in its own cell, so what goes inside is your markup.
+- It has no open state. Wrap it in `{#if}` to show and hide it.
+- `placement="site"` is the full-width strip for the top of a page.
+
+## Anatomy
+
+Every part is a property on `Banner`. A banner renders a `<div>`.
+
+```svelte
+<Banner variant="warning">
+  <Banner.Icon>...</Banner.Icon>
+  <Banner.Title>title</Banner.Title>
+  <Banner.Description>description</Banner.Description>
+  <Banner.Actions>...</Banner.Actions>
+  <Banner.Details summary="Details">...</Banner.Details>
+  <Banner.Close onclick={dismiss} />
+  <Banner.Progress value={elapsed} label="Time until dismissed" />
+</Banner>
+```
+
+## Usage
+
+### Stacked
+
+A title, a description, and an actions row. Use the neutral `button` class for the emphasized action and `text-sm font-medium text-link` for a secondary one.
+
+<Example code={stackedSource} title="Stacked.svelte">
+  <Stacked client:visible />
+</Example>
+
+### Compact
+
+Leave the title out and the description sits on one line, with the actions inline beside it.
+
+<Example code={compactSource} title="Compact.svelte">
+  <Compact client:visible />
+</Example>
+
+### Dismissable
+
+`Banner.Close` takes a native `onclick`. The banner holds no state, so the consumer owns `{#if}`.
+
+<Example code={dismissableSource} title="Dismissable.svelte">
+  <Dismissable client:visible />
+</Example>
+
+### Pending
+
+`Banner.Icon` replaces the variant glyph. `Banner.Progress` pins a bar to the bottom edge, such as a countdown.
+
+<Example code={pendingSource} title="Pending.svelte">
+  <Pending client:visible />
+</Example>
+
+### With details
+
+`Banner.Details` is a disclosure under a divider. Its content is set in small monospace type.
+
+<Example code={withDetailsSource} title="WithDetails.svelte">
+  <WithDetails client:visible />
+</Example>
+
+### Site
+
+`placement="site"` drops the side and top borders and spans the full width.
+
+<Example code={siteSource} title="Site.svelte">
+  <Site client:visible />
+</Example>
+
+### States
+
+<BannerShowcase client:visible />
+
+## Styling
+
+Every part takes `class` on its element. Each part wears a component class from [Component classes](../../tailwind-config/component-classes/), so the same look works without Svelte.
+
+| Part                 | Component class                                                      |
+| -------------------- | -------------------------------------------------------------------- |
+| `Banner`             | `banner`, `banner-<variant>`, and `banner-site` for the site placement |
+| `Banner.Icon`        | `banner-chip`                                                        |
+| `Banner.Title`       | `banner-title`                                                       |
+| `Banner.Description` | `banner-description`                                                 |
+| `Banner.Actions`     | `banner-actions`                                                     |
+| `Banner.Details`     | `banner-details`                                                     |
+| `Banner.Close`       | `icon-button banner-close`                                           |
+| `Banner.Progress`    | `progress banner-progress`                                           |
+
+`Banner.Details` is built on `Collapsible`, so bits-ui sets its attributes.
+
+| Part      | Attribute       | Value                 |
+| --------- | --------------- | --------------------- |
+| `Details` | `data-state`    | `open` or `closed`    |
+| `Details` | `data-disabled` | present when disabled |
+
+## Keyboard
+
+| Key                                 | Action                                              |
+| ----------------------------------- | --------------------------------------------------- |
+| <kbd>Tab</kbd>                      | Focuses each action, the close button, and the details trigger. |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | On the details trigger, opens or closes the content. |
+
+## API
+
+<PropsTable name="banner" />
+
+<PartsDoc name="banner" />

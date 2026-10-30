@@ -2,7 +2,7 @@
 @component
 The panel of a [`Dialog`](./Dialog.svelte), rendered in a portal above a dimmed overlay.
 
-It carries chrome only. Set the width with `class`, such as `w-full max-w-md`. Focus is trapped inside
+It carries the panel styling only. Set the width with `class`, such as `w-full max-w-md`. Focus is trapped inside
 while it is open, Escape closes it, focus returns to the trigger, and the page behind does not scroll.
 -->
 <script lang="ts">

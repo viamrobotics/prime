@@ -11,6 +11,9 @@ export { default as Switch } from './Switch/Switch.svelte';
 export { default as NumberInput } from './Input/NumberInput.svelte';
 export { default as Textarea } from './Input/Textarea.svelte';
 
+export { Banner } from './Banner/banner.ts';
+export type { BannerVariant } from './Banner/banner.ts';
+
 export { Collapsible } from './Collapsible/collapsible.ts';
 export { ContextMenu } from './Menu/context-menu.ts';
 export { Dialog } from './Dialog/dialog.ts';
@@ -23,13 +26,15 @@ export { Input } from './Input/input.ts';
 export { Menu } from './Menu/menu.ts';
 export { RadioGroup } from './RadioGroup/radio-group.ts';
 
-export { Select } from './Select/select.ts';
-export { Tabs } from './Tabs/tabs.ts';
 export type { SelectOption } from './Select/option.ts';
+export { MultiSelect } from './Select/multi-select.ts';
+export { Select } from './Select/select.ts';
+
+export { Tabs } from './Tabs/tabs.ts';
 
 export { ToggleButtons } from './ToggleButtons/toggle-buttons.ts';
 export type { ToggleButtonsOption } from './ToggleButtons/option.ts';
 
-export { MultiSelect } from './Select/multi-select.ts';
 export { Popover } from './Popover/popover.ts';
+export { default as Progress } from './Progress/Progress.svelte';
 export { Tooltip } from './Tooltip/tooltip.ts';

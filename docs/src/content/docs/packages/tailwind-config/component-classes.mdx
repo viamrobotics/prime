@@ -106,6 +106,46 @@ Modifiers: `badge-success`, `badge-warning`, `badge-danger`, and `badge-neutral`
 <span class="badge badge-neutral">Info</span>`}
 />
 
+## banner
+
+Modifiers: `banner-info`, `banner-success`, `banner-warning`, `banner-danger`, and `banner-site`. A banner reads no attributes, so give it a `role` of `status` or `alert`. A `banner-title` inside switches it from the compact one-liner to the stacked layout.
+
+<div class="not-content flex flex-col gap-3 rounded-sm border border-light p-4">
+  <div class="banner banner-warning" role="alert">
+    <span class="banner-chip" aria-hidden="true">!</span>
+    <p class="banner-title">Module deprecated</p>
+    <p class="banner-description">my-camera uses a module that is no longer maintained.</p>
+    <div class="banner-actions">
+      <button type="button" class="button">Update module</button>
+    </div>
+    <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
+  </div>
+  <div class="banner banner-success" role="status">
+    <span class="banner-chip" aria-hidden="true">✓</span>
+    <p class="banner-description">Your changes were saved.</p>
+    <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="banner banner-warning" role="alert">
+  <span class="banner-chip" aria-hidden="true">!</span>
+  <p class="banner-title">Module deprecated</p>
+  <p class="banner-description">my-camera uses a module that is no longer maintained.</p>
+  <div class="banner-actions">
+    <button type="button" class="button">Update module</button>
+  </div>
+  <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
+</div>
+
+<div class="banner banner-success" role="status">
+  <span class="banner-chip" aria-hidden="true">✓</span>
+  <p class="banner-description">Your changes were saved.</p>
+  <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
+</div>`}
+/>
+
 ## pill
 
 Modifier: `pill-outline`. A removable pill holds a button child with an accessible name.
@@ -214,6 +254,29 @@ A braille spinner. It freezes on its first frame under `prefers-reduced-motion: 
   child. Inside a busy button, hide it with `aria-hidden="true"` and let
   `aria-busy` carry the meaning.
 </Aside>
+
+## progress
+
+A bar with a `progress-fill` child. It reads `aria-valuenow`, and when the attribute is absent the bar is indeterminate and the fill slides, except under `prefers-reduced-motion: reduce`. Set the determinate width on the fill.
+
+<div class="not-content flex flex-col gap-3 rounded-sm border border-light p-4">
+  <div class="progress" role="progressbar" aria-label="Upload" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60">
+    <div class="progress-fill" style="width: 60%"></div>
+  </div>
+  <div class="progress" role="progressbar" aria-label="Connecting" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-fill"></div>
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="progress" role="progressbar" aria-label="Upload" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60">
+  <div class="progress-fill" style="width: 60%"></div>
+</div>
+<div class="progress" role="progressbar" aria-label="Connecting" aria-valuemin="0" aria-valuemax="100">
+  <div class="progress-fill"></div>
+</div>`}
+/>
 
 ## input
 

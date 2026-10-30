@@ -26,6 +26,20 @@ const CHROME_CLASSES = [
   "kbd",
   "avatar",
   "progress-dots",
+  "banner",
+  "banner-info",
+  "banner-success",
+  "banner-warning",
+  "banner-danger",
+  "banner-site",
+  "banner-chip",
+  "banner-title",
+  "banner-description",
+  "banner-actions",
+  "banner-details",
+  "banner-close",
+  "banner-progress",
+  "progress",
   "input",
   "focus-ring",
   "focus-ring-within",
@@ -37,6 +51,12 @@ const BUTTON_COLORS = [
   "button-success",
   "button-info",
 ];
+const BANNER_VARIANTS = [
+  ["info", "var(--color-info-light)", "var(--color-info-dark)"],
+  ["success", "var(--color-success-light)", "var(--color-success-dark)"],
+  ["warning", "var(--color-warning-light)", "var(--color-warning-dark)"],
+  ["danger", "var(--color-danger-light)", "var(--color-danger-dark)"],
+] as const;
 
 const CANDIDATES = [
   "dark:bg-gray-9",
@@ -91,6 +111,9 @@ const declarationsOf = (container: Container): Map<string, string> => {
   });
   return declarations;
 };
+
+const declared = (root: Root, selector: string): Map<string, string> =>
+  declarationsOf(onlyRule(root, selector));
 
 const startsWithClass = (rule: Rule, name: string): boolean =>
   rule.selectors.some((selector) =>
@@ -455,5 +478,219 @@ describe("theme stylesheets compiled through Tailwind", () => {
       "80%",
       "90%",
     ]);
+  });
+
+  it("lays .banner out as the compact one-liner by default", () => {
+    const compact = declared(emitted, ".banner");
+    expect(compact.get("display")).toBe("grid");
+    expect(compact.get("position")).toBe("relative");
+    expect(compact.get("grid-template-columns")).toBe(
+      "auto minmax(0, 1fr) auto auto",
+    );
+    expect(compact.get("min-height")).toBe("calc(var(--spacing) * 10)");
+    expect(compact.get("padding")).toBe("calc(var(--spacing) * 1.5)");
+    expect(compact.get("align-items")).toBe("center");
+    expect(compact.get("border-width")).toBe("1px");
+    expect(compact.get("border-color")).toBe("var(--color-gray-3)");
+    expect(compact.get("background-color")).toBe("var(--color-white)");
+  });
+
+  it("spaces .banner columns with part margins, never a grid gap, and keeps the corners square", () => {
+    const compact = declared(emitted, ".banner");
+    for (const property of ["gap", "column-gap", "border-radius"]) {
+      expect(compact.has(property), property).toBe(false);
+    }
+  });
+
+  it("switches .banner to the stacked padding and top alignment when it holds a .banner-title", () => {
+    const stacked = declared(emitted, ".banner:has(.banner-title)");
+    expect(stacked.get("padding-block")).toBe("calc(var(--spacing) * 3)");
+    expect(stacked.get("padding-right")).toBe("calc(var(--spacing) * 3)");
+    expect(stacked.get("padding-left")).toBe("calc(var(--spacing) * 4)");
+    expect(stacked.get("align-items")).toBe("flex-start");
+  });
+
+  it("sizes the chip 28px with a 16px glyph, and 32px with a 20px glyph once stacked", () => {
+    const compact = declared(emitted, ".banner-chip");
+    expect(compact.get("width")).toBe("calc(var(--spacing) * 7)");
+    expect(compact.get("height")).toBe("calc(var(--spacing) * 7)");
+    expect(compact.get("margin-right")).toBe("calc(var(--spacing) * 3)");
+    expect(compact.get("background-color")).toBe("var(--banner-light)");
+    expect(compact.get("color")).toBe("var(--banner-dark)");
+    expect(declared(emitted, ".banner-chip > svg").get("width")).toBe(
+      "calc(var(--spacing) * 4)",
+    );
+
+    const stacked = declared(
+      emitted,
+      ".banner:has(.banner-title) .banner-chip",
+    );
+    expect(stacked.get("width")).toBe("calc(var(--spacing) * 8)");
+    expect(stacked.get("height")).toBe("calc(var(--spacing) * 8)");
+    expect(stacked.get("grid-row")).toBe("1 / span 4");
+    expect(
+      declared(emitted, ".banner:has(.banner-title) .banner-chip > svg").get(
+        "width",
+      ),
+    ).toBe("calc(var(--spacing) * 5)");
+  });
+
+  it("sets the banner body in the default color compact and in subtle-1 once stacked", () => {
+    expect(declared(emitted, ".banner-description").get("color")).toBe(
+      "var(--color-default)",
+    );
+    const stacked = declared(
+      emitted,
+      ".banner:has(.banner-title) .banner-description",
+    );
+    expect(stacked.get("color")).toBe("var(--color-subtle-1)");
+    expect(stacked.get("margin-top")).toBe("calc(var(--spacing) * .5)");
+  });
+
+  it("sets the banner title semibold in the default color in the content column", () => {
+    const title = declared(emitted, ".banner-title");
+    expect(title.get("font-weight")).toBe("var(--font-weight-semibold)");
+    expect(title.get("color")).toBe("var(--color-default)");
+    expect(title.get("grid-column-start")).toBe("2");
+  });
+
+  it("places .banner-actions under the text stacked and in the third column compact", () => {
+    const stacked = declared(emitted, ".banner-actions");
+    expect(stacked.get("display")).toBe("flex");
+    expect(stacked.get("grid-column-start")).toBe("2");
+    expect(stacked.get("gap")).toBe("calc(var(--spacing) * 4)");
+    expect(stacked.get("margin-top")).toBe("calc(var(--spacing) * 2)");
+
+    const compact = declared(
+      emitted,
+      ".banner:not(:has(.banner-title)) .banner-actions",
+    );
+    expect(compact.get("grid-column-start")).toBe("3");
+    expect(compact.get("grid-row-start")).toBe("1");
+    expect(compact.get("margin-left")).toBe("calc(var(--spacing) * 4)");
+    expect(compact.get("margin-top")).toBe("calc(var(--spacing) * 0)");
+  });
+
+  it("sets .banner-details under a divider in the content column", () => {
+    const details = declared(emitted, ".banner-details");
+    expect(details.get("grid-column-start")).toBe("2");
+    expect(details.get("margin-top")).toBe("calc(var(--spacing) * 2)");
+    expect(details.get("border-top-width")).toBe("1px");
+    expect(details.get("border-color")).toBe("var(--color-gray-3)");
+    expect(details.get("padding-top")).toBe("calc(var(--spacing) * 2)");
+  });
+
+  it("puts .banner-close in the fourth column, pulled into the padding once stacked and centered without growing the row compact", () => {
+    const close = declared(emitted, ".banner-close");
+    expect(close.get("grid-column-start")).toBe("4");
+    expect(close.get("grid-row-start")).toBe("1");
+    expect(close.get("margin-left")).toBe("calc(var(--spacing) * 3)");
+
+    const stacked = declared(
+      emitted,
+      ".banner:has(.banner-title) .banner-close",
+    );
+    expect(stacked.get("margin-top")).toBe("calc(var(--spacing) * -1.5)");
+    expect(stacked.get("margin-right")).toBe("calc(var(--spacing) * -1.5)");
+
+    const compact = declared(
+      emitted,
+      ".banner:not(:has(.banner-title)) .banner-close",
+    );
+    expect(compact.get("margin-block")).toBe("-1px");
+  });
+
+  it.each(BANNER_VARIANTS)(
+    "sets both banner custom properties on .banner-%s",
+    (name, light, dark) => {
+      const declarations = declared(emitted, `.banner-${name}`);
+      expect(declarations.get("--banner-light")).toBe(light);
+      expect(declarations.get("--banner-dark")).toBe(dark);
+    },
+  );
+
+  it("defaults .banner to the info tokens behind a guard that excludes every other variant", () => {
+    const declarations = declared(
+      emitted,
+      ".banner:not(.banner-success, .banner-warning, .banner-danger)",
+    );
+    expect(declarations.get("--banner-light")).toBe("var(--color-info-light)");
+    expect(declarations.get("--banner-dark")).toBe("var(--color-info-dark)");
+    expect(declared(emitted, ".banner").has("--banner-light")).toBe(false);
+  });
+
+  it("drops the side and top borders on .banner-site with a rule that outranks .banner", () => {
+    expect(declared(emitted, ".banner-site").get("width")).toBe("100%");
+    const site = declared(emitted, ".banner-site.banner");
+    expect(site.get("border-inline-width")).toBe("0");
+    expect(site.get("border-top-width")).toBe("0");
+    expect(site.has("border-bottom-width")).toBe(false);
+  });
+
+  it("pins .banner-progress to the bottom edge and outranks the track's relative position", () => {
+    const pinned = declared(emitted, ".banner-progress");
+    expect(pinned.get("position")).toBe("absolute");
+    expect(pinned.get("inset-inline")).toBe("calc(var(--spacing) * 0)");
+    expect(pinned.get("bottom")).toBe("calc(var(--spacing) * 0)");
+    expect(declared(emitted, ".progress").get("position")).toBe("relative");
+    expect(declared(emitted, ".banner-progress.progress").get("position")).toBe(
+      "absolute",
+    );
+  });
+
+  it("draws .progress as a 3px gray-2 track that clips an info-dark fill", () => {
+    const track = declared(emitted, ".progress");
+    expect(track.get("display")).toBe("block");
+    expect(track.get("width")).toBe("100%");
+    expect(track.get("height")).toBe("calc(var(--spacing) * .75)");
+    expect(track.get("overflow")).toBe("hidden");
+    expect(track.get("background-color")).toBe("var(--color-gray-2)");
+
+    const fill = declared(emitted, ".progress > .progress-fill");
+    expect(fill.get("height")).toBe("100%");
+    expect(fill.get("background-color")).toBe("var(--color-info-dark)");
+    expect(fill.has("animation")).toBe(false);
+  });
+
+  it("animates the indeterminate .progress fill only under the no-preference motion query", () => {
+    const indeterminate = rulesOf(
+      emitted,
+      (rule) =>
+        rule.selector === ".progress:not([aria-valuenow]) > .progress-fill",
+    );
+    const sized = indeterminate.filter((rule) =>
+      declarationsOf(rule).has("width"),
+    );
+    expect(sized).toHaveLength(1);
+    expect(declarationsOf(sized[0]!).get("width")).toBe("40%");
+    expect(enclosingMedia(sized[0]!)).toBeUndefined();
+
+    const animated = indeterminate.filter((rule) =>
+      declarationsOf(rule).has("animation"),
+    );
+    expect(animated).toHaveLength(1);
+    expect(declarationsOf(animated[0]!).get("animation")).toBe(
+      "1.5s ease-in-out infinite progress-indeterminate",
+    );
+    expect(enclosingMedia(animated[0]!)).toBe(
+      "(prefers-reduced-motion: no-preference)",
+    );
+  });
+
+  it("emits the progress-indeterminate keyframes sliding from -100% to 250%", () => {
+    const keyframes: AtRule[] = [];
+    emitted.walkAtRules("keyframes", (atRule) => {
+      if (atRule.params === "progress-indeterminate") keyframes.push(atRule);
+    });
+    expect(keyframes).toHaveLength(1);
+
+    const stops = new Map(
+      (keyframes[0]!.nodes ?? [])
+        .filter((node): node is Rule => node.type === "rule")
+        .map((rule) => [rule.selector, declarationsOf(rule).get("transform")]),
+    );
+    expect([...stops.keys()]).toStrictEqual(["from", "to"]);
+    expect(stops.get("from")).toBe("translateX(-100%)");
+    expect(stops.get("to")).toBe("translateX(250%)");
   });
 });

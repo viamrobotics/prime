@@ -1,0 +1,58 @@
+---
+title: Progress
+description: A horizontal bar showing how far a task has come.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import ProgressDemo from "./progress/ProgressDemo.svelte";
+import ProgressShowcase from "./progress/ProgressShowcase.svelte";
+import Determinate from "./progress/Determinate.svelte";
+import determinateSource from "./progress/Determinate.svelte?raw";
+import Indeterminate from "./progress/Indeterminate.svelte";
+import indeterminateSource from "./progress/Indeterminate.svelte?raw";
+
+<ComponentIntro name="progress" />
+
+<ProgressDemo client:visible />
+
+- Determinate with `value` and `max`. `value` is clamped between 0 and `max`.
+- Indeterminate without `value`, and `aria-valuenow` is left off.
+- `label` is the accessible name, so always give one.
+- The indeterminate slide stops under `prefers-reduced-motion: reduce`.
+
+## Usage
+
+### Determinate
+
+Pass `value`, and `max` when the range is not 0 to 100.
+
+<Example code={determinateSource} title="Determinate.svelte">
+  <Determinate client:visible />
+</Example>
+
+### Indeterminate
+
+Leave `value` out when the length of the task is unknown.
+
+<Example code={indeterminateSource} title="Indeterminate.svelte">
+  <Indeterminate client:visible />
+</Example>
+
+### States
+
+<ProgressShowcase client:visible />
+
+## Styling
+
+`class` lands on the track, which wears the `progress` component class. The fill is the `.progress-fill` child. See [Component classes](../../tailwind-config/component-classes/) for the plain HTML form.
+
+## Keyboard
+
+The bar is not interactive, so it takes no keys.
+
+## API
+
+<PropsTable name="progress" />

@@ -1,6 +1,6 @@
 # @viamrobotics/prime-tree
 
-Headless tree view for Svelte 5. The package owns behavior and accessibility: keyboard navigation, roving focus, selection, expansion, and the ARIA attributes. The consumer owns every row's markup through a `node` snippet, and the tree draws no chrome. Behavior comes from the zag.js tree view machine. Nodes are the consumer's own type, described to the tree by accessor functions.
+Headless tree view for Svelte 5. The package owns behavior and accessibility: keyboard navigation, roving focus, selection, expansion, and the ARIA attributes. The consumer owns every row's markup through a `node` snippet, and the tree draws nothing of its own. Behavior comes from the zag.js tree view machine. Nodes are the consumer's own type, described to the tree by accessor functions.
 
 ## Layout
 
@@ -37,5 +37,5 @@ Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwrig
 - Svelte 5 runes only. See [.claude/rules/svelte.md](../../.claude/rules/svelte.md).
 - State flows through `bind:expanded` and `bind:selected`, never a change callback. A function binding can refuse a change by not assigning.
 - No zag.js names in the public API. Props and parts use web-standard vocabulary.
-- No chrome. The tree sets no indentation, icons, or colors. It exposes `depth` in the state and a `--depth` custom property on each row.
+- No styling. The tree sets no indentation, icons, or colors. It exposes `depth` in the state and a `--depth` custom property on each row.
 - Tailwind classes reference `@viamrobotics/tailwind-config` tokens only.
