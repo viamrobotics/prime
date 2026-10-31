@@ -1,5 +1,10 @@
 # @viamrobotics/tailwind-config
 
+## 1.6.0
+### Minor Changes
+
+- 2b3c573: Add Banner and Progress, with banner and progress component classes in tailwind-config
+
 ## 1.5.0
 ### Minor Changes
 

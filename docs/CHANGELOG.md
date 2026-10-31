@@ -1,5 +1,12 @@
 # @viamrobotics/prime-docs
 
+## 0.0.3
+### Patch Changes
+
+- 62f5c3b: Add Toast and Notify, two notification stacks on one zag toast machine
+- 62f5c3b: Add the clickOutside attachment and the keybindings registry
+- 2b3c573: Add Banner and Progress, with banner and progress component classes in tailwind-config
+
 ## 0.0.2
 ### Patch Changes
 
