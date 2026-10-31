@@ -1,0 +1,133 @@
+---
+title: Notify
+description: Notifications for something that happened to the user, stacked as banners that may persist.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import NotifyDemo from "./notify/NotifyDemo.svelte";
+import NotifyShowcase from "./notify/NotifyShowcase.svelte";
+import Basic from "./notify/Basic.svelte";
+import basicSource from "./notify/Basic.svelte?raw";
+import basicActionsSource from "./notify/BasicActions.svelte?raw";
+import Pending from "./notify/Pending.svelte";
+import pendingSource from "./notify/Pending.svelte?raw";
+import Persistent from "./notify/Persistent.svelte";
+import persistentSource from "./notify/Persistent.svelte?raw";
+import WithDetails from "./notify/WithDetails.svelte";
+import withDetailsSource from "./notify/WithDetails.svelte?raw";
+import CustomItem from "./notify/CustomItem.svelte";
+import customItemSource from "./notify/CustomItem.svelte?raw";
+
+<ComponentIntro name="notify" />
+
+<NotifyDemo client:visible />
+
+- Render one `Notify` region per app, below a `provideNotify`.
+- `useNotify` has `info`, `success`, `warning`, `danger`, and `pending`. Each returns `{ id, dismiss }`.
+- The default item is a [`Banner`](../banner/) with a countdown bar.
+- `pending` has no timer and shows a spinner in the chip.
+- `persist: true` keeps a notification until the user dismisses it.
+- `update` turns a pending notification into its result.
+
+## Toast or notification?
+
+A notification reports something that happened to the user, such as a failure, a lost connection, or long-running work. It carries a title and may persist. A [toast](../toast/) confirms an action the user just took, such as `Saved` or `Copied`, and goes away on its own.
+
+## Anatomy
+
+`Notify` is the region, and it renders one item per notification. The item is a `Banner`, and the `item` snippet replaces it.
+
+```svelte
+<script>
+  provideNotify();
+</script>
+
+<Notify>
+  <!-- default item: Banner with title, description, close button, countdown -->
+</Notify>
+```
+
+## Usage
+
+### Basic
+
+`provideNotify` and `Notify` live in one component, and any component below it calls `useNotify`. The second argument is an optional description.
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+<Code code={basicActionsSource} lang="svelte" title="BasicActions.svelte" />
+
+### Pending
+
+`pending` shows a spinner and never dismisses itself. Pass the id it returned to `update` to turn it into a result, which starts the countdown.
+
+<Example code={pendingSource} title="Pending.svelte">
+  <Pending client:visible />
+</Example>
+
+### Persistent
+
+`persist: true` keeps the notification until it is dismissed. `onDismiss` runs once it has gone, however it went.
+
+<Example code={persistentSource} title="Persistent.svelte">
+  <Persistent client:visible />
+</Example>
+
+### With details
+
+The description is a string or a snippet. A snippet renders whatever markup you give it, such as monospace error output.
+
+<Example code={withDetailsSource} title="WithDetails.svelte">
+  <WithDetails client:visible />
+</Example>
+
+### Custom item
+
+The `item` snippet receives the notification's state and composes the [`Banner`](../banner/) parts itself. The notification keeps its live-region role and its stacking motion.
+
+<Example code={customItemSource} title="CustomItem.svelte">
+  <CustomItem client:visible />
+</Example>
+
+### States
+
+<NotifyShowcase client:visible />
+
+## Styling
+
+`class` lands on the region. The default item renders `Banner`, so its look follows the [Banner](../banner/#styling) classes, and the `item` snippet replaces it.
+
+## Keyboard
+
+| Key                                 | Action                                                      |
+| ----------------------------------- | ----------------------------------------------------------- |
+| <kbd>Tab</kbd>                      | Focuses the close button of each notification in turn.      |
+| <kbd>Escape</kbd>                   | Dismisses the focused notification.                         |
+| <kbd>Alt</kbd> + <kbd>T</kbd>       | Moves focus to the region.                                  |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | On the close button, dismisses the notification.            |
+
+## API
+
+<PropsTable name="notify" />
+
+### useNotify
+
+`useNotify` returns the methods below, and `provideNotify` returns the same object. The variant methods take `(title, description?, options?)`, where `description` is a string or a snippet and `options` takes `duration`, `persist`, and `onDismiss`.
+
+| Method                | Description                                                              |
+| --------------------- | ------------------------------------------------------------------------ |
+| `info(...)`           | Shows an `info` notification and returns `{ id, dismiss }`.              |
+| `success(...)`        | Shows a `success` notification.                                          |
+| `warning(...)`        | Shows a `warning` notification.                                          |
+| `danger(...)`         | Shows a `danger` notification.                                           |
+| `pending(...)`        | Shows a spinner and no timer. Resolve it with `dismiss` or `update`.     |
+| `update(id, changes)` | Changes a visible notification in place. `changes` takes `variant`, `title`, and `description`. |
+| `dismiss(id?)`        | Dismisses one notification, or every notification without an id.         |
+
+`provideNotify` takes `placement` (default `top-end`), `duration` (default `8000` milliseconds), and `max` (default `5`).

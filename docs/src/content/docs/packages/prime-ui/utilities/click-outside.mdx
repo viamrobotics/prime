@@ -1,0 +1,47 @@
+---
+title: Click outside
+description: An attachment that runs a handler on a press outside an element.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import Example from "@docs/doc/Example.astro";
+
+import Basic from "./click-outside/Basic.svelte";
+import basicSource from "./click-outside/Basic.svelte?raw";
+import WithPopover from "./click-outside/WithPopover.svelte";
+import withPopoverSource from "./click-outside/WithPopover.svelte?raw";
+
+`clickOutside` is a Svelte attachment. It runs its handler on a `pointerdown` outside the element it is attached to.
+
+```svelte
+<div {@attach clickOutside(() => (isOpen = false))}>...</div>
+```
+
+## Usage
+
+### Basic
+
+The wrapper holds both the toggle button and the panel, so a press on the button is inside and only a press elsewhere closes the panel.
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+### With a popover
+
+A `Popover` or `Menu` renders its content in a portal, outside the panel's DOM subtree. Content that the element's trigger links through `aria-controls` counts as inside, so a press in the popover does not close the panel.
+
+<Example code={withPopoverSource} title="WithPopover.svelte">
+  <WithPopover client:visible />
+</Example>
+
+### Exclude
+
+`exclude` receives the press target and returns `true` for a target that may be pressed without counting as outside. It adds to the element's own subtree and its `aria-controls` content, and does not replace them.
+
+## API
+
+| Argument  | Type                                    | Description                                                              |
+| --------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| `handler` | `(event: PointerEvent) => void`         | Runs on a `pointerdown` outside the element.                             |
+| `options` | `{ exclude?: (target: HTMLElement) => boolean }` | `exclude` marks targets that count as inside, beyond the subtree and `aria-controls` content. |

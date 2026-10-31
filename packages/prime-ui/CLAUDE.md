@@ -1,6 +1,6 @@
 # @viamrobotics/prime-ui
 
-Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintained **headless** primitives ([bits-ui](https://bits-ui.com)) or native elements, dressed in `@viamrobotics/tailwind-config` design tokens. Source lives in `src/lib/`. There is no app in this package: the docs site ([docs](../../docs/)) is where components are demonstrated and where you look at them while developing.
+Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintained **headless** primitives ([bits-ui](https://bits-ui.com), and [zag](https://zagjs.com) where bits-ui has no equivalent, such as the toast) or native elements, dressed in `@viamrobotics/tailwind-config` design tokens. Source lives in `src/lib/`. There is no app in this package: the docs site ([docs](../../docs/)) is where components are demonstrated and where you look at them while developing.
 
 ## Layout
 
@@ -9,15 +9,15 @@ Viam's Svelte 5 component library, the v2 of prime. Components wrap well-maintai
 
 ## Stack
 
-| Layer         | Tool                                                                    |
-| ------------- | ----------------------------------------------------------------------- |
-| Framework     | Svelte 5 (runes). `svelte-package` builds `dist`, with no app framework |
-| Headless base | [bits-ui](https://bits-ui.com) (styled) + native elements               |
-| Bundler       | Vite                                                                    |
-| Styles        | Tailwind CSS v4 + `@viamrobotics/tailwind-config` tokens                |
-| Tests         | Vitest (browser mode for `.svelte`)                                     |
-| Typecheck     | `svelte-check`                                                          |
-| Lint/format   | ESLint (+ `eslint-plugin-perfectionist`) + Prettier                     |
+| Layer         | Tool                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------ |
+| Framework     | Svelte 5 (runes). `svelte-package` builds `dist`, with no app framework                                      |
+| Headless base | [bits-ui](https://bits-ui.com) (styled), [zag](https://zagjs.com) for the toast machine, and native elements |
+| Bundler       | Vite                                                                                                         |
+| Styles        | Tailwind CSS v4 + `@viamrobotics/tailwind-config` tokens                                                     |
+| Tests         | Vitest (browser mode for `.svelte`)                                                                          |
+| Typecheck     | `svelte-check`                                                                                               |
+| Lint/format   | ESLint (+ `eslint-plugin-perfectionist`) + Prettier                                                          |
 
 ## Workspace deps
 
@@ -118,7 +118,11 @@ A root that owns data its parts render shares it through a context module beside
 
 ### Icon
 
-`Icon` takes an `icon` prop: an SVG path string (an `@mdi/js` export, drawn on a 24×24 viewBox) **or** any Svelte icon component, rendered directly. prime ships no icon set: mdi is what the Viam app renders, so consumers bring `@mdi/js`, and internal parts import the few paths they use (`mdiChevronDown`, `mdiCheck`, …) rather than a shared map. The hand-drawn Viam glyphs live in `src/lib/Icon/icons/` as components over an internal `Glyph.svelte` base and ship from the `@viamrobotics/prime-ui/icons` subpath (`package.json` `exports["./icons"]`). The docs app aliases that subpath to source in dev, ahead of the bare package alias. `Icon` is `aria-hidden` by default and becomes `role="img"` when given `aria-label` or `aria-labelledby`. It emits no `data-testid`: a spec asserts the rendered `svg path`'s `d` against the same `@mdi/js` export. The old curated names map to `@mdi/js` exports in the migration table on the docs Icon page.
+`Icon` takes an `icon` prop: an SVG path string (an `@mdi/js` export, drawn on a 24×24 viewBox) **or** any Svelte icon component, rendered directly. prime ships no icon set: mdi is what the Viam app renders, so consumers bring `@mdi/js`, and internal parts import the few paths they use (`mdiChevronDown`, `mdiCheck`, …) rather than a shared map. The hand-drawn Viam glyphs live in `src/lib/Icon/icons/` as components over an internal `Glyph.svelte` base and ship from the `@viamrobotics/prime-ui/icons` subpath (`package.json` `exports["./icons"]`). The docs app aliases that subpath to source in dev, ahead of the bare package alias. `Icon` is `aria-hidden` by default and becomes `role="img"` when given `aria-label` or `aria-labelledby`. It emits no `data-testid`: a spec asserts the rendered `svg path`'s `d` against the same `@mdi/js` export. The old curated names map to `@mdi/js` exports in the Icons section of the docs "Migrating from prime-core" page.
+
+### Utilities: attachments and the keybindings subpath
+
+Function exports live beside the components. `src/lib/attachments/` holds Svelte attachments, and `clickOutside` (over `@zag-js/interact-outside`) ships from the root barrel: a press inside the element, or inside portaled content the element links through `aria-controls`, does not count as outside. `src/lib/keybindings/` is the shortcut registry, re-exported from the root barrel through its own `index.ts`: `provideKeybindings` creates the registry and owns the one capture-phase window `keydown` listener, `useHotkey` registers a shortcut for as long as its component is mounted, and `formatKeybinding` / `keybindingParts` print one for a label. `Keybinding.group` is a free string. The types live in `keybindings/keybinding.ts`, never in the `.svelte.ts` module. A utility gets a docs page under `docs/src/content/docs/packages/prime-ui/utilities/`.
 
 ### Styling
 

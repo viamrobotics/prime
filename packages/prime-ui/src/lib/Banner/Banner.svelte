@@ -36,11 +36,14 @@ banner owns no open state, so render it inside an `{#if}` to show and hide it.
 		variant?: BannerVariant;
 		/** `site` spans the full width with only a bottom border. @default 'inline' */
 		placement?: 'inline' | 'site';
+		/** The live-region role. Defaults by variant: `status` for info and success, `alert` for warning and danger. Pass `null` for none, when an ancestor already announces. */
+		role?: HTMLAttributes<HTMLDivElement>['role'];
 	}
 
 	const {
 		variant = 'info',
 		placement = 'inline',
+		role,
 		class: extraClasses,
 		children,
 		...restProps
@@ -72,7 +75,7 @@ banner owns no open state, so render it inside an `{#if}` to show and hide it.
 
 <div
 	{...restProps}
-	role={roles[variant]}
+	role={role === undefined ? roles[variant] : role}
 	class={['banner', tones[variant], placement === 'site' && 'banner-site', extraClasses]}
 >
 	{#if !context.hasIcon}

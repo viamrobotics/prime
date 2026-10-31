@@ -1,3 +1,25 @@
+export { clickOutside } from './attachments/click-outside.ts';
+export type { ClickOutsideOptions } from './attachments/click-outside.ts';
+
+export {
+	createKeybindings,
+	formatKey,
+	formatKeybinding,
+	keybindingParts,
+	provideKeybindings,
+	useHotkey,
+	useKeybinding,
+	useKeybindings
+} from './keybindings/index.ts';
+export type {
+	HotkeyDefinition,
+	HotkeyHandler,
+	Keybinding,
+	KeybindingsContext,
+	MatchedHotkey,
+	Press
+} from './keybindings/index.ts';
+
 export { default as CodeSnippet } from './CodeSnippet/CodeSnippet.svelte';
 export { codeSnippetLanguages, type CodeSnippetLanguage } from './CodeSnippet/language.ts';
 
@@ -32,8 +54,30 @@ export { Select } from './Select/select.ts';
 
 export { Tabs } from './Tabs/tabs.ts';
 
+export { default as Toast } from './Toast/Toast.svelte';
+export { provideToast, useToast } from './Toast/useToast.svelte.ts';
+export type {
+	ToastContext,
+	ToastItemState,
+	ToastOptions,
+	ToastPlacement,
+	ToastProviderOptions,
+	ToastVariant
+} from './Toast/useToast.svelte.ts';
+
 export { ToggleButtons } from './ToggleButtons/toggle-buttons.ts';
 export type { ToggleButtonsOption } from './ToggleButtons/option.ts';
+
+export { default as Notify } from './Notify/Notify.svelte';
+export { provideNotify, useNotify } from './Notify/useNotify.svelte.ts';
+export type {
+	NotifyContext,
+	NotifyHandle,
+	NotifyItemState,
+	NotifyOptions,
+	NotifyProviderOptions,
+	NotifyVariant
+} from './Notify/useNotify.svelte.ts';
 
 export { Popover } from './Popover/popover.ts';
 export { default as Progress } from './Progress/Progress.svelte';
