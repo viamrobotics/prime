@@ -1,0 +1,1 @@
+function u(e,r){return Array.from(e?.querySelectorAll(r)??[])}var i=e=>e.id;function d(e,r,t=i){return e.find(n=>t(n)===r)}function f(e,r,t=i){const n=d(e,r,t);return n?e.indexOf(n):-1}export{i as d,f as i,u as q};

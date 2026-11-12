@@ -1,0 +1,1 @@
+import"./disclose-version.DsnmJJEf.js";import"./legacy.BtU1eqwK.js";import{S as o}from"./Sandbox.cjp_MMQ6.js";import{P as r}from"./Progress.CoBx2IRU.js";function n(e){o(e,{name:"Progress",get component(){return r},controls:{value:{kind:"number",label:"Value",default:40,min:0,max:100},label:{kind:"text",label:"Label",default:"Upload"}}})}export{n as default};
