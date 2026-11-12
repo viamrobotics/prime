@@ -126,7 +126,7 @@
 		"@zag-js/splitter": "1.46.0",
 		"@zag-js/svelte": "1.46.0",
 		"@zag-js/tree-view": "1.46.0",
-		"playwright": "^1.59.1",
+		"playwright": "^1.65.0",
 		"svelte": "^5.55.5",
 		"svelte-check": "catalog:",
 		"svelte-tweakpane-ui": "^1.5.16",

@@ -163,7 +163,7 @@
 		"eslint-config-prettier": "catalog:",
 		"eslint-plugin-svelte": "catalog:",
 		"globals": "catalog:",
-		"playwright": "^1.59.1",
+		"playwright": "^1.65.0",
 		"prettier": "catalog:",
 		"prettier-plugin-svelte": "^3.5.1",
 		"prettier-plugin-tailwindcss": "^0.7.2",
