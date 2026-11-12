@@ -59,3 +59,9 @@
 #starlight__sidebar .group-label .large {
   font-size: var(--sl-text-sm);
 }
+
+/* Starlight isolates the main pane, which traps a fixed Toast or Notify region rendered
+   inside a demo in the pane's stacking context, under the site header. */
+.main-pane {
+  isolation: auto;
+}

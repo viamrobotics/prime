@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Banner } from "@viamrobotics/prime-ui";
 
-  const variants = ["info", "success", "warning", "danger"] as const;
+  const variants = ["info", "success", "warning", "danger", "pending"] as const;
 </script>
 
 <div class="not-content flex flex-col gap-6">

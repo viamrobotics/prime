@@ -12,10 +12,7 @@
 </script>
 
 <div class="not-content">
-  <Banner variant="info">
-    <Banner.Icon class="bg-light">
-      <span class="progress-dots" aria-hidden="true"></span>
-    </Banner.Icon>
+  <Banner variant="pending">
     <Banner.Description>Restarting the machine.</Banner.Description>
     <Banner.Progress value={elapsed} label="Time until the restart finishes" />
   </Banner>

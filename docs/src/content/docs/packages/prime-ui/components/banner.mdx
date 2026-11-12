@@ -20,18 +20,18 @@ import Pending from "./banner/Pending.svelte";
 import pendingSource from "./banner/Pending.svelte?raw";
 import WithDetails from "./banner/WithDetails.svelte";
 import withDetailsSource from "./banner/WithDetails.svelte?raw";
-import Site from "./banner/Site.svelte";
-import siteSource from "./banner/Site.svelte?raw";
+import Block from "./banner/Block.svelte";
+import blockSource from "./banner/Block.svelte?raw";
 
 <ComponentIntro name="banner" />
 
 <BannerDemo client:visible />
 
-- `variant` sets the chip color, the glyph, and the live-region role. `info` and `success` are `status`, `warning` and `danger` are `alert`.
+- `variant` sets the chip color, the glyph, and the live-region role. `info`, `success`, and `pending` are `status`, `warning` and `danger` are `alert`. `pending` spins in the chip.
 - With no `Banner.Title` the banner is the compact one-liner. A title stacks it.
 - The parts give you the layout. Each lands in its own cell, so what goes inside is your markup.
 - It has no open state. Wrap it in `{#if}` to show and hide it.
-- `placement="site"` is the full-width strip for the top of a page.
+- `placement="block"` is the full-width strip for the top of a page.
 
 ## Anatomy
 
@@ -77,7 +77,7 @@ Leave the title out and the description sits on one line, with the actions inlin
 
 ### Pending
 
-`Banner.Icon` replaces the variant glyph. `Banner.Progress` pins a bar to the bottom edge, such as a countdown.
+`variant="pending"` shows a spinner in the chip for work still running. `Banner.Progress` pins a bar to the bottom edge, such as a countdown, and `Banner.Icon` replaces any variant's glyph with your own.
 
 <Example code={pendingSource} title="Pending.svelte">
   <Pending client:visible />
@@ -91,12 +91,12 @@ Leave the title out and the description sits on one line, with the actions inlin
   <WithDetails client:visible />
 </Example>
 
-### Site
+### Block
 
-`placement="site"` drops the side and top borders and spans the full width.
+`placement="block"` drops the side and top borders and spans the full width.
 
-<Example code={siteSource} title="Site.svelte">
-  <Site client:visible />
+<Example code={blockSource} title="Block.svelte">
+  <Block client:visible />
 </Example>
 
 ### States
@@ -109,7 +109,7 @@ Every part takes `class` on its element. Each part wears a component class from 
 
 | Part                 | Component class                                                      |
 | -------------------- | -------------------------------------------------------------------- |
-| `Banner`             | `banner`, `banner-<variant>`, and `banner-site` for the site placement |
+| `Banner`             | `banner`, `banner-<variant>`, and `banner-block` for the block placement |
 | `Banner.Icon`        | `banner-chip`                                                        |
 | `Banner.Title`       | `banner-title`                                                       |
 | `Banner.Description` | `banner-description`                                                 |

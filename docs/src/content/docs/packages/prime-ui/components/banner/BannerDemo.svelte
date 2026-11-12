@@ -13,13 +13,13 @@
       kind: "select",
       label: "Variant",
       default: "info",
-      options: ["info", "success", "warning", "danger"],
+      options: ["info", "success", "warning", "danger", "pending"],
     },
     placement: {
       kind: "select",
       label: "Placement",
       default: "inline",
-      options: ["inline", "site"],
+      options: ["inline", "block"],
     },
   }}
 >

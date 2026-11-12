@@ -4,4 +4,4 @@
 "@viamrobotics/prime-docs": patch
 ---
 
-Add Banner and Progress, with banner and progress component classes in tailwind-config
+Add Banner and Progress, with their component classes and a pending tone in tailwind-config

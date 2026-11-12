@@ -3,7 +3,7 @@
 </script>
 
 <div class="not-content">
-  <Banner variant="warning" placement="site">
+  <Banner variant="warning" placement="block">
     <Banner.Description>Scheduled maintenance begins at 02:00 UTC.</Banner.Description>
     <Banner.Close />
   </Banner>

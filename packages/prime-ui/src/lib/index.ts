@@ -58,7 +58,6 @@ export { default as Toast } from './Toast/Toast.svelte';
 export { provideToast, useToast } from './Toast/useToast.svelte.ts';
 export type {
 	ToastContext,
-	ToastItemState,
 	ToastOptions,
 	ToastPlacement,
 	ToastProviderOptions,
@@ -72,8 +71,8 @@ export { default as Notify } from './Notify/Notify.svelte';
 export { provideNotify, useNotify } from './Notify/useNotify.svelte.ts';
 export type {
 	NotifyContext,
+	NotifyChanges,
 	NotifyHandle,
-	NotifyItemState,
 	NotifyOptions,
 	NotifyProviderOptions,
 	NotifyVariant

@@ -4,7 +4,6 @@ import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
 import '../../__tests__/tailwind.css';
-import CustomToastHost from './CustomToastHost.svelte';
 import ToastHost from './ToastHost.svelte';
 
 const HOLD_OPEN = 60_000;
@@ -118,24 +117,6 @@ describe('Toast', () => {
 
 		expect(onaction).toHaveBeenCalledTimes(1);
 		expect(itemsWhenRun).toBe(1);
-		await waitForNoItems();
-	});
-
-	it('renders the item snippet in place of the default layout', async () => {
-		const { container } = render(CustomToastHost);
-
-		await userEvent.click(trigger(container, 'danger'));
-
-		const item = await waitForItem();
-		const custom = item.querySelector('[data-testid="custom"]')!;
-		expect(custom.textContent?.trim()).toBe('Custom');
-		expect(custom.getAttribute('data-variant')).toBe('danger');
-		expect(item.getAttribute('role')).toBe('alert');
-		expect(item.querySelector('button[aria-label="Dismiss"]')).toBeNull();
-		expect(item.querySelector('svg')).toBeNull();
-
-		await userEvent.click(item.querySelector<HTMLButtonElement>('[data-testid="custom-dismiss"]')!);
-
 		await waitForNoItems();
 	});
 

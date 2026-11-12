@@ -114,27 +114,39 @@ describe('Notify', () => {
 		}
 	);
 
-	it('renders the item snippet with the remaining time and no Banner', async () => {
-		const { container } = render(NotifyHost, {
-			props: { custom: true, duration: LONG_DURATION_MS }
-		});
-		await create(container, 'info');
+	it('starts the countdown when an update takes a notification out of pending', async () => {
+		const { container } = render(NotifyHost, { props: { duration: LONG_DURATION_MS } });
+		await create(container, 'resolve-pending');
 		const item = await firstItem();
 
-		expect(item.querySelector('[data-testid="custom"]')?.textContent).toMatch(/^Deployed \d+$/);
-		expect(item.querySelector('.banner')).toBeNull();
+		expect(item.querySelector('.banner-chip .progress-dots')).toBeNull();
+		expect(item.querySelector('[role="progressbar"]')).toBeTruthy();
 	});
 
-	it('dismisses through the dismiss of the item snippet', async () => {
-		const { container } = render(NotifyHost, {
-			props: { custom: true, duration: LONG_DURATION_MS }
-		});
-		await create(container, 'info');
+	it('shows progress along the bottom of a pending notification and takes updates to it', async () => {
+		const { container } = render(NotifyHost, { props: { duration: LONG_DURATION_MS } });
+		await create(container, 'progress');
 		const item = await firstItem();
 
-		await userEvent.click(item.querySelector<HTMLElement>('[data-testid="custom-dismiss"]')!);
+		expect(item.querySelector('.banner-chip .progress-dots')).toBeTruthy();
+		expect(item.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe('60');
+	});
 
-		await vi.waitFor(() => expect(items()).toHaveLength(0));
+	it('keeps a persisted notification open when an update changes its variant', async () => {
+		const { container } = render(NotifyHost, { props: { duration: LONG_DURATION_MS } });
+		await create(container, 'resolve-persisted');
+		const item = await firstItem();
+
+		expect(item.getAttribute('role')).toBe('status');
+		expect(item.querySelector('[role="progressbar"]')).toBeNull();
+	});
+
+	it('renders the actions snippet in the banner action row', async () => {
+		const { container } = render(NotifyHost, { props: { duration: LONG_DURATION_MS } });
+		await create(container, 'actions');
+		const item = await firstItem();
+
+		expect(item.querySelector('.banner-actions [data-testid="view"]')?.textContent).toBe('View');
 	});
 
 	it('lists the newest notification first', async () => {

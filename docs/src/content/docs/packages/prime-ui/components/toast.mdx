@@ -17,8 +17,6 @@ import WithAction from "./toast/WithAction.svelte";
 import withActionSource from "./toast/WithAction.svelte?raw";
 import Placement from "./toast/Placement.svelte";
 import placementSource from "./toast/Placement.svelte?raw";
-import CustomItem from "./toast/CustomItem.svelte";
-import customItemSource from "./toast/CustomItem.svelte?raw";
 
 <ComponentIntro name="toast" />
 
@@ -28,7 +26,6 @@ import customItemSource from "./toast/CustomItem.svelte?raw";
 - `info`, `success`, `warning`, and `danger` set the glyph. `warning` and `danger` announce as an `alert`, the others as a `status`.
 - Hovering the region or focusing a toast holds its timer.
 - <kbd>Escape</kbd> dismisses the focused toast.
-- The `item` snippet replaces the default layout with your own.
 
 ## Toast or notification?
 
@@ -36,16 +33,14 @@ A toast confirms an action the user just took, such as `Saved` or `Copied`. It i
 
 ## Anatomy
 
-`Toast` is the region, and it renders one row per toast. The row is the default item, and the `item` snippet replaces it.
+`Toast` is the region, and it renders one row per toast: the variant glyph, the title, an optional description and action, and the close button. A toast is one short line, so everything it shows comes from the `useToast` call that made it.
 
 ```svelte
 <script>
   provideToast();
 </script>
 
-<Toast>
-  <!-- default item: glyph, title, description, action, close button -->
-</Toast>
+<Toast />
 ```
 
 ## Usage
@@ -76,21 +71,22 @@ A toast confirms an action the user just took, such as `Saved` or `Copied`. It i
   <Placement client:visible />
 </Example>
 
-### Custom item
-
-The `item` snippet receives the toast's state. The toast keeps its live-region role and its stacking motion, and everything inside it is yours.
-
-<Example code={customItemSource} title="CustomItem.svelte">
-  <CustomItem client:visible />
-</Example>
-
 ### States
 
 <ToastShowcase client:visible />
 
 ## Styling
 
-`class` lands on the region. The default item's look is fixed, and the `item` snippet replaces it.
+`class` lands on the region. The row's look is fixed.
+
+Each item carries data attributes for styling by state.
+
+| Attribute        | Values                           |
+| ---------------- | -------------------------------- |
+| `data-state`     | `open`, `closed`                 |
+| `data-paused`    | Present while the timer is held. |
+| `data-first`     | Present on the newest item.      |
+| `data-placement` | The provider's `placement`.      |
 
 ## Keyboard
 
