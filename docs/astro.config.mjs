@@ -80,6 +80,10 @@ export default defineConfig({
               link: "/packages/prime-tree/",
             },
             {
+              label: "@viamrobotics/prime-controls",
+              link: "/packages/prime-controls/",
+            },
+            {
               label: "@viamrobotics/tailwind-config",
               items: [
                 { label: "Overview", link: "/packages/tailwind-config/" },

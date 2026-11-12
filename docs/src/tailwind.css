@@ -4,6 +4,7 @@
 @import "@viamrobotics/prime-ui/styles.css";
 @import "@viamrobotics/prime-panes/styles.css";
 @import "@viamrobotics/prime-tree/styles.css";
+@import "@viamrobotics/prime-controls/styles.css";
 @import "starlight-theme-nova/tailwind.css";
 
 /* Each package's styles.css is the entry consumers use and points at the built dist. Under
@@ -12,6 +13,7 @@
 @source "../../packages/prime-ui/src/lib";
 @source "../../packages/prime-panes/src/lib";
 @source "../../packages/prime-tree/src/lib";
+@source "../../packages/prime-controls/src/lib";
 
 :root {
   --sl-font: var(--font-public-sans);

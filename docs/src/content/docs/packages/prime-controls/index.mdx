@@ -1,0 +1,166 @@
+---
+title: "@viamrobotics/prime-controls"
+description: "Compact realtime controls for Svelte 5 tool panels: number fields and vectors that scrub by label drag and step by keyboard."
+---
+
+import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import TwoWay from "./TwoWay.svelte";
+import twoWaySource from "./TwoWay.svelte?raw";
+import Controlled from "./Controlled.svelte";
+import controlledSource from "./Controlled.svelte?raw";
+import Bounds from "./Bounds.svelte";
+import boundsSource from "./Bounds.svelte?raw";
+import Point2D from "./Point2D.svelte";
+import point2DSource from "./Point2D.svelte?raw";
+import Point3D from "./Point3D.svelte";
+import point3DSource from "./Point3D.svelte?raw";
+import Point4D from "./Point4D.svelte";
+import point4DSource from "./Point4D.svelte?raw";
+import PointVeto from "./PointVeto.svelte";
+import pointVetoSource from "./PointVeto.svelte?raw";
+import PointLabels from "./PointLabels.svelte";
+import pointLabelsSource from "./PointLabels.svelte?raw";
+
+`@viamrobotics/prime-controls` is a set of compact realtime controls for tool panels. Each control is a native number input that steps by keyboard and scrubs by dragging its label sideways, so a value can be tuned live without typing.
+
+<Aside type="caution">
+  The public API is unstable until 1.0. Expect breaking changes in minor
+  releases.
+</Aside>
+
+- `NumberField`, one number with a label that doubles as the scrub handle.
+- `Point`, a 2D, 3D, or 4D vector as one `NumberField` per axis.
+- A scrub writes the bound value on every pointer move, so a function binding sees each intermediate value.
+
+## Installation
+
+<Steps>
+
+1. Install the package and its peers. The `svelte` peer is `^5.29.0`.
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add @viamrobotics/prime-controls @viamrobotics/prime-ui @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install @viamrobotics/prime-controls @viamrobotics/prime-ui @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add @viamrobotics/prime-controls @viamrobotics/prime-ui @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+   </Tabs>
+
+2. Import the stylesheets once, in this order. Tailwind skips `node_modules` when it scans for classes, so each package's stylesheet points it at that package's compiled components.
+
+   ```css
+   @import "tailwindcss";
+   @import "@viamrobotics/prime-ui/styles.css";
+   @import "@viamrobotics/prime-controls/styles.css";
+   ```
+
+</Steps>
+
+## NumberField
+
+`NumberField` wraps a native `<input type="number">` with an optional visible `label`. Without a `label`, pass `aria-label`, and the field does not scrub.
+
+### Two-way binding
+
+`bind:value` holds the number, or `undefined` while the field is empty. Drag the label sideways to scrub, or focus the input and press the arrow keys.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Function binding
+
+A scrub writes on every pointer move, so a function binding receives each intermediate value. Use one to throttle, to veto by not assigning, or to count writes as this recipe does.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Range and step
+
+`min` and `max` clamp scrubs and key presses, while typing stays unclamped. `step` is the amount one key press or one pixel of scrub moves the value, and a fractional step keeps its decimal places, so 0.05 steps never show float residue.
+
+<Example code={boundsSource} title="Bounds.svelte">
+  <Bounds client:visible />
+</Example>
+
+### Keyboard and pointer
+
+| Input                          | Action                                                   |
+| ------------------------------ | -------------------------------------------------------- |
+| Arrow Up / Arrow Down          | Raise or lower the value by `step`                       |
+| Shift + Arrow Up / Arrow Down  | Step by 10 times `step`                                  |
+| Alt + Arrow Up / Arrow Down    | Step by a tenth of `step`                                |
+| Drag the label sideways        | Scrub, moving the value by `step` for each pixel         |
+| Shift or Alt while scrubbing   | Scale each pixel by 10 or by a tenth                     |
+| Click the label                | Focus the input                                          |
+
+A drag begins once the pointer moves 4 pixels from where it was pressed, and only the primary button scrubs. A `disabled` or `readonly` field neither steps nor scrubs. An empty field starts from `min`, or 0 without one.
+
+## Point
+
+`Point` binds a `PointValue`, an object with `x` and `y` and optionally `z` and `w`. The defined axes decide how many fields render. Editing one axis writes a new object with that axis changed and the others as they were. `min`, `max`, `step`, and `disabled` apply to every axis.
+
+### 2D
+
+<Example code={point2DSource} title="Point2D.svelte">
+  <Point2D client:visible />
+</Example>
+
+### 3D
+
+Define `z` and a third field appears.
+
+<Example code={point3DSource} title="Point3D.svelte">
+  <Point3D client:visible />
+</Example>
+
+### 4D
+
+Define `w` as well for a fourth.
+
+<Example code={point4DSource} title="Point4D.svelte">
+  <Point4D client:visible />
+</Example>
+
+### Function binding
+
+The setter receives the whole new `PointValue`. This one refuses any value farther than 10 from the origin by not assigning, so the point stops at that circle while the drag continues.
+
+<Example code={pointVetoSource} title="PointVeto.svelte">
+  <PointVeto client:visible />
+</Example>
+
+### Custom labels
+
+Each axis label is also its scrub handle. `labels` renames any of them, and an axis left out keeps its uppercase name.
+
+<Example code={pointLabelsSource} title="PointLabels.svelte">
+  <PointLabels client:visible />
+</Example>
+
+## API
+
+### NumberField
+
+<PropsTable name="number-field" collection="prime-controls" />
+
+### Point
+
+<PropsTable name="point" collection="prime-controls" />
