@@ -9,15 +9,13 @@
 </script>
 
 {#snippet options()}
-  <Select.Portal>
-    <Select.Content>
-      <Select.Viewport>
-        {#each sizes as item (item.value)}
-          <Select.Item value={item.value} label={item.label} disabled={item.disabled} />
-        {/each}
-      </Select.Viewport>
-    </Select.Content>
-  </Select.Portal>
+  <Select.Content>
+    <Select.Viewport>
+      {#each sizes as item (item.value)}
+        <Select.Item value={item.value} label={item.label} disabled={item.disabled} />
+      {/each}
+    </Select.Viewport>
+  </Select.Content>
 {/snippet}
 
 <div class="not-content flex flex-col gap-6">

@@ -25,13 +25,11 @@
       <Select.Trigger>
         <Select.Value placeholder="Pick a region" />
       </Select.Trigger>
-      <Select.Portal>
-        <Select.Content>
-          <Select.Viewport>
-            <Select.Items />
-          </Select.Viewport>
-        </Select.Content>
-      </Select.Portal>
+      <Select.Content>
+        <Select.Viewport>
+          <Select.Items />
+        </Select.Viewport>
+      </Select.Content>
     </Select>
     <Hint>EU Central is declined by the setter, so picking it changes nothing.</Hint>
   </Field>

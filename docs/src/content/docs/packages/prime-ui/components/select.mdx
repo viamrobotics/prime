@@ -36,22 +36,20 @@ import manualItemsSource from "./select/ManualItems.svelte?raw";
 
 ## Anatomy
 
-Every part is a property on `Select`. `Portal` and `Content` are required for the panel to float. `Viewport` is the scrolling region, and `Content` should contain one. `Items` renders every entry of `items` as a `Select.Item`, and renders no element of its own. `Group` and `GroupHeading` are optional.
+Every part is a property on `Select`. `Content` is the floating panel, portaled to the body. `Viewport` is the scrolling region, and `Content` should contain one. `Items` renders every entry of `items` as a `Select.Item`, and renders no element of its own. `Group` and `GroupHeading` are optional.
 
 ```svelte
 <Select>
   <Select.Trigger>
     <Select.Value />
   </Select.Trigger>
-  <Select.Portal>
-    <Select.Content>
-      <Select.ScrollUpButton />
-      <Select.Viewport>
-        <Select.Items />
-      </Select.Viewport>
-      <Select.ScrollDownButton />
-    </Select.Content>
-  </Select.Portal>
+  <Select.Content>
+    <Select.ScrollUpButton />
+    <Select.Viewport>
+      <Select.Items />
+    </Select.Viewport>
+    <Select.ScrollDownButton />
+  </Select.Content>
 </Select>
 ```
 
@@ -62,18 +60,16 @@ To arrange items by hand, for example under group headings, compose `Select.Item
   <Select.Trigger>
     <Select.Value />
   </Select.Trigger>
-  <Select.Portal>
-    <Select.Content>
-      <Select.Viewport>
+  <Select.Content>
+    <Select.Viewport>
+      <Select.Item />
+      <Select.Group>
+        <Select.GroupHeading />
         <Select.Item />
-        <Select.Group>
-          <Select.GroupHeading />
-          <Select.Item />
-        </Select.Group>
-      </Select.Viewport>
-      <Select.ScrollDownButton />
-    </Select.Content>
-  </Select.Portal>
+      </Select.Group>
+    </Select.Viewport>
+    <Select.ScrollDownButton />
+  </Select.Content>
 </Select>
 ```
 
@@ -158,13 +154,11 @@ A prime-core `Select` was a native `<select>` with `<option>` children and an `o
   <Select.Trigger class="w-full">
     <Select.Value placeholder="Pick a method" />
   </Select.Trigger>
-  <Select.Portal>
-    <Select.Content>
-      <Select.Viewport>
-        <Select.Items />
-      </Select.Viewport>
-    </Select.Content>
-  </Select.Portal>
+  <Select.Content>
+    <Select.Viewport>
+      <Select.Items />
+    </Select.Viewport>
+  </Select.Content>
 </Select>
 ```
 

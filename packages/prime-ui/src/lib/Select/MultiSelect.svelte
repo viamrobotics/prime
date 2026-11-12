@@ -1,6 +1,6 @@
 <!--
 @component
-A select that holds several values. Render `MultiSelect.Trigger`, `MultiSelect.Portal`, `MultiSelect.Content`,
+A select that holds several values. Render `MultiSelect.Trigger`, `MultiSelect.Content`,
 `MultiSelect.Viewport`, and `MultiSelect.Items` inside it, the same parts a [`Select`](./Select.svelte) takes.
 Picking an item toggles it and keeps the list open. The closed trigger shows the selected labels joined by commas,
 and a `name` submits one hidden input per value. Inside a [`Field`](../Field/Field.svelte) it takes `disabled` and
@@ -15,13 +15,11 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select) with `ty
 		<MultiSelect.Trigger>
 			<MultiSelect.Value placeholder="Pick toppings" />
 		</MultiSelect.Trigger>
-		<MultiSelect.Portal>
-			<MultiSelect.Content>
-				<MultiSelect.Viewport>
-					<MultiSelect.Items />
-				</MultiSelect.Viewport>
-			</MultiSelect.Content>
-		</MultiSelect.Portal>
+		<MultiSelect.Content>
+			<MultiSelect.Viewport>
+				<MultiSelect.Items />
+			</MultiSelect.Viewport>
+		</MultiSelect.Content>
 	</MultiSelect>
 </Field>
 ```

@@ -1,6 +1,6 @@
 <!--
 @component
-A select. Render `Select.Trigger`, `Select.Portal`, `Select.Content`, `Select.Viewport`, and `Select.Items` inside it. Inside a
+A select. Render `Select.Trigger`, `Select.Content`, `Select.Viewport`, and `Select.Items` inside it. Inside a
 [`Field`](../Field/Field.svelte) it takes `disabled` and `required` from there.
 
 Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
@@ -12,13 +12,11 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 		<Select.Trigger>
 			<Select.Value placeholder="Pick a size" />
 		</Select.Trigger>
-		<Select.Portal>
-			<Select.Content>
-				<Select.Viewport>
-					<Select.Items />
-				</Select.Viewport>
-			</Select.Content>
-		</Select.Portal>
+		<Select.Content>
+			<Select.Viewport>
+				<Select.Items />
+			</Select.Viewport>
+		</Select.Content>
 	</Select>
 </Field>
 ```

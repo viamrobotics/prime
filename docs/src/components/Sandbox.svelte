@@ -115,15 +115,13 @@ children.
             <Select.Trigger>
               <Select.Value placeholder={control.label} />
             </Select.Trigger>
-            <Select.Portal>
-              <Select.Content>
-                <Select.Viewport>
-                  {#each control.options as option (option)}
-                    <Select.Item value={option} label={option} />
-                  {/each}
-                </Select.Viewport>
-              </Select.Content>
-            </Select.Portal>
+            <Select.Content>
+              <Select.Viewport>
+                {#each control.options as option (option)}
+                  <Select.Item value={option} label={option} />
+                {/each}
+              </Select.Viewport>
+            </Select.Content>
           </Select>
         </Field>
       {:else}

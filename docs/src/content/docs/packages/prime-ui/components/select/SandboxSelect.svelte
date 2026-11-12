@@ -24,11 +24,9 @@
   <Select.Trigger class="w-64" state={fieldState} aria-label="Size">
     <Select.Value placeholder="Pick a size" />
   </Select.Trigger>
-  <Select.Portal>
-    <Select.Content {side} {align}>
-      <Select.Viewport>
-        <Select.Items />
-      </Select.Viewport>
-    </Select.Content>
-  </Select.Portal>
+  <Select.Content {side} {align}>
+    <Select.Viewport>
+      <Select.Items />
+    </Select.Viewport>
+  </Select.Content>
 </Select>

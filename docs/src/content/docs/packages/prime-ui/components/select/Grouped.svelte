@@ -52,22 +52,20 @@
       <Select.Trigger class="w-64" aria-label="Character">
         <Select.Value placeholder="Pick a character" />
       </Select.Trigger>
-      <Select.Portal>
-        <Select.Content>
-          <Select.ScrollUpButton />
-          <Select.Viewport>
-            {#each groups as group (group.heading)}
-              <Select.Group>
-                <Select.GroupHeading>{group.heading}</Select.GroupHeading>
-                {#each group.items as item (item.value)}
-                  <Select.Item value={item.value} label={item.label} />
-                {/each}
-              </Select.Group>
-            {/each}
-          </Select.Viewport>
-          <Select.ScrollDownButton />
-        </Select.Content>
-      </Select.Portal>
+      <Select.Content>
+        <Select.ScrollUpButton />
+        <Select.Viewport>
+          {#each groups as group (group.heading)}
+            <Select.Group>
+              <Select.GroupHeading>{group.heading}</Select.GroupHeading>
+              {#each group.items as item (item.value)}
+                <Select.Item value={item.value} label={item.label} />
+              {/each}
+            </Select.Group>
+          {/each}
+        </Select.Viewport>
+        <Select.ScrollDownButton />
+      </Select.Content>
     </Select>
   </div>
 

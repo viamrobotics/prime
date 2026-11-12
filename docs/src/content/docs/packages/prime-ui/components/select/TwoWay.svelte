@@ -17,13 +17,11 @@
       <Select.Trigger>
         <Select.Value placeholder="Pick a size" />
       </Select.Trigger>
-      <Select.Portal>
-        <Select.Content>
-          <Select.Viewport>
-            <Select.Items />
-          </Select.Viewport>
-        </Select.Content>
-      </Select.Portal>
+      <Select.Content>
+        <Select.Viewport>
+          <Select.Items />
+        </Select.Viewport>
+      </Select.Content>
     </Select>
   </Field>
 

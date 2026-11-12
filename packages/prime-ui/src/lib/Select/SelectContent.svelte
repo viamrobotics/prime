@@ -1,8 +1,6 @@
 <!--
 @component
-The floating panel of a [`Select`](./Select.svelte).
-
-Render it inside a [`Select.Portal`](./SelectPortal.svelte), with a
+The floating panel of a [`Select`](./Select.svelte), portaled to the body. Render a
 [`Select.Viewport`](./SelectViewport.svelte) inside it.
 -->
 <script lang="ts">
@@ -42,16 +40,18 @@ Render it inside a [`Select.Portal`](./SelectPortal.svelte), with a
 	}: Props = $props();
 </script>
 
-<Select.Content
-	{side}
-	{align}
-	{sideOffset}
-	{alignOffset}
-	class={[
-		'z-popover max-h-(--bits-select-content-available-height) w-(--bits-select-anchor-width) min-w-(--bits-select-anchor-width) overflow-hidden rounded-sm border border-light bg-white shadow-md',
-		extraClasses
-	]}
-	{...restProps}
->
-	{@render children?.()}
-</Select.Content>
+<Select.Portal>
+	<Select.Content
+		{side}
+		{align}
+		{sideOffset}
+		{alignOffset}
+		class={[
+			'z-popover max-h-(--bits-select-content-available-height) w-(--bits-select-anchor-width) min-w-(--bits-select-anchor-width) overflow-hidden rounded-sm border border-light bg-white shadow-md',
+			extraClasses
+		]}
+		{...restProps}
+	>
+		{@render children?.()}
+	</Select.Content>
+</Select.Portal>

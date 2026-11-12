@@ -26,20 +26,18 @@ import controlledSource from "./multi-select/Controlled.svelte?raw";
 
 ## Anatomy
 
-The parts are the `Select` parts, so the [Select anatomy](../select/#anatomy) applies with `MultiSelect` in place of `Select`. `Portal` and `Content` are required for the panel to float, `Viewport` is the scrolling region, and `Items` renders every entry of `items`.
+The parts are the `Select` parts, so the [Select anatomy](../select/#anatomy) applies with `MultiSelect` in place of `Select`. `Content` is the floating panel, portaled to the body, `Viewport` is the scrolling region, and `Items` renders every entry of `items`.
 
 ```svelte
 <MultiSelect>
   <MultiSelect.Trigger>
     <MultiSelect.Value />
   </MultiSelect.Trigger>
-  <MultiSelect.Portal>
-    <MultiSelect.Content>
-      <MultiSelect.Viewport>
-        <MultiSelect.Items />
-      </MultiSelect.Viewport>
-    </MultiSelect.Content>
-  </MultiSelect.Portal>
+  <MultiSelect.Content>
+    <MultiSelect.Viewport>
+      <MultiSelect.Items />
+    </MultiSelect.Viewport>
+  </MultiSelect.Content>
 </MultiSelect>
 ```
 
