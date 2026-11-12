@@ -1,1 +1,0 @@
-function e(e,t){return Array.from(e?.querySelectorAll(t)??[])}var t=e=>e.id;function n(e,n,r=t){return e.find(e=>r(e)===n)}function r(e,r,i=t){let a=n(e,r,i);return a?e.indexOf(a):-1}export{r as n,e as r,t};
