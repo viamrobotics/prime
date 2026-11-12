@@ -58,7 +58,8 @@ describe('Banner', () => {
 	it('stacks when a title is present', () => {
 		const { container } = render(StackedBanner);
 
-		expect(getComputedStyle(banner(container)).alignItems).toBe('flex-start');
+		// Chromium 158 serializes `flex-start` as its newer alias `flow-start`.
+		expect(getComputedStyle(banner(container)).alignItems).toMatch(/^(flex|flow)-start$/);
 		expect(getComputedStyle(chip(container)).height).toBe('32px');
 	});
 
