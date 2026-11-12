@@ -49,6 +49,8 @@
 
   /* Shadows */
   --dark-shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.4);
+  --dark-shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --dark-shadow-dialog: 0 12px 48px rgba(0, 0, 0, 0.6);
 
   /* Code colors */
   --dark-color-code-boolean: #a9a1ff;
@@ -176,6 +178,8 @@
 
   /* Shadows */
   --light-shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.06);
+  --light-shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --light-shadow-dialog: 0 12px 48px rgba(0, 0, 0, 0.25);
 
   /* Code colors */
   --light-color-code-boolean: #201293;
@@ -309,6 +313,8 @@
 
     /* Shadows */
     --shadow-sm: var(--dark-shadow-sm);
+    --shadow-popover: var(--dark-shadow-popover);
+    --shadow-dialog: var(--dark-shadow-dialog);
 
     /* Code colors */
     --color-code-boolean: var(--dark-color-code-boolean);
@@ -445,6 +451,8 @@
 
   /* Shadows */
   --shadow-sm: var(--dark-shadow-sm);
+  --shadow-popover: var(--dark-shadow-popover);
+  --shadow-dialog: var(--dark-shadow-dialog);
 
   /* Code colors */
   --color-code-boolean: var(--dark-color-code-boolean);
@@ -578,6 +586,8 @@
 
   /* Shadows */
   --shadow-sm: var(--light-shadow-sm);
+  --shadow-popover: var(--light-shadow-popover);
+  --shadow-dialog: var(--light-shadow-dialog);
 
   /* Code colors */
   --color-code-boolean: var(--light-color-code-boolean);

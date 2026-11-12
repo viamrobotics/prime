@@ -8,6 +8,8 @@
 
   /* Shadows */
   --shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.06);
+  --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-dialog: 0 12px 48px rgba(0, 0, 0, 0.25);
 
   /* Text colors */
   --color-heading: #131414;
@@ -311,6 +313,13 @@
   }
 }
 
+/* Dense panels. The doubled class beats the padding and size `input` declares in any emission order. */
+@utility input-compact {
+  &.input {
+    @apply px-2 py-1 text-xs;
+  }
+}
+
 /*
  * Buttons compose a color family with a fill. `button` alone is the neutral family at the
  * outline fill, which is the default button. A color modifier (`button-danger`,
@@ -356,6 +365,13 @@
     border-color: var(--color-disabled-light);
     background-color: var(--color-disabled-light);
     color: var(--color-disabled-dark);
+  }
+}
+
+/* Dense panels. The doubled class beats the padding and size `button` declares in any emission order. */
+@utility button-compact {
+  &.button {
+    @apply gap-1 px-2 py-1 text-xs;
   }
 }
 
@@ -632,6 +648,58 @@
       animation: none;
     }
   }
+}
+
+/*
+ * An 8px state dot. Bare `status-dot` is the neutral gray dot. A state modifier
+ * (`status-dot-info`, `status-dot-warning`, `status-dot-success`, `status-dot-danger`,
+ * `status-dot-disabled`) assigns `--status-dot-color`. The fill and the 1px ring both paint
+ * that color. `status-dot-hollow` composes with any state, or none, and clears only the
+ * fill. A direct `progress-dots` child replaces the dot with the spinner in the dot's color
+ * on the same 8px box, so a state change never shifts layout. Modifiers only assign custom
+ * properties, so they win in any emission order. The dot reads no attributes. Give it
+ * `role="img"` and an `aria-label`.
+ */
+@utility status-dot {
+  @apply inline-flex size-2 shrink-0 items-center justify-center rounded-full border;
+  border-color: var(--status-dot-color, var(--color-gray-6));
+  background-color: var(
+    --status-dot-fill,
+    var(--status-dot-color, var(--color-gray-6))
+  );
+
+  &:has(> .progress-dots) {
+    border-color: transparent;
+    background-color: transparent;
+  }
+  & > .progress-dots {
+    @apply text-xs;
+    color: var(--status-dot-color, var(--color-gray-6));
+  }
+}
+
+@utility status-dot-info {
+  --status-dot-color: var(--color-info-dark);
+}
+
+@utility status-dot-warning {
+  --status-dot-color: var(--color-warning-bright);
+}
+
+@utility status-dot-success {
+  --status-dot-color: var(--color-success-bright);
+}
+
+@utility status-dot-danger {
+  --status-dot-color: var(--color-danger-dark);
+}
+
+@utility status-dot-disabled {
+  --status-dot-color: var(--color-disabled-dark);
+}
+
+@utility status-dot-hollow {
+  --status-dot-fill: transparent;
 }
 
 /*

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
+import { boxShadow, shapeOf } from '../../__tests__/computed-style.ts';
 import BoundPopover from './BoundPopover.svelte';
 import ControlledPopover from './ControlledPopover.svelte';
 import UndefinedPopover from './UndefinedPopover.svelte';
@@ -43,6 +43,16 @@ describe('Popover', () => {
 		expect(dialog()?.textContent).toContain('Details');
 		expect(dialog()?.getAttribute('aria-label')).toBe('Details');
 		expect(trigger(container).dataset.state).toBe('open');
+	});
+
+	it('wears the popover shadow token', async () => {
+		const { container } = render(BoundPopover);
+
+		await open(container);
+
+		const expected = shapeOf('shadow-popover', 'boxShadow');
+		expect(expected).not.toBe('none');
+		expect(boxShadow(dialog()!)).toBe(expected);
 	});
 
 	it('renders no forcemount attribute on any element while open', async () => {
@@ -99,23 +109,6 @@ describe('Popover', () => {
 		await open(container);
 
 		expect(getComputedStyle(dialog()!).zIndex).toBe('1200');
-	});
-
-	it('wears the panel styling', async () => {
-		const { container } = render(BoundPopover);
-		await open(container);
-
-		for (const name of [
-			'z-popover',
-			'rounded-sm',
-			'border',
-			'border-light',
-			'bg-white',
-			'p-4',
-			'shadow-sm'
-		]) {
-			expect(dialog()!.classList.contains(name), name).toBe(true);
-		}
 	});
 
 	it.each([

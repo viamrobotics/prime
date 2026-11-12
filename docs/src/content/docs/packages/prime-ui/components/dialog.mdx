@@ -97,7 +97,7 @@ Pair each with `w-full` so the panel fills the width up to that limit.
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `Dialog` renders no element, so it takes no `class`. `Dialog.Trigger` is a real `<button>` with the shared focus ring and no other style, so add `button` or your own classes. `Dialog.Close` wears `icon-button` and shows a close icon labelled `Close`. Pass children to replace the icon and `aria-label` to replace the label. bits-ui sets the data attributes in the table below. `Dialog.Overlay` wears `z-overlay` and `Dialog.Content` wears `z-dialog`; see [z layers](../../tailwind-config/component-classes/#z-layers).
+Every part that renders an element takes `class` on that element. `Dialog` renders no element, so it takes no `class`. `Dialog.Trigger` is a real `<button>` with the shared focus ring and no other style, so add `button` or your own classes. `Dialog.Close` wears `icon-button` and shows a close icon labeled `Close`. Pass children to replace the icon and `aria-label` to replace the label. bits-ui sets the data attributes in the table below. `Dialog.Overlay` wears `z-overlay` and `Dialog.Content` wears `z-dialog`, the `shadow-dialog` token, and `rounded-sm`; see [z layers](../../tailwind-config/component-classes/#z-layers).
 
 | Part      | Attribute    | Value              |
 | --------- | ------------ | ------------------ |
