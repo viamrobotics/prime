@@ -46,7 +46,7 @@ outside, and returns focus to the trigger.
 		{sideOffset}
 		{alignOffset}
 		role="dialog"
-		class={['z-popover rounded-sm border border-light bg-white p-4 shadow-sm', extraClasses]}
+		class={['z-popover rounded-sm border border-light bg-white p-4 shadow-popover', extraClasses]}
 		{...restProps}
 	>
 		{@render children?.()}

@@ -26,6 +26,19 @@ Every color modifier in every fill and state. The markup below is the grid, cell
 | Disabled | `:disabled` or `[aria-disabled="true"]` | Disabled colors and a `not-allowed` cursor, with no hover. |
 | Busy     | `[aria-busy="true"]`                    | The cursor becomes `progress`.                             |
 
+`button-compact` tightens the gap and padding and sets `text-xs`, for dense panels.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <button type="button" class="button">Default</button>
+  <button type="button" class="button button-compact">Compact</button>
+  <button type="button" class="button button-dark button-compact">Compact dark</button>
+</div>
+
+<Code
+  lang="html"
+  code={`<button type="button" class="button button-compact">Compact</button>`}
+/>
+
 A leading icon is an inline `<svg>` placed as the first child.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
@@ -147,6 +160,51 @@ Modifiers: `banner-info`, `banner-success`, `banner-warning`, `banner-danger`, `
   <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
 </div>`}
 />
+
+## status-dot
+
+An 8px state dot. Bare `status-dot` is the neutral gray dot. The modifiers `status-dot-info`, `status-dot-warning`, `status-dot-success`, `status-dot-danger`, and `status-dot-disabled` set its color, and `status-dot-hollow` clears the fill and keeps the ring, with or without a state. A direct `progress-dots` child replaces the dot with the spinner in the dot's color on the same 8px box, so a state change never shifts layout.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <span class="status-dot" role="img" aria-label="Unknown"></span>
+  <span class="status-dot status-dot-info" role="img" aria-label="Info"></span>
+  <span class="status-dot status-dot-warning" role="img" aria-label="Warning"></span>
+  <span class="status-dot status-dot-success" role="img" aria-label="Success"></span>
+  <span class="status-dot status-dot-danger" role="img" aria-label="Danger"></span>
+  <span class="status-dot status-dot-disabled" role="img" aria-label="Disabled"></span>
+</div>
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <span class="status-dot status-dot-hollow" role="img" aria-label="Unknown, hollow"></span>
+  <span class="status-dot status-dot-info status-dot-hollow" role="img" aria-label="Info, hollow"></span>
+  <span class="status-dot status-dot-warning status-dot-hollow" role="img" aria-label="Warning, hollow"></span>
+  <span class="status-dot status-dot-success status-dot-hollow" role="img" aria-label="Success, hollow"></span>
+  <span class="status-dot status-dot-danger status-dot-hollow" role="img" aria-label="Danger, hollow"></span>
+  <span class="status-dot status-dot-disabled status-dot-hollow" role="img" aria-label="Disabled, hollow"></span>
+</div>
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <span class="status-dot status-dot-info" role="img" aria-label="Connecting">
+    <span class="progress-dots" aria-hidden="true"></span>
+  </span>
+</div>
+
+<Code
+  lang="html"
+  code={`<span class="status-dot" role="img" aria-label="Unknown"></span>
+<span class="status-dot status-dot-success" role="img" aria-label="Success"></span>
+<span class="status-dot status-dot-danger status-dot-hollow" role="img" aria-label="Danger, hollow"></span>
+<span class="status-dot status-dot-info" role="img" aria-label="Connecting">
+  <span class="progress-dots" aria-hidden="true"></span>
+</span>`}
+/>
+
+The dot reads no attributes.
+
+<Aside type="caution" title="Label the dot">
+  A `status-dot` carries `role="img"` and `aria-label`, because color alone does
+  not name the state.
+</Aside>
 
 ## pill
 
@@ -346,6 +404,18 @@ The frame for a text field. Put it on a native `<input>`, or on a wrapper around
   <option>multiple</option>
 </select>`} />
 
+`input-compact` tightens the padding and sets `text-xs`, for dense panels.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <input class="input" aria-label="Default size" placeholder="Default" />
+  <input class="input input-compact" aria-label="Compact size" placeholder="Compact" />
+</div>
+
+<Code
+  lang="html"
+  code={`<input class="input input-compact" aria-label="Compact size" placeholder="Compact" />`}
+/>
+
 Each state also applies when the attribute sits on a direct child `<input>` of the frame. On a native single `<select>`, the class replaces the browser's arrow with a chevron and pads the right edge for it, so the frame reads the same as a text field.
 
 | State     | Attribute                        | What changes                                |
@@ -392,6 +462,21 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
 | -------------- | -------------------------------------------- | --------------------------------- |
 | Keyboard focus | `:focus-visible` (`focus-ring`)              | The outline appears.              |
 | Focus inside   | `:has(:focus-visible)` (`focus-ring-within`) | The outline appears on the frame. |
+
+## Elevation
+
+`shadow-popover` and `shadow-dialog` are the two floating-surface shadows, backed by `--shadow-popover` and `--shadow-dialog`.
+
+<div class="not-content flex flex-wrap items-center gap-6 rounded-sm border border-light p-6">
+  <div class="shadow-popover w-48 rounded-sm bg-white p-3 text-sm">Popover</div>
+  <div class="shadow-dialog w-64 rounded-sm bg-white p-4 text-sm">Dialog</div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="shadow-popover rounded-sm bg-white p-3">Popover</div>
+<div class="shadow-dialog rounded-sm bg-white p-4">Dialog</div>`}
+/>
 
 ## z layers
 

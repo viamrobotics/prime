@@ -1,0 +1,48 @@
+---
+title: StatusDot
+description: A small dot showing the state of a thing.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import StatusDotDemo from "./status-dot/StatusDotDemo.svelte";
+import StatusDotShowcase from "./status-dot/StatusDotShowcase.svelte";
+import InTooltip from "./status-dot/InTooltip.svelte";
+import inTooltipSource from "./status-dot/InTooltip.svelte?raw";
+
+<ComponentIntro name="status-dot" />
+
+<StatusDotDemo client:visible />
+
+- `state` picks the color: `info`, `warning`, `success`, `danger`, or `disabled`. Leave it out for the gray dot.
+- `variant="hollow"` draws a ring in the state's color with no fill. `<StatusDot variant="hollow" label="Not started" />` is the gray ring.
+- `working` replaces the dot with an animated glyph in the state's color on the same 8px box, so a change never shifts the layout.
+- `label` is the accessible name, so always give one. A sighted viewer sees only the color, so pair the dot with visible text or a tooltip that shows the label.
+
+## Usage
+
+### States
+
+<StatusDotShowcase client:visible />
+
+### In a tooltip
+
+A dot is not focusable by itself. Give it `tabindex="0"` inside `Tooltip.Trigger` so keyboard users reach the tooltip, and keep the `label` as its `aria-label`.
+
+<Example code={inTooltipSource} title="InTooltip.svelte">
+  <InTooltip client:visible />
+</Example>
+
+## Styling
+
+`class` lands on the dot, which wears the `status-dot` component class and one `status-dot-<state>` modifier. See [Component classes](../../tailwind-config/component-classes/) for the plain HTML form.
+
+## Keyboard
+
+The dot is not interactive, so it takes no keys. With `tabindex="0"` it becomes a tab stop, which opens a tooltip around it.
+
+## API
+
+<PropsTable name="status-dot" />

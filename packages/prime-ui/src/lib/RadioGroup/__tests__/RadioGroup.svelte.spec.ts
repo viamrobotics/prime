@@ -6,6 +6,7 @@ import { userEvent } from 'vitest/browser';
 import { colorOf, textColor } from '../../__tests__/computed-style.ts';
 import BoundRadioGroup from './BoundRadioGroup.svelte';
 import ControlledRadioGroup from './ControlledRadioGroup.svelte';
+import DescribedRadioGroup from './DescribedRadioGroup.svelte';
 import IndicatorRadioGroup from './IndicatorRadioGroup.svelte';
 import UndefinedRadioGroup from './UndefinedRadioGroup.svelte';
 
@@ -119,5 +120,37 @@ describe('RadioGroup', () => {
 
 		expect(owner(container)).toBe('sm');
 		expect(radio(container, 'Large').getAttribute('aria-checked')).toBe('false');
+	});
+
+	describe('description and details', () => {
+		it('describes the radio with the description text', async () => {
+			const { container } = render(DescribedRadioGroup);
+
+			await expect
+				.element(radio(container, 'Email'))
+				.toHaveAccessibleDescription('We send a code.');
+			expect(radio(container, 'Email').textContent).not.toContain('We send');
+		});
+
+		it('shows the details only while the item is checked', async () => {
+			const { container } = render(DescribedRadioGroup);
+			const field = () => container.querySelector('input[aria-label="Email address"]');
+
+			expect(field()).toBeNull();
+			await userEvent.click(radio(container, 'Email'));
+			expect(field()).not.toBeNull();
+			await userEvent.click(radio(container, 'Text message'));
+			expect(field()).toBeNull();
+		});
+
+		it('puts class on the wrapper when a description is given, and on the button otherwise', () => {
+			const { container } = render(DescribedRadioGroup);
+
+			const wrapper = container.querySelector('.wrapper-class')!;
+			expect(wrapper.tagName).toBe('DIV');
+			expect(wrapper.contains(radio(container, 'Email'))).toBe(true);
+			expect(radio(container, 'Email').classList.contains('wrapper-class')).toBe(false);
+			expect(radio(container, 'None').classList.contains('plain-class')).toBe(true);
+		});
 	});
 });

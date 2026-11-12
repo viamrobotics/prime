@@ -46,6 +46,7 @@ export type { FieldContext } from './Field/useField.svelte.ts';
 
 export { Input } from './Input/input.ts';
 export { Menu } from './Menu/menu.ts';
+export { Menubar } from './Menu/menubar.ts';
 export { RadioGroup } from './RadioGroup/radio-group.ts';
 
 export type { SelectOption } from './Select/option.ts';
@@ -80,4 +81,6 @@ export type {
 
 export { Popover } from './Popover/popover.ts';
 export { default as Progress } from './Progress/Progress.svelte';
+export { default as StatusDot } from './StatusDot/StatusDot.svelte';
+export type { StatusDotState, StatusDotVariant } from './StatusDot/status-dot.ts';
 export { Tooltip } from './Tooltip/tooltip.ts';

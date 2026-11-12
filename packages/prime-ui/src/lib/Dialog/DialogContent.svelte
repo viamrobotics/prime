@@ -22,7 +22,7 @@ while it is open, Escape closes it, focus returns to the trigger, and the page b
 	<Dialog.Overlay class="fixed inset-0 z-overlay bg-black/40" />
 	<Dialog.Content
 		class={[
-			'fixed top-1/2 left-1/2 z-dialog flex max-h-[calc(100vh-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col border border-medium bg-white p-4 shadow-sm',
+			'fixed top-1/2 left-1/2 z-dialog flex max-h-[calc(100vh-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-sm border border-medium bg-white p-4 shadow-dialog',
 			extraClasses
 		]}
 		{...restProps}

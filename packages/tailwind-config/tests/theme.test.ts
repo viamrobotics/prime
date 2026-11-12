@@ -44,6 +44,17 @@ const CHROME_CLASSES = [
   "banner-progress",
   "progress",
   "input",
+  "input-compact",
+  "button-compact",
+  "status-dot",
+  "status-dot-info",
+  "status-dot-warning",
+  "status-dot-success",
+  "status-dot-danger",
+  "status-dot-disabled",
+  "status-dot-hollow",
+  "shadow-popover",
+  "shadow-dialog",
   "focus-ring",
   "focus-ring-within",
 ];
@@ -630,6 +641,119 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(block.get("border-inline-width")).toBe("0");
     expect(block.get("border-top-width")).toBe("0");
     expect(block.has("border-bottom-width")).toBe(false);
+  });
+
+  it("sets .button-compact and .input-compact to text-xs with tighter padding under a rule that outranks the base class", () => {
+    const button = declared(emitted, ".button-compact.button");
+    expect(button.get("gap")).toBe("calc(var(--spacing) * 1)");
+    expect(button.get("padding-inline")).toBe("calc(var(--spacing) * 2)");
+    expect(button.get("padding-block")).toBe("calc(var(--spacing) * 1)");
+    expect(button.get("font-size")).toBe("var(--text-xs)");
+    expect(button.get("line-height")).toBe(
+      "var(--tw-leading, var(--text-xs--line-height))",
+    );
+
+    const input = declared(emitted, ".input-compact.input");
+    expect(input.get("padding-inline")).toBe("calc(var(--spacing) * 2)");
+    expect(input.get("padding-block")).toBe("calc(var(--spacing) * 1)");
+    expect(input.get("font-size")).toBe("var(--text-xs)");
+    expect(input.get("line-height")).toBe(
+      "var(--tw-leading, var(--text-xs--line-height))",
+    );
+  });
+
+  it("defines the popover and dialog shadow tokens in @theme and compiles the utilities to box-shadow from their values", () => {
+    expect(themeDefaults.get("--shadow-popover")).toBe(
+      "0 8px 24px rgba(0, 0, 0, 0.12)",
+    );
+    expect(themeDefaults.get("--shadow-dialog")).toBe(
+      "0 12px 48px rgba(0, 0, 0, 0.25)",
+    );
+    const expected = [
+      ["popover", "0 8px 24px var(--tw-shadow-color, #0000001f)"],
+      ["dialog", "0 12px 48px var(--tw-shadow-color, #00000040)"],
+    ] as const;
+    for (const [name, shadow] of expected) {
+      const declarations = declared(emitted, `.shadow-${name}`);
+      expect(declarations.get("--tw-shadow")).toBe(shadow);
+      expect(declarations.get("box-shadow")).toContain("var(--tw-shadow)");
+    }
+  });
+
+  it("assigns the popover and dialog shadows in .dark, .light, and the media scope", () => {
+    const scopes = [
+      [onlyRule(emitted, ".dark"), "dark"],
+      [onlyRule(emitted, ".light"), "light"],
+      [onlyRule(emitted, ":root:not(.light)"), "dark"],
+    ] as const;
+    for (const [rule, scheme] of scopes) {
+      const declarations = declarationsOf(rule);
+      expect(declarations.get("--shadow-popover")).toBe(
+        `var(--${scheme}-shadow-popover)`,
+      );
+      expect(declarations.get("--shadow-dialog")).toBe(
+        `var(--${scheme}-shadow-dialog)`,
+      );
+    }
+    const root = declarationsOf(onlyRule(unoptimized, ":root"));
+    expect(root.get("--dark-shadow-popover")).toBe(
+      "0 8px 24px rgba(0, 0, 0, 0.5)",
+    );
+    expect(root.get("--dark-shadow-dialog")).toBe(
+      "0 12px 48px rgba(0, 0, 0, 0.6)",
+    );
+    expect(root.get("--light-shadow-popover")).toBe(
+      themeDefaults.get("--shadow-popover"),
+    );
+    expect(root.get("--light-shadow-dialog")).toBe(
+      themeDefaults.get("--shadow-dialog"),
+    );
+  });
+
+  it("draws .status-dot as an 8px round dot painting fill and border from --status-dot-color over a gray-6 fallback", () => {
+    const dot = declared(emitted, ".status-dot");
+    expect(dot.get("width")).toBe("calc(var(--spacing) * 2)");
+    expect(dot.get("height")).toBe("calc(var(--spacing) * 2)");
+    expect(dot.get("border-radius")).toBe("3.40282e38px");
+    expect(dot.get("border-color")).toBe(
+      "var(--status-dot-color, var(--color-gray-6))",
+    );
+    expect(dot.get("background-color")).toBe(
+      "var(--status-dot-fill, var(--status-dot-color, var(--color-gray-6)))",
+    );
+  });
+
+  it("assigns --status-dot-color per state modifier and emits no neutral modifier", () => {
+    const states = [
+      ["info", "var(--color-info-dark)"],
+      ["warning", "var(--color-warning-bright)"],
+      ["success", "var(--color-success-bright)"],
+      ["danger", "var(--color-danger-dark)"],
+      ["disabled", "var(--color-disabled-dark)"],
+    ] as const;
+    for (const [state, token] of states) {
+      expect(
+        declared(emitted, `.status-dot-${state}`).get("--status-dot-color"),
+      ).toBe(token);
+    }
+    expect(
+      rulesOf(emitted, (rule) => startsWithClass(rule, "status-dot-neutral")),
+    ).toHaveLength(0);
+  });
+
+  it("clears only the fill on .status-dot-hollow", () => {
+    const hollow = declared(emitted, ".status-dot-hollow");
+    expect(hollow.get("--status-dot-fill")).toBe("transparent");
+    expect(hollow.has("--status-dot-color")).toBe(false);
+  });
+
+  it("clears the fill and ring of a .status-dot that holds a direct .progress-dots child and colors the spinner", () => {
+    const spinning = declared(emitted, ".status-dot:has( > .progress-dots)");
+    expect(spinning.get("border-color")).toBe("#0000");
+    expect(spinning.get("background-color")).toBe("#0000");
+    expect(declared(emitted, ".status-dot > .progress-dots").get("color")).toBe(
+      "var(--status-dot-color, var(--color-gray-6))",
+    );
   });
 
   it("pins .banner-progress to the bottom edge and outranks the track's relative position", () => {

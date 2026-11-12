@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
+import { boxShadow, shapeOf } from '../../__tests__/computed-style.ts';
 import BoundDialog from './BoundDialog.svelte';
 import ControlledDialog from './ControlledDialog.svelte';
 import UndefinedDialog from './UndefinedDialog.svelte';
@@ -54,6 +54,26 @@ describe('Dialog', () => {
 		const overlay = document.querySelector('[data-dialog-overlay]')!;
 		expect(getComputedStyle(overlay).zIndex).toBe('1000');
 		expect(getComputedStyle(dialog()!).zIndex).toBe('1100');
+	});
+
+	it('wears the dialog shadow token', async () => {
+		const { container } = render(BoundDialog);
+
+		await open(container);
+
+		const expectedShadow = shapeOf('shadow-dialog', 'boxShadow');
+		expect(expectedShadow).not.toBe('none');
+		expect(boxShadow(dialog()!)).toBe(expectedShadow);
+	});
+
+	it('rounds its corners with the shared radius', async () => {
+		const { container } = render(BoundDialog);
+
+		await open(container);
+
+		const expectedRadius = shapeOf('rounded-sm', 'borderTopLeftRadius');
+		expect(expectedRadius).not.toBe('0px');
+		expect(getComputedStyle(dialog()!).borderTopLeftRadius).toBe(expectedRadius);
 	});
 
 	it('moves focus into the dialog and traps Tab and Shift+Tab inside it', async () => {

@@ -14,6 +14,8 @@ import TwoWay from "./radio-group/TwoWay.svelte";
 import twoWaySource from "./radio-group/TwoWay.svelte?raw";
 import Controlled from "./radio-group/Controlled.svelte";
 import controlledSource from "./radio-group/Controlled.svelte?raw";
+import DescriptionDetails from "./radio-group/DescriptionDetails.svelte";
+import descriptionDetailsSource from "./radio-group/DescriptionDetails.svelte?raw";
 import CustomIndicator from "./radio-group/CustomIndicator.svelte";
 import customIndicatorSource from "./radio-group/CustomIndicator.svelte?raw";
 
@@ -62,13 +64,21 @@ Pass an `indicator` snippet to an item to replace the radio icon. It receives `c
   <CustomIndicator client:visible />
 </Example>
 
+### Description and details
+
+Pass `description` to show a line of text under an item's label. The radio's accessible description reads it. Pass a `details` snippet for content that renders only while that item is checked, such as a field the choice needs. An item with either becomes a wrapper `<div>` holding the button, and `class` lands on that wrapper. Both sit outside the button, so they stay out of its accessible name and `details` can hold interactive controls.
+
+<Example code={descriptionDetailsSource} title="DescriptionDetails.svelte">
+  <DescriptionDetails client:visible />
+</Example>
+
 ### States
 
 <RadioGroupShowcase client:visible />
 
 ## Styling
 
-`class` on `RadioGroup` lands on the group `<div>`, which is `flex` with `flex-col` or `flex-row` by orientation, so add the gap you want. `class` on `RadioGroup.Item` lands on the item button. bits-ui sets these data attributes for Tailwind variants.
+`class` on `RadioGroup` lands on the group `<div>`, which is `flex` with `flex-col` or `flex-row` by orientation, so add the gap you want. `class` on `RadioGroup.Item` lands on the item button, or on the wrapper `<div>` when the item has a `description` or `details`. bits-ui sets these data attributes for Tailwind variants.
 
 | Element | Attribute          | Value                      |
 | ------- | ------------------ | -------------------------- |
