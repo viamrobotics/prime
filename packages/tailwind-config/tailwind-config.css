@@ -503,6 +503,30 @@
   }
 }
 
+@utility button-pending {
+  --button-dark: var(--color-pending-dark);
+  --button-text: var(--color-pending-dark);
+  --button-border: var(--color-pending-medium);
+  --button-medium: var(--color-pending-medium);
+  --button-medium-light: var(--color-pending-medium-light);
+  --button-light: var(--color-pending-light);
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost) {
+    border-color: var(--button-dark);
+    background-color: var(--button-dark);
+    color: var(--color-white);
+    @supports (color: contrast-color(red)) {
+      color: contrast-color(var(--button-dark));
+    }
+  }
+  &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost):is(
+      :hover,
+      :active
+    ) {
+    border-color: color-mix(in oklab, var(--button-dark) 88%, black);
+    background-color: color-mix(in oklab, var(--button-dark) 88%, black);
+  }
+}
+
 @utility button-outline {
   border-color: var(--button-border);
   background-color: var(--button-light);
@@ -549,6 +573,12 @@
   border-color: var(--color-danger-medium);
   background-color: var(--color-danger-light);
   color: var(--color-danger-dark);
+}
+
+@utility badge-pending {
+  border-color: var(--color-pending-medium);
+  background-color: var(--color-pending-light);
+  color: var(--color-pending-dark);
 }
 
 @utility badge-neutral {
@@ -617,7 +647,7 @@
   @apply relative grid min-h-10 items-center border border-light bg-white p-1.5;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
 
-  &:not(.banner-success, .banner-warning, .banner-danger) {
+  &:not(.banner-success, .banner-warning, .banner-danger, .banner-pending) {
     --banner-light: var(--color-info-light);
     --banner-dark: var(--color-info-dark);
   }
@@ -665,15 +695,20 @@
   --banner-dark: var(--color-danger-dark);
 }
 
-/* Full-width strip. The doubled class beats the border `banner` declares in any emission order. */
-@utility banner-site {
+@utility banner-pending {
+  --banner-light: var(--color-pending-light);
+  --banner-dark: var(--color-pending-dark);
+}
+
+/* Full-width block. The doubled class beats the border `banner` declares in any emission order. */
+@utility banner-block {
   @apply w-full;
   &.banner {
     @apply border-x-0 border-t-0;
   }
 }
 
-/* The icon chip. Its direct `svg` is the glyph. Compact is 28px with a 16px glyph. */
+/* The icon chip. Its direct `svg` is the glyph, or a `progress-dots` spinner in the chip's tone. */
 @utility banner-chip {
   @apply col-start-1 row-start-1 mr-3 flex size-7 items-center justify-center;
   background-color: var(--banner-light);
@@ -681,6 +716,9 @@
 
   & > svg {
     @apply size-4;
+  }
+  & .progress-dots {
+    color: inherit;
   }
 }
 
@@ -704,11 +742,17 @@
   @apply col-start-4 row-start-1 ml-3;
 }
 
-/* Pinned to the bottom edge inside the border. The doubled class beats `progress`'s own `position`. */
+/*
+ * Pinned to the bottom edge inside the border, filled in the banner's dark tone. The doubled
+ * class beats `progress`'s own `position` and fill color.
+ */
 @utility banner-progress {
   @apply absolute inset-x-0 bottom-0;
   &.progress {
     position: absolute;
+  }
+  &.progress > .progress-fill {
+    background-color: var(--banner-dark);
   }
 }
 

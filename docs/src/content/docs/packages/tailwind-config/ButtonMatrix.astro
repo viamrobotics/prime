@@ -4,7 +4,7 @@
  * grid with the modifier classes under each cell. Static HTML, so hover is not shown.
  */
 import { Code } from "@astrojs/starlight/components";
-import { mdiAlert, mdiCheck, mdiCog, mdiDelete, mdiInformation, mdiPencil } from "@mdi/js";
+import { mdiAlert, mdiCheck, mdiCog, mdiDelete, mdiInformation, mdiPencil, mdiProgressClock } from "@mdi/js";
 
 interface Props {
   kind?: "button" | "icon-button";
@@ -19,6 +19,7 @@ const rows = [
   { name: "Warning", color: "button-warning", icon: mdiAlert },
   { name: "Success", color: "button-success", icon: mdiCheck },
   { name: "Info", color: "button-info", icon: mdiInformation },
+  { name: "Pending", color: "button-pending", icon: mdiProgressClock },
 ];
 
 const columns = [

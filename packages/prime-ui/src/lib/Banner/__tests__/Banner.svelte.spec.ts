@@ -18,7 +18,8 @@ describe('Banner', () => {
 		{ variant: 'info', role: 'status' },
 		{ variant: 'success', role: 'status' },
 		{ variant: 'warning', role: 'alert' },
-		{ variant: 'danger', role: 'alert' }
+		{ variant: 'danger', role: 'alert' },
+		{ variant: 'pending', role: 'status' }
 	] as const)('has role $role for the $variant variant', ({ variant, role }) => {
 		const { container } = render(VariantBanner, { props: { variant } });
 
@@ -29,7 +30,8 @@ describe('Banner', () => {
 		{ variant: 'info', light: 'bg-info-light', dark: 'text-info-dark' },
 		{ variant: 'success', light: 'bg-success-light', dark: 'text-success-dark' },
 		{ variant: 'warning', light: 'bg-warning-light', dark: 'text-warning-dark' },
-		{ variant: 'danger', light: 'bg-danger-light', dark: 'text-danger-dark' }
+		{ variant: 'danger', light: 'bg-danger-light', dark: 'text-danger-dark' },
+		{ variant: 'pending', light: 'bg-pending-light', dark: 'text-pending-dark' }
 	] as const)('colors the $variant chip from the variant tokens', ({ variant, light, dark }) => {
 		const { container } = render(VariantBanner, { props: { variant } });
 
@@ -68,6 +70,13 @@ describe('Banner', () => {
 		expect(chip(container).querySelector('svg')).toBeTruthy();
 	});
 
+	it('spins in the chip for the pending variant', () => {
+		const { container } = render(VariantBanner, { props: { variant: 'pending' } });
+
+		expect(container.querySelector('.banner-chip .progress-dots')).toBeTruthy();
+		expect(container.querySelector('.banner-chip svg')).toBeNull();
+	});
+
 	it('replaces the default glyph with Banner.Icon', () => {
 		const { container } = render(IconBanner);
 
@@ -101,8 +110,8 @@ describe('Banner', () => {
 		expect(container.textContent).toContain('Stack trace');
 	});
 
-	it('drops the side borders for the site placement', () => {
-		const { container } = render(VariantBanner, { props: { placement: 'site' } });
+	it('drops the side borders for the block placement', () => {
+		const { container } = render(VariantBanner, { props: { placement: 'block' } });
 
 		const style = getComputedStyle(banner(container));
 		expect(style.borderLeftWidth).toBe('0px');

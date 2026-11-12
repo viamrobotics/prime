@@ -22,7 +22,7 @@ The documentation site for the prime monorepo. Astro + Starlight. Every library 
 - `src/components/Head.astro`: overrides Starlight's head to run `src/theme-bridge.ts`. The bridge mirrors Starlight's `data-theme` into the `dark` and `light` classes that the token package's dark variant reads. A browser spec under `src/components/__tests__/` covers it.
 - `src/components/theme.svelte.ts`: exposes the site theme to islands whose library has its own theme switch. The tweakpane-config islands use it to pick between `primeTheme` and `primeThemeDark`.
 - `source-aliases.mjs`: one alias list that resolves every workspace library to its source. `astro.config.mjs` applies it under `serve` only, and `vitest.config.ts` applies it always.
-- `src/tailwind.css`: pulls in Tailwind, the tokens, the dark variant, and each package's `styles.css`. It is referenced from `customCss` in `astro.config.mjs`. It has an `@source` per Svelte package pointing at that package's `src/lib`, so island markup gets its utility classes.
+- `src/tailwind.css`: pulls in Tailwind, the tokens, the dark variant, and each package's `styles.css`. It is referenced from `customCss` in `astro.config.mjs`. It has an `@source` per Svelte package pointing at that package's `src/lib`, so island markup gets its utility classes. Site-level overrides of Starlight's own CSS go at the bottom, each with a comment naming what it corrects.
 
 A component page follows one template, modeled on the bits-ui and Zag docs, in this order:
 

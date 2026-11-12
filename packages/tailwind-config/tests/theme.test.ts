@@ -13,6 +13,7 @@ const CHROME_CLASSES = [
   "button-warning",
   "button-success",
   "button-info",
+  "button-pending",
   "button-outline",
   "button-ghost",
   "icon-button",
@@ -20,6 +21,7 @@ const CHROME_CLASSES = [
   "badge-success",
   "badge-warning",
   "badge-danger",
+  "badge-pending",
   "badge-neutral",
   "pill",
   "pill-outline",
@@ -31,7 +33,8 @@ const CHROME_CLASSES = [
   "banner-success",
   "banner-warning",
   "banner-danger",
-  "banner-site",
+  "banner-pending",
+  "banner-block",
   "banner-chip",
   "banner-title",
   "banner-description",
@@ -50,12 +53,14 @@ const BUTTON_COLORS = [
   "button-warning",
   "button-success",
   "button-info",
+  "button-pending",
 ];
 const BANNER_VARIANTS = [
   ["info", "var(--color-info-light)", "var(--color-info-dark)"],
   ["success", "var(--color-success-light)", "var(--color-success-dark)"],
   ["warning", "var(--color-warning-light)", "var(--color-warning-dark)"],
   ["danger", "var(--color-danger-light)", "var(--color-danger-dark)"],
+  ["pending", "var(--color-pending-light)", "var(--color-pending-dark)"],
 ] as const;
 
 const CANDIDATES = [
@@ -412,7 +417,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
   });
 
-  it.each(["button", "icon-button"])(
+  it.each(["button", "icon-button", "banner-chip"])(
     "lets .%s pass its text color to progress-dots inside it",
     (name) => {
       const rules = rulesOf(
@@ -612,19 +617,19 @@ describe("theme stylesheets compiled through Tailwind", () => {
   it("defaults .banner to the info tokens behind a guard that excludes every other variant", () => {
     const declarations = declared(
       emitted,
-      ".banner:not(.banner-success, .banner-warning, .banner-danger)",
+      ".banner:not(.banner-success, .banner-warning, .banner-danger, .banner-pending)",
     );
     expect(declarations.get("--banner-light")).toBe("var(--color-info-light)");
     expect(declarations.get("--banner-dark")).toBe("var(--color-info-dark)");
     expect(declared(emitted, ".banner").has("--banner-light")).toBe(false);
   });
 
-  it("drops the side and top borders on .banner-site with a rule that outranks .banner", () => {
-    expect(declared(emitted, ".banner-site").get("width")).toBe("100%");
-    const site = declared(emitted, ".banner-site.banner");
-    expect(site.get("border-inline-width")).toBe("0");
-    expect(site.get("border-top-width")).toBe("0");
-    expect(site.has("border-bottom-width")).toBe(false);
+  it("drops the side and top borders on .banner-block with a rule that outranks .banner", () => {
+    expect(declared(emitted, ".banner-block").get("width")).toBe("100%");
+    const block = declared(emitted, ".banner-block.banner");
+    expect(block.get("border-inline-width")).toBe("0");
+    expect(block.get("border-top-width")).toBe("0");
+    expect(block.has("border-bottom-width")).toBe(false);
   });
 
   it("pins .banner-progress to the bottom edge and outranks the track's relative position", () => {

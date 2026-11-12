@@ -14,41 +14,24 @@ at the provider's `placement`, and each toast inside it announces itself as a `s
 
 <Toast />
 ```
-
-The `item` snippet receives each toast's state:
-
-```svelte
-<Toast>
-	{#snippet item(toast)}
-		<p>{toast.title}</p>
-		<button type="button" onclick={toast.dismiss}>Close</button>
-	{/snippet}
-</Toast>
-```
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
 
 	import { normalizeProps, useMachine } from '@zag-js/svelte';
 	import * as toast from '@zag-js/toast';
 
 	import ToastItem from './ToastItem.svelte';
-	import { useToastStore, type ToastItemState } from './useToast.svelte.ts';
+	import { useToastStore } from './useToast.svelte.ts';
 
 	interface Props {
 		/** The region's accessible label. @default 'Notifications' */
 		label?: string;
 		/** Classes for the region element. */
 		class?: ClassValue;
-		/**
-		 * Renders the inside of each toast. The toast keeps its live-region role and its stacking
-		 * motion, and the default glyph, text, action, and close button give way to the snippet.
-		 */
-		item?: Snippet<[ToastItemState]>;
 	}
 
-	const { label = 'Notifications', class: extraClasses, item: layout }: Props = $props();
+	const { label = 'Notifications', class: extraClasses }: Props = $props();
 
 	const { store } = useToastStore();
 
@@ -59,6 +42,6 @@ The `item` snippet receives each toast's state:
 
 <div {...api.getGroupProps({ label })} class={['z-toast', extraClasses]}>
 	{#each api.getToasts() as item, index (item.id)}
-		<ToastItem {item} {index} parent={service} {layout} />
+		<ToastItem {item} {index} parent={service} />
 	{/each}
 </div>

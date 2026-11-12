@@ -29,22 +29,6 @@ export interface ToastOptions {
 	};
 }
 
-/** What `Toast`'s `item` snippet receives for one toast. */
-export interface ToastItemState {
-	id: string;
-	variant: ToastVariant;
-	title: string;
-	description?: string;
-	/** The action with its handler already composed to dismiss the toast after it runs. */
-	action?: {
-		label: string;
-		onclick: () => void;
-	};
-	/** Whether the timer is held, by hover, focus, or `pause`. */
-	paused: boolean;
-	dismiss: () => void;
-}
-
 /** What `provideToast` takes. */
 export interface ToastProviderOptions {
 	/** @default 'bottom' */
