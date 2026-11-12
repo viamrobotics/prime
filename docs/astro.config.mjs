@@ -63,11 +63,11 @@ export default defineConfig({
                 },
                 {
                   label: "Components",
-                  autogenerate: { directory: "packages/prime-ui/components" },
+                  items: [{ autogenerate: { directory: "packages/prime-ui/components" } }],
                 },
                 {
                   label: "Utilities",
-                  autogenerate: { directory: "packages/prime-ui/utilities" },
+                  items: [{ autogenerate: { directory: "packages/prime-ui/utilities" } }],
                 },
               ],
             },
