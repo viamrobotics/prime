@@ -45,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/ledger-inject.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/ledger-inject.mjs\" || { echo \"[houserules] ledger-inject.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/ledger-inject.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/ledger-inject.mjs\" || exit 0"
           }
         ]
       }
@@ -55,29 +55,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" || { echo \"[houserules] lint-format-fix.mjs missing. Run: npx houserules update\" >&2; exit 1; }",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" || exit 0",
             "statusMessage": "Running lint/format auto-fix",
             "timeout": 120
           },
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-check.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-check.mjs\" || { echo \"[houserules] changeset-check.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-check.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-check.mjs\" || exit 0"
           },
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-gate.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-gate.mjs\" || { echo \"[houserules] changeset-gate.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/lint-format-fix.mjs\" || { echo \"[houserules] lint-format-fix.mjs missing. Run: npx houserules update\" >&2; exit 1; }",
-            "statusMessage": "Running lint/format auto-fix",
-            "timeout": 120
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-gate.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/changeset-gate.mjs\" || exit 0"
           }
         ]
       }
@@ -87,11 +75,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" || { echo \"[houserules] session-context.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" || { echo \"[houserules] session-context.mjs missing. Run: npx houserules update\"; exit 0; }"
           },
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" || { echo \"[houserules] debug-session-check.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" || { echo \"[houserules] debug-session-check.mjs missing. Run: npx houserules update\"; exit 0; }"
           }
         ]
       }

@@ -24,7 +24,10 @@ exactly the collision above.
 **That setting covers only half of it.** `fix.onSubagentStop` governs a WORKER's exit. A `Stop` hook
 fires at YOUR exit, and this pattern ends a turn every time you dispatch or review, with every
 worker still holding files open. So the repo-wide fixer runs against a tree mid-edit anyway, from the
-other direction.
+other direction. houserules' own `lint-format-fix.mjs` exits without running while the Stop
+payload's `background_tasks` is non-empty, and after a turn whose tool uses were all read-only.
+A dispatch-only or review-only turn no longer triggers it. Keep the warning for repos whose fix
+hook is not houserules' own.
 
 Two consequences, and the second one matters more:
 

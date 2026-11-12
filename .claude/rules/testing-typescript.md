@@ -15,7 +15,7 @@ rules on placement, structure, and naming that this guide assumes. The examples 
 Vitest and TypeScript, but the principles they illustrate apply to any test runner with a
 `describe`/`it` shape.
 
-## Rule — follow without deliberation
+## Rule
 
 - **Pick one suffix per package, `.test.ts` or `.spec.ts`, and never mix them within one.**
   Two conventions mean every glob in the package has to list both, and one of them
@@ -29,10 +29,9 @@ Vitest and TypeScript, but the principles they illustrate apply to any test runn
   rely on. Ordinary application code does not need one, since a runtime test already covers the
   values that flow through it. Use Vitest's built-in `expectTypeOf`, or `tsd`.
 - **Enable Vitest's `typecheck` for a type test to run at all.** Vitest strips types by default
-  rather than checking them, the same trap `CLAUDE.md` warns about for the whole repo. Without
-  `typecheck: { enabled: true }` in the Vitest config, a file full of `expectTypeOf` assertions
-  reports green while checking nothing. Checked mechanically, and only against Vitest's own
-  `expectTypeOf`, not `tsd`.
+  rather than checking them. Without `typecheck: { enabled: true }` in the Vitest config, a file
+  full of `expectTypeOf` assertions reports green while checking nothing. Checked mechanically,
+  and only against Vitest's own `expectTypeOf`, not `tsd`.
 
 ## Checked mechanically
 

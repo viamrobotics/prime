@@ -8,7 +8,7 @@ paths:
 Assumes `strict: true`. See the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/)
 for anything this rule does not cover.
 
-## Rule — follow without deliberation
+## Rule
 
 ### Type definitions
 

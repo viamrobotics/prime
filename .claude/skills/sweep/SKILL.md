@@ -2,7 +2,7 @@
 name: sweep
 description: Shard a repo-wide mechanical edit into per-package writer subagents, costing O(shards) not O(matches). Use for a rote change across many files, such as renaming an import or swapping an API call.
 argument-hint: <the mechanical change to make across the repo>
-allowed-tools: Bash, Grep, Glob, Read, Agent
+allowed-tools: Bash, Grep, Glob, Read, Agent, AskUserQuestion
 ---
 
 Apply a mechanical, repo-wide change **off-context**: **$ARGUMENTS**
@@ -26,6 +26,13 @@ Find the scope with a single counting pass. **Do not** read the matches into con
 grep -rlZ '<pattern>' -- <paths> | xargs -0 -n1 dirname | sort | uniq -c
 ```
 
+Also count the matched lines, which step 3 reports if it has to ask. This prints one number and loads
+no match:
+
+```
+grep -rE '<pattern>' -- <paths> | wc -l
+```
+
 You want the **set of files and packages** that match and _how many_, not their contents. If the
 pattern needs refining, refine it here, cheaply, before fanning out.
 
@@ -35,7 +42,19 @@ Group the matching files by package, using `.claude/houserules.config.json` `tar
 top-level dir. Each package is one shard. Sharding by package rather than by file keeps writers from
 colliding and makes verification package-scoped.
 
-## 3. Fan out one writer per shard — in ONE message
+## 3. Fan out one writer per shard, in ONE message
+
+If there are more than 8 shards, call `AskUserQuestion` before any `Agent` call, and dispatch nothing
+until the user answers. The question states three numbers: the shard count, the matched line count
+from step 1, and an estimate of the cost. The estimate is one agent per shard, about 55k tokens per
+writer (shards × 55k in total), and about 3 minutes, because the writers run in parallel. Offer three
+options:
+
+- **Run all shards.**
+- **Run a named slice.** The user names the packages to include, and you dispatch only those.
+- **Cancel.** Dispatch nothing and stop.
+
+With 8 or fewer shards, skip the question and dispatch.
 
 Dispatch all shards in a single message as parallel `Agent` calls. Each writer is **cheap and
 pinned**: request `model: haiku` (or `effort: low`). A mechanical edit doesn't need a strong model,

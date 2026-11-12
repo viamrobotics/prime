@@ -19,7 +19,7 @@ dead code. The principles are language-agnostic. The examples are TypeScript. De
 design and structure principles, such as when to introduce an abstraction, live in the
 reference doc linked below.
 
-## Rule — follow without deliberation
+## Rule
 
 ### Naming
 

@@ -23,7 +23,7 @@ this repo installed.
 The rule assumes a test you are writing. When you are changing behavior instead, the test
 that covers it is part of the change, not a follow-up.
 
-## Rule — follow without deliberation
+## Rule
 
 ### Whether the test is worth writing
 
@@ -214,8 +214,8 @@ that covers it is part of the change, not a follow-up.
   - What survives is the rare domain fact a reader could not infer and no name can carry, such
     as why a malformed input is deliberately tolerated. Keep those short and about the SYSTEM,
     never about the test.
-- **No file header comment on a test file.** This is stricter than `code-comments.md`'s
-  exception for files that export nothing. A suite's contract is its `describe` names. A header
+- **No file header comment on a test file.** `code-comments.md`'s shebang entry-point
+  exception does not reach a test file. A suite's contract is its `describe` names. A header
   restates them, then goes stale.
 - **No banner or section dividers inside a test file.** Needing signposts to navigate a suite
   means it should be several suites, split by the unit under test.

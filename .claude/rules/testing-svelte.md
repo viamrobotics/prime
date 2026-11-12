@@ -13,7 +13,7 @@ Runner setup for testing Svelte 5 components and `.svelte.ts` reactive modules. 
 `testing.md` for the runner-agnostic rules on placement, structure, and naming that this
 guide assumes, and `svelte.md` for authoring conventions, which this guide does not repeat.
 
-## Rule — follow without deliberation
+## Rule
 
 - **Pick the renderer for the environment and the environment for what the assertion
   reads.** `@testing-library/svelte` under `jsdom` or `happy-dom` with `svelteTesting()`

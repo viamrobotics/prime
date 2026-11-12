@@ -47,3 +47,21 @@ extra cost as another reason to keep the cap at 2.
 
 **Load-bearing** means the seam implementation, a security-relevant branch, the one hunk the brief
 called out. Everything else stays unread.
+
+## Before you accuse a worker of a deviation
+
+Grep locates, and it shows only the first line of each list item. A `REVISE` grounded on that
+extraction costs a full round when the worker can refute it with line numbers. `Read` the cited step in
+full first. Do not read a full diff to settle it, because that forfeits the point of orchestrating.
+
+## A worker that stalled
+
+A stall (`Agent stalled: no progress for 600s`) reaches you as a report containing the word
+"stalled", or as no report. Match on that word, not the full sentence. It is not a verdict, and the
+slice is neither approved nor failed. The worker's partial edits are on disk, so run
+`git diff --name-only` against the slice's `owns` and list what landed in the re-brief. A fresh
+worker then builds on it instead of redoing it.
+
+A worker that backgrounds a long command hands back an interim report at once, or none. The task
+notification says it is waiting on its own background work and will deliver its report when that
+finishes. Wait for that report. Reviewing the interim one judges work that has not finished.

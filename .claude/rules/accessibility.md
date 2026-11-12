@@ -14,7 +14,7 @@ This rule covers markup an agent authors. It targets WCAG 2.2 level A and AA. It
 guidance, not a linter, so the repo's own accessibility linter still does the mechanical
 checking.
 
-## Rule — follow without deliberation
+## Rule
 
 ### Semantics
 

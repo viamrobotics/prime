@@ -45,7 +45,8 @@
         "./packages/prime-ui:lint",
         "./packages/prime-panes:lint",
         "./packages/prime-tree:lint",
-        "./packages/tweakpane-config:lint"
+        "./packages/tweakpane-config:lint",
+        "./docs:lint"
       ]
     },
     "test": {
@@ -69,14 +70,14 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
-    "@houserules/cli": "^0.6.1",
-    "@houserules/plugin-accessibility": "^0.1.4",
-    "@houserules/plugin-changesets": "^0.2.4",
-    "@houserules/plugin-design": "^0.2.3",
-    "@houserules/plugin-prose": "^0.2.0",
-    "@houserules/plugin-svelte": "^0.1.2",
-    "@houserules/plugin-testing": "^0.3.1",
-    "@houserules/plugin-typescript": "^0.1.2",
+    "@houserules/cli": "^0.12.1",
+    "@houserules/plugin-accessibility": "^0.2.1",
+    "@houserules/plugin-changesets": "^0.3.2",
+    "@houserules/plugin-design": "^0.4.2",
+    "@houserules/plugin-prose": "^0.2.2",
+    "@houserules/plugin-svelte": "^0.2.0",
+    "@houserules/plugin-testing": "^0.3.3",
+    "@houserules/plugin-typescript": "^0.1.3",
     "@tailwindcss/oxide": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",

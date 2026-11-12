@@ -19,6 +19,9 @@ of recalling API details:
 
 - `svelte-autofixer`: **required** on any Svelte code you write, before handing it over.
   Re-run until it reports no issues.
+- An agent whose tool set lacks it, such as an `/orchestrate` worker, says so in its report
+  instead of skipping the step, and a repo grants it to workers through
+  `orchestrate.workerTools` in `.claude/houserules.config.json`.
 - `list-sections`, then `get-documentation`: when a Svelte or SvelteKit API is uncertain.
   Fetch only the sections whose `use_cases` match the task.
 
@@ -68,9 +71,9 @@ value)` to read reactive state without taking a dependency.
 ## Context Providers
 
 Reactive shared state lives in `.svelte.ts` files using `getContext` and `setContext`.
-**ALWAYS** use `Symbol` keys. Never declare `$state` at module scope here: on the server it
-is one instance shared across every request and user, so create it inside `provide*`
-instead.
+Use `Symbol` keys, so two contexts can never collide. Never declare `$state` at module scope
+here: on the server it is one instance shared across every request and user, so create it
+inside `provide*` instead.
 
 ```typescript
 // theme-context.svelte.ts
@@ -104,6 +107,35 @@ export const useTheme = (): ThemeContext => getContext(key);
 - `Symbol()` keys prevent collisions.
 - Return **getters**, not plain properties, to preserve reactivity.
 - Name `provide*` to inject, `use*` or `create*` to consume.
+
+## Lifecycle
+
+- **Never call `onDestroy` in a `.svelte` component.** Subscribe inside `$effect` and return
+  the unsubscribe as the teardown. Setup and teardown then live in one rune, so neither moves
+  without the other.
+- **`onDestroy` fires only when the component unmounts.** A subscription whose inputs changed
+  keeps running against the old ones. A function returned from `$effect` also runs before each
+  re-run, so the subscription follows its inputs.
+- **Exception:** `onDestroy` in a `.svelte.ts` composable is allowed when it releases
+  something the composable registered against a context that outlives it.
+- Convert a legacy `onDestroy` call when you are already editing that component, not as a
+  sweep.
+
+```svelte
+<script lang="ts">
+import { bus } from './bus';
+import { onDestroy } from 'svelte';
+
+const { topic }: { topic: string } = $props();
+
+// WRONG: the subscription never follows `topic`.
+const unsubscribe = bus.subscribe(topic, handle);
+onDestroy(unsubscribe);
+
+// RIGHT: teardown runs before each re-run and on destroy.
+$effect(() => bus.subscribe(topic, handle));
+</script>
+```
 
 ## Styling
 
@@ -150,7 +182,10 @@ export default [
 
 `.claude/scripts/svelte-lint.mjs`, where installed, flags a bare `<slot>` element and, when
 this repo's ESLint config imports `eslint-plugin-svelte`, an `svelte/valid-compile` or
-`svelte/no-unused-svelte-ignore` rule that is not enabled. Run it with
+`svelte/no-unused-svelte-ignore` rule that is not enabled. It also flags `onDestroy(` in a
+file ending in `.svelte`, outside HTML comments, as `svelte/no-on-destroy-in-component`. A
+`.svelte.ts` composable is allowed by path alone, and `onDestroy` inside a string or a `//`
+comment within `<script>` is not caught. Run it with
 `node .claude/scripts/svelte-lint.mjs <files>`. It has never run against a real corpus, only
 paired fixtures, so treat a finding as a starting point and report a false positive rather than
 working around it.

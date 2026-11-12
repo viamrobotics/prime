@@ -11,14 +11,17 @@ and reading only their compact results.
 ## 1. Verify (delegate — do not run the full suite here)
 
 If `/verify-changed` is installed (`.claude/skills/verify-changed/`), invoke it and take its
-per-package PASS/FAIL verdict as the verification result. If it is not installed, spawn **one**
-subagent to run the repo's verify or test command and return only PASS/FAIL plus any failing residue.
-Do not stream the full suite into this context.
+per-package PASS/FAIL verdict as the verification result. If it is not installed, run the repo's
+verify or test command with `run_in_background: true`, wait for the completion notification, and read
+only the tail of the output file it names for PASS/FAIL plus any failing residue. Do not read the full
+suite transcript into this context. It stays in that output file.
 
 ## 2. Review (delegate if reviewers exist)
 
 If reviewer agents are installed (`.claude/agents/*-reviewer.md`, non-DRAFT), invoke `/review-change`
 and take its OK/Conflict/Gap reconciliation. If none exist, skip the step and say review was not run.
+A reviewer that stalled counts as review not run for its area, even after the re-dispatch
+`/review-change` makes. The verdict must name that area as unreviewed.
 
 ## 3. Changeset / handoff hooks (don't re-run — just report)
 
@@ -54,7 +57,8 @@ remove <ID> <file> "<resolution>"`."_ Do not auto-remove. Surface the candidates
 Produce, in this order:
 
 1. **VERDICT: READY** or **VERDICT: NOT READY.** Not-ready if verify failed, a reviewer returned
-   Conflict, a user-visible change has no changeset, or a resolved backlog item lingers.
+   Conflict, a user-visible change has no changeset, or a resolved backlog item lingers. An
+   unreviewed area is not a blocker by itself. Name it as a caveat on the acceptance checklist.
 2. **Blockers**, only if not ready. One line each, with the exact fix.
 3. **Acceptance checklist.** The falsifiable "done" criteria for this change, as checkboxes the user
    can confirm in the running system, such as a test passing, a route returning 200, or a flag

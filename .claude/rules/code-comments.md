@@ -21,7 +21,7 @@ The principles are language-agnostic. The examples are TypeScript, and "TSDoc" b
 whatever doc-comment form the language uses. TSDoc or JSDoc here, docstrings in Python,
 rustdoc in Rust.
 
-## Rule — follow without deliberation
+## Rule
 
 ### Whether to comment
 

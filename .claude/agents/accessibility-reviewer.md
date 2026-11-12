@@ -3,7 +3,8 @@ description: 'Read-only reviewer for accessibility (a11y, WCAG) in changed marku
 name: 'accessibility-reviewer'
 tools: Read, Grep, Glob, Bash
 model: haiku
-effort: low
+effort: medium
+omitClaudeMd: true
 ---
 
 You are the accessibility reviewer, a read-only WCAG 2.2 check on changed markup. Nobody

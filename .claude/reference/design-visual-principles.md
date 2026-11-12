@@ -97,3 +97,30 @@ Three claims are checkable rather than a matter of taste:
   spacing), contrast against the surrounding content is what a reader's eye is drawn to
   first. Everything else on a page competing for that same contrast flattens the hierarchy
   back to nothing standing out.
+
+## Generated defaults
+
+Generated interfaces repeat a set of visual and copy defaults regardless of the subject.
+Each one is legitimate for some product, but a default is not a choice, and several of them
+together suggest nobody chose. Look for these in the markup and CSS:
+
+- **Cream and terracotta palette.** A warm off-white background near `#F4F1EA`, a
+  high-contrast serif display face, and a terracotta or clay accent.
+- **Near-black with one loud accent.** A background of `#0B0B0B` or `#111` instead of true
+  black, with a single acid-green or vermilion accent.
+- **Broadsheet layout.** Hairline rules, zero border-radius, and dense newspaper columns.
+- **Card kit.** Identical rounded cards, one border-radius on every element whatever its
+  rank, and the same soft gray shadow such as `rgba(0,0,0,.1)` under each.
+- **Gradient washes** used as decoration instead of to carry meaning.
+- **Template hero.** A big number with a small label, supporting stats, and a gradient accent.
+- **Eyebrows.** A tracked-out all-caps label above every heading.
+- **Single-word accent.** One word of a headline set in italic, bold, or another color.
+- **Monospace data labels.** A monospace face used only for small labels.
+- **Invented structure.** Numbered markers like 01 / 02 / 03 with no real sequence,
+  middle-dot meta strings like `A · B · C`, and `WORD — fragment` labels.
+- **Decorative borders and dividers** that encode no information.
+- **Scattered motion.** A fade-and-slide-up entrance on every section and a hover
+  transition on every card.
+- **Copy tells.** A trailing arrow on link and button text, generic labels like "Submit"
+  where a specific verb like "Save changes" fits, salesy phrasing over plain description,
+  and vague errors that omit what went wrong and how to fix it.

@@ -53,6 +53,11 @@ Collect the verdicts into one table of area → OK / Conflict / Gap, with a one-
   fix or flag it before handoff.
 - **Gap** means the source is silent. Note it as a judgment call for the user.
 - **All OK** means the change is consistent with every touched area's source of truth. Say so.
+- **Stalled** is neither OK nor Gap. A reviewer whose report says it stalled, or whose report is
+  interim because its notification says it is waiting on background work, has not reviewed
+  anything. Re-dispatch it once with the same brief. On a second stall, read the diff for that
+  area in-context, report the area as "unreviewed (agent stalled twice)", and say the judgment
+  layer did not run. The table never shows OK for an area whose reviewer stalled.
 
 ## Notes
 

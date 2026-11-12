@@ -10,7 +10,7 @@ Document-level guidance for hand-written HTML and Astro. See `accessibility.md` 
 element-level rules on semantics, names, keyboard, focus, forms, color, and structure that
 this guide assumes.
 
-## Rule — follow without deliberation
+## Rule
 
 - **Set `lang` on `<html>`, and again on any element whose language changes.** A screen reader
   picks the voice and pronunciation rules from it.

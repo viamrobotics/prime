@@ -14,7 +14,9 @@ Review the design-system fit of a working-tree change. Arguments (optional file 
    stop. There is nothing to review.
 2. **Run the checker.** `node .claude/scripts/design.mjs check <files>` finds hardcoded
    literals, off-scale spacing and type, contrast failures, and undersized hit targets, each
-   with an exact number.
+   with an exact number. When the checker exits non-zero listing more than one stylesheet
+   that imports Tailwind, stop and ask the user to set `design.themeEntry` in
+   `.claude/houserules.config.json`, or pass `--theme <path>` for this run.
 3. **Reach for the rendered tier only when the source pass cannot settle it.** This step is
    conditional, not routine. Run it when `check` raised something only a render can decide,
    such as a contrast ratio against a background painted by another layer, or when the
@@ -44,6 +46,12 @@ Review the design-system fit of a working-tree change. Arguments (optional file 
    components pays that repeatedly. The subagent absorbs the launch and the raw output, and
    the main context gets the verdict. This is the same discipline `/verify-changed` and
    `blast-radius` use.
+
+   If the subagent reports that it stalled, or hands back only an interim report, re-dispatch
+   it once with the same brief. On a second stall, run
+   `node .claude/scripts/design.mjs check <files>` in this context and report the rendered
+   tier as not run, as step 7 describes. The render launches Chrome under a fixed 30 second
+   cap, well under the default Bash timeout, so it needs no `run_in_background`.
 
 4. **Read only what it reported.** For a token the check names, run
    `node .claude/scripts/design.mjs token <name>` to confirm it. Never read

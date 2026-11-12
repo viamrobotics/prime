@@ -72,6 +72,11 @@ phase then a UI phase, and that shape has no working tree and no falsifiable acc
 last phase lands. Prefer one narrow feature wired all the way through over one whole layer built for
 features that do not exist yet.
 
+Read independence off the finished cut, do not manufacture it. When two phases name disjoint path
+roots and neither reads the other's output, mark them `After: none` (or the phases they really wait
+on) so they can run together. Re-cutting horizontally to make lanes brings back the no-working-tree
+failure described above.
+
 Ground the phases in the real code, not guesses. Read the repo's own docs and run targeted greps
 first. If a subsystem is unfamiliar, fan out **one read-only Explore subagent** to map its seams
 before you commit to a phase boundary, and fan out only for what the docs and greps don't answer. For
@@ -94,7 +99,7 @@ the workspace is self-contained. A phase that records its spec in `## Reference`
 **`PLAN.md`** is the stable overview: goal plus approach, and it rarely changes once set.
 
 ```markdown
-# PLAN — <slug>
+# PLAN: <slug>
 
 **Created:** <date> · **Status:** see [ROADMAP.md](ROADMAP.md)
 
@@ -108,8 +113,8 @@ the workspace is self-contained. A phase that records its spec in `## Reference`
 
 ## Phases
 
-1. **<name>** — <one line> → [phase-1-<slug>.md](phase-1-<slug>.md)
-2. **<name>** — <one line> → [phase-2-<slug>.md](phase-2-<slug>.md)
+1. **<name>**: <one line> → [phase-1-<slug>.md](phase-1-<slug>.md)
+2. **<name>**: <one line> → [phase-2-<slug>.md](phase-2-<slug>.md)
 
 ## Key files & interfaces
 
@@ -119,33 +124,38 @@ the workspace is self-contained. A phase that records its spec in `## Reference`
 **`ROADMAP.md`** is the **living** status doc, the one file resume reads first.
 
 ```markdown
-# ROADMAP — <slug>
+# ROADMAP: <slug>
 
 **Status:** IN PROGRESS · **Started:** <date> · **Updated:** <date>
 
-> Resuming? Read this file's status lines below — do not re-derive scope from the transcript.
+> Resuming? Read this file's status lines below. Do not re-derive scope from the transcript.
 
 ## Phases
 
-- [x] **Phase 1 — <name>** · Status: DONE (<date>) · [sub-plan](phase-1-<slug>.md)
-- [~] **Phase 2 — <name>** · Status: IN PROGRESS · [sub-plan](phase-2-<slug>.md)
-- [ ] **Phase 3 — <name>** · Status: TODO · [sub-plan](phase-3-<slug>.md)
+- [x] **Phase 1: <name>** · Status: DONE (<date>) · [sub-plan](phase-1-<slug>.md)
+- [~] **Phase 2: <name>** · Status: IN PROGRESS · [sub-plan](phase-2-<slug>.md)
+- [ ] **Phase 3: <name>** · Status: TODO · [sub-plan](phase-3-<slug>.md) · After: none
 
 ## Log
 
-- <date> — <one line on what changed / what's next>
+- <date>: <one line on what changed / what's next>
 ```
 
 Status vocabulary is fixed so it's greppable: **`TODO` · `IN PROGRESS` · `DONE` · `BLOCKED`**.
 Checkboxes mirror it: `[ ]` todo, `[~]` in progress, `[x]` done.
 
+The optional trailing `After` segment sets order. Absent means the phase waits on the line above it,
+and the first line waits on nothing. `none` means no dependency, and does not reset the chain for the
+line below. A list such as `After: 2, 3` names the phases that must be `DONE` first.
+
 **`phase-N-<slug>.md`** is one file per phase, the working record for that slice.
 
 ```markdown
-# Phase N — <name>
+# Phase N: <name>
 
 **Status:** TODO · **Part of:** [PLAN.md](PLAN.md) · **Roadmap:** [ROADMAP.md](ROADMAP.md)
 **Signals:** <optional: `wide` for a big footprint, `ui` for user-facing surfaces, else omit the line>
+**Domain:** <optional: comma-separated path roots this phase may write, each in backticks, never a glob. Omit the line for `all`>
 
 ## Objective
 
@@ -157,14 +167,29 @@ Checkboxes mirror it: `[ ]` todo, `[~]` in progress, `[x]` done.
 
 ## Steps
 
+- [ ] <step: the decision made, plus the acceptance that shows it holds. Never a code block>
 - [ ] <step>
-- [ ] <step>
+
+Self-check before handing off: if fenced code is more than a tenth of a phase file's lines, the
+plan is implementing. Move the code into a "decisions" bullet as prose, or drop it. `plan-lint`
+warns above that share.
+
+## Review Focus
+
+<Optional: up to five inputs or failure modes the spec implies but no step's tests exercise.>
+
+- <the input or failure mode: what must hold, pinned by `path/to/__tests__/owning-step.test.ts`>
 
 ## Notes & decisions
 
 <Captured as you implement: what you chose, what you ruled out, surprises. This is the durable
 memory that survives the transcript.>
 ```
+
+`## Review Focus` lists the inputs and failure modes the spec implies but no step's tests exercise,
+so a reviewer knows where to look. Five items is the cap. Each item names the test file that pins it
+in backticks, in the step that owns the code. `plan-lint` warns past five items and on an item that
+names no test path. Omit the section when every case the spec implies already has a test.
 
 The optional `**Signals:**` line is read by `/orchestrate` where that skill is installed: `wide`
 turns on its pre-slicing `/blast-radius` map and `ui` its close-of-phase accessibility and design
@@ -185,16 +210,29 @@ This is a hard stop, not a suggestion. The point of writing the plan down is tha
 read it and change it before any code moves, and a skill that slides from planning into implementing
 takes that away. A phase that looks small enough to just do is still the user's call.
 
+Before the report, dispatch one `plan-reviewer` on the workspace path with
+`subagent_type: "plan-reviewer"` and wait for its list. It reads the finished plan as the person who
+would build it and returns what that person would still have to ask. Carry each question into the
+handoff under the assumptions line, or say the list was empty. It costs one `plan-reviewer` run
+and catches a mis-specified slice before a worker spends a run on it. Do not edit the plan to
+answer a question. The user decides.
+
 Report, then wait:
 
 - the resolved slug and the workspace path,
 - the phases, one line each, in order,
 - anything you had to assume or couldn't resolve while planning,
-- the next command, so starting is one keystroke:
+- the next command, so starting is one keystroke. When any phase carries an `After` that is not the
+  chain, name the first ready set, with `/orchestrate <slug> all` as the command and the `2,3` form
+  as the explicit one:
   - `/orchestrate <slug> 1` fans out scoped workers for phase 1 (needs the `orchestrate` module).
   - Or the user asks you to take phase 1 in-context.
+- the execution mode, with its cost, and a recommendation. `/orchestrate` runs workers per slice and
+  pays for briefs, dispatch, and review, which is worth it above roughly two slices. In-context is
+  one pass and cheaper below that. Recommend one for this plan and give the reason from its own phase
+  sizes. The user still makes the choice.
 
-Whoever picks it up works one phase at a time, top of the ROADMAP down. Before starting a phase, they
+Whoever picks it up works in `After` order, concurrently where the ROADMAP allows. Before starting a phase, they
 set its ROADMAP line and sub-plan header to `IN PROGRESS`, then tick the sub-plan's step checkboxes as
 they go. Don't smuggle a later phase's work into the current one. The point is that each phase lands
 cleanly.
@@ -205,7 +243,8 @@ The instant a phase lands and its acceptance actually passes, update **both** th
 (`[x]` / `Status: DONE (<date>)`) and the sub-plan header, in the same edit pass, before moving on. A
 stale ROADMAP is worse than none, because it lies to the next session. Add a one-line `## Log` entry
 with the date and what's next, and bump the `**Updated:**` date. If a phase is blocked, mark it
-`BLOCKED` and note why in the sub-plan. Don't leave it silently `IN PROGRESS`.
+`BLOCKED` and note why in the sub-plan. Don't leave it silently `IN PROGRESS`. Under nested `/orchestrate` the ROADMAP line is the dispatcher's
+write, per `references/nested.md`.
 
 If `.claude/scripts/plan-lint.mjs` is installed, run `node .claude/scripts/plan-lint.mjs` after
 the edit. It checks every phase's status cell against the fixed vocabulary and cross-checks each

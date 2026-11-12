@@ -7,7 +7,7 @@ paths:
 
 Svelte-specific residue on top of `accessibility.md`, which this guide assumes.
 
-## Rule — follow without deliberation
+## Rule
 
 - **Treat an `a11y_` compiler warning as an error.** Svelte's compiler checks accessibility
   at build time, and no other major framework does. A warning that ships is a bug that

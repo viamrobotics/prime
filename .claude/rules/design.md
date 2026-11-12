@@ -15,7 +15,7 @@ system's values come from a seeded token file or from this repo's Tailwind theme
 this install uses. It is guidance, not a linter, so a value that violates a rule below is a
 finding to weigh, not an error to block on.
 
-## Rule — follow without deliberation
+## Rule
 
 ### Tokens over literals
 
@@ -63,7 +63,7 @@ rule stays small and the values stay current with whatever the repo has seeded.
 - **Find out what exists before inventing a name:** `node .claude/scripts/design.mjs list [group]`
 - **Check a literal against the spacing, type, and radius scales:** `node .claude/scripts/design.mjs scales`
 
-Three pull-only references sit alongside the script. They are not loaded until you read them, so
+Four pull-only references sit alongside the script. They are not loaded until you read them, so
 read the one that answers the question in front of you.
 
 - **Contrast ratios, hit-target rules, type scale, spacing rhythm:** `../reference/design-visual-principles.md`
@@ -72,6 +72,9 @@ read the one that answers the question in front of you.
 - **A design decision that might cost rendering performance:** which properties animate cheaply,
   what a blur or a shadow costs, fonts and layout shift, image format. See
   `../reference/design-performance.md`.
+- **A press, drag, or hold decision on an interactive element:** when a drag handle starts moving,
+  what a hold delay is for, where a distance threshold serves instead. See
+  `../reference/design-interaction.md`.
 
 ## Where other rules apply
 
