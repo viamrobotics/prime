@@ -10,13 +10,11 @@
 </script>
 
 {#snippet options()}
-  <MultiSelect.Portal>
-    <MultiSelect.Content>
-      <MultiSelect.Viewport>
-        <MultiSelect.Items />
-      </MultiSelect.Viewport>
-    </MultiSelect.Content>
-  </MultiSelect.Portal>
+  <MultiSelect.Content>
+    <MultiSelect.Viewport>
+      <MultiSelect.Items />
+    </MultiSelect.Viewport>
+  </MultiSelect.Content>
 {/snippet}
 
 <div class="not-content flex flex-col gap-6">

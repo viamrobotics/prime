@@ -28,13 +28,11 @@
       <MultiSelect.Trigger>
         <MultiSelect.Value placeholder="Pick toppings" />
       </MultiSelect.Trigger>
-      <MultiSelect.Portal>
-        <MultiSelect.Content>
-          <MultiSelect.Viewport>
-            <MultiSelect.Items />
-          </MultiSelect.Viewport>
-        </MultiSelect.Content>
-      </MultiSelect.Portal>
+      <MultiSelect.Content>
+        <MultiSelect.Viewport>
+          <MultiSelect.Items />
+        </MultiSelect.Viewport>
+      </MultiSelect.Content>
     </MultiSelect>
     <Hint>Up to {MAX_TOPPINGS}. A third pick is refused.</Hint>
   </Field>

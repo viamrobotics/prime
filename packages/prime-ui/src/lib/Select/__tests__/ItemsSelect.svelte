@@ -15,12 +15,10 @@
 	<Select.Trigger>
 		<Select.Value placeholder="Pick a size" />
 	</Select.Trigger>
-	<Select.Portal>
-		<Select.Content>
-			<Select.Viewport>
-				<SelectItems />
-			</Select.Viewport>
-		</Select.Content>
-	</Select.Portal>
+	<Select.Content>
+		<Select.Viewport>
+			<SelectItems />
+		</Select.Viewport>
+	</Select.Content>
 </Select>
 <span data-testid="owner">{value}</span>

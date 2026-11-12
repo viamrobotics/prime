@@ -14,14 +14,12 @@
 	<Select.Trigger>
 		<Select.Value placeholder="Pick a size" />
 	</Select.Trigger>
-	<Select.Portal>
-		<Select.Content>
-			<Select.Viewport>
-				{#each items as item (item.value)}
-					<Select.Item value={item.value} label={item.label} />
-				{/each}
-			</Select.Viewport>
-		</Select.Content>
-	</Select.Portal>
+	<Select.Content>
+		<Select.Viewport>
+			{#each items as item (item.value)}
+				<Select.Item value={item.value} label={item.label} />
+			{/each}
+		</Select.Viewport>
+	</Select.Content>
 </Select>
 <span data-testid="owner">{String(value)}</span>

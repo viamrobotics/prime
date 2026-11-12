@@ -47,15 +47,13 @@
         <Select.Trigger>
           <Select.Value placeholder="Pick a size" />
         </Select.Trigger>
-        <Select.Portal>
-          <Select.Content>
-            <Select.Viewport>
-              {#each sizes as item (item.value)}
-                <Select.Item value={item.value} label={item.label} />
-              {/each}
-            </Select.Viewport>
-          </Select.Content>
-        </Select.Portal>
+        <Select.Content>
+          <Select.Viewport>
+            {#each sizes as item (item.value)}
+              <Select.Item value={item.value} label={item.label} />
+            {/each}
+          </Select.Viewport>
+        </Select.Content>
       </Select>
       <Hint>Applies to every new part.</Hint>
     </Field>
