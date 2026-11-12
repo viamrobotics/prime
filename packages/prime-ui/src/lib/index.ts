@@ -36,6 +36,8 @@ export { default as Textarea } from './Input/Textarea.svelte';
 export { Banner } from './Banner/banner.ts';
 export type { BannerVariant } from './Banner/banner.ts';
 
+export { Breadcrumbs } from './Breadcrumbs/breadcrumbs.ts';
+
 export { Collapsible } from './Collapsible/collapsible.ts';
 export { ContextMenu } from './Menu/context-menu.ts';
 export { Dialog } from './Dialog/dialog.ts';
@@ -54,6 +56,7 @@ export { MultiSelect } from './Select/multi-select.ts';
 export { Select } from './Select/select.ts';
 
 export { Tabs } from './Tabs/tabs.ts';
+export { Takeover } from './Takeover/takeover.ts';
 
 export { default as Toast } from './Toast/Toast.svelte';
 export { provideToast, useToast } from './Toast/useToast.svelte.ts';

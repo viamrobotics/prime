@@ -1,0 +1,108 @@
+---
+title: Breadcrumbs
+description: A trail of the pages leading to the current one.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import BreadcrumbsDemo from "./breadcrumbs/BreadcrumbsDemo.svelte";
+import BreadcrumbsShowcase from "./breadcrumbs/BreadcrumbsShowcase.svelte";
+import Basic from "./breadcrumbs/Basic.svelte";
+import basicSource from "./breadcrumbs/Basic.svelte?raw";
+import Collapsed from "./breadcrumbs/Collapsed.svelte";
+import collapsedSource from "./breadcrumbs/Collapsed.svelte?raw";
+import CustomSeparator from "./breadcrumbs/CustomSeparator.svelte";
+import customSeparatorSource from "./breadcrumbs/CustomSeparator.svelte?raw";
+
+<ComponentIntro name="breadcrumbs" />
+
+<BreadcrumbsDemo client:visible />
+
+- Composed from parts, so each link, the separators, and the current page are yours to arrange.
+- A `nav` landmark wrapping an ordered list, so assistive technology announces it as a trail.
+- `Breadcrumbs.Page` marks the current page with `aria-current="page"`, and it is text, not a link.
+- `Breadcrumbs.Ellipsis` stands in for hidden crumbs, alone or inside a menu trigger.
+
+## Anatomy
+
+Every part is a property on `Breadcrumbs`. `Breadcrumbs` renders the `nav` and the `ol`, and each part renders a single element. `Breadcrumbs.Separator` is a direct child of the list.
+
+```svelte
+<Breadcrumbs>
+  <Breadcrumbs.Item>
+    <Breadcrumbs.Link />
+  </Breadcrumbs.Item>
+  <Breadcrumbs.Separator />
+  <Breadcrumbs.Item>
+    <Breadcrumbs.Ellipsis />
+  </Breadcrumbs.Item>
+  <Breadcrumbs.Separator />
+  <Breadcrumbs.Item>
+    <Breadcrumbs.Page />
+  </Breadcrumbs.Item>
+</Breadcrumbs>
+```
+
+## Usage
+
+### Basic trail
+
+A `Breadcrumbs.Link` in each ancestor's `Breadcrumbs.Item`, a `Breadcrumbs.Separator` between items, and a `Breadcrumbs.Page` for the current page.
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+### Collapsed run
+
+Put `Breadcrumbs.Ellipsis` inside a [`Menu.Trigger`](../menu/) and list the hidden crumbs as menu items. The ellipsis has no behavior of its own.
+
+<Example code={collapsedSource} title="Collapsed.svelte">
+  <Collapsed client:visible />
+</Example>
+
+### Custom separator
+
+Pass children to `Breadcrumbs.Separator` to replace the chevron.
+
+<Example code={customSeparatorSource} title="CustomSeparator.svelte">
+  <CustomSeparator client:visible />
+</Example>
+
+### States
+
+<BreadcrumbsShowcase client:visible />
+
+## Migrating from prime-core
+
+prime-core's `Breadcrumbs` took a `crumbs` array of strings and rendered the whole trail. Here you write the trail from parts, so each crumb can be a real link.
+
+| prime-core                              | Now                                                                  |
+| --------------------------------------- | -------------------------------------------------------------------- |
+| `Breadcrumbs` with `crumbs`             | `Breadcrumbs` with one `Breadcrumbs.Item` per crumb.                 |
+| `isDisabled`                            | Not carried over. Render a `Breadcrumbs.Page` instead of a link.     |
+| `cx`                                    | `class`                                                              |
+| `NavigationBreadcrumb`                  | `Breadcrumbs`                                                        |
+| `NavigationBreadcrumbList`              | Folded into `Breadcrumbs`, which renders the list.                   |
+| `NavigationBreadcrumbItem`              | `Breadcrumbs.Item`                                                   |
+| `NavigationBreadcrumbLink`              | `Breadcrumbs.Link`                                                   |
+| `NavigationBreadcrumbPage`              | `Breadcrumbs.Page`                                                   |
+| `NavigationBreadcrumbSeparator`         | `Breadcrumbs.Separator`, placed between items and not inside one.    |
+| `NavigationBreadcrumbEllipsis`          | `Breadcrumbs.Ellipsis`                                               |
+
+## Styling
+
+Every part takes `class` on the element it renders. `Breadcrumbs.Link` is muted and darkens on hover. `Breadcrumbs.Page` uses the default text color. `Breadcrumbs.Separator` is hidden from assistive technology, and `Breadcrumbs.Ellipsis` draws a horizontal dots icon labeled `More`. The list wraps onto a new line when the trail is wider than its container. Nothing here sets data attributes.
+
+## Keyboard
+
+Links are native, so <kbd>Tab</kbd> moves between them and <kbd>Enter</kbd> follows one.
+
+## API
+
+<PropsTable name="breadcrumbs" />
+
+<PartsDoc name="breadcrumbs" />
