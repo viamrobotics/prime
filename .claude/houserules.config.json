@@ -126,7 +126,8 @@
       "verifyCommands": [
         "check",
         "lint",
-        "format"
+        "format",
+        "test"
       ]
     },
     {
@@ -183,6 +184,42 @@
       ]
     },
     {
+      "name": "prime-controls",
+      "prefix": "PRIME_CONTROLS",
+      "packageName": "@viamrobotics/prime-controls",
+      "pathPrefix": "packages/prime-controls/",
+      "sourcePath": "packages/prime-controls/src",
+      "label": "Prime Controls",
+      "fixCommands": [
+        "lint:fix",
+        "format:fix"
+      ],
+      "verifyCommands": [
+        "check",
+        "lint",
+        "format",
+        "test"
+      ]
+    },
+    {
+      "name": "prime-editor",
+      "prefix": "PRIME_EDITOR",
+      "packageName": "@viamrobotics/prime-editor",
+      "pathPrefix": "packages/prime-editor/",
+      "sourcePath": "packages/prime-editor/src",
+      "label": "Prime Editor",
+      "fixCommands": [
+        "lint:fix",
+        "format:fix"
+      ],
+      "verifyCommands": [
+        "check",
+        "lint",
+        "format",
+        "test"
+      ]
+    },
+    {
       "name": "docs",
       "prefix": "DOCS",
       "packageName": "@viamrobotics/prime-docs",
@@ -193,7 +230,9 @@
         "lint:fix"
       ],
       "verifyCommands": [
+        "check",
         "lint",
+        "test",
         "build"
       ]
     }
