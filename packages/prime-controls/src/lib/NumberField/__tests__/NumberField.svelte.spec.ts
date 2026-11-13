@@ -41,6 +41,12 @@ describe('NumberField', () => {
 		await expect.element(page.getByRole('spinbutton', { name: 'Speed' })).toBeInTheDocument();
 	});
 
+	it('styles the label as subtle text', () => {
+		const { container } = render(NumberField, { props: { label: 'Speed', value: 1 } });
+
+		expect(container.querySelector('label')).toHaveClass('text-subtle-1');
+	});
+
 	it('takes its accessible name from aria-label without a label', async () => {
 		const { container } = render(NumberField, { props: { 'aria-label': 'Speed', value: 1 } });
 

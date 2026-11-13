@@ -42,6 +42,13 @@ describe('Point', () => {
 		await expect.element(page.getByRole('group', { name: 'Position' })).toBeInTheDocument();
 	});
 
+	it('styles the group label as subtle text', () => {
+		render(BoundPoint, { props: { initial: { x: 0, y: 0 }, label: 'Position' } });
+
+		const labelId = page.getByRole('group').element().getAttribute('aria-labelledby')!;
+		expect(document.getElementById(labelId)).toHaveClass('text-subtle-1');
+	});
+
 	it('points aria-labelledby at the visible label', () => {
 		render(BoundPoint, { props: { initial: { x: 0, y: 0 }, label: 'Position' } });
 

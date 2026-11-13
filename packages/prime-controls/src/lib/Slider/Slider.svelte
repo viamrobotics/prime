@@ -12,6 +12,7 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 <script lang="ts">
 	import type { ClassValue } from 'svelte/elements';
 
+	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
 	import NumberField from '../NumberField/NumberField.svelte';
 
 	interface Props {
@@ -71,7 +72,7 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 
 <div class={['flex items-center gap-1', extraClasses]}>
 	{#if label}
-		<label for={id} class="shrink-0 text-xs text-subtle-1">{label}</label>
+		<label for={id} class={['shrink-0', CONTROL_LABEL_CLASS]}>{label}</label>
 	{/if}
 	<input
 		{id}

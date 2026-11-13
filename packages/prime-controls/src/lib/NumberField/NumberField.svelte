@@ -15,6 +15,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 
 	import { NumberInput } from '@viamrobotics/prime-ui';
 
+	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
 	import { type Bounds, clamp, settle, startingValue, stepMultiplier } from './number-step.ts';
 
 	interface Props extends Omit<
@@ -150,7 +151,8 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		<label
 			for={id}
 			class={[
-				'flex min-h-6 min-w-6 shrink-0 items-center text-xs text-subtle-1',
+				'flex min-h-6 min-w-6 shrink-0 items-center',
+				CONTROL_LABEL_CLASS,
 				!isLocked && 'cursor-ew-resize touch-none select-none'
 			]}
 			onpointerdown={handleLabelPointerdown}

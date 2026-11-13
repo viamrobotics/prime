@@ -75,6 +75,10 @@ const BANNER_VARIANTS = [
 ] as const;
 
 const CANDIDATES = [
+  "slider-thumb-w-3",
+  "slider-thumb-h-3",
+  "slider-track-h-1",
+  "slider-thumb-w-foo",
   "dark:bg-gray-9",
   "bg-extralight",
   "bg-gray-0",
@@ -122,9 +126,12 @@ const Z_LAYERS = [
   ["max", "9999"],
 ] as const;
 
-const rulesOf = (root: Root, matches: (rule: Rule) => boolean): Rule[] => {
+const rulesOf = (
+  container: Container,
+  matches: (rule: Rule) => boolean,
+): Rule[] => {
   const found: Rule[] = [];
-  root.walkRules((rule) => {
+  container.walkRules((rule) => {
     if (matches(rule)) found.push(rule);
   });
   return found;
@@ -432,6 +439,44 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(
       declarationsOf(onlyRule(unoptimized, ".z-1150")).get("z-index"),
     ).toBe("1150");
+  });
+
+  it("sizes slider parts from the bare spacing scale", () => {
+    const valueOf = (
+      name: string,
+      pseudo: string,
+      property: string,
+    ): string | undefined => {
+      const [nested] = rulesOf(
+        onlyRule(unoptimized, `.${name}`),
+        (rule) => rule.selector === `&${pseudo}`,
+      );
+      return declarationsOf(nested!).get(property);
+    };
+    const webkitThumb = "::-webkit-slider-thumb";
+    expect(valueOf("slider-thumb-w-3", webkitThumb, "width")).toBe(
+      "calc(var(--spacing) * 3)",
+    );
+    expect(valueOf("slider-thumb-w-3", "::-moz-range-thumb", "width")).toBe(
+      "calc(var(--spacing) * 3)",
+    );
+    expect(valueOf("slider-thumb-h-3", webkitThumb, "height")).toBe(
+      "calc(var(--spacing) * 3)",
+    );
+    expect(valueOf("slider-thumb-h-3", webkitThumb, "margin-top")).toBe(
+      "calc(calc(var(--spacing) * 3) / -2)",
+    );
+    expect(
+      valueOf("slider-track-h-1", "::-webkit-slider-runnable-track", "height"),
+    ).toBe("calc(var(--spacing) * 1)");
+  });
+
+  it("emits no rule for an unknown slider thumb size", () => {
+    expect(
+      rulesOf(unoptimized, (rule) =>
+        startsWithClass(rule, "slider-thumb-w-foo"),
+      ),
+    ).toHaveLength(0);
   });
 
   it("emits no rule for an unknown z name", () => {

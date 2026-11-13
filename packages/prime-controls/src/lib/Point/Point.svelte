@@ -11,6 +11,7 @@ one axis writes a new object with that axis changed and every other axis as it w
 <script lang="ts">
 	import type { ClassValue } from 'svelte/elements';
 
+	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
 	import NumberField from '../NumberField/NumberField.svelte';
 	import type { PointAxis, PointValue } from './point.ts';
 
@@ -76,7 +77,7 @@ one axis writes a new object with that axis changed and every other axis as it w
 	class={['flex flex-col gap-1', extraClasses]}
 >
 	{#if label}
-		<span id={labelId} class="text-xs text-subtle-1">{label}</span>
+		<span id={labelId} class={CONTROL_LABEL_CLASS}>{label}</span>
 	{/if}
 	<div class="flex gap-1">
 		{#each axes as axis (axis)}

@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { boxShadow, shapeOf } from '../../__tests__/computed-style.ts';
 import BoundPopover from './BoundPopover.svelte';
 import ControlledPopover from './ControlledPopover.svelte';
+import TextClosePopover from './TextClosePopover.svelte';
 import UndefinedPopover from './UndefinedPopover.svelte';
 
 const trigger = (container: Element) =>
@@ -102,6 +103,17 @@ describe('Popover', () => {
 		await userEvent.click(closeButton);
 
 		await vi.waitFor(() => expect(dialog()).toBeNull());
+	});
+
+	it('a close given children wears only the consumer class', async () => {
+		const { container } = render(TextClosePopover);
+		await open(container);
+		const text = [...dialog()!.querySelectorAll('button')].find(
+			(button) => button.textContent?.trim() === 'Cancel'
+		)!;
+
+		expect(text.classList.contains('button')).toBe(true);
+		expect(text.classList.contains('icon-button')).toBe(false);
 	});
 
 	it('stacks the panel on the popover layer', async () => {

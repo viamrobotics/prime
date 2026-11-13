@@ -65,16 +65,24 @@ describe('Breadcrumbs', () => {
 	it('announces the ellipsis as More', () => {
 		const { container } = render(Trail);
 
-		const icon = container.querySelector('li > span > svg')!;
-		expect(icon.getAttribute('role')).toBe('img');
-		expect(icon.getAttribute('aria-label')).toBe('More');
+		const glyph = container.querySelector('li [role="img"]')!;
+		expect(glyph.getAttribute('aria-label')).toBe('More');
+		expect(glyph.textContent).toBe('…');
+		expect(glyph.parentElement!.querySelector('svg')).toBeNull();
 	});
 
 	it('names the ellipsis through aria-label', () => {
 		const { container } = render(Trail, { props: { ellipsisLabel: 'Show hidden pages' } });
 
-		expect(container.querySelector('li > span > svg')!.getAttribute('aria-label')).toBe(
+		expect(container.querySelector('li [role="img"]')!.getAttribute('aria-label')).toBe(
 			'Show hidden pages'
 		);
+	});
+
+	it('replaces the glyph with children', () => {
+		const { container } = render(Trail, { props: { hasEllipsisChildren: true } });
+
+		expect(container.querySelector('li [role="img"]')).toBeNull();
+		expect(container.querySelector('li [data-custom]')!.textContent).toBe('hidden');
 	});
 });

@@ -873,6 +873,7 @@
 @utility scrollbar-w-* {
   &::-webkit-scrollbar {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
     width: --value([*]);
   }
 }
@@ -922,10 +923,12 @@
 @utility slider-track-w-* {
   &::-webkit-slider-runnable-track {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
     width: --value([*]);
   }
   &::-moz-range-track {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
     width: --value([*]);
   }
 }
@@ -933,10 +936,12 @@
 @utility slider-track-h-* {
   &::-webkit-slider-runnable-track {
     height: --value(--spacing-*);
+    height: --spacing(--value(integer));
     height: --value([*]);
   }
   &::-moz-range-track {
     height: --value(--spacing-*);
+    height: --spacing(--value(integer));
     height: --value([*]);
   }
 }
@@ -996,19 +1001,29 @@
 @utility slider-thumb-w-* {
   &::-webkit-slider-thumb {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
+    width: --value([*]);
   }
   &::-moz-range-thumb {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
+    width: --value([*]);
   }
 }
 
 @utility slider-thumb-h-* {
   &::-webkit-slider-thumb {
     height: --value(--spacing-*);
+    height: --spacing(--value(integer));
+    height: --value([*]);
     margin-top: calc(--value(--spacing-*) / -2);
+    margin-top: calc(--spacing(--value(integer)) / -2);
+    margin-top: calc(--value([*]) / -2);
   }
   &::-moz-range-thumb {
     height: --value(--spacing-*);
+    height: --spacing(--value(integer));
+    height: --value([*]);
   }
 }
 
