@@ -2,7 +2,8 @@
 @component
 An on/off switch. Inside a [`Field`](../Field/Field.svelte) it takes its `id` (the field's
 `controlId`), `disabled`, `required`, `state`, and `aria-describedby` from there. An `error`
-state sets `aria-invalid`. Always pair it with a `Label`.
+state sets `aria-invalid`. Always pair it with a `Label`. A `switch-info`, `switch-success`,
+`switch-warning`, or `switch-danger` class sets the track color while it is on.
 
 Built on [bits-ui `Switch`](https://bits-ui.com/docs/components/switch).
 
@@ -61,7 +62,7 @@ Built on [bits-ui `Switch`](https://bits-ui.com/docs/components/switch).
 		'inline-flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 focus-ring',
 		isDisabled
 			? 'cursor-not-allowed bg-disabled-light data-[state=checked]:bg-disabled-dark'
-			: 'cursor-pointer bg-gray-6 aria-invalid:bg-danger-light data-[state=checked]:bg-gray-9 aria-invalid:data-[state=checked]:bg-danger-dark',
+			: 'cursor-pointer bg-gray-6 aria-invalid:bg-danger-light data-[state=checked]:bg-[var(--switch-on,var(--color-gray-9))] aria-invalid:data-[state=checked]:bg-danger-dark',
 		extraClasses
 	]}
 	disabled={isDisabled}

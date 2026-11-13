@@ -68,7 +68,7 @@ A switch can show more settings when it is on. Read `checked` and render the ext
 
 ## Styling
 
-`class` lands on the root button, which is the track. The thumb is inside it and is not exposed. bits-ui sets these attributes on the track, so Tailwind variants like `data-[state=checked]:bg-light` work without a wrapper.
+`class` lands on the root button, which is the track. The thumb is inside it and is not exposed. The tone classes `switch-info`, `switch-success`, `switch-warning`, and `switch-danger` set the track color while the switch is on, and an `error` state still paints over them. bits-ui sets these attributes on the track, so Tailwind variants like `data-[state=checked]:bg-light` work without a wrapper.
 
 | Attribute       | Value                          |
 | --------------- | ------------------------------ |

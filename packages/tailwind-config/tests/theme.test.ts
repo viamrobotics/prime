@@ -43,6 +43,14 @@ const CHROME_CLASSES = [
   "banner-close",
   "banner-progress",
   "progress",
+  "progress-info",
+  "progress-success",
+  "progress-warning",
+  "progress-danger",
+  "switch-info",
+  "switch-success",
+  "switch-warning",
+  "switch-danger",
   "input",
   "input-compact",
   "button-compact",
@@ -1001,7 +1009,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
   });
 
-  it("draws .progress as a 3px gray-2 track that clips an info-dark fill", () => {
+  it("draws .progress as a 3px gray-2 track that clips a fill painted from --progress-fill over info-dark", () => {
     const track = declared(emitted, ".progress");
     expect(track.get("display")).toBe("block");
     expect(track.get("width")).toBe("100%");
@@ -1011,8 +1019,27 @@ describe("theme stylesheets compiled through Tailwind", () => {
 
     const fill = declared(emitted, ".progress > .progress-fill");
     expect(fill.get("height")).toBe("100%");
-    expect(fill.get("background-color")).toBe("var(--color-info-dark)");
+    expect(fill.get("background-color")).toBe(
+      "var(--progress-fill, var(--color-info-dark))",
+    );
     expect(fill.has("animation")).toBe(false);
+  });
+
+  it.each([
+    ["progress", "--progress-fill"],
+    ["switch", "--switch-on"],
+  ] as const)("assigns the %s tone modifiers to %s", (name, variable) => {
+    const tones = ["info", "success", "warning", "danger"].map((tone) => [
+      tone,
+      declared(emitted, `.${name}-${tone}`).get(variable),
+    ]);
+
+    expect(tones).toEqual([
+      ["info", "var(--color-info-dark)"],
+      ["success", "var(--color-success-dark)"],
+      ["warning", "var(--color-warning-dark)"],
+      ["danger", "var(--color-danger-dark)"],
+    ]);
   });
 
   it("animates the indeterminate .progress fill only under the no-preference motion query", () => {

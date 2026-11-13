@@ -843,14 +843,15 @@
 
 /*
  * Progress bar. The track is the element, the fill is its `.progress-fill` child, which the
- * consumer sizes with an inline width. Without `aria-valuenow` the bar is indeterminate and
+ * consumer sizes with an inline width and which paints `--progress-fill`. Without `aria-valuenow` the bar is indeterminate and
  * the fill slides, only when the user has not asked for reduced motion.
  */
 @utility progress {
   @apply relative block h-0.75 w-full overflow-hidden bg-medium;
 
   & > .progress-fill {
-    @apply block h-full bg-info-dark;
+    @apply block h-full;
+    background-color: var(--progress-fill, var(--color-info-dark));
   }
   &:not([aria-valuenow]) > .progress-fill {
     width: 40%;
@@ -858,6 +859,43 @@
       animation: progress-indeterminate 1.5s ease-in-out infinite;
     }
   }
+}
+
+/* Tone modifiers for `progress`. Each sets the fill color, and bare `progress` is info. */
+@utility progress-info {
+  --progress-fill: var(--color-info-dark);
+}
+
+@utility progress-success {
+  --progress-fill: var(--color-success-dark);
+}
+
+@utility progress-warning {
+  --progress-fill: var(--color-warning-dark);
+}
+
+@utility progress-danger {
+  --progress-fill: var(--color-danger-dark);
+}
+
+/*
+ * Tone modifiers for a switch. Each sets `--switch-on`, the track color a switch paints while
+ * it is on. A switch with none paints its own default.
+ */
+@utility switch-info {
+  --switch-on: var(--color-info-dark);
+}
+
+@utility switch-success {
+  --switch-on: var(--color-success-dark);
+}
+
+@utility switch-warning {
+  --switch-on: var(--color-warning-dark);
+}
+
+@utility switch-danger {
+  --switch-on: var(--color-danger-dark);
 }
 
 /* Scrollbar */

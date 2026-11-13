@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor } from '../../__tests__/computed-style.ts';
+import { backgroundColor, colorOf } from '../../__tests__/computed-style.ts';
 import Switch from '../Switch.svelte';
 import BoundSwitch from './BoundSwitch.svelte';
 import ControlledSwitch from './ControlledSwitch.svelte';
@@ -40,6 +40,32 @@ describe('Switch', () => {
 
 		expect(toggle(container).getAttribute('aria-invalid')).toBe('true');
 		expect(backgroundColor(toggle(container))).not.toBe(normalTrack);
+	});
+
+	it.each([
+		{ tone: 'switch-info', color: 'bg-info-dark' },
+		{ tone: 'switch-success', color: 'bg-success-dark' },
+		{ tone: 'switch-warning', color: 'bg-warning-dark' },
+		{ tone: 'switch-danger', color: 'bg-danger-dark' }
+	] as const)('paints the on track in $color under $tone', ({ tone, color }) => {
+		const { container } = render(Switch, { props: { checked: true, class: tone } });
+
+		expect(backgroundColor(toggle(container))).toBe(colorOf(color, 'backgroundColor'));
+	});
+
+	it('keeps the off track unchanged under a tone class', () => {
+		const plain = render(Switch);
+		const { container } = render(Switch, { props: { class: 'switch-success' } });
+
+		expect(backgroundColor(toggle(container))).toBe(backgroundColor(toggle(plain.container)));
+	});
+
+	it('paints the error track over a tone class while on', () => {
+		const { container } = render(Switch, {
+			props: { checked: true, state: 'error', class: 'switch-success' }
+		});
+
+		expect(backgroundColor(toggle(container))).toBe(colorOf('bg-danger-dark', 'backgroundColor'));
 	});
 
 	it('paints a different track and moves the thumb when on', () => {

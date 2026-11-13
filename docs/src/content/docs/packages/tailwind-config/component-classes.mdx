@@ -317,7 +317,7 @@ A braille spinner. It freezes on its first frame under `prefers-reduced-motion: 
 
 ## progress
 
-A bar with a `progress-fill` child. It reads `aria-valuenow`, and when the attribute is absent the bar is indeterminate and the fill slides, except under `prefers-reduced-motion: reduce`. Set the determinate width on the fill.
+A bar with a `progress-fill` child. It reads `aria-valuenow`, and when the attribute is absent the bar is indeterminate and the fill slides, except under `prefers-reduced-motion: reduce`. Set the determinate width on the fill. The modifiers `progress-info`, `progress-success`, `progress-warning`, and `progress-danger` set the fill color through `--progress-fill`, and bare `progress` is info.
 
 <div class="not-content flex flex-col gap-3 rounded-sm border border-light p-4">
   <div class="progress" role="progressbar" aria-label="Upload" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60">
@@ -325,6 +325,12 @@ A bar with a `progress-fill` child. It reads `aria-valuenow`, and when the attri
   </div>
   <div class="progress" role="progressbar" aria-label="Connecting" aria-valuemin="0" aria-valuemax="100">
     <div class="progress-fill"></div>
+  </div>
+  <div class="progress progress-success" role="progressbar" aria-label="Synced" aria-valuemin="0" aria-valuemax="100" aria-valuenow="80">
+    <div class="progress-fill" style="width: 80%"></div>
+  </div>
+  <div class="progress progress-danger" role="progressbar" aria-label="Disk" aria-valuemin="0" aria-valuemax="100" aria-valuenow="95">
+    <div class="progress-fill" style="width: 95%"></div>
   </div>
 </div>
 
@@ -335,6 +341,12 @@ A bar with a `progress-fill` child. It reads `aria-valuenow`, and when the attri
 </div>
 <div class="progress" role="progressbar" aria-label="Connecting" aria-valuemin="0" aria-valuemax="100">
   <div class="progress-fill"></div>
+</div>
+<div class="progress progress-success" role="progressbar" aria-label="Synced" aria-valuemin="0" aria-valuemax="100" aria-valuenow="80">
+  <div class="progress-fill" style="width: 80%"></div>
+</div>
+<div class="progress progress-danger" role="progressbar" aria-label="Disk" aria-valuemin="0" aria-valuemax="100" aria-valuenow="95">
+  <div class="progress-fill" style="width: 95%"></div>
 </div>`}
 />
 
