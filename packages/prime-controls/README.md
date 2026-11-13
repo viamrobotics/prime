@@ -1,6 +1,6 @@
 # @viamrobotics/prime-controls
 
-Compact realtime controls for Svelte 5 tool panels. Each control is a native number input that steps by keyboard and scrubs by dragging its label sideways.
+Compact realtime controls for Svelte 5 tool panels: number fields, vectors, and sliders that step by keyboard and scrub by dragging, plus panels, folders, and tabs to group them.
 
 > [!NOTE]
 > Under active development. The public API is unstable until 1.0.
@@ -48,6 +48,55 @@ Drag the label sideways to scrub, or press ArrowUp and ArrowDown to step. Shift 
 ```
 
 The defined axes decide how many fields render: `x` and `y`, plus `z` and `w` when present.
+
+### Slider
+
+```svelte
+<script lang="ts">
+	import { Slider } from '@viamrobotics/prime-controls';
+
+	let opacity = $state(0.5);
+</script>
+
+<Slider label="Opacity" min={0} max={1} step={0.01} bind:value={opacity} />
+```
+
+A native range with a number readout beside it. A drag writes the value on every pointer move.
+
+### Panel
+
+```svelte
+<Panel title="Camera">
+	<NumberField label="FOV" bind:value={fov} />
+</Panel>
+```
+
+A dense group of controls. A visible `title` names it, or pass `aria-label`.
+
+### Folder
+
+```svelte
+<Folder title="Lighting" bind:open>
+	<Slider label="Intensity" min={0} max={1} step={0.01} bind:value={intensity} />
+</Folder>
+```
+
+A collapsible group inside a panel, open by default.
+
+### Tabs
+
+```svelte
+<Tabs bind:value>
+	<Tabs.List aria-label="Mode">
+		<Tabs.Trigger value="move">Move</Tabs.Trigger>
+		<Tabs.Trigger value="rotate">Rotate</Tabs.Trigger>
+	</Tabs.List>
+	<Tabs.Content value="move">…</Tabs.Content>
+	<Tabs.Content value="rotate">…</Tabs.Content>
+</Tabs>
+```
+
+The prime-ui tabs at panel scale, with the same parts and keyboard.
 
 ## Documentation
 
