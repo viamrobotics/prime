@@ -114,6 +114,18 @@ describe('Menubar', () => {
 		expect(document.activeElement).not.toBe(trigger('Edit'));
 	});
 
+	it('closes on a press outside and focuses the pressed input', async () => {
+		render(BasicMenubar);
+		await openMenu('Edit');
+		const input = document.querySelector<HTMLInputElement>('input[aria-label="Outside"]')!;
+
+		await userEvent.click(input);
+
+		await vi.waitFor(() => expect(menu()).toBeNull());
+		await new Promise((resolve) => setTimeout(resolve, CLOSE_SETTLE_MS));
+		expect(document.activeElement).toBe(input);
+	});
+
 	it('moves the highlight by type-ahead', async () => {
 		render(BasicMenubar);
 		await openMenu('Edit');

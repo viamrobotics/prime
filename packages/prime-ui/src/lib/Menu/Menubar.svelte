@@ -1,7 +1,7 @@
 <!--
 @component
 A horizontal bar of menus, such as an application's File, Edit, and View. Render a `Menubar.Menu` for each menu inside it.
-Left and Right Arrow move focus between the triggers, and while one menu is open they open the neighbouring menu. The ends wrap around.
+Left and Right Arrow move focus between the triggers, and while one menu is open they open the neighboring menu. The ends wrap around.
 
 Built on [bits-ui `Menubar`](https://bits-ui.com/docs/components/menubar).
 

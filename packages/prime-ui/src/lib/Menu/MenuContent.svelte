@@ -42,6 +42,22 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 	}: Props = $props();
 
 	const contentId = $derived(id ?? `menu-${uid}`);
+
+	let pressedTrigger: HTMLElement | null = null;
+
+	// The trigger names the panel in aria-controls only while the menu is open, so it is looked up at the press.
+	const captureTrigger = () => {
+		pressedTrigger = document.querySelector(`[aria-controls="${CSS.escape(contentId)}"]`);
+	};
+
+	// bits-ui skips the trigger after any outside press, and the modal layer swallows that press, so focus would stay on the body.
+	const restoreFocus = (event: Event) => {
+		const trigger = pressedTrigger;
+		pressedTrigger = null;
+		if (event.defaultPrevented || !trigger || document.activeElement !== document.body) return;
+		event.preventDefault();
+		trigger.focus();
+	};
 </script>
 
 <DropdownMenu.Portal>
@@ -51,6 +67,8 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		{align}
 		{sideOffset}
 		{alignOffset}
+		onInteractOutside={captureTrigger}
+		onCloseAutoFocus={restoreFocus}
 		class={['z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-sm', extraClasses]}
 		{...restProps}
 	>

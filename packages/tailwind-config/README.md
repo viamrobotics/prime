@@ -107,6 +107,6 @@ The config also ships the design system's components as `@utility` classes, so a
 
 A `banner` is the compact one-liner until a `banner-title` sits inside it, and then it lays out stacked. A `status-dot` is 8px. `button-compact` and `input-compact` tighten padding and set `text-xs` for dense panels. A `progress` holds a `progress-fill` child that the consumer sizes with an inline width.
 
-Elevation tokens `--shadow-popover` and `--shadow-dialog` back the `shadow-popover` and `shadow-dialog` classes, and the dark theme reassigns both.
+Elevation tokens `--shadow-popover` and `--shadow-dialog` back the `shadow-popover` and `shadow-dialog` classes. Each shadow reads its color from `--shadow-color-popover` or `--shadow-color-dialog`, and the dark theme reassigns those colors.
 
 Every state is a nested selector on an attribute the element already carries, with no `!important`, so a consumer class can still override anything. On a native single `<select>`, `input` replaces the browser's arrow with a chevron in the subtle text color and pads the right edge for it. Recipes for each class, including leading icons and the busy spinner, are on the docs site under the package's "Component classes" page.

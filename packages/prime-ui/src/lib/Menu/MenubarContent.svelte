@@ -1,7 +1,7 @@
 <!--
 @component
 The floating panel of a [`Menubar`](./Menubar.svelte), portaled to the body. It holds [`Menubar.Item`](./MenuItem.svelte) parts and the other menu parts.
-It closes on Escape and on a press outside, and returns focus to the trigger.
+Escape closes it and returns focus to the trigger. A press outside closes it and leaves focus on the control it pressed.
 -->
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -45,10 +45,23 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 
 	let triggerId: string | null = null;
 	let wasPressedOutside = false;
+	let focusedOutside: HTMLElement | null = null;
 
 	const captureTrigger = (node: HTMLElement) => {
 		triggerId = node.getAttribute('aria-labelledby');
 		wasPressedOutside = false;
+		focusedOutside = null;
+	};
+
+	// The panel's focus trap pulls focus back from a control a press focuses, so the control is remembered for the close.
+	const trackFocusOutside = (node: HTMLElement) => {
+		const rememberFocusedOutside = (event: FocusEvent) => {
+			if (event.target instanceof HTMLElement && !node.contains(event.target)) {
+				focusedOutside = event.target;
+			}
+		};
+		document.addEventListener('focusin', rememberFocusedOutside, true);
+		return () => document.removeEventListener('focusin', rememberFocusedOutside, true);
 	};
 
 	const isSwitchingMenus = (trigger: HTMLElement) =>
@@ -57,14 +70,21 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		].some((other) => other !== trigger);
 
 	// A trigger that is not the bar's tab stop is not refocused on close, so focus would fall to the body.
-	// A press outside, or a switch to a neighboring menu, leaves focus where it went.
-	const restoreFocus = (event: Event) => {
+	// A press outside keeps focus on the control it pressed, and a switch to a neighboring menu leaves focus where it went.
+	const closeFocusTarget = (): HTMLElement | null => {
 		const trigger = triggerId ? document.getElementById(triggerId) : null;
-		if (event.defaultPrevented || wasPressedOutside || !trigger) return;
-		if (trigger.getAttribute('aria-expanded') === 'true') return;
-		if (isSwitchingMenus(trigger)) return;
+		if (trigger && isSwitchingMenus(trigger)) return null;
+		if (wasPressedOutside) return focusedOutside?.isConnected ? focusedOutside : null;
+		if (!trigger || trigger.getAttribute('aria-expanded') === 'true') return null;
+		return trigger;
+	};
+
+	const restoreFocus = (event: Event) => {
+		if (event.defaultPrevented) return;
+		const target = closeFocusTarget();
+		if (!target) return;
 		event.preventDefault();
-		trigger.focus();
+		target.focus();
 	};
 </script>
 
@@ -78,6 +98,7 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		onInteractOutside={() => (wasPressedOutside = true)}
 		onCloseAutoFocus={restoreFocus}
 		{@attach captureTrigger}
+		{@attach trackFocusOutside}
 		class={['z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-sm', extraClasses]}
 		{...restProps}
 	>

@@ -24,7 +24,34 @@ afterEach(async () => {
 	if (listbox()) await userEvent.keyboard('{Escape}');
 });
 
+const CLOSE_SETTLE_MS = 400;
+
+const addOutsideInput = () => {
+	const input = document.createElement('input');
+	input.setAttribute('aria-label', 'Outside');
+	input.style.cssText = 'position: fixed; right: 0; bottom: 0';
+	document.body.append(input);
+	return input;
+};
+
+afterEach(() => {
+	document.querySelectorAll('input[aria-label="Outside"]').forEach((input) => input.remove());
+});
+
 describe('MultiSelect', () => {
+	it('closes on a press outside and focuses the pressed input', async () => {
+		const { container } = render(BoundMultiSelect);
+		await userEvent.click(trigger(container));
+		await optionLabeled('Small');
+		const input = addOutsideInput();
+
+		await userEvent.click(input);
+
+		await vi.waitFor(() => expect(listbox()).toBeNull());
+		await new Promise((resolve) => setTimeout(resolve, CLOSE_SETTLE_MS));
+		expect(document.activeElement).toBe(input);
+	});
+
 	it('shows the bound values joined on the closed trigger', () => {
 		const { container } = render(BoundMultiSelect);
 

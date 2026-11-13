@@ -47,7 +47,7 @@ The floating panel of a [`Select`](./Select.svelte), portaled to the body. Rende
 		{sideOffset}
 		{alignOffset}
 		class={[
-			'z-popover max-h-(--bits-select-content-available-height) w-(--bits-select-anchor-width) min-w-(--bits-select-anchor-width) overflow-hidden rounded-sm border border-light bg-white shadow-md',
+			'z-popover max-h-(--bits-select-content-available-height) w-(--bits-select-anchor-width) min-w-(--bits-select-anchor-width) overflow-hidden rounded-sm border border-light bg-white shadow-sm',
 			extraClasses
 		]}
 		{...restProps}

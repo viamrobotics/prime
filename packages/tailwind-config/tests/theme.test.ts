@@ -89,8 +89,27 @@ const CANDIDATES = [
   "z-50",
   "z-1150",
   "z-nope",
+  "shadow-sm",
+  "shadow-popover/50",
+  "shadow-red-500",
+  "shadow-color-popover",
   ...CHROME_CLASSES,
 ];
+
+const UNSET_SHADOW_LAYERS = "0 0 #0000, 0 0 #0000, 0 0 #0000, 0 0 #0000";
+const ELEVATIONS = [
+  ["sm", "0 4px 32px rgba(0, 0, 0, 0.06)", "0 4px 32px rgba(0, 0, 0, 0.4)"],
+  [
+    "popover",
+    "0 8px 24px rgba(0, 0, 0, 0.12)",
+    "0 8px 24px rgba(0, 0, 0, 0.5)",
+  ],
+  [
+    "dialog",
+    "0 12px 48px rgba(0, 0, 0, 0.25)",
+    "0 12px 48px rgba(0, 0, 0, 0.6)",
+  ],
+] as const;
 
 const Z_LAYERS = [
   ["sticky", "100"],
@@ -174,6 +193,86 @@ const stripPrefix = (names: string[], prefix: string): string[] =>
     .map((name) => `--${name.slice(prefix.length)}`)
     .sort();
 
+interface CustomPropertyReference {
+  name: string;
+  fallback: string | undefined;
+  start: number;
+  end: number;
+}
+
+const firstCustomPropertyReference = (
+  value: string,
+): CustomPropertyReference | undefined => {
+  const start = value.indexOf("var(");
+  if (start === -1) return undefined;
+  const open = start + "var".length;
+  let depth = 0;
+  let comma: number | undefined;
+  for (let index = open; index < value.length; index++) {
+    const character = value[index];
+    if (character === "(") depth++;
+    if (character === "," && depth === 1) comma ??= index;
+    if (character === ")" && --depth === 0) {
+      return {
+        name: value.slice(open + 1, comma ?? index).trim(),
+        fallback:
+          comma === undefined
+            ? undefined
+            : value.slice(comma + 1, index).trim(),
+        start,
+        end: index + 1,
+      };
+    }
+  }
+  throw new Error(`unbalanced var() in ${value}`);
+};
+
+const resolveCustomProperties = (
+  value: string,
+  properties: Map<string, string>,
+): string => {
+  const reference = firstCustomPropertyReference(value);
+  if (!reference) return value;
+  const substitute = properties.get(reference.name) ?? reference.fallback;
+  if (substitute === undefined) {
+    throw new Error(`${reference.name} has no value and no fallback`);
+  }
+  return resolveCustomProperties(
+    value.slice(0, reference.start) + substitute + value.slice(reference.end),
+    properties,
+  );
+};
+
+const THEME_ROOT = ":root, :host";
+
+const themeRootDeclarations = (root: Root): Map<string, string> =>
+  new Map(
+    rulesOf(root, (rule) => rule.selectors.join(", ") === THEME_ROOT).flatMap(
+      (rule) => [...declarationsOf(rule)],
+    ),
+  );
+
+const registeredInitialValues = (root: Root): Map<string, string> => {
+  const values = new Map<string, string>();
+  root.walkAtRules("property", (property) => {
+    const initial = declarationsOf(property).get("initial-value");
+    if (initial !== undefined) values.set(property.params, initial);
+  });
+  return values;
+};
+
+const paintedBoxShadow = (root: Root, cascade: Container[]): string => {
+  const properties = new Map([
+    ...registeredInitialValues(root),
+    ...themeRootDeclarations(root),
+    ...declarationsOf(onlyRule(root, ":root")),
+    ...cascade.flatMap((container) => [...declarationsOf(container)]),
+  ]);
+  const boxShadow = properties.get("box-shadow");
+  if (boxShadow === undefined) throw new Error("no box-shadow in the cascade");
+  return resolveCustomProperties(boxShadow, properties);
+};
+
 describe("theme stylesheets compiled through Tailwind", () => {
   let emitted: Root;
   let unoptimized: Root;
@@ -189,18 +288,17 @@ describe("theme stylesheets compiled through Tailwind", () => {
     unoptimized = postcss.parse(built);
 
     themeDefaults = new Map();
-    postcss
-      .parse(
-        readFileSync(
-          path.join(packageDirectory, "tailwind-config.css"),
-          "utf8",
-        ),
-      )
-      .walkAtRules("theme", (theme) => {
-        for (const [name, value] of declarationsOf(theme)) {
-          themeDefaults.set(name, value);
-        }
-      });
+    const source = postcss.parse(
+      readFileSync(path.join(packageDirectory, "tailwind-config.css"), "utf8"),
+    );
+    source.walkAtRules("theme", (theme) => {
+      for (const [name, value] of declarationsOf(theme)) {
+        themeDefaults.set(name, value);
+      }
+    });
+    for (const [name, value] of themeRootDeclarations(source)) {
+      themeDefaults.set(name, value);
+    }
   });
 
   it("emits the dark variant as a class rule and a media rule, both skipping .light", () => {
@@ -243,7 +341,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
 
   it("restores the light default through .light", () => {
     const rootDeclarations = declarationsOf(onlyRule(emitted, ":root"));
-    const emittedTheme = declarationsOf(onlyRule(emitted, ":root, :host"));
+    const emittedTheme = themeRootDeclarations(emitted);
 
     expect(
       declarationsOf(onlyRule(emitted, ".light")).get("--color-heading"),
@@ -254,7 +352,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
   });
 
-  it("holds every --light-* value equal to its @theme default in tailwind-config.css", () => {
+  it("holds every --light-* value equal to its default in tailwind-config.css", () => {
     const lightDefaults = [...declarationsOf(onlyRule(unoptimized, ":root"))]
       .filter(([name]) => name.startsWith("--light-"))
       .map(([name, value]) => [`--${name.slice("--light-".length)}`, value]);
@@ -284,9 +382,9 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(declarationsOf(extralight!).get("background-color")).toBe(
       "var(--color-gray-0)",
     );
-    expect(
-      declarationsOf(onlyRule(emitted, ":root, :host")).get("--color-gray-0"),
-    ).toBe("#fbfbfc");
+    expect(themeRootDeclarations(emitted).get("--color-gray-0")).toBe(
+      "#fbfbfc",
+    );
     expect(
       declarationsOf(onlyRule(emitted, ".dark")).get("--color-gray-0"),
     ).toBe("var(--dark-color-gray-0)");
@@ -308,7 +406,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
       "line-height": "var(--text-xs--line-height)",
     });
 
-    const theme = declarationsOf(onlyRule(unoptimized, ":root, :host"));
+    const theme = themeRootDeclarations(unoptimized);
     expect(theme.get("--text-xs")).toBe("0.75rem");
     expect(theme.get("--text-xs--line-height")).toBe("calc(1 / 0.75)");
   });
@@ -662,51 +760,129 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
   });
 
-  it("defines the popover and dialog shadow tokens in @theme and compiles the utilities to box-shadow from their values", () => {
-    expect(themeDefaults.get("--shadow-popover")).toBe(
-      "0 8px 24px rgba(0, 0, 0, 0.12)",
-    );
-    expect(themeDefaults.get("--shadow-dialog")).toBe(
-      "0 12px 48px rgba(0, 0, 0, 0.25)",
-    );
-    const expected = [
-      ["popover", "0 8px 24px var(--tw-shadow-color, #0000001f)"],
-      ["dialog", "0 12px 48px var(--tw-shadow-color, #00000040)"],
-    ] as const;
-    for (const [name, shadow] of expected) {
-      const declarations = declared(emitted, `.shadow-${name}`);
-      expect(declarations.get("--tw-shadow")).toBe(shadow);
-      expect(declarations.get("box-shadow")).toContain("var(--tw-shadow)");
-    }
+  it("mints no shadow-color-* utility from the shadow colors", () => {
+    expect(
+      rulesOf(emitted, (rule) => startsWithClass(rule, "shadow-color-popover")),
+    ).toHaveLength(0);
   });
 
-  it("assigns the popover and dialog shadows in .dark, .light, and the media scope", () => {
+  it("defines each shadow token over a shadow color and compiles the utility to read that color", () => {
+    const tokens = Object.fromEntries(
+      ELEVATIONS.flatMap(([name]) => [
+        [`--shadow-${name}`, themeDefaults.get(`--shadow-${name}`)],
+        [`--shadow-color-${name}`, themeDefaults.get(`--shadow-color-${name}`)],
+        [
+          `.shadow-${name}`,
+          declared(emitted, `.shadow-${name}`).get("--tw-shadow"),
+        ],
+      ]),
+    );
+
+    expect(tokens).toStrictEqual({
+      "--shadow-sm": "0 4px 32px var(--shadow-color-sm)",
+      "--shadow-color-sm": "rgba(0, 0, 0, 0.06)",
+      ".shadow-sm": "0 4px 32px var(--tw-shadow-color, var(--shadow-color-sm))",
+      "--shadow-popover": "0 8px 24px var(--shadow-color-popover)",
+      "--shadow-color-popover": "rgba(0, 0, 0, 0.12)",
+      ".shadow-popover":
+        "0 8px 24px var(--tw-shadow-color, var(--shadow-color-popover))",
+      "--shadow-dialog": "0 12px 48px var(--shadow-color-dialog)",
+      "--shadow-color-dialog": "rgba(0, 0, 0, 0.25)",
+      ".shadow-dialog":
+        "0 12px 48px var(--tw-shadow-color, var(--shadow-color-dialog))",
+    });
+  });
+
+  it("assigns each shadow color in .dark, .light, and the media scope from its --dark-* or --light-* definition", () => {
     const scopes = [
-      [onlyRule(emitted, ".dark"), "dark"],
-      [onlyRule(emitted, ".light"), "light"],
-      [onlyRule(emitted, ":root:not(.light)"), "dark"],
+      [".dark", "dark"],
+      [".light", "light"],
+      [":root:not(.light)", "dark"],
     ] as const;
-    for (const [rule, scheme] of scopes) {
-      const declarations = declarationsOf(rule);
-      expect(declarations.get("--shadow-popover")).toBe(
-        `var(--${scheme}-shadow-popover)`,
-      );
-      expect(declarations.get("--shadow-dialog")).toBe(
-        `var(--${scheme}-shadow-dialog)`,
-      );
-    }
     const root = declarationsOf(onlyRule(unoptimized, ":root"));
-    expect(root.get("--dark-shadow-popover")).toBe(
-      "0 8px 24px rgba(0, 0, 0, 0.5)",
+
+    const assigned = Object.fromEntries(
+      scopes.flatMap(([selector]) =>
+        ELEVATIONS.map(([name]) => [
+          `${selector} ${name}`,
+          declarationsOf(onlyRule(emitted, selector)).get(
+            `--shadow-color-${name}`,
+          ),
+        ]),
+      ),
     );
-    expect(root.get("--dark-shadow-dialog")).toBe(
-      "0 12px 48px rgba(0, 0, 0, 0.6)",
+    const darkElevationColors = ELEVATIONS.map(([name]) =>
+      root.get(`--dark-shadow-color-${name}`),
     );
-    expect(root.get("--light-shadow-popover")).toBe(
-      themeDefaults.get("--shadow-popover"),
+
+    expect(assigned).toStrictEqual(
+      Object.fromEntries(
+        scopes.flatMap(([selector, scheme]) =>
+          ELEVATIONS.map(([name]) => [
+            `${selector} ${name}`,
+            `var(--${scheme}-shadow-color-${name})`,
+          ]),
+        ),
+      ),
     );
-    expect(root.get("--light-shadow-dialog")).toBe(
-      themeDefaults.get("--shadow-dialog"),
+    expect(darkElevationColors).toStrictEqual([
+      "rgba(0, 0, 0, 0.4)",
+      "rgba(0, 0, 0, 0.5)",
+      "rgba(0, 0, 0, 0.6)",
+    ]);
+  });
+
+  it.each(ELEVATIONS)(
+    "paints shadow-%s with the light shadow color at the root and the dark one under .dark",
+    (name, light, dark) => {
+      const utility = onlyRule(unoptimized, `.shadow-${name}`);
+
+      const painted = {
+        light: paintedBoxShadow(unoptimized, [utility]),
+        dark: paintedBoxShadow(unoptimized, [
+          onlyRule(unoptimized, ".dark"),
+          utility,
+        ]),
+      };
+
+      expect(
+        painted,
+        "Tailwind inlines a --shadow-* value into the utility, so reassigning --shadow-* alone leaves the dark case painting the light color",
+      ).toStrictEqual({
+        light: `${UNSET_SHADOW_LAYERS}, ${light}`,
+        dark: `${UNSET_SHADOW_LAYERS}, ${dark}`,
+      });
+    },
+  );
+
+  it("lets shadow-red-500 recolor shadow-popover under .dark", () => {
+    const painted = paintedBoxShadow(unoptimized, [
+      onlyRule(unoptimized, ".dark"),
+      onlyRule(unoptimized, ".shadow-popover"),
+      onlyRule(unoptimized, ".shadow-red-500"),
+    ]);
+
+    expect(painted).toBe(
+      `${UNSET_SHADOW_LAYERS}, 0 8px 24px oklch(63.7% 0.237 25.331)`,
+    );
+  });
+
+  it("applies the shadow-popover/50 opacity to the dark shadow color", () => {
+    const utility = onlyRule(unoptimized, String.raw`.shadow-popover\/50`);
+    const relativeColor = utility.nodes.find(
+      (node): node is AtRule =>
+        node instanceof AtRule && node.name === "supports",
+    );
+    if (!relativeColor) throw new Error("shadow-popover/50 has no @supports");
+
+    const painted = paintedBoxShadow(unoptimized, [
+      onlyRule(unoptimized, ".dark"),
+      utility,
+      relativeColor,
+    ]);
+
+    expect(painted).toBe(
+      `${UNSET_SHADOW_LAYERS}, 0 8px 24px oklab(from rgba(0, 0, 0, 0.5) l a b / 50%)`,
     );
   });
 

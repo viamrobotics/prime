@@ -28,7 +28,34 @@ afterEach(async () => {
 	if (menu()) await userEvent.keyboard('{Escape}');
 });
 
+const CLOSE_SETTLE_MS = 400;
+
+const addOutsideInput = () => {
+	const input = document.createElement('input');
+	input.setAttribute('aria-label', 'Outside');
+	input.style.cssText = 'position: fixed; right: 0; bottom: 0';
+	document.body.append(input);
+	return input;
+};
+
+afterEach(() => {
+	document.querySelectorAll('input[aria-label="Outside"]').forEach((input) => input.remove());
+});
+
 describe('ContextMenu', () => {
+	it('closes on a press outside that does not reach the input, leaving focus on body', async () => {
+		const { container } = render(BasicContextMenu);
+		rightClick(container);
+		await vi.waitFor(() => expect(menu()).not.toBeNull());
+		const input = addOutsideInput();
+
+		await userEvent.click(input, { force: true });
+
+		await vi.waitFor(() => expect(menu()).toBeNull());
+		await new Promise((resolve) => setTimeout(resolve, CLOSE_SETTLE_MS));
+		expect(document.activeElement).toBe(document.body);
+	});
+
 	it('is closed by default', () => {
 		const { container } = render(BasicContextMenu);
 
