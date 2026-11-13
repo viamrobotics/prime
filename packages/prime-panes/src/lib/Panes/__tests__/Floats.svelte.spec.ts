@@ -23,6 +23,17 @@ function floatWithRect(rect: { x: number; y: number; width: number; height: numb
 	return { ...layout, floats: [{ ...layout.floats[0]!, rect }, layout.floats[1]!] };
 }
 
+const OVERFLOW_HEIGHT_PX = 400;
+
+function appendOverflowingRow(container: Element) {
+	const spacer = document.createElement('div');
+	spacer.style.height = `${OVERFLOW_HEIGHT_PX}px`;
+	const row = document.createElement('div');
+	row.textContent = 'row';
+	container.append(spacer, row);
+	return row;
+}
+
 describe('Floats', () => {
 	it('draws a window inside the float node at its rect', async () => {
 		render(FloatingPanes);
@@ -63,6 +74,16 @@ describe('Floats', () => {
 			width: '800px',
 			height: '600px'
 		});
+	});
+
+	it('stays unscrolled when code scrolls overflowing content into view', async () => {
+		render(FloatingPanes);
+		const entry = page.getByFloatEntry(floatIds.entryB).element();
+		const overflowingRow = appendOverflowingRow(entry);
+
+		overflowingRow.scrollIntoView();
+
+		expect(entry.scrollTop).toBe(0);
 	});
 
 	it('raises a lower window on press with exactly one write', async () => {

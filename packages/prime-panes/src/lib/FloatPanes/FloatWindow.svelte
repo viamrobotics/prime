@@ -153,7 +153,7 @@
 	bind:this={element}
 	aria-label={label}
 	data-float-entry={entry.id}
-	class="absolute min-h-0 min-w-0 overflow-hidden outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid"
+	class="absolute min-h-0 min-w-0 overflow-clip outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid"
 	style:left="{drawnRect.x}px"
 	style:top="{drawnRect.y}px"
 	style:width="{drawnRect.width}px"
