@@ -38,6 +38,8 @@ import SelectBasic from "./SelectBasic.svelte"
 import selectBasicSource from "./SelectBasic.svelte?raw"
 import SelectParts from "./SelectParts.svelte"
 import selectPartsSource from "./SelectParts.svelte?raw"
+import ToggleButtonsBasic from "./ToggleButtonsBasic.svelte"
+import toggleButtonsBasicSource from "./ToggleButtonsBasic.svelte?raw"
 import PointLabels from "./PointLabels.svelte"
 import pointLabelsSource from "./PointLabels.svelte?raw"
 
@@ -52,6 +54,7 @@ import pointLabelsSource from "./PointLabels.svelte?raw"
 - `Point`, a 2D, 3D, or 4D vector as one `NumberField` per axis.
 - `Slider`, a range input with a `NumberField` readout beside it.
 - `Select`, a compact dropdown for choosing one of a list of items.
+- `ToggleButtons`, a compact row of mutually exclusive buttons.
 - `Panel`, `Folder`, and `Tabs`, the containers that group controls at tool panel scale.
 - A scrub or a drag writes the bound value on every pointer move, so a function binding sees each intermediate value.
 
@@ -222,6 +225,14 @@ Write the parts when you need a class, handlers, or a custom item. `Select.Items
   <SelectParts client:visible />
 </Example>
 
+## ToggleButtons
+
+`ToggleButtons` is prime-ui's `ToggleButtons` at panel scale, with the same keyboard. `bind:value` holds the selected option's value, and one option is always selected. Give it `items`, or write `ToggleButtons.Item` parts when an option needs an icon or a class. The visible `label` names the group. Without it, pass `aria-label` or `aria-labelledby`.
+
+<Example code={toggleButtonsBasicSource} title="ToggleButtonsBasic.svelte">
+  <ToggleButtonsBasic client:visible />
+</Example>
+
 ## Slider
 
 `Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label` or `aria-labelledby`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing.
@@ -271,3 +282,9 @@ A drag writes on every pointer move, so a function binding receives each interme
 <PropsTable name="select" collection="prime-controls" />
 
 <PartsDoc name="select" collection="prime-controls" />
+
+### ToggleButtons
+
+<PropsTable name="toggle-buttons" collection="prime-controls" />
+
+<PartsDoc name="toggle-buttons" collection="prime-controls" />
