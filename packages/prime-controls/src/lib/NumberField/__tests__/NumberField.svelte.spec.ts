@@ -54,6 +54,15 @@ describe('NumberField', () => {
 		expect(container.querySelector('label')).toBeNull();
 	});
 
+	it('places the label outside the input box by default', () => {
+		const { container } = render(NumberField, { props: { label: 'Speed' } });
+
+		const labelRight = container.querySelector('label')!.getBoundingClientRect().right;
+		const boxLeft = input(container).getBoundingClientRect().left;
+
+		expect(labelRight).toBeLessThanOrEqual(boxLeft);
+	});
+
 	it('keeps the input-compact class on the input', () => {
 		const { container } = render(NumberField, { props: { label: 'Speed' } });
 

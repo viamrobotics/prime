@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PointValue } from "@viamrobotics/prime-controls";
 
-  import { Folder, NumberField, Panel, Point, Slider, Tabs } from "@viamrobotics/prime-controls";
+  import { Folder, NumberField, Panel, Point, Select, Slider, Tabs } from "@viamrobotics/prime-controls";
 
   let speed = $state(5);
   let position = $state<PointValue>({ x: 0, y: 1, z: 2 });
@@ -11,12 +11,18 @@
   let mode = $state("move");
   let moveStep = $state(0.5);
   let rotateStep = $state(15);
+  let projection = $state("perspective");
+  const projections = [
+    { value: "perspective", label: "Perspective" },
+    { value: "orthographic", label: "Orthographic" },
+  ];
 </script>
 
 <div class="not-content flex flex-wrap items-start gap-6">
   <Panel title="Scene" class="w-80">
     <NumberField label="Speed" bind:value={speed} />
     <Point label="Position" step={0.1} bind:value={position} />
+    <Select items={projections} bind:value={projection} aria-label="Projection" />
     <Slider label="Opacity" min={0} max={1} step={0.01} bind:value={opacity} />
     <Folder title="Lighting">
       <Slider label="Intensity" min={0} max={1} step={0.01} bind:value={intensity} />
@@ -41,6 +47,7 @@
     <li>opacity: <code>{opacity}</code></li>
     <li>intensity: <code>{intensity}</code></li>
     <li>exposure: <code>{exposure}</code></li>
+    <li>projection: <code>{projection}</code></li>
     <li>mode: <code>{mode}</code></li>
     <li>step: <code>{moveStep}</code></li>
     <li>angle: <code>{rotateStep}</code></li>

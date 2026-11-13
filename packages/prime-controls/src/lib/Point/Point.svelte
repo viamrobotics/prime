@@ -83,6 +83,7 @@ one axis writes a new object with that axis changed and every other axis as it w
 		{#each axes as axis (axis)}
 			<NumberField
 				label={labels?.[axis] ?? axis.toUpperCase()}
+				labelPlacement="inset"
 				{min}
 				{max}
 				{step}

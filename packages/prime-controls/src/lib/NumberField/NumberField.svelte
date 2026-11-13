@@ -43,6 +43,13 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		 */
 		step?: number;
 
+		/**
+		 * Where the visible `label` sits. `'outside'` puts it before the input. `'inset'` draws it
+		 * inside the input's left edge as a prefix, which fits a short label such as one axis
+		 * letter. @default 'outside'
+		 */
+		labelPlacement?: 'outside' | 'inset';
+
 		/** Classes for the root element, which holds the label and the input. */
 		class?: ClassValue;
 	}
@@ -50,6 +57,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 	let {
 		value = $bindable(),
 		label,
+		labelPlacement = 'outside',
 		min,
 		max,
 		step = 1,
@@ -66,6 +74,21 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		| { 'aria-label': string }
 		| { 'aria-labelledby': string };
 
+	const PLACEMENT_CLASSES = {
+		outside: {
+			root: 'flex items-center gap-1',
+			label: 'flex min-h-6 min-w-6 shrink-0 items-center',
+			input: 'min-w-0 flex-1 input-compact'
+		},
+		inset: {
+			root: 'relative flex items-center',
+			label:
+				'absolute top-1/2 left-px flex h-6 min-w-6 -translate-y-1/2 items-center justify-center',
+			// `input-compact` sets its padding on a doubled class, which outranks a plain `pl-*` utility.
+			input: 'min-w-0 flex-1 input-compact pl-7!'
+		}
+	} as const;
+
 	const SCRUB_THRESHOLD_PX = 4;
 	const STEP_KEYS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1 };
 
@@ -80,6 +103,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		}
 	};
 	const isLocked = $derived(Boolean(disabled) || Boolean(readonly));
+	const placementClasses = $derived(PLACEMENT_CLASSES[labelPlacement]);
 
 	function write(next: number) {
 		if (next !== value) value = next;
@@ -146,12 +170,12 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 	}
 </script>
 
-<div class={['flex items-center gap-1', extraClasses]}>
+<div class={[placementClasses.root, extraClasses]}>
 	{#if label}
 		<label
 			for={id}
 			class={[
-				'flex min-h-6 min-w-6 shrink-0 items-center',
+				placementClasses.label,
 				CONTROL_LABEL_CLASS,
 				!isLocked && 'cursor-ew-resize touch-none select-none'
 			]}
@@ -170,6 +194,6 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		{readonly}
 		bind:value
 		onkeydown={handleKeydown}
-		class="min-w-0 flex-1 input-compact"
+		class={placementClasses.input}
 	/>
 </div>
