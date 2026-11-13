@@ -24,4 +24,5 @@ export const collections = {
   "prime-panes": components("prime-panes", "anchors"),
   "prime-tree": components("prime-tree", "anchors"),
   "prime-controls": components("prime-controls", "anchors"),
+  "prime-editor": components("prime-editor", "anchors"),
 };
