@@ -26,6 +26,7 @@
         "./packages/prime-panes:build",
         "./packages/prime-tree:build",
         "./packages/prime-controls:build",
+        "./packages/prime-editor:build",
         "./packages/tweakpane-config:build",
         "./docs:build"
       ]
@@ -37,6 +38,7 @@
         "./packages/prime-panes:check",
         "./packages/prime-tree:check",
         "./packages/prime-controls:check",
+        "./packages/prime-editor:check",
         "./packages/tweakpane-config:check",
         "./docs:check"
       ]
@@ -48,6 +50,7 @@
         "./packages/prime-panes:lint",
         "./packages/prime-tree:lint",
         "./packages/prime-controls:lint",
+        "./packages/prime-editor:lint",
         "./packages/tweakpane-config:lint",
         "./docs:lint"
       ]
@@ -59,6 +62,7 @@
         "./packages/prime-panes:test",
         "./packages/prime-tree:test",
         "./packages/prime-controls:test",
+        "./packages/prime-editor:test",
         "./docs:test"
       ]
     },
@@ -69,6 +73,7 @@
         "./packages/prime-panes:format",
         "./packages/prime-tree:format",
         "./packages/prime-controls:format",
+        "./packages/prime-editor:format",
         "./packages/tweakpane-config:format"
       ]
     }

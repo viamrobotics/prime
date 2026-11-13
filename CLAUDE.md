@@ -19,6 +19,7 @@ The workspace root holds shared tooling (lint, format, changesets, CI).
 | [`@viamrobotics/prime-panes`](packages/prime-panes/CLAUDE.md)           | Resizable, rearrangeable split-pane layouts for Svelte 5.           |
 | [`@viamrobotics/prime-tree`](packages/prime-tree/CLAUDE.md)             | Headless tree view for Svelte 5.                                    |
 | [`@viamrobotics/prime-controls`](packages/prime-controls/CLAUDE.md)     | Compact realtime controls for tool panels: scrubbing number fields. |
+| [`@viamrobotics/prime-editor`](packages/prime-editor/CLAUDE.md)         | A CodeMirror 6 code editor with Viam's code tokens and a diff view. |
 | [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md)   | Viam's shared Tailwind CSS v4 configuration: design tokens + fonts. |
 | [`@viamrobotics/tweakpane-config`](packages/tweakpane-config/CLAUDE.md) | Shared Tweakpane theme and helpers for the docs demos.            |
 
@@ -76,7 +77,7 @@ The tokens themselves are the `@theme` blocks in [`packages/tailwind-config`](pa
 node .claude/scripts/design.mjs <query>
 ```
 
-Four entry points compile under standalone Tailwind: `packages/prime-ui/tailwind.css`, a tooling-only file also used by prettier-plugin-tailwindcss, and the `test/tailwind.css` fixture stylesheet in `prime-panes`, `prime-tree`, and `prime-controls`. `docs/src/tailwind.css` imports the `@viamrobotics/tailwind-config/dark` export subpath and `starlight-theme-nova/tailwind.css`, paths that Vite and Astro resolve and standalone Tailwind does not, so it exits 1. Pass `--theme <path>` to read a different entry point.
+Five entry points compile under standalone Tailwind: `packages/prime-ui/tailwind.css`, a tooling-only file also used by prettier-plugin-tailwindcss, and the `test/tailwind.css` fixture stylesheet in `prime-panes`, `prime-tree`, `prime-controls`, and `prime-editor`. `docs/src/tailwind.css` imports the `@viamrobotics/tailwind-config/dark` export subpath and `starlight-theme-nova/tailwind.css`, paths that Vite and Astro resolve and standalone Tailwind does not, so it exits 1. Pass `--theme <path>` to read a different entry point.
 
 `packages/prime-ui/styles.css` is a stylesheet with a different job: it is the entry prime-ui **ships** (`exports["./styles.css"]`) so a consumer's Tailwind scans the package's compiled components, which automatic content detection skips under `node_modules`. It imports the tokens, and holds an `@source`, with no `@import "tailwindcss"`, so a consumer writes one import after `tailwindcss` and it is not a `--theme` candidate. The tooling `tailwind.css` imports it, so the components' classes resolve for prettier, `design.mjs`, and the browser specs.
 

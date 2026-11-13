@@ -1,0 +1,128 @@
+---
+title: "@viamrobotics/prime-editor"
+description: "A CodeMirror 6 code editor for Svelte 5, themed with Viam's code tokens, with a diff view."
+---
+
+import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import Demo from "./Demo.svelte";
+import TwoWay from "./TwoWay.svelte";
+import twoWaySource from "./TwoWay.svelte?raw";
+import Controlled from "./Controlled.svelte";
+import controlledSource from "./Controlled.svelte?raw";
+import Languages from "./Languages.svelte";
+import languagesSource from "./Languages.svelte?raw";
+import Readonly from "./Readonly.svelte";
+import readonlySource from "./Readonly.svelte?raw";
+import UnifiedDiff from "./UnifiedDiff.svelte";
+import unifiedDiffSource from "./UnifiedDiff.svelte?raw";
+import SplitDiff from "./SplitDiff.svelte";
+import splitDiffSource from "./SplitDiff.svelte?raw";
+
+`@viamrobotics/prime-editor` is a CodeMirror 6 code editor for Svelte 5. It highlights with Viam's code tokens, so it follows the light and dark themes, and it can show a diff against another text.
+
+<Aside type="caution">
+  The public API is unstable until 1.0. Expect breaking changes in minor
+  releases.
+</Aside>
+
+<Demo client:visible />
+
+- `CodeEditor`, one editor with a bindable `value`.
+- Six languages: TypeScript, JavaScript, JSON, Python, Go, and SQL.
+- Optional line numbers, line wrapping, and a readonly mode.
+- A unified or split diff view that opens when `original` is set.
+
+## Installation
+
+<Steps>
+
+1. Install the package and its peer. The `svelte` peer is `^5.29.0`.
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add @viamrobotics/prime-editor @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install @viamrobotics/prime-editor @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add @viamrobotics/prime-editor @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+   </Tabs>
+
+2. Import the stylesheet once, after Tailwind. Tailwind skips `node_modules` when it scans for classes, so the package's stylesheet points it at the compiled components.
+
+   ```css
+   @import "tailwindcss";
+   @import "@viamrobotics/prime-editor/styles.css";
+   ```
+
+</Steps>
+
+## Usage
+
+Every editor needs a name. Pass `aria-label`, or `aria-labelledby` with the id of a visible label.
+
+### Two-way binding
+
+`bind:value` holds the document. Typing writes it, and assigning it from outside replaces the document.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Function binding
+
+A function binding receives each edit and decides what `value` becomes. This one refuses an edit past 60 characters by not assigning, and transforms every other edit to uppercase. The editor reads `value` back after each edit, so a refused edit is undone and a transformed one replaces what was typed.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Languages
+
+`language` picks the grammar that highlights and indents the document. Omit it for plain text.
+
+<Example code={languagesSource} title="Languages.svelte">
+  <Languages client:visible />
+</Example>
+
+### Readonly
+
+`readonly` blocks edits. The document stays focusable, selectable, and copyable.
+
+<Example code={readonlySource} title="Readonly.svelte">
+  <Readonly client:visible />
+</Example>
+
+### Unified diff
+
+Set `original` to open the diff view. `value` is compared against it, and the deleted and inserted lines share one editor.
+
+<Example code={unifiedDiffSource} title="UnifiedDiff.svelte">
+  <UnifiedDiff client:visible />
+</Example>
+
+### Split diff
+
+Set `diff="split"` to put `original` beside `value`. The original side is readonly. Switching between unified and split rebuilds the editor, and every other prop change reconfigures it in place.
+
+<Example code={splitDiffSource} title="SplitDiff.svelte">
+  <SplitDiff client:visible />
+</Example>
+
+## API
+
+<PropsTable name="code-editor" collection="prime-editor" />
