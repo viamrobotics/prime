@@ -1,0 +1,102 @@
+---
+title: DatePicker
+description: A segmented date field with a calendar popover.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import DatePickerDemo from "./date-picker/DatePickerDemo.svelte";
+import DatePickerShowcase from "./date-picker/DatePickerShowcase.svelte";
+import TwoWay from "./date-picker/TwoWay.svelte";
+import twoWaySource from "./date-picker/TwoWay.svelte?raw";
+import Controlled from "./date-picker/Controlled.svelte";
+import controlledSource from "./date-picker/Controlled.svelte?raw";
+
+<ComponentIntro name="date-picker" />
+
+<DatePickerDemo client:visible />
+
+- Composed from parts, so the field, its trigger, and the calendar are yours to arrange.
+- One `value`, bindable. `open` is bindable too. `min` and `max` bound the selectable dates.
+- `granularity` sets the smallest unit the field edits, from `day` down to `second`.
+- `DatePicker.Field` takes `state` from an enclosing [`Field`](../field/), or directly. `error` and `warn` share the `input` [component class](../../tailwind-config/component-classes/) with [`Input`](../input/).
+- The calendar floats in a portal, positioned to the field.
+
+## Anatomy
+
+Every part is a property on `DatePicker`. `Field` is the segmented input and holds the `Trigger` button that opens the calendar. `Content` is the floating panel, portaled to the body, and holds the `Calendar`.
+
+```svelte
+<DatePicker>
+  <DatePicker.Field>
+    <DatePicker.Trigger />
+  </DatePicker.Field>
+  <DatePicker.Content>
+    <DatePicker.Calendar />
+  </DatePicker.Content>
+</DatePicker>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the root. The value is a `DateValue` from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/), or `undefined` until one is picked. `value?.toString()` prints it as ISO `YYYY-MM-DD`.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:value` a getter and a setter. [State & binding](../state/) explains both modes.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Bounds
+
+`min` and `max` take date objects from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/), such as `new CalendarDate(2026, 1, 1)`. Dates outside the range cannot be selected.
+
+### Placement
+
+`DatePicker.Content` takes `side` and `align` to place the calendar, and `sideOffset` and `alignOffset` to nudge it. It opens below the field and aligns to its end by default. The API table lists each option and its default.
+
+### States
+
+`disabled` disables the field and its trigger. `readonly` shows the read-only frame and disables the trigger, so the calendar cannot open and the segments cannot be edited.
+
+<DatePickerShowcase client:visible />
+
+## Styling
+
+`DatePicker.Field`, `DatePicker.Trigger`, and `DatePicker.Calendar` take `class` on the element they render. `DatePicker` takes no `class`, since it renders no element of its own. `DatePicker.Trigger` takes button attributes, and its `children` replace the calendar icon. `DatePicker.Content` wears `z-popover`. See [z layers](../../tailwind-config/component-classes/#z-layers).
+
+## Keyboard
+
+With focus on a segment of the field:
+
+| Key                                                                | Action                                  |
+| ------------------------------------------------------------------ | --------------------------------------- |
+| Digits                                                             | Types into the segment.                 |
+| <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>                          | Steps the segment up or down.           |
+| <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd>                       | Moves to the previous or next segment.  |
+
+With focus on a day in the open calendar:
+
+| Key                                                                | Action                                  |
+| ------------------------------------------------------------------ | --------------------------------------- |
+| <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd>                       | Moves to the previous or next day.      |
+| <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>                          | Moves to the same day a week earlier or later. |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>                                | Selects the focused day.                |
+| <kbd>Escape</kbd>                                                  | Closes the calendar.                    |
+
+## API
+
+<PropsTable name="date-picker" />
+
+<PartsDoc name="date-picker" />
