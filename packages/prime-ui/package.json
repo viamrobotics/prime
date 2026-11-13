@@ -153,7 +153,6 @@
 		"svelte": "^5.0.0"
 	},
 	"devDependencies": {
-		"@eslint/compat": "catalog:",
 		"@eslint/js": "catalog:",
 		"@lucide/svelte": "^1.17.0",
 		"@sveltejs/package": "^2.5.7",

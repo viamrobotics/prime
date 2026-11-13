@@ -157,7 +157,6 @@
 		"svelte": "^5.29.0"
 	},
 	"devDependencies": {
-		"@eslint/compat": "catalog:",
 		"@eslint/js": "catalog:",
 		"@sveltejs/package": "^2.5.7",
 		"@sveltejs/vite-plugin-svelte": "catalog:",

@@ -145,7 +145,6 @@
 	},
 	"devDependencies": {
 		"@astrojs/svelte": "^9.1.5",
-		"@eslint/compat": "catalog:",
 		"@eslint/js": "catalog:",
 		"@fontsource-variable/public-sans": "catalog:",
 		"@fontsource-variable/roboto-mono": "catalog:",

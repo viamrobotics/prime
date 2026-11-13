@@ -1,7 +1,6 @@
 import path from "node:path";
-import { includeIgnoreFile } from "@eslint/compat";
 import js from "@eslint/js";
-import { defineConfig } from "eslint/config";
+import { defineConfig, includeIgnoreFile } from "eslint/config";
 import prettier from "eslint-config-prettier/flat";
 import globals from "globals";
 import ts from "typescript-eslint";

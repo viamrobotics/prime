@@ -109,7 +109,6 @@
     "svelte-tweakpane-ui": "^1.5.16"
   },
   "devDependencies": {
-    "@eslint/compat": "catalog:",
     "@eslint/js": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",

@@ -1,10 +1,9 @@
-import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
 import astro from 'eslint-plugin-astro';
 import perfectionist from 'eslint-plugin-perfectionist';
 import svelte from 'eslint-plugin-svelte';
-import { defineConfig } from 'eslint/config';
+import { defineConfig, includeIgnoreFile } from 'eslint/config';
 import globals from 'globals';
 import path from 'node:path';
 import ts from 'typescript-eslint';
@@ -25,7 +24,10 @@ export default defineConfig(
 	svelte.configs.prettier,
 	{
 		plugins: { perfectionist },
-		languageOptions: { globals: { ...globals.browser, ...globals.node } },
+		languageOptions: {
+			globals: { ...globals.browser, ...globals.node },
+			parserOptions: { tsconfigRootDir: import.meta.dirname }
+		},
 		rules: {
 			// TypeScript resolves globals itself, so typescript-eslint recommends turning this off.
 			'no-undef': 'off',

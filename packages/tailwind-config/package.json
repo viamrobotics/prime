@@ -104,7 +104,6 @@
     "tailwindcss": ">=4 <5"
   },
   "devDependencies": {
-    "@eslint/compat": "catalog:",
     "@eslint/js": "catalog:",
     "@tailwindcss/node": "catalog:",
     "@types/node": "catalog:",
