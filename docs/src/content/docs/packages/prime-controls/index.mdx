@@ -1,30 +1,43 @@
 ---
 title: "@viamrobotics/prime-controls"
-description: "Compact realtime controls for Svelte 5 tool panels: number fields and vectors that scrub by label drag and step by keyboard."
+description: "Compact realtime controls for Svelte 5 tool panels: number fields, vectors, and sliders, grouped by panels, folders, and tabs."
 ---
 
 import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
-import Example from "@docs/doc/Example.astro";
-import PropsTable from "@docs/doc/PropsTable.astro";
+import Example from "@docs/doc/Example.astro"
+import PropsTable from "@docs/doc/PropsTable.astro"
+import PartsDoc from "@docs/doc/PartsDoc.astro"
 
-import TwoWay from "./TwoWay.svelte";
-import twoWaySource from "./TwoWay.svelte?raw";
-import Controlled from "./Controlled.svelte";
-import controlledSource from "./Controlled.svelte?raw";
-import Bounds from "./Bounds.svelte";
-import boundsSource from "./Bounds.svelte?raw";
-import Point2D from "./Point2D.svelte";
-import point2DSource from "./Point2D.svelte?raw";
-import Point3D from "./Point3D.svelte";
-import point3DSource from "./Point3D.svelte?raw";
-import Point4D from "./Point4D.svelte";
-import point4DSource from "./Point4D.svelte?raw";
-import PointVeto from "./PointVeto.svelte";
-import pointVetoSource from "./PointVeto.svelte?raw";
-import PointLabels from "./PointLabels.svelte";
-import pointLabelsSource from "./PointLabels.svelte?raw";
+import TwoWay from "./TwoWay.svelte"
+import twoWaySource from "./TwoWay.svelte?raw"
+import Controlled from "./Controlled.svelte"
+import controlledSource from "./Controlled.svelte?raw"
+import Bounds from "./Bounds.svelte"
+import boundsSource from "./Bounds.svelte?raw"
+import Point2D from "./Point2D.svelte"
+import point2DSource from "./Point2D.svelte?raw"
+import Point3D from "./Point3D.svelte"
+import point3DSource from "./Point3D.svelte?raw"
+import Point4D from "./Point4D.svelte"
+import point4DSource from "./Point4D.svelte?raw"
+import PointVeto from "./PointVeto.svelte"
+import pointVetoSource from "./PointVeto.svelte?raw"
+import LivePanel from "./LivePanel.svelte"
+import livePanelSource from "./LivePanel.svelte?raw"
+import PanelTitle from "./PanelTitle.svelte"
+import panelTitleSource from "./PanelTitle.svelte?raw"
+import FolderOpen from "./FolderOpen.svelte"
+import folderOpenSource from "./FolderOpen.svelte?raw"
+import TabsModes from "./TabsModes.svelte"
+import tabsModesSource from "./TabsModes.svelte?raw"
+import SliderBounds from "./SliderBounds.svelte"
+import sliderBoundsSource from "./SliderBounds.svelte?raw"
+import SliderControlled from "./SliderControlled.svelte"
+import sliderControlledSource from "./SliderControlled.svelte?raw"
+import PointLabels from "./PointLabels.svelte"
+import pointLabelsSource from "./PointLabels.svelte?raw"
 
-`@viamrobotics/prime-controls` is a set of compact realtime controls for tool panels. Each control is a native number input that steps by keyboard and scrubs by dragging its label sideways, so a value can be tuned live without typing.
+`@viamrobotics/prime-controls` is a set of compact realtime controls for tool panels. Each number control steps by keyboard and scrubs by dragging its label sideways, so a value can be tuned live without typing. Containers group the controls into panels, folders, and tabs.
 
 <Aside type="caution">
   The public API is unstable until 1.0. Expect breaking changes in minor
@@ -33,7 +46,13 @@ import pointLabelsSource from "./PointLabels.svelte?raw";
 
 - `NumberField`, one number with a label that doubles as the scrub handle.
 - `Point`, a 2D, 3D, or 4D vector as one `NumberField` per axis.
-- A scrub writes the bound value on every pointer move, so a function binding sees each intermediate value.
+- `Slider`, a range input with a `NumberField` readout beside it.
+- `Panel`, `Folder`, and `Tabs`, the containers that group controls at tool panel scale.
+- A scrub or a drag writes the bound value on every pointer move, so a function binding sees each intermediate value.
+
+<Example code={livePanelSource} title="LivePanel.svelte">
+  <LivePanel client:visible />
+</Example>
 
 ## Installation
 
@@ -110,6 +129,9 @@ A scrub writes on every pointer move, so a function binding receives each interm
 | Drag the label sideways        | Scrub, moving the value by `step` for each pixel         |
 | Shift or Alt while scrubbing   | Scale each pixel by 10 or by a tenth                     |
 | Click the label                | Focus the input                                          |
+| Slider: Arrow Left / Right / Up / Down | The range moves by `step`, natively              |
+| Slider: Home / End             | The range jumps to `min` or `max`, natively              |
+| Slider: readout                | Steps like a `NumberField`, without scrubbing            |
 
 A drag begins once the pointer moves 4 pixels from where it was pressed, and only the primary button scrubs. A `disabled` or `readonly` field neither steps nor scrubs. An empty field starts from `min`, or 0 without one.
 
@@ -155,6 +177,46 @@ Each axis label is also its scrub handle. `labels` renames any of them, and an a
   <PointLabels client:visible />
 </Example>
 
+## Panel
+
+`Panel` is the dense container for a tool panel's controls, a `role="group"` with a border and tight spacing. A visible `title` names the group. Without one, pass `aria-label`.
+
+<Example code={panelTitleSource} title="PanelTitle.svelte">
+  <PanelTitle client:visible />
+</Example>
+
+## Folder
+
+`Folder` is a collapsible group inside a panel. Its `title` is the text of the button that opens and closes it. It is open by default, and `bind:open` reads and sets the state.
+
+<Example code={folderOpenSource} title="FolderOpen.svelte">
+  <FolderOpen client:visible />
+</Example>
+
+## Tabs
+
+`Tabs` is a compound of `Tabs.List`, `Tabs.Trigger`, and `Tabs.Content`. It wraps the prime-ui parts at panel scale, so the props and the keyboard behavior are prime-ui's. `bind:value` holds the selected tab, and each `Tabs.Content` shows while its `value` is selected. Give `Tabs.List` an `aria-label`.
+
+<Example code={tabsModesSource} title="TabsModes.svelte">
+  <TabsModes client:visible />
+</Example>
+
+## Slider
+
+`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing.
+
+<Example code={sliderBoundsSource} title="SliderBounds.svelte">
+  <SliderBounds client:visible />
+</Example>
+
+### Function binding
+
+A drag writes on every pointer move, so a function binding receives each intermediate value, as it does for `NumberField`. This one counts the writes.
+
+<Example code={sliderControlledSource} title="SliderControlled.svelte">
+  <SliderControlled client:visible />
+</Example>
+
 ## API
 
 ### NumberField
@@ -164,3 +226,21 @@ Each axis label is also its scrub handle. `labels` renames any of them, and an a
 ### Point
 
 <PropsTable name="point" collection="prime-controls" />
+
+### Panel
+
+<PropsTable name="panel" collection="prime-controls" />
+
+### Folder
+
+<PropsTable name="folder" collection="prime-controls" />
+
+### Slider
+
+<PropsTable name="slider" collection="prime-controls" />
+
+### Tabs
+
+<PropsTable name="tabs" collection="prime-controls" />
+
+<PartsDoc name="tabs" collection="prime-controls" />
