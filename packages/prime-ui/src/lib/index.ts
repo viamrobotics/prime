@@ -40,6 +40,7 @@ export { Breadcrumbs } from './Breadcrumbs/breadcrumbs.ts';
 
 export { Collapsible } from './Collapsible/collapsible.ts';
 export { ContextMenu } from './Menu/context-menu.ts';
+export { DatePicker } from './DatePicker/date-picker.ts';
 export { Dialog } from './Dialog/dialog.ts';
 
 export { Field } from './Field/field.ts';

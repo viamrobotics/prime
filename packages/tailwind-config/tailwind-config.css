@@ -259,7 +259,7 @@
 }
 
 /*
- * Bordered field frame. Reads `:disabled`, `[data-disabled]`, `[readonly]`,
+ * Bordered field frame. Reads `:disabled`, `[data-disabled]`, `[readonly]`, `[data-readonly]`,
  * `[aria-invalid="true"]`, and `[data-field-state="warn"]`, on itself or on a child `<input>`.
  * Later rules win ties: disabled and readonly beat invalid and warn, and every state beats hover.
  */
@@ -279,7 +279,7 @@
   &:is([data-field-state="warn"], :has(> input[data-field-state="warn"])) {
     border-color: var(--color-warning-dark);
   }
-  &:is([readonly], :has(> input[readonly])) {
+  &:is([readonly], [data-readonly], :has(> input[readonly])) {
     border-color: transparent;
     background-color: var(--color-gray-1);
   }

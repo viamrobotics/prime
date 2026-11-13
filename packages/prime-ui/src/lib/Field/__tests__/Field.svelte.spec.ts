@@ -185,6 +185,26 @@ describe('Field with widgets', () => {
 		});
 	});
 
+	it('names a date field by its label and describes it by its hint', async () => {
+		const scope = field(render(WidgetFields).container, 'date-field');
+		const group = scope.querySelector('[role="group"]')!;
+
+		await vi.waitFor(() => {
+			expect(group.getAttribute('aria-labelledby')).toBe(scope.querySelector('label')?.id);
+			expect(group.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
+		});
+	});
+
+	it('disables the date segments and trigger when the field is disabled', () => {
+		const scope = field(
+			render(WidgetFields, { props: { disabled: true } }).container,
+			'date-field'
+		);
+
+		expect(scope.querySelector('[data-segment="day"]')?.getAttribute('aria-disabled')).toBe('true');
+		expect(scope.querySelector('button')?.disabled, 'trigger disabled').toBe(true);
+	});
+
 	it('wires a switch', async () => {
 		const scope = field(render(WidgetFields).container, 'switch-field');
 		const control = scope.querySelector('[role="switch"]')!;
@@ -223,9 +243,10 @@ describe('Field with widgets', () => {
 				field(container, 'checkbox-field').querySelector('[role="checkbox"]'),
 				field(container, 'radio-field').querySelector('[role="radiogroup"]'),
 				field(container, 'select-field').querySelector('button'),
+				field(container, 'date-field').querySelector('[role="group"]'),
 				field(container, 'switch-field').querySelector('[role="switch"]'),
 				field(container, 'toggle-field').querySelector('[role="group"]')
 			].map((control) => control?.getAttribute('aria-invalid'))
-		).toEqual(['true', 'true', 'true', 'true', 'true']);
+		).toEqual(['true', 'true', 'true', 'true', 'true', 'true']);
 	});
 });

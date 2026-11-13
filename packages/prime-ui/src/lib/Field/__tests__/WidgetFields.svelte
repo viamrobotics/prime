@@ -2,6 +2,7 @@
 	import type { FieldState } from '../state.ts';
 
 	import Checkbox from '../../Checkbox/Checkbox.svelte';
+	import { DatePicker } from '../../DatePicker/date-picker.ts';
 	import Hint from '../../Hint/Hint.svelte';
 	import Label from '../../Label/Label.svelte';
 	import { RadioGroup } from '../../RadioGroup/radio-group.ts';
@@ -45,6 +46,16 @@
 		</Select.Trigger>
 	</Select>
 	<Hint>Select hint</Hint>
+</Field>
+
+<Field {disabled} {required} {state} data-testid="date-field">
+	<Label>Start date</Label>
+	<DatePicker>
+		<DatePicker.Field>
+			<DatePicker.Trigger />
+		</DatePicker.Field>
+	</DatePicker>
+	<Hint>Date hint</Hint>
 </Field>
 
 <Field {disabled} {required} {state} data-testid="switch-field">
