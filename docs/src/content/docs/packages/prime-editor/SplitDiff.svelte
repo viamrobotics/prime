@@ -1,7 +1,7 @@
 <script lang="ts">
   import { CodeEditor } from "@viamrobotics/prime-editor";
 
-  const original = `const greeting = "hello";\nconsole.log(greeting);\n`;
+  const original = `const greeting = "hello there";\nconst unused = true;\nconsole.log(greeting);\n`;
   let value = $state(`const greeting = "hello, world";\nconsole.log(greeting.toUpperCase());\n`);
 </script>
 

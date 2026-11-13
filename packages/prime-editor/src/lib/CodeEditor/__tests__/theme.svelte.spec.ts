@@ -35,6 +35,13 @@ const resolveColor = (container: HTMLElement, variable: string) => {
 	return resolved;
 };
 
+const probeBackground = (container: HTMLElement, kind: 'success' | 'danger') => {
+	const probe = document.createElement('span');
+	probe.style.background = `color-mix(in srgb, var(--color-${kind}-bright) 14%, var(--color-${kind}-light))`;
+	container.append(probe);
+	return probe;
+};
+
 const colorOfText = (root: HTMLElement, text: string) => {
 	const span = [...root.querySelectorAll('.cm-line span')].find(
 		(node) => node.textContent === text
@@ -105,6 +112,13 @@ describe('codeEditorTheme', () => {
 		);
 	});
 
+	it('clips its square gutter and scroller to the rounded corners', () => {
+		const style = getComputedStyle(mount());
+
+		expect(Number.parseFloat(style.borderTopLeftRadius)).toBeGreaterThan(0);
+		expect(style.overflow).toBe('hidden');
+	});
+
 	it('keeps a visible focus outline', async () => {
 		const root = mount();
 		root.querySelector<HTMLElement>('.cm-content')!.focus();
@@ -123,7 +137,14 @@ describe('codeEditorTheme', () => {
 		expect(dark).not.toBe(light);
 	});
 
-	it('paints the original side of a split diff as removed and the changed side as added', () => {
+	const signOf = (line: Element) => getComputedStyle(line, '::before').content;
+	const backgroundOf = (root: HTMLElement, selector: string) => {
+		const node = root.querySelector(selector);
+		if (!node) throw new Error(`no node matches ${selector}`);
+		return getComputedStyle(node).backgroundColor;
+	};
+
+	it('paints the split diff like a patch: tinted lines, darker changed words, and a sign', () => {
 		host = document.createElement('div');
 		document.body.append(host);
 		const extensions = [javascript(), codeEditorTheme];
@@ -132,40 +153,56 @@ describe('codeEditorTheme', () => {
 			b: { doc: 'let value = 2;\n', extensions },
 			parent: host
 		});
-		const backgroundOf = (side: EditorView) =>
-			getComputedStyle(side.dom.querySelector('.cm-changedLine')!).backgroundColor;
 
-		expect(backgroundOf(view.a)).toBe(resolveColor(host, '--color-danger-light'));
-		expect(backgroundOf(view.b)).toBe(resolveColor(host, '--color-success-light'));
-		expect(getComputedStyle(view.a.dom.querySelector('.cm-changedText')!).textDecorationLine).toBe(
-			'line-through'
+		expect(backgroundOf(view.a.dom, '.cm-changedLine')).toBe(
+			resolveColor(host, '--color-danger-light')
 		);
-		expect(getComputedStyle(view.b.dom.querySelector('.cm-changedText')!).textDecorationLine).toBe(
-			'underline'
+		expect(backgroundOf(view.b.dom, '.cm-changedLine')).toBe(
+			resolveColor(host, '--color-success-light')
 		);
+		expect(getComputedStyle(view.a.dom.querySelector('.cm-changedText')!).background).toBe(
+			getComputedStyle(probeBackground(host, 'danger')).background
+		);
+		expect(getComputedStyle(view.b.dom.querySelector('.cm-changedText')!).background).toBe(
+			getComputedStyle(probeBackground(host, 'success')).background
+		);
+		expect(signOf(view.a.dom.querySelector('.cm-changedLine')!)).toBe('"-"');
+		expect(signOf(view.b.dom.querySelector('.cm-changedLine')!)).toBe('"+"');
+		expect(signOf(view.b.dom.querySelector('.cm-line:not(.cm-changedLine)')!)).toBe('none');
 		view.destroy();
 	});
 
-	it('marks unified diff text with a decoration as well as a color', () => {
+	it('paints the unified diff the same way, with no strike or underline on the text', () => {
 		host = document.createElement('div');
 		document.body.append(host);
 		const view = new EditorView({
-			doc: 'let value = 2;\n',
+			doc: 'let value = 2;\nkeep\n',
 			extensions: [
 				javascript(),
 				codeEditorTheme,
-				unifiedMergeView({ original: 'let value = 1;\n', mergeControls: false })
+				unifiedMergeView({ original: 'let value = 1;\nkeep\n', mergeControls: false })
 			],
 			parent: host
 		});
-		const decorationOf = (selector: string) =>
-			getComputedStyle(view.dom.querySelector(selector)!).textDecorationLine;
+		const deletedText = view.dom.querySelector('.cm-deletedChunk .cm-deletedText')!;
+		const changedText = view.dom.querySelector('.cm-changedText')!;
 
-		expect(decorationOf('.cm-deletedChunk .cm-deletedText, .cm-deletedLine')).toBe('line-through');
-		expect(decorationOf('.cm-changedText')).toBe('underline');
-		expect(getComputedStyle(view.dom.querySelector('.cm-changedLine')!).backgroundColor).toBe(
+		expect(backgroundOf(view.dom, '.cm-changedLine')).toBe(
 			resolveColor(host, '--color-success-light')
 		);
+		expect(backgroundOf(view.dom, '.cm-deletedChunk')).toBe(
+			resolveColor(host, '--color-danger-light')
+		);
+		expect(getComputedStyle(deletedText).background).toBe(
+			getComputedStyle(probeBackground(host, 'danger')).background
+		);
+		expect(getComputedStyle(changedText).background).toBe(
+			getComputedStyle(probeBackground(host, 'success')).background
+		);
+		expect(getComputedStyle(deletedText).textDecorationLine).toBe('none');
+		expect(getComputedStyle(changedText).textDecorationLine).toBe('none');
+		expect(signOf(view.dom.querySelector('.cm-changedLine')!)).toBe('"+"');
+		expect(signOf(view.dom.querySelector('.cm-deletedChunk .cm-deletedLine')!)).toBe('"-"');
 		view.destroy();
 	});
 });

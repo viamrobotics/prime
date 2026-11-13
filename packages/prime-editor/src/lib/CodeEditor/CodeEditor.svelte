@@ -177,6 +177,7 @@
 		return unifiedMergeView({
 			original: text,
 			mergeControls: false,
+			gutter: false,
 			...(collapsedContext && { collapseUnchanged: collapsedContext })
 		});
 	}
@@ -267,6 +268,7 @@
 			() =>
 				new MergeView({
 					parent: node,
+					gutter: false,
 					...(collapsed && { collapseUnchanged: collapsed }),
 					a: {
 						doc: original,

@@ -41,6 +41,14 @@ const highlightStyle = HighlightStyle.define([
 	}
 ]);
 
+// A changed word is its line's tint with a share of the bright color mixed in, so it reads as
+// the same hue, stronger.
+const changedWordFill = (kind: 'success' | 'danger') =>
+	`color-mix(in srgb, var(--color-${kind}-bright) 14%, var(--color-${kind}-light))`;
+
+const DIFF_SIGN_WIDTH = '2ch';
+const DIFF_LINE_INDENT = `calc(var(--spacing) * 2 + ${DIFF_SIGN_WIDTH})`;
+
 const surfaceTheme = EditorView.theme({
 	'&': {
 		color: 'var(--color-default)',
@@ -49,7 +57,9 @@ const surfaceTheme = EditorView.theme({
 		fontSize: 'var(--text-xs)',
 		lineHeight: 'var(--text-xs--line-height)',
 		border: '1px solid var(--color-gray-3)',
-		borderRadius: 'var(--radius-sm)'
+		borderRadius: 'var(--radius-sm)',
+		// The gutter and the scroller are square, so they are clipped to the rounded corners.
+		overflow: 'hidden'
 	},
 	'&:has(.cm-content[aria-invalid="true"])': { borderColor: 'var(--color-danger-dark)' },
 	'&:has(.cm-content[aria-disabled="true"])': {
@@ -121,32 +131,51 @@ const surfaceTheme = EditorView.theme({
 		outline: '1px solid var(--color-warning-bright)'
 	},
 
-	'.cm-insertedLine, .cm-inlineChangedLine, &.cm-merge-b .cm-changedLine': {
+	'&.cm-merge-b .cm-changedLine, .cm-inlineChangedLine': {
 		backgroundColor: 'var(--color-success-light)'
 	},
-	'.cm-deletedLine, .cm-deletedChunk, &.cm-merge-a .cm-changedLine': {
+	'&.cm-merge-a .cm-changedLine, .cm-deletedChunk': {
 		backgroundColor: 'var(--color-danger-light)'
 	},
-	'.cm-deletedLine': { textDecoration: 'line-through' },
-	'&.cm-merge-b .cm-changedText': {
-		background: 'var(--color-success-medium)',
-		textDecoration: 'underline'
+	// Naming `.cm-content` matches the specificity of the merge view's own underline gradient.
+	'&.cm-merge-b .cm-content .cm-changedText': {
+		background: changedWordFill('success')
 	},
-	'&.cm-merge-a .cm-changedText, .cm-deletedText': {
-		background: 'var(--color-danger-medium)',
-		textDecoration: 'line-through'
+	[[
+		'&.cm-merge-a .cm-content .cm-changedText',
+		'.cm-content .cm-deletedChunk .cm-deletedText',
+		'&.cm-merge-b .cm-deletedText'
+	].join(', ')]: { background: changedWordFill('danger') },
+
+	// Every line of a diff leaves room for the sign, so changed and unchanged code stay aligned.
+	'&.cm-merge-a .cm-line, &.cm-merge-b .cm-line, .cm-deletedChunk': {
+		paddingLeft: DIFF_LINE_INDENT
 	},
-	'&.cm-merge-b .cm-changedLineGutter': { background: 'var(--color-success-dark)' },
-	'&.cm-merge-a .cm-changedLineGutter, .cm-deletedLineGutter': {
-		background: 'var(--color-danger-dark)'
+	[[
+		'&.cm-merge-a .cm-changedLine::before',
+		'&.cm-merge-b .cm-changedLine::before',
+		'.cm-deletedChunk .cm-deletedLine::before'
+	].join(', ')]: {
+		display: 'inline-block',
+		width: DIFF_SIGN_WIDTH,
+		marginLeft: `calc(${DIFF_SIGN_WIDTH} * -1)`
 	},
-	'.cm-inlineChangedLineGutter': { background: 'var(--color-success-dark)' },
-	'.cm-deletedChunk': { paddingLeft: 'calc(var(--spacing) * 2)' },
+	'&.cm-merge-b .cm-changedLine::before': {
+		content: '"+"',
+		color: 'var(--color-success-dark)'
+	},
+	'&.cm-merge-a .cm-changedLine::before, .cm-deletedChunk .cm-deletedLine::before': {
+		content: '"-"',
+		color: 'var(--color-danger-dark)'
+	},
+
 	'.cm-mergeView': { border: 'none' },
-	'.cm-collapsedLines': {
+	'.cm-content .cm-collapsedLines': {
 		color: 'var(--color-subtle-1)',
-		backgroundColor: 'var(--color-gray-2)'
-	}
+		background: 'var(--color-gray-2)',
+		padding: 'var(--spacing) calc(var(--spacing) * 2)'
+	},
+	'.cm-collapsedLines:before, .cm-collapsedLines:after': { content: 'none' }
 });
 
 /**
