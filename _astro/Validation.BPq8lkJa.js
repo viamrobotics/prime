@@ -1,0 +1,4 @@
+import"./disclose-version.xihTtKlq.js";import{Ht as e,Q as t,St as n,U as r,V as i,_t as a,at as o,ft as s,ut as c,yt as l,z as u}from"./client.BX8nO9gf.js";import{t as d}from"./CodeEditor.s7L4_bqz.js";var f=r(`<div class="not-content flex w-full flex-col gap-1"><span id="config-label" class="text-sm font-medium">Config</span> <!> <p id="config-error" aria-live="polite" class="min-h-4 text-xs text-danger-dark"> </p></div>`);function p(r){let p=l(`{
+  "speed": 5,
+}
+`),m=n(()=>{try{JSON.parse(t(p));return}catch(e){return e instanceof Error?e.message:`The config is not valid JSON.`}});var h=f(),g=s(c(h),2);{let e=n(()=>t(m)!==void 0);d(g,{"aria-labelledby":`config-label`,"aria-describedby":`config-error`,get"aria-invalid"(){return t(e)},class:`max-h-64 w-full overflow-auto`,language:`json`,get value(){return t(p)},set value(e){a(p,e,!0)}})}var _=s(g,2),v=c(_,!0);e(_),e(h),o(()=>u(v,t(m))),i(r,h)}export{p as default};
