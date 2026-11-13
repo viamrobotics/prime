@@ -5,6 +5,7 @@ description: A non-modal panel anchored to a trigger.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -98,11 +99,13 @@ Every part that renders an element takes `class` on that element. `Popover.Trigg
 
 ## Keyboard
 
-| Key                                 | Action                                      |
-| ----------------------------------- | ------------------------------------------- |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | On the trigger, opens or closes the panel.  |
-| <kbd>Tab</kbd>                      | Moves focus within the panel, then on.      |
-| <kbd>Escape</kbd>                   | Closes the panel and focuses the trigger.   |
+<KeyboardTable
+  bindings={[
+    { keys: "Enter / Space", action: "On the trigger, opens or closes the panel." },
+    { keys: "Tab", action: "Moves focus within the panel, then on." },
+    { keys: "Escape", action: "Closes the panel and focuses the trigger." },
+  ]}
+/>
 
 ## API
 

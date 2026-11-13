@@ -8,6 +8,8 @@ import { getEntry } from "astro:content";
 
 import type { ComponentCollection } from "./collection";
 
+import { inlineCode } from "./inline-code";
+
 interface Props {
   name: string;
   collection?: ComponentCollection;
@@ -24,10 +26,6 @@ const {
   requiresOneOf,
 } = entry.data;
 
-const escape = (text: string) =>
-  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const inlineCode = (text: string) =>
-  escape(text).replace(/`([^`]+)`/g, "<code>$1</code>");
 ---
 
 {

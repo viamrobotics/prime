@@ -5,6 +5,7 @@ description: A composable dropdown select.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -188,23 +189,27 @@ Every part that renders an element takes `class` on that element. `Select.Trigge
 
 With focus on the trigger:
 
-| Key                                                                             | Action                                |
-| ------------------------------------------------------------------------------- | ------------------------------------- |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Opens the panel.                      |
-| Printable characters                                                            | Selects the next item from `items` matching the text, without opening. |
+<KeyboardTable
+  bindings={[
+    { keys: "Enter / Space / ArrowDown / ArrowUp", action: "Opens the panel." },
+    { text: "Printable characters", action: "Selects the next item from `items` matching the text, without opening." },
+  ]}
+/>
 
 With the panel open:
 
-| Key                                       | Action                                                 |
-| ----------------------------------------- | ------------------------------------------------------ |
-| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Highlights the next or previous item.                  |
-| <kbd>Home</kbd> / <kbd>End</kbd>          | Highlights the first or last item.                     |
-| <kbd>PageDown</kbd> / <kbd>PageUp</kbd>   | Highlights the item a page away.                       |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>       | Selects the highlighted item and closes.               |
-| <kbd>Alt</kbd> + <kbd>ArrowUp</kbd>       | Selects the highlighted item and closes.               |
-| Printable characters                      | Typeahead: highlights the next item matching the text. |
-| <kbd>Escape</kbd>                         | Closes without changing the value.                     |
-| <kbd>Tab</kbd>                            | Closes and moves focus on.                             |
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowDown / ArrowUp", action: "Highlights the next or previous item." },
+    { keys: "Home / End", action: "Highlights the first or last item." },
+    { keys: "PageDown / PageUp", action: "Highlights the item a page away." },
+    { keys: "Enter / Space", action: "Selects the highlighted item and closes." },
+    { keys: "Alt + ArrowUp", action: "Selects the highlighted item and closes." },
+    { text: "Printable characters", action: "Typeahead: highlights the next item matching the text." },
+    { keys: "Escape", action: "Closes without changing the value." },
+    { keys: "Tab", action: "Closes and moves focus on." },
+  ]}
+/>
 
 ## API
 

@@ -5,6 +5,7 @@ description: A menu opened by right-click or long-press on an area.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -57,15 +58,17 @@ Every part that renders an element takes `class` on that element. `ContextMenu.T
 
 ## Keyboard
 
-| Key                                                    | Action                                                  |
-| ------------------------------------------------------ | ------------------------------------------------------- |
-| Right-click or long-press                              | Opens the menu at the pointer.                          |
-| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd>              | Moves focus to the next or previous item.               |
-| <kbd>Home</kbd> / <kbd>End</kbd>                       | Moves focus to the first or last item.                  |
-| <kbd>ArrowRight</kbd> / <kbd>ArrowLeft</kbd>           | Opens a submenu, or closes it and returns to its parent. |
-| Typed characters                                       | Focuses the next item whose text starts with them.      |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>                    | On an item, activates it and closes the menu.           |
-| <kbd>Escape</kbd>                                      | Closes the menu.                                        |
+<KeyboardTable
+  bindings={[
+    { text: "Right-click or long-press", action: "Opens the menu at the pointer." },
+    { keys: "ArrowDown / ArrowUp", action: "Moves focus to the next or previous item." },
+    { keys: "Home / End", action: "Moves focus to the first or last item." },
+    { keys: "ArrowRight / ArrowLeft", action: "Opens a submenu, or closes it and returns to its parent." },
+    { text: "Typed characters", action: "Focuses the next item whose text starts with them." },
+    { keys: "Enter / Space", action: "On an item, activates it and closes the menu." },
+    { keys: "Escape", action: "Closes the menu." },
+  ]}
+/>
 
 ## API
 

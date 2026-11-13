@@ -5,6 +5,7 @@ description: A composable dropdown select that holds several values.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
 import MultiSelectDemo from "./MultiSelectDemo.svelte";
@@ -71,10 +72,12 @@ Everything on the [Select styling](../select/#styling) section applies: `class` 
 
 The [Select keyboard table](../select/#keyboard) applies, with two differences while the panel is open:
 
-| Key                                 | Action                                                  |
-| ----------------------------------- | ------------------------------------------------------- |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | Toggles the highlighted item. The panel stays open.     |
-| <kbd>Escape</kbd>                   | Closes the panel. The values picked so far are kept.    |
+<KeyboardTable
+  bindings={[
+    { keys: "Enter / Space", action: "Toggles the highlighted item. The panel stays open." },
+    { keys: "Escape", action: "Closes the panel. The values picked so far are kept." },
+  ]}
+/>
 
 ## API
 

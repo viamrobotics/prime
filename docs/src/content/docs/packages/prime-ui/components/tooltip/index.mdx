@@ -5,6 +5,7 @@ description: A short label for a control, shown on hover or focus.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -98,10 +99,12 @@ The trigger span is inline, so its box is a line box and not the control's box. 
 
 ## Keyboard
 
-| Key                 | Action                                                              |
-| ------------------- | ------------------------------------------------------------------- |
-| <kbd>Tab</kbd>      | Moves focus to the control inside the trigger and opens the tooltip. |
-| <kbd>Escape</kbd>   | Closes the tooltip. Focus stays on the control.                     |
+<KeyboardTable
+  bindings={[
+    { keys: "Tab", action: "Moves focus to the control inside the trigger and opens the tooltip." },
+    { keys: "Escape", action: "Closes the tooltip. Focus stays on the control." },
+  ]}
+/>
 
 Tabbing away from the control closes the tooltip. The trigger span is never a tab stop.
 

@@ -5,6 +5,7 @@ description: A notification strip with a variant chip, content, and an optional 
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -127,10 +128,12 @@ Every part takes `class` on its element. Each part wears a component class from 
 
 ## Keyboard
 
-| Key                                 | Action                                              |
-| ----------------------------------- | --------------------------------------------------- |
-| <kbd>Tab</kbd>                      | Focuses each action, the close button, and the details trigger. |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | On the details trigger, opens or closes the content. |
+<KeyboardTable
+  bindings={[
+    { keys: "Tab", action: "Focuses each action, the close button, and the details trigger." },
+    { keys: "Enter / Space", action: "On the details trigger, opens or closes the content." },
+  ]}
+/>
 
 ## API
 

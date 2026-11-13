@@ -1,0 +1,54 @@
+---
+/**
+ * Keyboard table for a component or package page. Each binding names its keys in the
+ * notation `Enter / Space` for alternatives and `Shift + Tab` for a chord, and every key
+ * renders as a `<kbd>`. `text` is prose shown after the keys, or alone when the input is
+ * not a named key, such as "Typed characters". Backtick spans in `action` render as code.
+ */
+import { inlineCode } from "./inline-code";
+import { tokenizeKeys } from "./key-tokens";
+
+interface KeyBinding {
+  keys?: string;
+  text?: string;
+  action: string;
+}
+
+interface Props {
+  bindings: KeyBinding[];
+}
+
+const { bindings } = Astro.props;
+
+for (const binding of bindings) {
+  if (!binding.keys && !binding.text) {
+    throw new Error(`Key binding "${binding.action}" has neither keys nor text`);
+  }
+}
+---
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      bindings.map(({ keys, text, action }) => (
+        <tr>
+          <td>
+            {keys &&
+              tokenizeKeys(keys).map((token) =>
+                token.kind === "key" ? <kbd>{token.text}</kbd> : ` ${token.text} `,
+              )}
+            {keys && text && " "}
+            {text}
+          </td>
+          <td set:html={inlineCode(action)} />
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

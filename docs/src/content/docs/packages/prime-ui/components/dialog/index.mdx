@@ -5,6 +5,7 @@ description: A modal dialog with a focus trap, built from parts.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -109,11 +110,13 @@ The overlay is part of `Dialog.Content` and takes no class of its own.
 
 ## Keyboard
 
-| Key                                                    | Action                                                            |
-| ------------------------------------------------------ | ----------------------------------------------------------------- |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>                    | On the trigger, opens the dialog.                                 |
-| <kbd>Escape</kbd>                                      | Closes the dialog and returns focus to the trigger.               |
-| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd>     | Cycles focus inside the dialog, wrapping at either end.           |
+<KeyboardTable
+  bindings={[
+    { keys: "Enter / Space", action: "On the trigger, opens the dialog." },
+    { keys: "Escape", action: "Closes the dialog and returns focus to the trigger." },
+    { keys: "Tab / Shift + Tab", action: "Cycles focus inside the dialog, wrapping at either end." },
+  ]}
+/>
 
 ## API
 

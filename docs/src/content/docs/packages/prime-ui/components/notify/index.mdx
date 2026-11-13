@@ -6,6 +6,7 @@ description: Notifications for something that happened to the user, stacked as b
 import { Code } from "@astrojs/starlight/components";
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
 import NotifyDemo from "./NotifyDemo.svelte";
@@ -112,12 +113,14 @@ Each item carries data attributes for styling by state.
 
 ## Keyboard
 
-| Key                                 | Action                                                      |
-| ----------------------------------- | ----------------------------------------------------------- |
-| <kbd>Tab</kbd>                      | Focuses the close button of each notification in turn.      |
-| <kbd>Escape</kbd>                   | Dismisses the focused notification.                         |
-| <kbd>Alt</kbd> + <kbd>T</kbd>       | Moves focus to the region.                                  |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | On the close button, dismisses the notification.            |
+<KeyboardTable
+  bindings={[
+    { keys: "Tab", action: "Focuses the close button of each notification in turn." },
+    { keys: "Escape", action: "Dismisses the focused notification." },
+    { keys: "Alt + T", action: "Moves focus to the region." },
+    { keys: "Enter / Space", action: "On the close button, dismisses the notification." },
+  ]}
+/>
 
 ## API
 

@@ -5,6 +5,7 @@ description: A row of mutually exclusive buttons.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -96,13 +97,15 @@ Inside a [`Field`](../field/), the group takes its `id`, `disabled`, `state`, an
 
 Arrow keys move focus only. Selecting is a separate key press.
 
-| Key                                          | Action                                           |
-| -------------------------------------------- | ------------------------------------------------ |
-| <kbd>Tab</kbd>                               | Focuses the selected option, or the first.       |
-| <kbd>ArrowRight</kbd> / <kbd>ArrowDown</kbd> | Moves focus to the next option, wrapping around. |
-| <kbd>ArrowLeft</kbd> / <kbd>ArrowUp</kbd>    | Moves focus to the previous option, wrapping.    |
-| <kbd>Home</kbd> / <kbd>End</kbd>             | Moves focus to the first or last option.         |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>          | Selects the focused option.                      |
+<KeyboardTable
+  bindings={[
+    { keys: "Tab", action: "Focuses the selected option, or the first." },
+    { keys: "ArrowRight / ArrowDown", action: "Moves focus to the next option, wrapping around." },
+    { keys: "ArrowLeft / ArrowUp", action: "Moves focus to the previous option, wrapping." },
+    { keys: "Home / End", action: "Moves focus to the first or last option." },
+    { keys: "Enter / Space", action: "Selects the focused option." },
+  ]}
+/>
 
 ## API
 

@@ -12,6 +12,7 @@ import {
 } from "@astrojs/starlight/components";
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -711,51 +712,61 @@ The pane wrapper is the element that `PaneState` mirrors, so `data-stacked` matc
 
 With focus on a divider:
 
-| Key                                          | Action                                                                                 |
-| -------------------------------------------- | -------------------------------------------------------------------------------------- |
-| <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> | In a `row` split, moves the divider 1% toward the first or second pane.                |
-| <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>    | In a `column` split, moves the divider 1% toward the first or second pane.             |
-| <kbd>Shift</kbd> + an arrow key              | Moves the divider 10%.                                                                 |
-| <kbd>Home</kbd> / <kbd>End</kbd>             | Moves the divider as far toward the first or second pane as their minimum sizes allow. |
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowLeft / ArrowRight", action: "In a `row` split, moves the divider 1% toward the first or second pane." },
+    { keys: "ArrowUp / ArrowDown", action: "In a `column` split, moves the divider 1% toward the first or second pane." },
+    { keys: "Shift", text: "+ an arrow key", action: "Moves the divider 10%." },
+    { keys: "Home / End", action: "Moves the divider as far toward the first or second pane as their minimum sizes allow." },
+  ]}
+/>
 
 With focus on a `Panes.MoveTrigger`:
 
-| Key                                 | Action                                            |
-| ----------------------------------- | ------------------------------------------------- |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | Enters move mode, or leaves it when it is active. |
+<KeyboardTable
+  bindings={[
+    { keys: "Enter / Space", action: "Enters move mode, or leaves it when it is active." },
+  ]}
+/>
 
 A native `button` toggles through its own click. An element with `role="button"` toggles on Enter keydown and Space keyup, and an element with `role="menuitem"` through the `click` that its menu dispatches.
 
 During move mode, with focus on the moving pane's trigger:
 
-| Key                                                | Action                                                                                                    |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Arrow keys                                         | Step between the sides of a pane, then cross into the adjacent pane. Arrows in a text field stay with it. |
-| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> | Moves between destinations. Each destination is one Tab stop.                                             |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>                | Places the pane at the focused destination.                                                               |
-| <kbd>F6</kbd> / <kbd>Shift</kbd> + <kbd>F6</kbd>   | Moves to the next or previous layer: the base, then each window.                                          |
-| <kbd>Escape</kbd>                                  | Cancels move mode.                                                                                        |
+<KeyboardTable
+  bindings={[
+    { text: "Arrow keys", action: "Step between the sides of a pane, then cross into the adjacent pane. Arrows in a text field stay with it." },
+    { keys: "Tab / Shift + Tab", action: "Moves between destinations. Each destination is one Tab stop." },
+    { keys: "Enter / Space", action: "Places the pane at the focused destination." },
+    { keys: "F6 / Shift + F6", action: "Moves to the next or previous layer: the base, then each window." },
+    { keys: "Escape", action: "Cancels move mode." },
+  ]}
+/>
 
 <kbd>Escape</kbd> also cancels a pointer drag.
 
 With focus on a tab:
 
-| Key                                                                              | Action                                                                 |
-| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| <kbd>Tab</kbd>                                                                   | Moves focus into the list on the active tab, then out.                 |
-| <kbd>ArrowRight</kbd>                                                            | Selects and focuses the next tab. It wraps at the end.                 |
-| <kbd>ArrowLeft</kbd>                                                             | Selects and focuses the previous tab. It wraps.                        |
-| <kbd>Home</kbd> / <kbd>End</kbd>                                                 | Selects and focuses the first or last tab.                             |
-| <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> | Moves the tab one place earlier or later, while `reorderable` is true. |
+<KeyboardTable
+  bindings={[
+    { keys: "Tab", action: "Moves focus into the list on the active tab, then out." },
+    { keys: "ArrowRight", action: "Selects and focuses the next tab. It wraps at the end." },
+    { keys: "ArrowLeft", action: "Selects and focuses the previous tab. It wraps." },
+    { keys: "Home / End", action: "Selects and focuses the first or last tab." },
+    { keys: "Alt + Shift + ArrowLeft / ArrowRight", action: "Moves the tab one place earlier or later, while `reorderable` is true." },
+  ]}
+/>
 
 With focus on a window itself, not on a control inside it:
 
-| Key                                                           | Action                                                                                        |
-| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| An arrow key                                                  | Moves the window 10 pixels.                                                                   |
-| <kbd>Shift</kbd> + an arrow key                               | Moves the window 100 pixels.                                                                  |
-| <kbd>Alt</kbd> + <kbd>ArrowRight</kbd> / <kbd>ArrowDown</kbd> | Grows the right or bottom edge by 10 pixels, or 100 with Shift.                               |
-| <kbd>Alt</kbd> + <kbd>ArrowLeft</kbd> / <kbd>ArrowUp</kbd>    | Shrinks the right or bottom edge by 10 pixels, or 100 with Shift. It stops at `floatMinSize`. |
+<KeyboardTable
+  bindings={[
+    { text: "An arrow key", action: "Moves the window 10 pixels." },
+    { keys: "Shift", text: "+ an arrow key", action: "Moves the window 100 pixels." },
+    { keys: "Alt + ArrowRight / ArrowDown", action: "Grows the right or bottom edge by 10 pixels, or 100 with Shift." },
+    { keys: "Alt + ArrowLeft / ArrowUp", action: "Shrinks the right or bottom edge by 10 pixels, or 100 with Shift. It stops at `floatMinSize`." },
+  ]}
+/>
 
 ## API
 

@@ -5,6 +5,7 @@ description: A composable radio group.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -94,13 +95,15 @@ Pass `description` to show a line of text under an item's label. The radio's acc
 
 Focus moves between items, and moving focus with the arrow keys also selects the newly focused item.
 
-| Key                                          | Action                                               |
-| -------------------------------------------- | ---------------------------------------------------- |
-| <kbd>Tab</kbd>                               | Focuses the checked item, or the first if none is.   |
-| <kbd>ArrowDown</kbd> / <kbd>ArrowRight</kbd> | Moves to and selects the next item, wrapping around. |
-| <kbd>ArrowUp</kbd> / <kbd>ArrowLeft</kbd>    | Moves to and selects the previous item, wrapping.    |
-| <kbd>Home</kbd> / <kbd>End</kbd>             | Moves to and selects the first or last item.         |
-| <kbd>Space</kbd>                             | Selects the focused item.                            |
+<KeyboardTable
+  bindings={[
+    { keys: "Tab", action: "Focuses the checked item, or the first if none is." },
+    { keys: "ArrowDown / ArrowRight", action: "Moves to and selects the next item, wrapping around." },
+    { keys: "ArrowUp / ArrowLeft", action: "Moves to and selects the previous item, wrapping." },
+    { keys: "Home / End", action: "Moves to and selects the first or last item." },
+    { keys: "Space", action: "Selects the focused item." },
+  ]}
+/>
 
 ## Events
 

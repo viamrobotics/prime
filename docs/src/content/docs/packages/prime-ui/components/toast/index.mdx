@@ -6,6 +6,7 @@ description: A brief confirmation of an action the user just took, stacked at th
 import { Code } from "@astrojs/starlight/components";
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
 import ToastDemo from "./ToastDemo.svelte";
@@ -90,12 +91,14 @@ Each item carries data attributes for styling by state.
 
 ## Keyboard
 
-| Key                                  | Action                                                 |
-| ------------------------------------ | ------------------------------------------------------ |
-| <kbd>Tab</kbd>                       | Focuses each toast's action and close button in turn.  |
-| <kbd>Escape</kbd>                    | Dismisses the focused toast.                           |
-| <kbd>Alt</kbd> + <kbd>T</kbd>        | Moves focus to the region.                             |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>  | On the action or close button, activates it.           |
+<KeyboardTable
+  bindings={[
+    { keys: "Tab", action: "Focuses each toast's action and close button in turn." },
+    { keys: "Escape", action: "Dismisses the focused toast." },
+    { keys: "Alt + T", action: "Moves focus to the region." },
+    { keys: "Enter / Space", action: "On the action or close button, activates it." },
+  ]}
+/>
 
 ## API
 

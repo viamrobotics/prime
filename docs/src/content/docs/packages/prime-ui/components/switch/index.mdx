@@ -5,6 +5,7 @@ description: An on/off switch for settings that apply immediately.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
 import SwitchDemo from "./SwitchDemo.svelte";
@@ -77,10 +78,12 @@ A switch can show more settings when it is on. Read `checked` and render the ext
 
 ## Keyboard
 
-| Key              | Action                                                      |
-| ---------------- | ----------------------------------------------------------- |
-| <kbd>Space</kbd> | Toggles the switch.                                         |
-| <kbd>Enter</kbd> | Toggles the switch.                                         |
+<KeyboardTable
+  bindings={[
+    { keys: "Space", action: "Toggles the switch." },
+    { keys: "Enter", action: "Toggles the switch." },
+  ]}
+/>
 
 ## API
 

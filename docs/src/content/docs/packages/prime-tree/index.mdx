@@ -5,6 +5,7 @@ description: "Headless tree view for Svelte 5: the package owns behavior and acc
 
 import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 
@@ -189,16 +190,18 @@ Focus is roving. One row has `tabindex="0"` and the rest are reachable by the ar
 
 ## Keyboard
 
-| Key                     | Action                                                          |
-| ----------------------- | --------------------------------------------------------------- |
-| Arrow Down / Arrow Up   | Move focus to the next or previous visible row                  |
-| Arrow Right             | Expand a collapsed branch, or move into an expanded one         |
-| Arrow Left              | Collapse an expanded branch, or move to the parent              |
-| Home / End              | Move focus to the first or last visible row                     |
-| Enter or Space          | Select the focused row. On a branch, do what `branchClick` sets |
-| Shift + Arrow Up / Down | Extend a multiple selection                                     |
-| `*`                     | Expand every sibling of the focused row                         |
-| Printable characters    | Type-ahead by `nodeToString`                                    |
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowDown / ArrowUp", action: "Move focus to the next or previous visible row" },
+    { keys: "ArrowRight", action: "Expand a collapsed branch, or move into an expanded one" },
+    { keys: "ArrowLeft", action: "Collapse an expanded branch, or move to the parent" },
+    { keys: "Home / End", action: "Move focus to the first or last visible row" },
+    { keys: "Enter / Space", action: "Select the focused row. On a branch, do what `branchClick` sets" },
+    { keys: "Shift + ArrowUp / ArrowDown", action: "Extend a multiple selection" },
+    { keys: "*", action: "Expand every sibling of the focused row" },
+    { text: "Printable characters", action: "Type-ahead by `nodeToString`" },
+  ]}
+/>
 
 ## API
 

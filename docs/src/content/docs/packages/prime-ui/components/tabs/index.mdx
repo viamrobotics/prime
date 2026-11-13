@@ -5,6 +5,7 @@ description: A tab strip with one panel per tab.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -91,11 +92,13 @@ The root and every part take `class` on their element.
 
 ## Keyboard
 
-| Key                                 | Action                                |
-| ----------------------------------- | ------------------------------------- |
-| <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd> | Moves focus to the previous or next tab and selects it. |
-| <kbd>Home</kbd> / <kbd>End</kbd>    | Moves focus to the first or last tab and selects it. |
-| <kbd>Tab</kbd>                      | Moves focus into the selected panel.  |
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowLeft / ArrowRight", action: "Moves focus to the previous or next tab and selects it." },
+    { keys: "Home / End", action: "Moves focus to the first or last tab and selects it." },
+    { keys: "Tab", action: "Moves focus into the selected panel." },
+  ]}
+/>
 
 ## API
 

@@ -5,6 +5,7 @@ description: A full-viewport modal sheet with a focus trap, built from parts.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -102,11 +103,13 @@ Every part that renders an element takes `class` on that element. `Takeover` ren
 
 ## Keyboard
 
-| Key                                                | Action                                                      |
-| -------------------------------------------------- | ----------------------------------------------------------- |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>                | On the trigger, opens the takeover.                         |
-| <kbd>Escape</kbd>                                  | Closes the takeover and returns focus to the trigger.       |
-| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> | Cycles focus inside the takeover, wrapping at either end.   |
+<KeyboardTable
+  bindings={[
+    { keys: "Enter / Space", action: "On the trigger, opens the takeover." },
+    { keys: "Escape", action: "Closes the takeover and returns focus to the trigger." },
+    { keys: "Tab / Shift + Tab", action: "Cycles focus inside the takeover, wrapping at either end." },
+  ]}
+/>
 
 ## API
 

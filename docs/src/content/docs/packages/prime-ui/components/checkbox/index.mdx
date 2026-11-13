@@ -5,6 +5,7 @@ description: A checkbox with an indeterminate state.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
 import CheckboxDemo from "./CheckboxDemo.svelte";
@@ -77,10 +78,12 @@ Inside a [`Field`](../field/) the checkbox takes `controlId`, `disabled`, `requi
 
 ## Keyboard
 
-| Key              | Action                                                       |
-| ---------------- | ------------------------------------------------------------ |
-| <kbd>Space</kbd> | Toggles the checkbox.                                        |
-| <kbd>Enter</kbd> | Swallowed, so pressing it on the box never submits the form. |
+<KeyboardTable
+  bindings={[
+    { keys: "Space", action: "Toggles the checkbox." },
+    { keys: "Enter", action: "Swallowed, so pressing it on the box never submits the form." },
+  ]}
+/>
 
 ## API
 

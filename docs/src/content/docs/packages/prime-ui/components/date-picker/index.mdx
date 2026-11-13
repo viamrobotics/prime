@@ -5,6 +5,7 @@ description: A segmented date field with a calendar popover.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -98,20 +99,24 @@ The previous and next month buttons take their names from the root `locale` thro
 
 With focus on a segment of the field:
 
-| Key                                                                | Action                                  |
-| ------------------------------------------------------------------ | --------------------------------------- |
-| Digits                                                             | Types into the segment.                 |
-| <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>                          | Steps the segment up or down.           |
-| <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd>                       | Moves to the previous or next segment.  |
+<KeyboardTable
+  bindings={[
+    { text: "Digits", action: "Types into the segment." },
+    { keys: "ArrowUp / ArrowDown", action: "Steps the segment up or down." },
+    { keys: "ArrowLeft / ArrowRight", action: "Moves to the previous or next segment." },
+  ]}
+/>
 
 With focus on a day in the open calendar:
 
-| Key                                                                | Action                                  |
-| ------------------------------------------------------------------ | --------------------------------------- |
-| <kbd>ArrowLeft</kbd> / <kbd>ArrowRight</kbd>                       | Moves to the previous or next day.      |
-| <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>                          | Moves to the same day a week earlier or later. |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>                                | Selects the focused day.                |
-| <kbd>Escape</kbd>                                                  | Closes the calendar.                    |
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowLeft / ArrowRight", action: "Moves to the previous or next day." },
+    { keys: "ArrowUp / ArrowDown", action: "Moves to the same day a week earlier or later." },
+    { keys: "Enter / Space", action: "Selects the focused day." },
+    { keys: "Escape", action: "Closes the calendar." },
+  ]}
+/>
 
 ## API
 

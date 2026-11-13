@@ -5,6 +5,7 @@ description: A horizontal bar of menus, such as an application's File, Edit, and
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
@@ -58,16 +59,18 @@ Every part that renders an element takes `class` on that element. `Menubar` lays
 
 ## Keyboard
 
-| Key                                          | Action                                                                  |
-| -------------------------------------------- | ----------------------------------------------------------------------- |
-| <kbd>ArrowRight</kbd> / <kbd>ArrowLeft</kbd> | On a trigger, moves focus to the next or previous trigger, wrapping.    |
-| <kbd>ArrowDown</kbd> / <kbd>Enter</kbd> / <kbd>Space</kbd> | On a trigger, opens its menu and focuses the first item.  |
-| <kbd>ArrowRight</kbd> / <kbd>ArrowLeft</kbd> | In an open menu, opens the next or previous menu, or opens and closes a submenu. |
-| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd>    | Moves focus to the next or previous item.                               |
-| <kbd>Home</kbd> / <kbd>End</kbd>             | Moves focus to the first or last item.                                  |
-| Typed characters                             | Focuses the next item whose text starts with them.                      |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>          | On an item, activates it and closes the menu.                           |
-| <kbd>Escape</kbd>                            | Closes the menu and returns focus to its trigger.                       |
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowRight / ArrowLeft", action: "On a trigger, moves focus to the next or previous trigger, wrapping." },
+    { keys: "ArrowDown / Enter / Space", action: "On a trigger, opens its menu and focuses the first item." },
+    { keys: "ArrowRight / ArrowLeft", action: "In an open menu, opens the next or previous menu, or opens and closes a submenu." },
+    { keys: "ArrowDown / ArrowUp", action: "Moves focus to the next or previous item." },
+    { keys: "Home / End", action: "Moves focus to the first or last item." },
+    { text: "Typed characters", action: "Focuses the next item whose text starts with them." },
+    { keys: "Enter / Space", action: "On an item, activates it and closes the menu." },
+    { keys: "Escape", action: "Closes the menu and returns focus to its trigger." },
+  ]}
+/>
 
 ## API
 
