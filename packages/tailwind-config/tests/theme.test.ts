@@ -397,6 +397,19 @@ describe("theme stylesheets compiled through Tailwind", () => {
     ).toBe("var(--dark-color-gray-0)");
   });
 
+  it("darkens light subtle-2 below gray-7 to a text-grade value and keeps the dark value", () => {
+    const emittedTheme = themeRootDeclarations(emitted);
+
+    expect(
+      emittedTheme.get("--color-subtle-2"),
+      "#686a6e holds 4.5:1 on gray-2, the darkest surface subtle-2 text sits on",
+    ).toBe("#686a6e");
+    expect(emittedTheme.get("--color-gray-7")).toBe("#7a7c80");
+    expect(
+      declarationsOf(onlyRule(emitted, ":root")).get("--dark-color-subtle-2"),
+    ).toBe("#9c9ca4");
+  });
+
   it("declares text-display and text-code from the type tokens", () => {
     const display = declarationsOf(onlyRule(unoptimized, ".text-display"));
     expect(Object.fromEntries(display)).toStrictEqual({
