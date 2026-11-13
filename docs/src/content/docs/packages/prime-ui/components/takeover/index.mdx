@@ -1,0 +1,115 @@
+---
+title: Takeover
+description: A full-viewport modal sheet with a focus trap, built from parts.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import TakeoverDemo from "./TakeoverDemo.svelte";
+import TakeoverShowcase from "./TakeoverShowcase.svelte";
+import TwoWay from "./TwoWay.svelte";
+import twoWaySource from "./TwoWay.svelte?raw";
+import HeaderActions from "./HeaderActions.svelte";
+import headerActionsSource from "./HeaderActions.svelte?raw";
+import ScrollingBody from "./ScrollingBody.svelte";
+import scrollingBodySource from "./ScrollingBody.svelte?raw";
+
+<ComponentIntro name="takeover" />
+
+<TakeoverDemo client:visible />
+
+- Composed from parts, so the trigger, the header, and the body are yours to arrange.
+- One `open`, bindable. Closing returns focus to the trigger.
+- Focus is trapped inside while open, Escape closes, and the page behind does not scroll, via bits-ui.
+- The sheet fills the viewport in a portal. It has no overlay, border radius, or shadow, and it is labeled by `Takeover.Title`.
+
+For a floating panel over a dimmed page, use [`Dialog`](../dialog/).
+
+## Anatomy
+
+Every part is a property on `Takeover`. `Takeover` renders no element. The body is your own markup inside `Takeover.Content`.
+
+```svelte
+<Takeover>
+  <Takeover.Trigger />
+  <Takeover.Content>
+    <Takeover.Header>
+      <Takeover.Title />
+      <Takeover.Close />
+    </Takeover.Header>
+    <!-- body -->
+  </Takeover.Content>
+</Takeover>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:open` on the root.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Header actions
+
+`Takeover.Header` is a flex row with its children spread between the ends. Wrap the actions and `Takeover.Close` in one element so they stay together on the right.
+
+<Example code={headerActionsSource} title="HeaderActions.svelte">
+  <HeaderActions client:visible />
+</Example>
+
+### Scrolling body
+
+`Takeover.Content` is a column flex container and the header does not shrink. Give the body `min-h-0 flex-1 overflow-y-auto` and it scrolls while the header stays pinned.
+
+<Example code={scrollingBodySource} title="ScrollingBody.svelte">
+  <ScrollingBody client:visible />
+</Example>
+
+### States
+
+<TakeoverShowcase client:visible />
+
+## Migrating from prime-core
+
+A prime-core `Takeover` was a single component driven by `isOpen` and `onClose`. Here it is a set of parts with a bindable `open`, and the trigger is a part.
+
+| prime-core                  | Now                                                                  |
+| --------------------------- | -------------------------------------------------------------------- |
+| `Takeover`                  | `Takeover` with `Takeover.Trigger` and `Takeover.Content`.           |
+| `isOpen`                    | `bind:open` on `Takeover`.                                           |
+| `onClose`                   | Watch `open`, or pass a getter and setter. See [State & binding](../state/). |
+| `cx` on `Takeover`          | `class` on `Takeover.Content`.                                       |
+| `TakeoverHeader`            | `Takeover.Header`                                                    |
+| `TakeoverTitle`             | `Takeover.Title`                                                     |
+| `TakeoverClose`             | `Takeover.Close`                                                     |
+
+## Styling
+
+Every part that renders an element takes `class` on that element. `Takeover` renders no element, so it takes no `class`. `Takeover.Trigger` is a real `<button>` with no style of its own, so add `button` or your own classes. `Takeover.Close` wears `icon-button` and shows a close icon labeled `Close`. Pass children to replace the icon and `aria-label` to replace the label. `Takeover.Content` wears `z-dialog`, so it sits on the same layer as [`Dialog`](../dialog/). See [z layers](../../tailwind-config/component-classes/#z-layers). bits-ui sets the data attributes in the table below.
+
+| Part      | Attribute          | Value                                  |
+| --------- | ------------------ | -------------------------------------- |
+| `Trigger` | `data-state`       | `open` or `closed`                     |
+| `Content` | `data-state`       | `open` or `closed`                     |
+| `Content` | `data-nested`      | Present when inside another dialog     |
+| `Content` | `data-nested-open` | Present while a nested dialog is open  |
+
+## Keyboard
+
+| Key                                                | Action                                                      |
+| -------------------------------------------------- | ----------------------------------------------------------- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>                | On the trigger, opens the takeover.                         |
+| <kbd>Escape</kbd>                                  | Closes the takeover and returns focus to the trigger.       |
+| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> | Cycles focus inside the takeover, wrapping at either end.   |
+
+## API
+
+<PropsTable name="takeover" />
+
+<PartsDoc name="takeover" />

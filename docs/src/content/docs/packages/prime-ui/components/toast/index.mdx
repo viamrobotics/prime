@@ -1,0 +1,120 @@
+---
+title: Toast
+description: A brief confirmation of an action the user just took, stacked at the edge of the viewport.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import ToastDemo from "./ToastDemo.svelte";
+import ToastShowcase from "./ToastShowcase.svelte";
+import Basic from "./Basic.svelte";
+import basicSource from "./Basic.svelte?raw";
+import basicActionsSource from "./BasicActions.svelte?raw";
+import WithAction from "./WithAction.svelte";
+import withActionSource from "./WithAction.svelte?raw";
+import Placement from "./Placement.svelte";
+import placementSource from "./Placement.svelte?raw";
+
+<ComponentIntro name="toast" />
+
+<ToastDemo client:visible />
+
+- `provideToast` once near the app root creates the stack, and `useToast` anywhere below it creates toasts.
+- `info`, `success`, `warning`, and `danger` set the glyph. `warning` and `danger` announce as an `alert`, the others as a `status`.
+- Hovering the region or focusing a toast holds its timer.
+- <kbd>Escape</kbd> dismisses the focused toast.
+
+## Toast or notification?
+
+A toast confirms an action the user just took, such as `Saved` or `Copied`. It is one short line and it goes away on its own. Something that happened to the user, such as a failure, a lost connection, or long-running work, belongs in a [notification](../notify/), which carries a title and may persist.
+
+## Anatomy
+
+`Toast` is the region, and it renders one row per toast: the variant glyph, the title, an optional description and action, and the close button. A toast is one short line, so everything it shows comes from the `useToast` call that made it.
+
+```svelte
+<script>
+  provideToast();
+</script>
+
+<Toast />
+```
+
+## Usage
+
+### Basic
+
+`provideToast` and `Toast` live in one component, and any component below it calls `useToast`. The provider has to sit above the consumer, so the two halves are separate files.
+
+<Example code={basicSource} title="Basic.svelte">
+  <Basic client:visible />
+</Example>
+
+<Code code={basicActionsSource} lang="svelte" title="BasicActions.svelte" />
+
+### With an action
+
+`toast.create` takes an `action`. Its handler runs, then the toast dismisses.
+
+<Example code={withActionSource} title="WithAction.svelte">
+  <WithAction client:visible />
+</Example>
+
+### Placement
+
+`provideToast` takes a `placement`, which defaults to `bottom`. The `duration` and `max` options set how long a toast stays and how many show at once.
+
+<Example code={placementSource} title="Placement.svelte">
+  <Placement client:visible />
+</Example>
+
+### States
+
+<ToastShowcase client:visible />
+
+## Styling
+
+`class` lands on the region. The row's look is fixed.
+
+Each item carries data attributes for styling by state.
+
+| Attribute        | Values                           |
+| ---------------- | -------------------------------- |
+| `data-state`     | `open`, `closed`                 |
+| `data-paused`    | Present while the timer is held. |
+| `data-first`     | Present on the newest item.      |
+| `data-placement` | The provider's `placement`.      |
+
+## Keyboard
+
+| Key                                  | Action                                                 |
+| ------------------------------------ | ------------------------------------------------------ |
+| <kbd>Tab</kbd>                       | Focuses each toast's action and close button in turn.  |
+| <kbd>Escape</kbd>                    | Dismisses the focused toast.                           |
+| <kbd>Alt</kbd> + <kbd>T</kbd>        | Moves focus to the region.                             |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>  | On the action or close button, activates it.           |
+
+## API
+
+<PropsTable name="toast" />
+
+### useToast
+
+`useToast` returns the methods below, and `provideToast` returns the same object. Every method that takes an `id` accepts the one `create` returned.
+
+| Method                    | Description                                                                |
+| ------------------------- | -------------------------------------------------------------------------- |
+| `create(options)`         | Shows a toast and returns its id. Takes `title`, `description`, `variant`, `duration`, and `action`. |
+| `info(title, options?)`   | `create` with the `info` variant.                                          |
+| `success(title, options?)` | `create` with the `success` variant.                                      |
+| `warning(title, options?)` | `create` with the `warning` variant.                                      |
+| `danger(title, options?)` | `create` with the `danger` variant.                                        |
+| `update(id, options)`     | Changes a visible toast in place.                                          |
+| `dismiss(id?)`            | Dismisses one toast, or every toast without an id.                         |
+| `pause(id?)`              | Holds one toast's timer, or every timer without an id.                     |
+| `resume(id?)`             | Restarts a timer `pause` held.                                             |
+
+`provideToast` takes `placement` (default `bottom`), `duration` (default `4000` milliseconds), and `max` (default `3`).

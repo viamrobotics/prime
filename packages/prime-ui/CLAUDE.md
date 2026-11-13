@@ -45,7 +45,7 @@ Root scripts (`pnpm build`, `pnpm check`, `pnpm lint`, `pnpm test`) fan these ac
 
 ## Where components are demonstrated
 
-The docs site is the only consumer of demos. Every component has a page under `docs/src/content/docs/packages/prime-ui/components/<slug>.mdx`, with its `Sandbox` demo and states showcase beside it in `<slug>/`. **A new component is not done until it has a docs page.**
+The docs site is the only consumer of demos. Every component has a page at `docs/src/content/docs/packages/prime-ui/components/<slug>/index.mdx`, with its `Sandbox` demo and states showcase beside it in the same folder. **A new component is not done until it has a docs page.**
 
 `astro dev` aliases `@viamrobotics/prime-ui` to `src/lib/index.ts`, so edits here hot-reload into the docs with no build. `astro build` uses the package's `svelte` export (`dist`), so the published site renders what npm consumers get. The alias lives in `docs/astro.config.mjs`.
 

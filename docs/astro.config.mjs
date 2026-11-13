@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import starlightThemeNova from "starlight-theme-nova";
 
+import { sidebarPages } from "./sidebar-pages.mjs";
 import { sourceAliases } from "./source-aliases.mjs";
 
 const base = process.env.DOCS_BASE ?? "/prime/";
@@ -63,11 +64,11 @@ export default defineConfig({
                 },
                 {
                   label: "Components",
-                  items: [{ autogenerate: { directory: "packages/prime-ui/components" } }],
+                  items: sidebarPages("packages/prime-ui/components"),
                 },
                 {
                   label: "Utilities",
-                  items: [{ autogenerate: { directory: "packages/prime-ui/utilities" } }],
+                  items: sidebarPages("packages/prime-ui/utilities"),
                 },
               ],
             },

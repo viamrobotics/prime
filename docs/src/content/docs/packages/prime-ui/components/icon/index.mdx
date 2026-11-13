@@ -1,0 +1,95 @@
+---
+title: Icon
+description: Render an SVG path or any Svelte icon component.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import IconDemo from "./IconDemo.svelte";
+import IconShowcase from "./IconShowcase.svelte";
+import CustomComponent from "./CustomComponent.svelte";
+import customComponentSource from "./CustomComponent.svelte?raw";
+
+<ComponentIntro name="icon" />
+
+<IconDemo client:visible />
+
+`icon` accepts an SVG path string or a Svelte component. A string is the `d` attribute of a path on a 24 by 24 viewBox, which is what every `@mdi/js` export is. A component renders as is, so any icon library that ships Svelte components works.
+
+- `size` takes one of eight tokens, `xs` through `4xl`, from `iconSizes` in `packages/prime-ui/src/lib/Icon/icon.ts`. Color follows `currentColor`.
+- Decorative by default: `aria-hidden` and not focusable. Add an `aria-label` when it stands alone.
+- `Icon` bundles no paths of its own. Your bundler keeps only the icons you import.
+
+## Usage
+
+### An `@mdi/js` path
+
+```svelte
+<script lang="ts">
+  import { mdiAlert } from "@mdi/js";
+  import { Icon } from "@viamrobotics/prime-ui";
+</script>
+
+<Icon icon={mdiAlert} />
+```
+
+### A component
+
+```svelte
+<script lang="ts">
+  import Rocket from "@lucide/svelte/icons/rocket";
+  import { Icon } from "@viamrobotics/prime-ui";
+</script>
+
+<Icon icon={Rocket} />
+```
+
+### A Viam glyph
+
+The glyphs `mdi` has no equivalent for live at `@viamrobotics/prime-ui/icons`. Each is a Svelte component, so it works as `icon` or on its own.
+
+```svelte
+<script lang="ts">
+  import { Icon } from "@viamrobotics/prime-ui";
+  import { ViamService } from "@viamrobotics/prime-ui/icons";
+</script>
+
+<Icon icon={ViamService} />
+<ViamService class="size-6" />
+```
+
+### By path, component, and color
+
+<Example code={customComponentSource} title="CustomComponent.svelte">
+  <CustomComponent client:visible />
+</Example>
+
+### Sizes and sources
+
+<IconShowcase client:visible />
+
+### An informative icon
+
+An icon with no visible text next to it needs a name. Pass `aria-label` or `aria-labelledby`, and the icon gets `role="img"` and stops being hidden from assistive technology.
+
+```svelte
+<Icon icon={mdiAlert} aria-label="Warning" />
+```
+
+## Why there is no icon set
+
+prime ships no general icon set. It ships only the Viam glyphs, under `@viamrobotics/prime-ui/icons`. For everything else, bring `@mdi/js` or another library and import only what you render.
+
+## Styling
+
+`class` lands on the `<svg>`, next to the size class. Set color with a `text-*` token, since the paths fill with `currentColor`.
+
+## Migrating from the curated names
+
+`Icon` takes an import, not a curated kebab-case name such as `icon="cog"`. The [Icons section of the migration page](../../migrating/#icons) maps each old name to its `@mdi/js` export or Viam glyph.
+
+## API
+
+<PropsTable name="icon" />
