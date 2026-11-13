@@ -4,7 +4,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled trigger</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled trigger</h4>
     <Menubar aria-label="Disabled example">
       <Menubar.Menu>
         <Menubar.Trigger>File</Menubar.Trigger>
@@ -22,7 +22,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled and danger items</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled and danger items</h4>
     <Menubar aria-label="Items example">
       <Menubar.Menu>
         <Menubar.Trigger>Project</Menubar.Trigger>

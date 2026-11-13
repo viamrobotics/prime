@@ -41,7 +41,7 @@ Prose that is not the component's own contract (how it relates to other componen
 pnpm --filter @viamrobotics/prime-docs dev       # astro dev; every package resolves to its source and hot-reloads
 pnpm --filter @viamrobotics/prime-docs build     # package builds of prime-ui, prime-panes, prime-tree, prime-controls, prime-editor, and tweakpane-config, then astro build
 pnpm --filter @viamrobotics/prime-docs check     # svelte-check over src against each library's built types
-pnpm --filter @viamrobotics/prime-docs lint      # eslint over the .astro components, with the jsx-a11y accessibility rules
+pnpm --filter @viamrobotics/prime-docs lint      # eslint over the .astro, .svelte, and .ts sources, with prime-ui's rules plus jsx-a11y for .astro
 pnpm --filter @viamrobotics/prime-docs preview   # astro preview against dist/
 ```
 

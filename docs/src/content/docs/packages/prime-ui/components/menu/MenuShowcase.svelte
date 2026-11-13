@@ -8,7 +8,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Iconed item</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Iconed item</h4>
     <Menu>
       <Menu.Trigger class="button">Open</Menu.Trigger>
       <Menu.Content>
@@ -25,7 +25,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Item with shortcut</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Item with shortcut</h4>
     <p class="text-sm text-subtle-2">
       The shortcut is hidden from assistive technology, so the item is announced as "Save" alone.
     </p>
@@ -45,7 +45,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Checkbox item</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Checkbox item</h4>
     <Menu>
       <Menu.Trigger class="button">Open</Menu.Trigger>
       <Menu.Content>
@@ -56,7 +56,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Radio group</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Radio group</h4>
     <Menu>
       <Menu.Trigger class="button">Open</Menu.Trigger>
       <Menu.Content>
@@ -70,7 +70,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Submenu</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Submenu</h4>
     <Menu>
       <Menu.Trigger class="button">Open</Menu.Trigger>
       <Menu.Content>
@@ -87,7 +87,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Separator and group heading</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Separator and group heading</h4>
     <Menu>
       <Menu.Trigger class="button">Open</Menu.Trigger>
       <Menu.Content>
@@ -106,7 +106,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Danger item</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Danger item</h4>
     <Menu>
       <Menu.Trigger class="button">Open</Menu.Trigger>
       <Menu.Content>
@@ -118,7 +118,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled item</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled item</h4>
     <Menu>
       <Menu.Trigger class="button">Open</Menu.Trigger>
       <Menu.Content>

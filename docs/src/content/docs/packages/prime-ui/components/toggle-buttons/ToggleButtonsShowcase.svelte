@@ -15,22 +15,22 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Default</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Default</h4>
     <ToggleButtons value="mm" {items} aria-label="Units" />
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
     <ToggleButtons value="mm" {items} disabled aria-label="Units" />
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">One disabled item</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">One disabled item</h4>
     <ToggleButtons value="mm" items={someDisabled} aria-label="Units" />
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Error</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Error</h4>
     <Field state="error" class="flex flex-col gap-1">
       <Label>Units</Label>
       <ToggleButtons value="mm" {items} />

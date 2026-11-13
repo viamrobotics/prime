@@ -6,7 +6,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Stacked</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Stacked</h4>
     {#each variants as variant (variant)}
       <Banner {variant}>
         <Banner.Title>{variant}</Banner.Title>
@@ -17,7 +17,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Compact</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Compact</h4>
     {#each variants as variant (variant)}
       <Banner {variant}>
         <Banner.Description>A short explanation of what happened.</Banner.Description>

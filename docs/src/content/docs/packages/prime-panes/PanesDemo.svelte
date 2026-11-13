@@ -1,15 +1,16 @@
 <script lang="ts">
+  import type {
+    LayoutNode,
+    PaneNode,
+    PaneState,
+  } from "@viamrobotics/prime-panes";
+
   import {
     addPaneToUpperRight,
     floatPane,
     Panes,
     removeFloat,
     removePane,
-  } from "@viamrobotics/prime-panes";
-  import type {
-    LayoutNode,
-    PaneNode,
-    PaneState,
   } from "@viamrobotics/prime-panes";
 
   interface PaneData {

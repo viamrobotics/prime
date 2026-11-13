@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { render } from "vitest-browser-svelte";
+
 import { bridgeTheme } from "../../theme-bridge";
 import ThemeProbe from "./ThemeProbe.svelte";
 import "./theme.css";

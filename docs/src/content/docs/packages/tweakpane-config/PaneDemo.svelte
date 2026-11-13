@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { theme } from "@docs/theme.svelte.ts";
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
   import { Checkbox, Pane, Slider } from "svelte-tweakpane-ui";
-  import { theme } from "@docs/theme.svelte.ts";
 
   let amount = $state(0.25);
   let isEnabled = $state(true);

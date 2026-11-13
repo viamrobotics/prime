@@ -5,7 +5,7 @@
 </script>
 
 <div class="not-content flex flex-col gap-2">
-  <p class="text-xs font-medium text-subtle-2 uppercase">Widths</p>
+  <h4 class="text-xs font-medium text-subtle-2 uppercase">Widths</h4>
   <div class="flex flex-wrap gap-2">
     {#each widths as width (width)}
       <Dialog>

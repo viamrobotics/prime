@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Point } from "@viamrobotics/prime-controls";
   import type { PointValue } from "@viamrobotics/prime-controls";
+
+  import { Point } from "@viamrobotics/prime-controls";
 
   let color = $state<PointValue>({ x: 255, y: 128, z: 0 });
 </script>

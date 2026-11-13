@@ -20,7 +20,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Placeholder, with a disabled item</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Placeholder, with a disabled item</h4>
     <div class="max-w-xs">
       <Select items={sizes}>
         <Select.Trigger class="w-64" aria-label="Size">
@@ -32,7 +32,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Error</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Error</h4>
     <div class="max-w-xs">
       <Select items={sizes}>
         <Select.Trigger class="w-64" aria-label="Size" state="error">
@@ -44,7 +44,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
     <div class="max-w-xs">
       <Select items={sizes} value="md" disabled>
         <Select.Trigger class="w-64" aria-label="Size">

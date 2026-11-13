@@ -167,26 +167,13 @@ const borders = [
   { token: "border-dark", className: "border-dark" },
 ];
 
-const textColors = [
-  { token: "heading", className: "text-heading" },
-  { token: "default", className: "text-default" },
-  { token: "subtle-1", className: "text-subtle-1" },
-  { token: "subtle-2", className: "text-subtle-2" },
-  { token: "disabled", className: "text-disabled" },
-  { token: "link", className: "text-link" },
-];
-
-const codeColors = [
-  { token: "code-property-keys", className: "text-code-property-keys" },
-  { token: "code-string", className: "text-code-string" },
-  { token: "code-number", className: "text-code-number" },
-  { token: "code-boolean", className: "text-code-boolean" },
-  { token: "code-null", className: "text-code-null" },
-  { token: "code-keyword", className: "text-code-keyword" },
-  { token: "code-comment", className: "text-code-comment" },
-  { token: "code-type", className: "text-code-type" },
-  { token: "code-function", className: "text-code-function" },
-  { token: "code-line-number", className: "text-code-line-number" },
+const textColorClasses = [
+  "text-heading",
+  "text-default",
+  "text-subtle-1",
+  "text-subtle-2",
+  "text-disabled",
+  "text-link",
 ];
 
 const fonts = [
@@ -242,7 +229,7 @@ const textSizes = [
   <section class="flex flex-col gap-2">
     <h3 class="text-subtle-1 text-xs font-medium tracking-wide uppercase">Text colors</h3>
     {
-      textColors.map(({ token, className }) => (
+      textColorClasses.map((className) => (
         <p class={`text-lg ${className}`}>
           {className}: The quick brown fox jumps over the lazy dog
         </p>

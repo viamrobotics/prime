@@ -7,7 +7,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Plain area</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Plain area</h4>
     <ContextMenu>
       <ContextMenu.Trigger class={area}>Right-click here</ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -18,7 +18,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
     <ContextMenu>
       <ContextMenu.Trigger class={area} disabled>
         The browser's own menu shows here

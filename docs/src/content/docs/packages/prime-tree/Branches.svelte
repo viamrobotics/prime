@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Tree } from "@viamrobotics/prime-tree";
   import type { TreeBranchClick } from "@viamrobotics/prime-tree";
+
+  import { Tree } from "@viamrobotics/prime-tree";
 
   interface FileNode {
     path: string;

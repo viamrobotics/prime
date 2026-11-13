@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Folder, NumberField, Panel, Point, Slider, Tabs } from "@viamrobotics/prime-controls";
   import type { PointValue } from "@viamrobotics/prime-controls";
+
+  import { Folder, NumberField, Panel, Point, Slider, Tabs } from "@viamrobotics/prime-controls";
 
   let speed = $state(5);
   let position = $state<PointValue>({ x: 0, y: 1, z: 2 });

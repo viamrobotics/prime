@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Popover } from "@viamrobotics/prime-ui";
   import type { ComponentProps } from "svelte";
+
+  import { Popover } from "@viamrobotics/prime-ui";
 
   type Placement = Pick<ComponentProps<typeof Popover.Content>, "side" | "align">;
 

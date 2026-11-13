@@ -29,7 +29,11 @@ export default defineConfig(
 		rules: {
 			// TypeScript resolves globals itself, so typescript-eslint recommends turning this off.
 			'no-undef': 'off',
-			'perfectionist/sort-imports': ['error', { type: 'natural' }]
+			'perfectionist/sort-imports': ['error', { type: 'natural' }],
+			// A `\n` inside an attribute string stays a literal backslash, so an escaped string needs its mustache.
+			'svelte/no-useless-mustaches': ['error', { ignoreStringEscape: true }],
+			'svelte/no-unused-svelte-ignore': 'error',
+			'svelte/valid-compile': 'error'
 		}
 	},
 	{

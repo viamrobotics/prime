@@ -53,7 +53,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Sizes</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Sizes</h4>
     <div class="flex items-end gap-4 text-default">
       {#each sizes as size (size)}
         <span class="flex flex-col items-center gap-1">
@@ -65,7 +65,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Paths from @mdi/js</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Paths from @mdi/js</h4>
     <div class="flex flex-wrap gap-4 text-default">
       {#each paths as { label, icon } (label)}
         <span class="flex w-28 flex-col items-center gap-1">
@@ -77,7 +77,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Viam glyphs from @viamrobotics/prime-ui/icons (a few of 25, see the migration table for the full list)</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Viam glyphs from @viamrobotics/prime-ui/icons (a few of 25, see the migration table for the full list)</h4>
     <div class="flex flex-wrap gap-4 text-default">
       {#each glyphs as { label, component } (label)}
         <span class="flex w-32 flex-col items-center gap-1">
@@ -89,7 +89,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Any Svelte icon component (Lucide)</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Any Svelte icon component (Lucide)</h4>
     <div class="flex flex-wrap gap-4 text-default">
       {#each custom as { label, component } (label)}
         <span class="flex w-20 flex-col items-center gap-1">
@@ -101,7 +101,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Color follows currentColor</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Color follows currentColor</h4>
     <div class="flex gap-4">
       <Icon icon={mdiAlertCircle} size="xl" class="text-danger-dark" />
       <Icon icon={mdiInformation} size="xl" class="text-info-dark" />

@@ -4,7 +4,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Error state, with Field.StateIcon</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Error state, with Field.StateIcon</h4>
     <Input.Group class="w-40">
       <NumberInput state="error" value={42} min={0} max={10} aria-label="Out of range" />
       <Field.StateIcon state="error" />
@@ -12,7 +12,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled and read-only</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled and read-only</h4>
     <div class="grid max-w-3xs gap-3">
       <Input.Group>
         <NumberInput disabled value={3} aria-label="Disabled" />

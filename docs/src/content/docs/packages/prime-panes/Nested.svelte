@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Panes } from "@viamrobotics/prime-panes";
   import type { LayoutNode } from "@viamrobotics/prime-panes";
+
+  import { Panes } from "@viamrobotics/prime-panes";
 
   interface AppPane {
     title: string;

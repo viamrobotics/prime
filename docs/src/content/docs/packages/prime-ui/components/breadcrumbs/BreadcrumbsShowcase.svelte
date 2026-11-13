@@ -4,14 +4,14 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Single page</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Single page</h4>
     <Breadcrumbs aria-label="Single page">
       <Breadcrumbs.Item><Breadcrumbs.Page>Dashboard</Breadcrumbs.Page></Breadcrumbs.Item>
     </Breadcrumbs>
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Ellipsis</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Ellipsis</h4>
     <Breadcrumbs aria-label="Ellipsis">
       <Breadcrumbs.Item><Breadcrumbs.Link href="#home">Home</Breadcrumbs.Link></Breadcrumbs.Item>
       <Breadcrumbs.Separator />
@@ -22,7 +22,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Custom separator</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Custom separator</h4>
     <Breadcrumbs aria-label="Custom separator">
       <Breadcrumbs.Item><Breadcrumbs.Link href="#home">Home</Breadcrumbs.Link></Breadcrumbs.Item>
       <Breadcrumbs.Separator>/</Breadcrumbs.Separator>

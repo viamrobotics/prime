@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Select, type FieldState } from "@viamrobotics/prime-ui";
   import type { ComponentProps } from "svelte";
+
+  import { Select, type FieldState } from "@viamrobotics/prime-ui";
 
   type Placement = Pick<ComponentProps<typeof Select.Content>, "side" | "align">;
 

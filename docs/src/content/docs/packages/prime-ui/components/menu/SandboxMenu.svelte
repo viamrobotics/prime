@@ -1,7 +1,8 @@
 <script lang="ts">
+  import type { ComponentProps } from "svelte";
+
   import { mdiPencil } from "@mdi/js";
   import { Icon, Menu } from "@viamrobotics/prime-ui";
-  import type { ComponentProps } from "svelte";
 
   type Placement = Pick<ComponentProps<typeof Menu.Content>, "side" | "align">;
 

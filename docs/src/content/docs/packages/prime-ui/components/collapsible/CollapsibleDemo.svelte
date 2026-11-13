@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Collapsible } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+  import { Collapsible } from "@viamrobotics/prime-ui";
 </script>
 
 <!-- The parts are composed as children, so the generated snippet would omit them. -->

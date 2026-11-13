@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Textarea } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+  import { Textarea } from "@viamrobotics/prime-ui";
 </script>
 
 <Sandbox

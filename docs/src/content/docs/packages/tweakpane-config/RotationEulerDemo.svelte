@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { theme } from "@docs/theme.svelte.ts";
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
   import { RotationEuler, type RotationEulerValue } from "svelte-tweakpane-ui";
-  import { theme } from "@docs/theme.svelte.ts";
 
   let value: RotationEulerValue = $state({ x: 0, y: 0, z: 0 });
 

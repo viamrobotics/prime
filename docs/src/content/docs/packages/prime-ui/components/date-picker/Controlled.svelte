@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { DatePicker, Field, Hint, Label } from "@viamrobotics/prime-ui";
   import type { ComponentProps } from "svelte";
+
+  import { DatePicker, Field, Hint, Label } from "@viamrobotics/prime-ui";
 
   let value = $state<ComponentProps<typeof DatePicker>["value"]>();
 </script>

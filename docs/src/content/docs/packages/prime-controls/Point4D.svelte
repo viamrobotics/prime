@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Point } from "@viamrobotics/prime-controls";
   import type { PointValue } from "@viamrobotics/prime-controls";
+
+  import { Point } from "@viamrobotics/prime-controls";
 
   let rotation = $state<PointValue>({ x: 0, y: 0, z: 0, w: 1 });
 </script>

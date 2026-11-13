@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { ToggleButtons } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+  import { ToggleButtons } from "@viamrobotics/prime-ui";
 </script>
 
 <!-- The Sandbox cannot edit an `items` array, so the options are composed and the generated snippet would mislead. -->
