@@ -227,4 +227,10 @@ describe('NumberField', () => {
 		expect(owner(container)).toBe('21');
 		expect(input(container).value).toBe('21');
 	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof NumberField> = { value: 0 };
+		expect(props).toBeDefined();
+	});
 });

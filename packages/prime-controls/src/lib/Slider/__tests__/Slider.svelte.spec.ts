@@ -174,4 +174,10 @@ describe('Slider', () => {
 		expect(values()).toEqual([]);
 		expect(owner(container)).toBe('30');
 	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof Slider> = { value: 0 };
+		expect(props).toBeDefined();
+	});
 });

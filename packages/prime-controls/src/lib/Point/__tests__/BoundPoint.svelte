@@ -6,9 +6,13 @@
 	import Point from '../Point.svelte';
 	import type { PointValue } from '../point.ts';
 
-	interface Props extends Omit<ComponentProps<typeof Point>, 'value'> {
+	type DistributiveOmit<TProps, TKey extends PropertyKey> = TProps extends unknown
+		? Omit<TProps, TKey>
+		: never;
+
+	type Props = DistributiveOmit<ComponentProps<typeof Point>, 'value'> & {
 		initial: PointValue;
-	}
+	};
 
 	const { initial, ...rest }: Props = $props();
 

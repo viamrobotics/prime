@@ -26,6 +26,7 @@ export const componentSchema = z.object({
   propsType: z.string().optional(),
   external: z.boolean(),
   extends: z.string().optional(),
+  requiresOneOf: z.array(z.string()).optional(),
   props: z.array(prop),
 });
 
@@ -166,7 +167,7 @@ interface Entry {
 const readEntry = async (
   lib: string,
   id: string,
-  data: Omit<ComponentData, "propsType" | "external" | "extends" | "props">,
+  data: Omit<ComponentData, "propsType" | "external" | "extends" | "requiresOneOf" | "props">,
   resolve: (file: string) => string | undefined,
 ): Promise<Entry> => {
   const parsed = parseComponentSource(
@@ -180,6 +181,7 @@ const readEntry = async (
       propsType: parsed.propsType,
       external: parsed.external,
       extends: parsed.extends,
+      requiresOneOf: parsed.requiresOneOf,
       props: parsed.props,
     },
   };

@@ -17,6 +17,7 @@
 </script>
 
 <CodeEditor
+	aria-label="Robot config"
 	{...rest}
 	bind:value={
 		() => value,

@@ -5,6 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import { commands, page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
+import Point from '../Point.svelte';
 import type { PointValue } from '../point.ts';
 import BoundPoint from './BoundPoint.svelte';
 import ControlledPoint from './ControlledPoint.svelte';
@@ -175,5 +176,11 @@ describe('Point', () => {
 		for (const field of page.getByRole('spinbutton').elements()) {
 			expect((field as HTMLInputElement).disabled).toBe(true);
 		}
+	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof Point> = { value: { x: 0, y: 0 } };
+		expect(props).toBeDefined();
 	});
 });

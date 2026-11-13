@@ -26,7 +26,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 
 		/**
 		 * Visible label, rendered before the input. Dragging it sideways scrubs the value. Without
-		 * it, pass `aria-label`, and the field does not scrub.
+		 * it, pass `aria-label` or `aria-labelledby`, and the field does not scrub.
 		 */
 		label?: string;
 
@@ -58,7 +58,12 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		readonly,
 		onkeydown,
 		...restProps
-	}: Props = $props();
+	}: Props & AccessibleName = $props();
+
+	type AccessibleName =
+		| { label: string }
+		| { 'aria-label': string }
+		| { 'aria-labelledby': string };
 
 	const SCRUB_THRESHOLD_PX = 4;
 	const STEP_KEYS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1 };

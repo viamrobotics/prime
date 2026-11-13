@@ -1,8 +1,11 @@
+import type { ComponentProps } from 'svelte';
+
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
+import Panel from '../Panel.svelte';
 import PanelWithChild from './PanelWithChild.svelte';
 
 describe('Panel', () => {
@@ -32,5 +35,11 @@ describe('Panel', () => {
 	it('renders its children', async () => {
 		render(PanelWithChild, { props: { title: 'Camera' } });
 		await expect.element(page.getByTestId('child')).toBeVisible();
+	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof Panel> = {};
+		expect(props).toBeDefined();
 	});
 });

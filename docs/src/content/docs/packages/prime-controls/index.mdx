@@ -93,7 +93,7 @@ import pointLabelsSource from "./PointLabels.svelte?raw"
 
 ## NumberField
 
-`NumberField` wraps a native `<input type="number">` with an optional visible `label`. Without a `label`, pass `aria-label`, and the field does not scrub.
+`NumberField` wraps a native `<input type="number">` with an optional visible `label`. Without a `label`, pass `aria-label` or `aria-labelledby`, and the field does not scrub.
 
 ### Two-way binding
 
@@ -179,7 +179,7 @@ Each axis label is also its scrub handle. `labels` renames any of them, and an a
 
 ## Panel
 
-`Panel` is the dense container for a tool panel's controls, a `role="group"` with a border and tight spacing. A visible `title` names the group. Without one, pass `aria-label`.
+`Panel` is the dense container for a tool panel's controls, a `role="group"` with a border and tight spacing. A visible `title` names the group. Without one, pass `aria-label` or `aria-labelledby`.
 
 <Example code={panelTitleSource} title="PanelTitle.svelte">
   <PanelTitle client:visible />
@@ -203,7 +203,7 @@ Each axis label is also its scrub handle. `labels` renames any of them, and an a
 
 ## Slider
 
-`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing.
+`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label` or `aria-labelledby`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing.
 
 <Example code={sliderBoundsSource} title="SliderBounds.svelte">
   <SliderBounds client:visible />
