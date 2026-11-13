@@ -29,6 +29,6 @@ export const fieldState = {
 /** Icon and color class for each state except `none`. */
 export const stateIcon = {
 	info: { icon: mdiInformation, class: 'text-info-dark' },
-	warn: { icon: mdiAlert, class: 'text-warning-text' },
+	warn: { icon: mdiAlert, class: 'text-warning-dark' },
 	error: { icon: mdiAlertCircle, class: 'text-danger-dark' }
 } as const;
