@@ -1,0 +1,1 @@
+import{st as e,tt as t}from"./client.C50mFgTt.js";function n(n){e(()=>t(()=>n()))}export{n as t};
