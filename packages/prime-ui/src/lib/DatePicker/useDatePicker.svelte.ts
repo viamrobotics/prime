@@ -5,6 +5,9 @@ const key = Symbol('DatePicker');
 interface DatePickerOptions {
 	disabled: () => boolean;
 	readonly: () => boolean;
+	open: () => boolean;
+	locale: () => string;
+	calendarLabel: { get: () => string | undefined; set: (label: string | undefined) => void };
 }
 
 /** What a `DatePicker` shares with the parts bits-ui does not wire to its root. */
@@ -13,6 +16,12 @@ export interface DatePickerContext {
 	readonly disabled: boolean;
 	/** The root's `readonly`. */
 	readonly readonly: boolean;
+	/** Whether the calendar is open. */
+	readonly open: boolean;
+	/** The root's BCP 47 `locale`. */
+	readonly locale: string;
+	/** The calendar's accessible name, before bits-ui appends the month heading. */
+	calendarLabel: string | undefined;
 }
 
 export const provideDatePicker = (options: DatePickerOptions): DatePickerContext =>
@@ -22,6 +31,18 @@ export const provideDatePicker = (options: DatePickerOptions): DatePickerContext
 		},
 		get readonly() {
 			return options.readonly();
+		},
+		get open() {
+			return options.open();
+		},
+		get locale() {
+			return options.locale();
+		},
+		get calendarLabel() {
+			return options.calendarLabel.get();
+		},
+		set calendarLabel(label) {
+			options.calendarLabel.set(label);
 		}
 	});
 

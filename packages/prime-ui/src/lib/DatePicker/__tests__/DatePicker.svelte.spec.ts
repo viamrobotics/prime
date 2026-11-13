@@ -3,7 +3,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor, borderColor, colorOf } from '../../__tests__/computed-style.ts';
+import {
+	backgroundColor,
+	borderColor,
+	colorOf,
+	textColor
+} from '../../__tests__/computed-style.ts';
 import BoundDatePicker from './BoundDatePicker.svelte';
 import ControlledDatePicker from './ControlledDatePicker.svelte';
 import UndefinedDatePicker from './UndefinedDatePicker.svelte';
@@ -14,6 +19,14 @@ const segment = (container: Element, part: string) =>
 	container.querySelector<HTMLElement>(`[data-segment="${part}"]`)!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 const calendar = () => document.querySelector('[role="dialog"], [role="grid"]');
+const monthButtonNames = () =>
+	[...document.querySelectorAll('[role="dialog"] button')].map((button) =>
+		button.getAttribute('aria-label')
+	);
+const relativeMonthName = (locale: string, step: -1 | 1) => {
+	const name = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(step, 'month');
+	return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
+};
 
 const dayOf = async (date: string) => {
 	let day: HTMLElement | null = null;
@@ -174,6 +187,83 @@ describe('DatePicker', () => {
 			expect(segment(container, 'day').getAttribute('aria-valuenow')).toBe(shownDay);
 		}
 	);
+
+	it.each([
+		{ locale: undefined, expected: ['Last month', 'Next month'] },
+		{
+			locale: 'de-DE',
+			expected: [relativeMonthName('de-DE', -1), relativeMonthName('de-DE', 1)]
+		}
+	])('names the month buttons in the $locale locale', async ({ locale, expected }) => {
+		const { container } = render(BoundDatePicker, { props: { locale } });
+
+		await userEvent.click(trigger(container));
+
+		await vi.waitFor(() => expect(monthButtonNames()).toEqual(expected));
+	});
+
+	it('names the calendar with its aria-label followed by the month', async () => {
+		const { container } = render(BoundDatePicker, {
+			props: { calendarLabel: 'Choose a start date' }
+		});
+
+		await userEvent.click(trigger(container));
+
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="application"]')?.getAttribute('aria-label')).toBe(
+				'Choose a start date March 2026'
+			)
+		);
+	});
+
+	it('paints today in the heading color, not the link color', async () => {
+		const { container } = render(UndefinedDatePicker);
+
+		await userEvent.click(trigger(container));
+		const todayCell = await dayOf(today(getLocalTimeZone()).toString());
+
+		expect(textColor(todayCell)).toBe(colorOf('text-heading', 'color'));
+		expect(textColor(todayCell)).not.toBe(colorOf('text-link', 'color'));
+	});
+
+	it('is danger and aria-invalid when a typed date falls before min', async () => {
+		const { container } = render(BoundDatePicker, {
+			props: { min: new CalendarDate(2026, 3, 8) }
+		});
+		segment(container, 'day').focus();
+
+		await userEvent.keyboard('05');
+
+		await vi.waitFor(() => expect(dateField(container).getAttribute('aria-invalid')).toBe('true'));
+		expect(borderColor(dateField(container))).toBe(colorOf('border-danger-dark', 'borderTopColor'));
+	});
+
+	it('darkens the frame while the calendar is open and restores it on close', async () => {
+		const { container } = render(BoundDatePicker);
+		await userEvent.unhover(dateField(container));
+		trigger(container).focus();
+
+		await userEvent.keyboard('{Enter}');
+		await vi.waitFor(() => expect(calendar(), 'calendar open').toBeTruthy());
+		const openBorder = borderColor(dateField(container));
+		await userEvent.keyboard('{Escape}');
+		await vi.waitFor(() => expect(calendar(), 'calendar closed').toBeNull());
+
+		expect(openBorder, 'open').toBe(colorOf('border-gray-9', 'borderTopColor'));
+		expect(borderColor(dateField(container)), 'closed').toBe(
+			colorOf('border-light', 'borderTopColor')
+		);
+	});
+
+	it('keeps the danger frame while the calendar is open in the error state', async () => {
+		const { container } = render(BoundDatePicker, { props: { state: 'error' } });
+		trigger(container).focus();
+
+		await userEvent.keyboard('{Enter}');
+
+		await vi.waitFor(() => expect(calendar(), 'calendar open').toBeTruthy());
+		expect(borderColor(dateField(container))).toBe(colorOf('border-danger-dark', 'borderTopColor'));
+	});
 
 	it('is danger and aria-invalid in the error state', () => {
 		const { container } = render(BoundDatePicker, { props: { state: 'error' } });
