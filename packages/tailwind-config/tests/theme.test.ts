@@ -402,8 +402,8 @@ describe("theme stylesheets compiled through Tailwind", () => {
 
     expect(
       emittedTheme.get("--color-subtle-2"),
-      "#686a6e holds 4.5:1 on gray-2, the darkest surface subtle-2 text sits on",
-    ).toBe("#686a6e");
+      "#6e7074 holds 4.5:1 on gray-1, the darkest surface subtle-2 text sits on",
+    ).toBe("#6e7074");
     expect(emittedTheme.get("--color-gray-7")).toBe("#7a7c80");
     expect(
       declarationsOf(onlyRule(emitted, ":root")).get("--dark-color-subtle-2"),

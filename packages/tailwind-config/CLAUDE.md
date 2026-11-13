@@ -25,7 +25,7 @@ The token and class demos live on this package's pages in [docs](../../docs/): t
 
 The **published** package is intentionally lean: pure CSS + `fonts.js`, no build step for the shipped files, no compiled TypeScript. Keep it that way. The only tooling is the vitest spec in `tests/`, which compiles the stylesheets through `@tailwindcss/node` and asserts the emitted CSS, run with `pnpm --filter @viamrobotics/tailwind-config test`. It stays dev-only. New design tokens go inside the existing `@theme {}` block in `tailwind-config.css`.
 
-Token values must match the Viam design system at https://design.viam.com/. Don't invent values; copy from the published guides. The light `subtle-2` text color is a deliberate departure: it is `#686a6e`, darker than `gray-7`, so subtle text holds 4.5:1 on every surface through `gray-2`, and `tests/theme.test.ts` pins it.
+Token values must match the Viam design system at https://design.viam.com/. Don't invent values; copy from the published guides. The light `subtle-2` text color is a deliberate departure: it is `#6e7074`, darker than `gray-7`, so subtle text holds 4.5:1 on white and `gray-1`, the darkest surface it sits on, and `tests/theme.test.ts` pins it.
 
 A floating component wears a named z layer (`z-dialog`, `z-popover`, `z-tooltip`), never a bare number, and `z-max` is reserved for what nothing may cover.
 
