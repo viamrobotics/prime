@@ -2,17 +2,18 @@
 	import { untrack } from 'svelte';
 
 	import Toast from '../Toast.svelte';
-	import { provideToast, type ToastVariant } from '../useToast.svelte.ts';
+	import { provideToast, type ToastPlacement, type ToastVariant } from '../useToast.svelte.ts';
 
 	interface Props {
 		duration?: number;
 		max?: number;
+		placement?: ToastPlacement;
 		onaction?: () => void;
 	}
 
-	const { duration = 200, max, onaction }: Props = $props();
+	const { duration = 200, max, placement, onaction }: Props = $props();
 
-	const toasts = untrack(() => provideToast({ duration, max }));
+	const toasts = untrack(() => provideToast({ duration, max, placement }));
 	const variants: ToastVariant[] = ['info', 'success', 'warning', 'danger'];
 </script>
 

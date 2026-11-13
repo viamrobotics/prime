@@ -8,6 +8,7 @@ import ToastHost from './ToastHost.svelte';
 
 const HOLD_OPEN = 60_000;
 const REMOVAL_TIMEOUT = 3000;
+const TOAST_WIDTH_PX = 320;
 
 const trigger = (container: Element, testId: string) =>
 	container.querySelector<HTMLButtonElement>(`[data-testid="${testId}"]`)!;
@@ -46,6 +47,18 @@ describe('Toast', () => {
 		expect(item.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
 		expect(item.querySelector('svg path')?.getAttribute('d')).toBe(glyph);
 	});
+
+	it.each(['top-start', 'top', 'top-end', 'bottom-start', 'bottom', 'bottom-end'] as const)(
+		'draws a toast at its full width when placed at %s',
+		async (placement) => {
+			const { container } = render(ToastHost, { props: { duration: HOLD_OPEN, placement } });
+
+			await userEvent.click(trigger(container, 'info'));
+			const item = await waitForItem();
+
+			expect(item.getBoundingClientRect().width).toBe(TOAST_WIDTH_PX);
+		}
+	);
 
 	it('dismisses from its close button', async () => {
 		const { container } = render(ToastHost, { duration: HOLD_OPEN });

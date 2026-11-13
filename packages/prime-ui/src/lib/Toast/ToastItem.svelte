@@ -38,10 +38,11 @@ dismiss button. The region renders it, so a consumer never places one.
 	);
 </script>
 
+<!-- The width cap is against the viewport: a region pinned to one side has no width of its own for a percentage to resolve against. -->
 <div
 	{...api.getRootProps()}
 	role={isAlert ? 'alert' : 'status'}
-	class="z-[var(--z-index)] flex h-10 w-80 max-w-full [translate:var(--x)_var(--y)] [scale:var(--scale)] items-center gap-2 rounded-sm border border-medium bg-medium px-3 opacity-[var(--opacity)] transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale]"
+	class="z-[var(--z-index)] flex h-10 w-80 max-w-[calc(100vw-var(--spacing)*8)] [translate:var(--x)_var(--y)] [scale:var(--scale)] items-center gap-2 rounded-sm border border-medium bg-medium px-3 opacity-[var(--opacity)] transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale]"
 >
 	<span {...api.getGhostBeforeProps()}></span>
 	<span {...api.getGhostAfterProps()}></span>
