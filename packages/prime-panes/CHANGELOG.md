@@ -1,5 +1,21 @@
 # @viamrobotics/prime-panes
 
+## 0.1.2
+### Patch Changes
+
+- c06bc4c: Run the browser specs on Playwright 1.65
+- 312a8f0: Drop the `@eslint/compat` dev dependency
+- 5fd36fa: Keep a float window from scrolling when code scrolls its overflowing content into view
+- Updated dependencies [312a8f0]
+- Updated dependencies [c637afa]
+- Updated dependencies [c121f5a]
+- Updated dependencies [312a8f0]
+- Updated dependencies [312a8f0]
+- Updated dependencies [2b3c573]
+- Updated dependencies [312a8f0]
+- Updated dependencies [1da8ed5]
+  - @viamrobotics/tailwind-config@1.6.0
+
 ## 0.1.1
 ### Patch Changes
 

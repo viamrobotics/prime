@@ -1,6 +1,6 @@
 {
 	"name": "@viamrobotics/prime-editor",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "A CodeMirror 6 code editor for Svelte 5, themed with Viam's code tokens, with a diff view.",
 	"license": "Apache-2.0",
 	"publishConfig": {
