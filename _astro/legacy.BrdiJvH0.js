@@ -1,0 +1,1 @@
+import{Vt as e}from"./client.C50mFgTt.js";e();
