@@ -1,7 +1,7 @@
 ---
 name: task-worker
 description: Implements ONE tightly-scoped slice of a planned phase and reports back in a fixed format. Dispatched by /orchestrate, one worker per slice.
-tools: Read, Edit, Write, Grep, Glob, Bash
+tools: Read, Edit, Write, Grep, Glob, Bash, mcp__svelte__svelte-autofixer
 model: sonnet
 effort: medium
 ---

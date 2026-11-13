@@ -90,6 +90,9 @@
   "design": {
     "themeEntry": "packages/prime-ui/tailwind.css"
   },
+  "orchestrate": {
+    "workerTools": ["mcp__svelte__svelte-autofixer"]
+  },
   "targets": [
     {
       "name": "prime-ui",
