@@ -30,9 +30,18 @@ const openMenu = async (name: string) => {
 const openMenuLabel = (label: string) =>
 	vi.waitFor(() => expect(menu()?.getAttribute('aria-label')).toBe(label));
 
+const PAGE_PADDING_PX = 2000;
+const BAR_OFFSET_FROM_VIEWPORT_TOP_PX = 200;
+
+const scrollBarIntoTallPage = () => {
+	document.body.style.paddingBlock = `${PAGE_PADDING_PX}px`;
+	window.scrollTo(0, PAGE_PADDING_PX - BAR_OFFSET_FROM_VIEWPORT_TOP_PX);
+};
+
 afterEach(async () => {
 	if (menu()) await userEvent.keyboard('{Escape}');
 	await vi.waitFor(() => expect(menu()).toBeNull());
+	document.body.style.paddingBlock = '';
 });
 
 // bits-ui runs the close-focus handler twice on an outside press, so the check waits past both calls.
@@ -58,6 +67,15 @@ describe('Menubar', () => {
 
 		expect(trigger('Edit').getAttribute('aria-expanded')).toBe('true');
 		expect(item('Undo')).toBeTruthy();
+	});
+
+	it('does not scroll the page when a menu opens', async () => {
+		render(BasicMenubar);
+		scrollBarIntoTallPage();
+
+		await openMenu('Edit');
+
+		expect(window.scrollY).toBe(PAGE_PADDING_PX - BAR_OFFSET_FROM_VIEWPORT_TOP_PX);
 	});
 
 	it('opens the next menu on ArrowRight and the previous on ArrowLeft', async () => {

@@ -7,6 +7,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { Menubar } from 'bits-ui';
+	import { tick } from 'svelte';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
@@ -79,6 +80,12 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 		return trigger;
 	};
 
+	// bits-ui focuses the panel with a bare `focus()` before it is positioned, which scrolls the page.
+	const focusPanelWithoutScrolling = (event: Event) => {
+		event.preventDefault();
+		void tick().then(() => document.getElementById(contentId)?.focus({ preventScroll: true }));
+	};
+
 	const restoreFocus = (event: Event) => {
 		if (event.defaultPrevented) return;
 		const target = closeFocusTarget();
@@ -96,6 +103,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 		{sideOffset}
 		{alignOffset}
 		onInteractOutside={() => (wasPressedOutside = true)}
+		onOpenAutoFocus={focusPanelWithoutScrolling}
 		onCloseAutoFocus={restoreFocus}
 		{@attach captureTrigger}
 		{@attach trackFocusOutside}
