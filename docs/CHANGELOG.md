@@ -1,5 +1,29 @@
 # @viamrobotics/prime-docs
 
+## 0.0.3
+### Patch Changes
+
+- 312a8f0: Show each brand color as its own row in the token gallery
+- c637afa: Add StatusDot, Menubar, elevation tokens, and compact control sizes
+- 27be2a2: Add prime-controls with NumberField and Point
+- e7d53e5: Add Breadcrumbs and Takeover
+- c121f5a: Add DatePicker
+- 312a8f0: Add a compact `Select` to prime-controls and inset the `Point` axis labels
+- 152ca17: Add a compact `ToggleButtons` to prime-controls
+- 5e4dc09: Add prime-editor with a CodeMirror CodeEditor and its diff view
+- 9534529: Render keyboard tables through a shared `KeyboardTable` component and build the Notify and Toast demo forms from prime-ui controls
+- 62f5c3b: Add Toast and Notify, two notification stacks with actions and progress on one zag toast machine
+- 312a8f0: Localize DatePicker month buttons and mark out-of-range typed dates invalid
+- 312a8f0: Point, NumberField, Panel, and Slider require a `label` or `title`, `aria-label`, or `aria-labelledby` at the type level
+- c06bc4c: Move the docs to Astro 7 and load the Prism core before its language components so CodeSnippet highlights under a bundler that inlines CommonJS
+- 312a8f0: Close parts wear `icon-button` only on their default icon, and `Breadcrumbs.Ellipsis` draws a `…` glyph on the text baseline
+- 62f5c3b: Add the clickOutside attachment and the keybindings registry
+- 312a8f0: Lint the docs Svelte islands and TypeScript sources, and make Showcase group captions headings
+- 2b3c573: Add Banner and Progress, with their component classes and a pending tone in tailwind-config
+- c56e514: Remove Select.Portal and MultiSelect.Portal: Select.Content now portals itself, like every other floating panel
+- 312a8f0: Darken the light `--color-code-type` token to #1b6580 so type names reach 4.5:1 on code surfaces
+- 1da8ed5: Add tone classes for `Progress` (`progress-success`) and `Switch` (`switch-success`), in info, success, warning, and danger
+
 ## 0.0.2
 ### Patch Changes
 

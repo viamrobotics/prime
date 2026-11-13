@@ -1,5 +1,20 @@
 # @viamrobotics/tailwind-config
 
+## 1.6.0
+### Minor Changes
+
+- c637afa: Add StatusDot, Menubar, elevation tokens, and compact control sizes
+- 312a8f0: Recolor the `shadow-sm`, `shadow-popover`, and `shadow-dialog` utilities in the dark theme through `--shadow-color-*` variables, which replace `--dark-shadow-*` and `--light-shadow-*`
+- 312a8f0: Darken the light `subtle-2` text color to `#6e7074` so it meets 4.5:1 contrast on white and `gray-1`
+- 2b3c573: Add Banner and Progress, with their component classes and a pending tone in tailwind-config
+- 1da8ed5: Add tone classes for `Progress` (`progress-success`) and `Switch` (`switch-success`), in info, success, warning, and danger
+
+### Patch Changes
+
+- 312a8f0: Slider and scrollbar sizing utilities accept the bare spacing scale, such as `slider-thumb-w-3`
+- c121f5a: Add DatePicker
+- 312a8f0: Darken the light `--color-code-type` token to #1b6580 so type names reach 4.5:1 on code surfaces
+
 ## 1.5.0
 ### Minor Changes
 

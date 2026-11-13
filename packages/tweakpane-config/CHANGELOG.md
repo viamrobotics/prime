@@ -1,5 +1,10 @@
 # @viamrobotics/tweakpane-config
 
+## 0.2.4
+### Patch Changes
+
+- 312a8f0: Drop the `@eslint/compat` dev dependency
+
 ## 0.2.3
 ### Patch Changes
 
