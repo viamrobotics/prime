@@ -16,10 +16,14 @@ import Languages from "./Languages.svelte";
 import languagesSource from "./Languages.svelte?raw";
 import Readonly from "./Readonly.svelte";
 import readonlySource from "./Readonly.svelte?raw";
+import Disabled from "./Disabled.svelte";
+import disabledSource from "./Disabled.svelte?raw";
 import UnifiedDiff from "./UnifiedDiff.svelte";
 import unifiedDiffSource from "./UnifiedDiff.svelte?raw";
 import SplitDiff from "./SplitDiff.svelte";
 import splitDiffSource from "./SplitDiff.svelte?raw";
+import Validation from "./Validation.svelte";
+import validationSource from "./Validation.svelte?raw";
 
 `@viamrobotics/prime-editor` is a CodeMirror 6 code editor for Svelte 5. It highlights with Viam's code tokens, so it follows the light and dark themes, and it can show a diff against another text.
 
@@ -32,8 +36,10 @@ import splitDiffSource from "./SplitDiff.svelte?raw";
 
 - `CodeEditor`, one editor with a bindable `value`.
 - Six languages: TypeScript, JavaScript, JSON, Python, Go, and SQL.
-- Optional line numbers, line wrapping, and a readonly mode.
+- Optional line numbers, line wrapping, a placeholder, and readonly and disabled modes.
+- Search and code folding from the keyboard.
 - A unified or split diff view that opens when `original` is set.
+- An invalid state through `aria-invalid`.
 
 ## Installation
 
@@ -107,6 +113,14 @@ A function binding receives each edit and decides what `value` becomes. This one
   <Readonly client:visible />
 </Example>
 
+### Disabled and placeholder
+
+`disabled` turns the editor off. Unlike `readonly`, it takes no focus and no selection, it leaves the tab order, and the textbox is marked `aria-disabled`. `placeholder` is the text shown while the document is empty.
+
+<Example code={disabledSource} title="Disabled.svelte">
+  <Disabled client:visible />
+</Example>
+
 ### Unified diff
 
 Set `original` to open the diff view. `value` is compared against it, and the deleted and inserted lines share one editor.
@@ -122,6 +136,29 @@ Set `diff="split"` to put `original` beside `value`. The original side is readon
 <Example code={splitDiffSource} title="SplitDiff.svelte">
   <SplitDiff client:visible />
 </Example>
+
+A long diff is mostly unchanged lines. `collapseUnchanged` folds each run of them into one row that expands on click, and keeps three lines of context around every change. Changing it rebuilds the editor.
+
+### Validation
+
+The editor does not validate the document. Check `value` yourself, then set `aria-invalid` to paint the error border and mark the textbox invalid. Point `aria-describedby` at the message so a screen reader reads it with the editor's name. Every `aria-*` attribute goes to the textbox, so `aria-errormessage` and `aria-required` work the same way. Every other attribute, such as `id`, `class`, or an event handler, goes to the editor's outer element.
+
+<Example code={validationSource} title="Validation.svelte">
+  <Validation client:visible />
+</Example>
+
+### Keyboard
+
+| Input                                              | Action                                         |
+| -------------------------------------------------- | ---------------------------------------------- |
+| Ctrl + F, or Cmd + F on macOS                      | Open the search panel                          |
+| Enter / Shift + Enter in the search field          | Go to the next or previous match               |
+| Escape                                             | Close the search panel                         |
+| Ctrl + Shift + [, or Cmd + Alt + [ on macOS        | Fold the block at the cursor                   |
+| Ctrl + Shift + ], or Cmd + Alt + ] on macOS        | Unfold the block at the cursor                 |
+| Click a fold marker in the gutter                  | Fold or unfold that block                      |
+
+The search panel also replaces, unless the editor is `readonly`. The fold markers share the gutter with the line numbers, so `lineNumbers={false}` hides both and folding stays on the keyboard. Tab moves focus out of the editor and never indents.
 
 ## API
 

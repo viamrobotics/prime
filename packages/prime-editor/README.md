@@ -30,7 +30,7 @@ Requires `svelte` `^5.29.0`. Import the stylesheet once, after Tailwind:
 <CodeEditor aria-label="Config" language="json" bind:value />
 ```
 
-`language` is one of `go`, `javascript`, `json`, `python`, `sql`, and `typescript`. Set `original` to open a diff view, and `diff="split"` to show it side by side. A function binding receives every edit and can veto or transform it.
+`language` is one of `go`, `javascript`, `json`, `python`, `sql`, and `typescript`. Set `original` to open a diff view, and `diff="split"` to show it side by side. A function binding receives every edit and can veto or transform it. Search and code folding work from the keyboard, and `aria-invalid` marks the document invalid.
 
 ## Documentation
 

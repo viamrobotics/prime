@@ -20,6 +20,10 @@ const docText = (content: Element) =>
 const token = (container: Element, text: string) =>
 	[...container.querySelectorAll('.cm-line span')].find((span) => span.textContent === text);
 
+const MODIFIER = navigator.platform.includes('Mac') ? 'Meta' : 'Control';
+const LONG_ORIGINAL = Array.from({ length: 30 }, (_, index) => `line ${index}`).join('\n');
+const LONG_VALUE = LONG_ORIGINAL.replace('line 0', 'line zero');
+
 async function typeAtLineEnd(line: HTMLElement, text: string) {
 	await userEvent.click(line);
 	await userEvent.keyboard('{End}');
@@ -115,6 +119,59 @@ describe('CodeEditor', () => {
 		const { container } = render(CodeEditor, { props: { value: 'locked', readonly: true } });
 
 		expect(contents(container)[0].getAttribute('aria-readonly')).toBe('true');
+	});
+
+	it('takes no focus, input, or tab stop while disabled, and marks the textbox aria-disabled', async () => {
+		const { container, rerender } = render(BoundCodeEditor, {
+			props: { initial: 'off', disabled: true, readonly: true }
+		});
+		const [content] = contents(container);
+
+		expect(content.getAttribute('aria-disabled')).toBe('true');
+		expect(content.hasAttribute('tabindex')).toBe(false);
+
+		await typeAtLineEnd(lines(content)[0], '!');
+
+		expect(content.ownerDocument.activeElement).not.toBe(content);
+		expect(owner(container)).toBe('off');
+
+		await rerender({ disabled: false, readonly: false });
+		await typeAtLineEnd(lines(content)[0], '!');
+
+		expect(content.hasAttribute('aria-disabled')).toBe(false);
+		expect(owner(container)).toBe('off!');
+	});
+
+	it('disables both sides of a split diff', async () => {
+		const { container } = render(CodeEditor, {
+			props: { value: 'a\nb', original: 'a\nB', diff: 'split', disabled: true }
+		});
+
+		await expect.poll(() => contents(container)).toHaveLength(2);
+
+		for (const side of contents(container)) {
+			expect(side.getAttribute('aria-disabled')).toBe('true');
+			expect(side.hasAttribute('tabindex')).toBe(false);
+		}
+	});
+
+	it('shows placeholder only while the document is empty, and follows the prop', async () => {
+		const { container, rerender } = render(BoundCodeEditor, {
+			props: { initial: '', placeholder: 'Paste a config' }
+		});
+		const [content] = contents(container);
+		const shown = () => container.querySelector('.cm-placeholder')?.textContent;
+
+		expect(shown()).toBe('Paste a config');
+
+		await rerender({ placeholder: 'Type a query' });
+
+		await expect.poll(shown).toBe('Type a query');
+
+		await userEvent.click(content);
+		await userEvent.keyboard('x');
+
+		await expect.poll(shown).toBeUndefined();
 	});
 
 	it('shows the line-number gutter by default and removes it with lineNumbers false', async () => {
@@ -223,4 +280,130 @@ describe('CodeEditor', () => {
 		expect(owner(container)).toBe('a\nb\ncx');
 		expect(docText(originalSide)).toBe('a\nB\nc');
 	});
+
+	it('describes and invalidates the textbox, and clears both', async () => {
+		const { rerender } = render(CodeEditor, {
+			props: {
+				value: '{',
+				'aria-label': 'Config',
+				'aria-describedby': 'config-hint',
+				'aria-invalid': true,
+				'aria-errormessage': 'config-error'
+			}
+		});
+		const textbox = page.getByRole('textbox', { name: 'Config' });
+
+		await expect.element(textbox).toHaveAttribute('aria-describedby', 'config-hint');
+		await expect.element(textbox).toHaveAttribute('aria-invalid', 'true');
+		await expect.element(textbox).toHaveAttribute('aria-errormessage', 'config-error');
+
+		await rerender({
+			'aria-invalid': false,
+			'aria-describedby': undefined,
+			'aria-errormessage': undefined
+		});
+
+		await expect.element(textbox).toHaveAttribute('aria-invalid', 'false');
+		await expect.element(textbox).not.toHaveAttribute('aria-describedby');
+		await expect.element(textbox).not.toHaveAttribute('aria-errormessage');
+	});
+
+	it('puts every aria attribute on the textbox and every other attribute on the outer element', async () => {
+		const onfocusin = vi.fn();
+		const { container } = render(CodeEditor, {
+			props: {
+				value: 'x',
+				id: 'config-editor',
+				class: ['max-h-64', { 'w-full': true }],
+				'data-kind': 'config',
+				'aria-label': 'Config',
+				'aria-required': true,
+				onfocusin
+			}
+		});
+		const outer = container.querySelector<HTMLElement>('#config-editor');
+		const textbox = page.getByRole('textbox', { name: 'Config' });
+
+		expect(outer?.dataset.kind).toBe('config');
+		expect(outer?.className).toBe('max-h-64 w-full');
+		expect(outer?.hasAttribute('aria-label')).toBe(false);
+		expect(outer?.hasAttribute('aria-required')).toBe(false);
+		await expect.element(textbox).toHaveAttribute('aria-required', 'true');
+		expect(textbox.element().closest('#config-editor')).toBe(outer);
+
+		await userEvent.click(textbox);
+
+		expect(onfocusin).toHaveBeenCalled();
+	});
+
+	it('invalidates only the value side of a split diff', async () => {
+		const { container } = render(CodeEditor, {
+			props: { value: 'a\nb', original: 'a\nB', diff: 'split', 'aria-invalid': true }
+		});
+
+		await expect.poll(() => contents(container)).toHaveLength(2);
+		const [originalSide, valueSide] = contents(container);
+
+		expect(originalSide.getAttribute('aria-invalid')).toBeNull();
+		expect(valueSide.getAttribute('aria-invalid')).toBe('true');
+	});
+
+	it('opens a search panel from the keyboard, marks the matches, and closes on Escape', async () => {
+		const { container } = render(CodeEditor, { props: { value: 'alpha\nbeta\nalpha' } });
+		const [content] = contents(container);
+
+		await userEvent.click(lines(content)[1]);
+		await userEvent.keyboard(`{${MODIFIER}>}f{/${MODIFIER}}`);
+
+		await expect.poll(() => container.querySelector('.cm-search')).not.toBeNull();
+
+		await userEvent.keyboard('alpha');
+
+		await expect.poll(() => container.querySelectorAll('.cm-searchMatch')).toHaveLength(2);
+
+		await userEvent.keyboard('{Escape}');
+
+		await expect.poll(() => container.querySelector('.cm-search')).toBeNull();
+	});
+
+	it('folds a block from the gutter, and drops the fold markers with lineNumbers false', async () => {
+		const { container, rerender } = render(CodeEditor, {
+			props: { value: '{\n  "a": 1,\n  "b": 2\n}', language: 'json' }
+		});
+		const [content] = contents(container);
+		const foldMarker = () =>
+			container.querySelector<HTMLElement>('.cm-foldGutter [title="Fold line"]');
+
+		await expect.poll(foldMarker).not.toBeNull();
+		await userEvent.click(foldMarker()!);
+
+		await expect.poll(() => content.querySelector('.cm-foldPlaceholder')).not.toBeNull();
+		expect(lines(content)).toHaveLength(1);
+
+		await rerender({ lineNumbers: false });
+
+		await expect.poll(() => container.querySelector('.cm-foldGutter')).toBeNull();
+	});
+
+	it.each(['unified', 'split'] as const)(
+		'folds unchanged lines in the %s diff only with collapseUnchanged',
+		async (diff) => {
+			const { container, rerender } = render(CodeEditor, {
+				props: { value: LONG_VALUE, original: LONG_ORIGINAL, diff }
+			});
+			const collapsed = () => container.querySelector('.cm-collapsedLines');
+
+			await expect.poll(() => container.querySelector('.cm-changedLine')).not.toBeNull();
+			expect(collapsed()).toBeNull();
+
+			await rerender({ collapseUnchanged: true });
+
+			await expect.poll(collapsed).not.toBeNull();
+			expect(container.querySelector('.cm-changedLine')).not.toBeNull();
+
+			await rerender({ collapseUnchanged: false });
+
+			await expect.poll(collapsed).toBeNull();
+		}
+	);
 });

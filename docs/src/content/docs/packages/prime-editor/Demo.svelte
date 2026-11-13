@@ -17,6 +17,7 @@
       options: ["typescript", "javascript", "json", "python", "go", "sql"],
     },
     readonly: { kind: "boolean", label: "Readonly", default: false },
+    disabled: { kind: "boolean", label: "Disabled", default: false },
     lineNumbers: { kind: "boolean", label: "Line numbers", default: true },
     wrapLines: { kind: "boolean", label: "Wrap lines", default: false },
     diff: {
@@ -25,5 +26,7 @@
       default: "off",
       options: ["off", "unified", "split"],
     },
+    collapseUnchanged: { kind: "boolean", label: "Collapse unchanged", default: false },
+    invalid: { kind: "boolean", label: "Invalid", default: false },
   }}
 />

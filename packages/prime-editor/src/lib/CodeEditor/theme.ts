@@ -51,6 +51,15 @@ const surfaceTheme = EditorView.theme({
 		border: '1px solid var(--color-gray-3)',
 		borderRadius: 'var(--radius-sm)'
 	},
+	'&:has(.cm-content[aria-invalid="true"])': { borderColor: 'var(--color-danger-dark)' },
+	'&:has(.cm-content[aria-disabled="true"])': {
+		color: 'var(--color-disabled-dark)',
+		backgroundColor: 'var(--color-disabled-light)',
+		borderColor: 'transparent',
+		cursor: 'not-allowed'
+	},
+	'.cm-content[aria-disabled="true"]': { userSelect: 'none' },
+	'.cm-placeholder': { color: 'var(--color-subtle-2)' },
 	'&.cm-focused': {
 		outline: '2px solid var(--color-link)',
 		outlineOffset: '2px'
@@ -75,6 +84,42 @@ const surfaceTheme = EditorView.theme({
 	'&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, ::selection':
 		{ backgroundColor: 'var(--color-info-medium)' },
 	'.cm-selectionMatch': { backgroundColor: 'var(--color-info-light)' },
+	'.cm-foldGutter .cm-gutterElement': { cursor: 'pointer' },
+	'.cm-foldPlaceholder': {
+		color: 'var(--color-subtle-1)',
+		backgroundColor: 'var(--color-gray-2)',
+		border: 'none'
+	},
+
+	'.cm-panels': {
+		color: 'var(--color-default)',
+		backgroundColor: 'var(--color-gray-1)'
+	},
+	'.cm-panels.cm-panels-top': { borderBottom: '1px solid var(--color-gray-3)' },
+	'.cm-panels.cm-panels-bottom': { borderTop: '1px solid var(--color-gray-3)' },
+	'.cm-textfield': {
+		color: 'var(--color-default)',
+		backgroundColor: 'var(--color-white)',
+		border: '1px solid var(--color-gray-3)',
+		borderRadius: 'var(--radius-sm)',
+		fontSize: 'inherit'
+	},
+	'.cm-button': {
+		color: 'var(--color-default)',
+		backgroundColor: 'var(--color-white)',
+		backgroundImage: 'none',
+		border: '1px solid var(--color-gray-3)',
+		borderRadius: 'var(--radius-sm)',
+		fontSize: 'inherit'
+	},
+	'.cm-textfield:focus-visible, .cm-button:focus-visible, .cm-panel button[name="close"]:focus-visible':
+		{ outline: '2px solid var(--color-link)', outlineOffset: '2px' },
+	'.cm-panel button[name="close"]': { color: 'var(--color-default)', cursor: 'pointer' },
+	'.cm-searchMatch': { backgroundColor: 'var(--color-warning-light)' },
+	'.cm-searchMatch.cm-searchMatch-selected': {
+		backgroundColor: 'var(--color-warning-medium)',
+		outline: '1px solid var(--color-warning-bright)'
+	},
 
 	'.cm-insertedLine, .cm-inlineChangedLine, &.cm-merge-b .cm-changedLine': {
 		backgroundColor: 'var(--color-success-light)'

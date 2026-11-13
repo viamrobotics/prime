@@ -17,6 +17,7 @@ export default defineConfig({
 			'@codemirror/lang-sql',
 			'@codemirror/language',
 			'@codemirror/merge',
+			'@codemirror/search',
 			'@codemirror/state',
 			'@codemirror/view',
 			'@lezer/highlight'

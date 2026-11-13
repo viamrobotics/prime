@@ -3,7 +3,7 @@ import '@viamrobotics/tailwind-config/dark';
 
 import { javascript } from '@codemirror/lang-javascript';
 import { MergeView, unifiedMergeView } from '@codemirror/merge';
-import { EditorView, lineNumbers } from '@codemirror/view';
+import { EditorView, lineNumbers, placeholder } from '@codemirror/view';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { codeEditorTheme } from '../theme.ts';
@@ -64,6 +64,44 @@ describe('codeEditorTheme', () => {
 		expect(gutterNumber).not.toBeNull();
 		expect(getComputedStyle(gutterNumber!).color).toBe(
 			resolveColor(root, '--color-code-line-number')
+		);
+	});
+
+	it('paints the error border only while the content is aria-invalid', () => {
+		const validBorder = getComputedStyle(mount()).borderTopColor;
+		host?.remove();
+		host = document.createElement('div');
+		document.body.append(host);
+		const view = new EditorView({
+			doc: SOURCE,
+			extensions: [codeEditorTheme, EditorView.contentAttributes.of({ 'aria-invalid': 'true' })],
+			parent: host
+		});
+
+		const invalidBorder = getComputedStyle(view.dom).borderTopColor;
+
+		expect(invalidBorder).toBe(resolveColor(view.dom, '--color-danger-dark'));
+		expect(invalidBorder).not.toBe(validBorder);
+	});
+
+	it('dims a disabled editor and paints the placeholder with the subtle token', () => {
+		host = document.createElement('div');
+		document.body.append(host);
+		const view = new EditorView({
+			doc: '',
+			extensions: [
+				codeEditorTheme,
+				placeholder('Empty'),
+				EditorView.contentAttributes.of({ 'aria-disabled': 'true' })
+			],
+			parent: host
+		});
+		const placeholderNode = view.dom.querySelector('.cm-placeholder');
+		if (!placeholderNode) throw new Error('no placeholder');
+
+		expect(getComputedStyle(view.dom).color).toBe(resolveColor(view.dom, '--color-disabled-dark'));
+		expect(getComputedStyle(placeholderNode).color).toBe(
+			resolveColor(view.dom, '--color-subtle-2')
 		);
 	});
 
