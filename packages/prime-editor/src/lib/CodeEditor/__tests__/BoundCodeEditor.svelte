@@ -15,6 +15,6 @@
 	let value = $state(untrack(() => initial));
 </script>
 
-<CodeEditor {...rest} bind:value />
+<CodeEditor aria-label="Robot config" {...rest} bind:value />
 <span data-testid="owner">{value}</span>
 <button type="button" onclick={() => (value = replacement)}>Replace</button>

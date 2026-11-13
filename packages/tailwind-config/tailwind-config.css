@@ -6,16 +6,20 @@
     "Roboto Mono Variable", "Roboto Mono", ui-monospace, monospace;
   --font-public-sans: "Public Sans Variable", "Public Sans", sans-serif;
 
-  /* Shadows */
-  --shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.06);
-  --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --shadow-dialog: 0 12px 48px rgba(0, 0, 0, 0.25);
+  /*
+   * Shadows. Tailwind inlines a --shadow-* value into its utility at build time, so
+   * reassigning --shadow-* changes nothing a utility paints. Each color is a variable
+   * instead, read when the utility paints, so the dark theme recolors it.
+   */
+  --shadow-sm: 0 4px 32px var(--shadow-color-sm);
+  --shadow-popover: 0 8px 24px var(--shadow-color-popover);
+  --shadow-dialog: 0 12px 48px var(--shadow-color-dialog);
 
   /* Text colors */
   --color-heading: #131414;
   --color-default: #282829;
   --color-subtle-1: #4e4f52;
-  --color-subtle-2: #7a7c80;
+  --color-subtle-2: #6e7074;
   --color-disabled: #9c9ca4;
   --color-link: #0066cc;
 
@@ -29,7 +33,7 @@
   --color-code-number: #2f6447;
   --color-code-property-keys: #000;
   --color-code-string: #9c251d;
-  --color-code-type: #2b91af;
+  --color-code-type: #1b6580;
 
   /* Grayscale */
   --color-black: #131414;
@@ -168,6 +172,19 @@
   --animate-blink: blink 1.7s ease-in-out infinite;
   --animate-popup-enter: popup-enter 120ms cubic-bezier(0.165, 0.84, 0.44, 1)
     both;
+}
+
+/*
+ * The shadow colors sit outside @theme, because a --shadow-color-* there would mint a
+ * shadow-color-* utility. Layered with the theme, so the dark stylesheet's scopes win.
+ */
+@layer theme {
+  :root,
+  :host {
+    --shadow-color-sm: rgba(0, 0, 0, 0.06);
+    --shadow-color-popover: rgba(0, 0, 0, 0.12);
+    --shadow-color-dialog: rgba(0, 0, 0, 0.25);
+  }
 }
 
 /* Button elements keep the expected cursor across consumers. */
@@ -856,6 +873,7 @@
 @utility scrollbar-w-* {
   &::-webkit-scrollbar {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
     width: --value([*]);
   }
 }
@@ -905,10 +923,12 @@
 @utility slider-track-w-* {
   &::-webkit-slider-runnable-track {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
     width: --value([*]);
   }
   &::-moz-range-track {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
     width: --value([*]);
   }
 }
@@ -916,10 +936,12 @@
 @utility slider-track-h-* {
   &::-webkit-slider-runnable-track {
     height: --value(--spacing-*);
+    height: --spacing(--value(integer));
     height: --value([*]);
   }
   &::-moz-range-track {
     height: --value(--spacing-*);
+    height: --spacing(--value(integer));
     height: --value([*]);
   }
 }
@@ -979,19 +1001,29 @@
 @utility slider-thumb-w-* {
   &::-webkit-slider-thumb {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
+    width: --value([*]);
   }
   &::-moz-range-thumb {
     width: --value(--spacing-*);
+    width: --spacing(--value(integer));
+    width: --value([*]);
   }
 }
 
 @utility slider-thumb-h-* {
   &::-webkit-slider-thumb {
     height: --value(--spacing-*);
+    height: --spacing(--value(integer));
+    height: --value([*]);
     margin-top: calc(--value(--spacing-*) / -2);
+    margin-top: calc(--spacing(--value(integer)) / -2);
+    margin-top: calc(--value([*]) / -2);
   }
   &::-moz-range-thumb {
     height: --value(--spacing-*);
+    height: --spacing(--value(integer));
+    height: --value([*]);
   }
 }
 

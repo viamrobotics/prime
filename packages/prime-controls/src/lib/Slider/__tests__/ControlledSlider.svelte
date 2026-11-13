@@ -5,11 +5,15 @@
 
 	import Slider from '../Slider.svelte';
 
-	interface Props extends Omit<ComponentProps<typeof Slider>, 'value'> {
+	type DistributiveOmit<TProps, TKey extends PropertyKey> = TProps extends unknown
+		? Omit<TProps, TKey>
+		: never;
+
+	type Props = DistributiveOmit<ComponentProps<typeof Slider>, 'value'> & {
 		initial?: number;
 		accept?: boolean;
 		record: (next: number) => void;
-	}
+	};
 
 	const { initial = 0, accept = false, record, ...rest }: Props = $props();
 

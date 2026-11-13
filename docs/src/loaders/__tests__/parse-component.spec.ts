@@ -87,6 +87,59 @@ describe("parseComponentSource", () => {
     expect(external.external).toBe(true);
     expect(external.props).toEqual([]);
   });
+
+  describe("given an intersection annotation", () => {
+    const intersection = (alias: string) =>
+      parseComponentSource(`<script lang="ts">
+interface Props {
+  title?: string;
+  'aria-label'?: string;
+  size?: number;
+}
+${alias}
+const { size }: Props & Name = $props();
+</script>`);
+
+    it("reads the table from the local interface and keeps the full annotation", () => {
+      const parsed = intersection(
+        "type Name = { title: string } | { 'aria-label': string };",
+      );
+
+      expect(parsed.external).toBe(false);
+      expect(parsed.propsType).toBe("Props & Name");
+      expect(parsed.props.map((prop) => prop.name)).toEqual([
+        "title",
+        "aria-label",
+        "size",
+      ]);
+    });
+
+    it("lists the required names of a three-arm alias in arm order", () => {
+      const parsed = intersection(
+        "type Name = { title: string } | { 'aria-label': string } | { 'aria-labelledby': string };",
+      );
+
+      expect(parsed.requiresOneOf).toEqual([
+        "title",
+        "aria-label",
+        "aria-labelledby",
+      ]);
+    });
+
+    it("lists the required names of a two-arm alias", () => {
+      const parsed = intersection(
+        "type Name = { 'aria-label': string } | { 'aria-labelledby': string };",
+      );
+
+      expect(parsed.requiresOneOf).toEqual(["aria-label", "aria-labelledby"]);
+    });
+
+    it("leaves requiresOneOf undefined when no alias union is named", () => {
+      const parsed = intersection("type Name = { title: string };");
+
+      expect(parsed.requiresOneOf).toBeUndefined();
+    });
+  });
 });
 
 describe("rewriteSvelteLinks", () => {

@@ -16,7 +16,13 @@ interface Props {
 const { name, collection = "prime-ui" } = Astro.props;
 const entry = await getEntry(collection, name);
 if (!entry) throw new Error(`No ${collection} component entry "${name}"`);
-const { props, extends: extendsType, external, propsType } = entry.data;
+const {
+  props,
+  extends: extendsType,
+  external,
+  propsType,
+  requiresOneOf,
+} = entry.data;
 
 const escape = (text: string) =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -66,6 +72,22 @@ const inlineCode = (text: string) =>
   external && (
     <p>
       Takes <code>{propsType}</code> as its props.
+    </p>
+  )
+}
+
+{
+  requiresOneOf && (
+    <p>
+      Requires one of{" "}
+      {requiresOneOf.map((propName, index) => (
+        <>
+          {index > 0 && (requiresOneOf.length > 2 ? ", " : " ")}
+          {index > 0 && index === requiresOneOf.length - 1 && "or "}
+          <code>{propName}</code>
+        </>
+      ))}
+      .
     </p>
   )
 }

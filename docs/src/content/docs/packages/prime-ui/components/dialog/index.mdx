@@ -24,7 +24,7 @@ import withFormSource from "./WithForm.svelte?raw";
 - Composed from parts, so the trigger, the title, the body, and the footer are yours to arrange.
 - One `open`, bindable. Closing returns focus to the trigger.
 - Focus is trapped inside while open, Escape closes, and the page behind does not scroll, via bits-ui.
-- The panel floats in a portal over a dimmed overlay. It is labelled by `Dialog.Title` and described by `Dialog.Description`.
+- The panel floats in a portal over a dimmed overlay. It is labeled by `Dialog.Title` and described by `Dialog.Description`.
 - `Dialog.Content` carries the panel styling only. Width is the `class` you pass.
 
 ## Anatomy
@@ -64,7 +64,7 @@ Pass `bind:open` a getter and a setter. The setter can decline a change. [State 
 
 ### Body and footer
 
-`Dialog.Content` is a column flex container with a maximum height. Put a scrolling body between the header and the footer with `min-h-0 overflow-y-auto`, and the footer stays in view. `Dialog.Close` takes children and a `class`, so it can be a labelled secondary button.
+`Dialog.Content` is a column flex container with a maximum height. Put a scrolling body between the header and the footer with `min-h-0 overflow-y-auto`, and the footer stays in view. `Dialog.Close` takes children and a `class`, so it can be a labeled secondary button.
 
 <Example code={withFormSource} title="WithForm.svelte">
   <WithForm client:visible />
@@ -97,7 +97,7 @@ Pair each with `w-full` so the panel fills the width up to that limit.
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `Dialog` renders no element, so it takes no `class`. `Dialog.Trigger` is a real `<button>` with the shared focus ring and no other style, so add `button` or your own classes. `Dialog.Close` wears `icon-button` and shows a close icon labeled `Close`. Pass children to replace the icon and `aria-label` to replace the label. bits-ui sets the data attributes in the table below. `Dialog.Overlay` wears `z-overlay` and `Dialog.Content` wears `z-dialog`, the `shadow-dialog` token, and `rounded-sm`; see [z layers](../../tailwind-config/component-classes/#z-layers).
+Every part that renders an element takes `class` on that element. `Dialog` renders no element, so it takes no `class`. `Dialog.Trigger` is a real `<button>` with the shared focus ring and no other style, so add `button` or your own classes. `Dialog.Close` wears `icon-button` and shows a close icon labeled `Close`. Pass children to replace the icon and `aria-label` to replace the label. With children it wears no class of its own, so `class="button"` gives a text close the `button` class alone. bits-ui sets the data attributes in the table below. `Dialog.Overlay` wears `z-overlay` and `Dialog.Content` wears `z-dialog`, the `shadow-dialog` token, and `rounded-sm`; see [z layers](../../tailwind-config/component-classes/#z-layers).
 
 | Part      | Attribute    | Value              |
 | --------- | ------------ | ------------------ |

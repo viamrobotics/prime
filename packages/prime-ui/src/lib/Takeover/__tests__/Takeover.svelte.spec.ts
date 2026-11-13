@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 
 import '../../__tests__/tailwind.css';
 import BoundTakeover from './BoundTakeover.svelte';
+import TextCloseTakeover from './TextCloseTakeover.svelte';
 import UndefinedTakeover from './UndefinedTakeover.svelte';
 
 const trigger = (container: Element) => container.querySelector('button')!;
@@ -79,6 +80,17 @@ describe('Takeover', () => {
 
 		await vi.waitFor(() => expect(sheet()).toBeNull());
 		await vi.waitFor(() => expect(document.activeElement).toBe(trigger(container)));
+	});
+
+	it('a close given children wears only the consumer class', async () => {
+		const { container } = render(TextCloseTakeover);
+		await open(container);
+		const text = [...sheet()!.querySelectorAll('button')].find(
+			(button) => button.textContent?.trim() === 'Cancel'
+		)!;
+
+		expect(text.classList.contains('button')).toBe(true);
+		expect(text.classList.contains('icon-button')).toBe(false);
 	});
 
 	it('two-way: opening and closing are reflected in the owner', async () => {

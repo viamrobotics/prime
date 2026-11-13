@@ -47,7 +47,10 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 		/** The smallest unit the field edits. @default 'day' */
 		granularity?: 'day' | 'hour' | 'minute' | 'second';
 
-		/** BCP 47 locale for segment order and month names. @default 'en-US' */
+		/**
+		 * BCP 47 locale for segment order, month names, and the names of the calendar's month
+		 * buttons. @default 'en-US'
+		 */
 		locale?: string;
 
 		/** Name for form submission. */
@@ -83,7 +86,15 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 	const field = useField();
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
 
-	provideDatePicker({ disabled: () => isDisabled, readonly: () => readonly });
+	let calendarLabel = $state<string>();
+
+	provideDatePicker({
+		disabled: () => isDisabled,
+		readonly: () => readonly,
+		open: () => open ?? false,
+		locale: () => locale,
+		calendarLabel: { get: () => calendarLabel, set: (label) => (calendarLabel = label) }
+	});
 </script>
 
 <DatePicker.Root
@@ -96,7 +107,7 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 	{readonly}
 	disabled={isDisabled}
 	required={required ?? field?.required ?? false}
-	calendarLabel="Choose a date"
+	calendarLabel={calendarLabel ?? 'Choose a date'}
 >
 	{@render children?.()}
 </DatePicker.Root>

@@ -15,7 +15,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Input: required, error, disabled</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Input: required, error, disabled</h4>
     <div class="grid max-w-md gap-4">
       <Field class="flex flex-col gap-1" required>
         <Label>Robot name</Label>
@@ -40,7 +40,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Select</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Select</h4>
     <Field class="flex max-w-md flex-col gap-1">
       <Label>Size</Label>
       <Select bind:value={size} items={sizes}>
@@ -60,7 +60,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">RadioGroup, named by the label</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">RadioGroup, named by the label</h4>
     <Field class="flex max-w-md flex-col gap-1">
       <Label>Shape</Label>
       <RadioGroup bind:value={shape} name="shape">
@@ -72,7 +72,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Checkbox</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Checkbox</h4>
     <Field class="grid max-w-md grid-cols-[auto_1fr] items-center gap-x-2 gap-y-1" required>
       <Checkbox bind:checked={agreed} />
       <Label>Accept the terms</Label>

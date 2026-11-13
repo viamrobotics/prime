@@ -7,7 +7,7 @@
 <div class="not-content flex flex-col gap-6">
   {#each codeSnippetLanguages as language (language)}
     <div class="flex flex-col gap-2">
-      <p class="text-xs font-medium text-subtle-2 uppercase">{language}</p>
+      <h4 class="text-xs font-medium text-subtle-2 uppercase">{language}</h4>
       <CodeSnippet code={samples[language]} {language} />
     </div>
   {/each}

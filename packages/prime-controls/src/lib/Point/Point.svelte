@@ -11,6 +11,7 @@ one axis writes a new object with that axis changed and every other axis as it w
 <script lang="ts">
 	import type { ClassValue } from 'svelte/elements';
 
+	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
 	import NumberField from '../NumberField/NumberField.svelte';
 	import type { PointAxis, PointValue } from './point.ts';
 
@@ -18,11 +19,14 @@ one axis writes a new object with that axis changed and every other axis as it w
 		/** The vector. Its defined axes decide how many fields render. */
 		value: PointValue;
 
-		/** Visible label for the group. Without it, pass `aria-label`. */
+		/** Visible label for the group. Without it, pass `aria-label` or `aria-labelledby`. */
 		label?: string;
 
 		/** Accessible name for the group when it has no visible `label`. */
 		'aria-label'?: string;
+
+		/** Id of the element that names the group when it has no visible `label`. */
+		'aria-labelledby'?: string;
 
 		/** Each axis field's visible label, which is also its scrub handle. @default the uppercase axis name */
 		labels?: Partial<Record<PointAxis, string>>;
@@ -47,13 +51,19 @@ one axis writes a new object with that axis changed and every other axis as it w
 		value = $bindable(),
 		label,
 		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledby,
 		labels,
 		min,
 		max,
 		step = 1,
 		disabled,
 		class: extraClasses
-	}: Props = $props();
+	}: Props & AccessibleName = $props();
+
+	type AccessibleName =
+		| { label: string }
+		| { 'aria-label': string }
+		| { 'aria-labelledby': string };
 
 	const AXES: PointAxis[] = ['x', 'y', 'z', 'w'];
 	const axes = $derived(AXES.filter((axis) => value[axis] !== undefined));
@@ -62,17 +72,18 @@ one axis writes a new object with that axis changed and every other axis as it w
 
 <div
 	role="group"
-	aria-labelledby={label ? labelId : undefined}
+	aria-labelledby={label ? labelId : ariaLabelledby}
 	aria-label={label ? undefined : ariaLabel}
 	class={['flex flex-col gap-1', extraClasses]}
 >
 	{#if label}
-		<span id={labelId} class="text-xs text-subtle-1">{label}</span>
+		<span id={labelId} class={CONTROL_LABEL_CLASS}>{label}</span>
 	{/if}
 	<div class="flex gap-1">
 		{#each axes as axis (axis)}
 			<NumberField
 				label={labels?.[axis] ?? axis.toUpperCase()}
+				labelPlacement="inset"
 				{min}
 				{max}
 				{step}

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Hint } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+  import { Hint } from "@viamrobotics/prime-ui";
 </script>
 
 <Sandbox

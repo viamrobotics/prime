@@ -5,11 +5,15 @@
 
 	import NumberField from '../NumberField.svelte';
 
-	interface Props extends Omit<ComponentProps<typeof NumberField>, 'value' | 'accept'> {
+	type DistributiveOmit<TProps, TKey extends PropertyKey> = TProps extends unknown
+		? Omit<TProps, TKey>
+		: never;
+
+	type Props = DistributiveOmit<ComponentProps<typeof NumberField>, 'value' | 'accept'> & {
 		initial?: number;
 		accept?: boolean;
 		record: (next: number | undefined) => void;
-	}
+	};
 
 	const { initial, accept = false, record, ...rest }: Props = $props();
 

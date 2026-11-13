@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { Panes } from "@viamrobotics/prime-panes";
   import type {
     LayoutNode,
     PaneNode,
     PaneState,
   } from "@viamrobotics/prime-panes";
+
+  import { Panes } from "@viamrobotics/prime-panes";
 
   interface PaneData {
     label: string;
@@ -110,7 +111,7 @@
 
 <div class="not-content grid gap-6 sm:grid-cols-2">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Empty</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Empty</h4>
     <Panes
       bind:layout={emptyLayout}
       {pane}
@@ -128,7 +129,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Stacked</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Stacked</h4>
     <Panes
       bind:layout={stackedLayout}
       {pane}
@@ -138,7 +139,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Floated</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Floated</h4>
     <Panes
       bind:layout={floatedLayout}
       {pane}
@@ -148,7 +149,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Move mode</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Move mode</h4>
     <Panes
       bind:layout={movingLayout}
       {pane}

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Field, Hint, Input, Label } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+  import { Field, Hint, Input, Label } from "@viamrobotics/prime-ui";
 </script>
 
 <Sandbox

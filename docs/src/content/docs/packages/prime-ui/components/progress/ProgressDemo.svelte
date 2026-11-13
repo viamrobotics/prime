@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Progress } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+  import { Progress } from "@viamrobotics/prime-ui";
 </script>
 
 <Sandbox

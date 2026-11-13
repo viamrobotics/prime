@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { theme } from "@docs/theme.svelte.ts";
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
   import { Button } from "svelte-tweakpane-ui";
-  import { theme } from "@docs/theme.svelte.ts";
 
   let clickCount = $state(0);
 

@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Field, Input, NumberInput } from "@viamrobotics/prime-ui";
   import type { ComponentProps } from "svelte";
+
+  import { Field, Input, NumberInput } from "@viamrobotics/prime-ui";
 
   type Props = ComponentProps<typeof NumberInput>;
 

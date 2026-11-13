@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { DatePicker, type FieldState } from "@viamrobotics/prime-ui";
   import type { ComponentProps } from "svelte";
+
+  import { DatePicker, type FieldState } from "@viamrobotics/prime-ui";
 
   type Value = ComponentProps<typeof DatePicker>["value"];
 

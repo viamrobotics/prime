@@ -47,10 +47,10 @@
   --dark-color-disabled: #7a7c80;
   --dark-color-link: #4d8fdf;
 
-  /* Shadows */
-  --dark-shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.4);
-  --dark-shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --dark-shadow-dialog: 0 12px 48px rgba(0, 0, 0, 0.6);
+  /* Shadow colors */
+  --dark-shadow-color-sm: rgba(0, 0, 0, 0.4);
+  --dark-shadow-color-popover: rgba(0, 0, 0, 0.5);
+  --dark-shadow-color-dialog: rgba(0, 0, 0, 0.6);
 
   /* Code colors */
   --dark-color-code-boolean: #a9a1ff;
@@ -172,14 +172,14 @@
   --light-color-heading: #131414;
   --light-color-default: #282829;
   --light-color-subtle-1: #4e4f52;
-  --light-color-subtle-2: #7a7c80;
+  --light-color-subtle-2: #6e7074;
   --light-color-disabled: #9c9ca4;
   --light-color-link: #0066cc;
 
-  /* Shadows */
-  --light-shadow-sm: 0 4px 32px rgba(0, 0, 0, 0.06);
-  --light-shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --light-shadow-dialog: 0 12px 48px rgba(0, 0, 0, 0.25);
+  /* Shadow colors */
+  --light-shadow-color-sm: rgba(0, 0, 0, 0.06);
+  --light-shadow-color-popover: rgba(0, 0, 0, 0.12);
+  --light-shadow-color-dialog: rgba(0, 0, 0, 0.25);
 
   /* Code colors */
   --light-color-code-boolean: #201293;
@@ -191,7 +191,7 @@
   --light-color-code-number: #2f6447;
   --light-color-code-property-keys: #000;
   --light-color-code-string: #9c251d;
-  --light-color-code-type: #2b91af;
+  --light-color-code-type: #1b6580;
 
   /* Grayscale */
   --light-color-black: #131414;
@@ -311,10 +311,10 @@
     --color-disabled: var(--dark-color-disabled);
     --color-link: var(--dark-color-link);
 
-    /* Shadows */
-    --shadow-sm: var(--dark-shadow-sm);
-    --shadow-popover: var(--dark-shadow-popover);
-    --shadow-dialog: var(--dark-shadow-dialog);
+    /* Shadow colors */
+    --shadow-color-sm: var(--dark-shadow-color-sm);
+    --shadow-color-popover: var(--dark-shadow-color-popover);
+    --shadow-color-dialog: var(--dark-shadow-color-dialog);
 
     /* Code colors */
     --color-code-boolean: var(--dark-color-code-boolean);
@@ -449,10 +449,10 @@
   --color-disabled: var(--dark-color-disabled);
   --color-link: var(--dark-color-link);
 
-  /* Shadows */
-  --shadow-sm: var(--dark-shadow-sm);
-  --shadow-popover: var(--dark-shadow-popover);
-  --shadow-dialog: var(--dark-shadow-dialog);
+  /* Shadow colors */
+  --shadow-color-sm: var(--dark-shadow-color-sm);
+  --shadow-color-popover: var(--dark-shadow-color-popover);
+  --shadow-color-dialog: var(--dark-shadow-color-dialog);
 
   /* Code colors */
   --color-code-boolean: var(--dark-color-code-boolean);
@@ -584,10 +584,10 @@
   --color-disabled: var(--light-color-disabled);
   --color-link: var(--light-color-link);
 
-  /* Shadows */
-  --shadow-sm: var(--light-shadow-sm);
-  --shadow-popover: var(--light-shadow-popover);
-  --shadow-dialog: var(--light-shadow-dialog);
+  /* Shadow colors */
+  --shadow-color-sm: var(--light-shadow-color-sm);
+  --shadow-color-popover: var(--light-shadow-color-popover);
+  --shadow-color-dialog: var(--light-shadow-color-dialog);
 
   /* Code colors */
   --color-code-boolean: var(--light-color-code-boolean);

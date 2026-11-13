@@ -34,6 +34,10 @@ import SliderBounds from "./SliderBounds.svelte"
 import sliderBoundsSource from "./SliderBounds.svelte?raw"
 import SliderControlled from "./SliderControlled.svelte"
 import sliderControlledSource from "./SliderControlled.svelte?raw"
+import SelectBasic from "./SelectBasic.svelte"
+import selectBasicSource from "./SelectBasic.svelte?raw"
+import SelectParts from "./SelectParts.svelte"
+import selectPartsSource from "./SelectParts.svelte?raw"
 import PointLabels from "./PointLabels.svelte"
 import pointLabelsSource from "./PointLabels.svelte?raw"
 
@@ -47,6 +51,7 @@ import pointLabelsSource from "./PointLabels.svelte?raw"
 - `NumberField`, one number with a label that doubles as the scrub handle.
 - `Point`, a 2D, 3D, or 4D vector as one `NumberField` per axis.
 - `Slider`, a range input with a `NumberField` readout beside it.
+- `Select`, a compact dropdown for choosing one of a list of items.
 - `Panel`, `Folder`, and `Tabs`, the containers that group controls at tool panel scale.
 - A scrub or a drag writes the bound value on every pointer move, so a function binding sees each intermediate value.
 
@@ -93,7 +98,7 @@ import pointLabelsSource from "./PointLabels.svelte?raw"
 
 ## NumberField
 
-`NumberField` wraps a native `<input type="number">` with an optional visible `label`. Without a `label`, pass `aria-label`, and the field does not scrub.
+`NumberField` wraps a native `<input type="number">` with an optional visible `label`. Without a `label`, pass `aria-label` or `aria-labelledby`, and the field does not scrub.
 
 ### Two-way binding
 
@@ -137,7 +142,7 @@ A drag begins once the pointer moves 4 pixels from where it was pressed, and onl
 
 ## Point
 
-`Point` binds a `PointValue`, an object with `x` and `y` and optionally `z` and `w`. The defined axes decide how many fields render. Editing one axis writes a new object with that axis changed and the others as they were. `min`, `max`, `step`, and `disabled` apply to every axis.
+`Point` binds a `PointValue`, an object with `x` and `y` and optionally `z` and `w`. The defined axes decide how many fields render. Each axis letter sits inside its field as a prefix and is the scrub handle. Editing one axis writes a new object with that axis changed and the others as they were. `min`, `max`, `step`, and `disabled` apply to every axis.
 
 ### 2D
 
@@ -171,7 +176,7 @@ The setter receives the whole new `PointValue`. This one refuses any value farth
 
 ### Custom labels
 
-Each axis label is also its scrub handle. `labels` renames any of them, and an axis left out keeps its uppercase name.
+`labels` renames any axis letter, and an axis left out keeps its uppercase name.
 
 <Example code={pointLabelsSource} title="PointLabels.svelte">
   <PointLabels client:visible />
@@ -179,7 +184,7 @@ Each axis label is also its scrub handle. `labels` renames any of them, and an a
 
 ## Panel
 
-`Panel` is the dense container for a tool panel's controls, a `role="group"` with a border and tight spacing. A visible `title` names the group. Without one, pass `aria-label`.
+`Panel` is the dense container for a tool panel's controls, a `role="group"` with a border and tight spacing. A visible `title` names the group. Without one, pass `aria-label` or `aria-labelledby`.
 
 <Example code={panelTitleSource} title="PanelTitle.svelte">
   <PanelTitle client:visible />
@@ -201,9 +206,25 @@ Each axis label is also its scrub handle. `labels` renames any of them, and an a
   <TabsModes client:visible />
 </Example>
 
+## Select
+
+`Select` is prime-ui's `Select` at panel scale, with the same parts and keyboard. `bind:value` holds the selected item's value. A `Select` with no children renders the trigger, the value, and the list from `items`. It takes `placeholder` and needs an `aria-label` or `aria-labelledby`.
+
+<Example code={selectBasicSource} title="SelectBasic.svelte">
+  <SelectBasic client:visible />
+</Example>
+
+### Parts
+
+Write the parts when you need a class, handlers, or a custom item. `Select.Items` renders one compact item per entry of `items`.
+
+<Example code={selectPartsSource} title="SelectParts.svelte">
+  <SelectParts client:visible />
+</Example>
+
 ## Slider
 
-`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing.
+`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label` or `aria-labelledby`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing.
 
 <Example code={sliderBoundsSource} title="SliderBounds.svelte">
   <SliderBounds client:visible />
@@ -244,3 +265,9 @@ A drag writes on every pointer move, so a function binding receives each interme
 <PropsTable name="tabs" collection="prime-controls" />
 
 <PartsDoc name="tabs" collection="prime-controls" />
+
+### Select
+
+<PropsTable name="select" collection="prime-controls" />
+
+<PartsDoc name="select" collection="prime-controls" />

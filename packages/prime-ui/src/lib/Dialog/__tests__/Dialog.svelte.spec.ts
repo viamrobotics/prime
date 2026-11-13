@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { boxShadow, shapeOf } from '../../__tests__/computed-style.ts';
 import BoundDialog from './BoundDialog.svelte';
 import ControlledDialog from './ControlledDialog.svelte';
+import TextCloseDialog from './TextCloseDialog.svelte';
 import UndefinedDialog from './UndefinedDialog.svelte';
 
 // Long enough for a vetoed open to have shown if it were going to.
@@ -31,7 +32,7 @@ describe('Dialog', () => {
 		expect(dialog()).toBeNull();
 	});
 
-	it('opens on trigger click as a labelled, described modal dialog', async () => {
+	it('opens on trigger click as a labeled, described modal dialog', async () => {
 		const { container } = render(BoundDialog);
 
 		await open(container);
@@ -112,7 +113,7 @@ describe('Dialog', () => {
 		await vi.waitFor(() => expect(document.activeElement).toBe(trigger(container)));
 	});
 
-	it('closes from Dialog.Close, which wears icon-button and is labelled Close', async () => {
+	it('closes from Dialog.Close, which wears icon-button and is labeled Close', async () => {
 		const { container } = render(BoundDialog);
 		await open(container);
 
@@ -121,6 +122,17 @@ describe('Dialog', () => {
 		await userEvent.click(closeButton());
 
 		await vi.waitFor(() => expect(dialog()).toBeNull());
+	});
+
+	it('a close given children wears only the consumer class', async () => {
+		const { container } = render(TextCloseDialog);
+		await open(container);
+		const text = [...dialog()!.querySelectorAll('button')].find(
+			(button) => button.textContent?.trim() === 'Cancel'
+		)!;
+
+		expect(text.classList.contains('button')).toBe(true);
+		expect(text.classList.contains('icon-button')).toBe(false);
 	});
 
 	it('locks body scroll while open and restores it after close', async () => {

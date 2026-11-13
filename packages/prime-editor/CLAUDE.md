@@ -38,5 +38,5 @@ Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwrig
 - The editor never validates. The theme paints the error border from `aria-invalid` on the editing surface.
 - Tab is not bound, so focus can always leave the editor.
 - The unified diff reconfigures its own compartment when `original` appears or disappears, and sends a new `original` as a change to the original document.
-- Every editor needs `aria-label` or `aria-labelledby`. A readonly editor keeps `tabindex` 0 so it stays reachable by keyboard. A disabled editor has no tab stop, takes no focus or selection, and marks the editing surface `aria-disabled`. `disabled` wins over `readonly`, and in a split diff it applies to both sides.
+- Every editor needs `aria-label` or `aria-labelledby`, and `$props()` is annotated `Props & AccessibleName` so omitting both is a type error. A readonly editor keeps `tabindex` 0 so it stays reachable by keyboard. A disabled editor has no tab stop, takes no focus or selection, and marks the editing surface `aria-disabled`. `disabled` wins over `readonly`, and in a split diff it applies to both sides.
 - Colors come from `@viamrobotics/tailwind-config` tokens only, never a literal.

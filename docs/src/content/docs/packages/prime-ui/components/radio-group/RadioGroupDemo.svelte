@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { RadioGroup } from "@viamrobotics/prime-ui";
   import Sandbox from "@docs/Sandbox.svelte";
+  import { RadioGroup } from "@viamrobotics/prime-ui";
 </script>
 
 <Sandbox

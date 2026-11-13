@@ -5,11 +5,13 @@ month buttons around the month heading, the weekday names, and the day grid. Ren
 [`DatePicker.Content`](./DatePickerContent.svelte).
 
 Arrow keys move between days, and Enter or Space selects the focused day. The header buttons
-change the month.
+change the month, and their names ("Last month" and "Next month" in `en-US`) follow the
+picker's `locale`. The calendar's accessible name is its `aria-label` followed by the month
+on show.
 
 ```svelte
 <DatePicker.Content>
-	<DatePicker.Calendar />
+	<DatePicker.Calendar aria-label="Choose a start date" />
 </DatePicker.Content>
 ```
 -->
@@ -20,13 +22,39 @@ change the month.
 	import { DatePicker } from 'bits-ui';
 
 	import Icon from '../Icon/Icon.svelte';
+	import { useDatePicker } from './useDatePicker.svelte.ts';
 
 	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
+
+		/**
+		 * The calendar's accessible name. The month on show is appended to it.
+		 * @default 'Choose a date'
+		 */
+		'aria-label'?: string;
 	}
 
-	const { class: extraClasses, ...restProps }: Props = $props();
+	const { class: extraClasses, 'aria-label': label, ...restProps }: Props = $props();
+
+	const picker = useDatePicker();
+
+	$effect(() => {
+		if (!picker) return;
+		picker.calendarLabel = label;
+		return () => {
+			picker.calendarLabel = undefined;
+		};
+	});
+
+	const monthButtonName = (step: -1 | 1): string => {
+		const locale = picker?.locale ?? 'en-US';
+		const name = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(step, 'month');
+		return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
+	};
+
+	const previousMonthName = $derived(monthButtonName(-1));
+	const nextMonthName = $derived(monthButtonName(1));
 
 	const MONTH_BUTTON_CLASSES =
 		'inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring hover:bg-light hover:text-default data-disabled:cursor-not-allowed data-disabled:text-disabled-dark';
@@ -36,11 +64,19 @@ change the month.
 	{#snippet children({ months, weekdays })}
 		<DatePicker.Header class="mb-2 flex items-center justify-between gap-2">
 			<DatePicker.PrevButton class={MONTH_BUTTON_CLASSES}>
-				<Icon icon={mdiChevronLeft} size="base" />
+				{#snippet child({ props })}
+					<button {...props} aria-label={previousMonthName}>
+						<Icon icon={mdiChevronLeft} size="base" />
+					</button>
+				{/snippet}
 			</DatePicker.PrevButton>
 			<DatePicker.Heading class="font-medium text-heading" />
 			<DatePicker.NextButton class={MONTH_BUTTON_CLASSES}>
-				<Icon icon={mdiChevronRight} size="base" />
+				{#snippet child({ props })}
+					<button {...props} aria-label={nextMonthName}>
+						<Icon icon={mdiChevronRight} size="base" />
+					</button>
+				{/snippet}
 			</DatePicker.NextButton>
 		</DatePicker.Header>
 		{#each months as month (month.value.toString())}
@@ -63,7 +99,7 @@ change the month.
 										class={[
 											'inline-flex size-8 cursor-pointer items-center justify-center rounded-sm focus-ring',
 											'not-data-disabled:not-data-selected:hover:bg-light',
-											'data-today:font-semibold not-data-selected:data-today:text-link',
+											'data-today:font-semibold not-data-selected:data-today:text-heading',
 											'data-outside-month:text-subtle-2',
 											'data-selected:bg-gray-9 data-selected:text-white',
 											'data-disabled:cursor-not-allowed data-disabled:text-disabled-dark',

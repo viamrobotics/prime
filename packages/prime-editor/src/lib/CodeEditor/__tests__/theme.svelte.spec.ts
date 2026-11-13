@@ -3,7 +3,13 @@ import '@viamrobotics/tailwind-config/dark';
 
 import { javascript } from '@codemirror/lang-javascript';
 import { MergeView, unifiedMergeView } from '@codemirror/merge';
-import { EditorView, lineNumbers, placeholder } from '@codemirror/view';
+import {
+	EditorView,
+	highlightActiveLine,
+	highlightActiveLineGutter,
+	lineNumbers,
+	placeholder
+} from '@codemirror/view';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { codeEditorTheme } from '../theme.ts';
@@ -24,6 +30,31 @@ const mount = (scopeClass?: string) => {
 		parent: host
 	});
 	return view.dom;
+};
+
+const TRANSPARENT = 'rgba(0, 0, 0, 0)';
+
+const mountWithActiveLine = (doc: string) => {
+	host = document.createElement('div');
+	document.body.append(host);
+	const view = new EditorView({
+		doc,
+		extensions: [
+			lineNumbers(),
+			highlightActiveLine(),
+			highlightActiveLineGutter(),
+			placeholder('Empty'),
+			codeEditorTheme
+		],
+		parent: host
+	});
+	return view.dom;
+};
+
+const backgroundOf = (root: HTMLElement, selector: string) => {
+	const node = root.querySelector(selector);
+	if (!node) throw new Error(`no node matches ${selector}`);
+	return getComputedStyle(node).backgroundColor;
 };
 
 const resolveColor = (container: HTMLElement, variable: string) => {
@@ -112,6 +143,24 @@ describe('codeEditorTheme', () => {
 		);
 	});
 
+	it.each(['.cm-activeLine', '.cm-activeLineGutter'])(
+		'paints the %s band on the cursor line of a document with text',
+		(selector) => {
+			const root = mountWithActiveLine(SOURCE);
+
+			expect(backgroundOf(root, selector)).toBe(resolveColor(root, '--color-gray-2'));
+		}
+	);
+
+	it.each(['.cm-activeLine', '.cm-activeLineGutter'])(
+		'paints no %s band behind the placeholder of an empty document',
+		(selector) => {
+			const root = mountWithActiveLine('');
+
+			expect(backgroundOf(root, selector)).toBe(TRANSPARENT);
+		}
+	);
+
 	it('clips its square gutter and scroller to the rounded corners', () => {
 		const style = getComputedStyle(mount());
 
@@ -138,11 +187,6 @@ describe('codeEditorTheme', () => {
 	});
 
 	const signOf = (line: Element) => getComputedStyle(line, '::before').content;
-	const backgroundOf = (root: HTMLElement, selector: string) => {
-		const node = root.querySelector(selector);
-		if (!node) throw new Error(`no node matches ${selector}`);
-		return getComputedStyle(node).backgroundColor;
-	};
 
 	it('paints the split diff like a patch: tinted lines, darker changed words, and a sign', () => {
 		host = document.createElement('div');

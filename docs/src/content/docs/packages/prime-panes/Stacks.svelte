@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { Panes } from "@viamrobotics/prime-panes";
   import type {
     LayoutNode,
     PaneNode,
     PaneState,
   } from "@viamrobotics/prime-panes";
+
+  import { Panes } from "@viamrobotics/prime-panes";
 
   interface PaneData {
     label: string;

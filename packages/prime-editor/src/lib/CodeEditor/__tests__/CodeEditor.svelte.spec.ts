@@ -1,3 +1,5 @@
+import type { ComponentProps } from 'svelte';
+
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
@@ -82,7 +84,7 @@ describe('CodeEditor', () => {
 
 	it('rehighlights the same text when language changes, without rebuilding the editor', async () => {
 		const { container, rerender } = render(CodeEditor, {
-			props: { value: '[true]', language: 'json' }
+			props: { value: '[true]', language: 'json', 'aria-label': 'Robot config' }
 		});
 		const [content] = contents(container);
 
@@ -116,7 +118,9 @@ describe('CodeEditor', () => {
 	});
 
 	it('exposes aria-readonly on a readonly editor', () => {
-		const { container } = render(CodeEditor, { props: { value: 'locked', readonly: true } });
+		const { container } = render(CodeEditor, {
+			props: { value: 'locked', readonly: true, 'aria-label': 'Robot config' }
+		});
 
 		expect(contents(container)[0].getAttribute('aria-readonly')).toBe('true');
 	});
@@ -144,7 +148,13 @@ describe('CodeEditor', () => {
 
 	it('disables both sides of a split diff', async () => {
 		const { container } = render(CodeEditor, {
-			props: { value: 'a\nb', original: 'a\nB', diff: 'split', disabled: true }
+			props: {
+				value: 'a\nb',
+				original: 'a\nB',
+				diff: 'split',
+				disabled: true,
+				'aria-label': 'Robot config'
+			}
 		});
 
 		await expect.poll(() => contents(container)).toHaveLength(2);
@@ -175,7 +185,9 @@ describe('CodeEditor', () => {
 	});
 
 	it('shows the line-number gutter by default and removes it with lineNumbers false', async () => {
-		const { container, rerender } = render(CodeEditor, { props: { value: 'one\ntwo' } });
+		const { container, rerender } = render(CodeEditor, {
+			props: { value: 'one\ntwo', 'aria-label': 'Robot config' }
+		});
 
 		expect(container.querySelector('.cm-lineNumbers')).not.toBeNull();
 
@@ -185,7 +197,9 @@ describe('CodeEditor', () => {
 	});
 
 	it('toggles line wrapping with wrapLines', async () => {
-		const { container, rerender } = render(CodeEditor, { props: { value: 'one' } });
+		const { container, rerender } = render(CodeEditor, {
+			props: { value: 'one', 'aria-label': 'Robot config' }
+		});
 		const [content] = contents(container);
 
 		expect(content.classList.contains('cm-lineWrapping')).toBe(false);
@@ -203,6 +217,13 @@ describe('CodeEditor', () => {
 		await expect.element(page.getByRole('textbox', { name: 'Script' })).toBeInTheDocument();
 	});
 
+	it('requires an accessible name', () => {
+		// @ts-expect-error aria-label or aria-labelledby is required
+		const unnamed: ComponentProps<typeof CodeEditor> = { value: 'print(1)' };
+
+		expect(unnamed.value).toBe('print(1)');
+	});
+
 	it('names the textbox with aria-labelledby', async () => {
 		render(LabelledCodeEditor);
 
@@ -211,7 +232,7 @@ describe('CodeEditor', () => {
 
 	it('marks a changed chunk in the unified diff and follows original', async () => {
 		const { container, rerender } = render(CodeEditor, {
-			props: { value: 'a\nb\nc', original: 'a\nB\nc' }
+			props: { value: 'a\nb\nc', original: 'a\nB\nc', 'aria-label': 'Robot config' }
 		});
 		const changed = () => container.querySelector('.cm-changedLine, .cm-deletedChunk');
 
@@ -338,7 +359,13 @@ describe('CodeEditor', () => {
 
 	it('invalidates only the value side of a split diff', async () => {
 		const { container } = render(CodeEditor, {
-			props: { value: 'a\nb', original: 'a\nB', diff: 'split', 'aria-invalid': true }
+			props: {
+				value: 'a\nb',
+				original: 'a\nB',
+				diff: 'split',
+				'aria-invalid': true,
+				'aria-label': 'Robot config'
+			}
 		});
 
 		await expect.poll(() => contents(container)).toHaveLength(2);
@@ -349,7 +376,9 @@ describe('CodeEditor', () => {
 	});
 
 	it('opens a search panel from the keyboard, marks the matches, and closes on Escape', async () => {
-		const { container } = render(CodeEditor, { props: { value: 'alpha\nbeta\nalpha' } });
+		const { container } = render(CodeEditor, {
+			props: { value: 'alpha\nbeta\nalpha', 'aria-label': 'Robot config' }
+		});
 		const [content] = contents(container);
 
 		await userEvent.click(lines(content)[1]);
@@ -368,7 +397,7 @@ describe('CodeEditor', () => {
 
 	it('folds a block from the gutter, and drops the fold markers with lineNumbers false', async () => {
 		const { container, rerender } = render(CodeEditor, {
-			props: { value: '{\n  "a": 1,\n  "b": 2\n}', language: 'json' }
+			props: { value: '{\n  "a": 1,\n  "b": 2\n}', language: 'json', 'aria-label': 'Robot config' }
 		});
 		const [content] = contents(container);
 		const foldMarker = () =>
@@ -389,7 +418,7 @@ describe('CodeEditor', () => {
 		'folds unchanged lines in the %s diff only with collapseUnchanged',
 		async (diff) => {
 			const { container, rerender } = render(CodeEditor, {
-				props: { value: LONG_VALUE, original: LONG_ORIGINAL, diff }
+				props: { value: LONG_VALUE, original: LONG_ORIGINAL, diff, 'aria-label': 'Robot config' }
 			});
 			const collapsed = () => container.querySelector('.cm-collapsedLines');
 

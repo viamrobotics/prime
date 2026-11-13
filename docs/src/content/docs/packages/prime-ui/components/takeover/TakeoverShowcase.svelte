@@ -3,7 +3,7 @@
 </script>
 
 <div class="not-content flex flex-col gap-2">
-  <p class="text-xs font-medium text-subtle-2 uppercase">Custom close label</p>
+  <h4 class="text-xs font-medium text-subtle-2 uppercase">Custom close label</h4>
   <div>
     <Takeover>
       <Takeover.Trigger class="button">Open takeover</Takeover.Trigger>

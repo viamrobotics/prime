@@ -6,7 +6,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Placement</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Placement</h4>
     <div class="flex flex-wrap gap-4 px-24 py-12">
       {#each placements as placement (placement)}
         <Tooltip>
@@ -20,7 +20,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
     <Tooltip disabled>
       <Tooltip.Trigger class="inline-flex">
         <button type="button" class="button">Never shows</button>

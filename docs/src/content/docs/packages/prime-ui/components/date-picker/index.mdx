@@ -24,6 +24,7 @@ import controlledSource from "./Controlled.svelte?raw";
 - `granularity` sets the smallest unit the field edits, from `day` down to `second`.
 - `DatePicker.Field` takes `state` from an enclosing [`Field`](../field/), or directly. `error` and `warn` share the `input` [component class](../../tailwind-config/component-classes/) with [`Input`](../input/).
 - The calendar floats in a portal, positioned to the field.
+- While the calendar is open, the field shows the darker `border-gray-9` frame, as `Select.Trigger` does.
 
 ## Anatomy
 
@@ -60,7 +61,24 @@ Pass `bind:value` a getter and a setter. [State & binding](../state/) explains b
 
 ### Bounds
 
-`min` and `max` take date objects from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/), such as `new CalendarDate(2026, 1, 1)`. Dates outside the range cannot be selected.
+`min` and `max` take date objects from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/), such as `new CalendarDate(2026, 1, 1)`. Dates outside the range cannot be selected in the calendar. A date typed outside the range marks the field `aria-invalid` and paints the same error border as `state="error"`.
+
+### Accessible names
+
+`DatePicker.Trigger` takes `aria-label`, which defaults to "Open calendar". `DatePicker.Content` takes `aria-label`, which defaults to "Choose a date". `DatePicker.Calendar` takes `aria-label` too. It replaces "Choose a date" at the start of the calendar grid's name, and the month and year stay appended. Set all three to name them on a page that is not in English.
+
+The previous and next month buttons take their names from the root `locale` through `Intl.RelativeTimeFormat`, such as "Last month" and "Next month" in `en-US`. They need no override.
+
+```svelte
+<DatePicker locale="de-DE">
+  <DatePicker.Field>
+    <DatePicker.Trigger aria-label="Kalender öffnen" />
+  </DatePicker.Field>
+  <DatePicker.Content aria-label="Datum auswählen">
+    <DatePicker.Calendar aria-label="Datum auswählen" />
+  </DatePicker.Content>
+</DatePicker>
+```
 
 ### Placement
 

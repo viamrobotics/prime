@@ -1,15 +1,16 @@
 <script lang="ts">
-  import {
-    floatPane,
-    Panes,
-    removeFloat,
-    setFloatRect,
-  } from "@viamrobotics/prime-panes";
   import type {
     FloatRect,
     LayoutNode,
     PaneNode,
     PaneState,
+  } from "@viamrobotics/prime-panes";
+
+  import {
+    floatPane,
+    Panes,
+    removeFloat,
+    setFloatRect,
   } from "@viamrobotics/prime-panes";
 
   interface PaneData {

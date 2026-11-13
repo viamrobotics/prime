@@ -4,7 +4,7 @@
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Validation states, with Field.StateIcon</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Validation states, with Field.StateIcon</h4>
     <div class="grid max-w-md gap-3">
       <Input placeholder="Default (none)" aria-label="Default" />
       <Input.Group>
@@ -23,7 +23,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-xs font-medium text-subtle-2 uppercase">Disabled and read-only</p>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled and read-only</h4>
     <div class="grid max-w-md gap-3">
       <Input disabled placeholder="Disabled" aria-label="Disabled" />
       <Input readonly value="Read-only value" aria-label="Read-only" />

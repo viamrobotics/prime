@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { theme } from "@docs/theme.svelte.ts";
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
   import { List, type ListOptions } from "svelte-tweakpane-ui";
-  import { theme } from "@docs/theme.svelte.ts";
 
   const options: ListOptions<string> = {
     Power_wire: "power-wire",

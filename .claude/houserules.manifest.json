@@ -1,6 +1,6 @@
 {
   "kitVersion": "0.12.1",
-  "installedAt": "2026-11-12T21:47:13.136Z",
+  "installedAt": "2026-11-13T02:47:37.272Z",
   "modules": [
     "core",
     "lint-fix",
@@ -67,7 +67,7 @@
     ".claude/skills/orchestrate/references/review-patterns.md": "e83d438712368d9385fde8da33f7196522d9ca39af3f92663a5427d3a9ad5a42",
     ".claude/skills/orchestrate/references/fixer-and-residue.md": "d7564cc74af92283bbb8b03143c4e49716d137a6c95041c00b5eccf9b5f0b0bf",
     ".claude/skills/orchestrate/references/closing.md": "55c1646aefbfdfc32fbe0645a1108d30a0905617aae2d52a3261f310197e6fcb",
-    ".claude/agents/task-worker.md": "52f0c91108f2ed2f55d0e92791f009cd1c43a22746d212e37d3987400d8a4f6c",
+    ".claude/agents/task-worker.md": "6117a4aff1adf2a3853bbbcc59281ab34174b30d209bcfcfe460bc79048f8853",
     ".claude/scripts/plan-lint.mjs": "aebda10f7d7e6e60018c4b91af3acfa8b6b9e4292c5ba9d2b939fb77deaa05eb",
     ".claude/scripts/verify-changed.mjs": "8def31c2e4a4ebd0b38d92f8a7f841ae7f9b895d29276a38e4bbf81be783f79c",
     ".claude/skills/verify-changed/SKILL.md": "4d529d2a1b2fcdf1367c132280eff43ff3a41801f2b228794435fbeb98ad5dbe",

@@ -48,6 +48,10 @@
 			"command": "eslint . --concurrency auto",
 			"files": [
 				"src/**/*.astro",
+				"src/**/*.svelte",
+				"src/**/*.ts",
+				"*.mjs",
+				"*.ts",
 				"eslint.config.js",
 				"tsconfig.json",
 				"package.json"
@@ -141,7 +145,7 @@
 	},
 	"devDependencies": {
 		"@astrojs/svelte": "^9.1.5",
-		"@eslint/compat": "catalog:",
+		"@eslint/js": "catalog:",
 		"@fontsource-variable/public-sans": "catalog:",
 		"@fontsource-variable/roboto-mono": "catalog:",
 		"@lucide/svelte": "^1.17.0",
@@ -161,8 +165,12 @@
 		"@zag-js/tree-view": "1.46.0",
 		"astro-eslint-parser": "^3.2.0",
 		"eslint": "catalog:",
+		"eslint-config-prettier": "catalog:",
 		"eslint-plugin-astro": "^3.2.1",
 		"eslint-plugin-jsx-a11y-x": "^0.2.0",
+		"eslint-plugin-perfectionist": "^5.10.0",
+		"eslint-plugin-svelte": "catalog:",
+		"globals": "catalog:",
 		"playwright": "^1.65.0",
 		"svelte": "^5.55.5",
 		"svelte-check": "catalog:",

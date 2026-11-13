@@ -41,11 +41,26 @@ describe('NumberField', () => {
 		await expect.element(page.getByRole('spinbutton', { name: 'Speed' })).toBeInTheDocument();
 	});
 
+	it('styles the label as subtle text', () => {
+		const { container } = render(NumberField, { props: { label: 'Speed', value: 1 } });
+
+		expect(container.querySelector('label')).toHaveClass('text-subtle-1');
+	});
+
 	it('takes its accessible name from aria-label without a label', async () => {
 		const { container } = render(NumberField, { props: { 'aria-label': 'Speed', value: 1 } });
 
 		await expect.element(page.getByRole('spinbutton', { name: 'Speed' })).toBeInTheDocument();
 		expect(container.querySelector('label')).toBeNull();
+	});
+
+	it('places the label outside the input box by default', () => {
+		const { container } = render(NumberField, { props: { label: 'Speed' } });
+
+		const labelRight = container.querySelector('label')!.getBoundingClientRect().right;
+		const boxLeft = input(container).getBoundingClientRect().left;
+
+		expect(labelRight).toBeLessThanOrEqual(boxLeft);
 	});
 
 	it('keeps the input-compact class on the input', () => {
@@ -226,5 +241,11 @@ describe('NumberField', () => {
 
 		expect(owner(container)).toBe('21');
 		expect(input(container).value).toBe('21');
+	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof NumberField> = { value: 0 };
+		expect(props).toBeDefined();
 	});
 });

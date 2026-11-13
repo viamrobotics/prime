@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Icon, ToggleButtons } from "@viamrobotics/prime-ui";
   import { mdiFormatListBulleted, mdiViewGrid } from "@mdi/js";
+  import { Icon, ToggleButtons } from "@viamrobotics/prime-ui";
 
   let layout = $state("grid");
 </script>

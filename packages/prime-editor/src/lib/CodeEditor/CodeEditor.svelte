@@ -89,6 +89,8 @@
 		'aria-invalid'?: HTMLAttributes<HTMLDivElement>['aria-invalid'];
 	}
 
+	type AccessibleName = { 'aria-label': string } | { 'aria-labelledby': string };
+
 	let {
 		value = $bindable(''),
 		language,
@@ -101,7 +103,7 @@
 		diff = 'unified',
 		collapseUnchanged = false,
 		...rest
-	}: Props = $props();
+	}: Props & AccessibleName = $props();
 
 	const languageCompartment = new Compartment();
 	const editabilityCompartment = new Compartment();

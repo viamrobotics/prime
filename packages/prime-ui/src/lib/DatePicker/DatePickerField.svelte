@@ -5,9 +5,11 @@ editable segment: type digits, or press the arrow keys to step it. Place a
 [`DatePicker.Trigger`](./DatePickerTrigger.svelte) inside it to open the calendar.
 
 Inside a [`Field`](../Field/Field.svelte) it takes its `id` (the field's `controlId`), `state`,
-`aria-labelledby`, and `aria-describedby` from there. An `error` state sets `aria-invalid` and the
-error border, and `warn` the warning border, through the same `input` class an
-[`Input`](../Input/Input.svelte) wears.
+`aria-labelledby`, and `aria-describedby` from there. An `error` state, or a typed date outside
+the picker's `min` and `max`, sets `aria-invalid` and the error border, and `warn` the warning
+border, through the same `input` class an [`Input`](../Input/Input.svelte) wears. The border
+darkens while the calendar is open, as a [`Select.Trigger`](../Select/SelectTrigger.svelte)
+does while its list is open.
 
 ```svelte
 <DatePicker.Field>
@@ -45,32 +47,46 @@ error border, and `warn` the warning border, through the same `input` class an
 	const field = useField();
 	const picker = useDatePicker();
 	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	const openState = $derived.by(() => {
+		if (!picker) return undefined;
+		return picker.open ? 'open' : 'closed';
+	});
 </script>
 
 <DatePicker.Input
 	id={id ?? field?.controlId}
 	aria-labelledby={labelledBy ?? field?.labelledBy}
 	aria-describedby={describedBy ?? field?.describedBy}
-	aria-invalid={currentState === FieldStates.Error || undefined}
 	data-field-state={currentState === FieldStates.None ? undefined : currentState}
 	data-readonly={picker?.readonly ? '' : undefined}
-	class={['inline-flex input items-center gap-1 focus-ring-within', extraClasses]}
+	data-state={openState}
+	class={[
+		'inline-flex input items-center gap-1 focus-ring-within data-[state=open]:border-gray-9',
+		extraClasses
+	]}
 	{...restProps}
 >
-	{#snippet children({ segments })}
-		<span class="flex items-center">
-			{#each segments as { part, value }, index (index)}
-				<DatePicker.Segment
-					{part}
-					class={[
-						'rounded-sm tabular-nums outline-none aria-[valuetext=Empty]:text-subtle-2',
-						part !== 'literal' && 'px-0.5 focus:bg-medium'
-					]}
-				>
-					{value}
-				</DatePicker.Segment>
-			{/each}
-		</span>
-		{@render trailing?.()}
+	{#snippet child({ props, segments })}
+		<div
+			{...props}
+			aria-invalid={currentState === FieldStates.Error ||
+				props['data-invalid'] !== undefined ||
+				undefined}
+		>
+			<span class="flex items-center">
+				{#each segments as { part, value }, index (index)}
+					<DatePicker.Segment
+						{part}
+						class={[
+							'rounded-sm tabular-nums outline-none aria-[valuetext=Empty]:text-subtle-2',
+							part !== 'literal' && 'px-0.5 focus:bg-medium'
+						]}
+					>
+						{value}
+					</DatePicker.Segment>
+				{/each}
+			</span>
+			{@render trailing?.()}
+		</div>
 	{/snippet}
 </DatePicker.Input>

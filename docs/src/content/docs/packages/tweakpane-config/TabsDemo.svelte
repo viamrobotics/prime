@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { theme } from "@docs/theme.svelte.ts";
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
   import { Checkbox, Color, Slider, TabGroup, TabPage } from "svelte-tweakpane-ui";
-  import { theme } from "@docs/theme.svelte.ts";
 
   let accent = $state("#a51aff");
   let amount = $state(0.25);

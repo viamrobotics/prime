@@ -19,6 +19,8 @@ export interface ParsedComponent {
   external: boolean;
   /** The `extends` clause of the local `Props` interface, verbatim. */
   extends?: string;
+  /** Property names of an alias union in the annotation, such as `Props & AccessibleName`, where a consumer must pass one. */
+  requiresOneOf?: string[];
   props: ComponentProp[];
 }
 
@@ -49,22 +51,46 @@ const destructureDefault = (
   return raw;
 };
 
-const propsInterface = (
-  script: string,
-  name: string | undefined,
-): { file: ts.SourceFile; node?: ts.InterfaceDeclaration } => {
-  const file = ts.createSourceFile(
-    "component.ts",
-    script,
-    ts.ScriptTarget.Latest,
-    true,
-  );
-  let node: ts.InterfaceDeclaration | undefined;
-  file.forEachChild((child) => {
-    if (ts.isInterfaceDeclaration(child) && child.name.text === name)
-      node = child;
-  });
-  return { file, node };
+const parseSource = (text: string) =>
+  ts.createSourceFile("component.ts", text, ts.ScriptTarget.Latest, true);
+
+const unquotedName = (member: ts.PropertySignature, file: ts.SourceFile) =>
+  member.name.getText(file).replace(/^['"]|['"]$/g, "");
+
+/** The type names an annotation joins with `&`, or the annotation itself when it is no intersection. */
+const annotationNames = (propsType: string | undefined): string[] => {
+  if (propsType === undefined) return [];
+  // A type only parses as a statement, so wrap it in an alias to read its AST.
+  const annotation = parseSource(`type Annotation = ${propsType};`);
+  const declaration = annotation.statements[0];
+  if (
+    !ts.isTypeAliasDeclaration(declaration) ||
+    !ts.isIntersectionTypeNode(declaration.type)
+  )
+    return [propsType];
+  return declaration.type.types.map((type) => type.getText(annotation));
+};
+
+const findPropsInterface = (file: ts.SourceFile, names: string[]) =>
+  file.statements
+    .filter(ts.isInterfaceDeclaration)
+    .find((declaration) => names.includes(declaration.name.text));
+
+/** The required property of each object arm of a named union alias, such as `AccessibleName`. */
+const findRequiredOneOf = (
+  file: ts.SourceFile,
+  names: string[],
+): string[] | undefined => {
+  const alias = file.statements
+    .filter(ts.isTypeAliasDeclaration)
+    .find((declaration) => names.includes(declaration.name.text));
+  if (!alias || !ts.isUnionTypeNode(alias.type)) return undefined;
+  const required = alias.type.types
+    .filter(ts.isTypeLiteralNode)
+    .flatMap((arm) => arm.members.filter(ts.isPropertySignature))
+    .filter((member) => member.questionToken === undefined)
+    .map((member) => unquotedName(member, file));
+  return required.length > 0 ? [...new Set(required)] : undefined;
 };
 
 const readProp = (
@@ -73,7 +99,7 @@ const readProp = (
   script: string,
   bindable: Set<string>,
 ): ComponentProp => {
-  const name = member.name.getText(file).replace(/^['"]|['"]$/g, "");
+  const name = unquotedName(member, file);
   const description = ts
     .getJSDocCommentsAndTags(member)
     .filter(ts.isJSDoc)
@@ -105,7 +131,9 @@ export const parseComponentSource = (source: string): ParsedComponent => {
   const bindable = new Set(
     [...script.matchAll(BINDABLE)].map((match) => match[1]),
   );
-  const { file, node } = propsInterface(script, propsType);
+  const file = parseSource(script);
+  const names = annotationNames(propsType);
+  const node = findPropsInterface(file, names);
 
   return {
     doc,
@@ -114,6 +142,7 @@ export const parseComponentSource = (source: string): ParsedComponent => {
     extends: node?.heritageClauses
       ?.flatMap((clause) => clause.types.map((type) => type.getText(file)))
       .join(", "),
+    requiresOneOf: findRequiredOneOf(file, names),
     props:
       node?.members
         .filter(ts.isPropertySignature)

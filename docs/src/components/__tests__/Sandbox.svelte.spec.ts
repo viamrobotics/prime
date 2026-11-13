@@ -1,7 +1,8 @@
+import { Input } from "@viamrobotics/prime-ui";
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-svelte";
 import { userEvent } from "vitest/browser";
-import { Input } from "@viamrobotics/prime-ui";
+
 import Sandbox from "../Sandbox.svelte";
 
 describe("Sandbox", () => {

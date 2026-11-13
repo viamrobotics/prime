@@ -87,7 +87,7 @@ A popover does not lock page scroll, trap focus, or make the rest of the page in
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `Popover.Trigger` is a real `<button>` with no look of its own beyond the focus ring, so add `button` or `icon-button`. `Popover.Close` wears `icon-button`. `Popover` renders no element, so it takes no `class`. bits-ui sets the data attributes below. `Popover.Content` wears `z-popover` and the `shadow-popover` token; see [z layers](../../tailwind-config/component-classes/#z-layers).
+Every part that renders an element takes `class` on that element. `Popover.Trigger` is a real `<button>` with no look of its own beyond the focus ring, so add `button` or `icon-button`. `Popover.Close` wears `icon-button` while it shows its default close icon. With children it wears no class of its own, so `class="button"` gives a text close the `button` class alone. `Popover` renders no element, so it takes no `class`. bits-ui sets the data attributes below. `Popover.Content` wears `z-popover` and the `shadow-popover` token; see [z layers](../../tailwind-config/component-classes/#z-layers).
 
 | Part      | Attribute    | Value                            |
 | --------- | ------------ | -------------------------------- |

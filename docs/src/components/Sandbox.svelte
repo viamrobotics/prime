@@ -18,9 +18,11 @@ children.
 />
 ```
 -->
+<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -- Component props are contravariant, so only any admits every demo's Props interface. -->
 <script lang="ts" generics="Props extends ComponentProps<any>">
-  import { Checkbox, Field, Input, Label, NumberInput, Select } from "@viamrobotics/prime-ui";
   import type { Component, ComponentProps, Snippet } from "svelte";
+
+  import { Checkbox, Field, Input, Label, NumberInput, Select } from "@viamrobotics/prime-ui";
 
   type Control =
     | { kind: "text"; label: string; default: string }

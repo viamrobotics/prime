@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
+import { borderColor, boxShadow, colorOf } from '../../__tests__/computed-style.ts';
 import BoundSelect from './BoundSelect.svelte';
 import ControlledSelect from './ControlledSelect.svelte';
 import IndicatorSelect from './IndicatorSelect.svelte';
@@ -33,7 +33,34 @@ afterEach(async () => {
 	if (listbox()) await userEvent.keyboard('{Escape}');
 });
 
+const CLOSE_SETTLE_MS = 400;
+
+const addOutsideInput = () => {
+	const input = document.createElement('input');
+	input.setAttribute('aria-label', 'Outside');
+	input.style.cssText = 'position: fixed; right: 0; bottom: 0';
+	document.body.append(input);
+	return input;
+};
+
+afterEach(() => {
+	document.querySelectorAll('input[aria-label="Outside"]').forEach((input) => input.remove());
+});
+
 describe('Select', () => {
+	it('closes on a press outside and focuses the pressed input', async () => {
+		const { container } = render(BoundSelect);
+		await userEvent.click(trigger(container));
+		await optionLabeled('Small');
+		const input = addOutsideInput();
+
+		await userEvent.click(input);
+
+		await vi.waitFor(() => expect(listbox()).toBeNull());
+		await new Promise((resolve) => setTimeout(resolve, CLOSE_SETTLE_MS));
+		expect(document.activeElement).toBe(input);
+	});
+
 	it('shows the bound value on the closed trigger', () => {
 		const { container } = render(BoundSelect);
 
@@ -130,6 +157,17 @@ describe('Select', () => {
 
 		await vi.waitFor(() => expect(listbox()).toBeTruthy());
 		expect(getComputedStyle(listbox()!).zIndex).toBe('1200');
+	});
+
+	it('lifts the panel with the small shadow', async () => {
+		const { container } = render(BoundSelect);
+
+		await userEvent.click(trigger(container));
+
+		await vi.waitFor(() => expect(listbox()).toBeTruthy());
+		expect(boxShadow(listbox()!)).toBe(
+			'rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.06) 0px 4px 32px 0px'
+		);
 	});
 
 	describe('trigger border', () => {

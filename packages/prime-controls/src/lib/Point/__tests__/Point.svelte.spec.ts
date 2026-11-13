@@ -5,6 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import { commands, page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
+import Point from '../Point.svelte';
 import type { PointValue } from '../point.ts';
 import BoundPoint from './BoundPoint.svelte';
 import ControlledPoint from './ControlledPoint.svelte';
@@ -12,6 +13,24 @@ import ControlledPoint from './ControlledPoint.svelte';
 const owner = (container: Element) =>
 	JSON.parse(container.querySelector('[data-testid="owner"]')!.textContent!) as PointValue;
 const spinbutton = (name: string) => page.getByRole('spinbutton', { name, exact: true });
+
+const axisLabel = (text: string) =>
+	[...document.querySelectorAll('label')].find((label) => label.textContent?.trim() === text)!;
+const boundingRectangles = (name: string) => ({
+	label: axisLabel(name).getBoundingClientRect(),
+	box: spinbutton(name).element().getBoundingClientRect()
+});
+
+const MIN_TARGET_PX = 24;
+const MAX_LETTER_WIDTH_PX = 32;
+const RGB_LABELS = { x: 'R', y: 'G', z: 'B' };
+const INSET_CASES = [
+	{ name: 'X', labels: undefined },
+	{ name: 'Y', labels: undefined },
+	{ name: 'Z', labels: undefined },
+	{ name: 'R', labels: RGB_LABELS },
+	{ name: 'B', labels: RGB_LABELS }
+];
 
 const PRESS_X = 5;
 const MIDDLE = '50%';
@@ -39,6 +58,13 @@ describe('Point', () => {
 		render(BoundPoint, { props: { initial: { x: 0, y: 0 }, label: 'Position' } });
 
 		await expect.element(page.getByRole('group', { name: 'Position' })).toBeInTheDocument();
+	});
+
+	it('styles the group label as subtle text', () => {
+		render(BoundPoint, { props: { initial: { x: 0, y: 0 }, label: 'Position' } });
+
+		const labelId = page.getByRole('group').element().getAttribute('aria-labelledby')!;
+		expect(document.getElementById(labelId)).toHaveClass('text-subtle-1');
 	});
 
 	it('points aria-labelledby at the visible label', () => {
@@ -138,6 +164,50 @@ describe('Point', () => {
 		]);
 	});
 
+	it.each(INSET_CASES)('draws the $name label inside its input box', ({ name, labels }) => {
+		render(BoundPoint, { props: { initial: { x: 1, y: 2, z: 3 }, label: 'Position', labels } });
+
+		const { label, box } = boundingRectangles(name);
+
+		expect(label.left, 'left edge').toBeGreaterThanOrEqual(box.left);
+		expect(label.right, 'right edge').toBeLessThanOrEqual(box.right);
+		expect(label.top, 'top edge').toBeGreaterThanOrEqual(box.top);
+		expect(label.bottom, 'bottom edge').toBeLessThanOrEqual(box.bottom);
+	});
+
+	it.each(INSET_CASES)(
+		'gives the $name label a target between 24 and 32 pixels wide and at least 24 tall',
+		({ name, labels }) => {
+			render(BoundPoint, {
+				props: { initial: { x: 1, y: 2, z: 3 }, label: 'Position', labels }
+			});
+
+			const { label } = boundingRectangles(name);
+
+			expect(label.width, 'width').toBeGreaterThanOrEqual(MIN_TARGET_PX);
+			expect(label.width, 'width').toBeLessThanOrEqual(MAX_LETTER_WIDTH_PX);
+			expect(label.height, 'height').toBeGreaterThanOrEqual(MIN_TARGET_PX);
+		}
+	);
+
+	it('scrubs a custom axis label drawn inside its box', async () => {
+		const { values } = renderControlled({ labels: RGB_LABELS });
+
+		await scrubLabel('B', [6]);
+
+		expect(values()).toEqual([{ x: 1, y: 2, z: 9 }]);
+	});
+
+	it('focuses the axis spinbutton on a click on its letter', async () => {
+		render(BoundPoint, { props: { initial: { x: 1, y: 2, z: 3 }, label: 'Position' } });
+
+		await commands.mouseMove('label:text-is("Z")');
+		await commands.mouseDown();
+		await commands.mouseUp();
+
+		await expect.element(spinbutton('Z')).toHaveFocus();
+	});
+
 	it('applies min, max, and step to every axis', async () => {
 		const { container } = render(BoundPoint, {
 			props: { initial: { x: 5, y: 5, z: 5 }, label: 'Position', min: 0, max: 6, step: 2 }
@@ -175,5 +245,11 @@ describe('Point', () => {
 		for (const field of page.getByRole('spinbutton').elements()) {
 			expect((field as HTMLInputElement).disabled).toBe(true);
 		}
+	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof Point> = { value: { x: 0, y: 0 } };
+		expect(props).toBeDefined();
 	});
 });

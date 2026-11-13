@@ -1,7 +1,8 @@
 <script lang="ts">
+  import type { ComponentProps } from "svelte";
+
   import { mdiContentCopy } from "@mdi/js";
   import { Icon, Tooltip } from "@viamrobotics/prime-ui";
-  import type { ComponentProps } from "svelte";
 
   type Placement = Pick<ComponentProps<typeof Tooltip.Content>, "placement">;
 

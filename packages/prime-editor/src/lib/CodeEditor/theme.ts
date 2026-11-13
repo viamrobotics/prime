@@ -91,6 +91,10 @@ const surfaceTheme = EditorView.theme({
 		backgroundColor: 'var(--color-gray-2)',
 		color: 'var(--color-default)'
 	},
+	// An empty document has one line, so the band marks nothing and would only darken the surface behind the placeholder.
+	'&:has(.cm-placeholder) .cm-activeLine, &:has(.cm-placeholder) .cm-activeLineGutter': {
+		backgroundColor: 'transparent'
+	},
 	'&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, ::selection':
 		{ backgroundColor: 'var(--color-info-medium)' },
 	'.cm-selectionMatch': { backgroundColor: 'var(--color-info-light)' },

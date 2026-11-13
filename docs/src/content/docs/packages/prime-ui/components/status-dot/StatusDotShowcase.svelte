@@ -12,7 +12,7 @@
 <div class="not-content flex flex-col gap-6">
   {#each rows as row (row.name)}
     <div class="flex flex-col gap-2">
-      <p class="text-xs font-medium text-subtle-2 uppercase">{row.name}</p>
+      <h4 class="text-xs font-medium text-subtle-2 uppercase">{row.name}</h4>
       <div class="flex flex-wrap gap-6">
         {#each states as state (state ?? "none")}
           <div class="flex items-center gap-2">
