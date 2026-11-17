@@ -1,5 +1,18 @@
 # @viamrobotics/prime-controls
 
+## 0.3.0
+### Minor Changes
+
+- 48af973: Add `axes` to `Point`, so a single axis can set its own `min`, `max`, `step`, `suffix`, `state`, and `describedBy`, and a `details` snippet drawn under each axis field
+- 48af973: Add a `state` prop to `Slider`
+
+### Patch Changes
+
+- 48af973: Widen the label gap on `NumberField`, `TextField`, `Slider`, and `ToggleButtons` to 8 px so the focus ring no longer touches the label
+- 48af973: Size the `Slider` readout to the longest value in its range so long values are no longer clipped
+- Updated dependencies [48af973]
+  - @viamrobotics/tailwind-config@1.7.1
+
 ## 0.2.0
 ### Minor Changes
 
