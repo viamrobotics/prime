@@ -21,7 +21,7 @@ A row of mutually exclusive buttons at a tool panel's scale, one of which is sel
 
 	import { ToggleButtons, type ToggleButtonsOption } from '@viamrobotics/prime-ui';
 
-	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
+	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import Item from './ToggleButtonsItem.svelte';
 
@@ -79,7 +79,7 @@ A row of mutually exclusive buttons at a tool panel's scale, one of which is sel
 	const hintId = `${labelId}-hint`;
 </script>
 
-<div class={['flex items-center gap-1', extraClasses]}>
+<div class={[CONTROL_ROW_CLASS, extraClasses]}>
 	{#if label}
 		<span id={labelId} class={['shrink-0', CONTROL_LABEL_CLASS]}>{label}</span>
 	{/if}

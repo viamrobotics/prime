@@ -453,3 +453,28 @@ describe('NumberField state', () => {
 		expect(input(error.container).getAttribute('aria-invalid')).toBe('true');
 	});
 });
+
+describe('NumberField label gap', () => {
+	it('leaves 8 px between the label and the input, so the focus ring clears the label', () => {
+		const { container } = render(NumberField, { props: { label: 'Speed', value: 1 } });
+		const labelRight = container.querySelector('label')!.getBoundingClientRect().right;
+		const inputLeft = input(container).getBoundingClientRect().left;
+
+		expect(inputLeft - labelRight).toBe(8);
+	});
+});
+
+describe('NumberField suffix size', () => {
+	it("draws a suffixed field at the bare field's height and text size", () => {
+		const bare = render(NumberField, { props: { label: 'Speed', value: 1 } });
+		const bareHeight = input(bare.container).getBoundingClientRect().height;
+		const bareFontSize = getComputedStyle(input(bare.container)).fontSize;
+		bare.unmount();
+
+		const suffixed = render(NumberField, { props: { label: 'Speed', suffix: 'mm', value: 1 } });
+		const group = input(suffixed.container).parentElement!;
+
+		expect(group.getBoundingClientRect().height).toBe(bareHeight);
+		expect(getComputedStyle(input(suffixed.container)).fontSize).toBe(bareFontSize);
+	});
+});

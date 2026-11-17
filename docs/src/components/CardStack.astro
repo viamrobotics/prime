@@ -1,0 +1,25 @@
+---
+/**
+ * A single-column list of Starlight `<Card>`s. Put the cards in the default slot. Each
+ * keeps its icon and its accent color, which Starlight assigns by position in the list.
+ */
+---
+
+<div class="card-stack"><slot /></div>
+
+<style>
+  .card-stack {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  /* The gap spaces the cards, so the top margin Starlight puts between content siblings goes. */
+  .card-stack > :global(*) {
+    margin-top: 0;
+  }
+
+  .card-stack > :global(.card) {
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+  }
+</style>

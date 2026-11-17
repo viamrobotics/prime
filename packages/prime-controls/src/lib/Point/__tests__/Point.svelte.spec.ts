@@ -9,6 +9,7 @@ import Point from '../Point.svelte';
 import type { PointValue } from '../point.ts';
 import BoundPoint from './BoundPoint.svelte';
 import ControlledPoint from './ControlledPoint.svelte';
+import PointWithDetails from './PointWithDetails.svelte';
 
 const owner = (container: Element) =>
 	JSON.parse(container.querySelector('[data-testid="owner"]')!.textContent!) as PointValue;
@@ -332,5 +333,112 @@ describe('Point suffix and state', () => {
 			await expect.element(spinbutton(axis)).toHaveAttribute('data-field-state', 'warn');
 			await expect.element(spinbutton(axis)).not.toHaveAttribute('aria-invalid');
 		}
+	});
+});
+
+describe('Point per axis', () => {
+	const position = { x: 1, y: 2, z: 3 };
+
+	it('sets a state on one axis and leaves the others alone', async () => {
+		render(Point, {
+			props: { label: 'Position', axes: { y: { state: 'warn' } }, value: position }
+		});
+
+		await expect.element(spinbutton('Y')).toHaveAttribute('data-field-state', 'warn');
+		await expect.element(spinbutton('X')).not.toHaveAttribute('data-field-state');
+		await expect.element(spinbutton('Z')).not.toHaveAttribute('data-field-state');
+	});
+
+	it('lets an axis state take the place of the control state', async () => {
+		render(Point, {
+			props: { label: 'Position', state: 'error', axes: { y: { state: 'warn' } }, value: position }
+		});
+
+		await expect.element(spinbutton('X')).toHaveAttribute('aria-invalid', 'true');
+		await expect.element(spinbutton('Y')).toHaveAttribute('data-field-state', 'warn');
+		await expect.element(spinbutton('Y')).not.toHaveAttribute('aria-invalid');
+	});
+
+	it("draws details under each axis field, at that field's width", async () => {
+		render(PointWithDetails, { props: { label: 'Position', value: position } });
+
+		for (const axis of ['x', 'y', 'z']) {
+			const button = page.getByRole('button', { name: `Reset ${axis}` });
+			await expect.element(button).toBeInTheDocument();
+
+			const field = spinbutton(axis.toUpperCase()).element().getBoundingClientRect();
+			const column = button.element().parentElement!.getBoundingClientRect();
+			expect(button.element().getBoundingClientRect().top).toBeGreaterThanOrEqual(field.bottom);
+			expect(column.left).toBe(field.left);
+			expect(column.width).toBe(field.width);
+		}
+	});
+
+	it('keeps the axis fields the same width with details', () => {
+		render(PointWithDetails, { props: { label: 'Position', messageAxis: 'y', value: position } });
+
+		const widths = ['X', 'Y', 'Z'].map(
+			(name) => spinbutton(name).element().getBoundingClientRect().width
+		);
+
+		// Grid tracks land on fractions of a pixel, so the widths agree to within one.
+		expect(Math.max(...widths) - Math.min(...widths)).toBeLessThan(1);
+	});
+
+	it('describes one axis by the element its id names', async () => {
+		render(PointWithDetails, { props: { label: 'Position', messageAxis: 'y', value: position } });
+
+		await expect.element(spinbutton('Y')).toHaveAccessibleDescription('Moved since your edit');
+		await expect.element(spinbutton('X')).not.toHaveAccessibleDescription();
+	});
+
+	it('lists the axis description before the suffix', async () => {
+		render(PointWithDetails, {
+			props: { label: 'Position', suffix: 'mm', messageAxis: 'y', value: position }
+		});
+
+		await expect.element(spinbutton('Y')).toHaveAccessibleDescription('Moved since your edit mm');
+		await expect.element(spinbutton('X')).toHaveAccessibleDescription('mm');
+	});
+
+	it('gives one axis its own suffix, step, and range', async () => {
+		const { container } = render(BoundPoint, {
+			props: {
+				label: 'Orientation',
+				step: 0.01,
+				min: -1,
+				max: 1,
+				labels: { w: 'Theta' },
+				axes: { w: { step: 5, min: -180, max: 180, suffix: 'deg' } },
+				initial: { x: 0, y: 0, z: 1, w: 90 }
+			}
+		});
+
+		await expect.element(spinbutton('Theta')).toHaveAccessibleDescription('deg');
+		await expect.element(spinbutton('X')).not.toHaveAccessibleDescription();
+		await expect.element(spinbutton('Theta')).toHaveAttribute('max', '180');
+		await expect.element(spinbutton('Z')).toHaveAttribute('max', '1');
+
+		await userEvent.click(spinbutton('Theta'));
+		await userEvent.keyboard('{ArrowUp}');
+		expect(owner(container)).toEqual({ x: 0, y: 0, z: 1, w: 95 });
+
+		await userEvent.click(spinbutton('X'));
+		await userEvent.keyboard('{ArrowUp}');
+		expect(owner(container)).toEqual({ x: 0.01, y: 0, z: 1, w: 95 });
+	});
+
+	it('draws no suffix on an axis whose own suffix is empty', async () => {
+		render(Point, {
+			props: {
+				label: 'Mixed',
+				suffix: 'mm',
+				axes: { y: { suffix: '' } },
+				value: { x: 1, y: 2 }
+			}
+		});
+
+		await expect.element(spinbutton('X')).toHaveAccessibleDescription('mm');
+		await expect.element(spinbutton('Y')).not.toHaveAccessibleDescription();
 	});
 });

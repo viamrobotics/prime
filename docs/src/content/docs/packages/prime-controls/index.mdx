@@ -46,6 +46,10 @@ import Hints from "./Hints.svelte"
 import hintsSource from "./Hints.svelte?raw"
 import Suffix from "./Suffix.svelte"
 import suffixSource from "./Suffix.svelte?raw"
+import PointAxes from "./PointAxes.svelte"
+import pointAxesSource from "./PointAxes.svelte?raw"
+import PointDetails from "./PointDetails.svelte"
+import pointDetailsSource from "./PointDetails.svelte?raw"
 import States from "./States.svelte"
 import statesSource from "./States.svelte?raw"
 import TextFieldBasic from "./TextFieldBasic.svelte"
@@ -194,6 +198,22 @@ The setter receives the whole new `PointValue`. This one refuses any value farth
   <PointLabels client:visible />
 </Example>
 
+### Per axis
+
+`axes` lets single axes set `min`, `max`, `step`, `suffix`, `state`, and `describedBy` for themselves, and an axis listed there uses its own value in place of the control's. So a vector whose last axis has its own unit and range is still one `Point`. This orientation is four axes, and the last is an angle with its own step, range, and unit.
+
+<Example code={pointAxesSource} title="PointAxes.svelte">
+  <PointAxes client:visible />
+</Example>
+
+### Details under an axis
+
+The `details` snippet draws content under one axis field, at that field's width, and receives the axis. Here each axis has a button that restores its live value. Y has been edited, so that one field warns through `axes`, and `describedBy` points it at the message under it. Pair a warn or error on one axis with such a message, because a color is never the only signal.
+
+<Example code={pointDetailsSource} title="PointDetails.svelte">
+  <PointDetails client:visible />
+</Example>
+
 ## Hints
 
 `NumberField`, `Point`, `Slider`, `ToggleButtons`, and a `Select` with no children take a `hint`. It puts an info button beside the label that opens a tooltip with the text, and the control is described by the same text, tooltip open or not. The button is named `About <label>`. A hint needs a visible `label`, so it sits beside one. `Select` shows no label, so its button is named from `aria-label`. `Point` has one hint for the whole group, and its axis fields have none. An inset `NumberField` puts the button after the input, since the label is inside it.
@@ -212,7 +232,7 @@ The setter receives the whole new `PointValue`. This one refuses any value farth
 
 ## State
 
-`NumberField` and `Point` take a `state` of `'none'`, `'info'`, `'warn'`, or `'error'`, prime-ui's `FieldState`. `'warn'` draws the `warning-dark` border. `'error'` draws the `danger-dark` border and sets `aria-invalid="true"`. `'info'` changes no border, because prime-ui's `input` style has no info rule, and this package draws none of its own. `Point` takes one state for the whole control and gives it to every axis field. With a `suffix`, the border belongs to the group. A color is never the only signal, so pair a warn or error with text, such as a hint.
+`NumberField`, `Point`, and `Slider` take a `state` of `'none'`, `'info'`, `'warn'`, or `'error'`, prime-ui's `FieldState`. `'warn'` draws the `warning-dark` border. `'error'` draws the `danger-dark` border and sets `aria-invalid="true"`. `'info'` changes no border, because prime-ui's `input` style has no info rule, and this package draws none of its own. `Point` takes one state for the whole control and gives it to every axis field, and `axes` sets one on single axes. `Slider` draws its state on the readout, and an error marks the range invalid too. With a `suffix`, the border belongs to the group. A color is never the only signal, so pair a warn or error with text, such as a hint.
 
 <Example code={statesSource} title="States.svelte">
   <States client:visible />
@@ -278,7 +298,7 @@ Write the parts when you need a class, handlers, or a custom item. `Select.Items
 
 ## Slider
 
-`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label` or `aria-labelledby`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing.
+`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label` or `aria-labelledby`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing. The readout is 64 px wide and grows to fit the longest value in the range, `min` or `max` at the step's decimal places, so a value such as `-179.9` is never clipped.
 
 <Example code={sliderBoundsSource} title="SliderBounds.svelte">
   <SliderBounds client:visible />

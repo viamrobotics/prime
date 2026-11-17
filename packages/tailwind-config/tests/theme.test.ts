@@ -828,6 +828,17 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
   });
 
+  it("gives an input inside an .input group the group's text size", () => {
+    const grouped = rulesOf(emitted, (rule) =>
+      /^\.input\s*>\s*input$/.test(rule.selector),
+    );
+    expect(grouped).toHaveLength(1);
+
+    const declarations = declarationsOf(grouped[0]!);
+    expect(declarations.get("font-size")).toBe("inherit");
+    expect(declarations.get("line-height")).toBe("inherit");
+  });
+
   it("sets .button-xs to the toggle item size under a rule that outranks the base class", () => {
     const button = declared(emitted, ".button-xs.button");
     expect(button.get("min-height")).toBe("calc(var(--spacing) * 6)");

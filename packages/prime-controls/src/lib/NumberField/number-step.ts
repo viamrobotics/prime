@@ -23,6 +23,12 @@ function decimalsOf(amount: number) {
 	return MAX_DECIMALS;
 }
 
+/** The character count of the longest value a range shows: `min` or `max` at the step's decimal places. */
+export function longestValueLength(min: number, max: number, step: number) {
+	const decimals = decimalsOf(step);
+	return Math.max(min.toFixed(decimals).length, max.toFixed(decimals).length);
+}
+
 export function clamp(amount: number, { min, max }: Bounds) {
 	return Math.min(max ?? Infinity, Math.max(min ?? -Infinity, amount));
 }
