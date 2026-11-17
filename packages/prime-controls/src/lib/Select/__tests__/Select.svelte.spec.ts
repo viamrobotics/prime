@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import '../../../../test/tailwind.css';
 import BoundSelect from './BoundSelect.svelte';
 import ChildlessSelect from './ChildlessSelect.svelte';
+import HintedSelect from './HintedSelect.svelte';
 
 const MIN_ROW_HEIGHT_PX = 24;
 const MAX_ROW_HEIGHT_PX = 28;
@@ -125,5 +126,42 @@ describe('Select', () => {
 			expect(height).toBeLessThanOrEqual(MAX_ROW_HEIGHT_PX);
 			expect(getComputedStyle(element).fontSize).toBe(resolvedFontSize(rootProperty('--text-xs')));
 		});
+	});
+});
+
+describe('Select hint', () => {
+	const HINT = 'How the gizmo moves the part';
+
+	it('names an info button after the label', async () => {
+		render(HintedSelect);
+
+		await expect.element(page.getByRole('button', { name: 'About Mode' })).toBeInTheDocument();
+	});
+
+	it('describes the control by the hint while the tooltip is closed', async () => {
+		render(HintedSelect);
+
+		expect(page.getByRole('tooltip').query()).toBeNull();
+		await expect
+			.element(page.getByRole('combobox', { name: 'Mode' }))
+			.toHaveAccessibleDescription(HINT);
+	});
+
+	it('shows the hint in a tooltip when the button takes focus', async () => {
+		render(HintedSelect);
+
+		await userEvent.tab();
+		await userEvent.tab();
+		await expect.element(page.getByRole('button', { name: 'About Mode' })).toHaveFocus();
+		await expect.element(page.getByRole('tooltip')).toHaveTextContent(HINT);
+	});
+
+	it('renders no button and no description without a hint', async () => {
+		render(ChildlessSelect);
+
+		expect(page.getByRole('button', { name: 'About Mode' }).query()).toBeNull();
+		await expect
+			.element(page.getByRole('combobox', { name: 'Mode' }))
+			.not.toHaveAttribute('aria-describedby');
 	});
 });

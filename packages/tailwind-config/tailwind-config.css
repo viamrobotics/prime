@@ -338,6 +338,15 @@
 }
 
 /*
+ * Read-only value box at field height. It is the `input` frame at the `input-compact` size in
+ * its readonly colors: 26px tall, a transparent border, and the `gray-1` fill. A long value
+ * truncates on one line. It reads no state and needs no `<input>`, so put it on a `<span>`.
+ */
+@utility readout {
+  @apply block min-w-0 flex-1 truncate rounded-sm border border-transparent bg-gray-1 px-2 py-1 text-xs text-default;
+}
+
+/*
  * Buttons compose a color family with a fill. `button` alone is the neutral family at the
  * outline fill, which is the default button. A color modifier (`button-danger`,
  * `button-warning`, `button-success`, `button-info`) assigns the five `--button-*` custom
@@ -389,6 +398,13 @@
 @utility button-compact {
   &.button {
     @apply gap-1 px-2 py-1 text-xs;
+  }
+}
+
+/* The toggle item's size, for a button beside a toggle group. The doubled class beats the padding and size `button` declares in any emission order. */
+@utility button-xs {
+  &.button {
+    @apply min-h-6 gap-1 px-1.5 py-0.5 text-xs;
   }
 }
 

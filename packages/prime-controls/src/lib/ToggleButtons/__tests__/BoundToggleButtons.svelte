@@ -8,9 +8,10 @@
 		disabled?: boolean;
 		composed?: boolean;
 		label?: string;
+		hint?: string;
 	}
 
-	let { initial = 'local', disabled, composed = false, label }: Props = $props();
+	let { initial = 'local', disabled, composed = false, label, hint }: Props = $props();
 
 	const items = [
 		{ value: 'local', label: 'Local' },
@@ -19,7 +20,7 @@
 	];
 
 	let value = $state(untrack(() => initial));
-	const name = $derived(label ? { label } : { 'aria-label': 'Space' });
+	const name = $derived(label ? { label, hint } : { 'aria-label': 'Space' });
 </script>
 
 {#if composed}

@@ -13,9 +13,10 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 <script lang="ts">
 	import type { ClassValue, HTMLInputAttributes } from 'svelte/elements';
 
-	import { NumberInput } from '@viamrobotics/prime-ui';
+	import { type FieldState, Input, NumberInput } from '@viamrobotics/prime-ui';
 
 	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
+	import Hint from '../Hint/Hint.svelte';
 	import { type Bounds, clamp, settle, startingValue, stepMultiplier } from './number-step.ts';
 
 	interface Props extends Omit<
@@ -30,6 +31,25 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		 * it, pass `aria-label` or `aria-labelledby`, and the field does not scrub.
 		 */
 		label?: string;
+
+		/**
+		 * Help text, shown in a tooltip from an info button beside the label, and the control's
+		 * accessible description. Needs a visible `label`.
+		 */
+		hint?: string;
+
+		/**
+		 * Short text such as a unit, drawn inside the input's right edge and part of the control's
+		 * accessible description. The input sits in a prime-ui `Input.Group`, which wears the border.
+		 */
+		suffix?: string;
+
+		/**
+		 * Contextual state. `warn` draws the `warning-dark` border. `error` draws the `danger-dark`
+		 * border and sets `aria-invalid`. `info` changes no border. With a `suffix`, the group wears
+		 * the border.
+		 */
+		state?: FieldState;
 
 		/** The minimum value a scrub or a key press reaches. */
 		min?: number;
@@ -57,6 +77,9 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 	let {
 		value = $bindable(),
 		label,
+		hint,
+		suffix,
+		state,
 		labelPlacement = 'outside',
 		min,
 		max,
@@ -66,26 +89,31 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		disabled,
 		readonly,
 		onkeydown,
+		'aria-describedby': ariaDescribedby,
 		...restProps
 	}: Props & AccessibleName = $props();
 
+	// A hint sits beside the visible label, so it is only allowed with one.
 	type AccessibleName =
 		| { label: string }
-		| { 'aria-label': string }
-		| { 'aria-labelledby': string };
+		| { label?: undefined; hint?: undefined; 'aria-label': string }
+		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
 
 	const PLACEMENT_CLASSES = {
 		outside: {
 			root: 'flex items-center gap-1',
 			label: 'flex min-h-6 min-w-6 shrink-0 items-center',
-			input: 'min-w-0 flex-1 input-compact'
+			input: 'min-w-0 flex-1 input-compact',
+			group: 'min-w-0 flex-1 input-compact'
 		},
 		inset: {
 			root: 'relative flex items-center',
 			label:
 				'absolute top-1/2 left-px flex h-6 min-w-6 -translate-y-1/2 items-center justify-center',
 			// `input-compact` sets its padding on a doubled class, which outranks a plain `pl-*` utility.
-			input: 'min-w-0 flex-1 input-compact pl-7!'
+			input: 'min-w-0 flex-1 input-compact pl-7!',
+			// The group wears the frame, so it takes the left padding the bare input would.
+			group: 'min-w-0 flex-1 input-compact pl-7!'
 		}
 	} as const;
 
@@ -102,6 +130,13 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 			return max;
 		}
 	};
+	const hintId = $derived(`${id}-hint`);
+	const suffixId = $derived(`${id}-suffix`);
+	const describedBy = $derived(
+		[ariaDescribedby, label && hint ? hintId : undefined, suffix ? suffixId : undefined]
+			.filter(Boolean)
+			.join(' ') || undefined
+	);
 	const isLocked = $derived(Boolean(disabled) || Boolean(readonly));
 	const placementClasses = $derived(PLACEMENT_CLASSES[labelPlacement]);
 
@@ -184,16 +219,45 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 			{label}
 		</label>
 	{/if}
-	<NumberInput
-		{...restProps}
-		{id}
-		{min}
-		{max}
-		{step}
-		{disabled}
-		{readonly}
-		bind:value
-		onkeydown={handleKeydown}
-		class={placementClasses.input}
-	/>
+	{#if label && hint && labelPlacement === 'outside'}
+		<Hint {label} {hint} descriptionId={hintId} disabled={Boolean(disabled)} />
+	{/if}
+	{#if suffix}
+		<Input.Group class={placementClasses.group}>
+			<NumberInput
+				{...restProps}
+				{id}
+				{min}
+				{max}
+				{step}
+				{disabled}
+				{readonly}
+				{state}
+				aria-describedby={describedBy}
+				bind:value
+				onkeydown={handleKeydown}
+				class="min-w-0 flex-1"
+			/>
+			<span id={suffixId} class="shrink-0 text-subtle-2">{suffix}</span>
+		</Input.Group>
+	{:else}
+		<NumberInput
+			{...restProps}
+			{id}
+			{min}
+			{max}
+			{step}
+			{disabled}
+			{readonly}
+			{state}
+			aria-describedby={describedBy}
+			bind:value
+			onkeydown={handleKeydown}
+			class={placementClasses.input}
+		/>
+	{/if}
+	<!-- An inset label sits inside the input's left edge, so its hint goes after the input. -->
+	{#if label && hint && labelPlacement === 'inset'}
+		<Hint {label} {hint} descriptionId={hintId} disabled={Boolean(disabled)} class="ml-1" />
+	{/if}
 </div>

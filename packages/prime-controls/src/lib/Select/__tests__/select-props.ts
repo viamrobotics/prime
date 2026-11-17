@@ -20,3 +20,11 @@ export const composedWithPlaceholder: SelectProps = { children: parts, placehold
 
 // @ts-expect-error a childless select needs an accessible name
 export const childlessUnnamed: SelectProps = { placeholder: 'Pick a mode' };
+
+export const childlessHinted: SelectProps = { 'aria-label': 'Mode', hint: 'How it moves' };
+
+// @ts-expect-error a hint is named from aria-label, so aria-labelledby alone cannot take one
+export const childlessLabelledbyHinted: SelectProps = { 'aria-labelledby': 'mode', hint: 'x' };
+
+// @ts-expect-error children and a hint cannot mix
+export const composedWithHint: SelectProps = { children: parts, hint: 'How it moves' };

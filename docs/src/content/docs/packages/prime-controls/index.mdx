@@ -42,6 +42,14 @@ import ToggleButtonsBasic from "./ToggleButtonsBasic.svelte"
 import toggleButtonsBasicSource from "./ToggleButtonsBasic.svelte?raw"
 import PointLabels from "./PointLabels.svelte"
 import pointLabelsSource from "./PointLabels.svelte?raw"
+import Hints from "./Hints.svelte"
+import hintsSource from "./Hints.svelte?raw"
+import Suffix from "./Suffix.svelte"
+import suffixSource from "./Suffix.svelte?raw"
+import States from "./States.svelte"
+import statesSource from "./States.svelte?raw"
+import TextFieldBasic from "./TextFieldBasic.svelte"
+import textFieldBasicSource from "./TextFieldBasic.svelte?raw"
 
 `@viamrobotics/prime-controls` is a set of compact realtime controls for tool panels. Each number control steps by keyboard and scrubs by dragging its label sideways, so a value can be tuned live without typing. Containers group the controls into panels, folders, and tabs.
 
@@ -51,6 +59,7 @@ import pointLabelsSource from "./PointLabels.svelte?raw"
 </Aside>
 
 - `NumberField`, one number with a label that doubles as the scrub handle.
+- `TextField`, one string with a plain label and no scrub.
 - `Point`, a 2D, 3D, or 4D vector as one `NumberField` per axis.
 - `Slider`, a range input with a `NumberField` readout beside it.
 - `Select`, a compact dropdown for choosing one of a list of items.
@@ -185,6 +194,40 @@ The setter receives the whole new `PointValue`. This one refuses any value farth
   <PointLabels client:visible />
 </Example>
 
+## Hints
+
+`NumberField`, `Point`, `Slider`, `ToggleButtons`, and a `Select` with no children take a `hint`. It puts an info button beside the label that opens a tooltip with the text, and the control is described by the same text, tooltip open or not. The button is named `About <label>`. A hint needs a visible `label`, so it sits beside one. `Select` shows no label, so its button is named from `aria-label`. `Point` has one hint for the whole group, and its axis fields have none. An inset `NumberField` puts the button after the input, since the label is inside it.
+
+<Example code={hintsSource} title="Hints.svelte">
+  <Hints client:visible />
+</Example>
+
+## Suffix
+
+`NumberField` takes a `suffix`, a short text such as a unit, drawn inside the input's right edge in `subtle-2`. The input sits in a prime-ui `Input.Group`, which wears the border and the focus ring, and the input inside it goes borderless. An inset label keeps its left padding on the group. The suffix is part of the input's accessible description, next to a `hint` and any `aria-describedby` you pass, so a unit is not only for sighted users. `Point` draws the suffix in every axis field, and `Slider` draws it in its readout.
+
+<Example code={suffixSource} title="Suffix.svelte">
+  <Suffix client:visible />
+</Example>
+
+## State
+
+`NumberField` and `Point` take a `state` of `'none'`, `'info'`, `'warn'`, or `'error'`, prime-ui's `FieldState`. `'warn'` draws the `warning-dark` border. `'error'` draws the `danger-dark` border and sets `aria-invalid="true"`. `'info'` changes no border, because prime-ui's `input` style has no info rule, and this package draws none of its own. `Point` takes one state for the whole control and gives it to every axis field. With a `suffix`, the border belongs to the group. A color is never the only signal, so pair a warn or error with text, such as a hint.
+
+<Example code={statesSource} title="States.svelte">
+  <States client:visible />
+</Example>
+
+## TextField
+
+`TextField` is a native text input with the `NumberField` row layout and no scrub. The label is a plain `<label>` that focuses the input. Without a `label`, pass `aria-label` or `aria-labelledby`. It takes `placeholder`, the native input attributes, `hint`, and `state`, which work as they do on `NumberField`. It has no `suffix` and no `labelPlacement`.
+
+`bind:value` holds a string. Unlike `NumberField`, whose empty field is `undefined`, an empty `TextField` is the empty string, so a bound `$state('')` stays a string.
+
+<Example code={textFieldBasicSource} title="TextFieldBasic.svelte">
+  <TextFieldBasic client:visible />
+</Example>
+
 ## Panel
 
 `Panel` is the dense container for a tool panel's controls, a `role="group"` with a border and tight spacing. A visible `title` names the group. Without one, pass `aria-label` or `aria-labelledby`.
@@ -254,6 +297,10 @@ A drag writes on every pointer move, so a function binding receives each interme
 ### NumberField
 
 <PropsTable name="number-field" collection="prime-controls" />
+
+### TextField
+
+<PropsTable name="text-field" collection="prime-controls" />
 
 ### Point
 

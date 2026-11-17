@@ -28,6 +28,7 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 
 	import { Select } from '@viamrobotics/prime-ui';
 
+	import Hint from '../Hint/Hint.svelte';
 	import SelectContent from './SelectContent.svelte';
 	import SelectItems from './SelectItems.svelte';
 	import { provideSelectItems } from './select-items.ts';
@@ -41,6 +42,7 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 		/** The `Select.*` parts. Without them the select renders its own trigger and list from `items`. */
 		children: Snippet;
 		placeholder?: never;
+		hint?: never;
 		'aria-label'?: never;
 		'aria-labelledby'?: never;
 	}
@@ -56,9 +58,17 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 
 		/** Id of the element that names the trigger. Only without `children`. */
 		'aria-labelledby'?: string;
+
+		/**
+		 * Help text, shown in a tooltip from an info button beside the trigger, and the trigger's
+		 * accessible description. The button is named from `aria-label`, so it needs one. Only
+		 * without `children`.
+		 */
+		hint?: string;
 	}
 
-	type AccessibleName = { 'aria-label': string } | { 'aria-labelledby': string };
+	// The hint button is named `About <aria-label>`, so a hint needs an `aria-label` and not an id.
+	type AccessibleName = { 'aria-label': string } | { 'aria-labelledby': string; hint?: undefined };
 
 	type Props = ComposedProps | (ChildlessProps & AccessibleName);
 
@@ -67,21 +77,39 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 		items,
 		children,
 		placeholder,
+		hint,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
 		...restProps
 	}: Props = $props();
 
 	provideSelectItems(() => items);
+
+	const hintId = $props.id();
+	const hintedName = $derived(hint ? ariaLabel : undefined);
 </script>
 
 <Select bind:value {items} {...restProps}>
 	{#if children}
 		{@render children()}
 	{:else}
-		<SelectTrigger aria-label={ariaLabel} aria-labelledby={ariaLabelledby}>
-			<SelectValue {placeholder} />
-		</SelectTrigger>
+		{#snippet trigger()}
+			<SelectTrigger
+				aria-label={ariaLabel}
+				aria-labelledby={ariaLabelledby}
+				aria-describedby={hintedName ? hintId : undefined}
+			>
+				<SelectValue {placeholder} />
+			</SelectTrigger>
+		{/snippet}
+		{#if hint && hintedName}
+			<div class="flex items-center gap-1">
+				{@render trigger()}
+				<Hint label={hintedName} {hint} descriptionId={hintId} />
+			</div>
+		{:else}
+			{@render trigger()}
+		{/if}
 		<SelectContent>
 			<SelectViewport>
 				<SelectItems />
