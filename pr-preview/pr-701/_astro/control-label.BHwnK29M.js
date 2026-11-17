@@ -1,1 +1,0 @@
-var e=`text-xs text-subtle-1`;export{e as t};
