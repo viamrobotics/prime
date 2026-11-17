@@ -13,6 +13,7 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 	import type { ClassValue } from 'svelte/elements';
 
 	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
+	import Hint from '../Hint/Hint.svelte';
 	import NumberField from '../NumberField/NumberField.svelte';
 
 	interface Props {
@@ -21,6 +22,12 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 
 		/** Visible label, rendered before the range. Without it, pass `aria-label` or `aria-labelledby`. */
 		label?: string;
+
+		/**
+		 * Help text, shown in a tooltip from an info button beside the label, and the control's
+		 * accessible description. Needs a visible `label`.
+		 */
+		hint?: string;
 
 		/** Accessible name for the range and the readout when there is no visible `label`. */
 		'aria-label'?: string;
@@ -37,6 +44,9 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		/** The amount one key press moves the value, and the granularity of a drag. @default 1 */
 		step?: number;
 
+		/** Text such as a unit, drawn inside the right edge of the readout. */
+		suffix?: string;
+
 		/** Disable the range and the readout. */
 		disabled?: boolean;
 
@@ -47,21 +57,26 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 	let {
 		value = $bindable(),
 		label,
+		hint,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
 		min = 0,
 		max = 100,
 		step = 1,
+		suffix,
 		disabled,
 		class: extraClasses
 	}: Props & AccessibleName = $props();
 
+	// A hint sits beside the visible label, so it is only allowed with one.
 	type AccessibleName =
 		| { label: string }
-		| { 'aria-label': string }
-		| { 'aria-labelledby': string };
+		| { label?: undefined; hint?: undefined; 'aria-label': string }
+		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
 
 	const id = $props.id();
+	const hintId = `${id}-hint`;
+	const describedBy = $derived(label && hint ? hintId : undefined);
 	const readoutName = $derived.by(() => {
 		const name = label ?? ariaLabel;
 		if (name) return { 'aria-label': name };
@@ -74,11 +89,15 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 	{#if label}
 		<label for={id} class={['shrink-0', CONTROL_LABEL_CLASS]}>{label}</label>
 	{/if}
+	{#if label && hint}
+		<Hint {label} {hint} descriptionId={hintId} {disabled} />
+	{/if}
 	<input
 		{id}
 		type="range"
 		aria-label={label ? undefined : ariaLabel}
 		aria-labelledby={label ? undefined : ariaLabelledby}
+		aria-describedby={describedBy}
 		{min}
 		{max}
 		{step}
@@ -96,9 +115,11 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 	/>
 	<NumberField
 		{...readoutName}
+		aria-describedby={describedBy}
 		{min}
 		{max}
 		{step}
+		{suffix}
 		{disabled}
 		class="w-16 shrink-0"
 		bind:value={

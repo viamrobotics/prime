@@ -253,3 +253,84 @@ describe('Point', () => {
 		expect(props).toBeDefined();
 	});
 });
+
+describe('Point hint', () => {
+	const HINT = 'Shown beside the label';
+
+	it('names an info button after the label', async () => {
+		render(Point, { props: { label: 'Position', hint: HINT, value: { x: 1, y: 2 } } });
+
+		await expect.element(page.getByRole('button', { name: 'About Position' })).toBeInTheDocument();
+	});
+
+	it('describes the control by the hint while the tooltip is closed', async () => {
+		render(Point, { props: { label: 'Position', hint: HINT, value: { x: 1, y: 2 } } });
+
+		expect(page.getByRole('tooltip').query()).toBeNull();
+		await expect
+			.element(page.getByRole('group', { name: 'Position' }))
+			.toHaveAccessibleDescription(HINT);
+	});
+
+	it('shows the hint in a tooltip when the button takes focus', async () => {
+		render(Point, { props: { label: 'Position', hint: HINT, value: { x: 1, y: 2 } } });
+
+		await userEvent.tab();
+		await expect.element(page.getByRole('button', { name: 'About Position' })).toHaveFocus();
+		await expect.element(page.getByRole('tooltip')).toHaveTextContent(HINT);
+	});
+
+	it('renders no button and no description without a hint', async () => {
+		render(Point, { props: { label: 'Position', value: { x: 1, y: 2 } } });
+
+		expect(page.getByRole('button', { name: 'About Position' }).query()).toBeNull();
+		await expect
+			.element(page.getByRole('group', { name: 'Position' }))
+			.not.toHaveAttribute('aria-describedby');
+	});
+
+	it('gives the axis fields no hint of their own', async () => {
+		render(Point, { props: { label: 'Position', hint: HINT, value: { x: 1, y: 2 } } });
+
+		expect(page.getByRole('button').elements()).toHaveLength(1);
+		await expect
+			.element(page.getByRole('spinbutton', { name: 'X' }))
+			.not.toHaveAttribute('aria-describedby');
+	});
+});
+
+describe('Point suffix and state', () => {
+	it('draws the suffix on every axis and describes each field by it', async () => {
+		render(Point, { props: { label: 'Position', suffix: 'mm', value: { x: 1, y: 2, z: 3 } } });
+
+		expect(page.getByText('mm', { exact: true }).elements()).toHaveLength(3);
+		await expect.element(spinbutton('X')).toHaveAccessibleDescription('mm');
+		await expect.element(spinbutton('Z')).toHaveAccessibleDescription('mm');
+	});
+
+	it('keeps typing writing the axis with a suffix', async () => {
+		const { container } = render(BoundPoint, {
+			props: { label: 'Position', suffix: 'mm', initial: { x: 1, y: 2 } }
+		});
+
+		await spinbutton('Y').fill('9');
+
+		expect(owner(container)).toEqual({ x: 1, y: 9 });
+	});
+
+	it('forwards an error to every axis', async () => {
+		render(Point, { props: { label: 'Position', state: 'error', value: { x: 1, y: 2 } } });
+
+		await expect.element(spinbutton('X')).toHaveAttribute('aria-invalid', 'true');
+		await expect.element(spinbutton('Y')).toHaveAttribute('aria-invalid', 'true');
+	});
+
+	it('forwards a warn to every axis without aria-invalid', async () => {
+		render(Point, { props: { label: 'Position', state: 'warn', value: { x: 1, y: 2 } } });
+
+		for (const axis of ['X', 'Y']) {
+			await expect.element(spinbutton(axis)).toHaveAttribute('data-field-state', 'warn');
+			await expect.element(spinbutton(axis)).not.toHaveAttribute('aria-invalid');
+		}
+	});
+});

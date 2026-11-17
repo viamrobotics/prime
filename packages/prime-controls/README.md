@@ -1,6 +1,6 @@
 # @viamrobotics/prime-controls
 
-Compact realtime controls for Svelte 5 tool panels: number fields, vectors, and sliders that step by keyboard and scrub by dragging, plus panels, folders, and tabs to group them.
+Compact realtime controls for Svelte 5 tool panels: number fields, vectors, and sliders that step by keyboard and scrub by dragging, text fields, plus panels, folders, and tabs to group them.
 
 > [!NOTE]
 > Under active development. The public API is unstable until 1.0.
@@ -34,6 +34,38 @@ Requires `svelte` `^5.29.0`. Import the stylesheets once, after Tailwind:
 ```
 
 Drag the label sideways to scrub, or press ArrowUp and ArrowDown to step. Shift steps by 10 times and Alt by a tenth. A function binding receives every value a scrub writes and can veto or throttle by not assigning.
+
+Pass `hint` to put an info button beside the label that shows the text in a tooltip and describes the field to a screen reader. `NumberField`, `Point`, `Slider`, and `ToggleButtons` take it with a visible `label`. A childless `Select` has none, so it names the button from `aria-label`.
+
+```svelte
+<NumberField label="Speed" hint="Metres per second" bind:value={speed} />
+```
+
+Pass `suffix` to draw a short text such as a unit inside the input's right edge. It is part of the field's accessible description. `Point` draws it in every axis and `Slider` in its readout.
+
+```svelte
+<NumberField label="Length" suffix="mm" bind:value={length} />
+```
+
+Pass `state` (`'warn'` or `'error'`) to draw a `warning-dark` or `danger-dark` border. An error also sets `aria-invalid="true"`. `'info'` draws no border. `NumberField` and `Point` take it, and `Point` gives one state to every axis.
+
+```svelte
+<NumberField label="Speed" state="warn" bind:value={speed} />
+```
+
+### TextField
+
+```svelte
+<script lang="ts">
+	import { TextField } from '@viamrobotics/prime-controls';
+
+	let name = $state('');
+</script>
+
+<TextField label="Motion name" placeholder="builtin" bind:value={name} />
+```
+
+A text input in the `NumberField` row layout, without scrub. The bound value is a string, and an empty field is `''`. It takes `hint` and `state` as `NumberField` does.
 
 ### Point
 

@@ -73,3 +73,39 @@ describe('ToggleButtons', () => {
 		await expect.element(page.getByText('Orientation')).toBeVisible();
 	});
 });
+
+describe('ToggleButtons hint', () => {
+	const HINT = 'Shown beside the label';
+
+	it('names an info button after the label', async () => {
+		render(BoundToggleButtons, { props: { label: 'Space', hint: HINT } });
+
+		await expect.element(page.getByRole('button', { name: 'About Space' })).toBeInTheDocument();
+	});
+
+	it('describes the control by the hint while the tooltip is closed', async () => {
+		render(BoundToggleButtons, { props: { label: 'Space', hint: HINT } });
+
+		expect(page.getByRole('tooltip').query()).toBeNull();
+		await expect
+			.element(page.getByRole('group', { name: 'Space' }))
+			.toHaveAccessibleDescription(HINT);
+	});
+
+	it('shows the hint in a tooltip when the button takes focus', async () => {
+		render(BoundToggleButtons, { props: { label: 'Space', hint: HINT } });
+
+		await userEvent.tab();
+		await expect.element(page.getByRole('button', { name: 'About Space' })).toHaveFocus();
+		await expect.element(page.getByRole('tooltip')).toHaveTextContent(HINT);
+	});
+
+	it('renders no button and no description without a hint', async () => {
+		render(BoundToggleButtons, { props: { label: 'Space' } });
+
+		expect(page.getByRole('button', { name: 'About Space' }).query()).toBeNull();
+		await expect
+			.element(page.getByRole('group', { name: 'Space' }))
+			.not.toHaveAttribute('aria-describedby');
+	});
+});

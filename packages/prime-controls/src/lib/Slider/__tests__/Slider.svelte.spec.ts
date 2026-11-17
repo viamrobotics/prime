@@ -181,3 +181,66 @@ describe('Slider', () => {
 		expect(props).toBeDefined();
 	});
 });
+
+describe('Slider hint', () => {
+	const HINT = 'Shown beside the label';
+
+	it('names an info button after the label', async () => {
+		render(Slider, { props: { label: 'Opacity', hint: HINT, value: 1 } });
+
+		await expect.element(page.getByRole('button', { name: 'About Opacity' })).toBeInTheDocument();
+	});
+
+	it('describes the control by the hint while the tooltip is closed', async () => {
+		render(Slider, { props: { label: 'Opacity', hint: HINT, value: 1 } });
+
+		expect(page.getByRole('tooltip').query()).toBeNull();
+		await expect
+			.element(page.getByRole('slider', { name: 'Opacity' }))
+			.toHaveAccessibleDescription(HINT);
+	});
+
+	it('shows the hint in a tooltip when the button takes focus', async () => {
+		render(Slider, { props: { label: 'Opacity', hint: HINT, value: 1 } });
+
+		await userEvent.tab();
+		await expect.element(page.getByRole('button', { name: 'About Opacity' })).toHaveFocus();
+		await expect.element(page.getByRole('tooltip')).toHaveTextContent(HINT);
+	});
+
+	it('renders no button and no description without a hint', async () => {
+		render(Slider, { props: { label: 'Opacity', value: 1 } });
+
+		expect(page.getByRole('button', { name: 'About Opacity' }).query()).toBeNull();
+		await expect
+			.element(page.getByRole('slider', { name: 'Opacity' }))
+			.not.toHaveAttribute('aria-describedby');
+	});
+
+	it('describes the readout by the hint too', async () => {
+		render(Slider, { props: { label: 'Opacity', hint: HINT, value: 1 } });
+
+		await expect
+			.element(page.getByRole('spinbutton', { name: 'Opacity' }))
+			.toHaveAccessibleDescription(HINT);
+	});
+});
+
+describe('Slider suffix', () => {
+	it('draws the suffix beside the readout and describes the readout by it', async () => {
+		const { container } = render(Slider, { props: { label: 'Opacity', suffix: '%', value: 50 } });
+
+		await expect.element(page.getByText('%', { exact: true })).toBeInTheDocument();
+		await expect.element(readout(container)).toHaveAccessibleDescription('%');
+	});
+
+	it('keeps the readout writing the value with a suffix', async () => {
+		const { container } = render(BoundSlider, {
+			props: { label: 'Opacity', suffix: '%', initial: 50 }
+		});
+
+		await page.getByRole('spinbutton', { name: 'Opacity' }).fill('70');
+
+		expect(owner(container)).toBe('70');
+	});
+});

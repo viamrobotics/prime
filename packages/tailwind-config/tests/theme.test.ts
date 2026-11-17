@@ -54,6 +54,8 @@ const CHROME_CLASSES = [
   "input",
   "input-compact",
   "button-compact",
+  "button-xs",
+  "readout",
   "status-dot",
   "status-dot-info",
   "status-dot-warning",
@@ -824,6 +826,26 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(input.get("line-height")).toBe(
       "var(--tw-leading, var(--text-xs--line-height))",
     );
+  });
+
+  it("sets .button-xs to the toggle item size under a rule that outranks the base class", () => {
+    const button = declared(emitted, ".button-xs.button");
+    expect(button.get("min-height")).toBe("calc(var(--spacing) * 6)");
+    expect(button.get("gap")).toBe("calc(var(--spacing) * 1)");
+    expect(button.get("padding-inline")).toBe("calc(var(--spacing) * 1.5)");
+    expect(button.get("padding-block")).toBe("calc(var(--spacing) * .5)");
+    expect(button.get("font-size")).toBe("var(--text-xs)");
+  });
+
+  it("paints .readout as a truncating gray-1 box with a transparent border", () => {
+    const readout = declared(emitted, ".readout");
+    expect(readout.get("background-color")).toBe("var(--color-gray-1)");
+    expect(readout.get("border-color")).toBe("#0000");
+    expect(readout.get("padding-inline")).toBe("calc(var(--spacing) * 2)");
+    expect(readout.get("padding-block")).toBe("calc(var(--spacing) * 1)");
+    expect(readout.get("font-size")).toBe("var(--text-xs)");
+    expect(readout.get("text-overflow")).toBe("ellipsis");
+    expect(readout.get("white-space")).toBe("nowrap");
   });
 
   it("mints no shadow-color-* utility from the shadow colors", () => {

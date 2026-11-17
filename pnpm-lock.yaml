@@ -252,6 +252,9 @@ importers:
 
   packages/prime-controls:
     dependencies:
+      '@mdi/js':
+        specifier: ^7.4.47
+        version: 7.4.47
       '@viamrobotics/prime-ui':
         specifier: workspace:^
         version: link:../prime-ui

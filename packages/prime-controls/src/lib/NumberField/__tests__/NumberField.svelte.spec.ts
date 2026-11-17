@@ -249,3 +249,207 @@ describe('NumberField', () => {
 		expect(props).toBeDefined();
 	});
 });
+
+describe('NumberField hint', () => {
+	const HINT = 'Shown beside the label';
+
+	it('names an info button after the label', async () => {
+		render(NumberField, { props: { label: 'Speed', hint: HINT, value: 1 } });
+
+		await expect.element(page.getByRole('button', { name: 'About Speed' })).toBeInTheDocument();
+	});
+
+	it('describes the control by the hint while the tooltip is closed', async () => {
+		render(NumberField, { props: { label: 'Speed', hint: HINT, value: 1 } });
+
+		expect(page.getByRole('tooltip').query()).toBeNull();
+		await expect
+			.element(page.getByRole('spinbutton', { name: 'Speed' }))
+			.toHaveAccessibleDescription(HINT);
+	});
+
+	it('shows the hint in a tooltip when the button takes focus', async () => {
+		render(NumberField, { props: { label: 'Speed', hint: HINT, value: 1 } });
+
+		await userEvent.tab();
+		await expect.element(page.getByRole('button', { name: 'About Speed' })).toHaveFocus();
+		await expect.element(page.getByRole('tooltip')).toHaveTextContent(HINT);
+	});
+
+	it('renders no button and no description without a hint', async () => {
+		render(NumberField, { props: { label: 'Speed', value: 1 } });
+
+		expect(page.getByRole('button', { name: 'About Speed' }).query()).toBeNull();
+		await expect
+			.element(page.getByRole('spinbutton', { name: 'Speed' }))
+			.not.toHaveAttribute('aria-describedby');
+	});
+
+	it('describes an inset field by the hint and puts the button after the input', async () => {
+		const { container } = render(NumberField, {
+			props: { label: 'X', labelPlacement: 'inset', hint: HINT, value: 1 }
+		});
+
+		await expect
+			.element(page.getByRole('spinbutton', { name: 'X' }))
+			.toHaveAccessibleDescription(HINT);
+		const inputRight = container.querySelector('input')!.getBoundingClientRect().right;
+		const buttonLeft = page
+			.getByRole('button', { name: 'About X' })
+			.element()
+			.getBoundingClientRect().left;
+		expect(buttonLeft).toBeGreaterThanOrEqual(inputRight);
+	});
+
+	it('keeps the existing description next to the hint', async () => {
+		render(NumberField, {
+			props: { label: 'Speed', hint: HINT, value: 1, 'aria-describedby': 'note' }
+		});
+
+		await expect
+			.element(page.getByRole('spinbutton', { name: 'Speed' }))
+			.toHaveAttribute('aria-describedby', expect.stringContaining('note'));
+	});
+
+	it('does not scrub when a drag starts on the hint button', async () => {
+		const { container } = render(BoundNumberField, {
+			props: { label: 'Speed', hint: HINT, initial: 5 }
+		});
+		const selector = 'button[aria-label="About Speed"]';
+
+		await commands.mouseMove(selector, { x: 5, y: MIDDLE });
+		await commands.mouseDown();
+		await commands.mouseMove(selector, { x: 5 + 40, y: MIDDLE });
+		await commands.mouseUp();
+
+		expect(owner(container)).toBe('5');
+		expect(input(container).value).toBe('5');
+	});
+});
+
+describe('NumberField suffix', () => {
+	it('renders the suffix text and describes the input by it', async () => {
+		render(NumberField, { props: { label: 'Length', suffix: 'mm', value: 1 } });
+
+		await expect.element(page.getByText('mm', { exact: true })).toBeInTheDocument();
+		await expect
+			.element(page.getByRole('spinbutton', { name: 'Length' }))
+			.toHaveAccessibleDescription('mm');
+	});
+
+	it('puts the suffix after the input, inside a group that wears the frame', () => {
+		const { container } = render(NumberField, {
+			props: { label: 'Length', suffix: 'mm', value: 1 }
+		});
+		const field = input(container);
+		const group = field.parentElement!;
+
+		expect(group.classList.contains('input')).toBe(true);
+		expect(field.getBoundingClientRect().right).toBeLessThanOrEqual(
+			page.getByText('mm', { exact: true }).element().getBoundingClientRect().left
+		);
+		expect(getComputedStyle(field).borderTopWidth).toBe('0px');
+	});
+
+	it('keeps typing writing the value', async () => {
+		const { container } = render(BoundNumberField, {
+			props: { label: 'Length', suffix: 'mm', initial: 1 }
+		});
+
+		await page.getByRole('spinbutton', { name: 'Length' }).fill('42');
+
+		expect(owner(container)).toBe('42');
+	});
+
+	it('keeps a label scrub writing the value', async () => {
+		const { container } = render(BoundNumberField, {
+			props: { label: 'Length', suffix: 'mm', initial: 5 }
+		});
+
+		await scrub([10, 20, 30]);
+
+		expect(owner(container)).toBe('35');
+	});
+
+	it('merges the hint, the suffix, and a consumer description', async () => {
+		render(NumberField, {
+			props: {
+				label: 'Length',
+				hint: 'Tip length',
+				suffix: 'mm',
+				value: 1,
+				'aria-describedby': 'note'
+			}
+		});
+
+		const field = page.getByRole('spinbutton', { name: 'Length' });
+		const describedBy = field.element().getAttribute('aria-describedby')!.split(' ');
+		expect(describedBy).toHaveLength(3);
+		expect(describedBy[0]).toBe('note');
+		await expect.element(field).toHaveAccessibleDescription(expect.stringContaining('Tip length'));
+		await expect.element(field).toHaveAccessibleDescription(expect.stringContaining('mm'));
+	});
+
+	it('gives an inset group the left padding the input took', () => {
+		const { container } = render(NumberField, {
+			props: { label: 'X', labelPlacement: 'inset', suffix: 'mm', value: 1 }
+		});
+		const group = input(container).parentElement!;
+
+		expect(parseFloat(getComputedStyle(group).paddingLeft)).toBeGreaterThanOrEqual(28);
+	});
+});
+
+describe('NumberField state', () => {
+	it('sets aria-invalid and data-field-state on an error', async () => {
+		render(NumberField, { props: { label: 'Speed', state: 'error', value: 1 } });
+
+		const field = page.getByRole('spinbutton', { name: 'Speed' });
+		await expect.element(field).toHaveAttribute('aria-invalid', 'true');
+		await expect.element(field).toHaveAttribute('data-field-state', 'error');
+	});
+
+	it('marks a warn without aria-invalid', async () => {
+		render(NumberField, { props: { label: 'Speed', state: 'warn', value: 1 } });
+
+		const field = page.getByRole('spinbutton', { name: 'Speed' });
+		await expect.element(field).not.toHaveAttribute('aria-invalid');
+		await expect.element(field).toHaveAttribute('data-field-state', 'warn');
+	});
+
+	it('sets neither attribute without a state', async () => {
+		render(NumberField, { props: { label: 'Speed', value: 1 } });
+
+		const field = page.getByRole('spinbutton', { name: 'Speed' });
+		await expect.element(field).not.toHaveAttribute('aria-invalid');
+		await expect.element(field).not.toHaveAttribute('data-field-state');
+	});
+
+	it('draws the warn and error borders on the bare input', () => {
+		const warn = render(NumberField, { props: { label: 'Speed', state: 'warn', value: 1 } });
+		const warnColor = getComputedStyle(input(warn.container)).borderTopColor;
+		warn.unmount();
+		const error = render(NumberField, { props: { label: 'Speed', state: 'error', value: 1 } });
+		const errorColor = getComputedStyle(input(error.container)).borderTopColor;
+		error.unmount();
+		const none = render(NumberField, { props: { label: 'Speed', value: 1 } });
+		const noneColor = getComputedStyle(input(none.container)).borderTopColor;
+
+		expect(warnColor).not.toBe(noneColor);
+		expect(errorColor).not.toBe(noneColor);
+		expect(warnColor).not.toBe(errorColor);
+	});
+
+	it('draws the border on the group when a suffix is set', () => {
+		const plain = render(NumberField, { props: { label: 'Speed', suffix: 'm', value: 1 } });
+		const plainColor = getComputedStyle(input(plain.container).parentElement!).borderTopColor;
+		plain.unmount();
+		const error = render(NumberField, {
+			props: { label: 'Speed', suffix: 'm', state: 'error', value: 1 }
+		});
+		const group = input(error.container).parentElement!;
+
+		expect(getComputedStyle(group).borderTopColor).not.toBe(plainColor);
+		expect(input(error.container).getAttribute('aria-invalid')).toBe('true');
+	});
+});
