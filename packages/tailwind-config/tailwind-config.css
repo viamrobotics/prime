@@ -345,9 +345,27 @@
  * Read-only value box at field height. It is the `input` frame at the `input-compact` size in
  * its readonly colors: 26px tall, a transparent border, and the `gray-1` fill. A long value
  * truncates on one line. It reads no state and needs no `<input>`, so put it on a `<span>`.
+ *
+ * A readout with a unit holds a `readout-value` and then a `readout-suffix`. It lays out as a
+ * row, so the value truncates and the unit stays whole. Text put straight into a `readout`
+ * truncates from its end, which would cut the unit first.
  */
 @utility readout {
   @apply block min-w-0 flex-1 truncate rounded-sm border border-transparent bg-gray-1 px-2 py-1 text-xs text-default;
+
+  &:has(> .readout-suffix) {
+    @apply flex items-baseline gap-1;
+  }
+}
+
+/* The value inside a `readout` that also holds a `readout-suffix`. It takes the room left over. */
+@utility readout-value {
+  @apply min-w-0 flex-1 truncate;
+}
+
+/* A unit after the `readout-value`, in a field suffix's color. It never shrinks. */
+@utility readout-suffix {
+  @apply shrink-0 text-subtle-2;
 }
 
 /*

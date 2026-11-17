@@ -453,6 +453,27 @@ The frame for a text field. Put it on a native `<input>`, or on a wrapper around
   code={`<span class="readout">12.5</span>`}
 />
 
+A readout with a unit holds a `readout-value` and then a `readout-suffix`. It lays out as a row, so a long value truncates and the unit stays whole. Text put straight into a `readout` truncates from its end, which would cut the unit first. The suffix takes the color of a field's suffix.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <span class="readout max-w-24">
+    <span class="readout-value">312.40</span>
+    <span class="readout-suffix">mm</span>
+  </span>
+  <span class="readout max-w-24">
+    <span class="readout-value">-1234567.89</span>
+    <span class="readout-suffix">mm</span>
+  </span>
+</div>
+
+<Code
+  lang="html"
+  code={`<span class="readout">
+  <span class="readout-value">312.40</span>
+  <span class="readout-suffix">mm</span>
+</span>`}
+/>
+
 Each state also applies when the attribute sits on a direct child `<input>` of the frame. On a native single `<select>`, the class replaces the browser's arrow with a chevron and pads the right edge for it, so the frame reads the same as a text field.
 
 | State     | Attribute                        | What changes                                |
