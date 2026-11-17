@@ -1,5 +1,19 @@
 # @viamrobotics/prime-controls
 
+## 0.2.0
+### Minor Changes
+
+- dfee9ad: Add a `hint` prop to `NumberField`, `Point`, `Slider`, `ToggleButtons`, and a childless `Select`
+- dfee9ad: Add a `state` prop to `NumberField` and `Point`
+- dfee9ad: Add a `suffix` prop to `NumberField`, `Point`, and `Slider`
+- dfee9ad: Add a `TextField` control
+
+### Patch Changes
+
+- Updated dependencies [dfee9ad]
+- Updated dependencies [dfee9ad]
+  - @viamrobotics/tailwind-config@1.7.0
+
 ## 0.1.0
 ### Minor Changes
 

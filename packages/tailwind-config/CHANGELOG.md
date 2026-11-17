@@ -1,5 +1,11 @@
 # @viamrobotics/tailwind-config
 
+## 1.7.0
+### Minor Changes
+
+- dfee9ad: Add a `button-xs` class, the `button` at the 24px size of a toggle button item
+- dfee9ad: Add a `readout` class, a read-only value box at field height that truncates a long value
+
 ## 1.6.0
 ### Minor Changes
 
