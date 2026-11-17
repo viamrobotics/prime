@@ -1,5 +1,10 @@
 # @viamrobotics/tailwind-config
 
+## 1.8.0
+### Minor Changes
+
+- 2036299: Add `readout-value` and `readout-suffix`, so a `readout` can hold a unit that stays whole while its value truncates
+
 ## 1.7.1
 ### Patch Changes
 
