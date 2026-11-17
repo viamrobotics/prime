@@ -12,9 +12,12 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 <script lang="ts">
 	import type { ClassValue } from 'svelte/elements';
 
-	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
+	import { type FieldState, FieldStates } from '@viamrobotics/prime-ui';
+
+	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import NumberField from '../NumberField/NumberField.svelte';
+	import { longestValueLength } from '../NumberField/number-step.ts';
 
 	interface Props {
 		/** Current value. */
@@ -47,6 +50,13 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		/** Text such as a unit, drawn inside the right edge of the readout. */
 		suffix?: string;
 
+		/**
+		 * Contextual state, drawn on the readout. `warn` draws the `warning-dark` border. `error`
+		 * draws the `danger-dark` border and sets `aria-invalid` on the range and the readout. `info`
+		 * changes no border.
+		 */
+		state?: FieldState;
+
 		/** Disable the range and the readout. */
 		disabled?: boolean;
 
@@ -64,6 +74,7 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		max = 100,
 		step = 1,
 		suffix,
+		state,
 		disabled,
 		class: extraClasses
 	}: Props & AccessibleName = $props();
@@ -74,8 +85,15 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		| { label?: undefined; hint?: undefined; 'aria-label': string }
 		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
 
+	const READOUT_CARET_ROOM_PX = 2;
+
 	const id = $props.id();
 	const hintId = `${id}-hint`;
+	// The readout's text box is as wide as the longest value in the range, so no value clips. The
+	// width is content-box, so the frame and a suffix add to it instead of eating into it.
+	const readoutStyle = $derived(
+		`box-sizing: content-box; width: calc(${longestValueLength(min, max, step)}ch + ${READOUT_CARET_ROOM_PX}px)`
+	);
 	const describedBy = $derived(label && hint ? hintId : undefined);
 	const readoutName = $derived.by(() => {
 		const name = label ?? ariaLabel;
@@ -85,7 +103,7 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 	});
 </script>
 
-<div class={['flex items-center gap-1', extraClasses]}>
+<div class={[CONTROL_ROW_CLASS, extraClasses]}>
 	{#if label}
 		<label for={id} class={['shrink-0', CONTROL_LABEL_CLASS]}>{label}</label>
 	{/if}
@@ -98,6 +116,7 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		aria-label={label ? undefined : ariaLabel}
 		aria-labelledby={label ? undefined : ariaLabelledby}
 		aria-describedby={describedBy}
+		aria-invalid={state === FieldStates.Error || undefined}
 		{min}
 		{max}
 		{step}
@@ -120,8 +139,10 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		{max}
 		{step}
 		{suffix}
+		{state}
 		{disabled}
-		class="w-16 shrink-0"
+		style={readoutStyle}
+		class="min-w-16 shrink-0"
 		bind:value={
 			() => value,
 			(next) => {

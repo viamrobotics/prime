@@ -15,26 +15,18 @@ hero:
       icon: right-arrow
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
+import { Card } from "@astrojs/starlight/components";
+import CardStack from "@docs/CardStack.astro";
 
 Prime is Viam's design-system implementation: a set of npm packages that share design tokens (`@viamrobotics/tailwind-config`) and ship Svelte 5 components on top of them (`@viamrobotics/prime-ui`). This site documents what's available, with live demos and usage recipes for each package.
 
 ## Packages
 
-<CardGrid>
+<CardStack>
   <Card title="@viamrobotics/prime-ui" icon="seti:svelte">
     Viam's Svelte 5 component library. See the [package
     docs](./packages/prime-ui/) for installation, or the [component
     pages](./packages/prime-ui/components/field/) for live demos and usage.
-  </Card>
-  <Card title="@viamrobotics/tailwind-config" icon="seti:css">
-    Shared Tailwind CSS v4 design tokens and fonts. See the [package
-    docs](./packages/tailwind-config/) for usage and token references.
-  </Card>
-  <Card title="@viamrobotics/tweakpane-config" icon="seti:json">
-    Viam-themed preset for
-    [`svelte-tweakpane-ui`](https://kitschpatrol.com/svelte-tweakpane-ui). See
-    the [package docs](./packages/tweakpane-config/) for usage.
   </Card>
   <Card title="@viamrobotics/prime-panes" icon="seti:svelte">
     Resizable, rearrangeable split-pane layouts for Svelte 5. See the [package
@@ -45,4 +37,23 @@ Prime is Viam's design-system implementation: a set of npm packages that share d
     accessibility, and you own every row. See the [package
     docs](./packages/prime-tree/) for usage and the snippet contract.
   </Card>
-</CardGrid>
+  <Card title="@viamrobotics/prime-controls" icon="seti:svelte">
+    Compact realtime controls for Svelte 5 tool panels: number fields, vectors,
+    and sliders, grouped by panels, folders, and tabs. See the [package
+    docs](./packages/prime-controls/) for usage and live demos.
+  </Card>
+  <Card title="@viamrobotics/prime-editor" icon="seti:svelte">
+    A CodeMirror 6 code editor for Svelte 5, themed with Viam's code tokens,
+    with a diff view. See the [package docs](./packages/prime-editor/) for usage
+    and live demos.
+  </Card>
+  <Card title="@viamrobotics/tailwind-config" icon="seti:css">
+    Shared Tailwind CSS v4 design tokens and fonts. See the [package
+    docs](./packages/tailwind-config/) for usage and token references.
+  </Card>
+  <Card title="@viamrobotics/tweakpane-config" icon="seti:json">
+    Viam-themed preset for
+    [`svelte-tweakpane-ui`](https://kitschpatrol.com/svelte-tweakpane-ui). See
+    the [package docs](./packages/tweakpane-config/) for usage.
+  </Card>
+</CardStack>

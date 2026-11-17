@@ -9,6 +9,7 @@ one axis writes a new object with that axis changed and every other axis as it w
 ```
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
 
 	import type { FieldState } from '@viamrobotics/prime-ui';
@@ -16,7 +17,7 @@ one axis writes a new object with that axis changed and every other axis as it w
 	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import NumberField from '../NumberField/NumberField.svelte';
-	import type { PointAxis, PointValue } from './point.ts';
+	import type { PointAxis, PointAxisOptions, PointValue } from './point.ts';
 
 	interface Props {
 		/** The vector. Its defined axes decide how many fields render. */
@@ -55,6 +56,18 @@ one axis writes a new object with that axis changed and every other axis as it w
 		/** Contextual state of the whole control, forwarded to every axis field. */
 		state?: FieldState;
 
+		/**
+		 * What single axes set for themselves: `min`, `max`, `step`, `suffix`, `state`, and
+		 * `describedBy`. An axis listed here uses its own value in place of the control's.
+		 */
+		axes?: Partial<Record<PointAxis, PointAxisOptions>>;
+
+		/**
+		 * Content drawn under one axis field, at that field's width, such as a restore button or a
+		 * message about that axis. It receives the axis.
+		 */
+		details?: Snippet<[axis: PointAxis]>;
+
 		/** Disable every axis. */
 		disabled?: boolean;
 
@@ -74,6 +87,8 @@ one axis writes a new object with that axis changed and every other axis as it w
 		step = 1,
 		suffix,
 		state,
+		axes,
+		details,
 		disabled,
 		class: extraClasses
 	}: Props & AccessibleName = $props();
@@ -85,7 +100,7 @@ one axis writes a new object with that axis changed and every other axis as it w
 		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
 
 	const AXES: PointAxis[] = ['x', 'y', 'z', 'w'];
-	const axes = $derived(AXES.filter((axis) => value[axis] !== undefined));
+	const definedAxes = $derived(AXES.filter((axis) => value[axis] !== undefined));
 	const labelId = $props.id();
 	const hintId = `${labelId}-hint`;
 </script>
@@ -107,25 +122,30 @@ one axis writes a new object with that axis changed and every other axis as it w
 			<span id={labelId} class={CONTROL_LABEL_CLASS}>{label}</span>
 		{/if}
 	{/if}
-	<div class="flex gap-1">
-		{#each axes as axis (axis)}
-			<NumberField
-				label={labels?.[axis] ?? axis.toUpperCase()}
-				labelPlacement="inset"
-				{min}
-				{max}
-				{step}
-				{suffix}
-				{state}
-				{disabled}
-				class="min-w-0 flex-1"
-				bind:value={
-					() => value[axis],
-					(next) => {
-						if (next !== undefined) value = { ...value, [axis]: next };
+	<!-- Equal grid columns keep every axis the same width, whatever `details` holds. -->
+	<div class="grid auto-cols-fr grid-flow-col gap-1">
+		{#each definedAxes as axis (axis)}
+			<div class="flex min-w-0 flex-col gap-1">
+				<NumberField
+					label={labels?.[axis] ?? axis.toUpperCase()}
+					labelPlacement="inset"
+					aria-describedby={axes?.[axis]?.describedBy}
+					min={axes?.[axis]?.min ?? min}
+					max={axes?.[axis]?.max ?? max}
+					step={axes?.[axis]?.step ?? step}
+					suffix={axes?.[axis]?.suffix ?? suffix}
+					state={axes?.[axis]?.state ?? state}
+					{disabled}
+					class="min-w-0"
+					bind:value={
+						() => value[axis],
+						(next) => {
+							if (next !== undefined) value = { ...value, [axis]: next };
+						}
 					}
-				}
-			/>
+				/>
+				{@render details?.(axis)}
+			</div>
 		{/each}
 	</div>
 </div>

@@ -306,12 +306,16 @@
     background-color: var(--color-disabled-light);
     color: var(--color-disabled-dark);
   }
+  /* A grouped input wears the group's frame and takes the group's text size, so a size class
+     on the group, such as `input-compact`, reaches the input inside it. */
   & > input {
     flex: 1;
     min-width: 0;
     border: 0;
     background-color: transparent;
     padding: 0;
+    font-size: inherit;
+    line-height: inherit;
   }
   /* Browsers draw the native select arrow at the box edge and ignore padding-right, so a
      single select drops it and draws a chevron from two gradients, which can read a color

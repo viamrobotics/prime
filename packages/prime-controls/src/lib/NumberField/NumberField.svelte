@@ -15,7 +15,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 
 	import { type FieldState, Input, NumberInput } from '@viamrobotics/prime-ui';
 
-	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
+	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import { type Bounds, clamp, settle, startingValue, stepMultiplier } from './number-step.ts';
 
@@ -101,7 +101,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 
 	const PLACEMENT_CLASSES = {
 		outside: {
-			root: 'flex items-center gap-1',
+			root: CONTROL_ROW_CLASS,
 			label: 'flex min-h-6 min-w-6 shrink-0 items-center',
 			input: 'min-w-0 flex-1 input-compact',
 			group: 'min-w-0 flex-1 input-compact'

@@ -244,3 +244,119 @@ describe('Slider suffix', () => {
 		expect(owner(container)).toBe('70');
 	});
 });
+
+describe('Slider state', () => {
+	it('gives an error to the readout and marks the range invalid', async () => {
+		const { container } = render(Slider, {
+			props: { label: 'Opacity', state: 'error', value: 50 }
+		});
+
+		await expect.element(readout(container)).toHaveAttribute('data-field-state', 'error');
+		await expect.element(readout(container)).toHaveAttribute('aria-invalid', 'true');
+		await expect.element(range(container)).toHaveAttribute('aria-invalid', 'true');
+	});
+
+	it('marks a warn on the readout without aria-invalid', async () => {
+		const { container } = render(Slider, { props: { label: 'Opacity', state: 'warn', value: 50 } });
+
+		await expect.element(readout(container)).toHaveAttribute('data-field-state', 'warn');
+		await expect.element(readout(container)).not.toHaveAttribute('aria-invalid');
+		await expect.element(range(container)).not.toHaveAttribute('aria-invalid');
+	});
+
+	it('sets neither attribute without a state', async () => {
+		const { container } = render(Slider, { props: { label: 'Opacity', value: 50 } });
+
+		await expect.element(readout(container)).not.toHaveAttribute('data-field-state');
+		await expect.element(readout(container)).not.toHaveAttribute('aria-invalid');
+		await expect.element(range(container)).not.toHaveAttribute('aria-invalid');
+	});
+
+	it('draws the warn and error borders on the readout', () => {
+		const warn = render(Slider, { props: { label: 'Opacity', state: 'warn', value: 50 } });
+		const warnColor = getComputedStyle(readout(warn.container)).borderTopColor;
+		warn.unmount();
+		const error = render(Slider, { props: { label: 'Opacity', state: 'error', value: 50 } });
+		const errorColor = getComputedStyle(readout(error.container)).borderTopColor;
+		error.unmount();
+		const none = render(Slider, { props: { label: 'Opacity', value: 50 } });
+		const noneColor = getComputedStyle(readout(none.container)).borderTopColor;
+
+		expect(warnColor).not.toBe(noneColor);
+		expect(errorColor).not.toBe(noneColor);
+		expect(warnColor).not.toBe(errorColor);
+	});
+});
+
+describe('Slider readout width', () => {
+	const FONT_PROPERTIES = [
+		'fontFamily',
+		'fontSize',
+		'fontWeight',
+		'fontStyle',
+		'fontVariantNumeric',
+		'fontFeatureSettings',
+		'letterSpacing'
+	] as const;
+
+	// The space left in the readout after its value, measured with the readout's own font. A
+	// negative number is text the readout clips.
+	function spareWidth(field: HTMLInputElement) {
+		const style = getComputedStyle(field);
+		const probe = document.createElement('span');
+		for (const property of FONT_PROPERTIES) probe.style[property] = style[property];
+		probe.style.whiteSpace = 'pre';
+		probe.textContent = field.value;
+		document.body.append(probe);
+		const textWidth = probe.getBoundingClientRect().width;
+		probe.remove();
+
+		const frame = [
+			style.paddingLeft,
+			style.paddingRight,
+			style.borderLeftWidth,
+			style.borderRightWidth
+		].reduce((total, length) => total + Number.parseFloat(length), 0);
+		return field.getBoundingClientRect().width - frame - textWidth;
+	}
+
+	it.each([{ suffix: undefined }, { suffix: '%' }])(
+		'keeps the 64 px readout when the range is short, with suffix $suffix',
+		({ suffix }) => {
+			const { container } = render(Slider, { props: { label: 'Opacity', suffix, value: 50 } });
+			const frame = readout(container).closest('div')!;
+
+			expect(frame.getBoundingClientRect().width).toBe(64);
+		}
+	);
+
+	it('widens the readout past 64 px when the range needs it', () => {
+		const { container } = render(Slider, {
+			props: { label: 'Joint 1', suffix: '°', min: -180, max: 180, step: 0.1, value: 0 }
+		});
+		const frame = readout(container).closest('div')!;
+
+		expect(frame.getBoundingClientRect().width).toBeGreaterThan(64);
+	});
+
+	it.each([
+		{ step: 0.1, value: -179.9 },
+		{ step: 0.01, value: -179.99 },
+		{ step: 0.001, value: -179.999 }
+	])('fits $value with a suffix', ({ step, value }) => {
+		const { container } = render(Slider, {
+			props: { label: 'Joint 1', suffix: '°', min: -180, max: 180, step, value }
+		});
+
+		expect(readout(container).value).toBe(String(value));
+		expect(spareWidth(readout(container))).toBeGreaterThanOrEqual(0);
+	});
+
+	it('fits the longest value without a suffix', () => {
+		const { container } = render(Slider, {
+			props: { label: 'Offset', min: -10000, max: 10000, step: 0.01, value: -9999.99 }
+		});
+
+		expect(spareWidth(readout(container))).toBeGreaterThanOrEqual(0);
+	});
+});

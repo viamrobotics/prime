@@ -13,7 +13,7 @@ An empty field is the empty string.
 
 	import { type FieldState, Input } from '@viamrobotics/prime-ui';
 
-	import { CONTROL_LABEL_CLASS } from '../control-label.ts';
+	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
 	import Hint from '../Hint/Hint.svelte';
 
 	interface Props extends Omit<HTMLInputAttributes, 'value' | 'type' | 'children' | 'class'> {
@@ -68,7 +68,7 @@ An empty field is the empty string.
 	);
 </script>
 
-<div class={['flex items-center gap-1', extraClasses]}>
+<div class={[CONTROL_ROW_CLASS, extraClasses]}>
 	{#if label}
 		<label for={id} class={['flex min-h-6 min-w-6 shrink-0 items-center', CONTROL_LABEL_CLASS]}>
 			{label}
