@@ -56,6 +56,8 @@ const CHROME_CLASSES = [
   "button-compact",
   "button-xs",
   "readout",
+  "readout-value",
+  "readout-suffix",
   "status-dot",
   "status-dot-info",
   "status-dot-warning",
@@ -857,6 +859,30 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(readout.get("font-size")).toBe("var(--text-xs)");
     expect(readout.get("text-overflow")).toBe("ellipsis");
     expect(readout.get("white-space")).toBe("nowrap");
+  });
+
+  it("lays a .readout out as a row once it holds a .readout-suffix", () => {
+    const row = rulesOf(emitted, (rule) =>
+      /^\.readout:has\(\s*>\s*\.readout-suffix\)$/.test(rule.selector),
+    );
+    expect(row).toHaveLength(1);
+
+    const declarations = declarationsOf(row[0]!);
+    expect(declarations.get("display")).toBe("flex");
+    expect(declarations.get("align-items")).toBe("baseline");
+    expect(declarations.get("gap")).toBe("calc(var(--spacing) * 1)");
+  });
+
+  it("lets .readout-value truncate and keeps .readout-suffix whole in a field suffix's color", () => {
+    const value = declared(emitted, ".readout-value");
+    expect(value.get("min-width")).toBe("calc(var(--spacing) * 0)");
+    expect(value.get("flex")).toBe("1");
+    expect(value.get("text-overflow")).toBe("ellipsis");
+    expect(value.get("white-space")).toBe("nowrap");
+
+    const suffix = declared(emitted, ".readout-suffix");
+    expect(suffix.get("flex-shrink")).toBe("0");
+    expect(suffix.get("color")).toBe("var(--color-subtle-2)");
   });
 
   it("mints no shadow-color-* utility from the shadow colors", () => {
