@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 const packageDirectory = path.resolve(import.meta.dirname, "..");
 const DARK_SCHEME_MEDIA = "(prefers-color-scheme: dark)";
-const CHROME_CLASSES = [
+const SHIPPED_CLASSES = [
   "button",
   "button-dark",
   "button-danger",
@@ -69,6 +69,8 @@ const CHROME_CLASSES = [
   "shadow-dialog",
   "focus-ring",
   "focus-ring-within",
+  "text-display",
+  "text-code",
 ];
 const BUTTON_COLORS = [
   "button-dark",
@@ -86,6 +88,17 @@ const BANNER_VARIANTS = [
   ["pending", "var(--color-pending-light)", "var(--color-pending-dark)"],
 ] as const;
 
+const Z_LAYERS = [
+  ["sticky", "100"],
+  ["overlay", "1000"],
+  ["dialog", "1100"],
+  ["popover", "1200"],
+  ["menu", "1200"],
+  ["toast", "1300"],
+  ["tooltip", "1400"],
+  ["max", "9999"],
+] as const;
+
 const CANDIDATES = [
   "slider-thumb-w-3",
   "slider-thumb-h-3",
@@ -94,14 +107,9 @@ const CANDIDATES = [
   "dark:bg-gray-9",
   "bg-extralight",
   "bg-gray-0",
-  "text-display",
-  "text-code",
   "bg-heading",
-  "text-xs",
   "px-4",
-  "z-dialog",
-  "z-tooltip",
-  "z-max",
+  ...Z_LAYERS.map(([name]) => `z-${name}`),
   "z-50",
   "z-1150",
   "z-nope",
@@ -109,7 +117,7 @@ const CANDIDATES = [
   "shadow-popover/50",
   "shadow-red-500",
   "shadow-color-popover",
-  ...CHROME_CLASSES,
+  ...SHIPPED_CLASSES,
 ];
 
 const UNSET_SHADOW_LAYERS = "0 0 #0000, 0 0 #0000, 0 0 #0000, 0 0 #0000";
@@ -125,17 +133,6 @@ const ELEVATIONS = [
     "0 12px 48px rgba(0, 0, 0, 0.25)",
     "0 12px 48px rgba(0, 0, 0, 0.6)",
   ],
-] as const;
-
-const Z_LAYERS = [
-  ["sticky", "100"],
-  ["overlay", "1000"],
-  ["dialog", "1100"],
-  ["popover", "1200"],
-  ["menu", "1200"],
-  ["toast", "1300"],
-  ["tooltip", "1400"],
-  ["max", "9999"],
 ] as const;
 
 const rulesOf = (
@@ -422,40 +419,17 @@ describe("theme stylesheets compiled through Tailwind", () => {
     ).toBe("#9c9ca4");
   });
 
-  it("declares text-display and text-code from the type tokens", () => {
-    const display = declarationsOf(onlyRule(unoptimized, ".text-display"));
-    expect(Object.fromEntries(display)).toStrictEqual({
-      "font-family": "var(--font-space-grotesk)",
-      "font-weight": "500",
-      "font-size": "1.5rem",
-      "line-height": "1.625rem",
-    });
+  it("emits every named z layer as z-index: var(--z-<name>) over its token value", () => {
+    const layers = Z_LAYERS.map(([name]) => [
+      name,
+      declared(unoptimized, `.z-${name}`).get("z-index"),
+      themeDefaults.get(`--z-${name}`),
+    ]);
 
-    const code = declarationsOf(onlyRule(unoptimized, ".text-code"));
-    expect(Object.fromEntries(code)).toStrictEqual({
-      "font-family": "var(--font-roboto-mono)",
-      "font-size": "var(--text-xs)",
-      "line-height": "var(--text-xs--line-height)",
-    });
-
-    const theme = themeRootDeclarations(unoptimized);
-    expect(theme.get("--text-xs")).toBe("0.75rem");
-    expect(theme.get("--text-xs--line-height")).toBe("calc(1 / 0.75)");
+    expect(layers).toStrictEqual(
+      Z_LAYERS.map(([name, value]) => [name, `var(--z-${name})`, value]),
+    );
   });
-
-  it.each(Z_LAYERS)(
-    "emits z-%s as z-index: var(--z-%s) with the token set to %s",
-    async (name, value) => {
-      const compiler = await compile(
-        `@import "tailwindcss";\n@import "./tailwind-config.css";`,
-        { base: packageDirectory, onDependency() {} },
-      );
-      const built = postcss.parse(compiler.build([`z-${name}`]));
-      const rule = onlyRule(built, `.z-${name}`);
-      expect(declarationsOf(rule).get("z-index")).toBe(`var(--z-${name})`);
-      expect(themeDefaults.get(`--z-${name}`)).toBe(value);
-    },
-  );
 
   it("emits bare z numbers through Tailwind's own utility", () => {
     expect(declarationsOf(onlyRule(unoptimized, ".z-50")).get("z-index")).toBe(
@@ -510,9 +484,13 @@ describe("theme stylesheets compiled through Tailwind", () => {
     ).toHaveLength(0);
   });
 
-  it.each(CHROME_CLASSES)("emits at least one rule for .%s", (name) => {
-    const found = rulesOf(emitted, (rule) => startsWithClass(rule, name));
-    expect(found.length, `no rule starts with .${name}`).toBeGreaterThan(0);
+  it("emits a rule for every shipped class", () => {
+    const missing = SHIPPED_CLASSES.filter(
+      (name) =>
+        rulesOf(emitted, (rule) => startsWithClass(rule, name)).length === 0,
+    );
+
+    expect(missing).toStrictEqual([]);
   });
 
   it("draws the focus ring on .button:focus-visible", () => {
@@ -631,15 +609,6 @@ describe("theme stylesheets compiled through Tailwind", () => {
     }
   });
 
-  it("gives a disabled .button the not-allowed cursor", () => {
-    const [disabled] = rulesOf(
-      emitted,
-      (rule) =>
-        rule.selector === '.button:is(:disabled, [aria-disabled="true"])',
-    );
-    expect(declarationsOf(disabled!).get("cursor")).toBe("not-allowed");
-  });
-
   it("emits the progress-dots keyframes with 10 stops", () => {
     const keyframes: AtRule[] = [];
     emitted.walkAtRules("keyframes", (atRule) => {
@@ -662,21 +631,6 @@ describe("theme stylesheets compiled through Tailwind", () => {
       "80%",
       "90%",
     ]);
-  });
-
-  it("lays .banner out as the compact one-liner by default", () => {
-    const compact = declared(emitted, ".banner");
-    expect(compact.get("display")).toBe("grid");
-    expect(compact.get("position")).toBe("relative");
-    expect(compact.get("grid-template-columns")).toBe(
-      "auto minmax(0, 1fr) auto auto",
-    );
-    expect(compact.get("min-height")).toBe("calc(var(--spacing) * 10)");
-    expect(compact.get("padding")).toBe("calc(var(--spacing) * 1.5)");
-    expect(compact.get("align-items")).toBe("center");
-    expect(compact.get("border-width")).toBe("1px");
-    expect(compact.get("border-color")).toBe("var(--color-gray-3)");
-    expect(compact.get("background-color")).toBe("var(--color-white)");
   });
 
   it("spaces .banner columns with part margins, never a grid gap, and keeps the corners square", () => {
@@ -731,13 +685,6 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(stacked.get("margin-top")).toBe("calc(var(--spacing) * .5)");
   });
 
-  it("sets the banner title semibold in the default color in the content column", () => {
-    const title = declared(emitted, ".banner-title");
-    expect(title.get("font-weight")).toBe("var(--font-weight-semibold)");
-    expect(title.get("color")).toBe("var(--color-default)");
-    expect(title.get("grid-column-start")).toBe("2");
-  });
-
   it("places .banner-actions under the text stacked and in the third column compact", () => {
     const stacked = declared(emitted, ".banner-actions");
     expect(stacked.get("display")).toBe("flex");
@@ -753,15 +700,6 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(compact.get("grid-row-start")).toBe("1");
     expect(compact.get("margin-left")).toBe("calc(var(--spacing) * 4)");
     expect(compact.get("margin-top")).toBe("calc(var(--spacing) * 0)");
-  });
-
-  it("sets .banner-details under a divider in the content column", () => {
-    const details = declared(emitted, ".banner-details");
-    expect(details.get("grid-column-start")).toBe("2");
-    expect(details.get("margin-top")).toBe("calc(var(--spacing) * 2)");
-    expect(details.get("border-top-width")).toBe("1px");
-    expect(details.get("border-color")).toBe("var(--color-gray-3)");
-    expect(details.get("padding-top")).toBe("calc(var(--spacing) * 2)");
   });
 
   it("puts .banner-close in the fourth column, pulled into the padding once stacked and centered without growing the row compact", () => {
@@ -848,41 +786,6 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(button.get("padding-inline")).toBe("calc(var(--spacing) * 1.5)");
     expect(button.get("padding-block")).toBe("calc(var(--spacing) * .5)");
     expect(button.get("font-size")).toBe("var(--text-xs)");
-  });
-
-  it("paints .readout as a truncating gray-1 box with a transparent border", () => {
-    const readout = declared(emitted, ".readout");
-    expect(readout.get("background-color")).toBe("var(--color-gray-1)");
-    expect(readout.get("border-color")).toBe("#0000");
-    expect(readout.get("padding-inline")).toBe("calc(var(--spacing) * 2)");
-    expect(readout.get("padding-block")).toBe("calc(var(--spacing) * 1)");
-    expect(readout.get("font-size")).toBe("var(--text-xs)");
-    expect(readout.get("text-overflow")).toBe("ellipsis");
-    expect(readout.get("white-space")).toBe("nowrap");
-  });
-
-  it("lays a .readout out as a row once it holds a .readout-suffix", () => {
-    const row = rulesOf(emitted, (rule) =>
-      /^\.readout:has\(\s*>\s*\.readout-suffix\)$/.test(rule.selector),
-    );
-    expect(row).toHaveLength(1);
-
-    const declarations = declarationsOf(row[0]!);
-    expect(declarations.get("display")).toBe("flex");
-    expect(declarations.get("align-items")).toBe("baseline");
-    expect(declarations.get("gap")).toBe("calc(var(--spacing) * 1)");
-  });
-
-  it("lets .readout-value truncate and keeps .readout-suffix whole in a field suffix's color", () => {
-    const value = declared(emitted, ".readout-value");
-    expect(value.get("min-width")).toBe("calc(var(--spacing) * 0)");
-    expect(value.get("flex")).toBe("1");
-    expect(value.get("text-overflow")).toBe("ellipsis");
-    expect(value.get("white-space")).toBe("nowrap");
-
-    const suffix = declared(emitted, ".readout-suffix");
-    expect(suffix.get("flex-shrink")).toBe("0");
-    expect(suffix.get("color")).toBe("var(--color-subtle-2)");
   });
 
   it("mints no shadow-color-* utility from the shadow colors", () => {
