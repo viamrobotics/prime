@@ -1,5 +1,15 @@
 # @viamrobotics/prime-ui
 
+## 0.4.0
+### Minor Changes
+
+- 0d4a44c: Add a `portal` prop to every floating panel (`Dialog.Content`, `Takeover.Content`, `Popover.Content`, `Tooltip.Content`, `Menu.Content`, `ContextMenu.Content`, `Menubar.Content`, `Select.Content`, and `DatePicker.Content`). `false` renders the panel in place, and an element or a CSS selector renders it there
+
+### Patch Changes
+
+- Updated dependencies [0d4a44c]
+  - @viamrobotics/tailwind-config@1.8.1
+
 ## 0.3.0
 ### Minor Changes
 
