@@ -153,6 +153,42 @@ describe('Point', () => {
 		expect(owner(container)).toEqual({ x: 1, y: 2, z: 3 });
 	});
 
+	it('leaves a cleared axis empty while it has focus', async () => {
+		const { container } = render(BoundPoint, {
+			props: { initial: { x: 1, y: 2, z: 3 }, label: 'Position' }
+		});
+
+		await userEvent.clear(spinbutton('Y'));
+
+		await expect.element(spinbutton('Y')).toHaveFocus();
+		expect((spinbutton('Y').element() as HTMLInputElement).value).toBe('');
+		expect(owner(container)).toEqual({ x: 1, y: 2, z: 3 });
+	});
+
+	it('takes a negative number typed into a cleared axis', async () => {
+		const { container } = render(BoundPoint, {
+			props: { initial: { x: 1, y: 2, z: 3 }, label: 'Position' }
+		});
+
+		await userEvent.clear(spinbutton('X'));
+		await userEvent.keyboard('-5');
+
+		expect(owner(container)).toEqual({ x: -5, y: 2, z: 3 });
+		expect((spinbutton('X').element() as HTMLInputElement).value).toBe('-5');
+	});
+
+	it('shows the axis number again when a cleared axis loses focus', async () => {
+		const { container } = render(BoundPoint, {
+			props: { initial: { x: 1, y: 2, z: 3 }, label: 'Position' }
+		});
+
+		await userEvent.clear(spinbutton('Y'));
+		await userEvent.tab();
+
+		await expect.element(spinbutton('Y')).toHaveValue(2);
+		expect(owner(container)).toEqual({ x: 1, y: 2, z: 3 });
+	});
+
 	it('records one whole object per scrub move with the other axes unchanged', async () => {
 		const { values } = renderControlled({ initial: { x: 1, y: 10, z: 3 } });
 

@@ -4,12 +4,13 @@
 	interface Props {
 		open?: boolean;
 		disabled?: boolean;
+		summary?: string;
 	}
 
-	let { open = $bindable(true), disabled = false }: Props = $props();
+	let { open = $bindable(true), disabled = false, summary }: Props = $props();
 </script>
 
-<Folder title="Lighting" bind:open {disabled}>
+<Folder title="Lighting" {summary} bind:open {disabled}>
 	<span>Intensity</span>
 </Folder>
 <output data-testid="open">{open}</output>

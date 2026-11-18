@@ -11,15 +11,20 @@ Escape closes it, focus returns to the trigger, and the page behind does not scr
 
 	import { Dialog } from 'bits-ui';
 
+	import { portalProps, type PortalTarget } from '../portal.ts';
+
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
+
+		/** Where the panel renders: `true` at the end of `<body>`, `false` in place, or inside an element or the first match of a CSS selector. @default true */
+		portal?: PortalTarget;
 	}
 
-	const { class: extraClasses, children, ...restProps }: Props = $props();
+	const { class: extraClasses, children, portal, ...restProps }: Props = $props();
 </script>
 
-<Dialog.Portal>
+<Dialog.Portal {...portalProps(portal)}>
 	<Dialog.Content
 		class={['fixed inset-0 z-dialog flex min-h-0 flex-col overflow-y-auto bg-white', extraClasses]}
 		{...restProps}

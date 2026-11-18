@@ -8,6 +8,8 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 
 	import { DropdownMenu } from 'bits-ui';
 
+	import { portalProps, type PortalTarget } from '../portal.ts';
+
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -26,6 +28,9 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 
 		/** Shift in pixels along the alignment axis. @default 0 */
 		alignOffset?: number;
+
+		/** Where the panel renders: `true` at the end of `<body>`, `false` in place, or inside an element or the first match of a CSS selector. @default true */
+		portal?: PortalTarget;
 	}
 
 	const uid = $props.id();
@@ -34,6 +39,7 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		id,
 		class: extraClasses,
 		children,
+		portal,
 		side = 'bottom',
 		align = 'start',
 		sideOffset = 4,
@@ -60,7 +66,7 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 	};
 </script>
 
-<DropdownMenu.Portal>
+<DropdownMenu.Portal {...portalProps(portal)}>
 	<DropdownMenu.Content
 		id={contentId}
 		{side}
