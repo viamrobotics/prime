@@ -1,5 +1,10 @@
 # @viamrobotics/tailwind-config
 
+## 1.8.1
+### Patch Changes
+
+- 0d4a44c: Define `scrollbar-thumb-border-*` and `slider-thumb-border-*` once each, so every form compiles on Tailwind 4.1, which kept only the first definition of a name. Both now take a bare number for the border width, such as `scrollbar-thumb-border-0`
+
 ## 1.8.0
 ### Minor Changes
 

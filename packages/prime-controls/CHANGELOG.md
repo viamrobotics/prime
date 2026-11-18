@@ -1,5 +1,19 @@
 # @viamrobotics/prime-controls
 
+## 0.4.0
+### Minor Changes
+
+- 0d4a44c: Add `summary` to `Folder`, a short text at the end of its title row.
+
+### Patch Changes
+
+- 0d4a44c: Fix `Point` so a cleared axis stays empty while typing instead of snapping back.
+- 0d4a44c: Publish `Select` with its prop types, which shipped as `any`.
+- Updated dependencies [0d4a44c]
+- Updated dependencies [0d4a44c]
+  - @viamrobotics/prime-ui@0.4.0
+  - @viamrobotics/tailwind-config@1.8.1
+
 ## 0.3.0
 ### Minor Changes
 
