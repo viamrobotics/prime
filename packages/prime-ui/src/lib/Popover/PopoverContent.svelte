@@ -8,6 +8,8 @@ outside, and returns focus to the trigger.
 
 	import { Popover } from 'bits-ui';
 
+	import { portalProps, type PortalTarget } from '../portal.ts';
+
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -26,11 +28,15 @@ outside, and returns focus to the trigger.
 
 		/** Shift in pixels along the alignment axis. @default 0 */
 		alignOffset?: number;
+
+		/** Where the panel renders: `true` at the end of `<body>`, `false` in place, or inside an element or the first match of a CSS selector. @default true */
+		portal?: PortalTarget;
 	}
 
 	const {
 		class: extraClasses,
 		children,
+		portal,
 		side = 'bottom',
 		align = 'center',
 		sideOffset = 4,
@@ -39,7 +45,7 @@ outside, and returns focus to the trigger.
 	}: Props = $props();
 </script>
 
-<Popover.Portal>
+<Popover.Portal {...portalProps(portal)}>
 	<Popover.Content
 		{side}
 		{align}

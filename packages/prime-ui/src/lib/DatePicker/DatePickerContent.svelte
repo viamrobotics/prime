@@ -8,6 +8,8 @@ The floating panel of a [`DatePicker`](./DatePicker.svelte), portaled to the bod
 
 	import { DatePicker } from 'bits-ui';
 
+	import { portalProps, type PortalTarget } from '../portal.ts';
+
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -26,12 +28,16 @@ The floating panel of a [`DatePicker`](./DatePicker.svelte), portaled to the bod
 
 		/** Shift in pixels along the alignment axis. @default 0 */
 		alignOffset?: number;
+
+		/** Where the panel renders: `true` at the end of `<body>`, `false` in place, or inside an element or the first match of a CSS selector. @default true */
+		portal?: PortalTarget;
 	}
 
 	// `side`, `align`, `sideOffset`, and `alignOffset` keep Floating UI's placement terms.
 	const {
 		class: extraClasses,
 		children,
+		portal,
 		side = 'bottom',
 		align = 'end',
 		sideOffset = 4,
@@ -53,7 +59,7 @@ The floating panel of a [`DatePicker`](./DatePicker.svelte), portaled to the bod
 	};
 </script>
 
-<DatePicker.Portal>
+<DatePicker.Portal {...portalProps(portal)}>
 	<DatePicker.Content
 		{side}
 		{align}

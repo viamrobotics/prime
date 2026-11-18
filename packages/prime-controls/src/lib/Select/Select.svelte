@@ -26,7 +26,8 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 <script lang="ts">
 	import type { ComponentProps, Snippet } from 'svelte';
 
-	import { Select } from '@viamrobotics/prime-ui';
+	// Aliased, because a `typeof Select` here would name this component in the published types.
+	import { Select as PrimeSelect } from '@viamrobotics/prime-ui';
 
 	import Hint from '../Hint/Hint.svelte';
 	import SelectContent from './SelectContent.svelte';
@@ -36,7 +37,7 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 	import SelectValue from './SelectValue.svelte';
 	import SelectViewport from './SelectViewport.svelte';
 
-	type RootProps = Omit<ComponentProps<typeof Select>, 'children'>;
+	type RootProps = Omit<ComponentProps<typeof PrimeSelect>, 'children'>;
 
 	interface ComposedProps extends RootProps {
 		/** The `Select.*` parts. Without them the select renders its own trigger and list from `items`. */
@@ -89,7 +90,7 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 	const hintedName = $derived(hint ? ariaLabel : undefined);
 </script>
 
-<Select bind:value {items} {...restProps}>
+<PrimeSelect bind:value {items} {...restProps}>
 	{#if children}
 		{@render children()}
 	{:else}
@@ -116,4 +117,4 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 			</SelectViewport>
 		</SelectContent>
 	{/if}
-</Select>
+</PrimeSelect>

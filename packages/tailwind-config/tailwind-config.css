@@ -966,21 +966,16 @@
   }
 }
 
+/*
+ * One definition per name. Tailwind 4.1 keeps only the first `@utility` of a name, so radius,
+ * width, and color share this block, and a declaration whose value does not resolve is dropped.
+ */
 @utility scrollbar-thumb-border-* {
   &::-webkit-scrollbar-thumb {
     border-radius: --value(--radius-*);
-  }
-}
-
-@utility scrollbar-thumb-border-* {
-  &::-webkit-scrollbar-thumb {
     border-width: --value(--border-width-*);
+    border-width: calc(--value(integer) * 1px);
     border-width: --value([*]);
-  }
-}
-
-@utility scrollbar-thumb-border-* {
-  &::-webkit-scrollbar-thumb {
     border-color: --value(--color-*);
   }
 }
@@ -1105,19 +1100,13 @@
 
 /*
  * The default border properties were causing rendering issues, so we
- * split the width utility into its own class to avoid that
+ * split the width utility into its own class to avoid that.
+ * Width, style, color, and radius share one block, for the reason on `scrollbar-thumb-border-*`.
  */
 @utility slider-thumb-border-* {
   &::-webkit-slider-thumb {
     border-width: --value(--border-width-*);
-  }
-  &::-moz-range-thumb {
-    border-width: --value(--border-width-*);
-  }
-}
-
-@utility slider-thumb-border-* {
-  &::-webkit-slider-thumb {
+    border-width: calc(--value(integer) * 1px);
     border-style: --value(
       "none",
       "solid",
@@ -1131,38 +1120,26 @@
       "hidden"
     );
     border-style: --value([*]);
-  }
-  &::-moz-range-thumb {
-    border-style: --value(
-      "none",
-      "solid",
-      "dashed",
-      "dotted",
-      "double",
-      "groove",
-      "ridge",
-      "inset",
-      "outset",
-      "hidden"
-    );
-    border-style: --value([*]);
-  }
-}
-
-@utility slider-thumb-border-* {
-  &::-webkit-slider-thumb {
     border-color: --value(--color-*);
-  }
-  &::-moz-range-thumb {
-    border-color: --value(--color-*);
-  }
-}
-
-@utility slider-thumb-border-* {
-  &::-webkit-slider-thumb {
     border-radius: --value(--radius-*);
   }
   &::-moz-range-thumb {
+    border-width: --value(--border-width-*);
+    border-width: calc(--value(integer) * 1px);
+    border-style: --value(
+      "none",
+      "solid",
+      "dashed",
+      "dotted",
+      "double",
+      "groove",
+      "ridge",
+      "inset",
+      "outset",
+      "hidden"
+    );
+    border-style: --value([*]);
+    border-color: --value(--color-*);
     border-radius: --value(--radius-*);
   }
 }

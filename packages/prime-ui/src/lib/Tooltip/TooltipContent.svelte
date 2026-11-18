@@ -8,6 +8,8 @@ trigger, and flips to the opposite side when there is no room.
 
 	import { Tooltip } from 'bits-ui';
 
+	import { portalProps, type PortalTarget } from '../portal.ts';
+
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -20,6 +22,9 @@ trigger, and flips to the opposite side when there is no room.
 
 		/** Gap in pixels between the trigger and the label. @default 4 */
 		sideOffset?: number;
+
+		/** Where the label renders: `true` at the end of `<body>`, `false` in place, or inside an element or the first match of a CSS selector. @default true */
+		portal?: PortalTarget;
 	}
 
 	const uid = $props.id();
@@ -28,13 +33,14 @@ trigger, and flips to the opposite side when there is no room.
 		id = `tooltip-${uid}`,
 		class: extraClasses,
 		children,
+		portal,
 		placement = 'top',
 		sideOffset = 4,
 		...restProps
 	}: Props = $props();
 </script>
 
-<Tooltip.Portal>
+<Tooltip.Portal {...portalProps(portal)}>
 	<Tooltip.Content
 		side={placement}
 		{sideOffset}

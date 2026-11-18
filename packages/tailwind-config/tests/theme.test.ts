@@ -104,6 +104,15 @@ const CANDIDATES = [
   "slider-thumb-h-3",
   "slider-track-h-1",
   "slider-thumb-w-foo",
+  "slider-thumb-border-2",
+  "slider-thumb-border-dashed",
+  "slider-thumb-border-gray-9",
+  "slider-thumb-border-sm",
+  "scrollbar-thumb-border-0",
+  "scrollbar-thumb-border-[3px]",
+  "scrollbar-thumb-border-gray-9",
+  "scrollbar-thumb-border-sm",
+  "scrollbar-thumb-border-nope",
   "dark:bg-gray-9",
   "bg-extralight",
   "bg-gray-0",
@@ -474,6 +483,67 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(
       rulesOf(unoptimized, (rule) =>
         startsWithClass(rule, "slider-thumb-w-foo"),
+      ),
+    ).toHaveLength(0);
+  });
+
+  it("defines each utility name once, because Tailwind 4.1 keeps only the first definition", () => {
+    const source = postcss.parse(
+      readFileSync(path.join(packageDirectory, "tailwind-config.css"), "utf8"),
+    );
+    const seen = new Set<string>();
+    const repeated = new Set<string>();
+    source.walkAtRules("utility", (utility) => {
+      (seen.has(utility.params) ? repeated : seen).add(utility.params);
+    });
+    expect([...repeated]).toEqual([]);
+  });
+
+  it("sets a thumb border's radius, width, style, and color from one utility name", () => {
+    const thumbBorder = (name: string, pseudo: string): Map<string, string> => {
+      const [nested] = rulesOf(
+        onlyRule(unoptimized, `.${name.replaceAll(/[[\]]/g, String.raw`\$&`)}`),
+        (rule) => rule.selector === `&${pseudo}`,
+      );
+      return declarationsOf(nested!);
+    };
+    const scrollbarThumb = "::-webkit-scrollbar-thumb";
+    expect(thumbBorder("scrollbar-thumb-border-sm", scrollbarThumb)).toEqual(
+      new Map([["border-radius", "var(--radius-sm)"]]),
+    );
+    expect(thumbBorder("scrollbar-thumb-border-0", scrollbarThumb)).toEqual(
+      new Map([["border-width", "calc(0 * 1px)"]]),
+    );
+    expect(thumbBorder("scrollbar-thumb-border-[3px]", scrollbarThumb)).toEqual(
+      new Map([["border-width", "3px"]]),
+    );
+    expect(
+      thumbBorder("scrollbar-thumb-border-gray-9", scrollbarThumb),
+    ).toEqual(new Map([["border-color", "var(--color-gray-9)"]]));
+
+    for (const sliderThumb of [
+      "::-webkit-slider-thumb",
+      "::-moz-range-thumb",
+    ]) {
+      expect(thumbBorder("slider-thumb-border-2", sliderThumb)).toEqual(
+        new Map([["border-width", "calc(2 * 1px)"]]),
+      );
+      expect(thumbBorder("slider-thumb-border-dashed", sliderThumb)).toEqual(
+        new Map([["border-style", "dashed"]]),
+      );
+      expect(thumbBorder("slider-thumb-border-gray-9", sliderThumb)).toEqual(
+        new Map([["border-color", "var(--color-gray-9)"]]),
+      );
+      expect(thumbBorder("slider-thumb-border-sm", sliderThumb)).toEqual(
+        new Map([["border-radius", "var(--radius-sm)"]]),
+      );
+    }
+  });
+
+  it("emits no rule for an unknown thumb border value", () => {
+    expect(
+      rulesOf(unoptimized, (rule) =>
+        startsWithClass(rule, "scrollbar-thumb-border-nope"),
       ),
     ).toHaveLength(0);
   });

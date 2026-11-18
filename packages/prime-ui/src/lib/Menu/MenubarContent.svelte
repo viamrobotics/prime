@@ -9,6 +9,8 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 	import { Menubar } from 'bits-ui';
 	import { tick } from 'svelte';
 
+	import { portalProps, type PortalTarget } from '../portal.ts';
+
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -27,6 +29,9 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 
 		/** Shift in pixels along the alignment axis. @default 0 */
 		alignOffset?: number;
+
+		/** Where the panel renders: `true` at the end of `<body>`, `false` in place, or inside an element or the first match of a CSS selector. @default true */
+		portal?: PortalTarget;
 	}
 
 	const uid = $props.id();
@@ -35,6 +40,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 		id,
 		class: extraClasses,
 		children,
+		portal,
 		side = 'bottom',
 		align = 'start',
 		sideOffset = 4,
@@ -95,7 +101,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 	};
 </script>
 
-<Menubar.Portal>
+<Menubar.Portal {...portalProps(portal)}>
 	<Menubar.Content
 		id={contentId}
 		{side}

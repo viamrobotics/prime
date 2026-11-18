@@ -51,3 +51,40 @@ describe('Folder', () => {
 		await expect.element(child()).toBeVisible();
 	});
 });
+
+describe('Folder summary', () => {
+	const summarized = () => page.getByRole('button', { name: /^Lighting\s*Set$/ });
+	const chevron = () => summarized().element().querySelector('svg')!;
+
+	it('draws no summary without one and keeps the chevron', async () => {
+		render(BoundFolder);
+		await expect.element(trigger()).toBeVisible();
+		expect(trigger().element().textContent?.trim()).toBe('Lighting');
+		expect(trigger().element().querySelector('svg')).not.toBeNull();
+	});
+
+	it('adds the summary to the title row and to the button name', async () => {
+		render(BoundFolder, { props: { summary: 'Set' } });
+		await expect.element(summarized()).toBeVisible();
+		await expect.element(page.getByText('Set', { exact: true })).toBeVisible();
+	});
+
+	it('puts the summary between the title and the chevron', async () => {
+		render(BoundFolder, { props: { summary: 'Set' } });
+		await expect.element(summarized()).toBeVisible();
+		const title = page.getByText('Lighting', { exact: true }).element().getBoundingClientRect();
+		const summary = page.getByText('Set', { exact: true }).element().getBoundingClientRect();
+		const icon = chevron().getBoundingClientRect();
+		expect(summary.left).toBeGreaterThan(title.right);
+		expect(icon.left).toBeGreaterThanOrEqual(summary.right);
+	});
+
+	it('turns the chevron with the folder when it has a summary', async () => {
+		render(BoundFolder, { props: { summary: 'Set' } });
+		await expect.element(summarized()).toHaveAttribute('aria-expanded', 'true');
+		expect(chevron().classList.contains('rotate-180')).toBe(true);
+		await summarized().click();
+		await expect.element(summarized()).toHaveAttribute('aria-expanded', 'false');
+		expect(chevron().classList.contains('rotate-180')).toBe(false);
+	});
+});

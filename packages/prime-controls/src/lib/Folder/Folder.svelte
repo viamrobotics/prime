@@ -1,7 +1,8 @@
 <!--
 @component
 A collapsible group of controls inside a [`Panel`](../Panel/Panel.svelte), built on prime-ui's
-`Collapsible`. The `title` is the disclosure button's text. Open by default.
+`Collapsible`. The `title` is the disclosure button's text. Open by default. A `summary` adds a
+short text at the end of the title row, such as what the folder holds while it is closed.
 
 ```svelte
 <Folder title="Lighting" bind:open>
@@ -13,11 +14,18 @@ A collapsible group of controls inside a [`Panel`](../Panel/Panel.svelte), built
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
 
-	import { Collapsible } from '@viamrobotics/prime-ui';
+	import { mdiChevronDown } from '@mdi/js';
+	import { Collapsible, Icon } from '@viamrobotics/prime-ui';
 
 	interface Props {
 		/** Visible title, the text of the button that opens and closes the folder. */
 		title: string;
+
+		/**
+		 * Short text at the end of the title row, before the chevron, such as what the folder holds
+		 * while it is closed. It is part of the button's accessible name.
+		 */
+		summary?: string;
 
 		/** Whether the controls are shown. Two-way bindable. @default true */
 		open?: boolean;
@@ -34,6 +42,7 @@ A collapsible group of controls inside a [`Panel`](../Panel/Panel.svelte), built
 
 	let {
 		title,
+		summary,
 		open = $bindable(true),
 		disabled = false,
 		class: extraClasses,
@@ -41,9 +50,25 @@ A collapsible group of controls inside a [`Panel`](../Panel/Panel.svelte), built
 	}: Props = $props();
 </script>
 
+<!-- The trigger draws its chevron only when it has no indicator, so the summary brings one along. -->
+{#snippet summaryIndicator({ open: isOpen }: { open: boolean })}
+	<span class="flex shrink-0 items-center gap-2">
+		<span class="font-normal text-subtle-2">{summary}</span>
+		<Icon
+			icon={mdiChevronDown}
+			size="sm"
+			class={['text-subtle-2 transition-transform', isOpen && 'rotate-180']}
+		/>
+	</span>
+{/snippet}
+
 <Collapsible bind:open {disabled} class={extraClasses}>
-	<Collapsible.Trigger class="min-h-6 rounded-sm text-xs font-semibold">{title}</Collapsible.Trigger
+	<Collapsible.Trigger
+		class="min-h-6 rounded-sm text-xs font-semibold"
+		indicator={summary ? summaryIndicator : undefined}
 	>
+		{title}
+	</Collapsible.Trigger>
 	<Collapsible.Content class="mt-1 flex flex-col gap-1 border-l border-light pl-2">
 		{@render children?.()}
 	</Collapsible.Content>
