@@ -8,7 +8,8 @@ the option's content.
 
 	import { ToggleButtons } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof ToggleButtons.Item>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof ToggleButtons.Item> {}
 
 	const { class: extraClasses, children, ...restProps }: Props = $props();
 	// prime-ui's utility sorts after this one in the stylesheet and wins unless this one is important.

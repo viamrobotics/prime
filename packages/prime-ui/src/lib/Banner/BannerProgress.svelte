@@ -12,7 +12,8 @@ A [`Progress`](../Progress/Progress.svelte) pinned to the bottom edge of a
 
 	import Progress from '../Progress/Progress.svelte';
 
-	type Props = ComponentProps<typeof Progress>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Progress> {}
 
 	const { class: extraClasses, ...restProps }: Props = $props();
 </script>

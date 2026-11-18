@@ -8,7 +8,8 @@ The strip that holds a [`Tabs`](./Tabs.svelte) root's triggers. Give it an `aria
 
 	import { Tabs } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Tabs.List>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Tabs.List> {}
 
 	const { class: extraClasses, children, ...restProps }: Props = $props();
 	// prime-ui's utility sorts after this one in the stylesheet and wins unless this one is important.

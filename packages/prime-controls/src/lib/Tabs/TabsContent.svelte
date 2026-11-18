@@ -8,7 +8,8 @@ selected.
 
 	import { Tabs } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Tabs.Content>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Tabs.Content> {}
 
 	const { class: extraClasses, children, ...restProps }: Props = $props();
 </script>

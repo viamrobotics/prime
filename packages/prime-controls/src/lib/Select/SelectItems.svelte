@@ -10,7 +10,8 @@ One [`Select.Item`](./SelectItem.svelte) per entry of the root's `items`, at a t
 	import SelectItem from './SelectItem.svelte';
 	import { useSelectItems } from './select-items.ts';
 
-	type Props = ComponentProps<typeof Select.Items>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Select.Items> {}
 
 	const { children: content }: Props = $props();
 

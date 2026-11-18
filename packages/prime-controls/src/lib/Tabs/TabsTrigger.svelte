@@ -7,7 +7,8 @@ One tab of a [`Tabs`](./Tabs.svelte) strip. Its children are the tab's label.
 
 	import { Tabs } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Tabs.Trigger>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Tabs.Trigger> {}
 
 	const { class: extraClasses, children, ...restProps }: Props = $props();
 	// prime-ui's utility sorts after this one in the stylesheet and wins unless this one is important.

@@ -7,7 +7,8 @@ A control that scrolls the open list up, for lists taller than the viewport.
 
 	import { Select } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Select.ScrollUpButton>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Select.ScrollUpButton> {}
 
 	const { children, ...restProps }: Props = $props();
 </script>

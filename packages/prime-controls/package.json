@@ -52,9 +52,10 @@
 			]
 		},
 		"package": {
-			"command": "svelte-package --tsconfig ./tsconfig.package.json && publint",
+			"command": "svelte-package --tsconfig ./tsconfig.package.json && publint && node ../../scripts/check-declarations.mjs dist",
 			"files": [
 				"src/lib/**",
+				"../../scripts/check-declarations.mjs",
 				"svelte.config.js",
 				"tsconfig.json",
 				"tsconfig.package.json",

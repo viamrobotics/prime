@@ -7,7 +7,8 @@ The scrollable area inside [`Select.Content`](./SelectContent.svelte). Render [`
 
 	import { Select } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Select.Viewport>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Select.Viewport> {}
 
 	const { children, ...restProps }: Props = $props();
 </script>

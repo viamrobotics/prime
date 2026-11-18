@@ -7,7 +7,8 @@ A labelled set of items inside [`Select.Viewport`](./SelectViewport.svelte). Sta
 
 	import { Select } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Select.Group>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Select.Group> {}
 
 	const { children, ...restProps }: Props = $props();
 </script>

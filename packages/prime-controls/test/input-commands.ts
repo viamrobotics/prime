@@ -66,6 +66,6 @@ type InputCommands = {
 };
 
 declare module 'vitest/browser' {
-	// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- augmentation merges into an interface, which a type alias cannot do
+	// An interface, because augmentation merges into one and a type alias cannot.
 	interface BrowserCommands extends InputCommands {}
 }

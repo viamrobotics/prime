@@ -7,7 +7,8 @@ The floating list of a [`Select`](./Select.svelte), portaled to the body. Render
 
 	import { Select } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Select.Content>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Select.Content> {}
 
 	const { children, ...restProps }: Props = $props();
 </script>

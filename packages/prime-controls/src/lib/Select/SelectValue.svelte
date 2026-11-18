@@ -7,7 +7,8 @@ The selected item's label inside [`Select.Trigger`](./SelectTrigger.svelte), or 
 
 	import { Select } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Select.Value>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof Select.Value> {}
 
 	const props: Props = $props();
 </script>

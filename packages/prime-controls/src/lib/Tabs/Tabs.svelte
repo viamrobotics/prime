@@ -18,13 +18,15 @@ holding one [`Tabs.Trigger`](./TabsTrigger.svelte) per tab, and one
 <script lang="ts">
 	import type { ComponentProps } from 'svelte';
 
-	import { Tabs } from '@viamrobotics/prime-ui';
+	// Aliased, because a `typeof Tabs` here would name this component in the published types.
+	import { Tabs as PrimeTabs } from '@viamrobotics/prime-ui';
 
-	type Props = ComponentProps<typeof Tabs>;
+	// An interface, not an alias, so the published declaration can name these props.
+	interface Props extends ComponentProps<typeof PrimeTabs> {}
 
 	let { value = $bindable(), class: extraClasses, children, ...restProps }: Props = $props();
 </script>
 
-<Tabs bind:value class={['flex flex-col gap-1', extraClasses]} {...restProps}>
+<PrimeTabs bind:value class={['flex flex-col gap-1', extraClasses]} {...restProps}>
 	{@render children?.()}
-</Tabs>
+</PrimeTabs>
