@@ -2,7 +2,9 @@
 @component
 A 2D, 3D, or 4D vector as one [`NumberField`](../NumberField/NumberField.svelte) per axis. It binds
 a [`PointValue`](./point.ts) and renders `x` and `y`, plus `z` and `w` when they are defined. Editing
-one axis writes a new object with that axis changed and every other axis as it was.
+one axis writes a new object with that axis changed and every other axis as it was. Clearing an axis
+writes nothing. Its field stays empty while it is being typed in and shows the axis's number again
+on blur.
 
 ```svelte
 <Point label="Position" step={0.1} bind:value={position} />
@@ -11,6 +13,7 @@ one axis writes a new object with that axis changed and every other axis as it w
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	import type { FieldState } from '@viamrobotics/prime-ui';
 
@@ -103,6 +106,19 @@ one axis writes a new object with that axis changed and every other axis as it w
 	const definedAxes = $derived(AXES.filter((axis) => value[axis] !== undefined));
 	const labelId = $props.id();
 	const hintId = `${labelId}-hint`;
+
+	// An `undefined` axis would drop its field, so a cleared axis writes nothing. It is held here
+	// instead, which lets its field stay empty until a number is typed or the field loses focus.
+	const clearedAxes = new SvelteSet<PointAxis>();
+
+	function writeAxis(axis: PointAxis, next: number | undefined) {
+		if (next === undefined) {
+			clearedAxes.add(axis);
+			return;
+		}
+		clearedAxes.delete(axis);
+		value = { ...value, [axis]: next };
+	}
 </script>
 
 <div
@@ -137,11 +153,9 @@ one axis writes a new object with that axis changed and every other axis as it w
 					state={axes?.[axis]?.state ?? state}
 					{disabled}
 					class="min-w-0"
+					onblur={() => clearedAxes.delete(axis)}
 					bind:value={
-						() => value[axis],
-						(next) => {
-							if (next !== undefined) value = { ...value, [axis]: next };
-						}
+						() => (clearedAxes.has(axis) ? undefined : value[axis]), (next) => writeAxis(axis, next)
 					}
 				/>
 				{@render details?.(axis)}
