@@ -1,5 +1,12 @@
 # @viamrobotics/prime-controls
 
+## 0.4.1
+### Patch Changes
+
+- db601ca: Publish type declarations for `Tabs` and for the `Select`, `Tabs`, and `ToggleButtons` parts.
+- Updated dependencies [db601ca]
+  - @viamrobotics/prime-ui@0.4.1
+
 ## 0.4.0
 ### Minor Changes
 

@@ -1,5 +1,10 @@
 # @viamrobotics/prime-ui
 
+## 0.4.1
+### Patch Changes
+
+- db601ca: Publish a type declaration for `Banner.Progress`.
+
 ## 0.4.0
 ### Minor Changes
 
