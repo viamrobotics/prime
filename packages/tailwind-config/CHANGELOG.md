@@ -1,5 +1,17 @@
 # @viamrobotics/tailwind-config
 
+## 1.9.0
+### Minor Changes
+
+- 0516abd: Fill the solid `button-warning` with the brighter warning tone, under dark text.
+- 0516abd: Add a compact, file-style look to `Tabs` with `variant="file"`, styled by the new `file-tabs` and `file-tab` classes.
+- 0516abd: Add `button-group` to join a row of buttons, and raise the contrast of a `kbd` inside a filled button and of the warning banner glyph.
+- 0516abd: Soften the elevation shadows: `shadow-dialog` takes the former popover shadow, and `shadow-popover` becomes subtler.
+
+### Patch Changes
+
+- 0516abd: Fix `scrollbar-*`, which emitted an invalid `scrollbar-color`: it now sets the thumb color over a clear track.
+
 ## 1.8.1
 ### Patch Changes
 
