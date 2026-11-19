@@ -1,5 +1,23 @@
 # @viamrobotics/prime-ui
 
+## 0.5.0
+### Minor Changes
+
+- 0516abd: Add `Combobox`, a single-select input that filters its options as you type, with a bindable `query` for lists the consumer fetches.
+- 0516abd: Add `DateRangePicker`, a start and end date picker in the `DatePicker` family, bound as a `DateRange`.
+- 0516abd: Add a compact, file-style look to `Tabs` with `variant="file"`, styled by the new `file-tabs` and `file-tab` classes.
+- 0516abd: Tabs can be reordered by keyboard and by drag, with the order held in a bindable `order` on `Tabs.List`.
+
+### Patch Changes
+
+- 0516abd: Give every floating panel (`Select`, `Combobox`, `DatePicker`, `DateRangePicker`, and the menus) the same `shadow-popover` elevation as `Popover`.
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+  - @viamrobotics/tailwind-config@1.9.0
+
 ## 0.4.1
 ### Patch Changes
 

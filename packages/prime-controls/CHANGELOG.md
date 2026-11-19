@@ -1,5 +1,20 @@
 # @viamrobotics/prime-controls
 
+## 0.4.2
+### Patch Changes
+
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+- Updated dependencies [0516abd]
+  - @viamrobotics/tailwind-config@1.9.0
+  - @viamrobotics/prime-ui@0.5.0
+
 ## 0.4.1
 ### Patch Changes
 
