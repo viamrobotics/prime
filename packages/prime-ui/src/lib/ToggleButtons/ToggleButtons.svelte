@@ -71,7 +71,7 @@ Built on [bits-ui `ToggleGroup`](https://bits-ui.com/docs/components/toggle-grou
 	aria-labelledby={labelledBy ?? field?.labelledBy}
 	aria-describedby={describedBy ?? field?.describedBy}
 	id={id ?? field?.controlId ?? uid}
-	class={['inline-flex', extraClasses]}
+	class={['button-group', extraClasses]}
 	loop
 	{...restProps}
 >

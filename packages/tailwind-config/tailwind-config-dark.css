@@ -49,8 +49,8 @@
 
   /* Shadow colors */
   --dark-shadow-color-sm: rgba(0, 0, 0, 0.4);
-  --dark-shadow-color-popover: rgba(0, 0, 0, 0.5);
-  --dark-shadow-color-dialog: rgba(0, 0, 0, 0.6);
+  --dark-shadow-color-popover: rgba(0, 0, 0, 0.4);
+  --dark-shadow-color-dialog: rgba(0, 0, 0, 0.5);
 
   /* Code colors */
   --dark-color-code-boolean: #a9a1ff;
@@ -178,8 +178,8 @@
 
   /* Shadow colors */
   --light-shadow-color-sm: rgba(0, 0, 0, 0.06);
-  --light-shadow-color-popover: rgba(0, 0, 0, 0.12);
-  --light-shadow-color-dialog: rgba(0, 0, 0, 0.25);
+  --light-shadow-color-popover: rgba(0, 0, 0, 0.08);
+  --light-shadow-color-dialog: rgba(0, 0, 0, 0.12);
 
   /* Code colors */
   --light-color-code-boolean: #201293;

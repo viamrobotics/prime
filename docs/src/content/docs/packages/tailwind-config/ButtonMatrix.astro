@@ -1,16 +1,19 @@
 ---
 /**
  * Every color modifier crossed with every fill and state for `button` or `icon-button`, as a
- * grid with the modifier classes under each cell. Static HTML, so hover is not shown.
+ * grid with the modifier classes under each cell. Static HTML, so hover is not shown. `withKbd`
+ * puts a `kbd` inside every `button` cell.
  */
 import { Code } from "@astrojs/starlight/components";
 import { mdiAlert, mdiCheck, mdiCog, mdiDelete, mdiInformation, mdiPencil, mdiProgressClock } from "@mdi/js";
 
 interface Props {
   kind?: "button" | "icon-button";
+  withKbd?: boolean;
 }
 
-const { kind = "button" } = Astro.props;
+const { kind = "button", withKbd = false } = Astro.props;
+const showKbd = withKbd && kind === "button";
 
 const rows = [
   { name: "Neutral", color: "", icon: mdiCog },
@@ -26,8 +29,7 @@ const columns = [
   { name: "Default", fill: "", attrs: {} },
   { name: "Outline", fill: "button-outline", attrs: {} },
   { name: "Ghost", fill: "button-ghost", attrs: {} },
-  { name: ":disabled", fill: "", attrs: { disabled: true } },
-  { name: "aria-disabled", fill: "", attrs: { "aria-disabled": "true" } },
+  { name: "Disabled", fill: "", attrs: { disabled: true } },
   { name: "aria-busy", fill: "", attrs: { "aria-busy": "true" } },
 ];
 
@@ -37,12 +39,13 @@ const attributeText = (attrs: Record<string, string | boolean>) =>
     .join("");
 
 const busyDots = '<span class="progress-dots" aria-hidden="true"></span>';
+const keyHint = showKbd ? ' <kbd class="kbd">K</kbd>' : "";
 
 const cellMarkup = (row: (typeof rows)[number], column: (typeof columns)[number]) => {
   const classes = [kind, row.color, column.fill].filter(Boolean).join(" ");
   const busy = "aria-busy" in column.attrs;
   if (kind === "button") {
-    return `<button type="button" class="${classes}"${attributeText(column.attrs)}>${busy ? busyDots : ""}${row.name}</button>`;
+    return `<button type="button" class="${classes}"${attributeText(column.attrs)}>${busy ? busyDots : ""}${row.name}${keyHint}</button>`;
   }
   const glyph = busy
     ? busyDots
@@ -90,6 +93,7 @@ const code = rows
                     <path d={row.icon} />
                   </svg>
                 )}
+                {showKbd && <kbd class="kbd">K</kbd>}
               </button>
             </div>
           );

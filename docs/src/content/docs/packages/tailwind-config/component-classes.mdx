@@ -5,6 +5,7 @@ description: Design-system buttons, badges, pills, inputs, and more as plain Tai
 
 import { Aside, Code } from "@astrojs/starlight/components";
 
+import BannerGallery from "./BannerGallery.astro";
 import ButtonMatrix from "./ButtonMatrix.astro";
 
 The component classes are `@utility` classes shipped by `@viamrobotics/tailwind-config`. They style native elements, bits-ui triggers in prime-ui (`<Dialog.Close class="icon-button">`), and markup outside Svelte.
@@ -52,7 +53,7 @@ Every color modifier in every fill and state. The markup below is the grid, cell
   code={`<button type="button" class="button button-xs">Extra small</button>`}
 />
 
-`button-group` on a wrapper joins its `.button` children into one segmented control. Neighbors share a single border and only the outer corners round. An enabled button stacks above a disabled one so the borders beside a disabled button stay visible. A hovered or focused button draws above its neighbors, so its border and focus ring are never covered. It works with every color, fill, and size modifier. Neighbors of the same solid fill show no divider, because the border is the fill color. Give the wrapper `role="group"` and an `aria-label`.
+`button-group` on a wrapper joins its direct children into one segmented control. The children are usually `button`s, and any bordered child joins the same way. Neighbors share a single border and only the outer corners round. An enabled button stacks above a disabled one so the borders beside a disabled button stay visible. A hovered or focused button draws above its neighbors, so its border and focus ring are never covered. It works with every color, fill, and size modifier. Neighbors of the same solid fill show no divider, because the border is the fill color. Give the wrapper `role="group"` and an `aria-label`.
 
 <div class="not-content flex flex-col items-start gap-3 rounded-sm border border-light p-4">
   <div class="button-group" role="group" aria-label="Time range">
@@ -200,41 +201,9 @@ Modifiers: `badge-success`, `badge-warning`, `badge-danger`, `badge-pending`, an
 
 Modifiers: `banner-info`, `banner-success`, `banner-warning`, `banner-danger`, `banner-pending`, and `banner-block`. A banner reads no attributes, so give it a `role` of `status` or `alert`. A `banner-title` inside switches it from the compact one-liner to the stacked layout.
 
-<div class="not-content flex flex-col gap-3 rounded-sm border border-light p-4">
-  <div class="banner banner-warning" role="alert">
-    <span class="banner-chip" aria-hidden="true">!</span>
-    <p class="banner-title">Module deprecated</p>
-    <p class="banner-description">my-camera uses a module that is no longer maintained.</p>
-    <div class="banner-actions">
-      <button type="button" class="button">Update module</button>
-    </div>
-    <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
-  </div>
-  <div class="banner banner-success" role="status">
-    <span class="banner-chip" aria-hidden="true">✓</span>
-    <p class="banner-description">Your changes were saved.</p>
-    <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
-  </div>
-</div>
+Every tone in the compact and the stacked layout, then `banner-block`, `banner-progress`, and `banner-details`.
 
-<Code
-  lang="html"
-  code={`<div class="banner banner-warning" role="alert">
-  <span class="banner-chip" aria-hidden="true">!</span>
-  <p class="banner-title">Module deprecated</p>
-  <p class="banner-description">my-camera uses a module that is no longer maintained.</p>
-  <div class="banner-actions">
-    <button type="button" class="button">Update module</button>
-  </div>
-  <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
-</div>
-
-<div class="banner banner-success" role="status">
-  <span class="banner-chip" aria-hidden="true">✓</span>
-  <p class="banner-description">Your changes were saved.</p>
-  <button type="button" class="icon-button banner-close" aria-label="Dismiss">×</button>
-</div>`}
-/>
+<BannerGallery />
 
 ## status-dot
 
@@ -321,6 +290,27 @@ On a plain `<span>`, `aria-disabled` and `aria-readonly` are CSS hooks only. Ass
 | Disabled  | `[aria-disabled="true"]` | Disabled colors and a `not-allowed` cursor. |
 | Read only | `[aria-readonly="true"]` | Disabled colors, with the default cursor.   |
 
+`pill-outline` reads the same two attributes, and a disabled removable pill disables its button.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <span class="pill pill-outline" aria-disabled="true">Outline disabled</span>
+  <span class="pill pill-outline" aria-readonly="true">Outline read only</span>
+  <span class="pill" aria-disabled="true">
+    Disabled
+    <button type="button" aria-label="Remove Disabled" disabled>×</button>
+  </span>
+</div>
+
+<Code
+  lang="html"
+  code={`<span class="pill pill-outline" aria-disabled="true">Outline disabled</span>
+<span class="pill pill-outline" aria-readonly="true">Outline read only</span>
+<span class="pill" aria-disabled="true">
+  Disabled
+  <button type="button" aria-label="Remove Disabled" disabled>×</button>
+</span>`}
+/>
+
 ## kbd
 
 A keyboard key hint. It is static, so it has no states.
@@ -338,28 +328,9 @@ A keyboard key hint. It is static, so it has no states.
 
 Inside an enabled solid button, a `kbd` takes the button's label color for its text and border. The solid buttons are `button-dark`, `button-danger`, `button-warning`, `button-success`, `button-info`, and `button-pending`. In an outline or ghost button, or a disabled one, it keeps its subtle text and medium border.
 
-<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-  <button type="button" class="button button-dark">
-    Search
-    <kbd class="kbd">K</kbd>
-  </button>
-  <button type="button" class="button button-danger">
-    Delete
-    <kbd class="kbd">Del</kbd>
-  </button>
-  <button type="button" class="button button-outline">
-    Search
-    <kbd class="kbd">K</kbd>
-  </button>
-</div>
+Every color modifier in every fill and state, each with a `kbd` inside. Switch the theme to check both.
 
-<Code
-  lang="html"
-  code={`<button type="button" class="button button-dark">
-  Search
-  <kbd class="kbd">K</kbd>
-</button>`}
-/>
+<ButtonMatrix withKbd />
 
 ## avatar
 
@@ -450,6 +421,27 @@ A bar with a `progress-fill` child. It reads `aria-valuenow`, and when the attri
 </div>`}
 />
 
+`progress-info` is the bare color, named so a tone can be set from data. `progress-warning` completes the set.
+
+<div class="not-content flex flex-col gap-4 rounded-sm border border-light p-4">
+  <div class="progress progress-info" role="progressbar" aria-label="Indexing" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40">
+    <div class="progress-fill" style="width: 40%"></div>
+  </div>
+  <div class="progress progress-warning" role="progressbar" aria-label="Quota" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
+    <div class="progress-fill" style="width: 70%"></div>
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="progress progress-info" role="progressbar" aria-label="Indexing" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40">
+  <div class="progress-fill" style="width: 40%"></div>
+</div>
+<div class="progress progress-warning" role="progressbar" aria-label="Quota" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
+  <div class="progress-fill" style="width: 70%"></div>
+</div>`}
+/>
+
 ## input
 
 The frame for a text field. Put it on a native `<input>`, or on a wrapper around a bare `<input>` to build a group with a leading icon or trailing button.
@@ -528,6 +520,47 @@ The frame for a text field. Put it on a native `<input>`, or on a wrapper around
   code={`<input class="input input-compact" aria-label="Compact size" placeholder="Compact" />`}
 />
 
+`input-compact` beside `input` tightens the padding and sets `text-xs`. The frame also fits a `<textarea>`, and a group frame takes each state from its direct child `<input>`. A frame with no native control takes `data-disabled` or `data-readonly`.
+
+<div class="not-content flex flex-col items-start gap-3 rounded-sm border border-light p-4">
+  <input class="input input-compact" aria-label="Compact" placeholder="Compact" />
+  <textarea class="input" aria-label="Notes" rows="2">Textarea</textarea>
+  <select class="input" aria-label="Disabled mode" disabled>
+    <option>single</option>
+  </select>
+  <div class="input focus-ring-within flex">
+    <input aria-label="Invalid in a group" value="Invalid in a group" aria-invalid="true" />
+  </div>
+  <div class="input focus-ring-within flex">
+    <input aria-label="Read only in a group" value="Read only in a group" readonly />
+  </div>
+  <div class="input focus-ring-within flex">
+    <input aria-label="Disabled in a group" value="Disabled in a group" disabled />
+  </div>
+  <div class="input" data-disabled>Disabled frame</div>
+  <div class="input" data-readonly>Read only frame</div>
+</div>
+
+<Code
+  lang="html"
+  code={`<input class="input input-compact" aria-label="Compact" placeholder="Compact" />
+<textarea class="input" aria-label="Notes" rows="2">Textarea</textarea>
+<select class="input" aria-label="Disabled mode" disabled>
+  <option>single</option>
+</select>
+<div class="input focus-ring-within flex">
+  <input aria-label="Invalid in a group" value="Invalid in a group" aria-invalid="true" />
+</div>
+<div class="input focus-ring-within flex">
+  <input aria-label="Read only in a group" value="Read only in a group" readonly />
+</div>
+<div class="input focus-ring-within flex">
+  <input aria-label="Disabled in a group" value="Disabled in a group" disabled />
+</div>
+<div class="input" data-disabled>Disabled frame</div>
+<div class="input" data-readonly>Read only frame</div>`}
+/>
+
 `readout` is a read-only value box at field height. It is the `input` frame at the `input-compact` size in its readonly colors: 26px tall, a transparent border, and the `gray-1` fill. A long value truncates on one line. It reads no state and does not need an `<input>`, so put it on a `<span>` or any other non-interactive element.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
@@ -578,6 +611,140 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
   markup can set it directly.
 </Aside>
 
+## switch tones
+
+`switch-info`, `switch-success`, `switch-warning`, and `switch-danger` set `--switch-on`, the track color a prime-ui [`Switch`](../../prime-ui/components/switch/) paints while it is on. They style nothing by themselves. Each sample below is a track painted with the property its class sets.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <span class="switch-info inline-block h-4 w-7 rounded-full" style="background-color: var(--switch-on)" role="img" aria-label="switch-info track"></span>
+  <span class="switch-success inline-block h-4 w-7 rounded-full" style="background-color: var(--switch-on)" role="img" aria-label="switch-success track"></span>
+  <span class="switch-warning inline-block h-4 w-7 rounded-full" style="background-color: var(--switch-on)" role="img" aria-label="switch-warning track"></span>
+  <span class="switch-danger inline-block h-4 w-7 rounded-full" style="background-color: var(--switch-on)" role="img" aria-label="switch-danger track"></span>
+</div>
+
+<Code
+  lang="html"
+  code={`<span class="switch-info inline-block h-4 w-7 rounded-full" style="background-color: var(--switch-on)" role="img" aria-label="switch-info track"></span>
+<span class="switch-success inline-block h-4 w-7 rounded-full" style="background-color: var(--switch-on)" role="img" aria-label="switch-success track"></span>
+<span class="switch-warning inline-block h-4 w-7 rounded-full" style="background-color: var(--switch-on)" role="img" aria-label="switch-warning track"></span>
+<span class="switch-danger inline-block h-4 w-7 rounded-full" style="background-color: var(--switch-on)" role="img" aria-label="switch-danger track"></span>`}
+/>
+
+## table
+
+`table-container` goes on the `<table>`, `table-header` on the `<thead>`, `table-header-cell` on each `<th>`, and `table-cell` on each `<td>`. `table-cell-link` makes a link fill its cell and underline on hover. `table-cell-flex` lays several items out in one cell and lets them wrap. The table has a 1200px minimum width, so the example scrolls sideways.
+
+<div class="not-content overflow-x-auto rounded-sm border border-light p-4">
+  <table class="table-container">
+    <thead class="table-header">
+      <tr>
+        <th class="table-header-cell text-left" scope="col">Machine</th>
+        <th class="table-header-cell text-left" scope="col">Status</th>
+        <th class="table-header-cell text-left" scope="col">Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="table-cell"><a class="table-cell-link" href="#table">arm-01</a></td>
+        <td class="table-cell"><span class="badge badge-success">Online</span></td>
+        <td class="table-cell">
+          <div class="table-cell-flex">
+            <span class="pill">lab</span>
+            <span class="pill">gantry</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-cell"><a class="table-cell-link" href="#table">rover-07</a></td>
+        <td class="table-cell"><span class="badge badge-danger">Offline</span></td>
+        <td class="table-cell">
+          <div class="table-cell-flex">
+            <span class="pill">field</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<Code
+  lang="html"
+  code={`<table class="table-container">
+  <thead class="table-header">
+    <tr>
+      <th class="table-header-cell text-left" scope="col">Machine</th>
+      <th class="table-header-cell text-left" scope="col">Status</th>
+      <th class="table-header-cell text-left" scope="col">Tags</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="table-cell"><a class="table-cell-link" href="#table">arm-01</a></td>
+      <td class="table-cell"><span class="badge badge-success">Online</span></td>
+      <td class="table-cell">
+        <div class="table-cell-flex">
+          <span class="pill">lab</span>
+          <span class="pill">gantry</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="table-cell"><a class="table-cell-link" href="#table">rover-07</a></td>
+      <td class="table-cell"><span class="badge badge-danger">Offline</span></td>
+      <td class="table-cell">
+        <div class="table-cell-flex">
+          <span class="pill">field</span>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>`}
+/>
+
+## scrollbar
+
+`scrollbar-thin` sets the standard `scrollbar-width`, and `scrollbar-*` sets the standard `scrollbar-color` to a color token for the thumb over a clear track. The rest style the WebKit scrollbar parts: `scrollbar-w-*` its width from the spacing scale, `scrollbar-track-*` and `scrollbar-thumb-*` their colors from the color tokens, and `scrollbar-thumb-border-*` the thumb's radius, border width, or border color, by which token the value names. A browser that applies `scrollbar-width` ignores the WebKit parts on the same element, so use one approach per element.
+
+<div class="not-content flex flex-wrap items-start gap-6 rounded-sm border border-light p-4">
+  <div class="h-24 w-64 scrollbar-w-2 scrollbar-track-gray-2 scrollbar-thumb-gray-6 scrollbar-thumb-border-sm overflow-y-scroll p-2 text-sm" tabindex="0" role="region" aria-label="Styled scrollbar">
+    A machine is a computer with components attached. Each component reports readings, and each reading can be captured and synced. A long enough paragraph overflows this box, so the scrollbar appears and shows its track and its thumb.
+  </div>
+  <div class="h-24 w-64 scrollbar-thin scrollbar-gray-6 overflow-y-scroll p-2 text-sm" tabindex="0" role="region" aria-label="Thin scrollbar">
+    A machine is a computer with components attached. Each component reports readings, and each reading can be captured and synced. A long enough paragraph overflows this box, so the scrollbar appears and shows its track and its thumb.
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="h-24 w-64 scrollbar-w-2 scrollbar-track-gray-2 scrollbar-thumb-gray-6 scrollbar-thumb-border-sm overflow-y-scroll p-2 text-sm" tabindex="0" role="region" aria-label="Styled scrollbar">
+  A machine is a computer with components attached. Each component reports readings, and each reading can be captured and synced. A long enough paragraph overflows this box, so the scrollbar appears and shows its track and its thumb.
+</div>
+<div class="h-24 w-64 scrollbar-thin scrollbar-gray-6 overflow-y-scroll p-2 text-sm" tabindex="0" role="region" aria-label="Thin scrollbar">
+  A machine is a computer with components attached. Each component reports readings, and each reading can be captured and synced. A long enough paragraph overflows this box, so the scrollbar appears and shows its track and its thumb.
+</div>`}
+/>
+
+## slider
+
+The `slider-*` classes style the track and thumb of a native `<input type="range">` in both WebKit and Firefox. `slider-track-*` and `slider-thumb-*` take a color token. The `-w-*` and `-h-*` forms size each part from the spacing scale, `slider-thumb-border-*` sets the thumb's border, bare `slider-thumb-border` makes it a round gray-bordered thumb, and the `-cursor-*` forms set the cursor over each part. The input still needs `appearance-none`, and so does its WebKit thumb.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <input
+    type="range"
+    aria-label="Speed"
+    class="w-48 appearance-none bg-transparent slider-track-gray-3 slider-track-h-1 slider-thumb-gray-7 slider-thumb-w-3 slider-thumb-h-3 slider-thumb-border slider-thumb-border-0 slider-thumb-cursor-grab [&::-moz-range-track]:rounded-full [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:appearance-none"
+  />
+</div>
+
+<Code
+  lang="html"
+  code={`<input
+  type="range"
+  aria-label="Speed"
+  class="w-48 appearance-none bg-transparent slider-track-gray-3 slider-track-h-1 slider-thumb-gray-7 slider-thumb-w-3 slider-thumb-h-3 slider-thumb-border slider-thumb-border-0 slider-thumb-cursor-grab [&::-moz-range-track]:rounded-full [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:appearance-none"
+/>`}
+/>
+
 ## focus-ring and focus-ring-within
 
 `focus-ring` draws a 2px outline offset by 2px on `:focus-visible`. `button`, `icon-button`, and `input` already include it. `focus-ring-within` draws the same ring on a frame whose focus lives on a child, and it silences the child's own ring.
@@ -607,6 +774,44 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
 | -------------- | -------------------------------------------- | --------------------------------- |
 | Keyboard focus | `:focus-visible` (`focus-ring`)              | The outline appears.              |
 | Focus inside   | `:has(:focus-visible)` (`focus-ring-within`) | The outline appears on the frame. |
+
+## Surface and text aliases
+
+`bg-extralight`, `bg-light`, `bg-medium`, and `bg-dark` name the gray surfaces, and `border-light`, `border-medium`, and `border-dark` name the gray borders. Each reads a gray token, so it follows the theme.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <div class="bg-extralight border border-light p-3 text-xs">bg-extralight</div>
+  <div class="bg-light border border-light p-3 text-xs">bg-light</div>
+  <div class="bg-medium border border-light p-3 text-xs">bg-medium</div>
+  <div class="bg-dark border border-light p-3 text-xs text-white">bg-dark</div>
+  <div class="border border-light p-3 text-xs">border-light</div>
+  <div class="border border-medium p-3 text-xs">border-medium</div>
+  <div class="border border-dark p-3 text-xs">border-dark</div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="bg-extralight border border-light p-3 text-xs">bg-extralight</div>
+<div class="bg-light border border-light p-3 text-xs">bg-light</div>
+<div class="bg-medium border border-light p-3 text-xs">bg-medium</div>
+<div class="bg-dark border border-light p-3 text-xs text-white">bg-dark</div>
+<div class="border border-light p-3 text-xs">border-light</div>
+<div class="border border-medium p-3 text-xs">border-medium</div>
+<div class="border border-dark p-3 text-xs">border-dark</div>`}
+/>
+
+`text-display` is the display heading: Space Grotesk at 24px, weight 500. `text-code` is Roboto Mono at the `text-xs` size.
+
+<div class="not-content flex flex-col gap-3 rounded-sm border border-light p-4">
+  <p class="text-display">text-display</p>
+  <p class="text-code">text-code</p>
+</div>
+
+<Code
+  lang="html"
+  code={`<p class="text-display">text-display</p>
+<p class="text-code">text-code</p>`}
+/>
 
 ## Elevation
 

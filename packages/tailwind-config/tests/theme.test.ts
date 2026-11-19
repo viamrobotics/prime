@@ -83,6 +83,10 @@ const BUTTON_COLORS = [
   "button-info",
   "button-pending",
 ];
+const solidFillOf = (tone: string) =>
+  tone === "button-warning"
+    ? "var(--color-warning-bright)"
+    : "var(--button-dark)";
 const BANNER_VARIANTS = [
   ["info", "var(--color-info-light)", "var(--color-info-dark)"],
   ["success", "var(--color-success-light)", "var(--color-success-dark)"],
@@ -111,6 +115,7 @@ const CANDIDATES = [
   "slider-thumb-border-dashed",
   "slider-thumb-border-gray-9",
   "slider-thumb-border-sm",
+  "scrollbar-gray-6",
   "scrollbar-thumb-border-0",
   "scrollbar-thumb-border-[3px]",
   "scrollbar-thumb-border-gray-9",
@@ -138,14 +143,10 @@ const ELEVATIONS = [
   ["sm", "0 4px 32px rgba(0, 0, 0, 0.06)", "0 4px 32px rgba(0, 0, 0, 0.4)"],
   [
     "popover",
-    "0 8px 24px rgba(0, 0, 0, 0.12)",
-    "0 8px 24px rgba(0, 0, 0, 0.5)",
+    "0 4px 12px rgba(0, 0, 0, 0.08)",
+    "0 4px 12px rgba(0, 0, 0, 0.4)",
   ],
-  [
-    "dialog",
-    "0 12px 48px rgba(0, 0, 0, 0.25)",
-    "0 12px 48px rgba(0, 0, 0, 0.6)",
-  ],
+  ["dialog", "0 8px 24px rgba(0, 0, 0, 0.12)", "0 8px 24px rgba(0, 0, 0, 0.5)"],
 ] as const;
 
 const rulesOf = (
@@ -1020,7 +1021,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
       );
       expect(solid).toHaveLength(1);
       expect(declarationsOf(solid[0]!).get("background-color")).toBe(
-        "var(--button-dark)",
+        solidFillOf(name),
       );
     },
   );
@@ -1031,7 +1032,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
       const guards = contrastGuards(emitted, name);
       expect(guards).toHaveLength(1);
       expect(declarationsOf(guards[0]!).get("color")).toBe(
-        "contrast-color(var(--button-dark))",
+        `contrast-color(${solidFillOf(name)})`,
       );
     },
   );
@@ -1188,6 +1189,19 @@ describe("theme stylesheets compiled through Tailwind", () => {
       expect(style.get("color")).toBe(label);
     },
   );
+
+  it("fills the enabled .button-warning with the bright warning token inside a warning-dark border", () => {
+    const style = cascadedDeclarations(
+      cascade,
+      element(["button", "button-warning"]),
+      true,
+    );
+
+    expect([
+      style.get("background-color"),
+      style.get("border-color"),
+    ]).toStrictEqual(["var(--color-warning-bright)", "var(--button-dark)"]);
+  });
 
   it.each(BANNER_VARIANTS)(
     "holds the .banner-%s chip glyph at 3:1 on its chip in both themes",
@@ -1360,6 +1374,35 @@ describe("theme stylesheets compiled through Tailwind", () => {
       expect(painted).toStrictEqual(layers);
     },
   );
+
+  it("joins .button-group children that do not wear .button", () => {
+    const [first, last] = groupedRow([
+      { classes: ["w-40"] },
+      { classes: ["w-40"] },
+    ]).map((child) => cascadedDeclarations(cascade, child, true));
+
+    expect({
+      overlap: [
+        first?.get("margin-inline-start") ?? "0",
+        last?.get("margin-inline-start"),
+      ],
+      innerCorners: [
+        first?.get("border-start-end-radius"),
+        first?.get("border-end-end-radius"),
+        last?.get("border-start-start-radius"),
+        last?.get("border-end-start-radius"),
+      ],
+    }).toStrictEqual({
+      overlap: ["0", "-1px"],
+      innerCorners: ["0", "0", "0", "0"],
+    });
+  });
+
+  it("paints scrollbar-* as a thumb color over a clear track", () => {
+    expect(declared(emitted, ".scrollbar-gray-6").get("scrollbar-color")).toBe(
+      "var(--color-gray-6) transparent",
+    );
+  });
 
   it("lays .button-group out inline in its own stacking context, without clipping a focus ring", () => {
     const group = declared(emitted, ".button-group");
@@ -1574,14 +1617,14 @@ describe("theme stylesheets compiled through Tailwind", () => {
       "--shadow-sm": "0 4px 32px var(--shadow-color-sm)",
       "--shadow-color-sm": "rgba(0, 0, 0, 0.06)",
       ".shadow-sm": "0 4px 32px var(--tw-shadow-color, var(--shadow-color-sm))",
-      "--shadow-popover": "0 8px 24px var(--shadow-color-popover)",
-      "--shadow-color-popover": "rgba(0, 0, 0, 0.12)",
+      "--shadow-popover": "0 4px 12px var(--shadow-color-popover)",
+      "--shadow-color-popover": "rgba(0, 0, 0, 0.08)",
       ".shadow-popover":
-        "0 8px 24px var(--tw-shadow-color, var(--shadow-color-popover))",
-      "--shadow-dialog": "0 12px 48px var(--shadow-color-dialog)",
-      "--shadow-color-dialog": "rgba(0, 0, 0, 0.25)",
+        "0 4px 12px var(--tw-shadow-color, var(--shadow-color-popover))",
+      "--shadow-dialog": "0 8px 24px var(--shadow-color-dialog)",
+      "--shadow-color-dialog": "rgba(0, 0, 0, 0.12)",
       ".shadow-dialog":
-        "0 12px 48px var(--tw-shadow-color, var(--shadow-color-dialog))",
+        "0 8px 24px var(--tw-shadow-color, var(--shadow-color-dialog))",
     });
   });
 
@@ -1619,8 +1662,8 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
     expect(darkElevationColors).toStrictEqual([
       "rgba(0, 0, 0, 0.4)",
+      "rgba(0, 0, 0, 0.4)",
       "rgba(0, 0, 0, 0.5)",
-      "rgba(0, 0, 0, 0.6)",
     ]);
   });
 
@@ -1655,7 +1698,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     ]);
 
     expect(painted).toBe(
-      `${UNSET_SHADOW_LAYERS}, 0 8px 24px oklch(63.7% 0.237 25.331)`,
+      `${UNSET_SHADOW_LAYERS}, 0 4px 12px oklch(63.7% 0.237 25.331)`,
     );
   });
 
@@ -1674,7 +1717,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     ]);
 
     expect(painted).toBe(
-      `${UNSET_SHADOW_LAYERS}, 0 8px 24px oklab(from rgba(0, 0, 0, 0.5) l a b / 50%)`,
+      `${UNSET_SHADOW_LAYERS}, 0 4px 12px oklab(from rgba(0, 0, 0, 0.4) l a b / 50%)`,
     );
   });
 

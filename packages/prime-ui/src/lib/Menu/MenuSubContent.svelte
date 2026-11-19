@@ -39,7 +39,10 @@ The floating panel of a [`Menu.Sub`](./MenuSub.svelte). It opens beside its [`Me
 	id={contentId}
 	{sideOffset}
 	{alignOffset}
-	class={['z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-sm', extraClasses]}
+	class={[
+		'z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-popover',
+		extraClasses
+	]}
 	{...restProps}
 >
 	{@render children?.()}

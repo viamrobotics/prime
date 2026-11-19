@@ -294,6 +294,22 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		expect(ghost()).toBeNull();
 	});
 
+	it('draws the file-style landing slot as a full-height cell with the separator on its right', async () => {
+		render(ReorderTabs, { props: { variant: 'file' } });
+
+		const usage = await lift('Usage');
+		const slot = chip() as HTMLElement;
+		const neighbor = tab('Overview').element();
+
+		expect(getComputedStyle(slot).borderRightWidth).toBe('1px');
+		expect(getComputedStyle(slot).borderRightColor).toBe(
+			getComputedStyle(neighbor).borderRightColor
+		);
+		expect(slot.getBoundingClientRect().height).toBe(neighbor.getBoundingClientRect().height);
+
+		drop(usage, centerOf(slot));
+	});
+
 	it('swallows the click that follows a drop, and only that one', async () => {
 		render(ReorderTabs);
 

@@ -111,7 +111,7 @@ The config also ships the design system's components as `@utility` classes, so a
 
 `switch-info`, `switch-success`, `switch-warning`, and `switch-danger` set `--switch-on`, the track color a prime-ui `Switch` paints while it is on.
 
-A `banner` is the compact one-liner until a `banner-title` sits inside it, and then it lays out stacked. A `status-dot` is 8px. `button-compact` and `input-compact` tighten padding and set `text-xs` for dense panels. `button-xs` is the 24px size of a toggle button item. A `button-group` wrapper joins its `button` children into one control. Neighbors share one border, only the outer corners round, and a hovered or focused button draws above its neighbors. A `readout` is a read-only value box at the 26px field height, for a `<span>`. A `progress` holds a `progress-fill` child that the consumer sizes with an inline width.
+A `banner` is the compact one-liner until a `banner-title` sits inside it, and then it lays out stacked. A `status-dot` is 8px. `button-compact` and `input-compact` tighten padding and set `text-xs` for dense panels. `button-xs` is the 24px size of a toggle button item. A `button-group` wrapper joins its direct children into one control, whether or not they wear `button`. Neighbors share one border, only the outer corners round, and a hovered or focused button draws above its neighbors. A `readout` is a read-only value box at the 26px field height, for a `<span>`. A `progress` holds a `progress-fill` child that the consumer sizes with an inline width.
 
 Elevation tokens `--shadow-popover` and `--shadow-dialog` back the `shadow-popover` and `shadow-dialog` classes. Each shadow reads its color from `--shadow-color-popover` or `--shadow-color-dialog`, and the dark theme reassigns those colors.
 

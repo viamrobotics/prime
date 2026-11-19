@@ -69,7 +69,7 @@ Render a [`DateRangePicker.Calendar`](./DateRangePickerCalendar.svelte) inside i
 		aria-label={accessibleName}
 		aria-labelledby={labelledBy}
 		onOpenAutoFocus={focusDayWithoutScrolling}
-		class={['z-popover rounded-sm border border-light bg-white p-3 shadow-md', extraClasses]}
+		class={['z-popover rounded-sm border border-light bg-white p-3 shadow-popover', extraClasses]}
 		{...restProps}
 	>
 		{@render children?.()}

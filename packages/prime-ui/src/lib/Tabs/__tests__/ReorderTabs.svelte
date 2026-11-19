@@ -1,12 +1,15 @@
 <script lang="ts">
+	import type { TabsVariant } from '../variant.ts';
+
 	import { Tabs } from '../tabs.ts';
 
 	interface Props {
 		reorderable?: boolean;
 		disabledTab?: string;
+		variant?: TabsVariant;
 	}
 
-	const { reorderable = true, disabledTab }: Props = $props();
+	const { reorderable = true, disabledTab, variant }: Props = $props();
 
 	const INITIAL_ORDER = ['overview', 'usage', 'api'];
 	const labels: Record<string, string> = { overview: 'Overview', usage: 'Usage', api: 'API' };
@@ -16,7 +19,7 @@
 	let order = $state([...INITIAL_ORDER]);
 </script>
 
-<Tabs bind:value>
+<Tabs bind:value {variant}>
 	<Tabs.List aria-label="Details" {reorderable} bind:order>
 		{#each order as id (id)}
 			<Tabs.Trigger value={id} disabled={id === disabledTab} aria-label={ariaLabels[id]}>

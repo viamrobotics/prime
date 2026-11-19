@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { borderColor, boxShadow, colorOf } from '../../__tests__/computed-style.ts';
+import { borderColor, boxShadow, colorOf, shapeOf } from '../../__tests__/computed-style.ts';
 import BoundSelect from './BoundSelect.svelte';
 import ControlledSelect from './ControlledSelect.svelte';
 import IndicatorSelect from './IndicatorSelect.svelte';
@@ -159,15 +159,15 @@ describe('Select', () => {
 		expect(getComputedStyle(listbox()!).zIndex).toBe('1200');
 	});
 
-	it('lifts the panel with the small shadow', async () => {
+	it('wears the popover shadow token', async () => {
 		const { container } = render(BoundSelect);
 
 		await userEvent.click(trigger(container));
 
 		await vi.waitFor(() => expect(listbox()).toBeTruthy());
-		expect(boxShadow(listbox()!)).toBe(
-			'rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.06) 0px 4px 32px 0px'
-		);
+		const expected = shapeOf('shadow-popover', 'boxShadow');
+		expect(expected).not.toBe('none');
+		expect(boxShadow(listbox()!)).toBe(expected);
 	});
 
 	describe('trigger border', () => {

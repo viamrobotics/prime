@@ -12,8 +12,8 @@
    * instead, read when the utility paints, so the dark theme recolors it.
    */
   --shadow-sm: 0 4px 32px var(--shadow-color-sm);
-  --shadow-popover: 0 8px 24px var(--shadow-color-popover);
-  --shadow-dialog: 0 12px 48px var(--shadow-color-dialog);
+  --shadow-popover: 0 4px 12px var(--shadow-color-popover);
+  --shadow-dialog: 0 8px 24px var(--shadow-color-dialog);
 
   /* Text colors */
   --color-heading: #131414;
@@ -182,8 +182,8 @@
   :root,
   :host {
     --shadow-color-sm: rgba(0, 0, 0, 0.06);
-    --shadow-color-popover: rgba(0, 0, 0, 0.12);
-    --shadow-color-dialog: rgba(0, 0, 0, 0.25);
+    --shadow-color-popover: rgba(0, 0, 0, 0.08);
+    --shadow-color-dialog: rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -378,6 +378,10 @@
  * properties, so every modifier applies to it too. Every class reads `:disabled`,
  * `[aria-disabled="true"]`, and `[aria-busy="true"]`.
  *
+ * The warning family fills with `--color-warning-bright` inside a `--color-warning-dark`
+ * border, because a warning tone dark enough for white text no longer reads as yellow. Every
+ * other family fills with its dark tone.
+ *
  * Solid text is `contrast-color()` of the fill where the browser has it, so a light family
  * such as warning gets dark text. White is the fallback, except on the warning fill, where it is
  * the black `contrast-color()` picks there. The `@supports` probe passes a
@@ -512,10 +516,10 @@
   --button-light: var(--color-warning-light);
   &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost) {
     border-color: var(--button-dark);
-    background-color: var(--button-dark);
+    background-color: var(--color-warning-bright);
     color: black;
     @supports (color: contrast-color(red)) {
-      color: contrast-color(var(--button-dark));
+      color: contrast-color(var(--color-warning-bright));
     }
   }
   &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost):is(
@@ -523,7 +527,11 @@
       :active
     ) {
     border-color: color-mix(in oklab, var(--button-dark) 88%, black);
-    background-color: color-mix(in oklab, var(--button-dark) 88%, black);
+    background-color: color-mix(
+      in oklab,
+      var(--color-warning-bright) 88%,
+      black
+    );
   }
 }
 
@@ -625,8 +633,8 @@
 }
 
 /*
- * Joins the `.button` children of a wrapper into one control. Each button after the first
- * overlaps its neighbor by 1px, so two neighbors share one border, and only the outer corners
+ * Joins the direct children of a wrapper into one control, whether or not they wear `button`.
+ * Each child after the first overlaps its neighbor by 1px, so two neighbors share one border, and only the outer corners
  * round. An enabled button stacks above a disabled one, so the borders beside a disabled button
  * stay visible. A hovered or focused button stacks above its neighbors, so its border and focus
  * ring are never covered. The layers are `:where()` rules so the focus layer wins by order, and
@@ -635,19 +643,19 @@
 @utility button-group {
   @apply isolate inline-flex;
 
-  & > .button:not(:first-child) {
+  & > *:not(:first-child) {
     @apply -ms-px rounded-s-none;
   }
-  & > .button:not(:last-child) {
+  & > *:not(:last-child) {
     @apply rounded-e-none;
   }
-  & > .button:where(:not(:disabled, [aria-disabled="true"])) {
+  & > *:where(:not(:disabled, [aria-disabled="true"])) {
     @apply z-1;
   }
-  & > .button:where(:not(:disabled, [aria-disabled="true"]):hover) {
+  & > *:where(:not(:disabled, [aria-disabled="true"]):hover) {
     @apply z-2;
   }
-  & > .button:where(:focus-visible) {
+  & > *:where(:focus-visible) {
     @apply z-3;
   }
 }
@@ -1030,8 +1038,9 @@
   scrollbar-width: thin;
 }
 
+/* `scrollbar-color` takes the thumb color, then the track color. The track stays clear. */
 @utility scrollbar-* {
-  scrollbar-color: --value(--color-*);
+  scrollbar-color: --value(--color-*) transparent;
 }
 
 @utility scrollbar-w-* {
