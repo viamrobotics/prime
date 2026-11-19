@@ -29,7 +29,7 @@ describe('Banner', () => {
 	it.each([
 		{ variant: 'info', light: 'bg-info-light', dark: 'text-info-dark' },
 		{ variant: 'success', light: 'bg-success-light', dark: 'text-success-dark' },
-		{ variant: 'warning', light: 'bg-warning-light', dark: 'text-warning-dark' },
+		{ variant: 'warning', light: 'bg-warning-light', dark: 'text-warning-text' },
 		{ variant: 'danger', light: 'bg-danger-light', dark: 'text-danger-dark' },
 		{ variant: 'pending', light: 'bg-pending-light', dark: 'text-pending-dark' }
 	] as const)('colors the $variant chip from the variant tokens', ({ variant, light, dark }) => {

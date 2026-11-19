@@ -1,15 +1,22 @@
 import { getContext, setContext, untrack } from 'svelte';
 
+import type { TabsVariant } from './variant.ts';
+
 const key = Symbol('Tabs');
 
 interface TabsOptions {
 	value: () => string | undefined;
+	variant: () => TabsVariant;
 }
 
 /** What a `Tabs` root shares with the parts inside it. */
 export interface TabsContext {
 	/** The selected tab's value: the bound value while its tab exists, otherwise the first tab's. */
 	readonly value: string | undefined;
+	/** The strip's look, which the list and triggers follow. */
+	readonly variant: TabsVariant;
+	/** The triggers' values, in mount order. */
+	readonly triggers: readonly string[];
 	/** Register a trigger's value, in mount order. Returns the unregister function. */
 	register: (value: string) => () => void;
 	/** Register a panel's value, in mount order. Returns the unregister function. */
@@ -45,6 +52,12 @@ export const provideTabs = (options: TabsOptions): TabsContext => {
 	return setContext<TabsContext>(key, {
 		get value() {
 			return selected;
+		},
+		get variant() {
+			return options.variant();
+		},
+		get triggers() {
+			return triggers.values;
 		},
 		register: triggers.add,
 		registerPanel: panels.add

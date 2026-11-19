@@ -18,6 +18,12 @@ import WithIcons from "./WithIcons.svelte";
 import withIconsSource from "./WithIcons.svelte?raw";
 import Closable from "./Closable.svelte";
 import closableSource from "./Closable.svelte?raw";
+import FileTabs from "./FileTabs.svelte";
+import fileTabsSource from "./FileTabs.svelte?raw";
+import Reorderable from "./Reorderable.svelte";
+import reorderableSource from "./Reorderable.svelte?raw";
+import ReorderControlled from "./ReorderControlled.svelte";
+import reorderControlledSource from "./ReorderControlled.svelte?raw";
 
 <ComponentIntro name="tabs" />
 
@@ -80,9 +86,35 @@ A control nested in a tab keeps its own key events, so <kbd>Enter</kbd> and <kbd
   <Closable client:visible />
 </Example>
 
+### File-style tabs
+
+`variant="file"` on the root draws compact, boxed tabs like an editor's file tabs, with the selected tab joined to the content below it. Pick it for a header over documents the user opens and closes, where the tabs are many and each carries a control. `Tabs.List` and `Tabs.Trigger` follow the root, so only the root takes the prop. The selected tab scrolls into view, and a strip that overflows scrolls sideways and never wraps.
+
+<Example code={fileTabsSource} title="FileTabs.svelte">
+  <FileTabs client:visible />
+</Example>
+
+### Reordering
+
+`reorderable` on `Tabs.List` lets the user move tabs, with a pointer drag or the keyboard. It works under both variants. The order is yours to hold: `Tabs.List` takes a bindable `order`, the tab values in strip order, and you render the triggers from it in a keyed `{#each}`. Key each trigger by its value, so a move shuffles the existing tabs instead of rebuilding them. A move writes a new array and changes no selection.
+
+A press on a control inside a tab never starts a drag, so a close button keeps working. A disabled tab cannot be moved.
+
+Dragging is not enough on its own for a pointer user who cannot drag (WCAG 2.5.7), and the keys need a keyboard. Give each tab a way to move with single clicks, such as Move left and Move right items in a tab menu, each writing the new array to `order`.
+
+<Example code={reorderableSource} title="Reorderable.svelte">
+  <Reorderable client:visible />
+</Example>
+
+`bind:order` also takes a getter and a setter. When the setter leaves `order` unchanged, the move is refused and the strip stays as it was.
+
+<Example code={reorderControlledSource} title="ReorderControlled.svelte">
+  <ReorderControlled client:visible />
+</Example>
+
 ## Styling
 
-The root and every part take `class` on their element.
+The root and every part take `class` on their element. The `file` variant wears the `file-tabs` and `file-tab` classes from tailwind-config. See [file-tabs](../../tailwind-config/component-classes/#file-tabs).
 
 | Part      | Attribute       | Value                  |
 | --------- | --------------- | ---------------------- |
@@ -96,6 +128,7 @@ The root and every part take `class` on their element.
   bindings={[
     { keys: "ArrowLeft / ArrowRight", action: "Moves focus to the previous or next tab and selects it." },
     { keys: "Home / End", action: "Moves focus to the first or last tab and selects it." },
+    { keys: "Alt + Shift + ArrowLeft / ArrowRight", action: "Moves the focused tab one place left or right, when the list is reorderable." },
     { keys: "Tab", action: "Moves focus into the selected panel." },
   ]}
 />

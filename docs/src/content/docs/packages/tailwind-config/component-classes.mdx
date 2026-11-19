@@ -52,6 +52,40 @@ Every color modifier in every fill and state. The markup below is the grid, cell
   code={`<button type="button" class="button button-xs">Extra small</button>`}
 />
 
+`button-group` on a wrapper joins its `.button` children into one segmented control. Neighbors share a single border and only the outer corners round. An enabled button stacks above a disabled one so the borders beside a disabled button stay visible. A hovered or focused button draws above its neighbors, so its border and focus ring are never covered. It works with every color, fill, and size modifier. Neighbors of the same solid fill show no divider, because the border is the fill color. Give the wrapper `role="group"` and an `aria-label`.
+
+<div class="not-content flex flex-col items-start gap-3 rounded-sm border border-light p-4">
+  <div class="button-group" role="group" aria-label="Time range">
+    <button type="button" class="button">Day</button>
+    <button type="button" class="button">Week</button>
+    <button type="button" class="button">Month</button>
+  </div>
+  <div class="button-group" role="group" aria-label="Alert level">
+    <button type="button" class="button button-danger button-outline">Low</button>
+    <button type="button" class="button button-danger button-outline">Medium</button>
+    <button type="button" class="button button-danger button-outline">High</button>
+  </div>
+  <div class="button-group" role="group" aria-label="Zoom">
+    <button type="button" class="button button-compact">Fit</button>
+    <button type="button" class="button button-compact">50%</button>
+    <button type="button" class="button button-compact">100%</button>
+  </div>
+  <div class="button-group" role="group" aria-label="Export format">
+    <button type="button" class="button">CSV</button>
+    <button type="button" class="button" disabled>JSON</button>
+    <button type="button" class="button">PDF</button>
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="button-group" role="group" aria-label="Time range">
+  <button type="button" class="button">Day</button>
+  <button type="button" class="button">Week</button>
+  <button type="button" class="button">Month</button>
+</div>`}
+/>
+
 A leading icon is an inline `<svg>` placed as the first child.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
@@ -110,6 +144,34 @@ It takes the same `button-*` color and fill modifiers. `icon-button` alone is th
   An `icon-button` has no visible text, so it must carry `aria-label` or
   `aria-labelledby`.
 </Aside>
+
+## file-tabs
+
+A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the strip, one 35px row that scrolls sideways and never wraps, and `file-tab` is one tab in it. The selected tab carries a line on top and drops its bottom border, so it joins the content below. Hover darkens an enabled, unselected tab, and keyboard focus draws an inset ring, because the strip's scroll container clips anything drawn outside a tab.
+
+<div class="not-content rounded-sm border border-light p-4">
+  <div class="file-tabs" role="tablist" aria-label="Open files">
+    <div class="file-tab" role="tab" aria-selected="false" tabindex="-1">Rest</div>
+    <div class="file-tab" role="tab" aria-selected="true" tabindex="0">Selected</div>
+    <div class="file-tab" role="tab" aria-selected="false" aria-disabled="true" tabindex="-1">Disabled</div>
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="file-tabs" role="tablist" aria-label="Open files">
+  <div class="file-tab" role="tab" aria-selected="false">main.ts</div>
+  <div class="file-tab" role="tab" aria-selected="true">config.json</div>
+  <div class="file-tab" role="tab" aria-selected="false" aria-disabled="true">README.md</div>
+</div>`}
+/>
+
+| State    | Attribute                | What changes                                                |
+| -------- | ------------------------ | ----------------------------------------------------------- |
+| Hover    | `:hover`                 | A medium background and default text, on an enabled tab.    |
+| Selected | `[aria-selected="true"]` | A dark top line, no bottom border, a white fill, bold text. |
+| Disabled | `[aria-disabled="true"]` | Subtle text and a `not-allowed` cursor, with no hover.      |
+| Focus    | `:focus-visible`         | An inset 2px outline.                                       |
 
 ## badge
 
@@ -272,6 +334,31 @@ A keyboard key hint. It is static, so it has no states.
   lang="html"
   code={`<kbd class="kbd">K</kbd>
 <kbd class="kbd">Esc</kbd>`}
+/>
+
+Inside an enabled solid button, a `kbd` takes the button's label color for its text and border. The solid buttons are `button-dark`, `button-danger`, `button-warning`, `button-success`, `button-info`, and `button-pending`. In an outline or ghost button, or a disabled one, it keeps its subtle text and medium border.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <button type="button" class="button button-dark">
+    Search
+    <kbd class="kbd">K</kbd>
+  </button>
+  <button type="button" class="button button-danger">
+    Delete
+    <kbd class="kbd">Del</kbd>
+  </button>
+  <button type="button" class="button button-outline">
+    Search
+    <kbd class="kbd">K</kbd>
+  </button>
+</div>
+
+<Code
+  lang="html"
+  code={`<button type="button" class="button button-dark">
+  Search
+  <kbd class="kbd">K</kbd>
+</button>`}
 />
 
 ## avatar

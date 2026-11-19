@@ -208,4 +208,88 @@ describe('Tabs', () => {
 		expect(selectedLabels(container)).toEqual(['Overview']);
 		expect(owner(container)).toBe('undefined');
 	});
+
+	describe('file variant', () => {
+		const transparent = colorOf('border-transparent', 'borderTopColor');
+		const overflowingStrip = { variant: 'file' as const, extraTabCount: 12, width: '240px' };
+		const subpixelTolerance = 1;
+		const widthOfW40 = '160px';
+
+		it.each([
+			{ variant: 'file' as const, selectedBorder: transparent },
+			{ variant: 'underline' as const, selectedBorder: colorOf('border-gray-9', 'borderTopColor') }
+		])(
+			'$variant: the selected tab paints its bottom border $selectedBorder',
+			({ variant, selectedBorder }) => {
+				const { container } = render(ClosableTabs, { props: { variant } });
+
+				expect(borderBottomColor(tab(container, 'Overview'))).toBe(selectedBorder);
+				expect(borderBottomColor(tab(container, 'Usage'))).not.toBe(selectedBorder);
+			}
+		);
+
+		it('closing a tab from its close button does not select it', async () => {
+			const { container } = render(ClosableTabs, { props: { variant: 'file' } });
+
+			await userEvent.click(closeButton(container, 'Usage'));
+
+			expect(labels(container)).toEqual(['Overview', 'API']);
+			expect(selectedLabels(container)).toEqual(['Overview']);
+		});
+
+		it('keeps more tabs than fit on one scrolling row', () => {
+			const { container } = render(ClosableTabs, {
+				props: overflowingStrip
+			});
+			const list = tablist(container)!;
+
+			expect(new Set(tabs(container).map((item) => item.offsetTop)).size).toBe(1);
+			expect(list.scrollWidth).toBeGreaterThan(list.clientWidth);
+		});
+
+		it('scrolls an off-screen tab into the list when it is selected by binding', async () => {
+			const { container } = render(ClosableTabs, {
+				props: overflowingStrip
+			});
+			const list = tablist(container)!;
+			expect(list.scrollLeft).toBe(0);
+
+			await userEvent.click(button(container, 'Select last'));
+
+			const selected = tabs(container).find(
+				(item) => item.getAttribute('aria-selected') === 'true'
+			)!;
+			expect(list.scrollLeft).toBeGreaterThan(0);
+			expect(selected.getBoundingClientRect().right).toBeLessThanOrEqual(
+				list.getBoundingClientRect().right + subpixelTolerance
+			);
+			expect(selected.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+				list.getBoundingClientRect().left - subpixelTolerance
+			);
+		});
+
+		it('lets a consumer class set the trigger width', () => {
+			const { container } = render(ClosableTabs, {
+				props: { variant: 'file', triggerClass: 'w-40' }
+			});
+
+			expect(tabs(container).map((item) => getComputedStyle(item).width)).toEqual([
+				widthOfW40,
+				widthOfW40,
+				widthOfW40
+			]);
+		});
+
+		it('draws an inset outline on a tab focused by keyboard', async () => {
+			const { container } = render(ClosableTabs, { props: { variant: 'file' } });
+			await userEvent.click(tab(container, 'Overview'));
+
+			await userEvent.keyboard('{ArrowRight}');
+
+			const style = getComputedStyle(tab(container, 'Usage'));
+			expect(document.activeElement).toBe(tab(container, 'Usage'));
+			expect(style.outlineWidth).toBe('2px');
+			expect(style.outlineOffset).toBe('-2px');
+		});
+	});
 });

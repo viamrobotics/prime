@@ -185,6 +185,30 @@ describe('Field with widgets', () => {
 		});
 	});
 
+	it('wires a combobox input', async () => {
+		const scope = field(
+			render(WidgetFields, { props: { required: true } }).container,
+			'combobox-field'
+		);
+		const input = scope.querySelector<HTMLInputElement>('[role="combobox"]')!;
+
+		expect(scope.querySelector('label')?.getAttribute('for')).toBe(input.id);
+		expect(input.getAttribute('aria-required')).toBe('true');
+		await vi.waitFor(() => {
+			expect(input.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
+		});
+	});
+
+	it('disables the combobox input and trigger when the field is disabled', () => {
+		const scope = field(
+			render(WidgetFields, { props: { disabled: true } }).container,
+			'combobox-field'
+		);
+
+		expect(scope.querySelector<HTMLInputElement>('[role="combobox"]')?.disabled).toBe(true);
+		expect(scope.querySelector('button')?.disabled, 'trigger disabled').toBe(true);
+	});
+
 	it('names a date field by its label and describes it by its hint', async () => {
 		const scope = field(render(WidgetFields).container, 'date-field');
 		const group = scope.querySelector('[role="group"]')!;
@@ -202,6 +226,30 @@ describe('Field with widgets', () => {
 		);
 
 		expect(scope.querySelector('[data-segment="day"]')?.getAttribute('aria-disabled')).toBe('true');
+		expect(scope.querySelector('button')?.disabled, 'trigger disabled').toBe(true);
+	});
+
+	it('names a date range field by its label and describes it by its hint', async () => {
+		const scope = field(render(WidgetFields).container, 'daterange-field');
+		const group = scope.querySelector('[role="group"]')!;
+
+		await vi.waitFor(() => {
+			expect(group.getAttribute('aria-labelledby')).toBe(scope.querySelector('label')?.id);
+			expect(group.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
+		});
+	});
+
+	it('disables both date range ends and the trigger when the field is disabled', () => {
+		const scope = field(
+			render(WidgetFields, { props: { disabled: true } }).container,
+			'daterange-field'
+		);
+
+		expect(
+			[...scope.querySelectorAll('[data-segment="day"]')].map((day) =>
+				day.getAttribute('aria-disabled')
+			)
+		).toEqual(['true', 'true']);
 		expect(scope.querySelector('button')?.disabled, 'trigger disabled').toBe(true);
 	});
 
@@ -243,10 +291,12 @@ describe('Field with widgets', () => {
 				field(container, 'checkbox-field').querySelector('[role="checkbox"]'),
 				field(container, 'radio-field').querySelector('[role="radiogroup"]'),
 				field(container, 'select-field').querySelector('button'),
+				field(container, 'combobox-field').querySelector('[role="combobox"]'),
 				field(container, 'date-field').querySelector('[role="group"]'),
+				field(container, 'daterange-field').querySelector('[role="group"]'),
 				field(container, 'switch-field').querySelector('[role="switch"]'),
 				field(container, 'toggle-field').querySelector('[role="group"]')
 			].map((control) => control?.getAttribute('aria-invalid'))
-		).toEqual(['true', 'true', 'true', 'true', 'true', 'true']);
+		).toEqual(['true', 'true', 'true', 'true', 'true', 'true', 'true', 'true']);
 	});
 });

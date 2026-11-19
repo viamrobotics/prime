@@ -1,0 +1,131 @@
+---
+title: Combobox
+description: A text input that filters a list of options as you type.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import ComboboxDemo from "./ComboboxDemo.svelte";
+import ComboboxShowcase from "./ComboboxShowcase.svelte";
+import TwoWay from "./TwoWay.svelte";
+import twoWaySource from "./TwoWay.svelte?raw";
+import Controlled from "./Controlled.svelte";
+import controlledSource from "./Controlled.svelte?raw";
+import Grouped from "./Grouped.svelte";
+import groupedSource from "./Grouped.svelte?raw";
+import CustomFilter from "./CustomFilter.svelte";
+import customFilterSource from "./CustomFilter.svelte?raw";
+import Remote from "./Remote.svelte";
+import remoteSource from "./Remote.svelte?raw";
+
+<ComponentIntro name="combobox" />
+
+<ComboboxDemo client:visible />
+
+- Composed from parts, so the input, the trigger, and the list are yours to arrange.
+- One `value`, bindable, and a bindable `query` for the text typed since the list opened.
+- `items` is the single source of truth for the options. The input shows the selected label, and `Combobox.Items` renders the ones the `filter` keeps.
+- `Combobox.Input` takes `state` from an enclosing [`Field`](../field/), or directly. Both it and `Combobox.Trigger` sit in an [`Input.Group`](../input/).
+- The list floats in a portal, positioned to the input.
+- To pick from a fixed list without typing, use [`Select`](../select/).
+
+## Anatomy
+
+Every part is a property on `Combobox`. `Content` is the floating list, portaled to the body, and should contain a `Viewport`. `Items` renders every match as a `Combobox.Item` and renders no element of its own. `Empty` shows only while nothing matches. `Group` and `GroupHeading` are optional.
+
+```svelte
+<Combobox items={options}>
+  <Input.Group>
+    <Combobox.Input />
+    <Combobox.Trigger />
+  </Input.Group>
+  <Combobox.Content>
+    <Combobox.Viewport>
+      <Combobox.Items />
+      <Combobox.Empty />
+    </Combobox.Viewport>
+  </Combobox.Content>
+</Combobox>
+```
+
+## Usage
+
+### Two-way binding
+
+`bind:value` on the root holds the selection, and `bind:query` holds what the user has typed. `query` is empty while the list is closed. Put the combobox in a `Field` with a `Label` so the label targets the input.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### Fully controlled
+
+Pass `bind:value` a getter and a setter. [State & binding](../state/) explains both modes.
+
+<Example code={controlledSource} title="Controlled.svelte">
+  <Controlled client:visible />
+</Example>
+
+### Groups
+
+Render `Combobox.Item` by hand to add structure. Wrap related items in `Combobox.Group` with a `Combobox.GroupHeading`. `items` stays on the root for the input's label, and reading `query` lets you drop groups with no match.
+
+<Example code={groupedSource} title="Grouped.svelte">
+  <Grouped client:visible />
+</Example>
+
+### Custom filter
+
+The default `filter` keeps options whose label contains the typed text, ignoring case. Pass your own to change that. This one keeps labels that start with the text.
+
+<Example code={customFilterSource} title="CustomFilter.svelte">
+  <CustomFilter client:visible />
+</Example>
+
+### Remote options
+
+For a long or remote list, fetch in the consumer. Read the bound `query`, load the matches, and pass them as `items`. Set `filter={() => true}` so the combobox shows them all instead of filtering again. The lookup here is simulated locally.
+
+<Example code={remoteSource} title="Remote.svelte">
+  <Remote client:visible />
+</Example>
+
+### States
+
+<ComboboxShowcase client:visible />
+
+## Styling
+
+Every part that renders an element takes `class` on that element. `Combobox` and `Combobox.Items` render no element, so they take no `class`. Focus shows as the same 2px ring every prime control uses. `error` sets `aria-invalid="true"` and the error border, and `warn` sets the warning border, both from the `input` [component class](../../tailwind-config/component-classes/). `Combobox.Content` wears `z-popover`. See [z layers](../../tailwind-config/component-classes/#z-layers).
+
+## Keyboard
+
+With focus on the input:
+
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowDown / ArrowUp", action: "Opens the list and highlights an item." },
+    { text: "Printable characters", action: "Opens the list and filters it to matches." },
+  ]}
+/>
+
+With the list open:
+
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowDown / ArrowUp", action: "Highlights the next or previous item." },
+    { keys: "Enter", action: "Selects the highlighted item and closes." },
+    { keys: "Escape", action: "Closes without changing the value." },
+    { keys: "Tab", action: "Closes and moves focus on." },
+  ]}
+/>
+
+## API
+
+<PropsTable name="combobox" />
+
+<PartsDoc name="combobox" />

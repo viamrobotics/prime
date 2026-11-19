@@ -39,8 +39,12 @@ export type { BannerVariant } from './Banner/banner.ts';
 export { Breadcrumbs } from './Breadcrumbs/breadcrumbs.ts';
 
 export { Collapsible } from './Collapsible/collapsible.ts';
+export { Combobox } from './Combobox/combobox.ts';
+export type { ComboboxFilter } from './Combobox/useCombobox.svelte.ts';
 export { ContextMenu } from './Menu/context-menu.ts';
 export { DatePicker } from './DatePicker/date-picker.ts';
+export { DateRangePicker } from './DateRangePicker/date-range-picker.ts';
+export type { DateRange } from './DateRangePicker/date-range.ts';
 export { Dialog } from './Dialog/dialog.ts';
 
 export { Field } from './Field/field.ts';

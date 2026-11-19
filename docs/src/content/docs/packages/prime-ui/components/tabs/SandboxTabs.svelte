@@ -1,7 +1,11 @@
 <script lang="ts">
   import { Tabs } from "@viamrobotics/prime-ui";
 
-  const { count = 3, disabled = false }: { count?: number; disabled?: boolean } = $props();
+  const {
+    count = 3,
+    disabled = false,
+    variant = "underline",
+  }: { count?: number; disabled?: boolean; variant?: "underline" | "file" } = $props();
 
   const all = [
     { id: "overview", label: "Overview" },
@@ -14,7 +18,7 @@
 </script>
 
 <div class="not-content w-full max-w-md">
-  <Tabs>
+  <Tabs {variant}>
     {#if tabs.length > 1}
       <Tabs.List aria-label="Details">
         {#each tabs as tab, index (tab.id)}

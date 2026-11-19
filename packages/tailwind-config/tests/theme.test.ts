@@ -16,6 +16,7 @@ const SHIPPED_CLASSES = [
   "button-pending",
   "button-outline",
   "button-ghost",
+  "button-group",
   "icon-button",
   "badge",
   "badge-success",
@@ -26,6 +27,8 @@ const SHIPPED_CLASSES = [
   "pill",
   "pill-outline",
   "kbd",
+  "file-tabs",
+  "file-tab",
   "avatar",
   "progress-dots",
   "banner",
@@ -118,6 +121,7 @@ const CANDIDATES = [
   "bg-gray-0",
   "bg-heading",
   "px-4",
+  "w-40",
   ...Z_LAYERS.map(([name]) => `z-${name}`),
   "z-50",
   "z-1150",
@@ -180,12 +184,16 @@ const startsWithClass = (rule: Rule, name: string): boolean =>
     new RegExp(`^\\.${name}(?![\\w-])`).test(selector),
   );
 
+const isContrastGuard = (condition: AtRule): boolean =>
+  condition.name === "supports" &&
+  condition.params.includes("contrast-color(red)");
+
 // The guard stays nested under its rule or is hoisted around a copy of it, depending on the
 // optimizer, so the declarations are read from whichever node holds them.
 const contrastGuards = (root: Root, name: string): Container[] => {
   const guards: Container[] = [];
   root.walkAtRules("supports", (atRule) => {
-    if (!atRule.params.includes("contrast-color(red)")) return;
+    if (!isContrastGuard(atRule)) return;
     const nested = atRule.parent instanceof Rule;
     const owner = nested ? atRule.parent : atRule.first;
     if (owner instanceof Rule && owner.selector.startsWith(`.${name}:`)) {
@@ -298,10 +306,339 @@ const paintedBoxShadow = (root: Root, cascade: Container[]): string => {
   return resolveCustomProperties(boxShadow, properties);
 };
 
+interface StyledElement {
+  classes: readonly string[];
+  states: readonly string[];
+  parent?: StyledElement;
+}
+
+interface CascadeRule {
+  selectors: string[];
+  declarations: Map<string, string>;
+  needsContrastColor: boolean;
+}
+
+type ThemeName = "light" | "dark";
+
+const CLASS_SPECIFICITY = 1000;
+const COMPOUND_STRIDE = 2;
+const SRGB_LINEAR_THRESHOLD = 0.04045;
+const SRGB_LINEAR_SLOPE = 12.92;
+const SRGB_GAMMA_OFFSET = 0.055;
+const SRGB_GAMMA = 2.4;
+const LUMINANCE_WEIGHTS = [0.2126, 0.7152, 0.0722] as const;
+const CONTRAST_FLARE = 0.05;
+const MIN_TEXT_CONTRAST = 4.5;
+const MIN_GLYPH_CONTRAST = 3;
+const NESTING_OPENERS = new Set(["(", "["]);
+const NESTING_CLOSERS = new Set([")", "]"]);
+const LOGICAL_CORNERS = [
+  "border-start-start-radius",
+  "border-end-start-radius",
+  "border-start-end-radius",
+  "border-end-end-radius",
+];
+
+const splitSelectorList = (list: string): string[] => {
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let index = 0; index < list.length; index++) {
+    const character = list[index]!;
+    if (NESTING_OPENERS.has(character)) depth++;
+    if (NESTING_CLOSERS.has(character)) depth--;
+    if (character === "," && depth === 0) {
+      parts.push(list.slice(start, index).trim());
+      start = index + 1;
+    }
+  }
+  parts.push(list.slice(start).trim());
+  return parts;
+};
+
+const compoundsAndCombinators = (selector: string): string[] => {
+  const tokens: string[] = [];
+  let depth = 0;
+  let current = "";
+  let pendingCombinator: string | undefined;
+  for (const character of selector) {
+    if (depth === 0 && (character === " " || character === ">")) {
+      if (current) {
+        tokens.push(current);
+        current = "";
+        pendingCombinator ??= " ";
+      }
+      if (character === ">") pendingCombinator = ">";
+      continue;
+    }
+    if (pendingCombinator && tokens.length > 0) tokens.push(pendingCombinator);
+    pendingCombinator = undefined;
+    if (NESTING_OPENERS.has(character)) depth++;
+    if (NESTING_CLOSERS.has(character)) depth--;
+    current += character;
+  }
+  if (current) tokens.push(current);
+  return tokens;
+};
+
+const simpleSelectors = (compound: string): string[] => {
+  const parts: string[] = [];
+  let depth = 0;
+  let current = "";
+  for (const character of compound) {
+    const startsSimple =
+      character === "." || character === ":" || character === "[";
+    if (depth === 0 && startsSimple && current && current !== ":") {
+      parts.push(current);
+      current = "";
+    }
+    if (NESTING_OPENERS.has(character)) depth++;
+    if (NESTING_CLOSERS.has(character)) depth--;
+    current += character;
+  }
+  if (current) parts.push(current);
+  return parts;
+};
+
+const SELECTOR_LIST_PSEUDO = /^:(is|where|not)\((.*)\)$/;
+
+const matchesSimple = (simple: string, element: StyledElement): boolean => {
+  if (simple === "*") return true;
+  if (simple.startsWith(".")) return element.classes.includes(simple.slice(1));
+  const listPseudo = SELECTOR_LIST_PSEUDO.exec(simple);
+  if (listPseudo) {
+    const anyMatch = splitSelectorList(listPseudo[2]!).some((selector) =>
+      matchesSelector(selector, element),
+    );
+    return listPseudo[1] === "not" ? !anyMatch : anyMatch;
+  }
+  if (simple.startsWith(":")) return element.states.includes(simple.slice(1));
+  return element.states.includes(simple);
+};
+
+const matchesFrom = (
+  tokens: string[],
+  index: number,
+  element: StyledElement,
+): boolean => {
+  const matchesCompound = simpleSelectors(tokens[index]!).every((simple) =>
+    matchesSimple(simple, element),
+  );
+  if (!matchesCompound) return false;
+  if (index === 0) return true;
+  if (tokens[index - 1] === ">") {
+    return (
+      element.parent !== undefined &&
+      matchesFrom(tokens, index - COMPOUND_STRIDE, element.parent)
+    );
+  }
+  for (let ancestor = element.parent; ancestor; ancestor = ancestor.parent) {
+    if (matchesFrom(tokens, index - COMPOUND_STRIDE, ancestor)) return true;
+  }
+  return false;
+};
+
+const matchesSelector = (selector: string, element: StyledElement): boolean => {
+  const tokens = compoundsAndCombinators(selector);
+  return matchesFrom(tokens, tokens.length - 1, element);
+};
+
+const simpleSpecificity = (simple: string): number => {
+  if (simple === "*") return 0;
+  const listPseudo = SELECTOR_LIST_PSEUDO.exec(simple);
+  if (listPseudo?.[1] === "where") return 0;
+  if (listPseudo) {
+    return Math.max(...splitSelectorList(listPseudo[2]!).map(specificityOf));
+  }
+  return CLASS_SPECIFICITY;
+};
+
+const specificityOf = (selector: string): number =>
+  compoundsAndCombinators(selector)
+    .filter((token) => token !== ">" && token !== " ")
+    .flatMap(simpleSelectors)
+    .reduce((total, simple) => total + simpleSpecificity(simple), 0);
+
+const utilityCascade = (root: Root): CascadeRule[] => {
+  const cascade: CascadeRule[] = [];
+  root.walkAtRules("layer", (layer) => {
+    if (layer.params !== "utilities") return;
+    layer.walkRules((rule) => {
+      const conditions: AtRule[] = [];
+      let ancestor: Container | undefined = rule.parent;
+      while (ancestor && ancestor !== layer) {
+        if (ancestor instanceof AtRule) conditions.push(ancestor);
+        ancestor = ancestor.parent as Container | undefined;
+      }
+      if (!conditions.every(isContrastGuard)) return;
+      cascade.push({
+        selectors: rule.selectors,
+        declarations: declarationsOf(rule),
+        needsContrastColor: conditions.length > 0,
+      });
+    });
+  });
+  return cascade;
+};
+
+const cascadedDeclarations = (
+  cascade: CascadeRule[],
+  element: StyledElement,
+  hasContrastColor: boolean,
+): Map<string, string> => {
+  const matched = cascade.flatMap((rule) => {
+    if (rule.needsContrastColor && !hasContrastColor) return [];
+    const specificities = rule.selectors
+      .filter((selector) => matchesSelector(selector, element))
+      .map(specificityOf);
+    return specificities.length === 0
+      ? []
+      : [{ rule, specificity: Math.max(...specificities) }];
+  });
+  matched.sort((first, second) => first.specificity - second.specificity);
+
+  const style = new Map<string, string>();
+  for (const { rule } of matched) {
+    for (const [property, value] of rule.declarations) {
+      const longhands =
+        property === "border-radius" ? LOGICAL_CORNERS : [property];
+      for (const longhand of longhands) style.set(longhand, value);
+    }
+  }
+  return style;
+};
+
+const parseHex = (hex: string): [number, number, number] => {
+  const digits = /^#([\da-f]{3}|[\da-f]{6})$/i.exec(hex)?.[1];
+  if (!digits) throw new Error(`${hex} is not a hex color`);
+  const full =
+    digits.length === 3
+      ? [...digits].map((digit) => digit + digit).join("")
+      : digits;
+  return [0, 2, 4].map((offset) =>
+    Number.parseInt(full.slice(offset, offset + 2), 16),
+  ) as [number, number, number];
+};
+
+const relativeLuminance = (hex: string): number => {
+  const linear = parseHex(hex).map((channel) => {
+    const unit = channel / 255;
+    return unit <= SRGB_LINEAR_THRESHOLD
+      ? unit / SRGB_LINEAR_SLOPE
+      : ((unit + SRGB_GAMMA_OFFSET) / (1 + SRGB_GAMMA_OFFSET)) ** SRGB_GAMMA;
+  });
+  return linear.reduce(
+    (total, channel, index) => total + LUMINANCE_WEIGHTS[index]! * channel,
+    0,
+  );
+};
+
+const contrastRatio = (first: string, second: string): number => {
+  const luminances = [relativeLuminance(first), relativeLuminance(second)];
+  return (
+    (Math.max(...luminances) + CONTRAST_FLARE) /
+    (Math.min(...luminances) + CONTRAST_FLARE)
+  );
+};
+
+const CONTRAST_COLOR_FUNCTION = /^contrast-color\((#[\da-f]+)\)$/i;
+
+const paintedHex = (value: string): string => {
+  const contrastColor = CONTRAST_COLOR_FUNCTION.exec(value);
+  if (!contrastColor) return value;
+  const fill = contrastColor[1]!;
+  return contrastRatio("#fff", fill) >= contrastRatio("#000", fill)
+    ? "#fff"
+    : "#000";
+};
+
+interface PaintContext {
+  cascade: CascadeRule[];
+  theme: Map<string, string>;
+  hasContrastColor: boolean;
+}
+
+const themeProperties = (root: Root, theme: ThemeName): Map<string, string> =>
+  new Map([
+    ...themeRootDeclarations(root),
+    ...declarationsOf(onlyRule(root, ":root")),
+    ...(theme === "dark" ? declarationsOf(onlyRule(root, ".dark")) : []),
+  ]);
+
+const inheritedCustomProperties = (
+  context: PaintContext,
+  element: StyledElement,
+): Map<string, string> =>
+  new Map([
+    ...(element.parent
+      ? inheritedCustomProperties(context, element.parent)
+      : []),
+    ...[
+      ...cascadedDeclarations(
+        context.cascade,
+        element,
+        context.hasContrastColor,
+      ),
+    ].filter(([property]) => property.startsWith("--")),
+  ]);
+
+const paintedColor = (
+  context: PaintContext,
+  element: StyledElement,
+  property: "color" | "background-color" | "border-color",
+): string => {
+  const value = cascadedDeclarations(
+    context.cascade,
+    element,
+    context.hasContrastColor,
+  ).get(property);
+  const inherits = property === "color" && (value ?? "inherit") === "inherit";
+  if (inherits && element.parent) {
+    return paintedColor(context, element.parent, "color");
+  }
+  if (value === undefined) throw new Error(`no ${property} in the cascade`);
+  if (value.toLowerCase() === "currentcolor") {
+    return paintedColor(context, element, "color");
+  }
+  return paintedHex(
+    resolveCustomProperties(
+      value,
+      new Map([
+        ...context.theme,
+        ...inheritedCustomProperties(context, element),
+      ]),
+    ),
+  );
+};
+
+const element = (
+  classes: readonly string[],
+  parent?: StyledElement,
+): StyledElement => ({ classes, states: [], parent });
+
+const groupedRow = (
+  buttons: readonly {
+    classes: readonly string[];
+    states?: readonly string[];
+  }[],
+): StyledElement[] => {
+  const group = element(["button-group"]);
+  return buttons.map((button, index) => ({
+    classes: button.classes,
+    parent: group,
+    states: [
+      ...(button.states ?? []),
+      ...(index === 0 ? ["first-child"] : []),
+      ...(index === buttons.length - 1 ? ["last-child"] : []),
+    ],
+  }));
+};
+
 describe("theme stylesheets compiled through Tailwind", () => {
   let emitted: Root;
   let unoptimized: Root;
   let themeDefaults: Map<string, string>;
+  let cascade: CascadeRule[];
 
   beforeAll(async () => {
     const compiler = await compile(
@@ -311,6 +648,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     const built = compiler.build([...CANDIDATES]);
     emitted = postcss.parse(optimize(built).code);
     unoptimized = postcss.parse(built);
+    cascade = utilityCascade(emitted);
 
     themeDefaults = new Map();
     const source = postcss.parse(
@@ -580,6 +918,85 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(paddingIndex).toBeGreaterThan(buttonIndex);
   });
 
+  it.each(["file-tabs", "file-tab"])("emits .%s with no !important", (name) => {
+    const rules = rulesOf(emitted, (rule) => startsWithClass(rule, name));
+    expect(rules.length).toBeGreaterThan(0);
+    for (const rule of rules) {
+      rule.walkDecls((declaration) => {
+        expect(
+          declaration.important,
+          `${rule.selector} ${declaration.prop}`,
+        ).toBeFalsy();
+      });
+    }
+  });
+
+  it("emits .file-tab before .w-40 so a consumer width wins", () => {
+    const tabIndex = firstRuleIndex(emitted, "file-tab");
+    const widthIndex = firstRuleIndex(emitted, "w-40");
+    expect(tabIndex).toBeGreaterThanOrEqual(0);
+    expect(widthIndex).toBeGreaterThan(tabIndex);
+  });
+
+  it.each(
+    (["light", "dark"] as const).flatMap((theme) => [
+      [theme, "rest", []],
+      [theme, "hovered", ["hover"]],
+      [theme, "selected", ['[aria-selected="true"]']],
+      [theme, "disabled", ['[aria-disabled="true"]']],
+    ]) as [ThemeName, string, string[]][],
+  )(
+    "holds the %s theme .file-tab %s text at 4.5:1 on its fill",
+    (theme, state, states) => {
+      const strip = element(["file-tabs"]);
+      const tab: StyledElement = {
+        classes: ["file-tab"],
+        states,
+        parent: strip,
+      };
+      const context: PaintContext = {
+        cascade,
+        theme: themeProperties(emitted, theme),
+        hasContrastColor: true,
+      };
+      const fill =
+        state === "rest" || state === "disabled"
+          ? paintedColor(context, strip, "background-color")
+          : paintedColor(context, tab, "background-color");
+
+      expect(
+        contrastRatio(paintedColor(context, tab, "color"), fill),
+      ).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST);
+    },
+  );
+
+  it("insets the focus ring of an .icon-button inside a .file-tab and keeps it outset elsewhere", () => {
+    const tab = element(["file-tab"], element(["file-tabs"]));
+    const offset = (parent?: StyledElement) =>
+      cascadedDeclarations(
+        cascade,
+        { classes: ["icon-button"], states: ["focus-visible"], parent },
+        true,
+      ).get("outline-offset");
+
+    expect([offset(tab), offset()]).toStrictEqual(["-2px", "2px"]);
+  });
+
+  it("draws a transparent bottom border on the selected .file-tab and gray-3 on a rest one", () => {
+    const strip = element(["file-tabs"]);
+    const bottom = (states: string[]) =>
+      cascadedDeclarations(
+        cascade,
+        { classes: ["file-tab"], states, parent: strip },
+        true,
+      ).get("border-bottom-color");
+
+    expect([bottom(['[aria-selected="true"]']), bottom([])]).toStrictEqual([
+      "#0000",
+      "var(--color-gray-3)",
+    ]);
+  });
+
   it.each(BUTTON_COLORS)(
     "emits .%s after .button and .icon-button so the color wins",
     (name) => {
@@ -679,6 +1096,281 @@ describe("theme stylesheets compiled through Tailwind", () => {
     }
   });
 
+  it.each(BUTTON_COLORS)(
+    "paints a .kbd inside an enabled .%s in the button's label color",
+    (tone) => {
+      const kbd = element(["kbd"], element([], element(["button", tone])));
+
+      const style = cascadedDeclarations(cascade, kbd, true);
+
+      expect([style.get("color"), style.get("border-color")]).toStrictEqual([
+        "inherit",
+        "currentColor",
+      ]);
+    },
+  );
+
+  it.each([
+    ["outside a button", element([])],
+    ["in a plain button", element(["button"])],
+    [
+      "in an outline button",
+      element(["button", "button-danger", "button-outline"]),
+    ],
+    ["in a ghost button", element(["button", "button-dark", "button-ghost"])],
+    [
+      "in a disabled button",
+      { classes: ["button", "button-dark"], states: ["disabled"] },
+    ],
+    [
+      "in an aria-disabled button",
+      {
+        classes: ["button", "button-info"],
+        states: ['[aria-disabled="true"]'],
+      },
+    ],
+  ])("keeps the subtle .kbd text and medium border %s", (_, parent) => {
+    const kbd = element(["kbd"], parent);
+
+    const style = cascadedDeclarations(cascade, kbd, true);
+
+    expect([style.get("color"), style.get("border-color")]).toStrictEqual([
+      "var(--color-subtle-2)",
+      "var(--color-gray-4)",
+    ]);
+  });
+
+  it.each(BUTTON_COLORS)(
+    "holds a .kbd text and border inside an enabled .%s at 4.5:1 on the rest fill in both themes, with and without contrast-color",
+    (tone) => {
+      const button = element(["button", tone]);
+      const kbd = element(["kbd"], element([], button));
+
+      const ratios = Object.fromEntries(
+        (["light", "dark"] as const).flatMap((theme) =>
+          [true, false].flatMap((hasContrastColor) => {
+            const context: PaintContext = {
+              cascade,
+              theme: themeProperties(emitted, theme),
+              hasContrastColor,
+            };
+            const fill = paintedColor(context, button, "background-color");
+            const path = hasContrastColor ? "contrast-color" : "fallback";
+            return (["color", "border-color"] as const).map((property) => [
+              `${theme} ${path} ${property}`,
+              contrastRatio(paintedColor(context, kbd, property), fill),
+            ]);
+          }),
+        ),
+      );
+
+      expect(
+        Object.entries(ratios).filter(([, ratio]) => ratio < MIN_TEXT_CONTRAST),
+        JSON.stringify(ratios),
+      ).toStrictEqual([]);
+    },
+  );
+
+  it.each([
+    ["button-dark", "var(--color-white)"],
+    ["button-danger", "var(--color-white)"],
+    ["button-warning", "#000"],
+    ["button-success", "var(--color-white)"],
+    ["button-info", "var(--color-white)"],
+    ["button-pending", "var(--color-white)"],
+  ])(
+    "paints the enabled .%s label %s where contrast-color is unsupported",
+    (tone, label) => {
+      const button = element(["button", tone]);
+
+      const style = cascadedDeclarations(cascade, button, false);
+
+      expect(style.get("color")).toBe(label);
+    },
+  );
+
+  it.each(BANNER_VARIANTS)(
+    "holds the .banner-%s chip glyph at 3:1 on its chip in both themes",
+    (name) => {
+      const chip = element(
+        ["banner-chip"],
+        element(["banner", `banner-${name}`]),
+      );
+
+      const ratios = Object.fromEntries(
+        (["light", "dark"] as const).map((theme) => {
+          const context: PaintContext = {
+            cascade,
+            theme: themeProperties(emitted, theme),
+            hasContrastColor: true,
+          };
+          return [
+            theme,
+            contrastRatio(
+              paintedColor(context, chip, "color"),
+              paintedColor(context, chip, "background-color"),
+            ),
+          ];
+        }),
+      );
+
+      expect(
+        Object.entries(ratios).filter(
+          ([, ratio]) => ratio < MIN_GLYPH_CONTRAST,
+        ),
+        JSON.stringify(ratios),
+      ).toStrictEqual([]);
+    },
+  );
+
+  it("paints the .banner-warning chip glyph with the text-grade warning token in both themes", () => {
+    const chip = element(
+      ["banner-chip"],
+      element(["banner", "banner-warning"]),
+    );
+
+    const glyphs = (["light", "dark"] as const).map((theme) =>
+      paintedColor(
+        {
+          cascade,
+          theme: themeProperties(emitted, theme),
+          hasContrastColor: true,
+        },
+        chip,
+        "color",
+      ),
+    );
+
+    expect(glyphs).toStrictEqual(["#7a5a00", "#e0b84d"]);
+  });
+
+  it("fills .banner-progress from --banner-dark, not the glyph color", () => {
+    expect(
+      declared(emitted, ".banner-progress.progress > .progress-fill").get(
+        "background-color",
+      ),
+    ).toBe("var(--banner-dark)");
+  });
+
+  it.each([
+    ["plain", ["button"]],
+    ["tinted", ["button", "button-info", "button-outline"]],
+    ["filled", ["button", "button-danger"]],
+    ["ghost", ["button", "button-ghost"]],
+    ["compact", ["button", "button-compact"]],
+    ["extra-small", ["button", "button-xs"]],
+  ] as const)(
+    "joins a %s row of one, two, and three .button-group buttons with one shared border and rounded outer corners",
+    (_, classes) => {
+      const round = "var(--radius-sm)";
+      const square = "0";
+      const only = {
+        border: "1px",
+        overlap: "0",
+        corners: [round, round, round, round],
+      };
+      const first = {
+        border: "1px",
+        overlap: "0",
+        corners: [round, round, square, square],
+      };
+      const middle = {
+        border: "1px",
+        overlap: "-1px",
+        corners: [square, square, square, square],
+      };
+      const last = {
+        border: "1px",
+        overlap: "-1px",
+        corners: [square, square, round, round],
+      };
+
+      const shapes = [1, 2, 3].map((count) =>
+        groupedRow(Array.from({ length: count }, () => ({ classes }))).map(
+          (button) => {
+            const style = cascadedDeclarations(cascade, button, true);
+            return {
+              border: style.get("border-width"),
+              overlap: style.get("margin-inline-start") ?? "0",
+              corners: LOGICAL_CORNERS.map((corner) => style.get(corner)),
+            };
+          },
+        ),
+      );
+
+      expect(shapes).toStrictEqual([
+        [only],
+        [first, last],
+        [first, middle, last],
+      ]);
+    },
+  );
+
+  it.each([
+    [
+      "a disabled middle button below both neighbors",
+      ["disabled"],
+      [],
+      [1, 0, 1],
+    ],
+    [
+      "an aria-disabled middle button below both neighbors",
+      ['[aria-disabled="true"]'],
+      [],
+      [1, 0, 1],
+    ],
+    [
+      "a hovered disabled middle button below both neighbors",
+      ["disabled", "hover"],
+      [],
+      [1, 0, 1],
+    ],
+    ["a hovered middle button above both neighbors", ["hover"], [], [1, 2, 1]],
+    [
+      "a focused middle button above a hovered neighbor",
+      ["focus-visible"],
+      ["hover"],
+      [1, 3, 2],
+    ],
+    [
+      "a focused and hovered middle button above both neighbors",
+      ["focus-visible", "hover"],
+      [],
+      [1, 3, 1],
+    ],
+  ] as const)(
+    "stacks %s in a .button-group",
+    (_, middleStates, lastStates, layers) => {
+      const row = groupedRow([
+        { classes: ["button", "button-info", "button-outline"] },
+        {
+          classes: ["button", "button-info", "button-outline"],
+          states: middleStates,
+        },
+        {
+          classes: ["button", "button-info", "button-outline"],
+          states: lastStates,
+        },
+      ]);
+
+      const painted = row.map((button) =>
+        Number(cascadedDeclarations(cascade, button, true).get("z-index") ?? 0),
+      );
+
+      expect(painted).toStrictEqual(layers);
+    },
+  );
+
+  it("lays .button-group out inline in its own stacking context, without clipping a focus ring", () => {
+    const group = declared(emitted, ".button-group");
+
+    expect([
+      group.get("display"),
+      group.get("isolation"),
+      group.get("overflow"),
+    ]).toStrictEqual(["inline-flex", "isolate", undefined]);
+  });
+
   it("emits the progress-dots keyframes with 10 stops", () => {
     const keyframes: AtRule[] = [];
     emitted.walkAtRules("keyframes", (atRule) => {
@@ -724,7 +1416,9 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(compact.get("height")).toBe("calc(var(--spacing) * 7)");
     expect(compact.get("margin-right")).toBe("calc(var(--spacing) * 3)");
     expect(compact.get("background-color")).toBe("var(--banner-light)");
-    expect(compact.get("color")).toBe("var(--banner-dark)");
+    expect(compact.get("color")).toBe(
+      "var(--banner-glyph, var(--banner-dark))",
+    );
     expect(declared(emitted, ".banner-chip > svg").get("width")).toBe(
       "calc(var(--spacing) * 4)",
     );
