@@ -31,6 +31,7 @@ export { default as Hint } from './Hint/Hint.svelte';
 export { default as Checkbox } from './Checkbox/Checkbox.svelte';
 export { default as Switch } from './Switch/Switch.svelte';
 export { default as NumberInput } from './Input/NumberInput.svelte';
+export { default as FileInput } from './Input/FileInput.svelte';
 export { default as Textarea } from './Input/Textarea.svelte';
 
 export { Banner } from './Banner/banner.ts';

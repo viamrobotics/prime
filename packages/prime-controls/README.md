@@ -1,6 +1,6 @@
 # @viamrobotics/prime-controls
 
-Compact realtime controls for Svelte 5 tool panels: number fields, vectors, and sliders that step by keyboard and scrub by dragging, text fields, plus panels, folders, and tabs to group them.
+Compact realtime controls for Svelte 5 tool panels: number fields, vectors, and sliders that step by keyboard and scrub by dragging, text and file fields, plus panels, folders, and tabs to group them.
 
 > [!NOTE]
 > Under active development. The public API is unstable until 1.0.
@@ -66,6 +66,20 @@ Pass `state` (`'warn'` or `'error'`) to draw a `warning-dark` or `danger-dark` b
 ```
 
 A text input in the `NumberField` row layout, without scrub. The bound value is a string, and an empty field is `''`. It takes `hint` and `state` as `NumberField` does.
+
+### FileField
+
+```svelte
+<script lang="ts">
+	import { FileField } from '@viamrobotics/prime-controls';
+
+	let files = $state<File[]>([]);
+</script>
+
+<FileField label="Audio file" accept=".wav,.mp3" bind:value={files} />
+```
+
+A native file input in the `TextField` row layout. The bound value is a `File[]`, which holds at most one file without `multiple`, and a cleared field is `[]`. The chosen names truncate to the row and a clear button sits beside them. It takes `hint` and `state` as `NumberField` does.
 
 ### Point
 

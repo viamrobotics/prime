@@ -74,7 +74,70 @@ const SHIPPED_CLASSES = [
   "focus-ring-within",
   "text-display",
   "text-code",
+  "popover-panel",
+  "listbox-option",
+  "listbox-heading",
+  "input-button",
+  "date-field",
+  "date-segment",
+  "calendar-nav",
+  "calendar-weekday",
+  "calendar-day",
+  "calendar-day-range",
 ];
+const PANEL_CLASSES = SHIPPED_CLASSES.slice(
+  SHIPPED_CLASSES.indexOf("popover-panel"),
+);
+const POPOVER_PANEL_INLINE =
+  "rounded-sm border border-light bg-white shadow-popover".split(" ");
+const LISTBOX_OPTION_INLINE =
+  "flex cursor-pointer items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm text-default outline-none select-none data-disabled:cursor-not-allowed data-disabled:text-disabled-dark data-highlighted:bg-light".split(
+    " ",
+  );
+const LISTBOX_HEADING_INLINE =
+  "px-2 py-1.5 text-xs font-medium text-subtle-2".split(" ");
+const INPUT_BUTTON_INLINE =
+  "inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-subtle-2 focus-ring transition-colors hover:text-default disabled:cursor-not-allowed disabled:text-disabled-dark".split(
+    " ",
+  );
+const DATE_FIELD_INLINE =
+  "inline-flex input items-center gap-1 focus-ring-within data-[state=open]:border-gray-9".split(
+    " ",
+  );
+const DATE_SEGMENT_LITERAL_INLINE =
+  "rounded-sm tabular-nums outline-none aria-[valuetext=Empty]:text-subtle-2".split(
+    " ",
+  );
+const DATE_SEGMENT_INLINE = [
+  ...DATE_SEGMENT_LITERAL_INLINE,
+  "px-0.5",
+  "focus:bg-medium",
+];
+const CALENDAR_NAV_INLINE =
+  "inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring hover:bg-light hover:text-default data-disabled:cursor-not-allowed data-disabled:text-disabled-dark".split(
+    " ",
+  );
+const CALENDAR_WEEKDAY_INLINE =
+  "w-8 pb-1 text-xs font-normal text-subtle-2".split(" ");
+const CALENDAR_DAY_INLINE =
+  "inline-flex size-8 cursor-pointer items-center justify-center rounded-sm focus-ring not-data-disabled:not-data-selected:hover:bg-light data-today:font-semibold not-data-selected:data-today:text-heading data-outside-month:text-subtle-2 data-selected:bg-gray-9 data-selected:text-white data-disabled:cursor-not-allowed data-disabled:text-disabled-dark data-unavailable:line-through".split(
+    " ",
+  );
+const CALENDAR_RANGE_DAY_INLINE =
+  "inline-flex size-8 cursor-pointer items-center justify-center rounded-sm focus-ring not-data-disabled:not-data-selected:hover:bg-light data-today:font-semibold not-data-selected:data-today:text-heading data-outside-month:text-subtle-2 not-data-selection-start:not-data-selection-end:data-selected:bg-light not-data-selection-start:not-data-selection-end:data-highlighted:bg-light data-selection-start:bg-gray-9 data-selection-start:text-white data-selection-end:bg-gray-9 data-selection-end:text-white data-disabled:cursor-not-allowed data-disabled:text-disabled-dark data-unavailable:line-through".split(
+    " ",
+  );
+const PANEL_CONSUMER_OVERRIDES = [
+  ["popover-panel", "rounded-md"],
+  ["listbox-option", "px-4"],
+  ["listbox-heading", "px-4"],
+  ["input-button", "size-8"],
+  ["date-field", "gap-2"],
+  ["date-segment", "px-1"],
+  ["calendar-nav", "size-8"],
+  ["calendar-weekday", "w-40"],
+  ["calendar-day", "size-9"],
+] as const;
 const BUTTON_COLORS = [
   "button-dark",
   "button-danger",
@@ -136,6 +199,18 @@ const CANDIDATES = [
   "shadow-popover/50",
   "shadow-red-500",
   "shadow-color-popover",
+  "text-default",
+  ...POPOVER_PANEL_INLINE,
+  ...LISTBOX_OPTION_INLINE,
+  ...LISTBOX_HEADING_INLINE,
+  ...INPUT_BUTTON_INLINE,
+  ...DATE_FIELD_INLINE,
+  ...DATE_SEGMENT_INLINE,
+  ...CALENDAR_NAV_INLINE,
+  ...CALENDAR_WEEKDAY_INLINE,
+  ...CALENDAR_DAY_INLINE,
+  ...CALENDAR_RANGE_DAY_INLINE,
+  ...PANEL_CONSUMER_OVERRIDES.map(([, consumer]) => consumer),
   ...SHIPPED_CLASSES,
 ];
 
@@ -363,7 +438,13 @@ const compoundsAndCombinators = (selector: string): string[] => {
   let depth = 0;
   let current = "";
   let pendingCombinator: string | undefined;
+  let isEscaped = false;
   for (const character of selector) {
+    if (isEscaped || character === "\\") {
+      isEscaped = !isEscaped;
+      current += character;
+      continue;
+    }
     if (depth === 0 && (character === " " || character === ">")) {
       if (current) {
         tokens.push(current);
@@ -387,7 +468,13 @@ const simpleSelectors = (compound: string): string[] => {
   const parts: string[] = [];
   let depth = 0;
   let current = "";
+  let isEscaped = false;
   for (const character of compound) {
+    if (isEscaped || character === "\\") {
+      isEscaped = !isEscaped;
+      current += character;
+      continue;
+    }
     const startsSimple =
       character === "." || character === ":" || character === "[";
     if (depth === 0 && startsSimple && current && current !== ":") {
@@ -404,10 +491,16 @@ const simpleSelectors = (compound: string): string[] => {
 
 const OUTLINE_WIDTH_AND_STYLE = /^\d+px solid /;
 const SELECTOR_LIST_PSEUDO = /^:(is|where|not)\((.*)\)$/;
+const RELATIONAL_PSEUDO = /^:(has)\((.*)\)$/;
+const TYPE_OR_PSEUDO_ELEMENT = /^([a-z]|::)/i;
+const TYPE_SPECIFICITY = 1;
+const ESCAPE = /\\(.)/g;
 
 const matchesSimple = (simple: string, element: StyledElement): boolean => {
   if (simple === "*") return true;
-  if (simple.startsWith(".")) return element.classes.includes(simple.slice(1));
+  if (simple.startsWith(".")) {
+    return element.classes.includes(simple.slice(1).replaceAll(ESCAPE, "$1"));
+  }
   const listPseudo = SELECTOR_LIST_PSEUDO.exec(simple);
   if (listPseudo) {
     const anyMatch = splitSelectorList(listPseudo[2]!).some((selector) =>
@@ -448,11 +541,13 @@ const matchesSelector = (selector: string, element: StyledElement): boolean => {
 
 const simpleSpecificity = (simple: string): number => {
   if (simple === "*") return 0;
-  const listPseudo = SELECTOR_LIST_PSEUDO.exec(simple);
+  const listPseudo =
+    SELECTOR_LIST_PSEUDO.exec(simple) ?? RELATIONAL_PSEUDO.exec(simple);
   if (listPseudo?.[1] === "where") return 0;
   if (listPseudo) {
     return Math.max(...splitSelectorList(listPseudo[2]!).map(specificityOf));
   }
+  if (TYPE_OR_PSEUDO_ELEMENT.test(simple)) return TYPE_SPECIFICITY;
   return CLASS_SPECIFICITY;
 };
 
@@ -462,7 +557,16 @@ const specificityOf = (selector: string): number =>
     .flatMap(simpleSelectors)
     .reduce((total, simple) => total + simpleSpecificity(simple), 0);
 
-const utilityCascade = (root: Root): CascadeRule[] => {
+const isHoverMedia = (condition: AtRule): boolean =>
+  condition.name === "media" && condition.params === "(hover: hover)";
+
+const isContrastGuardOrHoverMedia = (condition: AtRule): boolean =>
+  isContrastGuard(condition) || isHoverMedia(condition);
+
+const utilityCascade = (
+  root: Root,
+  admits: (condition: AtRule) => boolean,
+): CascadeRule[] => {
   const cascade: CascadeRule[] = [];
   root.walkAtRules("layer", (layer) => {
     if (layer.params !== "utilities") return;
@@ -473,11 +577,11 @@ const utilityCascade = (root: Root): CascadeRule[] => {
         if (ancestor instanceof AtRule) conditions.push(ancestor);
         ancestor = ancestor.parent as Container | undefined;
       }
-      if (!conditions.every(isContrastGuard)) return;
+      if (!conditions.every(admits)) return;
       cascade.push({
         selectors: rule.selectors,
         declarations: declarationsOf(rule),
-        needsContrastColor: conditions.length > 0,
+        needsContrastColor: conditions.some(isContrastGuard),
       });
     });
   });
@@ -637,11 +741,216 @@ const groupedRow = (
   }));
 };
 
+const subsetsOf = (states: readonly string[]): string[][] =>
+  states.reduce<string[][]>(
+    (subsets, state) => [
+      ...subsets,
+      ...subsets.map((subset) => [...subset, state]),
+    ],
+    [[]],
+  );
+
+const PAINTED_PROPERTIES = [
+  "color",
+  "background-color",
+  "border-color",
+] as const;
+const DECLARED_PROPERTIES = [
+  "font-weight",
+  "text-decoration-line",
+  "cursor",
+  "padding-inline",
+  "--tw-shadow",
+] as const;
+
+const paintedOrNone = (
+  context: PaintContext,
+  styled: StyledElement,
+  property: (typeof PAINTED_PROPERTIES)[number],
+): string =>
+  property === "color" ||
+  cascadedDeclarations(context.cascade, styled, true).has(property)
+    ? paintedColor(context, styled, property)
+    : "none";
+
+const paintedStyle = (
+  context: PaintContext,
+  styled: StyledElement,
+): Record<string, string> => {
+  const declarations = cascadedDeclarations(context.cascade, styled, true);
+  const properties = new Map([
+    ...context.theme,
+    ...inheritedCustomProperties(context, styled),
+  ]);
+  return Object.fromEntries([
+    ...PAINTED_PROPERTIES.map((property) => [
+      property,
+      paintedOrNone(context, styled, property),
+    ]),
+    ...DECLARED_PROPERTIES.map((property) => {
+      const value = declarations.get(property);
+      return [
+        property,
+        value === undefined
+          ? "none"
+          : resolveCustomProperties(value, properties),
+      ];
+    }),
+  ]);
+};
+
+const rulesNaming = (
+  cascade: CascadeRule[],
+  classes: readonly string[],
+): CascadeRule[] =>
+  cascade.filter((rule) =>
+    rule.selectors.some((selector) => {
+      const unescaped = selector.replaceAll(ESCAPE, "$1");
+      return classes.some((name) => unescaped.includes(`.${name}`));
+    }),
+  );
+
+const fillBehind = (context: PaintContext, styled: StyledElement): string => {
+  if (
+    cascadedDeclarations(context.cascade, styled, true).has("background-color")
+  ) {
+    return paintedColor(context, styled, "background-color");
+  }
+  if (!styled.parent) throw new Error("no fill behind the element");
+  return fillBehind(context, styled.parent);
+};
+
+interface InlineEquivalence {
+  name: string;
+  classes: readonly string[];
+  inline: readonly string[];
+  fixedStates: readonly string[];
+  states: readonly string[];
+  isReachable: (states: readonly string[]) => boolean;
+}
+
+const EVERY_COMBINATION = () => true;
+const SELECTION_END_STATES = ["[data-selection-start]", "[data-selection-end]"];
+const endsAreSelected = (states: readonly string[]) =>
+  states.includes("[data-selected]") ||
+  !SELECTION_END_STATES.some((state) => states.includes(state));
+const CALENDAR_DAY_STATES = [
+  "[data-today]",
+  "[data-outside-month]",
+  "[data-selected]",
+  "[data-disabled]",
+  "[data-unavailable]",
+  "hover",
+];
+
+const INLINE_EQUIVALENCES: InlineEquivalence[] = [
+  {
+    name: "popover-panel",
+    classes: ["popover-panel"],
+    inline: POPOVER_PANEL_INLINE,
+    fixedStates: [],
+    states: [],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "listbox-option",
+    classes: ["listbox-option"],
+    inline: LISTBOX_OPTION_INLINE,
+    fixedStates: [],
+    states: ["[data-highlighted]", "[data-disabled]"],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "listbox-heading",
+    classes: ["listbox-heading"],
+    inline: LISTBOX_HEADING_INLINE,
+    fixedStates: [],
+    states: [],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "input-button",
+    classes: ["input-button"],
+    inline: INPUT_BUTTON_INLINE,
+    fixedStates: [],
+    states: ["hover", "disabled"],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "date-field on an input frame",
+    classes: ["input", "date-field"],
+    inline: DATE_FIELD_INLINE,
+    fixedStates: [],
+    states: [
+      '[data-state="open"]',
+      "hover",
+      '[aria-invalid="true"]',
+      '[data-field-state="warn"]',
+      "[data-readonly]",
+      "[data-disabled]",
+    ],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "date-segment for a literal",
+    classes: ["date-segment"],
+    inline: DATE_SEGMENT_LITERAL_INLINE,
+    fixedStates: ['[data-segment="literal"]'],
+    states: ['[aria-valuetext="Empty"]', "focus"],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "date-segment for a value",
+    classes: ["date-segment"],
+    inline: DATE_SEGMENT_INLINE,
+    fixedStates: ['[data-segment="month"]'],
+    states: ['[aria-valuetext="Empty"]', "focus"],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "calendar-nav",
+    classes: ["calendar-nav"],
+    inline: CALENDAR_NAV_INLINE,
+    fixedStates: [],
+    states: ["hover", "[data-disabled]"],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "calendar-weekday",
+    classes: ["calendar-weekday"],
+    inline: CALENDAR_WEEKDAY_INLINE,
+    fixedStates: [],
+    states: [],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "calendar-day",
+    classes: ["calendar-day"],
+    inline: CALENDAR_DAY_INLINE,
+    fixedStates: [],
+    states: CALENDAR_DAY_STATES,
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "calendar-day with calendar-day-range",
+    classes: ["calendar-day", "calendar-day-range"],
+    inline: CALENDAR_RANGE_DAY_INLINE,
+    fixedStates: [],
+    states: [
+      ...CALENDAR_DAY_STATES,
+      ...SELECTION_END_STATES,
+      "[data-highlighted]",
+    ],
+    isReachable: endsAreSelected,
+  },
+];
+
 describe("theme stylesheets compiled through Tailwind", () => {
   let emitted: Root;
   let unoptimized: Root;
   let themeDefaults: Map<string, string>;
   let cascade: CascadeRule[];
+  let pointerCascade: CascadeRule[];
 
   beforeAll(async () => {
     const compiler = await compile(
@@ -651,7 +960,8 @@ describe("theme stylesheets compiled through Tailwind", () => {
     const built = compiler.build([...CANDIDATES]);
     emitted = postcss.parse(optimize(built).code);
     unoptimized = postcss.parse(built);
-    cascade = utilityCascade(emitted);
+    cascade = utilityCascade(emitted, isContrastGuard);
+    pointerCascade = utilityCascade(emitted, isContrastGuardOrHoverMedia);
 
     themeDefaults = new Map();
     const source = postcss.parse(
@@ -921,18 +1231,21 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(paddingIndex).toBeGreaterThan(buttonIndex);
   });
 
-  it.each(["file-tabs", "file-tab"])("emits .%s with no !important", (name) => {
-    const rules = rulesOf(emitted, (rule) => startsWithClass(rule, name));
-    expect(rules.length).toBeGreaterThan(0);
-    for (const rule of rules) {
-      rule.walkDecls((declaration) => {
-        expect(
-          declaration.important,
-          `${rule.selector} ${declaration.prop}`,
-        ).toBeFalsy();
-      });
-    }
-  });
+  it.each(["file-tabs", "file-tab", ...PANEL_CLASSES])(
+    "emits .%s with no !important",
+    (name) => {
+      const rules = rulesOf(emitted, (rule) => startsWithClass(rule, name));
+      expect(rules.length).toBeGreaterThan(0);
+      for (const rule of rules) {
+        rule.walkDecls((declaration) => {
+          expect(
+            declaration.important,
+            `${rule.selector} ${declaration.prop}`,
+          ).toBeFalsy();
+        });
+      }
+    },
+  );
 
   it("emits .file-tab before .w-40 so a consumer width wins", () => {
     const tabIndex = firstRuleIndex(emitted, "file-tab");
@@ -1087,6 +1400,98 @@ describe("theme stylesheets compiled through Tailwind", () => {
       "var(--color-gray-3)",
     ]);
   });
+
+  it.each(PANEL_CONSUMER_OVERRIDES)(
+    "emits .%s before .%s so a consumer utility wins",
+    (name, consumer) => {
+      const classIndex = firstRuleIndex(emitted, name);
+      const consumerIndex = firstRuleIndex(emitted, consumer);
+      expect(classIndex).toBeGreaterThanOrEqual(0);
+      expect(consumerIndex).toBeGreaterThan(classIndex);
+    },
+  );
+
+  it.each(
+    INLINE_EQUIVALENCES.flatMap((equivalence) =>
+      (["light", "dark"] as const).map(
+        (theme) => [equivalence.name, theme, equivalence] as const,
+      ),
+    ),
+  )(
+    "paints %s like the inline list it replaces, in every state, in the %s theme",
+    (_name, theme, equivalence) => {
+      const parent = element(["text-default"]);
+      const context: PaintContext = {
+        cascade: rulesNaming(pointerCascade, [
+          ...equivalence.classes,
+          ...equivalence.inline,
+          ...parent.classes,
+        ]),
+        theme: themeProperties(emitted, theme),
+        hasContrastColor: true,
+      };
+      const combinations = subsetsOf(equivalence.states)
+        .filter(equivalence.isReachable)
+        .map((states) => [...equivalence.fixedStates, ...states]);
+
+      const mismatches = combinations.flatMap((states) => {
+        const painted = paintedStyle(context, {
+          classes: equivalence.classes,
+          states,
+          parent,
+        });
+        const inline = paintedStyle(context, {
+          classes: equivalence.inline,
+          states,
+          parent,
+        });
+        return JSON.stringify(painted) === JSON.stringify(inline)
+          ? []
+          : [{ states, painted, inline }];
+      });
+
+      expect(mismatches).toStrictEqual([]);
+    },
+  );
+
+  it.each(
+    (["light", "dark"] as const).flatMap((theme) => [
+      [theme, ".listbox-option", ["listbox-option"], []],
+      [
+        theme,
+        "highlighted .listbox-option",
+        ["listbox-option"],
+        ["[data-highlighted]"],
+      ],
+      [theme, ".listbox-heading", ["listbox-heading"], []],
+      [theme, ".calendar-weekday", ["calendar-weekday"], []],
+      [
+        theme,
+        "outside-month .calendar-day",
+        ["calendar-day"],
+        ["[data-outside-month]"],
+      ],
+      [theme, "selected .calendar-day", ["calendar-day"], ["[data-selected]"]],
+    ]) as [ThemeName, string, string[], string[]][],
+  )(
+    "holds the %s theme %s text at 4.5:1 on its fill",
+    (theme, _name, classes, states) => {
+      const context: PaintContext = {
+        cascade: pointerCascade,
+        theme: themeProperties(emitted, theme),
+        hasContrastColor: true,
+      };
+      const panel = element(["popover-panel"], element(["text-default"]));
+      const styled: StyledElement = { classes, states, parent: panel };
+
+      expect(
+        contrastRatio(
+          paintedColor(context, styled, "color"),
+          fillBehind(context, styled),
+        ),
+      ).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST);
+    },
+  );
 
   it.each(BUTTON_COLORS)(
     "emits .%s after .button and .icon-button so the color wins",

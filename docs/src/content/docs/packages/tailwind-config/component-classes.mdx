@@ -611,6 +611,280 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
   markup can set it directly.
 </Aside>
 
+## listbox
+
+`popover-panel` is the frame of a floating panel: a light border, a white fill, and the popover shadow. Inside it, `listbox-option` is one choice and `listbox-heading` labels a group of options. An option reads `data-highlighted` for the keyboard or pointer cursor and `data-disabled` for a choice that cannot be picked.
+
+<div class="not-content rounded-sm border border-light p-4">
+  <div class="popover-panel w-56 p-1" role="listbox" aria-label="Fruit" aria-readonly="true">
+    <div role="group" aria-labelledby="fruit-heading">
+      <div id="fruit-heading" class="listbox-heading">Fruit</div>
+      <div class="listbox-option" role="option" aria-selected="false">Apple</div>
+      <div
+        class="listbox-option"
+        role="option"
+        aria-selected="false"
+        data-highlighted
+      >
+        Banana
+      </div>
+      <div
+        class="listbox-option"
+        role="option"
+        aria-selected="false"
+        aria-disabled="true"
+        data-disabled
+      >
+        Cherry
+      </div>
+    </div>
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="popover-panel p-1" role="listbox" aria-label="Fruit" aria-readonly="true">
+  <div role="group" aria-labelledby="fruit-heading">
+    <div id="fruit-heading" class="listbox-heading">Fruit</div>
+    <div class="listbox-option" role="option" aria-selected="false">Apple</div>
+    <div class="listbox-option" role="option" aria-selected="false" data-highlighted>Banana</div>
+    <div class="listbox-option" role="option" aria-selected="false" aria-disabled="true" data-disabled>Cherry</div>
+  </div>
+</div>`}
+/>
+
+| State       | Attribute            | What changes                              |
+| ----------- | -------------------- | ----------------------------------------- |
+| Highlighted | `[data-highlighted]` | A light background.                       |
+| Disabled    | `[data-disabled]`    | Disabled text and a `not-allowed` cursor. |
+
+## date field
+
+A segmented date entry. `date-field` is worn beside `input` on the frame, and each `date-segment` inside it is one part of the date. The frame rings while a segment has focus and takes a dark border while its picker is open, which beats the `input` hover border. The `input` invalid, warning, read only, and disabled borders beat the open border. An `input-button` inside the frame is a square icon button that darkens on hover.
+
+A segment whose `aria-valuetext` is `Empty` shows placeholder text. A segment that is not `data-segment="literal"` takes a small inline padding and a medium fill on focus, so a literal separator stays plain.
+
+<div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
+  <div class="input date-field" role="group" aria-label="Empty date">
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="month"
+      aria-valuemin="1"
+      aria-valuemax="12"
+      aria-valuetext="Empty">mm</span
+    >
+    <span class="date-segment" data-segment="literal" aria-hidden="true">/</span>
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="day"
+      aria-valuemin="1"
+      aria-valuemax="31"
+      aria-valuetext="Empty">dd</span
+    >
+    <span class="date-segment" data-segment="literal" aria-hidden="true">/</span>
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="year"
+      aria-valuemin="1"
+      aria-valuemax="9999"
+      aria-valuetext="Empty">yyyy</span
+    >
+  </div>
+  <div class="input date-field" role="group" aria-label="Filled date">
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="month"
+      aria-valuemin="1"
+      aria-valuemax="12"
+      aria-valuenow="3">03</span
+    >
+    <span class="date-segment" data-segment="literal" aria-hidden="true">/</span>
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="day"
+      aria-valuemin="1"
+      aria-valuemax="31"
+      aria-valuenow="14">14</span
+    >
+    <span class="date-segment" data-segment="literal" aria-hidden="true">/</span>
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="year"
+      aria-valuemin="1"
+      aria-valuemax="9999"
+      aria-valuenow="2026">2026</span
+    >
+    <button type="button" class="input-button" aria-label="Open calendar">
+      <svg
+        aria-hidden="true"
+        class="size-4"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+      >
+        <rect x="2.5" y="3.5" width="11" height="10" rx="1" />
+        <path d="M2.5 6.5h11M5.5 2v3M10.5 2v3" />
+      </svg>
+    </button>
+  </div>
+  <div
+    class="input date-field"
+    role="group"
+    aria-label="Open date"
+    data-state="open"
+  >
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="month"
+      aria-valuemin="1"
+      aria-valuemax="12"
+      aria-valuenow="3">03</span
+    >
+    <span class="date-segment" data-segment="literal" aria-hidden="true">/</span>
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="day"
+      aria-valuemin="1"
+      aria-valuemax="31"
+      aria-valuenow="14">14</span
+    >
+    <span class="date-segment" data-segment="literal" aria-hidden="true">/</span>
+    <span
+      class="date-segment"
+      role="spinbutton"
+      aria-label="year"
+      aria-valuemin="1"
+      aria-valuemax="9999"
+      aria-valuenow="2026">2026</span
+    >
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="input date-field" role="group" aria-label="Date" data-state="open">
+  <span class="date-segment" role="spinbutton" aria-label="month"
+    aria-valuemin="1" aria-valuemax="12" aria-valuetext="Empty">mm</span>
+  <span class="date-segment" data-segment="literal" aria-hidden="true">/</span>
+  <span class="date-segment" role="spinbutton" aria-label="day"
+    aria-valuemin="1" aria-valuemax="31" aria-valuenow="14">14</span>
+  <button type="button" class="input-button" aria-label="Open calendar">...</button>
+</div>`}
+/>
+
+| State           | Attribute                                    | What changes                              |
+| --------------- | -------------------------------------------- | ----------------------------------------- |
+| Empty segment   | `[aria-valuetext="Empty"]`                   | Subtle placeholder text.                  |
+| Focused segment | `:focus` on a segment that is not `literal`  | A medium background.                      |
+| Open            | `[data-state="open"]`                        | A `gray-9` border, also on hover.         |
+| Frame focus     | `:focus-visible` on a child                  | The focus ring.                           |
+| Button hover    | `:hover` on `input-button`                   | Default text color.                       |
+| Button disabled | `:disabled` on `input-button`                | Disabled text and a `not-allowed` cursor. |
+
+## calendar
+
+The parts of a month grid. `calendar-nav` is a previous or next month button, `calendar-weekday` heads a weekday column, and `calendar-day` is one day. Today is semibold, an outside-month day is subtle, and an unavailable day is struck through. A selected day fills `gray-9` under white text, which beats every other text color. On an unselected day, today's color beats outside-month, which beats disabled.
+
+<div class="not-content rounded-sm border border-light p-4">
+  <div class="mb-2 flex items-center justify-between">
+    <button type="button" class="calendar-nav" aria-label="Previous month">
+      <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5" /></svg>
+    </button>
+    <button type="button" class="calendar-nav" aria-label="Next month" aria-disabled="true" data-disabled>
+      <svg aria-hidden="true" class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" /></svg>
+    </button>
+  </div>
+  <table aria-label="March 2026">
+    <thead>
+      <tr>
+        <th class="calendar-weekday" scope="col">Su</th>
+        <th class="calendar-weekday" scope="col">Mo</th>
+        <th class="calendar-weekday" scope="col">Tu</th>
+        <th class="calendar-weekday" scope="col">We</th>
+        <th class="calendar-weekday" scope="col">Th</th>
+        <th class="calendar-weekday" scope="col">Fr</th>
+        <th class="calendar-weekday" scope="col">Sa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><button type="button" class="calendar-day" data-outside-month>30</button></td>
+        <td><button type="button" class="calendar-day">1</button></td>
+        <td><button type="button" class="calendar-day" data-today aria-current="date">2</button></td>
+        <td><button type="button" class="calendar-day" data-selected aria-pressed="true">3</button></td>
+        <td><button type="button" class="calendar-day" data-disabled aria-disabled="true">4</button></td>
+        <td><button type="button" class="calendar-day" data-unavailable aria-disabled="true">5</button></td>
+        <td><button type="button" class="calendar-day">6</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<Code
+  lang="html"
+  code={`<button type="button" class="calendar-nav" aria-label="Previous month">...</button>
+<button type="button" class="calendar-nav" aria-label="Next month" aria-disabled="true" data-disabled>...</button>
+
+<table aria-label="March 2026">
+  <thead>
+    <tr><th class="calendar-weekday" scope="col">Su</th>...</tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><button type="button" class="calendar-day" data-outside-month>30</button></td>
+      <td><button type="button" class="calendar-day" data-today aria-current="date">2</button></td>
+      <td><button type="button" class="calendar-day" data-selected aria-pressed="true">3</button></td>
+      <td><button type="button" class="calendar-day" data-disabled aria-disabled="true">4</button></td>
+      <td><button type="button" class="calendar-day" data-unavailable aria-disabled="true">5</button></td>
+    </tr>
+  </tbody>
+</table>`}
+/>
+
+`calendar-day-range` is worn with `calendar-day` in a range calendar and replaces its selected fill. The two ends fill `gray-9` under white text. A selected or highlighted day between them takes a light fill and keeps its text color.
+
+<div class="not-content rounded-sm border border-light p-4">
+  <table aria-label="March 2026">
+    <tbody>
+      <tr>
+        <td><button type="button" class="calendar-day calendar-day-range" data-selected aria-pressed="true" data-selection-start>10</button></td>
+        <td><button type="button" class="calendar-day calendar-day-range" data-selected aria-pressed="true">11</button></td>
+        <td><button type="button" class="calendar-day calendar-day-range" data-highlighted>12</button></td>
+        <td><button type="button" class="calendar-day calendar-day-range" data-selected aria-pressed="true" data-selection-end>13</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<Code
+  lang="html"
+  code={`<button type="button" class="calendar-day calendar-day-range" data-selected aria-pressed="true" data-selection-start>10</button>
+<button type="button" class="calendar-day calendar-day-range" data-selected aria-pressed="true">11</button>
+<button type="button" class="calendar-day calendar-day-range" data-highlighted>12</button>
+<button type="button" class="calendar-day calendar-day-range" data-selected aria-pressed="true" data-selection-end>13</button>`}
+/>
+
+| State         | Attribute                                        | What changes                                 |
+| ------------- | ------------------------------------------------ | -------------------------------------------- |
+| Hover         | `:hover` on an enabled, unselected day           | A light background.                          |
+| Today         | `[data-today]`                                   | Semibold, and heading color when unselected. |
+| Outside month | `[data-outside-month]`                           | Subtle text.                                 |
+| Selected      | `[data-selected]`                                | A `gray-9` fill under white text.            |
+| Disabled      | `[data-disabled]`                                | Disabled text and a `not-allowed` cursor.    |
+| Unavailable   | `[data-unavailable]`                             | A line through the text.                     |
+| Range ends    | `[data-selection-start]`, `[data-selection-end]` | A `gray-9` fill under white text.            |
+| Range middle  | `[data-selected]` or `[data-highlighted]`        | A light fill, text color kept.               |
+| Nav disabled  | `[data-disabled]` on `calendar-nav`              | Disabled text and a `not-allowed` cursor.    |
+
 ## switch tones
 
 `switch-info`, `switch-success`, `switch-warning`, and `switch-danger` set `--switch-on`, the track color a prime-ui [`Switch`](../../prime-ui/components/switch/) paints while it is on. They style nothing by themselves. Each sample below is a track painted with the property its class sets.

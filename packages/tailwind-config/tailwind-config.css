@@ -699,6 +699,151 @@
   }
 }
 
+/* The frame of a floating panel: a light border, a white fill, and the popover shadow. Reads nothing. */
+@utility popover-panel {
+  @apply rounded-sm border border-light bg-white shadow-popover;
+}
+
+/*
+ * The rows of a listbox. `listbox-option` is one choice. It reads `[data-highlighted]` for a
+ * light fill and `[data-disabled]` for disabled text. `listbox-heading` labels a group of
+ * options and reads nothing.
+ */
+@utility listbox-option {
+  @apply flex cursor-pointer items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm text-default outline-none select-none;
+
+  &[data-disabled] {
+    @apply cursor-not-allowed text-disabled-dark;
+  }
+  &[data-highlighted] {
+    @apply bg-light;
+  }
+}
+
+@utility listbox-heading {
+  @apply px-2 py-1.5 text-xs font-medium text-subtle-2;
+}
+
+/* A square icon button inside an `input` frame. Reads `:hover` and `:disabled`. Disabled text beats hover. */
+@utility input-button {
+  @apply inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring;
+
+  @variant hover {
+    @apply text-default;
+  }
+  &:disabled {
+    @apply cursor-not-allowed text-disabled-dark;
+  }
+}
+
+/*
+ * A segmented date entry. `date-field` is worn beside `input` on the frame. It lays its children
+ * in a row, rings the frame while a child has focus, and reads `[data-state="open"]` for a
+ * `gray-9` border, which beats the `input` hover border. The `input` frame's invalid, warn,
+ * readonly, and disabled borders beat it. `date-segment` is one segment. It reads
+ * `[aria-valuetext="Empty"]` for placeholder text, and a segment whose `[data-segment]` is not
+ * `literal` takes inline padding and a fill on `:focus`.
+ */
+@utility date-field {
+  @apply inline-flex items-center gap-1 focus-ring-within;
+
+  &[data-state="open"],
+  &[data-state="open"]:hover:where(
+      :not(
+        [aria-invalid="true"],
+        [data-field-state="warn"],
+        [readonly],
+        [data-readonly],
+        :disabled,
+        [data-disabled]
+      )
+    ) {
+    @apply border-gray-9;
+  }
+}
+
+@utility date-segment {
+  @apply rounded-sm tabular-nums outline-none;
+
+  &[aria-valuetext="Empty"] {
+    @apply text-subtle-2;
+  }
+  &:not([data-segment="literal"]) {
+    @apply px-0.5;
+  }
+  &:not([data-segment="literal"]):focus {
+    @apply bg-medium;
+  }
+}
+
+/*
+ * The parts of a month grid. `calendar-nav` is a previous or next month button and reads
+ * `:hover` and `[data-disabled]`. `calendar-weekday` heads a weekday column and reads nothing.
+ * `calendar-day` is one day. It reads `[data-today]`, `[data-outside-month]`, `[data-selected]`,
+ * `[data-disabled]`, `[data-unavailable]`, and `:hover`. A selected day fills `gray-9` under
+ * white text, which beats every other text color. On an unselected day, today's color beats
+ * outside-month, which beats disabled.
+ *
+ * `calendar-day-range` is worn with `calendar-day` in a range calendar and replaces its selected
+ * fill. It reads `[data-selection-start]`, `[data-selection-end]`, `[data-selected]`, and
+ * `[data-highlighted]`. The two ends fill `gray-9` under white text. A selected or highlighted
+ * day between them takes a `bg-light` fill and keeps its text color.
+ */
+@utility calendar-nav {
+  @apply inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring;
+
+  @variant hover {
+    @apply bg-light text-default;
+  }
+  &[data-disabled] {
+    @apply cursor-not-allowed text-disabled-dark;
+  }
+}
+
+@utility calendar-weekday {
+  @apply w-8 pb-1 text-xs font-normal text-subtle-2;
+}
+
+@utility calendar-day {
+  @apply inline-flex size-8 cursor-pointer items-center justify-center rounded-sm focus-ring;
+
+  &:not([data-disabled]):not([data-selected]) {
+    @variant hover {
+      @apply bg-light;
+    }
+  }
+  &[data-disabled] {
+    @apply cursor-not-allowed text-disabled-dark;
+  }
+  &[data-outside-month] {
+    @apply text-subtle-2;
+  }
+  &[data-selected]:where(:not(.calendar-day-range)) {
+    @apply bg-gray-9 text-white;
+  }
+  &[data-today] {
+    @apply font-semibold;
+  }
+  &[data-today]:not([data-selected]) {
+    @apply text-heading;
+  }
+  &[data-unavailable] {
+    @apply line-through;
+  }
+}
+
+@utility calendar-day-range {
+  &.calendar-day:is([data-selected], [data-highlighted]):not(
+      [data-selection-start],
+      [data-selection-end]
+    ) {
+    @apply bg-light;
+  }
+  &.calendar-day:is([data-selection-start], [data-selection-end]) {
+    @apply bg-gray-9 text-white;
+  }
+}
+
 /* Status badge. Static, reads no attributes. Modifiers recolor. */
 @utility badge {
   @apply inline-flex items-center gap-1 rounded-full border border-medium bg-light px-2.5 py-0.5 text-xs text-default;

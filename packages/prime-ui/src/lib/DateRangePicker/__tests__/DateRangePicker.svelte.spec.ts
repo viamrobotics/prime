@@ -68,7 +68,7 @@ describe('DateRangePicker', () => {
 
 		expect(container.querySelectorAll('[role="group"]').length, 'one group').toBe(1);
 		expect(rangeField(container).classList.contains('input'), 'input class').toBe(true);
-		expect(rangeField(container).classList.contains('focus-ring-within'), 'frame ring').toBe(true);
+		expect(rangeField(container).classList.contains('date-field'), 'frame ring').toBe(true);
 		expect(rangeField(container).querySelectorAll('[data-segment="day"]').length).toBe(2);
 	});
 

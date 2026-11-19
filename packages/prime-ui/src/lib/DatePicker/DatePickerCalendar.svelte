@@ -55,15 +55,12 @@ on show.
 
 	const previousMonthName = $derived(monthButtonName(-1));
 	const nextMonthName = $derived(monthButtonName(1));
-
-	const MONTH_BUTTON_CLASSES =
-		'inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring hover:bg-light hover:text-default data-disabled:cursor-not-allowed data-disabled:text-disabled-dark';
 </script>
 
 <DatePicker.Calendar class={['text-sm text-default select-none', extraClasses]} {...restProps}>
 	{#snippet children({ months, weekdays })}
 		<DatePicker.Header class="mb-2 flex items-center justify-between gap-2">
-			<DatePicker.PrevButton class={MONTH_BUTTON_CLASSES}>
+			<DatePicker.PrevButton class="calendar-nav">
 				{#snippet child({ props })}
 					<button {...props} aria-label={previousMonthName}>
 						<Icon icon={mdiChevronLeft} size="base" />
@@ -71,7 +68,7 @@ on show.
 				{/snippet}
 			</DatePicker.PrevButton>
 			<DatePicker.Heading class="font-medium text-heading" />
-			<DatePicker.NextButton class={MONTH_BUTTON_CLASSES}>
+			<DatePicker.NextButton class="calendar-nav">
 				{#snippet child({ props })}
 					<button {...props} aria-label={nextMonthName}>
 						<Icon icon={mdiChevronRight} size="base" />
@@ -84,7 +81,7 @@ on show.
 				<DatePicker.GridHead>
 					<DatePicker.GridRow class="flex">
 						{#each weekdays as weekday, index (index)}
-							<DatePicker.HeadCell class="w-8 pb-1 text-xs font-normal text-subtle-2">
+							<DatePicker.HeadCell class="calendar-weekday">
 								{weekday}
 							</DatePicker.HeadCell>
 						{/each}
@@ -95,17 +92,7 @@ on show.
 						<DatePicker.GridRow class="flex">
 							{#each week as date (date.toString())}
 								<DatePicker.Cell {date} month={month.value} class="p-0">
-									<DatePicker.Day
-										class={[
-											'inline-flex size-8 cursor-pointer items-center justify-center rounded-sm focus-ring',
-											'not-data-disabled:not-data-selected:hover:bg-light',
-											'data-today:font-semibold not-data-selected:data-today:text-heading',
-											'data-outside-month:text-subtle-2',
-											'data-selected:bg-gray-9 data-selected:text-white',
-											'data-disabled:cursor-not-allowed data-disabled:text-disabled-dark',
-											'data-unavailable:line-through'
-										]}
-									/>
+									<DatePicker.Day class="calendar-day" />
 								</DatePicker.Cell>
 							{/each}
 						</DatePicker.GridRow>

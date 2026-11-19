@@ -1,3 +1,4 @@
+export { default as FileField } from './FileField/FileField.svelte';
 export { default as Folder } from './Folder/Folder.svelte';
 export { default as NumberField } from './NumberField/NumberField.svelte';
 export { default as Panel } from './Panel/Panel.svelte';

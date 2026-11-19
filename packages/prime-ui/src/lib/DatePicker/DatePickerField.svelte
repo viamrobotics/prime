@@ -60,10 +60,7 @@ does while its list is open.
 	data-field-state={currentState === FieldStates.None ? undefined : currentState}
 	data-readonly={picker?.readonly ? '' : undefined}
 	data-state={openState}
-	class={[
-		'inline-flex input items-center gap-1 focus-ring-within data-[state=open]:border-gray-9',
-		extraClasses
-	]}
+	class={['date-field input', extraClasses]}
 	{...restProps}
 >
 	{#snippet child({ props, segments })}
@@ -75,13 +72,7 @@ does while its list is open.
 		>
 			<span class="flex items-center">
 				{#each segments as { part, value }, index (index)}
-					<DatePicker.Segment
-						{part}
-						class={[
-							'rounded-sm tabular-nums outline-none aria-[valuetext=Empty]:text-subtle-2',
-							part !== 'literal' && 'px-0.5 focus:bg-medium'
-						]}
-					>
+					<DatePicker.Segment {part} class="date-segment">
 						{value}
 					</DatePicker.Segment>
 				{/each}

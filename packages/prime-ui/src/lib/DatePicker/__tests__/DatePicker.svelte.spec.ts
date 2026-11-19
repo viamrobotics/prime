@@ -65,8 +65,8 @@ describe('DatePicker', () => {
 		const { container } = render(BoundDatePicker);
 
 		expect(dateField(container).classList.contains('input'), 'input class').toBe(true);
-		expect(dateField(container).classList.contains('focus-ring-within'), 'frame ring').toBe(true);
-		expect(trigger(container).classList.contains('focus-ring'), 'trigger ring').toBe(true);
+		expect(dateField(container).classList.contains('date-field'), 'frame ring').toBe(true);
+		expect(trigger(container).classList.contains('input-button'), 'trigger ring').toBe(true);
 	});
 
 	it('names the trigger by default', () => {
