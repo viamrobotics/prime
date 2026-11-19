@@ -44,8 +44,7 @@ Review the design-system fit of a working-tree change. Arguments (optional file 
    **Run this step inside a subagent and bring back only the verdict.** A render launches a
    browser and can report a finding per element on a busy page, and a review touching several
    components pays that repeatedly. The subagent absorbs the launch and the raw output, and
-   the main context gets the verdict. This is the same discipline `/verify-changed` and
-   `blast-radius` use.
+   the main context gets the verdict.
 
    If the subagent reports that it stalled, or hands back only an interim report, re-dispatch
    it once with the same brief. On a second stall, run
@@ -86,8 +85,8 @@ Review the design-system fit of a working-tree change. Arguments (optional file 
 ## Accessibility is a separate review
 
 Contrast and hit-target thresholds are also WCAG success criteria.
-`@houserules/plugin-accessibility` owns the accessibility verdict. Run its
-`/accessibility-review` skill for focus states, keyboard behavior, and screen-reader
+`@houserules/plugin-accessibility` owns the accessibility verdict. If
+`.claude/skills/accessibility-review/` exists, run its `/accessibility-review` skill for focus states, keyboard behavior, and screen-reader
 concerns. This skill reports the design-system angle only and does not duplicate that work.
 
 ## Off-context reviews

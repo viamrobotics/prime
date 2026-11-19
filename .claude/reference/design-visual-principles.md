@@ -4,8 +4,8 @@ The claims here hold across any design system, which is why they live separately
 `design.md`. Everything below is checkable: a threshold, a formula, or a count. Cut
 anything that reads as taste instead.
 
-This is the visual layer. `design-principles.md`, shipped by the CLI's `code-cleanliness`
-module, is a different document about software structure.
+This is the visual layer. If `.claude/reference/design-principles.md` is installed, it is a different
+document about software structure.
 
 ## Contrast
 

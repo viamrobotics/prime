@@ -1,6 +1,6 @@
 <!--
 @component
-The heading of a [`Dialog`](./Dialog.svelte), rendered as an `h2`. The dialog is labelled by it.
+The heading of a [`Dialog`](./Dialog.svelte), rendered as an `h2`. The dialog is labeled by it.
 -->
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';

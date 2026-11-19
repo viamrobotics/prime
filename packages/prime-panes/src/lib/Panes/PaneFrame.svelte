@@ -359,7 +359,7 @@
 		<button
 			type="button"
 			aria-label={floatName(context.movingLabel)}
-			class="absolute top-2/3 left-1/2 z-40 min-h-6 min-w-6 -translate-x-1/2 cursor-pointer rounded border border-info-dark bg-info-light px-2 py-1 text-xs text-info-dark outline-info-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid"
+			class="absolute top-2/3 left-1/2 z-40 min-h-6 min-w-6 -translate-x-1/2 cursor-pointer rounded-sm border border-info-dark bg-info-light px-2 py-1 text-xs text-info-dark outline-info-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid"
 			onclick={() => context.floatMoving()}
 		>
 			Float

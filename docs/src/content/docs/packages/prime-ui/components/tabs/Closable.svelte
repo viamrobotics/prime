@@ -23,14 +23,16 @@
         {#each ids as n (n)}
           <Tabs.Trigger value="tab-{n}" class="flex items-center gap-1.5">
             Tab {n}
-            <button
-              type="button"
-              class="icon-button"
-              aria-label="Close Tab {n}"
-              onclick={(event) => close(event, n)}
-            >
-              <Icon icon={mdiClose} size="sm" />
-            </button>
+            {#snippet actions()}
+              <button
+                type="button"
+                class="icon-button"
+                aria-label="Close Tab {n}"
+                onclick={(event) => close(event, n)}
+              >
+                <Icon icon={mdiClose} size="sm" />
+              </button>
+            {/snippet}
           </Tabs.Trigger>
         {/each}
       </Tabs.List>

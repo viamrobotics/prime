@@ -1,6 +1,6 @@
 <!--
 @component
-A labelled set of items inside [`Select.Viewport`](./SelectViewport.svelte). Start it with a [`Select.GroupHeading`](./SelectGroupHeading.svelte).
+A labeled set of items inside [`Select.Viewport`](./SelectViewport.svelte). Start it with a [`Select.GroupHeading`](./SelectGroupHeading.svelte).
 -->
 <script lang="ts">
 	import type { ComponentProps } from 'svelte';

@@ -27,17 +27,20 @@ describe('Banner', () => {
 	});
 
 	it.each([
-		{ variant: 'info', light: 'bg-info-light', dark: 'text-info-dark' },
-		{ variant: 'success', light: 'bg-success-light', dark: 'text-success-dark' },
-		{ variant: 'warning', light: 'bg-warning-light', dark: 'text-warning-text' },
-		{ variant: 'danger', light: 'bg-danger-light', dark: 'text-danger-dark' },
-		{ variant: 'pending', light: 'bg-pending-light', dark: 'text-pending-dark' }
-	] as const)('colors the $variant chip from the variant tokens', ({ variant, light, dark }) => {
-		const { container } = render(VariantBanner, { props: { variant } });
+		{ variant: 'info', background: 'bg-info-light', text: 'text-info-dark' },
+		{ variant: 'success', background: 'bg-success-light', text: 'text-success-dark' },
+		{ variant: 'warning', background: 'bg-warning-light', text: 'text-warning-text' },
+		{ variant: 'danger', background: 'bg-danger-light', text: 'text-danger-dark' },
+		{ variant: 'pending', background: 'bg-pending-light', text: 'text-pending-dark' }
+	] as const)(
+		'colors the $variant chip from the variant tokens',
+		({ variant, background, text }) => {
+			const { container } = render(VariantBanner, { props: { variant } });
 
-		expect(backgroundColor(chip(container))).toBe(colorOf(light, 'backgroundColor'));
-		expect(textColor(chip(container))).toBe(colorOf(dark, 'color'));
-	});
+			expect(backgroundColor(chip(container))).toBe(colorOf(background, 'backgroundColor'));
+			expect(textColor(chip(container))).toBe(colorOf(text, 'color'));
+		}
+	);
 
 	it('defaults to the info variant', () => {
 		const { container } = render(VariantBanner);
@@ -85,7 +88,7 @@ describe('Banner', () => {
 		expect(chip(container).querySelector('svg')).toBeNull();
 	});
 
-	it('fires the native onclick of Banner.Close, labelled Dismiss', async () => {
+	it('fires the native onclick of Banner.Close, labeled Dismiss', async () => {
 		const onclick = vi.fn();
 		const { container } = render(CloseBanner, { props: { onclick } });
 		const close = container.querySelector<HTMLButtonElement>('button')!;

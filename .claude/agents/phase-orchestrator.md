@@ -62,18 +62,24 @@ The worker's report arrives as a message and wakes you too.
 
 ## Skills and state
 
-Run `/blast-radius`, `/sweep`, `/tidy`, `/verify-changed`, and the close-of-phase reviews here,
-as the skill says. Never run `/decide` or `/pr-description`. They need the user, so list their
+Run `/blast-radius`, `/sweep`, `/tidy`, `/verify-changed` (the repo's own verify on the touched packages when it is not
+installed), and the close-of-phase reviews here, as the skill says. Never run `/decide` or `/pr-description`. They need the user, so list their
 candidates under `Decide candidates` and the main conversation runs them. Never run `/backlog-add`
 either, because the subagent write gate refuses every ledger write. List each out-of-scope finding
 under `Backlogged` with its area, a one-line problem, and where it lives, and the main conversation
 logs it.
 
-When `Siblings:` is not `none`, the §7 fixer and `/tidy` take your `Domain:` paths, and verify is
-an explicit `--filter` over the domain's packages. Never run `/verify-changed` or the bare fix
-scripts then, because both reach into siblings' files. The repo-wide pass belongs to the main
-conversation. `plan-lint.mjs` scans every workspace, so a finding in a sibling's goes under
-`Out of scope`.
+When `Siblings:` is not `none`, the §7 fixer and `/tidy` take your `Domain:` paths, and §7 step 3
+reruns each slice's acceptance command in place of a verify. Never run the bare fix scripts,
+`/verify-changed`, or a `--filter` over your packages then. The fix scripts and `/verify-changed`
+reach into siblings' files. Two domains can also hold disjoint directories of one package, so a
+package-wide run tests a sibling's half-finished edits. At §8, check each phase acceptance
+criterion by its narrowest command. List one that needs a package-wide run under `Verify`, and the
+main conversation's whole-tree verify after every `DONE` covers it. `plan-lint.mjs` scans every
+workspace, so a finding in a sibling's goes under `Out of scope`.
+
+A verify already running when the main conversation changes your barrier runs to its end. Do not
+wait on it, ignore its result, and never try to kill it, because the kill can be refused.
 
 The plan workspace on disk is the state, and the sub-plan is yours from the spawn on, header
 included. The dispatcher set its header `IN PROGRESS` with the ROADMAP line before spawning you.
@@ -97,7 +103,7 @@ Landed
 - <slice id>: <one line on what closed this wave, or "none">
 
 Verify
-<the verdict and the output tail at phase close, otherwise "not run, the phase is open">
+<the verdict and the output tail at phase close, with any criterion left to the main conversation's run, otherwise "not run, the phase is open">
 
 Ruling needed
 <on NEEDS_RULING only, omit the section otherwise: the question, the options with your recommendation first, the cost if wrong>
@@ -124,8 +130,9 @@ Resume
 Pick the first-line status by what the main conversation has to do next. `WAVE_CLOSED` means a wave
 closed and the phase is open, so print the table and send `continue`. `DONE` means the phase is
 closed and the sub-plan header says so. `NEEDS_RULING` means only the user can answer, and `Ruling needed`
-holds the question. `BLOCKED` means you cannot run the phase at all, such as `Agent` withheld or a
-`Plan:` with no workspace on disk. `PARTIAL` means you stopped at the context-size gate, past 300,000
+holds the question. `BLOCKED` means you cannot run the phase at all, such as `Agent` withheld, a
+`Plan:` with no workspace on disk, or a step that needs a tool missing from your `tools:` line,
+which you name. `PARTIAL` means you stopped at the context-size gate, past 300,000
 tokens of context and before compaction near 364,000, after the current wave closed, and `Resume` names what a fresh spawn picks up.
 
 Hard rules for the report: **no diffs, no file contents, no per-file logs, no narration.** Print the

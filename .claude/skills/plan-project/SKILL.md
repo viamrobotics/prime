@@ -154,7 +154,7 @@ line below. A list such as `After: 2, 3` names the phases that must be `DONE` fi
 # Phase N: <name>
 
 **Status:** TODO · **Part of:** [PLAN.md](PLAN.md) · **Roadmap:** [ROADMAP.md](ROADMAP.md)
-**Signals:** <optional: `wide` for a big footprint, `ui` for user-facing surfaces, else omit the line>
+**Signals:** <optional, comma-separated: `wide` for a big footprint, `ui` for user-facing surfaces, `live` for checks against a running server, else omit the line>
 **Domain:** <optional: comma-separated path roots this phase may write, each in backticks, never a glob. Omit the line for `all`>
 
 ## Objective
@@ -193,7 +193,11 @@ names no test path. Omit the section when every case the spec implies already ha
 
 The optional `**Signals:**` line is read by `/orchestrate` where that skill is installed: `wide`
 turns on its pre-slicing `/blast-radius` map and `ui` its close-of-phase accessibility and design
-reviews. Omit the line when neither applies.
+reviews. `live` marks a phase whose checks read a running process, such as a dev server, that
+another phase's edits would disturb mid-reading. It runs alone, and `plan-lint` errors unless
+`After` orders it against every other phase. Omit the line when none applies. Name an MCP tool a
+step needs by its callable name, `mcp__<server>__<tool>`, so `/orchestrate` can check it against
+its agents' `tools:` lines before it spawns.
 
 For a control-flow-heavy phase, one where the hard part is which function calls which and in what
 order, add an optional call-stack sketch to that phase file: the call tree in diff syntax, with `+`

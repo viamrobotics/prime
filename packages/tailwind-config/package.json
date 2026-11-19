@@ -20,12 +20,18 @@
   "exports": {
     ".": "./tailwind-config.css",
     "./dark": "./tailwind-config-dark.css",
-    "./fonts": "./fonts.js"
+    "./fonts": "./fonts.js",
+    "./theme-color": {
+      "types": "./theme-color.d.ts",
+      "default": "./theme-color.js"
+    }
   },
   "files": [
     "fonts.js",
     "tailwind-config.css",
-    "tailwind-config-dark.css"
+    "tailwind-config-dark.css",
+    "theme-color.d.ts",
+    "theme-color.js"
   ],
   "scripts": {
     "check": "wireit",
@@ -41,6 +47,8 @@
       "command": "tsc --noEmit -p tsconfig.json",
       "files": [
         "fonts.js",
+        "theme-color.d.ts",
+        "theme-color.js",
         "tests/**",
         "vitest.config.ts",
         "tsconfig.json",
@@ -73,6 +81,8 @@
         "tests/**",
         "tailwind-config.css",
         "tailwind-config-dark.css",
+        "theme-color.d.ts",
+        "theme-color.js",
         "vitest.config.ts",
         "package.json"
       ],

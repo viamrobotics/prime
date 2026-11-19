@@ -57,15 +57,12 @@ show.
 
 	const previousMonthName = $derived(monthButtonName(-1));
 	const nextMonthName = $derived(monthButtonName(1));
-
-	const MONTH_BUTTON_CLASSES =
-		'inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring hover:bg-light hover:text-default data-disabled:cursor-not-allowed data-disabled:text-disabled-dark';
 </script>
 
 <DateRangePicker.Calendar class={['text-sm text-default select-none', extraClasses]} {...restProps}>
 	{#snippet children({ months, weekdays })}
 		<DateRangePicker.Header class="mb-2 flex items-center justify-between gap-2">
-			<DateRangePicker.PrevButton class={MONTH_BUTTON_CLASSES}>
+			<DateRangePicker.PrevButton class="calendar-nav">
 				{#snippet child({ props })}
 					<button {...props} aria-label={previousMonthName}>
 						<Icon icon={mdiChevronLeft} size="base" />
@@ -73,7 +70,7 @@ show.
 				{/snippet}
 			</DateRangePicker.PrevButton>
 			<DateRangePicker.Heading class="font-medium text-heading" />
-			<DateRangePicker.NextButton class={MONTH_BUTTON_CLASSES}>
+			<DateRangePicker.NextButton class="calendar-nav">
 				{#snippet child({ props })}
 					<button {...props} aria-label={nextMonthName}>
 						<Icon icon={mdiChevronRight} size="base" />
@@ -86,7 +83,7 @@ show.
 				<DateRangePicker.GridHead>
 					<DateRangePicker.GridRow class="flex">
 						{#each weekdays as weekday, index (index)}
-							<DateRangePicker.HeadCell class="w-8 pb-1 text-xs font-normal text-subtle-2">
+							<DateRangePicker.HeadCell class="calendar-weekday">
 								{weekday}
 							</DateRangePicker.HeadCell>
 						{/each}
@@ -97,20 +94,7 @@ show.
 						<DateRangePicker.GridRow class="flex">
 							{#each week as date (date.toString())}
 								<DateRangePicker.Cell {date} month={month.value} class="p-0">
-									<DateRangePicker.Day
-										class={[
-											'inline-flex size-8 cursor-pointer items-center justify-center rounded-sm focus-ring',
-											'not-data-disabled:not-data-selected:hover:bg-light',
-											'data-today:font-semibold not-data-selected:data-today:text-heading',
-											'data-outside-month:text-subtle-2',
-											'not-data-selection-start:not-data-selection-end:data-selected:bg-light',
-											'not-data-selection-start:not-data-selection-end:data-highlighted:bg-light',
-											'data-selection-start:bg-gray-9 data-selection-start:text-white',
-											'data-selection-end:bg-gray-9 data-selection-end:text-white',
-											'data-disabled:cursor-not-allowed data-disabled:text-disabled-dark',
-											'data-unavailable:line-through'
-										]}
-									/>
+									<DateRangePicker.Day class="calendar-day calendar-day-range" />
 								</DateRangePicker.Cell>
 							{/each}
 						</DateRangePicker.GridRow>

@@ -1,4 +1,4 @@
-import { getContext, setContext } from 'svelte';
+import { getContext, setContext, type Snippet } from 'svelte';
 
 import type { SelectOption } from '../Select/option.ts';
 
@@ -29,6 +29,8 @@ export interface ComboboxContext {
 	readonly required: boolean;
 	/** The rendered input, which `Combobox.Content` positions against. Set by `Combobox.Input`. */
 	input: HTMLInputElement | null;
+	/** The message `Combobox.Empty` registers while mounted, which the root announces. */
+	emptyMessage: Snippet | undefined;
 }
 
 export const matchesLabel: ComboboxFilter = (option, query) =>
@@ -43,6 +45,7 @@ export const provideCombobox = (options: ComboboxOptions): ComboboxContext => {
 	});
 
 	let input = $state<HTMLInputElement | null>(null);
+	let emptyMessage = $state.raw<Snippet>();
 
 	return setContext<ComboboxContext>(key, {
 		get items() {
@@ -68,6 +71,12 @@ export const provideCombobox = (options: ComboboxOptions): ComboboxContext => {
 		},
 		set input(next) {
 			input = next;
+		},
+		get emptyMessage() {
+			return emptyMessage;
+		},
+		set emptyMessage(next) {
+			emptyMessage = next;
 		}
 	});
 };

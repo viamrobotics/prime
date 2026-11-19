@@ -388,7 +388,7 @@
 			aria-label={nameFor(markRegion)}
 			style={markStyle(markRegion)}
 			class={[
-				'absolute z-20 flex cursor-pointer rounded focus-visible:outline-none',
+				'absolute z-20 flex cursor-pointer rounded-sm focus-visible:outline-none',
 				buttonClasses,
 				{ 'pointer-events-none opacity-0': !isEngaged }
 			]}

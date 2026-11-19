@@ -154,7 +154,10 @@ every worker pays a cold acceptance boot.
 - **A rule that needs an MCP tool the worker lacks.** Add the full callable name,
   `mcp__<server>__<tool>`, or the `mcp__<server>` pattern to `orchestrate.workerTools` in
   `.claude/houserules.config.json`, then run `npx houserules update`. `doctor` reports the same gap.
-  Until then, run that tool yourself over each worker's files at wave close, before the fixer.
+  Until then, run that tool yourself over each worker's files at wave close, before the fixer. One
+  layer down that is the phase-orchestrator's job, and it has the tool only when
+  `orchestrate.orchestratorTools` lists it. Without that, return `BLOCKED` naming the tool, and the
+  main conversation runs the phase flat as `nested.md` describes.
 - **Worktree isolation.** `isolation: 'worktree'` exists for waves that genuinely cannot be made
   disjoint. Correct slicing is cheaper than merging, and needing it usually means the slices were
   drawn wrong. Set `worktree.baseRef` to `"head"` when the worktree must see earlier waves.

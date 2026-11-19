@@ -81,7 +81,7 @@ read the one that answers the question in front of you.
 - Contrast is also a WCAG success criterion. If `accessibility.md` is installed, it owns the
   broader WCAG obligations for markup, and this rule's contrast guidance is the design-system
   half of the same requirement.
-- How the sentence inside any prose you write here reads: see `prose-voice.md`.
+- How the sentence inside any prose you write here reads: see `prose-voice.md` if `.claude/rules/prose-voice.md` is installed.
 
 ## Also installed in this repo
 

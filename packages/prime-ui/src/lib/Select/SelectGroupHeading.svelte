@@ -15,9 +15,6 @@ A non-selectable heading for a [`Select.Group`](./SelectGroup.svelte).
 	const { class: extraClasses, children, ...restProps }: Props = $props();
 </script>
 
-<Select.GroupHeading
-	class={['px-2 py-1.5 text-xs font-medium text-subtle-2', extraClasses]}
-	{...restProps}
->
+<Select.GroupHeading class={['listbox-heading', extraClasses]} {...restProps}>
 	{@render children?.()}
 </Select.GroupHeading>

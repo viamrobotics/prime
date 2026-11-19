@@ -42,6 +42,15 @@ afterEach(async () => {
 });
 
 describe('DateRangePicker', () => {
+	it('closes the calendar when Escape is pressed', async () => {
+		const { container } = render(BoundDateRangePicker);
+		await openCalendar(container);
+
+		await userEvent.keyboard('{Escape}');
+
+		await vi.waitFor(() => expect(calendar(), 'calendar closed').toBeNull());
+	});
+
 	it('shows both ends of the bound range in the segments', () => {
 		const { container } = render(BoundDateRangePicker);
 
@@ -59,7 +68,7 @@ describe('DateRangePicker', () => {
 
 		expect(container.querySelectorAll('[role="group"]').length, 'one group').toBe(1);
 		expect(rangeField(container).classList.contains('input'), 'input class').toBe(true);
-		expect(rangeField(container).classList.contains('focus-ring-within'), 'frame ring').toBe(true);
+		expect(rangeField(container).classList.contains('date-field'), 'frame ring').toBe(true);
 		expect(rangeField(container).querySelectorAll('[data-segment="day"]').length).toBe(2);
 	});
 

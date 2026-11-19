@@ -96,7 +96,7 @@
 	const api = $derived(floatingPanel.connect(service, normalizeProps));
 	// zag labels the dialog by a title this window never renders, sizes it from variables its own positioner would set, and marks stacking from its page-wide stack, not `floats` order.
 	const windowProps = $derived({
-		...api.getContentProps(),
+		...withoutAttachments(api.getContentProps()),
 		'aria-labelledby': undefined,
 		style: undefined,
 		'data-topmost': undefined,
@@ -109,6 +109,11 @@
 			content: () => entry.content
 		})
 	);
+
+	// In the browser, zag's normalizer applies `style` through a symbol-keyed attachment, which a `style` key cannot blank.
+	function withoutAttachments<TProps extends object>(props: TProps): TProps {
+		return Object.fromEntries(Object.entries(props)) as TProps;
+	}
 
 	// zag positions in the viewport, and this window sits inside its box.
 	function readBoxOrigin() {

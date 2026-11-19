@@ -125,7 +125,7 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 			'min-h-6 min-w-0 flex-1 cursor-pointer appearance-none bg-transparent',
 			'slider-thumb-gray-7 slider-track-gray-3',
 			'[&::-moz-range-track]:h-1 [&::-moz-range-track]:rounded-full [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-full',
-			'[&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:size-3 [&::-webkit-slider-thumb]:rounded-full',
+			'slider-thumb-h-3 slider-thumb-w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:rounded-full',
 			'[&::-webkit-slider-thumb]:appearance-none',
 			'focus-ring',
 			'disabled:cursor-not-allowed disabled:opacity-60 disabled:slider-thumb-gray-4'

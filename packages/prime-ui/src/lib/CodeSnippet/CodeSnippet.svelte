@@ -7,10 +7,10 @@ A read-only block of highlighted code with a copy button.
 ```
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { mdiCheck, mdiContentCopy } from '@mdi/js';
-	import { onDestroy, type Snippet } from 'svelte';
 
 	import type { CodeSnippetLanguage } from './language.ts';
 
@@ -42,6 +42,8 @@ A read-only block of highlighted code with a copy button.
 		...restProps
 	}: Props = $props();
 
+	const captionId = $props.id();
+
 	const COPY_STATES = {
 		idle: { label: 'Copy code', icon: mdiContentCopy, status: '' },
 		copied: { label: 'Copied', icon: mdiCheck, status: 'Copied' },
@@ -50,6 +52,8 @@ A read-only block of highlighted code with a copy button.
 
 	let copyState = $state<keyof typeof COPY_STATES>('idle');
 	let timer: ReturnType<typeof setTimeout> | undefined;
+	let pre = $state<HTMLPreElement>();
+	let isOverflowing = $state(false);
 
 	const copy = async () => {
 		try {
@@ -64,15 +68,44 @@ A read-only block of highlighted code with a copy button.
 		}, COPIED_MS);
 	};
 
-	onDestroy(() => clearTimeout(timer));
+	$effect(() => () => clearTimeout(timer));
 
 	const html = $derived(highlight(code, language));
+
+	$effect(() => {
+		void html;
+		if (!pre || wrapLines) {
+			isOverflowing = false;
+			return;
+		}
+		const element = pre;
+		const measure = () => {
+			isOverflowing = element.scrollWidth > element.clientWidth;
+		};
+		measure();
+		const observer = new ResizeObserver(measure);
+		observer.observe(element);
+		return () => observer.disconnect();
+	});
+
+	const scrollRegion = $derived(
+		isOverflowing
+			? {
+					role: 'region',
+					tabindex: 0,
+					'aria-labelledby': caption ? captionId : undefined,
+					'aria-label': caption ? undefined : 'Code'
+				}
+			: {}
+	);
 </script>
 
 <!-- eslint-disable svelte/no-at-html-tags -- prism escapes <, >, and & in its output -->
 <figure class={className} {...restProps}>
 	<div class="relative">
 		<pre
+			bind:this={pre}
+			{...scrollRegion}
 			class={[
 				'code-snippet bg-light p-2 text-code',
 				wrapLines ? 'whitespace-pre-wrap' : 'overflow-x-auto whitespace-pre'
@@ -88,7 +121,7 @@ A read-only block of highlighted code with a copy button.
 		<span role="status" class="sr-only">{COPY_STATES[copyState].status}</span>
 	</div>
 	{#if caption}
-		<figcaption>{@render caption()}</figcaption>
+		<figcaption id={captionId}>{@render caption()}</figcaption>
 	{/if}
 </figure>
 

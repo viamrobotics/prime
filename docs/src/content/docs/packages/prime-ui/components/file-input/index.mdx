@@ -1,0 +1,75 @@
+---
+title: FileInput
+description: A native file input drawn as one row, with the chosen file names and a clear button.
+---
+
+import ComponentIntro from "@docs/doc/ComponentIntro.astro";
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import FileInputDemo from "./FileInputDemo.svelte";
+import FileInputShowcase from "./FileInputShowcase.svelte";
+import TwoWay from "./TwoWay.svelte";
+import twoWaySource from "./TwoWay.svelte?raw";
+import InField from "./InField.svelte";
+import inFieldSource from "./InField.svelte?raw";
+import Validated from "./Validated.svelte";
+import validatedSource from "./Validated.svelte?raw";
+
+<ComponentIntro name="file-input" />
+
+<FileInputDemo client:visible />
+
+- A real `<input type="file">` covers the row, so the picker, a dropped file, the keyboard, and form submission are the browser's, and a form reset empties `value`. `accept`, `multiple`, `name`, `capture`, and `onchange` pass straight through.
+- `value` is a `File[]`. Without `multiple` it holds at most one file, and a cleared input is an empty array.
+- The chosen names show in the row and truncate to its width. A clear button appears beside them.
+- Reads `controlId`, `disabled`, `required`, `state`, and `aria-describedby` from an enclosing [`Field`](../field/).
+
+## Usage
+
+### Two-way binding
+
+`bind:value` holds the chosen files. Writing the value from outside, such as an empty array, also updates the native input, so the same file can be chosen again. [State & binding](../state/) covers the controlled mode, where a function binding can refuse a file.
+
+<Example code={twoWaySource} title="TwoWay.svelte">
+  <TwoWay client:visible />
+</Example>
+
+### In a field
+
+Inside a [`Field`](../field/) the label and hint wire themselves to the native input.
+
+<Example code={inFieldSource} title="InField.svelte">
+  <InField client:visible />
+</Example>
+
+### Validation
+
+`accept` only filters the picker, and a dropped file skips it, so check the files yourself. Set `state` on the field and the frame, the hint, and `aria-invalid` all follow it.
+
+<Example code={validatedSource} title="Validated.svelte">
+  <Validated client:visible />
+</Example>
+
+### States
+
+<FileInputShowcase client:visible />
+
+## Styling
+
+`class` lands on the frame, the element that holds the native input. It carries no width, so set one yourself or let a flex or grid parent stretch it. The frame is the `input` [component class](../../tailwind-config/component-classes/) from `@viamrobotics/tailwind-config`, the same one `Input` wears, so `input-compact` sizes it for a dense panel.
+
+The prompt, an upload icon and "Choose file", is decoration. Pass `children` to replace it. `placeholder` is the text shown while nothing is chosen, and `clearLabel` names the clear button.
+
+| Hook               | Where                                                |
+| ------------------ | ---------------------------------------------------- |
+| `data-field-state` | On the native input for `info`, `warn`, and `error`  |
+| `aria-invalid`     | On the native input in the `error` state             |
+
+## Keyboard
+
+Native file input behavior: <kbd>Enter</kbd> or <kbd>Space</kbd> on the input opens the picker. The clear button is the next tab stop while a file is chosen, and clearing moves focus back to the input.
+
+## API
+
+<PropsTable name="file-input" />

@@ -87,7 +87,7 @@ reference doc linked below.
 
 ### Where other rules apply
 
-- Whether and how to comment: see `code-comments.md`.
+- Whether and how to comment: see `code-comments.md` if that rule is installed.
 - Formatting: the repo's own formatter owns it, not this rule.
 - Import order: the repo's linter owns it only where an import-order rule is configured. Where
   none is configured, nothing enforces it and this rule makes no claim about it.

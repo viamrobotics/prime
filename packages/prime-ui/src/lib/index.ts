@@ -31,6 +31,7 @@ export { default as Hint } from './Hint/Hint.svelte';
 export { default as Checkbox } from './Checkbox/Checkbox.svelte';
 export { default as Switch } from './Switch/Switch.svelte';
 export { default as NumberInput } from './Input/NumberInput.svelte';
+export { default as FileInput } from './Input/FileInput.svelte';
 export { default as Textarea } from './Input/Textarea.svelte';
 
 export { Banner } from './Banner/banner.ts';
@@ -60,7 +61,9 @@ export type { SelectOption } from './Select/option.ts';
 export { MultiSelect } from './Select/multi-select.ts';
 export { Select } from './Select/select.ts';
 
+export type { TabsMove } from './Tabs/move.ts';
 export { Tabs } from './Tabs/tabs.ts';
+export type { TabsVariant } from './Tabs/variant.ts';
 export { Takeover } from './Takeover/takeover.ts';
 
 export { default as Toast } from './Toast/Toast.svelte';

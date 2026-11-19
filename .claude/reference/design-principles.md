@@ -233,7 +233,7 @@ pins it. An untested reliance can change without warning, because the maintainer
 promised it would hold. This is sometimes called the Beyoncé Rule: if you liked it, you
 should have put a test on it.
 
-`testing.md` says not to test code you did not write, aimed at a library's own documented
+`testing.md`, where it is installed, says not to test code you did not write, aimed at a library's own documented
 contract, covered by that library's own suite. This is the opposite case. You are depending
 on something outside that contract, and the test you add protects your own code, not the
 library's.

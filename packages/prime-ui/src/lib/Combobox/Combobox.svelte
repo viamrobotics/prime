@@ -100,7 +100,7 @@ Built on [bits-ui `Combobox`](https://bits-ui.com/docs/components/combobox).
 	);
 	const text = $derived(isTyping ? (query ?? '') : label);
 
-	provideCombobox({
+	const combobox = provideCombobox({
 		items: () => items,
 		filter: () => filter,
 		query: {
@@ -141,3 +141,9 @@ Built on [bits-ui `Combobox`](https://bits-ui.com/docs/components/combobox).
 >
 	{@render children?.()}
 </Combobox.Root>
+
+<div role="status" class="sr-only">
+	{#if isOpen && combobox.matches.length === 0 && combobox.emptyMessage}
+		{@render combobox.emptyMessage()}
+	{/if}
+</div>

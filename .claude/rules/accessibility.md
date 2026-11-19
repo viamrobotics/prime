@@ -96,7 +96,7 @@ table.
 
 ### Where other rules apply
 
-- How the sentence inside any prose you write here reads: see `prose-voice.md`.
+- How the sentence inside any prose you write here reads: see `prose-voice.md` if that rule is installed.
 - Per-framework residue such as component-specific patterns: see `accessibility-react.md`,
   `accessibility-svelte.md`, `accessibility-vue.md`, or `accessibility-html.md`, each only if
   that guide is installed.

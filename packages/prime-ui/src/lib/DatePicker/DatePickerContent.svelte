@@ -69,7 +69,7 @@ The floating panel of a [`DatePicker`](./DatePicker.svelte), portaled to the bod
 		aria-label={accessibleName}
 		aria-labelledby={labelledBy}
 		onOpenAutoFocus={focusDayWithoutScrolling}
-		class={['z-popover rounded-sm border border-light bg-white p-3 shadow-popover', extraClasses]}
+		class={['z-popover popover-panel p-3', extraClasses]}
 		{...restProps}
 	>
 		{@render children?.()}

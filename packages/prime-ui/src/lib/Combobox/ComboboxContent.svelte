@@ -65,7 +65,7 @@ The floating panel of a [`Combobox`](./Combobox.svelte), portaled to the body. R
 		{alignOffset}
 		customAnchor={anchor}
 		class={[
-			'z-popover max-h-(--bits-combobox-content-available-height) w-(--bits-combobox-anchor-width) min-w-(--bits-combobox-anchor-width) overflow-hidden rounded-sm border border-light bg-white shadow-popover',
+			'z-popover max-h-(--bits-combobox-content-available-height) w-(--bits-combobox-anchor-width) min-w-(--bits-combobox-anchor-width) overflow-hidden popover-panel',
 			extraClasses
 		]}
 		{...restProps}

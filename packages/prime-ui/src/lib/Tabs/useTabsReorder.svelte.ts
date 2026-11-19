@@ -26,8 +26,20 @@ export interface TabsReorderContext {
 	move: (value: string, index: number, options: { focus: boolean }) => void;
 }
 
-const labelOf = (element: HTMLElement | undefined) =>
-	element?.getAttribute('aria-label') ?? element?.textContent?.trim() ?? '';
+/** The label a tab is named by: its `aria-labelledby` text, else its `aria-label`, else its own text. */
+export const labelOf = (element: HTMLElement | undefined) => {
+	if (!element) return '';
+	const labelledBy = element.getAttribute('aria-labelledby');
+	if (labelledBy) {
+		const text = labelledBy
+			.split(/\s+/)
+			.map((id) => element.ownerDocument.getElementById(id)?.textContent?.trim() ?? '')
+			.filter(Boolean)
+			.join(' ');
+		if (text) return text;
+	}
+	return element.getAttribute('aria-label') ?? element.textContent?.trim() ?? '';
+};
 
 export const provideTabsReorder = (options: TabsReorderOptions): TabsReorderContext => {
 	const elements = new SvelteMap<string, HTMLElement>();

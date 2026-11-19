@@ -43,10 +43,7 @@ and `children` replace the icon.
 
 <DatePicker.Trigger
 	disabled={disabled ?? (picker?.disabled || picker?.readonly) ?? false}
-	class={[
-		'inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-subtle-2 focus-ring transition-colors hover:text-default disabled:cursor-not-allowed disabled:text-disabled-dark',
-		extraClasses
-	]}
+	class={['input-button', extraClasses]}
 	aria-label={label}
 	{...restProps}
 >

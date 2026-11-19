@@ -54,10 +54,7 @@ A chevron is rendered by default. Pass an `indicator` snippet to replace it:
 <Combobox.Trigger
 	aria-label={label}
 	{tabindex}
-	class={[
-		'-my-0.5 inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-subtle-2 focus-ring transition-colors hover:text-default disabled:cursor-not-allowed disabled:text-disabled-dark',
-		extraClasses
-	]}
+	class={['-my-0.5 input-button', extraClasses]}
 	{...restProps}
 >
 	{@const suffix = indicator ?? chevron}

@@ -12,6 +12,7 @@
   controls={{
     variant: { kind: "select", label: "Variant", default: "underline", options: ["underline", "file"] },
     count: { kind: "number", label: "Tabs", default: 3, min: 1, max: 4, step: 1 },
+    reorderable: { kind: "boolean", label: "Reorderable", default: false },
     disabled: { kind: "boolean", label: "Disable second tab", default: false },
   }}
 />

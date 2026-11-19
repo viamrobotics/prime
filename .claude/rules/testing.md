@@ -215,7 +215,7 @@ that covers it is part of the change, not a follow-up.
     as why a malformed input is deliberately tolerated. Keep those short and about the SYSTEM,
     never about the test.
 - **No file header comment on a test file.** `code-comments.md`'s shebang entry-point
-  exception does not reach a test file. A suite's contract is its `describe` names. A header
+  exception (where that rule is installed) does not reach a test file. A suite's contract is its `describe` names. A header
   restates them, then goes stale.
 - **No banner or section dividers inside a test file.** Needing signposts to navigate a suite
   means it should be several suites, split by the unit under test.
@@ -252,9 +252,9 @@ that covers it is part of the change, not a follow-up.
 
 ### Where other rules apply
 
-- Whether a comment should exist at all: see `code-comments.md`.
-- How the sentence inside a description or comment reads: see `prose-voice.md`.
-- Naming, function size, and dead code in test helpers: see `code-cleanliness.md`. Helpers are
+- Whether a comment should exist at all: see `code-comments.md` if that rule is installed.
+- How the sentence inside a description or comment reads: see `prose-voice.md` if that rule is installed.
+- Naming, function size, and dead code in test helpers: see `code-cleanliness.md` if that rule is installed. Helpers are
   code and the same rules apply.
 
 ## Checked mechanically
