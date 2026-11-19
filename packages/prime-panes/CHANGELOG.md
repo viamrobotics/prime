@@ -1,5 +1,14 @@
 # @viamrobotics/prime-panes
 
+## 0.1.3
+### Patch Changes
+
+- 09e47ee: Float windows keep their size with zag.js 1.48.
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+  - @viamrobotics/tailwind-config@1.10.0
+
 ## 0.1.2
 ### Patch Changes
 

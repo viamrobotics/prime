@@ -1,5 +1,14 @@
 # @viamrobotics/prime-editor
 
+## 0.1.1
+### Patch Changes
+
+- 09e47ee: A split diff names its original side "<name>, original", apart from the value side.
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+  - @viamrobotics/tailwind-config@1.10.0
+
 ## 0.1.0
 ### Minor Changes
 
