@@ -2,7 +2,9 @@
 	import type { FieldState } from '../state.ts';
 
 	import Checkbox from '../../Checkbox/Checkbox.svelte';
+	import { Combobox } from '../../Combobox/combobox.ts';
 	import { DatePicker } from '../../DatePicker/date-picker.ts';
+	import { DateRangePicker } from '../../DateRangePicker/date-range-picker.ts';
 	import Hint from '../../Hint/Hint.svelte';
 	import Label from '../../Label/Label.svelte';
 	import { RadioGroup } from '../../RadioGroup/radio-group.ts';
@@ -48,6 +50,15 @@
 	<Hint>Select hint</Hint>
 </Field>
 
+<Field {disabled} {required} {state} data-testid="combobox-field">
+	<Label>Region</Label>
+	<Combobox {items}>
+		<Combobox.Input />
+		<Combobox.Trigger />
+	</Combobox>
+	<Hint>Combobox hint</Hint>
+</Field>
+
 <Field {disabled} {required} {state} data-testid="date-field">
 	<Label>Start date</Label>
 	<DatePicker>
@@ -56,6 +67,16 @@
 		</DatePicker.Field>
 	</DatePicker>
 	<Hint>Date hint</Hint>
+</Field>
+
+<Field {disabled} {required} {state} data-testid="daterange-field">
+	<Label>Reporting period</Label>
+	<DateRangePicker>
+		<DateRangePicker.Field>
+			<DateRangePicker.Trigger />
+		</DateRangePicker.Field>
+	</DateRangePicker>
+	<Hint>Date range hint</Hint>
 </Field>
 
 <Field {disabled} {required} {state} data-testid="switch-field">

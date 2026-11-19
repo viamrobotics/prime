@@ -21,7 +21,7 @@ content.
 <ToggleGroup.Item
 	{value}
 	class={[
-		'-ml-px inline-flex cursor-pointer items-center justify-center gap-1.5 border border-gray-6 px-3 py-1.5 text-sm whitespace-nowrap focus-ring transition-colors select-none first:ml-0 first:rounded-l-sm last:rounded-r-sm',
+		'inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-sm border border-gray-6 px-3 py-1.5 text-sm whitespace-nowrap focus-ring transition-colors select-none',
 		'bg-medium text-subtle-1 hover:bg-gray-3 active:bg-gray-4',
 		'data-[state=on]:bg-light data-[state=on]:font-semibold data-[state=on]:text-default data-[state=on]:hover:bg-light',
 		'disabled:cursor-not-allowed disabled:border-disabled-light disabled:bg-disabled-light disabled:text-disabled-dark',

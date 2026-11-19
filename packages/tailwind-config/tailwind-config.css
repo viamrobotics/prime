@@ -12,8 +12,8 @@
    * instead, read when the utility paints, so the dark theme recolors it.
    */
   --shadow-sm: 0 4px 32px var(--shadow-color-sm);
-  --shadow-popover: 0 8px 24px var(--shadow-color-popover);
-  --shadow-dialog: 0 12px 48px var(--shadow-color-dialog);
+  --shadow-popover: 0 4px 12px var(--shadow-color-popover);
+  --shadow-dialog: 0 8px 24px var(--shadow-color-dialog);
 
   /* Text colors */
   --color-heading: #131414;
@@ -182,8 +182,8 @@
   :root,
   :host {
     --shadow-color-sm: rgba(0, 0, 0, 0.06);
-    --shadow-color-popover: rgba(0, 0, 0, 0.12);
-    --shadow-color-dialog: rgba(0, 0, 0, 0.25);
+    --shadow-color-popover: rgba(0, 0, 0, 0.08);
+    --shadow-color-dialog: rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -378,8 +378,13 @@
  * properties, so every modifier applies to it too. Every class reads `:disabled`,
  * `[aria-disabled="true"]`, and `[aria-busy="true"]`.
  *
+ * The warning family fills with `--color-warning-bright` inside a `--color-warning-dark`
+ * border, because a warning tone dark enough for white text no longer reads as yellow. Every
+ * other family fills with its dark tone.
+ *
  * Solid text is `contrast-color()` of the fill where the browser has it, so a light family
- * such as warning gets dark text. White is the fallback. The `@supports` probe passes a
+ * such as warning gets dark text. White is the fallback, except on the warning fill, where it is
+ * the black `contrast-color()` picks there. The `@supports` probe passes a
  * literal, `red`, because `var()` parses everywhere and would make the probe true in a
  * browser that then drops the real declaration. The literal paints nothing.
  */
@@ -511,10 +516,10 @@
   --button-light: var(--color-warning-light);
   &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost) {
     border-color: var(--button-dark);
-    background-color: var(--button-dark);
-    color: var(--color-white);
+    background-color: var(--color-warning-bright);
+    color: black;
     @supports (color: contrast-color(red)) {
-      color: contrast-color(var(--button-dark));
+      color: contrast-color(var(--color-warning-bright));
     }
   }
   &:not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost):is(
@@ -522,7 +527,11 @@
       :active
     ) {
     border-color: color-mix(in oklab, var(--button-dark) 88%, black);
-    background-color: color-mix(in oklab, var(--button-dark) 88%, black);
+    background-color: color-mix(
+      in oklab,
+      var(--color-warning-bright) 88%,
+      black
+    );
   }
 }
 
@@ -623,6 +632,71 @@
   }
 }
 
+/*
+ * Joins the direct children of a wrapper into one control, whether or not they wear `button`.
+ * Each child after the first overlaps its neighbor by 1px, so two neighbors share one border, and only the outer corners
+ * round. An enabled button stacks above a disabled one, so the borders beside a disabled button
+ * stay visible. A hovered or focused button stacks above its neighbors, so its border and focus
+ * ring are never covered. The layers are `:where()` rules so the focus layer wins by order, and
+ * `isolate` keeps them inside the group.
+ */
+@utility button-group {
+  @apply isolate inline-flex;
+
+  & > *:not(:first-child) {
+    @apply -ms-px rounded-s-none;
+  }
+  & > *:not(:last-child) {
+    @apply rounded-e-none;
+  }
+  & > *:where(:not(:disabled, [aria-disabled="true"])) {
+    @apply z-1;
+  }
+  & > *:where(:not(:disabled, [aria-disabled="true"]):hover) {
+    @apply z-2;
+  }
+  & > *:where(:focus-visible) {
+    @apply z-3;
+  }
+}
+
+/*
+ * A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the strip: one
+ * 35px row that scrolls sideways and never wraps, with its scrollbar hidden. `file-tab` is one
+ * tab in it. Reads `aria-selected="true"` and `aria-disabled="true"`. The selected tab carries a
+ * line on top and drops its bottom border, so it joins the content below. The focus ring is
+ * inset, as is a nested `focus-ring` or `icon-button`'s, because the strip's scroll container
+ * clips anything drawn outside a tab.
+ */
+@utility file-tabs {
+  @apply flex overflow-x-auto bg-light;
+  box-shadow: inset 0 -1px var(--color-gray-3);
+  scrollbar-width: none;
+}
+
+@utility file-tab {
+  @apply flex flex-none cursor-pointer items-center gap-1.5 border-t-2 border-r border-b border-t-transparent border-r-gray-3 border-b-gray-3 px-3 text-xs whitespace-nowrap text-subtle-1 outline-none;
+  height: calc(var(--spacing) * 8.75);
+
+  &:where(:not([aria-selected="true"], [aria-disabled="true"]):hover) {
+    @apply bg-medium text-default;
+  }
+  &[aria-selected="true"] {
+    @apply border-t-gray-9 border-b-transparent bg-white font-semibold text-default;
+  }
+  &[aria-disabled="true"] {
+    @apply cursor-not-allowed text-subtle-2;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--color-link);
+    outline-offset: -2px;
+  }
+  & .focus-ring:focus-visible,
+  & .icon-button:focus-visible {
+    outline-offset: -2px;
+  }
+}
+
 /* Status badge. Static, reads no attributes. Modifiers recolor. */
 @utility badge {
   @apply inline-flex items-center gap-1 rounded-full border border-medium bg-light px-2.5 py-0.5 text-xs text-default;
@@ -680,9 +754,28 @@
   }
 }
 
-/* Keyboard key hint. Static. */
+/*
+ * Keyboard key hint. Static. Inside an enabled button with a solid fill, its text and border take
+ * the button's label color, so the hint holds the label's contrast on every fill. The `:where()`
+ * keeps the class's specificity, so a later utility still wins.
+ */
 @utility kbd {
   @apply pointer-events-none inline-flex h-4 min-w-4 items-center justify-center rounded-xs border border-medium px-0.5 font-sans text-xs leading-none text-subtle-2 select-none;
+
+  &:where(
+    :is(
+        .button-dark,
+        .button-danger,
+        .button-warning,
+        .button-success,
+        .button-info,
+        .button-pending
+      ):not(:disabled, [aria-disabled="true"], .button-outline, .button-ghost)
+      *
+  ) {
+    border-color: currentColor;
+    color: inherit;
+  }
 }
 
 /* Initials or an `<img>` in a circle. Carries `role="img"` and `aria-label`. */
@@ -763,7 +856,9 @@
  * switches it to the stacked layout through `:has()`, so the rule holds for any markup.
  * Column spacing is margins on the parts, because an empty grid track still takes its gap.
  *
- * A modifier sets `--banner-light` and `--banner-dark`, and the chip reads them. The info
+ * A modifier sets `--banner-light` and `--banner-dark`, and the chip reads them. The glyph
+ * paints `--banner-glyph` where a modifier sets it, and `--banner-dark` otherwise. Warning sets
+ * it to the text-grade warning token, because its dark tone is too light on its chip. The info
  * default sits behind a `:not()` guard so a modifier wins whichever utility is emitted last.
  */
 @utility banner {
@@ -811,6 +906,7 @@
 @utility banner-warning {
   --banner-light: var(--color-warning-light);
   --banner-dark: var(--color-warning-dark);
+  --banner-glyph: var(--color-warning-text);
 }
 
 @utility banner-danger {
@@ -835,7 +931,7 @@
 @utility banner-chip {
   @apply col-start-1 row-start-1 mr-3 flex size-7 items-center justify-center;
   background-color: var(--banner-light);
-  color: var(--banner-dark);
+  color: var(--banner-glyph, var(--banner-dark));
 
   & > svg {
     @apply size-4;
@@ -942,8 +1038,9 @@
   scrollbar-width: thin;
 }
 
+/* `scrollbar-color` takes the thumb color, then the track color. The track stays clear. */
 @utility scrollbar-* {
-  scrollbar-color: --value(--color-*);
+  scrollbar-color: --value(--color-*) transparent;
 }
 
 @utility scrollbar-w-* {

@@ -23,6 +23,8 @@ Built on [bits-ui `Tabs`](https://bits-ui.com/docs/components/tabs).
 
 	import { Tabs } from 'bits-ui';
 
+	import type { TabsVariant } from './variant.ts';
+
 	import { provideTabs } from './useTabs.svelte.ts';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
@@ -31,11 +33,14 @@ Built on [bits-ui `Tabs`](https://bits-ui.com/docs/components/tabs).
 
 		/** The selected tab's `value`. Two-way bindable. Defaults to the first tab's. */
 		value?: string;
+
+		/** The strip's look. `file` is compact, boxed tabs like an editor's file tabs. @default 'underline' */
+		variant?: TabsVariant;
 	}
 
-	let { value = $bindable(), children, ...restProps }: Props = $props();
+	let { value = $bindable(), variant = 'underline', children, ...restProps }: Props = $props();
 
-	const tabs = provideTabs({ value: () => value });
+	const tabs = provideTabs({ value: () => value, variant: () => variant });
 </script>
 
 <Tabs.Root bind:value={() => tabs.value ?? '', (next) => (value = next)} {...restProps}>

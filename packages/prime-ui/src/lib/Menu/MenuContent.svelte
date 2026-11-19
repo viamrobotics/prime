@@ -75,7 +75,10 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		{alignOffset}
 		onInteractOutside={captureTrigger}
 		onCloseAutoFocus={restoreFocus}
-		class={['z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-sm', extraClasses]}
+		class={[
+			'z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-popover',
+			extraClasses
+		]}
 		{...restProps}
 	>
 		{@render children?.()}

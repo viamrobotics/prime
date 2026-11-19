@@ -1,0 +1,150 @@
+---
+/**
+ * Every `banner` tone in both layouts, then `banner-block`, `banner-progress`, and
+ * `banner-details`, with the markup under the examples. Static HTML.
+ */
+import { Code } from "@astrojs/starlight/components";
+import {
+  mdiAlertCircleOutline,
+  mdiAlertOutline,
+  mdiCheckCircleOutline,
+  mdiClose,
+  mdiInformationOutline,
+} from "@mdi/js";
+
+interface Tone {
+  name: string;
+  modifier: string;
+  role: "status" | "alert";
+  glyph?: string;
+  title: string;
+  description: string;
+}
+
+const tones: Tone[] = [
+  {
+    name: "Info",
+    modifier: "banner-info",
+    role: "status",
+    glyph: mdiInformationOutline,
+    title: "Update available",
+    description: "A new version of viam-server is ready to install.",
+  },
+  {
+    name: "Success",
+    modifier: "banner-success",
+    role: "status",
+    glyph: mdiCheckCircleOutline,
+    title: "Changes saved",
+    description: "Your machine picked up the new configuration.",
+  },
+  {
+    name: "Warning",
+    modifier: "banner-warning",
+    role: "alert",
+    glyph: mdiAlertOutline,
+    title: "Module deprecated",
+    description: "my-camera uses a module that is no longer maintained.",
+  },
+  {
+    name: "Danger",
+    modifier: "banner-danger",
+    role: "alert",
+    glyph: mdiAlertCircleOutline,
+    title: "Machine offline",
+    description: "The machine has not checked in for ten minutes.",
+  },
+  {
+    name: "Pending",
+    modifier: "banner-pending",
+    role: "status",
+    title: "Deploying",
+    description: "Sending the configuration to three machines.",
+  },
+];
+
+const icon = (path: string) =>
+  `<svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="currentColor"><path d="${path}" /></svg>`;
+
+const chip = (tone: Tone) =>
+  `<span class="banner-chip" aria-hidden="true">${
+    tone.glyph ? icon(tone.glyph) : '<span class="progress-dots"></span>'
+  }</span>`;
+
+const close = `<button type="button" class="icon-button banner-close" aria-label="Dismiss">${icon(mdiClose)}</button>`;
+
+const banner = (tone: Tone, parts: string[], extraClasses = "") =>
+  [
+    `<div class="banner ${tone.modifier}${extraClasses}" role="${tone.role}">`,
+    ...[chip(tone), ...parts].map((part) => `  ${part}`),
+    "</div>",
+  ].join("\n");
+
+const compact = (tone: Tone) =>
+  banner(tone, [`<p class="banner-description">${tone.description}</p>`, close]);
+
+const stackedParts = (tone: Tone) => [
+  `<p class="banner-title">${tone.title}</p>`,
+  `<p class="banner-description">${tone.description}</p>`,
+  `<div class="banner-actions"><button type="button" class="button">Review</button></div>`,
+  close,
+];
+
+const stacked = (tone: Tone) => banner(tone, stackedParts(tone));
+
+const [info, , warning, danger] = tones;
+
+const block = banner(warning, stackedParts(warning), " banner-block");
+
+const withProgress = banner(info, [
+  `<p class="banner-description">${info.description}</p>`,
+  close,
+  `<div class="progress banner-progress" role="progressbar" aria-label="Time until dismissed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60"><div class="progress-fill" style="width: 60%"></div></div>`,
+]);
+
+const withDetails = banner(danger, [
+  `<p class="banner-title">${danger.title}</p>`,
+  `<p class="banner-description">${danger.description}</p>`,
+  close,
+  `<div class="banner-details"><p class="font-roboto-mono text-xs text-subtle-1">last seen 14:02:11, exit code 137</p></div>`,
+]);
+
+const extras = [
+  { name: "banner-block", markup: block },
+  { name: "banner-progress", markup: withProgress },
+  { name: "banner-details", markup: withDetails },
+];
+
+const withoutPaths = (markup: string) => markup.replaceAll(/<path d="[^"]*" \/>/g, '<path d="..." />');
+
+const code = withoutPaths(
+  [
+    ...tones.flatMap((tone) => [`<!-- ${tone.name} -->`, compact(tone), stacked(tone), ""]),
+    ...extras.flatMap((extra) => [`<!-- ${extra.name} -->`, extra.markup, ""]),
+  ]
+    .join("\n")
+    .trimEnd(),
+);
+---
+
+<div class="not-content flex flex-col gap-6 rounded-sm border border-light p-4">
+  {
+    tones.map((tone) => (
+      <div class="flex flex-col items-start gap-2">
+        <p class="text-xs font-medium text-subtle-2 uppercase">{tone.name}</p>
+        <Fragment set:html={compact(tone)} />
+        <Fragment set:html={stacked(tone)} />
+      </div>
+    ))
+  }
+  {
+    extras.map((extra) => (
+      <div class="flex flex-col items-start gap-2">
+        <p class="text-xs font-medium text-subtle-2">{extra.name}</p>
+        <Fragment set:html={extra.markup} />
+      </div>
+    ))
+  }
+</div>
+
+<Code lang="html" {code} />
