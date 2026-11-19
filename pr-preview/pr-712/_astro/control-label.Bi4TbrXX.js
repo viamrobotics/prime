@@ -1,1 +1,0 @@
-var e=`text-xs text-subtle-1`,t=`flex items-center gap-2`;export{t as n,e as t};
