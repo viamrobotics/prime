@@ -22,7 +22,7 @@ This skill executes a **plan that already exists**. List the candidates with the
 grep -l . .claude/plans/*/ROADMAP.md | xargs grep -H '^\*\*Status:\*\*'
 ```
 
-- **No plan workspace?** Stop and run `/plan-project "<what to build>"` first (the `plans` module).
+- **No plan workspace?** Stop and run `/plan-project "<what to build>"` first.
   Orchestration without a persisted phase boundary has nothing to slice and nowhere to record status.
 - **Trivial work?** If you'd finish the phase in one pass, **do it yourself**. Below roughly two
   slices, briefs, dispatch, and review cost more than the work.
@@ -73,7 +73,7 @@ suppresses only that pause.
 Read the phase sub-plan (`phase-N-<slug>.md`). Break its steps into **slices**: the unit one worker
 owns end to end.
 
-Two pre-slicing moments, each skipped silently when its skill is not installed:
+Two pre-slicing moments:
 
 - **Wide or risky phase → `/blast-radius` first.** When the phase touches several packages, or its
   sub-plan carries a `wide` signal on its `**Signals:**` line, run it before drawing slices and let

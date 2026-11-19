@@ -1,6 +1,6 @@
 {
-  "kitVersion": "0.14.0",
-  "installedAt": "2026-11-19T05:06:34.649Z",
+  "kitVersion": "0.15.0",
+  "installedAt": "2026-11-19T19:10:37.197Z",
   "modules": [
     "core",
     "lint-fix",
@@ -43,32 +43,32 @@
     ".claude/scripts/lib/findings.mjs": "9db26aabfd775ed49bf4594862581fe6e9426bc7c40146da1b72a7dd4a6feb3a",
     ".claude/scripts/guard-bash.mjs": "2afcb35625a0068e4ee6602561265c1bad5dff44cb7cc32b143d663c8d1d35c1",
     ".claude/scripts/ledger-inject.mjs": "82becef707f57c9d1bb11a385feb7ea08efa16089466e6c0619bf95ec8f6eb3d",
-    ".claude/templates/CLAUDE.md.template": "ea8191159596f16a82eec0cc172f9ff259ce4757e5a0b8d1c13249f163b50e97",
+    ".claude/templates/CLAUDE.md.template": "7be4a87380943fbcf662498e092dc56f646aced190c91555905bd25df6300026",
     ".claude/templates/agents/reviewer.agent.md.template": "10df260314d1db4a3cdcc3b8a86fdf8eb92cd0138a2069fad6828b249a66c5e0",
     ".claude/templates/rules/GUARDRAIL.md.template": "d31f5aa8b959523a20516a4f8dd94a8a22766b9b68369c768b53519b197dc35b",
     ".claude/templates/.gitignore": "ff43e4750f6889a22672491abc89633a183a8d8929f0922edadd5f06ab9a2843",
     ".claude/scripts/.gitignore": "5837676d0344c53e2ecc4d8b7a2e8a5ea36e6e670a398f31a82b2f53b02416ae",
-    "CLAUDE.md": "af77e9002dd6acd8a0f269736d19ad019d8fea4aa24c177b3f7a556f5f38129a",
+    "CLAUDE.md": "2a9c9b4a2ba605aaf55481d754ac3a68011eec7c97538a6e0f5956fd64755b4b",
     ".claude/scripts/lint-format-fix.mjs": "c089c57339e42ba3c71e1a5bf7d382590df214a31583a326eaf1f9017db13f5c",
     ".claude/scripts/session-context.mjs": "f01e5cde3e42ca7f4cb47b07a942193f9890c796f8745920c49da75cc1ecf94c",
     ".claude/scripts/rename.mjs": "03d0c7a818340f6aebf5cac182761f15a7f6edd9903994966af2f8e66fd09e22",
-    ".claude/skills/review-change/SKILL.md": "d246cb7bc1b3dd78eeb576333bea75a5bc484e3a40c96c5f4a3907fde028df80",
+    ".claude/skills/review-change/SKILL.md": "c53866a7fe9b10388cb2e73620135b454c23f3fc8ddb404e6bf0d527f1838bfa",
     ".claude/scripts/review-package.mjs": "4c9718c9d4647a56dad71b5293683c6420c87a613c5698d61a54724df2d4d87f",
     ".claude/skills/debug-session/SKILL.md": "cf0e3c8fd38a9340e10c7f0497b7c02f3fd698764bec41aba37aadcc847e42d4",
     ".claude/scripts/debug-session-check.mjs": "e05229369d49f0353ee6c4b57a3242e2e31b744f82886d664859c25977bd2378",
     ".claude/templates/agents/debugger.agent.md.template": "46411ee6ababe8024982e2c859e7e9e28fcf3a4c67602ae7cfe2d0fa5ce25c52",
     ".claude/debug/.gitignore": "177dee43ccc45ef1afccdbb6e9282a751271d25d87eb197a17f63f75fe867be1",
-    ".claude/skills/plan-project/SKILL.md": "e31197152ebeda4660c371a3573e219f36a9280b61aff95504794b64b2310143",
+    ".claude/skills/plan-project/SKILL.md": "e9073644ead84ff64bed8c54598f69eee594641e93b67492e22ab8d4344b192e",
     ".claude/skills/blast-radius/SKILL.md": "673778dd8d539f8f19e83d6c50cb7f4441026d873cfcc930513f27c069da69f8",
     ".claude/agents/blast-radius-mapper.md": "1ebf25f7a4766b3068767bc822398094b81d2be929bd7a0c7e18fc9f664b30b4",
     ".claude/plans/.gitignore": "e5388670bdb4e570d8ee9c73582c10594ab3d8ddd8738fb7169bd90afec8730e",
-    ".claude/skills/orchestrate/SKILL.md": "111b2a203b18c075178454cd4be4eff5531c11e33b0cca67fb9d21c7aeee1e04",
-    ".claude/skills/orchestrate/references/slicing.md": "157bcb917d07c6f8e7ce31d87c161fea819e4b818a2b172f52fd97ccb3a135e2",
+    ".claude/skills/orchestrate/SKILL.md": "cb60a05d779d4007946edd4fa5ad570849a44d8f62b8d6c2a5c644879e999639",
+    ".claude/skills/orchestrate/references/slicing.md": "06c0cdd61fb086fcd55bd31e2149b5bdadf7f0d268f33b40d2d9222ac93b5e3b",
     ".claude/skills/orchestrate/references/review-patterns.md": "e83d438712368d9385fde8da33f7196522d9ca39af3f92663a5427d3a9ad5a42",
     ".claude/skills/orchestrate/references/fixer-and-residue.md": "d7564cc74af92283bbb8b03143c4e49716d137a6c95041c00b5eccf9b5f0b0bf",
     ".claude/skills/orchestrate/references/closing.md": "55c1646aefbfdfc32fbe0645a1108d30a0905617aae2d52a3261f310197e6fcb",
     ".claude/agents/task-worker.md": "6117a4aff1adf2a3853bbbcc59281ab34174b30d209bcfcfe460bc79048f8853",
-    ".claude/scripts/plan-lint.mjs": "289674f07cb6662c74fc8fcbf7458ae6a00adc26385cbdd535175facf09c8021",
+    ".claude/scripts/plan-lint.mjs": "eed5bb9ddcf1a1dda958ef20589425c426698d3d47dec79327710a08f33cec7b",
     ".claude/scripts/verify-changed.mjs": "c038c84c5fd59ce7e704ff01eff4c2aed56aab34c3e86668ac8f8437e1ecf5cc",
     ".claude/skills/verify-changed/SKILL.md": "4d529d2a1b2fcdf1367c132280eff43ff3a41801f2b228794435fbeb98ad5dbe",
     ".claude/skills/ready/SKILL.md": "cb331227578b1afb0020a3a238fb2ae8b9297cc017b86fae299317d52b10cb92",
@@ -76,11 +76,11 @@
     ".claude/scripts/guard-read.mjs": "4f0ce296103a772e9074e200aa8fef6ef9447a653ea3fd55c4ed96a5697d30ab",
     ".claude/scripts/statusline.mjs": "ef2b2267993567db89c8e6904b9083d7f7aaf5bfc214f329fedab2591507cded",
     ".claude/rules/code-cleanliness.md": {
-      "body": "e98a6bdd27d6088f49d67ae5264464ce5320ca6f476ec12d821ec14ab9dda9fc",
+      "body": "36e4689b005e59ccc6e6b0b8da3ca775a4438f6c375765ab3f074dd6ba9151e1",
       "frontmatter": "26f6e6023808560c1725ccde625e53c55ddcdfba96b742bc15b58b1499afc5ac"
     },
-    ".claude/reference/design-principles.md": "447044406b3e601c4b969c5c87f9fe7046a684bb6a71de36cad56ebbdf069b97",
-    ".claude/skills/tidy/SKILL.md": "45a5a5d742aa8ab12f8d5c2ec59781d52692e00815f206015e92b5566807c432",
+    ".claude/reference/design-principles.md": "f5ad89ac6dd9c17083c7787f2d74454aa9e9d46a98f57526dd38eb9014f5f791",
+    ".claude/skills/tidy/SKILL.md": "ece4edbcf0bf3867e848a6a171f6d0b059346bfad78bf60e17b1d6306a26fe97",
     ".claude/scripts/catch-all-filename.mjs": "b28a05bfd804b61209bca11cd47c3fef4e081ec6eec9691e609015122a96697d",
     ".claude/settings.ci.json": "b6a21552d285335aadc8579da821b056febba252cfeb9abe14cb02b934e14930",
     ".claude/rules/code-comments.md": {
@@ -101,7 +101,7 @@
       "frontmatter": "6b153f6b5ad98e0f52c1658e71896b8623c5063aee2c7116f9df2574bb019495"
     },
     ".claude/rules/svelte.md": {
-      "body": "0190897796e138eb2e0a583c6167718585ccc7022a7c31b8217eebe14dce30bd",
+      "body": "a4ff6576e7fd5abb70d69c58937bab301a3cbbb1f0940a1bc7286ec4588b87ca",
       "frontmatter": "01669efb05f684fa1dc9e59a07e67f1de288e8c6976b4c1f9219eda42ec210b0"
     },
     ".claude/scripts/svelte-lint.mjs": "2c111a83f2986823cb453f7433eb62da63efbf203d6482fcc65a333195f3dc49",
@@ -109,7 +109,7 @@
     ".claude/mcp/svelte.stdio.json": "2125ce807be24d4380c8bc5f00f700ed73ab2239d4f2d0dca459036a477e5103",
     ".claude/mcp/svelte.vscode.json": "18c042f1740eacf294371ea167b96bd8d5873bde61e8e2c84f3db10dd87b53d4",
     ".claude/rules/testing.md": {
-      "body": "6853a2a9c72cfb417a8c9ec3d39092102c8b440a8c5b301bff2ffcd9bc1903f4",
+      "body": "e81284d911592d90674d412ca53c1b090eaf49e80d3eff2fbaaa3bed6bb15460",
       "frontmatter": "42d4ce2a2cc6233c36221f8d58d0bb235a13e645f6ed83066fd3f7edd9ae2012"
     },
     ".claude/rules/testing-typescript.md": {
@@ -117,7 +117,7 @@
       "frontmatter": "5c5850fddf38db27c61e50fb1d52d3461eab4b64236a3f055a40257c438d1040"
     },
     ".claude/rules/testing-svelte.md": {
-      "body": "112afa78585abc9007cf86ffedefe1e83c8c8df00a65b380ca82f71e50449835",
+      "body": "fadfc6425b095abfc629b95c76309290af1e684ad4d27c20446788d36d9969d0",
       "frontmatter": "1cf112ffd75b9b5b7d7954d9e70885a721dfe79780d1a88630665ed17c579fea"
     },
     ".claude/scripts/test-layout.mjs": "844ff06711de1d1b3aefa4865532e5ced771e2947ac06a9ff3bc6fff537aa260",
@@ -126,15 +126,15 @@
     ".claude/mcp/playwright.vscode.json": "99eb1d02caf898f3dbe8480205727791eee0aa6f789f1d9016ae3658ce3875d8",
     ".claude/scripts/changeset-write.mjs": "50a41874e4a7d7ab36044a9a97c6e657124a62f1e107382a89487d730eb24716",
     ".claude/scripts/changeset-check.mjs": "1eb6cc189f6b7c268c0c8346395d7ec5826317c31e8ad22856b84243f59d6561",
-    ".claude/scripts/changeset-gate.mjs": "4b2969e8f5f762286a5d043861c7c9e742d9b3b2b16bb5dc2b564f0aa3671428",
+    ".claude/scripts/changeset-gate.mjs": "b64b360b6339b15133007bc5aa820d1381724aeb75f9c2d8afd4fe5dfdc9b7e3",
     ".claude/state/.gitignore": "6d306aec8fa79b4ddddcd3a59e52761ce3e33f81259cb508d965bb3fbc139a7b",
     ".claude/skills/changeset/SKILL.md": "21961d1a0bd3c991172e40cbfd2a2dc13202ed90aa609cac1730c814975e2ed4",
     ".claude/agents/changeset-writer.md": "1c98404e5f5817d9bd44b79a01eea3415640d5e17d512494735f76ba95001ed9",
     ".claude/rules/design.md": {
-      "body": "95fb09ea67c86dbb1bc7a556127d6805f9c2d7f97f3c219a060538336bd8c86e",
+      "body": "7b7e2c71d20d51740cf8287abc7785af50bcfa1682c9abe813644beb7341daeb",
       "frontmatter": "86e2936b957e71fafcded2efdb5789a1ca419e9526acf96939a709340de18624"
     },
-    ".claude/reference/design-visual-principles.md": "c88edfc64cf6f000f4fb4972ab7cc7d67aba3c69584d014852f97b2dc445c895",
+    ".claude/reference/design-visual-principles.md": "082bb11e703474cbcee40e1d5a7bcda11c595376797b3003a4ea49fbc03cda2b",
     ".claude/reference/design-layout.md": "3ded042212643d1cb964bf0d73faab38877e621a8684f1424d08f9be1dda936a",
     ".claude/reference/design-performance.md": "de429e019be467cf2008fdc75afa405d725f8197aa6ff3c6946746d17d9c0f6f",
     ".claude/scripts/design.mjs": "424ed47a4f1faa02cbda065d47bc800380640d4a420f60db11b04cf90a4ecaf0",
@@ -143,10 +143,10 @@
     ".claude/scripts/lib/css-custom-properties.mjs": "cefae24c1b19cc0dcd87d18e99680131bd82dcdb27e5152548b9c9e801392e5c",
     ".claude/scripts/lib/style-literals.mjs": "229073b4d9095a66a2f465c2ad1ba32e8cf6eda08b33900b98a957e6e8f54227",
     ".claude/scripts/lib/design-checks.mjs": "0376a7b727a6fe33dc150cf9d31b31c402321725b83c848a563569a024b868cd",
-    ".claude/scripts/lib/cdp-session.mjs": "4cbe6c91303a38e0ce9af6c6bb8eb708660558d5f013027b866142559d744a8b",
+    ".claude/scripts/lib/cdp-session.mjs": "f4138dea586059a4cce1cdf4babb91457bdf6e38ff24ac91eefd6e18887ed94a",
     ".claude/scripts/lib/rendered-checks.mjs": "ce6b63838079f51fd22c90cadb4bf5f32f47c641a9b0aa8720869310b6b0b7dc",
-    ".claude/skills/design-review/SKILL.md": "11a1661ee36edfaa1bf9fff1d2931460512ca993848422f6d997acf1c96d7365",
-    ".claude/agents/design-reviewer.md": "ae28bf8507ba4e4a73c8f890f144058b774e06c14950999357b92bd2c8a10f7a",
+    ".claude/skills/design-review/SKILL.md": "5f8ecd1696b6885e9b6084e61d327e89f12f25cb38e2a682b5f2b072ce077e28",
+    ".claude/agents/design-reviewer.md": "19cc4621c112c2431bc6c617b099ddac760343d058148b0a3b7c826afaeee1b7",
     ".claude/scripts/lib/tailwind-host-packages.mjs": "25c02ad079c85ebf0036974b9744a067701b62b0d7fa485a9afa9ab702452f5a",
     ".claude/scripts/lib/tailwind-design-system.mjs": "93d1dae76beceba9aaaaeb2247806247e126af0034a98e79e63226fe3d74c64f",
     ".claude/scripts/lib/tailwind-theme-to-dtcg.mjs": "1d4625fafed835255621c53b2f484631ce9320815722b204ab2101ab13a29619",
@@ -164,7 +164,7 @@
       "frontmatter": "d9f433bf88d125968c80fd2a02f5ab0217c5eef307dafa7c57fcebd5939dba6b"
     },
     ".claude/rules/accessibility.md": {
-      "body": "b4ae5adff1b86fb352da259c69b1551221eb63363c2efd8269ce0ea297b9e321",
+      "body": "c161adb3c52934597e01cc2e0944e17461402f0f14c483bbd3dfe297ca79496e",
       "frontmatter": "afc8d99cc256c20b5a6af3d4aac0a44940750aa4a2e51e3a90f222917476a0cc"
     },
     ".claude/reference/wcag22.md": "a477388a76953ea823c5ca7eb3e144666f185698e32fac2169fe43a1d40d8d7c",
@@ -173,10 +173,10 @@
     ".claude/scripts/a11y-markup.mjs": "5bf06d066e47ffdb20a0778a7a340b7e29bbf0108d473dcf15311505d4cb619c",
     ".claude/skills/accessibility-review/SKILL.md": "113b65b2f438e49e758be5c5ae8f18c9cacc3b1310998643c5a8f62cb5ec297b",
     ".claude/agents/accessibility-reviewer.md": "e6fc5ffec2bb0020e005f4f64bea5fb121306b9265acf504d7b068702bd28e53",
-    ".claude/scripts/lib/transcript-turn.mjs": "a51c5965e135dad7482ea0690d6078cc4dc5609ba48b3d457adf771cfc0ba15b",
+    ".claude/scripts/lib/transcript-turn.mjs": "3ce002de904eda5584aec0eb3ab6d09a45b9d2dd7bc443234af81ddb749ebbce",
     ".claude/agents/plan-reviewer.md": "0185c78d74ac94f7d4f14cf2e1c8e6b7156e391c9ada68375b76fa30a9da28fa",
-    ".claude/skills/orchestrate/references/nested.md": "21fc4f5e79267c44a6a73085e08d95df2bb9a82e937a88c23dec3d74900327e7",
-    ".claude/agents/phase-orchestrator.md": "d277cf248b7fdcec94c2b6071ee2a76af43b162f45a6b61a57a1954c06ef8dfc",
+    ".claude/skills/orchestrate/references/nested.md": "cf13fd1dcddc2bb1a3784d39f9141cff7839b85cd2bcdc443f55ff489705ed7e",
+    ".claude/agents/phase-orchestrator.md": "c7a3171707d0b6f3fbe1aa63391007961dc9caa0a1eecbc3955148bf6cf8b0be",
     ".claude/scripts/wave-ceiling.mjs": "8fd752e4aa52b3bcb7aff32b30fcedf0bb8fbf192821d839e427cc9abf6814a0",
     ".claude/scripts/lib/changeset-owner.mjs": "d2a298437c3f5cad7a213929b5e0fc0095017d8938ad1853d031baa1cff09233",
     ".claude/reference/design-interaction.md": "eb8fbd4e1d8d9ad7e76b65edbd1d67609d4da9eb6e4e178aba38f94588d92f7f",

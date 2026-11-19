@@ -81,29 +81,29 @@ importers:
         specifier: ^2.31.0
         version: 2.31.0(@types/node@24.12.3)
       '@houserules/cli':
-        specifier: ^0.14.0
-        version: 0.14.0
+        specifier: ^0.15.0
+        version: 0.15.0
       '@houserules/plugin-accessibility':
-        specifier: ^0.2.2
-        version: 0.2.2(@houserules/api@0.7.3)
+        specifier: ^0.3.0
+        version: 0.3.0(@houserules/api@0.8.0)
       '@houserules/plugin-changesets':
-        specifier: ^0.4.0
-        version: 0.4.0(@houserules/api@0.7.3)
+        specifier: ^0.4.1
+        version: 0.4.1(@houserules/api@0.8.0)
       '@houserules/plugin-design':
-        specifier: ^0.4.3
-        version: 0.4.3(@houserules/api@0.7.3)
+        specifier: ^0.5.0
+        version: 0.5.0(@houserules/api@0.8.0)
       '@houserules/plugin-prose':
-        specifier: ^0.2.3
-        version: 0.2.3(@houserules/api@0.7.3)
+        specifier: ^0.2.4
+        version: 0.2.4(@houserules/api@0.8.0)
       '@houserules/plugin-svelte':
-        specifier: ^0.2.1
-        version: 0.2.1(@houserules/api@0.7.3)
+        specifier: ^0.2.2
+        version: 0.2.2(@houserules/api@0.8.0)
       '@houserules/plugin-testing':
-        specifier: ^0.3.4
-        version: 0.3.4(@houserules/api@0.7.3)
+        specifier: ^0.3.5
+        version: 0.3.5(@houserules/api@0.8.0)
       '@houserules/plugin-typescript':
-        specifier: ^0.1.3
-        version: 0.1.3(@houserules/api@0.7.3)
+        specifier: ^0.1.4
+        version: 0.1.4(@houserules/api@0.8.0)
       '@tailwindcss/oxide':
         specifier: 'catalog:'
         version: 4.3.3
@@ -242,7 +242,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -327,7 +327,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -442,7 +442,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -530,7 +530,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -612,7 +612,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -721,7 +721,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -773,7 +773,7 @@ importers:
         version: 8.72.2(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3)
       vitest:
         specifier: 'catalog:'
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       wireit:
         specifier: 'catalog:'
         version: 0.14.13
@@ -1320,57 +1320,57 @@ packages:
   '@fontsource-variable/space-grotesk@5.2.10':
     resolution: {integrity: sha512-yJQO/o35/hAP3CFnpdFTwQku2yzJOae2HIpBmqkOVoxhhXJaQP3g+b6Jrz7u+eI7A5ZdCIf88uMWpBJdFiGr5w==}
 
-  '@houserules/api@0.7.3':
-    resolution: {integrity: sha512-m+epQ73Jkgi8jHQ4pKS0eYRGDjhemLBxSjmJOjDDLDK0PDeKIKvM+Q9A9/1rEnNIx9fvETy97kGRcseQwsuZ5Q==}
+  '@houserules/api@0.8.0':
+    resolution: {integrity: sha512-3DxZWl5uFpMeeKsKQZr2efMz/GyKaqLAjbPBsbftL7hSIc1QM9gHXfN2uGAHqCsDxW/+8vflkTVlBtWXrGVfww==}
     engines: {node: '>=22'}
 
-  '@houserules/cli@0.14.0':
-    resolution: {integrity: sha512-RtPG5+RQdt0xGO5w0So+e+b8qolsZpChiZONBHoB3dVOcjHgV5nENsLv/HGHSv+vVdyA1P8OjHXI3HIeSamzTQ==}
+  '@houserules/cli@0.15.0':
+    resolution: {integrity: sha512-I7/8ca8bjD98ZwDDlctijJc0uVbuQycVsFSdqoyG010PMmRadkgCeDUz/XTaYBMjDfgBZpdizTScE6P00XNUhQ==}
     engines: {node: '>=22'}
     hasBin: true
 
-  '@houserules/payload@0.5.0':
-    resolution: {integrity: sha512-z5ZFwdPELnHRnCYnIYm8ma8e2e5ObS4ccxgmJaRcPwlWr90pAxrcYi9GloogbnxP7irgQjVkf2edYapXEozxnQ==}
+  '@houserules/payload@0.5.1':
+    resolution: {integrity: sha512-TmCSsZRoTYKS83IHxxjE+iBHwXnK5A8g1dWEixRy3nJMJP8XxqwKQG9Kqb1XC1ZcCH2Gv5PJLmMwB86gds6hMw==}
     engines: {node: '>=22'}
 
-  '@houserules/plugin-accessibility@0.2.2':
-    resolution: {integrity: sha512-VwMBEpwBhdm6RQXMQaAmLTL7ar+doXgFAaHyp1ssUqR4gKuIiFIyrPeAq/5Sqr96aPbFjmk6QBC5J0eravOY4A==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      '@houserules/api': '>=0.0.0 <1.0.0'
-
-  '@houserules/plugin-changesets@0.4.0':
-    resolution: {integrity: sha512-0xoOWOy7ap5eui9TfUp6cv0W4d+kMXNNpR6LiurNF3o2RbwUviasGnhiQK2HN74I+ZUygLoFBBqLvIsIkWz5aw==}
+  '@houserules/plugin-accessibility@0.3.0':
+    resolution: {integrity: sha512-dfDJbIOC66IsZJvrhngLZI7i1MfZGPitpEa/scJGG1KTQG8AOzhigqDV5lT68o2vYXOJLheypRvP2Ho9akCBdA==}
     engines: {node: '>=22'}
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
 
-  '@houserules/plugin-design@0.4.3':
-    resolution: {integrity: sha512-Kvhgl8Zaaz4nLqgOOfGMM/XOlhBw8wFETMI6Cc9WI66AfqB5Ioicz+pqzapm7G68IA0e/geSKQZ/9Q0zG/4Iow==}
+  '@houserules/plugin-changesets@0.4.1':
+    resolution: {integrity: sha512-XOg+pkvYlw+1zbO81lJ63bSbwWgmXTMwJ43T4YPxfW8JBJCHWWz8JVy888YO4PGAHUtWOwhjc/sLmYqjRBLOAw==}
     engines: {node: '>=22'}
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
 
-  '@houserules/plugin-prose@0.2.3':
-    resolution: {integrity: sha512-Hi2xw4kwTcNI1JXHA8peSzMaYlrHFbAp61mYjtoYMEjRZMhyMMz5Cn5Id/a1qEE3XJbbkt0mZwF/EXHZouWHug==}
+  '@houserules/plugin-design@0.5.0':
+    resolution: {integrity: sha512-xo+KjAXo8xRtO5y7HenT672WeyAgmNx3DFQAESriMP4J3H8qCMJlLZExCu2Xl9UkqZWc5CgDMBeTu4+cda6X1w==}
     engines: {node: '>=22'}
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
 
-  '@houserules/plugin-svelte@0.2.1':
-    resolution: {integrity: sha512-cOs2A9WGmJ8ZVFChsgiHXyf8Be7X6rWNnut7kFgMDSvR1Vqp5BY56BDM8wUci+WXf6ZwRHMlKSfo0S5kxvg8LA==}
+  '@houserules/plugin-prose@0.2.4':
+    resolution: {integrity: sha512-i8qIf4b0MExoQaNrFVZhOOb07Cc4+vaW24JaZzfhgqxjeb3jlHpaKNyzaQMJliUq16PsyqnGQ319lIMbuilDww==}
     engines: {node: '>=22'}
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
 
-  '@houserules/plugin-testing@0.3.4':
-    resolution: {integrity: sha512-MgQ7juW4sIZUBTGj1SpopEdkLU6qyITeBsV2S66oAaRYNnPJ54SJFT5DBM+lXN8PlLarDTZL3gDmcbJw01QzXw==}
+  '@houserules/plugin-svelte@0.2.2':
+    resolution: {integrity: sha512-GMxtamDFNxvh5eWjdt7bYGCNXQKmdR5jQK4dxppED+JFBKD0izD8zPM7rvQBzJ3nptfWDfFVy0ddU6Y0NAfKDQ==}
     engines: {node: '>=22'}
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
 
-  '@houserules/plugin-typescript@0.1.3':
-    resolution: {integrity: sha512-MuuRGqcCRDWF4VkY6wApd3EokAAVZ5RHM6WfK8ZCt63Zsak/6MlfzQzRXWtxQZygxDai52K73Bp95nsmA9g5kw==}
+  '@houserules/plugin-testing@0.3.5':
+    resolution: {integrity: sha512-fktA4R+2V8o2A++9/w8X1QQVhc+8QtV3DQ6nV4L9sLzVd5IzOqG+1sK+EqigQD8GYsaICNObeNbAyEfzNPYuFw==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@houserules/api': '>=0.0.0 <1.0.0'
+
+  '@houserules/plugin-typescript@0.1.4':
+    resolution: {integrity: sha512-AqiWQor4wFw7qou+FCLAMZYoiciEibU4oYqqR5xl1mabRA7gUaVvW8dKuNTn0LPsI5X/TtYzbsQt96Q9xc127A==}
     engines: {node: '>=22'}
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
@@ -4776,7 +4776,6 @@ packages:
       '@vitest/ui': 4.1.6
       happy-dom: '*'
       jsdom: '*'
-      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true
@@ -5581,52 +5580,53 @@ snapshots:
 
   '@fontsource-variable/space-grotesk@5.2.10': {}
 
-  '@houserules/api@0.7.3':
+  '@houserules/api@0.8.0':
     dependencies:
-      '@houserules/payload': 0.5.0
+      '@houserules/payload': 0.5.1
       type-fest: 6.0.2
       zod: 4.6.7
 
-  '@houserules/cli@0.14.0':
+  '@houserules/cli@0.15.0':
     dependencies:
       '@clack/prompts': 1.9.0
-      '@houserules/api': 0.7.3
-      '@houserules/payload': 0.5.0
+      '@houserules/api': 0.8.0
+      '@houserules/payload': 0.5.1
       commander: 15.1.0
       dequal: 2.0.3
       diff: 9.0.0
       picocolors: 1.1.1
       semver: 7.8.6
 
-  '@houserules/payload@0.5.0': {}
+  '@houserules/payload@0.5.1': {}
 
-  '@houserules/plugin-accessibility@0.2.2(@houserules/api@0.7.3)':
+  '@houserules/plugin-accessibility@0.3.0(@houserules/api@0.8.0)':
     dependencies:
-      '@houserules/api': 0.7.3
+      '@houserules/api': 0.8.0
+      semver: 7.8.6
 
-  '@houserules/plugin-changesets@0.4.0(@houserules/api@0.7.3)':
+  '@houserules/plugin-changesets@0.4.1(@houserules/api@0.8.0)':
     dependencies:
-      '@houserules/api': 0.7.3
+      '@houserules/api': 0.8.0
 
-  '@houserules/plugin-design@0.4.3(@houserules/api@0.7.3)':
+  '@houserules/plugin-design@0.5.0(@houserules/api@0.8.0)':
     dependencies:
-      '@houserules/api': 0.7.3
+      '@houserules/api': 0.8.0
 
-  '@houserules/plugin-prose@0.2.3(@houserules/api@0.7.3)':
+  '@houserules/plugin-prose@0.2.4(@houserules/api@0.8.0)':
     dependencies:
-      '@houserules/api': 0.7.3
+      '@houserules/api': 0.8.0
 
-  '@houserules/plugin-svelte@0.2.1(@houserules/api@0.7.3)':
+  '@houserules/plugin-svelte@0.2.2(@houserules/api@0.8.0)':
     dependencies:
-      '@houserules/api': 0.7.3
+      '@houserules/api': 0.8.0
 
-  '@houserules/plugin-testing@0.3.4(@houserules/api@0.7.3)':
+  '@houserules/plugin-testing@0.3.5(@houserules/api@0.8.0)':
     dependencies:
-      '@houserules/api': 0.7.3
+      '@houserules/api': 0.8.0
 
-  '@houserules/plugin-typescript@0.1.3(@houserules/api@0.7.3)':
+  '@houserules/plugin-typescript@0.1.4(@houserules/api@0.8.0)':
     dependencies:
-      '@houserules/api': 0.7.3
+      '@houserules/api': 0.8.0
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -6605,7 +6605,7 @@ snapshots:
       '@vitest/mocker': 4.1.6(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       playwright: 1.65.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -6618,7 +6618,7 @@ snapshots:
       '@vitest/mocker': 4.1.6(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       playwright: 1.65.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -6635,7 +6635,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       ws: 8.20.0
     transitivePeerDependencies:
       - bufferutil
@@ -6652,7 +6652,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
       ws: 8.20.0
     transitivePeerDependencies:
       - bufferutil
@@ -8761,7 +8761,7 @@ snapshots:
       postcss: 8.5.14
       postcss-scss: 4.0.9(postcss@8.5.14)
       postcss-selector-parser: 7.1.1
-      semver: 7.8.5
+      semver: 7.8.6
     optionalDependencies:
       svelte: 5.55.5(@typescript-eslint/types@8.72.2)
 
@@ -9077,37 +9077,9 @@ snapshots:
     dependencies:
       '@testing-library/svelte-core': 1.0.0(svelte@5.55.5(@typescript-eslint/types@8.72.2))
       svelte: 5.55.5(@typescript-eslint/types@8.72.2)
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
 
-  vitest@4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)):
-    dependencies:
-      '@vitest/expect': 4.1.6
-      '@vitest/mocker': 4.1.6(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
-      '@vitest/pretty-format': 4.1.6
-      '@vitest/runner': 4.1.6
-      '@vitest/snapshot': 4.1.6
-      '@vitest/spy': 4.1.6
-      '@vitest/utils': 4.1.6
-      es-module-lexer: 2.1.0
-      expect-type: 1.3.0
-      magic-string: 0.30.21
-      obug: 2.1.1
-      pathe: 2.0.3
-      picomatch: 4.0.4
-      std-env: 4.1.0
-      tinybench: 2.9.0
-      tinyexec: 1.1.2
-      tinyglobby: 0.2.16
-      tinyrainbow: 3.1.0
-      vite: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 24.12.3
-      '@vitest/browser-playwright': 4.1.6(playwright@1.65.0)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))(vitest@4.1.6)
-    transitivePeerDependencies:
-      - msw
-
-  vitest@4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)):
+  vitest@4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1):
     dependencies:
       '@vitest/expect': 4.1.6
       '@vitest/mocker': 4.1.6(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
@@ -9133,7 +9105,18 @@ snapshots:
       '@types/node': 24.12.3
       '@vitest/browser-playwright': 4.1.6(playwright@1.65.0)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))(vitest@4.1.6)
     transitivePeerDependencies:
+      - '@vitejs/devtools'
+      - esbuild
+      - jiti
+      - less
       - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
 
   w3c-keyname@2.2.8: {}
 

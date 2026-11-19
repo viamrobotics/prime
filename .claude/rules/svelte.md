@@ -155,7 +155,7 @@ string template:
 - **Enable `svelte/valid-compile`.** `eslint-plugin-svelte`'s recommended config leaves it
   off. Turning it on fails the lint on any warning the Svelte compiler emits: an unused
   CSS selector, a duplicate `style:` directive, a store used outside a component, and
-  more, not only the `a11y_` warnings `accessibility-svelte.md` already covers.
+  more, not only the `a11y_` warnings `accessibility-svelte.md` already covers where it is installed.
 - **Enable `svelte/no-unused-svelte-ignore`.** It is already part of the recommended
   config, but state it explicitly if this repo builds its ESLint config from `svelte/base`
   instead. It flags a `<!-- svelte-ignore some_warning -->` comment whose warning the
