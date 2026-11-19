@@ -1,16 +1,18 @@
 <!--
 @component
-One tab of a [`Tabs`](./Tabs.svelte) strip. Its children are the tab's content. It is a
+One tab of a [`Tabs`](./Tabs.svelte) strip. Its children are the tab's label. It is a
 `role="tab"` element rather than a `<button>`, so a control such as a close `icon-button` can
-sit inside it. That control's keys stay with it, and it stops click propagation so the click
-does not select the tab. Under the root's `file` variant the tab is a boxed file tab, and
+sit inside it, placed through the `actions` snippet. That control's keys stay with it, and it
+stops click propagation so the click does not select the tab. Under the root's `file` variant the tab is a boxed file tab, and
 selecting it scrolls the strip to show it.
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { Tabs } from 'bits-ui';
 
+	import type { TabsMove } from './move.ts';
 	import type { TabsVariant } from './variant.ts';
 
 	import { watchTabDrag } from './drag-reorder.ts';
@@ -27,9 +29,23 @@ selecting it scrolls the strip to show it.
 		value: string;
 		/** Disable this tab. @default false */
 		disabled?: boolean;
+		/**
+		 * Controls placed after the label, such as a close button or Move left and Move right buttons. The
+		 * tab is named from `children` alone unless `aria-label` or `aria-labelledby` is given.
+		 */
+		actions?: Snippet<[TabsMove]>;
 	}
 
-	const { value, disabled = false, class: extraClasses, children, ...restProps }: Props = $props();
+	const {
+		value,
+		disabled = false,
+		class: extraClasses,
+		children,
+		actions,
+		...restProps
+	}: Props = $props();
+
+	const labelId = $props.id();
 
 	const tabs = useTabs();
 	const reorder = useTabsReorder();
@@ -71,13 +87,39 @@ selecting it scrolls the strip to show it.
 		return watchTabDrag(element, value, drag);
 	});
 
+	const moveBy = (direction: number) => {
+		if (!reorder || !isMovable) return;
+		reorder.move(value, reorder.order.indexOf(value) + direction, { focus: true });
+	};
+
 	const moveByKey = (event: KeyboardEvent) => {
-		const step = reorderStepOf(event);
-		if (!reorder || step === undefined) return false;
+		const direction = reorderStepOf(event);
+		if (direction === undefined) return false;
 		event.preventDefault();
-		reorder.move(value, reorder.order.indexOf(value) + step, { focus: true });
+		moveBy(direction);
 		return true;
 	};
+
+	const move: TabsMove = {
+		movePrevious: () => moveBy(-1),
+		moveNext: () => moveBy(1),
+		get canMovePrevious() {
+			return isMovable && reorder !== undefined && reorder.order.indexOf(value) > 0;
+		},
+		get canMoveNext() {
+			return (
+				isMovable &&
+				reorder !== undefined &&
+				reorder.order.indexOf(value) < reorder.order.length - 1
+			);
+		}
+	};
+
+	const isNamedByLabel = $derived(
+		actions !== undefined &&
+			restProps['aria-label'] === undefined &&
+			restProps['aria-labelledby'] === undefined
+	);
 
 	// bits-ui renders a button, so it sets the button-only `type` and `disabled` that a div must not carry.
 	const buttonOnlyAttributes = { type: undefined, disabled: undefined };
@@ -102,6 +144,7 @@ selecting it scrolls the strip to show it.
 			bind:this={element}
 			{...props}
 			{...buttonOnlyAttributes}
+			{...isNamedByLabel ? { 'aria-labelledby': labelId } : {}}
 			aria-disabled={disabled || undefined}
 			aria-keyshortcuts={isMovable ? REORDER_KEYSHORTCUTS : undefined}
 			hidden={drag?.lifted === value || undefined}
@@ -111,7 +154,8 @@ selecting it scrolls the strip to show it.
 				onkeydown?.(event);
 			}}
 		>
-			{@render children?.()}
+			<span class="contents" id={labelId} data-tab-label>{@render children?.()}</span>
+			{@render actions?.(move)}
 		</div>
 	{/snippet}
 </Tabs.Trigger>

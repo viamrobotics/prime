@@ -15,15 +15,17 @@
     <Tabs.List aria-label="Open files">
       {#each ids as id (id)}
         <Tabs.Trigger value={id}>
-          <span>{id}</span>
-          <button
-            type="button"
-            class="icon-button"
-            aria-label="Close {id}"
-            onclick={(event) => close(event, id)}
-          >
-            <Icon icon={mdiClose} size="sm" />
-          </button>
+          {id}
+          {#snippet actions()}
+            <button
+              type="button"
+              class="icon-button"
+              aria-label="Close {id}"
+              onclick={(event) => close(event, id)}
+            >
+              <Icon icon={mdiClose} size="sm" />
+            </button>
+          {/snippet}
         </Tabs.Trigger>
       {/each}
     </Tabs.List>

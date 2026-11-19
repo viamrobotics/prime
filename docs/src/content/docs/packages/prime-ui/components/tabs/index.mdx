@@ -80,7 +80,7 @@ A trigger's children are its content, so an icon sits beside the label.
 
 ### Controls inside a tab
 
-A control nested in a tab keeps its own key events, so <kbd>Enter</kbd> and <kbd>Space</kbd> reach it. Its click handler should call `event.stopPropagation()`, or the click also selects the tab. Closing the selected tab falls back to the first remaining tab, and the list hides at one tab.
+Put controls in the `actions` snippet of `Tabs.Trigger`, after the label. The tab is then named from its label alone, so a close button's name does not leak into it. A control nested in a tab keeps its own key events, so <kbd>Enter</kbd> and <kbd>Space</kbd> reach it. Its click handler should call `event.stopPropagation()`, or the click also selects the tab. Closing the selected tab falls back to the first remaining tab, and the list hides at one tab.
 
 <Example code={closableSource} title="Closable.svelte">
   <Closable client:visible />
@@ -100,7 +100,7 @@ A control nested in a tab keeps its own key events, so <kbd>Enter</kbd> and <kbd
 
 A press on a control inside a tab never starts a drag, so a close button keeps working. A disabled tab cannot be moved.
 
-Dragging is not enough on its own for a pointer user who cannot drag (WCAG 2.5.7), and the keys need a keyboard. Give each tab a way to move with single clicks, such as Move left and Move right items in a tab menu, each writing the new array to `order`.
+A drag alone fails WCAG 2.5.7, and the keys need a keyboard. The `actions` snippet receives `movePrevious`, `moveNext`, `canMovePrevious`, and `canMoveNext`. Those take the same path as a key, so the move is announced, focus lands on the moved tab, and a binding that refuses the move is honored. The Reorderable example shows them in a tab menu.
 
 <Example code={reorderableSource} title="Reorderable.svelte">
   <Reorderable client:visible />

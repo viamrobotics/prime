@@ -6,6 +6,7 @@ import { page, userEvent } from 'vitest/browser';
 import '../../__tests__/tailwind.css';
 import ClosableTabs from './ClosableTabs.svelte';
 import ControlledReorderTabs from './ControlledReorderTabs.svelte';
+import MoveControlTabs from './MoveControlTabs.svelte';
 import ReorderTabs from './ReorderTabs.svelte';
 
 const MOVE_RIGHT = '{Alt>}{Shift>}{ArrowRight}{/Shift}{/Alt}';
@@ -268,6 +269,14 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		drop(overview, beforeStartOf('Usage'));
 		await expect.poll(order).toBe('overview,usage,api');
 		await expect.element(announcer()).toHaveTextContent('Overview moved to position 1 of 3.');
+	});
+
+	it('ghosts the visible label, not the aria-label', async () => {
+		render(ReorderTabs);
+
+		await lift('API reference');
+
+		expect(ghost()?.textContent?.trim()).toBe('API');
 	});
 
 	it('lifts the tab out of the strip, follows the pointer with a ghost, and marks the landing slot', async () => {
@@ -554,5 +563,69 @@ describe('Tabs.List without reorderable', () => {
 			false
 		]);
 		expect(document.querySelector('[role="status"]')).toBeNull();
+	});
+});
+
+describe('Tabs.Trigger move controls', () => {
+	const control = (name: string) => page.getByRole('button', { name, exact: true });
+	const controlElement = (name: string) => control(name).element() as HTMLButtonElement;
+
+	it('moves the tab, announces as a key does, and focuses the moved tab', async () => {
+		render(MoveControlTabs);
+
+		await userEvent.click(control('Move Overview right'));
+
+		expect(order()).toBe('usage,overview,api');
+		await expect.element(announcer()).toHaveTextContent('Overview moved to position 2 of 3.');
+		await expect.poll(() => document.activeElement).toBe(tab('Overview').element());
+	});
+
+	it('steps past a disabled tab', async () => {
+		render(MoveControlTabs, { props: { disabledTab: 'usage' } });
+
+		await userEvent.click(control('Move Overview right'));
+
+		expect(order()).toBe('usage,overview,api');
+		await userEvent.click(control('Move Overview right'));
+		expect(order()).toBe('usage,api,overview');
+	});
+
+	it('disables the buttons at each end', () => {
+		render(MoveControlTabs);
+
+		expect(controlElement('Move Overview left').disabled).toBe(true);
+		expect(controlElement('Move Overview right').disabled).toBe(false);
+		expect(controlElement('Move API left').disabled).toBe(false);
+		expect(controlElement('Move API right').disabled).toBe(true);
+	});
+
+	it('disables both buttons on a disabled tab and moves nothing', async () => {
+		render(MoveControlTabs, { props: { disabledTab: 'usage' } });
+
+		expect(controlElement('Move Usage left').disabled).toBe(true);
+		expect(controlElement('Move Usage right').disabled).toBe(true);
+		controlElement('Move Usage right').click();
+		await tick();
+
+		expect(order()).toBe('overview,usage,api');
+		expect(announcer().element().textContent).toBe('');
+	});
+
+	it('changes nothing and says nothing when a function binding refuses', async () => {
+		render(MoveControlTabs, { props: { isRefusing: true } });
+
+		await userEvent.click(control('Move Overview right'));
+		await tick();
+
+		expect(order()).toBe('overview,usage,api');
+		expect(announcer().element().textContent).toBe('');
+	});
+
+	it('starts from registration order with order unbound', async () => {
+		render(MoveControlTabs, { props: { isUnbound: true } });
+
+		await userEvent.click(control('Move Usage left'));
+
+		await expect.element(announcer()).toHaveTextContent('Usage moved to position 1 of 3.');
 	});
 });

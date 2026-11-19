@@ -60,7 +60,9 @@ export type { SelectOption } from './Select/option.ts';
 export { MultiSelect } from './Select/multi-select.ts';
 export { Select } from './Select/select.ts';
 
+export type { TabsMove } from './Tabs/move.ts';
 export { Tabs } from './Tabs/tabs.ts';
+export type { TabsVariant } from './Tabs/variant.ts';
 export { Takeover } from './Takeover/takeover.ts';
 
 export { default as Toast } from './Toast/Toast.svelte';
