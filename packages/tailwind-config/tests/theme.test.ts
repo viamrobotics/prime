@@ -116,6 +116,7 @@ const CANDIDATES = [
   "slider-thumb-border-gray-9",
   "slider-thumb-border-sm",
   "scrollbar-gray-6",
+  "scrollbar-w-3",
   "scrollbar-thumb-border-0",
   "scrollbar-thumb-border-[3px]",
   "scrollbar-thumb-border-gray-9",
@@ -401,6 +402,7 @@ const simpleSelectors = (compound: string): string[] => {
   return parts;
 };
 
+const OUTLINE_WIDTH_AND_STYLE = /^\d+px solid /;
 const SELECTOR_LIST_PSEUDO = /^:(is|where|not)\((.*)\)$/;
 
 const matchesSimple = (simple: string, element: StyledElement): boolean => {
@@ -971,6 +973,94 @@ describe("theme stylesheets compiled through Tailwind", () => {
     },
   );
 
+  it.each(["button", "input", "icon-button"])(
+    "keeps outline-color out of the .%s transition so the focus ring does not fade",
+    (name) => {
+      const properties = resolveCustomProperties(
+        cascadedDeclarations(
+          cascade,
+          { classes: [name], states: [] },
+          true,
+        ).get("transition-property") ?? "",
+        themeProperties(emitted, "light"),
+      )
+        .split(",")
+        .map((property) => property.trim());
+
+      expect(properties).not.toContain("outline-color");
+      expect(properties).not.toContain("all");
+      expect(properties).toContain("background-color");
+      expect(properties).toContain("color");
+    },
+  );
+
+  it("sizes scrollbar-w-3 from the spacing scale through the bare integer form", () => {
+    const width = (name: string) =>
+      rulesOf(emitted, (rule) => startsWithClass(rule, name)).flatMap((rule) =>
+        rule.nodes.flatMap((node) =>
+          node.type === "decl" && node.prop === "width" ? [node.value] : [],
+        ),
+      );
+
+    expect(width("scrollbar-w-3")).toStrictEqual(["calc(var(--spacing) * 3)"]);
+  });
+
+  const fileTabContrastRatios = (theme: ThemeName) => {
+    const strip = element(["file-tabs"]);
+    const properties = themeProperties(emitted, theme);
+    const context: PaintContext = {
+      cascade,
+      theme: properties,
+      hasContrastColor: true,
+    };
+    const selected: StyledElement = {
+      classes: ["file-tab"],
+      states: ['[aria-selected="true"]'],
+      parent: strip,
+    };
+    const unselected: StyledElement = {
+      classes: ["file-tab"],
+      states: [],
+      parent: strip,
+    };
+    const painted = (tab: StyledElement, property: string) =>
+      paintedHex(
+        resolveCustomProperties(
+          cascadedDeclarations(cascade, tab, true).get(property) ?? "",
+          properties,
+        ).replace(OUTLINE_WIDTH_AND_STYLE, ""),
+      );
+    const focused = (tab: StyledElement): StyledElement => ({
+      ...tab,
+      states: [...tab.states, "focus-visible"],
+    });
+    const selectedFill = paintedColor(context, selected, "background-color");
+    const unselectedFill = paintedColor(context, strip, "background-color");
+    const topLine = painted(selected, "border-top-color");
+    const outline = (tab: StyledElement) => painted(focused(tab), "outline");
+
+    return {
+      topLineOnSelected: contrastRatio(topLine, selectedFill),
+      topLineOnUnselected: contrastRatio(topLine, unselectedFill),
+      outlineOnSelected: contrastRatio(outline(selected), selectedFill),
+      outlineOnUnselected: contrastRatio(outline(unselected), unselectedFill),
+    };
+  };
+
+  it.each(["light", "dark"] as const)(
+    "holds the %s theme .file-tab top line and focus outline at 3:1 on the selected and unselected fills",
+    (theme) => {
+      const ratios = fileTabContrastRatios(theme);
+
+      expect(
+        Object.entries(ratios).filter(
+          ([, ratio]) => ratio < MIN_GLYPH_CONTRAST,
+        ),
+        JSON.stringify(ratios),
+      ).toStrictEqual([]);
+    },
+  );
+
   it("insets the focus ring of an .icon-button inside a .file-tab and keeps it outset elsewhere", () => {
     const tab = element(["file-tab"], element(["file-tabs"]));
     const offset = (parent?: StyledElement) =>
@@ -1234,6 +1324,30 @@ describe("theme stylesheets compiled through Tailwind", () => {
         ),
         JSON.stringify(ratios),
       ).toStrictEqual([]);
+    },
+  );
+
+  it.each(["light", "dark"] as const)(
+    "paints an info banner glyph in the info color inside a warning banner in the %s theme",
+    (theme) => {
+      const outer = element(["banner", "banner-warning"]);
+      const chip = element(
+        ["banner-chip"],
+        element(["banner", "banner-info"], outer),
+      );
+      const context: PaintContext = {
+        cascade,
+        theme: themeProperties(emitted, theme),
+        hasContrastColor: true,
+      };
+      const alone = element(
+        ["banner-chip"],
+        element(["banner", "banner-info"]),
+      );
+
+      expect(paintedColor(context, chip, "color")).toBe(
+        paintedColor(context, alone, "color"),
+      );
     },
   );
 

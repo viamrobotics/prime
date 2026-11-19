@@ -34,13 +34,13 @@
 		{@render dragPreview(preview)}
 	{:else if preview.form === 'tab'}
 		<div
-			class="w-max rounded border border-medium bg-white px-2 py-1 text-xs text-default shadow-sm"
+			class="w-max rounded-sm border border-medium bg-white px-2 py-1 text-xs text-default shadow-sm"
 		>
 			{preview.label}
 		</div>
 	{:else}
 		<div
-			class="flex h-28 w-48 flex-col overflow-hidden rounded border border-medium bg-white text-xs text-default shadow-sm"
+			class="flex h-28 w-48 flex-col overflow-hidden rounded-sm border border-medium bg-white text-xs text-default shadow-sm"
 		>
 			<div class="truncate border-b border-medium bg-light px-2 py-1">{preview.label}</div>
 		</div>

@@ -1,6 +1,6 @@
 <!--
 @component
-A set of related items in a [`Menu.Content`](./MenuContent.svelte), labelled by its [`Menu.GroupHeading`](./MenuGroupHeading.svelte).
+A set of related items in a [`Menu.Content`](./MenuContent.svelte), labeled by its [`Menu.GroupHeading`](./MenuGroupHeading.svelte).
 -->
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';

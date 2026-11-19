@@ -5,10 +5,12 @@ import { page, userEvent } from 'vitest/browser';
 import { colorOf, textColor } from '../../__tests__/computed-style.ts';
 import CodeSnippet from '../CodeSnippet.svelte';
 import DarkCodeSnippet from './DarkCodeSnippet.svelte';
+import NarrowCodeSnippet from './NarrowCodeSnippet.svelte';
 import WrapCodeSnippet from './WrapCodeSnippet.svelte';
 
 const code = '{ "name": "viam", "count": 3 }';
 const COPIED_MS = 2000;
+const longLine = 'const roverName = "a very long string that cannot fit in a narrow box";';
 
 const darkColorOf = (utility: string) => {
 	const wrapper = document.createElement('div');
@@ -123,5 +125,34 @@ describe('CodeSnippet', () => {
 		const { container } = render(WrapCodeSnippet, { props: { wrapLines } });
 
 		expect(getComputedStyle(container.querySelector('pre')!).whiteSpace).toBe(whiteSpace);
+	});
+
+	it('names an overflowing snippet Code and makes it a tab stop', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: longLine } });
+
+		await expect.element(page.getByRole('region', { name: 'Code' })).toBeVisible();
+		expect(container.querySelector('pre')!.tabIndex).toBe(0);
+	});
+
+	it('names an overflowing captioned snippet by its caption', async () => {
+		render(NarrowCodeSnippet, { props: { code: longLine, hasCaption: true } });
+
+		await expect.element(page.getByRole('region', { name: 'rover.ts' })).toBeVisible();
+	});
+
+	it('gives a snippet that fits no region role and no tab stop', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: 'a' } });
+		const pre = container.querySelector('pre')!;
+
+		await expect.poll(() => pre.hasAttribute('role')).toBe(false);
+		expect(pre.hasAttribute('tabindex')).toBe(false);
+	});
+
+	it('gives a wrapLines snippet with a long line no region role and no tab stop', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: longLine, wrapLines: true } });
+		const pre = container.querySelector('pre')!;
+
+		await expect.poll(() => pre.hasAttribute('role')).toBe(false);
+		expect(pre.hasAttribute('tabindex')).toBe(false);
 	});
 });

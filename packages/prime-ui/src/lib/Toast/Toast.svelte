@@ -1,7 +1,7 @@
 <!--
 @component
 The region that shows the toasts a [`provideToast`](./useToast.svelte.ts) stack creates. Render one
-near the app root, below the `provideToast` call. It is a labelled `region` fixed to the viewport
+near the app root, below the `provideToast` call. It is a labeled `region` fixed to the viewport
 at the provider's `placement`, and each toast inside it announces itself as a `status`, or as an
 `alert` for `warning` and `danger`. Hovering the region or focusing a toast holds every timer.
 

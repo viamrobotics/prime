@@ -42,6 +42,17 @@ afterEach(async () => {
 });
 
 describe('DatePicker', () => {
+	it('closes the calendar when Escape is pressed', async () => {
+		const { container } = render(BoundDatePicker);
+		trigger(container).focus();
+
+		await userEvent.keyboard('{Enter}');
+		await vi.waitFor(() => expect(calendar(), 'calendar open').toBeTruthy());
+		await userEvent.keyboard('{Escape}');
+
+		await vi.waitFor(() => expect(calendar(), 'calendar closed').toBeNull());
+	});
+
 	it('shows the bound date in the segments', () => {
 		const { container } = render(BoundDatePicker);
 

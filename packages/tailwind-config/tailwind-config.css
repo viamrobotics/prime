@@ -151,6 +151,8 @@
 
   /* Transition properties */
   --transition-property-expand-vertical: max-height, visibility;
+  --transition-property-hover-colors:
+    color, background-color, border-color, text-decoration-color, fill, stroke;
 
   /*
    * Z layers, named after what sits on each one and ordered by who must clear whom: a popover
@@ -281,7 +283,7 @@
  * Later rules win ties: disabled and readonly beat invalid and warn, and every state beats hover.
  */
 @utility input {
-  @apply rounded-sm border border-light bg-white px-2 py-1.5 text-sm text-default transition-colors focus-ring;
+  @apply rounded-sm border border-light bg-white px-2 py-1.5 text-sm text-default transition-hover-colors focus-ring;
 
   &:hover {
     border-color: var(--color-gray-6);
@@ -395,7 +397,7 @@
   --button-medium: var(--color-gray-4);
   --button-medium-light: var(--color-gray-2);
   --button-light: var(--color-gray-1);
-  @apply inline-flex items-center justify-center gap-1.5 rounded-sm border px-3 py-1.5 text-sm whitespace-nowrap transition-colors select-none focus-ring;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-sm border px-3 py-1.5 text-sm whitespace-nowrap transition-hover-colors select-none focus-ring;
   border-color: var(--button-border);
   background-color: var(--button-light);
   color: var(--button-text);
@@ -442,7 +444,7 @@
   --button-medium: var(--color-gray-4);
   --button-medium-light: var(--color-gray-2);
   --button-light: var(--color-gray-1);
-  @apply inline-flex size-7.5 items-center justify-center rounded-sm border border-transparent text-gray-7 transition-colors focus-ring;
+  @apply inline-flex size-7.5 items-center justify-center rounded-sm border border-transparent text-gray-7 transition-hover-colors focus-ring;
 
   &:hover {
     border-color: var(--button-medium);
@@ -857,13 +859,17 @@
  * Column spacing is margins on the parts, because an empty grid track still takes its gap.
  *
  * A modifier sets `--banner-light` and `--banner-dark`, and the chip reads them. The glyph
- * paints `--banner-glyph` where a modifier sets it, and `--banner-dark` otherwise. Warning sets
- * it to the text-grade warning token, because its dark tone is too light on its chip. The info
+ * paints `--banner-glyph`, which every banner but warning resets to `--banner-dark`, so a nested
+ * banner never inherits its parent's glyph. Warning sets it to the text-grade warning token,
+ * because its dark tone is too light on its chip. The info
  * default sits behind a `:not()` guard so a modifier wins whichever utility is emitted last.
  */
 @utility banner {
   @apply relative grid min-h-10 items-center border border-light bg-white p-1.5;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
+  &:not(.banner-warning) {
+    --banner-glyph: var(--banner-dark);
+  }
 
   &:not(.banner-success, .banner-warning, .banner-danger, .banner-pending) {
     --banner-light: var(--color-info-light);

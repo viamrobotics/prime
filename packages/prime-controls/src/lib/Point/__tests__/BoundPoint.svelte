@@ -1,14 +1,11 @@
 <script lang="ts">
 	import type { ComponentProps } from 'svelte';
+	import type { DistributiveOmit } from '../../__tests__/distributive-omit.ts';
 
 	import { untrack } from 'svelte';
 
 	import Point from '../Point.svelte';
 	import type { PointValue } from '../point.ts';
-
-	type DistributiveOmit<TProps, TKey extends PropertyKey> = TProps extends unknown
-		? Omit<TProps, TKey>
-		: never;
 
 	type Props = DistributiveOmit<ComponentProps<typeof Point>, 'value'> & {
 		initial: PointValue;

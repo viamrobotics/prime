@@ -86,6 +86,23 @@ Dark mode is opt-in. Import it after the base config.
 - One level of `.light` inside `.dark` is supported. A `.dark` nested inside that `.light` flips the tokens but not `dark:` utilities.
 - The dark palette is derived from the light tokens and the grayscale ramp is inverted, so `bg-white` is not literally white in dark mode. `bg-extralight` now adapts too, because it reads `gray-0`.
 
+## Colors in script
+
+A canvas, a WebGL scene, or a map marker needs a concrete color, where a class or `var()` cannot reach. `themeColor` reads a token's current value from the page.
+
+```js
+import { themeColor } from "@viamrobotics/tailwind-config/theme-color";
+
+const hovered = themeColor("--color-solar-power-bright");
+```
+
+- Write the whole custom property name as a literal at the call site. Tailwind emits a theme variable only when a scanned source file names it in full. A name built from parts, such as `` `--color-${tone}` ``, reads as unset.
+- Your Tailwind build has to scan the file that makes the call. A package that calls `themeColor` needs an `@source` entry in the app, as it does for its classes.
+- It returns the value as the stylesheet writes it, or `undefined` when the token is unset.
+- Pass the element the color is drawn on as the second argument to follow a `.dark` or `.light` subtree. It defaults to the document root.
+- It reads `document` when called, so call it in the browser. The import is safe on a server.
+- `ThemeColorName` is the union of every color token.
+
 ## Component classes
 
 The config also ships the design system's components as `@utility` classes, so a native element, a bits-ui trigger, or a non-Svelte consumer can wear it. A bare class is the design-system default. A modifier class beside it recolors or changes the fill. A utility written after the class wins, so `class="button px-4"` keeps the wider padding.
