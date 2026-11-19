@@ -1,49 +1,20 @@
 # prime
 
-Pretty Rad Interactive Modular Elements, Viam's Svelte 5 component-library monorepo.
+Pretty Rad Interactive Modular Elements, Viam's Svelte 5 component-library monorepo: pnpm workspaces, Node 24 (`.nvmrc`), Svelte 5 runes, Tailwind CSS v4, Vitest, wireit, and Changesets.
 
-## Monorepo layout
+## Layout
 
-Two top-level workspaces:
+Each package publishes as `@viamrobotics/<name>` and owns its build, tests, and `CLAUDE.md`:
 
-- `packages/<name>/` — published-to-npm libraries and configs. Each owns its `package.json`, build, tests, and `CLAUDE.md`.
-- `docs/` — the Astro Starlight documentation site, `private: true`, which consumes every package. It is the only app in the repo.
+- [`prime-ui`](packages/prime-ui/CLAUDE.md): the component library, the v2 of prime.
+- [`prime-panes`](packages/prime-panes/CLAUDE.md): resizable, rearrangeable split panes.
+- [`prime-tree`](packages/prime-tree/CLAUDE.md): headless tree view.
+- [`prime-controls`](packages/prime-controls/CLAUDE.md): realtime tool-panel controls.
+- [`prime-editor`](packages/prime-editor/CLAUDE.md): CodeMirror 6 editor with a diff view.
+- [`tailwind-config`](packages/tailwind-config/CLAUDE.md): design tokens and fonts.
+- [`tweakpane-config`](packages/tweakpane-config/CLAUDE.md): Tweakpane theme for the docs demos.
 
-The workspace root holds shared tooling (lint, format, changesets, CI).
-
-## Packages
-
-| Package                                                                 | Purpose                                                             |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| [`@viamrobotics/prime-ui`](packages/prime-ui/CLAUDE.md)                 | Svelte 5 component library — the v2 of prime.                       |
-| [`@viamrobotics/prime-panes`](packages/prime-panes/CLAUDE.md)           | Resizable, rearrangeable split-pane layouts for Svelte 5.           |
-| [`@viamrobotics/prime-tree`](packages/prime-tree/CLAUDE.md)             | Headless tree view for Svelte 5.                                    |
-| [`@viamrobotics/prime-controls`](packages/prime-controls/CLAUDE.md)     | Compact realtime controls for tool panels: scrubbing number fields. |
-| [`@viamrobotics/prime-editor`](packages/prime-editor/CLAUDE.md)         | A CodeMirror 6 code editor with Viam's code tokens and a diff view. |
-| [`@viamrobotics/tailwind-config`](packages/tailwind-config/CLAUDE.md)   | Viam's shared Tailwind CSS v4 configuration: design tokens + fonts. |
-| [`@viamrobotics/tweakpane-config`](packages/tweakpane-config/CLAUDE.md) | Shared Tweakpane theme and helpers for the docs demos.            |
-
-## Docs
-
-[`prime-docs`](docs/CLAUDE.md) is the Astro Starlight documentation site. Every library package is demonstrated on its own page, and it deploys to GitHub Pages.
-
-### Docs-as-demo convention
-
-Every package is demonstrated on its page in the docs site (`docs/`), and no package has an app of its own. Demos are Svelte islands that sit beside their page under `src/content/docs/packages/<package>/`. `astro dev` resolves every workspace library to its source through [docs/source-aliases.mjs](docs/source-aliases.mjs), so an edit to a package hot-reloads into its page. `astro build` renders each package's built `dist`, and the docs `build` script declares those package builds as wireit dependencies. To add a package to the docs, follow "Adding a package page" in [docs/CLAUDE.md](docs/CLAUDE.md).
-
-## Tech stack (workspace-level)
-
-| Layer           | Technology       |
-| --------------- | ---------------- |
-| Package manager | pnpm workspaces  |
-| Node            | 24 (`.nvmrc`)    |
-| Frontend        | Svelte 5 (runes) |
-| Styling         | TailwindCSS      |
-| Testing         | Vitest           |
-| Task runner     | wireit           |
-| Versioning      | Changesets       |
-
-Per-package testing/build tooling is documented in each package's `CLAUDE.md`.
+[`docs/`](docs/CLAUDE.md) is the Astro Starlight site and the only app. Every package is demonstrated on its page there, never in an app of its own.
 
 ## Commands
 
@@ -59,36 +30,11 @@ pnpm exec houserules doctor   # validate the kit-managed .claude/ install
 pnpm exec houserules update   # refresh kit files after a @houserules/* bump
 ```
 
-**Task orchestration.** `build`/`check`/`lint`/`format`/`test` are run through [wireit](https://github.com/google/wireit): each package's script declares its inputs (`files`), outputs, and cross-package `dependencies`, so unchanged work is skipped or restored from cache, locally (`.wireit/`, gitignored) and in CI (GitHub Actions cache, set up by the `.github/actions/setup` composite). Run `pnpm <build|check|lint|format|test>` at the root (whole workspace, in dependency order) or `pnpm --filter <pkg> run <script>` for one package plus its declared deps. `WIREIT_CACHE=none` forces a real re-run. The `:fix` variants stay plain recursive commands since they mutate files.
+`build`, `check`, `lint`, `format`, and `test` run through [wireit](https://github.com/google/wireit), cached in `.wireit/` and in CI. `pnpm --filter <pkg> run <script>` runs one package plus its declared deps. `WIREIT_CACHE=none` forces a real re-run. Shared dependency versions live in the `catalog:` block of [pnpm-workspace.yaml](pnpm-workspace.yaml).
 
-**Shared dependency versions** live in the `catalog:` block of [pnpm-workspace.yaml](pnpm-workspace.yaml); packages reference them with `"<dep>": "catalog:"`. Bump a shared toolchain version there, not per-package.
+`.claude/scripts/` is houserules build output, gitignored. Never hand-edit it. If a hook reports a missing script, run `pnpm exec houserules update`.
 
-## Generated code — never hand-edit
-
-`.claude/scripts/` is build output written by houserules and gitignored. If a hook reports a missing script, run `pnpm exec houserules update`.
-
-## Design system
-
-prime implements the Viam design system. The source of truth lives at **https://design.viam.com/guides/intro/**. Verify visual treatment, naming, and interaction patterns there before inventing new ones.
-
-The tokens themselves are the `@theme` blocks in [`packages/tailwind-config`](packages/tailwind-config/CLAUDE.md). houserules' `design.mjs` reads them through a stylesheet that imports Tailwind. Several files in this workspace do, so `design.themeEntry` in `.claude/houserules.config.json` names the entry point, `packages/prime-ui/tailwind.css`:
-
-```
-node .claude/scripts/design.mjs <query>
-```
-
-Five entry points compile under standalone Tailwind: `packages/prime-ui/tailwind.css`, a tooling-only file also used by prettier-plugin-tailwindcss, and the `test/tailwind.css` fixture stylesheet in `prime-panes`, `prime-tree`, `prime-controls`, and `prime-editor`. `docs/src/tailwind.css` imports the `@viamrobotics/tailwind-config/dark` export subpath and `starlight-theme-nova/tailwind.css`, paths that Vite and Astro resolve and standalone Tailwind does not, so it exits 1. Pass `--theme <path>` to read a different entry point.
-
-`packages/prime-ui/styles.css` is a stylesheet with a different job: it is the entry prime-ui **ships** (`exports["./styles.css"]`) so a consumer's Tailwind scans the package's compiled components, which automatic content detection skips under `node_modules`. It imports the tokens, and holds an `@source`, with no `@import "tailwindcss"`, so a consumer writes one import after `tailwindcss` and it is not a `--theme` candidate. The tooling `tailwind.css` imports it, so the components' classes resolve for prettier, `design.mjs`, and the browser specs.
-
-## Topic-specific rules
-
-Detailed guidance lives in `.claude/rules/`. Path-scoped rules load when Claude reads matching files; rules without `paths` load every session. The svelte, typescript, testing, design, accessibility, code-comments, prose-voice, and code-cleanliness rules are installed and documented by houserules, see the block below. The repo-owned rules:
-
-| Rule                        | Loads when                                                                      |
-| --------------------------- | ------------------------------------------------------------------------------- |
-| `viam-context.md`           | every session (design system context)                                           |
-| `no-internal-references.md` | every session (committed text never names plans, PRs, branches, or local paths) |
+Design tokens are the `@theme` blocks in `packages/tailwind-config`, read by `design.mjs`. See `.claude/rules/viam-context.md`.
 
 <!-- houserules:claude-md start -->
 
@@ -103,6 +49,8 @@ Fuller templates live in `.claude/templates/`.
   the commit**.
 - Too big to hold in one plan: scaffold with `/plan-project`, then execute each phase with
   `/orchestrate`.
+- Building UI, an artifact, or a deck? Take colors, type, and spacing from
+  `.claude/design/tokens.json`, never a palette of your own.
 
 ### Conventions
 

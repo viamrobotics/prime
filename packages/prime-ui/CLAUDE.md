@@ -136,6 +136,8 @@ Four house rules on top of that:
 - **No `!important`.** Precedence between a component's own states is expressed in selectors and source order, the way the `input` class lists error and warn before readonly and disabled so the later rule wins a tie, and a consumer can still override anything with a class.
 - **Shared styling is a class in `@viamrobotics/tailwind-config`, not a TS constant.** `input`, `focus-ring`, and `focus-ring-within` are declared once as CSS there, and prime-ui adds none of its own, with their states as nested selectors on attributes the element already carries. A TS module that only holds a string of utilities gets no IntelliSense and hides CSS as code. A lookup table keyed by a prop value (`Icon/icon.ts` sizes, `Field/state.ts` icons) is logic and stays in TS.
 
+`styles.css` is the stylesheet this package **ships** (`exports["./styles.css"]`), so a consumer's Tailwind scans the compiled components, which automatic content detection skips under `node_modules`. It imports the tokens and holds an `@source`, with no `@import "tailwindcss"`, so a consumer writes one import after `tailwindcss`, and `design.mjs` cannot read it as a `--theme` entry. `tailwind.css` is tooling only. It imports Tailwind and `styles.css`, so the components' classes resolve for prettier-plugin-tailwindcss, `design.mjs`, and the browser specs.
+
 ### Doc comments
 
 Open each component `.svelte` with an `@component` block: one-sentence description, a link to the bits-ui component if headless-backed, and a minimal `bind:` example. No prop docs there. Put those as `/** */` JSDoc on each `Props` field, with `@default` where the default is not obvious from the destructuring.

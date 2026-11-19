@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" || { echo \"[houserules] guard-bash.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" || { echo \"[houserules] guard-bash.mjs is missing, so this call is blocked. Restore it from your terminal: npx houserules update\" >&2; exit 1; }"
           }
         ]
       },
@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" || { echo \"[houserules] guard-read.mjs missing. Run: npx houserules update\" >&2; exit 1; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" || { echo \"[houserules] guard-read.mjs is missing, so this call is blocked. Restore it from your terminal: npx houserules update\" >&2; exit 1; }"
           }
         ]
       }

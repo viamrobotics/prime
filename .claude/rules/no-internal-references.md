@@ -1,3 +1,23 @@
+---
+paths:
+  - '**/*.md'
+  - '**/*.mdx'
+  # `**` does not reliably descend into dot-directories, so name the ones that hold committed text.
+  - '.changeset/*.md'
+  - '.claude/**/*.md'
+  - '.github/**/*.md'
+  - '**/*.ts'
+  - '**/*.mts'
+  - '**/*.js'
+  - '**/*.mjs'
+  - '**/*.cjs'
+  - '**/*.svelte'
+  - '**/*.svelte.ts'
+  - '**/*.svelte.js'
+  - '**/*.astro'
+  - '**/*.css'
+---
+
 # No internal references in committed text
 
 Committed text is read by people who have none of this session's context: package consumers, future contributors, and the design-system port. It covers READMEs, docs pages, CLAUDE.md files, code comments, changesets, test names, and playground copy.

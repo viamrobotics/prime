@@ -35,9 +35,19 @@ without widening it.
 
 ## 3. Write the dated artifact
 
-Write `.claude/plans/blast-radius-<slug>-<YYYY-MM-DD>.md`, stamping the date with `date +%Y-%m-%d` and
-the commit with `git rev-parse --short HEAD`. It **must** open with a staleness disclaimer and carry
-these sections:
+Pick the map's home first. A map that serves a plan belongs in that plan's workspace, where the
+phase it informed finds it and where it leaves with the plan:
+
+- **A plan is in play:** `.claude/plans/<plan>/blast-radius-<slug>-<YYYY-MM-DD>.md`. That covers
+  `/orchestrate` running this for a phase, arguments that name a plan, and a conversation already
+  working a phase of one plan.
+- **No plan is in play:** `.claude/plans/blast-radius-<slug>-<YYYY-MM-DD>.md`, at the root.
+
+Never pick a plan from mtime or sort order. When several workspaces exist and none of those cases
+names one, write to the root and say so.
+
+Stamp the date with `date +%Y-%m-%d` and the commit with `git rev-parse --short HEAD`. The file
+**must** open with a staleness disclaimer and carry these sections:
 
 ```markdown
 # Blast radius: <surface>: <YYYY-MM-DD>
@@ -66,8 +76,8 @@ these sections:
 
 ## 4. Hand back the artifact, not the survey
 
-Tell the user the map is at `.claude/plans/blast-radius-<slug>-<date>.md` and give the one-line
-headline: N consumers across M files, coverage HIGH/MED/LOW, and the sharpest risk. Do **not** paste
+Tell the user the path the map was written to and give the one-line headline: N consumers across M
+files, coverage HIGH/MED/LOW, and the sharpest risk. Do **not** paste
 the whole map into this context. The point is that it lives on disk. `.claude/plans/` is gitignored by
 the plans module, so the artifact is local living state, not a commit.
 

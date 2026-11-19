@@ -34,6 +34,10 @@ You return at every wave barrier and at phase close, and nowhere else.
 - **`DONE`** after §8 closes the phase. Under `all --auto` you still stop here, because the main
   conversation spawns the next phase's orchestrator.
 
+Every report goes up by `SubagentHandback`. The main conversation sends a resume only after the
+notice that you `finished`. If a hand-back answers that nothing was sent because an earlier report
+was already delivered, send the same report with `SendMessage` to `main`, once, and end the turn.
+
 Every point where the skill stops for the user becomes a `NEEDS_RULING` return, mapped by the gate
 table in `references/nested.md`. `AskUserQuestion` does not exist one layer down, so a return is the
 only way to ask. Put the question, the options with your recommendation first, and the cost if wrong
@@ -50,9 +54,11 @@ had", and the answer is to end the turn and wait.
 
 When every live worker is itself waiting on background work, the harness sees no live child and
 nudges you to hand back (`handback-send-enforce`). Do not. A hand back ends your run with the wave
-open. Start a keepalive instead, `sleep 600` with `run_in_background: true`, end the turn, and start
-another each time it wakes you with the wave still open. The worker's report arrives as a message
-and wakes you too.
+open. Start a keepalive instead, `sleep 270` with `run_in_background: true`, end the turn, and start
+another each time it wakes you with the wave still open. A wake inside 300 seconds re-reads your
+cached context, and a later one rewrites all of it. After seven keepalive wakes in one wait, about
+30 minutes, switch to `sleep 1800`, because by then the short wakes have cost about one rewrite.
+The worker's report arrives as a message and wakes you too.
 
 ## Skills and state
 
@@ -119,8 +125,8 @@ Pick the first-line status by what the main conversation has to do next. `WAVE_C
 closed and the phase is open, so print the table and send `continue`. `DONE` means the phase is
 closed and the sub-plan header says so. `NEEDS_RULING` means only the user can answer, and `Ruling needed`
 holds the question. `BLOCKED` means you cannot run the phase at all, such as `Agent` withheld or a
-`Plan:` with no workspace on disk. `PARTIAL` means you stopped at the context-size gate after the
-current wave closed, and `Resume` names what a fresh spawn picks up.
+`Plan:` with no workspace on disk. `PARTIAL` means you stopped at the context-size gate, past 300,000
+tokens of context and before compaction near 364,000, after the current wave closed, and `Resume` names what a fresh spawn picks up.
 
 Hard rules for the report: **no diffs, no file contents, no per-file logs, no narration.** Print the
 status table verbatim, with every slice in the phase. One line per slice under `Landed`. If a ruling

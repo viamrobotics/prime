@@ -1,6 +1,6 @@
 {
-  "kitVersion": "0.12.1",
-  "installedAt": "2026-11-13T17:14:41.844Z",
+  "kitVersion": "0.14.0",
+  "installedAt": "2026-11-19T05:06:34.649Z",
   "modules": [
     "core",
     "lint-fix",
@@ -38,28 +38,28 @@
     ".claude/scripts/lib/backlog-id.mjs": "0f0711407679db1da7fc9d112bd5b7f99e1db237c48c1d41115bae950c4a73ed",
     ".claude/scripts/lib/entry-ledger.mjs": "331e21029cbc62104e480c05fbd6fecfea0e8419a1348a82117f903ab74bdb79",
     ".claude/scripts/lib/ledger-index.mjs": "9a04cdc8b1cb9fbfc20fc9bed81ddd85956c3be97cf0599489fe71b68f23c0d1",
-    ".claude/scripts/lib/workspaces.mjs": "40df5ff510ec044ef46628d4967d288acc4067341247f5b4d278d3f41eaf95c5",
+    ".claude/scripts/lib/workspaces.mjs": "599ad0ab5d3a65efebab1e4b9c31b4e260d38f9ba61046db2443044fc938a0e9",
     ".claude/scripts/lib/proc.mjs": "241f79ba1d07024032f68709e54041f9c9043a62564ff3daa4feefb6bf3430f5",
     ".claude/scripts/lib/findings.mjs": "9db26aabfd775ed49bf4594862581fe6e9426bc7c40146da1b72a7dd4a6feb3a",
     ".claude/scripts/guard-bash.mjs": "2afcb35625a0068e4ee6602561265c1bad5dff44cb7cc32b143d663c8d1d35c1",
-    ".claude/scripts/ledger-inject.mjs": "0c2413922a9c252635bc2c6a447c6210ec9a6de7d78acc4ac932ece97400c806",
+    ".claude/scripts/ledger-inject.mjs": "82becef707f57c9d1bb11a385feb7ea08efa16089466e6c0619bf95ec8f6eb3d",
     ".claude/templates/CLAUDE.md.template": "ea8191159596f16a82eec0cc172f9ff259ce4757e5a0b8d1c13249f163b50e97",
     ".claude/templates/agents/reviewer.agent.md.template": "10df260314d1db4a3cdcc3b8a86fdf8eb92cd0138a2069fad6828b249a66c5e0",
     ".claude/templates/rules/GUARDRAIL.md.template": "d31f5aa8b959523a20516a4f8dd94a8a22766b9b68369c768b53519b197dc35b",
     ".claude/templates/.gitignore": "ff43e4750f6889a22672491abc89633a183a8d8929f0922edadd5f06ab9a2843",
     ".claude/scripts/.gitignore": "5837676d0344c53e2ecc4d8b7a2e8a5ea36e6e670a398f31a82b2f53b02416ae",
-    "CLAUDE.md": "27a39af0822521aefe1fbaf044a21aef527931fac177e295ab927321bbca4005",
+    "CLAUDE.md": "af77e9002dd6acd8a0f269736d19ad019d8fea4aa24c177b3f7a556f5f38129a",
     ".claude/scripts/lint-format-fix.mjs": "c089c57339e42ba3c71e1a5bf7d382590df214a31583a326eaf1f9017db13f5c",
     ".claude/scripts/session-context.mjs": "f01e5cde3e42ca7f4cb47b07a942193f9890c796f8745920c49da75cc1ecf94c",
     ".claude/scripts/rename.mjs": "03d0c7a818340f6aebf5cac182761f15a7f6edd9903994966af2f8e66fd09e22",
     ".claude/skills/review-change/SKILL.md": "d246cb7bc1b3dd78eeb576333bea75a5bc484e3a40c96c5f4a3907fde028df80",
     ".claude/scripts/review-package.mjs": "4c9718c9d4647a56dad71b5293683c6420c87a613c5698d61a54724df2d4d87f",
-    ".claude/skills/debug-session/SKILL.md": "9c15cce2b6910be3f85069fc94cf7197d99487cc2743a99f6fa189e4294e663f",
+    ".claude/skills/debug-session/SKILL.md": "cf0e3c8fd38a9340e10c7f0497b7c02f3fd698764bec41aba37aadcc847e42d4",
     ".claude/scripts/debug-session-check.mjs": "e05229369d49f0353ee6c4b57a3242e2e31b744f82886d664859c25977bd2378",
     ".claude/templates/agents/debugger.agent.md.template": "46411ee6ababe8024982e2c859e7e9e28fcf3a4c67602ae7cfe2d0fa5ce25c52",
     ".claude/debug/.gitignore": "177dee43ccc45ef1afccdbb6e9282a751271d25d87eb197a17f63f75fe867be1",
     ".claude/skills/plan-project/SKILL.md": "e31197152ebeda4660c371a3573e219f36a9280b61aff95504794b64b2310143",
-    ".claude/skills/blast-radius/SKILL.md": "041349375d9da3858d338fad715b612e2e676985b314d336628c09771a287874",
+    ".claude/skills/blast-radius/SKILL.md": "673778dd8d539f8f19e83d6c50cb7f4441026d873cfcc930513f27c069da69f8",
     ".claude/agents/blast-radius-mapper.md": "1ebf25f7a4766b3068767bc822398094b81d2be929bd7a0c7e18fc9f664b30b4",
     ".claude/plans/.gitignore": "e5388670bdb4e570d8ee9c73582c10594ab3d8ddd8738fb7169bd90afec8730e",
     ".claude/skills/orchestrate/SKILL.md": "111b2a203b18c075178454cd4be4eff5531c11e33b0cca67fb9d21c7aeee1e04",
@@ -68,13 +68,13 @@
     ".claude/skills/orchestrate/references/fixer-and-residue.md": "d7564cc74af92283bbb8b03143c4e49716d137a6c95041c00b5eccf9b5f0b0bf",
     ".claude/skills/orchestrate/references/closing.md": "55c1646aefbfdfc32fbe0645a1108d30a0905617aae2d52a3261f310197e6fcb",
     ".claude/agents/task-worker.md": "6117a4aff1adf2a3853bbbcc59281ab34174b30d209bcfcfe460bc79048f8853",
-    ".claude/scripts/plan-lint.mjs": "aebda10f7d7e6e60018c4b91af3acfa8b6b9e4292c5ba9d2b939fb77deaa05eb",
-    ".claude/scripts/verify-changed.mjs": "8def31c2e4a4ebd0b38d92f8a7f841ae7f9b895d29276a38e4bbf81be783f79c",
+    ".claude/scripts/plan-lint.mjs": "289674f07cb6662c74fc8fcbf7458ae6a00adc26385cbdd535175facf09c8021",
+    ".claude/scripts/verify-changed.mjs": "c038c84c5fd59ce7e704ff01eff4c2aed56aab34c3e86668ac8f8437e1ecf5cc",
     ".claude/skills/verify-changed/SKILL.md": "4d529d2a1b2fcdf1367c132280eff43ff3a41801f2b228794435fbeb98ad5dbe",
     ".claude/skills/ready/SKILL.md": "cb331227578b1afb0020a3a238fb2ae8b9297cc017b86fae299317d52b10cb92",
     ".claude/skills/sweep/SKILL.md": "af239aeb566c9e6649fb73dd1a6ee68f926191f017a352b993f278754f0f5380",
     ".claude/scripts/guard-read.mjs": "4f0ce296103a772e9074e200aa8fef6ef9447a653ea3fd55c4ed96a5697d30ab",
-    ".claude/scripts/statusline.mjs": "cc873b466640978f77ebd565b2a4b504fca9df4a1d711aab113b10050ae45bc9",
+    ".claude/scripts/statusline.mjs": "ef2b2267993567db89c8e6904b9083d7f7aaf5bfc214f329fedab2591507cded",
     ".claude/rules/code-cleanliness.md": {
       "body": "e98a6bdd27d6088f49d67ae5264464ce5320ca6f476ec12d821ec14ab9dda9fc",
       "frontmatter": "26f6e6023808560c1725ccde625e53c55ddcdfba96b742bc15b58b1499afc5ac"
@@ -91,7 +91,7 @@
       "body": "9812f54882ce3c6c03c3b41b80cbda8488da46f22c946aa55d33d40cc246ddb9",
       "frontmatter": "15f0c04c9375db3b5b344e605ade6157cc2413b172345093778287b1cd86e715"
     },
-    ".claude/scripts/prose-lint.mjs": "a0e10475f74eebdab770afd9fcf37b87f9066f15501d307dd8777e204e7b3592",
+    ".claude/scripts/prose-lint.mjs": "fae9dc5e3fa1953a518649dc76d59f75794d48bfc1e74d9aba33ac246539a1fe",
     ".claude/scripts/lib/markdown-segment.mjs": "c7a0fe99a214586c3a71bd14d066fbe1642452153e54323ea9ddd2d0eb4e6065",
     ".claude/output-styles/output-prose.md": "ffa6a68d0fe8d3e3d95d4d66422fad5af21c01725caeb3a260ae895e8e6429cc",
     ".claude/skills/pr-description/SKILL.md": "b81a067b9eb653dab6a2584a153275c603f66b766b07a4ebe0c44d36dd9bf95e",
@@ -104,7 +104,7 @@
       "body": "0190897796e138eb2e0a583c6167718585ccc7022a7c31b8217eebe14dce30bd",
       "frontmatter": "01669efb05f684fa1dc9e59a07e67f1de288e8c6976b4c1f9219eda42ec210b0"
     },
-    ".claude/scripts/svelte-lint.mjs": "1cbd7566028b755704731e3c109bb07e9cbf6fc07f9bd8aec0543e609acbd5b9",
+    ".claude/scripts/svelte-lint.mjs": "2c111a83f2986823cb453f7433eb62da63efbf203d6482fcc65a333195f3dc49",
     ".claude/mcp/svelte.http.json": "deaa7ea22590061b0f152fb201478aad5c226950411df6353dc3eb7ad9604bc3",
     ".claude/mcp/svelte.stdio.json": "2125ce807be24d4380c8bc5f00f700ed73ab2239d4f2d0dca459036a477e5103",
     ".claude/mcp/svelte.vscode.json": "18c042f1740eacf294371ea167b96bd8d5873bde61e8e2c84f3db10dd87b53d4",
@@ -121,15 +121,14 @@
       "frontmatter": "1cf112ffd75b9b5b7d7954d9e70885a721dfe79780d1a88630665ed17c579fea"
     },
     ".claude/scripts/test-layout.mjs": "844ff06711de1d1b3aefa4865532e5ced771e2947ac06a9ff3bc6fff537aa260",
-    ".claude/scripts/test-config.mjs": "1ccb013bb8a7f48051124f9b7487cc02e658ed35c74984448a4c6d4cd7f8707a",
+    ".claude/scripts/test-config.mjs": "b147697e1a1b40620e53784646217973313e58965a4b5661abdf4ec37065c52b",
     ".claude/mcp/playwright.stdio.json": "1750d869f04eaea44deace452477a6cfc7e9879c755301c66b5547c1353cb56d",
     ".claude/mcp/playwright.vscode.json": "99eb1d02caf898f3dbe8480205727791eee0aa6f789f1d9016ae3658ce3875d8",
     ".claude/scripts/changeset-write.mjs": "50a41874e4a7d7ab36044a9a97c6e657124a62f1e107382a89487d730eb24716",
-    ".claude/scripts/changeset-check.mjs": "bb6bc00fb398322b90c7b122622da675f9ba7efc5a1fa36d29a989e9befef694",
-    ".claude/scripts/changeset-gate.mjs": "fc8871ba1d28cbf936ee8ef12778176eb805d3018b8e736c1690bae7b990fba3",
+    ".claude/scripts/changeset-check.mjs": "1eb6cc189f6b7c268c0c8346395d7ec5826317c31e8ad22856b84243f59d6561",
+    ".claude/scripts/changeset-gate.mjs": "4b2969e8f5f762286a5d043861c7c9e742d9b3b2b16bb5dc2b564f0aa3671428",
     ".claude/state/.gitignore": "6d306aec8fa79b4ddddcd3a59e52761ce3e33f81259cb508d965bb3fbc139a7b",
-    ".claude/skills/changeset/SKILL.md": "572dcd7f198d296cdbb81c83ac2dcb12048565c4180f086560ec7df2e95ac81f",
-    ".claude/skills/changeset-condense/SKILL.md": "2a11b671b1a5a87d6713eb373a38652868d27f05ff97115acfc9e40834f520d2",
+    ".claude/skills/changeset/SKILL.md": "21961d1a0bd3c991172e40cbfd2a2dc13202ed90aa609cac1730c814975e2ed4",
     ".claude/agents/changeset-writer.md": "1c98404e5f5817d9bd44b79a01eea3415640d5e17d512494735f76ba95001ed9",
     ".claude/rules/design.md": {
       "body": "95fb09ea67c86dbb1bc7a556127d6805f9c2d7f97f3c219a060538336bd8c86e",
@@ -150,7 +149,7 @@
     ".claude/agents/design-reviewer.md": "ae28bf8507ba4e4a73c8f890f144058b774e06c14950999357b92bd2c8a10f7a",
     ".claude/scripts/lib/tailwind-host-packages.mjs": "25c02ad079c85ebf0036974b9744a067701b62b0d7fa485a9afa9ab702452f5a",
     ".claude/scripts/lib/tailwind-design-system.mjs": "93d1dae76beceba9aaaaeb2247806247e126af0034a98e79e63226fe3d74c64f",
-    ".claude/scripts/lib/tailwind-theme-to-dtcg.mjs": "0d8d8966f74b6b9e7642792365539b4b3e8e3faf351d31cf60cb326e1d129229",
+    ".claude/scripts/lib/tailwind-theme-to-dtcg.mjs": "1d4625fafed835255621c53b2f484631ce9320815722b204ab2101ab13a29619",
     ".claude/scripts/lib/tailwind-candidates.mjs": "11beed84717ebe7ec31fed25f3e34f8826a20f8c688a14182bef2254ec56083c",
     ".claude/scripts/lib/tailwind-checks.mjs": "1fe35f4695782a1e6090b333564e5ea6530648030524799f509c4163c9cbadfe",
     ".claude/scripts/lib/is-record.mjs": "4778b3ad828f31ef767ba3a6f47338e177a21e5cdbc1bbb8e4a8783ff9f32d4b",
@@ -171,16 +170,18 @@
     ".claude/reference/wcag22.md": "a477388a76953ea823c5ca7eb3e144666f185698e32fac2169fe43a1d40d8d7c",
     ".claude/scripts/wcag.mjs": "091ed9c6dec82c9c294826d89ac23f7eb8f3f9ad238a94758516ad02f99b8067",
     ".claude/scripts/lib/wcag-patterns.mjs": "0e88c55ac5161a4413c71bbeddda10f28c9c67e0719b8a0fff113e414e0003a9",
-    ".claude/scripts/a11y-markup.mjs": "cdaceb8bc67dcb9e1a1b36816d93274d58f781779a0c8d1a0203a6fcc6f42f69",
-    ".claude/skills/accessibility-review/SKILL.md": "b4ef321a400a59d3d1b312702ce621e1e910fb91e63da91f7040af081af4c564",
+    ".claude/scripts/a11y-markup.mjs": "5bf06d066e47ffdb20a0778a7a340b7e29bbf0108d473dcf15311505d4cb619c",
+    ".claude/skills/accessibility-review/SKILL.md": "113b65b2f438e49e758be5c5ae8f18c9cacc3b1310998643c5a8f62cb5ec297b",
     ".claude/agents/accessibility-reviewer.md": "e6fc5ffec2bb0020e005f4f64bea5fb121306b9265acf504d7b068702bd28e53",
     ".claude/scripts/lib/transcript-turn.mjs": "a51c5965e135dad7482ea0690d6078cc4dc5609ba48b3d457adf771cfc0ba15b",
     ".claude/agents/plan-reviewer.md": "0185c78d74ac94f7d4f14cf2e1c8e6b7156e391c9ada68375b76fa30a9da28fa",
-    ".claude/skills/orchestrate/references/nested.md": "c0203422421ca55cf75d6c5f85e6d9d257e1cd7294da549a6f92ca7388b92389",
-    ".claude/agents/phase-orchestrator.md": "b2a0e223109d942c6df2f13d2c3c9bab1588b99133e0fa4c3f9228021f193a51",
+    ".claude/skills/orchestrate/references/nested.md": "21fc4f5e79267c44a6a73085e08d95df2bb9a82e937a88c23dec3d74900327e7",
+    ".claude/agents/phase-orchestrator.md": "d277cf248b7fdcec94c2b6071ee2a76af43b162f45a6b61a57a1954c06ef8dfc",
     ".claude/scripts/wave-ceiling.mjs": "8fd752e4aa52b3bcb7aff32b30fcedf0bb8fbf192821d839e427cc9abf6814a0",
     ".claude/scripts/lib/changeset-owner.mjs": "d2a298437c3f5cad7a213929b5e0fc0095017d8938ad1853d031baa1cff09233",
-    ".claude/reference/design-interaction.md": "eb8fbd4e1d8d9ad7e76b65edbd1d67609d4da9eb6e4e178aba38f94588d92f7f"
+    ".claude/reference/design-interaction.md": "eb8fbd4e1d8d9ad7e76b65edbd1d67609d4da9eb6e4e178aba38f94588d92f7f",
+    ".claude/scripts/lib/checker-input.mjs": "1c81d1dd7523a9416be5ec4987c61dfc27561e8fbb7aca46cc8ade9a41d4b658",
+    ".claude/scripts/lib/finding-blocks.mjs": "f0a261449fba5b627fd95a0778073a85a31d4ff576b209d7bf90dc0f09e08846"
   },
   "settings": {
     "hooks": [
@@ -242,49 +243,5 @@
       "allow:Bash(node .claude/scripts/wcag.mjs:*)",
       "allow:Bash(node .claude/scripts/a11y-markup.mjs:*)"
     ]
-  },
-  "plugins": [
-    {
-      "name": "@houserules/plugin-prose",
-      "alias": "prose",
-      "version": "0.2.2",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-prose@0.2.2_@houserules+api@0.7.1/node_modules/@houserules/plugin-prose"
-    },
-    {
-      "name": "@houserules/plugin-typescript",
-      "alias": "ts",
-      "version": "0.1.3",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-typescript@0.1.3_@houserules+api@0.7.1/node_modules/@houserules/plugin-typescript"
-    },
-    {
-      "name": "@houserules/plugin-svelte",
-      "alias": "svelte",
-      "version": "0.2.0",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-svelte@0.2.0_@houserules+api@0.7.1/node_modules/@houserules/plugin-svelte"
-    },
-    {
-      "name": "@houserules/plugin-testing",
-      "alias": "testing",
-      "version": "0.3.3",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-testing@0.3.3_@houserules+api@0.7.1/node_modules/@houserules/plugin-testing"
-    },
-    {
-      "name": "@houserules/plugin-changesets",
-      "alias": "changesets",
-      "version": "0.3.2",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-changesets@0.3.2_@houserules+api@0.7.1/node_modules/@houserules/plugin-changesets"
-    },
-    {
-      "name": "@houserules/plugin-design",
-      "alias": "design",
-      "version": "0.4.2",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-design@0.4.2_@houserules+api@0.7.1/node_modules/@houserules/plugin-design"
-    },
-    {
-      "name": "@houserules/plugin-accessibility",
-      "alias": "accessibility",
-      "version": "0.2.1",
-      "dir": "/Users/devin/Projects/prime/node_modules/.pnpm/@houserules+plugin-accessibility@0.2.1_@houserules+api@0.7.1/node_modules/@houserules/plugin-accessibility"
-    }
-  ]
+  }
 }

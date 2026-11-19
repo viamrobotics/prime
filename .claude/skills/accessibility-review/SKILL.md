@@ -8,7 +8,7 @@ Review the accessibility of a working-tree change. Arguments (optional file filt
 
 1. **Resolve the changed markup files.** Diff against the merge-base:
    ```
-   git diff --name-only "$(git merge-base HEAD origin/main)"...HEAD
+   git diff --name-only --diff-filter=d "$(git merge-base HEAD origin/main)"...HEAD
    ```
    Filter to `.html`, `.jsx`, `.tsx`, `.svelte`, `.vue`, `.astro`. If none changed, say so and
    stop. There is nothing to review.

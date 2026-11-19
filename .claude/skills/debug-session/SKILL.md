@@ -1,6 +1,6 @@
 ---
 name: debug-session
-description: Hypothesis-driven debugging for bugs, with structured trace logging under .claude/debug/. Use when a bug's cause is non-obvious and print statements are about to be sprinkled in.
+description: Use for any bug whose cause is non-obvious from a first read, or after a fix attempt did not hold, before print statements get sprinkled in. Hypothesis-driven debugging with structured trace logging under .claude/debug/, cleaned up after.
 argument-hint: <bug description>
 allowed-tools: Read, Edit, Write, Grep, Glob, Bash
 ---
