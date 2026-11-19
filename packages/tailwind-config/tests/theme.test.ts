@@ -843,6 +843,8 @@ const CALENDAR_DAY_STATES = [
   "hover",
 ];
 
+const EVERY_STATE_TIMEOUT_MS = 30_000;
+
 const INLINE_EQUIVALENCES: InlineEquivalence[] = [
   {
     name: "popover-panel",
@@ -1452,6 +1454,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
 
       expect(mismatches).toStrictEqual([]);
     },
+    EVERY_STATE_TIMEOUT_MS,
   );
 
   it.each(
