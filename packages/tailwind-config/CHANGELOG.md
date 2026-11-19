@@ -1,5 +1,15 @@
 # @viamrobotics/tailwind-config
 
+## 1.10.0
+### Minor Changes
+
+- 09e47ee: Add `themeColor` at `@viamrobotics/tailwind-config/theme-color`, which reads a color token for script.
+- 09e47ee: Add component classes for floating list panels, date fields, and calendar grids.
+
+### Patch Changes
+
+- 09e47ee: The focus ring no longer fades in on buttons, inputs, and icon buttons, and a banner nested in a warning banner keeps its own glyph color.
+
 ## 1.9.0
 ### Minor Changes
 
