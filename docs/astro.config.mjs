@@ -89,6 +89,10 @@ export default defineConfig({
               link: "/packages/prime-editor/",
             },
             {
+              label: "@viamrobotics/prime-charts",
+              link: "/packages/prime-charts/",
+            },
+            {
               label: "@viamrobotics/tailwind-config",
               items: [
                 { label: "Overview", link: "/packages/tailwind-config/" },

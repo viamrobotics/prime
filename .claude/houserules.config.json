@@ -220,6 +220,24 @@
       ]
     },
     {
+      "name": "prime-charts",
+      "prefix": "PRIME_CHARTS",
+      "packageName": "@viamrobotics/prime-charts",
+      "pathPrefix": "packages/prime-charts/",
+      "sourcePath": "packages/prime-charts/src",
+      "label": "Prime Charts",
+      "fixCommands": [
+        "lint:fix",
+        "format:fix"
+      ],
+      "verifyCommands": [
+        "check",
+        "lint",
+        "format",
+        "test"
+      ]
+    },
+    {
       "name": "docs",
       "prefix": "DOCS",
       "packageName": "@viamrobotics/prime-docs",

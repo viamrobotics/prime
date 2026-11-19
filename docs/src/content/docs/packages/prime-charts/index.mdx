@@ -1,0 +1,64 @@
+---
+title: "@viamrobotics/prime-charts"
+description: "Svelte 5 charts built on LayerCake, themed with Viam's tokens."
+---
+
+import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
+import Example from "@docs/doc/Example.astro";
+
+import Demo from "./Demo.svelte";
+import demoSource from "./Demo.svelte?raw";
+
+`@viamrobotics/prime-charts` is a set of Svelte 5 charts built on LayerCake. They draw with Viam's design tokens, so they follow the light and dark themes.
+
+<Aside type="caution">
+  The public API is unstable until 1.0. Expect breaking changes in minor
+  releases.
+</Aside>
+
+- `Chart`, a container that fills its parent and holds the marks.
+- `Chart.Line`, a line over a list of points.
+
+## Installation
+
+<Steps>
+
+1. Install the package and its peer. The `svelte` peer is `^5.40.0`.
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add @viamrobotics/prime-charts @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install @viamrobotics/prime-charts @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add @viamrobotics/prime-charts @viamrobotics/tailwind-config"
+         lang="sh"
+       />
+     </TabItem>
+   </Tabs>
+
+2. Import the stylesheet once, after Tailwind. Tailwind skips `node_modules` when it scans for classes, so the package's stylesheet points it at the compiled components.
+
+   ```css
+   @import "tailwindcss";
+   @import "@viamrobotics/prime-charts/styles.css";
+   ```
+
+</Steps>
+
+## Usage
+
+`Chart` fills its container, so give it one with a height. Each `Chart.Line` takes `points`, a list of `{ x, y }` where `x` is a `Date` and `y` is a number.
+
+<Example code={demoSource} title="Demo.svelte">
+  <Demo client:visible />
+</Example>

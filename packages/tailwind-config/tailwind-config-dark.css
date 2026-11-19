@@ -166,6 +166,18 @@
   --dark-color-ghost-light: rgba(255, 255, 255, 0.05);
   --dark-color-ghost-medium: rgba(255, 255, 255, 0.1);
 
+  /* Chart colors */
+  --dark-color-chart-series-1: #5686f2;
+  --dark-color-chart-series-2: #d24d76;
+  --dark-color-chart-series-3: #a56cdd;
+  --dark-color-chart-series-4: #1ea74e;
+  --dark-color-chart-series-5: #c161c0;
+  --dark-color-chart-series-6: #c8414b;
+  --dark-color-chart-series-7: #19a0a0;
+  --dark-color-chart-grid: #242426;
+  --dark-color-chart-axis: #3a3a3d;
+  --dark-color-chart-axis-label: #9c9ca4;
+
   /* Light defaults — mirror the @theme values in tailwind-config.css. */
 
   /* Text colors */
@@ -292,6 +304,18 @@
   /* Ghost colors */
   --light-color-ghost-light: rgba(0, 0, 0, 0.04);
   --light-color-ghost-medium: rgba(0, 0, 0, 0.08);
+
+  /* Chart colors */
+  --light-color-chart-series-1: #3f6dd7;
+  --light-color-chart-series-2: #d55079;
+  --light-color-chart-series-3: #8c54c3;
+  --light-color-chart-series-4: #10a148;
+  --light-color-chart-series-5: #a648a7;
+  --light-color-chart-series-6: #970525;
+  --light-color-chart-series-7: #069999;
+  --light-color-chart-grid: #edeef0;
+  --light-color-chart-axis: #d7d7d9;
+  --light-color-chart-axis-label: #6e7074;
 }
 
 /*
@@ -436,6 +460,18 @@
     /* Ghost colors */
     --color-ghost-light: var(--dark-color-ghost-light);
     --color-ghost-medium: var(--dark-color-ghost-medium);
+
+    /* Chart colors */
+    --color-chart-series-1: var(--dark-color-chart-series-1);
+    --color-chart-series-2: var(--dark-color-chart-series-2);
+    --color-chart-series-3: var(--dark-color-chart-series-3);
+    --color-chart-series-4: var(--dark-color-chart-series-4);
+    --color-chart-series-5: var(--dark-color-chart-series-5);
+    --color-chart-series-6: var(--dark-color-chart-series-6);
+    --color-chart-series-7: var(--dark-color-chart-series-7);
+    --color-chart-grid: var(--dark-color-chart-grid);
+    --color-chart-axis: var(--dark-color-chart-axis);
+    --color-chart-axis-label: var(--dark-color-chart-axis-label);
   }
 }
 
@@ -572,6 +608,18 @@
   /* Ghost colors */
   --color-ghost-light: var(--dark-color-ghost-light);
   --color-ghost-medium: var(--dark-color-ghost-medium);
+
+  /* Chart colors */
+  --color-chart-series-1: var(--dark-color-chart-series-1);
+  --color-chart-series-2: var(--dark-color-chart-series-2);
+  --color-chart-series-3: var(--dark-color-chart-series-3);
+  --color-chart-series-4: var(--dark-color-chart-series-4);
+  --color-chart-series-5: var(--dark-color-chart-series-5);
+  --color-chart-series-6: var(--dark-color-chart-series-6);
+  --color-chart-series-7: var(--dark-color-chart-series-7);
+  --color-chart-grid: var(--dark-color-chart-grid);
+  --color-chart-axis: var(--dark-color-chart-axis);
+  --color-chart-axis-label: var(--dark-color-chart-axis-label);
 }
 
 /* Explicit class override for light, including inside a `.dark` scope. */
@@ -707,4 +755,16 @@
   /* Ghost colors */
   --color-ghost-light: var(--light-color-ghost-light);
   --color-ghost-medium: var(--light-color-ghost-medium);
+
+  /* Chart colors */
+  --color-chart-series-1: var(--light-color-chart-series-1);
+  --color-chart-series-2: var(--light-color-chart-series-2);
+  --color-chart-series-3: var(--light-color-chart-series-3);
+  --color-chart-series-4: var(--light-color-chart-series-4);
+  --color-chart-series-5: var(--light-color-chart-series-5);
+  --color-chart-series-6: var(--light-color-chart-series-6);
+  --color-chart-series-7: var(--light-color-chart-series-7);
+  --color-chart-grid: var(--light-color-chart-grid);
+  --color-chart-axis: var(--light-color-chart-axis);
+  --color-chart-axis-label: var(--light-color-chart-axis-label);
 }

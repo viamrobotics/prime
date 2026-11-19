@@ -1,0 +1,183 @@
+{
+	"name": "@viamrobotics/prime-charts",
+	"version": "0.0.0",
+	"description": "Svelte 5 charts built on LayerCake, themed with Viam's design tokens.",
+	"license": "Apache-2.0",
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/viamrobotics/prime.git",
+		"directory": "packages/prime-charts"
+	},
+	"type": "module",
+	"svelte": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js"
+		},
+		"./styles.css": "./styles.css"
+	},
+	"files": [
+		"dist",
+		"styles.css",
+		"!dist/**/*.test.*",
+		"!dist/**/*.spec.*",
+		"!dist/**/__tests__/**"
+	],
+	"sideEffects": [
+		"**/*.css"
+	],
+	"scripts": {
+		"build": "wireit",
+		"package": "wireit",
+		"prepack": "wireit",
+		"check": "wireit",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "wireit",
+		"lint:fix": "eslint . --fix --concurrency auto",
+		"format": "wireit",
+		"format:fix": "prettier --write .",
+		"test:unit": "vitest",
+		"test": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"dependencies": [
+				"package"
+			]
+		},
+		"package": {
+			"command": "svelte-package --tsconfig ./tsconfig.package.json && publint && node ../../scripts/check-declarations.mjs dist",
+			"files": [
+				"src/lib/**",
+				"../../scripts/check-declarations.mjs",
+				"svelte.config.js",
+				"tsconfig.json",
+				"tsconfig.package.json",
+				"package.json"
+			],
+			"output": [
+				"dist/**"
+			],
+			"packageLocks": [
+				"pnpm-lock.yaml",
+				"pnpm-workspace.yaml"
+			]
+		},
+		"prepack": {
+			"dependencies": [
+				"package"
+			]
+		},
+		"check": {
+			"command": "svelte-check --tsconfig ./tsconfig.json",
+			"files": [
+				"src/**",
+				"test/**",
+				"tsconfig.json",
+				"svelte.config.js",
+				"package.json"
+			],
+			"output": [],
+			"packageLocks": [
+				"pnpm-lock.yaml",
+				"pnpm-workspace.yaml"
+			]
+		},
+		"test": {
+			"command": "vitest run --passWithNoTests",
+			"files": [
+				"src/**",
+				"test/**",
+				"vite.config.ts",
+				"tsconfig.json",
+				"svelte.config.js",
+				"package.json",
+				"../tailwind-config/tailwind-config.css",
+				"../tailwind-config/tailwind-config-dark.css"
+			],
+			"output": [],
+			"packageLocks": [
+				"pnpm-lock.yaml",
+				"pnpm-workspace.yaml"
+			]
+		},
+		"lint": {
+			"command": "eslint . --concurrency auto",
+			"files": [
+				"**/*.{js,mjs,cjs,ts,svelte}",
+				"!dist/**",
+				"!.wireit/**",
+				"eslint.config.js",
+				"tsconfig.json",
+				"package.json",
+				"../tailwind-config/tailwind-config.css"
+			],
+			"output": [],
+			"packageLocks": [
+				"pnpm-lock.yaml",
+				"pnpm-workspace.yaml"
+			]
+		},
+		"format": {
+			"command": "prettier --check .",
+			"files": [
+				"**",
+				"!dist/**",
+				"!.wireit/**"
+			],
+			"output": [],
+			"packageLocks": [
+				"pnpm-lock.yaml",
+				"pnpm-workspace.yaml"
+			]
+		}
+	},
+	"dependencies": {
+		"@viamrobotics/tailwind-config": "workspace:^",
+		"d3-scale": "^4.0.2",
+		"d3-shape": "^3.2.0",
+		"layercake": "^11.0.0"
+	},
+	"peerDependencies": {
+		"svelte": "^5.40.0"
+	},
+	"devDependencies": {
+		"@eslint/js": "catalog:",
+		"@sveltejs/package": "^2.5.7",
+		"@sveltejs/vite-plugin-svelte": "catalog:",
+		"@tailwindcss/vite": "catalog:",
+		"@types/d3-scale": "^4.0.9",
+		"@types/d3-shape": "^3.1.8",
+		"@types/node": "catalog:",
+		"@vitest/browser-playwright": "^4.1.3",
+		"eslint": "catalog:",
+		"eslint-config-prettier": "catalog:",
+		"eslint-plugin-svelte": "catalog:",
+		"globals": "catalog:",
+		"playwright": "^1.65.0",
+		"prettier": "catalog:",
+		"prettier-plugin-svelte": "^3.5.1",
+		"prettier-plugin-tailwindcss": "^0.7.2",
+		"publint": "catalog:",
+		"svelte": "catalog:",
+		"svelte-check": "catalog:",
+		"tailwindcss": "catalog:",
+		"typescript": "catalog:",
+		"typescript-eslint": "catalog:",
+		"vite": "catalog:",
+		"vitest": "^4.1.3",
+		"vitest-browser-svelte": "^2.1.0"
+	},
+	"keywords": [
+		"svelte",
+		"charts",
+		"layercake",
+		"time series"
+	]
+}

@@ -71,6 +71,10 @@ Named layers order floating UI by who must clear whom. Wear a layer instead of a
 
 Bare numbers such as `z-50` and `z-1150` still work through Tailwind's own utility. Steps of 100 leave room for a bare value between layers.
 
+## Chart colors
+
+Ten tokens color data graphics, and each adapts in dark mode: `--color-chart-series-1` through `--color-chart-series-7` for data series, assigned in order, plus `--color-chart-grid`, `--color-chart-axis`, and `--color-chart-axis-label`. Every series color holds 3:1 against its theme's background, and the axis label holds 4.5:1.
+
 ## Dark mode
 
 Dark mode is opt-in. Import it after the base config.
