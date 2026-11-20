@@ -1,5 +1,10 @@
 # @viamrobotics/tailwind-config
 
+## 1.11.0
+### Minor Changes
+
+- c47256b: Add chart color tokens: seven series colors plus grid, axis, and axis label colors, in light and dark themes.
+
 ## 1.10.0
 ### Minor Changes
 
