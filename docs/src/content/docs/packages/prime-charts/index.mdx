@@ -5,19 +5,48 @@ description: "Svelte 5 charts built on LayerCake, themed with Viam's tokens."
 
 import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
 
 import Demo from "./Demo.svelte";
-import demoSource from "./Demo.svelte?raw";
+import Series from "./Series.svelte";
+import seriesSource from "./Series.svelte?raw";
+import Bounds from "./Bounds.svelte";
+import boundsSource from "./Bounds.svelte?raw";
+import Formatters from "./Formatters.svelte";
+import formattersSource from "./Formatters.svelte?raw";
+import Hiding from "./Hiding.svelte";
+import hidingSource from "./Hiding.svelte?raw";
+import States from "./States.svelte";
+import statesSource from "./States.svelte?raw";
 
-`@viamrobotics/prime-charts` is a set of Svelte 5 charts built on LayerCake. They draw with Viam's design tokens, so they follow the light and dark themes.
+`@viamrobotics/prime-charts` is a set of Svelte 5 charts built on LayerCake. They draw with Viam's design tokens, so they follow the light and dark themes. `Chart` is a compound component for cartesian charts with a time axis on x and a number axis on y.
 
 <Aside type="caution">
   The public API is unstable until 1.0. Expect breaking changes in minor
   releases.
 </Aside>
 
-- `Chart`, a container that fills its parent and holds the marks.
-- `Chart.Line`, a line over a list of points.
+<Demo client:visible />
+
+- Several series on one chart, each with a palette color by position or a color you pick from the tokens.
+- Axes, a grid, a tooltip, and a legend, each a part you place only when you want it.
+- Bounds you set on either axis, or leave to the data.
+- Keyboard navigation of the points and a live region that announces the active point.
+
+## Anatomy
+
+```svelte
+<Chart>
+  <Chart.Grid />
+  <Chart.XAxis />
+  <Chart.YAxis />
+  <Chart.Line />
+  <Chart.Tooltip />
+  <Chart.Legend />
+</Chart>
+```
 
 ## Installation
 
@@ -57,8 +86,101 @@ import demoSource from "./Demo.svelte?raw";
 
 ## Usage
 
-`Chart` fills its container, so give it one with a height. Each `Chart.Line` takes `points`, a list of `{ x, y }` where `x` is a `Date` and `y` is a number.
+`Chart` fills its container, so give it an element with a height. It needs an accessible name, either `aria-label` or `aria-labelledby`. Each `Chart.Line` takes `points`, a list of `{ x, y }` where `x` is a `Date` and `y` is a number or `null` for a gap.
 
-<Example code={demoSource} title="Demo.svelte">
-  <Demo client:visible />
+### Several series
+
+Each `Chart.Line` takes the next palette color, `--color-chart-series-1` to `--color-chart-series-7` in source order. Pass `color` a CSS variable name to pick another token. A `unit` shows after the series name in the legend and after its value in the tooltip.
+
+One y axis serves every series, so series with different units share it and the axis shows no unit of its own.
+
+<Example code={seriesSource} title="Series.svelte">
+  <Series client:visible />
 </Example>
+
+### Bounds
+
+Set `xMin`, `xMax`, `yMin`, or `yMax` to fix an edge. A given bound is used exactly. A bound you leave out comes from the data, and a y bound from the data is rounded out to the next tick. The first chart below fixes the y axis and the second fixes a window on x and the bottom of y.
+
+<Example code={boundsSource} title="Bounds.svelte">
+  <Bounds client:visible />
+</Example>
+
+### Formatters
+
+`Chart.XAxis` and `Chart.YAxis` take a `format` for their tick labels. `Chart.Tooltip` takes `xFormat` and `yFormat`, which each default to the format of the matching axis. Without any of them, the ticks use the time scale's own format and the tooltip shows a full date and time with the value through `Intl.NumberFormat`.
+
+<Example code={formattersSource} title="Formatters.svelte">
+  <Formatters client:visible />
+</Example>
+
+### Hiding a series
+
+The legend renders one toggle button per series. Bind `hidden` on a `Chart.Line` to read or set the state from outside. Unbound, the line keeps the state itself. A hidden series keeps its color and position, and the axes follow the series that remain visible.
+
+<Example code={hidingSource} title="Hiding.svelte">
+  <Hiding client:visible />
+</Example>
+
+### States
+
+`empty` replaces the plot when no series has a point, and defaults to the text "No data". `loading` lays an overlay on the plot and keeps the last lines underneath. Loading wins over the empty state. A `loading` prop on a line shows its loading mark in the legend.
+
+<Example code={statesSource} title="States.svelte">
+  <States client:visible />
+</Example>
+
+## Styling
+
+`class` lands on a different element for each part.
+
+| Part            | Where `class` lands                          |
+| --------------- | -------------------------------------------- |
+| `Chart`         | The root element, which has the `figure` role |
+| `Chart.Line`    | The path, or the circle of a single point    |
+| `Chart.Grid`    | The `<g>` that holds the grid lines          |
+| `Chart.XAxis`   | The `<g>` that holds the axis                |
+| `Chart.YAxis`   | The `<g>` that holds the axis                |
+| `Chart.Tooltip` | The tooltip box                              |
+| `Chart.Legend`  | The list                                     |
+
+Every other attribute on `Chart` also goes to the root element. Colors come from the chart tokens in `@viamrobotics/tailwind-config`, such as `--color-chart-series-1`, so a literal color has no place in a class or in `color`.
+
+The package sets these `data-part` attributes, so a variant like `[&_[data-part=legend-item]]:text-xs` reaches them from the root.
+
+| `data-part`        | Element                                           |
+| ------------------ | ------------------------------------------------- |
+| `loading`          | The overlay over the plot while `loading`         |
+| `empty`            | The box that holds the `empty` content            |
+| `legend`           | The legend list                                   |
+| `legend-item`      | A legend toggle button                            |
+| `legend-swatch`    | A series color swatch in the legend               |
+| `legend-loading`   | A series loading mark in the legend               |
+| `tooltip`          | The tooltip box                                   |
+| `tooltip-marker`   | The dot on the active point                       |
+| `tooltip-swatch`   | The series color swatch in the tooltip            |
+
+The root has `aria-busy` while loading. Each legend button has `aria-pressed`, which is true while its series is visible.
+
+## Keyboard
+
+The plot is one tab stop when a `Chart.Tooltip` is placed and a visible series has a point. Each legend button is a tab stop after it. Focusing the plot shows the tooltip on the active point. On first focus that is the first point of the first visible series, and after that it is the point focus left. Hidden series and gaps are skipped.
+
+<KeyboardTable
+  bindings={[
+    { keys: "ArrowLeft / ArrowRight", action: "Move to the previous or next point in the series" },
+    { keys: "ArrowUp / ArrowDown", action: "Move to the previous or next visible series, at its point nearest in time" },
+    { keys: "Home / End", action: "Move to the first or last point of the series" },
+    { keys: "PageUp / PageDown", action: "Move by a tenth of the series" },
+    { keys: "Escape", action: "Hide the tooltip and keep focus on the plot" },
+    { keys: "Enter / Space", action: "On a legend button, toggle the series" },
+  ]}
+/>
+
+A polite live region announces the active point as the tooltip reads it, and the visible tooltip is `aria-hidden`. The plot has `role="application"`, with its instructions linked through `aria-describedby`.
+
+## API
+
+<PropsTable name="chart" collection="prime-charts" />
+
+<PartsDoc name="chart" collection="prime-charts" />

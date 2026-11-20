@@ -6,7 +6,7 @@
 </script>
 
 <div style:width="{width}px" style:height="{height}px">
-	<Chart>
-		<Chart.Line {points} />
+	<Chart aria-label="Readings">
+		<Chart.Line name="Reading" {points} />
 	</Chart>
 </div>

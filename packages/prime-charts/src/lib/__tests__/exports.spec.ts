@@ -22,7 +22,14 @@ const declarations = (directory: string): string[] =>
 describe('public API', () => {
 	it('exports only the Chart compound and its parts', () => {
 		expect(Object.keys(library)).toEqual(['Chart']);
-		expect(Object.keys(library.Chart).filter((key) => !COMPONENT_KEYS.has(key))).toEqual(['Line']);
+		expect(Object.keys(library.Chart).filter((key) => !COMPONENT_KEYS.has(key))).toEqual([
+			'Line',
+			'XAxis',
+			'YAxis',
+			'Grid',
+			'Tooltip',
+			'Legend'
+		]);
 	});
 
 	it(

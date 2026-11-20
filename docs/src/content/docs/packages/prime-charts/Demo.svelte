@@ -1,21 +1,19 @@
 <script lang="ts">
-  import { Chart, type ChartPoint } from "@viamrobotics/prime-charts";
+  import Sandbox from "@docs/Sandbox.svelte";
 
-  const START_TIME = Date.UTC(2026, 0, 1);
-  const HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
-  const HOURS_IN_DAY = 24;
-
-  const readingAt = (hour: number): number =>
-    50 + 30 * Math.sin(hour / 3) + 8 * Math.cos(hour * 1.7);
-
-  const points: ChartPoint[] = Array.from({ length: HOURS_IN_DAY }, (_, hour) => ({
-    x: new Date(START_TIME + hour * HOUR_IN_MILLISECONDS),
-    y: readingAt(hour),
-  }));
+  import SandboxChart from "./SandboxChart.svelte";
 </script>
 
-<div class="h-64">
-  <Chart aria-label="Hourly readings">
-    <Chart.Line {points} />
-  </Chart>
-</div>
+<!-- The wrapper maps each control onto bounds and hidden series, so the generated snippet would mislead. -->
+<Sandbox
+  name="Chart"
+  component={SandboxChart}
+  showCode={false}
+  controls={{
+    fixedBounds: { kind: "boolean", label: "Fixed y bounds (0 to 100)", default: false },
+    loading: { kind: "boolean", label: "Loading", default: false },
+    hideCell01: { kind: "boolean", label: "Hide cell-01", default: false },
+    hideCell02: { kind: "boolean", label: "Hide cell-02", default: false },
+    hideCell03: { kind: "boolean", label: "Hide cell-03", default: false },
+  }}
+/>

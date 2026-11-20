@@ -2,35 +2,132 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { scaleLinear, scaleTime } from 'd3-scale';
-	import { LayerCake, Svg } from 'layercake';
-	import { extent, timeValue } from './domain.ts';
+	import { Html, LayerCake, Svg } from 'layercake';
+	import { provideChart, type ChartLayer, type ChartPadding } from './context.svelte.ts';
+	import {
+		domainPoints,
+		hasData,
+		xDomain as computeXDomain,
+		yDomain as computeYDomain
+	} from './domain.ts';
 	import type { ChartScale } from './scale.ts';
-	import { provideSeries } from './series.svelte.ts';
+	import { yTickCount } from './ticks.ts';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** The kind of x scale. Defaults to `'time'`. */
 		x?: ChartScale;
-		/** The parts to draw, such as `Chart.Line`. */
+		/** The lower x bound. Left out, it comes from the data. */
+		xMin?: Date | number;
+		/** The upper x bound. Left out, it comes from the data. */
+		xMax?: Date | number;
+		/** The lower y bound, used exactly. Left out, it comes from the data, rounded out to the next tick. */
+		yMin?: number;
+		/** The upper y bound, used exactly. Left out, it comes from the data, rounded out to the next tick. */
+		yMax?: number;
+		/** Lays an overlay on the plot and keeps the last lines drawn underneath. */
+		loading?: boolean;
+		/** Rendered in place of the plot when no series has a point. Defaults to the text "No data". */
+		empty?: Snippet;
+		/** The parts, such as `Chart.Line` and `Chart.XAxis`. */
 		children?: Snippet;
 	}
 
-	let { x = 'time', children, class: className, ...rest }: Props = $props();
+	type AccessibleName = { 'aria-label': string } | { 'aria-labelledby': string };
+
+	let {
+		x = 'time',
+		xMin,
+		xMax,
+		yMin,
+		yMax,
+		loading = false,
+		empty,
+		children,
+		class: className,
+		...rest
+	}: Props & AccessibleName = $props();
 
 	const X_SCALES = {
 		time: scaleTime
 	} satisfies Record<ChartScale, () => unknown>;
 
-	const series = provideSeries();
+	const chart = provideChart();
 	const xScale = $derived(X_SCALES[x]());
 	const yScale = scaleLinear();
-	const xDomain = $derived(extent(series.points.map((point) => timeValue(point.x))));
-	const yDomain = $derived(extent(series.points.map((point) => point.y)));
+	const points = $derived(domainPoints(chart.series));
+	const xDomain = $derived(computeXDomain(points, xMin, xMax));
+	const isEmpty = $derived(!hasData(chart.series));
+
+	const layersOf = (kind: ChartLayer['kind']) =>
+		chart.layers.filter((layer) => layer.kind === kind);
+
+	const maxPadding = (side: keyof ChartPadding) =>
+		Math.max(0, ...chart.layers.map((layer) => layer.padding?.[side] ?? 0));
+
+	const padding: ChartPadding = $derived({
+		top: maxPadding('top'),
+		right: maxPadding('right'),
+		bottom: maxPadding('bottom'),
+		left: maxPadding('left')
+	});
+
+	let plotHeight = $state(0);
+	const yTicks = $derived(yTickCount(plotHeight - padding.top - padding.bottom));
+	const yDomain = $derived(computeYDomain(points, yMin, yMax, yTicks));
+
+	// A focusable plot is a named widget of its own, so it carries the chart's accessible name.
+	const plotName = $derived(
+		chart.plotAttributes.role
+			? { 'aria-label': rest['aria-label'], 'aria-labelledby': rest['aria-labelledby'] }
+			: {}
+	);
 </script>
 
-<div role="figure" {...rest} class={['size-full', className]}>
-	<LayerCake {xScale} {yScale} {xDomain} {yDomain}>
-		<Svg>
+<div
+	role="figure"
+	{...rest}
+	aria-busy={loading || undefined}
+	class={['flex size-full flex-col', className]}
+>
+	<div
+		class="relative min-h-0 flex-1 focus-ring"
+		bind:clientHeight={plotHeight}
+		{...plotName}
+		{...chart.plotAttributes}
+	>
+		<LayerCake {xScale} {yScale} {xDomain} {yDomain} {padding}>
+			<Svg>
+				{#if !isEmpty}
+					{#each layersOf('svg') as layer (layer)}
+						{@render layer.draw()}
+					{/each}
+				{/if}
+			</Svg>
+			<Html pointerEvents={false}>
+				{#if !isEmpty}
+					{#each layersOf('html') as layer (layer)}
+						{@render layer.draw()}
+					{/each}
+				{/if}
+			</Html>
 			{@render children?.()}
-		</Svg>
-	</LayerCake>
+		</LayerCake>
+		{#if loading}
+			<div data-part="loading" class="absolute inset-0 bg-white/60"></div>
+		{:else if isEmpty}
+			<div
+				data-part="empty"
+				class="absolute inset-0 flex items-center justify-center text-sm text-subtle-1"
+			>
+				{#if empty}
+					{@render empty()}
+				{:else}
+					No data
+				{/if}
+			</div>
+		{/if}
+	</div>
+	{#each layersOf('below') as layer (layer)}
+		{@render layer.draw()}
+	{/each}
 </div>
