@@ -1,5 +1,0 @@
-import"./disclose-version.xihTtKlq.js";import"./legacy.BP1iH2ir.js";import{H as e,Ut as t,W as n,dt as r}from"./client.BlIQQwp-.js";import{t as i}from"./CodeSnippet.Cn7sb_kY.js";var a=n(`<div class="not-content"><!></div>`);function o(n){var o=a(),s=r(o);i(s,{code:`{
-  "name": "rover",
-  "speed": 3,
-  "ready": true
-}`,language:`json`}),t(o),e(n,o)}export{o as default};
