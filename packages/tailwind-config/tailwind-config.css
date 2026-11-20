@@ -146,6 +146,22 @@
   --color-pixel-teal: #4b758d;
   --color-pixel-blue: #201293;
 
+  /*
+   * Chart colors. The design system publishes no data colors, so each series value is derived:
+   * it keeps a brand family's hue at a step that holds 3:1 on the chart background. Values are
+   * literal hex, because a var() in @theme resolves at :root and would not follow a nested .dark.
+   */
+  --color-chart-series-1: #3f6dd7;
+  --color-chart-series-2: #d55079;
+  --color-chart-series-3: #8c54c3;
+  --color-chart-series-4: #10a148;
+  --color-chart-series-5: #a648a7;
+  --color-chart-series-6: #970525;
+  --color-chart-series-7: #069999;
+  --color-chart-grid: #edeef0;
+  --color-chart-axis: #d7d7d9;
+  --color-chart-axis-label: #6e7074;
+
   /* Spacing */
   --spacing-7_5: 1.875rem;
 

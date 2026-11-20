@@ -22,6 +22,7 @@
 				"../packages/prime-tree:package",
 				"../packages/prime-controls:package",
 				"../packages/prime-editor:package",
+				"../packages/prime-charts:package",
 				"../packages/tweakpane-config:package"
 			],
 			"files": [
@@ -36,6 +37,7 @@
 				"../packages/prime-tree/dist/**",
 				"../packages/prime-controls/dist/**",
 				"../packages/prime-editor/dist/**",
+				"../packages/prime-charts/dist/**",
 				"../packages/tweakpane-config/dist/**"
 			],
 			"output": [],
@@ -70,6 +72,7 @@
 				"../packages/prime-tree:package",
 				"../packages/prime-controls:package",
 				"../packages/prime-editor:package",
+				"../packages/prime-charts:package",
 				"../packages/tweakpane-config:package"
 			],
 			"files": [
@@ -88,8 +91,10 @@
 				"../packages/prime-tree/src/lib/**",
 				"../packages/prime-controls/dist/**",
 				"../packages/prime-editor/dist/**",
+				"../packages/prime-charts/dist/**",
 				"../packages/prime-controls/src/lib/**",
 				"../packages/prime-editor/src/lib/**",
+				"../packages/prime-charts/src/lib/**",
 				"../packages/tweakpane-config/dist/**",
 				"../packages/tailwind-config/tailwind-config.css",
 				"../packages/tailwind-config/tailwind-config-dark.css"
@@ -124,6 +129,7 @@
 				"../packages/prime-tree/src/lib/**",
 				"../packages/prime-controls/src/lib/**",
 				"../packages/prime-editor/src/lib/**",
+				"../packages/prime-charts/src/lib/**",
 				"../packages/tweakpane-config/src/lib/**",
 				"../packages/tailwind-config/tailwind-config.css",
 				"../packages/tailwind-config/tailwind-config-dark.css"
@@ -152,6 +158,7 @@
 		"@mdi/js": "^7.4.47",
 		"@sveltejs/vite-plugin-svelte": "^7.3.1",
 		"@viamrobotics/prime-controls": "workspace:^",
+		"@viamrobotics/prime-charts": "workspace:^",
 		"@viamrobotics/prime-editor": "workspace:^",
 		"@viamrobotics/prime-panes": "workspace:^",
 		"@viamrobotics/prime-tree": "workspace:^",

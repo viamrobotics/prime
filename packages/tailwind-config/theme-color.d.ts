@@ -114,7 +114,17 @@ export type ThemeColorName =
   | "--color-pixel-red"
   | "--color-pixel-green"
   | "--color-pixel-teal"
-  | "--color-pixel-blue";
+  | "--color-pixel-blue"
+  | "--color-chart-series-1"
+  | "--color-chart-series-2"
+  | "--color-chart-series-3"
+  | "--color-chart-series-4"
+  | "--color-chart-series-5"
+  | "--color-chart-series-6"
+  | "--color-chart-series-7"
+  | "--color-chart-grid"
+  | "--color-chart-axis"
+  | "--color-chart-axis-label";
 
 /**
  * Reads a color token's current value, for code that needs a concrete color and cannot use a

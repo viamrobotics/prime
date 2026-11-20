@@ -1045,6 +1045,67 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
   });
 
+  describe("chart colors", () => {
+    const seriesIndices = (names: Iterable<string>, prefix: string) =>
+      [...names]
+        .map((name) => new RegExp(`^${prefix}chart-series-(\\d+)$`).exec(name))
+        .filter((match) => match !== null)
+        .map((match) => Number(match[1]))
+        .toSorted((first, second) => first - second);
+
+    const darkTokens = () => declarationsOf(onlyRule(unoptimized, ":root"));
+    const series = (values: Map<string, string>, prefix: string) =>
+      seriesIndices(values.keys(), prefix).map(
+        (index) =>
+          [index, values.get(`${prefix}chart-series-${index}`)!] as const,
+      );
+
+    it("defines series 1 through 7 in both themes", () => {
+      const expected = [1, 2, 3, 4, 5, 6, 7];
+      expect(seriesIndices(themeDefaults.keys(), "--color-")).toStrictEqual(
+        expected,
+      );
+      expect(seriesIndices(darkTokens().keys(), "--dark-color-")).toStrictEqual(
+        expected,
+      );
+    });
+
+    it("holds every series color at 3:1 against its theme background", () => {
+      const dark = darkTokens();
+      const darkBackground = dark.get("--dark-color-white")!;
+
+      for (const [index, value] of series(themeDefaults, "--color-")) {
+        expect(
+          contrastRatio(value, themeDefaults.get("--color-white")!),
+          `light series ${index}`,
+        ).toBeGreaterThanOrEqual(3);
+      }
+      for (const [index, value] of series(dark, "--dark-color-")) {
+        expect(
+          contrastRatio(value, darkBackground),
+          `dark series ${index}`,
+        ).toBeGreaterThanOrEqual(3);
+      }
+    });
+
+    it("holds the axis label at 4.5:1 against its theme background", () => {
+      const dark = darkTokens();
+
+      expect(
+        contrastRatio(
+          themeDefaults.get("--color-chart-axis-label")!,
+          themeDefaults.get("--color-white")!,
+        ),
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(
+        contrastRatio(
+          dark.get("--dark-color-chart-axis-label")!,
+          dark.get("--dark-color-white")!,
+        ),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+  });
+
   it("orders the .light rule after the .dark rule", () => {
     const allRules = rulesOf(emitted, () => true);
     const darkIndex = allRules.indexOf(onlyRule(emitted, ".dark"));
