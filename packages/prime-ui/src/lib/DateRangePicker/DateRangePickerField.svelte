@@ -61,13 +61,7 @@ darkens while the calendar is open.
 		{#snippet child({ props, segments })}
 			<span {...props} class="flex items-center">
 				{#each segments as { part, value }, index (index)}
-					<DateRangePicker.Segment
-						{part}
-						class={[
-							'rounded-sm tabular-nums outline-none aria-[valuetext=Empty]:text-subtle-2',
-							part !== 'literal' && 'px-0.5 focus:bg-medium'
-						]}
-					>
+					<DateRangePicker.Segment {part} class="date-segment">
 						{value}
 					</DateRangePicker.Segment>
 				{/each}
@@ -90,10 +84,7 @@ darkens while the calendar is open.
 	data-disabled={picker?.disabled ? '' : undefined}
 	data-readonly={picker?.readonly ? '' : undefined}
 	data-state={openState}
-	class={[
-		'inline-flex input items-center gap-1 focus-ring-within data-[state=open]:border-gray-9',
-		extraClasses
-	]}
+	class={['date-field input', extraClasses]}
 >
 	{@render dateSegments('start')}
 	<span aria-hidden="true">–</span>

@@ -252,16 +252,17 @@ describe('CodeEditor', () => {
 		await expect.poll(changed).toBeNull();
 	});
 
-	it('names both split textboxes and marks only the original side aria-readonly', async () => {
+	it('names the original split textbox apart from the value side and marks only it aria-readonly', async () => {
 		render(CodeEditor, {
 			props: { value: 'a\nb', original: 'a\nB', diff: 'split', 'aria-label': 'Program' }
 		});
-		const named = page.getByRole('textbox', { name: 'Program' });
+		const valueSide = page.getByRole('textbox', { name: 'Program', exact: true });
+		const originalSide = page.getByRole('textbox', { name: 'Program, original', exact: true });
 
-		await expect.poll(() => named.elements()).toHaveLength(2);
-		const [originalSide, valueSide] = named.elements();
-		expect(originalSide.getAttribute('aria-readonly')).toBe('true');
-		expect(valueSide.getAttribute('aria-readonly')).toBeNull();
+		await expect.poll(() => originalSide.elements()).toHaveLength(1);
+		expect(valueSide.elements()).toHaveLength(1);
+		expect(originalSide.element().getAttribute('aria-readonly')).toBe('true');
+		expect(valueSide.element().getAttribute('aria-readonly')).toBeNull();
 	});
 
 	it('renames both split textboxes when aria-label changes', async () => {
@@ -272,9 +273,30 @@ describe('CodeEditor', () => {
 		await rerender({ 'aria-label': 'Script' });
 
 		await expect
-			.poll(() => page.getByRole('textbox', { name: 'Script' }).elements())
-			.toHaveLength(2);
+			.poll(() => page.getByRole('textbox', { name: 'Script, original', exact: true }).elements())
+			.toHaveLength(1);
+		expect(page.getByRole('textbox', { name: 'Script', exact: true }).elements()).toHaveLength(1);
 		expect(page.getByRole('textbox', { name: 'Program' }).elements()).toHaveLength(0);
+	});
+
+	it('names the original split textbox with the label text followed by original', async () => {
+		render(LabelledCodeEditor, { props: { split: true } });
+
+		await expect
+			.poll(() => page.getByRole('textbox', { name: 'Query original', exact: true }).elements())
+			.toHaveLength(1);
+		expect(page.getByRole('textbox', { name: 'Query', exact: true }).elements()).toHaveLength(1);
+	});
+
+	it('names a unified diff textbox exactly as given', async () => {
+		render(CodeEditor, {
+			props: { value: 'a\nb', original: 'a\nB', 'aria-label': 'Program' }
+		});
+
+		await expect
+			.poll(() => page.getByRole('textbox', { name: 'Program', exact: true }).elements())
+			.toHaveLength(1);
+		expect(page.getByRole('textbox', { name: 'original' }).elements()).toHaveLength(0);
 	});
 
 	it('renders the split diff as two editors with the original side read-only', async () => {

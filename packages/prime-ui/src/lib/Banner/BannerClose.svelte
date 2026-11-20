@@ -1,6 +1,6 @@
 <!--
 @component
-The dismiss button of a [`Banner`](./Banner.svelte), labelled `Dismiss`. It renders a close icon by
+The dismiss button of a [`Banner`](./Banner.svelte), labeled `Dismiss`. It renders a close icon by
 default. Pass children to replace the icon, and `aria-label` to replace the label. The banner owns
 no open state, so handle `onclick` and remove the banner yourself.
 -->

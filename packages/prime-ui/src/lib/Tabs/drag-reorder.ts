@@ -2,6 +2,8 @@ import { tick } from 'svelte';
 
 import type { DragPoint, TabsDragContext } from './useTabsDrag.svelte.ts';
 
+import { labelOf } from './useTabsReorder.svelte.ts';
+
 const DRAG_START_THRESHOLD_PX = 4;
 const HOLD_TO_DRAG_MS = 250;
 const EDGE_SCROLL_ZONE_PX = 24;
@@ -22,7 +24,7 @@ const startsOnNestedControl = (event: PointerEvent, trigger: HTMLElement) => {
 };
 
 const visibleLabelOf = (trigger: HTMLElement) =>
-	trigger.textContent?.trim() || (trigger.getAttribute('aria-label') ?? '');
+	trigger.querySelector('[data-tab-label]')?.textContent?.trim() || labelOf(trigger);
 
 const edgeScrollStep = (list: HTMLElement, x: number) => {
 	if (list.scrollWidth <= list.clientWidth) return 0;

@@ -1,6 +1,6 @@
 {
 	"name": "@viamrobotics/prime-ui",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"description": "Viam's Svelte 5 component library.",
 	"license": "Apache-2.0",
 	"publishConfig": {
@@ -144,10 +144,10 @@
 		"@internationalized/date": "^3.12.2",
 		"@mdi/js": "^7.4.47",
 		"@viamrobotics/tailwind-config": "workspace:^",
-		"@zag-js/interact-outside": "^1.46.0",
-		"@zag-js/svelte": "^1.46.0",
-		"@zag-js/toast": "^1.46.0",
-		"bits-ui": "^2.20.2",
+		"@zag-js/interact-outside": "^1.48.0",
+		"@zag-js/svelte": "^1.48.0",
+		"@zag-js/toast": "^1.48.0",
+		"bits-ui": "^2.21.0",
 		"prismjs": "^1.30.0"
 	},
 	"peerDependencies": {

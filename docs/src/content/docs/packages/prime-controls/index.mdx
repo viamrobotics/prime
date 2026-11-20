@@ -54,6 +54,8 @@ import States from "./States.svelte"
 import statesSource from "./States.svelte?raw"
 import TextFieldBasic from "./TextFieldBasic.svelte"
 import textFieldBasicSource from "./TextFieldBasic.svelte?raw"
+import FileFieldBasic from "./FileFieldBasic.svelte"
+import fileFieldBasicSource from "./FileFieldBasic.svelte?raw"
 
 `@viamrobotics/prime-controls` is a set of compact realtime controls for tool panels. Each number control steps by keyboard and scrubs by dragging its label sideways, so a value can be tuned live without typing. Containers group the controls into panels, folders, and tabs.
 
@@ -64,6 +66,7 @@ import textFieldBasicSource from "./TextFieldBasic.svelte?raw"
 
 - `NumberField`, one number with a label that doubles as the scrub handle.
 - `TextField`, one string with a plain label and no scrub.
+- `FileField`, a native file input that shows the chosen file names and clears them.
 - `Point`, a 2D, 3D, or 4D vector as one `NumberField` per axis.
 - `Slider`, a range input with a `NumberField` readout beside it.
 - `Select`, a compact dropdown for choosing one of a list of items.
@@ -248,6 +251,16 @@ The `details` snippet draws content under one axis field, at that field's width,
   <TextFieldBasic client:visible />
 </Example>
 
+## FileField
+
+`FileField` is prime-ui's [`FileInput`](../prime-ui/components/file-input/) in the `TextField` row layout. A native `<input type="file">` covers the control, so the picker, a dropped file, and the keyboard are the browser's, and `accept`, `multiple`, and the other native attributes pass through. The label is a plain `<label>`. Without a `label`, pass `aria-label` or `aria-labelledby`. `hint` and `state` work as they do on `NumberField`.
+
+`bind:value` holds a `File[]`. Without `multiple` it holds at most one file, and a cleared field is an empty array. The chosen names truncate to the row, so the control never grows past a narrow pane, and a clear button appears beside them. `accept` only filters the picker, so check the files yourself and set `state="error"` on one you refuse.
+
+<Example code={fileFieldBasicSource} title="FileFieldBasic.svelte">
+  <FileFieldBasic client:visible />
+</Example>
+
 ## Panel
 
 `Panel` is the dense container for a tool panel's controls, a `role="group"` with a border and tight spacing. A visible `title` names the group. Without one, pass `aria-label` or `aria-labelledby`.
@@ -321,6 +334,10 @@ A drag writes on every pointer move, so a function binding receives each interme
 ### TextField
 
 <PropsTable name="text-field" collection="prime-controls" />
+
+### FileField
+
+<PropsTable name="file-field" collection="prime-controls" />
 
 ### Point
 

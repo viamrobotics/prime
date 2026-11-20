@@ -11,7 +11,7 @@ paths:
 
 Runner setup for testing Svelte 5 components and `.svelte.ts` reactive modules. See
 `testing.md` for the runner-agnostic rules on placement, structure, and naming that this
-guide assumes, and `svelte.md` for authoring conventions, which this guide does not repeat.
+guide assumes, and `svelte.md` (where it is installed) for authoring conventions, which this guide does not repeat.
 
 ## Rule
 

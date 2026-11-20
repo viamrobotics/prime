@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 
 import { colorOf } from '../../__tests__/computed-style.ts';
 import BoundTabs from './BoundTabs.svelte';
 import ClosableTabs from './ClosableTabs.svelte';
 import ControlledTabs from './ControlledTabs.svelte';
+import LabelledActionTab from './LabelledActionTab.svelte';
 import SingleTab from './SingleTab.svelte';
 import UndefinedTabs from './UndefinedTabs.svelte';
 
@@ -207,6 +208,27 @@ describe('Tabs', () => {
 		expect(labels(container)).toEqual(['Overview', 'API']);
 		expect(selectedLabels(container)).toEqual(['Overview']);
 		expect(owner(container)).toBe('undefined');
+	});
+
+	it('closable: the tab is named by its label alone', async () => {
+		render(ClosableTabs);
+
+		await expect.element(page.getByRole('tab', { name: 'Overview', exact: true })).toBeVisible();
+		await expect.element(page.getByRole('button', { name: 'Close Overview' })).toBeVisible();
+	});
+
+	it('closable: an aria-label on the tab keeps its name', async () => {
+		render(LabelledActionTab);
+
+		await expect.element(page.getByRole('tab', { name: 'Custom name', exact: true })).toBeVisible();
+	});
+
+	it('closable: a consumer aria-labelledby names the tab', async () => {
+		render(LabelledActionTab, { props: { isLabelledByOutside: true } });
+
+		await expect
+			.element(page.getByRole('tab', { name: 'Outside name', exact: true }))
+			.toBeVisible();
 	});
 
 	describe('file variant', () => {

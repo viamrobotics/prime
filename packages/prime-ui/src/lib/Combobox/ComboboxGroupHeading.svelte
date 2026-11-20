@@ -15,9 +15,6 @@ A non-selectable heading for a [`Combobox.Group`](./ComboboxGroup.svelte).
 	const { class: extraClasses, children, ...restProps }: Props = $props();
 </script>
 
-<Combobox.GroupHeading
-	class={['px-2 py-1.5 text-xs font-medium text-subtle-2', extraClasses]}
-	{...restProps}
->
+<Combobox.GroupHeading class={['listbox-heading', extraClasses]} {...restProps}>
 	{@render children?.()}
 </Combobox.GroupHeading>

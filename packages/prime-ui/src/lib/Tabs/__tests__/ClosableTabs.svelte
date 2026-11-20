@@ -41,14 +41,16 @@
 			{#each ids as id (id)}
 				<Tabs.Trigger value={id} class={triggerClass}>
 					<span>{labelOf(id)}</span>
-					<button
-						type="button"
-						class="icon-button"
-						aria-label="Close {labelOf(id)}"
-						onclick={(event) => close(event, id)}
-					>
-						<Icon icon={mdiClose} />
-					</button>
+					{#snippet actions()}
+						<button
+							type="button"
+							class="icon-button"
+							aria-label="Close {labelOf(id)}"
+							onclick={(event) => close(event, id)}
+						>
+							<Icon icon={mdiClose} />
+						</button>
+					{/snippet}
 				</Tabs.Trigger>
 			{/each}
 		</Tabs.List>

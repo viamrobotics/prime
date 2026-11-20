@@ -81,9 +81,12 @@
 		 * click. Changing it rebuilds the editor.
 		 */
 		collapseUnchanged?: boolean;
-		/** The accessible name of the editing surface. A split diff gives it to both sides. */
+		/** The accessible name of the editing surface. A split diff names the original side `<name>, original`. */
 		'aria-label'?: string;
-		/** The id of the element that names the editing surface. A split diff gives it to both sides. */
+		/**
+		 * The ids of the elements that name the editing surface. A split diff adds a hidden
+		 * `original` label after them on the original side.
+		 */
 		'aria-labelledby'?: string;
 		/** Marks the document invalid, and paints the error border. */
 		'aria-invalid'?: HTMLAttributes<HTMLDivElement>['aria-invalid'];
@@ -112,10 +115,12 @@
 	const lineNumbersCompartment = new Compartment();
 	const wrapLinesCompartment = new Compartment();
 	const nameCompartment = new Compartment();
+	const originalNameCompartment = new Compartment();
 	const ariaCompartment = new Compartment();
 	const unifiedDiffCompartment = new Compartment();
 
 	const ARIA_PREFIX = 'aria-';
+	const ORIGINAL_SIDE_SUFFIX = 'original';
 	const NAME_ATTRIBUTES = ['aria-label', 'aria-labelledby'];
 
 	// Unchanged lines kept visible around each change, and the shortest run worth folding.
@@ -128,6 +133,8 @@
 	let originalEditor = $state.raw<EditorView>();
 	let unifiedOriginal: string | undefined;
 
+	const originalLabelId = $props.id();
+
 	const isSplit = $derived(original !== undefined && diff === 'split');
 
 	const languageExtension = $derived<Extension>(language ? languageSupport(language) : []);
@@ -139,6 +146,9 @@
 	const placeholderText = $derived<Extension>(placeholder ? placeholderExtension(placeholder) : []);
 	const wrapLinesExtension = $derived<Extension>(wrapLines ? EditorView.lineWrapping : []);
 	const nameExtension = $derived(ariaContentAttributes(isNameAttribute));
+	const originalNameExtension = $derived(
+		EditorView.contentAttributes.of(originalNameAttributes(rest, originalLabelId))
+	);
 	const ariaExtension = $derived(ariaContentAttributes((name) => !isNameAttribute(name)));
 	const elementAttributes = $derived<HTMLAttributes<HTMLDivElement>>(
 		Object.fromEntries(Object.entries(rest).filter(([name]) => !name.startsWith(ARIA_PREFIX)))
@@ -147,6 +157,17 @@
 
 	function isNameAttribute(name: string) {
 		return NAME_ATTRIBUTES.includes(name);
+	}
+
+	function originalNameAttributes(
+		attributes: Record<string, unknown>,
+		labelId: string
+	): Record<string, string> {
+		const label = attributes['aria-label'];
+		const labelledby = attributes['aria-labelledby'];
+		if (labelledby != null) return { 'aria-labelledby': `${labelledby} ${labelId}` };
+		if (label != null) return { 'aria-label': `${label}, ${ORIGINAL_SIDE_SUFFIX}` };
+		return {};
 	}
 
 	function ariaContentAttributes(isIncluded: (name: string) => boolean): Extension {
@@ -277,7 +298,7 @@
 						extensions: [
 							sharedExtensions(),
 							originalEditabilityCompartment.of(editabilityExtension(originalEditability)),
-							nameCompartment.of(nameExtension)
+							originalNameCompartment.of(originalNameExtension)
 						]
 					},
 					b: { doc: value, extensions: [sharedExtensions(), editableExtensions()] }
@@ -324,7 +345,11 @@
 	});
 
 	$effect(() => {
-		reconfigure([editor, originalEditor], nameCompartment.reconfigure(nameExtension));
+		reconfigure([editor], nameCompartment.reconfigure(nameExtension));
+	});
+
+	$effect(() => {
+		reconfigure([originalEditor], originalNameCompartment.reconfigure(originalNameExtension));
 	});
 
 	$effect(() => {
@@ -358,3 +383,6 @@
 </script>
 
 <div {...elementAttributes} {@attach isSplit ? attachSplitEditors : attachEditor}></div>
+{#if isSplit && rest['aria-labelledby'] != null}
+	<span id={originalLabelId} class="sr-only">{ORIGINAL_SIDE_SUFFIX}</span>
+{/if}

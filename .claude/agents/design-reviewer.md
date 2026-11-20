@@ -75,8 +75,8 @@ to point it at, say "cannot determine from source" instead of guessing.
 
 Contrast and hit-target thresholds also come from WCAG. `@houserules/plugin-accessibility`
 owns the accessibility verdict and its `accessibility-reviewer` agent covers focus states,
-keyboard behavior, and screen-reader concerns. Report the design-system angle only. Defer
-anything else to `/accessibility-review`.
+keyboard behavior, and screen-reader concerns. Report the design-system angle only. If
+`.claude/skills/accessibility-review/` exists, defer anything else to `/accessibility-review`.
 
 You are read-only. Report the finding and the location. Never propose a rewritten file or
 edit the markup yourself. Your `Bash` access is for `design.mjs check`, `list`, `token`,

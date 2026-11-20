@@ -62,7 +62,7 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 		'aria-hidden': true,
 		inert: true,
 		'data-tab-preview': '',
-		class: 'inline-block rounded bg-info-light px-2 py-1 text-info-dark'
+		class: 'inline-block rounded-sm bg-info-light px-2 py-1 text-info-dark'
 	};
 
 	const context = usePanes();
@@ -125,7 +125,7 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 			tabindex: isActive ? 0 : -1,
 			'aria-keyshortcuts': context.reorderable ? REORDER_SHORTCUTS : undefined,
 			class:
-				'rounded px-2 py-1 hover:bg-ghost-light focus-visible:bg-ghost-light active:bg-ghost-medium aria-selected:font-semibold',
+				'rounded-sm px-2 py-1 hover:bg-ghost-light focus-visible:bg-ghost-light active:bg-ghost-medium aria-selected:font-semibold',
 			onclick: () => pane.select(stacked.id)
 		};
 	}

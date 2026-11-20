@@ -50,8 +50,8 @@ Fuller templates live in `.claude/templates/`.
   the commit**.
 - Too big to hold in one plan: scaffold with `/plan-project`, then execute each phase with
   `/orchestrate`.
-- Building UI, an artifact, or a deck? Take colors, type, and spacing from
-  `.claude/design/tokens.json`, never a palette of your own.
+- Building UI, an artifact, or a deck? Take colors, type, and spacing from the Tailwind theme
+  via `node .claude/scripts/design.mjs token <name>`, never a palette of your own.
 
 ### Conventions
 

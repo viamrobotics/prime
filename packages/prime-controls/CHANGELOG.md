@@ -1,5 +1,24 @@
 # @viamrobotics/prime-controls
 
+## 0.5.0
+### Minor Changes
+
+- 09e47ee: Add FileField, a compact labeled file chooser built on FileInput.
+
+### Patch Changes
+
+- 09e47ee: `Slider` sizes its thumb with the `slider-thumb-w-3` and `slider-thumb-h-3` utilities.
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+  - @viamrobotics/prime-ui@0.6.0
+  - @viamrobotics/tailwind-config@1.10.0
+
 ## 0.4.2
 ### Patch Changes
 

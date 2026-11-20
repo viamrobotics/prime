@@ -42,7 +42,7 @@ To react to changes without controlling them, use `$effect`. It also fires on pr
 $effect(() => console.log("checked is now", checked));
 ```
 
-`NumberInput` binds `number | undefined`, and `undefined` means the field is empty. `Input`, `RadioGroup`, and `Select` bind `string`. `Checkbox` binds `checked`, a `boolean`.
+`NumberInput` binds `number | undefined`, and `undefined` means the field is empty. `FileInput` binds a `File[]`, and a cleared input is an empty array. `Input`, `RadioGroup`, and `Select` bind `string`. `Checkbox` binds `checked`, a `boolean`.
 
 Two things Svelte cannot do for you:
 

@@ -79,7 +79,7 @@ import validationSource from "./Validation.svelte?raw";
 
 ## Usage
 
-Every editor needs a name. Pass `aria-label`, or `aria-labelledby` with the id of a visible label.
+Every editor needs a name. Pass `aria-label`, or `aria-labelledby` with the id of a visible label. In a split diff the original side reads as the name followed by "original", so the two textboxes are told apart: `aria-label` becomes `<name>, original`, and `aria-labelledby` adds a hidden `original` label after yours.
 
 ### Two-way binding
 

@@ -12,6 +12,8 @@ const input = (container: Element) =>
 const trigger = (container: Element) => container.querySelector('button')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 const listbox = () => document.querySelector('[role="listbox"]');
+const statusRegion = (container: Element) =>
+	container.querySelector<HTMLElement>('[role="status"]')!;
 const optionLabels = () =>
 	[...document.querySelectorAll('[role="option"]')].map((option) => option.textContent?.trim());
 const borderOf = (utility: string) => colorOf(utility, 'borderTopColor');
@@ -67,13 +69,45 @@ describe('Combobox', () => {
 	it.each([
 		{ typed: 'me', status: '' },
 		{ typed: 'zz', status: 'No matching size' }
-	])('announces $status through a status region after typing $typed', async ({ typed, status }) => {
+	])(
+		'announces $status through a status region outside the listbox after typing $typed',
+		async ({ typed, status }) => {
+			const { container } = render(BoundCombobox);
+
+			await typeInto(container, typed);
+
+			await vi.waitFor(() => {
+				expect(statusRegion(container).textContent?.trim()).toBe(status);
+			});
+			expect(listbox()?.contains(statusRegion(container))).toBe(false);
+		}
+	);
+
+	it('keeps the status region mounted and empty while the list is closed', async () => {
 		const { container } = render(BoundCombobox);
 
-		await typeInto(container, typed);
+		expect(statusRegion(container).textContent?.trim()).toBe('');
+
+		await typeInto(container, 'zz');
+		await vi.waitFor(() =>
+			expect(statusRegion(container).textContent?.trim()).toBe('No matching size')
+		);
+		await userEvent.keyboard('{Escape}');
+
+		await vi.waitFor(() => expect(listbox()).toBeNull());
+		expect(statusRegion(container).textContent?.trim()).toBe('');
+	});
+
+	it('hides the visible empty message from assistive technology', async () => {
+		const { container } = render(BoundCombobox);
+
+		await typeInto(container, 'zz');
 
 		await vi.waitFor(() => {
-			expect(listbox()?.querySelector('[role="status"]')?.textContent?.trim()).toBe(status);
+			const visible = [...(listbox()?.querySelectorAll('[aria-hidden="true"]') ?? [])].find(
+				(node) => node.textContent?.trim() === 'No matching size'
+			);
+			expect(visible, 'visible empty node is aria-hidden').toBeTruthy();
 		});
 	});
 

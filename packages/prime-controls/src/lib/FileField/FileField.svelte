@@ -1,0 +1,108 @@
+<!--
+@component
+A compact file chooser for tool panels: a native file input with an optional visible `label`
+before it, in the same row layout as `TextField`. The row shows the chosen file names, cut short
+to fit, and a button that clears them. A cleared field is an empty array.
+
+```svelte
+<FileField label="Audio file" accept=".wav,.mp3" bind:value />
+```
+-->
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+	import type { ClassValue, HTMLInputAttributes } from 'svelte/elements';
+
+	import { type FieldState, FileInput } from '@viamrobotics/prime-ui';
+
+	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
+	import Hint from '../Hint/Hint.svelte';
+
+	interface Props extends Omit<
+		HTMLInputAttributes,
+		'value' | 'files' | 'type' | 'children' | 'class' | 'placeholder' | 'readonly'
+	> {
+		/**
+		 * The chosen files, in the order the browser lists them. Without `multiple` it holds at most
+		 * one. A cleared field is an empty array.
+		 */
+		value?: File[];
+
+		/**
+		 * Visible label, rendered before the input. Without it, pass `aria-label` or
+		 * `aria-labelledby`.
+		 */
+		label?: string;
+
+		/**
+		 * Help text, shown in a tooltip from an info button beside the label, and the control's
+		 * accessible description. Needs a visible `label`.
+		 */
+		hint?: string;
+
+		/** Text shown while no file is chosen. @default 'No file chosen' */
+		placeholder?: string;
+
+		/** Accessible name of the button that clears the choice. @default 'Clear selection' */
+		clearLabel?: string;
+
+		/**
+		 * Contextual state. `warn` draws the `warning-dark` border. `error` draws the `danger-dark`
+		 * border and sets `aria-invalid`. `info` changes no border.
+		 */
+		state?: FieldState;
+
+		/**
+		 * Replaces the prompt, an upload icon and "Choose file". It is decoration, hidden from
+		 * assistive technology, which reads the native input.
+		 */
+		children?: Snippet;
+
+		/** Classes for the root element, which holds the label and the input. */
+		class?: ClassValue;
+	}
+
+	let {
+		value = $bindable(),
+		label,
+		hint,
+		state: fieldState,
+		id: providedId,
+		class: extraClasses,
+		disabled,
+		'aria-describedby': ariaDescribedby,
+		...restProps
+	}: Props & AccessibleName = $props();
+
+	// A hint sits beside the visible label, so it is only allowed with one.
+	type AccessibleName =
+		| { label: string }
+		| { label?: undefined; hint?: undefined; 'aria-label': string }
+		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
+
+	const generatedId = $props.id();
+	const id = $derived(providedId ?? generatedId);
+	const hintId = $derived(`${id}-hint`);
+	const describedBy = $derived(
+		[ariaDescribedby, label && hint ? hintId : undefined].filter(Boolean).join(' ') || undefined
+	);
+</script>
+
+<div class={[CONTROL_ROW_CLASS, extraClasses]}>
+	{#if label}
+		<label for={id} class={['flex min-h-6 min-w-6 shrink-0 items-center', CONTROL_LABEL_CLASS]}>
+			{label}
+		</label>
+	{/if}
+	{#if label && hint}
+		<Hint {label} {hint} descriptionId={hintId} disabled={Boolean(disabled)} />
+	{/if}
+	<FileInput
+		{...restProps}
+		{id}
+		{disabled}
+		state={fieldState}
+		aria-describedby={describedBy}
+		bind:value
+		class="min-w-0 flex-1 input-compact"
+	/>
+</div>

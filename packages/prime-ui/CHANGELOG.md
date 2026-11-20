@@ -1,5 +1,21 @@
 # @viamrobotics/prime-ui
 
+## 0.6.0
+### Minor Changes
+
+- 09e47ee: `Tabs.Trigger` takes an `actions` snippet for in-tab controls, with single-click move actions.
+- 09e47ee: Add FileInput, a native file input showing chosen file names with a clear button.
+
+### Patch Changes
+
+- 09e47ee: `Combobox` announces its no-match message from a status region outside the listbox.
+- 09e47ee: An overflowing `CodeSnippet` is a named, keyboard-scrollable region.
+- 09e47ee: Requires bits-ui 2.21 and zag.js 1.48.
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+- Updated dependencies [09e47ee]
+  - @viamrobotics/tailwind-config@1.10.0
+
 ## 0.5.0
 ### Minor Changes
 

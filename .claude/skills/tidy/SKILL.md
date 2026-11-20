@@ -77,7 +77,7 @@ order. It must not edit any file.
    things a line count alone would not catch, an optional-flags parameter that is really two
    functions, and a name that needs a comment to explain it. Skip anything the rule scopes
    elsewhere, such as formatting, import order, comments, or design-level duplication. Those
-   belong to the repo's linter, `code-comments.md`, and `design-principles.md`.
+   belong to the repo's linter, `code-comments.md` (where installed), and `design-principles.md`.
 5. Return a `TIDY FINDINGS` list and nothing else, with no diff and no file contents. Each line
    is the file, the line, the rule clause, and a one-line fix. Mark a finding that renames an
    exported symbol as `EXPORT RENAME`, with the old name and the new name. A finding with no

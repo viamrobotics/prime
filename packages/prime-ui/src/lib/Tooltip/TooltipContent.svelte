@@ -42,18 +42,13 @@ trigger, and flips to the opposite side when there is no room.
 
 <Tooltip.Portal {...portalProps(portal)}>
 	<Tooltip.Content
+		{id}
+		role="tooltip"
 		side={placement}
 		{sideOffset}
 		class={['z-tooltip max-w-xs bg-gray-9 px-2 py-1 text-xs text-white', extraClasses]}
 		{...restProps}
 	>
-		<!-- bits-ui puts `id` on the positioning wrapper and reads the inner element's id for the trigger's aria-describedby. -->
-		{#snippet child({ props, wrapperProps })}
-			<div {...wrapperProps}>
-				<div {...props} {id} role="tooltip">
-					{@render children?.()}
-				</div>
-			</div>
-		{/snippet}
+		{@render children?.()}
 	</Tooltip.Content>
 </Tooltip.Portal>
