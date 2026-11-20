@@ -45,6 +45,24 @@ describe('Chart bounds', () => {
 		await pathData(container).toBe(`M${WIDTH / 2},${HEIGHT}L${WIDTH},0`);
 	});
 
+	it('clips a line the x bounds cut to the plot', async () => {
+		const { container } = render(RootChart, {
+			props: {
+				series,
+				height: HEIGHT,
+				xMin: new Date('2026-01-01T00:00:30Z'),
+				xMax: new Date('2026-01-01T00:01:00Z')
+			}
+		});
+		await pathData(container).toBe(`M${-WIDTH},${HEIGHT}L${WIDTH},0`);
+		const clipUrl = container.querySelector('path')?.closest('g')?.getAttribute('clip-path');
+		const clipId = clipUrl?.match(/^url\(#(.+)\)$/)?.[1] ?? '';
+		const clipRect = () => document.getElementById(clipId)?.querySelector('rect');
+		await expect
+			.poll(() => ['x', 'y', 'width', 'height'].map((name) => clipRect()?.getAttribute(name)))
+			.toEqual(['-1', '-1', String(WIDTH + 2), String(HEIGHT + 2)]);
+	});
+
 	it('draws a lone point inside the plot', async () => {
 		const { container } = render(RootChart, {
 			props: { series: [{ name: 'Reading', points: [points[0]] }], height: HEIGHT }

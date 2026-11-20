@@ -98,6 +98,7 @@ The arrow keys follow the default series navigation of the Highcharts accessibil
 - Svelte 5 runes only. See [.claude/rules/svelte.md](../../.claude/rules/svelte.md).
 - `Chart` is a compound component for cartesian charts, with an x and a y axis. The root owns the container size and the scales, and the parts read them from the root.
 - Parts that draw SVG, the lines, axes and grid, hand their drawing to the root, which paints it in source order with the first part placed at the bottom. The legend and the tooltip are HTML.
+- The root clips each line to the plot area, so data a bound cuts off never draws past the axes. The axes and the grid are not clipped, since their labels sit in the padding outside the plot.
 - A point is a `ChartPoint`, with an `x` and a `y`. `x` is a `ChartXValue`: a `Date`, a `number`, or a category `string`. On the time scale it is a `Date` or epoch milliseconds. `y` is a `number`, or `null` for a gap.
 - The x scale kind is the root's `x` prop, a `ChartScale`. `'time'` is the only kind. A kind joins the union only together with the scale and the parts that draw on it.
 - Each line registers its series with the root through the internal context and drops it when it unmounts. An empty chart falls back to a fixed domain so no scale yields `NaN`.

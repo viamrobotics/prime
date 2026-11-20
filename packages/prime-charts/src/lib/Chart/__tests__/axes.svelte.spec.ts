@@ -97,4 +97,13 @@ describe('Chart axes', () => {
 		expect(labels(container, 'y-part').length).toBeGreaterThan(1);
 		expect(container.querySelector('path')).toBeNull();
 	});
+
+	it('leaves the tick labels outside the plot clip', async () => {
+		const { container } = render(AxesChart, { props: { series } });
+		await expect.poll(() => labels(container, 'x-part').length).toBeGreaterThan(1);
+		const clippedLabels = [...container.querySelectorAll('text')]
+			.filter((node) => node.closest('[clip-path]'))
+			.map((node) => node.textContent);
+		expect(clippedLabels).toEqual([]);
+	});
 });

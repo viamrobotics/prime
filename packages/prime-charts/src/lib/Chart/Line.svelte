@@ -58,7 +58,7 @@
 		}
 	});
 
-	chart.addLayer({ kind: 'svg', draw });
+	chart.addLayer({ kind: 'svg', draw, isClippedToPlot: true });
 
 	const DOT_RADIUS = 3;
 

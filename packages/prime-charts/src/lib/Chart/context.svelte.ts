@@ -41,10 +41,12 @@ export interface ChartSeries extends Omit<SeriesInput, 'color'> {
 
 // `svg` paints inside the plot's svg in registration order, `html` over the plot, and
 // `below` under the plot, outside it. `padding` reserves room around the plot area.
+// `isClippedToPlot` clips an `svg` layer to the plot area, for marks that a bound can cut.
 export interface ChartLayer {
 	readonly kind: 'svg' | 'html' | 'below';
 	readonly draw: Snippet;
 	readonly padding?: Partial<ChartPadding>;
+	readonly isClippedToPlot?: boolean;
 }
 
 export interface AxisFormats {
@@ -60,7 +62,7 @@ export interface ChartContext {
 	readonly layers: readonly ChartLayer[];
 	readonly axisFormats: Readonly<AxisFormats>;
 	readonly plotAttributes: HTMLAttributes<HTMLDivElement>;
-	// Each `add*` and `set*` registers during component initialisation and drops the entry
+	// Each `add*` and `set*` registers during component initialization and drops the entry
 	// when the calling component unmounts.
 	addSeries: (input: SeriesInput) => ChartSeries;
 	addLayer: (layer: ChartLayer) => void;
@@ -158,6 +160,6 @@ export const provideChart = (): ChartContext => {
 export const useChart = getChart;
 
 // The plot's measured size, padding and scales. Parts render inside the root's LayerCake,
-// so this is callable from any part's initialisation.
+// so this is callable from any part's initialization.
 export const usePlot = () =>
 	getLayerCakeContext<{ x: ScaleTime<number, number>; y: ScaleLinear<number, number> }>();

@@ -71,9 +71,19 @@
 		left: maxPadding('left')
 	});
 
+	let plotWidth = $state(0);
 	let plotHeight = $state(0);
 	const yTicks = $derived(yTickCount(plotHeight - padding.top - padding.bottom));
 	const yDomain = $derived(computeYDomain(points, yMin, yMax, yTicks));
+
+	// Half the line stroke, so a line along a plot edge keeps its full width.
+	const CLIP_OVERHANG = 1;
+	const id = $props.id();
+	const clipId = `${id}-plot`;
+	const clipBox = $derived({
+		width: Math.max(0, plotWidth - padding.left - padding.right) + 2 * CLIP_OVERHANG,
+		height: Math.max(0, plotHeight - padding.top - padding.bottom) + 2 * CLIP_OVERHANG
+	});
 
 	// A focusable plot is a named widget of its own, so it carries the chart's accessible name.
 	const plotName = $derived(
@@ -91,15 +101,30 @@
 >
 	<div
 		class="relative min-h-0 flex-1 focus-ring"
+		bind:clientWidth={plotWidth}
 		bind:clientHeight={plotHeight}
 		{...plotName}
 		{...chart.plotAttributes}
 	>
 		<LayerCake {xScale} {yScale} {xDomain} {yDomain} {padding}>
 			<Svg>
+				{#snippet defs()}
+					<clipPath id={clipId}>
+						<rect
+							x={-CLIP_OVERHANG}
+							y={-CLIP_OVERHANG}
+							width={clipBox.width}
+							height={clipBox.height}
+						/>
+					</clipPath>
+				{/snippet}
 				{#if !isEmpty}
 					{#each layersOf('svg') as layer (layer)}
-						{@render layer.draw()}
+						{#if layer.isClippedToPlot}
+							<g clip-path="url(#{clipId})">{@render layer.draw()}</g>
+						{:else}
+							{@render layer.draw()}
+						{/if}
 					{/each}
 				{/if}
 			</Svg>
