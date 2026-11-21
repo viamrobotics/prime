@@ -1,0 +1,1 @@
+import"./disclose-version.xihTtKlq.js";import"./legacy.jRBD_bo5.js";import"./client.C3HOevIA.js";import{t as e}from"./Sandbox.B991C-NJ.js";import{t}from"./Switch.BAecPybk.js";function n(n){e(n,{name:`Switch`,get component(){return t},controls:{checked:{kind:`boolean`,label:`Checked`,default:!1},disabled:{kind:`boolean`,label:`Disabled`,default:!1}}})}export{n as default};
