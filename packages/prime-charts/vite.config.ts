@@ -16,6 +16,9 @@ export default defineConfig({
 				extends: './vite.config.ts',
 				test: {
 					name: 'client',
+					// Spec files share one browser page, so parallel files fight over focus
+					// and keyboard and tab-order cases time out.
+					fileParallelism: false,
 					browser: {
 						enabled: true,
 						provider: playwright(),

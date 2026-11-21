@@ -1,10 +1,13 @@
-import { createContext, untrack, type Snippet } from 'svelte';
+import { createContext, getContext, setContext, untrack, type Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { ScaleLinear, ScaleTime } from 'd3-scale';
 import { getLayerCakeContext } from 'layercake';
+import { domainPoints, xDomain } from './domain.ts';
 import type { ChartPoint, ChartXValue } from './point.ts';
+import type { ChartScale } from './scale.ts';
+import { X_SCALES, type XToNumber, type XWindow } from './x-scales.ts';
 
-export const PALETTE = [
+const PALETTE = [
 	'--color-chart-series-1',
 	'--color-chart-series-2',
 	'--color-chart-series-3',
@@ -33,19 +36,19 @@ export interface SeriesInput {
 }
 
 export interface ChartSeries extends Omit<SeriesInput, 'color'> {
-	// Source order among the registered series, -1 until the line mounts.
+	// The order the lines mounted in among the registered series, -1 until the line mounts.
 	readonly index: number;
 	// The resolved paint, `var(--...)`, from the override or the palette slot.
 	readonly color: string;
 }
 
-// `svg` paints inside the plot's svg in registration order, `html` over the plot, and
-// `below` under the plot, outside it. `padding` reserves room around the plot area.
-// `isClippedToPlot` clips an `svg` layer to the plot area, for marks that a bound can cut.
 export interface ChartLayer {
-	readonly kind: 'svg' | 'html' | 'below';
+	// `svg` paints inside the plot's svg in registration order, and `html` over the plot.
+	readonly kind: 'svg' | 'html';
 	readonly draw: Snippet;
+	// Room reserved around the plot area. The plot reads it live, so a measuring part passes a getter.
 	readonly padding?: Partial<ChartPadding>;
+	// Clips an `svg` layer to the plot area, for marks that a bound can cut.
 	readonly isClippedToPlot?: boolean;
 }
 
@@ -54,31 +57,59 @@ export interface AxisFormats {
 	y: ((value: number) => string) | undefined;
 }
 
+export interface ChartAccessibleName {
+	readonly 'aria-label'?: string;
+	readonly 'aria-labelledby'?: string;
+}
+
+// The root's props that `Chart.Plot` draws with.
+export interface ChartSettings {
+	readonly x: ChartScale;
+	readonly xMin: Date | number | undefined;
+	readonly xMax: Date | number | undefined;
+	readonly yMin: number | undefined;
+	readonly yMax: number | undefined;
+	readonly loading: boolean;
+	readonly empty: Snippet | undefined;
+	readonly accessibleName: ChartAccessibleName;
+}
+
 type PlotAttributes = () => HTMLAttributes<HTMLDivElement>;
 
+// Each `add*` and `set*` below registers during component initialization and drops the entry
+// when the calling component unmounts.
 export interface ChartContext {
+	readonly settings: ChartSettings;
 	readonly series: readonly ChartSeries[];
 	readonly visibleSeries: readonly ChartSeries[];
-	readonly layers: readonly ChartLayer[];
 	readonly axisFormats: Readonly<AxisFormats>;
-	readonly plotAttributes: HTMLAttributes<HTMLDivElement>;
-	// Each `add*` and `set*` registers during component initialization and drops the entry
-	// when the calling component unmounts.
+	readonly xToNumber: XToNumber;
+	// The drawn x window, from the bounds and the series the domain reads.
+	readonly xWindow: XWindow;
 	addSeries: (input: SeriesInput) => ChartSeries;
+	setAxisFormat: <TDimension extends keyof AxisFormats>(
+		dimension: TDimension,
+		format: () => AxisFormats[TDimension]
+	) => void;
+}
+
+export interface PlotContext {
+	readonly layers: readonly ChartLayer[];
+	readonly attributes: HTMLAttributes<HTMLDivElement>;
+	readonly xWindow: XWindow;
 	addLayer: (layer: ChartLayer) => void;
-	setAxisFormat: <D extends keyof AxisFormats>(dimension: D, format: () => AxisFormats[D]) => void;
-	setPlotAttributes: (attributes: PlotAttributes) => void;
+	setAttributes: (attributes: PlotAttributes) => void;
 }
 
 const [getChart, setChart] = createContext<ChartContext>();
 
-function registry<T>() {
-	let entries = $state.raw<T[]>([]);
+function registry<TEntry>() {
+	let entries = $state.raw<TEntry[]>([]);
 	return {
 		get entries() {
 			return entries;
 		},
-		register(entry: T) {
+		register(entry: TEntry) {
 			$effect(() => {
 				// Registration runs inside the caller's effect, which must not track the list it grows.
 				untrack(() => {
@@ -92,28 +123,60 @@ function registry<T>() {
 	};
 }
 
-export const provideChart = (): ChartContext => {
+// Each option is a thunk over one of the root's live props.
+export type ChartOptions = { readonly [TKey in keyof ChartSettings]: () => ChartSettings[TKey] };
+
+export const provideChart = (options: ChartOptions): ChartContext => {
+	const settings: ChartSettings = {
+		get x() {
+			return options.x();
+		},
+		get xMin() {
+			return options.xMin();
+		},
+		get xMax() {
+			return options.xMax();
+		},
+		get yMin() {
+			return options.yMin();
+		},
+		get yMax() {
+			return options.yMax();
+		},
+		get loading() {
+			return options.loading();
+		},
+		get empty() {
+			return options.empty();
+		},
+		get accessibleName() {
+			return options.accessibleName();
+		}
+	};
 	const series = registry<ChartSeries>();
-	const layers = registry<ChartLayer>();
-	const plotAttributes = registry<PlotAttributes>();
 	const xFormats = registry<() => AxisFormats['x']>();
 	const yFormats = registry<() => AxisFormats['y']>();
+	const toNumber = $derived(X_SCALES[settings.x].toNumber);
+	const windowDomain = $derived(
+		xDomain(domainPoints(series.entries), toNumber, settings.xMin, settings.xMax)
+	);
 
 	const context: ChartContext = {
+		settings,
 		get series() {
 			return series.entries;
 		},
 		get visibleSeries() {
 			return series.entries.filter((entry) => !entry.hidden);
 		},
-		get layers() {
-			return layers.entries;
-		},
 		get axisFormats() {
 			return { x: xFormats.entries.at(-1)?.(), y: yFormats.entries.at(-1)?.() };
 		},
-		get plotAttributes() {
-			return Object.assign({}, ...plotAttributes.entries.map((attributes) => attributes()));
+		get xToNumber() {
+			return toNumber;
+		},
+		get xWindow() {
+			return { domain: windowDomain, toNumber };
 		},
 		addSeries: (input) => {
 			const entry: ChartSeries = {
@@ -146,12 +209,10 @@ export const provideChart = (): ChartContext => {
 			series.register(entry);
 			return entry;
 		},
-		addLayer: (layer) => layers.register(layer),
 		setAxisFormat: (dimension, format) => {
 			if (dimension === 'x') xFormats.register(format as () => AxisFormats['x']);
 			else yFormats.register(format as () => AxisFormats['y']);
-		},
-		setPlotAttributes: (attributes) => plotAttributes.register(attributes)
+		}
 	};
 	setChart(context);
 	return context;
@@ -159,7 +220,55 @@ export const provideChart = (): ChartContext => {
 
 export const useChart = getChart;
 
-// The plot's measured size, padding and scales. Parts render inside the root's LayerCake,
-// so this is callable from any part's initialization.
+// A Symbol key rather than `createContext`, so a missing plot can be detected and named.
+const PLOT_KEY = Symbol('Chart.Plot');
+const chartsWithPlot = new WeakSet<ChartContext>();
+
+export const providePlot = (): PlotContext => {
+	const chart = useChart();
+	// Checked in an effect, after a `{#key}` or `{#if}` swap has torn the outgoing plot down.
+	$effect(() => {
+		if (chartsWithPlot.has(chart)) throw new Error('A Chart takes one Chart.Plot.');
+		chartsWithPlot.add(chart);
+		return () => {
+			chartsWithPlot.delete(chart);
+		};
+	});
+
+	const layers = registry<ChartLayer>();
+	const attributes = registry<PlotAttributes>();
+	const context: PlotContext = {
+		get layers() {
+			return layers.entries;
+		},
+		get attributes() {
+			return Object.assign({}, ...attributes.entries.map((entry) => entry()));
+		},
+		get xWindow() {
+			return chart.xWindow;
+		},
+		addLayer: (layer) => layers.register(layer),
+		setAttributes: (entry) => attributes.register(entry)
+	};
+	setContext(PLOT_KEY, context);
+	return context;
+};
+
+// `part` names the caller, such as `'Chart.Line'`, in the error thrown when no `Chart.Plot`
+// encloses it. Call it before `usePlot`.
+export const usePlotContext = (part: string): PlotContext => {
+	const context = getContext<PlotContext | undefined>(PLOT_KEY);
+	if (!context) throw new Error(`${part} must be placed inside Chart.Plot.`);
+	return context;
+};
+
+// `part` names a part that renders where it is placed, such as `'Chart.Legend'`, in the error
+// thrown when a `Chart.Plot` encloses it.
+export const assertOutsidePlot = (part: string): void => {
+	if (getContext(PLOT_KEY)) throw new Error(`${part} must be placed outside Chart.Plot.`);
+};
+
+// The plot's measured size, padding and scales. Parts render inside the plot's LayerCake,
+// so this is callable from any part's initialization once `usePlotContext` has passed.
 export const usePlot = () =>
 	getLayerCakeContext<{ x: ScaleTime<number, number>; y: ScaleLinear<number, number> }>();

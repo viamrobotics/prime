@@ -17,7 +17,7 @@
  * (reassigned) in both the system-preference and class scopes. The light defaults are
  * mirrored as `--light-*` variables so `.light` can restore them under a dark scope.
  *
- * NOTE: the Viam design system does not publish a dark palette; these values are
+ * NOTE: the Viam design system does not publish a dark palette, so these values are
  * derived from the light tokens. The grayscale ramp (and `white`/`black`) is inverted
  * so surface/text utilities adapt automatically. `--color-white` is therefore no
  * longer literally white in dark mode.
@@ -37,7 +37,7 @@
 :root {
   color-scheme: light dark;
 
-  /* Canonical dark palette — defined once, applied in the scopes below. */
+  /* Canonical dark palette, defined once and applied in the scopes below. */
 
   /* Text colors */
   --dark-color-heading: #f7f7f8;
@@ -64,7 +64,7 @@
   --dark-color-code-string: #f0a8a2;
   --dark-color-code-type: #6cc4e0;
 
-  /* Grayscale — inverted ramp */
+  /* Grayscale, an inverted ramp */
   --dark-color-black: #f7f7f8;
   --dark-color-white: #131414;
   --dark-color-gray-9: #e4e4e6;
@@ -79,8 +79,8 @@
   --dark-color-gray-0: #171718;
 
   /* Semantic colors. `medium-light` interpolates ~30% from the dark `light` fill
-   * toward dark `medium`; the pending palette mirrors the other status hues. All
-   * derived for dark mode — confirm against the design system / Figma. */
+   * toward dark `medium`. The pending palette mirrors the other status hues. All are
+   * derived for dark mode, so confirm them against the design system / Figma. */
   --dark-color-danger-dark: #f08a8a;
   --dark-color-danger-light: #3a2120;
   --dark-color-danger-medium-light: #4a2928;
@@ -178,7 +178,7 @@
   --dark-color-chart-axis: #3a3a3d;
   --dark-color-chart-axis-label: #9c9ca4;
 
-  /* Light defaults — mirror the @theme values in tailwind-config.css. */
+  /* Light defaults, mirroring the @theme values in tailwind-config.css. */
 
   /* Text colors */
   --light-color-heading: #131414;
@@ -320,11 +320,11 @@
 
 /*
  * Apply the dark palette. CSS cannot share one declaration body across a media-query
- * scope and a class scope, so the assignment list appears twice; the values stay
+ * scope and a class scope, so the assignment list appears twice. The values stay
  * single-source in the `--dark-*` definitions above.
  */
 
-/* System preference — unless an ancestor forces light. */
+/* System preference, unless an ancestor forces light. */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
     /* Text colors */
@@ -475,7 +475,7 @@
   }
 }
 
-/* Explicit class override — wins over system preference. */
+/* Explicit class override, which wins over system preference. */
 .dark {
   /* Text colors */
   --color-heading: var(--dark-color-heading);

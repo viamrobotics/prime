@@ -24,8 +24,7 @@ const twoUnits = [
 ];
 const xFormat = (value: Date) => value.toISOString().slice(11, 19);
 
-const plotOf = (container: Element) =>
-	container.querySelector('[role="figure"]')!.firstElementChild as HTMLElement;
+const plotOf = (container: Element) => container.querySelector<HTMLElement>('[data-part="plot"]')!;
 const readoutLines = (container: Element) =>
 	[...(container.querySelector('[data-part="tooltip"]')?.children ?? [])].map((line) =>
 		line.textContent?.trim()

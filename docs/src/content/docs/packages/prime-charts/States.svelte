@@ -12,25 +12,25 @@
 </script>
 
 <div class="flex flex-col gap-6">
-  <div class="h-48">
-    <Chart aria-label="Empty chart">
+  <Chart aria-label="Empty chart">
+    <Chart.Plot class="h-48">
       <Chart.Grid />
       <Chart.XAxis />
       <Chart.YAxis />
       <Chart.Line name="cell-01" points={[]} />
-      {#snippet empty()}
-        <span>Nothing recorded for this range</span>
-      {/snippet}
-    </Chart>
-  </div>
+    </Chart.Plot>
+    {#snippet empty()}
+      <span>Nothing recorded for this range</span>
+    {/snippet}
+  </Chart>
 
-  <div class="h-48">
-    <Chart aria-label="Loading chart" loading>
+  <Chart aria-label="Loading chart" loading class="flex flex-col gap-2">
+    <Chart.Plot class="h-48">
       <Chart.Grid />
       <Chart.XAxis />
       <Chart.YAxis />
       <Chart.Line name="cell-01" loading {points} />
-      <Chart.Legend />
-    </Chart>
-  </div>
+    </Chart.Plot>
+    <Chart.Legend />
+  </Chart>
 </div>

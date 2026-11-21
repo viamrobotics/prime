@@ -16,8 +16,8 @@
   const pressure = pointsFor(30, 5, 3);
 </script>
 
-<div class="h-64">
-  <Chart aria-label="Cell readings">
+<Chart aria-label="Cell readings" class="flex flex-col gap-2">
+  <Chart.Plot class="h-64">
     <Chart.Grid />
     <Chart.XAxis />
     <Chart.YAxis />
@@ -25,6 +25,6 @@
     <Chart.Line name="cell-02" unit="°" points={cell02} />
     <Chart.Line name="pressure" unit="kPa" color="--color-chart-series-5" points={pressure} />
     <Chart.Tooltip />
-    <Chart.Legend />
-  </Chart>
-</div>
+  </Chart.Plot>
+  <Chart.Legend />
+</Chart>

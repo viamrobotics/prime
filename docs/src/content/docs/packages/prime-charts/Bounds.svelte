@@ -15,23 +15,23 @@
 </script>
 
 <div class="flex flex-col gap-6">
-  <div class="h-56">
-    <Chart aria-label="Fixed bounds" yMin={0} yMax={100}>
+  <Chart aria-label="Fixed bounds" yMin={0} yMax={100}>
+    <Chart.Plot class="h-56">
       <Chart.Grid />
       <Chart.XAxis />
       <Chart.YAxis />
       <Chart.Line name="cell-01" unit="°" {points} />
       <Chart.Tooltip />
-    </Chart>
-  </div>
+    </Chart.Plot>
+  </Chart>
 
-  <div class="h-56">
-    <Chart aria-label="Bounds from the data" xMin={windowStart} xMax={windowEnd} yMin={0}>
+  <Chart aria-label="Bounds from the data" xMin={windowStart} xMax={windowEnd} yMin={0}>
+    <Chart.Plot class="h-56">
       <Chart.Grid />
       <Chart.XAxis />
       <Chart.YAxis />
       <Chart.Line name="cell-01" unit="°" {points} />
       <Chart.Tooltip />
-    </Chart>
-  </div>
+    </Chart.Plot>
+  </Chart>
 </div>

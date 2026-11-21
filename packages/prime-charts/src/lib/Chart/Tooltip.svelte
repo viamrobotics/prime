@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
-	import { useChart, usePlot, type ChartSeries } from './context.svelte.ts';
-	import { timeValue } from './domain.ts';
+	import { useChart, usePlot, usePlotContext, type ChartSeries } from './context.svelte.ts';
+	import { defaultTimeFormat, defaultValueFormat } from './formats.ts';
 	import {
 		firstPoint,
 		isAvailable,
@@ -23,12 +23,8 @@
 	let { xFormat, yFormat, class: className }: Props = $props();
 
 	const POINT_GAP = 12;
-	const TIME_FORMAT = new Intl.DateTimeFormat(undefined, {
-		dateStyle: 'medium',
-		timeStyle: 'medium'
-	});
-	const VALUE_FORMAT = new Intl.NumberFormat();
 
+	const plotContext = usePlotContext('Chart.Tooltip');
 	const chart = useChart();
 	const plot = usePlot();
 	const id = $props.id();
@@ -40,20 +36,25 @@
 	let readoutWidth = $state(0);
 	let readoutHeight = $state(0);
 
-	const active = $derived(chosen && isAvailable(chart.series, chosen) ? chosen : undefined);
-	const isInteractive = $derived(firstPoint(chart.series) !== undefined);
+	const active = $derived(
+		chosen && isAvailable(chart.series, chosen, plotContext.xWindow) ? chosen : undefined
+	);
+	const isInteractive = $derived(firstPoint(chart.series, plotContext.xWindow) !== undefined);
 
-	const formatTime = $derived(
-		xFormat ?? chart.axisFormats.x ?? ((value: Date) => TIME_FORMAT.format(value))
-	);
-	const formatValue = $derived(
-		yFormat ?? chart.axisFormats.y ?? ((value: number) => VALUE_FORMAT.format(value))
-	);
+	const isVisible = $derived(isShown && isInteractive);
+
+	// Losing the tab stop also drops the blur and pointer-leave handlers that would hide the reading, so it is reset here.
+	$effect(() => {
+		if (!isInteractive) hide();
+	});
+
+	const formatTime = $derived(xFormat ?? chart.axisFormats.x ?? defaultTimeFormat);
+	const formatValue = $derived(yFormat ?? chart.axisFormats.y ?? defaultValueFormat);
 
 	const reading = $derived.by(() => {
 		const point = active?.series.points[active.index];
 		if (!active || !point || point.y === null) return undefined;
-		const time = timeValue(point.x);
+		const time = chart.xToNumber(point.x);
 		const value = formatValue(point.y);
 		return {
 			series: active.series,
@@ -65,7 +66,7 @@
 	});
 
 	const announcement = $derived(
-		reading && isShown && isAnnounced
+		reading && isVisible && isAnnounced
 			? `${reading.series.name}, ${reading.time}, ${reading.value}`
 			: ''
 	);
@@ -104,32 +105,39 @@
 		}
 		if (!isNavigationKey(event.key)) return;
 		event.preventDefault();
-		show(active ? step(chart.series, active, event.key) : firstPoint(chart.series), true);
+		show(
+			active
+				? step(chart.series, active, event.key, plotContext.xWindow)
+				: firstPoint(chart.series, plotContext.xWindow),
+			true
+		);
 	};
 
 	const onpointermove = (event: PointerEvent) => {
 		const position = plot.pointer(event);
-		show(nearestPoint(chart.series, position, { x: plot.xScale, y: plot.yScale }), false);
+		show(
+			nearestPoint(chart.series, position, { x: plot.xScale, y: plot.yScale }, plotContext.xWindow),
+			false
+		);
 	};
 
 	const attributes: HTMLAttributes<HTMLDivElement> = {
 		role: 'application',
 		tabindex: 0,
 		'aria-describedby': instructionsId,
-		onfocus: () => show(active ?? firstPoint(chart.series), true),
+		onfocus: () => show(active ?? firstPoint(chart.series, plotContext.xWindow), true),
 		onblur: hide,
 		onkeydown,
 		onpointermove,
 		onpointerleave: hide
 	};
 
-	chart.setPlotAttributes(() => (isInteractive ? attributes : {}));
-	chart.addLayer({ kind: 'html', draw: readout });
-	chart.addLayer({ kind: 'below', draw: announcer });
+	plotContext.setAttributes(() => (isInteractive ? attributes : {}));
+	plotContext.addLayer({ kind: 'html', draw: readout });
 </script>
 
 {#snippet readout()}
-	{#if isShown && reading && placement}
+	{#if isVisible && reading && placement}
 		<span
 			data-part="tooltip-marker"
 			aria-hidden="true"
@@ -161,13 +169,11 @@
 	{/if}
 {/snippet}
 
-{#snippet announcer()}
-	<div role="status" aria-live="polite" aria-atomic="true" class="sr-only">{announcement}</div>
-	{#if isInteractive}
-		<p id={instructionsId} class="sr-only">
-			Left and right arrows move between points. Up and down arrows move between series. Home and
-			End go to the first and last point. Page Up and Page Down move by a tenth of the series.
-			Escape hides the tooltip.
-		</p>
-	{/if}
-{/snippet}
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only">{announcement}</div>
+{#if isInteractive}
+	<p id={instructionsId} class="sr-only">
+		Left and right arrows move between points. Up and down arrows move between series. Home and End
+		go to the first and last point. Page Up and Page Down move by a tenth of the series. Escape
+		hides the tooltip.
+	</p>
+{/if}

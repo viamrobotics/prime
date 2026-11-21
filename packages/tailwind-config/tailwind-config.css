@@ -51,7 +51,7 @@
 
   /* Semantic colors. `medium-light` is the hover/active fill for outline buttons,
    * sitting between `light` and `medium`. Values marked "derived" had no published
-   * hex; they are interpolated ~30% from light toward medium and should be confirmed
+   * hex. They are interpolated ~30% from light toward medium and should be confirmed
    * against the design system / Figma. */
   --color-danger-dark: #be3536;
   --color-danger-light: #fcecea;

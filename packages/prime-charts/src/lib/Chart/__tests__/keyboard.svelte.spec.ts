@@ -19,8 +19,7 @@ const series = (name: string, values: (number | null)[], minutes?: number[]) => 
 	}))
 });
 
-const plotOf = (container: Element) =>
-	container.querySelector('[role="figure"]')!.firstElementChild as HTMLElement;
+const plotOf = (container: Element) => container.querySelector<HTMLElement>('[data-part="plot"]')!;
 const liveText = (container: Element) =>
 	container.querySelector('[role="status"]')?.textContent?.trim();
 const readoutOf = (container: Element) => container.querySelector('[data-part="tooltip"]');
@@ -218,6 +217,28 @@ describe('Chart.Tooltip keyboard', () => {
 		expect(document.getElementById(describedBy)?.textContent).toContain('arrows move');
 	});
 
+	it('follows DOM order with the legend before the plot, and the plot is one tab stop', async () => {
+		const { container } = render(TooltipChart, {
+			props: {
+				series: [series('cell-01', [1, 2]), series('cell-02', [3, 4])],
+				xFormat,
+				hasLegend: true,
+				isLegendFirst: true
+			}
+		});
+		await expect.poll(() => container.querySelector('svg path, svg circle')).not.toBeNull();
+		container.querySelector('button')!.focus();
+		const expectedStops = ['cell-01', 'cell-02', 'plot', 'After'];
+		const stops: string[] = [];
+		for (let index = 0; index < expectedStops.length; index++) {
+			await userEvent.tab();
+			const active = document.activeElement as HTMLElement;
+			stops.push(active === plotOf(container) ? 'plot' : (active.textContent?.trim() ?? ''));
+		}
+
+		expect(stops).toEqual(expectedStops);
+	});
+
 	it('leaves the plot out of the tab order without a tooltip', async () => {
 		const { container } = render(TooltipChart, {
 			props: { series: [series('cell-01', [1, 2])], hasTooltip: false, hasLegend: true }
@@ -226,7 +247,83 @@ describe('Chart.Tooltip keyboard', () => {
 		await tabIntoChart(container);
 
 		expect(document.activeElement?.textContent?.trim()).toBe('cell-01');
-		expect(plotOf(container).hasAttribute('tabindex')).toBe(false);
-		expect(plotOf(container).hasAttribute('role')).toBe(false);
+		expect(plotOf(container).hasAttribute('tabindex'), 'plot has no tabindex').toBe(false);
+		expect(plotOf(container).hasAttribute('role'), 'plot has no role').toBe(false);
+	});
+
+	it('has no tab stop when every point sits outside the x window', async () => {
+		const { container } = render(TooltipChart, {
+			props: {
+				series: [series('cell-01', [1, 2, 3])],
+				xMin: new Date(START + 10 * MINUTE),
+				xMax: new Date(START + 20 * MINUTE)
+			}
+		});
+		await expect.poll(() => plotOf(container)).not.toBeNull();
+
+		expect(plotOf(container).hasAttribute('tabindex'), 'plot has no tabindex').toBe(false);
+		expect(container.querySelector('[role="application"]')).toBeNull();
+	});
+
+	it('keeps first focus, Home and End inside the x window', async () => {
+		const { container } = render(TooltipChart, {
+			props: {
+				series: [series('cell-01', [1, 2, 3, 4, 5, 6])],
+				xMin: new Date(START + 2 * MINUTE),
+				xMax: new Date(START + 4 * MINUTE),
+				xFormat
+			}
+		});
+		await tabIntoChart(container);
+		await expect.poll(() => liveText(container)).toBe('cell-01, 00:02:00, 3');
+
+		const reads = await readAfter(container, ['{End}', '{Home}']);
+
+		expect(reads).toEqual(['cell-01, 00:04:00, 5', 'cell-01, 00:02:00, 3']);
+	});
+
+	it('hides the readout and empties the live region when the window leaves every point', async () => {
+		const points = series('cell-01', [1, 2, 3]);
+		const { container, rerender } = render(TooltipChart, { props: { series: [points], xFormat } });
+		await tabIntoChart(container);
+		await expect.poll(() => liveText(container)).toBe('cell-01, 00:00:00, 1');
+
+		await rerender({
+			series: [points],
+			xFormat,
+			xMin: new Date(START + 10 * MINUTE),
+			xMax: new Date(START + 20 * MINUTE)
+		});
+
+		await expect.poll(() => readoutOf(container)).toBeNull();
+		expect(liveText(container)).toBe('');
+
+		await rerender({ series: [points], xFormat, xMin: undefined, xMax: undefined });
+
+		expect(readoutOf(container), 'readout stays hidden once points return').toBeNull();
+		expect(liveText(container)).toBe('');
+	});
+
+	it('hides a hovered readout when the window leaves every point', async () => {
+		const points = series('cell-01', [1, 2, 3]);
+		const { container, rerender } = render(TooltipChart, { props: { series: [points], xFormat } });
+		await expect.poll(() => container.querySelector('svg path, svg circle')).not.toBeNull();
+		await userEvent.hover(plotOf(container));
+		await expect.poll(() => readoutOf(container)).not.toBeNull();
+
+		await rerender({
+			series: [points],
+			xFormat,
+			xMin: new Date(START + 10 * MINUTE),
+			xMax: new Date(START + 20 * MINUTE)
+		});
+
+		await expect.poll(() => readoutOf(container)).toBeNull();
+		await userEvent.hover(container.querySelector('button')!);
+
+		await rerender({ series: [points], xFormat, xMin: undefined, xMax: undefined });
+
+		await expect.poll(() => plotOf(container).getAttribute('tabindex')).toBe('0');
+		expect(readoutOf(container), 'readout stays hidden once points return').toBeNull();
 	});
 });

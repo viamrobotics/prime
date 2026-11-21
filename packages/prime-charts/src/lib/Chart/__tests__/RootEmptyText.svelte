@@ -7,5 +7,6 @@
 		{#snippet empty()}
 			<span>Nothing recorded</span>
 		{/snippet}
+		<Chart.Plot class="h-48" />
 	</Chart>
 </div>

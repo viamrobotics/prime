@@ -24,12 +24,53 @@ const flat = (value: number) =>
 const low = { name: 'cell-01', points: flat(10) };
 const high = { name: 'cell-02', points: flat(90) };
 
-const plotOf = (container: Element) =>
-	container.querySelector('[role="figure"]')!.firstElementChild as HTMLElement;
+const plotOf = (container: Element) => container.querySelector<HTMLElement>('[data-part="plot"]')!;
 const readoutOf = (container: Element) =>
 	container.querySelector<HTMLElement>('[data-part="tooltip"]');
 const readoutLines = (container: Element) =>
 	[...(readoutOf(container)?.children ?? [])].map((line) => line.textContent?.trim());
+
+const SETTLE_FRAMES = 3;
+const MAX_FRAMES = 120;
+
+const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+
+const labelNodesOf = (container: Element, part: string) => [
+	...container.querySelectorAll(`.${part} span`)
+];
+
+const labelCenters = (container: Element, part: string) =>
+	labelNodesOf(container, part)
+		.map((node) => node.getBoundingClientRect())
+		.map((box) => `${box.left + box.width / 2},${box.top + box.height / 2}`)
+		.join(' ');
+
+async function settledLabels(container: Element, part: string) {
+	await expect.poll(() => labelNodesOf(container, part).length).toBeGreaterThan(1);
+	await expect.poll(() => container.querySelector('path')).not.toBeNull();
+	let quiet = 0;
+	let previous = labelCenters(container, part);
+	for (let frame = 0; frame < MAX_FRAMES && quiet < SETTLE_FRAMES; frame++) {
+		await nextFrame();
+		const current = labelCenters(container, part);
+		quiet = current === previous ? quiet + 1 : 0;
+		previous = current;
+	}
+}
+
+async function hoverOnLabel(container: Element, part: string, which: 'first' | 'last') {
+	await settledLabels(container, part);
+	const nodes = labelNodesOf(container, part);
+	const label = (which === 'first' ? nodes[0] : nodes.at(-1))!.getBoundingClientRect();
+	const plot = plotOf(container);
+	const box = plot.getBoundingClientRect();
+	await userEvent.hover(plot, {
+		position: {
+			x: label.left + label.width / 2 - box.left,
+			y: label.top + label.height / 2 - box.top
+		}
+	});
+}
 
 async function hoverAt(container: Element, xFraction: number, yFraction: number) {
 	const plot = plotOf(container);
@@ -134,6 +175,27 @@ describe('Chart.Tooltip', () => {
 
 		await expect.poll(() => readoutLines(container)).toEqual(['cell-02', 'axis-x', '90 axis']);
 	});
+
+	it.each([
+		{ part: 'y-part', which: 'last', name: 'cell-02', value: '90 axis' },
+		{ part: 'x-part', which: 'first', name: 'cell-01', value: '10 axis' }
+	] as const)(
+		'answers a pointer resting on a tick label of the $part axis',
+		async ({ part, which, name, value }) => {
+			const { container } = render(TooltipChart, {
+				props: {
+					series: [low, high],
+					hasAxes: true,
+					axisXFormat: () => 'axis-x',
+					axisYFormat: (tick: number) => `${tick} axis`
+				}
+			});
+
+			await hoverOnLabel(container, part, which);
+
+			await expect.poll(() => readoutLines(container)).toEqual([name, 'axis-x', value]);
+		}
+	);
 
 	it('shows a full date and time with seconds and a grouped number by default', async () => {
 		const points = [

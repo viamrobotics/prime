@@ -26,12 +26,12 @@
   const formatReading = (value: number): string => `${value.toFixed(2)} degrees`;
 </script>
 
-<div class="h-64">
-  <Chart aria-label="Formatted readings">
+<Chart aria-label="Formatted readings">
+  <Chart.Plot class="h-64">
     <Chart.Grid />
     <Chart.XAxis format={formatHour} />
     <Chart.YAxis format={formatDegrees} />
     <Chart.Line name="cell-01" points={points} />
     <Chart.Tooltip xFormat={formatTime} yFormat={formatReading} />
-  </Chart>
-</div>
+  </Chart.Plot>
+</Chart>

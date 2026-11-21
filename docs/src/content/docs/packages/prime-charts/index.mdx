@@ -18,6 +18,12 @@ import Formatters from "./Formatters.svelte";
 import formattersSource from "./Formatters.svelte?raw";
 import Hiding from "./Hiding.svelte";
 import hidingSource from "./Hiding.svelte?raw";
+import Layout from "./Layout.svelte";
+import layoutSource from "./Layout.svelte?raw";
+import Stacked from "./Stacked.svelte";
+import stackedSource from "./Stacked.svelte?raw";
+import DataTable from "./DataTable.svelte";
+import dataTableSource from "./DataTable.svelte?raw";
 import States from "./States.svelte";
 import statesSource from "./States.svelte?raw";
 
@@ -39,12 +45,15 @@ import statesSource from "./States.svelte?raw";
 
 ```svelte
 <Chart>
-  <Chart.Grid />
-  <Chart.XAxis />
-  <Chart.YAxis />
-  <Chart.Line />
-  <Chart.Tooltip />
+  <Chart.Plot>
+    <Chart.Grid />
+    <Chart.XAxis />
+    <Chart.YAxis />
+    <Chart.Line />
+    <Chart.Tooltip />
+  </Chart.Plot>
   <Chart.Legend />
+  <Chart.Table />
 </Chart>
 ```
 
@@ -86,11 +95,11 @@ import statesSource from "./States.svelte?raw";
 
 ## Usage
 
-`Chart` fills its container, so give it an element with a height. It needs an accessible name, either `aria-label` or `aria-labelledby`. Each `Chart.Line` takes `points`, a list of `{ x, y }` where `x` is a `Date` and `y` is a number or `null` for a gap.
+`Chart` has no layout of its own. `Chart.Plot` takes and measures the size you give it through its `class`, such as `class="h-64"`, and a plot with no height draws nothing. It draws inside its content box, so padding in its `class` insets the drawing. Place the drawing parts inside `Chart.Plot`, and place `Chart.Legend` in the `Chart` before or after the plot. A part outside the plot throws, and so does a second `Chart.Plot`. `Chart` needs an accessible name, either `aria-label` or `aria-labelledby`. Each `Chart.Line` takes `points`, a list of `{ x, y }` where `x` is a `Date` or epoch milliseconds and `y` is a number or `null` for a gap. An `x` the time scale cannot place, such as a string or an invalid `Date`, drops like a gap.
 
 ### Several series
 
-Each `Chart.Line` takes the next palette color, `--color-chart-series-1` to `--color-chart-series-7` in source order. Pass `color` a CSS variable name to pick another token. A `unit` shows after the series name in the legend and after its value in the tooltip.
+Each `Chart.Line` takes the next palette color, `--color-chart-series-1` to `--color-chart-series-7` in the order the lines mount, which is source order on first render. A line that mounts later inside an `{#if}` takes the next color and the last legend slot. Pass `color` a CSS variable name to pick another token. A `unit` shows after the series name in the legend and after its value in the tooltip.
 
 One y axis serves every series, so series with different units share it and the axis shows no unit of its own.
 
@@ -122,12 +131,38 @@ The legend renders one toggle button per series. Bind `hidden` on a `Chart.Line`
   <Hiding client:visible />
 </Example>
 
+### Layout
+
+`Chart` renders its children in whatever layout its `class` gives it, so the legend goes wherever you place it. Make the `Chart` a flex row and let the plot take the rest of the width. In a `flex flex-col` chart, `class="min-h-0 flex-1"` on the plot fills the height the chart is given.
+
+<Example code={layoutSource} title="Layout.svelte">
+  <Layout client:visible />
+</Example>
+
+### Stacked charts
+
+Each axis sizes its gutter to its labels, so two charts with different y labels start their plots at different x positions. Give each `Chart.YAxis` the same `min-w-*` in its `class`, at least as wide as the widest label, and the plots line up. The gap after the tick marks sits outside the class element, so `min-w-*` bounds the labels alone. A `min-w-24` clears `15,000 req/h` at `text-xs`, which measures 72px. A padding or border you add to the column counts toward its width.
+
+<Example code={stackedSource} title="Stacked.svelte">
+  <Stacked client:visible />
+</Example>
+
 ### States
 
 `empty` replaces the plot when no series has a point, and defaults to the text "No data". `loading` lays an overlay on the plot and keeps the last lines underneath. Loading wins over the empty state. A `loading` prop on a line shows its loading mark in the legend.
 
 <Example code={statesSource} title="States.svelte">
   <States client:visible />
+</Example>
+
+### Screen readers
+
+The figure carries a visually hidden summary, linked through `aria-describedby`. It lists the visible series and the ranges of time and values, such as `Series: cell-01 (°), cell-02 (°). Time: Jan 1, 2026, 12:00:00 AM to Jan 1, 2026, 6:00:00 AM. Values: 12 to 48.`, with the series labeled as the legend labels them and each end formatted with the axis formats, then the tooltip defaults. An empty chart reads `No data.` and a chart with every series hidden reads `Every series is hidden.` Pass your own `aria-describedby` to `Chart` and it replaces the summary, which then does not render.
+
+`Chart.Table` is opt-in. It renders the visible series as a table with a Time column and one column per series, labeled like the legend, and one row per time inside the x window. A series with no value at a time leaves an empty cell. The table is visible by default. Its `class` lands on a wrapper around the table, so `class="sr-only"` keeps it for screen readers only and never grows the page. It takes a `caption`, and without one it takes its name from the chart's `aria-label`, or from `aria-labelledby` when the chart has one. Like the other parts, it formats time and values with the axis formats, then the tooltip defaults.
+
+<Example code={dataTableSource} title="DataTable.svelte">
+  <DataTable client:visible />
 </Example>
 
 ## Styling
@@ -137,12 +172,18 @@ The legend renders one toggle button per series. Bind `hidden` on a `Chart.Line`
 | Part            | Where `class` lands                          |
 | --------------- | -------------------------------------------- |
 | `Chart`         | The root element, which has the `figure` role |
+| `Chart.Plot`    | The plot element, sized through its `class`  |
 | `Chart.Line`    | The path, or the circle of a single point    |
 | `Chart.Grid`    | The `<g>` that holds the grid lines          |
-| `Chart.XAxis`   | The `<g>` that holds the axis                |
-| `Chart.YAxis`   | The `<g>` that holds the axis                |
+| `Chart.XAxis`   | The row of tick labels below the plot        |
+| `Chart.YAxis`   | The column of tick labels beside the plot    |
 | `Chart.Tooltip` | The tooltip box                              |
 | `Chart.Legend`  | The list                                     |
+| `Chart.Table`   | A wrapper around the `<table>`, with no layout of its own |
+
+An axis `class` styles the tick labels only. The axis line and tick marks take their color from the `--color-chart-axis` token. The labels default to `text-xs` in the axis label color.
+
+The axes size their gutters to their labels, and each side takes the larger of what the parts reserve on it. On `Chart.YAxis`, a font size changes the look and the column width, a color changes the look and no gutter, and a `min-w-*` sets a least width for the labels. On `Chart.XAxis`, a font size changes the look and the row height, a color changes no gutter, and a `min-w-*` has no effect. A border or padding on an axis `class` counts toward its gutter. A margin does not, so it moves the labels out of the plot's box.
 
 Every other attribute on `Chart` also goes to the root element. Colors come from the chart tokens in `@viamrobotics/tailwind-config`, such as `--color-chart-series-1`, so a literal color has no place in a class or in `color`.
 
@@ -150,6 +191,7 @@ The package sets these `data-part` attributes, so a variant like `[&_[data-part=
 
 | `data-part`        | Element                                           |
 | ------------------ | ------------------------------------------------- |
+| `plot`             | The plot element, which takes its `class`         |
 | `loading`          | The overlay over the plot while `loading`         |
 | `empty`            | The box that holds the `empty` content            |
 | `legend`           | The legend list                                   |
@@ -159,12 +201,14 @@ The package sets these `data-part` attributes, so a variant like `[&_[data-part=
 | `tooltip`          | The tooltip box                                   |
 | `tooltip-marker`   | The dot on the active point                       |
 | `tooltip-swatch`   | The series color swatch in the tooltip            |
+| `summary`          | The visually hidden figure summary                |
+| `table`            | The data table inside the `Table` wrapper         |
 
 The root has `aria-busy` while loading. Each legend button has `aria-pressed`, which is true while its series is visible.
 
 ## Keyboard
 
-The plot is one tab stop when a `Chart.Tooltip` is placed and a visible series has a point. Each legend button is a tab stop after it. Focusing the plot shows the tooltip on the active point. On first focus that is the first point of the first visible series, and after that it is the point focus left. Hidden series and gaps are skipped.
+Tab order follows DOM order, so a legend placed before `Chart.Plot` puts its buttons ahead of the plot. The plot is a tab stop when a `Chart.Tooltip` is placed and a visible series has a point inside the x window. Focusing the plot shows the tooltip on the active point. On first focus that is the first point inside the window of the first visible series that has one, and after that it is the point focus left. Hidden series, gaps, and points outside the window are skipped. Every key and the pointer stay inside the window, and a point exactly on a bound is inside.
 
 <KeyboardTable
   bindings={[
@@ -177,7 +221,7 @@ The plot is one tab stop when a `Chart.Tooltip` is placed and a visible series h
   ]}
 />
 
-A polite live region announces the active point as the tooltip reads it, and the visible tooltip is `aria-hidden`. The plot has `role="application"`, with its instructions linked through `aria-describedby`.
+A polite live region announces the active point as the tooltip reads it, and the visible tooltip is `aria-hidden`. The plot has `role="application"`, with its instructions linked through `aria-describedby`. The figure itself is described by the visually hidden summary, so a screen reader reads what the chart holds before the plot.
 
 ## API
 

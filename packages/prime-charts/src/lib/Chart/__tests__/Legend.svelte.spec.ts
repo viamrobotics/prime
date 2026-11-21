@@ -100,9 +100,9 @@ describe('Chart.Legend', () => {
 				hasLegend: true
 			}
 		});
-		const plot = container.querySelector('[role="figure"]')!.firstElementChild as HTMLElement;
-		await expect.poll(() => container.querySelectorAll('.x-part text').length).toBeGreaterThan(1);
-		expect(container.querySelectorAll('.y-part text').length).toBeGreaterThan(1);
+		const plot = container.querySelector<HTMLElement>('[data-part="plot"]')!;
+		await expect.poll(() => container.querySelectorAll('.x-part span').length).toBeGreaterThan(1);
+		expect(container.querySelectorAll('.y-part span').length).toBeGreaterThan(1);
 
 		container.querySelector('button')!.focus();
 		await userEvent.tab();
@@ -112,5 +112,16 @@ describe('Chart.Legend', () => {
 		const { width, height } = plot.getBoundingClientRect();
 		await userEvent.hover(plot, { position: { x: width * MIDDLE, y: height * MIDDLE } });
 		expect(container.querySelector('[data-part="tooltip"]')).toBeNull();
+	});
+
+	it.each([
+		{ isLegendFirst: false, flag: Node.DOCUMENT_POSITION_FOLLOWING, place: 'after' },
+		{ isLegendFirst: true, flag: Node.DOCUMENT_POSITION_PRECEDING, place: 'before' }
+	])('places the legend $place the plot', async ({ isLegendFirst, flag }) => {
+		const { container } = render(LegendChart, { props: { series: twoSeries, isLegendFirst } });
+		await expect.poll(() => buttons(container).length).toBe(2);
+		const plot = container.querySelector('[data-part="plot"]')!;
+		const legend = container.querySelector('[data-part="legend"]')!;
+		expect(plot.compareDocumentPosition(legend) & flag).toBe(flag);
 	});
 });

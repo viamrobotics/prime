@@ -1,8 +1,7 @@
 <script lang="ts" generics="TXValue extends ChartXValue = Date">
 	import type { ClassValue } from 'svelte/elements';
 	import { line } from 'd3-shape';
-	import { useChart, usePlot } from './context.svelte.ts';
-	import { timeValue } from './domain.ts';
+	import { useChart, usePlot, usePlotContext } from './context.svelte.ts';
 	import type { ChartPoint, ChartXValue } from './point.ts';
 
 	interface Props {
@@ -31,6 +30,7 @@
 		class: className
 	}: Props = $props();
 
+	const plotContext = usePlotContext('Chart.Line');
 	const chart = useChart();
 	const plot = usePlot();
 
@@ -58,7 +58,7 @@
 		}
 	});
 
-	chart.addLayer({ kind: 'svg', draw, isClippedToPlot: true });
+	plotContext.addLayer({ kind: 'svg', draw, isClippedToPlot: true });
 
 	const DOT_RADIUS = 3;
 
@@ -72,7 +72,7 @@
 		const result: Placed[][] = [];
 		let current: Placed[] = [];
 		for (const point of points) {
-			const x = plot.xScale(timeValue(point.x));
+			const x = plot.xScale(chart.xToNumber(point.x));
 			const y = point.y === null ? Number.NaN : plot.yScale(point.y);
 			if (Number.isFinite(x) && Number.isFinite(y)) {
 				current.push({ x, y });

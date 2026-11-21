@@ -23,17 +23,19 @@ describe('public API', () => {
 	it('exports only the Chart compound and its parts', () => {
 		expect(Object.keys(library)).toEqual(['Chart']);
 		expect(Object.keys(library.Chart).filter((key) => !COMPONENT_KEYS.has(key))).toEqual([
+			'Plot',
 			'Line',
 			'XAxis',
 			'YAxis',
 			'Grid',
 			'Tooltip',
-			'Legend'
+			'Legend',
+			'Table'
 		]);
 	});
 
 	it(
-		'names no LayerCake type in the published declarations',
+		'names no LayerCake type and imports no d3 module in the published declarations',
 		{ timeout: PACKAGE_BUILD_TIMEOUT_MS },
 		() => {
 			const output = mkdtempSync(join(tmpdir(), 'prime-charts-declarations-'));
@@ -49,6 +51,10 @@ describe('public API', () => {
 				);
 				const leaks = files.filter((file) => /layercake/i.test(readFileSync(file, 'utf8')));
 				expect(leaks).toEqual([]);
+				const d3Imports = files.filter((file) =>
+					/from ['"]d3-|import\(['"]d3-/.test(readFileSync(file, 'utf8'))
+				);
+				expect(d3Imports, 'declarations importing an untyped d3 module').toEqual([]);
 			} finally {
 				rmSync(output, { recursive: true, force: true });
 			}

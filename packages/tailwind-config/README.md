@@ -26,9 +26,9 @@ Add this package in your main CSS file:
 
 The config references the following font families.
 
-- **Space Grotesk** — `font-space-grotesk`
-- **Roboto Mono** — `font-roboto-mono`
-- **Public Sans** — `font-public-sans`
+- **Space Grotesk**: `font-space-grotesk`
+- **Roboto Mono**: `font-roboto-mono`
+- **Public Sans**: `font-public-sans`
 
 Add them to your project with the following Typescript import:
 

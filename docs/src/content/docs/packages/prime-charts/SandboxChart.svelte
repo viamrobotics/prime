@@ -19,39 +19,25 @@
 
   const data = series.map((item) => ({ ...item, points: pointsFor(item.base, item.swing, item.phase) }));
 
-  const {
-    fixedBounds = false,
-    loading = false,
-    hideCell01 = false,
-    hideCell02 = false,
-    hideCell03 = false,
-  }: {
-    fixedBounds?: boolean;
-    loading?: boolean;
-    hideCell01?: boolean;
-    hideCell02?: boolean;
-    hideCell03?: boolean;
-  } = $props();
+  let { fixedBounds = false, loading = false }: { fixedBounds?: boolean; loading?: boolean } = $props();
 
-  let hiddenCell01 = $derived(hideCell01);
-  let hiddenCell02 = $derived(hideCell02);
-  let hiddenCell03 = $derived(hideCell03);
 </script>
 
-<div class="h-80">
-  <Chart
-    aria-label="Cell temperatures"
-    yMin={fixedBounds ? 0 : undefined}
-    yMax={fixedBounds ? 100 : undefined}
-    {loading}
-  >
+<Chart
+  aria-label="Cell temperatures"
+  class="flex h-80 flex-col gap-2"
+  yMin={fixedBounds ? 0 : undefined}
+  yMax={fixedBounds ? 100 : undefined}
+  {loading}
+>
+  <Chart.Plot class="min-h-0 flex-1">
     <Chart.Grid />
     <Chart.XAxis />
     <Chart.YAxis />
-    <Chart.Line name="cell-01" unit="°" points={data[0]!.points} bind:hidden={hiddenCell01} />
-    <Chart.Line name="cell-02" unit="°" points={data[1]!.points} bind:hidden={hiddenCell02} />
-    <Chart.Line name="cell-03" unit="°" points={data[2]!.points} bind:hidden={hiddenCell03} />
+    {#each data as entry (entry.name)}
+      <Chart.Line name={entry.name} unit={entry.unit} points={entry.points} />
+    {/each}
     <Chart.Tooltip />
-    <Chart.Legend />
-  </Chart>
-</div>
+  </Chart.Plot>
+  <Chart.Legend />
+</Chart>

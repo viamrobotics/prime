@@ -1,25 +1,25 @@
-import { timeValue } from './domain.ts';
 import type { ChartPoint, ChartXValue } from './point.ts';
+import { isInsideWindow, isPlaced, type XWindow } from './x-scales.ts';
 
-/** A series as point search and key steps read it. */
+// A series as point search and key steps read it.
 export interface NavigationSeries {
 	readonly hidden: boolean;
 	readonly points: readonly ChartPoint<ChartXValue>[];
 }
 
-/** One point of one series: the series and the point's index in its `points`. */
+// One point of one series: the series and the point's index in its `points`.
 export interface ActivePoint<TSeries extends NavigationSeries = NavigationSeries> {
 	readonly series: TSeries;
 	readonly index: number;
 }
 
-/** Maps a time in epoch milliseconds and a value to plot-area pixels. */
+// Maps an x on the scale's numbers and a value to plot-area pixels.
 export interface PlotPosition {
-	x: (time: number) => number;
+	x: (value: number) => number;
 	y: (value: number) => number;
 }
 
-/** A key that moves the active point. */
+// A key that moves the active point.
 export type NavigationKey =
 	| 'ArrowLeft'
 	| 'ArrowRight'
@@ -32,42 +32,49 @@ export type NavigationKey =
 
 type Step = <TSeries extends NavigationSeries>(
 	series: readonly TSeries[],
-	active: ActivePoint<TSeries>
+	active: ActivePoint<TSeries>,
+	xWindow: XWindow
 ) => ActivePoint<TSeries>;
 
 const PAGE_FRACTION = 10;
 
-const isDrawable = (point: ChartPoint<ChartXValue> | undefined): boolean =>
-	point !== undefined &&
-	point.y !== null &&
-	Number.isFinite(point.y) &&
-	Number.isFinite(timeValue(point.x));
+// A point the converter cannot place, or outside the window, is a gap.
+function isDrawable(point: ChartPoint<ChartXValue> | undefined, xWindow: XWindow): boolean {
+	if (point === undefined || !isPlaced(point, xWindow.toNumber)) return false;
+	return isInsideWindow(xWindow.toNumber(point.x), xWindow);
+}
 
-const drawableIndices = (points: readonly ChartPoint<ChartXValue>[]): number[] =>
-	points.flatMap((point, index) => (isDrawable(point) ? [index] : []));
+const drawableIndices = (points: readonly ChartPoint<ChartXValue>[], xWindow: XWindow): number[] =>
+	points.flatMap((point, index) => (isDrawable(point, xWindow) ? [index] : []));
 
-const hasPoint = (series: NavigationSeries): boolean =>
-	!series.hidden && series.points.some((point) => isDrawable(point));
+const hasPoint = (series: NavigationSeries, xWindow: XWindow): boolean =>
+	!series.hidden && series.points.some((point) => isDrawable(point, xWindow));
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
 
-// Binary search for the first point at or after `target`, then a walk outward past gaps.
+// Binary search, over the points whose x the scale can place, for the first at or after
+// `target`, then a walk outward past gaps.
 function nearestIndex(
 	points: readonly ChartPoint<ChartXValue>[],
 	target: number,
-	position: (point: ChartPoint<ChartXValue>) => number
+	position: (point: ChartPoint<ChartXValue>) => number,
+	xWindow: XWindow
 ): number | undefined {
+	const placed = points.flatMap((point, index) =>
+		Number.isFinite(xWindow.toNumber(point.x)) ? [index] : []
+	);
 	let low = 0;
-	let high = points.length;
+	let high = placed.length;
 	while (low < high) {
 		const middle = (low + high) >>> 1;
-		if (position(points[middle]) < target) low = middle + 1;
+		if (position(points[placed[middle]]) < target) low = middle + 1;
 		else high = middle;
 	}
-	let before = low - 1;
-	while (before >= 0 && !isDrawable(points[before])) before -= 1;
-	let after = low;
-	while (after < points.length && !isDrawable(points[after])) after += 1;
+	const split = low < placed.length ? placed[low] : points.length;
+	let before = split - 1;
+	while (before >= 0 && !isDrawable(points[before], xWindow)) before -= 1;
+	let after = split;
+	while (after < points.length && !isDrawable(points[after], xWindow)) after += 1;
 
 	const candidates = [before, after].filter((index) => index >= 0 && index < points.length);
 	let best: number | undefined;
@@ -78,46 +85,51 @@ function nearestIndex(
 	return best;
 }
 
-/** Whether `active` still names a drawable point of a visible series in `series`. */
+// Whether `active` still names a drawable point of a visible series in `series`.
 export function isAvailable<TSeries extends NavigationSeries>(
 	series: readonly TSeries[],
-	active: ActivePoint<TSeries>
+	active: ActivePoint<TSeries>,
+	xWindow: XWindow
 ): boolean {
 	return (
 		series.includes(active.series) &&
 		!active.series.hidden &&
-		isDrawable(active.series.points[active.index])
+		isDrawable(active.series.points[active.index], xWindow)
 	);
 }
 
-/** The first drawable point of the first visible series that has one. */
+// The first drawable point of the first visible series that has one.
 export function firstPoint<TSeries extends NavigationSeries>(
-	series: readonly TSeries[]
+	series: readonly TSeries[],
+	xWindow: XWindow
 ): ActivePoint<TSeries> | undefined {
-	const first = series.find(hasPoint);
+	const first = series.find((entry) => hasPoint(entry, xWindow));
 	if (!first) return undefined;
-	return { series: first, index: drawableIndices(first.points)[0] };
+	return { series: first, index: drawableIndices(first.points, xWindow)[0] };
 }
 
-/**
- * The visible point nearest a plot-area pointer position. Each series contributes its point
- * nearest in x, and the closest of those by pixel distance wins. Gaps and hidden series are skipped.
- */
+// Each series contributes its point nearest in x, and the closest of those by pixel distance wins.
 export function nearestPoint<TSeries extends NavigationSeries>(
 	series: readonly TSeries[],
 	[pointerX, pointerY]: readonly [number, number],
-	plot: PlotPosition
+	plot: PlotPosition,
+	xWindow: XWindow
 ): ActivePoint<TSeries> | undefined {
 	if (!Number.isFinite(pointerX) || !Number.isFinite(pointerY)) return undefined;
 	let best: ActivePoint<TSeries> | undefined;
 	let bestDistance = Infinity;
 	for (const entry of series) {
 		if (entry.hidden) continue;
-		const index = nearestIndex(entry.points, pointerX, (point) => plot.x(timeValue(point.x)));
+		const index = nearestIndex(
+			entry.points,
+			pointerX,
+			(point) => plot.x(xWindow.toNumber(point.x)),
+			xWindow
+		);
 		if (index === undefined) continue;
 		const point = entry.points[index];
 		const distance = Math.hypot(
-			plot.x(timeValue(point.x)) - pointerX,
+			plot.x(xWindow.toNumber(point.x)) - pointerX,
 			plot.y(point.y ?? Number.NaN) - pointerY
 		);
 		if (distance < bestDistance) {
@@ -131,8 +143,8 @@ export function nearestPoint<TSeries extends NavigationSeries>(
 const pageSize = (count: number) => Math.max(1, Math.floor(count / PAGE_FRACTION));
 
 function along(offset: (position: number, count: number) => number): Step {
-	return (_series, active) => {
-		const drawable = drawableIndices(active.series.points);
+	return (_series, active, xWindow) => {
+		const drawable = drawableIndices(active.series.points, xWindow);
 		const position = drawable.indexOf(active.index);
 		if (position < 0) return active;
 		const next = clamp(offset(position, drawable.length), 0, drawable.length - 1);
@@ -141,12 +153,17 @@ function along(offset: (position: number, count: number) => number): Step {
 }
 
 function across(direction: -1 | 1): Step {
-	return (series, active) => {
-		const visible = series.filter(hasPoint);
+	return (series, active, xWindow) => {
+		const visible = series.filter((entry) => hasPoint(entry, xWindow));
 		const target = visible[visible.indexOf(active.series) + direction];
 		const point = active.series.points[active.index];
 		if (!target || !point) return active;
-		const index = nearestIndex(target.points, timeValue(point.x), (entry) => timeValue(entry.x));
+		const index = nearestIndex(
+			target.points,
+			xWindow.toNumber(point.x),
+			(entry) => xWindow.toNumber(entry.x),
+			xWindow
+		);
 		if (index === undefined) return active;
 		return { series: target, index };
 	};
@@ -163,19 +180,16 @@ const STEPS: Record<NavigationKey, Step> = {
 	ArrowDown: across(1)
 };
 
-/** Whether `key` is a `KeyboardEvent.key` that moves the active point. */
 export const isNavigationKey = (key: string): key is NavigationKey => Object.hasOwn(STEPS, key);
 
-/**
- * The point `key` moves to from `active`. Left and right step one point, Home and End go to
- * the ends of the series, and PageUp and PageDown step a tenth of the series, at least one.
- * Up and down go to the previous or next visible series, at its point nearest in time.
- * Gaps and hidden series are skipped. At an end, the point stays.
- */
+// Left and right step one point, Home and End go to the ends of the series, and PageUp and
+// PageDown step a tenth of the series, at least one. Up and down go to the previous or next
+// visible series, at its point nearest in time. At an end, the point stays.
 export function step<TSeries extends NavigationSeries>(
 	series: readonly TSeries[],
 	active: ActivePoint<TSeries>,
-	key: NavigationKey
+	key: NavigationKey,
+	xWindow: XWindow
 ): ActivePoint<TSeries> {
-	return STEPS[key](series, active);
+	return STEPS[key](series, active, xWindow);
 }

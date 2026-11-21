@@ -23,15 +23,15 @@
     Show cell-02
   </label>
 
-  <div class="h-64">
-    <Chart aria-label="Hideable series">
+  <Chart aria-label="Hideable series" class="flex flex-col gap-2">
+    <Chart.Plot class="h-64">
       <Chart.Grid />
       <Chart.XAxis />
       <Chart.YAxis />
       <Chart.Line name="cell-01" unit="°" points={cell01} />
       <Chart.Line name="cell-02" unit="°" points={cell02} bind:hidden={cell02Hidden} />
       <Chart.Tooltip />
-      <Chart.Legend />
-    </Chart>
-  </div>
+    </Chart.Plot>
+    <Chart.Legend />
+  </Chart>
 </div>
