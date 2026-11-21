@@ -12,9 +12,10 @@ and reading only their compact results.
 
 If `/verify-changed` is installed (`.claude/skills/verify-changed/`), invoke it and take its
 per-package PASS/FAIL verdict as the verification result. If it is not installed, run the repo's
-verify or test command with `run_in_background: true`, wait for the completion notification, and read
-only the tail of the output file it names for PASS/FAIL plus any failing residue. Do not read the full
-suite transcript into this context. It stays in that output file.
+verify or test command in the foreground with `timeout: 600000`. If it is expected to cover more than
+8 packages, background it and wait with foreground `sleep 20` calls as `/verify-changed` describes.
+Read only the tail of the output for PASS/FAIL plus any failing residue. Do not read the full suite
+transcript into this context.
 
 ## 2. Review (delegate if reviewers exist)
 

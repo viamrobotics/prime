@@ -36,7 +36,7 @@ feature is one bullet there, however many commits it took.
 3. **Pick the bump level per package** (semver):
    - `patch`: fixes, internal refactors with no API change. The default.
    - `minor`: new user-facing capability, backward-compatible.
-   - `major`: breaking change. **Confirm with the user before recording a major.**
+   - `major`: breaking change. **Propose a major and get the user's answer before writing it.**
 4. **Write the summary.** This is the canonical spec, and the `changeset-writer` agent follows it
    too.
    - **One short sentence**, 15 words or fewer, in changelog voice, naming what changed as the
@@ -139,7 +139,7 @@ bullet announces something no user ever saw.
    C, but it is now an incomplete list, and that is the same defect one step quieter.
 
 5. **Propose, then confirm.** For each group, print the ids, which one survives, the new summary,
-   and one line on why they are one entry. Wait for approval. Absorbing deletes the other files,
+   and one line on why they are one entry. Wait for the user's answer before running `--absorb`. Absorbing deletes the other files,
    and a changeset that was never committed cannot be recovered.
 6. **Execute**, one call per group.
 

@@ -1,37 +1,39 @@
 ---
 name: orchestrate
 description: Execute a planned phase from .claude/plans/ with scoped task-worker subagents. Use to drive a planned phase to done.
-argument-hint: '[<plan-slug>] [<phase> | <n,m> | all] [--auto] [--flat]'
+argument-hint: '[<plan-slug> | <milestone>] [<phase> | <n,m> | all] [--auto] [--flat]'
 allowed-tools: Read, Edit, Write, Grep, Glob, Bash, Agent, SendMessage
 ---
 
 Drive planned work to done as **planner → orchestrator → reviewer**: **$ARGUMENTS**
 
-You stay expensive and small. The implementation happens in cheap, tightly-scoped `task-worker`
-subagents, and a worker that reads twelve files and writes six pays for that itself, in a context
-that dies with its slice. What comes back to you is a **report**, not a diff. Your context holds the
-plan, the seam you write yourself, and N one-screen reports. It never holds worker diffs, full file
-dumps, per-file logs, or the match set of anything. If you're reading implementation here, you've
-stopped orchestrating and started working.
+You stay expensive and small. Implementation happens in cheap, scoped `task-worker`
+subagents, whose reads and writes cost their own context, which dies with its slice. What comes
+back to you is a **report**, not a diff. Your context holds the plan, the seam you write yourself,
+and N one-screen reports. It never holds worker diffs, file dumps, per-file logs, or match sets.
+Reading implementation here means you've stopped orchestrating.
 
 ## 0. Preconditions and arguments
 
 This skill executes a **plan that already exists**. List the candidates with their live status:
 
 ```
-grep -l . .claude/plans/*/ROADMAP.md | xargs grep -H '^\*\*Status:\*\*'
+find .claude/plans -maxdepth 3 \( -name ROADMAP.md -o -name MILESTONE.md \) ! -path '*/_*' | xargs grep -H '^\*\*Status:\*\*'
 ```
 
 - **No plan workspace?** Stop and run `/plan-project "<what to build>"` first.
-  Orchestration without a persisted phase boundary has nothing to slice and nowhere to record status.
+  Without a persisted phase boundary there is nothing to slice and nowhere to record status.
 - **Trivial work?** If you'd finish the phase in one pass, **do it yourself**. Below roughly two
-  slices, briefs, dispatch, and review cost more than the work.
+  slices, orchestration costs more than the work.
 
 ### Arguments
 
 `/orchestrate [<plan-slug>] [<phase> | <n,m> | all] [--auto] [--flat] [--ignore-gates <key,key>]`,
-both leading parts optional. A bare token that is a number, a comma list, or `all` is the **phase**. Anything else is
-the **plan slug**. Each phase runs one layer down by default (§4). `--flat` runs it here.
+both leading parts optional. A bare token that is a number, a comma list, or `all` is the
+**phase**. Anything else is the **plan slug**. A slug naming a milestone (a directory holding
+`MILESTONE.md`, whose members hold `ROADMAP.md`) routes to `references/milestone.md`. A
+`<milestone>/<member>` slug runs as an ordinary plan. Each phase runs one layer down by default
+(§4). `--flat` runs it here.
 
 | Invocation                     | Means                                                                         |
 | ------------------------------ | ----------------------------------------------------------------------------- |
@@ -55,7 +57,7 @@ No slug given? In order:
 2. **The conversation names one.** The user just planned it, or you're resuming work you were already
    doing on it.
 3. **Exactly one has `Status: IN PROGRESS`** → that one.
-4. **Otherwise ask.** Two half-finished plans is precisely when guessing wrong is expensive. List the
+4. **Otherwise ask.** Guessing between half-finished plans is expensive. List the
    slugs with their status lines and let the user pick.
 
 Never infer a plan from mtime or sort order. State the resolved plan and phase before you slice
@@ -114,10 +116,9 @@ change there **request it in their report**. They don't reach for it.
 
 ## 2. Write the seam yourself — before any fan-out
 
-Contract-first is what makes parallel slices safe. Before dispatching a wave, **you** write the
-shared surface it depends on (interfaces, signatures, stubs, config keys, migrations) to disk, so
-workers implement **against a fixed seam**. If a wave's slices would have to negotiate an interface
-between themselves, the seam isn't written yet.
+Before dispatching a wave, **you** write the shared surface it depends on (interfaces, signatures,
+stubs, config keys, migrations) to disk, so workers implement **against a fixed seam**. If slices
+would have to negotiate an interface between themselves, the seam isn't written yet.
 
 ## 3. Record the slice table (state on disk)
 
@@ -136,7 +137,7 @@ Append to the phase sub-plan, so a dead session resumes by grepping instead of r
 Status vocabulary is fixed and greppable, extending the ROADMAP's:
 **`TODO` · `DISPATCHED` · `IN REVIEW` · `REVISING` · `DONE` · `BLOCKED`**.
 
-Update it **in place** at every transition. A table that lags the truth is worse than none.
+Update it **in place** at every transition. A lagging table is worse than none.
 
 Run `node .claude/scripts/plan-lint.mjs`, if installed, after writing or updating the table. It
 checks the status vocabulary and the ROADMAP cross-link, so a typo'd status does not silently break
@@ -173,7 +174,7 @@ prohibition (below).
 > report.
 > Constraints: `<the architectural decisions from PLAN.md this slice must respect>`.
 
-Hand a worker its slice, seam, and constraints, never the whole plan.
+Hand a worker its slice, seam, and constraints, not the plan.
 
 ### The status table — the one shape you print between waves
 
@@ -214,8 +215,7 @@ git status --short | grep '^ D\|^D '   # deletions: every one must be intentiona
 ls .claude/plans/<slug>/               # plan state still there
 ```
 
-A deletion outside `owns` is a defect whatever the report says, and if plan state is gone, stop the
-wave and recover first.
+A deletion outside `owns` is a defect whatever the report says. If plan state is gone, stop and recover.
 
 Each worker returns a report: files touched, the acceptance command and its output tail, decisions
 and deviations, and anything blocked or out of scope. Its first line is one of
@@ -280,10 +280,10 @@ where the tree is quiet enough to touch globally:
 3. **Verify what actually changed.** Run `/verify-changed` if installed (it scopes to the changed
    packages plus dependents, off-context), otherwise the repo's verify on the touched packages.
 4. **Update the slice table** in place, then print the status table (§4), the wave-close printing.
-5. **Snapshot the state nothing can regenerate**, into a scratch directory: the plan workspace and
-   anything else gitignored that no command can rebuild. `references/closing.md` says what to copy.
-6. **Then** open the next wave. Dispatching over an unreviewed slice is precisely how the
-   architecture drifts while you aren't looking.
+5. **Snapshot the state nothing can regenerate**: the plan workspace and anything else gitignored that
+   no command can rebuild. `references/closing.md` says what to copy and where.
+6. **Then** open the next wave. Dispatching over an unreviewed slice is how the
+   architecture drifts unseen.
 
 **Residue** is what auto-fix couldn't fix, and it's yours by default. Never send it back to the slice
 workers, whose briefs are spent. `references/fixer-and-residue.md` has the routing table for when it

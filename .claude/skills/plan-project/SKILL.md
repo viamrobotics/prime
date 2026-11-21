@@ -17,19 +17,23 @@ from scrollback.
 
 ## 0. How much ceremony does this earn?
 
-There are three tiers, and the ask lands in exactly one:
+There are four tiers, and the ask lands in exactly one:
 
 - **Do it inline.** A handful of files you will finish now, with the shape already obvious. Write no
   plan at all.
 - **Plan inline, persist nothing.** Enough moving parts to be worth thinking through first, but still
   one sitting. Use plan mode or an in-context plan and scaffold no `.claude/plans/` dir.
 - **Persist a workspace.** The rest of this skill.
+- **Plan a milestone.** Two or more member plans, each with its own goal, run side by side under
+  one `MILESTONE.md`. Four ordered questions in `references/milestone.md` route an effort here, and
+  that reference covers everything a milestone adds.
 
-Name the tier out loud before doing anything, in one sentence, with the reason you picked it. The
-user can then override it in a word. Silently scaffolding is the failure this prevents, since a
-`.claude/plans/` dir for a one-sitting task is pure overhead that no one asks you to delete.
+Default to the lowest tier that passes. Name the tier out loud before doing anything, in one
+sentence, with the reason you picked it. The user can then override it in a word. Silently
+scaffolding is the failure this prevents, since a `.claude/plans/` dir for a one-sitting task is
+pure overhead that no one asks you to delete.
 
-The top tier has a bar. Scaffold **only** when at least one holds:
+The third tier has a bar. Scaffold **only** when at least one holds:
 
 - **3+ distinct phases** that can land independently and each leave the tree working.
 - Work you expect to **pause and resume** across sessions or days.
@@ -154,8 +158,9 @@ line below. A list such as `After: 2, 3` names the phases that must be `DONE` fi
 # Phase N: <name>
 
 **Status:** TODO · **Part of:** [PLAN.md](PLAN.md) · **Roadmap:** [ROADMAP.md](ROADMAP.md)
-**Signals:** <optional, comma-separated: `wide` for a big footprint, `ui` for user-facing surfaces, `live` for checks against a running server, else omit the line>
+**Signals:** <optional, comma-separated: `wide` for a big footprint, `ui` for user-facing surfaces, `live` for checks against a running server, `flat` for a phase that runs in the dispatcher's own context, else omit the line>
 **Domain:** <optional: comma-separated path roots this phase may write, each in backticks, never a glob. Omit the line for `all`>
+**Closes:** <optional: comma-separated issues this phase resolves, each `#` plus digits, as `#12, #15`. A duplicate closed by comment is not listed>
 
 ## Objective
 
@@ -194,10 +199,15 @@ names no test path. Omit the section when every case the spec implies already ha
 The optional `**Signals:**` line is read by `/orchestrate` where that skill is installed: `wide`
 turns on its pre-slicing `/blast-radius` map and `ui` its close-of-phase accessibility and design
 reviews. `live` marks a phase whose checks read a running process, such as a dev server, that
-another phase's edits would disturb mid-reading. It runs alone, and `plan-lint` errors unless
-`After` orders it against every other phase. Omit the line when none applies. Name an MCP tool a
-step needs by its callable name, `mcp__<server>__<tool>`, so `/orchestrate` can check it against
-its agents' `tools:` lines before it spawns.
+another phase's edits would disturb mid-reading. It runs alone, and the main conversation starts that process before the spawn and stops it after
+`DONE`, as `/orchestrate` specifies. `plan-lint` errors unless `After` orders it against every other
+phase. `flat` runs the phase in the dispatcher's own context, as `/orchestrate` specifies in
+`references/nested.md` "A phase that cannot nest". Set `flat` on a closeout phase and on any phase
+whose Domain is only the plan workspace. `plan-lint` warns when one lacks it. A plan that ends in a
+closeout writes that phase from `references/closeout.md` and dispatches it to the `closeout-worker`
+agent where installed. Omit the line when none applies. Name an MCP tool a step needs by its
+callable name, `mcp__<server>__<tool>`, so `/orchestrate` can check it against its agents' `tools:`
+lines before it spawns.
 
 For a control-flow-heavy phase, one where the hard part is which function calls which and in what
 order, add an optional call-stack sketch to that phase file: the call tree in diff syntax, with `+`
@@ -220,6 +230,13 @@ would build it and returns what that person would still have to ask. Carry each 
 handoff under the assumptions line, or say the list was empty. It costs one `plan-reviewer` run
 and catches a mis-specified slice before a worker spends a run on it. Do not edit the plan to
 answer a question. The user decides.
+
+A milestone gets one handoff for the whole milestone, never one per member. List the first step's
+items as `<member>/<phase-slug>`, and give `/orchestrate <milestone>` as the next command (needs the
+`orchestrate` module). Without that module, the next command is the user asking you to take the
+first item in-context. The execution line is `/orchestrate <milestone>`, one phase-orchestrator per
+item in the step. A milestone handoff writes no execution-mode cost comparison, so skip the mode
+bullet below. List the gates closed by a default taken, so the owner can reopen one.
 
 Report, then wait:
 

@@ -46,8 +46,9 @@ Review the design-system fit of a working-tree change. Arguments (optional file 
    components pays that repeatedly. The subagent absorbs the launch and the raw output, and
    the main context gets the verdict.
 
-   If the subagent reports that it stalled, or hands back only an interim report, re-dispatch
-   it once with the same brief. On a second stall, run
+   A notification that the subagent is waiting on its own background work is interim, so wait
+   for its report. If the subagent reports that it stalled, re-dispatch it once with the same
+   brief. On a second stall, run
    `node .claude/scripts/design.mjs check <files>` in this context and report the rendered
    tier as not run, as step 7 describes. The render launches Chrome under a fixed 30 second
    cap, well under the default Bash timeout, so it needs no `run_in_background`.

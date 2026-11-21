@@ -38,6 +38,18 @@ Two consequences, and the second one matters more:
   every ownership rule here exists to prevent. Residue is only what survives the barrier, when every
   slice is `DONE` or `BLOCKED` and the tree is quiet.
 
+## Scoping and skipping in the fix hook
+
+`fix.passPaths` is off by default. Set it to `true` and `lint-format-fix.mjs` ends each fix step's
+argv with `--` and the paths the ended turn changed, package-relative in the filtered shape and
+root-relative in the repo-root shape. It is opt-in because a script such as `eslint . --fix` widens
+or errors on trailing paths. A path list too long for one command line falls back to the unscoped
+run, and the hook says so on stderr.
+
+A fix step whose script is absent from the `package.json` it runs in is skipped. The hook prints one
+notice naming the script and the file, and still exits 0. `houserules doctor` warns about global
+`fix.commands` missing from the root `package.json` when no targets are configured.
+
 ## Routing the residue
 
 Residue is usually a handful of lines, and a brief costs more than the edit. Delegate only when it's

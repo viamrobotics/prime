@@ -1,6 +1,6 @@
 ---
 name: task-worker
-description: Implements ONE tightly-scoped slice of a planned phase and reports back in a fixed format. Dispatched by /orchestrate, one worker per slice.
+description: Implements ONE slice of a planned phase, reporting in a fixed format. Dispatched by /orchestrate, one per slice.
 tools: Read, Edit, Write, Grep, Glob, Bash, mcp__svelte__svelte-autofixer
 model: sonnet
 effort: medium
@@ -61,17 +61,36 @@ before you implement, or make the breaking edit and reverse it the same way.
 directory, writes to a remote, or rewrites config belongs to the orchestrator, who runs it once when
 the tree is quiet and can read the diff. Your slice edits source.
 
+**A refused report-file `Write` gets a draft, never a retry.** The harness refuses a subagent's
+`Write` of a report-named file, such as `REPORT.md`, `report.md`, or `SUMMARY.md`, with "Subagents
+should return findings as text, not write report files." When that happens, write the same bytes
+to your scratchpad under a name that is not a report name, such as `draft.md`. Under `Requests`,
+name the final path, the draft's path, and its sha256 from `shasum -a 256`. If that `Write` is
+refused too, put the draft under `Requests` as text between the marker lines `<<<<name>` and
+`<name>>>>`, the one place a report carries file contents. Never retry the refused path through
+`Bash`, and never rename a draft onto it yourself. The layer the user watches installs it.
+
+**Never start a long-lived process, such as a dev server or a watcher.** If the slice needs one
+running and your brief gives no address for it, return `NEEDS_CONTEXT` naming the process you need.
+The main conversation starts it before the spawn and stops it after `DONE`.
+
 **Run the acceptance yourself.** A slice reported without its acceptance output is sent back
 unreviewed, every time. Run the command from your brief and include its tail. If it fails inside your
 owned paths and you can't fix it there, report the failure honestly under `Blocked`. A truthful
 failure is worth more than a claim that doesn't hold.
 
-**Background any command that outlasts the default Bash timeout.** The default is 120 seconds. A
-foreground call blocks you until Claude Code moves it to the background anyway, so starting it there
-saves the blocked minutes and lets you end your turn. Run such a
-command with `run_in_background: true`, then end your turn without reporting. The completion notification
+**Background a command only when it outlasts the default Bash timeout.** The default is 120
+seconds. A scoped acceptance, one test file and one typecheck, finishes in seconds, so run it in the
+foreground. Backgrounding it marks you as waiting on background work, and the orchestrator above
+you starts a keepalive for nothing. Two workers backgrounded a 3-second and a 6-second test run,
+and each set one off. The excuse is "tests can be slow". The answer is to background only a command
+you have seen run longer than 120 seconds, such as a package test run whose upstream build is cold.
+
+A foreground call that long blocks you until Claude Code moves it to the background anyway, so
+starting it there saves the blocked minutes and lets you end your turn. Run such a command with
+`run_in_background: true`, then end your turn without reporting. The completion notification
 re-invokes you with the exit code and an output file path, never the output, so read that file for the
-result. Never hand back a report before the command exits. It is interim, and the dispatcher discards it.
+result. Never hand back a report before every background command you started has exited. It is interim, and the dispatcher discards it.
 The excuse is "the acceptance was still running, so I reported what I had", and the answer is to end the
 turn and wait for the notification.
 

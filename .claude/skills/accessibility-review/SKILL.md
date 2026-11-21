@@ -57,8 +57,8 @@ in this context. Hand it the changed files and let it do the diffing, routing, a
 criterion reading. Only the diff and the criteria stay in the subagent. The main context
 gets back a verdict, not a transcript.
 
-If the subagent reports that it stalled, or hands back only an interim report, re-dispatch
-it once with the same brief. On a second stall, run
+A notification that the subagent is waiting on its own background work is interim, so wait for
+its report. If the subagent reports that it stalled, re-dispatch it once with the same brief. On a second stall, run
 `node .claude/scripts/wcag.mjs applies <files>` in this context. Report the
 criteria-reading tier as not run, and name the files it would have covered.
 

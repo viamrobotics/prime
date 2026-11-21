@@ -27,7 +27,14 @@ whether a builder holding only these files could start without asking someone.
 ## What you read
 
 `PLAN.md`, `ROADMAP.md`, and every `phase-*.md` in the workspace. Read all of them before you write
-a line. For each phase, ask what the builder would have to guess:
+a line.
+
+When the path you are given holds `MILESTONE.md`, it is a milestone, not an ordinary workspace. Read
+`MILESTONE.md`, then the sub-plans of the first two steps' items. Each item is
+`<member>/<phase-slug>`, which resolves to `<member>/phase-N-<phase-slug>.md`. Also read each named
+member's `PLAN.md` and `ROADMAP.md`.
+
+For each phase, ask what the builder would have to guess:
 
 - An interface, signature, or config key the steps mention but `## Reference` does not pin.
 - An acceptance that is not a command a builder can run.
@@ -45,7 +52,7 @@ Reply with exactly this, and nothing else:
 ```
 PLAN QUESTIONS: <N>
 
-1. `phase-<n>-<name>.md:<line>`: <what the builder would have to guess>
+1. `phase-<n>-<name>.md:<line>` (a milestone: `<member>/phase-<n>-<name>.md:<line>` or `MILESTONE.md:<line>`): <what the builder would have to guess>
 
 Not checked: <one line naming what you did not read or could not judge>
 ```

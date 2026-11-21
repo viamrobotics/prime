@@ -1,6 +1,6 @@
 # prime
 
-Pretty Rad Interactive Modular Elements, Viam's Svelte 5 component-library monorepo: pnpm workspaces, Node 24 (`.nvmrc`), Svelte 5 runes, Tailwind CSS v4, Vitest, wireit, and Changesets.
+Pretty Rad Interactive Modular Elements, Viam's Svelte 5 component-library monorepo: pnpm workspaces, Node 24 (`.nvmrc`), runes, Tailwind CSS v4, Vitest, wireit, and Changesets.
 
 ## Layout
 
@@ -31,7 +31,7 @@ pnpm exec houserules doctor   # validate the kit-managed .claude/ install
 pnpm exec houserules update   # refresh kit files after a @houserules/* bump
 ```
 
-`build`, `check`, `lint`, `format`, and `test` run through [wireit](https://github.com/google/wireit), cached in `.wireit/` and in CI. `pnpm --filter <pkg> run <script>` runs one package plus its declared deps. `WIREIT_CACHE=none` forces a real re-run. Shared dependency versions live in the `catalog:` block of [pnpm-workspace.yaml](pnpm-workspace.yaml).
+`build`, `check`, `lint`, `format`, and `test` run through wireit, cached in `.wireit/` and in CI. `pnpm --filter <pkg> run <script>` runs one package plus its declared deps. `WIREIT_CACHE=none` forces a real re-run. Shared dependency versions live in the `catalog:` block of `pnpm-workspace.yaml`.
 
 `.claude/scripts/` is houserules build output, gitignored. Never hand-edit it. If a hook reports a missing script, run `pnpm exec houserules update`.
 
@@ -87,7 +87,8 @@ Fuller templates live in `.claude/templates/`.
   `run_in_background: true`, ends its turn without reporting, and reports when the completion
   notification re-invokes it, reading the output file it names. A foreground call blocks the
   subagent until Claude Code moves it to the background anyway, so starting it there saves the
-  blocked minutes and lets the subagent end its turn.
+  blocked minutes and lets the subagent end its turn. A command expected to finish inside the
+  default Bash timeout, such as a scoped test or typecheck, runs in the foreground.
 - On AskUserQuestion timeout, stop and re-ask later. Never carry tentative selections forward.
 - Read the repo's own docs + targeted greps before fanning out Explore/Plan agents.
 

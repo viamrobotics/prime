@@ -40,6 +40,10 @@ intended.
 
 Escalating the worker's model is the last resort, not the first.
 
+Send a `REVISE` only after the worker's `finished` notice. A message sent before it appears to stay
+inside the report already delivered, and a worker has no `SendMessage` to send its revised report
+another way.
+
 No `SendMessage` in your harness? Respawn with the original brief plus the defect list, and treat the
 extra cost as another reason to keep the cap at 2.
 

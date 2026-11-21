@@ -11,6 +11,21 @@ the fallback. Copy the plan directory plus any gitignored write-log, credential,
 the tool directory carries. Skip everything the installer rewrites. It costs a second and it is the
 only thing standing between a destructive slice and starting over.
 
+Write it to one place: `${TMPDIR:-/tmp}/plan-snapshots/<repo-dir-name>/<slug>/<label>/`. The path sits
+outside `.claude/`, because the snapshot guards against a slice that destroys the tool directory. It
+also stays out of git status.
+
+Every orchestrator at every depth uses the same two placeholders:
+
+- `<slug>` is the plan's slug as `/orchestrate` takes it. A milestone member is
+  `<milestone>/<member>`.
+- `<label>` is `phase-<n>-wave-<k>` at a wave barrier and `phase-<n>-close` at phase close. At a
+  milestone barrier it is `step-<step-slug>`, and the snapshot goes under the milestone slug.
+
+A wave 1 barrier of phase 1 in member `device` of milestone `tetherbox-mvp` writes to
+`.../tetherbox-mvp/device/phase-1-wave-1/`. The barrier of step `sign-up` writes to
+`.../tetherbox-mvp/step-sign-up/`. No other nesting is valid.
+
 ## Why plan-lint runs at phase close
 
 `node .claude/scripts/plan-lint.mjs` confirms the status update actually landed on both files. It has

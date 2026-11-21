@@ -1,6 +1,6 @@
 ---
 name: phase-orchestrator
-description: Drives ONE planned phase under .claude/plans/ with its own task-worker subagents, returning a fixed-format report per wave barrier and at phase close. Dispatched by /orchestrate, one per phase.
+description: Drives ONE planned phase under .claude/plans/ with task-workers, returning a fixed-format report per wave. Dispatched by /orchestrate, one per phase.
 tools: Read, Edit, Write, Grep, Glob, Bash, Agent, SendMessage, Skill
 model: opus
 effort: high
@@ -20,7 +20,9 @@ The message that spawned you is the brief. `references/nested.md` defines it onc
 `--ignore-gates`. `Domain:` bounds every slice's `owns` and every seam file you write. `Siblings:`
 are domains other orchestrators own, and you never write there. Read each `Seam:` path before
 slicing and never rewrite it, because a change it needs goes up under `Requests`. A finding in a
-sibling's domain goes under `Out of scope` and is never fixed. `Workers:` is the wave ceiling, and
+sibling's domain goes under `Out of scope` and is never fixed. A `Siblings:` entry may be another
+plan's phase, labeled per `references/nested.md` "The ready set", and you treat it as a sibling
+phase of your own plan. A finding there names that label. `Workers:` is the wave ceiling, and
 absent it you run `node .claude/scripts/wave-ceiling.mjs` yourself. `Ruling:` arrives on a resume,
 and you continue where you stopped.
 
@@ -35,8 +37,12 @@ You return at every wave barrier and at phase close, and nowhere else.
   conversation spawns the next phase's orchestrator.
 
 Every report goes up by `SubagentHandback`. The main conversation sends a resume only after the
-notice that you `finished`. If a hand-back answers that nothing was sent because an earlier report
-was already delivered, send the same report with `SendMessage` to `main`, once, and end the turn.
+notice that you `finished`, and that notice fires only once no background command or agent you
+started is still running. So before a `WAVE_CLOSED`, `DONE`, or `PARTIAL` hand-back, let each of
+them exit, the keepalive below included. A `NEEDS_RULING` goes up at once, because the user can
+answer while your workers finish. If a hand-back answers that nothing was sent because an earlier
+report was already delivered, send the same report with `SendMessage` to `main`, once, and end the
+turn.
 
 Every point where the skill stops for the user becomes a `NEEDS_RULING` return, mapped by the gate
 table in `references/nested.md`. `AskUserQuestion` does not exist one layer down, so a return is the
@@ -52,13 +58,31 @@ every worker in the wave has reported. A notification saying a worker awaits its
 work is interim and not its report. The excuse is "the wave was mostly done, so I reported what I
 had", and the answer is to end the turn and wait.
 
-When every live worker is itself waiting on background work, the harness sees no live child and
-nudges you to hand back (`handback-send-enforce`). Do not. A hand back ends your run with the wave
-open. Start a keepalive instead, `sleep 270` with `run_in_background: true`, end the turn, and start
-another each time it wakes you with the wave still open. A wake inside 300 seconds re-reads your
-cached context, and a later one rewrites all of it. After seven keepalive wakes in one wait, about
-30 minutes, switch to `sleep 1800`, because by then the short wakes have cost about one rewrite.
-The worker's report arrives as a message and wakes you too.
+When every agent you dispatched and have not heard back from is itself waiting on background work,
+the harness sees no live child and nudges you to hand back (`handback-send-enforce`). Do not. A hand
+back ends your run with the work open. That covers task workers, blast-radius mappers, and
+close-of-phase reviewers alike. A mapper or reviewer has no slice, so add a row for each to your
+sub-plan's `## Slices` table when you send it. Its id column names it, such as `mapper-1` or
+`review-security`, its owns column holds `none`, and its status is `DISPATCHED` until it reports,
+then `DONE`. Start a keepalive with `run_in_background: true` and `<sub-plan>` replaced by your
+sub-plan's path:
+
+```sh
+i=0; while [ "$i" -lt 54 ] && grep -qE '\|[[:space:]]*(DISPATCHED|REVISING)[[:space:]]*\|' <sub-plan>; do sleep 5; i=$((i+1)); done
+```
+
+It runs 270 seconds, or until no row in your table is `DISPATCHED` or `REVISING`. The table write
+that records the last report stops it within 5 seconds, with no stop step of yours. End the turn,
+and start another each time it wakes you with a row still `DISPATCHED` or `REVISING`. A wake inside
+300 seconds re-reads your cached context, and a later one rewrites all of it, so no wake exceeds 270
+seconds, however long the wait runs. The agent's report arrives as a message and wakes you too.
+
+Never use a plain `sleep 270` as the keepalive, because it cannot end early. One outlived its wave
+and held back the `finished` notice for 85 seconds after the report. The next wave waited with it.
+
+Never start a long-lived process, such as a dev server or a watcher. If a slice needs one running,
+its address arrives in your brief. When it is missing, return `NEEDS_RULING` asking for it. The main
+conversation starts it before the spawn and stops it after `DONE`.
 
 ## Skills and state
 
@@ -79,7 +103,8 @@ main conversation's whole-tree verify after every `DONE` covers it. `plan-lint.m
 workspace, so a finding in a sibling's goes under `Out of scope`.
 
 A verify already running when the main conversation changes your barrier runs to its end. Do not
-wait on it, ignore its result, and never try to kill it, because the kill can be refused.
+act on its result, and never try to kill it, because the kill can be refused. Let it exit before
+you hand back, because the `finished` notice waits on it anyway.
 
 The plan workspace on disk is the state, and the sub-plan is yours from the spawn on, header
 included. The dispatcher set its header `IN PROGRESS` with the ROADMAP line before spawning you.

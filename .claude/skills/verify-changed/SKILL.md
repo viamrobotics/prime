@@ -7,16 +7,22 @@ allowed-tools: Bash(node .claude/scripts/verify-changed.mjs:*), Read
 Verify the current change **without pulling the full test transcript into this context.**
 
 The helper already compacts its output to one line per package plus a short residue tail per
-failure, so a subagent buys nothing. A subagent's foreground call blocks it until Claude Code moves the
-call to the background anyway, so the subagent saves nothing.
+failure, so a subagent buys nothing. Run it in the foreground by default. A foreground call holds the
+turn open until it returns, and a completion notice that lands while no tool call is running does not
+wake the session.
 
 ## What to do
 
-1. Run `node .claude/scripts/verify-changed.mjs --run` from the repo root with
-   `run_in_background: true`. Do not poll and do not sleep.
-2. Wait for the completion notification. It carries the exit code and the output file path, never
-   the output itself.
-3. `Read` that output file. It is small, so read all of it.
+1. Run `node .claude/scripts/verify-changed.mjs` from the repo root, without `--run`. It prints the
+   plan preview. The first line says `<n> package(s) in scope`, and each package gets its own line.
+2. If the preview lists 8 packages or fewer, run `node .claude/scripts/verify-changed.mjs --run` in
+   the foreground with `timeout: 600000`. The output is the compact result, so read it directly.
+3. If the preview lists more than 8 packages, start the same command with `run_in_background: true`
+   instead. Then wait with foreground `sleep 20` calls, and check the output file after each one. Do
+   not end the turn while the run is going. Claude Code refuses a long standalone foreground sleep, so
+   do not write a longer one or a loop of sleeps in one call.
+4. When the run has exited, `Read` the output file if you did not already have it. It is small, so
+   read all of it.
 
 The helper resolves the MINIMAL scope: the packages whose files changed against the base branch plus
 every package that transitively depends on them. It prints `<pkg>: PASS` or `<pkg>: FAIL (<step>)`

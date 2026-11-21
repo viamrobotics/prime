@@ -151,6 +151,19 @@ every worker pays a cold acceptance boot.
   task-worker tools. If `.claude/agents/task-worker-research.md` is absent, dispatch `general-purpose`
   with `model: sonnet` and `effort: medium`, and paste `agents/task-worker.md` inline ahead of the
   brief, the same fallback as a missing `task-worker`.
+- **A slice that names its agent.** When a slice's sub-plan names an agent, such as
+  `research-spike` or `closeout-worker`, dispatch that agent with the brief. When that agent's file
+  is absent from `.claude/agents/`, dispatch `task-worker` with the same brief, as `/plan-project`
+  already has the implementer take an absent `research-spike`'s work.
+- **A refused report-file `Write`.** The harness refuses a subagent's `Write` of a report-named
+  file, such as `REPORT.md`, at every depth and in every directory. When a worker reports that
+  refusal, its standing rules in `agents/task-worker.md` have it hand back a draft under a name
+  that is not a report name, with the draft's path and sha256. When that write is refused too, the
+  draft comes back as text between two marker lines. Review the draft as the slice's deliverable,
+  not as `BLOCKED`. One layer down, pass the path and sha256, or the marked text, up under
+  `Requests`. The layer the user watches asks the user, then installs the draft byte for byte. It
+  copies the file and checks the sha256, or extracts the marked text with a script, and never
+  retypes it. Nobody retries the refused path through `Bash` or through a renamed final path.
 - **A rule that needs an MCP tool the worker lacks.** Add the full callable name,
   `mcp__<server>__<tool>`, or the `mcp__<server>` pattern to `orchestrate.workerTools` in
   `.claude/houserules.config.json`, then run `npx houserules update`. `doctor` reports the same gap.

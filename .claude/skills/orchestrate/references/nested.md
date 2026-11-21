@@ -53,9 +53,8 @@ Every later message to this orchestrator goes to that id with `SendMessage`.
 **Relay.** Print `Status table` verbatim, with no prose over it. Put one line under it for anything
 the columns cannot carry. Then act on the first line of the report:
 
-- `WAVE_CLOSED`: wait for the notice that the orchestrator `finished`, then send `continue` with
-  `SendMessage`. A resume sent while its keepalive still runs appears to stay inside the result
-  that already reported, and the next hand-back is refused. The same wait holds for a `Ruling:`.
+- `WAVE_CLOSED`: send `continue` with `SendMessage` once the orchestrator's `finished` notice has
+  arrived. Waiting for `finished`, below, says how to wait.
 - `DONE`: run `/backlog-add` for each `Backlogged` entry, then `/decide` and `/pr-description` at
   this layer, from `Decide candidates`, with `/pr-description` after the last phase only. Under `all`, spawn the recomputed ready set
   (see Several orchestrators), one fresh brief each, in one message. Check-in mode stops for the user first. The fresh spawn doubles as the
@@ -65,7 +64,24 @@ the columns cannot carry. Then act on the first line of the report:
 - `BLOCKED`: surface the report to the user. Never reword the cause. The one exception is a missing
   tool, routed as a phase that cannot nest, below.
 
-**The ruling round trip.** Relay `Ruling needed` verbatim through `AskUserQuestion`, with the
+**Waiting for `finished`.** Every `SendMessage` to an orchestrator that has handed back waits for
+its `finished` notice. That covers a `continue`, a `Ruling:`, a changed seam path, and residue
+after `DONE`. A message sent before the notice appears to stay inside the result that already
+reported, and the orchestrator's next hand-back is refused. Send each message once per hand-back,
+and fold a seam note into the `continue` it travels with.
+
+A notice that lands while none of your tool calls is running does not wake you once the turn ends.
+So never end a turn while such a message is owed. Wait with foreground `sleep 20` calls instead,
+because a notice that lands during one arrives with its result. Claude Code refuses a long
+standalone foreground sleep, so the wait is short calls repeated. After each one, check every
+orchestrator that is owed a message. After 30 minutes with a
+message still owed, stop waiting and tell the user which orchestrator reported and never
+finished. The excuse is "the notice will wake me". The answer is that one did not, and an
+`--auto` run sat idle until the user typed.
+
+**The ruling round trip.** Before you open `AskUserQuestion`, send each message already owed to
+another orchestrator whose `finished` notice has arrived, because the question blocks you until the
+user answers. Relay `Ruling needed` verbatim through `AskUserQuestion`, with the
 recommendation first. Never summarize it, because the orchestrator wrote the options with context
 you do not have. Send the answer back as a `Ruling:` line with `SendMessage` to the same agent id.
 Never respawn for a ruling, because the same id keeps its context.
@@ -80,15 +96,21 @@ the messages that arrived before you judge the phase still running.
 withheld `Agent` from the orchestrator. Set the variable and spawn fresh with the same brief. A
 re-brief changes nothing.
 
-**A phase that cannot nest.** A phase whose steps need a tool missing from the `tools:` line of
-`.claude/agents/phase-orchestrator.md`, such as an MCP server's, cannot run one layer down. Before
-any spawn, grep each sub-plan for `mcp__` and compare each name against that line. Hold that phase
-out of the spawn, and name it and the tool. Run the rest nested. When the last of them returns, run the
-held phase flat here, §1 to §8 as `--flat` does, before spawning anything else. That keeps its tool
-output out of this context while relays are live, and its checks away from siblings' edits. A
-`BLOCKED` report naming a missing tool is the same case found late, and takes the same route
-instead of stopping the run. `orchestrate.orchestratorTools` in `.claude/houserules.config.json`
-lets such a phase nest after `npx houserules update`.
+**A phase that cannot nest.** Two causes put a phase here. Its sub-plan carries `flat` on the
+`**Signals:**` line, or its steps need a tool missing from the `tools:` line of
+`.claude/agents/phase-orchestrator.md`, such as an MCP server's. Before any spawn, read each
+sub-plan's `**Signals:**` line for `flat`. Grep the sub-plan for `mcp__` and compare each name
+against that line. Hold that phase out of the spawn, and name it and the cause. Run the rest
+nested. When the last orchestrator in flight returns, run the held phase flat here, §1 to §8 as
+`--flat` does, before spawning anything else. That keeps its tool output out of this context while
+relays are live, and its checks away from siblings' edits. A `BLOCKED` report naming a missing tool
+is the same case found late, and takes the same route instead of stopping the run.
+`orchestrate.orchestratorTools` in `.claude/houserules.config.json` lets a phase held for a missing tool nest after `npx houserules update`.
+
+The `flat` cause holds these rules. Two flat phases run one at a time. A comma list holds a flat
+phase out as it does a `live` one. `/orchestrate <slug> <n>` on a flat phase runs it here with no
+spawn. `--flat` makes the signal moot. A `flat, live` phase has the main conversation start its
+process before §1 and stop it after `DONE`.
 
 ## Several orchestrators
 
@@ -106,12 +128,16 @@ leaves it. A domain is a set of source paths. The plan workspace is never part o
 **The ready set.** Under `all`, the dispatcher parses the `ROADMAP.md` phase lines and takes every
 `TODO` phase whose `After` phases are all `DONE`. Absent `After` means the previous line, and
 `none` means no wait. It spawns the whole ready set in one message. A phase with no `**Domain:**`
-line, or with `live` on its `**Signals:**` line, runs alone. It starts only when no other phase is
-in flight, and nothing else spawns until it returns. A `live` phase reads a running process, such
-as a dev server, that a sibling's edits would disturb. After each `DONE` report the dispatcher recomputes
+line, or with `live` or `flat` on its `**Signals:**` line, runs alone. It starts only when no other
+phase is in flight, and nothing else spawns until it returns. A `live` phase reads a running process, such
+as a dev server, that a sibling's edits would disturb. The main conversation starts that process
+before the spawn, names its address in the brief, and stops it after `DONE`. A subagent never
+starts it. After each `DONE` report the dispatcher recomputes
 the ready set. `Domain:` is copied from the phase header, and `Siblings:` from the other spawns'
 `Domain` headers. `Siblings:` keeps its meaning, the domains of the other live orchestrators, in
-this plan or another. It needs no plan slug, because domains are paths. A comma list, `2,3`, is an
+this plan or another. Inside one plan it needs no plan slug, because domains are paths. A milestone
+step labels each entry with its item, as `web/signup-form (apps/web)`, so a finding there names the
+plan that owns it (`references/milestone.md`). A comma list, `2,3`, is an
 explicit set. The dispatcher refuses it before any spawn when a domain is missing or two overlap,
 and names the overlap. A `live` phase in the list is held out and spawned alone once the rest have
 returned.
@@ -125,7 +151,7 @@ the `DONE` flip on each report, the `## Log` line, the `**Updated:**` bump, and 
 run after each. The pre-spawn pass sets the sub-plan header `IN PROGRESS` too, so the checker is
 clean before the orchestrator exists. Reports arrive one at a time, so those runs are serial.
 Each sub-plan is its orchestrator's from the spawn on, header included, whatever `Domain:` says.
-Under `--flat` the single layer writes
+Under `--flat`, and for a `flat` phase, the single layer writes
 both files as `/plan-project` §5 says.
 
 **The cross-domain seam.** Before dispatching either orchestrator, write what both domains depend

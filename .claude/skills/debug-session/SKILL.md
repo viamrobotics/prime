@@ -75,6 +75,9 @@ Run the exact trigger to emit fresh logs: start the server and hit the route, ru
 or invoke the command. Truncate the log between runs if a clean slate helps:
 `: > .claude/debug/<slug>.jsonl`.
 
+A subagent never starts a live process. It asks its caller, the main conversation, for the running
+one and reads its address from the brief.
+
 ## 5. Read the evidence with `jq`
 
 Query the log instead of eyeballing it. That's why it's structured.
