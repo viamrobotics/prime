@@ -27,9 +27,9 @@ Built on [bits-ui `Switch`](https://bits-ui.com/docs/components/switch).
 		checked?: boolean;
 		/** Value submitted when on and a `name` is given. */
 		value?: string;
-		/** Form field name. `null` is not accepted. */
+		/** Name for form submission. bits-ui accepts a string only, so `null` is dropped. */
 		name?: string;
-		/** Require the switch to be on for form submission. Defaults to the enclosing field's `required`. */
+		/** Mark the switch required. With a `name`, the form does not submit until it is on. Defaults to the enclosing field's `required`. */
 		required?: boolean;
 		/** Contextual state. Defaults to the enclosing field's `state`. */
 		state?: FieldState;

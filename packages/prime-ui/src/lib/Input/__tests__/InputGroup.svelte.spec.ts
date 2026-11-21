@@ -35,11 +35,16 @@ const setup = (props: ComponentProps<typeof GroupedInput> = {}) => {
 
 describe('Input.Group', () => {
 	it('wears the frame itself and leaves the input inside borderless', () => {
-		const { group, input } = setup({ groupClass: 'w-64' });
+		const { group, input } = setup();
 
 		expect(getComputedStyle(group).borderTopWidth).toBe('1px');
 		expect(getComputedStyle(input).borderTopWidth).toBe('0px');
-		expect(group.classList.contains('w-64'), 'consumer class lands on the group').toBe(true);
+	});
+
+	it('takes its width from a consumer class', () => {
+		const { group } = setup({ groupClass: 'w-64' });
+
+		expect(getComputedStyle(group).width).toBe('256px');
 	});
 
 	it('focuses the input when non-interactive content is pressed, without focusing the group', async () => {
@@ -78,9 +83,10 @@ describe('Input.Group', () => {
 	});
 
 	describe('border color', () => {
-		it('tells the four border tokens apart, so the cases below cannot pass vacuously', () => {
+		it('tells the five border tokens apart, so the cases below cannot pass vacuously', () => {
 			const colors = [
 				'border-light',
+				'border-gray-6',
 				'border-danger-dark',
 				'border-warning-dark',
 				'border-transparent'
@@ -157,11 +163,20 @@ describe('Input.Group', () => {
 		expect(getComputedStyle(group).outlineWidth).toBe('2px');
 	});
 
-	it('shows the not-allowed cursor for a disabled input and not for a disabled trailing button', () => {
-		const disabledInput = setup({ disabled: true });
-		const disabledAction = setup({ actionDisabled: true });
+	it.each([
+		{
+			name: 'not-allowed cursor for a disabled input',
+			props: { disabled: true },
+			cursor: 'not-allowed'
+		},
+		{
+			name: 'auto cursor for a disabled trailing button',
+			props: { actionDisabled: true },
+			cursor: 'auto'
+		}
+	])('shows the $name', ({ props, cursor }) => {
+		const { group } = setup(props);
 
-		expect(getComputedStyle(disabledInput.group).cursor).toBe('not-allowed');
-		expect(getComputedStyle(disabledAction.group).cursor).not.toBe('not-allowed');
+		expect(getComputedStyle(group).cursor).toBe(cursor);
 	});
 });

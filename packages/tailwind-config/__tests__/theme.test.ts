@@ -27,8 +27,11 @@ const SHIPPED_CLASSES = [
   "pill",
   "pill-outline",
   "kbd",
+  "underline-tabs",
+  "underline-tab",
   "file-tabs",
   "file-tab",
+  "file-tab-slot",
   "avatar",
   "progress-dots",
   "banner",
@@ -127,6 +130,22 @@ const CALENDAR_RANGE_DAY_INLINE =
   "inline-flex size-8 cursor-pointer items-center justify-center rounded-sm focus-ring not-data-disabled:not-data-selected:hover:bg-light data-today:font-semibold not-data-selected:data-today:text-heading data-outside-month:text-subtle-2 not-data-selection-start:not-data-selection-end:data-selected:bg-light not-data-selection-start:not-data-selection-end:data-highlighted:bg-light data-selection-start:bg-gray-9 data-selection-start:text-white data-selection-end:bg-gray-9 data-selection-end:text-white data-disabled:cursor-not-allowed data-disabled:text-disabled-dark data-unavailable:line-through".split(
     " ",
   );
+const UNDERLINE_TABS_INLINE = "flex gap-4 border-b border-medium".split(" ");
+const UNDERLINE_TAB_INLINE =
+  "-mb-px cursor-pointer border-b-2 pt-2 pb-1.5 text-sm focus-ring border-transparent text-subtle-2 hover:text-default data-[state=active]:border-gray-9 data-[state=active]:font-semibold data-[state=active]:text-default data-[disabled]:cursor-not-allowed data-[disabled]:text-disabled-dark".split(
+    " ",
+  );
+const FILE_TAB_SLOT_INLINE =
+  "flex flex-none items-center self-stretch border-r border-gray-3 px-1".split(
+    " ",
+  );
+const TAB_CONSUMER_OVERRIDES = [
+  ["underline-tabs", "gap-2"],
+  ["underline-tabs", "border-light"],
+  ["underline-tab", "pt-1"],
+  ["underline-tab", "text-base"],
+  ["file-tab-slot", "px-2"],
+] as const;
 const PANEL_CONSUMER_OVERRIDES = [
   ["popover-panel", "rounded-md"],
   ["listbox-option", "px-4"],
@@ -210,6 +229,10 @@ const CANDIDATES = [
   ...CALENDAR_WEEKDAY_INLINE,
   ...CALENDAR_DAY_INLINE,
   ...CALENDAR_RANGE_DAY_INLINE,
+  ...UNDERLINE_TABS_INLINE,
+  ...UNDERLINE_TAB_INLINE,
+  ...FILE_TAB_SLOT_INLINE,
+  ...TAB_CONSUMER_OVERRIDES.map(([, consumer]) => consumer),
   ...PANEL_CONSUMER_OVERRIDES.map(([, consumer]) => consumer),
   ...SHIPPED_CLASSES,
 ];
@@ -265,9 +288,10 @@ const isContrastGuard = (condition: AtRule): boolean =>
   condition.name === "supports" &&
   condition.params.includes("contrast-color(red)");
 
-// The guard stays nested under its rule or is hoisted around a copy of it, depending on the
-// optimizer, so the declarations are read from whichever node holds them.
-const contrastGuards = (root: Root, name: string): Container[] => {
+const nestedOrHoistedContrastGuards = (
+  root: Root,
+  name: string,
+): Container[] => {
   const guards: Container[] = [];
   root.walkAtRules("supports", (atRule) => {
     if (!isContrastGuard(atRule)) return;
@@ -843,6 +867,17 @@ const CALENDAR_DAY_STATES = [
   "hover",
 ];
 
+const TAB_ATTRIBUTE_PAIRS = [
+  ['[aria-selected="true"]', '[data-state="active"]'],
+  ['[aria-disabled="true"]', "[data-disabled]"],
+] as const;
+const tabAttributesAgree = (states: readonly string[]) =>
+  TAB_ATTRIBUTE_PAIRS.every(
+    ([aria, data]) => states.includes(aria) === states.includes(data),
+  );
+const TAB_STATES = [...TAB_ATTRIBUTE_PAIRS.flat(), "hover", "focus-visible"];
+const INLINE_TAB_CLASSES = ["underline-tabs", "underline-tab", "file-tab-slot"];
+
 const EVERY_STATE_TIMEOUT_MS = 30_000;
 
 const INLINE_EQUIVALENCES: InlineEquivalence[] = [
@@ -945,6 +980,30 @@ const INLINE_EQUIVALENCES: InlineEquivalence[] = [
     ],
     isReachable: endsAreSelected,
   },
+  {
+    name: "underline-tabs",
+    classes: ["underline-tabs"],
+    inline: UNDERLINE_TABS_INLINE,
+    fixedStates: [],
+    states: [],
+    isReachable: EVERY_COMBINATION,
+  },
+  {
+    name: "underline-tab",
+    classes: ["underline-tab"],
+    inline: UNDERLINE_TAB_INLINE,
+    fixedStates: [],
+    states: TAB_STATES,
+    isReachable: tabAttributesAgree,
+  },
+  {
+    name: "file-tab-slot",
+    classes: ["file-tab-slot"],
+    inline: FILE_TAB_SLOT_INLINE,
+    fixedStates: [],
+    states: [],
+    isReachable: EVERY_COMBINATION,
+  },
 ];
 
 describe("theme stylesheets compiled through Tailwind", () => {
@@ -1017,6 +1076,21 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
   });
 
+  it("reassigns every color token in .dark except the four pixel illustration colors", () => {
+    const reassigned = new Set(propertyNames(onlyRule(emitted, ".dark")));
+
+    const fixed = [...themeDefaults.keys()]
+      .filter((name) => name.startsWith("--color-") && !reassigned.has(name))
+      .sort();
+
+    expect(fixed).toStrictEqual([
+      "--color-pixel-blue",
+      "--color-pixel-green",
+      "--color-pixel-red",
+      "--color-pixel-teal",
+    ]);
+  });
+
   it("restores the light default through .light", () => {
     const rootDeclarations = declarationsOf(onlyRule(emitted, ":root"));
     const emittedTheme = themeRootDeclarations(emitted);
@@ -1072,20 +1146,29 @@ describe("theme stylesheets compiled through Tailwind", () => {
 
     it("holds every series color at 3:1 against its theme background", () => {
       const dark = darkTokens();
-      const darkBackground = dark.get("--dark-color-white")!;
+      const ratios = Object.fromEntries([
+        ...series(themeDefaults, "--color-").map(
+          ([index, value]) =>
+            [
+              `light series ${index}`,
+              contrastRatio(value, themeDefaults.get("--color-white")!),
+            ] as const,
+        ),
+        ...series(dark, "--dark-color-").map(
+          ([index, value]) =>
+            [
+              `dark series ${index}`,
+              contrastRatio(value, dark.get("--dark-color-white")!),
+            ] as const,
+        ),
+      ]);
 
-      for (const [index, value] of series(themeDefaults, "--color-")) {
-        expect(
-          contrastRatio(value, themeDefaults.get("--color-white")!),
-          `light series ${index}`,
-        ).toBeGreaterThanOrEqual(3);
-      }
-      for (const [index, value] of series(dark, "--dark-color-")) {
-        expect(
-          contrastRatio(value, darkBackground),
-          `dark series ${index}`,
-        ).toBeGreaterThanOrEqual(3);
-      }
+      expect(
+        Object.entries(ratios).filter(
+          ([, ratio]) => ratio < MIN_GLYPH_CONTRAST,
+        ),
+        JSON.stringify(ratios),
+      ).toStrictEqual([]);
     });
 
     it("holds the axis label at 4.5:1 against its theme background", () => {
@@ -1213,46 +1296,50 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect([...repeated]).toEqual([]);
   });
 
-  it("sets a thumb border's radius, width, style, and color from one utility name", () => {
-    const thumbBorder = (name: string, pseudo: string): Map<string, string> => {
-      const [nested] = rulesOf(
-        onlyRule(unoptimized, `.${name.replaceAll(/[[\]]/g, String.raw`\$&`)}`),
-        (rule) => rule.selector === `&${pseudo}`,
-      );
-      return declarationsOf(nested!);
-    };
-    const scrollbarThumb = "::-webkit-scrollbar-thumb";
-    expect(thumbBorder("scrollbar-thumb-border-sm", scrollbarThumb)).toEqual(
-      new Map([["border-radius", "var(--radius-sm)"]]),
+  const thumbBorder = (name: string, pseudo: string): Map<string, string> => {
+    const [nested] = rulesOf(
+      onlyRule(unoptimized, `.${name.replaceAll(/[[\]]/g, String.raw`\$&`)}`),
+      (rule) => rule.selector === `&${pseudo}`,
     );
-    expect(thumbBorder("scrollbar-thumb-border-0", scrollbarThumb)).toEqual(
-      new Map([["border-width", "calc(0 * 1px)"]]),
-    );
-    expect(thumbBorder("scrollbar-thumb-border-[3px]", scrollbarThumb)).toEqual(
-      new Map([["border-width", "3px"]]),
-    );
-    expect(
-      thumbBorder("scrollbar-thumb-border-gray-9", scrollbarThumb),
-    ).toEqual(new Map([["border-color", "var(--color-gray-9)"]]));
+    return declarationsOf(nested!);
+  };
 
-    for (const sliderThumb of [
-      "::-webkit-slider-thumb",
-      "::-moz-range-thumb",
-    ]) {
-      expect(thumbBorder("slider-thumb-border-2", sliderThumb)).toEqual(
-        new Map([["border-width", "calc(2 * 1px)"]]),
-      );
-      expect(thumbBorder("slider-thumb-border-dashed", sliderThumb)).toEqual(
-        new Map([["border-style", "dashed"]]),
-      );
-      expect(thumbBorder("slider-thumb-border-gray-9", sliderThumb)).toEqual(
-        new Map([["border-color", "var(--color-gray-9)"]]),
-      );
-      expect(thumbBorder("slider-thumb-border-sm", sliderThumb)).toEqual(
-        new Map([["border-radius", "var(--radius-sm)"]]),
-      );
-    }
+  it("sets a scrollbar thumb border's radius, width, and color from one utility name", () => {
+    const scrollbarThumb = "::-webkit-scrollbar-thumb";
+
+    const borders = [
+      "scrollbar-thumb-border-sm",
+      "scrollbar-thumb-border-0",
+      "scrollbar-thumb-border-[3px]",
+      "scrollbar-thumb-border-gray-9",
+    ].map((name) => Object.fromEntries(thumbBorder(name, scrollbarThumb)));
+
+    expect(borders).toStrictEqual([
+      { "border-radius": "var(--radius-sm)" },
+      { "border-width": "calc(0 * 1px)" },
+      { "border-width": "3px" },
+      { "border-color": "var(--color-gray-9)" },
+    ]);
   });
+
+  it.each(["::-webkit-slider-thumb", "::-moz-range-thumb"])(
+    "sets the %s border's width, style, color, and radius from one utility name",
+    (sliderThumb) => {
+      const borders = [
+        "slider-thumb-border-2",
+        "slider-thumb-border-dashed",
+        "slider-thumb-border-gray-9",
+        "slider-thumb-border-sm",
+      ].map((name) => Object.fromEntries(thumbBorder(name, sliderThumb)));
+
+      expect(borders).toStrictEqual([
+        { "border-width": "calc(2 * 1px)" },
+        { "border-style": "dashed" },
+        { "border-color": "var(--color-gray-9)" },
+        { "border-radius": "var(--radius-sm)" },
+      ]);
+    },
+  );
 
   it("emits no rule for an unknown thumb border value", () => {
     expect(
@@ -1294,19 +1381,21 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(paddingIndex).toBeGreaterThan(buttonIndex);
   });
 
-  it.each(["file-tabs", "file-tab", ...PANEL_CLASSES])(
+  it.each([...INLINE_TAB_CLASSES, "file-tabs", "file-tab", ...PANEL_CLASSES])(
     "emits .%s with no !important",
     (name) => {
       const rules = rulesOf(emitted, (rule) => startsWithClass(rule, name));
-      expect(rules.length).toBeGreaterThan(0);
+      const important: string[] = [];
       for (const rule of rules) {
         rule.walkDecls((declaration) => {
-          expect(
-            declaration.important,
-            `${rule.selector} ${declaration.prop}`,
-          ).toBeFalsy();
+          if (declaration.important) {
+            important.push(`${rule.selector} ${declaration.prop}`);
+          }
         });
       }
+
+      expect(rules.length).toBeGreaterThan(0);
+      expect(important).toStrictEqual([]);
     },
   );
 
@@ -1464,7 +1553,124 @@ describe("theme stylesheets compiled through Tailwind", () => {
     ]);
   });
 
-  it.each(PANEL_CONSUMER_OVERRIDES)(
+  it("draws a 1px gray-3 right border on a .file-tab", () => {
+    const declarations = cascadedDeclarations(
+      cascade,
+      { classes: ["file-tab"], states: [], parent: element(["file-tabs"]) },
+      true,
+    );
+
+    expect([
+      declarations.get("border-right-width"),
+      declarations.get("border-right-color"),
+    ]).toStrictEqual(["1px", "var(--color-gray-3)"]);
+  });
+
+  it.each(["light", "dark"] as const)(
+    "draws the same separator on a .file-tab-slot as on a .file-tab in the %s theme",
+    (theme) => {
+      const strip = element(["file-tabs"]);
+      const properties = themeProperties(emitted, theme);
+      const separator = (classes: string[]) => {
+        const declarations = cascadedDeclarations(
+          cascade,
+          { classes, states: [], parent: strip },
+          true,
+        );
+        const color =
+          declarations.get("border-right-color") ??
+          declarations.get("border-color") ??
+          "";
+        return [
+          declarations.get("border-right-width"),
+          declarations.get("border-right-style"),
+          resolveCustomProperties(color, properties),
+        ];
+      };
+
+      expect(separator(["file-tab-slot"])).toStrictEqual(
+        separator(["file-tab"]),
+      );
+    },
+  );
+
+  it.each(
+    (["light", "dark"] as const).flatMap((theme) => [
+      [theme, "rest", []],
+      [theme, "hovered", ["hover"]],
+      [theme, "selected", ['[aria-selected="true"]']],
+    ]) as [ThemeName, string, string[]][],
+  )(
+    "holds the %s theme .underline-tab %s text at 4.5:1 on a bg-white surface",
+    (theme, _state, states) => {
+      const context: PaintContext = {
+        cascade: pointerCascade,
+        theme: themeProperties(emitted, theme),
+        hasContrastColor: true,
+      };
+      const surface = element(["bg-white", "text-default"]);
+      const tab: StyledElement = {
+        classes: ["underline-tab"],
+        states,
+        parent: element(["underline-tabs"], surface),
+      };
+
+      expect(
+        contrastRatio(
+          paintedColor(context, tab, "color"),
+          fillBehind(context, tab),
+        ),
+      ).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST);
+    },
+  );
+
+  it.each(
+    INLINE_EQUIVALENCES.filter(({ name }) =>
+      INLINE_TAB_CLASSES.includes(name),
+    ).flatMap((equivalence) =>
+      (["light", "dark"] as const).flatMap((theme) =>
+        (["hover-capable", "touch"] as const).map(
+          (pointer) => [equivalence.name, theme, pointer, equivalence] as const,
+        ),
+      ),
+    ),
+  )(
+    "declares on .%s exactly the values the inline list declared, in every state, in the %s theme, on a %s device",
+    (_name, theme, pointer, equivalence) => {
+      const parent = element(["text-default"]);
+      const rules = rulesNaming(
+        pointer === "hover-capable" ? pointerCascade : cascade,
+        [...equivalence.classes, ...equivalence.inline],
+      );
+      const properties = new Map([
+        ...registeredInitialValues(emitted),
+        ...themeProperties(emitted, theme),
+      ]);
+      const resolved = (classes: readonly string[], states: string[]) =>
+        Object.fromEntries(
+          [...cascadedDeclarations(rules, { classes, states, parent }, true)]
+            .map(([property, value]) => [
+              property,
+              resolveCustomProperties(value, properties),
+            ])
+            .sort(([first], [second]) => first!.localeCompare(second!)),
+        );
+      const mismatches = subsetsOf(equivalence.states)
+        .filter(equivalence.isReachable)
+        .flatMap((states) => {
+          const declared = resolved(equivalence.classes, states);
+          const inline = resolved(equivalence.inline, states);
+          return JSON.stringify(declared) === JSON.stringify(inline)
+            ? []
+            : [{ states, declared, inline }];
+        });
+
+      expect(mismatches).toStrictEqual([]);
+    },
+    EVERY_STATE_TIMEOUT_MS,
+  );
+
+  it.each([...TAB_CONSUMER_OVERRIDES, ...PANEL_CONSUMER_OVERRIDES])(
     "emits .%s before .%s so a consumer utility wins",
     (name, consumer) => {
       const classIndex = firstRuleIndex(emitted, name);
@@ -1588,7 +1794,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
   it.each(BUTTON_COLORS)(
     "paints .%s text with contrast-color behind an @supports guard",
     (name) => {
-      const guards = contrastGuards(emitted, name);
+      const guards = nestedOrHoistedContrastGuards(emitted, name);
       expect(guards).toHaveLength(1);
       expect(declarationsOf(guards[0]!).get("color")).toBe(
         `contrast-color(${solidFillOf(name)})`,
@@ -1796,9 +2002,12 @@ describe("theme stylesheets compiled through Tailwind", () => {
     },
   );
 
-  it.each(["light", "dark"] as const)(
-    "paints an info banner glyph in the info color inside a warning banner in the %s theme",
-    (theme) => {
+  it.each([
+    ["light", "#2e67d3"],
+    ["dark", "#6f9ee8"],
+  ] as const)(
+    "paints an info banner glyph in the %s theme info-dark %s inside a warning banner",
+    (theme, infoDark) => {
       const outer = element(["banner", "banner-warning"]);
       const chip = element(
         ["banner-chip"],
@@ -1809,14 +2018,8 @@ describe("theme stylesheets compiled through Tailwind", () => {
         theme: themeProperties(emitted, theme),
         hasContrastColor: true,
       };
-      const alone = element(
-        ["banner-chip"],
-        element(["banner", "banner-info"]),
-      );
 
-      expect(paintedColor(context, chip, "color")).toBe(
-        paintedColor(context, alone, "color"),
-      );
+      expect(paintedColor(context, chip, "color")).toBe(infoDark);
     },
   );
 
@@ -2128,7 +2331,10 @@ describe("theme stylesheets compiled through Tailwind", () => {
     );
     expect(declarations.get("--banner-light")).toBe("var(--color-info-light)");
     expect(declarations.get("--banner-dark")).toBe("var(--color-info-dark)");
-    expect(declared(emitted, ".banner").has("--banner-light")).toBe(false);
+    expect(
+      declared(emitted, ".banner").get("--banner-light"),
+      "an unguarded default on .banner would beat a variant emitted before it",
+    ).toBeUndefined();
   });
 
   it("drops the side and top borders on .banner-block with a rule that outranks .banner", () => {
@@ -2136,7 +2342,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     const block = declared(emitted, ".banner-block.banner");
     expect(block.get("border-inline-width")).toBe("0");
     expect(block.get("border-top-width")).toBe("0");
-    expect(block.has("border-bottom-width")).toBe(false);
+    expect(block.get("border-bottom-width")).toBeUndefined();
   });
 
   it("sets .button-compact and .input-compact to text-xs with tighter padding under a rule that outranks the base class", () => {
@@ -2318,18 +2524,20 @@ describe("theme stylesheets compiled through Tailwind", () => {
   });
 
   it("assigns --status-dot-color per state modifier and emits no neutral modifier", () => {
-    const states = [
+    const assigned = ["info", "warning", "success", "danger", "disabled"].map(
+      (state) => [
+        state,
+        declared(emitted, `.status-dot-${state}`).get("--status-dot-color"),
+      ],
+    );
+
+    expect(assigned).toStrictEqual([
       ["info", "var(--color-info-dark)"],
       ["warning", "var(--color-warning-bright)"],
       ["success", "var(--color-success-bright)"],
       ["danger", "var(--color-danger-dark)"],
       ["disabled", "var(--color-disabled-dark)"],
-    ] as const;
-    for (const [state, token] of states) {
-      expect(
-        declared(emitted, `.status-dot-${state}`).get("--status-dot-color"),
-      ).toBe(token);
-    }
+    ]);
     expect(
       rulesOf(emitted, (rule) => startsWithClass(rule, "status-dot-neutral")),
     ).toHaveLength(0);
@@ -2338,7 +2546,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
   it("clears only the fill on .status-dot-hollow", () => {
     const hollow = declared(emitted, ".status-dot-hollow");
     expect(hollow.get("--status-dot-fill")).toBe("transparent");
-    expect(hollow.has("--status-dot-color")).toBe(false);
+    expect(hollow.get("--status-dot-color")).toBeUndefined();
   });
 
   it("clears the fill and ring of a .status-dot that holds a direct .progress-dots child and colors the spinner", () => {
@@ -2374,7 +2582,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(fill.get("background-color")).toBe(
       "var(--progress-fill, var(--color-info-dark))",
     );
-    expect(fill.has("animation")).toBe(false);
+    expect(fill.get("animation")).toBeUndefined();
   });
 
   it.each([

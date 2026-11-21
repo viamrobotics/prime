@@ -3,12 +3,16 @@
 
 	import type { FieldState } from '../../Field/state.ts';
 	import type { SelectOption } from '../../Select/option.ts';
+	import type { ComboboxFilter } from '../useCombobox.svelte.ts';
 
 	import { Input } from '../../Input/input.ts';
 	import { Combobox } from '../combobox.ts';
 
 	const {
 		disabled,
+		required,
+		allowDeselect,
+		filter,
 		name,
 		state: fieldState,
 		initial = 'sm',
@@ -19,6 +23,9 @@
 		]
 	}: {
 		disabled?: boolean;
+		required?: boolean;
+		allowDeselect?: boolean;
+		filter?: ComboboxFilter;
 		name?: string;
 		state?: FieldState;
 		initial?: string;
@@ -29,7 +36,7 @@
 	let query = $state('');
 </script>
 
-<Combobox {items} {disabled} {name} bind:value bind:query>
+<Combobox {items} {disabled} {required} {allowDeselect} {filter} {name} bind:value bind:query>
 	<Input.Group data-testid="group">
 		<Combobox.Input aria-label="Size" state={fieldState} />
 		<Combobox.Trigger />

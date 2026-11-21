@@ -1,13 +1,15 @@
 <!--
 @component
-The floating panel of a [`DateRangePicker`](./DateRangePicker.svelte), portaled to the body.
-Render a [`DateRangePicker.Calendar`](./DateRangePickerCalendar.svelte) inside it.
+The floating panel of a [`DateRangePicker`](./DateRangePicker.svelte), portaled to the body
+unless `portal` says otherwise. Render a
+[`DateRangePicker.Calendar`](./DateRangePickerCalendar.svelte) inside it.
 -->
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { DateRangePicker, Portal } from 'bits-ui';
 
+	import { focusDayWithoutScrolling } from '../DatePicker/focus-day-without-scrolling.ts';
 	import { portalProps, type PortalTarget } from '../portal.ts';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
@@ -48,15 +50,6 @@ Render a [`DateRangePicker.Calendar`](./DateRangePickerCalendar.svelte) inside i
 	}: Props = $props();
 
 	const accessibleName = $derived(label ?? (labelledBy ? undefined : 'Choose a date range'));
-
-	// bits-ui focuses the day with a bare `focus()` before the panel is positioned, which scrolls the page.
-	const focusDayWithoutScrolling = (event: Event) => {
-		const focusedDay = document.querySelector<HTMLElement>('[data-bits-day][data-focused]');
-		if (!focusedDay) return;
-
-		event.preventDefault();
-		focusedDay.focus({ preventScroll: true });
-	};
 </script>
 
 <Portal {...portalProps(portal)}>
@@ -66,9 +59,9 @@ Render a [`DateRangePicker.Calendar`](./DateRangePickerCalendar.svelte) inside i
 		{sideOffset}
 		{alignOffset}
 		role="dialog"
+		onOpenAutoFocus={focusDayWithoutScrolling}
 		aria-label={accessibleName}
 		aria-labelledby={labelledBy}
-		onOpenAutoFocus={focusDayWithoutScrolling}
 		class={['z-popover popover-panel p-3', extraClasses]}
 		{...restProps}
 	>

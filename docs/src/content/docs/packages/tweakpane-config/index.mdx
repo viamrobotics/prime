@@ -130,7 +130,7 @@ query.addEventListener("change", apply);
 
   let mode = $state<"light" | "dark">("light");
 
-  // Seed from the OS preference on first client load; a toggle can take over after.
+  // Seed from the OS preference on first client load. A toggle can take over after.
   onMount(() => {
     mode = window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
@@ -153,7 +153,7 @@ The theme references `Public Sans Variable`. Load it via [`@viamrobotics/tailwin
 
 ## Blades
 
-Every island below is a live `svelte-tweakpane-ui` component themed with `primeTheme` and `primeThemeDark`. Switch the site theme to see both. Each island sets the global default theme in an `$effect`, which runs only on the client because Tweakpane reads `window`. In an app you set the global default theme once, near the root.
+Every island below is a live `svelte-tweakpane-ui` component themed with `primeTheme` and `primeThemeDark`. Switch the site theme to see both. Each island passes the theme to its components through the `theme` prop, and renders on the client only because Tweakpane reads `window`. In an app you set the global default theme once, near the root.
 
 ### Slider
 

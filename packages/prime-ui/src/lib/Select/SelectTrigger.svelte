@@ -55,10 +55,6 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
 </script>
 
-{#snippet chevron()}
-	<Icon icon={mdiChevronDown} size="sm" class="shrink-0 text-subtle-2" />
-{/snippet}
-
 <Select.Trigger
 	id={id ?? field?.controlId}
 	aria-describedby={describedBy ?? field?.describedBy}
@@ -71,6 +67,9 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	{...restProps}
 >
 	{@render children?.()}
-	{@const suffix = indicator ?? chevron}
-	{@render suffix()}
+	{#if indicator}
+		{@render indicator()}
+	{:else}
+		<Icon icon={mdiChevronDown} size="sm" class="shrink-0 text-subtle-2" />
+	{/if}
 </Select.Trigger>

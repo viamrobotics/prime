@@ -23,7 +23,7 @@
       </div>
 
       <div class="flex justify-end gap-2">
-        <Dialog.Close class="button" aria-label="Cancel">Cancel</Dialog.Close>
+        <Dialog.Close class="button">Cancel</Dialog.Close>
         <button class="button" type="button" onclick={() => (open = false)}>Save</button>
       </div>
     </Dialog.Content>

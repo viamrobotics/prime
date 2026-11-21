@@ -30,7 +30,7 @@ import remoteSource from "./Remote.svelte?raw";
 - One `value`, bindable, and a bindable `query` for the text typed since the list opened.
 - `items` is the single source of truth for the options. The input shows the selected label, and `Combobox.Items` renders the ones the `filter` keeps.
 - `Combobox.Input` takes `state` from an enclosing [`Field`](../field/), or directly. Both it and `Combobox.Trigger` sit in an [`Input.Group`](../input/).
-- The list floats in a portal, positioned to the input.
+- The list floats in a portal, lined up with the `Input.Group` around the input.
 - To pick from a fixed list without typing, use [`Select`](../select/).
 
 ## Anatomy
@@ -100,7 +100,23 @@ For a long or remote list, fetch in the consumer. Read the bound `query`, load t
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `Combobox` and `Combobox.Items` render no element, so they take no `class`. Focus shows as the same 2px ring every prime control uses. `error` sets `aria-invalid="true"` and the error border, and `warn` sets the warning border, both from the `input` [component class](../../tailwind-config/component-classes/). `Combobox.Content` wears `z-popover`. See [z layers](../../tailwind-config/component-classes/#z-layers).
+Every part that renders an element takes `class` on that element. `Combobox` and `Combobox.Items` take no `class`. `Combobox.Items` renders no element of its own, and `Combobox` renders a visually hidden status region, plus a hidden form input when `name` is set. `Combobox` takes no event handlers either. `onfocus`, `onblur`, `onkeydown`, and the rest go on `Combobox.Input`, the real `<input>`. Focus shows as the same 2px ring every prime control uses. `error` sets `aria-invalid="true"` and the error border, and `warn` sets the warning border, both from the `input` [component class](../../tailwind-config/component-classes/). The panel width follows the input's frame, and its max height follows the space available. bits-ui sets the data attributes in the table below. `Combobox.Content` wears `z-popover`, described under [z layers](../../tailwind-config/component-classes/#z-layers).
+
+| Part      | Attribute          | Value                                    |
+| --------- | ------------------ | ---------------------------------------- |
+| `Input`   | `data-state`       | `open` or `closed`                       |
+| `Input`   | `data-disabled`    | present when disabled                    |
+| `Input`   | `aria-invalid`     | `true` when `state` is `error`           |
+| `Input`   | `data-field-state` | `info`, `warn`, or `error`, set by prime |
+| `Trigger` | `data-state`       | `open` or `closed`                       |
+| `Trigger` | `data-disabled`    | present when disabled                    |
+| `Content` | `data-state`       | `open` or `closed`                       |
+| `Content` | `data-side`        | the resolved side of the input's frame   |
+| `Content` | `data-align`       | the resolved alignment                   |
+| `Item`    | `data-selected`    | present when selected                    |
+| `Item`    | `data-highlighted` | present under the pointer or keys        |
+| `Item`    | `data-disabled`    | present when disabled                    |
+| `Item`    | `data-value`       | the item's `value`                       |
 
 ## Keyboard
 
@@ -109,7 +125,7 @@ With focus on the input:
 <KeyboardTable
   bindings={[
     { keys: "ArrowDown / ArrowUp", action: "Opens the list and highlights an item." },
-    { text: "Printable characters", action: "Opens the list and filters it to matches." },
+    { text: "Printable characters", action: "Opens the list, filters it to matches, and highlights the first." },
   ]}
 />
 
@@ -118,7 +134,10 @@ With the list open:
 <KeyboardTable
   bindings={[
     { keys: "ArrowDown / ArrowUp", action: "Highlights the next or previous item." },
-    { keys: "Enter", action: "Selects the highlighted item and closes." },
+    { keys: "PageDown / PageUp", action: "Highlights the item ten places down or up, stopping at the first or last." },
+    { keys: "Home / End", action: "Moves the text cursor, as in any text input." },
+    { keys: "Enter", action: "Selects the highlighted item and closes. With `allowDeselect`, Enter on the selected item clears the value instead." },
+    { keys: "Alt + ArrowUp", action: "Closes without changing the value." },
     { keys: "Escape", action: "Closes without changing the value." },
     { keys: "Tab", action: "Closes and moves focus on." },
   ]}

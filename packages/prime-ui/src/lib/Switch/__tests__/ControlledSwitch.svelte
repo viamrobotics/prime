@@ -2,7 +2,6 @@
 	import Switch from '../Switch.svelte';
 
 	interface Props {
-		/** When false, the setter rejects every change (controlled veto). */
 		accept?: boolean;
 	}
 

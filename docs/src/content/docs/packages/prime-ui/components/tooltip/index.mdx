@@ -85,7 +85,7 @@ An [`Icon`](../icon/) is `aria-hidden` and not focusable, so a bare icon inside 
 
 ## Styling
 
-`Tooltip` renders no element, so it takes no `class`. `Tooltip.Trigger` and `Tooltip.Content` take `class` on the element they render. The label has a dark background, white `text-xs` text, `max-w-xs`, and square corners, and it wears `z-tooltip`, the top layer; see [z layers](../../tailwind-config/component-classes/#z-layers).
+`Tooltip` renders no element, so it takes no `class`. `Tooltip.Trigger` and `Tooltip.Content` take `class` on the element they render. The label has a dark background, white `text-xs` text, `max-w-xs`, and square corners, and it wears `z-tooltip`, the top layer. See [z layers](../../tailwind-config/component-classes/#z-layers).
 
 The trigger span is inline, so its box is a line box and not the control's box. Pass `class="inline-flex"` to make the span fit an inline-flex control such as an `icon-button`, which centers the label on the control. bits-ui sets the data attributes in the table below.
 

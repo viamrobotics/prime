@@ -4,9 +4,12 @@ import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
 import '../../__tests__/tailwind.css';
+import Toast from '../Toast.svelte';
 import ToastHost from './ToastHost.svelte';
 
 const HOLD_OPEN = 60_000;
+const SHORT_DURATION = 600;
+const PAST_SHORT_DURATION = 1200;
 const REMOVAL_TIMEOUT = 3000;
 const TOAST_WIDTH_PX = 320;
 
@@ -91,12 +94,12 @@ describe('Toast', () => {
 	});
 
 	it('holds its timer while the region is hovered and releases it on leave', async () => {
-		const { container } = render(ToastHost, { duration: 600 });
+		const { container } = render(ToastHost, { duration: SHORT_DURATION });
 		await userEvent.click(trigger(container, 'info'));
 		const item = await waitForItem();
 
 		await userEvent.hover(item);
-		await new Promise((resolve) => setTimeout(resolve, 1200));
+		await new Promise((resolve) => setTimeout(resolve, PAST_SHORT_DURATION));
 
 		expect(items()).toHaveLength(1);
 		expect(item.getAttribute('data-state')).toBe('open');
@@ -104,6 +107,50 @@ describe('Toast', () => {
 		await userEvent.unhover(item);
 
 		await waitForNoItems();
+	});
+
+	it('holds its timer while a toast has focus and releases it on blur', async () => {
+		const { container } = render(ToastHost, { duration: SHORT_DURATION });
+		await userEvent.click(trigger(container, 'info'));
+		const item = await waitForItem();
+
+		item.focus();
+		await new Promise((resolve) => setTimeout(resolve, PAST_SHORT_DURATION));
+
+		expect(item.getAttribute('data-state'), 'focused past its duration').toBe('open');
+
+		item.blur();
+
+		await waitForNoItems();
+	});
+
+	it('wears the focus ring on each toast', async () => {
+		const { container } = render(ToastHost, { duration: HOLD_OPEN });
+
+		await userEvent.click(trigger(container, 'info'));
+
+		const item = await waitForItem();
+		item.focus();
+		await userEvent.keyboard('{Shift}');
+
+		expect(document.activeElement).toBe(item);
+		const style = getComputedStyle(item);
+		expect(style.outlineStyle, 'the focused toast draws an outline').toBe('solid');
+		expect(style.outlineWidth).toBe('2px');
+	});
+
+	it('keeps the fields an update leaves out', async () => {
+		const { container } = render(ToastHost, { duration: HOLD_OPEN });
+
+		await userEvent.click(trigger(container, 'update'));
+
+		const item = await waitForItem();
+		expect(item.querySelector('[data-part="title"]')?.textContent).toBe('Uploaded');
+		expect(item.querySelector('[data-part="description"]')?.textContent?.trim()).toBe('report.csv');
+	});
+
+	it('throws when rendered outside provideToast', () => {
+		expect(() => render(Toast)).toThrow('useToast() needs a provideToast() above it');
 	});
 
 	it('shows the description', async () => {

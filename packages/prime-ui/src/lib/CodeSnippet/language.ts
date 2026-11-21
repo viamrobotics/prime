@@ -10,4 +10,5 @@ export const codeSnippetLanguages = [
 	'typescript'
 ] as const;
 
+/** A grammar name `CodeSnippet` accepts for `language`. */
 export type CodeSnippetLanguage = (typeof codeSnippetLanguages)[number];

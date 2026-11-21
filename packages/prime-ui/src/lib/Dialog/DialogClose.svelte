@@ -1,8 +1,8 @@
 <!--
 @component
 A button that closes its [`Dialog`](./Dialog.svelte). It renders a close icon by default, labeled
-`Close`, and wears `icon-button` only then. Pass children to replace the icon, and `aria-label` to
-replace the label.
+`Close`, and wears `icon-button` only then. Pass children to replace the icon, and their text names
+the button. Pass `aria-label` to replace either name.
 -->
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
@@ -17,17 +17,14 @@ replace the label.
 		id?: string;
 	}
 
-	const {
-		class: extraClasses,
-		'aria-label': ariaLabel = 'Close',
-		children,
-		...restProps
-	}: Props = $props();
+	const { class: extraClasses, 'aria-label': ariaLabel, children, ...restProps }: Props = $props();
+
+	const ICON_LABEL = 'Close';
 </script>
 
 <Dialog.Close
 	class={[!children && 'icon-button', extraClasses]}
-	aria-label={ariaLabel}
+	aria-label={ariaLabel ?? (children ? undefined : ICON_LABEL)}
 	{...restProps}
 >
 	{#if children}

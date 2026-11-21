@@ -10,7 +10,7 @@ it takes `disabled` and `required` from there.
 The value is a `DateRange`, a `start` and an `end` that are each a `DateValue` from
 `@internationalized/date`. It is `undefined` until a date is chosen. With one end chosen, the
 other is `undefined`, so a finished range is one with both set. Picking the end before the start
-in the calendar swaps them, so `start` is never after `end`.
+in the calendar swaps them.
 
 Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-range-picker).
 
@@ -33,6 +33,7 @@ Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-ra
 
 	import type { DateRange } from './date-range.ts';
 
+	import { refusableValue } from '../DatePicker/refusable-value.svelte.ts';
 	import { useField } from '../Field/useField.svelte.ts';
 	import DateRangePickerFrameProps from './DateRangePickerFrameProps.svelte';
 	import { provideDateRangePicker } from './useDateRangePicker.svelte.ts';
@@ -97,27 +98,19 @@ Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-ra
 
 	const field = useField();
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
+	const isRequired = $derived(required ?? field?.required ?? false);
 
-	let calendarLabel = $state<string>();
-	let refusedWrites = $state(0);
-
-	// A fresh object after a refused write makes bits-ui re-read the range, so its segments drop the refused dates.
-	const headlessRange = $derived.by((): DateRange => {
-		void refusedWrites;
-		return { start: value?.start, end: value?.end };
+	// bits-ui mutates the range it holds when an end is cleared, so it always gets its own object.
+	const headlessRange = refusableValue({
+		owner: { get: () => value, set: (next) => (value = next) },
+		copy: (range): DateRange => ({ start: range?.start, end: range?.end }),
+		holds: (held, next) => held?.start === next?.start && held?.end === next?.end
 	});
 
-	const holdsRange = (
-		range: DateRange | undefined,
-		start: DateValue | undefined,
-		end: DateValue | undefined
-	) => range?.start === start && range?.end === end;
+	const writeRange = (start: DateValue | undefined, end: DateValue | undefined) =>
+		headlessRange.write(start === undefined && end === undefined ? undefined : { start, end });
 
-	const writeRange = (start: DateValue | undefined, end: DateValue | undefined) => {
-		if (holdsRange(value, start, end)) return;
-		value = start === undefined && end === undefined ? undefined : { start, end };
-		if (!holdsRange(value, start, end)) refusedWrites += 1;
-	};
+	let calendarLabel = $state<string>();
 
 	const interval = $derived(value?.start && value.end ? `${value.start}/${value.end}` : '');
 
@@ -131,7 +124,7 @@ Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-ra
 </script>
 
 <DateRangePicker.Root
-	bind:value={() => headlessRange, (next) => writeRange(next?.start, next?.end)}
+	bind:value={() => headlessRange.current, (next) => writeRange(next?.start, next?.end)}
 	bind:open={() => open ?? false, (next) => (open = next)}
 	onStartValueChange={(start) => writeRange(start, value?.end)}
 	onEndValueChange={(end) => writeRange(value?.start, end)}
@@ -141,7 +134,7 @@ Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-ra
 	{locale}
 	{readonly}
 	disabled={isDisabled}
-	required={required ?? field?.required ?? false}
+	required={isRequired}
 	calendarLabel={calendarLabel ?? 'Choose a date range'}
 >
 	{#snippet child({ props })}

@@ -24,11 +24,12 @@ export interface TabsDragContext {
 export const provideTabsDrag = (reorder: TabsReorderContext): TabsDragContext => {
 	let lifted = $state<string>();
 	let liftedLabel = $state('');
-	let ghostPoint = $state<DragPoint>({ x: 0, y: 0 });
-	let landing = $state(0);
+	let ghostPoint = $state.raw<DragPoint>({ x: 0, y: 0 });
+	let landingIndex = $state(0);
 
 	const otherValues = $derived(reorder.order.filter((value) => value !== lifted));
-	const slot = $derived(Math.min(landing, otherValues.length));
+	// A tab removed mid-drag can leave the pointer's index past the end of the strip.
+	const slot = $derived(Math.min(landingIndex, otherValues.length));
 
 	const isBefore = (value: string, x: number) => {
 		const rect = reorder.elementOf(value)?.getBoundingClientRect();
@@ -56,7 +57,7 @@ export const provideTabsDrag = (reorder: TabsReorderContext): TabsDragContext =>
 		isChipBefore: (value) => lifted !== undefined && otherValues[slot] === value,
 		lift: (value, label, point) => {
 			if (lifted !== undefined || !reorder.order.includes(value)) return false;
-			landing = reorder.order.indexOf(value);
+			landingIndex = reorder.order.indexOf(value);
 			liftedLabel = label;
 			ghostPoint = point;
 			lifted = value;
@@ -65,7 +66,7 @@ export const provideTabsDrag = (reorder: TabsReorderContext): TabsDragContext =>
 		follow: (point) => {
 			if (lifted === undefined) return;
 			ghostPoint = point;
-			landing = otherValues.filter((value) => isBefore(value, point.x)).length;
+			landingIndex = otherValues.filter((value) => isBefore(value, point.x)).length;
 		},
 		drop: () => {
 			const value = lifted;

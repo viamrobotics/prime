@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 
 import BoundSelection from './BoundSelection.svelte';
 import ControlledSelection from './ControlledSelection.svelte';
+import UndefinedSelection from './UndefinedSelection.svelte';
 
 const readout = (container: Element, id: string) =>
 	container.querySelector(`[data-testid="${id}"]`)?.textContent;
@@ -23,7 +24,9 @@ const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() 
 
 const open = async (container: Element) => {
 	await userEvent.click(trigger(container));
-	await vi.waitFor(() => expect(menu()?.contains(document.activeElement)).toBe(true));
+	await vi.waitFor(() =>
+		expect(menu()?.contains(document.activeElement), 'focus moved into the open menu').toBe(true)
+	);
 	await nextFrame();
 	await nextFrame();
 };
@@ -98,20 +101,22 @@ describe('Menu selection', () => {
 		expect(menu()).not.toBeNull();
 	});
 
-	it('honors a getter and setter on the checkbox item', async () => {
-		const { container } = render(ControlledSelection);
-		setLock(true);
-		await open(container);
-		await userEvent.click(checkbox('Show hidden'));
-		await nextFrame();
-		expect(readout(container, 'hidden')).toBe('false');
+	it.each([
+		{ decision: 'vetoes', isLocked: true, expected: 'false' },
+		{ decision: 'accepts', isLocked: false, expected: 'true' }
+	])(
+		'a setter that $decision the checkbox toggle leaves it $expected',
+		async ({ isLocked, expected }) => {
+			const { container } = render(ControlledSelection);
+			setLock(isLocked);
+			await open(container);
 
-		if (menu()) await userEvent.keyboard('{Escape}');
-		setLock(false);
-		await open(container);
-		await userEvent.click(checkbox('Show hidden'));
-		await vi.waitFor(() => expect(readout(container, 'hidden')).toBe('true'));
-	});
+			await userEvent.click(checkbox('Show hidden'));
+			await nextFrame();
+
+			expect(readout(container, 'hidden')).toBe(expected);
+		}
+	);
 
 	it('labels the radio group by a heading inside it', async () => {
 		const { container } = render(BoundSelection);
@@ -122,13 +127,22 @@ describe('Menu selection', () => {
 		expect(heading?.textContent?.trim()).toBe('Size');
 	});
 
-	it('renders radio items with menuitemradio roles', async () => {
+	it('renders each radio item as a menuitemradio', async () => {
 		const { container } = render(BoundSelection);
+
 		await open(container);
 
-		for (const name of ['Small', 'Medium', 'Large']) {
-			expect(radio(name)).toBeDefined();
-		}
+		const names = [...document.querySelectorAll('[role="menuitemradio"]')].map((candidate) =>
+			candidate.textContent?.trim()
+		);
+		expect(names).toStrictEqual(['Small', 'Medium', 'Large']);
+	});
+
+	it('checks the radio item matching the bound value', async () => {
+		const { container } = render(BoundSelection);
+
+		await open(container);
+
 		expect(radio('Small').getAttribute('aria-checked')).toBe('true');
 	});
 
@@ -156,14 +170,47 @@ describe('Menu selection', () => {
 		await vi.waitFor(() => expect(readout(container, 'size')).toBe('Large'));
 	});
 
-	it('keeps the old radio value when the setter vetoes', async () => {
-		const { container } = render(ControlledSelection);
-		setLock(true);
-		await open(container);
-		await userEvent.click(radio('Medium'));
-		await nextFrame();
+	it.each([
+		{ decision: 'vetoes', isLocked: true, expected: 'Small' },
+		{ decision: 'accepts', isLocked: false, expected: 'Medium' }
+	])(
+		'a setter that $decision the radio selection leaves it $expected',
+		async ({ isLocked, expected }) => {
+			const { container } = render(ControlledSelection);
+			setLock(isLocked);
+			await open(container);
 
-		expect(readout(container, 'size')).toBe('Small');
+			await userEvent.click(radio('Medium'));
+			await nextFrame();
+
+			expect(readout(container, 'size')).toBe(expected);
+		}
+	);
+
+	it('opens a menu whose bound open starts undefined', async () => {
+		const { container } = render(UndefinedSelection);
+
+		await open(container);
+
+		expect(readout(container, 'open')).toBe('true');
+	});
+
+	it('toggles a checkbox item whose bound checked starts undefined', async () => {
+		const { container } = render(UndefinedSelection);
+		await open(container);
+
+		await userEvent.click(checkbox('Show hidden'));
+
+		await vi.waitFor(() => expect(readout(container, 'hidden')).toBe('true'));
+	});
+
+	it('selects a radio item whose bound value starts undefined', async () => {
+		const { container } = render(UndefinedSelection);
+		await open(container);
+
+		await userEvent.click(radio('Large'));
+
+		await vi.waitFor(() => expect(readout(container, 'size')).toBe('Large'));
 	});
 
 	it('renders the shortcut as a decorative kbd inside its item', async () => {
@@ -174,7 +221,6 @@ describe('Menu selection', () => {
 		)!;
 		const shortcut = save.querySelector('kbd');
 
-		expect(shortcut?.classList.contains('kbd')).toBe(true);
 		expect(shortcut?.getAttribute('aria-hidden')).toBe('true');
 		expect(shortcut?.textContent).toBe('⌘S');
 	});

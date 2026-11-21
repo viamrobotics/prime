@@ -63,29 +63,29 @@ interface InternalToastContext extends ToastContext {
 	store: toast.Store;
 }
 
-/** zag names the danger tone `error`. */
-export const toastTypeOf = (variant: ToastVariant): toast.Type =>
-	variant === 'danger' ? 'error' : variant;
-
-/** The inverse of `toastTypeOf`, for an item reading its tone back off the machine. */
-export const toastVariantOf = (type: toast.Type): ToastVariant => {
-	if (type === 'error') return 'danger';
-	if (type === 'success') return 'success';
-	if (type === 'warning') return 'warning';
-	return 'info';
+export const TOAST_TYPE_BY_VARIANT: Record<ToastVariant, toast.Type> = {
+	info: 'info',
+	success: 'success',
+	warning: 'warning',
+	danger: 'error'
 };
+
+const TOAST_VARIANTS = Object.keys(TOAST_TYPE_BY_VARIANT) as ToastVariant[];
+
+export const toastVariantOf = (type: toast.Type): ToastVariant =>
+	TOAST_VARIANTS.find((variant) => TOAST_TYPE_BY_VARIANT[variant] === type) ?? 'info';
 
 const definedEntries = <T extends object>(object: T): Partial<T> =>
 	Object.fromEntries(
 		Object.entries(object).filter(([, value]) => value !== undefined)
 	) as Partial<T>;
 
-/** Only the keys the caller set, so an update never wipes a field it did not name. */
+// Only the keys the caller set, so an update never wipes a field it did not name.
 const toZagOptions = (options: Partial<ToastOptions>): Partial<toast.Options<string>> =>
 	definedEntries({
 		title: options.title,
 		description: options.description,
-		type: options.variant === undefined ? undefined : toastTypeOf(options.variant),
+		type: options.variant === undefined ? undefined : TOAST_TYPE_BY_VARIANT[options.variant],
 		duration: options.duration,
 		action:
 			options.action === undefined

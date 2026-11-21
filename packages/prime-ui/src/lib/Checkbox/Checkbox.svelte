@@ -31,9 +31,9 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 		checked?: boolean;
 		/** Indeterminate ("mixed") state. Wins over `checked` visually. @default false */
 		indeterminate?: boolean;
-		/** Value submitted when checked. */
+		/** Value submitted when checked and a `name` is given. */
 		value?: string;
-		/** Require the box to be checked for form submission. Defaults to the enclosing field's `required`. */
+		/** Mark the box required. With a `name`, the form does not submit until it is checked. Defaults to the enclosing field's `required`. */
 		required?: boolean;
 		/** Contextual state. Defaults to the enclosing field's `state`. */
 		state?: FieldState;

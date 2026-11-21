@@ -49,10 +49,9 @@
   --color-gray-1: #f7f7f8;
   --color-gray-0: #fbfbfc;
 
-  /* Semantic colors. `medium-light` is the hover/active fill for outline buttons,
-   * sitting between `light` and `medium`. Values marked "derived" had no published
-   * hex. They are interpolated ~30% from light toward medium and should be confirmed
-   * against the design system / Figma. */
+  /* Semantic colors. `medium-light` is the hover and active fill for outline buttons,
+   * between `light` and `medium`. A value marked "derived" has no published hex and
+   * sits about 30% of the way from `light` toward `medium`. */
   --color-danger-dark: #be3536;
   --color-danger-light: #fcecea;
   --color-danger-medium-light: #f5dfdc;
@@ -167,13 +166,14 @@
 
   /* Transition properties */
   --transition-property-expand-vertical: max-height, visibility;
+  /* The colors `transition-colors` animates, without `outline-color` and the gradient stops, so a focus ring appears at once. */
   --transition-property-hover-colors:
     color, background-color, border-color, text-decoration-color, fill, stroke;
 
   /*
    * Z layers, named after what sits on each one and ordered by who must clear whom: a popover
    * opened inside a dialog clears the dialog, a tooltip clears everything that can carry a hovered
-   * control, and `top` is reserved for what nothing may ever cover. Steps of 100 leave room for a
+   * control, and `max` is reserved for what nothing may ever cover. Steps of 100 leave room for a
    * bare value in between. The `z-*` utility below turns each one into a class.
    */
   --z-sticky: 100;
@@ -205,7 +205,7 @@
   }
 }
 
-/* Button elements keep the expected cursor across consumers. */
+/* Tailwind v4's preflight leaves a button on the default cursor. This restores the pointer. */
 @layer base {
   button,
   [role="button"] {
@@ -213,13 +213,7 @@
   }
 }
 
-/*
- * These reference the grayscale tokens (rather than hardcoded hex) so they
- * follow the dark-theme overrides in tailwind-config-dark.css. Light-mode values
- * are unchanged except where noted: bg-medium/bg-dark/border-dark snap to the
- * nearest gray token (imperceptible shift). bg-extralight reads gray-0, the step
- * past gray-1 that prime added, so it adapts to dark mode too.
- */
+/* Surface and border shorthands. Each reads a grayscale token, so it follows the dark theme. */
 @utility bg-extralight {
   background-color: var(--color-gray-0);
 }
@@ -679,12 +673,41 @@
 }
 
 /*
+ * A strip of tabs that marks the selected tab with a line under its label. `underline-tabs` is
+ * the strip: a row of tabs 16px apart over a 1px `gray-4` bottom border. `underline-tab` is one
+ * tab in it. Reads `aria-selected="true"` and `aria-disabled="true"`. The selected tab draws a
+ * 2px `gray-9` line over the strip's border and sets its text semibold. A hovered tab takes the
+ * default text color. Disabled text beats hover. A tab that is both selected and disabled keeps
+ * the selected look with a `not-allowed` cursor. The focus ring is the shared outset
+ * `focus-ring`, because this strip does not scroll.
+ */
+@utility underline-tabs {
+  @apply flex gap-4 border-b border-medium;
+}
+
+@utility underline-tab {
+  @apply -mb-px cursor-pointer border-b-2 border-transparent pt-2 pb-1.5 text-sm text-subtle-2 focus-ring;
+
+  @variant hover {
+    @apply text-default;
+  }
+  &[aria-disabled="true"] {
+    @apply cursor-not-allowed text-disabled-dark;
+  }
+  &[aria-selected="true"] {
+    @apply border-gray-9 font-semibold text-default;
+  }
+}
+
+/*
  * A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the strip: one
  * 35px row that scrolls sideways and never wraps, with its scrollbar hidden. `file-tab` is one
  * tab in it. Reads `aria-selected="true"` and `aria-disabled="true"`. The selected tab carries a
  * line on top and drops its bottom border, so it joins the content below. The focus ring is
  * inset, as is a nested `focus-ring` or `icon-button`'s, because the strip's scroll container
- * clips anything drawn outside a tab.
+ * clips anything drawn outside a tab. `file-tab-slot` is a placeholder cell in the strip, such
+ * as the spot where a dragged tab will land. It fills the row's height and draws the separator
+ * a `file-tab` draws on its right.
  */
 @utility file-tabs {
   @apply flex overflow-x-auto bg-light;
@@ -713,6 +736,10 @@
   & .icon-button:focus-visible {
     outline-offset: -2px;
   }
+}
+
+@utility file-tab-slot {
+  @apply flex flex-none items-center self-stretch border-r border-gray-3 px-1;
 }
 
 /* The frame of a floating panel: a light border, a white fill, and the popover shadow. Reads nothing. */
@@ -1199,8 +1226,6 @@
   --switch-on: var(--color-danger-dark);
 }
 
-/* Scrollbar */
-
 @utility scrollbar-thin {
   scrollbar-width: thin;
 }
@@ -1243,8 +1268,6 @@
     border-color: --value(--color-*);
   }
 }
-
-/* Slider track */
 
 @utility slider-track-* {
   &::-webkit-slider-runnable-track {
@@ -1320,8 +1343,6 @@
   }
 }
 
-/* Slider thumb */
-
 @utility slider-thumb-* {
   &::-webkit-slider-thumb {
     background: --value(--color-*);
@@ -1362,11 +1383,7 @@
   }
 }
 
-/*
- * The default border properties were causing rendering issues, so we
- * split the width utility into its own class to avoid that.
- * Width, style, color, and radius share one block, for the reason on `scrollbar-thumb-border-*`.
- */
+/* Width, style, color, and radius share one block, for the reason on `scrollbar-thumb-border-*`. */
 @utility slider-thumb-border-* {
   &::-webkit-slider-thumb {
     border-width: --value(--border-width-*);
@@ -1408,7 +1425,6 @@
   }
 }
 
-/* Default slider-thumb-border applies solid style, light border color, and full radius */
 @utility slider-thumb-border {
   &::-webkit-slider-thumb {
     border-style: solid;
@@ -1460,8 +1476,6 @@
     cursor: --value([*]);
   }
 }
-
-/* Table components */
 
 @utility table-container {
   @apply w-full min-w-300 border border-b-0 border-light text-sm;

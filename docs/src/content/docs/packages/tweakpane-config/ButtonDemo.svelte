@@ -3,6 +3,7 @@
   import { primeTheme, primeThemeDark } from "@viamrobotics/tweakpane-config";
   import { Button } from "svelte-tweakpane-ui";
 
+  // svelte-tweakpane-ui's Button dispatches a component event and has no onclick prop.
   let clickCount = $state(0);
 
   const paneTheme = $derived(

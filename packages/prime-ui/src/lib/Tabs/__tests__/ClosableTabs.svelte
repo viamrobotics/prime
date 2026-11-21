@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { mdiClose } from '@mdi/js';
+	import { untrack } from 'svelte';
 
 	import type { TabsVariant } from '../variant.ts';
 
@@ -19,13 +20,14 @@
 	const labels: Record<string, string> = { overview: 'Overview', usage: 'Usage', api: 'API' };
 
 	let value = $state<string>();
-	// svelte-ignore state_referenced_locally
-	let ids = $state([
-		'overview',
-		'usage',
-		'api',
-		...Array.from({ length: extraTabCount }, (_, index) => `extra-${index}`)
-	]);
+	let ids = $state(
+		untrack(() => [
+			'overview',
+			'usage',
+			'api',
+			...Array.from({ length: extraTabCount }, (_, index) => `extra-${index}`)
+		])
+	);
 
 	const labelOf = (id: string) => labels[id] ?? id;
 

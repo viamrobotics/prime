@@ -3,7 +3,7 @@
 Viam's Svelte 5 component library.
 
 > [!NOTE]
-> Under active development for prime v2. Public API is unstable; expect breaking changes until 1.0.
+> Under active development for prime v2. The public API is unstable. Expect breaking changes until 1.0.
 
 ## Installation
 

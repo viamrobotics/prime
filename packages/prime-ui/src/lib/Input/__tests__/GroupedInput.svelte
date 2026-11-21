@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { ClassValue } from 'svelte/elements';
+
 	import type { FieldState } from '../../Field/state.ts';
 
 	import Input from '../Input.svelte';
@@ -8,7 +10,7 @@
 		disabled?: boolean;
 		readonly?: boolean;
 		state?: FieldState;
-		groupClass?: string;
+		groupClass?: ClassValue;
 		actionDisabled?: boolean;
 		onpointerdown?: (event: PointerEvent) => void;
 	}

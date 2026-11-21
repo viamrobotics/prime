@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 
 import BoundMultiSelect from './BoundMultiSelect.svelte';
 import ControlledMultiSelect from './ControlledMultiSelect.svelte';
+import UndefinedMultiSelect from './UndefinedMultiSelect.svelte';
 
 const trigger = (container: Element) => container.querySelector('button')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
@@ -47,25 +48,50 @@ describe('MultiSelect', () => {
 
 		await userEvent.click(input);
 
-		await vi.waitFor(() => expect(listbox()).toBeNull());
+		await vi.waitFor(() => expect(listbox(), 'list closed').toBeNull());
 		await new Promise((resolve) => setTimeout(resolve, CLOSE_SETTLE_MS));
 		expect(document.activeElement).toBe(input);
 	});
 
-	it('shows the bound values joined on the closed trigger', () => {
+	it('shows the label from items for the bound value on the closed trigger', () => {
 		const { container } = render(BoundMultiSelect);
 
-		expect(trigger(container).textContent).toContain('Small');
+		expect(trigger(container).textContent?.trim()).toBe('Small');
 	});
 
-	it('two-way: picking a second option adds it and keeps the list open', async () => {
+	it('two-way: picking a second option adds it', async () => {
 		const { container } = render(BoundMultiSelect);
 		await userEvent.click(trigger(container));
 
 		await userEvent.click(await optionLabeled('Medium'));
 
 		await vi.waitFor(() => expect(owner(container)).toBe('sm,md'));
-		expect(listbox(), 'list stays open after a pick').toBeTruthy();
+	});
+
+	it('two-way: shows the placeholder while the owner state is undefined', () => {
+		const { container } = render(UndefinedMultiSelect);
+
+		expect(trigger(container).textContent?.trim()).toBe('Pick sizes');
+		expect(owner(container)).toBe('undefined');
+	});
+
+	it('two-way: writes a pick back to owner state that starts undefined', async () => {
+		const { container } = render(UndefinedMultiSelect);
+		await userEvent.click(trigger(container));
+
+		await userEvent.click(await optionLabeled('Medium'));
+
+		await vi.waitFor(() => expect(owner(container)).toBe('md'));
+	});
+
+	it('keeps the list open after a pick', async () => {
+		const { container } = render(BoundMultiSelect);
+		await userEvent.click(trigger(container));
+
+		await userEvent.click(await optionLabeled('Medium'));
+
+		await vi.waitFor(() => expect(owner(container)).toBe('sm,md'));
+		expect(listbox(), 'list stays open after a pick').not.toBeNull();
 	});
 
 	it('two-way: picking a selected option again removes it', async () => {
@@ -84,8 +110,8 @@ describe('MultiSelect', () => {
 
 		await userEvent.keyboard('{Escape}');
 
-		await vi.waitFor(() => expect(listbox()).toBeNull());
-		expect(trigger(container).textContent).toContain('Small, Medium');
+		await vi.waitFor(() => expect(listbox(), 'list closed').toBeNull());
+		expect(trigger(container).textContent?.trim()).toBe('Small, Medium');
 	});
 
 	it('two-way: ArrowDown opens, ArrowDown highlights the next option, Enter toggles it', async () => {
@@ -106,12 +132,18 @@ describe('MultiSelect', () => {
 		expect(inputs.map((input) => input.value)).toEqual(['sm']);
 	});
 
-	it('controlled: a function-binding setter can veto the change', async () => {
-		const { container } = render(ControlledMultiSelect, { props: { accept: false } });
-		await userEvent.click(trigger(container));
+	it.each([
+		{ accept: false, expected: 'sm' },
+		{ accept: true, expected: 'sm,md' }
+	])(
+		'controlled: a function-binding setter with accept=$accept leaves $expected',
+		async ({ accept, expected }) => {
+			const { container } = render(ControlledMultiSelect, { props: { accept } });
+			await userEvent.click(trigger(container));
 
-		await userEvent.click(await optionLabeled('Medium'));
+			await userEvent.click(await optionLabeled('Medium'));
 
-		await vi.waitFor(() => expect(owner(container)).toBe('sm'));
-	});
+			await vi.waitFor(() => expect(owner(container)).toBe(expected));
+		}
+	);
 });

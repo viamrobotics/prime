@@ -6,22 +6,44 @@ import { backgroundColor, borderColor, colorOf } from '../../__tests__/computed-
 import Input from '../Input.svelte';
 import BoundInput from './BoundInput.svelte';
 import ControlledInput from './ControlledInput.svelte';
+import UndefinedInput from './UndefinedInput.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
 describe('Input', () => {
-	it('renders one bare input carrying the native attributes, its value, and a passed class', () => {
+	it('renders one bare input wearing the input class and carrying the native attributes and value', () => {
 		const { container } = render(Input, {
-			props: { type: 'email', placeholder: 'you@viam.com', value: 'hi@viam.com', class: 'w-64' }
+			props: { type: 'email', placeholder: 'you@viam.com', value: 'hi@viam.com' }
 		});
 
 		expect(container.children).toHaveLength(1);
+		expect(input(container).classList).toContain('input');
 		expect(input(container).type).toBe('email');
 		expect(input(container).placeholder).toBe('you@viam.com');
 		expect(input(container).value).toBe('hi@viam.com');
-		expect([...input(container).classList]).toEqual(expect.arrayContaining(['w-64', 'input']));
-		expect(input(container).classList.contains('w-full'), 'no built-in width').toBe(false);
+	});
+
+	it('draws the shared focus ring on keyboard focus', async () => {
+		const { container } = render(Input);
+
+		await userEvent.click(container);
+		await userEvent.tab();
+
+		const field = input(container);
+		expect(document.activeElement).toBe(field);
+		expect(
+			getComputedStyle(field).outlineStyle,
+			'the keyboard-focused field draws an outline'
+		).toBe('solid');
+		expect(getComputedStyle(field).outlineWidth).toBe('2px');
+		expect(getComputedStyle(field).outlineOffset).toBe('2px');
+	});
+
+	it('takes its width from a consumer class', () => {
+		const { container } = render(Input, { props: { class: 'w-64' } });
+
+		expect(getComputedStyle(input(container)).width).toBe('256px');
 	});
 
 	it.each([
@@ -82,13 +104,27 @@ describe('Input', () => {
 		expect(owner(container)).toBe('hi');
 	});
 
-	it('controlled: a function-binding setter can veto typing', async () => {
-		const { container } = render(ControlledInput, { props: { accept: false } });
+	it('two-way: typing updates an owner that starts undefined, and clearing yields an empty string', async () => {
+		const { container } = render(UndefinedInput);
+
+		await userEvent.click(input(container));
+		await userEvent.keyboard('hi');
+		expect(owner(container), 'after typing').toBe('"hi"');
+
+		await userEvent.keyboard('{Backspace}{Backspace}');
+		expect(owner(container), 'after clearing').toBe('""');
+	});
+
+	it.each([
+		{ mode: 'accepts', accept: true, shown: 'hi' },
+		{ mode: 'vetoes', accept: false, shown: '' }
+	])('controlled: a function-binding setter $mode typing', async ({ accept, shown }) => {
+		const { container } = render(ControlledInput, { props: { accept } });
 
 		await userEvent.click(input(container));
 		await userEvent.keyboard('hi');
 
-		expect(input(container).value).toBe('');
-		expect(owner(container)).toBe('');
+		expect(input(container).value).toBe(shown);
+		expect(owner(container)).toBe(shown);
 	});
 });

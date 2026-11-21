@@ -9,21 +9,17 @@ interface TabsOptions {
 	variant: () => TabsVariant;
 }
 
-/** What a `Tabs` root shares with the parts inside it. */
 export interface TabsContext {
-	/** The selected tab's value: the bound value while its tab exists, otherwise the first tab's. */
+	// The bound value while its tab exists, otherwise the first tab's.
 	readonly value: string | undefined;
-	/** The strip's look, which the list and triggers follow. */
 	readonly variant: TabsVariant;
-	/** The triggers' values, in mount order. */
+	// In mount order, which is the order a list with an unset `order` starts from.
 	readonly triggers: readonly string[];
-	/** Register a trigger's value, in mount order. Returns the unregister function. */
 	register: (value: string) => () => void;
-	/** Register a panel's value, in mount order. Returns the unregister function. */
 	registerPanel: (value: string) => () => void;
 }
 
-const registry = () => {
+const createRegistry = () => {
 	let values = $state<string[]>([]);
 	return {
 		get values() {
@@ -39,8 +35,8 @@ const registry = () => {
 };
 
 export const provideTabs = (options: TabsOptions): TabsContext => {
-	const triggers = registry();
-	const panels = registry();
+	const triggers = createRegistry();
+	const panels = createRegistry();
 
 	// A strip hidden behind the consumer's `{#if}` mounts no trigger, so the panels decide then.
 	const selected = $derived.by(() => {
@@ -64,5 +60,4 @@ export const provideTabs = (options: TabsOptions): TabsContext => {
 	});
 };
 
-/** The enclosing `Tabs`, or `undefined` when a part is rendered on its own. */
 export const useTabs = (): TabsContext | undefined => getContext<TabsContext | undefined>(key);

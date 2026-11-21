@@ -15,21 +15,16 @@ interface ComboboxOptions {
 	required: () => boolean;
 }
 
-/** What a `Combobox` shares with the parts inside it. */
 export interface ComboboxContext {
-	/** The root's `items`, every option whatever the typed text. */
 	readonly items: readonly SelectOption[];
-	/** The `items` the root's filter keeps for the current `query`. `Combobox.Items` renders these. */
 	readonly matches: readonly SelectOption[];
-	/** The text typed since the list last opened, `''` while it is closed. */
 	query: string;
-	/** What the input shows: the typed text while the user types, otherwise the selected label. */
+	// The typed text while the user types, otherwise the selected label.
 	readonly text: string;
-	/** The root's `required`, resolved against the enclosing field. */
 	readonly required: boolean;
-	/** The rendered input, which `Combobox.Content` positions against. Set by `Combobox.Input`. */
+	// Set by `Combobox.Input`. `Combobox.Content` positions against it.
 	input: HTMLInputElement | null;
-	/** The message `Combobox.Empty` registers while mounted, which the root announces. */
+	// Registered by `Combobox.Empty` while mounted. The root announces it from its status region.
 	emptyMessage: Snippet | undefined;
 }
 
@@ -81,6 +76,5 @@ export const provideCombobox = (options: ComboboxOptions): ComboboxContext => {
 	});
 };
 
-/** The enclosing `Combobox`, or `undefined` when a part is rendered on its own. */
 export const useCombobox = (): ComboboxContext | undefined =>
 	getContext<ComboboxContext | undefined>(key);

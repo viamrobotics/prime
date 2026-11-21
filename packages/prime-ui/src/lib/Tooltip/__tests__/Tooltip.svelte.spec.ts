@@ -13,12 +13,11 @@ import UndefinedTooltip from './UndefinedTooltip.svelte';
 const button = (container: Element) => container.querySelector('button')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 const tooltip = () => document.querySelector<HTMLElement>('[role="tooltip"]');
-// Long enough for a vetoed open to have shown if it were going to.
-const SETTLE_MS = 100;
-// expect.poll gives up after 1000ms, so an open delay on either side of it decides the case.
+const CHANGE_WOULD_SHOW_WITHIN_MS = 100;
+const POLL_TIMEOUT_MS = 1000;
 const DELAY_UNDER_POLL_MS = 250;
 const DELAY_OVER_POLL_MS = 5000;
-const settle = () => new Promise((resolve) => setTimeout(resolve, SETTLE_MS));
+const settle = () => new Promise((resolve) => setTimeout(resolve, CHANGE_WOULD_SHOW_WITHIN_MS));
 
 afterEach(async () => {
 	if (tooltip()) await userEvent.keyboard('{Escape}');
@@ -32,7 +31,7 @@ describe('Tooltip', () => {
 		await userEvent.hover(button(container));
 		expect(tooltip(), 'still closed right after the pointer arrives').toBeNull();
 
-		await expect.poll(tooltip).not.toBeNull();
+		await expect.poll(tooltip, { timeout: POLL_TIMEOUT_MS }).not.toBeNull();
 		expect(tooltip()?.textContent).toBe('Copy to clipboard');
 	});
 
@@ -41,7 +40,7 @@ describe('Tooltip', () => {
 
 		button(container).focus();
 
-		await expect.poll(tooltip).not.toBeNull();
+		await expect.poll(tooltip, { timeout: POLL_TIMEOUT_MS }).not.toBeNull();
 	});
 
 	it('Escape closes it', async () => {
@@ -123,8 +122,8 @@ describe('Tooltip', () => {
 
 			expect(tooltip()!.id).not.toBe('');
 			expect(button(container).getAttribute('aria-describedby')).toBe(tooltip()!.id);
-			expect(span.hasAttribute('aria-describedby')).toBe(false);
-			expect(span.hasAttribute('tabindex')).toBe(false);
+			expect(span.hasAttribute('aria-describedby'), 'span carries no aria-describedby').toBe(false);
+			expect(span.hasAttribute('tabindex'), 'span is not a tab stop').toBe(false);
 		});
 
 		it('takes the description back off the control once closed', async () => {
@@ -167,7 +166,9 @@ describe('Tooltip', () => {
 			await userEvent.hover(trigger);
 
 			await expect.poll(tooltip).not.toBeNull();
-			expect(trigger.hasAttribute('aria-describedby')).toBe(false);
+			expect(trigger.hasAttribute('aria-describedby'), 'span carries no aria-describedby').toBe(
+				false
+			);
 		});
 	});
 
@@ -216,7 +217,7 @@ describe('Tooltip', () => {
 			await settle();
 
 			expect(owner(container)).toBe(String(opens));
-			expect(tooltip() !== null).toBe(opens);
+			expect(tooltip() !== null, 'tooltip rendered').toBe(opens);
 		});
 	});
 });

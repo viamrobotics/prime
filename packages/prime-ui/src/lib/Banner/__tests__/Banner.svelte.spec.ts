@@ -1,6 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+	mdiAlertCircleOutline,
+	mdiAlertOutline,
+	mdiCheckCircleOutline,
+	mdiInformationOutline
+} from '@mdi/js';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { userEvent } from 'vitest/browser';
+import { cdp, userEvent } from 'vitest/browser';
 
 import { backgroundColor, colorOf, textColor } from '../../__tests__/computed-style.ts';
 import CloseBanner from './CloseBanner.svelte';
@@ -12,6 +18,17 @@ import VariantBanner from './VariantBanner.svelte';
 
 const banner = (container: Element) => container.querySelector<HTMLElement>('.banner')!;
 const chip = (container: Element) => container.querySelector<HTMLElement>('.banner-chip')!;
+const glyphPath = (container: Element) =>
+	chip(container).querySelector('svg path')?.getAttribute('d');
+
+const FLEX_START = /^(flex|flow)-start$/;
+
+const emulateReducedMotion = (value: 'reduce' | 'no-preference') =>
+	cdp().send('Emulation.setEmulatedMedia', {
+		features: [{ name: 'prefers-reduced-motion', value }]
+	});
+
+afterEach(() => emulateReducedMotion('no-preference'));
 
 describe('Banner', () => {
 	it.each([
@@ -24,6 +41,15 @@ describe('Banner', () => {
 		const { container } = render(VariantBanner, { props: { variant } });
 
 		expect(banner(container).getAttribute('role')).toBe(role);
+	});
+
+	it.each([
+		{ role: 'log', rendered: 'log' },
+		{ role: null, rendered: null }
+	] as const)('takes a role of $role over the variant default', ({ role, rendered }) => {
+		const { container } = render(VariantBanner, { props: { variant: 'danger', role } });
+
+		expect(banner(container).getAttribute('role')).toBe(rendered);
 	});
 
 	it.each([
@@ -61,16 +87,23 @@ describe('Banner', () => {
 	it('stacks when a title is present', () => {
 		const { container } = render(StackedBanner);
 
-		// Chromium 158 serializes `flex-start` as its newer alias `flow-start`.
-		expect(getComputedStyle(banner(container)).alignItems).toMatch(/^(flex|flow)-start$/);
+		expect(
+			getComputedStyle(banner(container)).alignItems,
+			'Chromium 158 serializes flex-start as its newer alias flow-start'
+		).toMatch(FLEX_START);
 		expect(getComputedStyle(chip(container)).height).toBe('32px');
 	});
 
-	it('renders the default glyph in a single chip', () => {
-		const { container } = render(VariantBanner);
+	it.each([
+		{ variant: 'info', glyph: mdiInformationOutline },
+		{ variant: 'success', glyph: mdiCheckCircleOutline },
+		{ variant: 'warning', glyph: mdiAlertOutline },
+		{ variant: 'danger', glyph: mdiAlertCircleOutline }
+	] as const)('draws the $variant glyph in a single chip', ({ variant, glyph }) => {
+		const { container } = render(VariantBanner, { props: { variant } });
 
 		expect(container.querySelectorAll('.banner-chip')).toHaveLength(1);
-		expect(chip(container).querySelector('svg')).toBeTruthy();
+		expect(glyphPath(container)).toBe(glyph);
 	});
 
 	it('spins in the chip for the pending variant', () => {
@@ -80,6 +113,21 @@ describe('Banner', () => {
 		expect(container.querySelector('.banner-chip svg')).toBeNull();
 	});
 
+	it.each([
+		{ preference: 'no-preference', animationName: 'progress-dots' },
+		{ preference: 'reduce', animationName: 'none' }
+	] as const)(
+		'animates the pending spinner as $animationName under prefers-reduced-motion: $preference',
+		async ({ preference, animationName }) => {
+			await emulateReducedMotion(preference);
+			const { container } = render(VariantBanner, { props: { variant: 'pending' } });
+
+			const spinner = container.querySelector<HTMLElement>('.banner-chip .progress-dots')!;
+
+			expect(getComputedStyle(spinner, '::before').animationName).toBe(animationName);
+		}
+	);
+
 	it('replaces the default glyph with Banner.Icon', () => {
 		const { container } = render(IconBanner);
 
@@ -88,13 +136,29 @@ describe('Banner', () => {
 		expect(chip(container).querySelector('svg')).toBeNull();
 	});
 
-	it('fires the native onclick of Banner.Close, labeled Dismiss', async () => {
+	it('restores the default glyph when Banner.Icon unmounts', async () => {
+		const { container, rerender } = render(IconBanner);
+
+		await rerender({ showIcon: false });
+
+		expect(container.querySelectorAll('.banner-chip')).toHaveLength(1);
+		expect(glyphPath(container)).toBe(mdiInformationOutline);
+	});
+
+	it.each([
+		{ label: undefined, name: 'Dismiss' },
+		{ label: 'Close notice', name: 'Close notice' }
+	])('labels Banner.Close $name', ({ label, name }) => {
+		const { container } = render(CloseBanner, { props: { label } });
+
+		expect(container.querySelector('button')!.getAttribute('aria-label')).toBe(name);
+	});
+
+	it('fires the native onclick of Banner.Close', async () => {
 		const onclick = vi.fn();
 		const { container } = render(CloseBanner, { props: { onclick } });
-		const close = container.querySelector<HTMLButtonElement>('button')!;
 
-		expect(close.getAttribute('aria-label')).toBe('Dismiss');
-		await userEvent.click(close);
+		await userEvent.click(container.querySelector<HTMLButtonElement>('button')!);
 
 		expect(onclick).toHaveBeenCalledOnce();
 	});
@@ -113,19 +177,24 @@ describe('Banner', () => {
 		expect(container.textContent).toContain('Stack trace');
 	});
 
-	it('drops the side borders for the block placement', () => {
+	it('drops the side and top borders for the block placement', () => {
 		const { container } = render(VariantBanner, { props: { placement: 'block' } });
 
 		const style = getComputedStyle(banner(container));
 		expect(style.borderLeftWidth).toBe('0px');
 		expect(style.borderRightWidth).toBe('0px');
+		expect(style.borderTopWidth).toBe('0px');
 		expect(style.borderBottomWidth).toBe('1px');
 	});
 
 	it('keeps all four borders inline', () => {
 		const { container } = render(VariantBanner);
 
-		expect(getComputedStyle(banner(container)).borderLeftWidth).toBe('1px');
+		const style = getComputedStyle(banner(container));
+		expect(style.borderLeftWidth).toBe('1px');
+		expect(style.borderRightWidth).toBe('1px');
+		expect(style.borderTopWidth).toBe('1px');
+		expect(style.borderBottomWidth).toBe('1px');
 	});
 
 	it('pins Banner.Progress to the bottom edge', () => {

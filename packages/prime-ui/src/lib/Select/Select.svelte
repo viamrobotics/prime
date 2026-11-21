@@ -71,6 +71,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 
 	const field = useField();
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
+	const isRequired = $derived(required ?? field?.required ?? false);
 
 	provideSelect({ items: () => items });
 </script>
@@ -81,7 +82,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 	{name}
 	{allowDeselect}
 	disabled={isDisabled}
-	required={required ?? field?.required ?? false}
+	required={isRequired}
 	type="single"
 >
 	{@render children?.()}

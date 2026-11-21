@@ -3,10 +3,12 @@
 
 	import { DatePicker } from '../date-picker.ts';
 
+	const { name }: { name?: string } = $props();
+
 	let value = $state<DateValue>();
 </script>
 
-<DatePicker bind:value>
+<DatePicker {name} bind:value>
 	<DatePicker.Field>
 		<DatePicker.Trigger />
 	</DatePicker.Field>

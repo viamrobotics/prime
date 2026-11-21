@@ -3,7 +3,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor, borderColor, colorOf } from '../../__tests__/computed-style.ts';
+import {
+	backgroundColor,
+	borderColor,
+	colorOf,
+	textColor
+} from '../../__tests__/computed-style.ts';
 import BoundDateRangePicker from './BoundDateRangePicker.svelte';
 import ControlledDateRangePicker from './ControlledDateRangePicker.svelte';
 import UndefinedDateRangePicker from './UndefinedDateRangePicker.svelte';
@@ -21,6 +26,22 @@ const shownDays = (container: Element) =>
 		segment(container, end, 'day').getAttribute('aria-valuetext')
 	);
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
+const ownerOpen = (container: Element) =>
+	container.querySelector('[data-testid="open"]')?.textContent;
+const startSegmentParts = (container: Element) =>
+	[
+		...container
+			.querySelectorAll('[role="presentation"]')[0]
+			.querySelectorAll('[role="spinbutton"]')
+	].map((part) => part.getAttribute('data-segment'));
+const monthButton = (name: string) =>
+	document.querySelector<HTMLElement>(`[role="dialog"] button[aria-label="${name}"]`);
+const monthButtonNames = () =>
+	[...document.querySelectorAll('[role="dialog"] button')].map((button) =>
+		button.getAttribute('aria-label')
+	);
+const calendarName = () =>
+	document.querySelector('[role="application"]')?.getAttribute('aria-label');
 const calendar = () => document.querySelector('[role="dialog"], [role="grid"]');
 
 const dayOf = async (date: string) => {
@@ -91,6 +112,86 @@ describe('DateRangePicker', () => {
 				document.querySelector('[role="application"]')?.getAttribute('aria-label')
 			]).toEqual(['Open calendar', 'Choose a date range', 'Choose a date range March 2026'])
 		);
+	});
+
+	it.each([
+		{ locale: undefined, expected: ['Last month', 'Next month'] },
+		{ locale: 'de-DE', expected: ['Letzten Monat', 'Nächsten Monat'] }
+	])('names the month buttons in the $locale locale', async ({ locale, expected }) => {
+		const { container } = render(BoundDateRangePicker, { props: { locale } });
+
+		await openCalendar(container);
+
+		await vi.waitFor(() => expect(monthButtonNames()).toEqual(expected));
+	});
+
+	it('moves the calendar a month with the next and previous month buttons', async () => {
+		const { container } = render(BoundDateRangePicker);
+		await openCalendar(container);
+		await vi.waitFor(() => expect(calendarName()).toBe('Choose a date range March 2026'));
+
+		await userEvent.click(monthButton('Next month')!);
+		await vi.waitFor(() => expect(calendarName()).toBe('Choose a date range April 2026'));
+		await userEvent.click(monthButton('Last month')!);
+		await userEvent.click(monthButton('Last month')!);
+
+		await vi.waitFor(() => expect(calendarName()).toBe('Choose a date range February 2026'));
+	});
+
+	it('names the calendar from its aria-label followed by the month', async () => {
+		const { container } = render(BoundDateRangePicker, {
+			props: { calendarLabel: 'Choose a reporting period' }
+		});
+
+		await openCalendar(container);
+
+		await vi.waitFor(() => expect(calendarName()).toBe('Choose a reporting period March 2026'));
+	});
+
+	it('returns focus to the trigger when Escape closes the calendar', async () => {
+		const { container } = render(BoundDateRangePicker);
+		trigger(container).focus();
+		await userEvent.keyboard('{Enter}');
+		await vi.waitFor(async () => expect(document.activeElement).toBe(await dayOf('2026-03-10')));
+
+		await userEvent.keyboard('{Escape}');
+
+		await vi.waitFor(() => expect(document.activeElement).toBe(trigger(container)));
+	});
+
+	it('emphasizes today in bold and the heading color', async () => {
+		const { container } = render(UndefinedDateRangePicker);
+
+		await openCalendar(container);
+		const todayCell = await dayOf(today(getLocalTimeZone()).toString());
+
+		expect(getComputedStyle(todayCell).fontWeight, 'weight').toBe('600');
+		expect(textColor(todayCell), 'color').toBe(colorOf('text-heading', 'color'));
+	});
+
+	it('writes the opened calendar to the bound open', async () => {
+		const { container } = render(BoundDateRangePicker);
+
+		await userEvent.click(trigger(container));
+
+		await vi.waitFor(() => expect(ownerOpen(container)).toBe('true'));
+	});
+
+	it('orders the segments for the locale', () => {
+		const { container } = render(BoundDateRangePicker, { props: { locale: 'de-DE' } });
+
+		expect(startSegmentParts(container)).toEqual(['day', 'month', 'year']);
+	});
+
+	it('writes undefined once both ends are cleared', async () => {
+		const { container } = render(BoundDateRangePicker);
+		segment(container, 'start', 'month').focus();
+		await userEvent.keyboard('{Backspace}');
+		segment(container, 'end', 'month').focus();
+
+		await userEvent.keyboard('{Backspace}');
+
+		await vi.waitFor(() => expect(owner(container)).toBe('undefined'));
 	});
 
 	it('two-way: clicking a start and an end day writes the range and closes the calendar', async () => {
@@ -179,6 +280,22 @@ describe('DateRangePicker', () => {
 			await openCalendar(container);
 
 			await userEvent.click(await dayOf('2026-03-15'));
+
+			await vi.waitFor(() => expect(owner(container)).toBe(expected));
+			await vi.waitFor(() => expect(shownDays(container)).toEqual(days));
+		}
+	);
+
+	it.each([
+		{ accept: true, expected: '2026-03-24 2026-03-20', days: ['24', '20'] },
+		{ accept: false, expected: '2026-03-10 2026-03-20', days: ['10', '20'] }
+	])(
+		'controlled: accept=$accept on a typed start day leaves the owner at $expected and the field showing it',
+		async ({ accept, expected, days }) => {
+			const { container } = render(ControlledDateRangePicker, { props: { accept } });
+			segment(container, 'start', 'day').focus();
+
+			await userEvent.keyboard('24');
 
 			await vi.waitFor(() => expect(owner(container)).toBe(expected));
 			await vi.waitFor(() => expect(shownDays(container)).toEqual(days));
@@ -311,5 +428,85 @@ describe('DateRangePicker', () => {
 		expect(borderColor(rangeField(container))).toBe(
 			colorOf('border-transparent', 'borderTopColor')
 		);
+	});
+
+	it('names the trigger from its aria-label', () => {
+		const { container } = render(BoundDateRangePicker, {
+			props: { triggerProps: { 'aria-label': 'Pick a start date' } }
+		});
+
+		expect(trigger(container).getAttribute('aria-label')).toBe('Pick a start date');
+	});
+
+	it.each([
+		{ triggerProps: {}, disabled: true },
+		{ triggerProps: { disabled: false }, disabled: false }
+	])(
+		'a readonly picker with trigger props $triggerProps sets the trigger disabled to $disabled',
+		({ triggerProps, disabled }) => {
+			const { container } = render(BoundDateRangePicker, {
+				props: { readonly: true, triggerProps }
+			});
+
+			expect(trigger(container).disabled).toBe(disabled);
+		}
+	);
+
+	it.each([
+		{
+			contentProps: { 'aria-label': 'Reporting period' },
+			label: 'Reporting period',
+			labelledBy: null
+		},
+		{
+			contentProps: { 'aria-labelledby': 'period-heading' },
+			label: null,
+			labelledBy: 'period-heading'
+		}
+	])(
+		'names the panel with $contentProps instead of the default name',
+		async ({ contentProps, label, labelledBy }) => {
+			const { container } = render(BoundDateRangePicker, { props: { contentProps } });
+
+			await userEvent.click(trigger(container));
+
+			await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeTruthy());
+			const panel = document.querySelector('[role="dialog"]')!;
+			expect(panel.getAttribute('aria-label')).toBe(label);
+			expect(panel.getAttribute('aria-labelledby')).toBe(labelledBy);
+		}
+	);
+
+	it('fills only the focused segment', async () => {
+		const { container } = render(BoundDateRangePicker);
+		const day = segment(container, 'start', 'day');
+		const month = segment(container, 'start', 'month');
+		const unfocusedFill = backgroundColor(day);
+
+		month.focus();
+
+		await vi.waitFor(() =>
+			expect(backgroundColor(month)).toBe(colorOf('bg-medium', 'backgroundColor'))
+		);
+		expect(backgroundColor(day), 'unfocused segment').toBe(unfocusedFill);
+		expect(unfocusedFill).not.toBe(colorOf('bg-medium', 'backgroundColor'));
+	});
+
+	it('does not scroll the page when the calendar opens', async () => {
+		document.body.style.paddingBlock = '150vh';
+		try {
+			const { container } = render(BoundDateRangePicker);
+			trigger(container).scrollIntoView({ block: 'center' });
+			const scrolledTo = window.scrollY;
+
+			await userEvent.click(trigger(container));
+			const startDay = await dayOf('2026-03-10');
+			await vi.waitFor(() => expect(document.activeElement).toBe(startDay));
+
+			expect(scrolledTo).toBeGreaterThan(0);
+			expect(window.scrollY).toBe(scrolledTo);
+		} finally {
+			document.body.style.paddingBlock = '';
+		}
 	});
 });

@@ -1,19 +1,26 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 
-import { boxShadow, shapeOf } from '../../__tests__/computed-style.ts';
+import {
+	backgroundColor,
+	boxShadow,
+	colorOf,
+	shapeOf,
+	textColor
+} from '../../__tests__/computed-style.ts';
 import BoundDialog from './BoundDialog.svelte';
 import ControlledDialog from './ControlledDialog.svelte';
 import TextCloseDialog from './TextCloseDialog.svelte';
 import UndefinedDialog from './UndefinedDialog.svelte';
 
-// Long enough for a vetoed open to have shown if it were going to.
-const SETTLE_MS = 100;
+const ICON_BUTTON_SQUARE_PX = 30;
+const VETOED_OPEN_SETTLE_MS = 100;
 const trigger = (container: Element) => container.querySelector('button')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 const dialog = () => document.querySelector<HTMLElement>('[role="dialog"]');
 const closeButton = () => dialog()!.querySelector<HTMLButtonElement>('button[aria-label="Close"]')!;
+const firstField = () => dialog()!.querySelector<HTMLInputElement>('input[name="first"]')!;
 
 const open = async (container: Element) => {
 	await userEvent.click(trigger(container));
@@ -53,8 +60,8 @@ describe('Dialog', () => {
 		await open(container);
 
 		const overlay = document.querySelector('[data-dialog-overlay]')!;
-		expect(getComputedStyle(overlay).zIndex).toBe('1000');
-		expect(getComputedStyle(dialog()!).zIndex).toBe('1100');
+		expect(getComputedStyle(overlay).zIndex, 'the z-overlay layer').toBe('1000');
+		expect(getComputedStyle(dialog()!).zIndex, 'the z-dialog layer').toBe('1100');
 	});
 
 	it('wears the dialog shadow token', async () => {
@@ -77,62 +84,93 @@ describe('Dialog', () => {
 		expect(getComputedStyle(dialog()!).borderTopLeftRadius).toBe(expectedRadius);
 	});
 
-	it('moves focus into the dialog and traps Tab and Shift+Tab inside it', async () => {
+	it('moves focus to the first field on open', async () => {
 		const { container } = render(BoundDialog);
 
 		await open(container);
 
-		await vi.waitFor(() => expect(dialog()!.contains(document.activeElement)).toBe(true));
-		const focusables = [
-			...dialog()!.querySelectorAll<HTMLElement>(
-				'input, button, [href], [tabindex]:not([tabindex="-1"])'
-			)
-		];
-		expect(focusables.length, 'two inputs and the close button').toBeGreaterThanOrEqual(3);
-		const first = focusables[0]!;
-		const last = focusables[focusables.length - 1]!;
-
-		first.focus();
-		for (let i = 0; i < focusables.length; i += 1) {
-			await userEvent.keyboard('{Tab}');
-			expect(dialog()!.contains(document.activeElement), 'focus stayed inside').toBe(true);
-		}
-		expect(document.activeElement, 'Tab wrapped to the first').toBe(first);
-
-		await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
-		expect(document.activeElement, 'Shift+Tab wrapped to the last').toBe(last);
+		await vi.waitFor(() => expect(document.activeElement).toBe(firstField()));
 	});
 
-	it('closes on Escape and returns focus to the trigger', async () => {
+	it.each([
+		{ key: 'Tab', press: '{Tab}', from: closeButton, to: firstField },
+		{ key: 'Shift+Tab', press: '{Shift>}{Tab}{/Shift}', from: firstField, to: closeButton }
+	])('wraps $key from one end of the dialog to the other', async ({ press, from, to }) => {
+		const { container } = render(BoundDialog);
+		await open(container);
+		from().focus();
+
+		await userEvent.keyboard(press);
+
+		expect(document.activeElement).toBe(to());
+	});
+
+	it('closes on Escape', async () => {
 		const { container } = render(BoundDialog);
 		await open(container);
 
 		await userEvent.keyboard('{Escape}');
 
 		await vi.waitFor(() => expect(dialog()).toBeNull());
-		await vi.waitFor(() => expect(document.activeElement).toBe(trigger(container)));
 	});
 
-	it('closes from Dialog.Close, which wears icon-button and is labeled Close', async () => {
+	it('returns focus to the trigger on close', async () => {
 		const { container } = render(BoundDialog);
 		await open(container);
 
-		expect(closeButton().classList.contains('icon-button')).toBe(true);
-		expect(closeButton().getAttribute('aria-label')).toBe('Close');
+		await userEvent.keyboard('{Escape}');
+
+		await vi.waitFor(() => expect(document.activeElement).toBe(trigger(container)));
+	});
+
+	it('closes from Dialog.Close', async () => {
+		const { container } = render(BoundDialog);
+		await open(container);
+
 		await userEvent.click(closeButton());
 
 		await vi.waitFor(() => expect(dialog()).toBeNull());
 	});
 
-	it('a close given children wears only the consumer class', async () => {
+	it('renders Dialog.Close as an icon button named Close', async () => {
+		const { container } = render(BoundDialog);
+
+		await open(container);
+
+		await expect.element(page.getByRole('button', { name: 'Close', exact: true })).toBeVisible();
+		expect(textColor(closeButton()), 'paints the icon-button text color').toBe(
+			colorOf('icon-button', 'color')
+		);
+	});
+
+	it('a close given children paints the consumer class instead of the icon button', async () => {
 		const { container } = render(TextCloseDialog);
 		await open(container);
 		const text = [...dialog()!.querySelectorAll('button')].find(
 			(button) => button.textContent?.trim() === 'Cancel'
 		)!;
 
-		expect(text.classList.contains('button')).toBe(true);
-		expect(text.classList.contains('icon-button')).toBe(false);
+		expect(backgroundColor(text), 'paints the consumer button fill').toBe(
+			colorOf('button', 'backgroundColor')
+		);
+		expect(textColor(text), 'paints the consumer button text color').toBe(
+			colorOf('button', 'color')
+		);
+		expect(
+			text.offsetWidth,
+			'sized by its text, wider than the icon button square'
+		).toBeGreaterThan(ICON_BUTTON_SQUARE_PX);
+	});
+
+	it.each([
+		{ label: undefined, name: 'Cancel' },
+		{ label: 'Dismiss', name: 'Dismiss' }
+	])('a close given children and aria-label $label is named $name', async ({ label, name }) => {
+		const { container } = render(TextCloseDialog, { props: { label } });
+
+		await open(container);
+
+		await expect.element(page.getByRole('button', { name, exact: true })).toBeVisible();
 	});
 
 	it('locks body scroll while open and restores it after close', async () => {
@@ -140,29 +178,39 @@ describe('Dialog', () => {
 		const before = getComputedStyle(document.body).overflow;
 
 		await open(container);
-		await vi.waitFor(() => expect(getComputedStyle(document.body).overflow).toBe('hidden'));
+		await vi.waitFor(() =>
+			expect(getComputedStyle(document.body).overflow, 'locked while open').toBe('hidden')
+		);
 		await userEvent.keyboard('{Escape}');
 
-		await vi.waitFor(() => expect(getComputedStyle(document.body).overflow).toBe(before));
+		await vi.waitFor(() =>
+			expect(getComputedStyle(document.body).overflow, 'restored after close').toBe(before)
+		);
 	});
 
-	it('puts the consumer class on the content element and the focus ring on the trigger', async () => {
+	it('puts the consumer class on the content element', async () => {
 		const { container } = render(BoundDialog);
+
 		await open(container);
 
-		expect(dialog()!.classList.contains('max-w-md')).toBe(true);
-		expect(trigger(container).classList.contains('focus-ring')).toBe(true);
+		expect(dialog()!.classList.contains('max-w-md'), 'wears the consumer class').toBe(true);
+	});
+
+	it('gives the trigger the shared focus ring', () => {
+		const { container } = render(BoundDialog);
+
+		expect(trigger(container).classList.contains('focus-ring'), 'wears focus-ring').toBe(true);
 	});
 
 	it('two-way: opening and closing are reflected in the owner', async () => {
 		const { container } = render(BoundDialog);
-		expect(owner(container)).toBe('false');
+		expect(owner(container), 'starts closed').toBe('false');
 
 		await open(container);
-		await vi.waitFor(() => expect(owner(container)).toBe('true'));
+		await vi.waitFor(() => expect(owner(container), 'owner sees the open').toBe('true'));
 		await userEvent.keyboard('{Escape}');
 
-		await vi.waitFor(() => expect(owner(container)).toBe('false'));
+		await vi.waitFor(() => expect(owner(container), 'owner sees the close').toBe('false'));
 	});
 
 	it('two-way: renders from undefined state and writes the open state back', async () => {
@@ -180,8 +228,8 @@ describe('Dialog', () => {
 
 		await userEvent.click(trigger(container));
 
-		await new Promise((resolve) => setTimeout(resolve, SETTLE_MS));
-		expect(dialog()).toBeNull();
+		await new Promise((resolve) => setTimeout(resolve, VETOED_OPEN_SETTLE_MS));
+		expect(dialog(), 'a vetoed open shows no dialog after the settle wait').toBeNull();
 		expect(owner(container)).toBe('false');
 	});
 

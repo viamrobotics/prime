@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { cdp } from 'vitest/browser';
 
 import {
 	backgroundColor,
@@ -14,6 +15,17 @@ const dot = (container: Element) => container.querySelector<HTMLElement>('[role=
 const TRANSPARENT = 'rgba(0, 0, 0, 0)';
 
 const DOT_SIZE = '8px';
+
+const BRAILLE_GLYPH = /^"[\u2800-\u28FF]"$/;
+
+const glyph = (container: Element) => container.querySelector<HTMLElement>('.progress-dots')!;
+
+const emulateReducedMotion = (value: 'reduce' | 'no-preference') =>
+	cdp().send('Emulation.setEmulatedMedia', {
+		features: [{ name: 'prefers-reduced-motion', value }]
+	});
+
+afterEach(() => emulateReducedMotion('no-preference'));
 
 describe('StatusDot', () => {
 	it.each([
@@ -69,17 +81,32 @@ describe('StatusDot', () => {
 				props: { state, working: true, label: 'Syncing' }
 			});
 			const dotStyle = getComputedStyle(dot(container));
-			const glyph = container.querySelector<HTMLElement>('.progress-dots')!;
-			const content = getComputedStyle(glyph, '::before').content;
 
-			expect(textColor(glyph)).toBe(colorOf(text, 'color'));
-			expect(content).not.toBe('none');
-			expect(content).not.toBe('""');
+			expect(textColor(glyph(container))).toBe(colorOf(text, 'color'));
+			expect(getComputedStyle(glyph(container), '::before').content).toMatch(BRAILLE_GLYPH);
 			expect(dotStyle.width).toBe(DOT_SIZE);
 			expect(dotStyle.height).toBe(DOT_SIZE);
 			expect(backgroundColor(dot(container))).toBe(TRANSPARENT);
 		}
 	);
+
+	it('animates the working glyph when motion is allowed', () => {
+		const { container } = render(StatusDot, {
+			props: { state: 'info', working: true, label: 'Syncing' }
+		});
+
+		expect(getComputedStyle(glyph(container), '::before').animationName).toBe('progress-dots');
+	});
+
+	it('stops the working glyph under prefers-reduced-motion', async () => {
+		await emulateReducedMotion('reduce');
+
+		const { container } = render(StatusDot, {
+			props: { state: 'info', working: true, label: 'Syncing' }
+		});
+
+		expect(getComputedStyle(glyph(container), '::before').animationName).toBe('none');
+	});
 
 	it('renders no glyph when not working', () => {
 		const { container } = render(StatusDot, { props: { state: 'info', label: 'Status' } });
@@ -92,6 +119,6 @@ describe('StatusDot', () => {
 			props: { state: 'info', label: 'Status', class: 'mine' }
 		});
 
-		expect(dot(container).classList.contains('mine')).toBe(true);
+		expect(dot(container).classList).toContain('mine');
 	});
 });

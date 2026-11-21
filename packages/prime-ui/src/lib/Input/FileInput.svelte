@@ -45,8 +45,8 @@ from there.
 		state?: FieldState;
 
 		/**
-		 * Replaces the prompt, an upload icon and "Choose file". It is decoration, hidden from
-		 * assistive technology, which reads the native input.
+		 * Replaces the prompt, an upload icon and "Choose file", or "Choose files" with `multiple`.
+		 * It is decoration, hidden from assistive technology, which reads the native input.
 		 */
 		children?: Snippet;
 

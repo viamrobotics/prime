@@ -167,7 +167,7 @@ A prime-core `Select` was a native `<select>` with `<option>` children and an `o
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `Select.Trigger` carries no width of its own, so set one with a class such as `w-64` or `w-full`. Focus shows as the same 2px ring every prime control uses. `Select` and `Select.Items` render no element, so they take no `class`, and `Select` takes no event handlers. `onfocus`, `onblur`, `onkeydown`, and the rest go on `Select.Trigger`, the real `<button>`. The panel width follows the trigger through `--bits-select-anchor-width`. Its max height follows `--bits-select-content-available-height`. bits-ui sets both variables. bits-ui also sets the data attributes in the table below. `Select.Content` wears `z-popover`; see [z layers](../../tailwind-config/component-classes/#z-layers).
+Every part that renders an element takes `class` on that element. `Select.Trigger` carries no width of its own, so set one with a class such as `w-64` or `w-full`. Focus shows as the same 2px ring every prime control uses. `Select` and `Select.Items` render no element, so they take no `class`, and `Select` takes no event handlers. `onfocus`, `onblur`, `onkeydown`, and the rest go on `Select.Trigger`, the real `<button>`. The panel width follows the trigger through `--bits-select-anchor-width`. Its max height follows `--bits-select-content-available-height`. bits-ui sets both variables. bits-ui also sets the data attributes in the table below. `Select.Content` wears `z-popover`, described under [z layers](../../tailwind-config/component-classes/#z-layers).
 
 | Part      | Attribute          | Value                             |
 | --------- | ------------------ | --------------------------------- |
@@ -204,7 +204,7 @@ With the panel open:
     { keys: "Home / End", action: "Highlights the first or last item." },
     { keys: "PageDown / PageUp", action: "Highlights the item a page away." },
     { keys: "Enter / Space", action: "Selects the highlighted item and closes." },
-    { keys: "Alt + ArrowUp", action: "Selects the highlighted item and closes." },
+    { keys: "Alt + ArrowUp", action: "Closes without changing the value." },
     { text: "Printable characters", action: "Typeahead: highlights the next item matching the text." },
     { keys: "Escape", action: "Closes without changing the value." },
     { keys: "Tab", action: "Closes and moves focus on." },

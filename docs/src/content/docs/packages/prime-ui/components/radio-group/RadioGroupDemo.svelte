@@ -1,11 +1,13 @@
 <script lang="ts">
   import Sandbox from "@docs/Sandbox.svelte";
   import { RadioGroup } from "@viamrobotics/prime-ui";
+
+  import LabeledRadioGroup from "./LabeledRadioGroup.svelte";
 </script>
 
 <Sandbox
   name="RadioGroup"
-  component={RadioGroup}
+  component={LabeledRadioGroup}
   controls={{
     value: { kind: "select", label: "Value", default: "md", options: ["sm", "md", "lg"] },
     orientation: {

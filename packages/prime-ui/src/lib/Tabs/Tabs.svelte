@@ -2,8 +2,8 @@
 @component
 A tab strip with one panel per tab. Compose it from [`Tabs.List`](./TabsList.svelte) holding
 one [`Tabs.Trigger`](./TabsTrigger.svelte) per tab, and one
-[`Tabs.Content`](./TabsContent.svelte) per tab. The first tab is selected until the user picks
-another, and a selection whose tab is gone falls back to the first.
+[`Tabs.Content`](./TabsContent.svelte) per tab. With no `value`, or a `value` whose tab is gone,
+the first tab is selected.
 
 Built on [bits-ui `Tabs`](https://bits-ui.com/docs/components/tabs).
 
@@ -26,6 +26,7 @@ Built on [bits-ui `Tabs`](https://bits-ui.com/docs/components/tabs).
 	import type { TabsVariant } from './variant.ts';
 
 	import { provideTabs } from './useTabs.svelte.ts';
+	import { DEFAULT_TABS_VARIANT } from './variant.ts';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
@@ -38,7 +39,12 @@ Built on [bits-ui `Tabs`](https://bits-ui.com/docs/components/tabs).
 		variant?: TabsVariant;
 	}
 
-	let { value = $bindable(), variant = 'underline', children, ...restProps }: Props = $props();
+	let {
+		value = $bindable(),
+		variant = DEFAULT_TABS_VARIANT,
+		children,
+		...restProps
+	}: Props = $props();
 
 	const tabs = provideTabs({ value: () => value, variant: () => variant });
 </script>

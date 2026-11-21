@@ -61,9 +61,7 @@
               {/each}
             </Combobox.Group>
           {/each}
-          {#if visible.length === 0}
-            <Combobox.Empty>No matching machine</Combobox.Empty>
-          {/if}
+          <Combobox.Empty>No matching machine</Combobox.Empty>
         </Combobox.Viewport>
       </Combobox.Content>
     </Combobox>

@@ -16,7 +16,7 @@
     { id: "styling", label: "Styling" },
   ];
 
-  const tabs = $derived(all.slice(0, Math.max(1, Math.min(4, count))));
+  const tabs = $derived(all.slice(0, Math.max(1, count)));
 
   let order = $state(all.map((tab) => tab.id));
 

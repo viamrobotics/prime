@@ -30,10 +30,7 @@ The panel of a [`ContextMenu`](./ContextMenu.svelte), portaled to the body and o
 <ContextMenu.Portal {...portalProps(portal)}>
 	<ContextMenu.Content
 		id={contentId}
-		class={[
-			'z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-popover',
-			extraClasses
-		]}
+		class={['z-menu min-w-40 popover-panel p-1', extraClasses]}
 		{...restProps}
 	>
 		{@render children?.()}

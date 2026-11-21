@@ -11,7 +11,7 @@
 		id,
 		disabled,
 		required,
-		state,
+		state: fieldState,
 		inputId,
 		hintCount = 1
 	}: {
@@ -25,7 +25,7 @@
 	} = $props();
 </script>
 
-<Field {controlId} {id} {disabled} {required} {state}>
+<Field {controlId} {id} {disabled} {required} state={fieldState}>
 	<Label>Email</Label>
 	<Input id={inputId} type="email" />
 	{#each { length: hintCount }, index (index)}

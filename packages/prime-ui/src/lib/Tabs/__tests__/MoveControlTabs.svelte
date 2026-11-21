@@ -5,9 +5,15 @@
 		disabledTab?: string;
 		isRefusing?: boolean;
 		isUnbound?: boolean;
+		isIgnoringCanMove?: boolean;
 	}
 
-	const { disabledTab, isRefusing = false, isUnbound = false }: Props = $props();
+	const {
+		disabledTab,
+		isRefusing = false,
+		isUnbound = false,
+		isIgnoringCanMove = false
+	}: Props = $props();
 
 	const labels: Record<string, string> = { overview: 'Overview', usage: 'Usage', api: 'API' };
 
@@ -22,10 +28,14 @@
 				<Tabs.Trigger value={id} disabled={id === disabledTab}>
 					{labels[id]}
 					{#snippet actions({ movePrevious, moveNext, canMovePrevious, canMoveNext })}
-						<button type="button" disabled={!canMovePrevious} onclick={movePrevious}>
+						<button
+							type="button"
+							disabled={!isIgnoringCanMove && !canMovePrevious}
+							onclick={movePrevious}
+						>
 							Move {labels[id]} left
 						</button>
-						<button type="button" disabled={!canMoveNext} onclick={moveNext}>
+						<button type="button" disabled={!isIgnoringCanMove && !canMoveNext} onclick={moveNext}>
 							Move {labels[id]} right
 						</button>
 					{/snippet}
@@ -47,10 +57,14 @@
 				<Tabs.Trigger value={id} disabled={id === disabledTab}>
 					{labels[id]}
 					{#snippet actions({ movePrevious, moveNext, canMovePrevious, canMoveNext })}
-						<button type="button" disabled={!canMovePrevious} onclick={movePrevious}>
+						<button
+							type="button"
+							disabled={!isIgnoringCanMove && !canMovePrevious}
+							onclick={movePrevious}
+						>
 							Move {labels[id]} left
 						</button>
-						<button type="button" disabled={!canMoveNext} onclick={moveNext}>
+						<button type="button" disabled={!isIgnoringCanMove && !canMoveNext} onclick={moveNext}>
 							Move {labels[id]} right
 						</button>
 					{/snippet}

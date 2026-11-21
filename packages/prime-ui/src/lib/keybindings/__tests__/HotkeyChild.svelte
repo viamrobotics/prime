@@ -1,7 +1,27 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
+
 	import { useHotkey } from '../index.ts';
 
-	let { run }: { run: () => void } = $props();
+	interface Props {
+		run: () => void;
+		when?: () => boolean;
+		mod?: boolean;
+		preventDefault?: boolean;
+	}
 
-	useHotkey({ id: 'test-k', description: 'Test', group: 'View', key: 'k', run: () => run() });
+	const { run, when, mod, preventDefault }: Props = $props();
+
+	useHotkey(
+		untrack(() => ({
+			id: 'test-k',
+			description: 'Test',
+			group: 'View',
+			key: 'k',
+			mod,
+			preventDefault,
+			when: () => when?.() ?? true,
+			run: () => run()
+		}))
+	);
 </script>

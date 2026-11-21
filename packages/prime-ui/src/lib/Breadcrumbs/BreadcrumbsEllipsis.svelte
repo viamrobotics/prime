@@ -2,7 +2,9 @@
 @component
 Stands in for the crumbs a [`Breadcrumbs`](./Breadcrumbs.svelte) trail leaves out. Place it in a
 [`Breadcrumbs.Item`](./BreadcrumbsItem.svelte), alone or inside a menu trigger. It draws an ellipsis
-glyph that sits on the text baseline, labeled `More`. Pass children to replace the glyph, and `aria-label` to replace the label.
+glyph that sits on the text baseline, labeled `More`. Pass children to replace the glyph, and
+`aria-label` to replace the label. The label belongs to the default glyph, so children carry their
+own name.
 -->
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';

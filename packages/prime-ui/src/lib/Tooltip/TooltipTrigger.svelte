@@ -33,7 +33,7 @@ Built on [bits-ui `Tooltip`](https://bits-ui.com/docs/components/tooltip).
 		Record<'onfocus' | 'onblur' | 'onfocusin' | 'onfocusout', (event: FocusEvent) => void>
 	>;
 
-	const buttonOnlyAttributes = {
+	const BUTTON_ONLY_ATTRIBUTES = {
 		type: undefined,
 		disabled: undefined,
 		tabindex: undefined,
@@ -42,14 +42,14 @@ Built on [bits-ui `Tooltip`](https://bits-ui.com/docs/components/tooltip).
 		onblur: undefined
 	};
 
-	const focusableSelector = ':scope button, :scope a[href], :scope input, :scope [tabindex]';
+	const FOCUSABLE_SELECTOR = ':scope button, :scope a[href], :scope input, :scope [tabindex]';
 
 	// aria-describedby on the span would name nothing: the span is not what a screen reader focuses.
 	const describeFocusable =
 		(describedBy: unknown): Attachment<HTMLSpanElement> =>
 		(span) => {
 			const contentId = typeof describedBy === 'string' ? describedBy : undefined;
-			const target = contentId ? span.querySelector(focusableSelector) : null;
+			const target = contentId ? span.querySelector(FOCUSABLE_SELECTOR) : null;
 			if (!target || !contentId) return;
 
 			const existing = target.getAttribute('aria-describedby');
@@ -72,7 +72,7 @@ Built on [bits-ui `Tooltip`](https://bits-ui.com/docs/components/tooltip).
 		<!-- Focus does not bubble and bits-ui listens with onfocus/onblur, so forward the bubbling pair. -->
 		<span
 			{...props}
-			{...buttonOnlyAttributes}
+			{...BUTTON_ONLY_ATTRIBUTES}
 			onfocusin={(event) => {
 				onfocusin?.(event);
 				onfocus?.(event);

@@ -28,7 +28,7 @@ item.
 
 	import { RadioGroup } from 'bits-ui';
 
-	import { FieldStates, type FieldState } from '../Field/state.ts';
+	import { fieldState, FieldStates, type FieldState } from '../Field/state.ts';
 	import { useField } from '../Field/useField.svelte.ts';
 
 	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
@@ -69,16 +69,19 @@ item.
 	const field = useField();
 	const uid = $props.id();
 
+	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
+	const isRequired = $derived(required ?? field?.required ?? false);
 	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	const isError = $derived(fieldState.isError(currentState));
 </script>
 
 <RadioGroup.Root
 	bind:value={() => value ?? '', (next) => (value = next)}
 	{orientation}
 	{name}
-	disabled={disabled ?? field?.disabled ?? false}
-	required={required ?? field?.required ?? false}
-	aria-invalid={currentState === FieldStates.Error || undefined}
+	disabled={isDisabled}
+	required={isRequired}
+	aria-invalid={isError || undefined}
 	aria-labelledby={labelledBy ?? field?.labelledBy}
 	aria-describedby={describedBy ?? field?.describedBy}
 	id={id ?? field?.controlId ?? uid}

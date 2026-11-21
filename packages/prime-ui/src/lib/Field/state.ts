@@ -1,5 +1,6 @@
 import { mdiAlert, mdiAlertCircle, mdiInformation } from '@mdi/js';
 
+/** The four `FieldState` values by name, for a comparison without a string literal. */
 export const FieldStates = {
 	None: 'none',
 	Info: 'info',
@@ -26,7 +27,6 @@ export const fieldState = {
 		state === FieldStates.Error
 };
 
-/** Icon and color class for each state except `none`. */
 export const stateIcon = {
 	info: { icon: mdiInformation, class: 'text-info-dark' },
 	warn: { icon: mdiAlert, class: 'text-warning-dark' },

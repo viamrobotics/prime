@@ -29,7 +29,11 @@ Apply the theme globally:
 </Pane>
 ```
 
-`ThemeUtils.setGlobalDefaultTheme` touches `window`, so guard the call for SSR (e.g. inside `$effect`, `onMount`, or behind an `if (browser)` check). Call it once per theme change from one place: svelte-tweakpane-ui 1.5.16 removes a root variable it finds already set to the same value, so a second component applying the same theme turns it off. See the [svelte-tweakpane-ui themes docs](https://kitschpatrol.com/svelte-tweakpane-ui/docs/themes) for other usage patterns — passing `theme` per-component, partial overrides, etc.
+`ThemeUtils.setGlobalDefaultTheme` touches `window`, so guard the call for SSR (e.g. inside `$effect`, `onMount`, or behind an `if (browser)` check). Call it once per theme change from one place: svelte-tweakpane-ui 1.5.16 removes a root variable it finds already set to the same value, so a second component applying the same theme turns it off. See the [svelte-tweakpane-ui themes docs](https://kitschpatrol.com/svelte-tweakpane-ui/docs/themes) for other usage patterns such as passing `theme` per component and partial overrides.
+
+## Dark mode
+
+`primeThemeDark` has the same shape as `primeTheme`. Nothing switches themes for you, so pass whichever one fits, for example from a `prefers-color-scheme` listener.
 
 ## Extending the theme
 

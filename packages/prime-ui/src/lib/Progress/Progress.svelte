@@ -25,9 +25,8 @@ aria value attributes, named by `label`.
 
 	const { value, max = 100, label, class: extraClasses, ...restProps }: Props = $props();
 
-	const percent = $derived(
-		value === undefined ? undefined : (Math.min(Math.max(value, 0), max) / max) * 100
-	);
+	const clamped = $derived(value === undefined ? undefined : Math.min(Math.max(value, 0), max));
+	const percent = $derived(clamped === undefined ? undefined : (clamped / max) * 100);
 </script>
 
 <div
@@ -37,7 +36,7 @@ aria value attributes, named by `label`.
 	aria-label={label}
 	aria-valuemin="0"
 	aria-valuemax={max}
-	aria-valuenow={value === undefined ? undefined : Math.min(Math.max(value, 0), max)}
+	aria-valuenow={clamped}
 >
 	<div class="progress-fill" style:width={percent === undefined ? undefined : `${percent}%`}></div>
 </div>

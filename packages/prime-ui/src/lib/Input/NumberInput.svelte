@@ -6,7 +6,7 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 [`Input.Group`](./InputGroup.svelte) it goes borderless.
 
 ```svelte
-<NumberInput id="qty" min={0} max={10} bind:value />
+<NumberInput aria-label="Quantity" min={0} max={10} bind:value />
 ```
 -->
 <script lang="ts">

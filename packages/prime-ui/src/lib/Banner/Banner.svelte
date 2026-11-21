@@ -51,14 +51,14 @@ state, so render it inside an `{#if}` to show and hide it.
 	}: Props = $props();
 
 	// `pending` has no glyph: its chip holds the spinner.
-	const glyphs: Record<Exclude<BannerVariant, 'pending'>, string> = {
+	const GLYPHS: Record<Exclude<BannerVariant, 'pending'>, string> = {
 		info: mdiInformationOutline,
 		success: mdiCheckCircleOutline,
 		warning: mdiAlertOutline,
 		danger: mdiAlertCircleOutline
 	};
 
-	const tones: Record<BannerVariant, string> = {
+	const TONE_CLASSES: Record<BannerVariant, string> = {
 		info: 'banner-info',
 		success: 'banner-success',
 		warning: 'banner-warning',
@@ -66,7 +66,7 @@ state, so render it inside an `{#if}` to show and hide it.
 		pending: 'banner-pending'
 	};
 
-	const roles: Record<BannerVariant, 'status' | 'alert'> = {
+	const ROLES: Record<BannerVariant, 'status' | 'alert'> = {
 		info: 'status',
 		success: 'status',
 		warning: 'alert',
@@ -79,15 +79,15 @@ state, so render it inside an `{#if}` to show and hide it.
 
 <div
 	{...restProps}
-	role={role === undefined ? roles[variant] : role}
-	class={['banner', tones[variant], placement === 'block' && 'banner-block', extraClasses]}
+	role={role === undefined ? ROLES[variant] : role}
+	class={['banner', TONE_CLASSES[variant], placement === 'block' && 'banner-block', extraClasses]}
 >
 	{#if !context.hasIcon}
 		<span class="banner-chip" aria-hidden="true">
 			{#if variant === 'pending'}
 				<span class="progress-dots"></span>
 			{:else}
-				<Icon icon={glyphs[variant]} />
+				<Icon icon={GLYPHS[variant]} />
 			{/if}
 		</span>
 	{/if}

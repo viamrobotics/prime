@@ -1,28 +1,8 @@
 /*
- * Optional dark theme for @viamrobotics/tailwind-config.
- *
- * Import AFTER the base config:
- *   @import "@viamrobotics/tailwind-config";
- *   @import "@viamrobotics/tailwind-config/dark";
- *
- * Activation follows the OS by default (prefers-color-scheme: dark). A `.light`
- * ancestor forces light and a `.dark` ancestor forces dark. The class always wins.
- * `.light` works on any element, not only the root. One level of `.light` inside
- * `.dark` is supported. A `.dark` nested again inside that `.light` flips the tokens
- * but not `dark:` utilities, which stay light below the first `.light`.
- *
- * Mechanism: Tailwind v4 utilities resolve through `var(--color-*)`, so reassigning
- * those custom properties under a dark scope flips existing components with no markup
- * changes. The dark palette is defined once below as `--dark-*` variables and applied
- * (reassigned) in both the system-preference and class scopes. The light defaults are
- * mirrored as `--light-*` variables so `.light` can restore them under a dark scope.
- *
- * NOTE: the Viam design system does not publish a dark palette, so these values are
- * derived from the light tokens. The grayscale ramp (and `white`/`black`) is inverted
- * so surface/text utilities adapt automatically. `--color-white` is therefore no
- * longer literally white in dark mode.
+ * Import after the base config. A `.dark` ancestor or the OS preference turns the theme on, and a
+ * `.light` ancestor turns it off on any element. A `.dark` nested inside that `.light` flips the
+ * tokens but not `dark:` utilities, which stay light below the first `.light`.
  */
-
 @custom-variant dark {
   &:where(:is(.dark, .dark *):not(.light, .light *)) {
     @slot;
@@ -37,7 +17,11 @@
 :root {
   color-scheme: light dark;
 
-  /* Canonical dark palette, defined once and applied in the scopes below. */
+  /*
+   * The design system publishes no dark palette, so each `--dark-*` value is derived from its
+   * light token. The grayscale ramp and `white`/`black` invert, so `--color-white` is not white
+   * in dark mode. Each value is defined once here and assigned in the scopes below.
+   */
 
   /* Text colors */
   --dark-color-heading: #f7f7f8;
@@ -78,9 +62,7 @@
   --dark-color-gray-1: #1c1c1e;
   --dark-color-gray-0: #171718;
 
-  /* Semantic colors. `medium-light` interpolates ~30% from the dark `light` fill
-   * toward dark `medium`. The pending palette mirrors the other status hues. All are
-   * derived for dark mode, so confirm them against the design system / Figma. */
+  /* Semantic colors. `medium-light` sits about 30% of the way from `light` toward `medium`. */
   --dark-color-danger-dark: #f08a8a;
   --dark-color-danger-light: #3a2120;
   --dark-color-danger-medium-light: #4a2928;
@@ -178,7 +160,7 @@
   --dark-color-chart-axis: #3a3a3d;
   --dark-color-chart-axis-label: #9c9ca4;
 
-  /* Light defaults, mirroring the @theme values in tailwind-config.css. */
+  /* Light defaults, equal to the @theme values in tailwind-config.css, so `.light` can restore them. */
 
   /* Text colors */
   --light-color-heading: #131414;
@@ -342,18 +324,14 @@
 
     /* Code colors */
     --color-code-boolean: var(--dark-color-code-boolean);
-
     --color-code-comment: var(--dark-color-code-comment);
-
     --color-code-function: var(--dark-color-code-function);
-
     --color-code-keyword: var(--dark-color-code-keyword);
     --color-code-line-number: var(--dark-color-code-line-number);
     --color-code-null: var(--dark-color-code-null);
     --color-code-number: var(--dark-color-code-number);
     --color-code-property-keys: var(--dark-color-code-property-keys);
     --color-code-string: var(--dark-color-code-string);
-
     --color-code-type: var(--dark-color-code-type);
 
     /* Grayscale */
@@ -435,7 +413,6 @@
     --color-warning-medium-light: var(--dark-color-warning-medium-light);
     --color-warning-medium: var(--dark-color-warning-medium);
     --color-warning-bright: var(--dark-color-warning-bright);
-
     --color-warning-text: var(--dark-color-warning-text);
     --color-success-dark: var(--dark-color-success-dark);
     --color-success-light: var(--dark-color-success-light);
@@ -492,18 +469,14 @@
 
   /* Code colors */
   --color-code-boolean: var(--dark-color-code-boolean);
-
   --color-code-comment: var(--dark-color-code-comment);
-
   --color-code-function: var(--dark-color-code-function);
-
   --color-code-keyword: var(--dark-color-code-keyword);
   --color-code-line-number: var(--dark-color-code-line-number);
   --color-code-null: var(--dark-color-code-null);
   --color-code-number: var(--dark-color-code-number);
   --color-code-property-keys: var(--dark-color-code-property-keys);
   --color-code-string: var(--dark-color-code-string);
-
   --color-code-type: var(--dark-color-code-type);
 
   /* Grayscale */
@@ -583,7 +556,6 @@
   --color-warning-medium-light: var(--dark-color-warning-medium-light);
   --color-warning-medium: var(--dark-color-warning-medium);
   --color-warning-bright: var(--dark-color-warning-bright);
-
   --color-warning-text: var(--dark-color-warning-text);
   --color-success-dark: var(--dark-color-success-dark);
   --color-success-light: var(--dark-color-success-light);
@@ -639,18 +611,14 @@
 
   /* Code colors */
   --color-code-boolean: var(--light-color-code-boolean);
-
   --color-code-comment: var(--light-color-code-comment);
-
   --color-code-function: var(--light-color-code-function);
-
   --color-code-keyword: var(--light-color-code-keyword);
   --color-code-line-number: var(--light-color-code-line-number);
   --color-code-null: var(--light-color-code-null);
   --color-code-number: var(--light-color-code-number);
   --color-code-property-keys: var(--light-color-code-property-keys);
   --color-code-string: var(--light-color-code-string);
-
   --color-code-type: var(--light-color-code-type);
 
   /* Grayscale */
@@ -730,7 +698,6 @@
   --color-warning-medium-light: var(--light-color-warning-medium-light);
   --color-warning-medium: var(--light-color-warning-medium);
   --color-warning-bright: var(--light-color-warning-bright);
-
   --color-warning-text: var(--light-color-warning-text);
   --color-success-dark: var(--light-color-success-dark);
   --color-success-light: var(--light-color-success-light);

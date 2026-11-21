@@ -3,7 +3,6 @@
 	import RadioGroupItem from '../RadioGroupItem.svelte';
 
 	interface Props {
-		/** When false, the setter rejects every change (controlled veto). */
 		accept?: boolean;
 	}
 

@@ -28,6 +28,7 @@ dragging a tab drops it where the pointer lets go, and either writes the new str
 	import { useTabs } from './useTabs.svelte.ts';
 	import { provideTabsDrag } from './useTabsDrag.svelte.ts';
 	import { provideTabsReorder } from './useTabsReorder.svelte.ts';
+	import { DEFAULT_TABS_VARIANT } from './variant.ts';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
@@ -59,12 +60,15 @@ dragging a tab drops it where the pointer lets go, and either writes the new str
 	const GHOST_OFFSET_PX = 12;
 
 	const listClasses: Record<TabsVariant, string> = {
-		underline: 'flex gap-4 border-b border-medium',
+		underline: 'underline-tabs',
 		file: 'file-tabs'
 	};
 </script>
 
-<Tabs.List class={[listClasses[tabs?.variant ?? 'underline'], extraClasses]} {...restProps}>
+<Tabs.List
+	class={[listClasses[tabs?.variant ?? DEFAULT_TABS_VARIANT], extraClasses]}
+	{...restProps}
+>
 	{@render children?.()}
 	{#if drag.isChipAtEnd}
 		<LandingChip label={drag.label} />

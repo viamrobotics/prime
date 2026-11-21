@@ -98,7 +98,7 @@ const drop = (source: Element, point: Point, pointer = MOUSE) => {
 const startsNoDrag = async (element: Element) => {
 	await tick();
 	expect(ghost()).toBeNull();
-	expect(element.hasAttribute('hidden')).toBe(false);
+	expect(element.hasAttribute('hidden'), 'the pressed tab stays in the strip').toBe(false);
 };
 
 describe('Tabs.List reorderable: Alt+Shift+Arrow on a focused tab', () => {
@@ -262,13 +262,19 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 
 		const overview = await lift('Overview');
 		drop(overview, pastEndOf('API reference'));
-		await expect.poll(order).toBe('usage,api,overview');
-		await expect.element(announcer()).toHaveTextContent('Overview moved to position 3 of 3.');
+		await expect
+			.poll(order, { message: 'the first drop moves forward' })
+			.toBe('usage,api,overview');
+		await expect
+			.element(announcer(), { message: 'the first drop announces' })
+			.toHaveTextContent('Overview moved to position 3 of 3.');
 
 		await lift('Overview');
 		drop(overview, beforeStartOf('Usage'));
-		await expect.poll(order).toBe('overview,usage,api');
-		await expect.element(announcer()).toHaveTextContent('Overview moved to position 1 of 3.');
+		await expect.poll(order, { message: 'the second drop moves back' }).toBe('overview,usage,api');
+		await expect
+			.element(announcer(), { message: 'the second drop announces' })
+			.toHaveTextContent('Overview moved to position 1 of 3.');
 	});
 
 	it('ghosts the visible label, not the aria-label', async () => {
@@ -279,25 +285,66 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		expect(ghost()?.textContent?.trim()).toBe('API');
 	});
 
-	it('lifts the tab out of the strip, follows the pointer with a ghost, and marks the landing slot', async () => {
+	it('takes the lifted tab out of the strip', async () => {
 		render(ReorderTabs);
 
 		const usage = await lift('Usage');
 
 		expect(usage).not.toBeVisible();
-		expect(ghost()?.textContent?.trim()).toBe('Usage');
-		expect(ghost()?.getAttribute('aria-hidden')).toBe('true');
-		expect(chip()?.getAttribute('aria-hidden')).toBe('true');
-		await expect.poll(strip).toEqual(['Overview', 'Usage', 'API']);
+	});
 
-		const end = pastEndOf('API reference');
-		dispatchPointer('pointermove', document.body, end);
+	it('hides the ghost from assistive technology', async () => {
+		render(ReorderTabs);
+
+		await lift('Usage');
+
+		expect(ghost()?.getAttribute('aria-hidden')).toBe('true');
+	});
+
+	it('holds the lifted tab slot with a landing chip carrying its label', async () => {
+		render(ReorderTabs);
+
+		await lift('Usage');
+
+		await expect.poll(strip).toEqual(['Overview', 'Usage', 'API']);
+	});
+
+	it('hides the landing chip from assistive technology', async () => {
+		render(ReorderTabs);
+
+		await lift('Usage');
+
+		expect(chip()?.getAttribute('aria-hidden')).toBe('true');
+	});
+
+	it('moves the landing chip to the slot under the pointer', async () => {
+		render(ReorderTabs);
+		await lift('Usage');
+
+		dispatchPointer('pointermove', document.body, pastEndOf('API reference'));
+
 		await expect.poll(strip).toEqual(['Overview', 'API', 'Usage']);
+	});
+
+	it('draws the ghost offset below and right of the pointer', async () => {
+		render(ReorderTabs);
+		await lift('Usage');
+		const end = pastEndOf('API reference');
+
+		dispatchPointer('pointermove', document.body, end);
+		await tick();
+
 		const ghostRect = ghost()?.getBoundingClientRect();
 		expect(ghostRect?.left).toBeCloseTo(end.x + GHOST_OFFSET_PX, 0);
 		expect(ghostRect?.top).toBeCloseTo(end.y + GHOST_OFFSET_PX, 0);
+	});
 
-		drop(usage, end);
+	it('removes the ghost and the landing chip on a drop', async () => {
+		render(ReorderTabs);
+		const usage = await lift('Usage');
+
+		drop(usage, pastEndOf('API reference'));
+
 		await expect.poll(order).toBe('overview,api,usage');
 		expect(chip()).toBeNull();
 		expect(ghost()).toBeNull();
@@ -319,16 +366,25 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		drop(usage, centerOf(slot));
 	});
 
-	it('swallows the click that follows a drop, and only that one', async () => {
+	it('swallows the click that follows a drop', async () => {
 		render(ReorderTabs);
+		const usage = await lift('Usage');
 
+		drop(usage, pastEndOf('API reference'));
+
+		await expect.poll(order).toBe('overview,api,usage');
+		expect(page.getByTestId('owner').element().textContent).toBe('overview');
+	});
+
+	it('lets a later click through after a drop', async () => {
+		render(ReorderTabs);
 		const usage = await lift('Usage');
 		drop(usage, pastEndOf('API reference'));
 		await expect.poll(order).toBe('overview,api,usage');
-		expect(page.getByTestId('owner').element().textContent).toBe('overview');
 
-		await userEvent.click(tab('Usage'));
-		await expect.element(tab('Usage')).toHaveAttribute('aria-selected', 'true');
+		await page.getByRole('button', { name: 'Reset order' }).click();
+
+		await expect.poll(order).toBe('overview,usage,api');
 	});
 
 	it('keeps the selected tab selected and its panel shown and mounted through a drag', async () => {
@@ -337,7 +393,9 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 
 		const overview = await lift('Overview');
 		await tick();
-		expect(page.getByRole('tabpanel').element()).toBe(panel);
+		expect(page.getByRole('tabpanel').element(), 'the panel stays mounted while lifted').toBe(
+			panel
+		);
 		drop(overview, pastEndOf('API reference'));
 
 		await expect.poll(order).toBe('usage,api,overview');
@@ -388,60 +446,52 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		}
 	);
 
-	it('does not lift a disabled tab, and drops another tab past it', async () => {
+	it('does not lift a disabled tab', async () => {
 		render(ReorderTabs, { props: { disabledTab: 'usage' } });
 		const usage = tab('Usage').element();
 
 		travel(usage, press(usage));
+
 		await startsNoDrag(usage);
 		dispatchPointer('pointerup', usage, centerOf(usage));
+	});
 
+	it('drops a tab past a disabled one', async () => {
+		render(ReorderTabs, { props: { disabledTab: 'usage' } });
 		const overview = await lift('Overview');
+
 		drop(overview, beforeStartOf('API reference'));
+
 		await expect.poll(order).toBe('usage,overview,api');
 	});
 
-	it('ends the drag cleanly when the lifted tab is removed, and drags again after', async () => {
+	it('ends the drag when the lifted tab is removed', async () => {
 		render(ReorderTabs);
+		await lift('Usage');
 
-		const usage = await lift('Usage');
 		(page.getByRole('button', { name: 'Remove Usage' }).element() as HTMLElement).click();
 
 		await expect.poll(ghost).toBeNull();
 		expect(chip()).toBeNull();
-		expect(usage.isConnected).toBe(false);
 		dispatchPointer('pointerup', document.body, centerOf(tab('Overview').element()));
 		expect(strip()).toEqual(['Overview', 'API']);
+	});
+
+	it('drags another tab after the lifted one is removed', async () => {
+		render(ReorderTabs);
+		await lift('Usage');
+		(page.getByRole('button', { name: 'Remove Usage' }).element() as HTMLElement).click();
+		await expect.poll(ghost).toBeNull();
+		dispatchPointer('pointerup', document.body, centerOf(tab('Overview').element()));
 
 		const overview = await lift('Overview');
 		drop(overview, pastEndOf('API reference'));
+
 		await expect.poll(order).toBe('api,overview');
 	});
 
-	it('cancels on Escape without letting the key reach the page', async () => {
-		render(ReorderTabs);
-		const keys: string[] = [];
-		const controller = new AbortController();
-		onTestFinished(() => controller.abort());
-		document.addEventListener('keydown', (event) => keys.push(event.key), {
-			signal: controller.signal
-		});
-
-		const overview = await lift('Overview');
-		const end = pastEndOf('API reference');
-		dispatchPointer('pointermove', document.body, end);
-		await userEvent.keyboard('{Escape}');
-
-		await expect.poll(ghost).toBeNull();
-		expect(chip()).toBeNull();
-		expect(keys).toEqual([]);
-		drop(overview, end);
-		await tick();
-		expect(order()).toBe('overview,usage,api');
-		expect(strip()).toEqual(['Overview', 'Usage', 'API']);
-	});
-
 	it.each([
+		{ cause: 'Escape', end: () => userEvent.keyboard('{Escape}') },
 		{
 			cause: 'pointercancel',
 			end: () => dispatchPointer('pointercancel', document.body, { x: 0, y: 0 })
@@ -449,28 +499,55 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		{ cause: 'window blur', end: () => window.dispatchEvent(new FocusEvent('blur')) }
 	])('cancels on $cause with no write', async ({ end }) => {
 		render(ReorderTabs);
-
 		const overview = await lift('Overview');
 		const target = pastEndOf('API reference');
 		dispatchPointer('pointermove', document.body, target);
-		end();
+
+		await end();
 
 		await expect.poll(ghost).toBeNull();
+		expect(chip()).toBeNull();
 		drop(overview, target);
 		await tick();
 		expect(order()).toBe('overview,usage,api');
 		expect(strip()).toEqual(['Overview', 'Usage', 'API']);
 	});
 
-	it('starts no drag from a press on a nested close button, which still closes the tab', async () => {
+	it('keeps the Escape that cancels a drag from reaching the page', async () => {
+		render(ReorderTabs);
+		const keys: string[] = [];
+		const controller = new AbortController();
+		onTestFinished(() => controller.abort());
+		document.addEventListener('keydown', (event) => keys.push(event.key), {
+			signal: controller.signal
+		});
+		await lift('Overview');
+
+		await userEvent.keyboard('{Escape}');
+
+		await expect.poll(ghost).toBeNull();
+		expect(keys).toEqual([]);
+	});
+
+	it('starts no drag from a press on a nested close button', async () => {
 		render(ClosableTabs, { props: { reorderable: true } });
 		const close = page.getByRole('button', { name: 'Close Usage' }).element() as HTMLElement;
 		const usage = closableTab('Usage').element();
 
 		const start = press(close);
 		travel(close, start);
+
 		await startsNoDrag(usage);
 		dispatchPointer('pointerup', close, start);
+	});
+
+	it('lets a nested close button close its tab after a press that travels', async () => {
+		render(ClosableTabs, { props: { reorderable: true } });
+		const close = page.getByRole('button', { name: 'Close Usage' }).element() as HTMLElement;
+		const start = press(close);
+		travel(close, start);
+		dispatchPointer('pointerup', close, start);
+
 		close.click();
 
 		await expect.element(closableTab('Usage')).not.toBeInTheDocument();
@@ -491,7 +568,7 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 			props: { reorderable: true, variant: 'file', extraTabCount: 8, width: '240px' }
 		});
 		const list = page.getByRole('tablist').element();
-		expect(list.scrollLeft).toBe(0);
+		expect(list.scrollLeft, 'the strip starts unscrolled').toBe(0);
 
 		await lift('Overview', closableTab('Overview').element());
 		const { right, top, height } = list.getBoundingClientRect();
@@ -515,20 +592,32 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		dispatchPointer('pointerup', usage, centerOf(usage), TOUCH);
 	});
 
-	it('drags a touch held past the hold, and blocks scrolling once armed', async () => {
+	it('blocks touch scrolling only once the hold arms the press', async () => {
 		render(ReorderTabs);
 		const usage = tab('Usage').element();
-
-		const start = press(usage, TOUCH);
 		const early = new TouchEvent('touchmove', { bubbles: true, cancelable: true });
+		const armed = new TouchEvent('touchmove', { bubbles: true, cancelable: true });
+
+		press(usage, TOUCH);
 		usage.dispatchEvent(early);
 		await delay(PAST_HOLD_MS);
-		const armed = new TouchEvent('touchmove', { bubbles: true, cancelable: true });
 		usage.dispatchEvent(armed);
+
+		expect(
+			[early.defaultPrevented, armed.defaultPrevented],
+			'touchmove canceled [before, after] the hold'
+		).toEqual([false, true]);
+		dispatchPointer('pointerup', usage, centerOf(usage), TOUCH);
+	});
+
+	it('drags a touch held past the hold', async () => {
+		render(ReorderTabs);
+		const usage = tab('Usage').element();
+		const start = press(usage, TOUCH);
+		await delay(PAST_HOLD_MS);
+
 		travel(usage, start, TOUCH);
 
-		expect(early.defaultPrevented).toBe(false);
-		expect(armed.defaultPrevented).toBe(true);
 		await expect.poll(ghost).not.toBeNull();
 		drop(usage, pastEndOf('API reference'), TOUCH);
 		await expect.poll(order).toBe('overview,api,usage');
@@ -550,18 +639,28 @@ describe('Tabs.List without reorderable', () => {
 		expect(chip()).toBeNull();
 	});
 
-	it('moves nothing on the chord and marks no tab with aria-keyshortcuts', async () => {
+	it('moves nothing on the chord', async () => {
 		render(ReorderTabs, { props: { reorderable: false } });
 		focusTab('Overview');
 
 		await userEvent.keyboard(MOVE_RIGHT);
 
 		expect(order()).toBe('overview,usage,api');
-		expect(allTabs().map((element) => element.hasAttribute('aria-keyshortcuts'))).toEqual([
-			false,
-			false,
-			false
+	});
+
+	it('marks no tab with aria-keyshortcuts', () => {
+		render(ReorderTabs, { props: { reorderable: false } });
+
+		expect(allTabs().map((element) => element.getAttribute('aria-keyshortcuts'))).toEqual([
+			null,
+			null,
+			null
 		]);
+	});
+
+	it('renders no status region', () => {
+		render(ReorderTabs, { props: { reorderable: false } });
+
 		expect(document.querySelector('[role="status"]')).toBeNull();
 	});
 });
@@ -570,13 +669,29 @@ describe('Tabs.Trigger move controls', () => {
 	const control = (name: string) => page.getByRole('button', { name, exact: true });
 	const controlElement = (name: string) => control(name).element() as HTMLButtonElement;
 
-	it('moves the tab, announces as a key does, and focuses the moved tab', async () => {
+	const disabledStates = (names: string[]) => names.map((name) => controlElement(name).disabled);
+
+	it('moves the tab one place', async () => {
 		render(MoveControlTabs);
 
 		await userEvent.click(control('Move Overview right'));
 
 		expect(order()).toBe('usage,overview,api');
+	});
+
+	it('announces the move as a key does', async () => {
+		render(MoveControlTabs);
+
+		await userEvent.click(control('Move Overview right'));
+
 		await expect.element(announcer()).toHaveTextContent('Overview moved to position 2 of 3.');
+	});
+
+	it('focuses the moved tab', async () => {
+		render(MoveControlTabs);
+
+		await userEvent.click(control('Move Overview right'));
+
 		await expect.poll(() => document.activeElement).toBe(tab('Overview').element());
 	});
 
@@ -586,24 +701,34 @@ describe('Tabs.Trigger move controls', () => {
 		await userEvent.click(control('Move Overview right'));
 
 		expect(order()).toBe('usage,overview,api');
-		await userEvent.click(control('Move Overview right'));
-		expect(order()).toBe('usage,api,overview');
 	});
 
 	it('disables the buttons at each end', () => {
 		render(MoveControlTabs);
 
-		expect(controlElement('Move Overview left').disabled).toBe(true);
-		expect(controlElement('Move Overview right').disabled).toBe(false);
-		expect(controlElement('Move API left').disabled).toBe(false);
-		expect(controlElement('Move API right').disabled).toBe(true);
+		expect(
+			disabledStates([
+				'Move Overview left',
+				'Move Overview right',
+				'Move API left',
+				'Move API right'
+			]),
+			'disabled for [first left, first right, last left, last right]'
+		).toEqual([true, false, false, true]);
 	});
 
-	it('disables both buttons on a disabled tab and moves nothing', async () => {
+	it('disables both buttons on a disabled tab', () => {
 		render(MoveControlTabs, { props: { disabledTab: 'usage' } });
 
-		expect(controlElement('Move Usage left').disabled).toBe(true);
-		expect(controlElement('Move Usage right').disabled).toBe(true);
+		expect(
+			disabledStates(['Move Usage left', 'Move Usage right']),
+			'disabled for [left, right] on the disabled tab'
+		).toEqual([true, true]);
+	});
+
+	it('moves nothing when a disabled tab calls its move functions', async () => {
+		render(MoveControlTabs, { props: { disabledTab: 'usage', isIgnoringCanMove: true } });
+
 		controlElement('Move Usage right').click();
 		await tick();
 

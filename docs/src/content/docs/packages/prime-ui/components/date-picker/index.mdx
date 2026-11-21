@@ -29,7 +29,7 @@ import controlledSource from "./Controlled.svelte?raw";
 
 ## Anatomy
 
-Every part is a property on `DatePicker`. `Field` is the segmented input and holds the `Trigger` button that opens the calendar. `Content` is the floating panel, portaled to the body, and holds the `Calendar`.
+Every part is a property on `DatePicker`. `Field` is the segmented input and holds the `Trigger` button that opens the calendar. `Content` is the floating panel, portaled to the body unless `portal` says otherwise, and holds the `Calendar`.
 
 ```svelte
 <DatePicker>
@@ -48,13 +48,15 @@ Every part is a property on `DatePicker`. `Field` is the segmented input and hol
 
 `bind:value` on the root. The value is a `DateValue` from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/), or `undefined` until one is picked. `value?.toString()` prints it as ISO `YYYY-MM-DD`.
 
+`name` submits the date as its ISO 8601 string, and submits an empty value until a date is chosen.
+
 <Example code={twoWaySource} title="TwoWay.svelte">
   <TwoWay client:visible />
 </Example>
 
 ### Fully controlled
 
-Pass `bind:value` a getter and a setter. [State & binding](../state/) explains both modes.
+Pass `bind:value` a getter and a setter. The setter can refuse a date by leaving the value as it was, and the field then shows the date the owner holds. [State & binding](../state/) explains both modes.
 
 <Example code={controlledSource} title="Controlled.svelte">
   <Controlled client:visible />
@@ -104,6 +106,7 @@ With focus on a segment of the field:
     { text: "Digits", action: "Types into the segment." },
     { keys: "ArrowUp / ArrowDown", action: "Steps the segment up or down." },
     { keys: "ArrowLeft / ArrowRight", action: "Moves to the previous or next segment." },
+    { keys: "Backspace", action: "Clears the segment." },
   ]}
 />
 

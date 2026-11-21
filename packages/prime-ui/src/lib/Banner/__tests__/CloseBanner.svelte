@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Banner } from '../banner.ts';
 
-	const { onclick }: { onclick: () => void } = $props();
+	const { onclick, label }: { onclick?: () => void; label?: string } = $props();
 </script>
 
 <Banner>
 	<Banner.Description>Heads up</Banner.Description>
-	<Banner.Close {onclick} />
+	<Banner.Close {onclick} aria-label={label} />
 </Banner>

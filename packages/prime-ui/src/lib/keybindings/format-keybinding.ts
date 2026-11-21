@@ -29,7 +29,7 @@ const toTokens = (binding: Keybinding): string[] => {
  * label the modifiers with symbols, so Mod reads `⌘` there and `Ctrl` elsewhere.
  *
  * `formatKeybinding` prints the same keys as one string. Use that where markup will not fit,
- * such as an attribute.
+ * such as a `title` attribute.
  */
 export const keybindingParts = (binding: Keybinding): string[] => {
 	const apple = isAppleDevice();

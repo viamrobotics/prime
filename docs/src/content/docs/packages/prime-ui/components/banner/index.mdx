@@ -28,7 +28,7 @@ import blockSource from "./Block.svelte?raw";
 
 <BannerDemo client:visible />
 
-- `variant` sets the chip color, the glyph, and the live-region role. `info`, `success`, and `pending` are `status`, `warning` and `danger` are `alert`. `pending` spins in the chip.
+- `variant` sets the chip color, the glyph, and the live-region role. `info`, `success`, and `pending` are `status`. `warning` and `danger` are `alert`. `pending` spins in the chip.
 - With no `Banner.Title` the banner is the compact one-liner. A title stacks it.
 - The parts give you the layout. Each lands in its own cell, so what goes inside is your markup.
 - It has no open state. Wrap it in `{#if}` to show and hide it.
@@ -124,7 +124,6 @@ Every part takes `class` on its element. Each part wears a component class from 
 | Part      | Attribute       | Value                 |
 | --------- | --------------- | --------------------- |
 | `Details` | `data-state`    | `open` or `closed`    |
-| `Details` | `data-disabled` | present when disabled |
 
 ## Keyboard
 

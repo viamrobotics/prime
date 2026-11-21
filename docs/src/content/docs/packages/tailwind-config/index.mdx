@@ -68,11 +68,11 @@ import themeToggleSource from "./ThemeToggleDemo.svelte?raw";
 
 ## What it ships
 
-- `tailwind-config.css` — the `@theme {}` block: colors, spacing, fonts, shadows, z-index tokens.
-- `tailwind-config-dark.css` (`./dark`) — optional dark theme. Follows `prefers-color-scheme` by default; a `.light`/`.dark` ancestor forces the mode (class wins).
-- `fonts.js` — three `import '@fontsource-variable/*'` lines for Space Grotesk, Roboto Mono, and Public Sans.
+- `tailwind-config.css` holds the `@theme {}` block of colors, spacing, fonts, shadows, and z-index tokens, plus the component classes.
+- `tailwind-config-dark.css` (`./dark`) is the optional dark theme. It follows `prefers-color-scheme` by default, and a `.light` or `.dark` ancestor forces the mode. The class wins.
+- `fonts.js` holds three `import '@fontsource-variable/*'` lines for Space Grotesk, Roboto Mono, and Public Sans.
 
-Token values match the [Viam design system](https://design.viam.com/). Don't invent values; copy from the published guides.
+Token values match the [Viam design system](https://design.viam.com/). Don't invent values. Copy them from the published guides.
 
 The package also ships the design system's [component classes](./component-classes/): `button`, `badge`, `input`, and more, as plain Tailwind classes.
 
@@ -84,7 +84,7 @@ Every color, text, and font token the `@theme {}` block defines, rendered with t
 
 ## Dark theme scoping
 
-The optional dark theme reassigns the `--color-*` tokens under a `.dark` ancestor, so utilities adapt with no markup changes. A `.light` ancestor forces light mode, and the class wins over `prefers-color-scheme`. The button flips the `dark` class on the box itself, not on the page.
+The optional dark theme reassigns the `--color-*` tokens under a `.dark` ancestor, so utilities adapt with no markup changes. The four `--color-pixel-*` illustration colors keep their light values. A `.light` ancestor forces light mode, and the class wins over `prefers-color-scheme`. The button flips the `dark` class on the box itself, not on the page.
 
 - `dark:` utilities follow the same rules as the tokens. They apply under a `.dark` ancestor and never inside a `.light` subtree.
 - One level of `.light` inside `.dark` is supported. A `.dark` nested inside that `.light` flips the tokens but not `dark:` utilities.

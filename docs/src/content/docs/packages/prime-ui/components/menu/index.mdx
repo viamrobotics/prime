@@ -104,7 +104,7 @@ Pass `bind:open` a getter and a setter. The setter can decline a change.
   <Placed client:visible />
 </Example>
 
-### Item kinds
+### States
 
 <MenuShowcase client:visible />
 
@@ -114,19 +114,21 @@ Pass `bind:open` a getter and a setter. The setter can decline a change.
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `Menu.Trigger` is a real `<button>` with no look of its own beyond the focus ring, so add `button` or `button-ghost`. `Menu` and `Menu.Sub` render no element, so they take no `class`. bits-ui sets the data attributes below. `Menu.Content` wears `z-menu`; see [z layers](../../tailwind-config/component-classes/#z-layers).
+Every part that renders an element takes `class` on that element. `Menu.Trigger` is a real `<button>` with no look of its own beyond the focus ring, so add `button`, or `button button-ghost`. `Menu` and `Menu.Sub` render no element, so they take no `class`. `Menu.Content` and `Menu.SubContent` wear the `popover-panel` class, which carries the `shadow-popover` token, and the `z-menu` layer. See [z layers](../../tailwind-config/component-classes/#z-layers). The parts carry the data attributes below.
 
-| Part         | Attribute          | Value                            |
-| ------------ | ------------------ | -------------------------------- |
-| `Trigger`    | `data-state`       | `open` or `closed`               |
-| `Content`    | `data-state`       | `open` or `closed`               |
-| `Content`    | `data-side`        | the resolved side of the trigger |
-| `Content`    | `data-align`       | the resolved alignment           |
-| `SubTrigger` | `data-state`       | `open` or `closed`               |
-| `SubContent` | `data-state`       | `open` or `closed`               |
-| `Item`       | `data-highlighted` | present while focused or hovered |
-| `Item`       | `data-disabled`    | present when disabled            |
-| `Item`       | `data-variant`     | `default` or `danger`            |
+| Part           | Attribute          | Value                            |
+| -------------- | ------------------ | -------------------------------- |
+| `Trigger`      | `data-state`       | `open` or `closed`               |
+| `Content`      | `data-state`       | `open` or `closed`               |
+| `Content`      | `data-side`        | the resolved side of the trigger |
+| `Content`      | `data-align`       | the resolved alignment           |
+| `SubTrigger`   | `data-state`       | `open` or `closed`               |
+| `SubContent`   | `data-state`       | `open` or `closed`               |
+| `CheckboxItem` | `data-state`       | `checked` or `unchecked`         |
+| `RadioItem`    | `data-state`       | `checked` or `unchecked`         |
+| `Item`         | `data-highlighted` | present while focused or hovered |
+| `Item`         | `data-disabled`    | present when disabled            |
+| `Item`         | `data-variant`     | `default` or `danger`            |
 
 ## Keyboard
 

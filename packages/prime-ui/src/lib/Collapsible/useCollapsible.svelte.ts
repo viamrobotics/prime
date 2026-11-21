@@ -6,9 +6,7 @@ interface CollapsibleOptions {
 	open: () => boolean;
 }
 
-/** What a `Collapsible` shares with the parts inside it. */
 export interface CollapsibleContext {
-	/** Whether the content is shown. */
 	readonly open: boolean;
 }
 
@@ -19,6 +17,6 @@ export const provideCollapsible = (options: CollapsibleOptions): CollapsibleCont
 		}
 	});
 
-/** The enclosing `Collapsible`, or `undefined` when a part is rendered on its own. */
+// Undefined when a part is rendered outside a Collapsible.
 export const useCollapsible = (): CollapsibleContext | undefined =>
 	getContext<CollapsibleContext | undefined>(key);

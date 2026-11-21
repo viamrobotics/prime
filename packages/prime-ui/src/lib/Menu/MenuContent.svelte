@@ -56,7 +56,7 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		pressedTrigger = document.querySelector(`[aria-controls="${CSS.escape(contentId)}"]`);
 	};
 
-	// bits-ui skips the trigger after any outside press, and the modal layer swallows that press, so focus would stay on the body.
+	// bits-ui skips refocusing the trigger after any outside press, even one the modal layer swallows, so focus would stay on the body.
 	const restoreFocus = (event: Event) => {
 		const trigger = pressedTrigger;
 		pressedTrigger = null;
@@ -75,10 +75,7 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		{alignOffset}
 		onInteractOutside={captureTrigger}
 		onCloseAutoFocus={restoreFocus}
-		class={[
-			'z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-popover',
-			extraClasses
-		]}
+		class={['z-menu min-w-40 popover-panel p-1', extraClasses]}
 		{...restProps}
 	>
 		{@render children?.()}

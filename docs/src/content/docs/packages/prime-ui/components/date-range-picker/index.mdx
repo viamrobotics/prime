@@ -31,7 +31,7 @@ import inFieldSource from "./InField.svelte?raw";
 
 ## Anatomy
 
-Every part is a property on `DateRangePicker`. `Field` is the segmented input, holding the start date, a dash, the end date, and the `Trigger` button that opens the calendar. `Content` is the floating panel, portaled to the body, and holds the `Calendar`.
+Every part is a property on `DateRangePicker`. `Field` is the segmented input, holding the start date, a dash, the end date, and the `Trigger` button that opens the calendar. `Content` is the floating panel, portaled to the body unless `portal` says otherwise, and holds the `Calendar`.
 
 ```svelte
 <DateRangePicker>
@@ -48,7 +48,7 @@ Every part is a property on `DateRangePicker`. `Field` is the segmented input, h
 
 ### Two-way binding
 
-`bind:value` on the root. The value is a `DateRange`, an object with a `start` and an `end` that are each a `DateValue` from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/). It is `undefined` until a date is chosen. With only one end chosen, the other is `undefined`, so a finished range is one with both ends set. Picking the end before the start in the calendar swaps them, so `start` is never after `end`.
+`bind:value` on the root. The value is a `DateRange`, an object with a `start` and an `end` that are each a `DateValue` from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/). It is `undefined` until a date is chosen. With only one end chosen, the other is `undefined`, so a finished range is one with both ends set. Picking the end before the start in the calendar swaps them.
 
 `name` submits the range as an ISO 8601 interval, `<start>/<end>`, and submits an empty value until both ends are set.
 

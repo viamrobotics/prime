@@ -261,13 +261,7 @@ export function watchTabDrag(
 
 	return () => {
 		listeners.abort();
+		abandonPress();
 		clicks.stop();
-		clearTimeout(holdTimer);
-		edgeScroller.stop();
-		stopFollowing?.();
-		stopFollowing = undefined;
-		if (drag.lifted === value) drag.cancel();
-		focus.restore();
-		stage = undefined;
 	};
 }

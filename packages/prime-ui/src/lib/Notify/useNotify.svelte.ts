@@ -2,7 +2,8 @@ import * as toast from '@zag-js/toast';
 import { getContext, setContext, type Snippet } from 'svelte';
 
 import type { BannerVariant } from '../Banner/useBanner.svelte.ts';
-import type { ToastPlacement } from '../Toast/useToast.svelte.ts';
+
+import { TOAST_TYPE_BY_VARIANT, type ToastPlacement } from '../Toast/useToast.svelte.ts';
 
 const key = Symbol('Notify');
 
@@ -32,7 +33,7 @@ export interface NotifyChanges {
 	progress?: number;
 }
 
-/** The fields prime keeps on a toast beyond what the machine models. */
+// The fields prime keeps on a toast beyond what the machine models.
 export interface NotifyMeta {
 	actions?: Snippet;
 	progress?: number;
@@ -82,27 +83,38 @@ const DEFAULT_DURATION = 8000;
 const DEFAULT_MAX = 5;
 
 const TYPE_BY_VARIANT: Record<NotifyVariant, toast.Type> = {
-	info: 'info',
-	success: 'success',
-	warning: 'warning',
-	danger: 'error',
+	...TOAST_TYPE_BY_VARIANT,
 	pending: 'loading'
 };
 
-/** The inverse of `TYPE_BY_VARIANT`, for an item reading its tone back off the machine. */
-export const notifyVariantOf = (type: toast.Type): NotifyVariant => {
-	if (type === 'error') return 'danger';
-	if (type === 'loading') return 'pending';
-	if (type === 'success') return 'success';
-	if (type === 'warning') return 'warning';
-	return 'info';
+const NOTIFY_VARIANTS = Object.keys(TYPE_BY_VARIANT) as NotifyVariant[];
+
+export const notifyVariantOf = (type: toast.Type): NotifyVariant =>
+	NOTIFY_VARIANTS.find((variant) => TYPE_BY_VARIANT[variant] === type) ?? 'info';
+
+const toZagToast = (
+	variant: NotifyVariant,
+	title: string,
+	description: string | Snippet | undefined,
+	options: NotifyOptions,
+	duration: number
+): toast.Options<string | Snippet> => {
+	const persists = variant === 'pending' || options.persist === true;
+	const meta: NotifyMeta = { actions: options.actions, progress: options.progress };
+	return {
+		title,
+		description,
+		type: TYPE_BY_VARIANT[variant],
+		duration: persists ? Number.POSITIVE_INFINITY : (options.duration ?? duration),
+		meta,
+		onStatusChange: (details) => {
+			if (details.status === 'unmounted') options.onDismiss?.();
+		}
+	};
 };
 
-/**
- * Only the fields the caller set, so an update never wipes a field it did not name. The timer
- * changes only across the `pending` boundary: into it the notification stops dismissing itself,
- * out of it the countdown starts at the provider's `duration`.
- */
+// Only the fields the caller set. The timer changes only across `pending`: into it the
+// notification stops dismissing itself, out of it the countdown restarts at the provider's duration.
 const toZagChanges = (
 	current: toast.Options<string | Snippet>,
 	changes: NotifyChanges,
@@ -141,18 +153,7 @@ export const provideNotify = (options: NotifyProviderOptions = {}): NotifyContex
 	const notifyByVariant =
 		(variant: NotifyVariant): NotifyByVariant =>
 		(title, description, notifyOptions = {}) => {
-			const persists = variant === 'pending' || notifyOptions.persist === true;
-			const meta: NotifyMeta = { actions: notifyOptions.actions, progress: notifyOptions.progress };
-			const id = store.create({
-				title,
-				description,
-				type: TYPE_BY_VARIANT[variant],
-				duration: persists ? Number.POSITIVE_INFINITY : (notifyOptions.duration ?? duration),
-				meta,
-				onStatusChange: (details) => {
-					if (details.status === 'unmounted') notifyOptions.onDismiss?.();
-				}
-			});
+			const id = store.create(toZagToast(variant, title, description, notifyOptions, duration));
 			return { id, dismiss: () => store.dismiss(id) };
 		};
 

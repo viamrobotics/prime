@@ -2,7 +2,6 @@
 	import { Dialog } from '../dialog.ts';
 
 	interface Props {
-		/** When false, the setter rejects every change (controlled veto). */
 		accept?: boolean;
 	}
 

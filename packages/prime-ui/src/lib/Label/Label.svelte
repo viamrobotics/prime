@@ -55,10 +55,6 @@ On its own, associate it with `for`:
 	$effect(() => field?.label(labelId));
 </script>
 
-{#snippet asterisk()}
-	<span class="text-danger-dark" aria-hidden="true">*</span>
-{/snippet}
-
 <label
 	{...restProps}
 	id={labelId}
@@ -71,7 +67,10 @@ On its own, associate it with `for`:
 >
 	<span>{@render children?.()}</span>
 	{#if isRequired}
-		{@const suffix = indicator ?? asterisk}
-		{@render suffix()}
+		{#if indicator}
+			{@render indicator()}
+		{:else}
+			<span class="text-danger-dark" aria-hidden="true">*</span>
+		{/if}
 	{/if}
 </label>

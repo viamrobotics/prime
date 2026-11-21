@@ -1,8 +1,8 @@
 <!--
 @component
 A button that closes its [`Takeover`](./Takeover.svelte). It renders a close icon by default, labeled
-`Close`, and wears `icon-button` only then. Pass children to replace the icon, and `aria-label` to
-replace the label.
+`Close`, and wears `icon-button` only then. Pass children to replace the icon, and their text names
+the button. Pass `aria-label` to replace either name.
 -->
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';

@@ -2,7 +2,6 @@
 	import { Select } from '../select.ts';
 
 	interface Props {
-		/** When false, the setter rejects every change (controlled veto). */
 		accept?: boolean;
 	}
 
@@ -21,8 +20,8 @@
 	{items}
 	bind:value={
 		() => value,
-		(v) => {
-			if (accept) value = v;
+		(next) => {
+			if (accept) value = next;
 		}
 	}
 >

@@ -29,6 +29,7 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 	import { DatePicker } from 'bits-ui';
 
 	import { useField } from '../Field/useField.svelte.ts';
+	import { refusableValue } from './refusable-value.svelte.ts';
 	import { provideDatePicker } from './useDatePicker.svelte.ts';
 
 	interface Props {
@@ -53,7 +54,10 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 		 */
 		locale?: string;
 
-		/** Name for form submission. */
+		/**
+		 * Name for form submission. The submitted value is the date's ISO 8601 string, or empty
+		 * while no date is chosen.
+		 */
 		name?: string;
 
 		/** Disable the picker. Defaults to the enclosing field's `disabled`. */
@@ -85,6 +89,13 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 
 	const field = useField();
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
+	const isRequired = $derived(required ?? field?.required ?? false);
+
+	const headlessValue = refusableValue({
+		owner: { get: () => value, set: (next) => (value = next) },
+		copy: (date) => date?.copy(),
+		holds: (held, next) => held === next
+	});
 
 	let calendarLabel = $state<string>();
 
@@ -98,7 +109,7 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 </script>
 
 <DatePicker.Root
-	bind:value={() => value, (next) => (value = next)}
+	bind:value={() => headlessValue.current, headlessValue.write}
 	bind:open={() => open ?? false, (next) => (open = next)}
 	minValue={min}
 	maxValue={max}
@@ -106,7 +117,7 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 	{locale}
 	{readonly}
 	disabled={isDisabled}
-	required={required ?? field?.required ?? false}
+	required={isRequired}
 	calendarLabel={calendarLabel ?? 'Choose a date'}
 >
 	{@render children?.()}

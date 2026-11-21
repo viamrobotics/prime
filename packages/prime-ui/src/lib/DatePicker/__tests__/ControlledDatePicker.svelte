@@ -4,7 +4,6 @@
 	import { DatePicker } from '../date-picker.ts';
 
 	interface Props {
-		/** When false, the setter rejects every change (controlled veto). */
 		accept?: boolean;
 	}
 

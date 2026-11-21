@@ -8,8 +8,6 @@
 		readonly?: boolean;
 		required?: boolean;
 		state?: FieldState;
-		rows?: number;
-		name?: string;
 	}
 
 	const { state: fieldState, ...restProps }: Props = $props();

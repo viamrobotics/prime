@@ -25,7 +25,7 @@ at the provider's `placement`, and each toast inside it announces itself as a `s
 	import { useToastStore } from './useToast.svelte.ts';
 
 	interface Props {
-		/** The region's accessible label. @default 'Notifications' */
+		/** The region's accessible name. Its placement and the Alt+T shortcut that focuses it are read after the name. @default 'Notifications' */
 		label?: string;
 		/** Classes for the region element. */
 		class?: ClassValue;

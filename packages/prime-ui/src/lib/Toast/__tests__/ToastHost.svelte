@@ -45,4 +45,12 @@
 >
 	pair
 </button>
+<button
+	type="button"
+	data-testid="update"
+	onclick={() =>
+		toasts.update(toasts.info('Uploading', { description: 'report.csv' }), { title: 'Uploaded' })}
+>
+	update
+</button>
 <Toast />

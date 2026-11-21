@@ -29,12 +29,11 @@ export interface FieldContext {
 }
 
 const createRegistry = () => {
-	let ids = $state<string[]>([]);
+	let ids = $state.raw<string[]>([]);
 	const joined = $derived(ids.length > 0 ? ids.join(' ') : undefined);
 
-	// Parts register from an $effect. Reading `ids` there would make that effect depend
-	// on the list it appends to and loop, so the write happens untracked.
 	const register = (id: string) => {
+		// Parts register from an `$effect`, which would otherwise depend on the list it appends to and loop.
 		untrack(() => {
 			ids = [...ids, id];
 		});
@@ -80,5 +79,4 @@ export const provideField = (options: FieldOptions): FieldContext => {
 	});
 };
 
-/** The enclosing `Field`, or `undefined` when the part is used on its own. */
 export const useField = (): FieldContext | undefined => getContext<FieldContext | undefined>(key);

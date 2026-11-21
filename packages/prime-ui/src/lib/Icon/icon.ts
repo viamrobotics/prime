@@ -6,9 +6,9 @@ import type { Component } from 'svelte';
  */
 export type IconType = Component | string;
 
+/** A size token for `Icon`'s `size` prop, `xs` through `4xl`. */
 export type IconSize = keyof typeof iconSizes;
 
-/** Maps each size token to the Tailwind `size-*` class `Icon` applies. */
 export const iconSizes = {
 	xs: 'size-3',
 	sm: 'size-3.5',

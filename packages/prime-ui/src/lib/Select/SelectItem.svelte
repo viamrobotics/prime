@@ -50,13 +50,6 @@ Pass a children snippet to render custom content:
 	}: Props = $props();
 </script>
 
-{#snippet entry({ selected }: { selected: boolean })}
-	<span class="truncate">{label ?? value}</span>
-	{#if selected}
-		<Icon icon={mdiCheck} size="sm" class="shrink-0 text-default" />
-	{/if}
-{/snippet}
-
 <Select.Item
 	{value}
 	{label}
@@ -66,7 +59,13 @@ Pass a children snippet to render custom content:
 	{...restProps}
 >
 	{#snippet children({ selected, highlighted })}
-		{@const item = content ?? entry}
-		{@render item({ selected, highlighted })}
+		{#if content}
+			{@render content({ selected, highlighted })}
+		{:else}
+			<span class="truncate">{label ?? value}</span>
+			{#if selected}
+				<Icon icon={mdiCheck} size="sm" class="shrink-0 text-default" />
+			{/if}
+		{/if}
 	{/snippet}
 </Select.Item>

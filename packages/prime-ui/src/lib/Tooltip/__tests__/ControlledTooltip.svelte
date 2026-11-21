@@ -5,7 +5,6 @@
 	import { Tooltip } from '../tooltip.ts';
 
 	interface Props {
-		/** When false, the setter rejects every change (controlled veto). */
 		accept?: boolean;
 	}
 

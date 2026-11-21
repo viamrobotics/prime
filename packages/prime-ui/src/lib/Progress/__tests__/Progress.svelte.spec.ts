@@ -1,11 +1,19 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { cdp } from 'vitest/browser';
 
 import { backgroundColor, colorOf } from '../../__tests__/computed-style.ts';
 import Progress from '../Progress.svelte';
 
 const bar = (container: Element) => container.querySelector<HTMLElement>('[role="progressbar"]')!;
 const fill = (container: Element) => container.querySelector<HTMLElement>('.progress-fill')!;
+
+const emulateReducedMotion = (value: 'reduce' | 'no-preference') =>
+	cdp().send('Emulation.setEmulatedMedia', {
+		features: [{ name: 'prefers-reduced-motion', value }]
+	});
+
+afterEach(() => emulateReducedMotion('no-preference'));
 
 describe('Progress', () => {
 	it('is a progressbar named by label with a 0 to max range', () => {
@@ -33,11 +41,24 @@ describe('Progress', () => {
 		expect(fill(container).style.width).toBe(width);
 	});
 
-	it('omits aria-valuenow and slides the fill when indeterminate', () => {
+	it('omits aria-valuenow when indeterminate', () => {
 		const { container } = render(Progress, { props: { label: 'Connecting' } });
 
-		expect(bar(container).hasAttribute('aria-valuenow')).toBe(false);
+		expect(bar(container).getAttribute('aria-valuenow')).toBeNull();
+	});
+
+	it('slides the fill when indeterminate', () => {
+		const { container } = render(Progress, { props: { label: 'Connecting' } });
+
 		expect(getComputedStyle(fill(container)).animationName).toBe('progress-indeterminate');
+	});
+
+	it('holds the indeterminate fill still under prefers-reduced-motion', async () => {
+		await emulateReducedMotion('reduce');
+
+		const { container } = render(Progress, { props: { label: 'Connecting' } });
+
+		expect(getComputedStyle(fill(container)).animationName).toBe('none');
 	});
 
 	it('does not animate the fill when determinate', () => {

@@ -30,7 +30,10 @@ Pass a children snippet to render custom content:
 		/** The value this item selects when chosen. */
 		value: string;
 
-		/** Text shown for the item and in the input once it is selected. Falls back to `value`. */
+		/**
+		 * Text shown for the item. Falls back to `value`. Once the item is selected, the input shows
+		 * the label of the matching entry in the root's `items`, not this one.
+		 */
 		label?: string;
 
 		/** Prevent the item from being selected. @default false */
@@ -50,13 +53,6 @@ Pass a children snippet to render custom content:
 	}: Props = $props();
 </script>
 
-{#snippet entry({ selected }: { selected: boolean })}
-	<span class="truncate">{label ?? value}</span>
-	{#if selected}
-		<Icon icon={mdiCheck} size="sm" class="shrink-0 text-default" />
-	{/if}
-{/snippet}
-
 <Combobox.Item
 	{value}
 	{label}
@@ -66,7 +62,13 @@ Pass a children snippet to render custom content:
 	{...restProps}
 >
 	{#snippet children({ selected, highlighted })}
-		{@const item = content ?? entry}
-		{@render item({ selected, highlighted })}
+		{#if content}
+			{@render content({ selected, highlighted })}
+		{:else}
+			<span class="truncate">{label ?? value}</span>
+			{#if selected}
+				<Icon icon={mdiCheck} size="sm" class="shrink-0 text-default" />
+			{/if}
+		{/if}
 	{/snippet}
 </Combobox.Item>

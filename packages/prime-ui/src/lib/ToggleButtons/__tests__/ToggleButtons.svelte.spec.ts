@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor } from '../../__tests__/computed-style.ts';
+import { backgroundColor, colorOf, textColor } from '../../__tests__/computed-style.ts';
 import BoundToggleButtons from './BoundToggleButtons.svelte';
 import ControlledToggleButtons from './ControlledToggleButtons.svelte';
 import UndefinedToggleButtons from './UndefinedToggleButtons.svelte';
@@ -22,26 +22,26 @@ const radio = (container: Element, label: string) =>
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
 describe('ToggleButtons', () => {
-	it('renders one radio per item inside a group', () => {
-		const { container } = render(BoundToggleButtons, { props: { items } });
+	it.each([
+		{
+			source: 'items',
+			props: {
+				items: [
+					{ value: 'xs', label: 'Tiny' },
+					{ value: 'xl', label: 'Huge' }
+				]
+			},
+			labels: ['Tiny', 'Huge']
+		},
+		{ source: 'Item children', props: {}, labels: ['Small', 'Medium', 'Large'] }
+	])('renders one radio per option from $source inside the group', ({ props, labels }) => {
+		const { container } = render(BoundToggleButtons, { props });
 
-		expect(group(container)).not.toBeNull();
-		expect(radios(container).map((item) => item.textContent?.trim())).toEqual([
-			'Small',
-			'Medium',
-			'Large'
-		]);
-	});
-
-	it('renders one radio per Item child inside a group', () => {
-		const { container } = render(BoundToggleButtons);
-
-		expect(group(container)).not.toBeNull();
-		expect(radios(container).map((item) => item.textContent?.trim())).toEqual([
-			'Small',
-			'Medium',
-			'Large'
-		]);
+		expect(
+			[...group(container).querySelectorAll('[role="radio"]')].map((item) =>
+				item.textContent?.trim()
+			)
+		).toEqual(labels);
 	});
 
 	it('marks only the bound value checked', () => {
@@ -98,6 +98,16 @@ describe('ToggleButtons', () => {
 		expect(radios(container).map((item) => item.disabled)).toEqual([true, true, true]);
 	});
 
+	it('paints every unselected item disabled when the group is disabled', () => {
+		const { container } = render(BoundToggleButtons, { props: { disabled: true } });
+		const unselected = [radio(container, 'Medium'), radio(container, 'Large')];
+		const background = colorOf('bg-disabled-light', 'backgroundColor');
+		const text = colorOf('text-disabled-dark', 'color');
+
+		expect(unselected.map(backgroundColor)).toEqual([background, background]);
+		expect(unselected.map(textColor)).toEqual([text, text]);
+	});
+
 	it('disables an item alone when it is disabled itself', () => {
 		const { container } = render(BoundToggleButtons, { props: { itemDisabled: true } });
 
@@ -119,12 +129,19 @@ describe('ToggleButtons', () => {
 		expect(group(container).getAttribute('aria-describedby')).toBe('hint-id');
 	});
 
-	it('paints the selected item differently from an unselected one', () => {
+	it('paints the selected item light and default, and the others medium and subtle', () => {
 		const { container } = render(BoundToggleButtons);
+		const selected = colorOf('bg-light', 'backgroundColor');
+		const unselected = colorOf('bg-medium', 'backgroundColor');
+		const selectedText = colorOf('text-default', 'color');
+		const unselectedText = colorOf('text-subtle-1', 'color');
 
-		expect(backgroundColor(radio(container, 'Small'))).not.toBe(
-			backgroundColor(radio(container, 'Medium'))
-		);
+		expect(radios(container).map(backgroundColor)).toEqual([selected, unselected, unselected]);
+		expect(radios(container).map(textColor)).toEqual([
+			selectedText,
+			unselectedText,
+			unselectedText
+		]);
 	});
 
 	it('ArrowRight moves focus to the next item without changing the selection', async () => {

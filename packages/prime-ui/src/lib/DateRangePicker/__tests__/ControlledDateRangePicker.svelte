@@ -6,7 +6,6 @@
 	import { DateRangePicker } from '../date-range-picker.ts';
 
 	interface Props {
-		/** When false, the setter rejects every change (controlled veto). */
 		accept?: boolean;
 	}
 

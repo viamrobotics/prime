@@ -22,6 +22,7 @@ import FileTabs from "./FileTabs.svelte";
 import fileTabsSource from "./FileTabs.svelte?raw";
 import Reorderable from "./Reorderable.svelte";
 import reorderableSource from "./Reorderable.svelte?raw";
+import TabsShowcase from "./TabsShowcase.svelte";
 import ReorderControlled from "./ReorderControlled.svelte";
 import reorderControlledSource from "./ReorderControlled.svelte?raw";
 
@@ -30,7 +31,7 @@ import reorderControlledSource from "./ReorderControlled.svelte?raw";
 <TabsDemo client:visible />
 
 - Composed from parts, so the list, each tab, and each panel are yours to arrange.
-- The first tab is selected until the user picks another. A selection whose tab is removed falls back to the first remaining tab.
+- With no `value`, the first tab is selected. A selection whose tab is removed falls back to the first remaining tab.
 - `value` on the root is bindable, two-way or as a getter and setter. [State & binding](../state/) explains both modes.
 - Activation is automatic: <kbd>ArrowLeft</kbd>, <kbd>ArrowRight</kbd>, <kbd>Home</kbd>, and <kbd>End</kbd> move focus and select.
 - Each `Tabs.Trigger` is a `role="tab"` element, not a `<button>`, so a control can sit inside it.
@@ -80,7 +81,7 @@ A trigger's children are its content, so an icon sits beside the label.
 
 ### Controls inside a tab
 
-Put controls in the `actions` snippet of `Tabs.Trigger`, after the label. The tab is then named from its label alone, so a close button's name does not leak into it. A control nested in a tab keeps its own key events, so <kbd>Enter</kbd> and <kbd>Space</kbd> reach it. Its click handler should call `event.stopPropagation()`, or the click also selects the tab. Closing the selected tab falls back to the first remaining tab, and the list hides at one tab.
+Put controls in the `actions` snippet of `Tabs.Trigger`, after the label. The tab is then named from its label alone, so a close button's name does not leak into it. A control nested in a tab keeps its own key events, so <kbd>Enter</kbd> and <kbd>Space</kbd> reach it. Its click handler should call `event.stopPropagation()`, or the click also selects the tab. Closing the selected tab falls back to the first remaining tab. The example wraps the list in `{#if}`, so it hides at one tab.
 
 <Example code={closableSource} title="Closable.svelte">
   <Closable client:visible />
@@ -112,9 +113,13 @@ A drag alone fails WCAG 2.5.7, and the keys need a keyboard. The `actions` snipp
   <ReorderControlled client:visible />
 </Example>
 
+### States
+
+<TabsShowcase client:visible />
+
 ## Styling
 
-The root and every part take `class` on their element. The `file` variant wears the `file-tabs` and `file-tab` classes from tailwind-config. See [file-tabs](../../tailwind-config/component-classes/#file-tabs).
+The root and every part take `class` on their element. The `underline` variant wears the `underline-tabs` class on the list and `underline-tab` on each trigger. The `file` variant wears `file-tabs` and `file-tab`, and its drop placeholder wears `file-tab-slot`. All are classes from tailwind-config. See [file-tabs](../../tailwind-config/component-classes/#file-tabs).
 
 | Part      | Attribute       | Value                  |
 | --------- | --------------- | ---------------------- |
@@ -129,7 +134,7 @@ The root and every part take `class` on their element. The `file` variant wears 
     { keys: "ArrowLeft / ArrowRight", action: "Moves focus to the previous or next tab and selects it." },
     { keys: "Home / End", action: "Moves focus to the first or last tab and selects it." },
     { keys: "Alt + Shift + ArrowLeft / ArrowRight", action: "Moves the focused tab one place left or right, when the list is reorderable." },
-    { keys: "Tab", action: "Moves focus into the selected panel." },
+    { keys: "Tab", action: "Moves focus to the selected panel, stopping first on each control inside the selected tab and the tabs after it." },
   ]}
 />
 

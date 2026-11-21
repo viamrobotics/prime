@@ -20,7 +20,7 @@ import basicSource from "./Basic.svelte?raw";
 
 - Each menu is a `Menubar.Menu` holding a `Menubar.Trigger` and a `Menubar.Content`.
 - Shares every item part with [`Menu`](../menu/), so the item kinds, submenus, shortcuts, and selection are documented there.
-- With one menu open, moving to a neighbouring trigger opens that menu, and the ends wrap around.
+- With one menu open, moving to a neighboring trigger opens that menu, and the ends wrap around.
 - Give the bar an `aria-label` so assistive technology can name it.
 
 ## Anatomy
@@ -55,7 +55,7 @@ Project, Edit, and View menus with shortcut hints, a toggle, a submenu, a separa
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `Menubar` lays its triggers out in a row, and `Menubar.Trigger` is a text button that highlights on hover, on focus, and while its menu is open. `Menubar.Content` wears `z-menu`; see [z layers](../../tailwind-config/component-classes/#z-layers). The data attributes on the item parts are the same as on [`Menu`](../menu/#styling).
+Every part that renders an element takes `class` on that element. `Menubar` lays its triggers out in a row, and `Menubar.Trigger` is a text button that highlights on hover, on focus, and while its menu is open. `Menubar.Content` wears the `popover-panel` class, which carries the `shadow-popover` token, and the `z-menu` layer. See [z layers](../../tailwind-config/component-classes/#z-layers). The data attributes on the item parts are the same as on [`Menu`](../menu/#styling).
 
 ## Keyboard
 

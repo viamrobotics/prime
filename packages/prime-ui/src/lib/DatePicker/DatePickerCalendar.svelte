@@ -22,6 +22,7 @@ on show.
 	import { DatePicker } from 'bits-ui';
 
 	import Icon from '../Icon/Icon.svelte';
+	import { monthButtonName } from './month-button-name.ts';
 	import { useDatePicker } from './useDatePicker.svelte.ts';
 
 	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -47,14 +48,8 @@ on show.
 		};
 	});
 
-	const monthButtonName = (step: -1 | 1): string => {
-		const locale = picker?.locale ?? 'en-US';
-		const name = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(step, 'month');
-		return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
-	};
-
-	const previousMonthName = $derived(monthButtonName(-1));
-	const nextMonthName = $derived(monthButtonName(1));
+	const previousMonthName = $derived(monthButtonName(-1, picker?.locale));
+	const nextMonthName = $derived(monthButtonName(1, picker?.locale));
 </script>
 
 <DatePicker.Calendar class={['text-sm text-default select-none', extraClasses]} {...restProps}>

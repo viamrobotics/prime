@@ -5,7 +5,7 @@ sidebar:
   order: 0
 ---
 
-Every prime-ui value control manages its value with standard Svelte 5 bindings: `Checkbox`, `Input`, `NumberInput`, `RadioGroup`, `Select`. There are two modes. The examples use `Checkbox`, but the same applies to `value` on the others.
+Every prime-ui value control, such as `Checkbox`, `Input`, `NumberInput`, `RadioGroup`, and `Select`, manages its value with standard Svelte 5 bindings. There are two modes. The examples use `checked` on `Checkbox`, and the same applies to `checked` on `Switch` and to `value` on the others.
 
 ## Two-way binding
 
@@ -38,7 +38,7 @@ Give `bind:` a **function binding**: a getter and a setter. Your setter is the s
 
 To react to changes without controlling them, use `$effect`. It also fires on programmatic changes:
 
-```svelte
+```ts
 $effect(() => console.log("checked is now", checked));
 ```
 

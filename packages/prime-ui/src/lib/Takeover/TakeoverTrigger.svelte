@@ -1,6 +1,6 @@
 <!--
 @component
-The button that opens a [`Takeover`](./Takeover.svelte). It carries no visual style of its own, so add `button` or another class.
+The button that opens a [`Takeover`](./Takeover.svelte). It wears `focus-ring` and no other style, so add `button` or another class.
 -->
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';

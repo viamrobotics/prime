@@ -146,14 +146,43 @@ It takes the same `button-*` color and fill modifiers. `icon-button` alone is th
   `aria-labelledby`.
 </Aside>
 
+## underline-tabs
+
+A strip of tabs that marks the selected tab with a line under its label. `underline-tabs` is the strip, a row of tabs 16px apart over a 1px bottom border. `underline-tab` is one tab in it. The selected tab draws a 2px `gray-9` line over the strip's border and sets its text semibold. Hover gives an enabled tab the default text color. Keyboard focus draws the shared outset ring, because this strip does not scroll.
+
+<div class="not-content rounded-sm border border-light p-4">
+  <div class="underline-tabs" role="tablist" aria-label="Account">
+    <div class="underline-tab" role="tab" aria-selected="false" tabindex="-1">Rest</div>
+    <div class="underline-tab" role="tab" aria-selected="true" tabindex="0">Selected</div>
+    <div class="underline-tab" role="tab" aria-selected="false" aria-disabled="true" tabindex="-1">Disabled</div>
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="underline-tabs" role="tablist" aria-label="Account">
+  <div class="underline-tab" role="tab" aria-selected="true">Overview</div>
+  <div class="underline-tab" role="tab" aria-selected="false">Usage</div>
+  <div class="underline-tab" role="tab" aria-selected="false" aria-disabled="true">Billing</div>
+</div>`}
+/>
+
+| State    | Attribute                | What changes                                                                            |
+| -------- | ------------------------ | --------------------------------------------------------------------------------------- |
+| Hover    | `:hover`                 | Default text on an enabled tab, on a device that can hover.                             |
+| Selected | `[aria-selected="true"]` | A 2px `gray-9` line under the label and semibold default text.                          |
+| Disabled | `[aria-disabled="true"]` | Disabled text and a `not-allowed` cursor. A selected tab keeps its line and text color. |
+| Focus    | `:focus-visible`         | The shared 2px outline, offset 2px.                                                     |
+
 ## file-tabs
 
-A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the strip, one 35px row that scrolls sideways and never wraps, and `file-tab` is one tab in it. The selected tab carries a line on top and drops its bottom border, so it joins the content below. Hover darkens an enabled, unselected tab, and keyboard focus draws an inset ring, because the strip's scroll container clips anything drawn outside a tab.
+A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the strip, one 35px row that scrolls sideways and never wraps, and `file-tab` is one tab in it. The selected tab carries a line on top and drops its bottom border, so it joins the content below. Hover darkens an enabled, unselected tab, and keyboard focus draws an inset ring, because the strip's scroll container clips anything drawn outside a tab. `file-tab-slot` is a placeholder cell in the strip, such as the spot where a dragged tab will land. It fills the row's height and draws the same separator as a `file-tab`'s right edge.
 
 <div class="not-content rounded-sm border border-light p-4">
   <div class="file-tabs" role="tablist" aria-label="Open files">
     <div class="file-tab" role="tab" aria-selected="false" tabindex="-1">Rest</div>
     <div class="file-tab" role="tab" aria-selected="true" tabindex="0">Selected</div>
+    <div class="file-tab-slot" aria-hidden="true"></div>
     <div class="file-tab" role="tab" aria-selected="false" aria-disabled="true" tabindex="-1">Disabled</div>
   </div>
 </div>
@@ -163,6 +192,7 @@ A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the s
   code={`<div class="file-tabs" role="tablist" aria-label="Open files">
   <div class="file-tab" role="tab" aria-selected="false">main.ts</div>
   <div class="file-tab" role="tab" aria-selected="true">config.json</div>
+  <div class="file-tab-slot" aria-hidden="true"></div>
   <div class="file-tab" role="tab" aria-selected="false" aria-disabled="true">README.md</div>
 </div>`}
 />
@@ -1085,6 +1115,15 @@ The `slider-*` classes style the track and thumb of a native `<input type="range
   lang="html"
   code={`<p class="text-display">text-display</p>
 <p class="text-code">text-code</p>`}
+/>
+
+## Hover transition
+
+`transition-hover-colors` animates `color`, `background-color`, `border-color`, `text-decoration-color`, `fill`, and `stroke`. That is the set `transition-colors` animates, minus `outline-color` and the gradient stops, so a focus ring appears at once instead of fading in. `button`, `icon-button`, and `input` wear it, and the `--transition-property-hover-colors` token mints it.
+
+<Code
+  lang="html"
+  code={`<a href="/docs" class="text-subtle-1 transition-hover-colors hover:text-default">Docs</a>`}
 />
 
 ## Elevation

@@ -25,7 +25,7 @@ import placementSource from "./Placement.svelte?raw";
 
 - `provideToast` once near the app root creates the stack, and `useToast` anywhere below it creates toasts.
 - `info`, `success`, `warning`, and `danger` set the glyph. `warning` and `danger` announce as an `alert`, the others as a `status`.
-- Hovering the region or focusing a toast holds its timer.
+- Hovering the region or focusing a toast holds every timer.
 - <kbd>Escape</kbd> dismisses the focused toast.
 
 ## Toast or notification?
@@ -93,7 +93,7 @@ Each item carries data attributes for styling by state.
 
 <KeyboardTable
   bindings={[
-    { keys: "Tab", action: "Focuses each toast's action and close button in turn." },
+    { keys: "Tab", action: "Focuses each toast in turn, then its action and close button." },
     { keys: "Escape", action: "Dismisses the focused toast." },
     { keys: "Alt + T", action: "Moves focus to the region." },
     { keys: "Enter / Space", action: "On the action or close button, activates it." },

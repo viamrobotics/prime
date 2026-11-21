@@ -23,6 +23,7 @@ show.
 	import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 	import { DateRangePicker } from 'bits-ui';
 
+	import { monthButtonName } from '../DatePicker/month-button-name.ts';
 	import Icon from '../Icon/Icon.svelte';
 	import { useDateRangePicker } from './useDateRangePicker.svelte.ts';
 
@@ -49,14 +50,8 @@ show.
 		};
 	});
 
-	const monthButtonName = (step: -1 | 1): string => {
-		const locale = picker?.locale ?? 'en-US';
-		const name = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(step, 'month');
-		return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
-	};
-
-	const previousMonthName = $derived(monthButtonName(-1));
-	const nextMonthName = $derived(monthButtonName(1));
+	const previousMonthName = $derived(monthButtonName(-1, picker?.locale));
+	const nextMonthName = $derived(monthButtonName(1, picker?.locale));
 </script>
 
 <DateRangePicker.Calendar class={['text-sm text-default select-none', extraClasses]} {...restProps}>

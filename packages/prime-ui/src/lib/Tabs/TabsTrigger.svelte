@@ -2,9 +2,9 @@
 @component
 One tab of a [`Tabs`](./Tabs.svelte) strip. Its children are the tab's label. It is a
 `role="tab"` element rather than a `<button>`, so a control such as a close `icon-button` can
-sit inside it, placed through the `actions` snippet. That control's keys stay with it, and it
-stops click propagation so the click does not select the tab. Under the root's `file` variant the tab is a boxed file tab, and
-selecting it scrolls the strip to show it.
+sit inside it, placed through the `actions` snippet. That control keeps its own keys. It must
+stop click propagation itself, or its click also selects the tab. Under the root's `file`
+variant the tab is a boxed file tab, and selecting it scrolls the strip to show it.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -21,6 +21,7 @@ selecting it scrolls the strip to show it.
 	import { useTabs } from './useTabs.svelte.ts';
 	import { useTabsDrag } from './useTabsDrag.svelte.ts';
 	import { useTabsReorder } from './useTabsReorder.svelte.ts';
+	import { DEFAULT_TABS_VARIANT } from './variant.ts';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
@@ -52,15 +53,12 @@ selecting it scrolls the strip to show it.
 	const drag = useTabsDrag();
 
 	const isMovable = $derived(reorder?.reorderable === true && !disabled);
+	const position = $derived(reorder?.order.indexOf(value) ?? -1);
+	const lastPosition = $derived((reorder?.order.length ?? 0) - 1);
 
-	const triggerClasses: Record<TabsVariant, string[]> = {
-		underline: [
-			'-mb-px cursor-pointer border-b-2 pt-2 pb-1.5 text-sm focus-ring',
-			'border-transparent text-subtle-2 hover:text-default',
-			'data-[state=active]:border-gray-9 data-[state=active]:font-semibold data-[state=active]:text-default',
-			'data-[disabled]:cursor-not-allowed data-[disabled]:text-disabled-dark'
-		],
-		file: ['file-tab']
+	const triggerClasses: Record<TabsVariant, string> = {
+		underline: 'underline-tab',
+		file: 'file-tab'
 	};
 
 	let element = $state<HTMLElement>();
@@ -87,31 +85,34 @@ selecting it scrolls the strip to show it.
 		return watchTabDrag(element, value, drag);
 	});
 
-	const moveBy = (direction: number) => {
+	const moveBy = (step: number) => {
 		if (!reorder || !isMovable) return;
-		reorder.move(value, reorder.order.indexOf(value) + direction, { focus: true });
+		reorder.move(value, position + step, { focus: true });
 	};
 
 	const moveByKey = (event: KeyboardEvent) => {
-		const direction = reorderStepOf(event);
-		if (direction === undefined) return false;
+		const step = reorderStepOf(event);
+		if (step === undefined) return false;
 		event.preventDefault();
-		moveBy(direction);
+		moveBy(step);
 		return true;
+	};
+
+	const handleKeydown = (event: KeyboardEvent, triggerKeydown?: (event: KeyboardEvent) => void) => {
+		// A key from a control inside the tab must not reach bits-ui, which would swallow Enter and Space.
+		if (event.target !== event.currentTarget) return;
+		if (isMovable && moveByKey(event)) return;
+		triggerKeydown?.(event);
 	};
 
 	const move: TabsMove = {
 		movePrevious: () => moveBy(-1),
 		moveNext: () => moveBy(1),
 		get canMovePrevious() {
-			return isMovable && reorder !== undefined && reorder.order.indexOf(value) > 0;
+			return isMovable && position > 0;
 		},
 		get canMoveNext() {
-			return (
-				isMovable &&
-				reorder !== undefined &&
-				reorder.order.indexOf(value) < reorder.order.length - 1
-			);
+			return isMovable && position < lastPosition;
 		}
 	};
 
@@ -131,7 +132,7 @@ selecting it scrolls the strip to show it.
 <Tabs.Trigger
 	{value}
 	{disabled}
-	class={[triggerClasses[tabs?.variant ?? 'underline'], extraClasses]}
+	class={[triggerClasses[tabs?.variant ?? DEFAULT_TABS_VARIANT], extraClasses]}
 	{...triggerProps}
 >
 	{#snippet child({ props })}
@@ -139,7 +140,6 @@ selecting it scrolls the strip to show it.
 		{#if drag?.isChipBefore(value)}
 			<LandingChip label={drag.label} />
 		{/if}
-		<!-- A key from a control inside the tab must not reach bits-ui, which would swallow Enter and Space. -->
 		<div
 			bind:this={element}
 			{...props}
@@ -148,11 +148,7 @@ selecting it scrolls the strip to show it.
 			aria-disabled={disabled || undefined}
 			aria-keyshortcuts={isMovable ? REORDER_KEYSHORTCUTS : undefined}
 			hidden={drag?.lifted === value || undefined}
-			onkeydown={(event) => {
-				if (event.target !== event.currentTarget) return;
-				if (isMovable && moveByKey(event)) return;
-				onkeydown?.(event);
-			}}
+			onkeydown={(event) => handleKeydown(event, onkeydown)}
 		>
 			<span class="contents" id={labelId} data-tab-label>{@render children?.()}</span>
 			{@render actions?.(move)}

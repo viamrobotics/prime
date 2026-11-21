@@ -19,7 +19,7 @@ browser supports `field-sizing: content`, and shows `rows` lines elsewhere.
 
 	import { useInputControl } from './useInputControl.svelte.ts';
 
-	interface Props extends Omit<HTMLTextareaAttributes, 'value' | 'children'> {
+	interface Props extends Omit<HTMLTextareaAttributes, 'value' | 'children' | 'rows'> {
 		/** The text in the textarea. */
 		value?: string;
 

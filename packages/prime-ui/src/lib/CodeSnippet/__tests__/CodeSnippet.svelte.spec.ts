@@ -118,6 +118,29 @@ describe('CodeSnippet', () => {
 		await expect.element(page.getByRole('button', { name: 'Copy failed' })).toBeVisible();
 	});
 
+	it('announces Copy failed through a status region when the write rejects', async () => {
+		vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValueOnce(new Error('denied'));
+		render(CodeSnippet, { props: { code, language: 'json' } });
+
+		await userEvent.click(page.getByRole('button', { name: 'Copy code' }));
+
+		await expect.element(page.getByRole('status')).toHaveTextContent('Copy failed');
+	});
+
+	it('renders the caption beneath the code', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: 'a', hasCaption: true } });
+
+		await expect.element(page.getByText('rover.ts')).toBeVisible();
+		expect(container.querySelector('figure > figcaption')!.textContent!.trim()).toBe('rover.ts');
+
+		const pre = container.querySelector('pre')!;
+		const caption = container.querySelector('figure > figcaption')!;
+		expect(
+			caption.getBoundingClientRect().top,
+			'the caption starts below the code'
+		).toBeGreaterThanOrEqual(pre.getBoundingClientRect().bottom);
+	});
+
 	it.each([
 		[false, 'pre'],
 		[true, 'pre-wrap']
@@ -144,15 +167,26 @@ describe('CodeSnippet', () => {
 		const { container } = render(NarrowCodeSnippet, { props: { code: 'a' } });
 		const pre = container.querySelector('pre')!;
 
-		await expect.poll(() => pre.hasAttribute('role')).toBe(false);
-		expect(pre.hasAttribute('tabindex')).toBe(false);
+		await expect.poll(() => pre.hasAttribute('role'), { message: 'pre has no role' }).toBe(false);
+		expect(pre.hasAttribute('tabindex'), 'pre is not a tab stop').toBe(false);
+	});
+
+	it('drops the region role and tab stop when wrapLines turns on', async () => {
+		const { container, rerender } = render(NarrowCodeSnippet, { props: { code: longLine } });
+		const pre = container.querySelector('pre')!;
+		await expect.element(page.getByRole('region', { name: 'Code' })).toBeVisible();
+
+		await rerender({ code: longLine, wrapLines: true });
+
+		await expect.poll(() => pre.hasAttribute('role'), { message: 'pre has no role' }).toBe(false);
+		expect(pre.hasAttribute('tabindex'), 'pre is not a tab stop').toBe(false);
 	});
 
 	it('gives a wrapLines snippet with a long line no region role and no tab stop', async () => {
 		const { container } = render(NarrowCodeSnippet, { props: { code: longLine, wrapLines: true } });
 		const pre = container.querySelector('pre')!;
 
-		await expect.poll(() => pre.hasAttribute('role')).toBe(false);
-		expect(pre.hasAttribute('tabindex')).toBe(false);
+		await expect.poll(() => pre.hasAttribute('role'), { message: 'pre has no role' }).toBe(false);
+		expect(pre.hasAttribute('tabindex'), 'pre is not a tab stop').toBe(false);
 	});
 });

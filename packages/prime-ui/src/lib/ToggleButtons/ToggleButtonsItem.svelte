@@ -2,6 +2,10 @@
 @component
 One option of a [`ToggleButtons`](./ToggleButtons.svelte) group. Its children are the option's
 content.
+
+```svelte
+<ToggleButtons.Item value="grid">Grid</ToggleButtons.Item>
+```
 -->
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
@@ -9,7 +13,7 @@ content.
 	import { ToggleGroup } from 'bits-ui';
 
 	interface Props extends Omit<HTMLButtonAttributes, 'value'> {
-		/** Element id. `null` is not accepted. */
+		/** Element id. bits-ui accepts a string only, so `null` is not accepted. */
 		id?: string;
 		/** The value the group holds when this option is selected. */
 		value: string;

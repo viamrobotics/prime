@@ -1,7 +1,4 @@
-/**
- * Every color token the theme declares, by its whole custom property name. A test keeps this
- * list equal to the `--color-*` declarations in `tailwind-config.css`.
- */
+/** Every `--color-*` token `tailwind-config.css` declares, by its whole custom property name. */
 export type ThemeColorName =
   | "--color-heading"
   | "--color-default"

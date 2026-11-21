@@ -1,6 +1,8 @@
 <!--
 @component
-A button that closes the enclosing [`Popover`](./Popover.svelte). It renders a close icon unless given children, and wears `icon-button` only then.
+A button that closes the enclosing [`Popover`](./Popover.svelte). It renders a close icon by
+default, labeled `Close`, and wears `icon-button` only then. Pass children to replace the icon,
+and their text names the button. Pass `aria-label` to replace either name.
 -->
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
@@ -15,15 +17,16 @@ A button that closes the enclosing [`Popover`](./Popover.svelte). It renders a c
 		id?: string;
 	}
 
-	const {
-		class: extraClasses,
-		children,
-		'aria-label': label = 'Close',
-		...restProps
-	}: Props = $props();
+	const { class: extraClasses, 'aria-label': ariaLabel, children, ...restProps }: Props = $props();
+
+	const ICON_LABEL = 'Close';
 </script>
 
-<Popover.Close class={[!children && 'icon-button', extraClasses]} aria-label={label} {...restProps}>
+<Popover.Close
+	class={[!children && 'icon-button', extraClasses]}
+	aria-label={ariaLabel ?? (children ? undefined : ICON_LABEL)}
+	{...restProps}
+>
 	{#if children}
 		{@render children()}
 	{:else}

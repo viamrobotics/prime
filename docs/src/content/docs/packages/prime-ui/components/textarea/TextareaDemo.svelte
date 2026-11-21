@@ -1,11 +1,12 @@
 <script lang="ts">
   import Sandbox from "@docs/Sandbox.svelte";
-  import { Textarea } from "@viamrobotics/prime-ui";
+
+  import LabeledTextarea from "./LabeledTextarea.svelte";
 </script>
 
 <Sandbox
   name="Textarea"
-  component={Textarea}
+  component={LabeledTextarea}
   controls={{
     rows: { kind: "number", label: "Rows", default: 3, min: 1, max: 10 },
     placeholder: { kind: "text", label: "Placeholder", default: "Describe the machine" },

@@ -84,11 +84,11 @@ Pass `bind:open` a getter and a setter. The setter can decline a change.
 
 ## Not modal
 
-A popover does not lock page scroll, trap focus, or make the rest of the page inert. <kbd>Tab</kbd> moves through the panel and on to the rest of the page. Use a dialog when the user must answer before continuing.
+A popover does not lock page scroll or make the rest of the page inert, so the pointer still reaches everything outside it. Focus moves into the panel when it opens, and <kbd>Tab</kbd> and <kbd>Shift</kbd>+<kbd>Tab</kbd> cycle through the panel's controls until <kbd>Escape</kbd> or a press outside closes it. Use a dialog when the user must answer before continuing.
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `Popover.Trigger` is a real `<button>` with no look of its own beyond the focus ring, so add `button` or `icon-button`. `Popover.Close` wears `icon-button` while it shows its default close icon. With children it wears no class of its own, so `class="button"` gives a text close the `button` class alone. `Popover` renders no element, so it takes no `class`. bits-ui sets the data attributes below. `Popover.Content` wears `z-popover` and the `shadow-popover` token; see [z layers](../../tailwind-config/component-classes/#z-layers).
+Every part that renders an element takes `class` on that element. `Popover.Trigger` is a real `<button>` with no look of its own beyond the focus ring, so add `button` or `icon-button`. `Popover.Close` wears `icon-button` while it shows its default close icon. With children it wears no class of its own, so `class="button"` gives a text close the `button` class alone. `Popover` renders no element, so it takes no `class`. bits-ui sets the data attributes below. `Popover.Content` wears the `popover-panel` class, which carries the `shadow-popover` token, and the `z-popover` layer. See [z layers](../../tailwind-config/component-classes/#z-layers).
 
 | Part      | Attribute    | Value                            |
 | --------- | ------------ | -------------------------------- |
@@ -102,7 +102,7 @@ Every part that renders an element takes `class` on that element. `Popover.Trigg
 <KeyboardTable
   bindings={[
     { keys: "Enter / Space", action: "On the trigger, opens or closes the panel." },
-    { keys: "Tab", action: "Moves focus within the panel, then on." },
+    { keys: "Tab / Shift + Tab", action: "Cycles focus through the panel's controls, wrapping at either end." },
     { keys: "Escape", action: "Closes the panel and focuses the trigger." },
   ]}
 />

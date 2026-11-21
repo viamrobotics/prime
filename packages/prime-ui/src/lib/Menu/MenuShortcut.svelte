@@ -13,7 +13,7 @@ assistive technology, so the item's accessible name is its text alone. Binding t
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	type Props = HTMLAttributes<HTMLElement>;
+	interface Props extends HTMLAttributes<HTMLElement> {}
 
 	const { class: extraClasses, children, ...restProps }: Props = $props();
 </script>

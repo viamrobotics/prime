@@ -1,9 +1,3 @@
-<!--
-@component
-One notification in a [`Notify`](./Notify.svelte) stack: a [`Banner`](../Banner/Banner.svelte) that
-owns the live-region role, the stacking motion, and the bar along the bottom: progress while pending, the countdown after. The region renders it, so a
-consumer never places one.
--->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
@@ -14,11 +8,9 @@ consumer never places one.
 	import { notifyVariantOf, type NotifyMeta } from './useNotify.svelte.ts';
 
 	interface Props {
-		/** The notification to show, as the stack lists it. */
 		item: toast.Props<string | Snippet>;
-		/** Where the notification sits in the stack, newest first. */
+		// Sets how far down the stack the item sits.
 		index: number;
-		/** The stack machine this notification belongs to. */
 		parent: toast.GroupService;
 	}
 
@@ -64,7 +56,7 @@ consumer never places one.
 	id={rootProps.id ?? undefined}
 	role={undefined}
 	{variant}
-	class="z-[var(--z-index)] w-96 [translate:var(--x)_var(--y)] [scale:var(--scale)] opacity-[var(--opacity)] transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale]"
+	class="z-[var(--z-index)] w-96 [translate:var(--x)_var(--y)] [scale:var(--scale)] opacity-[var(--opacity)] focus-ring transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale]"
 >
 	<Banner.Title {...titleProps} id={titleProps.id ?? undefined}>{item.title}</Banner.Title>
 	{#if description !== undefined}

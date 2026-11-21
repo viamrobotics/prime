@@ -1,13 +1,23 @@
 <script lang="ts">
+	import type { ClassValue } from 'svelte/elements';
+
 	import type { FieldState } from '../../Field/state.ts';
 
 	import { Select } from '../select.ts';
 
 	const {
+		allowDeselect,
+		class: triggerClass,
 		disabled,
 		name,
 		state: fieldState
-	}: { disabled?: boolean; name?: string; state?: FieldState } = $props();
+	}: {
+		allowDeselect?: boolean;
+		class?: ClassValue;
+		disabled?: boolean;
+		name?: string;
+		state?: FieldState;
+	} = $props();
 
 	const items = [
 		{ value: 'sm', label: 'Small' },
@@ -18,8 +28,8 @@
 	let value = $state('sm');
 </script>
 
-<Select {items} {disabled} {name} bind:value>
-	<Select.Trigger state={fieldState}>
+<Select {items} {allowDeselect} {disabled} {name} bind:value>
+	<Select.Trigger class={triggerClass} state={fieldState}>
 		<Select.Value placeholder="Pick a size" />
 	</Select.Trigger>
 	<Select.Content>

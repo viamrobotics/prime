@@ -21,7 +21,7 @@ Built on [bits-ui `ToggleGroup`](https://bits-ui.com/docs/components/toggle-grou
 
 	import type { ToggleButtonsOption } from './option.ts';
 
-	import { FieldStates, type FieldState } from '../Field/state.ts';
+	import { fieldState, FieldStates, type FieldState } from '../Field/state.ts';
 	import { useField } from '../Field/useField.svelte.ts';
 	import Item from './ToggleButtonsItem.svelte';
 
@@ -55,7 +55,9 @@ Built on [bits-ui `ToggleGroup`](https://bits-ui.com/docs/components/toggle-grou
 	const field = useField();
 	const uid = $props.id();
 
+	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
 	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	const isError = $derived(fieldState.isError(currentState));
 </script>
 
 <ToggleGroup.Root
@@ -66,8 +68,8 @@ Built on [bits-ui `ToggleGroup`](https://bits-ui.com/docs/components/toggle-grou
 			if (next) value = next;
 		}
 	}
-	disabled={disabled ?? field?.disabled ?? false}
-	aria-invalid={currentState === FieldStates.Error || undefined}
+	disabled={isDisabled}
+	aria-invalid={isError || undefined}
 	aria-labelledby={labelledBy ?? field?.labelledBy}
 	aria-describedby={describedBy ?? field?.describedBy}
 	id={id ?? field?.controlId ?? uid}

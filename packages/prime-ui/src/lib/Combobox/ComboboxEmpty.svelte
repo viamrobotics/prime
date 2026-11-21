@@ -1,12 +1,13 @@
 <!--
 @component
 The message a [`Combobox`](./Combobox.svelte) shows in its list when no option matches the
-typed text. The visible text is hidden from assistive technology, and the `Combobox` announces
-the same message itself from a status region outside the list, rendering `children` a second time
-there, so keep the message to text with no ids or controls. It stays empty while any option
-matches. Place it in the
+typed text. It stays empty while any option matches. Place it in the
 [`Combobox.Viewport`](./ComboboxViewport.svelte) after
 [`Combobox.Items`](./ComboboxItems.svelte).
+
+The visible text is hidden from assistive technology. The `Combobox` announces the same message
+from a status region outside the list, rendering `children` a second time there, so keep the
+message to text with no ids or controls.
 
 ```svelte
 <Combobox.Viewport>

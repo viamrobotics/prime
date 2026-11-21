@@ -33,13 +33,24 @@ describe('Switch', () => {
 		expect(toggle(container).classList.contains('focus-ring'), 'focus-ring utility').toBe(true);
 	});
 
-	it('is invalid and recolors the track in the error state', () => {
-		const normal = render(Switch);
-		const normalTrack = backgroundColor(toggle(normal.container));
+	it('is invalid in the error state', () => {
 		const { container } = render(Switch, { props: { state: 'error' } });
 
 		expect(toggle(container).getAttribute('aria-invalid')).toBe('true');
-		expect(backgroundColor(toggle(container))).not.toBe(normalTrack);
+	});
+
+	it.each([
+		{ props: {}, color: 'bg-gray-6' },
+		{ props: { checked: true }, color: 'bg-gray-9' },
+		{ props: { state: 'error' }, color: 'bg-danger-light' },
+		{ props: { checked: true, state: 'error' }, color: 'bg-danger-dark' },
+		{ props: { disabled: true }, color: 'bg-disabled-light' },
+		{ props: { checked: true, disabled: true }, color: 'bg-disabled-dark' },
+		{ props: { disabled: true, state: 'error' }, color: 'bg-disabled-light' }
+	] as const)('paints the track $color for $props', ({ props, color }) => {
+		const { container } = render(Switch, { props });
+
+		expect(backgroundColor(toggle(container))).toBe(colorOf(color, 'backgroundColor'));
 	});
 
 	it.each([
@@ -53,11 +64,10 @@ describe('Switch', () => {
 		expect(backgroundColor(toggle(container))).toBe(colorOf(color, 'backgroundColor'));
 	});
 
-	it('keeps the off track unchanged under a tone class', () => {
-		const plain = render(Switch);
+	it('keeps the off track gray under a tone class', () => {
 		const { container } = render(Switch, { props: { class: 'switch-success' } });
 
-		expect(backgroundColor(toggle(container))).toBe(backgroundColor(toggle(plain.container)));
+		expect(backgroundColor(toggle(container))).toBe(colorOf('bg-gray-6', 'backgroundColor'));
 	});
 
 	it('paints the error track over a tone class while on', () => {
@@ -68,14 +78,15 @@ describe('Switch', () => {
 		expect(backgroundColor(toggle(container))).toBe(colorOf('bg-danger-dark', 'backgroundColor'));
 	});
 
-	it('paints a different track and moves the thumb when on', () => {
-		const off = render(Switch);
-		const on = render(Switch, { props: { checked: true } });
+	it.each([
+		{ checked: false, offset: 2 },
+		{ checked: true, offset: 18 }
+	])('sits the thumb $offset px into the track when checked is $checked', ({ checked, offset }) => {
+		const { container } = render(Switch, { props: { checked } });
 
-		expect(backgroundColor(toggle(on.container))).not.toBe(backgroundColor(toggle(off.container)));
-		expect(getComputedStyle(thumb(on.container)).translate).not.toBe(
-			getComputedStyle(thumb(off.container)).translate
-		);
+		expect(
+			thumb(container).getBoundingClientRect().left - toggle(container).getBoundingClientRect().left
+		).toBe(offset);
 	});
 
 	it('renders a hidden form input carrying name and value when given a name', () => {

@@ -2,24 +2,28 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
+import '../../__tests__/tailwind.css';
 import NumberInput from '../NumberInput.svelte';
 import BoundNumberInput from './BoundNumberInput.svelte';
 import ControlledNumberInput from './ControlledNumberInput.svelte';
+import UndefinedNumberInput from './UndefinedNumberInput.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
 describe('NumberInput', () => {
-	it('renders one bare number input carrying its value and a passed class', () => {
-		const { container } = render(NumberInput, { props: { value: 5, class: 'w-24' } });
+	it('renders one bare number input carrying its value', () => {
+		const { container } = render(NumberInput, { props: { value: 5 } });
 
 		expect(container.children).toHaveLength(1);
 		expect(input(container).type).toBe('number');
 		expect(input(container).value).toBe('5');
-		expect(input(container).classList.contains('w-24'), 'consumer class lands on the input').toBe(
-			true
-		);
-		expect(input(container).classList.contains('w-full'), 'no built-in width').toBe(false);
+	});
+
+	it('takes its width from a consumer class', () => {
+		const { container } = render(NumberInput, { props: { class: 'w-24' } });
+
+		expect(getComputedStyle(input(container)).width).toBe('96px');
 	});
 
 	it.each([
@@ -56,33 +60,42 @@ describe('NumberInput', () => {
 		expect(input(container).validity.stepMismatch, 'no step mismatch').toBe(false);
 	});
 
-	it('two-way: typing binds a number to the owner', async () => {
+	it("two-way: the input shows the owner's number", () => {
 		const { container } = render(BoundNumberInput);
 
-		await userEvent.click(input(container));
-		await userEvent.keyboard('42');
+		expect(input(container).value).toBe('3');
+	});
+
+	it('two-way: typing writes a number, not a string, to the owner', async () => {
+		const { container } = render(BoundNumberInput);
+
+		await userEvent.fill(input(container), '42');
 
 		expect(owner(container)).toBe('42');
 	});
 
-	it('two-way: clearing the field binds undefined, not NaN or an empty string', async () => {
-		const { container } = render(BoundNumberInput);
+	it('two-way: typing updates an owner that starts undefined, and clearing binds undefined, not NaN or an empty string', async () => {
+		const { container } = render(UndefinedNumberInput);
+
 		await userEvent.click(input(container));
 		await userEvent.keyboard('42');
+		expect(owner(container), 'after typing').toBe('42');
 
 		await userEvent.keyboard('{Backspace}{Backspace}');
-
 		await vi.waitFor(() => expect(input(container).value).toBe(''));
-		expect(owner(container)).toBe('undefined');
+		expect(owner(container), 'after clearing').toBe('undefined');
 	});
 
-	it('controlled: a function-binding setter can veto typing', async () => {
-		const { container } = render(ControlledNumberInput, { props: { accept: false } });
+	it.each([
+		{ mode: 'accepts', accept: true, shown: '7' },
+		{ mode: 'vetoes', accept: false, shown: '' }
+	])('controlled: a function-binding setter $mode typing', async ({ accept, shown }) => {
+		const { container } = render(ControlledNumberInput, { props: { accept } });
 
 		await userEvent.click(input(container));
 		await userEvent.keyboard('7');
 
-		expect(input(container).value).toBe('');
-		expect(owner(container)).toBe('');
+		expect(input(container).value).toBe(shown);
+		expect(owner(container)).toBe(shown);
 	});
 });

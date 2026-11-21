@@ -16,6 +16,7 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 
 ```svelte
 <Field state="error">
+	<Label>Email</Label>
 	<Input.Group>
 		<Input type="email" bind:value />
 		<Field.StateIcon />

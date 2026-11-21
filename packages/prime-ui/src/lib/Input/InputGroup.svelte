@@ -6,13 +6,13 @@ icon. The group wears the `input` class from `@viamrobotics/tailwind-config`, an
 focus ring. Clicking the group's padding or any non-interactive content focuses the input.
 
 A disabled or readonly input restyles the group, and the input's `error` or `warn` state colors
-the group's border. The frame reads the input's attributes in CSS, so no JavaScript runs. Only
-an `<input>` counts, so a disabled button beside it leaves the group alone.
+the group's border. The group reads the input's attributes in CSS, so restyling runs no
+JavaScript. Only an `<input>` counts, so a disabled button beside it leaves the group alone.
 
 ```svelte
 <Input.Group>
 	<Icon icon={mdiMagnify} class="text-subtle-2" />
-	<Input placeholder="Search" bind:value />
+	<Input placeholder="Search" aria-label="Search" bind:value />
 	<Field.StateIcon state="error" />
 </Input.Group>
 ```
@@ -28,15 +28,14 @@ an `<input>` counts, so a disabled button beside it leaves the group alone.
 
 	const { class: extraClasses, children, onpointerdown, ...restProps }: Props = $props();
 
-	const focusableSelector = 'button, a, input, select, textarea, [tabindex]';
-
-	let group = $state<HTMLDivElement>();
+	const FOCUSABLE_SELECTOR = 'button, a, input, select, textarea, [tabindex]';
 
 	const focusInput = (event: PointerEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
 		onpointerdown?.(event);
-		if (event.defaultPrevented || !group || !(event.target instanceof Element)) return;
+		const group = event.currentTarget;
+		if (event.defaultPrevented || !(event.target instanceof Element)) return;
 
-		const focusable = event.target.closest(focusableSelector);
+		const focusable = event.target.closest(FOCUSABLE_SELECTOR);
 		if (focusable && focusable !== group && group.contains(focusable)) return;
 
 		event.preventDefault();
@@ -46,7 +45,6 @@ an `<input>` counts, so a disabled button beside it leaves the group alone.
 
 <div
 	{...restProps}
-	bind:this={group}
 	onpointerdown={focusInput}
 	class={['inline-flex input items-center gap-1 focus-ring-within', extraClasses]}
 >

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import FileInputField from './FileInputField.svelte';
 import InputField from './InputField.svelte';
 import TextareaField from './TextareaField.svelte';
 import WidgetFields from './WidgetFields.svelte';
@@ -36,6 +37,17 @@ describe('Field', () => {
 
 		await vi.waitFor(() => {
 			expect(input.getAttribute('aria-describedby')).toBe(hints.map((hint) => hint.id).join(' '));
+		});
+	});
+
+	it('drops a removed hint from aria-describedby', async () => {
+		const { container, rerender } = render(InputField, { props: { hintCount: 2 } });
+
+		await rerender({ hintCount: 1 });
+
+		const { input, hints } = parts(container);
+		await vi.waitFor(() => {
+			expect(input.getAttribute('aria-describedby')).toBe(hints[0]?.id);
 		});
 	});
 
@@ -107,21 +119,18 @@ describe('Field with a textarea', () => {
 		});
 	});
 
-	it('cascades disabled, required, and the error state', () => {
-		const disabled = textareaParts(
-			render(TextareaField, { props: { disabled: true } }).container
-		).textarea;
-		const required = textareaParts(
-			render(TextareaField, { props: { required: true } }).container
-		).textarea;
-		const errored = textareaParts(
-			render(TextareaField, { props: { state: 'error' } }).container
-		).textarea;
+	it.each([
+		{ props: { disabled: true }, attribute: 'disabled', expected: '' },
+		{ props: { required: true }, attribute: 'required', expected: '' },
+		{ props: { state: 'error' }, attribute: 'aria-invalid', expected: 'true' }
+	] as const)(
+		'sets $attribute on the textarea from the field',
+		({ props, attribute, expected }) => {
+			const { textarea } = textareaParts(render(TextareaField, { props }).container);
 
-		expect(disabled.disabled, 'textarea disabled').toBe(true);
-		expect(required.required, 'textarea required').toBe(true);
-		expect(errored.getAttribute('aria-invalid')).toBe('true');
-	});
+			expect(textarea.getAttribute(attribute)).toBe(expected);
+		}
+	);
 
 	it('lets disabled={false} on the textarea override a disabled field', () => {
 		const { container } = render(TextareaField, {
@@ -129,6 +138,62 @@ describe('Field with a textarea', () => {
 		});
 
 		expect(container.querySelector('textarea')?.disabled).toBe(false);
+	});
+});
+
+describe('Field with a file input', () => {
+	const fileParts = (container: Element) => ({
+		label: container.querySelector('label')!,
+		input: container.querySelector<HTMLInputElement>('input[type="file"]')!,
+		hints: [...container.querySelectorAll('p')]
+	});
+
+	it('puts the field controlId on the file input and points the label at it', () => {
+		const { label, input } = fileParts(
+			render(FileInputField, { props: { controlId: 'audio' } }).container
+		);
+
+		expect(input.id).toBe('audio');
+		expect(label.getAttribute('for')).toBe('audio');
+	});
+
+	it('points the label at the file input through a generated id', () => {
+		const { label, input } = fileParts(render(FileInputField).container);
+
+		expect(input.id).not.toBe('');
+		expect(label.getAttribute('for')).toBe(input.id);
+	});
+
+	it('describes the file input by every hint', async () => {
+		const { input, hints } = fileParts(
+			render(FileInputField, { props: { hintCount: 2 } }).container
+		);
+
+		await vi.waitFor(() => {
+			expect(input.getAttribute('aria-describedby')).toBe(hints.map((hint) => hint.id).join(' '));
+		});
+	});
+
+	it.each([
+		{ props: { disabled: true }, attribute: 'disabled', expected: '' },
+		{ props: { required: true }, attribute: 'required', expected: '' },
+		{ props: { state: 'error' }, attribute: 'aria-invalid', expected: 'true' },
+		{ props: { state: 'warn' }, attribute: 'data-field-state', expected: 'warn' }
+	] as const)(
+		'sets $attribute on the file input from the field',
+		({ props, attribute, expected }) => {
+			const { input } = fileParts(render(FileInputField, { props }).container);
+
+			expect(input.getAttribute(attribute)).toBe(expected);
+		}
+	);
+
+	it('lets disabled={false} on the file input override a disabled field', () => {
+		const { input } = fileParts(
+			render(FileInputField, { props: { disabled: true, inputDisabled: false } }).container
+		);
+
+		expect(input.disabled, 'file input enabled').toBe(false);
 	});
 });
 
@@ -148,6 +213,18 @@ describe('Field with widgets', () => {
 		await vi.waitFor(() => {
 			expect(checkbox.getAttribute('aria-describedby')).toBe(scope.querySelector('p')?.id);
 		});
+	});
+
+	it('disables the checkbox when the field is disabled', () => {
+		const scope = field(
+			render(WidgetFields, { props: { disabled: true } }).container,
+			'checkbox-field'
+		);
+
+		expect(
+			scope.querySelector<HTMLButtonElement>('[role="checkbox"]')?.disabled,
+			'checkbox disabled'
+		).toBe(true);
 	});
 
 	it('names a radio group by its label and describes it by its hint', async () => {
@@ -263,6 +340,15 @@ describe('Field with widgets', () => {
 		});
 	});
 
+	it('marks the switch required when the field is required', () => {
+		const scope = field(
+			render(WidgetFields, { props: { required: true } }).container,
+			'switch-field'
+		);
+
+		expect(scope.querySelector('[role="switch"]')?.getAttribute('aria-required')).toBe('true');
+	});
+
 	it('names a toggle group by its label and describes it by its hint', async () => {
 		const scope = field(render(WidgetFields).container, 'toggle-field');
 		const group = scope.querySelector('[role="group"]')!;
@@ -282,6 +368,42 @@ describe('Field with widgets', () => {
 		expect(field(container, 'switch-field').querySelector('button')?.disabled).toBe(true);
 		expect(toggles.map((item) => item.disabled)).toEqual([true, true]);
 	});
+
+	it.each([
+		{ widget: 'checkbox', testId: 'checkbox-field', expected: [false] },
+		{ widget: 'radio', testId: 'radio-field', expected: [false, false] },
+		{ widget: 'switch', testId: 'switch-field', expected: [false] },
+		{ widget: 'toggle', testId: 'toggle-field', expected: [false, false] }
+	] as const)(
+		'lets disabled={false} on the $widget override a disabled field',
+		({ widget, testId, expected }) => {
+			const { container } = render(WidgetFields, {
+				props: { disabled: true, [widget]: { disabled: false } }
+			});
+
+			expect(
+				[...field(container, testId).querySelectorAll('button')].map((button) => button.disabled)
+			).toEqual(expected);
+		}
+	);
+
+	it.each([
+		{ widget: 'checkbox', testId: 'checkbox-field', control: '[role="checkbox"]' },
+		{ widget: 'radio', testId: 'radio-field', control: '[role="radiogroup"]' },
+		{ widget: 'switch', testId: 'switch-field', control: '[role="switch"]' },
+		{ widget: 'toggle', testId: 'toggle-field', control: '[role="group"]' }
+	] as const)(
+		'lets state="none" on the $widget override an error field',
+		({ widget, testId, control }) => {
+			const { container } = render(WidgetFields, {
+				props: { state: 'error', [widget]: { state: 'none' } }
+			});
+
+			expect(field(container, testId).querySelector(control)?.getAttribute('aria-invalid')).toBe(
+				null
+			);
+		}
+	);
 
 	it('cascades the error state to every widget as aria-invalid', () => {
 		const { container } = render(WidgetFields, { props: { state: 'error' } });

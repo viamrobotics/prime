@@ -1,6 +1,6 @@
 <!--
 @component
-The button that toggles a [`Menu`](./Menu.svelte). It renders a real `<button>`, so `button` or `button-ghost` styles it.
+The button that toggles a [`Menu`](./Menu.svelte). It renders a real `<button>`, so `button`, or `button button-ghost`, styles it.
 Arrow Down on the focused trigger opens the menu and focuses the first item.
 -->
 <script lang="ts">

@@ -26,7 +26,7 @@ import inFieldSource from "./InField.svelte?raw";
 
 - One `value` for the whole group, bindable. Options come from `items`, or from `ToggleButtons.Item` children.
 - One option is always selected: clicking the selected option does not clear it.
-- Takes `state`, `disabled`, and its labelling from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` on the group.
+- Takes `state`, `disabled`, and its labeling from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` on the group.
 - Arrow keys move focus between options without selecting. <kbd>Enter</kbd> or <kbd>Space</kbd> selects.
 - Each option is a `role="radio"` button inside a `role="group"`, and the selected one carries `data-state="on"`.
 
@@ -83,7 +83,7 @@ Inside a [`Field`](../field/), the group takes its `id`, `disabled`, `state`, an
 
 ## Styling
 
-`class` on `ToggleButtons` lands on the group `<div>`, which is `inline-flex`. `class` on `ToggleButtons.Item` lands on the item button, which wears `button`. bits-ui sets these data attributes for Tailwind variants.
+`class` on `ToggleButtons` lands on the group `<div>`, which is `inline-flex`. `class` on `ToggleButtons.Item` lands on the item button. bits-ui sets these data attributes for Tailwind variants.
 
 | Element | Attribute       | Value                          |
 | ------- | --------------- | ------------------------------ |
@@ -99,9 +99,9 @@ Arrow keys move focus only. Selecting is a separate key press.
 
 <KeyboardTable
   bindings={[
-    { keys: "Tab", action: "Focuses the selected option, or the first." },
-    { keys: "ArrowRight / ArrowDown", action: "Moves focus to the next option, wrapping around." },
-    { keys: "ArrowLeft / ArrowUp", action: "Moves focus to the previous option, wrapping." },
+    { keys: "Tab", action: "Focuses the option last focused or toggled, otherwise the first, even when another starts selected." },
+    { keys: "ArrowRight", action: "Moves focus to the next option, wrapping around." },
+    { keys: "ArrowLeft", action: "Moves focus to the previous option, wrapping." },
     { keys: "Home / End", action: "Moves focus to the first or last option." },
     { keys: "Enter / Space", action: "Selects the focused option." },
   ]}

@@ -26,13 +26,13 @@ describe('Field.StateIcon', () => {
 		expect(container.querySelector('svg')).toBeNull();
 	});
 
-	it('merges a passed class with the state color', () => {
+	it('keeps the state color when a class resizes it', () => {
 		const { container } = render(StateIconField, {
 			props: { state: 'error', iconClass: 'size-6' }
 		});
 		const svg = container.querySelector('svg')!;
 
-		expect(svg.classList.contains('size-6'), 'consumer class lands on the svg').toBe(true);
+		expect(getComputedStyle(svg).width).toBe('24px');
 		expect(textColor(svg)).toBe(colorOf('text-danger-dark', 'color'));
 	});
 

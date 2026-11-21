@@ -5,10 +5,11 @@
 
 	const {
 		variant,
-		placement
-	}: Pick<ComponentProps<typeof Banner>, 'variant' | 'placement'> = $props();
+		placement,
+		role
+	}: Pick<ComponentProps<typeof Banner>, 'variant' | 'placement' | 'role'> = $props();
 </script>
 
-<Banner {variant} {placement}>
+<Banner {variant} {placement} {role}>
 	<Banner.Description>Heads up</Banner.Description>
 </Banner>
