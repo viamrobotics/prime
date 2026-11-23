@@ -91,7 +91,9 @@
     "themeEntry": "packages/prime-ui/tailwind.css"
   },
   "orchestrate": {
-    "workerTools": ["mcp__svelte__svelte-autofixer"]
+    "workerTools": [
+      "mcp__svelte__svelte-autofixer"
+    ]
   },
   "targets": [
     {
@@ -266,5 +268,41 @@
       "html",
       "svelte"
     ]
-  }
+  },
+  "modules": [
+    "core",
+    "lint-fix",
+    "session-context",
+    "rename",
+    "reviewers",
+    "debug-session",
+    "plans",
+    "orchestrate",
+    "verify-changed",
+    "ready",
+    "sweep",
+    "read-guard",
+    "statusline",
+    "code-cleanliness",
+    "ci-settings",
+    "prose/code-comments",
+    "prose/prose-voice",
+    "prose/output-prose",
+    "prose/pr-description",
+    "ts/typescript",
+    "svelte/svelte",
+    "svelte/svelte-mcp",
+    "testing/testing",
+    "testing/playwright-mcp",
+    "changesets/changesets",
+    "design/design",
+    "design/design-review",
+    "design/design-tailwind",
+    "accessibility/accessibility",
+    "accessibility/accessibility-review"
+  ],
+  "ejected": [
+    ".claude/rules/svelte.md",
+    ".claude/rules/typescript.md"
+  ]
 }

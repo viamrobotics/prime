@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" || { echo \"[houserules] guard-bash.mjs is missing, so this call is blocked. Restore it from your terminal: npx houserules update\" >&2; exit 1; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-bash.mjs\" || { echo \"[houserules] guard-bash.mjs: this install's generated files are not synced yet. Run your dependency install (npm install, pnpm install, or yarn), or houserules update for a global CLI. This call is blocked until then.\" >&2; exit 1; }"
           }
         ]
       },
@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" || { echo \"[houserules] guard-read.mjs is missing, so this call is blocked. Restore it from your terminal: npx houserules update\" >&2; exit 1; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/guard-read.mjs\" || { echo \"[houserules] guard-read.mjs: this install's generated files are not synced yet. Run your dependency install (npm install, pnpm install, or yarn), or houserules update for a global CLI. This call is blocked until then.\" >&2; exit 1; }"
           }
         ]
       }
@@ -75,11 +75,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" || { echo \"[houserules] session-context.mjs missing. Run: npx houserules update\"; exit 0; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/session-context.mjs\" || { echo \"[houserules] session-context.mjs: this install's generated files are not synced yet. Run your dependency install (npm install, pnpm install, or yarn), or houserules update for a global CLI.\"; exit 0; }"
           },
           {
             "type": "command",
-            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" || { echo \"[houserules] debug-session-check.mjs missing. Run: npx houserules update\"; exit 0; }"
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/debug-session-check.mjs\" || { echo \"[houserules] debug-session-check.mjs: this install's generated files are not synced yet. Run your dependency install (npm install, pnpm install, or yarn), or houserules update for a global CLI.\"; exit 0; }"
+          },
+          {
+            "type": "command",
+            "command": "[ -f \"$CLAUDE_PROJECT_DIR/.claude/scripts/payload-sync.mjs\" ] && exec node \"$CLAUDE_PROJECT_DIR/.claude/scripts/payload-sync.mjs\" || { if [ -x \"$CLAUDE_PROJECT_DIR/node_modules/.bin/houserules\" ]; then out=$(\"$CLAUDE_PROJECT_DIR/node_modules/.bin/houserules\" update --sync \"$CLAUDE_PROJECT_DIR\"); elif command -v houserules >/dev/null 2>&1; then out=$(houserules update --sync \"$CLAUDE_PROJECT_DIR\"); else echo \"[houserules] payload-sync.mjs is not synced yet. Run your dependency install (npm install, pnpm install, or yarn) to sync this install.\"; fi; case \"$out\" in \"[houserules] synced\"*) echo \"$out\"; echo \"[houserules] Restart the session so the synced skills, rules, and agents load.\";; ?*) echo \"$out\";; esac; exit 0; }"
           }
         ]
       }

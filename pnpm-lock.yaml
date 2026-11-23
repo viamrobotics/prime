@@ -81,29 +81,29 @@ importers:
         specifier: ^2.31.0
         version: 2.31.0(@types/node@24.12.3)
       '@houserules/cli':
-        specifier: ^0.16.0
-        version: 0.16.0
+        specifier: ^0.17.0
+        version: 0.17.0
       '@houserules/plugin-accessibility':
         specifier: ^0.3.1
-        version: 0.3.1(@houserules/api@0.9.0)
+        version: 0.3.1(@houserules/api@0.10.0)
       '@houserules/plugin-changesets':
-        specifier: ^0.5.0
-        version: 0.5.0(@houserules/api@0.9.0)
+        specifier: ^0.5.1
+        version: 0.5.1(@houserules/api@0.10.0)
       '@houserules/plugin-design':
         specifier: ^0.5.1
-        version: 0.5.1(@houserules/api@0.9.0)
+        version: 0.5.1(@houserules/api@0.10.0)
       '@houserules/plugin-prose':
         specifier: ^0.2.4
-        version: 0.2.4(@houserules/api@0.9.0)
+        version: 0.2.4(@houserules/api@0.10.0)
       '@houserules/plugin-svelte':
-        specifier: ^0.2.2
-        version: 0.2.2(@houserules/api@0.9.0)
+        specifier: ^0.3.0
+        version: 0.3.0(@houserules/api@0.10.0)
       '@houserules/plugin-testing':
         specifier: ^0.3.5
-        version: 0.3.5(@houserules/api@0.9.0)
+        version: 0.3.5(@houserules/api@0.10.0)
       '@houserules/plugin-typescript':
         specifier: ^0.1.4
-        version: 0.1.4(@houserules/api@0.9.0)
+        version: 0.1.4(@houserules/api@0.10.0)
       '@tailwindcss/oxide':
         specifier: 'catalog:'
         version: 4.3.3
@@ -1414,17 +1414,17 @@ packages:
   '@fontsource-variable/space-grotesk@5.2.10':
     resolution: {integrity: sha512-yJQO/o35/hAP3CFnpdFTwQku2yzJOae2HIpBmqkOVoxhhXJaQP3g+b6Jrz7u+eI7A5ZdCIf88uMWpBJdFiGr5w==}
 
-  '@houserules/api@0.9.0':
-    resolution: {integrity: sha512-mTDU/1YWbas6QFwTS7JsyODyC7cv4qfCX4KtmKeaalasI0erQ1S3hr0Hin8Nhg1YDreNEHdvynNMJDJI3rKrBw==}
+  '@houserules/api@0.10.0':
+    resolution: {integrity: sha512-2xwZPXTdi/PNS8TSkgnyJRpbemcrwPL0csxB4tvUEjtF9mOC8qZTp2vedPMMpYRwvbpFtGj/7KPeQZDlXWadSg==}
     engines: {node: '>=22'}
 
-  '@houserules/cli@0.16.0':
-    resolution: {integrity: sha512-kEwFJ8fQxoiHoDahzIy1HlJLO2HYsEPt3/ndKnn3o5/HaS0qD3vT7FbfulGCl0nCMuLX0wigpTVoWOVvEULmfA==}
+  '@houserules/cli@0.17.0':
+    resolution: {integrity: sha512-jDlQc5a9b9uetoifVUBv93covRicv0F79AybeK8/7m+VCHD5FOHYzzpRdmidmUq2UfXcaVwT9S3dMvJ6D360xg==}
     engines: {node: '>=22'}
     hasBin: true
 
-  '@houserules/payload@0.6.0':
-    resolution: {integrity: sha512-wZNSmEIEKeKYiwmImO1cJKQ31jSKrFysvj63DQh1GXvk4Vxcf5c9G1UpJpUkVFJLAax6VYFnWdemSKsP7erQOA==}
+  '@houserules/payload@0.7.0':
+    resolution: {integrity: sha512-RgcvUvF8Pv6ASQy2i91Heww4+9/DWeoizHlXRhAc3HFwabbWnDh0Qu71jrMRodNU1VIrpm360e9/y8B9iqOpew==}
     engines: {node: '>=22'}
 
   '@houserules/plugin-accessibility@0.3.1':
@@ -1433,8 +1433,8 @@ packages:
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
 
-  '@houserules/plugin-changesets@0.5.0':
-    resolution: {integrity: sha512-N70FvtpDrQpxKZV1Ra2U6NLJEbXWbnEHjGkw4sDT/Gm2uanRsjYkdx3xSSbNcDD1mzR49VSz3FDnrKZmycDkvg==}
+  '@houserules/plugin-changesets@0.5.1':
+    resolution: {integrity: sha512-2irHi4RR/vEvWoL6JXjUgVar+ByhpqkkLQJhOc385MJeN+vSDPgQu+Hnjv25GH5q8kuDzUtt1t/Nh4i42ehZnQ==}
     engines: {node: '>=22'}
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
@@ -1451,8 +1451,8 @@ packages:
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
 
-  '@houserules/plugin-svelte@0.2.2':
-    resolution: {integrity: sha512-GMxtamDFNxvh5eWjdt7bYGCNXQKmdR5jQK4dxppED+JFBKD0izD8zPM7rvQBzJ3nptfWDfFVy0ddU6Y0NAfKDQ==}
+  '@houserules/plugin-svelte@0.3.0':
+    resolution: {integrity: sha512-uVKR0t909uozgd5A3g8fkSGvm9TZlVSRSPgCg9NexbF7Lo60C76PKKxGr/LgH3pXfkWWipDuhJPOPurdBwPg1Q==}
     engines: {node: '>=22'}
     peerDependencies:
       '@houserules/api': '>=0.0.0 <1.0.0'
@@ -5731,53 +5731,53 @@ snapshots:
 
   '@fontsource-variable/space-grotesk@5.2.10': {}
 
-  '@houserules/api@0.9.0':
+  '@houserules/api@0.10.0':
     dependencies:
-      '@houserules/payload': 0.6.0
+      '@houserules/payload': 0.7.0
       type-fest: 6.0.2
       zod: 4.6.7
 
-  '@houserules/cli@0.16.0':
+  '@houserules/cli@0.17.0':
     dependencies:
       '@clack/prompts': 1.9.0
-      '@houserules/api': 0.9.0
-      '@houserules/payload': 0.6.0
+      '@houserules/api': 0.10.0
+      '@houserules/payload': 0.7.0
       commander: 15.1.0
       dequal: 2.0.3
       diff: 9.0.0
       picocolors: 1.1.1
       semver: 7.8.6
 
-  '@houserules/payload@0.6.0': {}
+  '@houserules/payload@0.7.0': {}
 
-  '@houserules/plugin-accessibility@0.3.1(@houserules/api@0.9.0)':
+  '@houserules/plugin-accessibility@0.3.1(@houserules/api@0.10.0)':
     dependencies:
-      '@houserules/api': 0.9.0
+      '@houserules/api': 0.10.0
       semver: 7.8.6
 
-  '@houserules/plugin-changesets@0.5.0(@houserules/api@0.9.0)':
+  '@houserules/plugin-changesets@0.5.1(@houserules/api@0.10.0)':
     dependencies:
-      '@houserules/api': 0.9.0
+      '@houserules/api': 0.10.0
 
-  '@houserules/plugin-design@0.5.1(@houserules/api@0.9.0)':
+  '@houserules/plugin-design@0.5.1(@houserules/api@0.10.0)':
     dependencies:
-      '@houserules/api': 0.9.0
+      '@houserules/api': 0.10.0
 
-  '@houserules/plugin-prose@0.2.4(@houserules/api@0.9.0)':
+  '@houserules/plugin-prose@0.2.4(@houserules/api@0.10.0)':
     dependencies:
-      '@houserules/api': 0.9.0
+      '@houserules/api': 0.10.0
 
-  '@houserules/plugin-svelte@0.2.2(@houserules/api@0.9.0)':
+  '@houserules/plugin-svelte@0.3.0(@houserules/api@0.10.0)':
     dependencies:
-      '@houserules/api': 0.9.0
+      '@houserules/api': 0.10.0
 
-  '@houserules/plugin-testing@0.3.5(@houserules/api@0.9.0)':
+  '@houserules/plugin-testing@0.3.5(@houserules/api@0.10.0)':
     dependencies:
-      '@houserules/api': 0.9.0
+      '@houserules/api': 0.10.0
 
-  '@houserules/plugin-typescript@0.1.4(@houserules/api@0.9.0)':
+  '@houserules/plugin-typescript@0.1.4(@houserules/api@0.10.0)':
     dependencies:
-      '@houserules/api': 0.9.0
+      '@houserules/api': 0.10.0
 
   '@humanfs/core@0.19.2':
     dependencies:
