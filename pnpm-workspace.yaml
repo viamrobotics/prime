@@ -32,3 +32,5 @@ onlyBuiltDependencies:
   - "@tailwindcss/oxide"
   - esbuild
   - sharp
+patchedDependencies:
+  '@houserules/plugin-testing': patches/@houserules__plugin-testing.patch

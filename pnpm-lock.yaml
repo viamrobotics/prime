@@ -73,6 +73,11 @@ catalogs:
       specifier: 0.14.13
       version: 0.14.13
 
+patchedDependencies:
+  '@houserules/plugin-testing':
+    hash: 4691111aa9d7daaa74ec59c8b8ddb5bbc8d54d026529e53237ec3c180db34a63
+    path: patches/@houserules__plugin-testing.patch
+
 importers:
 
   .:
@@ -100,7 +105,7 @@ importers:
         version: 0.3.0(@houserules/api@0.10.0)
       '@houserules/plugin-testing':
         specifier: ^0.3.5
-        version: 0.3.5(@houserules/api@0.10.0)
+        version: 0.3.5(patch_hash=4691111aa9d7daaa74ec59c8b8ddb5bbc8d54d026529e53237ec3c180db34a63)(@houserules/api@0.10.0)
       '@houserules/plugin-typescript':
         specifier: ^0.1.4
         version: 0.1.4(@houserules/api@0.10.0)
@@ -245,7 +250,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -339,7 +344,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -421,7 +426,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -536,7 +541,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -624,7 +629,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -706,7 +711,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -815,7 +820,7 @@ importers:
         version: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       vitest-browser-svelte:
         specifier: ^2.1.0
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.72.2))(vitest@4.1.6)
@@ -867,7 +872,7 @@ importers:
         version: 8.72.2(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3)
       vitest:
         specifier: 'catalog:'
-        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       wireit:
         specifier: 'catalog:'
         version: 0.14.13
@@ -4927,6 +4932,7 @@ packages:
       '@vitest/ui': 4.1.6
       happy-dom: '*'
       jsdom: '*'
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true
@@ -5771,7 +5777,7 @@ snapshots:
     dependencies:
       '@houserules/api': 0.10.0
 
-  '@houserules/plugin-testing@0.3.5(@houserules/api@0.10.0)':
+  '@houserules/plugin-testing@0.3.5(patch_hash=4691111aa9d7daaa74ec59c8b8ddb5bbc8d54d026529e53237ec3c180db34a63)(@houserules/api@0.10.0)':
     dependencies:
       '@houserules/api': 0.10.0
 
@@ -6768,7 +6774,7 @@ snapshots:
       '@vitest/mocker': 4.1.6(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       playwright: 1.65.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -6781,7 +6787,7 @@ snapshots:
       '@vitest/mocker': 4.1.6(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       playwright: 1.65.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -6798,7 +6804,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       ws: 8.20.0
     transitivePeerDependencies:
       - bufferutil
@@ -6815,7 +6821,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
       ws: 8.20.0
     transitivePeerDependencies:
       - bufferutil
@@ -9284,9 +9290,37 @@ snapshots:
     dependencies:
       '@testing-library/svelte-core': 1.0.0(svelte@5.55.5(@typescript-eslint/types@8.72.2))
       svelte: 5.55.5(@typescript-eslint/types@8.72.2)
-      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1)
+      vitest: 4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
 
-  vitest@4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(jiti@2.7.0)(yaml@2.9.1):
+  vitest@4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)):
+    dependencies:
+      '@vitest/expect': 4.1.6
+      '@vitest/mocker': 4.1.6(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
+      '@vitest/pretty-format': 4.1.6
+      '@vitest/runner': 4.1.6
+      '@vitest/snapshot': 4.1.6
+      '@vitest/spy': 4.1.6
+      '@vitest/utils': 4.1.6
+      es-module-lexer: 2.1.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.1
+      pathe: 2.0.3
+      picomatch: 4.0.4
+      std-env: 4.1.0
+      tinybench: 2.9.0
+      tinyexec: 1.1.2
+      tinyglobby: 0.2.16
+      tinyrainbow: 3.1.0
+      vite: 8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.12.3
+      '@vitest/browser-playwright': 4.1.6(playwright@1.65.0)(vite@8.0.12(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))(vitest@4.1.6)
+    transitivePeerDependencies:
+      - msw
+
+  vitest@4.1.6(@types/node@24.12.3)(@vitest/browser-playwright@4.1.6)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1)):
     dependencies:
       '@vitest/expect': 4.1.6
       '@vitest/mocker': 4.1.6(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))
@@ -9312,18 +9346,7 @@ snapshots:
       '@types/node': 24.12.3
       '@vitest/browser-playwright': 4.1.6(playwright@1.65.0)(vite@8.3.8(@types/node@24.12.3)(jiti@2.7.0)(yaml@2.9.1))(vitest@4.1.6)
     transitivePeerDependencies:
-      - '@vitejs/devtools'
-      - esbuild
-      - jiti
-      - less
       - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - yaml
 
   w3c-keyname@2.2.8: {}
 

@@ -1,0 +1,56 @@
+diff --git a/payload-dist/rules/testing.md b/payload-dist/rules/testing.md
+index aa6183249715e7211ad96940cdc8c4ab7b0465b9..273eb145f6499e34338624710c21ced9884e2453 100644
+--- a/payload-dist/rules/testing.md
++++ b/payload-dist/rules/testing.md
+@@ -110,6 +110,11 @@ that covers it is part of the change, not a follow-up.
+   them in a plainly named `test/` directory. The distinction is worth holding: the test
+   directory means tests live here, `test/` means testing infrastructure lives here. A test
+   directory containing no tests misleads every reader who greps it.
++- **A fixture only the specs beside it use goes in a `fixtures/` subdirectory of the test
++  directory.** A wrapper component one spec mounts, or a data file one suite reads, belongs
++  to that suite, so it stays beside it without sitting among the tests. Once a second test
++  directory needs it, it is shared and moves to `test/`. Checked mechanically: the
++  directory-contents check skips `<test-dir>/fixtures/`.
+ 
+ ### What to test, and at which level
+ 
+diff --git a/payload-dist/scripts/test-layout.mjs b/payload-dist/scripts/test-layout.mjs
+index 0e20a330e67d9283b41ce315f0eb3ce25319f74b..afeff3e852530b91ab1e54e48fd2064b45aed9fd 100644
+--- a/payload-dist/scripts/test-layout.mjs
++++ b/payload-dist/scripts/test-layout.mjs
+@@ -57,18 +57,22 @@ export function checkColocation(file, testDir = '__tests__') {
+     }
+     return report;
+ }
++const FIXTURES_DIR = 'fixtures';
+ /**
+- * The configured test directory holds tests, not fixtures or setup. `__snapshots__` is
+- * excluded, since Vitest writes that subdirectory itself rather than an author placing a
+- * fixture there.
++ * The configured test directory holds tests, not shared setup. Two subdirectories are
++ * excluded: `__snapshots__`, which Vitest writes itself, and `fixtures/`, which holds the
++ * fixtures only the specs in that test directory use.
+  */
+ export function checkDirContents(file, testDir = '__tests__') {
+     const report = emptyReport();
+     const segments = file.split('/');
+-    if (!segments.includes(testDir))
++    const testDirIndex = segments.lastIndexOf(testDir);
++    if (testDirIndex === -1)
+         return report;
+     if (segments.includes('__snapshots__'))
+         return report;
++    if (segments[testDirIndex + 1] === FIXTURES_DIR && segments.length > testDirIndex + 2)
++        return report;
+     if (TEST_SUFFIX.test(file) || SPEC_SUFFIX.test(file))
+         return report;
+     report.findings.push({
+@@ -76,7 +80,7 @@ export function checkDirContents(file, testDir = '__tests__') {
+         level: 'error',
+         file,
+         line: null,
+-        msg: `Non-test file inside a ${testDir} directory. Shared fixtures and setup belong in a plainly named test/ directory, not ${testDir}/.`,
++        msg: `Non-test file inside a ${testDir} directory. A fixture only these specs use belongs in ${testDir}/${FIXTURES_DIR}/, and shared fixtures and setup in a plainly named test/ directory.`,
+     });
+     return report;
+ }
