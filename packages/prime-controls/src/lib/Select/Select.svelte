@@ -17,7 +17,8 @@ a [`Select.Viewport`](./SelectViewport.svelte), the same parts and keyboard as p
 </Select>
 ```
 
-Without children it renders those parts itself from `items`, named by `aria-label` or `aria-labelledby`:
+Without children it renders those parts itself from `items`, named by `aria-label` or `aria-labelledby`.
+Its trigger fills its container's width, and `class` lands on the trigger:
 
 ```svelte
 <Select {items} bind:value aria-label="Mode" />
@@ -25,6 +26,7 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 -->
 <script lang="ts">
 	import type { ComponentProps, Snippet } from 'svelte';
+	import type { ClassValue } from 'svelte/elements';
 
 	// Aliased, because a `typeof Select` here would name this component in the published types.
 	import { Select as PrimeSelect } from '@viamrobotics/prime-ui';
@@ -48,6 +50,7 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 		hint?: never;
 		'aria-label'?: never;
 		'aria-labelledby'?: never;
+		class?: never;
 	}
 
 	interface ChildlessProps extends RootProps {
@@ -68,6 +71,9 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 		 * without `children`.
 		 */
 		hint?: string;
+
+		/** Classes for the trigger, which fills its container's width. Only without `children`. */
+		class?: ClassValue;
 	}
 
 	// The hint button is named `About <aria-label>`, so a hint needs an `aria-label` and not an id.
@@ -83,6 +89,7 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 		hint,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
+		class: triggerClasses,
 		...restProps
 	}: Props = $props();
 
@@ -96,8 +103,9 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 	{#if children}
 		{@render children()}
 	{:else}
-		{#snippet trigger()}
+		{#snippet trigger(widthClasses: string)}
 			<SelectTrigger
+				class={[widthClasses, triggerClasses]}
 				aria-label={ariaLabel}
 				aria-labelledby={ariaLabelledby}
 				aria-describedby={hintedName ? hintId : undefined}
@@ -106,12 +114,12 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 			</SelectTrigger>
 		{/snippet}
 		{#if hint && hintedName}
-			<div class="flex items-center gap-1">
-				{@render trigger()}
+			<div class="flex w-full items-center gap-1">
+				{@render trigger('min-w-0 flex-1')}
 				<Hint label={hintedName} {hint} descriptionId={hintId} />
 			</div>
 		{:else}
-			{@render trigger()}
+			{@render trigger('w-full')}
 		{/if}
 		<SelectContent>
 			<SelectViewport>

@@ -53,6 +53,8 @@ import PointAxes from "./PointAxes.svelte"
 import pointAxesSource from "./PointAxes.svelte?raw"
 import PointDetails from "./PointDetails.svelte"
 import pointDetailsSource from "./PointDetails.svelte?raw"
+import PointMixed from "./PointMixed.svelte"
+import pointMixedSource from "./PointMixed.svelte?raw"
 import States from "./States.svelte"
 import statesSource from "./States.svelte?raw"
 import TextFieldBasic from "./TextFieldBasic.svelte"
@@ -122,7 +124,7 @@ import fileFieldBasicSource from "./FileFieldBasic.svelte?raw"
 
 ### Two-way binding
 
-`bind:value` holds the number, or `undefined` while the field is empty. Drag the label sideways to scrub, or focus the input and press the arrow keys.
+`bind:value` holds the number. An `undefined` value renders an empty field. While the input has focus it shows what was typed: each typed number is written, so a function binding may clamp or reject it without rewriting the field mid-entry, and an empty field writes nothing. On blur the field shows the bound value again. Drag the label sideways to scrub, or focus the input and press the arrow keys.
 
 <Example code={twoWaySource} title="TwoWay.svelte">
   <TwoWay client:visible />
@@ -163,7 +165,7 @@ A drag begins once the pointer moves 4 pixels from where it was pressed, and onl
 
 ## Point
 
-`Point` binds a `PointValue`, an object with `x` and `y` and optionally `z` and `w`. The defined axes decide how many fields render. Each axis letter sits inside its field as a prefix and is the scrub handle. Editing one axis writes a new object with that axis changed and the others as they were. `min`, `max`, `step`, and `disabled` apply to every axis.
+`Point` binds a `PointValue`, an object with `x` and `y` and optionally `z` and `w`. `x` and `y` always render, and `z` and `w` render when defined or listed in `axes`. Each axis letter sits inside its field as a prefix and is the scrub handle. Editing one axis writes a new object with that axis changed and the others as they were. `min`, `max`, `step`, and `disabled` apply to every axis.
 
 ### 2D
 
@@ -209,7 +211,7 @@ The setter receives the whole new `PointValue`. This one refuses any value farth
 
 ### Per axis
 
-`axes` lets single axes set `min`, `max`, `step`, `suffix`, `state`, and `describedBy` for themselves, and an axis listed there uses its own value in place of the control's. So a vector whose last axis has its own unit and range is still one `Point`. This orientation is four axes, and the last is an angle with its own step, range, and unit.
+`axes` lets single axes set `min`, `max`, `step`, `suffix`, `state`, `describedBy`, and `placeholder` for themselves, and an axis listed there uses its own value in place of the control's. So a vector whose last axis has its own unit and range is still one `Point`. This orientation is four axes, and the last is an angle with its own step, range, and unit.
 
 <Example code={pointAxesSource} title="PointAxes.svelte">
   <PointAxes client:visible />
@@ -221,6 +223,14 @@ The `details` snippet draws content under one axis field, at that field's width,
 
 <Example code={pointDetailsSource} title="PointDetails.svelte">
   <PointDetails client:visible />
+</Example>
+
+### Mixed values
+
+An axis whose value is `undefined` renders empty with its `placeholder` and stays `undefined` in every write. An undefined `z` or `w` renders only when it is listed in `axes`. That fits an editor for several objects at once: an axis that differs across them shows a dash, and a write carries numbers only for the axes that have one, so applying those numbers leaves each object's own value on the others. Here Z differs, and editing X or Y keeps both Z values.
+
+<Example code={pointMixedSource} title="PointMixed.svelte">
+  <PointMixed client:visible />
 </Example>
 
 ## Hints
@@ -319,7 +329,7 @@ Every control takes `disabled`. `NumberField` and `TextField` also take `readonl
 
 ## Select
 
-`Select` is prime-ui's `Select` at panel scale, with the same parts and keyboard. `bind:value` holds the selected item's value. A `Select` with no children renders the trigger, the value, and the list from `items`. It takes `placeholder` and needs an `aria-label` or `aria-labelledby`.
+`Select` is prime-ui's `Select` at panel scale, with the same parts and keyboard. `bind:value` holds the selected item's value. A `Select` with no children renders the trigger, the value, and the list from `items`. It takes `placeholder` and needs an `aria-label` or `aria-labelledby`. Its trigger fills its container's width, and `class` lands on the trigger, so `flex-1` or `min-w-0` fits it into a row.
 
 <Example code={selectBasicSource} title="SelectBasic.svelte">
   <SelectBasic client:visible />

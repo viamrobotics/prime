@@ -578,3 +578,22 @@ describe('Slider root and style', () => {
 		expect(props).toBeDefined();
 	});
 });
+
+describe('Slider cleared readout', () => {
+	it('stays empty when cleared and takes the number typed next', async () => {
+		const { container } = render(BoundSlider, {
+			props: { label: 'Opacity', min: 0, max: 1, step: 0.01, initial: 1 }
+		});
+
+		await userEvent.clear(readout(container));
+
+		expect(readout(container).value).toBe('');
+		expect(owner(container)).toBe('1');
+
+		await userEvent.keyboard('0.35');
+
+		expect(owner(container)).toBe('0.35');
+		expect(readout(container).value).toBe('0.35');
+		expect(range(container).value).toBe('0.35');
+	});
+});

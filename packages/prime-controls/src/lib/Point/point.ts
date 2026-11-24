@@ -40,4 +40,7 @@ export interface PointAxisOptions {
 	 * a warn or error `state`, because a color is never the only signal.
 	 */
 	describedBy?: string;
+
+	/** Text this axis field shows while its value is `undefined`, such as `-` for a mixed value. */
+	placeholder?: string;
 }

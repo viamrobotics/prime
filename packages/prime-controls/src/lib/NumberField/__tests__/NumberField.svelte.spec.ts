@@ -9,6 +9,7 @@ import NumberField from '../NumberField.svelte';
 import BoundNumberField from './fixtures/BoundNumberField.svelte';
 import ControlledNumberField from './fixtures/ControlledNumberField.svelte';
 import FieldsetNumberField from './fixtures/FieldsetNumberField.svelte';
+import FilteredNumberField from './fixtures/FilteredNumberField.svelte';
 import NumberFieldWithTrailing from './fixtures/NumberFieldWithTrailing.svelte';
 import TallTrailingNumberField from './fixtures/TallTrailingNumberField.svelte';
 
@@ -723,5 +724,101 @@ describe('NumberField suffix size', () => {
 
 		expect(frame(suffixed.container).getBoundingClientRect().height).toBe(bareHeight);
 		expect(getComputedStyle(input(suffixed.container)).fontSize).toBe(bareFontSize);
+	});
+});
+
+describe('NumberField typing', () => {
+	const clampToTwo = (next: number) => Math.max(2, next);
+	const rejectZero = (next: number) => (next === 0 ? undefined : next);
+
+	function renderFiltered(filter: (next: number) => number | undefined, initial = 25) {
+		const record = vi.fn<(next: number | undefined) => void>();
+		const screen = render(FilteredNumberField, {
+			props: { label: 'Speed', initial, filter, record }
+		});
+		return { ...screen, values: () => record.mock.calls.map(([next]) => next) };
+	}
+
+	it('stays empty and writes nothing when cleared', async () => {
+		const { container, values } = renderFiltered(clampToTwo);
+
+		await userEvent.clear(input(container));
+
+		await expect.element(input(container)).toHaveFocus();
+		expect(input(container).value).toBe('');
+		expect(values()).toEqual([]);
+		expect(owner(container)).toBe('25');
+	});
+
+	it('never writes undefined into a plain binding', async () => {
+		const { container } = render(BoundNumberField, { props: { label: 'Speed', initial: 20 } });
+
+		await userEvent.clear(input(container));
+
+		expect(owner(container)).toBe('20');
+		expect(input(container).value).toBe('');
+	});
+
+	it('shows what was typed while the binding clamps each partial number', async () => {
+		const { container, values } = renderFiltered(clampToTwo);
+
+		await userEvent.clear(input(container));
+		await userEvent.keyboard('150');
+
+		expect(input(container).value).toBe('150');
+		expect(values()).toEqual([1, 15, 150]);
+		expect(owner(container)).toBe('150');
+	});
+
+	it('shows what was typed while the binding rejects a partial number', async () => {
+		const { container } = renderFiltered(rejectZero, 7);
+
+		await userEvent.clear(input(container));
+		await userEvent.keyboard('0.5');
+
+		expect(input(container).value).toBe('0.5');
+		expect(owner(container)).toBe('0.5');
+	});
+
+	it('shows the clamped bound value on blur', async () => {
+		const { container } = renderFiltered(clampToTwo);
+
+		await userEvent.clear(input(container));
+		await userEvent.keyboard('1');
+		expect(input(container).value).toBe('1');
+
+		await userEvent.tab();
+
+		expect(input(container).value).toBe('2');
+		expect(owner(container)).toBe('2');
+	});
+
+	it('steps from the typed number, not the bound value', async () => {
+		const { container } = renderFiltered(rejectZero, 7);
+
+		await userEvent.clear(input(container));
+		await userEvent.keyboard('0{ArrowUp}');
+
+		expect(input(container).value).toBe('1');
+		expect(owner(container)).toBe('1');
+	});
+
+	it('writes each arrow key step and shows it', async () => {
+		const { container, values } = renderFiltered(clampToTwo);
+
+		await userEvent.click(input(container));
+		await userEvent.keyboard('{ArrowUp}{ArrowUp}');
+
+		expect(values()).toEqual([26, 27]);
+		expect(input(container).value).toBe('27');
+	});
+
+	it('writes each scrub step and shows it', async () => {
+		const { container, values } = renderFiltered(clampToTwo);
+
+		await scrub([6, 7, 8]);
+
+		expect(values()).toEqual([31, 32, 33]);
+		expect(input(container).value).toBe('33');
 	});
 });
