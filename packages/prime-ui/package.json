@@ -18,11 +18,13 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
 		},
 		"./icons": {
 			"types": "./dist/Icon/icons/index.d.ts",
-			"svelte": "./dist/Icon/icons/index.js"
+			"svelte": "./dist/Icon/icons/index.js",
+			"default": "./dist/Icon/icons/index.js"
 		},
 		"./styles.css": "./styles.css"
 	},

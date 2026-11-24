@@ -442,7 +442,9 @@ describe('CodeEditor', () => {
 			await expect.poll(() => count(container, '.cm-foldGutter [title="Fold line"]')).toBe(1);
 			await userEvent.click(foldMarker(container)!);
 			await expect.poll(() => count(content, '.cm-foldPlaceholder')).toBe(1);
-			await userEvent.click(lines(content)[0], { position: { x: 1, y: 1 } });
+			// Focus without a pointer keeps the initial cursor at the document start, on the folded line.
+			(content as HTMLElement).focus();
+			expect(document.activeElement).toBe(content);
 			expect(count(content, '.cm-foldPlaceholder')).toBe(1);
 
 			await userEvent.keyboard(EXPAND_KEY);
