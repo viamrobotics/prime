@@ -1,5 +1,12 @@
 # @viamrobotics/prime-ui
 
+## 0.7.1
+### Patch Changes
+
+- 44bed22: `Banner` and `Toast` no longer add screen-reader tone text such as "Error: ", so a variant is styling and a live-region role only.
+- Updated dependencies [44bed22]
+  - @viamrobotics/tailwind-config@1.12.1
+
 ## 0.7.0
 ### Minor Changes
 
