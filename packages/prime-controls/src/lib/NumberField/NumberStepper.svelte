@@ -67,12 +67,12 @@ them and leaves them inert.
 	$effect(() => () => stopHold?.());
 </script>
 
-<!-- The negative margins fill the frame's padding, so the buttons span its height without growing it. -->
+<!-- The negative margins cancel the compact frame's padding, so the stretched buttons fill its height and meet its right border, with the corners clipped to the frame's inner radius. -->
 <span
 	aria-hidden="true"
 	data-number-stepper
 	class={[
-		'-my-1 -mr-1.5 flex h-6 w-4 shrink-0 flex-col opacity-0 transition-opacity motion-reduce:transition-none',
+		'-my-1 -mr-2 flex w-4 shrink-0 flex-col self-stretch overflow-hidden rounded-r-[calc(var(--radius-sm)-1px)] opacity-0 transition-opacity motion-reduce:transition-none',
 		'group-focus-within/number-field:opacity-100 group-hover/number-field:opacity-100 pointer-coarse:opacity-100',
 		'group-has-[input:disabled]/number-field:invisible',
 		isLocked && 'invisible'
@@ -84,7 +84,7 @@ them and leaves them inert.
 			tabindex="-1"
 			aria-label={name}
 			data-step={direction}
-			class="flex flex-1 items-center justify-center rounded-xs text-subtle-1 hover:bg-light hover:text-default"
+			class="flex flex-1 items-center justify-center text-subtle-1 hover:bg-light hover:text-default"
 			onpointerdown={(event) => handlePointerdown(event, direction)}
 		>
 			<Icon {icon} size="xs" />

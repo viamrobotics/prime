@@ -10,6 +10,7 @@ import BoundNumberField from './fixtures/BoundNumberField.svelte';
 import ControlledNumberField from './fixtures/ControlledNumberField.svelte';
 import FieldsetNumberField from './fixtures/FieldsetNumberField.svelte';
 import NumberFieldWithTrailing from './fixtures/NumberFieldWithTrailing.svelte';
+import TallTrailingNumberField from './fixtures/TallTrailingNumberField.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
 const frame = (container: Element) => input(container).parentElement!;
@@ -494,6 +495,18 @@ function press(button: HTMLButtonElement, modifiers: PointerEventInit = {}) {
 	window.dispatchEvent(new PointerEvent('pointerup'));
 }
 
+function stepperInset(container: Element) {
+	const group = frame(container);
+	const border = Number.parseFloat(getComputedStyle(group).borderTopWidth);
+	const outer = group.getBoundingClientRect();
+	const box = container.querySelector('[data-number-stepper]')!.getBoundingClientRect();
+	return {
+		right: outer.right - border - box.right,
+		top: box.top - outer.top - border,
+		bottom: outer.bottom - border - box.bottom
+	};
+}
+
 function renderInDisabledFieldset() {
 	const record = vi.fn<(next: number | undefined) => void>();
 	const screen = render(FieldsetNumberField, {
@@ -564,6 +577,18 @@ describe('NumberField stepper', () => {
 		const stepper = container.querySelector('[data-number-stepper]')!;
 
 		expect(getComputedStyle(stepper).visibility).toBe('hidden');
+	});
+
+	it('fills the compact frame inside its border, flush right and full height', () => {
+		const { container } = render(NumberField, { props: { label: 'Length', value: 1 } });
+
+		expect(stepperInset(container)).toEqual({ right: 0, top: 0, bottom: 0 });
+	});
+
+	it('fills a frame that trailing content makes taller, flush right and full height', () => {
+		const { container } = render(TallTrailingNumberField);
+
+		expect(stepperInset(container)).toEqual({ right: 0, top: 0, bottom: 0 });
 	});
 
 	it('repeats every 60 ms once a press is held past 400 ms', () => {
