@@ -1,5 +1,20 @@
 # @viamrobotics/prime-ui
 
+## 0.7.0
+### Minor Changes
+
+- 49ad89d: Require an accessible name on `Field` and prop-named components through the exported `AccessibleName` type, warning in development when unnamed.
+- 49ad89d: `NumberInput` shows native-style step buttons that fit its frame, standalone or last in an `Input.Group`, exported as `NumberInput.Stepper`.
+- 49ad89d: Add closable tabs, rename `Tooltip.Content`'s `placement` to `side`, and add chevron and indicator snippets.
+
+### Patch Changes
+
+- 49ad89d: Fix accessibility, behavior, and documentation defects across components.
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+  - @viamrobotics/tailwind-config@1.12.0
+
 ## 0.6.0
 ### Minor Changes
 

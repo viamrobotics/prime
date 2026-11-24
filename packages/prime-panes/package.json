@@ -1,6 +1,6 @@
 {
 	"name": "@viamrobotics/prime-panes",
-	"version": "0.1.3",
+	"version": "0.2.0",
 	"description": "Resizable, rearrangeable split-pane layouts for Svelte 5.",
 	"license": "Apache-2.0",
 	"publishConfig": {

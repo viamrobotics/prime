@@ -1,5 +1,18 @@
 # @viamrobotics/prime-tree
 
+## 0.2.0
+### Minor Changes
+
+- 49ad89d: Rename the `Tree` accessors to `getValue`, `getLabel`, `getChildren`, `getChildCount`, and `isDisabled`, and require an accessible name.
+
+### Patch Changes
+
+- 49ad89d: Fix accessibility, behavior, and documentation defects across components.
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+  - @viamrobotics/tailwind-config@1.12.0
+
 ## 0.1.3
 ### Patch Changes
 

@@ -1,5 +1,18 @@
 # @viamrobotics/prime-editor
 
+## 0.2.0
+### Minor Changes
+
+- 49ad89d: Expand collapsed unchanged lines with the unfold key, and drop a readonly editor's border and click focus ring.
+
+### Patch Changes
+
+- 49ad89d: Fix accessibility, behavior, and documentation defects across components.
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+  - @viamrobotics/tailwind-config@1.12.0
+
 ## 0.1.1
 ### Patch Changes
 
