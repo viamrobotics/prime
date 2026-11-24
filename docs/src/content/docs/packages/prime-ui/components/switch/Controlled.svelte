@@ -5,7 +5,7 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex items-center gap-2">
+  <Field label="Arm the machine (cannot be undone)" class="flex items-center gap-2">
     <Switch
       bind:checked={
         () => armed,
@@ -14,7 +14,7 @@
         }
       }
     />
-    <Label>Arm the machine (cannot be undone)</Label>
+    <Label />
   </Field>
 
   <p class="mt-3 text-sm text-subtle-2">armed: <code>{armed}</code></p>

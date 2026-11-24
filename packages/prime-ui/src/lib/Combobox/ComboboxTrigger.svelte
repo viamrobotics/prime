@@ -4,6 +4,9 @@ The button that opens and closes the list of a [`Combobox`](./Combobox.svelte). 
 focus in the [`Combobox.Input`](./ComboboxInput.svelte). Place it beside the input in an
 [`Input.Group`](../Input/InputGroup.svelte).
 
+Its accessible name is "Show options" unless you pass `aria-label`. It stays out of the tab order,
+since the input already opens the list from the keyboard. Pass `tabindex` to change that.
+
 A chevron is rendered by default. Pass an `indicator` snippet to replace it:
 
 ```svelte
@@ -47,16 +50,15 @@ A chevron is rendered by default. Pass an `indicator` snippet to replace it:
 	}: Props = $props();
 </script>
 
-{#snippet chevron()}
-	<Icon icon={mdiChevronDown} size="sm" />
-{/snippet}
-
 <Combobox.Trigger
 	aria-label={label}
 	{tabindex}
 	class={['-my-0.5 input-button', extraClasses]}
 	{...restProps}
 >
-	{@const suffix = indicator ?? chevron}
-	{@render suffix()}
+	{#if indicator}
+		{@render indicator()}
+	{:else}
+		<Icon icon={mdiChevronDown} size="sm" />
+	{/if}
 </Combobox.Trigger>

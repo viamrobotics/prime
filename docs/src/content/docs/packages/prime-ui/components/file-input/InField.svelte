@@ -4,8 +4,8 @@
   let files = $state<File[]>([]);
 </script>
 
-<Field class="not-content flex max-w-xs flex-col gap-1">
-  <Label>Audio file</Label>
+<Field label="Audio file" class="not-content flex max-w-xs flex-col gap-1">
+  <Label />
   <FileInput accept=".wav,.mp3" bind:value={files} />
   <Hint>A WAV or MP3 recording.</Hint>
 </Field>

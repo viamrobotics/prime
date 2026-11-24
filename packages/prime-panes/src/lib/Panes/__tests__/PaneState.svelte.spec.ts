@@ -1,8 +1,9 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { commands, page, userEvent } from 'vitest/browser';
 
 import StackPanes from '../../../../test/fixtures/StackPanes.svelte';
+import { HOLD_TO_DRAG_MS } from '../classify-press.ts';
 
 const moveButtonOf = (label: string) =>
 	page.getByRole('button', { name: `Move ${label}`, exact: true });
@@ -47,11 +48,11 @@ describe('Panes pane state', () => {
 		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 		render(StackPanes, { props: { hasStateProbe: true, hasTriggers: true } });
 		await userEvent.hover(moveButtonOf('Solo'));
+		onTestFinished(() => commands.mouseUp());
 
 		await commands.mouseDown();
-		vi.advanceTimersByTime(300);
+		vi.advanceTimersByTime(HOLD_TO_DRAG_MS);
 
 		await expect.element(page.getByPaneState('solo')).toHaveAttribute('data-is-drag-armed', 'true');
-		await commands.mouseUp();
 	});
 });

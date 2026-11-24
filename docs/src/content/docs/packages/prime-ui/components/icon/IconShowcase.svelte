@@ -77,7 +77,7 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <h4 class="text-xs font-medium text-subtle-2 uppercase">Viam glyphs from @viamrobotics/prime-ui/icons (a few of 25, see the migration table for the full list)</h4>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Viam glyphs from @viamrobotics/prime-ui/icons (a few, see the migration table for the full list)</h4>
     <div class="flex flex-wrap gap-4 text-default">
       {#each glyphs as { label, component } (label)}
         <span class="flex w-32 flex-col items-center gap-1">

@@ -2,54 +2,72 @@ import { getContext, setContext, untrack } from 'svelte';
 
 import type { TabsVariant } from './variant.ts';
 
-const key = Symbol('Tabs');
+const TABS_KEY = Symbol('Tabs');
 
 interface TabsOptions {
 	value: () => string | undefined;
 	variant: () => TabsVariant;
 }
 
-/** What a `Tabs` root shares with the parts inside it. */
 export interface TabsContext {
-	/** The selected tab's value: the bound value while its tab exists, otherwise the first tab's. */
+	// The bound value while its tab exists, otherwise the leftmost tab's.
 	readonly value: string | undefined;
-	/** The strip's look, which the list and triggers follow. */
 	readonly variant: TabsVariant;
-	/** The triggers' values, in mount order. */
+	// In mount order, which is the order a list with an unset `order` starts from.
 	readonly triggers: readonly string[];
-	/** Register a trigger's value, in mount order. Returns the unregister function. */
-	register: (value: string) => () => void;
-	/** Register a panel's value, in mount order. Returns the unregister function. */
+	register: (value: string, element: HTMLElement) => () => void;
 	registerPanel: (value: string) => () => void;
 }
 
-const registry = () => {
-	let values = $state<string[]>([]);
+interface TriggerEntry {
+	value: string;
+	element: HTMLElement;
+}
+
+const createRegistry = <TEntry>() => {
+	let entries = $state.raw<TEntry[]>([]);
 	return {
-		get values() {
-			return values;
+		get entries() {
+			return entries;
 		},
-		add: (value: string) => {
-			untrack(() => (values = [...values, value]));
+		add: (entry: TEntry) => {
+			untrack(() => (entries = [...entries, entry]));
 			return () => {
-				values = values.filter((existing) => existing !== value);
+				entries = entries.filter((existing) => existing !== entry);
 			};
 		}
 	};
 };
 
+const precedes = (element: Node, other: Node) =>
+	(element.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+
+// Mount order drifts from strip order after a move or a front insert, so the strip's DOM decides.
+const leftmostOf = (entries: readonly TriggerEntry[]) =>
+	entries.reduce<TriggerEntry | undefined>(
+		(leftmost, entry) =>
+			leftmost === undefined || precedes(entry.element, leftmost.element) ? entry : leftmost,
+		undefined
+	)?.value;
+
 export const provideTabs = (options: TabsOptions): TabsContext => {
-	const triggers = registry();
-	const panels = registry();
+	const triggers = createRegistry<TriggerEntry>();
+	const panels = createRegistry<string>();
+
+	const triggerValues = $derived(triggers.entries.map((entry) => entry.value));
 
 	// A strip hidden behind the consumer's `{#if}` mounts no trigger, so the panels decide then.
 	const selected = $derived.by(() => {
-		const candidates = triggers.values.length > 0 ? triggers.values : panels.values;
 		const bound = options.value();
-		return bound !== undefined && candidates.includes(bound) ? bound : candidates[0];
+		if (triggers.entries.length === 0) {
+			return bound !== undefined && panels.entries.includes(bound) ? bound : panels.entries[0];
+		}
+		return bound !== undefined && triggerValues.includes(bound)
+			? bound
+			: leftmostOf(triggers.entries);
 	});
 
-	return setContext<TabsContext>(key, {
+	return setContext<TabsContext>(TABS_KEY, {
 		get value() {
 			return selected;
 		},
@@ -57,12 +75,11 @@ export const provideTabs = (options: TabsOptions): TabsContext => {
 			return options.variant();
 		},
 		get triggers() {
-			return triggers.values;
+			return triggerValues;
 		},
-		register: triggers.add,
+		register: (value, element) => triggers.add({ value, element }),
 		registerPanel: panels.add
 	});
 };
 
-/** The enclosing `Tabs`, or `undefined` when a part is rendered on its own. */
-export const useTabs = (): TabsContext | undefined => getContext<TabsContext | undefined>(key);
+export const useTabs = (): TabsContext | undefined => getContext<TabsContext | undefined>(TABS_KEY);

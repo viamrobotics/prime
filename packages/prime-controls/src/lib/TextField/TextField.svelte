@@ -2,7 +2,7 @@
 @component
 A compact text field for tool panels: a native text input with an optional visible `label` before
 it, in the same row layout as `NumberField`. The label focuses the input and does not scrub.
-An empty field is the empty string.
+A cleared field is the empty string.
 
 ```svelte
 <TextField label="Motion name" placeholder="builtin" bind:value />
@@ -10,14 +10,15 @@ An empty field is the empty string.
 -->
 <script lang="ts">
 	import type { ClassValue, HTMLInputAttributes } from 'svelte/elements';
+	import type { AccessibleName } from '../accessible-name.ts';
 
 	import { type FieldState, Input } from '@viamrobotics/prime-ui';
 
-	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
-	import Hint from '../Hint/Hint.svelte';
+	import ControlLabel from '../Hint/ControlLabel.svelte';
+	import { hintIdFor, joinDescribedBy } from '../Hint/described-by.ts';
 
 	interface Props extends Omit<HTMLInputAttributes, 'value' | 'type' | 'children' | 'class'> {
-		/** Current text. An empty field is the empty string. @default '' */
+		/** Current text, `undefined` until set. A cleared field writes the empty string. */
 		value?: string;
 
 		/**
@@ -43,7 +44,7 @@ An empty field is the empty string.
 	}
 
 	let {
-		value = $bindable(''),
+		value = $bindable(),
 		label,
 		hint,
 		state,
@@ -54,29 +55,14 @@ An empty field is the empty string.
 		...restProps
 	}: Props & AccessibleName = $props();
 
-	// A hint sits beside the visible label, so it is only allowed with one.
-	type AccessibleName =
-		| { label: string }
-		| { label?: undefined; hint?: undefined; 'aria-label': string }
-		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
-
 	const generatedId = $props.id();
 	const id = $derived(providedId ?? generatedId);
-	const hintId = $derived(`${id}-hint`);
-	const describedBy = $derived(
-		[ariaDescribedby, label && hint ? hintId : undefined].filter(Boolean).join(' ') || undefined
-	);
+	const hintId = $derived(hintIdFor(id));
+	const describedBy = $derived(joinDescribedBy([ariaDescribedby, label && hint && hintId]));
 </script>
 
-<div class={[CONTROL_ROW_CLASS, extraClasses]}>
-	{#if label}
-		<label for={id} class={['flex min-h-6 min-w-6 shrink-0 items-center', CONTROL_LABEL_CLASS]}>
-			{label}
-		</label>
-	{/if}
-	{#if label && hint}
-		<Hint {label} {hint} descriptionId={hintId} disabled={Boolean(disabled)} />
-	{/if}
+<div class={['flex items-center gap-2', extraClasses]}>
+	<ControlLabel for={id} {label} {hint} disabled={Boolean(disabled)} />
 	<Input
 		{...restProps}
 		{id}

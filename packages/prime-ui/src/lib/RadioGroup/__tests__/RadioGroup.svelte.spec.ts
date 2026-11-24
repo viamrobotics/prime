@@ -3,12 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
-import BoundRadioGroup from './BoundRadioGroup.svelte';
-import ControlledRadioGroup from './ControlledRadioGroup.svelte';
-import DescribedRadioGroup from './DescribedRadioGroup.svelte';
-import IndicatorRadioGroup from './IndicatorRadioGroup.svelte';
-import UndefinedRadioGroup from './UndefinedRadioGroup.svelte';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
+import BoundRadioGroup from './fixtures/BoundRadioGroup.svelte';
+import ControlledRadioGroup from './fixtures/ControlledRadioGroup.svelte';
+import DescribedRadioGroup from './fixtures/DescribedRadioGroup.svelte';
+import IndicatorRadioGroup from './fixtures/IndicatorRadioGroup.svelte';
+import UndefinedRadioGroup from './fixtures/UndefinedRadioGroup.svelte';
 
 const group = (container: Element) => container.querySelector<HTMLElement>('[role="radiogroup"]')!;
 const radios = (container: Element) => [
@@ -18,6 +18,8 @@ const radio = (container: Element, label: string) =>
 	radios(container).find((item) => item.textContent?.includes(label))!;
 const iconPaths = (container: Element) =>
 	[...container.querySelectorAll('svg path')].map((path) => path.getAttribute('d'));
+const iconColors = (container: Element) =>
+	[...container.querySelectorAll('[role="radio"] svg')].map(textColor);
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
 describe('RadioGroup', () => {
@@ -35,9 +37,19 @@ describe('RadioGroup', () => {
 	it('wears the shared focus ring on each item', () => {
 		const { container } = render(BoundRadioGroup);
 
-		expect(radio(container, 'Small').classList.contains('focus-ring'), 'focus-ring utility').toBe(
+		expect(radios(container).map((item) => item.classList.contains('focus-ring'))).toEqual([
+			true,
+			true,
 			true
-		);
+		]);
+	});
+
+	it('paints the checked icon default and each unchecked icon subtle', () => {
+		const { container } = render(BoundRadioGroup);
+		const checked = colorOf('text-default', 'color');
+		const unchecked = colorOf('text-subtle-2', 'color');
+
+		expect(iconColors(container)).toEqual([checked, unchecked, unchecked]);
 	});
 
 	it('renders a passed indicator with the checked state instead of the radio icon', () => {
@@ -67,16 +79,20 @@ describe('RadioGroup', () => {
 		expect(radios(container).map((item) => item.dataset.disabled)).toEqual(['', '', '']);
 	});
 
+	it('paints every label and icon disabled when the group is disabled', () => {
+		const { container } = render(BoundRadioGroup, { props: { disabled: true } });
+		const disabled = colorOf('text-disabled-dark', 'color');
+
+		expect(radios(container).map(textColor)).toEqual([disabled, disabled, disabled]);
+		expect(iconColors(container)).toEqual([disabled, disabled, disabled]);
+	});
+
 	it('is invalid and colors every icon danger in the error state', () => {
 		const { container } = render(BoundRadioGroup, { props: { state: 'error' } });
+		const danger = colorOf('text-danger-dark', 'color');
 
 		expect(group(container).getAttribute('aria-invalid')).toBe('true');
-		const danger = colorOf('text-danger-dark', 'color');
-		expect([...container.querySelectorAll('[role="radio"] svg')].map(textColor)).toEqual([
-			danger,
-			danger,
-			danger
-		]);
+		expect(iconColors(container)).toEqual([danger, danger, danger]);
 	});
 
 	it('renders a hidden form input carrying the value when given a name', () => {
@@ -113,14 +129,20 @@ describe('RadioGroup', () => {
 		expect(owner(container)).toBe('md');
 	});
 
-	it('controlled: a function-binding setter can veto the selection', async () => {
-		const { container } = render(ControlledRadioGroup, { props: { accept: false } });
+	it.each([
+		{ accept: true, expected: 'lg', checked: 'true' },
+		{ accept: false, expected: 'sm', checked: 'false' }
+	])(
+		'controlled: a setter that accepts is $accept updates the owner to $expected',
+		async ({ accept, expected, checked }) => {
+			const { container } = render(ControlledRadioGroup, { props: { accept } });
 
-		await userEvent.click(radio(container, 'Large'));
+			await userEvent.click(radio(container, 'Large'));
 
-		expect(owner(container)).toBe('sm');
-		expect(radio(container, 'Large').getAttribute('aria-checked')).toBe('false');
-	});
+			expect(owner(container)).toBe(expected);
+			expect(radio(container, 'Large').getAttribute('aria-checked')).toBe(checked);
+		}
+	);
 
 	describe('description and details', () => {
 		it('describes the radio with the description text', async () => {
@@ -147,10 +169,17 @@ describe('RadioGroup', () => {
 			const { container } = render(DescribedRadioGroup);
 
 			const wrapper = container.querySelector('.wrapper-class')!;
+
 			expect(wrapper.tagName).toBe('DIV');
-			expect(wrapper.contains(radio(container, 'Email'))).toBe(true);
-			expect(radio(container, 'Email').classList.contains('wrapper-class')).toBe(false);
-			expect(radio(container, 'None').classList.contains('plain-class')).toBe(true);
+			expect(wrapper.contains(radio(container, 'Email')), 'wrapper holds the radio').toBe(true);
+			expect(
+				radio(container, 'Email').classList.contains('wrapper-class'),
+				'class left off the described radio'
+			).toBe(false);
+			expect(
+				radio(container, 'None').classList.contains('plain-class'),
+				'class on the plain radio'
+			).toBe(true);
 		});
 	});
 });

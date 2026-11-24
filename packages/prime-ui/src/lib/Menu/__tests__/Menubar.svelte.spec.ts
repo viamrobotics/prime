@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import BasicMenubar from './BasicMenubar.svelte';
+import BasicMenubar from './fixtures/BasicMenubar.svelte';
 
 const trigger = (name: string) =>
 	[...document.querySelectorAll<HTMLElement>('[role="menubar"] [role="menuitem"]')].find(
@@ -22,10 +22,15 @@ const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() 
 const openMenu = async (name: string) => {
 	await userEvent.click(trigger(name));
 	await vi.waitFor(() => expect(menu()?.getAttribute('aria-label')).toBe(name));
-	await vi.waitFor(() => expect(menu()?.contains(document.activeElement)).toBe(true));
+	await vi.waitFor(() =>
+		expect(menu()?.contains(document.activeElement), 'focus moved into the open menu').toBe(true)
+	);
 	await nextFrame();
 	await nextFrame();
 };
+
+const parkPointerOffTheBar = (container: Element) =>
+	userEvent.hover(container.querySelector('input[aria-label="Outside"]')!);
 
 const openMenuLabel = (label: string) =>
 	vi.waitFor(() => expect(menu()?.getAttribute('aria-label')).toBe(label));
@@ -44,7 +49,6 @@ afterEach(async () => {
 	document.body.style.paddingBlock = '';
 });
 
-// bits-ui runs the close-focus handler twice on an outside press, so the check waits past both calls.
 const CLOSE_SETTLE_MS = 400;
 
 describe('Menubar', () => {
@@ -66,7 +70,6 @@ describe('Menubar', () => {
 		await openMenu('Edit');
 
 		expect(trigger('Edit').getAttribute('aria-expanded')).toBe('true');
-		expect(item('Undo')).toBeTruthy();
 	});
 
 	it('does not scroll the page when a menu opens', async () => {
@@ -110,6 +113,17 @@ describe('Menubar', () => {
 		expect(menu()).toBeNull();
 	});
 
+	it('opens a menu on ArrowDown from a focused trigger and focuses its first item', async () => {
+		const { container } = render(BasicMenubar);
+		await parkPointerOffTheBar(container);
+		trigger('Edit').focus();
+
+		await userEvent.keyboard('{ArrowDown}');
+
+		await openMenuLabel('Edit');
+		await vi.waitFor(() => expect(document.activeElement).toBe(item('Undo')));
+	});
+
 	it('closes on Escape and returns focus to the trigger', async () => {
 		render(BasicMenubar);
 		await openMenu('Edit');
@@ -118,18 +132,6 @@ describe('Menubar', () => {
 
 		await vi.waitFor(() => expect(menu()).toBeNull());
 		expect(document.activeElement).toBe(trigger('Edit'));
-	});
-
-	it('does not pull focus back to the trigger after a press outside', async () => {
-		render(BasicMenubar);
-		await openMenu('Edit');
-		const input = document.querySelector<HTMLInputElement>('input[aria-label="Outside"]')!;
-
-		await userEvent.click(input);
-
-		await vi.waitFor(() => expect(menu()).toBeNull());
-		await new Promise((resolve) => setTimeout(resolve, CLOSE_SETTLE_MS));
-		expect(document.activeElement).not.toBe(trigger('Edit'));
 	});
 
 	it('closes on a press outside and focuses the pressed input', async () => {
@@ -141,7 +143,10 @@ describe('Menubar', () => {
 
 		await vi.waitFor(() => expect(menu()).toBeNull());
 		await new Promise((resolve) => setTimeout(resolve, CLOSE_SETTLE_MS));
-		expect(document.activeElement).toBe(input);
+		expect(
+			document.activeElement,
+			`focus ${CLOSE_SETTLE_MS}ms after the close, once every deferred focus move has run`
+		).toBe(input);
 	});
 
 	it('moves the highlight by type-ahead', async () => {
@@ -172,15 +177,21 @@ describe('Menubar', () => {
 		await vi.waitFor(() => expect(readout(container, 'grid')).toBe('true'));
 	});
 
-	it('renders a separator and a shortcut in the content', async () => {
+	it('renders the shared separator part in its content', async () => {
 		render(BasicMenubar);
 		await openMenu('File');
 
-		expect(menu()?.querySelector('[role="separator"]')).toBeTruthy();
-		expect(item('New').textContent).toContain('⌘N');
+		expect(menu()?.querySelectorAll('[role="separator"]')).toHaveLength(1);
 	});
 
-	it('opens a submenu', async () => {
+	it('renders the shared shortcut part in an item', async () => {
+		render(BasicMenubar);
+		await openMenu('File');
+
+		expect(item('New').querySelector('kbd')?.textContent).toBe('⌘N');
+	});
+
+	it('activates an item in a submenu', async () => {
 		const { container } = render(BasicMenubar);
 		await openMenu('File');
 

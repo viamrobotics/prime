@@ -1,14 +1,15 @@
+import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
-import { colorOf } from '../../__tests__/computed-style.ts';
-import BoundTabs from './BoundTabs.svelte';
-import ClosableTabs from './ClosableTabs.svelte';
-import ControlledTabs from './ControlledTabs.svelte';
-import LabelledActionTab from './LabelledActionTab.svelte';
-import SingleTab from './SingleTab.svelte';
-import UndefinedTabs from './UndefinedTabs.svelte';
+import { colorOf } from '../../../../test/computed-style.ts';
+import BoundTabs from './fixtures/BoundTabs.svelte';
+import ClosableTabs from './fixtures/ClosableTabs.svelte';
+import ControlledTabs from './fixtures/ControlledTabs.svelte';
+import LabelledActionTab from './fixtures/LabelledActionTab.svelte';
+import SingleTab from './fixtures/SingleTab.svelte';
+import UndefinedTabs from './fixtures/UndefinedTabs.svelte';
 
 const tablist = (container: Element) => container.querySelector<HTMLElement>('[role="tablist"]');
 const tabs = (container: Element) => [...container.querySelectorAll<HTMLElement>('[role="tab"]')];
@@ -32,7 +33,18 @@ const owner = (container: Element) => container.querySelector('[data-testid="own
 const button = (container: Element, name: string) =>
 	[...container.querySelectorAll('button')].find((item) => item.textContent?.trim() === name)!;
 const closeButton = (container: Element, label: string) =>
-	container.querySelector<HTMLButtonElement>(`button[aria-label="Close ${label}"]`)!;
+	tab(container, label).querySelector<HTMLButtonElement>('[data-tab-close]')!;
+const closeByPointer = async (container: Element, label: string) => {
+	await userEvent.hover(tab(container, label));
+	await userEvent.click(closeButton(container, label));
+};
+const statusOf = (container: Element, label: string) =>
+	document.getElementById(tab(container, label).getAttribute('aria-describedby') ?? '')!;
+const visibility = (element: Element) => getComputedStyle(element).visibility;
+const moveOffStrip = (container: Element) => userEvent.hover(button(container, 'Select last'));
+const order = (container: Element) => container.querySelector('[data-testid="order"]')?.textContent;
+const announcement = (container: Element) =>
+	container.querySelector('[role="status"]')?.textContent;
 const borderBottomColor = (element: Element) => getComputedStyle(element).borderBottomColor;
 
 describe('Tabs', () => {
@@ -46,19 +58,44 @@ describe('Tabs', () => {
 			'false',
 			'false'
 		]);
-		expect(tabs(container).map((item) => item.hasAttribute('type'))).toEqual([false, false, false]);
 		expect(panels(container)).toHaveLength(3);
 		expect(visiblePanels(container)).toEqual(['Overview panel']);
 	});
 
-	it('wears the shared focus ring on each tab', () => {
+	it('renders each tab without the button-only type attribute', () => {
 		const { container } = render(BoundTabs);
 
-		expect(tabs(container).map((item) => item.classList.contains('focus-ring'))).toEqual([
-			true,
-			true,
-			true
-		]);
+		expect(
+			tabs(container).map((item) => item.getAttribute('type')),
+			'a role="tab" div carries no type'
+		).toEqual([null, null, null]);
+	});
+
+	it('wears the shared focus ring on each tab', async () => {
+		const { container } = render(BoundTabs);
+		const first = tabs(container)[0]!;
+		first.focus();
+		await userEvent.keyboard('{ArrowRight}');
+		const focused = tabs(container).find((item) => item === document.activeElement)!;
+
+		expect(getComputedStyle(focused).outlineStyle, 'the focused tab draws an outline').toBe(
+			'solid'
+		);
+		expect(getComputedStyle(focused).outlineWidth).toBe('2px');
+	});
+
+	it('draws the shared focus ring on the panel reached by keyboard', async () => {
+		const { container } = render(BoundTabs);
+		tab(container, 'Overview').focus();
+
+		await userEvent.keyboard('{Tab}');
+
+		const focused = panels(container).find((panel) => panel === document.activeElement);
+		expect(focused, 'Tab from the selected tab focuses the visible panel').toBeDefined();
+		expect(getComputedStyle(focused!).outlineStyle, 'the focused panel draws an outline').toBe(
+			'solid'
+		);
+		expect(getComputedStyle(focused!).outlineWidth).toBe('2px');
 	});
 
 	it('underlines the selected tab in a dark border and sets its text semibold', () => {
@@ -68,9 +105,8 @@ describe('Tabs', () => {
 
 		expect(borderBottomColor(selected)).toBe(colorOf('border-gray-9', 'borderTopColor'));
 		expect(borderBottomColor(idle)).toBe(colorOf('border-transparent', 'borderTopColor'));
-		expect(borderBottomColor(selected)).not.toBe(borderBottomColor(idle));
 		expect(getComputedStyle(selected).fontWeight).toBe('600');
-		expect(getComputedStyle(idle).fontWeight).not.toBe('600');
+		expect(getComputedStyle(idle).fontWeight).toBe('400');
 	});
 
 	it('two-way: clicking a tab selects it, shows its panel, and writes it to the owner', async () => {
@@ -92,12 +128,16 @@ describe('Tabs', () => {
 		expect(visiblePanels(container)).toEqual(['Usage panel']);
 	});
 
-	it('two-way: selects the first tab from undefined state and writes the clicked tab', async () => {
+	it('two-way: selects the first tab while the owner state stays undefined', () => {
 		const { container } = render(UndefinedTabs);
 
 		expect(selectedLabels(container)).toEqual(['Overview']);
 		expect(visiblePanels(container)).toEqual(['Overview panel']);
 		expect(owner(container)).toBe('undefined');
+	});
+
+	it('two-way: writes a clicked tab to owner state that started undefined', async () => {
+		const { container } = render(UndefinedTabs);
 
 		await userEvent.click(tab(container, 'Usage'));
 
@@ -123,13 +163,47 @@ describe('Tabs', () => {
 	it('falls back to the first tab when the selected tab is removed', async () => {
 		const { container } = render(BoundTabs);
 		await userEvent.click(tab(container, 'Usage'));
-		expect(selectedLabels(container)).toEqual(['Usage']);
+		expect(selectedLabels(container), 'Usage is selected before its removal').toEqual(['Usage']);
 
 		await userEvent.click(button(container, 'Remove Usage'));
 
 		expect(labels(container)).toEqual(['Overview', 'API']);
 		expect(selectedLabels(container)).toEqual(['Overview']);
 		expect(visiblePanels(container)).toEqual(['Overview panel']);
+	});
+
+	it('falls back to the leftmost tab, not the first mounted, when the selected tab is removed', async () => {
+		const { container } = render(BoundTabs);
+		await userEvent.click(tab(container, 'API'));
+		await userEvent.click(button(container, 'Add Intro'));
+		expect(labels(container), 'Intro mounts last but sits first').toEqual([
+			'Intro',
+			'Overview',
+			'Usage',
+			'API'
+		]);
+
+		await userEvent.click(button(container, 'Remove API'));
+
+		expect(selectedLabels(container)).toEqual(['Intro']);
+		expect(visiblePanels(container)).toEqual(['Intro panel']);
+	});
+
+	it('selects the first tab when the bound value never named a tab, and leaves the owner value', () => {
+		const { container } = render(BoundTabs, { props: { initial: 'missing' } });
+
+		expect(selectedLabels(container)).toEqual(['Overview']);
+		expect(visiblePanels(container)).toEqual(['Overview panel']);
+		expect(owner(container)).toBe('missing');
+	});
+
+	it('leaves the owner value as it was when the selected tab is removed', async () => {
+		const { container } = render(BoundTabs);
+		await userEvent.click(tab(container, 'Usage'));
+
+		await userEvent.click(button(container, 'Remove Usage'));
+
+		expect(owner(container)).toBe('usage');
 	});
 
 	it('keeps the selection when an unselected tab is removed', async () => {
@@ -176,38 +250,34 @@ describe('Tabs', () => {
 		expect(selectedLabels(container)).toEqual(['API']);
 	});
 
-	it('does not select a disabled tab when it is clicked, and paints it disabled', () => {
+	it('does not select a disabled tab when it is clicked', async () => {
 		const { container } = render(BoundTabs, { props: { disabled: 'usage' } });
-		const disabled = tab(container, 'Usage');
 
-		disabled.click();
+		tab(container, 'Usage').click();
+		await tick();
 
 		expect(selectedLabels(container)).toEqual(['Overview']);
 		expect(owner(container)).toBe('overview');
-		expect(getComputedStyle(disabled).color).toBe(colorOf('text-disabled-dark', 'color'));
-		expect(getComputedStyle(disabled).cursor).toBe('not-allowed');
+	});
+
+	it('paints a disabled tab in the disabled text color with a not-allowed cursor', () => {
+		const { container } = render(BoundTabs, { props: { disabled: 'usage' } });
+
+		const style = getComputedStyle(tab(container, 'Usage'));
+
+		expect(style.color).toBe(colorOf('text-disabled-dark', 'color'));
+		expect(style.cursor).toBe('not-allowed');
 	});
 
 	it('closable: closing an unselected tab removes it and keeps the selection', async () => {
 		const { container } = render(ClosableTabs);
 		await userEvent.click(tabLabel(container, 'API'));
 
-		await userEvent.click(closeButton(container, 'Usage'));
+		await closeByPointer(container, 'Usage');
 
 		expect(labels(container)).toEqual(['Overview', 'API']);
 		expect(selectedLabels(container)).toEqual(['API']);
 		expect(owner(container)).toBe('api');
-	});
-
-	it('closable: Enter on a close button removes its tab and keeps the selection', async () => {
-		const { container } = render(ClosableTabs);
-		closeButton(container, 'Usage').focus();
-
-		await userEvent.keyboard('{Enter}');
-
-		expect(labels(container)).toEqual(['Overview', 'API']);
-		expect(selectedLabels(container)).toEqual(['Overview']);
-		expect(owner(container)).toBe('undefined');
 	});
 
 	it('closable: the tab is named by its label alone', async () => {
@@ -229,6 +299,143 @@ describe('Tabs', () => {
 		await expect
 			.element(page.getByRole('tab', { name: 'Outside name', exact: true }))
 			.toBeVisible();
+	});
+
+	describe('closable', () => {
+		const KEYSHORTCUTS = 'Delete Alt+Shift+ArrowLeft Alt+Shift+ArrowRight';
+
+		it('shows the selected tab close button and hides the others in a space they keep', async () => {
+			const { container } = render(ClosableTabs);
+			await moveOffStrip(container);
+			const selected = closeButton(container, 'Overview');
+			const idle = closeButton(container, 'Usage');
+
+			expect([visibility(selected), visibility(idle)]).toEqual(['visible', 'hidden']);
+			expect(idle.getBoundingClientRect().width).toBe(selected.getBoundingClientRect().width);
+			expect(idle.getBoundingClientRect().width).toBeGreaterThan(0);
+		});
+
+		it('shows an unselected tab close button while the tab is hovered', async () => {
+			const { container } = render(ClosableTabs);
+
+			await userEvent.hover(tab(container, 'Usage'));
+
+			expect(visibility(closeButton(container, 'Usage'))).toBe('visible');
+		});
+
+		it('keeps every close button out of the Tab order', async () => {
+			const { container } = render(ClosableTabs);
+			await userEvent.click(tabLabel(container, 'Overview'));
+
+			await userEvent.keyboard('{Tab}');
+
+			expect(
+				[...container.querySelectorAll<HTMLButtonElement>('[data-tab-close]')].map(
+					(close) => close.tabIndex
+				)
+			).toEqual([-1, -1, -1]);
+			expect(panels(container).find((panel) => panel === document.activeElement)).toBeDefined();
+		});
+
+		it('keeps a consumer action in the Tab order', async () => {
+			const { container } = render(ClosableTabs, { props: { hasMenu: true } });
+			await userEvent.click(tabLabel(container, 'Overview'));
+
+			await userEvent.keyboard('{Tab}');
+
+			expect(document.activeElement?.getAttribute('aria-label')).toBe('Options for Overview');
+		});
+
+		it('fills an unselected tab close space with its status until the tab is hovered', async () => {
+			const { container } = render(ClosableTabs, { props: { statusTab: 'usage' } });
+			await moveOffStrip(container);
+			expect(
+				[visibility(statusOf(container, 'Usage')), visibility(closeButton(container, 'Usage'))],
+				'[status, close] before the hover'
+			).toEqual(['visible', 'hidden']);
+
+			await userEvent.hover(tab(container, 'Usage'));
+
+			expect(
+				[visibility(statusOf(container, 'Usage')), visibility(closeButton(container, 'Usage'))],
+				'[status, close] on hover'
+			).toEqual(['hidden', 'visible']);
+		});
+
+		it('hides the selected tab status behind its close button', () => {
+			const { container } = render(ClosableTabs, { props: { statusTab: 'overview' } });
+
+			expect(visibility(statusOf(container, 'Overview'))).toBe('hidden');
+			expect(visibility(closeButton(container, 'Overview'))).toBe('visible');
+		});
+
+		it('describes a tab by its status', async () => {
+			render(ClosableTabs, { props: { statusTab: 'usage' } });
+
+			await expect
+				.element(page.getByRole('tab', { name: 'Usage', exact: true }))
+				.toHaveAccessibleDescription('Unsaved');
+		});
+
+		it('Delete closes the focused tab, focuses the tab selected in its place, and announces', async () => {
+			const { container } = render(ClosableTabs);
+			await userEvent.click(tabLabel(container, 'Usage'));
+
+			await userEvent.keyboard('{Delete}');
+
+			expect(order(container)).toBe('overview,api');
+			expect(labels(container)).toEqual(['Overview', 'API']);
+			expect(selectedLabels(container)).toEqual(['Overview']);
+			await expect.poll(() => document.activeElement).toBe(tab(container, 'Overview'));
+			await expect.poll(() => announcement(container)).toBe('Usage closed.');
+		});
+
+		it('Delete closes nothing on a list that is not closable', async () => {
+			const { container } = render(BoundTabs);
+			await userEvent.click(tab(container, 'Usage'));
+
+			await userEvent.keyboard('{Delete}');
+
+			expect(labels(container)).toEqual(['Overview', 'Usage', 'API']);
+		});
+
+		it('keeps the tab when a function binding refuses the close', async () => {
+			const { container } = render(ClosableTabs, { props: { isRefusing: true } });
+			await userEvent.click(tabLabel(container, 'Usage'));
+
+			await userEvent.keyboard('{Delete}');
+			await tick();
+
+			expect(labels(container)).toEqual(['Overview', 'Usage', 'API']);
+			expect(document.activeElement).toBe(tab(container, 'Usage'));
+			expect(announcement(container)).toBe('');
+		});
+
+		it('gives a disabled tab no close button and ignores Delete on it', async () => {
+			const { container } = render(ClosableTabs, { props: { disabledTab: 'usage' } });
+			tab(container, 'Usage').focus();
+
+			await userEvent.keyboard('{Delete}');
+
+			expect(closeButton(container, 'Usage')).toBeNull();
+			expect(labels(container)).toEqual(['Overview', 'Usage', 'API']);
+		});
+
+		it.each([
+			{ reorderable: false, shortcuts: ['Delete', null, 'Delete'] },
+			{ reorderable: true, shortcuts: [KEYSHORTCUTS, null, KEYSHORTCUTS] }
+		])(
+			'lists Delete in aria-keyshortcuts with reorderable $reorderable',
+			({ reorderable, shortcuts }) => {
+				const { container } = render(ClosableTabs, {
+					props: { reorderable, disabledTab: 'usage' }
+				});
+
+				expect(tabs(container).map((item) => item.getAttribute('aria-keyshortcuts'))).toEqual(
+					shortcuts
+				);
+			}
+		);
 	});
 
 	describe('file variant', () => {
@@ -253,7 +460,7 @@ describe('Tabs', () => {
 		it('closing a tab from its close button does not select it', async () => {
 			const { container } = render(ClosableTabs, { props: { variant: 'file' } });
 
-			await userEvent.click(closeButton(container, 'Usage'));
+			await closeByPointer(container, 'Usage');
 
 			expect(labels(container)).toEqual(['Overview', 'API']);
 			expect(selectedLabels(container)).toEqual(['Overview']);
@@ -274,7 +481,7 @@ describe('Tabs', () => {
 				props: overflowingStrip
 			});
 			const list = tablist(container)!;
-			expect(list.scrollLeft).toBe(0);
+			expect(list.scrollLeft, 'the strip starts unscrolled').toBe(0);
 
 			await userEvent.click(button(container, 'Select last'));
 

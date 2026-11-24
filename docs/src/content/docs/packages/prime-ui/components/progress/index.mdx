@@ -18,9 +18,9 @@ import indeterminateSource from "./Indeterminate.svelte?raw";
 
 <ProgressDemo client:visible />
 
-- Determinate with `value` and `max`. `value` is clamped between 0 and `max`.
+- Determinate with `value` and `max`. `value` is clamped between 0 and `max`, and a `max` of 0 or less fills nothing.
 - Indeterminate without `value`, and `aria-valuenow` is left off.
-- `label` is the accessible name, so always give one.
+- A name is required: `label`, which is applied as the `aria-label`, or `aria-label`, or `aria-labelledby` naming a visible element.
 - The indeterminate slide stops under `prefers-reduced-motion: reduce`.
 
 ## Usage

@@ -11,17 +11,18 @@
 		vetoesWrites?: boolean;
 		dragTarget?: 'float' | 'stack';
 		floatingMoveTarget?: 'pane' | 'stack' | 'float';
+		reorderable?: boolean;
 	}
 
 	const {
 		initial = createFloatLayout(),
 		vetoesWrites = false,
 		dragTarget = 'float',
-		floatingMoveTarget
+		floatingMoveTarget,
+		reorderable
 	}: Props = $props();
 
-	// svelte-ignore state_referenced_locally
-	let layout = $state.raw<LayoutNode<PaneData> | undefined>(initial);
+	let layout = $derived<LayoutNode<PaneData> | undefined>(initial);
 	let writes = $state(0);
 
 	export function getLayout() {
@@ -33,7 +34,7 @@
 	}
 </script>
 
-<div data-testid="frame" style="width: 800px; height: 600px">
+<div style="width: 800px; height: 600px">
 	<Panes
 		bind:layout={
 			() => layout,
@@ -43,6 +44,7 @@
 				layout = next;
 			}
 		}
+		{reorderable}
 		paneLabel={(node) => node.data.label}
 		class="size-full"
 	>
@@ -53,19 +55,26 @@
 						data-header={node.data.label}
 						class="flex h-6 shrink-0 items-center gap-2 border-b border-medium bg-light px-4 text-xs"
 					>
-						<button type="button" aria-label="Menu {node.data.label}" class="size-4 border">
+						<button
+							type="button"
+							aria-label="Menu {node.data.label}"
+							class="size-4 border border-medium"
+						>
 							+
 						</button>
 						{node.data.label}
 						{#if !state.isFloating}
-							<Panes.MoveTrigger aria-label="Move {node.data.label}" class="size-4 border">
+							<Panes.MoveTrigger
+								aria-label="Move {node.data.label}"
+								class="size-4 border border-medium"
+							>
 								::
 							</Panes.MoveTrigger>
 						{:else if floatingMoveTarget}
 							<Panes.MoveTrigger
 								target={floatingMoveTarget}
 								aria-label="Move {node.data.label}"
-								class="size-4 border"
+								class="size-4 border border-medium"
 							>
 								::
 							</Panes.MoveTrigger>

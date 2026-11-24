@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { SVGAttributes } from 'svelte/elements';
 
+	import { iconRole } from '../icon-role.ts';
+
 	interface Props extends SVGAttributes<SVGElement> {
 		/** Layers drawn in order, each a path `d` on a 24×24 viewBox with an optional opacity. */
 		paths: { d: string; opacity?: number }[];
@@ -8,12 +10,11 @@
 
 	const { paths, class: extraClasses, ...restProps }: Props = $props();
 
-	const isLabeled = $derived(Boolean(restProps['aria-label'] || restProps['aria-labelledby']));
+	const roleAttributes = $derived(iconRole(restProps));
 </script>
 
 <svg
-	role={isLabeled ? 'img' : undefined}
-	aria-hidden={isLabeled ? undefined : true}
+	{...roleAttributes}
 	{...restProps}
 	viewBox="0 0 24 24"
 	focusable="false"

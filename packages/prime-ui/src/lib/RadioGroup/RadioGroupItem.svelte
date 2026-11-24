@@ -78,19 +78,18 @@ appears under it only while the item is checked. With either, `class` lands on a
 	];
 </script>
 
-{#snippet radio({ checked }: { checked: boolean })}
-	<Icon
-		icon={checked ? mdiRadioboxMarked : mdiRadioboxBlank}
-		class={[
-			'group-aria-invalid:text-danger-dark group-data-disabled:text-disabled-dark',
-			{ 'text-default': checked, 'text-subtle-2': !checked }
-		]}
-	/>
-{/snippet}
-
 {#snippet content({ checked }: { checked: boolean })}
-	{@const icon = indicator ?? radio}
-	{@render icon({ checked })}
+	{#if indicator}
+		{@render indicator({ checked })}
+	{:else}
+		<Icon
+			icon={checked ? mdiRadioboxMarked : mdiRadioboxBlank}
+			class={[
+				'group-aria-invalid:text-danger-dark group-data-disabled:text-disabled-dark',
+				{ 'text-default': checked, 'text-subtle-2': !checked }
+			]}
+		/>
+	{/if}
 	{@render label?.()}
 {/snippet}
 

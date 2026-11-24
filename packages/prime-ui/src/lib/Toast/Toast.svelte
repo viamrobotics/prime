@@ -16,7 +16,7 @@ at the provider's `placement`, and each toast inside it announces itself as a `s
 ```
 -->
 <script lang="ts">
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 
 	import { normalizeProps, useMachine } from '@zag-js/svelte';
 	import * as toast from '@zag-js/toast';
@@ -24,14 +24,14 @@ at the provider's `placement`, and each toast inside it announces itself as a `s
 	import ToastItem from './ToastItem.svelte';
 	import { useToastStore } from './useToast.svelte.ts';
 
-	interface Props {
-		/** The region's accessible label. @default 'Notifications' */
+	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'children'> {
+		/** The region's accessible name. Its placement and the Alt+T shortcut that focuses it are read after the name. @default 'Notifications' */
 		label?: string;
 		/** Classes for the region element. */
 		class?: ClassValue;
 	}
 
-	const { label = 'Notifications', class: extraClasses }: Props = $props();
+	const { label = 'Notifications', class: extraClasses, ...restProps }: Props = $props();
 
 	const { store } = useToastStore();
 
@@ -40,7 +40,7 @@ at the provider's `placement`, and each toast inside it announces itself as a `s
 	const api = $derived(toast.group.connect(service, normalizeProps));
 </script>
 
-<div {...api.getGroupProps({ label })} class={['z-toast', extraClasses]}>
+<div {...restProps} {...api.getGroupProps({ label })} class={['z-toast', extraClasses]}>
 	{#each api.getToasts() as item, index (item.id)}
 		<ToastItem {item} {index} parent={service} />
 	{/each}

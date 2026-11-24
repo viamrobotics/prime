@@ -25,7 +25,7 @@ import placementSource from "./Placement.svelte?raw";
 
 - `provideToast` once near the app root creates the stack, and `useToast` anywhere below it creates toasts.
 - `info`, `success`, `warning`, and `danger` set the glyph. `warning` and `danger` announce as an `alert`, the others as a `status`.
-- Hovering the region or focusing a toast holds its timer.
+- Hovering the region or focusing a toast holds every timer.
 - <kbd>Escape</kbd> dismisses the focused toast.
 
 ## Toast or notification?
@@ -78,7 +78,7 @@ A toast confirms an action the user just took, such as `Saved` or `Copied`. It i
 
 ## Styling
 
-`class` lands on the region. The row's look is fixed.
+`class` and any other attribute you pass land on the region, which keeps the `id` it needs for the Alt + T shortcut. The row's look is fixed. Each row carries its tone as visually hidden text before the title, so a screen reader hears "Warning" or "Error" along with the role. Under `prefers-reduced-motion: reduce` a row keeps its opacity fade and drops the slide and scale.
 
 Each item carries data attributes for styling by state.
 
@@ -93,7 +93,7 @@ Each item carries data attributes for styling by state.
 
 <KeyboardTable
   bindings={[
-    { keys: "Tab", action: "Focuses each toast's action and close button in turn." },
+    { keys: "Tab", action: "Focuses each toast in turn, then its action and close button." },
     { keys: "Escape", action: "Dismisses the focused toast." },
     { keys: "Alt + T", action: "Moves focus to the region." },
     { keys: "Enter / Space", action: "On the action or close button, activates it." },

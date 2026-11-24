@@ -7,9 +7,17 @@ import {
 	CAMERA_ROW,
 	CAMERAS,
 	SOLO,
+	STACK_B,
 	TWO_STACKS
 } from '../../../../test/layouts.ts';
-import { findPane, listPanes, listSlots, listStacks } from '../list-panes.ts';
+import {
+	findPane,
+	findStack,
+	findStackHolding,
+	listPanes,
+	listSlots,
+	listStacks
+} from '../list-panes.ts';
 
 describe('listPanes', () => {
 	it('returns no panes for an undefined root', () => {
@@ -77,5 +85,33 @@ describe('findPane', () => {
 
 	it('returns undefined for an undefined root', () => {
 		expect(findPane(undefined, 'solo')).toBeUndefined();
+	});
+});
+
+describe('findStack', () => {
+	it('finds a stack by id', () => {
+		expect(findStack(TWO_STACKS, 'stack-b')).toBe(STACK_B);
+	});
+
+	it('returns undefined for a pane id', () => {
+		expect(findStack(TWO_STACKS, 'b1')).toBeUndefined();
+	});
+
+	it('returns undefined for an undefined root', () => {
+		expect(findStack(undefined, 'stack-b')).toBeUndefined();
+	});
+});
+
+describe('findStackHolding', () => {
+	it('finds the stack that holds a pane', () => {
+		expect(findStackHolding(TWO_STACKS, 'b3')).toBe(STACK_B);
+	});
+
+	it('returns undefined for a pane outside any stack', () => {
+		expect(findStackHolding(CAMERA_ROW, 'solo')).toBeUndefined();
+	});
+
+	it('returns undefined for a stack id', () => {
+		expect(findStackHolding(TWO_STACKS, 'stack-b')).toBeUndefined();
 	});
 });

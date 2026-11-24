@@ -14,6 +14,6 @@
         class="focus-ring"
       />
     </Tooltip.Trigger>
-    <Tooltip.Content placement="right">Failed requests retry up to three times</Tooltip.Content>
+    <Tooltip.Content side="right">Failed requests retry up to three times</Tooltip.Content>
   </Tooltip>
 </div>

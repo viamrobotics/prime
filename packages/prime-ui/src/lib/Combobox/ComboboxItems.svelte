@@ -9,6 +9,7 @@ as [`Combobox.Item`](./ComboboxItem.svelte)s. Pair it with a
 
 	import type { SelectOption } from '../Select/option.ts';
 
+	import ListboxItems from '../Select/ListboxItems.svelte';
 	import ComboboxItem from './ComboboxItem.svelte';
 	import { useCombobox } from './useCombobox.svelte.ts';
 
@@ -17,7 +18,7 @@ as [`Combobox.Item`](./ComboboxItem.svelte)s. Pair it with a
 		children?: Snippet<[{ item: SelectOption; selected: boolean; highlighted: boolean }]>;
 	}
 
-	const { children: content }: Props = $props();
+	const { children }: Props = $props();
 
 	const combobox = useCombobox();
 	if (!combobox) {
@@ -25,14 +26,4 @@ as [`Combobox.Item`](./ComboboxItem.svelte)s. Pair it with a
 	}
 </script>
 
-{#each combobox.matches as item (item.value)}
-	{#if content}
-		<ComboboxItem value={item.value} label={item.label} disabled={item.disabled}>
-			{#snippet children({ selected, highlighted })}
-				{@render content({ item, selected, highlighted })}
-			{/snippet}
-		</ComboboxItem>
-	{:else}
-		<ComboboxItem value={item.value} label={item.label} disabled={item.disabled} />
-	{/if}
-{/each}
+<ListboxItems options={combobox.matches} Item={ComboboxItem} {children} />

@@ -2,6 +2,8 @@ const X_TICK_SPACING = 80;
 const Y_TICK_SPACING = 40;
 const MIN_TICK_COUNT = 2;
 
+export const TICK_SIZE = 6;
+
 export const xTickCount = (width: number) =>
 	Math.max(MIN_TICK_COUNT, Math.floor(width / X_TICK_SPACING));
 
@@ -59,11 +61,10 @@ export const edgeOverhang = ({
 	last
 }: EdgeOverhangInput) => {
 	const firstFraction = first.fraction;
-	// The last tick's place measured from the right end.
-	const lastFraction = 1 - last.fraction;
+	const lastFractionFromRight = 1 - last.fraction;
 	const firstHalf = first.width / 2;
 	const lastHalf = last.width / 2;
-	if (![firstFraction, lastFraction, firstHalf, lastHalf].every(Number.isFinite)) {
+	if (![firstFraction, lastFractionFromRight, firstHalf, lastHalf].every(Number.isFinite)) {
 		return NO_OVERHANG;
 	}
 
@@ -73,16 +74,16 @@ export const edgeOverhang = ({
 			? (firstHalf - firstFraction * (containerWidth - right)) / (1 - firstFraction)
 			: -Infinity;
 	const rightFor = (left: number) =>
-		lastFraction < 1
-			? (lastHalf - lastFraction * (containerWidth - left)) / (1 - lastFraction)
+		lastFractionFromRight < 1
+			? (lastHalf - lastFractionFromRight * (containerWidth - left)) / (1 - lastFractionFromRight)
 			: -Infinity;
 
 	// Both edges binding at once. Two distinct ticks have a positive spread, and one tick has none.
 	const spread = last.fraction - first.fraction;
 	const bothBinding =
 		spread > 0
-			? ((firstHalf - firstFraction * containerWidth) * (1 - lastFraction) +
-					firstFraction * (lastHalf - lastFraction * containerWidth)) /
+			? ((firstHalf - firstFraction * containerWidth) * (1 - lastFractionFromRight) +
+					firstFraction * (lastHalf - lastFractionFromRight * containerWidth)) /
 				spread
 			: -Infinity;
 

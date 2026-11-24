@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
-import BasicMenu from './BasicMenu.svelte';
-import ControlledMenu from './ControlledMenu.svelte';
+import { backgroundColor, colorOf, textColor } from '../../../../test/computed-style.ts';
+import BasicMenu from './fixtures/BasicMenu.svelte';
+import ControlledMenu from './fixtures/ControlledMenu.svelte';
 
 const buttonLabeled = (container: Element, label: string) =>
 	[...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === label)!;
@@ -25,7 +25,9 @@ const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() 
 
 const open = async (container: Element) => {
 	await userEvent.click(trigger(container));
-	await vi.waitFor(() => expect(menu()?.contains(document.activeElement)).toBe(true));
+	await vi.waitFor(() =>
+		expect(menu()?.contains(document.activeElement), 'focus moved into the open menu').toBe(true)
+	);
 	await nextFrame();
 	await nextFrame();
 };
@@ -34,15 +36,6 @@ const openOnFirstItem = async (container: Element) => {
 	await open(container);
 	await userEvent.keyboard('{ArrowDown}');
 	await focused('New');
-};
-
-const resolvedColor = (color: string) => {
-	const probe = document.createElement('div');
-	probe.style.color = color;
-	document.body.append(probe);
-	const resolved = getComputedStyle(probe).color;
-	probe.remove();
-	return resolved;
 };
 
 afterEach(async () => {
@@ -63,7 +56,14 @@ const addOutsideInput = () => {
 
 afterEach(() => {
 	document.querySelectorAll('input[aria-label="Outside"]').forEach((input) => input.remove());
+	document.body.style.paddingTop = '';
 });
+
+const ROOM_ABOVE_TRIGGER_PX = 400;
+
+const makeRoomAboveTheTrigger = () => {
+	document.body.style.paddingTop = `${ROOM_ABOVE_TRIGGER_PX}px`;
+};
 
 describe('Menu', () => {
 	it('closes on a press outside that does not reach the input, returning focus to the trigger', async () => {
@@ -105,10 +105,27 @@ describe('Menu', () => {
 		expect(trigger(container).getAttribute('aria-controls')).toBe(panel.id);
 	});
 
-	it('wears the shared focus ring on the trigger', () => {
+	it('opens below the trigger, aligned to its start, by default', async () => {
+		makeRoomAboveTheTrigger();
 		const { container } = render(BasicMenu);
 
-		expect(trigger(container).classList.contains('focus-ring')).toBe(true);
+		await open(container);
+
+		expect([menu()?.dataset.side, menu()?.dataset.align]).toStrictEqual(['bottom', 'start']);
+	});
+
+	it('wears the shared focus ring on the trigger', async () => {
+		const { container } = render(BasicMenu);
+		// The `button` class applies focus-ring too, so drop it to measure the trigger's own ring.
+		trigger(container).classList.remove('button');
+		buttonLabeled(container, 'Outside').focus();
+
+		await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+
+		await vi.waitFor(() => expect(document.activeElement).toBe(trigger(container)));
+		const style = getComputedStyle(trigger(container));
+		expect(style.outlineStyle, 'the keyboard-focused trigger draws an outline').toBe('solid');
+		expect(style.outlineWidth).toBe('2px');
 	});
 
 	it('opens on ArrowDown from the focused trigger and focuses the first item', async () => {
@@ -217,19 +234,41 @@ describe('Menu', () => {
 		expect(log(container)).toBe('New');
 	});
 
-	it('paints the danger item with the danger token', async () => {
+	it.each([
+		{ variant: 'default', name: 'New' },
+		{ variant: 'danger', name: 'Delete' }
+	])('marks a $variant item with data-variant', async ({ variant, name }) => {
+		const { container } = render(BasicMenu);
+
+		await open(container);
+
+		expect(item(name).dataset.variant).toBe(variant);
+	});
+
+	it.each([
+		{ variant: 'default', name: 'New', utility: 'text-default' },
+		{ variant: 'danger', name: 'Delete', utility: 'text-danger-dark' }
+	])('paints a $variant item with $utility', async ({ name, utility }) => {
+		const { container } = render(BasicMenu);
+
+		await open(container);
+
+		expect(textColor(item(name))).toBe(colorOf(utility, 'color'));
+	});
+
+	it.each([
+		{ variant: 'default', name: 'New', utility: 'bg-light' },
+		{ variant: 'danger', name: 'Delete', utility: 'bg-danger-light' }
+	])('fills a highlighted $variant item with $utility', async ({ name, utility }) => {
 		const { container } = render(BasicMenu);
 		await open(container);
-		const token = getComputedStyle(document.documentElement)
-			.getPropertyValue('--color-danger-dark')
-			.trim();
 
-		expect(item('Delete').dataset.variant).toBe('danger');
-		expect(token).not.toBe('');
-		expect(textColor(item('Delete'))).toBe(resolvedColor(token));
-		expect(textColor(item('Delete'))).toBe(colorOf('text-danger-dark', 'color'));
-		expect(textColor(item('New'))).toBe(colorOf('text-default', 'color'));
-		expect(textColor(item('New'))).not.toBe(textColor(item('Delete')));
+		item(name).focus();
+
+		await vi.waitFor(() =>
+			expect(item(name).hasAttribute('data-highlighted'), 'item highlighted').toBe(true)
+		);
+		expect(backgroundColor(item(name))).toBe(colorOf(utility, 'backgroundColor'));
 	});
 
 	it('closes on a press outside the menu', async () => {
@@ -245,10 +284,10 @@ describe('Menu', () => {
 		const { container } = render(BasicMenu);
 
 		await open(container);
-		await vi.waitFor(() => expect(owner(container)).toBe('true'));
+		await vi.waitFor(() => expect(owner(container), 'owner after opening').toBe('true'));
 
 		await userEvent.keyboard('{Escape}');
-		await vi.waitFor(() => expect(owner(container)).toBe('false'));
+		await vi.waitFor(() => expect(owner(container), 'owner after closing').toBe('false'));
 	});
 
 	it('controlled: a setter that vetoes closing keeps the menu open', async () => {

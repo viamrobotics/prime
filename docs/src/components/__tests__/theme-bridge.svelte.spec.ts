@@ -5,9 +5,8 @@ import { bridgeTheme } from "../../theme-bridge";
 import ThemeProbe from "./ThemeProbe.svelte";
 import "./theme.css";
 
-// --color-white in tailwind-config.css is #fff, and --dark-color-white in tailwind-config-dark.css is #131414.
-const LIGHT_WHITE = "rgb(255, 255, 255)";
-const DARK_WHITE = "rgb(19, 20, 20)";
+const COLOR_WHITE_LIGHT_THEME = "rgb(255, 255, 255)";
+const COLOR_WHITE_DARK_THEME = "rgb(19, 20, 20)";
 
 const root = document.documentElement;
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
@@ -31,7 +30,7 @@ describe("bridgeTheme", () => {
     const screen = await render(ThemeProbe);
     const probe = screen.getByTestId("probe").element() as HTMLElement;
 
-    expect(probeBackground(probe)).toBe(DARK_WHITE);
+    expect(probeBackground(probe)).toBe(COLOR_WHITE_DARK_THEME);
   });
 
   it("gives an island the light token value when data-theme is light", async () => {
@@ -41,7 +40,7 @@ describe("bridgeTheme", () => {
     const screen = await render(ThemeProbe);
     const probe = screen.getByTestId("probe").element() as HTMLElement;
 
-    expect(probeBackground(probe)).toBe(LIGHT_WHITE);
+    expect(probeBackground(probe)).toBe(COLOR_WHITE_LIGHT_THEME);
   });
 
   it("restores the light value when data-theme flips from dark to light", async () => {
@@ -49,12 +48,12 @@ describe("bridgeTheme", () => {
     disconnect = bridgeTheme(root);
     const screen = await render(ThemeProbe);
     const probe = screen.getByTestId("probe").element() as HTMLElement;
-    expect(probeBackground(probe), "dark before flip").toBe(DARK_WHITE);
+    expect(probeBackground(probe), "dark before flip").toBe(COLOR_WHITE_DARK_THEME);
 
     root.dataset.theme = "light";
     await nextFrame();
 
-    expect(probeBackground(probe)).toBe(LIGHT_WHITE);
+    expect(probeBackground(probe)).toBe(COLOR_WHITE_LIGHT_THEME);
   });
 
   it("stops mirroring after the returned disconnect runs", async () => {
@@ -67,6 +66,35 @@ describe("bridgeTheme", () => {
     root.dataset.theme = "light";
     await nextFrame();
 
-    expect(probeBackground(probe)).toBe(DARK_WHITE);
+    expect(probeBackground(probe)).toBe(COLOR_WHITE_DARK_THEME);
+  });
+
+  it("sets dark and clears light when data-theme is dark", () => {
+    root.dataset.theme = "dark";
+
+    disconnect = bridgeTheme(root);
+
+    expect(root.classList.contains("dark"), "dark class").toBe(true);
+    expect(root.classList.contains("light"), "light class").toBe(false);
+  });
+
+  it("sets light and clears dark when data-theme is absent", () => {
+    root.classList.add("dark");
+
+    disconnect = bridgeTheme(root);
+
+    expect(root.classList.contains("light"), "light class").toBe(true);
+    expect(root.classList.contains("dark"), "dark class").toBe(false);
+  });
+
+  it("swaps the classes when data-theme flips to dark", async () => {
+    root.dataset.theme = "light";
+    disconnect = bridgeTheme(root);
+
+    root.dataset.theme = "dark";
+    await nextFrame();
+
+    expect(root.classList.contains("dark"), "dark class").toBe(true);
+    expect(root.classList.contains("light"), "light class").toBe(false);
   });
 });

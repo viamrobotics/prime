@@ -31,7 +31,7 @@ import inFieldSource from "./InField.svelte?raw";
 
 ## Anatomy
 
-Every part is a property on `DateRangePicker`. `Field` is the segmented input, holding the start date, a dash, the end date, and the `Trigger` button that opens the calendar. `Content` is the floating panel, portaled to the body, and holds the `Calendar`.
+Every part is a property on `DateRangePicker`. `Field` is the segmented input, holding the start date, a dash, the end date, and the `Trigger` button that opens the calendar. `Content` is the floating panel, portaled to the body unless `portal` says otherwise, and holds the `Calendar`.
 
 ```svelte
 <DateRangePicker>
@@ -48,9 +48,9 @@ Every part is a property on `DateRangePicker`. `Field` is the segmented input, h
 
 ### Two-way binding
 
-`bind:value` on the root. The value is a `DateRange`, an object with a `start` and an `end` that are each a `DateValue` from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/). It is `undefined` until a date is chosen. With only one end chosen, the other is `undefined`, so a finished range is one with both ends set. Picking the end before the start in the calendar swaps them, so `start` is never after `end`.
+`bind:value` on the root. The value is a `DateRange`, an object with a `start` and an `end` that are each a `DateValue` from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/). It is `undefined` until a date is chosen. With only one end chosen, the other is `undefined`, so a finished range is one with both ends set. Picking the end before the start in the calendar swaps them.
 
-`name` submits the range as an ISO 8601 interval, `<start>/<end>`, and submits an empty value until both ends are set.
+`name` submits the range as an ISO 8601 interval, `<start>/<end>`, and submits an empty value until both ends are set. A disabled picker submits nothing.
 
 <Example code={twoWaySource} title="TwoWay.svelte">
   <TwoWay client:visible />
@@ -67,6 +67,8 @@ Pass `bind:value` a getter and a setter. The setter can refuse a range by leavin
 ### In a field
 
 An enclosing [`Field`](../field/) supplies the label, hint, `disabled`, `required`, and `state`. The visible `Label` names the segmented field.
+
+`required` sets `aria-required` on each segment.
 
 <Example code={inFieldSource} title="InField.svelte">
   <InField client:visible />
@@ -86,7 +88,7 @@ A preset such as "last 24 hours" belongs beside the control in the consuming app
 
 ### Accessible names
 
-`DateRangePicker.Trigger` takes `aria-label`, which defaults to "Open calendar". `DateRangePicker.Content` takes `aria-label`, which defaults to "Choose a date range". `DateRangePicker.Calendar` takes `aria-label` too. It replaces "Choose a date range" at the start of the calendar grid's name, and the month and year stay appended. Set all three to name them on a page that is not in English.
+`DateRangePicker.Trigger` takes `aria-label`, which defaults to "Open calendar". `DateRangePicker.Calendar` takes `aria-label`, which defaults to "Choose a date range". It names the floating panel and starts the calendar grid's name, with the month and year appended. `DateRangePicker.Content` takes its own `aria-label` when the panel needs a different name. Set the trigger's and the calendar's to name them on a page that is not in English.
 
 The previous and next month buttons take their names from the root `locale` through `Intl.RelativeTimeFormat`, such as "Last month" and "Next month" in `en-US`. They need no override.
 
@@ -102,7 +104,7 @@ The previous and next month buttons take their names from the root `locale` thro
 
 ## Styling
 
-`DateRangePicker.Field`, `DateRangePicker.Trigger`, and `DateRangePicker.Calendar` take `class` on the element they render. `DateRangePicker` takes no `class`, since it renders no element of its own. `DateRangePicker.Trigger` takes button attributes, and its `children` replace the calendar icon. `DateRangePicker.Content` wears `z-popover`. See [z layers](../../tailwind-config/component-classes/#z-layers).
+`DateRangePicker.Field`, `DateRangePicker.Trigger`, and `DateRangePicker.Calendar` take `class` on the element they render. `DateRangePicker` takes no `class`, since it renders no element of its own. `DateRangePicker.Trigger` takes button attributes, and its `children` replace the calendar icon. The `previousChevron` and `nextChevron` snippets on `DateRangePicker.Calendar` replace the chevrons in its month buttons. `DateRangePicker.Content` wears `z-popover`. See [z layers](../../tailwind-config/component-classes/#z-layers).
 
 Each day in the calendar carries these data attributes, set by bits-ui:
 
@@ -122,13 +124,14 @@ Each day in the calendar carries these data attributes, set by bits-ui:
 | `data-disabled`            | The day is disabled or outside `min` and `max`.                    |
 | `data-unavailable`         | The day is unavailable.                                            |
 
-The field frame sets `data-state` to `open` or `closed`, `data-disabled`, `data-readonly`, and `data-field-state` for `error` and `warn`. Each segment sets `data-segment` to its part, along with `data-invalid`, `data-disabled`, and `data-readonly`.
+The field frame sets `data-state` to `open` or `closed`, `data-disabled`, `data-readonly`, `data-invalid` for a typed date outside `min` and `max`, and `data-field-state` for `error` and `warn`. Each segment sets `data-segment` to its part, along with `data-invalid`, `data-disabled`, and `data-readonly`.
 
 ## Keyboard
 
 With focus on a segment of the field:
 
 <KeyboardTable
+  label="Keyboard bindings in the field"
   bindings={[
     { text: "Digits", action: "Types into the segment." },
     { keys: "ArrowUp / ArrowDown", action: "Steps the segment up or down." },
@@ -140,6 +143,7 @@ With focus on a segment of the field:
 With focus on a day in the open calendar:
 
 <KeyboardTable
+  label="Keyboard bindings with the calendar open"
   bindings={[
     { keys: "ArrowLeft / ArrowRight", action: "Moves to the previous or next day." },
     { keys: "ArrowUp / ArrowDown", action: "Moves to the same day a week earlier or later." },

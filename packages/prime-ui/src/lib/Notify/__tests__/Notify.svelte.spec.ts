@@ -1,9 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
-import NotifyHost from './NotifyHost.svelte';
+import '../../../../test/tailwind.css';
+import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
+import { allowTransitions, blockTransitions } from '../../../../test/transitions.ts';
+import Notify from '../Notify.svelte';
+import NotifyHost from './fixtures/NotifyHost.svelte';
 
 const LONG_DURATION_MS = 3000;
 
@@ -25,7 +28,51 @@ const firstItem = async () => {
 	return items()[0];
 };
 
+afterEach(async () => {
+	blockTransitions();
+	await emulateReducedMotion('no-preference');
+});
+
 describe('Notify', () => {
+	it('passes extra attributes to the region', () => {
+		render(NotifyHost);
+
+		expect(region().getAttribute('data-testid')).toBe('region');
+		expect(region().getAttribute('id')).toMatch(/^toast-group:/);
+	});
+
+	it('names the tone in text', async () => {
+		const { container } = render(NotifyHost);
+		await create(container, 'danger');
+
+		const item = await firstItem();
+
+		expect(item.querySelector('.sr-only')?.textContent).toBe('Error: ');
+	});
+
+	it.each([
+		{ preference: 'no-preference', property: 'translate, scale, opacity' },
+		{ preference: 'reduce', property: 'opacity' }
+	] as const)(
+		'transitions $property under prefers-reduced-motion: $preference',
+		async ({ preference, property }) => {
+			allowTransitions();
+			await emulateReducedMotion(preference);
+			const { container } = render(NotifyHost);
+			await create(container, 'info');
+
+			const item = await firstItem();
+
+			expect(getComputedStyle(item).transitionProperty).toBe(property);
+		}
+	);
+
+	it('names the region before any notification arrives', () => {
+		render(NotifyHost);
+
+		expect(region().getAttribute('aria-label')).toBe('Notifications, top-end (alt+T)');
+	});
+
 	it.each([
 		{ testId: 'info', role: 'status', title: 'Deployed' },
 		{ testId: 'danger', role: 'alert', title: 'Failed to publish' }
@@ -36,7 +83,6 @@ describe('Notify', () => {
 		const item = await firstItem();
 
 		expect(item.getAttribute('role')).toBe(role);
-		expect(item.querySelector('.banner-chip')).toBeTruthy();
 		expect(titleOf(item)).toBe(title);
 	});
 
@@ -101,6 +147,36 @@ describe('Notify', () => {
 		await vi.waitFor(() => expect(onDismiss).toHaveBeenCalledOnce());
 	});
 
+	it('dismisses on Escape with focus inside', async () => {
+		const { container } = render(NotifyHost, { props: { duration: LONG_DURATION_MS } });
+		await create(container, 'info');
+		const item = await firstItem();
+
+		item.focus();
+		await userEvent.keyboard('{Escape}');
+
+		await vi.waitFor(() => expect(items()).toHaveLength(0));
+	});
+
+	it('wears the focus ring on each notification', async () => {
+		const { container } = render(NotifyHost, { props: { duration: LONG_DURATION_MS } });
+
+		await create(container, 'info');
+
+		const item = await firstItem();
+		item.focus();
+		await userEvent.keyboard('{Shift}');
+
+		expect(document.activeElement).toBe(item);
+		const style = getComputedStyle(item);
+		expect(style.outlineStyle, 'the focused notification draws an outline').toBe('solid');
+		expect(style.outlineWidth).toBe('2px');
+	});
+
+	it('throws when rendered outside provideNotify', () => {
+		expect(() => render(Notify)).toThrow('useNotify() needs a provideNotify() above it');
+	});
+
 	it.each(['info', 'danger'])(
 		'carries one live-region role on a %s notification, the item itself',
 		async (testId) => {
@@ -137,7 +213,7 @@ describe('Notify', () => {
 		await create(container, 'resolve-persisted');
 		const item = await firstItem();
 
-		expect(item.getAttribute('role')).toBe('status');
+		expect(item.getAttribute('data-type')).toBe('success');
 		expect(item.querySelector('[role="progressbar"]')).toBeNull();
 	});
 

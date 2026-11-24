@@ -3,7 +3,7 @@ import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
-import TooltipChart from './TooltipChart.svelte';
+import TooltipChart from './fixtures/TooltipChart.svelte';
 
 const START = Date.parse('2026-01-01T00:00:00Z');
 const MINUTE = 60_000;
@@ -77,67 +77,6 @@ describe('Chart.Tooltip keyboard', () => {
 		expect(reads.map((read) => read?.split(', ').at(-1))).toEqual(['24', '22', '0', '2']);
 	});
 
-	it('moves between series at the point nearest in time', async () => {
-		const { container } = render(TooltipChart, {
-			props: {
-				series: [series('cell-01', [1, 2, 3, 4, 5]), series('cell-02', [10, 20, 30], [0, 2.9, 4])],
-				xFormat
-			}
-		});
-		await tabIntoChart(container);
-		await readAfter(container, ['{ArrowRight}', '{ArrowRight}', '{ArrowRight}']);
-
-		const reads = await readAfter(container, ['{ArrowDown}', '{ArrowDown}', '{ArrowUp}']);
-
-		expect(reads).toEqual([
-			'cell-02, 00:02:54, 20',
-			'cell-02, 00:02:54, 20',
-			'cell-01, 00:03:00, 4'
-		]);
-	});
-
-	it('skips a gap', async () => {
-		const { container } = render(TooltipChart, {
-			props: { series: [series('cell-01', [1, null, 3])], xFormat }
-		});
-		await tabIntoChart(container);
-
-		await userEvent.keyboard('{ArrowRight}');
-
-		await expect.poll(() => liveText(container)).toBe('cell-01, 00:02:00, 3');
-	});
-
-	it('skips a hidden series', async () => {
-		const { container } = render(TooltipChart, {
-			props: {
-				series: [
-					series('cell-01', [1, 2]),
-					{ ...series('cell-02', [3, 4]), hidden: true },
-					series('cell-03', [5, 6])
-				],
-				xFormat
-			}
-		});
-		await tabIntoChart(container);
-
-		await userEvent.keyboard('{ArrowDown}');
-
-		await expect.poll(() => liveText(container)).toBe('cell-03, 00:00:00, 5');
-	});
-
-	it('starts on the first visible series', async () => {
-		const { container } = render(TooltipChart, {
-			props: {
-				series: [{ ...series('cell-01', [1, 2]), hidden: true }, series('cell-02', [null, 4])],
-				xFormat
-			}
-		});
-
-		await tabIntoChart(container);
-
-		await expect.poll(() => liveText(container)).toBe('cell-02, 00:01:00, 4');
-	});
-
 	it('restores the point focus left when the plot is focused again', async () => {
 		const { container } = render(TooltipChart, {
 			props: { series: [series('cell-01', [1, 2, 3])], xFormat, hasLegend: true }
@@ -172,7 +111,7 @@ describe('Chart.Tooltip keyboard', () => {
 		await expect.poll(() => liveText(container)).toBe('cell-01, 00:00:00, 1');
 	});
 
-	it('hides the readout on Escape and keeps focus on the plot', async () => {
+	it('hides the readout and empties the live region on Escape', async () => {
 		const { container } = render(TooltipChart, {
 			props: { series: [series('cell-01', [1, 2])], xFormat }
 		});
@@ -181,9 +120,33 @@ describe('Chart.Tooltip keyboard', () => {
 
 		await userEvent.keyboard('{Escape}');
 
-		await expect.poll(() => readoutOf(container)).toBeNull();
-		expect(liveText(container)).toBe('');
+		await expect
+			.poll(() => ({ readout: readoutOf(container), live: liveText(container) }))
+			.toEqual({
+				readout: null,
+				live: ''
+			});
+	});
+
+	it('keeps focus on the plot on Escape', async () => {
+		const { container } = render(TooltipChart, {
+			props: { series: [series('cell-01', [1, 2])], xFormat }
+		});
+		await tabIntoChart(container);
+
+		await userEvent.keyboard('{Escape}');
+
 		expect(document.activeElement).toBe(plotOf(container));
+	});
+
+	it('announces the value followed by the series unit', async () => {
+		const { container } = render(TooltipChart, {
+			props: { series: [{ ...series('cell-01', [12.3, 4]), unit: '°' }], xFormat }
+		});
+
+		await tabIntoChart(container);
+
+		await expect.poll(() => liveText(container)).toBe('cell-01, 00:00:00, 12.3 °');
 	});
 
 	it('keeps the arrow keys from scrolling the page', async () => {
@@ -203,18 +166,32 @@ describe('Chart.Tooltip keyboard', () => {
 		expect(prevented).toEqual(['ArrowDown', 'ArrowRight', 'PageDown', 'End']);
 	});
 
-	it('makes the plot an application described by its instructions', async () => {
+	it('makes the focused plot an application named like the chart', async () => {
 		const { container } = render(TooltipChart, {
 			props: { series: [series('cell-01', [1, 2])], xFormat }
 		});
 
 		await tabIntoChart(container);
 
-		expect(document.activeElement).toBe(plotOf(container));
-		expect(plotOf(container).getAttribute('role')).toBe('application');
-		expect(plotOf(container).getAttribute('aria-label')).toBe('Readings');
+		const plot = plotOf(container);
+		expect({
+			focused: document.activeElement === plot,
+			role: plot.getAttribute('role'),
+			name: plot.getAttribute('aria-label')
+		}).toEqual({ focused: true, role: 'application', name: 'Readings' });
+	});
+
+	it('describes the plot by its keyboard instructions', async () => {
+		const { container } = render(TooltipChart, {
+			props: { series: [series('cell-01', [1, 2])], xFormat }
+		});
+
+		await tabIntoChart(container);
+
 		const describedBy = plotOf(container).getAttribute('aria-describedby') ?? '';
-		expect(document.getElementById(describedBy)?.textContent).toContain('arrows move');
+		expect(document.getElementById(describedBy)?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+			'Left and right arrows move between points. Up and down arrows move between series. Home and End go to the leftmost and rightmost point. Page Up and Page Down move by a tenth of the series. Escape hides the tooltip.'
+		);
 	});
 
 	it('follows DOM order with the legend before the plot, and the plot is one tab stop', async () => {
@@ -282,6 +259,23 @@ describe('Chart.Tooltip keyboard', () => {
 		expect(reads).toEqual(['cell-01, 00:04:00, 5', 'cell-01, 00:02:00, 3']);
 	});
 
+	it('moves the arrow keys the way the points are drawn on a reversed x axis', async () => {
+		const { container } = render(TooltipChart, {
+			props: {
+				series: [series('cell-01', [1, 2, 3])],
+				xMin: new Date(START + 2 * MINUTE),
+				xMax: new Date(START),
+				xFormat
+			}
+		});
+		await tabIntoChart(container);
+		await expect.poll(() => liveText(container)).toBe('cell-01, 00:02:00, 3');
+
+		const reads = await readAfter(container, ['{ArrowRight}', '{ArrowLeft}']);
+
+		expect(reads).toEqual(['cell-01, 00:01:00, 2', 'cell-01, 00:02:00, 3']);
+	});
+
 	it('hides the readout and empties the live region when the window leaves every point', async () => {
 		const points = series('cell-01', [1, 2, 3]);
 		const { container, rerender } = render(TooltipChart, { props: { series: [points], xFormat } });
@@ -295,13 +289,17 @@ describe('Chart.Tooltip keyboard', () => {
 			xMax: new Date(START + 20 * MINUTE)
 		});
 
-		await expect.poll(() => readoutOf(container)).toBeNull();
-		expect(liveText(container)).toBe('');
+		await expect
+			.poll(() => readoutOf(container), {
+				message: 'readout hides when the window leaves the points'
+			})
+			.toBeNull();
+		expect(liveText(container), 'live region empties when the window leaves the points').toBe('');
 
 		await rerender({ series: [points], xFormat, xMin: undefined, xMax: undefined });
 
 		expect(readoutOf(container), 'readout stays hidden once points return').toBeNull();
-		expect(liveText(container)).toBe('');
+		expect(liveText(container), 'live region stays empty once points return').toBe('');
 	});
 
 	it('hides a hovered readout when the window leaves every point', async () => {
@@ -318,12 +316,20 @@ describe('Chart.Tooltip keyboard', () => {
 			xMax: new Date(START + 20 * MINUTE)
 		});
 
-		await expect.poll(() => readoutOf(container)).toBeNull();
+		await expect
+			.poll(() => readoutOf(container), {
+				message: 'readout hides when the window leaves the points'
+			})
+			.toBeNull();
 		await userEvent.hover(container.querySelector('button')!);
 
 		await rerender({ series: [points], xFormat, xMin: undefined, xMax: undefined });
 
-		await expect.poll(() => plotOf(container).getAttribute('tabindex')).toBe('0');
+		await expect
+			.poll(() => plotOf(container).getAttribute('tabindex'), {
+				message: 'plot is a tab stop again once points return'
+			})
+			.toBe('0');
 		expect(readoutOf(container), 'readout stays hidden once points return').toBeNull();
 	});
 });

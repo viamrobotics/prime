@@ -8,8 +8,8 @@ The first day picked is the start and the second is the end. Picking an earlier 
 them. While only the start is set, the days between it and the hovered or focused day are shaded
 as a preview. Arrow keys move between days, and Enter or Space picks the focused day. The header
 buttons change the month, and their names ("Last month" and "Next month" in `en-US`) follow the
-picker's `locale`. The calendar's accessible name is its `aria-label` followed by the month on
-show.
+picker's `locale`. The `previousChevron` and `nextChevron` snippets replace the buttons'
+chevrons. The calendar's accessible name is its `aria-label` followed by the month on show.
 
 ```svelte
 <DateRangePicker.Content>
@@ -18,11 +18,13 @@ show.
 ```
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 	import { DateRangePicker } from 'bits-ui';
 
+	import { monthButtonName } from '../DatePicker/month-button-name.ts';
 	import Icon from '../Icon/Icon.svelte';
 	import { useDateRangePicker } from './useDateRangePicker.svelte.ts';
 
@@ -31,13 +33,26 @@ show.
 		id?: string;
 
 		/**
-		 * The calendar's accessible name. The month on show is appended to it.
+		 * The calendar's accessible name, which the panel takes too. The month on show is appended
+		 * to the calendar's.
 		 * @default 'Choose a date range'
 		 */
 		'aria-label'?: string;
+
+		/** Replaces the chevron in the previous month button. */
+		previousChevron?: Snippet;
+
+		/** Replaces the chevron in the next month button. */
+		nextChevron?: Snippet;
 	}
 
-	const { class: extraClasses, 'aria-label': label, ...restProps }: Props = $props();
+	const {
+		class: extraClasses,
+		'aria-label': label,
+		previousChevron,
+		nextChevron,
+		...restProps
+	}: Props = $props();
 
 	const picker = useDateRangePicker();
 
@@ -49,14 +64,8 @@ show.
 		};
 	});
 
-	const monthButtonName = (step: -1 | 1): string => {
-		const locale = picker?.locale ?? 'en-US';
-		const name = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(step, 'month');
-		return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
-	};
-
-	const previousMonthName = $derived(monthButtonName(-1));
-	const nextMonthName = $derived(monthButtonName(1));
+	const previousMonthName = $derived(monthButtonName(-1, picker?.locale));
+	const nextMonthName = $derived(monthButtonName(1, picker?.locale));
 </script>
 
 <DateRangePicker.Calendar class={['text-sm text-default select-none', extraClasses]} {...restProps}>
@@ -65,7 +74,11 @@ show.
 			<DateRangePicker.PrevButton class="calendar-nav">
 				{#snippet child({ props })}
 					<button {...props} aria-label={previousMonthName}>
-						<Icon icon={mdiChevronLeft} size="base" />
+						{#if previousChevron}
+							{@render previousChevron()}
+						{:else}
+							<Icon icon={mdiChevronLeft} size="base" />
+						{/if}
 					</button>
 				{/snippet}
 			</DateRangePicker.PrevButton>
@@ -73,7 +86,11 @@ show.
 			<DateRangePicker.NextButton class="calendar-nav">
 				{#snippet child({ props })}
 					<button {...props} aria-label={nextMonthName}>
-						<Icon icon={mdiChevronRight} size="base" />
+						{#if nextChevron}
+							{@render nextChevron()}
+						{:else}
+							<Icon icon={mdiChevronRight} size="base" />
+						{/if}
 					</button>
 				{/snippet}
 			</DateRangePicker.NextButton>

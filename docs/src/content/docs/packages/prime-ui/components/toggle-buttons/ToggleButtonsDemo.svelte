@@ -1,12 +1,14 @@
 <script lang="ts">
   import Sandbox from "@docs/Sandbox.svelte";
   import { ToggleButtons } from "@viamrobotics/prime-ui";
+
+  import LabeledToggleButtons from "./LabeledToggleButtons.svelte";
 </script>
 
 <!-- The Sandbox cannot edit an `items` array, so the options are composed and the generated snippet would mislead. -->
 <Sandbox
   name="ToggleButtons"
-  component={ToggleButtons}
+  component={LabeledToggleButtons}
   showCode={false}
   controls={{
     value: { kind: "select", label: "Value", default: "mm", options: ["mm", "cm", "in"] },

@@ -1,12 +1,12 @@
 <script lang="ts">
   import Sandbox from "@docs/Sandbox.svelte";
 
-  import SandboxDatePicker from "./SandboxDatePicker.svelte";
+  import LabeledDatePicker from "./LabeledDatePicker.svelte";
 </script>
 
 <Sandbox
   name="DatePicker"
-  component={SandboxDatePicker}
+  component={LabeledDatePicker}
   showCode={false}
   controls={{
     granularity: {

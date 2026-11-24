@@ -12,7 +12,9 @@ describe('createAttachedElements', () => {
 	it('reports the attached element as latest', () => {
 		const attached = createAttachedElements();
 		const first = element();
+
 		attached.attach(first);
+
 		expect(attached.latest).toBe(first);
 	});
 
@@ -20,7 +22,9 @@ describe('createAttachedElements', () => {
 		const attached = createAttachedElements();
 		attached.attach(element());
 		const second = element();
+
 		attached.attach(second);
+
 		expect(attached.latest).toBe(second);
 	});
 
@@ -29,7 +33,9 @@ describe('createAttachedElements', () => {
 		const first = element();
 		attached.attach(first);
 		const detachSecond = attached.attach(element());
+
 		detachSecond();
+
 		expect(attached.latest).toBe(first);
 	});
 
@@ -38,14 +44,18 @@ describe('createAttachedElements', () => {
 		const detachFirst = attached.attach(element());
 		const second = element();
 		attached.attach(second);
+
 		detachFirst();
+
 		expect(attached.latest).toBe(second);
 	});
 
 	it('has no latest after every element detaches', () => {
 		const attached = createAttachedElements();
 		const detach = attached.attach(element());
+
 		detach();
+
 		expect(attached.latest).toBeUndefined();
 	});
 
@@ -55,7 +65,9 @@ describe('createAttachedElements', () => {
 		const second = element();
 		attached.attach(first);
 		attached.attach(second);
+
 		attached.attach(first);
+
 		expect(attached.latest).toBe(second);
 	});
 });

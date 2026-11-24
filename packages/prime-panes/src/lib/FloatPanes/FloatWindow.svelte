@@ -10,7 +10,7 @@
 	import PanesNode from '../Panes/PanesNode.svelte';
 	import { isInSameRoot } from '../Panes/root-scope.ts';
 	import { usePanes } from '../Panes/usePanes.svelte.ts';
-	import { raiseFloat, setFloatRect } from '../tree.ts';
+	import { raiseFloat, setFloatRect } from './float-tree.ts';
 
 	import { clampToBox, fitMinimumToBox } from './float-geometry.ts';
 	import type { FloatSize } from './float-geometry.ts';
@@ -158,7 +158,7 @@
 	bind:this={element}
 	aria-label={label}
 	data-float-entry={entry.id}
-	class="absolute min-h-0 min-w-0 overflow-clip outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid"
+	class="absolute min-h-0 min-w-0 overflow-clip focus-ring-inset"
 	style:left="{drawnRect.x}px"
 	style:top="{drawnRect.y}px"
 	style:width="{drawnRect.width}px"

@@ -22,7 +22,7 @@ import controlledSource from "./Controlled.svelte?raw";
 - The same parts as [`Select`](../select/), under `MultiSelect.*`. The trigger, the panel, and each item are yours to arrange.
 - `value` is a `string[]`, bindable, in the order the values were picked. Picking an item toggles it and the list stays open.
 - The closed trigger shows the selected labels joined by commas, and a `name` submits one hidden input per value.
-- `items` is the single source of truth for the options, as on `Select`. Typing while the list is closed toggles the matching entry.
+- `items` is the single source of truth for the options, as on `Select`. It gives the closed trigger its labels, and `MultiSelect.Items` renders it.
 - Keyboard navigation, typeahead, and the WAI-ARIA listbox pattern, via bits-ui.
 
 ## Anatomy
@@ -70,10 +70,11 @@ Everything on the [Select styling](../select/#styling) section applies: `class` 
 
 ## Keyboard
 
-The [Select keyboard table](../select/#keyboard) applies, with two differences while the panel is open:
+The [Select keyboard table](../select/#keyboard) applies, with three differences:
 
 <KeyboardTable
   bindings={[
+    { text: "Printable characters, panel closed", action: "Do nothing. Typeahead runs only while the panel is open." },
     { keys: "Enter / Space", action: "Toggles the highlighted item. The panel stays open." },
     { keys: "Escape", action: "Closes the panel. The values picked so far are kept." },
   ]}

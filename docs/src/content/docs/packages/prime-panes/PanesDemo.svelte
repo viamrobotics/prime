@@ -112,7 +112,7 @@
           <Panes.DragTrigger>
             <Panes.MoveTrigger
               aria-label="Move {node.data.label}"
-              class="inline-flex size-6 cursor-grab items-center justify-center text-subtle-1 active:cursor-grabbing"
+              class="icon-button size-6 cursor-grab active:cursor-grabbing"
             >
               <svg
                 viewBox="0 0 16 16"
@@ -137,10 +137,7 @@
               >
                 {node.data.label}
               </h2>
-              <Panes.TabList
-                aria-label="Stacked panes"
-                class="flex min-w-0 gap-1 text-xs"
-              >
+              <Panes.TabList aria-label="Stacked panes" class="min-w-0">
                 <Panes.TabListDropRegion
                   class="absolute inset-x-0 top-0 hidden h-4 border-t-2 border-dashed border-info-medium in-data-dragging:block in-data-move-mode:block"
                 />
@@ -149,7 +146,11 @@
           </Panes.DragTrigger>
 
           {#if state.isStacked}
-            <Panes.MoveTrigger target="stack" class="button px-2 py-0.5 text-xs">
+            <Panes.MoveTrigger
+              target="stack"
+              aria-label="Move stack of {node.data.label}"
+              class="button px-2 py-0.5 text-xs"
+            >
               Move stack
             </Panes.MoveTrigger>
           {/if}
@@ -165,7 +166,7 @@
             <button
               type="button"
               aria-label="Close {node.data.label}"
-              class="inline-flex size-6 items-center justify-center text-subtle-1"
+              class="icon-button size-6"
               onclick={() =>
                 (layout = removeFloat(layout, state.floatEntryId!))}
             >
@@ -183,7 +184,7 @@
             <button
               type="button"
               aria-label="Remove {node.data.label}"
-              class="inline-flex size-6 items-center justify-center text-subtle-1"
+              class="icon-button size-6"
               onclick={() => (layout = removePane(layout, node.id))}
             >
               <svg

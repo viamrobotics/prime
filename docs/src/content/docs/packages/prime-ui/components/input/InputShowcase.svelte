@@ -6,27 +6,39 @@
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Validation states, with Field.StateIcon</h4>
     <div class="grid max-w-md gap-3">
-      <Input placeholder="Default (none)" aria-label="Default" />
-      <Input.Group>
-        <Input state="info" placeholder="Info" aria-label="Info" />
-        <Field.StateIcon state="info" />
-      </Input.Group>
-      <Input.Group>
-        <Input state="warn" placeholder="Warning" aria-label="Warning" />
-        <Field.StateIcon state="warn" />
-      </Input.Group>
-      <Input.Group>
-        <Input state="error" placeholder="Error" aria-label="Error" />
-        <Field.StateIcon state="error" />
-      </Input.Group>
+      <Field aria-label="Default" class="grid">
+        <Input placeholder="Default (none)" />
+      </Field>
+      <Field aria-label="Info" state="info" class="grid">
+        <Input.Group>
+          <Input placeholder="Info" />
+          <Field.StateIcon />
+        </Input.Group>
+      </Field>
+      <Field aria-label="Warning" state="warn" class="grid">
+        <Input.Group>
+          <Input placeholder="Warning" />
+          <Field.StateIcon />
+        </Input.Group>
+      </Field>
+      <Field aria-label="Error" state="error" class="grid">
+        <Input.Group>
+          <Input placeholder="Error" />
+          <Field.StateIcon />
+        </Input.Group>
+      </Field>
     </div>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled and read-only</h4>
     <div class="grid max-w-md gap-3">
-      <Input disabled placeholder="Disabled" aria-label="Disabled" />
-      <Input readonly value="Read-only value" aria-label="Read-only" />
+      <Field aria-label="Disabled" disabled class="grid">
+        <Input placeholder="Disabled" />
+      </Field>
+      <Field aria-label="Read-only" class="grid">
+        <Input readonly value="Read-only value" />
+      </Field>
     </div>
   </div>
 </div>

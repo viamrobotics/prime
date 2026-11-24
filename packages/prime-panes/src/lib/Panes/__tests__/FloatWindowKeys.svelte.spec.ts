@@ -10,7 +10,6 @@ import {
 	floatIds,
 	nestedFloatIds
 } from '../../../../test/layouts.ts';
-import '../../../../test/panes-queries.ts';
 import { FLOAT_RESIZE_AXES } from '../../FloatPanes/float-resize.ts';
 import type { FloatRect, LayoutNode } from '../../layout.ts';
 import type { PaneData } from '../../../../test/layouts.ts';
@@ -166,7 +165,7 @@ describe('FloatWindowKeys', () => {
 			expect(component.getWrites()).toBe(1);
 		});
 
-		it('writes once per key and steps from the rect the key before left', async () => {
+		it('steps each key from the rect the key before left, writing once per key', async () => {
 			const component = renderWindow(RECT);
 			await focusWindow();
 
@@ -190,11 +189,11 @@ describe('FloatWindowKeys', () => {
 			expect(component.getWrites()).toBe(1);
 		});
 
-		it('leaves a Ctrl+Arrow alone', async () => {
+		it.each(['Control', 'Meta'])('leaves a %s+Arrow alone', async (modifier) => {
 			const component = renderWindow(RECT);
 			await focusWindow();
 
-			await pressWith(['Control'], 'ArrowRight');
+			await pressWith([modifier], 'ArrowRight');
 
 			await expect.element(windowElement()).toHaveStyle(toStyle(RECT));
 			expect(component.getWrites()).toBe(0);

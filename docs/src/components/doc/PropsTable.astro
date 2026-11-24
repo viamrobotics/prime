@@ -25,27 +25,26 @@ const {
   propsType,
   requiresOneOf,
 } = entry.data;
-
 ---
 
 {
   props.length > 0 && (
-    <table>
+    <table aria-label={`Props of ${name}`}>
       <thead>
         <tr>
-          <th>Prop</th>
-          <th>Type</th>
-          <th>Default</th>
-          <th>Description</th>
+          <th scope="col">Prop</th>
+          <th scope="col">Type</th>
+          <th scope="col">Default</th>
+          <th scope="col">Description</th>
         </tr>
       </thead>
       <tbody>
         {props.map((prop) => (
           <tr>
-            <td>
+            <th scope="row">
               {prop.bindable && <span class="prop-flag">bind:</span>}
               <code>{prop.name}</code>
-            </td>
+            </th>
             <td>
               <code>{prop.type}</code>
             </td>

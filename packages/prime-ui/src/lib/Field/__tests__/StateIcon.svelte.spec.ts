@@ -2,9 +2,9 @@ import { mdiAlert, mdiAlertCircle, mdiInformation } from '@mdi/js';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import StateIcon from '../StateIcon.svelte';
-import StateIconField from './StateIconField.svelte';
+import StateIconField from './fixtures/StateIconField.svelte';
 
 const iconPath = (container: Element) => container.querySelector('svg path')?.getAttribute('d');
 
@@ -26,13 +26,13 @@ describe('Field.StateIcon', () => {
 		expect(container.querySelector('svg')).toBeNull();
 	});
 
-	it('merges a passed class with the state color', () => {
+	it('keeps the state color when a class resizes it', () => {
 		const { container } = render(StateIconField, {
 			props: { state: 'error', iconClass: 'size-6' }
 		});
 		const svg = container.querySelector('svg')!;
 
-		expect(svg.classList.contains('size-6'), 'consumer class lands on the svg').toBe(true);
+		expect(getComputedStyle(svg).width).toBe('24px');
 		expect(textColor(svg)).toBe(colorOf('text-danger-dark', 'color'));
 	});
 

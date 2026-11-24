@@ -73,11 +73,9 @@ A read-only block of highlighted code with a copy button.
 	const html = $derived(highlight(code, language));
 
 	$effect(() => {
+		// Reads `html` so a new highlight re-measures the overflow.
 		void html;
-		if (!pre || wrapLines) {
-			isOverflowing = false;
-			return;
-		}
+		if (!pre || wrapLines) return;
 		const element = pre;
 		const measure = () => {
 			isOverflowing = element.scrollWidth > element.clientWidth;
@@ -89,7 +87,7 @@ A read-only block of highlighted code with a copy button.
 	});
 
 	const scrollRegion = $derived(
-		isOverflowing
+		isOverflowing && !wrapLines
 			? {
 					role: 'region',
 					tabindex: 0,
@@ -108,7 +106,8 @@ A read-only block of highlighted code with a copy button.
 			{...scrollRegion}
 			class={[
 				'code-snippet bg-light p-2 text-code',
-				wrapLines ? 'whitespace-pre-wrap' : 'overflow-x-auto whitespace-pre'
+				wrapLines ? 'whitespace-pre-wrap' : 'overflow-x-auto whitespace-pre',
+				scrollRegion.tabindex === 0 && 'focus-ring'
 			]}><code>{@html html}</code></pre>
 		<button
 			type="button"

@@ -1,17 +1,17 @@
 <!--
 @component
 A checkbox with an optional indeterminate state. Inside a [`Field`](../Field/Field.svelte)
-it takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and
-`aria-describedby` from there.
+it takes its `id` (the field's `controlId`), `disabled`, `required`, `state`,
+`aria-describedby`, and name from there.
 An `error` state sets `aria-invalid` and colors the default icon. See
 [`Field`](../Field/Field.svelte) for pairing it with a `Hint`.
 
 Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 
 ```svelte
-<Field class="flex items-center gap-2">
+<Field label="Accept the terms" class="flex items-center gap-2">
 	<Checkbox bind:checked />
-	<Label>Accept the terms</Label>
+	<Label />
 </Field>
 ```
 -->
@@ -22,8 +22,9 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 	import { mdiCheckboxBlankOutline, mdiCheckboxIntermediate, mdiCheckboxMarked } from '@mdi/js';
 	import { Checkbox } from 'bits-ui';
 
+	import { warnIfUnnamed } from '../accessible-name-warning.ts';
 	import { fieldState, FieldStates, type FieldState } from '../Field/state.ts';
-	import { useField } from '../Field/useField.svelte.ts';
+	import { controlName, useField } from '../Field/useField.svelte.ts';
 	import Icon from '../Icon/Icon.svelte';
 
 	interface Props extends Omit<HTMLButtonAttributes, 'children' | 'form' | 'value'> {
@@ -31,9 +32,9 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 		checked?: boolean;
 		/** Indeterminate ("mixed") state. Wins over `checked` visually. @default false */
 		indeterminate?: boolean;
-		/** Value submitted when checked. */
+		/** Value submitted when checked and a `name` is given. */
 		value?: string;
-		/** Require the box to be checked for form submission. Defaults to the enclosing field's `required`. */
+		/** Mark the box required. With a `name`, the form does not submit until it is checked. Defaults to the enclosing field's `required`. */
 		required?: boolean;
 		/** Contextual state. Defaults to the enclosing field's `state`. */
 		state?: FieldState;
@@ -49,8 +50,10 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 		indeterminate = $bindable(),
 		disabled,
 		required,
-		state,
+		state: stateProp,
 		'aria-describedby': describedBy,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		class: extraClasses,
 		children,
 		...restProps
@@ -58,11 +61,18 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 
 	const field = useField();
 	const uid = $props.id();
+	let element = $state<HTMLButtonElement | null>(null);
+
+	const name = $derived(controlName(field, { ariaLabel, ariaLabelledBy }));
+
+	$effect(() => {
+		if (element) warnIfUnnamed(element, 'Checkbox');
+	});
 
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
 	const isRequired = $derived(required ?? field?.required ?? false);
 
-	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	const currentState = $derived(stateProp ?? field?.state ?? FieldStates.None);
 	const isError = $derived(fieldState.isError(currentState));
 
 	const isChecked = $derived(checked ?? false);
@@ -75,6 +85,7 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 </script>
 
 <Checkbox.Root
+	bind:ref={element}
 	bind:checked={() => checked ?? false, (next) => (checked = next)}
 	bind:indeterminate={() => indeterminate ?? false, (next) => (indeterminate = next)}
 	id={id ?? field?.controlId ?? uid}
@@ -87,6 +98,8 @@ Built on [bits-ui `Checkbox`](https://bits-ui.com/docs/components/checkbox).
 	required={isRequired}
 	aria-invalid={isError || undefined}
 	aria-describedby={describedBy ?? field?.describedBy}
+	aria-label={name['aria-label']}
+	aria-labelledby={name['aria-labelledby']}
 	{...restProps}
 >
 	{#if children}

@@ -9,6 +9,6 @@
 </script>
 
 <Input.Group class="w-40">
-  <NumberInput {state} {...rest} />
+  <NumberInput aria-label="Quantity" {state} {...rest} />
   <Field.StateIcon {state} />
 </Input.Group>

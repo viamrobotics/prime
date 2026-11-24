@@ -18,7 +18,7 @@ trigger, and flips to the opposite side when there is no room.
 		dir?: 'ltr' | 'rtl';
 
 		/** Which side of the trigger the label appears on. @default 'top' */
-		placement?: 'top' | 'right' | 'bottom' | 'left';
+		side?: 'top' | 'right' | 'bottom' | 'left';
 
 		/** Gap in pixels between the trigger and the label. @default 4 */
 		sideOffset?: number;
@@ -29,12 +29,13 @@ trigger, and flips to the opposite side when there is no room.
 
 	const uid = $props.id();
 
+	// `side` and `sideOffset` are bits-ui's anchor-placement names, shared with Floating UI. No native name exists to prefer.
 	const {
 		id = `tooltip-${uid}`,
 		class: extraClasses,
 		children,
 		portal,
-		placement = 'top',
+		side = 'top',
 		sideOffset = 4,
 		...restProps
 	}: Props = $props();
@@ -44,7 +45,7 @@ trigger, and flips to the opposite side when there is no room.
 	<Tooltip.Content
 		{id}
 		role="tooltip"
-		side={placement}
+		{side}
 		{sideOffset}
 		class={['z-tooltip max-w-xs bg-gray-9 px-2 py-1 text-xs text-white', extraClasses]}
 		{...restProps}

@@ -13,7 +13,7 @@
   <Dialog.Content class="w-full {width}">
     <div class="flex items-start justify-between gap-4">
       <Dialog.Title>Rename sensor</Dialog.Title>
-      <Dialog.Close />
+      <Dialog.Close aria-label="Close" />
     </div>
     <Dialog.Description class="mt-1">Pick a name that is easy to find later.</Dialog.Description>
   </Dialog.Content>

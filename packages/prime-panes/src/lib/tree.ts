@@ -1,11 +1,9 @@
 import type {
-	FloatEntry,
-	FloatNode,
-	FloatRect,
 	LayoutNode,
 	PaneNode,
 	SplitDirection,
 	SplitKey,
+	SplitNode,
 	StackNode
 } from './layout.ts';
 import {
@@ -18,12 +16,12 @@ import {
 	type ContainerNode
 } from './node-kind.ts';
 
-interface PathStep<TData> {
+export interface PathStep<TData> {
 	parent: ContainerNode<TData>;
 	index: number;
 }
 
-interface FoundNode<TData> {
+export interface FoundNode<TData> {
 	node: LayoutNode<TData>;
 	path: PathStep<TData>[];
 }
@@ -70,7 +68,7 @@ export function replaceAtPath<TData>(
 }
 
 // `undefined` when the removed node was the root.
-function removeFound<TData>(found: FoundNode<TData>): LayoutNode<TData> | undefined {
+export function removeFound<TData>(found: FoundNode<TData>): LayoutNode<TData> | undefined {
 	const step = found.path.at(-1);
 	if (!step) return undefined;
 
@@ -78,6 +76,17 @@ function removeFound<TData>(found: FoundNode<TData>): LayoutNode<TData> | undefi
 	const replacement = removeChild(step.parent, step.index);
 	if (replacement) return replaceAtPath(parentPath, replacement);
 	return removeFound({ node: step.parent, path: parentPath });
+}
+
+function createSplit<TData>(
+	node: LayoutNode<TData>,
+	slot: LayoutNode<TData>,
+	direction: SplitDirection,
+	key: SplitKey,
+	id: string
+): SplitNode<TData> {
+	const [first, second] = key === 'first' ? [node, slot] : [slot, node];
+	return { type: 'split', id, direction, ratio: NEW_SPLIT_RATIO, first, second };
 }
 
 function insertBeside<TData>(
@@ -91,16 +100,10 @@ function insertBeside<TData>(
 	const found = findNode(root, targetPaneId);
 	if (!found) return root;
 
-	const slot = slotOf(found);
-	const [first, second] = key === 'first' ? [node, slot] : [slot, node];
-	return replaceAtPath(slotPath(found), {
-		type: 'split',
-		id: newSplitId,
-		direction,
-		ratio: NEW_SPLIT_RATIO,
-		first,
-		second
-	});
+	return replaceAtPath(
+		slotPath(found),
+		createSplit(node, slotOf(found), direction, key, newSplitId)
+	);
 }
 
 // Pane nodes also match inside stacks, and a stack's `activeId` then follows its position.
@@ -161,13 +164,13 @@ export function movePane<TData>(
 ): LayoutNode<TData> | undefined {
 	if (!root || paneId === targetId) return root;
 
-	const moved = findNode(root, paneId)?.node;
-	const target = findNode(root, targetId)?.node;
-	if (moved?.type !== 'pane' || target?.type !== 'pane') return root;
+	const moved = findNode(root, paneId);
+	const target = findNode(root, targetId);
+	if (moved?.node.type !== 'pane' || target?.node.type !== 'pane') return root;
 
-	const remaining = removeFound(findNode(root, paneId)!)!;
+	const remaining = removeFound(moved)!;
 
-	return insertBeside(remaining, targetId, moved, direction, key, newSplitId);
+	return insertBeside(remaining, targetId, moved.node, direction, key, newSplitId);
 }
 
 function upperRightStep<TData>(node: LayoutNode<TData>): PathStep<TData> | undefined {
@@ -182,6 +185,29 @@ function upperRightStep<TData>(node: LayoutNode<TData>): PathStep<TData> | undef
 		default:
 			return node satisfies never;
 	}
+}
+
+function findUpperRightSlot<TData>(root: LayoutNode<TData>): FoundNode<TData> {
+	const path: PathStep<TData>[] = [];
+	let node = root;
+	for (let step = upperRightStep(node); step; step = upperRightStep(node)) {
+		path.push(step);
+		node = childrenOf(step.parent)[step.index]!;
+	}
+	return { node, path };
+}
+
+function splitAtUpperRight<TData>(
+	slot: FoundNode<TData>,
+	pane: PaneNode<TData>,
+	newSplitId: string
+): SplitNode<TData> {
+	const parent = slot.path.at(-1)?.parent;
+	const isParentRow = parent?.type === 'split' && parent.direction === 'row';
+	const [direction, key]: [SplitDirection, SplitKey] = isParentRow
+		? ['column', 'first']
+		: ['row', 'second'];
+	return createSplit(pane, slot.node, direction, key, newSplitId);
 }
 
 /**
@@ -200,29 +226,17 @@ export function addPaneToUpperRight<TData>(
 ): LayoutNode<TData> {
 	if (!root) return pane;
 
-	const path: PathStep<TData>[] = [];
-	let target = root;
-	for (let step = upperRightStep(target); step; step = upperRightStep(target)) {
-		path.push(step);
-		target = childrenOf(step.parent)[step.index]!;
+	const slot = findUpperRightSlot(root);
+	switch (slot.node.type) {
+		case 'float':
+			return replaceAtPath(slot.path, { ...slot.node, base: pane });
+		case 'pane':
+		case 'stack':
+		case 'split':
+			return replaceAtPath(slot.path, splitAtUpperRight(slot, pane, newSplitId));
+		default:
+			return slot.node satisfies never;
 	}
-
-	if (target.type === 'float') return replaceAtPath(path, { ...target, base: pane });
-
-	const parent = path.at(-1)?.parent;
-	const isParentRow = parent?.type === 'split' && parent.direction === 'row';
-	const [direction, key]: [SplitDirection, SplitKey] = isParentRow
-		? ['column', 'first']
-		: ['row', 'second'];
-	const [first, second] = key === 'first' ? [pane, target] : [target, pane];
-	return replaceAtPath(path, {
-		type: 'split',
-		id: newSplitId,
-		direction,
-		ratio: NEW_SPLIT_RATIO,
-		first,
-		second
-	});
 }
 
 /**
@@ -281,9 +295,12 @@ export function selectPane<TData>(
 	return replaceAtPath(slotPath(found), { ...stack, activeId: paneId });
 }
 
-function stackingOf<TData>(
-	node: LayoutNode<TData>
-): { panes: readonly PaneNode<TData>[]; activeId: string } | undefined {
+interface Stacking<TData> {
+	panes: readonly PaneNode<TData>[];
+	activeId: string;
+}
+
+function stackingOf<TData>(node: LayoutNode<TData>): Stacking<TData> | undefined {
 	switch (node.type) {
 		case 'pane':
 			return { panes: [node], activeId: node.id };
@@ -426,188 +443,4 @@ export function swapSlots<TData>(
 	if (firstSlot.id === secondSlot.id) return root;
 
 	return exchangeNodes(root, firstSlot, secondSlot);
-}
-
-interface FoundEntry<TData> {
-	float: FloatNode<TData>;
-	floatPath: PathStep<TData>[];
-	entry: FloatEntry<TData>;
-	entryIndex: number;
-}
-
-// Entries are not nodes, so `findNode` never returns one.
-function findEntry<TData>(
-	node: LayoutNode<TData>,
-	entryId: string,
-	path: PathStep<TData>[] = []
-): FoundEntry<TData> | undefined {
-	if (node.type === 'float') {
-		const entryIndex = node.floats.findIndex((candidate) => candidate.id === entryId);
-		if (entryIndex !== -1) {
-			return { float: node, floatPath: path, entry: node.floats[entryIndex]!, entryIndex };
-		}
-	}
-
-	if (!isContainer(node)) return undefined;
-	for (const [index, child] of childrenOf(node).entries()) {
-		const found = findEntry(child, entryId, [...path, { parent: node, index }]);
-		if (found) return found;
-	}
-	return undefined;
-}
-
-function floatSource<TData>(
-	root: LayoutNode<TData> | undefined,
-	sourceId: string,
-	sourceType: 'pane' | 'stack',
-	rect: FloatRect,
-	newEntryId: string,
-	newFloatId: string,
-	hostId: string | undefined
-): LayoutNode<TData> | undefined {
-	if (!root) return undefined;
-
-	const source = findNode(root, sourceId);
-	if (source?.node.type !== sourceType) return root;
-
-	const host = findNode(root, hostId ?? root.id);
-	if (!host || findNode(source.node, host.node.id)) return root;
-
-	const parentStep = source.path.at(-1);
-	const isWholeEntryContent =
-		parentStep?.parent.type === 'float' &&
-		parentStep.parent.id === host.node.id &&
-		parentStep.index >= (parentStep.parent.base ? 1 : 0);
-	if (isWholeEntryContent) return root;
-
-	const entry: FloatEntry<TData> = { id: newEntryId, rect, content: source.node };
-
-	let hostPath = host.path;
-	let hostNode: LayoutNode<TData> | undefined;
-	if (findNode(host.node, sourceId)) {
-		hostNode = removeFound({ node: source.node, path: source.path.slice(host.path.length) });
-	} else {
-		const remainingHost = findNode(removeFound(source)!, host.node.id)!;
-		hostPath = remainingHost.path;
-		hostNode = remainingHost.node;
-	}
-
-	const floated: FloatNode<TData> =
-		hostNode?.type === 'float'
-			? { ...hostNode, floats: [...hostNode.floats, entry] }
-			: { type: 'float', id: newFloatId, base: hostNode, floats: [entry] };
-	return replaceAtPath(hostPath, floated);
-}
-
-/**
- * Moves a pane out of its slot into a new entry of a float node. Never mutates `root`. A stacked
- * pane leaves its stack as `removePane` does. The rect is stored as given, never clamped.
- *
- * @param newEntryId The new entry's id.
- * @param newFloatId The id of the float node that wraps the host, when the host is not one already.
- * @param hostId The node whose box the entry floats over. Defaults to the root. When it is an
- * ancestor of the pane, the pane leaves it with the usual collapse rules and what remains is the
- * host. The wrapping float node has no `base` when nothing of the host remains.
- * @returns A new root. The same `root` reference when `paneId` names no pane, `hostId` names no
- * node, the host is the pane or inside it, or the pane is already the whole content of an entry of
- * the host. `undefined` when `root` is.
- */
-export function floatPane<TData>(
-	root: LayoutNode<TData> | undefined,
-	paneId: string,
-	rect: FloatRect,
-	newEntryId: string,
-	newFloatId: string,
-	hostId?: string
-): LayoutNode<TData> | undefined {
-	return floatSource(root, paneId, 'pane', rect, newEntryId, newFloatId, hostId);
-}
-
-/**
- * Moves a whole stack out of its slot into a new entry of a float node, as `floatPane` moves a
- * pane. Never mutates `root`. A pane inside the stack counts as inside the source.
- *
- * @returns A new root. The same `root` reference when nothing changes. `undefined` when `root` is.
- */
-export function floatStack<TData>(
-	root: LayoutNode<TData> | undefined,
-	stackId: string,
-	rect: FloatRect,
-	newEntryId: string,
-	newFloatId: string,
-	hostId?: string
-): LayoutNode<TData> | undefined {
-	return floatSource(root, stackId, 'stack', rect, newEntryId, newFloatId, hostId);
-}
-
-/**
- * Replaces a float entry's rect. Never mutates `root`.
- *
- * @param rect The new rect, or an updater that receives the entry's current rect and returns the
- * new one. An updater lets a resize button grow a window without keeping its own copy of the rect.
- * It is not called when `entryId` names no entry.
- * @returns A new root. The same `root` reference when `entryId` names no entry or the rect is
- * equal field by field. `undefined` when `root` is.
- */
-export function setFloatRect<TData>(
-	root: LayoutNode<TData> | undefined,
-	entryId: string,
-	rect: FloatRect | ((rect: FloatRect) => FloatRect)
-): LayoutNode<TData> | undefined {
-	if (!root) return undefined;
-
-	const found = findEntry(root, entryId);
-	if (!found) return root;
-	const { entry } = found;
-	const nextRect = typeof rect === 'function' ? rect(entry.rect) : rect;
-	const isUnchanged =
-		entry.rect.x === nextRect.x &&
-		entry.rect.y === nextRect.y &&
-		entry.rect.width === nextRect.width &&
-		entry.rect.height === nextRect.height;
-	if (isUnchanged) return root;
-
-	const floats = found.float.floats.with(found.entryIndex, { ...entry, rect: nextRect });
-	return replaceAtPath(found.floatPath, { ...found.float, floats });
-}
-
-/**
- * Moves a float entry to the top of its float node's stacking order. Never mutates `root`.
- *
- * @returns A new root. The same `root` reference when `entryId` names no entry or the entry is
- * already on top. `undefined` when `root` is.
- */
-export function raiseFloat<TData>(
-	root: LayoutNode<TData> | undefined,
-	entryId: string
-): LayoutNode<TData> | undefined {
-	if (!root) return undefined;
-
-	const found = findEntry(root, entryId);
-	if (!found || found.entryIndex === found.float.floats.length - 1) return root;
-
-	const floats = [...found.float.floats.toSpliced(found.entryIndex, 1), found.entry];
-	return replaceAtPath(found.floatPath, { ...found.float, floats });
-}
-
-/**
- * Removes a float entry and everything in it. Never mutates `root`. A float node left with no
- * entries is replaced by its `base`, and one with no `base` either is removed like any child.
- *
- * @returns A new root. The same `root` reference when `entryId` names no entry. `undefined` when
- * nothing remains.
- */
-export function removeFloat<TData>(
-	root: LayoutNode<TData> | undefined,
-	entryId: string
-): LayoutNode<TData> | undefined {
-	if (!root) return undefined;
-
-	const found = findEntry(root, entryId);
-	if (!found) return root;
-
-	const childIndex = (found.float.base ? 1 : 0) + found.entryIndex;
-	const replacement = removeChild(found.float, childIndex);
-	if (replacement) return replaceAtPath(found.floatPath, replacement);
-	return removeFound({ node: found.float, path: found.floatPath });
 }

@@ -2,7 +2,7 @@ import { createRawSnippet } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import Hint from '../Hint.svelte';
 
 const text = (value: string) => createRawSnippet(() => ({ render: () => `<span>${value}</span>` }));
@@ -30,10 +30,16 @@ describe('Hint', () => {
 	});
 
 	it('dims the text over the state color when disabled', () => {
-		const { container } = render(Hint, {
-			props: { disabled: true, state: 'error', children: text('hint') }
-		});
+		document.documentElement.classList.add('dark');
+		try {
+			const { container } = render(Hint, {
+				props: { disabled: true, state: 'error', children: text('hint') }
+			});
 
-		expect(textColor(hint(container))).toBe(colorOf('text-disabled', 'color'));
+			expect(textColor(hint(container))).toBe(colorOf('text-disabled-dark', 'color'));
+			expect(textColor(hint(container))).not.toBe(colorOf('text-disabled', 'color'));
+		} finally {
+			document.documentElement.classList.remove('dark');
+		}
 	});
 });

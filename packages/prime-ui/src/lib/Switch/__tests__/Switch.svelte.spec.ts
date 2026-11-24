@@ -1,19 +1,42 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor, colorOf } from '../../__tests__/computed-style.ts';
+import { backgroundColor, colorOf } from '../../../../test/computed-style.ts';
+import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
+import { allowTransitions, blockTransitions } from '../../../../test/transitions.ts';
 import Switch from '../Switch.svelte';
-import BoundSwitch from './BoundSwitch.svelte';
-import ControlledSwitch from './ControlledSwitch.svelte';
-import UndefinedSwitch from './UndefinedSwitch.svelte';
+import BoundSwitch from './fixtures/BoundSwitch.svelte';
+import ControlledSwitch from './fixtures/ControlledSwitch.svelte';
+import UndefinedSwitch from './fixtures/UndefinedSwitch.svelte';
 
 const toggle = (container: Element) =>
 	container.querySelector<HTMLButtonElement>('[role="switch"]')!;
 const thumb = (container: Element) => toggle(container).firstElementChild!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
+afterEach(async () => {
+	blockTransitions();
+	await emulateReducedMotion('no-preference');
+});
+
 describe('Switch', () => {
+	it('slides the thumb with a transition', () => {
+		allowTransitions();
+		const { container } = render(Switch);
+
+		expect(parseFloat(getComputedStyle(thumb(container)).transitionDuration)).toBeGreaterThan(0);
+	});
+
+	it('holds the thumb still under prefers-reduced-motion', async () => {
+		allowTransitions();
+		await emulateReducedMotion('reduce');
+
+		const { container } = render(Switch);
+
+		expect(getComputedStyle(thumb(container)).transitionProperty).toBe('none');
+	});
+
 	it('renders an off, valid switch by default', () => {
 		const { container } = render(Switch);
 
@@ -33,13 +56,24 @@ describe('Switch', () => {
 		expect(toggle(container).classList.contains('focus-ring'), 'focus-ring utility').toBe(true);
 	});
 
-	it('is invalid and recolors the track in the error state', () => {
-		const normal = render(Switch);
-		const normalTrack = backgroundColor(toggle(normal.container));
+	it('is invalid in the error state', () => {
 		const { container } = render(Switch, { props: { state: 'error' } });
 
 		expect(toggle(container).getAttribute('aria-invalid')).toBe('true');
-		expect(backgroundColor(toggle(container))).not.toBe(normalTrack);
+	});
+
+	it.each([
+		{ props: {}, color: 'bg-gray-6' },
+		{ props: { checked: true }, color: 'bg-gray-9' },
+		{ props: { state: 'error' }, color: 'bg-danger-light' },
+		{ props: { checked: true, state: 'error' }, color: 'bg-danger-dark' },
+		{ props: { disabled: true }, color: 'bg-disabled-light' },
+		{ props: { checked: true, disabled: true }, color: 'bg-disabled-dark' },
+		{ props: { disabled: true, state: 'error' }, color: 'bg-disabled-light' }
+	] as const)('paints the track $color for $props', ({ props, color }) => {
+		const { container } = render(Switch, { props });
+
+		expect(backgroundColor(toggle(container))).toBe(colorOf(color, 'backgroundColor'));
 	});
 
 	it.each([
@@ -53,11 +87,10 @@ describe('Switch', () => {
 		expect(backgroundColor(toggle(container))).toBe(colorOf(color, 'backgroundColor'));
 	});
 
-	it('keeps the off track unchanged under a tone class', () => {
-		const plain = render(Switch);
+	it('keeps the off track gray under a tone class', () => {
 		const { container } = render(Switch, { props: { class: 'switch-success' } });
 
-		expect(backgroundColor(toggle(container))).toBe(backgroundColor(toggle(plain.container)));
+		expect(backgroundColor(toggle(container))).toBe(colorOf('bg-gray-6', 'backgroundColor'));
 	});
 
 	it('paints the error track over a tone class while on', () => {
@@ -68,14 +101,15 @@ describe('Switch', () => {
 		expect(backgroundColor(toggle(container))).toBe(colorOf('bg-danger-dark', 'backgroundColor'));
 	});
 
-	it('paints a different track and moves the thumb when on', () => {
-		const off = render(Switch);
-		const on = render(Switch, { props: { checked: true } });
+	it.each([
+		{ checked: false, offset: 2 },
+		{ checked: true, offset: 18 }
+	])('sits the thumb $offset px into the track when checked is $checked', ({ checked, offset }) => {
+		const { container } = render(Switch, { props: { checked } });
 
-		expect(backgroundColor(toggle(on.container))).not.toBe(backgroundColor(toggle(off.container)));
-		expect(getComputedStyle(thumb(on.container)).translate).not.toBe(
-			getComputedStyle(thumb(off.container)).translate
-		);
+		expect(
+			thumb(container).getBoundingClientRect().left - toggle(container).getBoundingClientRect().left
+		).toBe(offset);
 	});
 
 	it('renders a hidden form input carrying name and value when given a name', () => {

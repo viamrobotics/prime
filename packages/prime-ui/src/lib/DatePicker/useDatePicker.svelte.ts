@@ -1,51 +1,48 @@
 import { getContext, setContext } from 'svelte';
 
-const key = Symbol('DatePicker');
+import type { PickerContext, PickerContextOptions } from './picker-context.ts';
 
-interface DatePickerOptions {
-	disabled: () => boolean;
-	readonly: () => boolean;
-	open: () => boolean;
-	locale: () => string;
-	calendarLabel: { get: () => string | undefined; set: (label: string | undefined) => void };
-}
+export const createPickerContext = (name: string, defaultCalendarName: string) => {
+	const key = Symbol(name);
 
-/** What a `DatePicker` shares with the parts bits-ui does not wire to its root. */
-export interface DatePickerContext {
-	/** The root's resolved `disabled`, after the enclosing field's. */
-	readonly disabled: boolean;
-	/** The root's `readonly`. */
-	readonly readonly: boolean;
-	/** Whether the calendar is open. */
-	readonly open: boolean;
-	/** The root's BCP 47 `locale`. */
-	readonly locale: string;
-	/** The calendar's accessible name, before bits-ui appends the month heading. */
-	calendarLabel: string | undefined;
-}
+	const provide = (options: PickerContextOptions): PickerContext =>
+		setContext<PickerContext>(key, {
+			get disabled() {
+				return options.disabled();
+			},
+			get required() {
+				return options.required();
+			},
+			get readonly() {
+				return options.readonly();
+			},
+			get open() {
+				return options.open();
+			},
+			get locale() {
+				return options.locale();
+			},
+			get formName() {
+				return options.formName?.();
+			},
+			get calendarLabel() {
+				return options.calendarLabel.get();
+			},
+			set calendarLabel(label) {
+				options.calendarLabel.set(label);
+			},
+			get calendarName() {
+				return options.calendarLabel.get() ?? defaultCalendarName;
+			}
+		});
 
-export const provideDatePicker = (options: DatePickerOptions): DatePickerContext =>
-	setContext<DatePickerContext>(key, {
-		get disabled() {
-			return options.disabled();
-		},
-		get readonly() {
-			return options.readonly();
-		},
-		get open() {
-			return options.open();
-		},
-		get locale() {
-			return options.locale();
-		},
-		get calendarLabel() {
-			return options.calendarLabel.get();
-		},
-		set calendarLabel(label) {
-			options.calendarLabel.set(label);
-		}
-	});
+	const use = (): PickerContext | undefined => getContext<PickerContext | undefined>(key);
 
-/** The enclosing `DatePicker`, or `undefined` when a part is rendered on its own. */
-export const useDatePicker = (): DatePickerContext | undefined =>
-	getContext<DatePickerContext | undefined>(key);
+	return { provide, use };
+};
+
+const datePicker = createPickerContext('DatePicker', 'Choose a date');
+
+export const provideDatePicker = datePicker.provide;
+
+export const useDatePicker = datePicker.use;

@@ -7,6 +7,7 @@ The floating panel of a [`Menu.Sub`](./MenuSub.svelte). It opens beside its [`Me
 
 	import { DropdownMenu } from 'bits-ui';
 
+	// sideOffset and alignOffset are the anchor-placement vocabulary bits-ui shares with Floating UI. No native name exists, so they keep bits-ui's names.
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -39,10 +40,7 @@ The floating panel of a [`Menu.Sub`](./MenuSub.svelte). It opens beside its [`Me
 	id={contentId}
 	{sideOffset}
 	{alignOffset}
-	class={[
-		'z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-popover',
-		extraClasses
-	]}
+	class={['z-menu min-w-40 popover-panel p-1', extraClasses]}
 	{...restProps}
 >
 	{@render children?.()}

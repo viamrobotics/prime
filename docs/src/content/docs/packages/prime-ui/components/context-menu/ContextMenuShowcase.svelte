@@ -2,7 +2,7 @@
   import { ContextMenu } from "@viamrobotics/prime-ui";
 
   const area =
-    "flex h-24 items-center justify-center rounded-lg border border-dashed border-medium text-sm text-subtle-2";
+    "flex h-24 items-center justify-center rounded-sm border border-dashed border-medium text-sm text-subtle-2";
 </script>
 
 <div class="not-content flex flex-col gap-6">

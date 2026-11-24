@@ -21,8 +21,8 @@
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Placeholder, with a disabled item</h4>
     <div class="max-w-xs">
-      <Field class="flex flex-col gap-1">
-        <Label>Size</Label>
+      <Field label="Size" class="flex flex-col gap-1">
+        <Label />
         <Combobox items={sizes}>
           <Input.Group>
             <Combobox.Input placeholder="Pick a size" />
@@ -37,8 +37,8 @@
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Error</h4>
     <div class="max-w-xs">
-      <Field class="flex flex-col gap-1" state="error">
-        <Label>Size</Label>
+      <Field label="Size" class="flex flex-col gap-1" state="error">
+        <Label />
         <Combobox items={sizes}>
           <Input.Group>
             <Combobox.Input placeholder="Pick a size" />
@@ -53,8 +53,8 @@
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
     <div class="max-w-xs">
-      <Field class="flex flex-col gap-1">
-        <Label>Size</Label>
+      <Field label="Size" class="flex flex-col gap-1">
+        <Label />
         <Combobox items={sizes} value="md" disabled>
           <Input.Group>
             <Combobox.Input />

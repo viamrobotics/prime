@@ -37,7 +37,7 @@ import statesSource from "./States.svelte?raw";
 <Demo client:visible />
 
 - Several series on one chart, each with a palette color by position or a color you pick from the tokens.
-- Axes, a grid, a tooltip, and a legend, each a part you place only when you want it.
+- Axes, a grid, a tooltip, a legend, and a data table, each a part you place only when you want it.
 - Bounds you set on either axis, or leave to the data.
 - Keyboard navigation of the points and a live region that announces the active point.
 
@@ -61,7 +61,7 @@ import statesSource from "./States.svelte?raw";
 
 <Steps>
 
-1. Install the package and its peer. The `svelte` peer is `^5.40.0`.
+1. Install the package. Its `svelte` peer is `^5.40.0`. `@viamrobotics/tailwind-config` comes with the package as a dependency, and installing it directly as well gives your own classes the same tokens.
 
    <Tabs syncKey="pkg">
      <TabItem label="pnpm">
@@ -95,7 +95,7 @@ import statesSource from "./States.svelte?raw";
 
 ## Usage
 
-`Chart` has no layout of its own. `Chart.Plot` takes and measures the size you give it through its `class`, such as `class="h-64"`, and a plot with no height draws nothing. It draws inside its content box, so padding in its `class` insets the drawing. Place the drawing parts inside `Chart.Plot`, and place `Chart.Legend` in the `Chart` before or after the plot. A part outside the plot throws, and so does a second `Chart.Plot`. `Chart` needs an accessible name, either `aria-label` or `aria-labelledby`. Each `Chart.Line` takes `points`, a list of `{ x, y }` where `x` is a `Date` or epoch milliseconds and `y` is a number or `null` for a gap. An `x` the time scale cannot place, such as a string or an invalid `Date`, drops like a gap.
+`Chart` has no layout of its own. `Chart.Plot` takes and measures the size you give it through its `class`, such as `class="h-64"`, and a plot with no height draws nothing. It draws inside its content box, so padding in its `class` insets the drawing. Place the drawing parts inside `Chart.Plot`, and place `Chart.Legend` and `Chart.Table` in the `Chart` before or after the plot. A drawing part outside the plot throws, a legend or table inside it throws, and so does a second `Chart.Plot`. `Chart` needs an accessible name, either `aria-label` or `aria-labelledby`. Each `Chart.Line` takes `points`, a list of `{ x, y }` where `x` is a `Date` or epoch milliseconds and `y` is a number or `null` for a gap. An `x` the time scale cannot place, such as a string or an invalid `Date`, drops like a gap. The package exports the `ChartPoint`, `ChartXValue`, and `ChartScale` types.
 
 ### Several series
 
@@ -109,7 +109,7 @@ One y axis serves every series, so series with different units share it and the 
 
 ### Bounds
 
-Set `xMin`, `xMax`, `yMin`, or `yMax` to fix an edge. A given bound is used exactly. A bound you leave out comes from the data, and a y bound from the data is rounded out to the next tick. The first chart below fixes the y axis and the second fixes a window on x and the bottom of y.
+Set `xMin`, `xMax`, `yMin`, or `yMax` to fix an edge. A given bound is used exactly. A bound you leave out comes from the data, and a y bound from the data is rounded out to the next tick. An `xMin` greater than `xMax` reverses the x axis, with later times on the left. The pointer picks the nearest point, and the left and right keys follow the screen, in either direction. The first chart below fixes the y axis and the second fixes a window on x and the bottom of y.
 
 <Example code={boundsSource} title="Bounds.svelte">
   <Bounds client:visible />
@@ -125,7 +125,7 @@ Set `xMin`, `xMax`, `yMin`, or `yMax` to fix an edge. A given bound is used exac
 
 ### Hiding a series
 
-The legend renders one toggle button per series. Bind `hidden` on a `Chart.Line` to read or set the state from outside. Unbound, the line keeps the state itself. A hidden series keeps its color and position, and the axes follow the series that remain visible.
+The legend renders one toggle button per series. Bind `hidden` on a `Chart.Line` to read or set the state from outside. A binding may start `undefined`, which reads as `false`. Unbound, the line keeps the state itself. A hidden series keeps its color and position, and the axes follow the series that remain visible.
 
 <Example code={hidingSource} title="Hiding.svelte">
   <Hiding client:visible />
@@ -133,7 +133,7 @@ The legend renders one toggle button per series. Bind `hidden` on a `Chart.Line`
 
 ### Layout
 
-`Chart` renders its children in whatever layout its `class` gives it, so the legend goes wherever you place it. Make the `Chart` a flex row and let the plot take the rest of the width. In a `flex flex-col` chart, `class="min-h-0 flex-1"` on the plot fills the height the chart is given.
+`Chart` renders its children in whatever layout its `class` gives it, so the legend goes wherever you place it. Make the `Chart` a flex row and let the plot take the rest of the width. The legend lays its items out as a wrapping flex row, its one layout of its own, so `flex-col` in its `class` stacks them. In a `flex flex-col` chart, `class="min-h-0 flex-1"` on the plot fills the height the chart is given.
 
 <Example code={layoutSource} title="Layout.svelte">
   <Layout client:visible />
@@ -171,21 +171,21 @@ The figure carries a visually hidden summary, linked through `aria-describedby`.
 
 | Part            | Where `class` lands                          |
 | --------------- | -------------------------------------------- |
-| `Chart`         | The root element, which has the `figure` role |
-| `Chart.Plot`    | The plot element, sized through its `class`  |
+| `Chart`         | The root element, a native `figure` |
+| `Chart.Plot`    | The plot `div`, sized through its `class`    |
 | `Chart.Line`    | The path, or the circle of a single point    |
 | `Chart.Grid`    | The `<g>` that holds the grid lines          |
 | `Chart.XAxis`   | The row of tick labels below the plot        |
 | `Chart.YAxis`   | The column of tick labels beside the plot    |
 | `Chart.Tooltip` | The tooltip box                              |
-| `Chart.Legend`  | The list                                     |
+| `Chart.Legend`  | The list, a `ul`                             |
 | `Chart.Table`   | A wrapper around the `<table>`, with no layout of its own |
 
 An axis `class` styles the tick labels only. The axis line and tick marks take their color from the `--color-chart-axis` token. The labels default to `text-xs` in the axis label color.
 
 The axes size their gutters to their labels, and each side takes the larger of what the parts reserve on it. On `Chart.YAxis`, a font size changes the look and the column width, a color changes the look and no gutter, and a `min-w-*` sets a least width for the labels. On `Chart.XAxis`, a font size changes the look and the row height, a color changes no gutter, and a `min-w-*` has no effect. A border or padding on an axis `class` counts toward its gutter. A margin does not, so it moves the labels out of the plot's box.
 
-Every other attribute on `Chart` also goes to the root element. Colors come from the chart tokens in `@viamrobotics/tailwind-config`, such as `--color-chart-series-1`, so a literal color has no place in a class or in `color`.
+Every other attribute of a `figure` on `Chart` also goes to the root element. `Chart.Plot`, `Chart.Legend` and `Chart.Table` do the same for their `div`, `ul` and wrapper `div`, and each throws outside `Chart`. The other parts take `class` only. Colors come from the chart tokens in `@viamrobotics/tailwind-config`, such as `--color-chart-series-1`, so a literal color has no place in a class or in `color`.
 
 The package sets these `data-part` attributes, so a variant like `[&_[data-part=legend-item]]:text-xs` reaches them from the root.
 
@@ -202,21 +202,21 @@ The package sets these `data-part` attributes, so a variant like `[&_[data-part=
 | `tooltip-marker`   | The dot on the active point                       |
 | `tooltip-swatch`   | The series color swatch in the tooltip            |
 | `summary`          | The visually hidden figure summary                |
-| `table`            | The data table inside the `Table` wrapper         |
+| `table`            | The data table inside the `Chart.Table` wrapper   |
 
-The root has `aria-busy` while loading. Each legend button has `aria-pressed`, which is true while its series is visible.
+The root has `aria-busy` while loading. Each legend button has `aria-pressed`, which is true while its series is visible. The legend list is named "Shown series", and a loading series' button is described by its hidden "Loading" text.
 
 ## Keyboard
 
-Tab order follows DOM order, so a legend placed before `Chart.Plot` puts its buttons ahead of the plot. The plot is a tab stop when a `Chart.Tooltip` is placed and a visible series has a point inside the x window. Focusing the plot shows the tooltip on the active point. On first focus that is the first point inside the window of the first visible series that has one, and after that it is the point focus left. Hidden series, gaps, and points outside the window are skipped. Every key and the pointer stay inside the window, and a point exactly on a bound is inside.
+Tab order follows DOM order, so a legend placed before `Chart.Plot` puts its buttons ahead of the plot. The plot is a tab stop when a `Chart.Tooltip` is placed and a visible series has a point inside the x window. Focusing the plot shows the tooltip on the active point. On first focus that is the leftmost point inside the window of the first visible series that has one, the point `Home` reaches, and after that it is the point focus left. Hidden series, gaps, and points outside the window are skipped. Every key and the pointer stay inside the window, and a point exactly on a bound is inside.
 
 <KeyboardTable
   bindings={[
-    { keys: "ArrowLeft / ArrowRight", action: "Move to the previous or next point in the series" },
+    { keys: "ArrowLeft / ArrowRight", action: "Move to the point drawn to the left or right in the series" },
     { keys: "ArrowUp / ArrowDown", action: "Move to the previous or next visible series, at its point nearest in time" },
-    { keys: "Home / End", action: "Move to the first or last point of the series" },
-    { keys: "PageUp / PageDown", action: "Move by a tenth of the series" },
-    { keys: "Escape", action: "Hide the tooltip and keep focus on the plot" },
+    { keys: "Home / End", action: "Move to the leftmost or rightmost point of the series" },
+    { keys: "PageUp / PageDown", action: "Move left or right by a tenth of the series" },
+    { keys: "Escape", action: "Hide the tooltip and keep focus on the plot. Pressed anywhere on the page, hide a shown tooltip, including one the pointer shows" },
     { keys: "Enter / Space", action: "On a legend button, toggle the series" },
   ]}
 />

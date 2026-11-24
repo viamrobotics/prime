@@ -2,6 +2,7 @@
 @component
 The floating panel of a [`Menu`](./Menu.svelte), portaled to the body. It holds [`Menu.Item`](./MenuItem.svelte) parts and the other menu parts.
 It closes on Escape and on a press outside, and returns focus to the trigger.
+The trigger names the panel unless you pass `aria-label` or `aria-labelledby`.
 -->
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -9,7 +10,9 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 	import { DropdownMenu } from 'bits-ui';
 
 	import { portalProps, type PortalTarget } from '../portal.ts';
+	import { useTriggerName } from './useTriggerName.svelte.ts';
 
+	// side, align, sideOffset, and alignOffset are the anchor-placement vocabulary bits-ui shares with Floating UI. No native name exists, so they keep bits-ui's names.
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -40,6 +43,8 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		class: extraClasses,
 		children,
 		portal,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		side = 'bottom',
 		align = 'start',
 		sideOffset = 4,
@@ -49,6 +54,9 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 
 	const contentId = $derived(id ?? `menu-${uid}`);
 
+	const triggerName = useTriggerName();
+	const labelledBy = $derived(ariaLabelledBy ?? (ariaLabel ? undefined : triggerName?.id));
+
 	let pressedTrigger: HTMLElement | null = null;
 
 	// The trigger names the panel in aria-controls only while the menu is open, so it is looked up at the press.
@@ -56,7 +64,7 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 		pressedTrigger = document.querySelector(`[aria-controls="${CSS.escape(contentId)}"]`);
 	};
 
-	// bits-ui skips the trigger after any outside press, and the modal layer swallows that press, so focus would stay on the body.
+	// bits-ui skips refocusing the trigger after any outside press, even one the modal layer swallows, so focus would stay on the body.
 	const restoreFocus = (event: Event) => {
 		const trigger = pressedTrigger;
 		pressedTrigger = null;
@@ -69,16 +77,15 @@ It closes on Escape and on a press outside, and returns focus to the trigger.
 <DropdownMenu.Portal {...portalProps(portal)}>
 	<DropdownMenu.Content
 		id={contentId}
+		aria-label={ariaLabel}
+		aria-labelledby={labelledBy}
 		{side}
 		{align}
 		{sideOffset}
 		{alignOffset}
 		onInteractOutside={captureTrigger}
 		onCloseAutoFocus={restoreFocus}
-		class={[
-			'z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-popover',
-			extraClasses
-		]}
+		class={['z-menu min-w-40 popover-panel p-1', extraClasses]}
 		{...restProps}
 	>
 		{@render children?.()}

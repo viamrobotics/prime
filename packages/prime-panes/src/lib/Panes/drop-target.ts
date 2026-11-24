@@ -2,7 +2,7 @@ import type { DropRegion } from '../drop-region.ts';
 import type { LayoutNode, PaneNode, StackNode } from '../layout.ts';
 import { findNode } from '../tree.ts';
 
-import { listPanes, listSlots, listStacks } from './list-panes.ts';
+import { findStack, findStackHolding, listPanes, listSlots } from './list-panes.ts';
 import { shownPaneId } from './shown-pane.ts';
 import type { DragSource, DropTarget } from './usePanes.svelte.ts';
 
@@ -70,17 +70,14 @@ export function paneIdToSkip<TData>(
 ): string | undefined {
 	if (source === undefined) return undefined;
 
-	const stacks = listStacks(root);
 	switch (source.type) {
 		case 'stack': {
-			const movingStack = stacks.find((stack) => stack.id === source.id);
+			const movingStack = findStack(root, source.id);
 			return movingStack && shownPaneId(movingStack);
 		}
-		case 'pane': {
-			const isStacked = stacks.some((stack) => stack.panes.some((pane) => pane.id === source.id));
+		case 'pane':
 			// The own slot of a stacked moving pane is a destination, so arrows may land on it.
-			return isStacked ? undefined : source.id;
-		}
+			return findStackHolding(root, source.id) ? undefined : source.id;
 		case 'float':
 			return undefined;
 		default:
@@ -88,7 +85,7 @@ export function paneIdToSkip<TData>(
 	}
 }
 
-/** Whether the pane or stack `nodeId` sits inside a float entry, at any depth. */
+// Whether the pane or stack `nodeId` sits inside a float entry, at any depth.
 export function isInWindow<TData>(root: LayoutNode<TData> | undefined, nodeId: string): boolean {
 	if (!root) return false;
 

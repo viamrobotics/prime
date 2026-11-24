@@ -4,7 +4,7 @@ import { userEvent } from 'vitest/browser';
 
 import type { PortalTarget } from '../portal.ts';
 
-import PortalPanel, { PANEL_KINDS, type PanelKind } from './PortalPanel.svelte';
+import PortalPanel, { PANEL_KINDS, type PanelKind } from './fixtures/PortalPanel.svelte';
 
 const TARGET_SELECTOR = '[data-testid="target"]';
 const OPENED_BY_PRESS: ReadonlySet<PanelKind> = new Set(['context-menu', 'menubar', 'select']);
@@ -32,20 +32,20 @@ describe.each(PANEL_KINDS)('the %s panel', (kind) => {
 	it('moves out of its parent by default', async () => {
 		const { host, target } = await openPanel(kind);
 
-		expect(host.contains(panel())).toBe(false);
-		expect(target.contains(panel())).toBe(false);
+		expect(host.contains(panel()), 'panel is inside its parent').toBe(false);
+		expect(target.contains(panel()), 'panel is inside the selector target').toBe(false);
 	});
 
 	it('stays inside its parent when portal is false', async () => {
 		const { host } = await openPanel(kind, false);
 
-		expect(host.contains(panel())).toBe(true);
+		expect(host.contains(panel()), 'panel is inside its parent').toBe(true);
 	});
 
 	it('moves into the element a selector names', async () => {
 		const { host, target } = await openPanel(kind, TARGET_SELECTOR);
 
-		expect(target.contains(panel())).toBe(true);
-		expect(host.contains(panel())).toBe(false);
+		expect(target.contains(panel()), 'panel is inside the selector target').toBe(true);
+		expect(host.contains(panel()), 'panel is inside its parent').toBe(false);
 	});
 });

@@ -1,3 +1,17 @@
+<!--
+@component
+A code editor built on CodeMirror 6, with syntax highlighting, search, folding, and a diff view.
+Bind the document with `bind:value`. Setting `original` compares `value` against it in a diff
+view, unified by default or side by side with `diff="split"`. Every editor needs a name, from
+`aria-label` or `aria-labelledby`. With `collapseUnchanged`, Ctrl+Shift+] (Cmd+Option+] on macOS)
+expands the folded run of unchanged lines next to the cursor.
+
+```svelte
+<CodeEditor bind:value={config} language="json" aria-label="Robot config" />
+<CodeEditor bind:value={config} original={savedConfig} diff="split" aria-label="Robot config" />
+```
+-->
+
 <script lang="ts">
 	import type { Attachment } from 'svelte/attachments';
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -34,7 +48,7 @@
 		highlightActiveLineGutter,
 		keymap,
 		lineNumbers as lineNumberGutter,
-		placeholder as placeholderExtension,
+		placeholder as emptyDocPlaceholder,
 		type ViewUpdate
 	} from '@codemirror/view';
 	import { classHighlighter } from '@lezer/highlight';
@@ -42,15 +56,23 @@
 
 	import type { CodeEditorDiff, CodeEditorLanguage } from './code-editor.ts';
 
+	import {
+		ORIGINAL_SIDE_SUFFIX,
+		isAriaAttribute,
+		nameContentAttributes,
+		originalNameContentAttributes,
+		otherAriaContentAttributes
+	} from './aria-attributes.ts';
+	import { expandUnchanged } from './expand-unchanged.ts';
 	import { languageSupport } from './languages.ts';
 	import { codeEditorTheme } from './theme.ts';
+
+	type Editability = 'editable' | 'readonly' | 'disabled';
 
 	/**
 	 * Every `aria-*` attribute goes to the editing surface, the element with the `textbox` role.
 	 * Every other attribute goes to the editor's outer element.
 	 */
-	type Editability = 'editable' | 'readonly' | 'disabled';
-
 	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		/**
 		 * The document. Bind it with `bind:value`, or with a function binding to veto or transform
@@ -76,6 +98,7 @@
 		original?: string;
 		/** The diff view's layout while `original` is set. */
 		diff?: CodeEditorDiff;
+		// `@codemirror/merge`'s option name, kept because no native or standard name exists.
 		/**
 		 * Folds each long run of unchanged lines in the diff view into one row that expands on
 		 * click. Changing it rebuilds the editor.
@@ -95,7 +118,7 @@
 	type AccessibleName = { 'aria-label': string } | { 'aria-labelledby': string };
 
 	let {
-		value = $bindable(''),
+		value = $bindable(),
 		language,
 		readonly = false,
 		disabled = false,
@@ -119,10 +142,6 @@
 	const ariaCompartment = new Compartment();
 	const unifiedDiffCompartment = new Compartment();
 
-	const ARIA_PREFIX = 'aria-';
-	const ORIGINAL_SIDE_SUFFIX = 'original';
-	const NAME_ATTRIBUTES = ['aria-label', 'aria-labelledby'];
-
 	// Unchanged lines kept visible around each change, and the shortest run worth folding.
 	const COLLAPSED_CONTEXT = { margin: 3, minSize: 4 };
 
@@ -143,39 +162,17 @@
 	);
 	const editability = $derived(editabilityOf(disabled, readonly));
 	const originalEditability = $derived(editabilityOf(disabled, true));
-	const placeholderText = $derived<Extension>(placeholder ? placeholderExtension(placeholder) : []);
-	const wrapLinesExtension = $derived<Extension>(wrapLines ? EditorView.lineWrapping : []);
-	const nameExtension = $derived(ariaContentAttributes(isNameAttribute));
-	const originalNameExtension = $derived(
-		EditorView.contentAttributes.of(originalNameAttributes(rest, originalLabelId))
+	const placeholderExtension = $derived<Extension>(
+		placeholder ? emptyDocPlaceholder(placeholder) : []
 	);
-	const ariaExtension = $derived(ariaContentAttributes((name) => !isNameAttribute(name)));
+	const wrapLinesExtension = $derived<Extension>(wrapLines ? EditorView.lineWrapping : []);
+	const nameExtension = $derived(nameContentAttributes(rest));
+	const originalNameExtension = $derived(originalNameContentAttributes(rest, originalLabelId));
+	const ariaExtension = $derived(otherAriaContentAttributes(rest));
 	const elementAttributes = $derived<HTMLAttributes<HTMLDivElement>>(
-		Object.fromEntries(Object.entries(rest).filter(([name]) => !name.startsWith(ARIA_PREFIX)))
+		Object.fromEntries(Object.entries(rest).filter(([name]) => !isAriaAttribute(name)))
 	);
 	const collapsedContext = $derived(collapseUnchanged ? COLLAPSED_CONTEXT : undefined);
-
-	function isNameAttribute(name: string) {
-		return NAME_ATTRIBUTES.includes(name);
-	}
-
-	function originalNameAttributes(
-		attributes: Record<string, unknown>,
-		labelId: string
-	): Record<string, string> {
-		const label = attributes['aria-label'];
-		const labelledby = attributes['aria-labelledby'];
-		if (labelledby != null) return { 'aria-labelledby': `${labelledby} ${labelId}` };
-		if (label != null) return { 'aria-label': `${label}, ${ORIGINAL_SIDE_SUFFIX}` };
-		return {};
-	}
-
-	function ariaContentAttributes(isIncluded: (name: string) => boolean): Extension {
-		const attributes = Object.entries(rest)
-			.filter(([name, value]) => name.startsWith(ARIA_PREFIX) && isIncluded(name) && value != null)
-			.map(([name, value]) => [name, String(value)]);
-		return EditorView.contentAttributes.of(Object.fromEntries(attributes));
-	}
 
 	function editabilityOf(isDisabled: boolean, isReadonly: boolean): Editability {
 		if (isDisabled) return 'disabled';
@@ -220,7 +217,7 @@
 		// A function binding can veto or transform the write without changing `value`, so no effect
 		// re-runs. Read it back once the update finishes and put the doc in line.
 		queueMicrotask(() => {
-			if (editor === update.view) replaceDoc(update.view, value);
+			if (editor === update.view) replaceDoc(update.view, value ?? '');
 		});
 	}
 
@@ -232,6 +229,7 @@
 				...defaultKeymap,
 				...searchKeymap,
 				...historyKeymap,
+				{ key: 'Ctrl-Shift-]', mac: 'Cmd-Alt-]', run: expandUnchanged },
 				...foldKeymap
 			]),
 			search(),
@@ -250,10 +248,10 @@
 		];
 	}
 
-	function editableExtensions(): Extension {
+	function valueEditorExtensions(): Extension {
 		return [
 			editabilityCompartment.of(editabilityExtension(editability)),
-			placeholderCompartment.of(placeholderText),
+			placeholderCompartment.of(placeholderExtension),
 			nameCompartment.of(nameExtension),
 			ariaCompartment.of(ariaExtension),
 			EditorView.updateListener.of(writeValue)
@@ -269,10 +267,10 @@
 			return new EditorView({
 				parent: node,
 				state: EditorState.create({
-					doc: value,
+					doc: value ?? '',
 					extensions: [
 						sharedExtensions(),
-						editableExtensions(),
+						valueEditorExtensions(),
 						unifiedDiffCompartment.of(unifiedDiffExtension(original))
 					]
 				})
@@ -301,7 +299,7 @@
 							originalNameCompartment.of(originalNameExtension)
 						]
 					},
-					b: { doc: value, extensions: [sharedExtensions(), editableExtensions()] }
+					b: { doc: value ?? '', extensions: [sharedExtensions(), valueEditorExtensions()] }
 				})
 		);
 		originalEditor = mergeView.a;
@@ -341,7 +339,7 @@
 	});
 
 	$effect(() => {
-		reconfigure([editor], placeholderCompartment.reconfigure(placeholderText));
+		reconfigure([editor], placeholderCompartment.reconfigure(placeholderExtension));
 	});
 
 	$effect(() => {
@@ -357,7 +355,7 @@
 	});
 
 	$effect(() => {
-		const text = value;
+		const text = value ?? '';
 		if (editor) replaceDoc(editor, text);
 	});
 

@@ -34,11 +34,13 @@ afterEach(() => {
 describe('classifyPress', () => {
 	it('holds a press on a button', () => {
 		const boundary = create('div');
+
 		expect(press(create('button', boundary), boundary)).toBe('held');
 	});
 
 	it.each(['a', 'select'] as const)('holds a press on a %s', (tag) => {
 		const boundary = create('div');
+
 		expect(press(create(tag, boundary), boundary)).toBe('held');
 	});
 
@@ -46,22 +48,26 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const control = create('div', boundary);
 		control.setAttribute('role', 'button');
+
 		expect(press(control, boundary)).toBe('held');
 	});
 
 	it('holds a press on content inside a button', () => {
 		const boundary = create('div');
 		const label = create('span', create('button', boundary));
+
 		expect(press(label, boundary)).toBe('held');
 	});
 
 	it('drags a press on plain content immediately', () => {
 		const boundary = create('div');
+
 		expect(press(create('div', boundary), boundary)).toBe('immediate');
 	});
 
 	it('drags a press on the boundary itself immediately', () => {
 		const boundary = create('div');
+
 		expect(press(boundary, boundary)).toBe('immediate');
 	});
 
@@ -69,11 +75,13 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const tab = create('button', boundary);
 		tab.dataset.tabPaneId = 'cam-a';
+
 		expect(press(tab, boundary)).toBe('immediate');
 	});
 
 	it.each(['input', 'textarea'] as const)('ignores a press on a %s', (tag) => {
 		const boundary = create('div');
+
 		expect(press(create(tag, boundary), boundary)).toBe('ignored');
 	});
 
@@ -81,6 +89,7 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const editable = create('div', boundary);
 		editable.setAttribute('contenteditable', '');
+
 		expect(press(editable, boundary)).toBe('ignored');
 	});
 
@@ -88,6 +97,7 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const claiming = create('div', boundary);
 		claimPresses(claiming);
+
 		expect(press(create('button', claiming), boundary)).toBe('ignored');
 	});
 
@@ -95,6 +105,7 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const ignoring = create('div', boundary);
 		dragIgnore(ignoring);
+
 		expect(press(create('span', ignoring), boundary)).toBe('ignored');
 	});
 
@@ -102,6 +113,7 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const grip = create('button', boundary);
 		markAsGrip(grip);
+
 		expect(press(grip, boundary)).toBe('grip');
 	});
 
@@ -109,6 +121,7 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const grip = create('button', boundary);
 		markAsGrip(grip);
+
 		expect(press(create('span', grip), boundary)).toBe('grip');
 	});
 
@@ -116,6 +129,7 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const grip = create('button', boundary);
 		markAsGrip(grip)();
+
 		expect(press(grip, boundary)).toBe('held');
 	});
 
@@ -123,12 +137,38 @@ describe('classifyPress', () => {
 		const boundary = create('div');
 		const grip = create('div', boundary);
 		markAsGrip(grip);
+
 		expect(press(create('input', grip), boundary)).toBe('ignored');
+	});
+
+	it('stops ignoring presses once the claimPresses element is detached', () => {
+		const boundary = create('div');
+		const claiming = create('div', boundary);
+		claimPresses(claiming)?.();
+
+		expect(press(create('button', claiming), boundary)).toBe('held');
+	});
+
+	it('stops ignoring presses once the dragIgnore element is detached', () => {
+		const boundary = create('div');
+		const ignoring = create('div', boundary);
+		dragIgnore(ignoring)?.();
+
+		expect(press(create('span', ignoring), boundary)).toBe('immediate');
+	});
+
+	it('ignores a text field before a grip mark is considered', () => {
+		const boundary = create('div');
+		const field = create('input', boundary);
+		markAsGrip(field);
+
+		expect(press(field, boundary)).toBe('ignored');
 	});
 
 	it('does not let elements outside the boundary change the kind', () => {
 		const outer = create('button');
 		const boundary = create('div', outer);
+
 		expect(press(create('div', boundary), boundary)).toBe('immediate');
 	});
 });

@@ -8,8 +8,8 @@ A text input that filters a list of options as the user types and selects one of
 Built on [bits-ui `Combobox`](https://bits-ui.com/docs/components/combobox).
 
 ```svelte
-<Field class="flex flex-col gap-1">
-	<Label>Region</Label>
+<Field label="Region" class="flex flex-col gap-1">
+	<Label />
 	<Combobox bind:value items={regions}>
 		<Input.Group>
 			<Combobox.Input placeholder="Search regions" />
@@ -31,9 +31,10 @@ Built on [bits-ui `Combobox`](https://bits-ui.com/docs/components/combobox).
 	import { Combobox } from 'bits-ui';
 
 	import type { SelectOption } from '../Select/option.ts';
+	import type { ComboboxFilter } from './filter.ts';
 
 	import { useField } from '../Field/useField.svelte.ts';
-	import { matchesLabel, provideCombobox, type ComboboxFilter } from './useCombobox.svelte.ts';
+	import { matchesLabel, provideCombobox } from './useCombobox.svelte.ts';
 
 	interface Props {
 		/**
@@ -63,6 +64,7 @@ Built on [bits-ui `Combobox`](https://bits-ui.com/docs/components/combobox).
 		/** Make selection required. Defaults to the enclosing field's `required`. */
 		required?: boolean;
 
+		// `allowDeselect` is bits-ui's name. No native or standard name exists to prefer.
 		/** Allow picking the selected item again to clear it. @default false */
 		allowDeselect?: boolean;
 

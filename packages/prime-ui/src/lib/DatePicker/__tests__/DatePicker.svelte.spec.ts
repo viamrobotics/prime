@@ -8,25 +8,38 @@ import {
 	borderColor,
 	colorOf,
 	textColor
-} from '../../__tests__/computed-style.ts';
-import BoundDatePicker from './BoundDatePicker.svelte';
-import ControlledDatePicker from './ControlledDatePicker.svelte';
-import UndefinedDatePicker from './UndefinedDatePicker.svelte';
+} from '../../../../test/computed-style.ts';
+import BoundDatePicker from './fixtures/BoundDatePicker.svelte';
+import ControlledDatePicker from './fixtures/ControlledDatePicker.svelte';
+import FormDatePicker from './fixtures/FormDatePicker.svelte';
+import UndefinedDatePicker from './fixtures/UndefinedDatePicker.svelte';
 
 const dateField = (container: Element) => container.querySelector<HTMLElement>('[role="group"]')!;
 const trigger = (container: Element) => container.querySelector('button')!;
 const segment = (container: Element, part: string) =>
 	container.querySelector<HTMLElement>(`[data-segment="${part}"]`)!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
+const ownerOpen = (container: Element) =>
+	container.querySelector('[data-testid="open"]')?.textContent;
+const segmentParts = (container: Element) =>
+	[...container.querySelectorAll('[role="spinbutton"]')].map((part) =>
+		part.getAttribute('data-segment')
+	);
+const segmentAttributes = (container: Element, attribute: string) =>
+	[...container.querySelectorAll('[role="spinbutton"]')].map((part) =>
+		part.getAttribute(attribute)
+	);
+const shownSegments = (container: Element) => segmentAttributes(container, 'aria-valuetext');
+const form = (container: Element) => container.querySelector('form')!;
 const calendar = () => document.querySelector('[role="dialog"], [role="grid"]');
 const monthButtonNames = () =>
 	[...document.querySelectorAll('[role="dialog"] button')].map((button) =>
 		button.getAttribute('aria-label')
 	);
-const relativeMonthName = (locale: string, step: -1 | 1) => {
-	const name = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(step, 'month');
-	return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
-};
+const monthButton = (name: string) =>
+	document.querySelector<HTMLElement>(`[role="dialog"] button[aria-label="${name}"]`);
+const calendarName = () =>
+	document.querySelector('[role="application"]')?.getAttribute('aria-label');
 
 const dayOf = async (date: string) => {
 	let day: HTMLElement | null = null;
@@ -111,6 +124,26 @@ describe('DatePicker', () => {
 		}
 	});
 
+	it('writes the opened calendar to the bound open', async () => {
+		const { container } = render(BoundDatePicker);
+
+		await userEvent.click(trigger(container));
+
+		await vi.waitFor(() => expect(ownerOpen(container)).toBe('true'));
+	});
+
+	it('orders the segments for the locale', () => {
+		const { container } = render(BoundDatePicker, { props: { locale: 'de-DE' } });
+
+		expect(segmentParts(container)).toEqual(['day', 'month', 'year']);
+	});
+
+	it('adds hour and minute segments at minute granularity', () => {
+		const { container } = render(BoundDatePicker, { props: { granularity: 'minute' } });
+
+		expect(segmentParts(container)).toEqual(['month', 'day', 'year', 'hour', 'minute']);
+	});
+
 	it('renders a hidden form input carrying the ISO date when given a name', () => {
 		const { container } = render(BoundDatePicker, { props: { name: 'start' } });
 
@@ -118,6 +151,42 @@ describe('DatePicker', () => {
 			'2026-03-10'
 		);
 	});
+
+	it('submits an empty value while no date is chosen', () => {
+		const { container } = render(UndefinedDatePicker, { props: { name: 'start' } });
+
+		expect(container.querySelector<HTMLInputElement>('input[name="start"]')?.value).toBe('');
+	});
+
+	it.each([
+		{ disabled: false, submitted: '2026-03-10' },
+		{ disabled: true, submitted: null }
+	])('disabled=$disabled submits $submitted with the form', ({ disabled, submitted }) => {
+		const { container } = render(FormDatePicker, { props: { disabled } });
+
+		expect(new FormData(form(container)).get('start')).toBe(submitted);
+	});
+
+	it.each([
+		{ empty: true, valid: false },
+		{ empty: false, valid: true }
+	])('a required picker with empty=$empty leaves the form valid=$valid', ({ empty, valid }) => {
+		const { container } = render(FormDatePicker, { props: { empty, required: true } });
+
+		expect(form(container).checkValidity()).toBe(valid);
+	});
+
+	it.each([
+		{ required: true, expected: ['true', 'true', 'true'] },
+		{ required: false, expected: [null, null, null] }
+	])(
+		'required=$required sets aria-required on the segments to $expected',
+		({ required, expected }) => {
+			const { container } = render(BoundDatePicker, { props: { required } });
+
+			expect(segmentAttributes(container, 'aria-required')).toEqual(expected);
+		}
+	);
 
 	it('two-way: clicking a day writes it to the owner and closes the calendar', async () => {
 		const { container } = render(BoundDatePicker);
@@ -159,16 +228,17 @@ describe('DatePicker', () => {
 		await vi.waitFor(() => expect(owner(container)).toBe('2026-04-10'));
 	});
 
-	it('keeps days before min out of reach', async () => {
-		const { container } = render(BoundDatePicker, {
-			props: { min: new CalendarDate(2026, 3, 8) }
-		});
-
+	it.each([
+		{ bound: 'min', props: { min: new CalendarDate(2026, 3, 8) }, day: '2026-03-05' },
+		{ bound: 'max', props: { max: new CalendarDate(2026, 3, 25) }, day: '2026-03-28' }
+	])('keeps days beyond $bound out of reach', async ({ props, day }) => {
+		const { container } = render(BoundDatePicker, { props });
 		await userEvent.click(trigger(container));
-		const early = await dayOf('2026-03-05');
-		await userEvent.click(early, { force: true });
+		const outOfRange = await dayOf(day);
 
-		expect(early.getAttribute('aria-disabled')).toBe('true');
+		await userEvent.click(outOfRange, { force: true });
+
+		expect(outOfRange.getAttribute('aria-disabled')).toBe('true');
 		expect(owner(container)).toBe('2026-03-10');
 	});
 
@@ -200,11 +270,36 @@ describe('DatePicker', () => {
 	);
 
 	it.each([
-		{ locale: undefined, expected: ['Last month', 'Next month'] },
-		{
-			locale: 'de-DE',
-			expected: [relativeMonthName('de-DE', -1), relativeMonthName('de-DE', 1)]
+		{ accept: true, expected: '2026-03-24', shownDay: '24' },
+		{ accept: false, expected: '2026-03-10', shownDay: '10' }
+	])(
+		'controlled: accept=$accept on a typed day leaves the owner at $expected and the field showing it',
+		async ({ accept, expected, shownDay }) => {
+			const { container } = render(ControlledDatePicker, { props: { accept } });
+			segment(container, 'day').focus();
+
+			await userEvent.keyboard('24');
+
+			await vi.waitFor(() => expect(owner(container)).toBe(expected));
+			await vi.waitFor(() =>
+				expect(segment(container, 'day').getAttribute('aria-valuenow')).toBe(shownDay)
+			);
 		}
+	);
+
+	it('controlled: a refused typed date leaves an empty picker showing no date', async () => {
+		const { container } = render(ControlledDatePicker, { props: { empty: true } });
+		segment(container, 'month').focus();
+
+		await userEvent.keyboard('03152');
+
+		await vi.waitFor(() => expect(shownSegments(container)).toEqual(['Empty', 'Empty', 'Empty']));
+		expect(owner(container)).toBe('undefined');
+	});
+
+	it.each([
+		{ locale: undefined, expected: ['Last month', 'Next month'] },
+		{ locale: 'de-DE', expected: ['Letzten Monat', 'Nächsten Monat'] }
 	])('names the month buttons in the $locale locale', async ({ locale, expected }) => {
 		const { container } = render(BoundDatePicker, { props: { locale } });
 
@@ -213,7 +308,25 @@ describe('DatePicker', () => {
 		await vi.waitFor(() => expect(monthButtonNames()).toEqual(expected));
 	});
 
-	it('names the calendar with its aria-label followed by the month', async () => {
+	it.each([
+		{ calendarLabel: undefined, expected: 'Choose a date March 2026' },
+		{ calendarLabel: 'Choose a start date', expected: 'Choose a start date March 2026' }
+	])(
+		'names the calendar $expected when its aria-label is $calendarLabel',
+		async ({ calendarLabel, expected }) => {
+			const { container } = render(BoundDatePicker, { props: { calendarLabel } });
+
+			await userEvent.click(trigger(container));
+
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="application"]')?.getAttribute('aria-label')).toBe(
+					expected
+				)
+			);
+		}
+	);
+
+	it('names the panel after the calendar', async () => {
 		const { container } = render(BoundDatePicker, {
 			props: { calendarLabel: 'Choose a start date' }
 		});
@@ -221,10 +334,59 @@ describe('DatePicker', () => {
 		await userEvent.click(trigger(container));
 
 		await vi.waitFor(() =>
-			expect(document.querySelector('[role="application"]')?.getAttribute('aria-label')).toBe(
-				'Choose a start date March 2026'
+			expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe(
+				'Choose a start date'
 			)
 		);
+	});
+
+	it('replaces the month button chevrons with the chevron snippets', async () => {
+		const { container } = render(BoundDatePicker, { props: { chevrons: true } });
+
+		await userEvent.click(trigger(container));
+
+		await vi.waitFor(() =>
+			expect(
+				[monthButton('Last month'), monthButton('Next month')].map((button) => button?.innerHTML)
+			).toEqual([
+				expect.stringContaining('data-testid="previous-chevron"'),
+				expect.stringContaining('data-testid="next-chevron"')
+			])
+		);
+		expect(document.querySelector('[role="dialog"] button svg')).toBeNull();
+	});
+
+	it('moves the calendar a month with the next and previous month buttons', async () => {
+		const { container } = render(BoundDatePicker);
+		await userEvent.click(trigger(container));
+		await vi.waitFor(() => expect(calendarName()).toBe('Choose a date March 2026'));
+
+		await userEvent.click(monthButton('Next month')!);
+		await vi.waitFor(() => expect(calendarName()).toBe('Choose a date April 2026'));
+		await userEvent.click(monthButton('Last month')!);
+		await userEvent.click(monthButton('Last month')!);
+
+		await vi.waitFor(() => expect(calendarName()).toBe('Choose a date February 2026'));
+	});
+
+	it('returns focus to the trigger when Escape closes the calendar', async () => {
+		const { container } = render(BoundDatePicker);
+		trigger(container).focus();
+		await userEvent.keyboard('{Enter}');
+		await vi.waitFor(async () => expect(document.activeElement).toBe(await dayOf('2026-03-10')));
+
+		await userEvent.keyboard('{Escape}');
+
+		await vi.waitFor(() => expect(document.activeElement).toBe(trigger(container)));
+	});
+
+	it('emphasizes today in bold', async () => {
+		const { container } = render(UndefinedDatePicker);
+
+		await userEvent.click(trigger(container));
+		const todayCell = await dayOf(today(getLocalTimeZone()).toString());
+
+		expect(getComputedStyle(todayCell).fontWeight).toBe('600');
 	});
 
 	it('paints today in the heading color, not the link color', async () => {
@@ -283,6 +445,20 @@ describe('DatePicker', () => {
 		expect(borderColor(dateField(container))).toBe(colorOf('border-danger-dark', 'borderTopColor'));
 	});
 
+	it('sets aria-invalid on every segment in the error state', () => {
+		const { container } = render(BoundDatePicker, { props: { state: 'error' } });
+
+		expect(segmentAttributes(container, 'aria-invalid')).toEqual(['true', 'true', 'true']);
+	});
+
+	it('keeps its own data-state over one passed to the field', () => {
+		const { container } = render(BoundDatePicker, {
+			props: { fieldProps: { 'data-state': 'stale' } }
+		});
+
+		expect(dateField(container).getAttribute('data-state')).toBe('closed');
+	});
+
 	it.each([
 		{ readonly: true, frame: 'bg-gray-1', triggerDisabled: true },
 		{ readonly: false, frame: 'bg-white', triggerDisabled: false }
@@ -302,5 +478,65 @@ describe('DatePicker', () => {
 		expect(trigger(container).disabled, 'trigger disabled').toBe(true);
 		expect(segment(container, 'day').getAttribute('aria-disabled')).toBe('true');
 		expect(borderColor(dateField(container))).toBe(colorOf('border-transparent', 'borderTopColor'));
+	});
+
+	it('names the trigger from its aria-label', () => {
+		const { container } = render(BoundDatePicker, {
+			props: { triggerProps: { 'aria-label': 'Pick a start date' } }
+		});
+
+		expect(trigger(container).getAttribute('aria-label')).toBe('Pick a start date');
+	});
+
+	it.each([
+		{ triggerProps: {}, disabled: true },
+		{ triggerProps: { disabled: false }, disabled: false }
+	])(
+		'a readonly picker with trigger props $triggerProps sets the trigger disabled to $disabled',
+		({ triggerProps, disabled }) => {
+			const { container } = render(BoundDatePicker, { props: { readonly: true, triggerProps } });
+
+			expect(trigger(container).disabled).toBe(disabled);
+		}
+	);
+
+	it.each([
+		{
+			contentProps: { 'aria-label': 'Reporting period' },
+			label: 'Reporting period',
+			labelledBy: null
+		},
+		{
+			contentProps: { 'aria-labelledby': 'period-heading' },
+			label: null,
+			labelledBy: 'period-heading'
+		}
+	])(
+		'names the panel with $contentProps instead of the default name',
+		async ({ contentProps, label, labelledBy }) => {
+			const { container } = render(BoundDatePicker, { props: { contentProps } });
+
+			await userEvent.click(trigger(container));
+
+			await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeTruthy());
+			const panel = document.querySelector('[role="dialog"]')!;
+			expect(panel.getAttribute('aria-label')).toBe(label);
+			expect(panel.getAttribute('aria-labelledby')).toBe(labelledBy);
+		}
+	);
+
+	it('fills only the focused segment', async () => {
+		const { container } = render(BoundDatePicker);
+		const day = segment(container, 'day');
+		const month = segment(container, 'month');
+		const unfocusedFill = backgroundColor(day);
+
+		month.focus();
+
+		await vi.waitFor(() =>
+			expect(backgroundColor(month)).toBe(colorOf('bg-medium', 'backgroundColor'))
+		);
+		expect(backgroundColor(day), 'unfocused segment').toBe(unfocusedFill);
+		expect(unfocusedFill).not.toBe(colorOf('bg-medium', 'backgroundColor'));
 	});
 });

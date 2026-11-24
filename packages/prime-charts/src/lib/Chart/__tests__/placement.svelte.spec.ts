@@ -2,15 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import '../../../../test/tailwind.css';
-import PlacementLegendInPlot from './PlacementLegendInPlot.svelte';
-import PlacementNoPlot from './PlacementNoPlot.svelte';
-import PlacementPart from './PlacementPart.svelte';
-import PlacementSwap from './PlacementSwap.svelte';
-import PlacementTwoPlots from './PlacementTwoPlots.svelte';
-import TableInPlot from './TableInPlot.svelte';
+import PlacementPart from './fixtures/PlacementPart.svelte';
+import PlacementSwap from './fixtures/PlacementSwap.svelte';
+import PlacementTwoPlots from './fixtures/PlacementTwoPlots.svelte';
 
-const insideParts = ['Line', 'XAxis', 'YAxis', 'Grid', 'Tooltip'];
-const standaloneParts = ['Line', 'XAxis', 'YAxis', 'Tooltip'];
+const insideParts = ['Line', 'XAxis', 'YAxis', 'Grid', 'Tooltip'] as const;
+const chartlessParts = ['Plot', 'Legend', 'Table'] as const;
+const outsideParts = ['Legend', 'Table'] as const;
 
 const thrownMessage = (run: () => unknown) => {
 	try {
@@ -23,63 +21,65 @@ const thrownMessage = (run: () => unknown) => {
 
 const plotSvg = (container: Element) => container.querySelector('[data-part="plot"] svg');
 
+const isFreshPlotDrawn = (container: Element, before: Element | null) => {
+	const current = container.querySelector('[data-part="plot"]');
+	return current !== null && current !== before && plotSvg(container) !== null;
+};
+
 describe('Chart placement', () => {
-	it('throws for a Chart.Line outside Chart.Plot', () => {
-		expect(thrownMessage(() => render(PlacementNoPlot))).toBe(
-			'Chart.Line must be placed inside Chart.Plot.'
-		);
-	});
-
 	it('throws for two Chart.Plots in one Chart', () => {
-		expect(thrownMessage(() => render(PlacementTwoPlots))).toBe('A Chart takes one Chart.Plot.');
+		const message = thrownMessage(() => render(PlacementTwoPlots));
+
+		expect(message).toBe('A Chart takes one Chart.Plot.');
 	});
 
-	it.each(insideParts)('throws for a Chart.%s inside Chart but outside Chart.Plot', (part) => {
-		expect(thrownMessage(() => render(PlacementPart, { props: { part } }))).toBe(
-			`Chart.${part} must be placed inside Chart.Plot.`
+	it.each(
+		insideParts.flatMap(
+			(part) =>
+				[
+					{ part, placement: 'chart' },
+					{ part, placement: 'no-chart' }
+				] as const
+		)
+	)('throws for a Chart.$part placed in $placement outside Chart.Plot', ({ part, placement }) => {
+		const message = thrownMessage(() => render(PlacementPart, { props: { part, placement } }));
+
+		expect(message).toBe(`Chart.${part} must be placed inside Chart.Plot.`);
+	});
+
+	it.each(chartlessParts)('throws for a Chart.%s placed outside any Chart', (part) => {
+		const message = thrownMessage(() =>
+			render(PlacementPart, { props: { part, placement: 'no-chart' } })
 		);
+
+		expect(message).toBe(`Chart.${part} must be placed inside Chart.`);
 	});
 
-	it.each(standaloneParts)('throws for a Chart.%s with no Chart', (part) => {
-		expect(thrownMessage(() => render(PlacementPart, { props: { part, isInChart: false } }))).toBe(
-			`Chart.${part} must be placed inside Chart.Plot.`
+	it.each(outsideParts)('throws for a Chart.%s inside Chart.Plot', (part) => {
+		const message = thrownMessage(() =>
+			render(PlacementPart, { props: { part, placement: 'plot' } })
 		);
+
+		expect(message).toBe(`Chart.${part} must be placed outside Chart.Plot.`);
 	});
 
-	it('throws for a Chart.Legend inside Chart.Plot', () => {
-		expect(thrownMessage(() => render(PlacementLegendInPlot))).toBe(
-			'Chart.Legend must be placed outside Chart.Plot.'
-		);
-	});
-
-	it('throws for a Chart.Table inside Chart.Plot', () => {
-		expect(thrownMessage(() => render(TableInPlot))).toBe(
-			'Chart.Table must be placed outside Chart.Plot.'
-		);
-	});
-
-	it('draws the plot after a keyed swap', async () => {
-		const { container, rerender } = render(PlacementSwap, { props: { mode: 'key', key: 0 } });
+	it.each([
+		{ swap: 'keyed', first: { mode: 'key', key: 0 }, second: { mode: 'key', key: 1 } },
+		{
+			swap: 'if/else',
+			first: { mode: 'if', isFirst: true },
+			second: { mode: 'if', isFirst: false }
+		}
+	] as const)('draws the plot after an $swap swap', async ({ first, second }) => {
+		const { container, rerender } = render(PlacementSwap, { props: first });
 		await expect.poll(() => plotSvg(container)).not.toBeNull();
 		const before = container.querySelector('[data-part="plot"]');
-		await rerender({ mode: 'key', key: 1 });
-		await expect
-			.poll(() => {
-				const current = container.querySelector('[data-part="plot"]');
-				return current !== null && current !== before && plotSvg(container) !== null;
-			})
-			.toBe(true);
-	});
 
-	it('draws the plot after an if/else swap', async () => {
-		const { container, rerender } = render(PlacementSwap, { props: { mode: 'if', isFirst: true } });
-		await expect.poll(() => plotSvg(container)).not.toBeNull();
-		const before = container.querySelector('[data-part="plot"]');
-		await rerender({ mode: 'if', isFirst: false });
+		await rerender(second);
+
 		await expect
-			.poll(() => {
-				const current = container.querySelector('[data-part="plot"]');
-				return current !== null && current !== before && plotSvg(container) !== null;
+			.poll(() => isFreshPlotDrawn(container, before), {
+				message: 'a new plot replaced the old one and drew its svg'
 			})
 			.toBe(true);
 	});

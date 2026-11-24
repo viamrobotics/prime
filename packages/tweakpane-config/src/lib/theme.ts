@@ -1,6 +1,10 @@
 import { type Theme, ThemeUtils } from "svelte-tweakpane-ui";
 
-// Hex values mirror tokens declared in @viamrobotics/tailwind-config
+/**
+ * The Viam light `Theme` for `svelte-tweakpane-ui`. Pass it to
+ * `ThemeUtils.setGlobalDefaultTheme` or to a component's `theme` prop. Values are inlined hex
+ * and rgba that mirror the light tokens in `@viamrobotics/tailwind-config`.
+ */
 export const primeTheme: Theme = {
   ...ThemeUtils.presets.light,
 
@@ -33,12 +37,12 @@ export const primeTheme: Theme = {
   pluginImageDraggingColor: "#2e67d3",
 };
 
-// Optional dark theme. Hex values mirror the dark tokens in
-// @viamrobotics/tailwind-config/dark (the grayscale ramp is inverted, so light
-// surfaces map to dark ones and vice versa). Unlike the CSS config, tweakpane
-// themes are applied via JS, so there is no automatic prefers-color-scheme /
-// `.dark` activation: the consumer chooses which theme to pass to
-// ThemeUtils.setGlobalDefaultTheme (e.g. from a media-query listener).
+/**
+ * The dark counterpart of `primeTheme`, mirroring the dark tokens in
+ * `@viamrobotics/tailwind-config/dark`. Tweakpane themes are applied from JS, so nothing
+ * activates it on `prefers-color-scheme` or a `.dark` ancestor. The consumer picks which theme
+ * to pass.
+ */
 export const primeThemeDark: Theme = {
   ...ThemeUtils.presets.standard,
 

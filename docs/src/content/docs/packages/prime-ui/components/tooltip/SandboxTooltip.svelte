@@ -4,15 +4,15 @@
   import { mdiContentCopy } from "@mdi/js";
   import { Icon, Tooltip } from "@viamrobotics/prime-ui";
 
-  type Placement = Pick<ComponentProps<typeof Tooltip.Content>, "placement">;
+  type Side = Pick<ComponentProps<typeof Tooltip.Content>, "side">;
 
-  interface Props extends Placement {
+  interface Props extends Side {
     openDelay?: number;
     interactive?: boolean;
     disabled?: boolean;
   }
 
-  const { placement, openDelay, interactive, disabled }: Props = $props();
+  const { side, openDelay, interactive, disabled }: Props = $props();
 </script>
 
 <Tooltip {openDelay} {interactive} {disabled}>
@@ -21,5 +21,5 @@
       <Icon icon={mdiContentCopy} />
     </button>
   </Tooltip.Trigger>
-  <Tooltip.Content {placement}>Copy to clipboard</Tooltip.Content>
+  <Tooltip.Content {side}>Copy to clipboard</Tooltip.Content>
 </Tooltip>

@@ -1,18 +1,21 @@
 import { mdiCheckboxBlankOutline, mdiCheckboxIntermediate, mdiCheckboxMarked } from '@mdi/js';
+import { createRawSnippet } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import Checkbox from '../Checkbox.svelte';
-import BoundCheckbox from './BoundCheckbox.svelte';
-import ControlledCheckbox from './ControlledCheckbox.svelte';
-import UndefinedCheckbox from './UndefinedCheckbox.svelte';
+import BoundCheckbox from './fixtures/BoundCheckbox.svelte';
+import ControlledCheckbox from './fixtures/ControlledCheckbox.svelte';
+import UndefinedCheckbox from './fixtures/UndefinedCheckbox.svelte';
 
 const box = (container: Element) =>
 	container.querySelector<HTMLButtonElement>('[role="checkbox"]')!;
 const iconPath = (container: Element) => container.querySelector('svg path')?.getAttribute('d');
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
+const ownerIndeterminate = (container: Element) =>
+	container.querySelector('[data-testid="owner-indeterminate"]')?.textContent;
 
 describe('Checkbox', () => {
 	it('renders an unchecked, valid checkbox by default', () => {
@@ -48,11 +51,45 @@ describe('Checkbox', () => {
 		expect(box(container).classList.contains('focus-ring'), 'focus-ring utility').toBe(true);
 	});
 
-	it('is invalid and colors the icon danger in the error state', () => {
+	it('is invalid in the error state', () => {
 		const { container } = render(Checkbox, { props: { state: 'error' } });
 
 		expect(box(container).getAttribute('aria-invalid')).toBe('true');
-		expect(textColor(container.querySelector('svg')!)).toBe(colorOf('text-danger-dark', 'color'));
+	});
+
+	it.each([
+		{ props: {}, color: 'text-subtle-2' },
+		{ props: { checked: true }, color: 'text-default' },
+		{ props: { indeterminate: true }, color: 'text-default' },
+		{ props: { state: 'error' }, color: 'text-danger-dark' },
+		{ props: { checked: true, state: 'error' }, color: 'text-danger-dark' },
+		{ props: { checked: true, disabled: true }, color: 'text-disabled-dark' },
+		{ props: { disabled: true, state: 'error' }, color: 'text-disabled-dark' }
+	] as const)('paints the default icon $color for $props', ({ props, color }) => {
+		const { container } = render(Checkbox, { props });
+
+		expect(textColor(container.querySelector('svg')!)).toBe(colorOf(color, 'color'));
+	});
+
+	it('renders children in place of the icon, passing the checked and indeterminate state', () => {
+		const children = createRawSnippet<[{ checked: boolean; indeterminate: boolean }]>((state) => ({
+			render: () => `<span>${state().checked} ${state().indeterminate}</span>`
+		}));
+
+		const { container } = render(Checkbox, { props: { checked: true, children } });
+
+		expect(box(container).querySelector('svg'), 'default icon replaced').toBeNull();
+		expect(box(container).textContent).toBe('true false');
+	});
+
+	it('runs a consumer onclick first, and its preventDefault keeps the box unchecked', async () => {
+		const { container } = render(Checkbox, {
+			props: { onclick: (event: MouseEvent) => event.preventDefault() }
+		});
+
+		await userEvent.click(box(container));
+
+		expect(box(container).getAttribute('aria-checked')).toBe('false');
 	});
 
 	it('renders a hidden form input carrying name and value when given a name', () => {
@@ -74,8 +111,19 @@ describe('Checkbox', () => {
 		expect(owner(container)).toBe('true');
 	});
 
+	it('two-way: a click on an indeterminate box clears indeterminate and checks it in the owner', async () => {
+		const { container } = render(BoundCheckbox, { props: { indeterminate: true } });
+
+		await userEvent.click(box(container));
+
+		expect(box(container).getAttribute('aria-checked')).toBe('true');
+		expect(owner(container)).toBe('true');
+		expect(ownerIndeterminate(container)).toBe('false');
+	});
+
 	it('two-way: renders unchecked from undefined state and writes a boolean back', async () => {
 		const { container } = render(UndefinedCheckbox);
+
 		expect(box(container).getAttribute('aria-checked')).toBe('false');
 		expect(owner(container)).toBe('undefined');
 

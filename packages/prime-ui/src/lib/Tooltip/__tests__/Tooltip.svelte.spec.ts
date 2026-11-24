@@ -1,24 +1,28 @@
+import type { ComponentProps } from 'svelte';
+
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor, colorOf, textColor } from '../../__tests__/computed-style.ts';
-import BoundTooltip from './BoundTooltip.svelte';
-import ControlledTooltip from './ControlledTooltip.svelte';
-import HoverOnlyTooltip from './HoverOnlyTooltip.svelte';
-import IconTriggerTooltip from './IconTriggerTooltip.svelte';
-import TabOrderTooltip from './TabOrderTooltip.svelte';
-import UndefinedTooltip from './UndefinedTooltip.svelte';
+import { backgroundColor, colorOf, textColor } from '../../../../test/computed-style.ts';
+import { INTERACTIVE_DESCENDANT_SELECTOR } from '../../interactive-descendant.ts';
+import { Tooltip } from '../tooltip.ts';
+import BoundTooltip from './fixtures/BoundTooltip.svelte';
+import ControlledTooltip from './fixtures/ControlledTooltip.svelte';
+import FocusableChildTooltip from './fixtures/FocusableChildTooltip.svelte';
+import HoverOnlyTooltip from './fixtures/HoverOnlyTooltip.svelte';
+import IconTriggerTooltip from './fixtures/IconTriggerTooltip.svelte';
+import TabOrderTooltip from './fixtures/TabOrderTooltip.svelte';
+import UndefinedTooltip from './fixtures/UndefinedTooltip.svelte';
 
 const button = (container: Element) => container.querySelector('button')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 const tooltip = () => document.querySelector<HTMLElement>('[role="tooltip"]');
-// Long enough for a vetoed open to have shown if it were going to.
-const SETTLE_MS = 100;
-// expect.poll gives up after 1000ms, so an open delay on either side of it decides the case.
+const CHANGE_WOULD_SHOW_WITHIN_MS = 100;
+const POLL_TIMEOUT_MS = 1000;
 const DELAY_UNDER_POLL_MS = 250;
 const DELAY_OVER_POLL_MS = 5000;
-const settle = () => new Promise((resolve) => setTimeout(resolve, SETTLE_MS));
+const settle = () => new Promise((resolve) => setTimeout(resolve, CHANGE_WOULD_SHOW_WITHIN_MS));
 
 afterEach(async () => {
 	if (tooltip()) await userEvent.keyboard('{Escape}');
@@ -32,7 +36,7 @@ describe('Tooltip', () => {
 		await userEvent.hover(button(container));
 		expect(tooltip(), 'still closed right after the pointer arrives').toBeNull();
 
-		await expect.poll(tooltip).not.toBeNull();
+		await expect.poll(tooltip, { timeout: POLL_TIMEOUT_MS }).not.toBeNull();
 		expect(tooltip()?.textContent).toBe('Copy to clipboard');
 	});
 
@@ -41,7 +45,7 @@ describe('Tooltip', () => {
 
 		button(container).focus();
 
-		await expect.poll(tooltip).not.toBeNull();
+		await expect.poll(tooltip, { timeout: POLL_TIMEOUT_MS }).not.toBeNull();
 	});
 
 	it('Escape closes it', async () => {
@@ -123,8 +127,8 @@ describe('Tooltip', () => {
 
 			expect(tooltip()!.id).not.toBe('');
 			expect(button(container).getAttribute('aria-describedby')).toBe(tooltip()!.id);
-			expect(span.hasAttribute('aria-describedby')).toBe(false);
-			expect(span.hasAttribute('tabindex')).toBe(false);
+			expect(span.hasAttribute('aria-describedby'), 'span carries no aria-describedby').toBe(false);
+			expect(span.hasAttribute('tabindex'), 'span is not a tab stop').toBe(false);
 		});
 
 		it('takes the description back off the control once closed', async () => {
@@ -159,29 +163,53 @@ describe('Tooltip', () => {
 			expect(icon.getAttribute('aria-describedby')).toBe(tooltip()!.id);
 		});
 
+		it.each(['select', 'textarea', 'summary', 'contenteditable'] as const)(
+			'names the content on a focused %s child while open',
+			async (child) => {
+				const { container } = render(FocusableChildTooltip, { props: { child } });
+				const control = container.querySelector<HTMLElement>('[data-testid="control"]')!;
+
+				control.focus();
+
+				await expect.poll(tooltip).not.toBeNull();
+				expect(document.activeElement).toBe(control);
+				expect(control.getAttribute('aria-describedby')).toBe(tooltip()!.id);
+			}
+		);
+
 		it('opens on hover alone when nothing inside it is focusable', async () => {
 			const { container } = render(HoverOnlyTooltip);
 			const trigger = container.querySelector<HTMLElement>('[data-testid="trigger"]')!;
-			expect(trigger.querySelector('button, a[href], input, [tabindex]')).toBeNull();
+			expect(trigger.querySelector(INTERACTIVE_DESCENDANT_SELECTOR)).toBeNull();
 
 			await userEvent.hover(trigger);
 
 			await expect.poll(tooltip).not.toBeNull();
-			expect(trigger.hasAttribute('aria-describedby')).toBe(false);
+			expect(trigger.hasAttribute('aria-describedby'), 'span carries no aria-describedby').toBe(
+				false
+			);
 		});
 	});
 
-	describe('placement', () => {
+	describe('side', () => {
 		it.each(['top', 'right', 'bottom', 'left'] as const)(
 			'places the content on the %s side',
-			async (placement) => {
-				const { container } = render(BoundTooltip, { props: { openDelay: 0, placement } });
+			async (side) => {
+				const { container } = render(BoundTooltip, { props: { openDelay: 0, side } });
 
 				button(container).focus();
 
-				await expect.poll(() => tooltip()?.getAttribute('data-side')).toBe(placement);
+				await expect.poll(() => tooltip()?.getAttribute('data-side')).toBe(side);
 			}
 		);
+
+		it('names the side prop side, not placement, by type', () => {
+			// @ts-expect-error the content takes side, the name every floating panel uses
+			const placed: ComponentProps<typeof Tooltip.Content> = { placement: 'right' };
+			const sided: ComponentProps<typeof Tooltip.Content> = { side: 'right' };
+
+			expect([placed, sided]).toHaveLength(2);
+		});
 	});
 
 	describe('binding', () => {
@@ -216,7 +244,7 @@ describe('Tooltip', () => {
 			await settle();
 
 			expect(owner(container)).toBe(String(opens));
-			expect(tooltip() !== null).toBe(opens);
+			expect(tooltip() !== null, 'tooltip rendered').toBe(opens);
 		});
 	});
 });

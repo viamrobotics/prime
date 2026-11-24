@@ -1,5 +1,5 @@
 import { FieldStates, type FieldState } from '../Field/state.ts';
-import { useField } from '../Field/useField.svelte.ts';
+import { controlName, useField } from '../Field/useField.svelte.ts';
 
 type Maybe<TValue> = TValue | null | undefined;
 
@@ -9,40 +9,32 @@ interface InputControlOptions {
 	required: () => Maybe<boolean>;
 	state: () => FieldState | undefined;
 	describedBy: () => Maybe<string>;
+	ariaLabel: () => Maybe<string>;
+	ariaLabelledBy: () => Maybe<string>;
 }
 
-/**
- * What a native `<input>` takes from its enclosing `Field`. A prop passed directly wins over the
- * field. Bind each returned value to the matching attribute on the element so `Input` and
- * `NumberInput` stay in step. Styling is the `input` class from `@viamrobotics/tailwind-config`, which reads these attributes.
- */
+// The Field wiring every native input shares, one bag spread after the rest props. The `input`
+// class styles from these attributes, so each one must land on the element.
 export const useInputControl = (options: InputControlOptions) => {
 	const field = useField();
 
-	const id = $derived(options.id() ?? field?.controlId);
-	const disabled = $derived(options.disabled() ?? field?.disabled ?? false);
-	const required = $derived(options.required() ?? field?.required ?? false);
 	const state = $derived(options.state() ?? field?.state ?? FieldStates.None);
-	const describedBy = $derived(options.describedBy() ?? field?.describedBy);
+	const attributes = $derived({
+		id: options.id() ?? field?.controlId,
+		disabled: options.disabled() ?? field?.disabled ?? false,
+		required: options.required() ?? field?.required ?? false,
+		'aria-describedby': options.describedBy() ?? field?.describedBy,
+		...controlName(field, {
+			ariaLabel: options.ariaLabel(),
+			ariaLabelledBy: options.ariaLabelledBy()
+		}),
+		'aria-invalid': state === FieldStates.Error || undefined,
+		'data-field-state': state === FieldStates.None ? undefined : state
+	});
 
 	return {
-		get id() {
-			return id;
-		},
-		get disabled() {
-			return disabled;
-		},
-		get required() {
-			return required;
-		},
-		get describedBy() {
-			return describedBy;
-		},
-		get invalid() {
-			return state === FieldStates.Error || undefined;
-		},
-		get fieldState() {
-			return state === FieldStates.None ? undefined : state;
+		get attributes() {
+			return attributes;
 		}
 	};
 };

@@ -2,9 +2,14 @@
 @component
 Groups a label, a control, and hints, and wires their ids and ARIA for you.
 
+A field requires a name: a `label`, an `aria-label`, or an `aria-labelledby` naming a visible
+element. A `Label` with no children renders the `label` text where you place it. With no
+`Label` placed, the control takes the `label` or `aria-label` as its `aria-label`, or the
+`aria-labelledby` as its own. The name never lands on the wrapper.
+
 The parts read the control id, `disabled`, `required`, and `state` from the field.
-`Label` points `for` at the control. Each `Hint` joins the control's `aria-describedby`.
-`RadioGroup` takes `aria-labelledby` from the labels.
+`Label` points `for` at the control, and the control takes `aria-labelledby` from the labels.
+Each `Hint` joins the control's `aria-describedby`.
 [`Field.StateIcon`](./StateIcon.svelte) shows the state. A prop passed to a part directly
 still wins.
 
@@ -13,8 +18,8 @@ the only signal, so pair it with a `Hint` that says what is wrong, or with
 `Field.StateIcon`.
 
 ```svelte
-<Field class="flex flex-col gap-1" required state="error">
-	<Label>Email</Label>
+<Field label="Email" class="flex flex-col gap-1" required state="error">
+	<Label />
 	<Input type="email" bind:value />
 	<Hint>We'll never share it.</Hint>
 	<Hint>Enter a valid address.</Hint>
@@ -25,11 +30,16 @@ the only signal, so pair it with a `Hint` that says what is wrong, or with
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import type { AccessibleName } from '../accessible-name.ts';
+	import type { FieldContext } from './context.ts';
 	import type { FieldState } from './state.ts';
 
-	import { provideField, type FieldContext } from './useField.svelte.ts';
+	import { provideField } from './useField.svelte.ts';
 
-	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+	interface Props extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'aria-label' | 'aria-labelledby'
+	> {
 		/** Id the field assigns to the control inside. Generated when omitted. `id` lands on this wrapper. */
 		controlId?: string;
 
@@ -42,7 +52,7 @@ the only signal, so pair it with a `Hint` that says what is wrong, or with
 		/** Contextual state shared with the control and hints. @default 'none' */
 		state?: FieldState;
 
-		/** The parts. Receives the field context, with `controlId`, `disabled`, `required`, and `state`. */
+		/** The parts. Receives the field context, with `controlId`, `disabled`, `required`, `state`, and the name. */
 		children?: Snippet<[FieldContext]>;
 	}
 
@@ -51,9 +61,12 @@ the only signal, so pair it with a `Hint` that says what is wrong, or with
 		disabled = false,
 		required = false,
 		state,
+		label,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		children,
 		...restProps
-	}: Props = $props();
+	}: Props & AccessibleName = $props();
 
 	const uid = $props.id();
 
@@ -61,7 +74,10 @@ the only signal, so pair it with a `Hint` that says what is wrong, or with
 		controlId: () => controlId ?? uid,
 		disabled: () => disabled,
 		required: () => required,
-		state: () => state
+		state: () => state,
+		labelText: () => label,
+		ariaLabel: () => ariaLabel,
+		ariaLabelledBy: () => ariaLabelledBy
 	});
 </script>
 

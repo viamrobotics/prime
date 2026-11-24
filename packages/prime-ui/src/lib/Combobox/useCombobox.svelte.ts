@@ -1,11 +1,9 @@
 import { getContext, setContext, type Snippet } from 'svelte';
 
 import type { SelectOption } from '../Select/option.ts';
+import type { ComboboxFilter } from './filter.ts';
 
-const key = Symbol('Combobox');
-
-/** Decides whether an option stays in the list for the typed text. */
-export type ComboboxFilter = (option: SelectOption, query: string) => boolean;
+const COMBOBOX_KEY = Symbol('Combobox');
 
 interface ComboboxOptions {
 	items: () => readonly SelectOption[] | undefined;
@@ -15,21 +13,15 @@ interface ComboboxOptions {
 	required: () => boolean;
 }
 
-/** What a `Combobox` shares with the parts inside it. */
 export interface ComboboxContext {
-	/** The root's `items`, every option whatever the typed text. */
-	readonly items: readonly SelectOption[];
-	/** The `items` the root's filter keeps for the current `query`. `Combobox.Items` renders these. */
 	readonly matches: readonly SelectOption[];
-	/** The text typed since the list last opened, `''` while it is closed. */
 	query: string;
-	/** What the input shows: the typed text while the user types, otherwise the selected label. */
+	// The typed text while the user types, otherwise the selected label.
 	readonly text: string;
-	/** The root's `required`, resolved against the enclosing field. */
 	readonly required: boolean;
-	/** The rendered input, which `Combobox.Content` positions against. Set by `Combobox.Input`. */
+	// Set by `Combobox.Input`. `Combobox.Content` positions against it.
 	input: HTMLInputElement | null;
-	/** The message `Combobox.Empty` registers while mounted, which the root announces. */
+	// Registered by `Combobox.Empty` while mounted. The root announces it from its status region.
 	emptyMessage: Snippet | undefined;
 }
 
@@ -47,10 +39,7 @@ export const provideCombobox = (options: ComboboxOptions): ComboboxContext => {
 	let input = $state<HTMLInputElement | null>(null);
 	let emptyMessage = $state.raw<Snippet>();
 
-	return setContext<ComboboxContext>(key, {
-		get items() {
-			return options.items() ?? [];
-		},
+	return setContext<ComboboxContext>(COMBOBOX_KEY, {
 		get matches() {
 			return matches;
 		},
@@ -81,6 +70,5 @@ export const provideCombobox = (options: ComboboxOptions): ComboboxContext => {
 	});
 };
 
-/** The enclosing `Combobox`, or `undefined` when a part is rendered on its own. */
 export const useCombobox = (): ComboboxContext | undefined =>
-	getContext<ComboboxContext | undefined>(key);
+	getContext<ComboboxContext | undefined>(COMBOBOX_KEY);

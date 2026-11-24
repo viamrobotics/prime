@@ -13,7 +13,7 @@ The notification stack: a live region that shows each notification made through 
 ```
 -->
 <script lang="ts">
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 
 	import { normalizeProps, useMachine } from '@zag-js/svelte';
 	import * as toast from '@zag-js/toast';
@@ -21,13 +21,14 @@ The notification stack: a live region that shows each notification made through 
 	import NotifyItem from './NotifyItem.svelte';
 	import { useNotifyStore } from './useNotify.svelte.ts';
 
-	interface Props {
-		/** The region's accessible name, read before its placement. @default 'Notifications' */
+	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'children'> {
+		/** The region's accessible name. Its placement and the Alt+T shortcut that focuses it are read after the name. @default 'Notifications' */
 		label?: string;
+		/** Classes for the region element. */
 		class?: ClassValue;
 	}
 
-	const { label = 'Notifications', class: extraClasses }: Props = $props();
+	const { label = 'Notifications', class: extraClasses, ...restProps }: Props = $props();
 
 	const id = $props.id();
 	const { store } = useNotifyStore();
@@ -36,7 +37,7 @@ The notification stack: a live region that shows each notification made through 
 	const api = $derived(toast.group.connect(service, normalizeProps));
 </script>
 
-<div {...api.getGroupProps({ label })} class={['z-toast', extraClasses]}>
+<div {...restProps} {...api.getGroupProps({ label })} class={['z-toast', extraClasses]}>
 	{#each api.getToasts() as notification, index (notification.id)}
 		<NotifyItem item={notification} {index} parent={service} />
 	{/each}

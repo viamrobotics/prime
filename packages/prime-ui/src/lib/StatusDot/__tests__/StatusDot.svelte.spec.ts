@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import type { ComponentProps } from 'svelte';
+
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import {
@@ -6,7 +8,8 @@ import {
 	borderColor,
 	colorOf,
 	textColor
-} from '../../__tests__/computed-style.ts';
+} from '../../../../test/computed-style.ts';
+import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
 import StatusDot from '../StatusDot.svelte';
 
 const dot = (container: Element) => container.querySelector<HTMLElement>('[role="img"]')!;
@@ -14,6 +17,12 @@ const dot = (container: Element) => container.querySelector<HTMLElement>('[role=
 const TRANSPARENT = 'rgba(0, 0, 0, 0)';
 
 const DOT_SIZE = '8px';
+
+const BRAILLE_GLYPH = /^"[\u2800-\u28FF]"$/;
+
+const glyph = (container: Element) => container.querySelector<HTMLElement>('.progress-dots')!;
+
+afterEach(() => emulateReducedMotion('no-preference'));
 
 describe('StatusDot', () => {
 	it.each([
@@ -69,17 +78,32 @@ describe('StatusDot', () => {
 				props: { state, working: true, label: 'Syncing' }
 			});
 			const dotStyle = getComputedStyle(dot(container));
-			const glyph = container.querySelector<HTMLElement>('.progress-dots')!;
-			const content = getComputedStyle(glyph, '::before').content;
 
-			expect(textColor(glyph)).toBe(colorOf(text, 'color'));
-			expect(content).not.toBe('none');
-			expect(content).not.toBe('""');
+			expect(textColor(glyph(container))).toBe(colorOf(text, 'color'));
+			expect(getComputedStyle(glyph(container), '::before').content).toMatch(BRAILLE_GLYPH);
 			expect(dotStyle.width).toBe(DOT_SIZE);
 			expect(dotStyle.height).toBe(DOT_SIZE);
 			expect(backgroundColor(dot(container))).toBe(TRANSPARENT);
 		}
 	);
+
+	it('animates the working glyph when motion is allowed', () => {
+		const { container } = render(StatusDot, {
+			props: { state: 'info', working: true, label: 'Syncing' }
+		});
+
+		expect(getComputedStyle(glyph(container), '::before').animationName).toBe('progress-dots');
+	});
+
+	it('stops the working glyph under prefers-reduced-motion', async () => {
+		await emulateReducedMotion('reduce');
+
+		const { container } = render(StatusDot, {
+			props: { state: 'info', working: true, label: 'Syncing' }
+		});
+
+		expect(getComputedStyle(glyph(container), '::before').animationName).toBe('none');
+	});
 
 	it('renders no glyph when not working', () => {
 		const { container } = render(StatusDot, { props: { state: 'info', label: 'Status' } });
@@ -92,6 +116,28 @@ describe('StatusDot', () => {
 			props: { state: 'info', label: 'Status', class: 'mine' }
 		});
 
-		expect(dot(container).classList.contains('mine')).toBe(true);
+		expect(dot(container).classList).toContain('mine');
+	});
+
+	it('requires a name by type', () => {
+		// @ts-expect-error a StatusDot requires a name
+		const unnamed: ComponentProps<typeof StatusDot> = {};
+		// @ts-expect-error a StatusDot takes one name, not two
+		const twice: ComponentProps<typeof StatusDot> = { label: 'Online', 'aria-label': 'Online' };
+
+		expect([unnamed, twice]).toHaveLength(2);
+	});
+
+	it('applies aria-label as the name', () => {
+		const { container } = render(StatusDot, { props: { 'aria-label': 'Offline' } });
+
+		expect(dot(container).getAttribute('aria-label')).toBe('Offline');
+	});
+
+	it('passes aria-labelledby through', () => {
+		const { container } = render(StatusDot, { props: { 'aria-labelledby': 'heading' } });
+
+		expect(dot(container).getAttribute('aria-labelledby')).toBe('heading');
+		expect(dot(container).hasAttribute('aria-label')).toBe(false);
 	});
 });

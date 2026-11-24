@@ -1,11 +1,6 @@
-<!--
-@component
-One notification in a [`Notify`](./Notify.svelte) stack: a [`Banner`](../Banner/Banner.svelte) that
-owns the live-region role, the stacking motion, and the bar along the bottom: progress while pending, the countdown after. The region renders it, so a
-consumer never places one.
--->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	import { normalizeProps, useMachine } from '@zag-js/svelte';
 	import * as toast from '@zag-js/toast';
@@ -14,11 +9,9 @@ consumer never places one.
 	import { notifyVariantOf, type NotifyMeta } from './useNotify.svelte.ts';
 
 	interface Props {
-		/** The notification to show, as the stack lists it. */
 		item: toast.Props<string | Snippet>;
-		/** Where the notification sits in the stack, newest first. */
+		// Sets how far down the stack the item sits.
 		index: number;
-		/** The stack machine this notification belongs to. */
 		parent: toast.GroupService;
 	}
 
@@ -33,7 +26,13 @@ consumer never places one.
 	const rootProps = $derived(api.getRootProps());
 	const titleProps = $derived(api.getTitleProps());
 	const descriptionProps = $derived(api.getDescriptionProps());
-	const closeProps = $derived(api.getCloseTriggerProps());
+	// zag's attribute bag, narrowed to what `Banner.Close` takes beside the name it sets here.
+	const closeProps = $derived(
+		api.getCloseTriggerProps() as Omit<
+			HTMLButtonAttributes,
+			'id' | 'aria-label' | 'aria-labelledby' | 'children'
+		> & { id?: string | null }
+	);
 
 	const variant = $derived(notifyVariantOf(api.type));
 	const description = $derived(item.description);
@@ -64,7 +63,7 @@ consumer never places one.
 	id={rootProps.id ?? undefined}
 	role={undefined}
 	{variant}
-	class="z-[var(--z-index)] w-96 [translate:var(--x)_var(--y)] [scale:var(--scale)] opacity-[var(--opacity)] transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale]"
+	class="toast-stack-item w-96 focus-ring"
 >
 	<Banner.Title {...titleProps} id={titleProps.id ?? undefined}>{item.title}</Banner.Title>
 	{#if description !== undefined}

@@ -2,6 +2,7 @@ import { tick } from 'svelte';
 
 import type { DragPoint, TabsDragContext } from './useTabsDrag.svelte.ts';
 
+import { interactiveDescendantAt } from '../interactive-descendant.ts';
 import { labelOf } from './useTabsReorder.svelte.ts';
 
 const DRAG_START_THRESHOLD_PX = 4;
@@ -9,19 +10,12 @@ const HOLD_TO_DRAG_MS = 250;
 const EDGE_SCROLL_ZONE_PX = 24;
 const EDGE_SCROLL_STEP_PX = 6;
 
-const NESTED_CONTROLS = 'button, a, input, select, textarea, [contenteditable], [role="button"]';
-
-// `canceled` is an Escape that ended the drag while the pointer is still down.
+// `canceled` is an Escape that ended the press while the pointer is still down.
 type Stage = 'held' | 'armed' | 'dragging' | 'canceled';
 
 const pointOf = ({ clientX, clientY }: PointerEvent): DragPoint => ({ x: clientX, y: clientY });
 
 const veto = (event: Event) => event.preventDefault();
-
-const startsOnNestedControl = (event: PointerEvent, trigger: HTMLElement) => {
-	const control = event.target instanceof Element ? event.target.closest(NESTED_CONTROLS) : null;
-	return control !== null && control !== trigger && trigger.contains(control);
-};
 
 const visibleLabelOf = (trigger: HTMLElement) =>
 	trigger.querySelector('[data-tab-label]')?.textContent?.trim() || labelOf(trigger);
@@ -206,9 +200,11 @@ export function watchTabDrag(
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key !== 'Escape') return;
-		// Consumed here so an enclosing dialog does not close along with the drag.
-		event.preventDefault();
-		event.stopPropagation();
+		// Consumed only mid-drag, so an enclosing dialog does not close along with the drag.
+		if (stage === 'dragging') {
+			event.preventDefault();
+			event.stopPropagation();
+		}
 		clearTimeout(holdTimer);
 		cancelDrag();
 		stage = 'canceled';
@@ -234,7 +230,8 @@ export function watchTabDrag(
 
 	function handlePointerdown(event: PointerEvent) {
 		if (event.button !== 0 || !event.isPrimary || stage !== undefined) return;
-		if (drag.lifted !== undefined || startsOnNestedControl(event, trigger)) return;
+		if (drag.lifted !== undefined || interactiveDescendantAt(event.target, trigger) !== null)
+			return;
 
 		stopFollowing = followPress();
 		pointerId = event.pointerId;
@@ -261,13 +258,7 @@ export function watchTabDrag(
 
 	return () => {
 		listeners.abort();
+		abandonPress();
 		clicks.stop();
-		clearTimeout(holdTimer);
-		edgeScroller.stop();
-		stopFollowing?.();
-		stopFollowing = undefined;
-		if (drag.lifted === value) drag.cancel();
-		focus.restore();
-		stage = undefined;
 	};
 }

@@ -21,8 +21,8 @@
 {#if hasHeader}
 	<Panes.DragTrigger>
 		<header data-header={label} class="absolute top-8 left-0 z-10 bg-light p-1">
-			<span data-header-text={label}>{label}</span>
-			<button type="button" data-control="button">Hold</button>
+			<span>{label}</span>
+			<button type="button">Hold</button>
 		</header>
 	</Panes.DragTrigger>
 {/if}

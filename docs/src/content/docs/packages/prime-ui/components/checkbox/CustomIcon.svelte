@@ -5,7 +5,7 @@
   let checked = $state(true);
 </script>
 
-<Field class="not-content flex items-center gap-2">
+<Field label="Larger, round, and blue when checked" class="not-content flex items-center gap-2">
   <Checkbox bind:checked>
     {#snippet children({ checked })}
       <Icon
@@ -15,5 +15,5 @@
       />
     {/snippet}
   </Checkbox>
-  <Label>Larger, round, and blue when checked</Label>
+  <Label />
 </Field>

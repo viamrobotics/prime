@@ -28,7 +28,7 @@ The wrapper holds both the toggle button and the panel, so a press on the button
 
 ### With a popover
 
-A `Popover` or `Menu` renders its content in a portal, outside the panel's DOM subtree. Content that the element's trigger links through `aria-controls` counts as inside, so a press in the popover does not close the panel.
+A `Popover` or `Menu` renders its content in a portal, outside the panel's DOM subtree. Open, non-modal content that a trigger inside the element links through `aria-controls` counts as inside, so a press in the popover does not close the panel. A `Dialog` is modal, so a press in it counts as outside.
 
 <Example code={withPopoverSource} title="WithPopover.svelte">
   <WithPopover client:visible />

@@ -9,8 +9,8 @@ and a `name` submits one hidden input per value. Inside a [`Field`](../Field/Fie
 Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select) with `type="multiple"`.
 
 ```svelte
-<Field class="flex flex-col gap-1">
-	<Label>Toppings</Label>
+<Field label="Toppings" class="flex flex-col gap-1">
+	<Label />
 	<MultiSelect bind:value items={toppings}>
 		<MultiSelect.Trigger>
 			<MultiSelect.Value placeholder="Pick toppings" />
@@ -38,8 +38,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select) with `ty
 		/**
 		 * The options, and the single source of truth for the select.
 		 * [`Select.Items`](./SelectItems.svelte) renders one option per entry. The closed trigger
-		 * shows the selected entries' labels. Typing while the list is closed toggles the matching
-		 * entry without opening it.
+		 * shows the selected entries' labels. Typeahead runs only while the list is open.
 		 */
 		items?: SelectOption[];
 
@@ -63,6 +62,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select) with `ty
 
 	const field = useField();
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
+	const isRequired = $derived(required ?? field?.required ?? false);
 
 	provideSelect({ items: () => items });
 </script>
@@ -72,7 +72,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select) with `ty
 	{items}
 	{name}
 	disabled={isDisabled}
-	required={required ?? field?.required ?? false}
+	required={isRequired}
 	type="multiple"
 >
 	{@render children?.()}

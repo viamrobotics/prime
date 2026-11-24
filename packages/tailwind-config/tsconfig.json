@@ -18,6 +18,11 @@
     "strict": true,
     "noUncheckedSideEffectImports": false
   },
-  "include": ["vitest.config.ts", "fonts.js", "tests/**/*.ts"],
+  "include": [
+    "vitest.config.ts",
+    "fonts.js",
+    "theme-color.js",
+    "__tests__/**/*.ts"
+  ],
   "exclude": ["node_modules/**"]
 }

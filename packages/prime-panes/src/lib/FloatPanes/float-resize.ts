@@ -45,11 +45,7 @@ function resizeSpan(
 	return { origin, length };
 }
 
-/**
- * The rect of a window resized from `axis`, starting from `start`. Only the edges the axis names
- * move. The opposite edges stay where they were, including once `size` reaches `minimum`, and no
- * edge leaves `box`. The size is rounded to whole pixels.
- */
+// The opposite edges stay where they were, including once `size` reaches `minimum`. The size is rounded to whole pixels.
 export function resizeFloatRect(
 	start: FloatRect,
 	axis: ResizeAxis,

@@ -1,20 +1,24 @@
+<!--
+@component
+The visible series as a `<table>`, with a Time column and one column per series, labeled like the legend. Rows merge the series on x inside the x window, and a series with no value at a row's x leaves an empty cell. Place it inside `Chart`, outside [`Chart.Plot`](./Plot.svelte).
+-->
 <script lang="ts">
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 	import { assertOutsidePlot, useChart } from './context.svelte.ts';
 	import { defaultTimeFormat, defaultValueFormat, seriesLabel } from './formats.ts';
 	import { mergeSeriesRows } from './table.ts';
 
-	interface Props {
-		/** Names the table. Defaults to the chart's accessible name. */
+	interface Props extends HTMLAttributes<HTMLDivElement> {
+		/** Names the table as its `<caption>`. Empty or left out, it falls back to the chart's `aria-label`, else the chart's `aria-labelledby` names the table and no caption renders. */
 		caption?: string;
 		/** Lands on a wrapper around the `<table>`. Pass `sr-only` to keep the table for screen readers only. */
 		class?: ClassValue;
 	}
 
-	let { caption, class: className }: Props = $props();
+	let { caption, class: className, ...rest }: Props = $props();
 
 	assertOutsidePlot('Chart.Table');
-	const chart = useChart();
+	const chart = useChart('Chart.Table');
 
 	const name = $derived(caption || chart.settings.accessibleName['aria-label']);
 	const labelledBy = $derived(name ? undefined : chart.settings.accessibleName['aria-labelledby']);
@@ -23,17 +27,19 @@
 	const formatValue = $derived(chart.axisFormats.y ?? defaultValueFormat);
 </script>
 
+{#snippet columnHeader(label: string)}
+	<th scope="col" class="px-2 py-1 text-left text-xs font-medium text-default">{label}</th>
+{/snippet}
+
 <!-- A table treats width and height as minimums, so `sr-only` on the table itself keeps its full box. The wrapper clips it. -->
-<div class={className}>
+<div {...rest} class={className}>
 	<table data-part="table" aria-labelledby={labelledBy}>
 		{#if name}<caption class="text-xs text-default">{name}</caption>{/if}
 		<thead>
 			<tr>
-				<th scope="col" class="px-2 py-1 text-left text-xs font-medium text-default">Time</th>
+				{@render columnHeader('Time')}
 				{#each chart.visibleSeries as series (series)}
-					<th scope="col" class="px-2 py-1 text-left text-xs font-medium text-default"
-						>{seriesLabel(series)}</th
-					>
+					{@render columnHeader(seriesLabel(series))}
 				{/each}
 			</tr>
 		</thead>

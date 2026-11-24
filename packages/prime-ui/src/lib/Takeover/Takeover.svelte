@@ -10,7 +10,7 @@ Built on [bits-ui `Dialog`](https://bits-ui.com/docs/components/dialog).
 	<Takeover.Content>
 		<Takeover.Header>
 			<Takeover.Title>Settings</Takeover.Title>
-			<Takeover.Close />
+			<Takeover.Close aria-label="Close" />
 		</Takeover.Header>
 		<p>Body</p>
 	</Takeover.Content>
@@ -20,7 +20,7 @@ Built on [bits-ui `Dialog`](https://bits-ui.com/docs/components/dialog).
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	import { Dialog } from 'bits-ui';
+	import DialogRoot from '../Dialog/Dialog.svelte';
 
 	interface Props {
 		/** Whether the sheet is open. Two-way bindable. */
@@ -33,6 +33,6 @@ Built on [bits-ui `Dialog`](https://bits-ui.com/docs/components/dialog).
 	let { open = $bindable(), children }: Props = $props();
 </script>
 
-<Dialog.Root bind:open={() => open ?? false, (next) => (open = next)}>
+<DialogRoot bind:open>
 	{@render children?.()}
-</Dialog.Root>
+</DialogRoot>

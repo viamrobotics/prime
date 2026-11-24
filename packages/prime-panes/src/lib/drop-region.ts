@@ -4,7 +4,7 @@ export type DropRegion = 'left' | 'right' | 'top' | 'bottom' | 'center' | 'stack
 export type DropRect = Pick<DOMRectReadOnly, 'left' | 'top' | 'width' | 'height'>;
 export type EdgeRegion = Exclude<DropRegion, 'center' | 'stack'>;
 
-export interface Placement {
+interface Placement {
 	direction: SplitDirection;
 	key: SplitKey;
 }
@@ -16,8 +16,9 @@ const PLACEMENTS = {
 	bottom: { direction: 'column', key: 'second' }
 } as const;
 
-const CENTER_HALF_EXTENT = 0.4;
-const PANE_CENTER_FRACTION = 0.5;
+const CENTER_FRACTION = 0.5;
+// How far from a rect's center, as a fraction of its width or height, a point still reads as center.
+const CENTER_ZONE_REACH = 0.2;
 
 export function placementFor(region: EdgeRegion): Placement {
 	return PLACEMENTS[region];
@@ -32,6 +33,18 @@ function containsPoint(rect: DropRect, clientX: number, clientY: number) {
 	);
 }
 
+function centerOf(rect: DropRect): [number, number] {
+	return [rect.left + rect.width * CENTER_FRACTION, rect.top + rect.height * CENTER_FRACTION];
+}
+
+// Each offset runs from -0.5 at the left or top edge to 0.5 at the right or bottom edge.
+function offsetFromCenter(clientX: number, clientY: number, rect: DropRect): [number, number] {
+	return [
+		(clientX - rect.left) / rect.width - CENTER_FRACTION,
+		(clientY - rect.top) / rect.height - CENTER_FRACTION
+	];
+}
+
 function clampInto(rect: DropRect, clientX: number, clientY: number): [number, number] {
 	return [
 		Math.min(Math.max(clientX, rect.left), rect.left + rect.width),
@@ -39,19 +52,23 @@ function clampInto(rect: DropRect, clientX: number, clientY: number): [number, n
 	];
 }
 
+// A tie between the axes reads vertical, and a vertical tie reads top.
+function dominantEdge(offsetX: number, offsetY: number): EdgeRegion {
+	if (Math.abs(offsetX) > Math.abs(offsetY)) return offsetX < 0 ? 'left' : 'right';
+	return offsetY > 0 ? 'bottom' : 'top';
+}
+
 export function getDropRegion(
 	clientX: number,
 	clientY: number,
 	rect: DropRect
 ): EdgeRegion | 'center' {
-	const x = ((clientX - rect.left) / rect.width - 0.5) * 2;
-	const y = -((clientY - rect.top) / rect.height - 0.5) * 2;
-	const absX = Math.abs(x);
-	const absY = Math.abs(y);
+	const [offsetX, offsetY] = offsetFromCenter(clientX, clientY, rect);
+	const absX = Math.abs(offsetX);
+	const absY = Math.abs(offsetY);
 
-	if (absX < CENTER_HALF_EXTENT && absY < CENTER_HALF_EXTENT) return 'center';
-	if (absX > absY) return x < 0 ? 'left' : 'right';
-	return y < 0 ? 'bottom' : 'top';
+	if (absX < CENTER_ZONE_REACH && absY < CENTER_ZONE_REACH) return 'center';
+	return dominantEdge(offsetX, offsetY);
 }
 
 // A point outside `bodyRect` reads as the nearest point on its border.
@@ -86,20 +103,16 @@ export function getDragRegion(
 }
 
 export function nearestEdge(clientX: number, clientY: number, paneRect: DropRect): EdgeRegion {
-	const offsetX = (clientX - paneRect.left) / paneRect.width - PANE_CENTER_FRACTION;
-	const offsetY = (clientY - paneRect.top) / paneRect.height - PANE_CENTER_FRACTION;
-	if (Math.abs(offsetX) > Math.abs(offsetY)) return offsetX < 0 ? 'left' : 'right';
-	return offsetY < 0 ? 'top' : 'bottom';
+	const [offsetX, offsetY] = offsetFromCenter(clientX, clientY, paneRect);
+	return dominantEdge(offsetX, offsetY);
 }
 
 export function stackSideOf(stackRect: DropRect, bodyRect: DropRect): EdgeRegion {
-	const centerX = stackRect.left + stackRect.width / 2;
-	const centerY = stackRect.top + stackRect.height / 2;
-	const region = getDropRegion(...clampInto(bodyRect, centerX, centerY), bodyRect);
+	const region = getDropRegion(...clampInto(bodyRect, ...centerOf(stackRect)), bodyRect);
 	return region === 'center' ? 'top' : region;
 }
 
 // Pass the tabs' layout rects, without the transforms of a running animation.
 export function insertionIndexAt(clientX: number, tabRects: readonly DropRect[]): number {
-	return tabRects.filter((rect) => rect.left + rect.width / 2 < clientX).length;
+	return tabRects.filter((rect) => centerOf(rect)[0] < clientX).length;
 }

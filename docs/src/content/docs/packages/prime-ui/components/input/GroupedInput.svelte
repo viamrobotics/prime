@@ -9,6 +9,6 @@
 </script>
 
 <Input.Group class="w-64">
-  <Input {state} {...rest} />
+  <Input aria-label="Email" {state} {...rest} />
   <Field.StateIcon {state} />
 </Input.Group>

@@ -36,7 +36,7 @@ The floating panel of a [`Combobox`](./Combobox.svelte), portaled to the body. R
 		portal?: PortalTarget;
 	}
 
-	// `side`, `align`, `sideOffset`, and `alignOffset` keep Floating UI's placement terms.
+	// `side`, `align`, `sideOffset`, and `alignOffset` are bits-ui's anchor-placement names, shared with Floating UI. No native name exists to prefer.
 	const {
 		class: extraClasses,
 		children,

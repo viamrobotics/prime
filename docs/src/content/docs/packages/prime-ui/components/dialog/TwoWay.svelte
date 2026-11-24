@@ -10,7 +10,7 @@
     <Dialog.Content class="w-full max-w-md">
       <div class="flex items-start justify-between gap-4">
         <Dialog.Title>Notifications</Dialog.Title>
-        <Dialog.Close />
+        <Dialog.Close aria-label="Close" />
       </div>
       <Dialog.Description class="mt-1">You will get an email when a machine goes offline.</Dialog.Description>
     </Dialog.Content>

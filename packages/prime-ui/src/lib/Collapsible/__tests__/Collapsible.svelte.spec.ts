@@ -2,11 +2,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
-import BoundCollapsible from './BoundCollapsible.svelte';
-import ControlledCollapsible from './ControlledCollapsible.svelte';
-import IndicatorCollapsible from './IndicatorCollapsible.svelte';
-import UndefinedCollapsible from './UndefinedCollapsible.svelte';
+import '../../../../test/tailwind.css';
+import BoundCollapsible from './fixtures/BoundCollapsible.svelte';
+import ClassCollapsible from './fixtures/ClassCollapsible.svelte';
+import ControlledCollapsible from './fixtures/ControlledCollapsible.svelte';
+import IndicatorCollapsible from './fixtures/IndicatorCollapsible.svelte';
+import UndefinedCollapsible from './fixtures/UndefinedCollapsible.svelte';
 
 const trigger = (container: Element) =>
 	container.querySelector<HTMLButtonElement>('[aria-expanded]')!;
@@ -91,11 +92,30 @@ describe('Collapsible', () => {
 
 	it('turns the default chevron when open', async () => {
 		const { container } = render(BoundCollapsible);
-		const closed = getComputedStyle(chevron(container)).rotate;
+		expect(getComputedStyle(chevron(container)).rotate).toBe('none');
 
 		await userEvent.click(trigger(container));
 
-		await vi.waitFor(() => expect(getComputedStyle(chevron(container)).rotate).not.toBe(closed));
+		await vi.waitFor(() => expect(getComputedStyle(chevron(container)).rotate).toBe('180deg'));
+	});
+
+	it('fills the width of the root with the trigger', () => {
+		const { container } = render(BoundCollapsible);
+
+		const root = trigger(container).parentElement!;
+		expect(trigger(container).getBoundingClientRect().width).toBe(
+			root.getBoundingClientRect().width
+		);
+	});
+
+	it.each([
+		{ part: 'root', find: (container: Element) => container.firstElementChild! },
+		{ part: 'trigger', find: (container: Element) => trigger(container) },
+		{ part: 'content', find: () => region()!.parentElement! }
+	])('lands class on the $part', ({ find }) => {
+		const { container } = render(ClassCollapsible);
+
+		expect(getComputedStyle(find(container)).paddingTop).toBe('16px');
 	});
 
 	it('renders a custom indicator in place of the chevron with the live open state', async () => {

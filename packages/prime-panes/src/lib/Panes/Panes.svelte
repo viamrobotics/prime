@@ -88,16 +88,16 @@ The root has no default size, display, or styling. Size it with a `class`, or it
 	}: Props = $props();
 
 	const idPrefix = $props.id();
-	const context = providePanes<TData>(
+	const context = providePanes<TData>({
 		idPrefix,
-		{ get: () => layout, set: (next) => (layout = next) },
-		() => pane,
-		() => reorderable,
-		() => paneLabel,
-		() => keepInactiveMounted,
-		() => empty,
-		() => floatMinSize
-	);
+		layout: { get: () => layout, set: (next) => (layout = next) },
+		pane: () => pane,
+		reorderable: () => reorderable,
+		paneLabel: () => paneLabel,
+		keepInactiveMounted: () => keepInactiveMounted,
+		empty: () => empty,
+		floatMinSize: () => floatMinSize
+	});
 
 	let isPressingInside = false;
 
@@ -115,12 +115,12 @@ The root has no default size, display, or styling. Size it with a `class`, or it
 		if (isInSameRoot(event.target, event.currentTarget)) isPressingInside = true;
 	}
 
-	// Safari and Firefox on macOS leave focus on nothing when a button is pressed, which is not leaving the view.
 	function handleFocusOut(event: FocusEvent & { currentTarget: HTMLDivElement }) {
 		onfocusout?.(event);
 		if (!isInSameRoot(event.target, event.currentTarget)) return;
 		const next = event.relatedTarget;
 		if (next instanceof Node && isInSameRoot(next, event.currentTarget)) return;
+		// Safari and Firefox on macOS leave focus on nothing when a button is pressed, which is not leaving the view.
 		if (next === null && isPressingInside) return;
 		if (next !== null || !(event.target instanceof Node)) {
 			context.abandonMove();

@@ -8,7 +8,7 @@
     <Breadcrumbs.Separator />
     <Breadcrumbs.Item>
       <Menu>
-        <Menu.Trigger class="focus-ring rounded-sm">
+        <Menu.Trigger class="rounded-sm">
           <Breadcrumbs.Ellipsis />
         </Menu.Trigger>
         <Menu.Content>

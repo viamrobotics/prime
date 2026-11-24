@@ -1,12 +1,17 @@
 import { mdiAlert, mdiAlertCircle, mdiCheckCircle, mdiInformation } from '@mdi/js';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
-import ToastHost from './ToastHost.svelte';
+import '../../../../test/tailwind.css';
+import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
+import { allowTransitions, blockTransitions } from '../../../../test/transitions.ts';
+import Toast from '../Toast.svelte';
+import ToastHost from './fixtures/ToastHost.svelte';
 
 const HOLD_OPEN = 60_000;
+const SHORT_DURATION = 600;
+const PAST_SHORT_DURATION = 1200;
 const REMOVAL_TIMEOUT = 3000;
 const TOAST_WIDTH_PX = 320;
 
@@ -23,7 +28,50 @@ const waitForItem = async () => {
 const waitForNoItems = () =>
 	vi.waitFor(() => expect(items()).toHaveLength(0), { timeout: REMOVAL_TIMEOUT });
 
+afterEach(async () => {
+	blockTransitions();
+	await emulateReducedMotion('no-preference');
+});
+
 describe('Toast', () => {
+	it('passes extra attributes to the region', () => {
+		render(ToastHost);
+
+		expect(region().getAttribute('data-testid')).toBe('region');
+		expect(region().getAttribute('id')).toMatch(/^toast-group:/);
+	});
+
+	it.each([
+		{ variant: 'info', name: 'Info' },
+		{ variant: 'success', name: 'Success' },
+		{ variant: 'warning', name: 'Warning' },
+		{ variant: 'danger', name: 'Error' }
+	])('names the $variant tone as $name in text', async ({ variant, name }) => {
+		const { container } = render(ToastHost, { duration: HOLD_OPEN });
+
+		await userEvent.click(trigger(container, variant));
+
+		const item = await waitForItem();
+		expect(item.querySelector('.sr-only')?.textContent).toBe(`${name}: `);
+	});
+
+	it.each([
+		{ preference: 'no-preference', property: 'translate, scale, opacity' },
+		{ preference: 'reduce', property: 'opacity' }
+	] as const)(
+		'transitions $property under prefers-reduced-motion: $preference',
+		async ({ preference, property }) => {
+			allowTransitions();
+			await emulateReducedMotion(preference);
+			const { container } = render(ToastHost, { duration: HOLD_OPEN });
+			await userEvent.click(trigger(container, 'info'));
+
+			const item = await waitForItem();
+
+			expect(getComputedStyle(item).transitionProperty).toBe(property);
+		}
+	);
+
 	it('labels the region', () => {
 		render(ToastHost);
 
@@ -91,12 +139,12 @@ describe('Toast', () => {
 	});
 
 	it('holds its timer while the region is hovered and releases it on leave', async () => {
-		const { container } = render(ToastHost, { duration: 600 });
+		const { container } = render(ToastHost, { duration: SHORT_DURATION });
 		await userEvent.click(trigger(container, 'info'));
 		const item = await waitForItem();
 
 		await userEvent.hover(item);
-		await new Promise((resolve) => setTimeout(resolve, 1200));
+		await new Promise((resolve) => setTimeout(resolve, PAST_SHORT_DURATION));
 
 		expect(items()).toHaveLength(1);
 		expect(item.getAttribute('data-state')).toBe('open');
@@ -104,6 +152,50 @@ describe('Toast', () => {
 		await userEvent.unhover(item);
 
 		await waitForNoItems();
+	});
+
+	it('holds its timer while a toast has focus and releases it on blur', async () => {
+		const { container } = render(ToastHost, { duration: SHORT_DURATION });
+		await userEvent.click(trigger(container, 'info'));
+		const item = await waitForItem();
+
+		item.focus();
+		await new Promise((resolve) => setTimeout(resolve, PAST_SHORT_DURATION));
+
+		expect(item.getAttribute('data-state'), 'focused past its duration').toBe('open');
+
+		item.blur();
+
+		await waitForNoItems();
+	});
+
+	it('wears the focus ring on each toast', async () => {
+		const { container } = render(ToastHost, { duration: HOLD_OPEN });
+
+		await userEvent.click(trigger(container, 'info'));
+
+		const item = await waitForItem();
+		item.focus();
+		await userEvent.keyboard('{Shift}');
+
+		expect(document.activeElement).toBe(item);
+		const style = getComputedStyle(item);
+		expect(style.outlineStyle, 'the focused toast draws an outline').toBe('solid');
+		expect(style.outlineWidth).toBe('2px');
+	});
+
+	it('keeps the fields an update leaves out', async () => {
+		const { container } = render(ToastHost, { duration: HOLD_OPEN });
+
+		await userEvent.click(trigger(container, 'update'));
+
+		const item = await waitForItem();
+		expect(item.querySelector('[data-part="title"]')?.textContent).toBe('Uploaded');
+		expect(item.querySelector('[data-part="description"]')?.textContent?.trim()).toBe('report.csv');
+	});
+
+	it('throws when rendered outside provideToast', () => {
+		expect(() => render(Toast)).toThrow('useToast() needs a provideToast() above it');
 	});
 
 	it('shows the description', async () => {

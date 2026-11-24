@@ -9,6 +9,7 @@ import StackPanes from '../../../../test/fixtures/StackPanes.svelte';
 
 const DRAG_PX = 40;
 const THRESHOLD_PX = 4.1;
+const SUB_THRESHOLD_PX = 3;
 const HOLD_TO_DRAG_MS = 250;
 const MOUSE_POINTER_ID = 1;
 const PRESS_X_PX = 10;
@@ -66,7 +67,10 @@ describe('pointer drag start threshold', () => {
 		render(PanePartsPanes, { props: { variant: 'drag-only' } });
 
 		await pressAt(cameraHeader(), PRESS_X_PX);
-		await commands.mouseMove(cameraHeader().selector, { x: PRESS_X_PX + 3, y: PRESS_Y_PX });
+		await commands.mouseMove(cameraHeader().selector, {
+			x: PRESS_X_PX + SUB_THRESHOLD_PX,
+			y: PRESS_Y_PX
+		});
 		await commands.mouseUp();
 
 		await expect.element(page.getByDraggingPanes()).not.toBeInTheDocument();
@@ -219,7 +223,7 @@ describe('pointer drag press rules', () => {
 		docsLink().element().dispatchEvent(dragstart);
 		await commands.mouseUp();
 
-		expect(dragstart.defaultPrevented).toBe(true);
+		expect(dragstart.defaultPrevented, 'dragstart is vetoed during a press').toBe(true);
 	});
 
 	it('leaves the browser drag of a link alone once the press ends', async () => {
@@ -231,7 +235,7 @@ describe('pointer drag press rules', () => {
 		await commands.mouseUp();
 		docsLink().element().dispatchEvent(dragstart);
 
-		expect(dragstart.defaultPrevented).toBe(false);
+		expect(dragstart.defaultPrevented, 'dragstart is left alone after a press').toBe(false);
 	});
 });
 

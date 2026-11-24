@@ -6,8 +6,8 @@ A select. Render `Select.Trigger`, `Select.Content`, `Select.Viewport`, and `Sel
 Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 
 ```svelte
-<Field class="flex flex-col gap-1">
-	<Label>Size</Label>
+<Field label="Size" class="flex flex-col gap-1">
+	<Label />
 	<Select bind:value items={sizes}>
 		<Select.Trigger>
 			<Select.Value placeholder="Pick a size" />
@@ -52,6 +52,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 		/** Make selection required. Defaults to the enclosing field's `required`. */
 		required?: boolean;
 
+		// `allowDeselect` is bits-ui's name. No native or standard name exists to prefer.
 		/** Allow clicking the selected item again to clear it. @default false */
 		allowDeselect?: boolean;
 
@@ -71,6 +72,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 
 	const field = useField();
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
+	const isRequired = $derived(required ?? field?.required ?? false);
 
 	provideSelect({ items: () => items });
 </script>
@@ -81,7 +83,7 @@ Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select).
 	{name}
 	{allowDeselect}
 	disabled={isDisabled}
-	required={required ?? field?.required ?? false}
+	required={isRequired}
 	type="single"
 >
 	{@render children?.()}

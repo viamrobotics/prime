@@ -20,7 +20,7 @@
       <Popover.Content aria-label="Close button details">
         <div class="flex items-start gap-4">
           <p class="text-sm">Panel content.</p>
-          <Popover.Close />
+          <Popover.Close aria-label="Close" />
         </div>
       </Popover.Content>
     </Popover>

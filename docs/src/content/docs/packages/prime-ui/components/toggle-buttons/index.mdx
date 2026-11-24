@@ -26,9 +26,10 @@ import inFieldSource from "./InField.svelte?raw";
 
 - One `value` for the whole group, bindable. Options come from `items`, or from `ToggleButtons.Item` children.
 - One option is always selected: clicking the selected option does not clear it.
-- Takes `state`, `disabled`, and its labelling from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` on the group.
-- Arrow keys move focus between options without selecting. <kbd>Enter</kbd> or <kbd>Space</kbd> selects.
-- Each option is a `role="radio"` button inside a `role="group"`, and the selected one carries `data-state="on"`.
+- Takes `state`, `disabled`, and its labeling from an enclosing [`Field`](../field/), or directly. `error` sets `aria-invalid="true"` on the group and draws every option's border `danger-dark`.
+- Tab lands on the selected option. Arrow keys move focus between options without selecting. <kbd>Enter</kbd> or <kbd>Space</kbd> selects.
+- Each option is a `role="radio"` button inside a `role="radiogroup"`, and the selected one carries `data-state="on"`.
+- In a disabled group every option reads disabled, and the selected one keeps a darker fill so it stays distinguishable.
 
 ## Anatomy
 
@@ -55,7 +56,7 @@ Pass `items` for the common case, or compose the options yourself with `ToggleBu
 
 ### Composed options
 
-`ToggleButtons.Item` children hold any content, such as an icon beside the text. Give an icon-only option an `aria-label`.
+`ToggleButtons.Item` children hold any content, such as an icon beside the text. An option with an icon and no text needs an `aria-label` of its own.
 
 <Example code={composedSource} title="Composed.svelte">
   <Composed client:visible />
@@ -83,11 +84,11 @@ Inside a [`Field`](../field/), the group takes its `id`, `disabled`, `state`, an
 
 ## Styling
 
-`class` on `ToggleButtons` lands on the group `<div>`, which is `inline-flex`. `class` on `ToggleButtons.Item` lands on the item button, which wears `button`. bits-ui sets these data attributes for Tailwind variants.
+`class` on `ToggleButtons` lands on the group `<div>`, which is `inline-flex` and carries the `group` class, so an option can style itself with `group-aria-invalid:`. `class` on `ToggleButtons.Item` lands on the item button. bits-ui sets these data attributes for Tailwind variants.
 
 | Element | Attribute       | Value                          |
 | ------- | --------------- | ------------------------------ |
-| group   | `aria-invalid`  | `true` when `state` is `error` |
+| group   | `aria-invalid`  | `true` when `state` is `error`, which turns every option's border `danger-dark` |
 | group   | `data-disabled` | present when disabled          |
 | item    | `data-state`    | `on` or `off`                  |
 | item    | `data-value`    | the item's `value`             |
@@ -95,13 +96,13 @@ Inside a [`Field`](../field/), the group takes its `id`, `disabled`, `state`, an
 
 ## Keyboard
 
-Arrow keys move focus only. Selecting is a separate key press.
+Arrow keys move focus only, and the Tab stop stays on the selected option. Selecting is a separate key press.
 
 <KeyboardTable
   bindings={[
-    { keys: "Tab", action: "Focuses the selected option, or the first." },
-    { keys: "ArrowRight / ArrowDown", action: "Moves focus to the next option, wrapping around." },
-    { keys: "ArrowLeft / ArrowUp", action: "Moves focus to the previous option, wrapping." },
+    { keys: "Tab", action: "Focuses the selected option, or the first when none is selected. Only that option is a Tab stop." },
+    { keys: "ArrowRight", action: "Moves focus to the next option, wrapping around." },
+    { keys: "ArrowLeft", action: "Moves focus to the previous option, wrapping." },
     { keys: "Home / End", action: "Moves focus to the first or last option." },
     { keys: "Enter / Space", action: "Selects the focused option." },
   ]}

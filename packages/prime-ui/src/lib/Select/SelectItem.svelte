@@ -18,10 +18,9 @@ Pass a children snippet to render custom content:
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	import { mdiCheck } from '@mdi/js';
 	import { Select } from 'bits-ui';
 
-	import Icon from '../Icon/Icon.svelte';
+	import ListboxItemBody from './ListboxItemBody.svelte';
 
 	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		/** Element id. `null` is not accepted. */
@@ -50,23 +49,15 @@ Pass a children snippet to render custom content:
 	}: Props = $props();
 </script>
 
-{#snippet entry({ selected }: { selected: boolean })}
-	<span class="truncate">{label ?? value}</span>
-	{#if selected}
-		<Icon icon={mdiCheck} size="sm" class="shrink-0 text-default" />
-	{/if}
-{/snippet}
-
 <Select.Item
 	{value}
 	{label}
 	{disabled}
 	aria-disabled={disabled || undefined}
-	class={['listbox-option', extraClasses]}
+	class={['listbox-option justify-between', extraClasses]}
 	{...restProps}
 >
 	{#snippet children({ selected, highlighted })}
-		{@const item = content ?? entry}
-		{@render item({ selected, highlighted })}
+		<ListboxItemBody {value} {label} {selected} {highlighted} {content} />
 	{/snippet}
 </Select.Item>

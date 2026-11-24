@@ -1,6 +1,6 @@
 <!--
 @component
-Toggles move mode, the way to rearrange a pane without dragging. Activate it with a click, Enter, or Space, then choose a destination with the pointer or the arrow keys. Dragging alone fails WCAG 2.5.7 (Dragging Movements), so every pane that has a [`Panes.DragTrigger`](./DragTrigger.svelte) needs one. It does nothing when `reorderable` is `false`.
+Toggles move mode, the way to rearrange a pane without dragging. Activate it with a click, Enter, or Space, then choose a destination with the pointer or the arrow keys. Dragging alone fails WCAG 2.5.7 (Dragging Movements), so every pane that has a [`Panes.DragTrigger`](./DragTrigger.svelte) needs one. It does nothing when `reorderable` is `false`. It requires a name, `aria-label` or `aria-labelledby`, and passes it to the default button and in `props` to `child`.
 
 By default it renders a `<button type="button">` around `children`, takes button attributes, and sets `aria-pressed`. The optional `child` snippet renders your own element instead. It receives `{ props }`, which you spread on that element.
 
@@ -13,7 +13,7 @@ By default it renders a `<button type="button">` around `children`, takes button
 When move mode ends, focus returns to the trigger. If the trigger has unmounted, as with a closed menu, focus goes to the pane itself, which shows a focus outline.
 
 ```svelte
-<Panes.MoveTrigger>
+<Panes.MoveTrigger aria-label="Move pane">
 	{#snippet child({ props })}
 		<DropdownMenu.Item role="menuitem" {...props}>Move pane</DropdownMenu.Item>
 	{/snippet}
@@ -27,6 +27,7 @@ When move mode ends, focus returns to the trigger. If the trigger has unmounted,
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import { on } from 'svelte/events';
 
+	import type { AccessibleName } from './accessible-name.ts';
 	import { markAsGrip } from './classify-press.ts';
 	import { usePane } from './usePanes.svelte.ts';
 	import type { DragSource } from './usePanes.svelte.ts';
@@ -35,6 +36,7 @@ When move mode ends, focus returns to the trigger. If the trigger has unmounted,
 		/** The default button's content. */
 		children?: Snippet;
 
+		// `child` is the render-delegation snippet name that headless libraries such as bits-ui use. It stays because no web standard names one.
 		/**
 		 * Replaces the default button with your own element, such as a menu item. Spread `props` on it.
 		 * Use a `button`, an element with `role="button"`, or a menu item whose menu dispatches `click`.
@@ -50,7 +52,7 @@ When move mode ends, focus returns to the trigger. If the trigger has unmounted,
 		target?: DragSource['type'];
 	}
 
-	const { children, child, target = 'pane', ...rest }: Props = $props();
+	const { children, child, target = 'pane', ...rest }: Props & AccessibleName = $props();
 
 	const pane = usePane();
 

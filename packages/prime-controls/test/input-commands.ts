@@ -2,14 +2,14 @@ import type { Frame } from 'playwright';
 import type { BrowserCommand } from 'vitest/node';
 
 // Pixels from the box's left or top edge, or a `'<n>%'` fraction of its width or height.
-export type Offset = number | `${number}%`;
+type Offset = number | `${number}%`;
 
-export interface At {
+interface At {
 	x: Offset;
 	y: Offset;
 }
 
-type Modifier = 'Alt' | 'Shift' | 'Control' | 'Meta';
+type Modifier = 'Alt' | 'Shift';
 
 const CENTER: At = { x: '50%', y: '50%' };
 

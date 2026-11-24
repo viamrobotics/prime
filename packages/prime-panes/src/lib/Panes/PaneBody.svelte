@@ -1,6 +1,6 @@
 <!--
 @component
-Marks the part of a pane below its header. Its rect sets the pane's edge and center drop regions, and a pane without one uses the whole pane, so a header above the body reads as the top edge. In a stacked pane with a [`Panes.TabList`](./TabList.svelte) it becomes the `tabpanel` that the tabs control, labeled by the active tab, so a screen reader announces the panel on entry and JAWS can jump from a tab to it. Elsewhere it renders a plain `div`.
+Marks the part of a pane below its header. Its rect sets the pane's edge and center drop regions, and a pane without one uses the whole pane, so a header above the body reads as the top edge. In a stacked pane with a [`Panes.TabList`](./TabList.svelte) it becomes the `tabpanel` that the tabs control, labeled by the active tab, so a screen reader announces the panel on entry and JAWS can jump from a tab to it. Elsewhere it renders a plain `div`. A tab panel sets the body's `id`, so an `id` passed there is replaced.
 
 It is optional. Without it the tabs still work and nothing claims the `tabpanel` role. Use it when a header holds several controls between the tabs and the content, or when the content has no heading of its own. The `pane` snippet is shared by every pane, so place it once there.
 -->
@@ -35,7 +35,7 @@ It is optional. Without it the tabs still work and nothing claims the `tabpanel`
 
 <div
 	{...rest}
-	id={pane.stack ? pane.panelId(pane.paneId) : rest.id}
+	id={isTabPanel ? pane.panelId(pane.paneId) : rest.id}
 	role={isTabPanel ? 'tabpanel' : undefined}
 	aria-labelledby={isTabPanel ? pane.tabId(pane.paneId) : rest['aria-labelledby']}
 	{@attach registerBody}

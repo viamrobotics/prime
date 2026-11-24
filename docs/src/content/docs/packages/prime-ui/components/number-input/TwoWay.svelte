@@ -5,8 +5,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-3xs flex-col gap-1">
-    <Label>Quantity</Label>
+  <Field label="Quantity" class="flex max-w-3xs flex-col gap-1">
+    <Label />
     <NumberInput bind:value={count} min={0} max={10} step={1} />
     <Hint>Clear the field and the value becomes undefined.</Hint>
   </Field>

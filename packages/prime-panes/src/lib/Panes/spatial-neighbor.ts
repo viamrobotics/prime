@@ -2,7 +2,7 @@ import type { EdgeRegion } from '../drop-region.ts';
 
 export type PaneBounds = Pick<DOMRectReadOnly, 'left' | 'right' | 'top' | 'bottom'>;
 
-/** A pane's bounds and its layer, the id of the innermost float entry holding it, or `undefined` for the base. */
+// A pane's bounds and its layer, the id of the innermost float entry holding it, or `undefined` for the base.
 export interface LayeredBounds extends PaneBounds {
 	readonly layer?: string;
 }
@@ -42,7 +42,7 @@ function isPreferred(candidate: Candidate, best: Candidate) {
 	return candidate.overlap > best.overlap;
 }
 
-/** Finds the nearest pane toward `direction`, ranking only panes in the same layer as `fromId`. */
+// Ranks only panes in the same layer as `fromId`.
 export function findNeighbor(
 	paneEntries: Iterable<readonly [string, LayeredBounds]>,
 	fromId: string,

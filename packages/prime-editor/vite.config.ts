@@ -36,8 +36,16 @@ export default defineConfig({
 						instances: [{ browser: 'chromium', headless: true }],
 						viewport: { width: 1000, height: 1400 }
 					},
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**']
+					include: ['src/**/*.svelte.{test,spec}.{js,ts}']
+				}
+			},
+
+			{
+				extends: './vite.config.ts',
+				test: {
+					name: 'ssr',
+					environment: 'node',
+					include: ['src/**/*.ssr.{test,spec}.{js,ts}']
 				}
 			},
 
@@ -47,7 +55,7 @@ export default defineConfig({
 					name: 'server',
 					environment: 'node',
 					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
+					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}', 'src/**/*.ssr.{test,spec}.{js,ts}']
 				}
 			}
 		]

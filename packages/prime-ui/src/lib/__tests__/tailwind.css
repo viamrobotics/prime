@@ -1,6 +1,0 @@
-@import '../../../tailwind.css';
-@import '@viamrobotics/tailwind-config/dark';
-
-* {
-	transition: none !important;
-}

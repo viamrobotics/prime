@@ -155,7 +155,7 @@ export function watchDragPress(
 		return () => controller.abort();
 	}
 
-	const stopListening = on(trigger, 'pointerdown', (event) => {
+	function handlePointerdown(event: PointerEvent) {
 		if (event.button !== 0 || stage === 'dragging') return;
 		if (!isInSameRoot(event.target, trigger)) return;
 
@@ -183,7 +183,9 @@ export function watchDragPress(
 		if (press === 'grip') {
 			holdTimer = setTimeout(() => (shouldSwallowClick ||= pane.isDragArmed), HOLD_TO_DRAG_MS);
 		}
-	});
+	}
+
+	const stopListening = on(trigger, 'pointerdown', handlePointerdown);
 
 	return () => {
 		stopListening();

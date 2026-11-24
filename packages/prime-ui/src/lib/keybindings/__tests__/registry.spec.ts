@@ -31,11 +31,29 @@ describe('keybinding registry', () => {
 		const keybindings = createKeybindings();
 		const binding = hotkey('a', 'a');
 
-		const release = keybindings.register(binding, { run: () => undefined });
+		keybindings.register(binding, { run: () => undefined });
+
 		expect(keybindings.bindings).toEqual([binding]);
+	});
+
+	it('drops a binding once its remover runs', () => {
+		const keybindings = createKeybindings();
+		const release = keybindings.register(hotkey('a', 'a'), { run: () => undefined });
 
 		release();
+
 		expect(keybindings.bindings).toEqual([]);
+	});
+
+	it('lists bindings in registration order', () => {
+		const keybindings = createKeybindings();
+		const zoom = hotkey('zoom', 'z');
+		const add = hotkey('add', 'a');
+
+		keybindings.register(zoom);
+		keybindings.register(add);
+
+		expect(keybindings.bindings).toEqual([zoom, add]);
 	});
 
 	it('lists a binding registered without a handler but never runs it', () => {
@@ -58,28 +76,35 @@ describe('keybinding registry', () => {
 		expect(keybindings.matching(press('C'))).toEqual([{ binding, handler }]);
 	});
 
-	it('keeps a shifted press separate from an unshifted one', () => {
+	it.each([
+		{ label: 'an unshifted press', key: 'h', modifiers: {}, expected: 'hide' },
+		{ label: 'a shifted press', key: 'H', modifiers: { shift: true }, expected: 'show-all' },
+		{ label: 'an unmodified press', key: 's', modifiers: {}, expected: 'select-mode' },
+		{ label: 'a modified press', key: 's', modifiers: { mod: true }, expected: 'save' }
+	])(
+		'matches $label only to the binding with the same modifiers',
+		({ key, modifiers, expected }) => {
+			const keybindings = createKeybindings();
+			keybindings.register(hotkey('hide', 'h'), { run: vi.fn() });
+			keybindings.register(hotkey('show-all', 'h', { shift: true }), { run: vi.fn() });
+			keybindings.register(hotkey('select-mode', 's'), { run: vi.fn() });
+			keybindings.register(hotkey('save', 's', { mod: true }), { run: vi.fn() });
+
+			const matched = keybindings.matching(press(key, modifiers));
+
+			expect(matched.map(({ binding }) => binding.id)).toEqual([expected]);
+		}
+	);
+
+	it('matches every binding that claims a press, in registration order', () => {
 		const keybindings = createKeybindings();
-		const plain = { run: vi.fn() };
-		const shifted = { run: vi.fn() };
+		vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+		keybindings.register(hotkey('first', 'x'), { run: vi.fn() });
+		keybindings.register(hotkey('second', 'x'), { run: vi.fn() });
 
-		keybindings.register(hotkey('hide', 'h'), plain);
-		keybindings.register(hotkey('show-all', 'h', { shift: true }), shifted);
+		const matched = keybindings.matching(press('x'));
 
-		expect(keybindings.matching(press('h'))[0]?.handler).toBe(plain);
-		expect(keybindings.matching(press('H', { shift: true }))[0]?.handler).toBe(shifted);
-	});
-
-	it('keeps a modified press separate from an unmodified one', () => {
-		const keybindings = createKeybindings();
-		const plain = { run: vi.fn() };
-		const modified = { run: vi.fn() };
-
-		keybindings.register(hotkey('select-mode', 's'), plain);
-		keybindings.register(hotkey('save', 's', { mod: true }), modified);
-
-		expect(keybindings.matching(press('s'))[0]?.handler).toBe(plain);
-		expect(keybindings.matching(press('s', { mod: true }))[0]?.handler).toBe(modified);
+		expect(matched.map(({ binding }) => binding.id)).toEqual(['first', 'second']);
 	});
 
 	it('matches nothing for an unbound press', () => {

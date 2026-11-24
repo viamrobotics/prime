@@ -1,11 +1,12 @@
 <!--
 @component
-A form label. Inside a [`Field`](../Field/Field.svelte) it points at the control and
-takes the field's `required` and `disabled`.
+A form label. Inside a [`Field`](../Field/Field.svelte) it points at the control, names it
+through `aria-labelledby`, and takes the field's `required` and `disabled`. With no children it
+renders the field's `label`.
 
 ```svelte
-<Field class="flex flex-col gap-1" required>
-	<Label>Email</Label>
+<Field label="Email" class="flex flex-col gap-1" required>
+	<Label />
 	<Input type="email" bind:value />
 </Field>
 ```
@@ -32,6 +33,9 @@ On its own, associate it with `for`:
 
 		/** Replaces the required asterisk. Rendered only when required. */
 		indicator?: Snippet;
+
+		/** The label text. Defaults to the enclosing field's `label`. */
+		children?: Snippet;
 	}
 
 	const {
@@ -55,10 +59,6 @@ On its own, associate it with `for`:
 	$effect(() => field?.label(labelId));
 </script>
 
-{#snippet asterisk()}
-	<span class="text-danger-dark" aria-hidden="true">*</span>
-{/snippet}
-
 <label
 	{...restProps}
 	id={labelId}
@@ -69,9 +69,18 @@ On its own, associate it with `for`:
 		extraClasses
 	]}
 >
-	<span>{@render children?.()}</span>
+	<span>
+		{#if children}
+			{@render children()}
+		{:else}
+			{field?.labelText}
+		{/if}
+	</span>
 	{#if isRequired}
-		{@const suffix = indicator ?? asterisk}
-		{@render suffix()}
+		{#if indicator}
+			{@render indicator()}
+		{:else}
+			<span class="text-danger-dark" aria-hidden="true">*</span>
+		{/if}
 	{/if}
 </label>

@@ -3,7 +3,7 @@
 </script>
 
 {#snippet picker(label: string)}
-  <DatePicker.Field class="w-64" aria-label={label}>
+  <DatePicker.Field class="w-64">
     <DatePicker.Trigger aria-label={label} />
   </DatePicker.Field>
   <DatePicker.Content>
@@ -14,15 +14,17 @@
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Default</h4>
-    <DatePicker>
-      {@render picker("Date")}
-    </DatePicker>
+    <Field aria-label="Date">
+      <DatePicker>
+        {@render picker("Date")}
+      </DatePicker>
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">In a field, with label and hint</h4>
-    <Field class="flex max-w-xs flex-col gap-1" required>
-      <Label>Start date</Label>
+    <Field label="Start date" class="flex max-w-xs flex-col gap-1" required>
+      <Label />
       <DatePicker>
         <DatePicker.Field>
           <DatePicker.Trigger aria-label="Start date" />
@@ -37,8 +39,8 @@
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Error</h4>
-    <Field class="flex max-w-xs flex-col gap-1" state="error">
-      <Label>Start date</Label>
+    <Field label="Start date" class="flex max-w-xs flex-col gap-1" state="error">
+      <Label />
       <DatePicker>
         <DatePicker.Field>
           <DatePicker.Trigger aria-label="Start date" />
@@ -53,8 +55,8 @@
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Warn</h4>
-    <Field class="flex max-w-xs flex-col gap-1" state="warn">
-      <Label>Start date</Label>
+    <Field label="Start date" class="flex max-w-xs flex-col gap-1" state="warn">
+      <Label />
       <DatePicker>
         <DatePicker.Field>
           <DatePicker.Trigger aria-label="Start date" />
@@ -69,22 +71,28 @@
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
-    <DatePicker disabled>
-      {@render picker("Date")}
-    </DatePicker>
+    <Field aria-label="Date">
+      <DatePicker disabled>
+        {@render picker("Date")}
+      </DatePicker>
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Read only</h4>
-    <DatePicker readonly>
-      {@render picker("Date")}
-    </DatePicker>
+    <Field aria-label="Date">
+      <DatePicker readonly>
+        {@render picker("Date")}
+      </DatePicker>
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Minute granularity</h4>
-    <DatePicker granularity="minute">
-      {@render picker("Date and time")}
-    </DatePicker>
+    <Field aria-label="Date and time">
+      <DatePicker granularity="minute">
+        {@render picker("Date and time")}
+      </DatePicker>
+    </Field>
   </div>
 </div>

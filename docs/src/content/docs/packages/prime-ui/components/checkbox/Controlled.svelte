@@ -5,7 +5,7 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex items-center gap-2">
+  <Field label="Accept the terms (cannot be undone)" class="flex items-center gap-2">
     <Checkbox
       bind:checked={
         () => accepted,
@@ -14,7 +14,7 @@
         }
       }
     />
-    <Label>Accept the terms (cannot be undone)</Label>
+    <Label />
   </Field>
 
   <p class="mt-3 text-sm text-subtle-2">accepted: <code>{accepted}</code></p>

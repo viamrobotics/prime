@@ -2,7 +2,7 @@ import { createRawSnippet } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import '../../__tests__/tailwind.css';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import Label from '../Label.svelte';
 
 const text = (value: string) => createRawSnippet(() => ({ render: () => `<span>${value}</span>` }));
@@ -43,5 +43,16 @@ describe('Label', () => {
 		const { container } = render(Label, { props: { disabled: true, children: text('Name') } });
 
 		expect(getComputedStyle(label(container)).cursor).toBe('not-allowed');
+	});
+
+	it('dims the text to the disabled color when disabled', () => {
+		document.documentElement.classList.add('dark');
+		try {
+			const { container } = render(Label, { props: { disabled: true, children: text('Name') } });
+
+			expect(textColor(label(container))).toBe(colorOf('text-disabled-dark', 'color'));
+		} finally {
+			document.documentElement.classList.remove('dark');
+		}
 	});
 });

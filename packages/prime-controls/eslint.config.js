@@ -26,7 +26,7 @@ export default defineConfig(
 			// see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
 			'no-undef': 'off',
 			// A wrapper's props are an empty interface over the wrapped component's props, so the published
-			// declaration has a name to print. An alias fails that emit. See scripts/check-declarations.mjs.
+			// declaration has a name to print. An alias fails that emit. See ../../scripts/check-declarations.mjs.
 			'@typescript-eslint/no-empty-object-type': [
 				'error',
 				{ allowInterfaces: 'with-single-extends' }
@@ -46,8 +46,6 @@ export default defineConfig(
 		}
 	},
 	{
-		// Override or add rule settings here, such as:
-		// 'svelte/button-has-type': 'error'
 		rules: {
 			'svelte/no-unused-svelte-ignore': 'error',
 			'svelte/valid-compile': 'error'

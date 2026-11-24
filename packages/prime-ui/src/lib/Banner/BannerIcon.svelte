@@ -6,8 +6,6 @@ spinner for a pending state or a custom icon.
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	import { onDestroy } from 'svelte';
-
 	import { useBanner } from './useBanner.svelte.ts';
 
 	interface Props extends HTMLAttributes<HTMLSpanElement> {
@@ -18,7 +16,7 @@ spinner for a pending state or a custom icon.
 	const { class: extraClasses, children, ...restProps }: Props = $props();
 
 	const release = useBanner()?.claimIcon();
-	onDestroy(() => release?.());
+	$effect(() => release);
 </script>
 
 <span {...restProps} class={['banner-chip', extraClasses]} aria-hidden="true">

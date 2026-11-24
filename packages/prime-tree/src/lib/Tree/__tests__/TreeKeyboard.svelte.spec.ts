@@ -2,10 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
+import BasicTree from '../../../../test/fixtures/BasicTree.svelte';
 import KeyboardTree from '../../../../test/fixtures/KeyboardTree.svelte';
+import SelectionTree from '../../../../test/fixtures/SelectionTree.svelte';
 
 const itemOf = (name: string) => page.getByRole('treeitem', { name, exact: true });
 const controlOf = (name: string) => itemOf(name).getByRole('button').first();
+
+const tabStopsInTree = () =>
+	[...document.querySelectorAll<HTMLElement>('[role="tree"] [tabindex="0"]')].map(
+		(row) => row.dataset.value
+	);
 
 const renderFocusedOnDocs = async (selectionMode?: 'single' | 'multiple') => {
 	const screen = render(KeyboardTree, { selectionMode });
@@ -46,12 +53,20 @@ describe('Tree keyboard', () => {
 		await expect.element(itemOf('Readme')).toHaveFocus();
 	});
 
-	it('expands a collapsed branch on ArrowRight and keeps focus on it', async () => {
+	it('expands a collapsed branch on ArrowRight', async () => {
 		await renderFocusedOnDocs();
 
 		await userEvent.keyboard('{ArrowRight}');
 
-		await expect.element(itemOf('Docs')).toHaveAttribute('aria-expanded', 'true');
+		await expect.element(itemOf('Readme')).toBeVisible();
+	});
+
+	it('keeps focus on a collapsed branch that ArrowRight expands', async () => {
+		await renderFocusedOnDocs();
+
+		await userEvent.keyboard('{ArrowRight}');
+
+		await expect.element(itemOf('Readme')).toBeVisible();
 		await expect.element(controlOf('Docs')).toHaveFocus();
 	});
 
@@ -114,23 +129,15 @@ describe('Tree keyboard', () => {
 		await expect.element(controlOf('Docs')).toHaveFocus();
 	});
 
-	it('selects the focused row on Enter', async () => {
+	it.each([
+		{ key: 'Enter', keys: '{Enter}' },
+		{ key: 'Space', keys: ' ' }
+	])('selects the focused leaf on $key', async ({ keys }) => {
 		const screen = await renderFocusedOnDocs();
 		await userEvent.keyboard('{End}');
 
-		await userEvent.keyboard('{Enter}');
+		await userEvent.keyboard(keys);
 
-		await expect.element(itemOf('Notes')).toHaveAttribute('aria-selected', 'true');
-		await expect.poll(() => screen.component.getSelected()).toEqual(['notes']);
-	});
-
-	it('selects the focused row on Space', async () => {
-		const screen = await renderFocusedOnDocs();
-		await userEvent.keyboard('{End}');
-
-		await userEvent.keyboard(' ');
-
-		await expect.element(itemOf('Notes')).toHaveAttribute('aria-selected', 'true');
 		await expect.poll(() => screen.component.getSelected()).toEqual(['notes']);
 	});
 
@@ -143,6 +150,63 @@ describe('Tree keyboard', () => {
 		await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
 
 		await expect.poll(() => screen.component.getSelected()).toEqual(['readme', 'guides']);
+	});
+
+	it('extends the selection to the previous row on Shift+ArrowUp in multiple mode', async () => {
+		const screen = await renderFocusedOnDocs('multiple');
+		await userEvent.keyboard('{End}{Enter}');
+		await expect.poll(() => screen.component.getSelected()).toEqual(['notes']);
+
+		await userEvent.keyboard('{Shift>}{ArrowUp}{/Shift}');
+
+		await expect.poll(() => screen.component.getSelected()).toEqual(['notes', 'zoo']);
+	});
+
+	it('skips a disabled row when Shift+ArrowUp extends the selection in multiple mode', async () => {
+		const screen = render(SelectionTree, { selectionMode: 'multiple' });
+		await itemOf('Notes').click();
+		await expect.element(itemOf('Notes')).toHaveFocus();
+
+		await userEvent.keyboard('{Shift>}{ArrowUp}{/Shift}');
+
+		await expect.poll(() => screen.component.getSelected()).toEqual(['notes', 'empty']);
+	});
+
+	it('leaves a disabled row out of the range Shift+End selects in multiple mode', async () => {
+		const screen = render(SelectionTree, { selectionMode: 'multiple', branchClick: 'select' });
+		await itemOf('Docs').getByText('Docs').click();
+		await expect.poll(() => screen.component.getSelected()).toEqual(['docs']);
+
+		await userEvent.keyboard('{Shift>}{End}{/Shift}');
+
+		await expect
+			.poll(() => screen.component.getSelected().toSorted())
+			.toEqual(['docs', 'empty', 'notes']);
+	});
+
+	it.each(['Control', 'Meta'])(
+		'selects every enabled node, collapsed ones included, on %s+A in multiple mode',
+		async (modifier) => {
+			const screen = render(SelectionTree, { selectionMode: 'multiple' });
+			await itemOf('Notes').click();
+
+			await userEvent.keyboard(`{${modifier}>}a{/${modifier}}`);
+
+			await expect
+				.poll(() => screen.component.getSelected().toSorted())
+				.toEqual(['advanced', 'docs', 'empty', 'guides', 'intro', 'notes', 'readme']);
+		}
+	);
+
+	it.each(['Control', 'Meta'])('selects nothing new on %s+A in single mode', async (modifier) => {
+		const screen = render(SelectionTree, { selectionMode: 'single' });
+		await itemOf('Notes').click();
+		await expect.poll(() => screen.component.getSelected()).toEqual(['notes']);
+
+		await userEvent.keyboard(`{${modifier}>}a{/${modifier}}`);
+
+		await expect.element(itemOf('Notes')).toHaveFocus();
+		expect(screen.component.getSelected()).toEqual(['notes']);
 	});
 
 	it('expands every sibling branch on *', async () => {
@@ -164,15 +228,26 @@ describe('Tree keyboard', () => {
 		await expect.element(itemOf('Notes')).toHaveFocus();
 	});
 
-	it('gives exactly one row tabindex 0 and moves it with focus on ArrowDown', async () => {
+	it('gives exactly one row of the tree tabindex 0', async () => {
+		render(KeyboardTree);
+
+		await expect.poll(() => tabStopsInTree()).toEqual(['docs']);
+	});
+
+	it('moves tabindex 0 to the row ArrowDown focuses', async () => {
 		await renderFocusedOnDocs();
 
 		await userEvent.keyboard('{ArrowDown}');
 
-		await expect.element(controlOf('Apps')).toHaveAttribute('tabindex', '0');
-		await expect.element(controlOf('Docs')).toHaveAttribute('tabindex', '-1');
-		await expect
-			.poll(() => document.querySelectorAll('[role="tree"] [tabindex="0"]').length)
-			.toBe(1);
+		await expect.poll(() => tabStopsInTree()).toEqual(['apps']);
+	});
+
+	it('puts the tab stop on the first row before the tree takes focus', async () => {
+		render(BasicTree);
+		(page.getByRole('button', { name: 'Append to Docs' }).element() as HTMLElement).focus();
+
+		await userEvent.tab();
+
+		await expect.element(itemOf('Docs').getByRole('button').first()).toHaveFocus();
 	});
 });

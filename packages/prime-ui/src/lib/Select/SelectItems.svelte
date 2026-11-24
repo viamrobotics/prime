@@ -8,6 +8,7 @@ Renders the `items` of the enclosing [`Select`](./Select.svelte) as
 
 	import type { SelectOption } from './option.ts';
 
+	import ListboxItems from './ListboxItems.svelte';
 	import SelectItem from './SelectItem.svelte';
 	import { useSelect } from './useSelect.svelte.ts';
 
@@ -16,7 +17,7 @@ Renders the `items` of the enclosing [`Select`](./Select.svelte) as
 		children?: Snippet<[{ item: SelectOption; selected: boolean; highlighted: boolean }]>;
 	}
 
-	const { children: content }: Props = $props();
+	const { children }: Props = $props();
 
 	const select = useSelect();
 	if (!select) {
@@ -24,14 +25,4 @@ Renders the `items` of the enclosing [`Select`](./Select.svelte) as
 	}
 </script>
 
-{#each select.items as item (item.value)}
-	{#if content}
-		<SelectItem value={item.value} label={item.label} disabled={item.disabled}>
-			{#snippet children({ selected, highlighted })}
-				{@render content({ item, selected, highlighted })}
-			{/snippet}
-		</SelectItem>
-	{:else}
-		<SelectItem value={item.value} label={item.label} disabled={item.disabled} />
-	{/if}
-{/each}
+<ListboxItems options={select.items} Item={SelectItem} {children} />

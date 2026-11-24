@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
-import GroupedInput from './GroupedInput.svelte';
+import { borderColor, colorOf } from '../../../../test/computed-style.ts';
+import GroupedInput from './fixtures/GroupedInput.svelte';
 
 const pointerDown = (element: Element) => {
 	const event = new PointerEvent('pointerdown', { bubbles: true, cancelable: true });
@@ -29,17 +29,24 @@ const setup = (props: ComponentProps<typeof GroupedInput> = {}) => {
 		group: container.querySelector<HTMLElement>('[data-testid="group"]')!,
 		input: container.querySelector('input')!,
 		suffix: container.querySelector<HTMLElement>('[data-testid="suffix"]')!,
-		action: container.querySelector<HTMLElement>('[data-testid="action"]')!
+		action: container.querySelector<HTMLElement>('[data-testid="action"]')!,
+		editable: container.querySelector<HTMLElement>('[data-testid="editable"]')!,
+		roleButton: container.querySelector<HTMLElement>('[data-testid="role-button"]')!
 	};
 };
 
 describe('Input.Group', () => {
 	it('wears the frame itself and leaves the input inside borderless', () => {
-		const { group, input } = setup({ groupClass: 'w-64' });
+		const { group, input } = setup();
 
 		expect(getComputedStyle(group).borderTopWidth).toBe('1px');
 		expect(getComputedStyle(input).borderTopWidth).toBe('0px');
-		expect(group.classList.contains('w-64'), 'consumer class lands on the group').toBe(true);
+	});
+
+	it('takes its width from a consumer class', () => {
+		const { group } = setup({ groupClass: 'w-64' });
+
+		expect(getComputedStyle(group).width).toBe('256px');
 	});
 
 	it('focuses the input when non-interactive content is pressed, without focusing the group', async () => {
@@ -67,6 +74,17 @@ describe('Input.Group', () => {
 		expect(document.activeElement).not.toBe(input);
 	});
 
+	it.each([
+		{ child: 'editable content', part: 'editable' },
+		{ child: 'a role="button" element', part: 'roleButton' }
+	] as const)('leaves a press on $child alone', ({ part }) => {
+		const parts = setup();
+
+		const event = pointerDown(parts[part]);
+
+		expect(event.defaultPrevented, 'pointer-down passes through').toBe(false);
+	});
+
 	it('runs a consumer onpointerdown first and honors its preventDefault', () => {
 		const onpointerdown = vi.fn((event: PointerEvent) => event.preventDefault());
 		const { input, suffix } = setup({ onpointerdown });
@@ -78,9 +96,10 @@ describe('Input.Group', () => {
 	});
 
 	describe('border color', () => {
-		it('tells the four border tokens apart, so the cases below cannot pass vacuously', () => {
+		it('tells the five border tokens apart, so the cases below cannot pass vacuously', () => {
 			const colors = [
 				'border-light',
+				'border-gray-6',
 				'border-danger-dark',
 				'border-warning-dark',
 				'border-transparent'
@@ -157,11 +176,20 @@ describe('Input.Group', () => {
 		expect(getComputedStyle(group).outlineWidth).toBe('2px');
 	});
 
-	it('shows the not-allowed cursor for a disabled input and not for a disabled trailing button', () => {
-		const disabledInput = setup({ disabled: true });
-		const disabledAction = setup({ actionDisabled: true });
+	it.each([
+		{
+			name: 'not-allowed cursor for a disabled input',
+			props: { disabled: true },
+			cursor: 'not-allowed'
+		},
+		{
+			name: 'auto cursor for a disabled trailing button',
+			props: { actionDisabled: true },
+			cursor: 'auto'
+		}
+	])('shows the $name', ({ props, cursor }) => {
+		const { group } = setup(props);
 
-		expect(getComputedStyle(disabledInput.group).cursor).toBe('not-allowed');
-		expect(getComputedStyle(disabledAction.group).cursor).not.toBe('not-allowed');
+		expect(getComputedStyle(group).cursor).toBe(cursor);
 	});
 });

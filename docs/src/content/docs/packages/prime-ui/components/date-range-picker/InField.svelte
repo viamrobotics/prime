@@ -3,8 +3,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-sm flex-col gap-1" required>
-    <Label>Billing period</Label>
+  <Field label="Billing period" class="flex max-w-sm flex-col gap-1" required>
+    <Label />
     <DateRangePicker>
       <DateRangePicker.Field>
         <DateRangePicker.Trigger />

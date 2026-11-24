@@ -49,7 +49,7 @@
         "fonts.js",
         "theme-color.d.ts",
         "theme-color.js",
-        "tests/**",
+        "__tests__/**",
         "vitest.config.ts",
         "tsconfig.json",
         "package.json"
@@ -78,7 +78,7 @@
     "test": {
       "command": "vitest run",
       "files": [
-        "tests/**",
+        "__tests__/**",
         "tailwind-config.css",
         "tailwind-config-dark.css",
         "theme-color.d.ts",

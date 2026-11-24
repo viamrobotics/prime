@@ -1,9 +1,10 @@
 <!--
 @component
 The item in a [`Menu.Content`](./MenuContent.svelte) that opens a [`Menu.Sub`](./MenuSub.svelte). It opens on hover, Enter, Space, and ArrowRight.
-A trailing chevron marks it as a submenu.
+A trailing chevron marks it as a submenu, and a `chevron` snippet replaces it.
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { mdiChevronRight } from '@mdi/js';
@@ -17,19 +18,19 @@ A trailing chevron marks it as a submenu.
 
 		/** Prevent the submenu from opening. @default false */
 		disabled?: boolean;
+
+		/** Replaces the trailing chevron. */
+		chevron?: Snippet;
 	}
 
-	const { class: extraClasses, children, ...restProps }: Props = $props();
+	const { class: extraClasses, chevron, children, ...restProps }: Props = $props();
 </script>
 
-<DropdownMenu.SubTrigger
-	class={[
-		'flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none data-disabled:cursor-not-allowed data-disabled:text-disabled-dark',
-		'text-default data-highlighted:bg-light',
-		extraClasses
-	]}
-	{...restProps}
->
+<DropdownMenu.SubTrigger class={['listbox-option', extraClasses]} {...restProps}>
 	{@render children?.()}
-	<Icon icon={mdiChevronRight} size="sm" class="ml-auto shrink-0" />
+	{#if chevron}
+		{@render chevron()}
+	{:else}
+		<Icon icon={mdiChevronRight} size="sm" class="ml-auto shrink-0" />
+	{/if}
 </DropdownMenu.SubTrigger>

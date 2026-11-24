@@ -12,7 +12,7 @@ the option's content.
 	interface Props extends ComponentProps<typeof ToggleButtons.Item> {}
 
 	const { class: extraClasses, children, ...restProps }: Props = $props();
-	// prime-ui's utility sorts after this one in the stylesheet and wins unless this one is important.
+	// prime-ui's item sets the same properties with plain utilities of the same specificity, which win here unless these are important.
 	const classes = $derived(['min-h-6 px-1.5! py-0.5! text-xs!', extraClasses]);
 </script>
 

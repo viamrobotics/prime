@@ -15,7 +15,7 @@
 		data-header={label}
 		class="absolute top-0 left-0 z-10 flex items-center gap-1 bg-light p-1"
 	>
-		<span data-header-text={label}>{label}</span>
+		<span>{label}</span>
 		<button
 			type="button"
 			aria-label="Menu for {label}"
@@ -25,11 +25,13 @@
 			...
 		</button>
 		{#if isOpen}
-			<Panes.MoveTrigger onclick={() => (isOpen = false)}>
-				{#snippet child({ props })}
-					<div role="menuitem" tabindex="-1" aria-label="Move {label}" {...props}>Move</div>
-				{/snippet}
-			</Panes.MoveTrigger>
+			<div role="menu" aria-label="Actions for {label}">
+				<Panes.MoveTrigger aria-label="Move {label}" onclick={() => (isOpen = false)}>
+					{#snippet child({ props })}
+						<div role="menuitem" tabindex="-1" aria-label="Move {label}" {...props}>Move</div>
+					{/snippet}
+				</Panes.MoveTrigger>
+			</div>
 		{/if}
 	</header>
 </Panes.DragTrigger>

@@ -15,6 +15,7 @@ import type { Point } from '../../../../test/input-commands.ts';
 const DESTINATION_COUNT = 3;
 const MIN_HIT_AREA_PX = 24;
 const INFO_DARK = 'rgb(46, 103, 211)';
+const LINK = 'rgb(0, 102, 204)';
 const GRAY_8 = 'rgb(78, 79, 82)';
 const UNSELECTED_BAR = { backgroundColor: GRAY_8, opacity: '0.7' } as const;
 const SELECTED_BAR = { backgroundColor: INFO_DARK, opacity: '1' } as const;
@@ -29,10 +30,15 @@ const SENSOR_STAT = 'Move Camera to Sensor stat';
 const CAMERA_2 = 'Move Camera to Camera 2';
 const STARTED_CAMERA =
 	'Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape. The arrow keys move between sides and panes, Tab moves between destinations, Enter places the pane, and Escape cancels.';
+const CAMERA_RIGHT_OF_TIME_SERIES = {
+	id: ids.innerSplit,
+	first: { first: { id: ids.mytimeseries }, second: { id: ids.mycam } }
+};
 const LEFT = { x: '10%', y: '50%' } as const;
 const RIGHT = { x: '90%', y: '50%' } as const;
 const TOP = { x: '50%', y: '10%' } as const;
 const CENTER = { x: '50%', y: '50%' } as const;
+const LOWER_LEFT_OF_CONTROL = { x: '5%', y: '95%' } as const;
 const EDGE_MARKS = [
 	{ region: 'left', name: 'Place Camera left of Time series' },
 	{ region: 'right', name: 'Place Camera right of Time series' },
@@ -89,37 +95,48 @@ const startMoveOnFirstDestination = async () => {
 };
 
 describe('Panes move mode: marking the moving pane', () => {
-	it('sets data-move-mode on the root only while a pane is moving', async () => {
+	it('sets no data-move-mode on the root before a move', async () => {
 		render(ControlledPanes, { accept: true, handles: true });
-		await expect
-			.element(page.getByPanesInMoveMode(), { message: 'before move mode' })
-			.not.toBeInTheDocument();
+
+		await expect.element(page.getByPanesInMoveMode()).not.toBeInTheDocument();
+	});
+
+	it('sets data-move-mode on the root while a pane is moving', async () => {
+		render(ControlledPanes, { accept: true, handles: true });
 
 		await startMoveWithClick();
-		await expect
-			.element(page.getByPanesInMoveMode(), { message: 'in move mode' })
-			.toBeInTheDocument();
+
+		await expect.element(page.getByPanesInMoveMode()).toBeInTheDocument();
+	});
+
+	it('clears data-move-mode from the root when the move is canceled', async () => {
+		render(ControlledPanes, { accept: true, handles: true });
+		await startMoveWithClick();
+		await expect.element(page.getByPanesInMoveMode()).toBeInTheDocument();
 
 		await userEvent.keyboard('{Escape}');
-		await expect
-			.element(page.getByPanesInMoveMode(), { message: 'after cancel' })
-			.not.toBeInTheDocument();
+
+		await expect.element(page.getByPanesInMoveMode()).not.toBeInTheDocument();
 	});
 
 	it('sets data-moving on the moving pane wrapper alone', async () => {
 		render(ControlledPanes, { accept: true, handles: true });
-		expect(page.getByMovingPane().elements(), 'before move mode').toHaveLength(0);
 
 		await startMoveWithClick();
+
 		await expect
-			.poll(() => page.getByMovingPane().elements(), { message: 'in move mode' })
-			.toHaveLength(1);
+			.poll(() => page.getByMovingPane().elements())
+			.toEqual([page.getByPane(ids.mycam).element()]);
+	});
+
+	it('clears data-moving when the move is canceled', async () => {
+		render(ControlledPanes, { accept: true, handles: true });
+		await startMoveWithClick();
 		await expect.element(page.getByPane(ids.mycam)).toHaveAttribute('data-moving');
 
 		await userEvent.keyboard('{Escape}');
-		await expect
-			.poll(() => page.getByMovingPane().elements(), { message: 'after cancel' })
-			.toHaveLength(0);
+
+		await expect.poll(() => page.getByMovingPane().elements()).toHaveLength(0);
 	});
 
 	it('tells the moving pane what to do', async () => {
@@ -145,7 +162,7 @@ describe('Panes move mode: marking the moving pane', () => {
 		await expect.element(page.getByMovingNotice()).not.toBeInTheDocument();
 	});
 
-	it('outlines the moving pane wrapper inside its edge in info-dark after a mouse click starts the move', async () => {
+	it('outlines the moving pane wrapper inside its edge in the link color after a mouse click starts the move', async () => {
 		render(ControlledPanes, { accept: true, handles: true });
 
 		await startMoveWithClick();
@@ -154,7 +171,7 @@ describe('Panes move mode: marking the moving pane', () => {
 			outlineStyle: 'solid',
 			outlineWidth: '2px',
 			outlineOffset: '-2px',
-			outlineColor: INFO_DARK
+			outlineColor: LINK
 		});
 	});
 
@@ -313,9 +330,9 @@ describe('Panes move mode: quiet until engaged', () => {
 		await startMoveOnFirstDestination();
 		await expect.element(timeSeriesPreview()).toBeInTheDocument();
 
-		const preview = timeSeriesPreview().element();
+		const hiddenAncestor = timeSeriesPreview().element().closest('[aria-hidden]');
 
-		expect(preview.closest('[aria-hidden="true"]')).not.toBeNull();
+		expect(hiddenAncestor?.getAttribute('aria-hidden')).toBe('true');
 	});
 });
 
@@ -378,7 +395,7 @@ describe('Panes move mode: edge bars', () => {
 		);
 	});
 
-	it('draws no focus outline on a focused edge button', async () => {
+	it('draws a 2px link-colored outline outside a focused edge button', async () => {
 		render(ControlledPanes, { accept: true, handles: true });
 		await startMoveWithKeyboard('Camera');
 
@@ -386,7 +403,12 @@ describe('Panes move mode: edge bars', () => {
 
 		const focused = mark('Place Camera above Time series');
 		await expect.element(focused).toHaveFocus();
-		await expect.element(focused).toHaveStyle({ outlineStyle: 'none' });
+		await expect.element(focused).toHaveStyle({
+			outlineStyle: 'solid',
+			outlineWidth: '2px',
+			outlineOffset: '2px',
+			outlineColor: LINK
+		});
 	});
 
 	it('draws the selected bar in solid info-dark and no other bar', async () => {
@@ -578,14 +600,17 @@ describe('Panes move mode: destination group', () => {
 			.toHaveAttribute('data-move-preview', 'top');
 	});
 
-	it('shows the full-pane preview and an inset outline on a focused swap', async () => {
+	it('shows the full-pane preview and an inset link-colored outline on a focused swap', async () => {
 		await renderEngaged();
 
 		const swap = mark('Swap Camera with Time series');
 		await expect.element(swap).toHaveFocus();
-		await expect
-			.element(swap)
-			.toHaveStyle({ outlineStyle: 'solid', outlineWidth: '2px', outlineOffset: '-2px' });
+		await expect.element(swap).toHaveStyle({
+			outlineStyle: 'solid',
+			outlineWidth: '2px',
+			outlineOffset: '-2px',
+			outlineColor: LINK
+		});
 		await expect.poll(() => boxOf(timeSeriesPreview())).toEqual(boxOf(timeSeries()));
 		await expect.element(timeSeriesPreview()).toHaveAttribute('data-move-preview', 'center');
 	});
@@ -703,24 +728,19 @@ describe('Panes move mode: destination group', () => {
 });
 
 describe('Panes move mode: pointer preview', () => {
-	it('moves the preview with the pointer', async () => {
+	it.each([
+		{ from: RIGHT, to: TOP, region: 'top' },
+		{ from: TOP, to: CENTER, region: 'center' },
+		{ from: CENTER, to: RIGHT, region: 'right' }
+	])('moves the preview to the $region region with the pointer', async ({ from, to, region }) => {
 		render(BoundPanes, { handles: true });
 		await startMoveWithClick();
+		await commands.mouseMove(timeSeries().selector, from);
+		await expect.element(timeSeriesPreview()).toBeInTheDocument();
 
-		await commands.mouseMove(timeSeries().selector, RIGHT);
-		await expect
-			.element(timeSeriesPreview(), { message: 'at right' })
-			.toHaveAttribute('data-move-preview', 'right');
+		await commands.mouseMove(timeSeries().selector, to);
 
-		await commands.mouseMove(timeSeries().selector, TOP);
-		await expect
-			.element(timeSeriesPreview(), { message: 'at top' })
-			.toHaveAttribute('data-move-preview', 'top');
-
-		await commands.mouseMove(timeSeries().selector, CENTER);
-		await expect
-			.element(timeSeriesPreview(), { message: 'at center' })
-			.toHaveAttribute('data-move-preview', 'center');
+		await expect.element(timeSeriesPreview()).toHaveAttribute('data-move-preview', region);
 	});
 
 	it('leaves the status text alone while the mouse sweeps across the regions', async () => {
@@ -821,7 +841,7 @@ describe('Panes move mode: touch', () => {
 
 		await expect.poll(announcement).toBe('Camera placed right of Time series.');
 		expect(allDestinations().elements()).toHaveLength(0);
-		expect(component.getLayout()).not.toEqual(layoutRoot);
+		expect(component.getLayout()).toMatchObject(CAMERA_RIGHT_OF_TIME_SERIES);
 	});
 
 	it('does not place the pane when a tap returns to a region the preview left', async () => {
@@ -904,11 +924,11 @@ describe('Panes move mode: inert panes', () => {
 		render(ControlledPanes, { accept: true, handles: true });
 		await startMoveWithClick();
 
-		await commands.mouseMove(trigger('Time series').selector);
+		await commands.mouseMove(trigger('Time series').selector, LOWER_LEFT_OF_CONTROL);
 		await commands.mouseDown();
 		await commands.mouseUp();
 
-		await expect.poll(announcement).toMatch(/^Camera placed (left of|above) Time series\.$/);
+		await expect.poll(announcement).toBe('Camera placed left of Time series.');
 	});
 
 	it('makes the resize separators inert in move mode', async () => {
@@ -1052,7 +1072,7 @@ describe('Panes move mode: motion', () => {
 
 		await renderPreview();
 
-		await expect.element(timeSeriesPreview()).not.toHaveStyle({ transitionDuration: '0s' });
+		await expect.element(timeSeriesPreview()).toHaveStyle({ transitionDuration: '0.15s' });
 	});
 
 	it('does not animate the preview under prefers-reduced-motion', async () => {

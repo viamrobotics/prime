@@ -5,8 +5,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex flex-col gap-1">
-    <Label>Size</Label>
+  <Field label="Size" class="flex flex-col gap-1">
+    <Label />
     <RadioGroup bind:value={size} name="size">
       <RadioGroup.Item value="sm">Small</RadioGroup.Item>
       <RadioGroup.Item value="md">Medium</RadioGroup.Item>

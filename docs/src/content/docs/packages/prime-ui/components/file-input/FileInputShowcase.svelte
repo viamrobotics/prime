@@ -6,18 +6,28 @@
 </script>
 
 <div class="not-content grid max-w-xs gap-3">
-  <FileInput aria-label="Default" />
-  <FileInput aria-label="Chosen" value={recording} />
-  <FileInput aria-label="Disabled" disabled />
-  <FileInput aria-label="Disabled with a file" disabled value={recording} />
-  <FileInput aria-label="Custom prompt">Browse</FileInput>
-  <Field state="warn" class="flex flex-col gap-1">
-    <Label>Warn</Label>
+  <Field aria-label="Default" class="grid">
+    <FileInput />
+  </Field>
+  <Field aria-label="Chosen" class="grid">
+    <FileInput value={recording} />
+  </Field>
+  <Field aria-label="Disabled" disabled class="grid">
+    <FileInput />
+  </Field>
+  <Field aria-label="Disabled with a file" disabled class="grid">
+    <FileInput value={recording} />
+  </Field>
+  <Field aria-label="Custom prompt" class="grid">
+    <FileInput>Browse</FileInput>
+  </Field>
+  <Field label="Warn" state="warn" class="flex flex-col gap-1">
+    <Label />
     <FileInput value={recording} />
     <Hint>This recording is longer than a minute.</Hint>
   </Field>
-  <Field state="error" class="flex flex-col gap-1">
-    <Label>Error</Label>
+  <Field label="Error" state="error" class="flex flex-col gap-1">
+    <Label />
     <FileInput value={notes} />
     <Hint>Unsupported audio format.</Hint>
   </Field>

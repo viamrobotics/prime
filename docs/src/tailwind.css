@@ -19,6 +19,7 @@
 @source "../../packages/prime-editor/src/lib";
 @source "../../packages/prime-charts/src/lib";
 
+/* Starlight's font variables point at Viam's fonts instead of nova's. */
 :root {
   --sl-font: var(--font-public-sans);
   --sl-font-mono: var(--font-roboto-mono);
@@ -51,7 +52,7 @@
   --sl-color-accent-high: #c2dcff;
 }
 
-/* Hero action buttons: smaller padding, sharper corners, smaller text — closer to
+/* Hero action buttons: smaller padding, sharper corners, smaller text, closer to
    Viam's prime button sizing than nova's default rounded-xl px-6 py-3. */
 .hero .actions a {
   padding: 0.5rem 1rem;

@@ -14,8 +14,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-sm flex-col gap-1">
-    <Label>Export window</Label>
+  <Field label="Export window" class="flex max-w-sm flex-col gap-1">
+    <Label />
     <DateRangePicker
       bind:value={
         () => value,

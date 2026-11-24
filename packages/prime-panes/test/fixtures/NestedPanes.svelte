@@ -1,16 +1,15 @@
 <script lang="ts">
 	import '../tailwind.css';
 
+	import type { ClassValue } from 'svelte/elements';
+
+	import { pane as paneNode } from '../layouts.ts';
 	import type { PaneData } from '../layouts.ts';
 	import type { LayoutNode, PaneNode } from '../../src/lib/layout.ts';
 	import type { PaneState } from '../../src/lib/Panes/pane-state.ts';
 	import { Panes } from '../../src/lib/Panes/panes.ts';
 
-	const labeledPane = (id: string): PaneNode<PaneData> => ({
-		type: 'pane',
-		id,
-		data: { label: id }
-	});
+	const labeledPane = (id: string) => paneNode(id, id);
 
 	let outerLayout = $state<LayoutNode<PaneData> | undefined>({
 		type: 'split',
@@ -47,13 +46,13 @@
 {#snippet paneContent(
 	node: PaneNode<PaneData>,
 	state: PaneState,
-	gripClass: string,
+	gripClass: ClassValue,
 	isOuter: boolean
 )}
 	<Panes.DragTrigger>
 		<Panes.MoveTrigger
 			aria-label="Move {node.id}"
-			class="absolute z-10 size-6 border border-medium {gripClass}"
+			class={['absolute z-10 size-6 border border-medium', gripClass]}
 		>
 			::
 		</Panes.MoveTrigger>
@@ -81,7 +80,7 @@
 	</Panes.DragTrigger>
 {/snippet}
 
-<div data-testid="frame" style="width: 800px; height: 600px">
+<div style="width: 800px; height: 600px">
 	<Panes
 		bind:layout={outerLayout}
 		paneLabel={(outer) => outer.data.label}

@@ -17,7 +17,6 @@ export type ArrowKey = keyof typeof ARROW_DIRECTIONS;
 
 export const isArrowKey = (key: string): key is ArrowKey => Object.hasOwn(ARROW_DIRECTIONS, key);
 
-/** The rect of a window moved `distance` pixels toward `key`, stopping at the edges of `box`. */
 export function moveFloatRectByKey(
 	rect: FloatRect,
 	key: ArrowKey,
@@ -34,11 +33,7 @@ export function moveFloatRectByKey(
 	);
 }
 
-/**
- * The rect of a window whose east edge moves `distance` pixels along ArrowLeft or ArrowRight, or
- * whose south edge does along ArrowUp or ArrowDown. A positive direction grows it. The other edges
- * stay put, and the size stops at `minimum` and at the edges of `box`.
- */
+// ArrowLeft and ArrowRight move the east edge and ArrowUp and ArrowDown the south edge, so a positive direction grows the window. The other edges stay put.
 export function resizeFloatRectByKey(
 	rect: FloatRect,
 	key: ArrowKey,

@@ -23,9 +23,10 @@ import point4DSource from "./Point4D.svelte?raw"
 import PointVeto from "./PointVeto.svelte"
 import pointVetoSource from "./PointVeto.svelte?raw"
 import LivePanel from "./LivePanel.svelte"
-import livePanelSource from "./LivePanel.svelte?raw"
 import PanelTitle from "./PanelTitle.svelte"
 import panelTitleSource from "./PanelTitle.svelte?raw"
+import FolderIndicator from "./FolderIndicator.svelte"
+import folderIndicatorSource from "./FolderIndicator.svelte?raw"
 import FolderOpen from "./FolderOpen.svelte"
 import folderOpenSource from "./FolderOpen.svelte?raw"
 import TabsModes from "./TabsModes.svelte"
@@ -46,6 +47,8 @@ import Hints from "./Hints.svelte"
 import hintsSource from "./Hints.svelte?raw"
 import Suffix from "./Suffix.svelte"
 import suffixSource from "./Suffix.svelte?raw"
+import Trailing from "./Trailing.svelte"
+import trailingSource from "./Trailing.svelte?raw"
 import PointAxes from "./PointAxes.svelte"
 import pointAxesSource from "./PointAxes.svelte?raw"
 import PointDetails from "./PointDetails.svelte"
@@ -64,6 +67,8 @@ import fileFieldBasicSource from "./FileFieldBasic.svelte?raw"
   releases.
 </Aside>
 
+<LivePanel client:visible />
+
 - `NumberField`, one number with a label that doubles as the scrub handle.
 - `TextField`, one string with a plain label and no scrub.
 - `FileField`, a native file input that shows the chosen file names and clears them.
@@ -73,10 +78,6 @@ import fileFieldBasicSource from "./FileFieldBasic.svelte?raw"
 - `ToggleButtons`, a compact row of mutually exclusive buttons.
 - `Panel`, `Folder`, and `Tabs`, the containers that group controls at tool panel scale.
 - A scrub or a drag writes the bound value on every pointer move, so a function binding sees each intermediate value.
-
-<Example code={livePanelSource} title="LivePanel.svelte">
-  <LivePanel client:visible />
-</Example>
 
 ## Installation
 
@@ -117,7 +118,7 @@ import fileFieldBasicSource from "./FileFieldBasic.svelte?raw"
 
 ## NumberField
 
-`NumberField` wraps a native `<input type="number">` with an optional visible `label`. Without a `label`, pass `aria-label` or `aria-labelledby`, and the field does not scrub.
+`NumberField` wraps a native `<input type="number">` with an optional visible `label`. The input sits in a prime-ui `Input.Group` that wears the frame, with prime-ui's `NumberInput.Stepper` at its right edge, whose up and down buttons step by `step` on a pointer press and repeat while held. They show while the field is hovered or focused, take no focus, and are hidden from assistive technology. Without a `label`, pass `aria-label` or `aria-labelledby`, and the field does not scrub. `labelPlacement` is `'outside'` by default, and `'inset'` draws the label inside the input's left edge as a prefix, which fits a short label such as one axis letter.
 
 ### Two-way binding
 
@@ -153,6 +154,7 @@ A scrub writes on every pointer move, so a function binding receives each interm
 | Drag the label sideways        | Scrub, moving the value by `step` for each pixel         |
 | Shift or Alt while scrubbing   | Scale each pixel by 10 or by a tenth                     |
 | Click the label                | Focus the input                                          |
+| Press the up or down button    | Step once by `step`, and repeat while held               |
 | Slider: Arrow Left / Right / Up / Down | The range moves by `step`, natively              |
 | Slider: Home / End             | The range jumps to `min` or `max`, natively              |
 | Slider: readout                | Steps like a `NumberField`, without scrubbing            |
@@ -201,6 +203,10 @@ The setter receives the whole new `PointValue`. This one refuses any value farth
   <PointLabels client:visible />
 </Example>
 
+### In a narrow box
+
+`Point` keeps its axes in one row while each has room for its value, and stacks them one a row in a narrower box: under 15rem for two axes, 22rem for three, and 29rem for four. It measures its own box with a container query, so its root is a size container. Give it a width where its parent would otherwise shrink it to its content.
+
 ### Per axis
 
 `axes` lets single axes set `min`, `max`, `step`, `suffix`, `state`, and `describedBy` for themselves, and an axis listed there uses its own value in place of the control's. So a vector whose last axis has its own unit and range is still one `Point`. This orientation is four axes, and the last is an angle with its own step, range, and unit.
@@ -219,7 +225,7 @@ The `details` snippet draws content under one axis field, at that field's width,
 
 ## Hints
 
-`NumberField`, `Point`, `Slider`, `ToggleButtons`, and a `Select` with no children take a `hint`. It puts an info button beside the label that opens a tooltip with the text, and the control is described by the same text, tooltip open or not. The button is named `About <label>`. A hint needs a visible `label`, so it sits beside one. `Select` shows no label, so its button is named from `aria-label`. `Point` has one hint for the whole group, and its axis fields have none. An inset `NumberField` puts the button after the input, since the label is inside it.
+`NumberField`, `Point`, `Slider`, `ToggleButtons`, and a `Select` with no children take a `hint`. It puts an info button beside the label that opens a tooltip with the text, and the control is described by the same text, tooltip open or not. The button is named `About <label>`. A hint needs a visible `label`, so it sits beside one. `Select` shows no label, so its button is named from `aria-label`. `Point` has one hint for the whole group, and its axis fields have none. An inset `NumberField` puts the button after the input, since the label is inside it. `TextField` and `FileField` take a `hint` the same way.
 
 <Example code={hintsSource} title="Hints.svelte">
   <Hints client:visible />
@@ -233,9 +239,19 @@ The `details` snippet draws content under one axis field, at that field's width,
   <Suffix client:visible />
 </Example>
 
+## Trailing content
+
+`NumberField` takes a `trailing` snippet, drawn inside the input's right edge after any `suffix`, in the same `Input.Group`. It fits an icon button that acts on the one field. `Point` takes the same snippet and passes it the axis, and `Slider` draws it in its readout. Content that keeps its box while hidden, as `invisible` does, keeps the input's width fixed, so the field does not move when the button appears. Here each axis gets a reset button once its value differs from the live one.
+
+<Example code={trailingSource} title="Trailing.svelte">
+  <Trailing client:visible />
+</Example>
+
 ## State
 
-`NumberField`, `Point`, and `Slider` take a `state` of `'none'`, `'info'`, `'warn'`, or `'error'`, prime-ui's `FieldState`. `'warn'` draws the `warning-dark` border. `'error'` draws the `danger-dark` border and sets `aria-invalid="true"`. `'info'` changes no border, because prime-ui's `input` style has no info rule, and this package draws none of its own. `Point` takes one state for the whole control and gives it to every axis field, and `axes` sets one on single axes. `Slider` draws its state on the readout, and an error marks the range invalid too. With a `suffix`, the border belongs to the group. A color is never the only signal, so pair a warn or error with text, such as a hint.
+`NumberField`, `Point`, and `Slider` take a `state` of `'none'`, `'info'`, `'warn'`, or `'error'`, prime-ui's `FieldState`. `'warn'` draws the `warning-dark` border. `'error'` draws the `danger-dark` border and sets `aria-invalid="true"`. `'info'` changes no border, because prime-ui's `input` style has no info rule, and this package draws none of its own. `Point` takes one state for the whole control and gives it to every axis field, and `axes` sets one on single axes. `Slider` draws its state on the readout, and an error marks the range invalid and turns its track `danger-dark`. With a `suffix`, the border belongs to the group. A color is never the only signal, so pair a warn or error with text, such as a hint.
+
+Every control takes `disabled`. `NumberField` and `TextField` also take `readonly`, which keeps the value visible and focusable but stops edits, steps, and scrubs. The panels below render each control in each state it supports.
 
 <Example code={statesSource} title="States.svelte">
   <States client:visible />
@@ -245,7 +261,7 @@ The `details` snippet draws content under one axis field, at that field's width,
 
 `TextField` is a native text input with the `NumberField` row layout and no scrub. The label is a plain `<label>` that focuses the input. Without a `label`, pass `aria-label` or `aria-labelledby`. It takes `placeholder`, the native input attributes, `hint`, and `state`, which work as they do on `NumberField`. It has no `suffix` and no `labelPlacement`.
 
-`bind:value` holds a string. Unlike `NumberField`, whose empty field is `undefined`, an empty `TextField` is the empty string, so a bound `$state('')` stays a string.
+`bind:value` holds a string. It starts `undefined` when the bound state does, and a cleared field binds the empty string, so a bound `$state('')` stays a string.
 
 <Example code={textFieldBasicSource} title="TextFieldBasic.svelte">
   <TextFieldBasic client:visible />
@@ -255,7 +271,7 @@ The `details` snippet draws content under one axis field, at that field's width,
 
 `FileField` is prime-ui's [`FileInput`](../prime-ui/components/file-input/) in the `TextField` row layout. A native `<input type="file">` covers the control, so the picker, a dropped file, and the keyboard are the browser's, and `accept`, `multiple`, and the other native attributes pass through. The label is a plain `<label>`. Without a `label`, pass `aria-label` or `aria-labelledby`. `hint` and `state` work as they do on `NumberField`.
 
-`bind:value` holds a `File[]`. Without `multiple` it holds at most one file, and a cleared field is an empty array. The chosen names truncate to the row, so the control never grows past a narrow pane, and a clear button appears beside them. `accept` only filters the picker, so check the files yourself and set `state="error"` on one you refuse.
+`bind:value` holds a `File[]`. Without `multiple` it holds at most one file, and a cleared field is an empty array. The chosen names truncate to the row, so the control never grows past a narrow pane, and a clear button appears beside them, named by `clearLabel`, which defaults to `Clear selection`. `accept` only filters the picker, so check the files yourself and set `state="error"` on one you refuse.
 
 <Example code={fileFieldBasicSource} title="FileFieldBasic.svelte">
   <FileFieldBasic client:visible />
@@ -263,7 +279,7 @@ The `details` snippet draws content under one axis field, at that field's width,
 
 ## Panel
 
-`Panel` is the dense container for a tool panel's controls, a `role="group"` with a border and tight spacing. A visible `title` names the group. Without one, pass `aria-label` or `aria-labelledby`.
+`Panel` is the dense container for a tool panel's controls, a `role="group"` with a `rounded-sm` border and tight spacing. A visible `title` names the group. Without one, pass `aria-label` or `aria-labelledby`.
 
 <Example code={panelTitleSource} title="PanelTitle.svelte">
   <PanelTitle client:visible />
@@ -271,15 +287,31 @@ The `details` snippet draws content under one axis field, at that field's width,
 
 ## Folder
 
-`Folder` is a collapsible group inside a panel. Its `title` is the text of the button that opens and closes it. It is open by default, and `bind:open` reads and sets the state.
+`Folder` is a collapsible group inside a panel. Its `title` is the text of the button that opens and closes it. `bind:open` reads and sets the state. It renders open while the bound value is `undefined`, so a folder with no initial value starts open.
 
 <Example code={folderOpenSource} title="FolderOpen.svelte">
   <FolderOpen client:visible />
 </Example>
 
+### Indicator
+
+`indicator` is a snippet that replaces the chevron at the end of the title row, after any `summary`. It receives `{ open }`.
+
+<Example code={folderIndicatorSource} title="FolderIndicator.svelte">
+  <FolderIndicator client:visible />
+</Example>
+
+## Root attributes
+
+`Point`, `Slider`, `ToggleButtons`, `Panel`, and `Folder` spread their remaining props onto the root element, so an `id`, a `data-*`, or an `aria-*` attribute reaches it. On `Slider` the naming props still name the range and the readout.
+
+```svelte
+<Slider label="Opacity" id="opacity-slider" data-testid="opacity" bind:value={opacity} />
+```
+
 ## Tabs
 
-`Tabs` is a compound of `Tabs.List`, `Tabs.Trigger`, and `Tabs.Content`. It wraps the prime-ui parts at panel scale, so the props and the keyboard behavior are prime-ui's. `bind:value` holds the selected tab, and each `Tabs.Content` shows while its `value` is selected. Give `Tabs.List` an `aria-label`.
+`Tabs` is a compound of `Tabs.List`, `Tabs.Trigger`, and `Tabs.Content`. It wraps the prime-ui parts at panel scale, so the props and the keyboard behavior are prime-ui's. `bind:value` holds the selected tab, and each `Tabs.Content` shows while its `value` is selected. Give `Tabs.List` a visible `label`, an `aria-label`, or an `aria-labelledby`.
 
 <Example code={tabsModesSource} title="TabsModes.svelte">
   <TabsModes client:visible />
@@ -311,7 +343,7 @@ Write the parts when you need a class, handlers, or a custom item. `Select.Items
 
 ## Slider
 
-`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label` or `aria-labelledby`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing. The readout is 64 px wide and grows to fit the longest value in the range, `min` or `max` at the step's decimal places, so a value such as `-179.9` is never clipped.
+`Slider` pairs a native `<input type="range">` with a `NumberField` readout. The visible `label` names both. Without it, pass `aria-label` or `aria-labelledby`. `min`, `max`, and `step` apply to both, and the readout steps like a `NumberField` without scrubbing. A disabled range paints a `disabled-light` track and a `disabled-dark` thumb, and the readout is disabled with it. `trailing` draws inside the right edge of the readout. The readout is 64 px wide and grows to fit the longest value in the range, `min` or `max` at the step's decimal places, so a value such as `-179.9` is never clipped.
 
 <Example code={sliderBoundsSource} title="SliderBounds.svelte">
   <SliderBounds client:visible />

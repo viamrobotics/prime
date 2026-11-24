@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import StructuredMenu from './StructuredMenu.svelte';
+import StructuredMenu from './fixtures/StructuredMenu.svelte';
 
 const trigger = (container: Element) =>
 	[...container.querySelectorAll('button')].find(
@@ -20,7 +20,11 @@ const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() 
 
 const open = async (container: Element) => {
 	await userEvent.click(trigger(container));
-	await vi.waitFor(() => expect(menus()[0]?.contains(document.activeElement)).toBe(true));
+	await vi.waitFor(() =>
+		expect(menus()[0]?.contains(document.activeElement), 'focus moved into the open menu').toBe(
+			true
+		)
+	);
 	await nextFrame();
 	await nextFrame();
 };
@@ -48,7 +52,7 @@ describe('Menu structure', () => {
 		const { container } = render(StructuredMenu);
 		await open(container);
 
-		expect(document.querySelector('[role="separator"]')).not.toBeNull();
+		expect(document.querySelectorAll('[role="separator"]')).toHaveLength(1);
 	});
 
 	it('labels the group by its heading', async () => {

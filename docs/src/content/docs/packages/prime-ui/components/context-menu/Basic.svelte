@@ -7,7 +7,7 @@
 <div class="not-content">
   <ContextMenu bind:open>
     <ContextMenu.Trigger
-      class="flex h-24 items-center justify-center rounded-lg border border-dashed border-medium text-sm text-subtle-2"
+      class="flex h-24 items-center justify-center rounded-sm border border-dashed border-medium text-sm text-subtle-2"
     >
       Right-click or long-press
     </ContextMenu.Trigger>

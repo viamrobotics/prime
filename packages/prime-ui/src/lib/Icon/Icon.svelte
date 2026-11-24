@@ -17,6 +17,7 @@ or any Svelte icon component rendered directly. Decorative by default. Pass `ari
 <script lang="ts">
 	import type { SVGAttributes } from 'svelte/elements';
 
+	import { iconRole } from './icon-role.ts';
 	import { iconSizes, type IconSize, type IconType } from './icon.ts';
 
 	interface Props extends SVGAttributes<SVGElement> {
@@ -29,13 +30,12 @@ or any Svelte icon component rendered directly. Decorative by default. Pass `ari
 
 	const { icon, size = 'base', class: extraClasses, ...restProps }: Props = $props();
 
-	const isLabeled = $derived(Boolean(restProps['aria-label'] || restProps['aria-labelledby']));
+	const roleAttributes = $derived(iconRole(restProps));
 </script>
 
 {#if typeof icon === 'string'}
 	<svg
-		role={isLabeled ? 'img' : undefined}
-		aria-hidden={isLabeled ? undefined : true}
+		{...roleAttributes}
 		{...restProps}
 		viewBox="0 0 24 24"
 		focusable="false"
@@ -45,10 +45,5 @@ or any Svelte icon component rendered directly. Decorative by default. Pass `ari
 	</svg>
 {:else}
 	{@const IconComponent = icon}
-	<IconComponent
-		role={isLabeled ? 'img' : undefined}
-		aria-hidden={isLabeled ? undefined : true}
-		{...restProps}
-		class={[iconSizes[size], extraClasses]}
-	/>
+	<IconComponent {...roleAttributes} {...restProps} class={[iconSizes[size], extraClasses]} />
 {/if}

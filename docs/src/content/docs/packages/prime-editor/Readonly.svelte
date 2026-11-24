@@ -6,9 +6,9 @@
 </script>
 
 <div class="not-content flex w-full flex-col gap-3">
-  <Field class="flex items-center gap-2">
+  <Field class="flex items-center gap-2" label="Readonly">
     <Checkbox bind:checked={readonly} />
-    <Label>Readonly</Label>
+    <Label />
   </Field>
   <CodeEditor
     aria-label="Python snippet"

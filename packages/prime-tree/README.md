@@ -48,9 +48,9 @@ Requires `svelte` `^5.29.0`. Import the stylesheet once, after Tailwind:
 
 <Tree
 	nodes={files}
-	nodeToValue={(file) => file.path}
-	nodeToString={(file) => file.name}
-	nodeToChildren={(file) => file.children}
+	getValue={(file) => file.path}
+	getLabel={(file) => file.name}
+	getChildren={(file) => file.children}
 	bind:expanded
 	bind:selected
 	aria-label="Files"
@@ -75,18 +75,21 @@ Requires `svelte` `^5.29.0`. Import the stylesheet once, after Tailwind:
 </Tree>
 ```
 
+Set `selectionMode="multiple"` to select several rows. Set `branchClick` to `'toggle'` for folders that only open and close, or to `'select'` to select a branch without opening it. Pass `getChildCount` for a branch whose children load later, and `isDisabled` to disable a node, which is then never selected or expanded. Give `Tree` a `children` snippet and place `Tree.Row` to arrange the root rows yourself, such as in a virtual list.
+
 ## Keyboard
 
-| Key                     | Action                                                  |
-| ----------------------- | ------------------------------------------------------- |
-| Arrow Down / Arrow Up   | Move focus to the next or previous visible row          |
-| Arrow Right             | Expand a collapsed branch, or move into an expanded one |
-| Arrow Left              | Collapse an expanded branch, or move to the parent      |
-| Home / End              | Move focus to the first or last visible row             |
-| Enter or Space          | Select the focused row                                  |
-| Shift + Arrow Up / Down | Extend a multiple selection                             |
-| `*`                     | Expand every sibling of the focused row                 |
-| Printable characters    | Type-ahead by `nodeToString`                            |
+| Key                     | Action                                                        |
+| ----------------------- | ------------------------------------------------------------- |
+| Arrow Down / Arrow Up   | Move focus to the next or previous visible row                |
+| Arrow Right             | Expand a collapsed branch, or move into an expanded one       |
+| Arrow Left              | Collapse an expanded branch, or move to the parent            |
+| Home / End              | Move focus to the first or last visible row                   |
+| Enter or Space          | Select the focused row, and toggle a branch per `branchClick` |
+| Shift + Arrow Up / Down | Extend a multiple selection                                   |
+| Ctrl + A / Meta + A     | In multiple mode, select every node that is not disabled      |
+| `*`                     | Expand every sibling of the focused row                       |
+| Printable characters    | Type-ahead by `getLabel`                                      |
 
 ## Documentation
 

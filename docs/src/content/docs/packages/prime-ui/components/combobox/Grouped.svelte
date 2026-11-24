@@ -44,8 +44,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Machine</Label>
+  <Field label="Machine" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <Combobox bind:value={machine} bind:query items={machines}>
       <Input.Group>
         <Combobox.Input placeholder="Search machines" />
@@ -61,9 +61,7 @@
               {/each}
             </Combobox.Group>
           {/each}
-          {#if visible.length === 0}
-            <Combobox.Empty>No matching machine</Combobox.Empty>
-          {/if}
+          <Combobox.Empty>No matching machine</Combobox.Empty>
         </Combobox.Viewport>
       </Combobox.Content>
     </Combobox>

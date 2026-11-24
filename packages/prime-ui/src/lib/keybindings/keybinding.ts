@@ -16,7 +16,7 @@ export interface Keybinding {
 	key: string;
 	/** Whether held Shift is part of the press. */
 	shift?: boolean;
-	/** Whether the platform's command key is part of the press: Command on Apple devices, Control elsewhere. */
+	/** Whether Command or Control is part of the press. Printed as Command on Apple devices and Control elsewhere. */
 	mod?: boolean;
 	/** Whether to cancel the browser's own response to the press, such as the save dialog on Command+S. */
 	preventDefault?: boolean;

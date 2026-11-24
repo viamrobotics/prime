@@ -6,7 +6,6 @@ import { defineConfig, includeIgnoreFile } from 'eslint/config';
 import globals from 'globals';
 import path from 'node:path';
 import ts from 'typescript-eslint';
-import tseslint from 'typescript-eslint';
 
 import svelteConfig from './svelte.config.js';
 
@@ -14,7 +13,7 @@ const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 
 export default defineConfig(
 	includeIgnoreFile(gitignorePath),
-	tseslint.config({
+	ts.config({
 		languageOptions: {
 			parserOptions: {
 				tsconfigRootDir: import.meta.dirname,
@@ -50,11 +49,6 @@ export default defineConfig(
 		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
 		languageOptions: {
 			parserOptions: {
-				projectService: {
-					allowDefaultProject: ['eslint.config.js', 'svelte.config.js'],
-					defaultProject: './tsconfig.json'
-				},
-				tsconfigRootDir: import.meta.dirname,
 				extraFileExtensions: ['.svelte'],
 				parser: ts.parser,
 				svelteConfig
@@ -62,8 +56,6 @@ export default defineConfig(
 		}
 	},
 	{
-		// Override or add rule settings here, such as:
-		// 'svelte/button-has-type': 'error'
 		rules: {
 			'svelte/no-unused-svelte-ignore': 'error',
 			'svelte/valid-compile': 'error'

@@ -1,8 +1,13 @@
+<!--
+@component
+The row a user focuses and activates on a branch. It holds the roving `tabindex`, and it mirrors `aria-expanded` from the node state because focus rests on it, not on the `treeitem`. Place it inside [`Tree.Branch`](./Branch.svelte), around the label and the trigger. With `branchClick` set to `'toggle'`, it replaces the default click and activation keys with its own toggle.
+-->
 <script lang="ts">
 	import { mergeProps } from '@zag-js/svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { deferFocus } from './defer-focus.ts';
+	import { disableActivation } from './disabled-node.ts';
 	import { useTree, useTreeNode } from './useTree.svelte.ts';
 
 	type Props = HTMLAttributes<HTMLDivElement>;
@@ -27,9 +32,16 @@
 	};
 
 	const attrs = $derived.by(() => {
-		const zagProps = deferFocus(
-			tree.api.getBranchControlProps({ node: current.node, indexPath: current.indexPath })
-		);
+		const zagProps = {
+			...disableActivation(
+				deferFocus(
+					tree.api.getBranchControlProps({ node: current.node, indexPath: current.indexPath })
+				),
+				current.state.disabled
+			),
+			// Focus rests on this button, not on the treeitem that zag gives aria-expanded to.
+			'aria-expanded': current.state.expanded
+		};
 
 		if (tree.branchClick !== 'toggle') return mergeProps(zagProps, rest);
 

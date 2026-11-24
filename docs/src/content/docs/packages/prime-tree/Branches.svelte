@@ -40,9 +40,9 @@
 
   <Tree
     nodes={files}
-    nodeToValue={(file) => file.path}
-    nodeToString={(file) => file.name}
-    nodeToChildren={(file) => file.children}
+    getValue={(file) => file.path}
+    getLabel={(file) => file.name}
+    getChildren={(file) => file.children}
     {branchClick}
     bind:selected
     aria-label="Files"
@@ -51,7 +51,7 @@
       {#if state.isBranch}
         <Tree.Branch>
           <Tree.BranchControl
-            class="focus-ring rounded-sm py-1 text-sm data-[selected]:bg-medium"
+            class="focus-ring rounded-sm py-1 text-sm data-[selected]:bg-medium data-[selected]:outline-2 data-[selected]:-outline-offset-2 data-[selected]:outline-link"
             style="padding-inline-start: calc(var(--depth) * 1rem)"
           >
             <Tree.BranchTrigger aria-label={state.expanded ? "Collapse" : "Expand"}>
@@ -63,7 +63,7 @@
         </Tree.Branch>
       {:else}
         <Tree.Item
-          class="focus-ring rounded-sm py-1 text-sm data-[selected]:bg-medium"
+          class="focus-ring rounded-sm py-1 text-sm data-[selected]:bg-medium data-[selected]:outline-2 data-[selected]:-outline-offset-2 data-[selected]:outline-link"
           style="padding-inline-start: calc(var(--depth) * 1rem + 1rem)"
         >
           {file.name}

@@ -2,11 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import CodeSnippet from '../CodeSnippet.svelte';
-import DarkCodeSnippet from './DarkCodeSnippet.svelte';
-import NarrowCodeSnippet from './NarrowCodeSnippet.svelte';
-import WrapCodeSnippet from './WrapCodeSnippet.svelte';
+import DarkCodeSnippet from './fixtures/DarkCodeSnippet.svelte';
+import NarrowCodeSnippet from './fixtures/NarrowCodeSnippet.svelte';
+import WrapCodeSnippet from './fixtures/WrapCodeSnippet.svelte';
 
 const code = '{ "name": "viam", "count": 3 }';
 const COPIED_MS = 2000;
@@ -118,6 +118,29 @@ describe('CodeSnippet', () => {
 		await expect.element(page.getByRole('button', { name: 'Copy failed' })).toBeVisible();
 	});
 
+	it('announces Copy failed through a status region when the write rejects', async () => {
+		vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValueOnce(new Error('denied'));
+		render(CodeSnippet, { props: { code, language: 'json' } });
+
+		await userEvent.click(page.getByRole('button', { name: 'Copy code' }));
+
+		await expect.element(page.getByRole('status')).toHaveTextContent('Copy failed');
+	});
+
+	it('renders the caption beneath the code', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: 'a', hasCaption: true } });
+
+		await expect.element(page.getByText('rover.ts')).toBeVisible();
+		expect(container.querySelector('figure > figcaption')!.textContent!.trim()).toBe('rover.ts');
+
+		const pre = container.querySelector('pre')!;
+		const caption = container.querySelector('figure > figcaption')!;
+		expect(
+			caption.getBoundingClientRect().top,
+			'the caption starts below the code'
+		).toBeGreaterThanOrEqual(pre.getBoundingClientRect().bottom);
+	});
+
 	it.each([
 		[false, 'pre'],
 		[true, 'pre-wrap']
@@ -134,6 +157,23 @@ describe('CodeSnippet', () => {
 		expect(container.querySelector('pre')!.tabIndex).toBe(0);
 	});
 
+	it('wears the shared focus ring on an overflowing snippet', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: longLine } });
+
+		await expect.element(page.getByRole('region', { name: 'Code' })).toBeVisible();
+		expect(container.querySelector('pre')!.classList.contains('focus-ring'), 'focus-ring').toBe(
+			true
+		);
+	});
+
+	it('does not wear the focus ring on a snippet that fits', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: 'a' } });
+		const pre = container.querySelector('pre')!;
+
+		await expect.poll(() => pre.hasAttribute('role')).toBe(false);
+		expect(pre.classList.contains('focus-ring'), 'focus-ring').toBe(false);
+	});
+
 	it('names an overflowing captioned snippet by its caption', async () => {
 		render(NarrowCodeSnippet, { props: { code: longLine, hasCaption: true } });
 
@@ -144,15 +184,26 @@ describe('CodeSnippet', () => {
 		const { container } = render(NarrowCodeSnippet, { props: { code: 'a' } });
 		const pre = container.querySelector('pre')!;
 
-		await expect.poll(() => pre.hasAttribute('role')).toBe(false);
-		expect(pre.hasAttribute('tabindex')).toBe(false);
+		await expect.poll(() => pre.hasAttribute('role'), { message: 'pre has no role' }).toBe(false);
+		expect(pre.hasAttribute('tabindex'), 'pre is not a tab stop').toBe(false);
+	});
+
+	it('drops the region role and tab stop when wrapLines turns on', async () => {
+		const { container, rerender } = render(NarrowCodeSnippet, { props: { code: longLine } });
+		const pre = container.querySelector('pre')!;
+		await expect.element(page.getByRole('region', { name: 'Code' })).toBeVisible();
+
+		await rerender({ code: longLine, wrapLines: true });
+
+		await expect.poll(() => pre.hasAttribute('role'), { message: 'pre has no role' }).toBe(false);
+		expect(pre.hasAttribute('tabindex'), 'pre is not a tab stop').toBe(false);
 	});
 
 	it('gives a wrapLines snippet with a long line no region role and no tab stop', async () => {
 		const { container } = render(NarrowCodeSnippet, { props: { code: longLine, wrapLines: true } });
 		const pre = container.querySelector('pre')!;
 
-		await expect.poll(() => pre.hasAttribute('role')).toBe(false);
-		expect(pre.hasAttribute('tabindex')).toBe(false);
+		await expect.poll(() => pre.hasAttribute('role'), { message: 'pre has no role' }).toBe(false);
+		expect(pre.hasAttribute('tabindex'), 'pre is not a tab stop').toBe(false);
 	});
 });

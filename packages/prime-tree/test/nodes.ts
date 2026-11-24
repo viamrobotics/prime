@@ -27,10 +27,20 @@ export const sampleNodes: SampleNode[] = [
 ];
 
 export const sampleAccessors = {
-	nodeToValue: (node: SampleNode) => node.id,
-	nodeToString: (node: SampleNode) => node.label,
-	nodeToChildren: (node: SampleNode) => node.children,
-	nodeToChildrenCount: (node: SampleNode) =>
+	getValue: (node: SampleNode) => node.id,
+	getLabel: (node: SampleNode) => node.label,
+	getChildren: (node: SampleNode) => node.children,
+	getChildCount: (node: SampleNode) =>
 		node.id === 'empty' ? 0 : (node.children?.length ?? undefined),
-	isNodeDisabled: (node: SampleNode) => node.disabled ?? false
+	isDisabled: (node: SampleNode) => node.disabled ?? false
 };
+
+export const lockedFolderNodes: SampleNode[] = [
+	{
+		id: 'archive',
+		label: 'Archive',
+		disabled: true,
+		children: [{ id: 'old', label: 'Old' }]
+	},
+	{ id: 'notes', label: 'Notes' }
+];

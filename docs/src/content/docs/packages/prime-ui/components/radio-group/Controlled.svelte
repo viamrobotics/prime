@@ -5,8 +5,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex flex-col gap-1">
-    <Label>Plan</Label>
+  <Field label="Plan" class="flex flex-col gap-1">
+    <Label />
     <RadioGroup
       name="plan"
       bind:value={

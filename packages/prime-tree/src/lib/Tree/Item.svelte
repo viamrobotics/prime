@@ -1,8 +1,14 @@
+<!--
+@component
+The `role="treeitem"` element of a leaf node. It holds the roving `tabindex`, carries `aria-selected`, and sets the `--depth` custom property. Place it as the outermost part of a leaf row in the `node` snippet.
+-->
 <script lang="ts">
 	import { mergeProps } from '@zag-js/svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { deferFocus } from './defer-focus.ts';
+	import { disableActivation } from './disabled-node.ts';
+	import { omitKeys } from './omit-keys.ts';
 	import { useTree, useTreeNode } from './useTree.svelte.ts';
 
 	type Props = HTMLAttributes<HTMLDivElement>;
@@ -14,12 +20,18 @@
 
 	const attrs = $derived(
 		mergeProps(
-			deferFocus(tree.api.getItemProps({ node: current.node, indexPath: current.indexPath })),
+			disableActivation(
+				// aria-selected carries the selection. aria-current would announce a navigation target.
+				omitKeys(
+					deferFocus(tree.api.getItemProps({ node: current.node, indexPath: current.indexPath })),
+					['aria-current']
+				),
+				current.state.disabled
+			),
 			{
 				'aria-posinset': current.indexPath.at(-1)! + 1,
 				'aria-setsize': current.setSize
 			},
-			{ 'aria-current': undefined },
 			rest
 		)
 	);

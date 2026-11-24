@@ -1,7 +1,7 @@
 {
 	"name": "@viamrobotics/prime-controls",
 	"version": "0.5.0",
-	"description": "Compact realtime controls for Svelte 5 tool panels: number fields and vectors that scrub by pointer and step by keyboard.",
+	"description": "Compact realtime controls for Svelte 5 tool panels: number, vector, slider, text, file, select, and toggle controls, with panels, folders, and tabs to group them.",
 	"license": "Apache-2.0",
 	"publishConfig": {
 		"access": "public",
@@ -18,7 +18,8 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
 		},
 		"./styles.css": "./styles.css"
 	},
@@ -84,6 +85,7 @@
 				"test/**",
 				"tsconfig.json",
 				"svelte.config.js",
+				"vite.config.ts",
 				"package.json",
 				"../tailwind-config/tailwind-config.css",
 				"../tailwind-config/tailwind-config-dark.css"
@@ -124,6 +126,7 @@
 				"!dist/**",
 				"!.wireit/**",
 				"eslint.config.js",
+				".gitignore",
 				"tsconfig.json",
 				"package.json",
 				"../tailwind-config/tailwind-config.css"
@@ -185,7 +188,6 @@
 		"svelte",
 		"controls",
 		"number input",
-		"vector",
-		"tweakpane"
+		"vector"
 	]
 }

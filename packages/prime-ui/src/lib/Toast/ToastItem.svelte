@@ -1,25 +1,40 @@
-<!--
-@component
-One toast in a [`Toast`](./Toast.svelte) region. It owns the machine, the live-region role, and the
-stacking motion, and shows the variant glyph, the title and description, an optional action, and a
-dismiss button. The region renders it, so a consumer never places one.
--->
 <script lang="ts">
 	import { mdiAlert, mdiAlertCircle, mdiCheckCircle, mdiClose, mdiInformation } from '@mdi/js';
 	import { normalizeProps, useMachine } from '@zag-js/svelte';
 	import * as toast from '@zag-js/toast';
 
+	import type { ToastVariant } from './toast.ts';
+
 	import Icon from '../Icon/Icon.svelte';
 	import { toastVariantOf } from './useToast.svelte.ts';
 
 	interface Props {
-		/** The toast this item shows, as the region's machine hands it over. */
 		item: toast.Props;
-		/** Position in the region's list, which sets how far down the stack the item sits. */
+		// Sets how far down the stack the item sits.
 		index: number;
-		/** The region's machine. */
 		parent: toast.GroupService;
 	}
+
+	const GLYPHS: Record<ToastVariant, { path: string; tone: string }> = {
+		info: { path: mdiInformation, tone: 'text-info-dark' },
+		success: { path: mdiCheckCircle, tone: 'text-success-dark' },
+		warning: { path: mdiAlert, tone: 'text-warning-dark' },
+		danger: { path: mdiAlertCircle, tone: 'text-danger-dark' }
+	};
+
+	const NAMES: Record<ToastVariant, string> = {
+		info: 'Info',
+		success: 'Success',
+		warning: 'Warning',
+		danger: 'Error'
+	};
+
+	const ROLES: Record<ToastVariant, 'status' | 'alert'> = {
+		info: 'status',
+		success: 'status',
+		warning: 'alert',
+		danger: 'alert'
+	};
 
 	const { item, index, parent }: Props = $props();
 
@@ -27,25 +42,18 @@ dismiss button. The region renders it, so a consumer never places one.
 
 	const api = $derived(toast.connect(service, normalizeProps));
 	const variant = $derived(toastVariantOf(api.type));
-	const isAlert = $derived(variant === 'warning' || variant === 'danger');
-	const glyph = $derived(
-		{
-			info: { path: mdiInformation, tone: 'text-info-dark' },
-			success: { path: mdiCheckCircle, tone: 'text-success-dark' },
-			warning: { path: mdiAlert, tone: 'text-warning-dark' },
-			danger: { path: mdiAlertCircle, tone: 'text-danger-dark' }
-		}[variant]
-	);
+	const glyph = $derived(GLYPHS[variant]);
 </script>
 
 <!-- The width cap is against the viewport: a region pinned to one side has no width of its own for a percentage to resolve against. -->
 <div
 	{...api.getRootProps()}
-	role={isAlert ? 'alert' : 'status'}
-	class="z-[var(--z-index)] flex h-10 w-80 max-w-[calc(100vw-var(--spacing)*8)] [translate:var(--x)_var(--y)] [scale:var(--scale)] items-center gap-2 rounded-sm border border-medium bg-medium px-3 opacity-[var(--opacity)] transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale]"
+	role={ROLES[variant]}
+	class="toast-stack-item flex h-10 w-80 max-w-[calc(100vw-var(--spacing)*8)] items-center gap-2 rounded-sm border border-medium bg-medium px-3 focus-ring"
 >
 	<span {...api.getGhostBeforeProps()}></span>
 	<span {...api.getGhostAfterProps()}></span>
+	<span class="sr-only">{`${NAMES[variant]}: `}</span>
 	<Icon icon={glyph.path} size="base" class={['shrink-0', glyph.tone]} />
 	<span class="min-w-0 truncate text-sm text-default" {...api.getTitleProps()}>{api.title}</span>
 	{#if api.description}

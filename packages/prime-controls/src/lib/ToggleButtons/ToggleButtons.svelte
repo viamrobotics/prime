@@ -17,15 +17,19 @@ A row of mutually exclusive buttons at a tool panel's scale, one of which is sel
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+	import type { AccessibleName } from '../accessible-name.ts';
 
 	import { ToggleButtons, type ToggleButtonsOption } from '@viamrobotics/prime-ui';
 
-	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
+	import { hintIdFor } from '../Hint/described-by.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import Item from './ToggleButtonsItem.svelte';
 
-	interface Props {
+	interface Props extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'class' | 'children' | 'aria-label' | 'aria-labelledby' | 'aria-describedby'
+	> {
 		/** The selected value. Two-way bindable. */
 		value?: string;
 
@@ -57,12 +61,6 @@ A row of mutually exclusive buttons at a tool panel's scale, one of which is sel
 		children?: Snippet;
 	}
 
-	// A hint sits beside the visible label, so it is only allowed with one.
-	type AccessibleName =
-		| { label: string }
-		| { label?: undefined; hint?: undefined; 'aria-label': string }
-		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
-
 	let {
 		value = $bindable(),
 		items,
@@ -72,16 +70,17 @@ A row of mutually exclusive buttons at a tool panel's scale, one of which is sel
 		'aria-labelledby': ariaLabelledby,
 		disabled,
 		class: extraClasses,
-		children
+		children,
+		...restProps
 	}: Props & AccessibleName = $props();
 
 	const labelId = $props.id();
-	const hintId = `${labelId}-hint`;
+	const hintId = hintIdFor(labelId);
 </script>
 
-<div class={[CONTROL_ROW_CLASS, extraClasses]}>
+<div {...restProps} class={['flex items-center gap-2', extraClasses]}>
 	{#if label}
-		<span id={labelId} class={['shrink-0', CONTROL_LABEL_CLASS]}>{label}</span>
+		<span id={labelId} class="shrink-0 control-label">{label}</span>
 	{/if}
 	{#if label && hint}
 		<Hint {label} {hint} descriptionId={hintId} {disabled} />

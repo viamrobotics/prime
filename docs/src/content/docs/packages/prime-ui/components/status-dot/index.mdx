@@ -19,7 +19,7 @@ import inTooltipSource from "./InTooltip.svelte?raw";
 - `state` picks the color: `info`, `warning`, `success`, `danger`, or `disabled`. Leave it out for the gray dot.
 - `variant="hollow"` draws a ring in the state's color with no fill. `<StatusDot variant="hollow" label="Not started" />` is the gray ring.
 - `working` replaces the dot with an animated glyph in the state's color on the same 8px box, so a change never shifts the layout.
-- `label` is the accessible name, so always give one. A sighted viewer sees only the color, so pair the dot with visible text or a tooltip that shows the label.
+- A name is required: `label`, which is applied as the `aria-label`, or `aria-label`, or `aria-labelledby` naming a visible element. A sighted viewer sees only the color, so pair the dot with visible text or a tooltip that shows the name.
 
 ## Usage
 

@@ -2,14 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
+import { nextFrame } from '../../../../test/frames.ts';
 import '../../../../test/tailwind.css';
-import TooltipChart from './TooltipChart.svelte';
+import TooltipChart from './fixtures/TooltipChart.svelte';
 
 const START = Date.parse('2026-01-01T00:00:00Z');
 const MINUTE = 60_000;
 const NEAR_TOP = 0.05;
 const NEAR_BOTTOM = 0.95;
 const MIDDLE = 0.5;
+const NEAR_LEFT = 0.01;
 const NEAR_RIGHT = 0.99;
 const HIDDEN_LINE_HEIGHT = 0.125;
 
@@ -32,8 +34,6 @@ const readoutLines = (container: Element) =>
 
 const SETTLE_FRAMES = 3;
 const MAX_FRAMES = 120;
-
-const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 
 const labelNodesOf = (container: Element, part: string) => [
 	...container.querySelectorAll(`.${part} span`)
@@ -122,6 +122,16 @@ describe('Chart.Tooltip', () => {
 		await expect.poll(() => readoutOf(container)).toBeNull();
 	});
 
+	it('hides a hovered readout on Escape with the pointer still on the plot', async () => {
+		const { container } = render(TooltipChart, { props: { series: [low, high] } });
+		await hoverAt(container, MIDDLE, NEAR_TOP);
+		await expect.poll(() => readoutOf(container)).not.toBeNull();
+
+		await userEvent.keyboard('{Escape}');
+
+		await expect.poll(() => readoutOf(container)).toBeNull();
+	});
+
 	it('hides the readout from assistive technology', async () => {
 		const { container } = render(TooltipChart, { props: { series: [low, high] } });
 
@@ -138,8 +148,8 @@ describe('Chart.Tooltip', () => {
 		await expect.poll(() => readoutOf(container)).not.toBeNull();
 		const plot = plotOf(container).getBoundingClientRect();
 		const readout = readoutOf(container)!.getBoundingClientRect();
-		expect(readout.right).toBeLessThanOrEqual(plot.right);
-		expect(readout.top).toBeGreaterThanOrEqual(plot.top);
+		expect(readout.right, 'readout right edge against the plot').toBeLessThanOrEqual(plot.right);
+		expect(readout.top, 'readout top edge against the plot').toBeGreaterThanOrEqual(plot.top);
 	});
 
 	it('formats with its own xFormat and yFormat', async () => {
@@ -197,18 +207,34 @@ describe('Chart.Tooltip', () => {
 		}
 	);
 
-	it('shows a full date and time with seconds and a grouped number by default', async () => {
+	it('formats the time as a full date and time with seconds and the value grouped by default', async () => {
 		const points = [
-			{ x: new Date('2026-06-15T12:00:07Z'), y: 12345.6 },
-			{ x: new Date('2026-06-15T12:01:07Z'), y: 12345.6 }
+			{ x: new Date(2026, 5, 15, 12, 0, 7), y: 12345.6 },
+			{ x: new Date(2026, 5, 15, 12, 1, 7), y: 12345.6 }
 		];
 		const { container } = render(TooltipChart, {
 			props: { series: [{ name: 'cell-01', points }] }
 		});
 
-		await hoverAt(container, MIDDLE, MIDDLE);
+		await hoverAt(container, NEAR_LEFT, MIDDLE);
 
-		await expect.poll(() => readoutLines(container)[2]).toBe('12,345.6');
-		expect(readoutLines(container)[1]).toMatch(/2026.*\d:\d{2}:07/);
+		await expect
+			.poll(() => readoutLines(container).map((line) => line?.replace(/\s/g, ' ')))
+			.toEqual(['cell-01', 'Jun 15, 2026, 12:00:07 PM', '12,345.6']);
+	});
+
+	it.each([
+		{ yFraction: NEAR_TOP, name: 'cell-01', value: '12.3 °' },
+		{ yFraction: NEAR_BOTTOM, name: 'cell-02', value: '4 V' }
+	])('follows the $name value with its own unit', async ({ yFraction, name, value }) => {
+		const series = [
+			{ name: 'cell-01', unit: '°', points: flat(12.3) },
+			{ name: 'cell-02', unit: 'V', points: flat(4) }
+		];
+		const { container } = render(TooltipChart, { props: { series, xFormat: () => 'time' } });
+
+		await hoverAt(container, MIDDLE, yFraction);
+
+		await expect.poll(() => readoutLines(container)).toEqual([name, 'time', value]);
 	});
 });

@@ -11,7 +11,7 @@
       <Banner {variant}>
         <Banner.Title>{variant}</Banner.Title>
         <Banner.Description>A short explanation of what happened.</Banner.Description>
-        <Banner.Close />
+        <Banner.Close aria-label="Dismiss" />
       </Banner>
     {/each}
   </div>
@@ -21,7 +21,7 @@
     {#each variants as variant (variant)}
       <Banner {variant}>
         <Banner.Description>A short explanation of what happened.</Banner.Description>
-        <Banner.Close />
+        <Banner.Close aria-label="Dismiss" />
       </Banner>
     {/each}
   </div>

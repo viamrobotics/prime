@@ -1,7 +1,7 @@
 <!--
 @component
 The button that opens a [`Select`](./Select.svelte). Inside a
-[`Field`](../Field/Field.svelte) it takes its `id` (the field's `controlId`), `state`, and `aria-describedby` from there.
+[`Field`](../Field/Field.svelte) it takes its `id` (the field's `controlId`), `state`, `aria-describedby`, and name from there.
 An `error` state sets `aria-invalid` and the error border, and `warn` the warning border, the same `input` class from `@viamrobotics/tailwind-config` an [`Input`](../Input/Input.svelte) wears. Pair it with a `Hint` or a
 `Field.StateIcon` that says what is wrong, since the border color alone is not a signal
 everyone can see.
@@ -30,8 +30,9 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	import { mdiChevronDown } from '@mdi/js';
 	import { Select } from 'bits-ui';
 
+	import { warnIfUnnamed } from '../accessible-name-warning.ts';
 	import { FieldStates, type FieldState } from '../Field/state.ts';
-	import { useField } from '../Field/useField.svelte.ts';
+	import { controlName, useField } from '../Field/useField.svelte.ts';
 	import Icon from '../Icon/Icon.svelte';
 
 	interface Props extends HTMLButtonAttributes {
@@ -44,7 +45,9 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	const {
 		id,
 		'aria-describedby': describedBy,
-		state,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
+		state: stateProp,
 		class: extraClasses,
 		indicator,
 		children,
@@ -52,16 +55,22 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	}: Props = $props();
 
 	const field = useField();
-	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	let element = $state<HTMLButtonElement | null>(null);
+
+	const name = $derived(controlName(field, { ariaLabel, ariaLabelledBy }));
+
+	$effect(() => {
+		if (element) warnIfUnnamed(element, 'Select.Trigger');
+	});
+	const currentState = $derived(stateProp ?? field?.state ?? FieldStates.None);
 </script>
 
-{#snippet chevron()}
-	<Icon icon={mdiChevronDown} size="sm" class="shrink-0 text-subtle-2" />
-{/snippet}
-
 <Select.Trigger
+	bind:ref={element}
 	id={id ?? field?.controlId}
 	aria-describedby={describedBy ?? field?.describedBy}
+	aria-label={name['aria-label']}
+	aria-labelledby={name['aria-labelledby']}
 	aria-invalid={currentState === FieldStates.Error || undefined}
 	data-field-state={currentState === FieldStates.None ? undefined : currentState}
 	class={[
@@ -71,6 +80,9 @@ A trailing chevron is rendered by default. Pass an `indicator` snippet to replac
 	{...restProps}
 >
 	{@render children?.()}
-	{@const suffix = indicator ?? chevron}
-	{@render suffix()}
+	{#if indicator}
+		{@render indicator()}
+	{:else}
+		<Icon icon={mdiChevronDown} size="sm" class="shrink-0 text-subtle-2" />
+	{/if}
 </Select.Trigger>

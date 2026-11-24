@@ -142,6 +142,96 @@ const { size }: Props & Name = $props();
   });
 });
 
+describe("parseComponentSource edge cases", () => {
+  it("returns an empty doc when the component has no @component block", () => {
+    const parsed = parseComponentSource(
+      `<!-- just a note -->\n<script lang="ts">\nlet { a }: Props = $props();\n</script>`,
+    );
+
+    expect(parsed.doc).toBe("");
+  });
+
+  it("reads props from the script that calls $props, past a module script", () => {
+    const parsed = parseComponentSource(`<script lang="ts" module>
+export const FLAG = 1;
+</script>
+<script lang="ts">
+interface Props {
+  size?: number;
+}
+let { size }: Props = $props();
+</script>`);
+
+    expect(parsed.props.map((prop) => prop.name)).toEqual(["size"]);
+    expect(parsed.propsType).toBe("Props");
+  });
+
+  it("reports no props type when the component never calls $props", () => {
+    const parsed = parseComponentSource(
+      `<script lang="ts">\nconst a = 1;\n</script>`,
+    );
+
+    expect(parsed.propsType).toBeUndefined();
+    expect(parsed.external).toBe(false);
+    expect(parsed.props).toEqual([]);
+  });
+
+  it("records optionality and the verbatim type text of each prop", () => {
+    const parsed = parseComponentSource(`<script lang="ts">
+interface Props {
+  required: string;
+  optional?: 'a' | 'b';
+  noType?;
+}
+let { required }: Props = $props();
+</script>`);
+
+    expect(
+      parsed.props.map(({ name, type, optional }) => ({ name, type, optional })),
+    ).toEqual([
+      { name: "required", type: "string", optional: false },
+      { name: "optional", type: "'a' | 'b'", optional: true },
+      { name: "noType", type: "unknown", optional: true },
+    ]);
+  });
+
+  it("joins multiple extended types and leaves bindable false on plain props", () => {
+    const parsed = parseComponentSource(`<script lang="ts">
+interface Props extends A, Omit<B, 'x'> {
+  plain?: number;
+}
+let { plain = 3 }: Props = $props();
+</script>`);
+
+    expect(parsed.extends).toBe("A, Omit<B, 'x'>");
+    expect(parsed.props[0].bindable).toBe(false);
+    expect(parsed.props[0].default).toBe("3");
+  });
+
+  it("leaves default undefined when a prop has neither tag nor destructuring default", () => {
+    const parsed = parseComponentSource(`<script lang="ts">
+interface Props {
+  tone?: string;
+}
+let { tone }: Props = $props();
+</script>`);
+
+    expect(parsed.props[0].default).toBeUndefined();
+  });
+
+  it("leaves a bindable with no fallback without a default", () => {
+    const parsed = parseComponentSource(`<script lang="ts">
+interface Props {
+  value?: string;
+}
+let { value = $bindable() }: Props = $props();
+</script>`);
+
+    expect(parsed.props[0].bindable).toBe(true);
+    expect(parsed.props[0].default).toBeUndefined();
+  });
+});
+
 describe("rewriteSvelteLinks", () => {
   it("rewrites a sibling .svelte link through the resolver", () => {
     const doc =
@@ -158,5 +248,14 @@ describe("rewriteSvelteLinks", () => {
   it("leaves a link the resolver cannot place untouched", () => {
     const doc = "See [`X`](./Unknown.svelte).";
     expect(rewriteSvelteLinks(doc, () => undefined)).toBe(doc);
+  });
+
+  it("rewrites every link in a doc and ignores non-svelte links", () => {
+    const doc =
+      "[a](./A.svelte) [site](https://example.com/B.svelte) [md](./notes.md) [b](../../Dir/B.svelte)";
+
+    expect(rewriteSvelteLinks(doc, (file) => `/${file}/`)).toBe(
+      "[a](/A/) [site](https://example.com/B.svelte) [md](./notes.md) [b](/B/)",
+    );
   });
 });

@@ -1,3 +1,10 @@
+export {
+	floatPane,
+	floatStack,
+	raiseFloat,
+	removeFloat,
+	setFloatRect
+} from './FloatPanes/float-tree.ts';
 export { dragIgnore } from './Panes/drag-ignore.ts';
 export type { DragPreview } from './Panes/drag-preview.ts';
 export type { PaneState } from './Panes/pane-state.ts';
@@ -16,16 +23,11 @@ export type {
 } from './layout.ts';
 export {
 	addPaneToUpperRight,
-	floatPane,
-	floatStack,
 	movePane,
 	moveStack,
-	raiseFloat,
-	removeFloat,
 	removePane,
 	reorderPane,
 	selectPane,
-	setFloatRect,
 	stackPanes,
 	swapPanes,
 	swapSlots,

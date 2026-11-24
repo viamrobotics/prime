@@ -11,6 +11,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 
 	import { portalProps, type PortalTarget } from '../portal.ts';
 
+	// side, align, sideOffset, and alignOffset are the anchor-placement vocabulary bits-ui shares with Floating UI. No native name exists, so they keep bits-ui's names.
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -60,7 +61,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 		focusedOutside = null;
 	};
 
-	// The panel's focus trap pulls focus back from a control a press focuses, so the control is remembered for the close.
+	// bits-ui traps focus in the panel, pulling it back from a control a press focuses, so the control is remembered for the close.
 	const trackFocusOutside = (node: HTMLElement) => {
 		const rememberFocusedOutside = (event: FocusEvent) => {
 			if (event.target instanceof HTMLElement && !node.contains(event.target)) {
@@ -76,7 +77,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 			...(trigger.closest('[role="menubar"]')?.querySelectorAll('[aria-expanded="true"]') ?? [])
 		].some((other) => other !== trigger);
 
-	// A trigger that is not the bar's tab stop is not refocused on close, so focus would fall to the body.
+	// bits-ui refocuses only a tabbable trigger, and a trigger that is not the bar's tab stop is not tabbable, so focus would fall to the body.
 	// A press outside keeps focus on the control it pressed, and a switch to a neighboring menu leaves focus where it went.
 	const closeFocusTarget = (): HTMLElement | null => {
 		const trigger = triggerId ? document.getElementById(triggerId) : null;
@@ -113,10 +114,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 		onCloseAutoFocus={restoreFocus}
 		{@attach captureTrigger}
 		{@attach trackFocusOutside}
-		class={[
-			'z-menu min-w-40 rounded-sm border border-light bg-white p-1 shadow-popover',
-			extraClasses
-		]}
+		class={['z-menu min-w-40 popover-panel p-1', extraClasses]}
 		{...restProps}
 	>
 		{@render children?.()}

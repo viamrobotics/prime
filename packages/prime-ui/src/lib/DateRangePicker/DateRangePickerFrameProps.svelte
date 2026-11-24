@@ -1,23 +1,16 @@
-<!--
-@component
-Shares the range field's root attributes with [`DateRangePicker.Field`](./DateRangePickerField.svelte),
-so the field's frame is the element bits-ui wires as its root.
--->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
 	import { provideDateRangePickerFrame } from './useDateRangePicker.svelte.ts';
 
 	interface Props {
-		/** The attributes bits-ui computes for the range field's root element. */
 		props: Record<string, unknown>;
-
-		/** The `DateRangePicker.*` parts. */
 		children?: Snippet;
 	}
 
 	const { props, children }: Props = $props();
 
+	// A snippet cannot set context, so this component hands bits-ui's root attributes to `DateRangePicker.Field`, which renders the frame bits-ui wires as its root.
 	provideDateRangePickerFrame(() => props);
 </script>
 

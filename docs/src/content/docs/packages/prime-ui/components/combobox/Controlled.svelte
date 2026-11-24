@@ -11,8 +11,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Region</Label>
+  <Field label="Region" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <Combobox
       items={regions}
       bind:value={

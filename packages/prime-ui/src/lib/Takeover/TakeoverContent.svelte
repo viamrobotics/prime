@@ -26,7 +26,7 @@ Escape closes it, focus returns to the trigger, and the page behind does not scr
 
 <Dialog.Portal {...portalProps(portal)}>
 	<Dialog.Content
-		class={['fixed inset-0 z-dialog flex min-h-0 flex-col overflow-y-auto bg-white', extraClasses]}
+		class={['fixed inset-0 z-dialog flex flex-col overflow-y-auto bg-white', extraClasses]}
 		{...restProps}
 	>
 		{@render children?.()}

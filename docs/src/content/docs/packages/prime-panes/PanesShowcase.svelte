@@ -63,7 +63,7 @@
       <Panes.DragTrigger>
         <Panes.MoveTrigger
           aria-label="Move {node.data.label}"
-          class="inline-flex size-6 cursor-grab items-center justify-center text-subtle-1 active:cursor-grabbing"
+          class="icon-button size-6 cursor-grab active:cursor-grabbing"
         >
           <svg
             viewBox="0 0 16 16"
@@ -85,7 +85,7 @@
           <h2 class="truncate px-1 font-semibold in-data-stacked:hidden">
             {node.data.label}
           </h2>
-          <Panes.TabList aria-label="Stacked panes" class="flex min-w-0 gap-1">
+          <Panes.TabList aria-label="Stacked panes" class="min-w-0">
             <Panes.TabListDropRegion
               class="absolute inset-x-0 top-0 hidden h-4 border-t-2 border-dashed border-info-medium in-data-dragging:block in-data-move-mode:block"
             />
@@ -95,9 +95,19 @@
       {#if state.isStacked}
         <Panes.MoveTrigger
           target="stack"
+          aria-label="Move stack of {node.data.label}"
           class="button px-2 py-0.5 text-xs"
         >
           Move stack
+        </Panes.MoveTrigger>
+      {/if}
+      {#if state.isFloating}
+        <Panes.MoveTrigger
+          target="float"
+          aria-label="Dock {node.data.label}"
+          class="button px-2 py-0.5 text-xs"
+        >
+          Dock
         </Panes.MoveTrigger>
       {/if}
     </header>

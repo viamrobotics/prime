@@ -19,10 +19,22 @@ import customIndicatorSource from "./CustomIndicator.svelte?raw";
 <LabelDemo client:visible />
 
 - A real `<label>`, so clicking it focuses the control it points at.
-- Inside a [`Field`](../field/) it finds the control, mirrors `required` and `disabled`, and names a `RadioGroup` through `aria-labelledby`.
+- Inside a [`Field`](../field/) it finds the control, mirrors `required` and `disabled`, and names the control through `aria-labelledby`.
+- With no children inside a field, it renders the field's `label`, so the text is written once.
 - The required asterisk is a snippet, so it can be any mark you like.
 
 ## Usage
+
+### Text from the field
+
+A `Field` requires a name. When it is a `label`, a `Label` with no children renders that text where you place it. Children, when given, replace it.
+
+```svelte
+<Field label="Email" required>
+  <Label />
+  <Input type="email" bind:value />
+</Field>
+```
 
 ### On its own
 
@@ -47,6 +59,10 @@ Pass an `indicator` snippet to replace the asterisk. It renders only while the l
 ## Styling
 
 `class` lands on the `<label>`, an inline flex row with a small gap between the text and the indicator. The asterisk is `aria-hidden`, so it never reaches the accessible name. Put `required` on the control too.
+
+## Keyboard
+
+The label takes no keys and is not a tab stop. Clicking it moves focus to the control it points at.
 
 ## API
 

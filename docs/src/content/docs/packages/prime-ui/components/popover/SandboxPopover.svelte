@@ -13,7 +13,7 @@
   <Popover.Content aria-label="Details" {side} {align}>
     <div class="flex items-start gap-4">
       <p class="text-sm">Anchored to its trigger. The page stays interactive.</p>
-      <Popover.Close />
+      <Popover.Close aria-label="Close" />
     </div>
   </Popover.Content>
 </Popover>

@@ -16,8 +16,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Component</Label>
+  <Field label="Component" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <Combobox bind:value={component} items={components} filter={startsWith}>
       <Input.Group>
         <Combobox.Input placeholder="Starts with..." />

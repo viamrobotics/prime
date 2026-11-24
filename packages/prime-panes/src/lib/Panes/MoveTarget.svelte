@@ -36,9 +36,6 @@
 	const EMPTY_REGION_STRIP_PX = 32;
 	const MARK_SELECTOR = '[data-move-button]:not([data-move-button="center"])';
 
-	const SWAP_FOCUS_CLASSES =
-		'outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid';
-
 	const MARK_BUTTONS = [
 		{
 			region: 'stack',
@@ -193,6 +190,10 @@
 		);
 	}
 
+	function barToneFor(markRegion: DropRegion) {
+		return region === markRegion ? 'bg-info-dark' : 'bg-gray-8 opacity-70';
+	}
+
 	function buttonFor(buttonRegion: DropRegion) {
 		return group?.querySelector<HTMLElement>(`[data-move-button="${buttonRegion}"]`);
 	}
@@ -233,7 +234,12 @@
 		return { region: pointedRegion, index: pointedIndex, isTouch: event.pointerType === 'touch' };
 	}
 
+	// A drag that starts on a pointer event ends the move and unmounts this target before the event reaches it.
+	const hasMoveEnded = () => context.movingSource === undefined;
+
 	function handlePointerDown(event: PointerEvent & { currentTarget: HTMLElement }) {
+		if (hasMoveEnded()) return;
+
 		press = selectUnder(event);
 		if (!press.isTouch) return;
 
@@ -243,6 +249,8 @@
 	}
 
 	function handlePointerMove(event: PointerEvent & { currentTarget: HTMLElement }) {
+		if (hasMoveEnded()) return;
+
 		selectUnder(event);
 	}
 
@@ -359,7 +367,7 @@
 			data-move-button="center"
 			tabindex={tabStopRegion === 'center' ? 0 : -1}
 			aria-label={nameFor('center')}
-			class={['absolute inset-0 z-10 cursor-pointer', SWAP_FOCUS_CLASSES]}
+			class="absolute inset-0 z-10 cursor-pointer focus-ring-inset"
 			onclick={() => handleClick('center')}
 			onfocus={(event) => handleButtonFocus('center', event)}
 		></button>
@@ -374,7 +382,7 @@
 					INDICATOR_CLASSES_BY_REGION[region]
 				]}
 			>
-				<span class="max-w-full truncate bg-info-light px-2 py-1 text-xs text-info-dark">
+				<span class="max-w-full truncate rounded-sm bg-info-light px-2 py-1 text-xs text-info-dark">
 					{movingLabel}
 				</span>
 			</div>
@@ -388,25 +396,20 @@
 			aria-label={nameFor(markRegion)}
 			style={markStyle(markRegion)}
 			class={[
-				'absolute z-20 flex cursor-pointer rounded-sm focus-visible:outline-none',
+				'absolute z-20 flex cursor-pointer rounded-sm focus-ring',
 				buttonClasses,
 				{ 'pointer-events-none opacity-0': !isEngaged }
 			]}
 			onclick={() => handleClick(markRegion)}
 			onfocus={(event) => handleButtonFocus(markRegion, event)}
 		>
-			<span
-				class={[
-					'rounded-full motion-safe:transition-all',
-					barClasses,
-					{ 'bg-info-dark': region === markRegion, 'bg-gray-8 opacity-70': region !== markRegion }
-				]}
+			<span class={['rounded-full motion-safe:transition-all', barClasses, barToneFor(markRegion)]}
 			></span>
 			{#if markRegion === 'stack'}
 				<span
 					class={[
 						'absolute top-1.5 left-2 h-1 w-3 rounded-t-full motion-safe:transition-all',
-						{ 'bg-info-dark': region === markRegion, 'bg-gray-8 opacity-70': region !== markRegion }
+						barToneFor(markRegion)
 					]}
 				></span>
 			{/if}

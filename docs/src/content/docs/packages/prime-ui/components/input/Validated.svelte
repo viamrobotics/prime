@@ -8,8 +8,8 @@
   const fieldState = $derived(touched && !isValid ? "error" : "none");
 </script>
 
-<Field class="not-content flex max-w-xs flex-col gap-1" state={fieldState}>
-  <Label>Machine name</Label>
+<Field label="Machine name" class="not-content flex max-w-xs flex-col gap-1" state={fieldState}>
+  <Label />
   <Input.Group>
     <Input bind:value={name} onblur={() => (touched = true)} />
     <Field.StateIcon />

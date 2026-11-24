@@ -1,3 +1,5 @@
+export type { AccessibleName } from './accessible-name.ts';
+
 export { clickOutside } from './attachments/click-outside.ts';
 export type { ClickOutsideOptions } from './attachments/click-outside.ts';
 
@@ -30,7 +32,7 @@ export { default as Label } from './Label/Label.svelte';
 export { default as Hint } from './Hint/Hint.svelte';
 export { default as Checkbox } from './Checkbox/Checkbox.svelte';
 export { default as Switch } from './Switch/Switch.svelte';
-export { default as NumberInput } from './Input/NumberInput.svelte';
+export { NumberInput } from './Input/number-input.ts';
 export { default as FileInput } from './Input/FileInput.svelte';
 export { default as Textarea } from './Input/Textarea.svelte';
 
@@ -41,7 +43,7 @@ export { Breadcrumbs } from './Breadcrumbs/breadcrumbs.ts';
 
 export { Collapsible } from './Collapsible/collapsible.ts';
 export { Combobox } from './Combobox/combobox.ts';
-export type { ComboboxFilter } from './Combobox/useCombobox.svelte.ts';
+export type { ComboboxFilter } from './Combobox/filter.ts';
 export { ContextMenu } from './Menu/context-menu.ts';
 export { DatePicker } from './DatePicker/date-picker.ts';
 export { DateRangePicker } from './DateRangePicker/date-range-picker.ts';
@@ -50,7 +52,7 @@ export { Dialog } from './Dialog/dialog.ts';
 
 export { Field } from './Field/field.ts';
 export { fieldState, FieldStates, type FieldState } from './Field/state.ts';
-export type { FieldContext } from './Field/useField.svelte.ts';
+export type { FieldContext } from './Field/context.ts';
 
 export { Input } from './Input/input.ts';
 export { Menu } from './Menu/menu.ts';
@@ -74,7 +76,7 @@ export type {
 	ToastPlacement,
 	ToastProviderOptions,
 	ToastVariant
-} from './Toast/useToast.svelte.ts';
+} from './Toast/toast.ts';
 
 export { ToggleButtons } from './ToggleButtons/toggle-buttons.ts';
 export type { ToggleButtonsOption } from './ToggleButtons/option.ts';
@@ -88,8 +90,9 @@ export type {
 	NotifyOptions,
 	NotifyProviderOptions,
 	NotifyVariant
-} from './Notify/useNotify.svelte.ts';
+} from './Notify/notify.ts';
 
+export type { PortalTarget } from './portal.ts';
 export { Popover } from './Popover/popover.ts';
 export { default as Progress } from './Progress/Progress.svelte';
 export { default as StatusDot } from './StatusDot/StatusDot.svelte';

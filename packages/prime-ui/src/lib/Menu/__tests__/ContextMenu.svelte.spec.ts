@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import BasicContextMenu from './BasicContextMenu.svelte';
+import BasicContextMenu from './fixtures/BasicContextMenu.svelte';
 
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 const log = (container: Element) => container.querySelector('[data-testid="log"]')?.textContent;
@@ -29,6 +29,8 @@ afterEach(async () => {
 });
 
 const CLOSE_SETTLE_MS = 400;
+const POINTER_TOLERANCE_PX = 8;
+const IGNORED_OPEN_WAIT_MS = 100;
 
 const addOutsideInput = () => {
 	const input = document.createElement('input');
@@ -92,9 +94,9 @@ describe('ContextMenu', () => {
 		await vi.waitFor(() => {
 			const rect = menu()!.getBoundingClientRect();
 			expect(rect.left).toBeGreaterThanOrEqual(clientX);
-			expect(rect.left).toBeLessThanOrEqual(clientX + 8);
+			expect(rect.left).toBeLessThanOrEqual(clientX + POINTER_TOLERANCE_PX);
 			expect(rect.top).toBeGreaterThanOrEqual(clientY);
-			expect(rect.top).toBeLessThanOrEqual(clientY + 8);
+			expect(rect.top).toBeLessThanOrEqual(clientY + POINTER_TOLERANCE_PX);
 		});
 	});
 
@@ -159,7 +161,7 @@ describe('ContextMenu', () => {
 		const { container } = render(BasicContextMenu, { disabled: true });
 
 		rightClick(container);
-		await new Promise((resolve) => setTimeout(resolve, 100));
+		await new Promise((resolve) => setTimeout(resolve, IGNORED_OPEN_WAIT_MS));
 
 		expect(menu()).toBeNull();
 		expect(owner(container)).toBe('false');

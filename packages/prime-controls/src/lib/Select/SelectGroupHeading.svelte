@@ -11,8 +11,7 @@ The heading of a [`Select.Group`](./SelectGroup.svelte), at a tool panel's scale
 	interface Props extends ComponentProps<typeof Select.GroupHeading> {}
 
 	const { class: extraClasses, children, ...restProps }: Props = $props();
-	// prime-ui's utility sorts after this one in the stylesheet and wins unless this one is important.
-	const classes = $derived(['px-1.5! py-0.5! text-xs!', extraClasses]);
+	const classes = $derived(['px-1.5 py-0.5', extraClasses]);
 </script>
 
 <Select.GroupHeading class={classes} {...restProps}>

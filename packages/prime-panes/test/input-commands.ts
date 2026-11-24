@@ -24,7 +24,7 @@ function sessionFor(page: Page) {
 	return session;
 }
 
-function resolve(offset: Offset, size: number, scale: number) {
+function resolveOffset(offset: Offset, size: number, scale: number) {
 	return typeof offset === 'number' ? offset * scale : (Number.parseFloat(offset) / 100) * size;
 }
 
@@ -36,8 +36,8 @@ async function pagePoint(frame: Frame, selector: string, at: Point) {
 	const cssWidth = await locator.evaluate((element) => element.getBoundingClientRect().width);
 	const scale = box.width / cssWidth;
 	return {
-		x: box.x + resolve(at.x, box.width, scale),
-		y: box.y + resolve(at.y, box.height, scale)
+		x: box.x + resolveOffset(at.x, box.width, scale),
+		y: box.y + resolveOffset(at.y, box.height, scale)
 	};
 }
 

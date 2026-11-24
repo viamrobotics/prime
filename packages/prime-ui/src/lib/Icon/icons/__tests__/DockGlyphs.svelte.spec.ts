@@ -14,7 +14,7 @@ describe('dock glyphs', () => {
 	it.each([
 		{ name: 'DockLeft', component: DockLeft, expected: DOCK_LEFT_PATH },
 		{ name: 'DockRight', component: DockRight, expected: DOCK_RIGHT_PATH }
-	])('$name renders the v1 path', ({ component, expected }) => {
+	])('$name draws its dock outline', ({ component, expected }) => {
 		const { container } = render(component);
 
 		const paths = container.querySelectorAll('svg path');

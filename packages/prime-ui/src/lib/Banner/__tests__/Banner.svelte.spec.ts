@@ -1,17 +1,32 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+	mdiAlertCircleOutline,
+	mdiAlertOutline,
+	mdiCheckCircleOutline,
+	mdiInformationOutline
+} from '@mdi/js';
+import { type ComponentProps, createRawSnippet } from 'svelte';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor, colorOf, textColor } from '../../__tests__/computed-style.ts';
-import CloseBanner from './CloseBanner.svelte';
-import DetailsBanner from './DetailsBanner.svelte';
-import IconBanner from './IconBanner.svelte';
-import ProgressBanner from './ProgressBanner.svelte';
-import StackedBanner from './StackedBanner.svelte';
-import VariantBanner from './VariantBanner.svelte';
+import { backgroundColor, colorOf, textColor } from '../../../../test/computed-style.ts';
+import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
+import { Banner } from '../banner.ts';
+import CloseBanner from './fixtures/CloseBanner.svelte';
+import DetailsBanner from './fixtures/DetailsBanner.svelte';
+import IconBanner from './fixtures/IconBanner.svelte';
+import ProgressBanner from './fixtures/ProgressBanner.svelte';
+import StackedBanner from './fixtures/StackedBanner.svelte';
+import VariantBanner from './fixtures/VariantBanner.svelte';
 
 const banner = (container: Element) => container.querySelector<HTMLElement>('.banner')!;
 const chip = (container: Element) => container.querySelector<HTMLElement>('.banner-chip')!;
+const glyphPath = (container: Element) =>
+	chip(container).querySelector('svg path')?.getAttribute('d');
+
+const FLEX_START = /^(flex|flow)-start$/;
+
+afterEach(() => emulateReducedMotion('no-preference'));
 
 describe('Banner', () => {
 	it.each([
@@ -24,6 +39,15 @@ describe('Banner', () => {
 		const { container } = render(VariantBanner, { props: { variant } });
 
 		expect(banner(container).getAttribute('role')).toBe(role);
+	});
+
+	it.each([
+		{ role: 'log', rendered: 'log' },
+		{ role: null, rendered: null }
+	] as const)('takes a role of $role over the variant default', ({ role, rendered }) => {
+		const { container } = render(VariantBanner, { props: { variant: 'danger', role } });
+
+		expect(banner(container).getAttribute('role')).toBe(rendered);
 	});
 
 	it.each([
@@ -41,6 +65,25 @@ describe('Banner', () => {
 			expect(textColor(chip(container))).toBe(colorOf(text, 'color'));
 		}
 	);
+
+	it.each([
+		{ variant: 'info', name: 'Info' },
+		{ variant: 'success', name: 'Success' },
+		{ variant: 'warning', name: 'Warning' },
+		{ variant: 'danger', name: 'Error' },
+		{ variant: 'pending', name: 'In progress' }
+	] as const)('names the $variant tone as $name in text', ({ variant, name }) => {
+		const { container } = render(VariantBanner, { props: { variant } });
+
+		expect(banner(container).querySelector('.sr-only')?.textContent).toBe(`${name}: `);
+		expect(chip(container).textContent).not.toContain(name);
+	});
+
+	it('keeps the tone name when a custom icon takes the chip', () => {
+		const { container } = render(IconBanner);
+
+		expect(banner(container).querySelector('.sr-only')?.textContent).toBe('Info: ');
+	});
 
 	it('defaults to the info variant', () => {
 		const { container } = render(VariantBanner);
@@ -61,16 +104,23 @@ describe('Banner', () => {
 	it('stacks when a title is present', () => {
 		const { container } = render(StackedBanner);
 
-		// Chromium 158 serializes `flex-start` as its newer alias `flow-start`.
-		expect(getComputedStyle(banner(container)).alignItems).toMatch(/^(flex|flow)-start$/);
+		expect(
+			getComputedStyle(banner(container)).alignItems,
+			'Chromium 158 serializes flex-start as its newer alias flow-start'
+		).toMatch(FLEX_START);
 		expect(getComputedStyle(chip(container)).height).toBe('32px');
 	});
 
-	it('renders the default glyph in a single chip', () => {
-		const { container } = render(VariantBanner);
+	it.each([
+		{ variant: 'info', glyph: mdiInformationOutline },
+		{ variant: 'success', glyph: mdiCheckCircleOutline },
+		{ variant: 'warning', glyph: mdiAlertOutline },
+		{ variant: 'danger', glyph: mdiAlertCircleOutline }
+	] as const)('draws the $variant glyph in a single chip', ({ variant, glyph }) => {
+		const { container } = render(VariantBanner, { props: { variant } });
 
 		expect(container.querySelectorAll('.banner-chip')).toHaveLength(1);
-		expect(chip(container).querySelector('svg')).toBeTruthy();
+		expect(glyphPath(container)).toBe(glyph);
 	});
 
 	it('spins in the chip for the pending variant', () => {
@@ -80,6 +130,21 @@ describe('Banner', () => {
 		expect(container.querySelector('.banner-chip svg')).toBeNull();
 	});
 
+	it.each([
+		{ preference: 'no-preference', animationName: 'progress-dots' },
+		{ preference: 'reduce', animationName: 'none' }
+	] as const)(
+		'animates the pending spinner as $animationName under prefers-reduced-motion: $preference',
+		async ({ preference, animationName }) => {
+			await emulateReducedMotion(preference);
+			const { container } = render(VariantBanner, { props: { variant: 'pending' } });
+
+			const spinner = container.querySelector<HTMLElement>('.banner-chip .progress-dots')!;
+
+			expect(getComputedStyle(spinner, '::before').animationName).toBe(animationName);
+		}
+	);
+
 	it('replaces the default glyph with Banner.Icon', () => {
 		const { container } = render(IconBanner);
 
@@ -88,13 +153,26 @@ describe('Banner', () => {
 		expect(chip(container).querySelector('svg')).toBeNull();
 	});
 
-	it('fires the native onclick of Banner.Close, labeled Dismiss', async () => {
+	it('restores the default glyph when Banner.Icon unmounts', async () => {
+		const { container, rerender } = render(IconBanner);
+
+		await rerender({ showIcon: false });
+
+		expect(container.querySelectorAll('.banner-chip')).toHaveLength(1);
+		expect(glyphPath(container)).toBe(mdiInformationOutline);
+	});
+
+	it('names Banner.Close by aria-label', () => {
+		const { container } = render(CloseBanner, { props: { label: 'Close notice' } });
+
+		expect(container.querySelector('button')!.getAttribute('aria-label')).toBe('Close notice');
+	});
+
+	it('fires the native onclick of Banner.Close', async () => {
 		const onclick = vi.fn();
 		const { container } = render(CloseBanner, { props: { onclick } });
-		const close = container.querySelector<HTMLButtonElement>('button')!;
 
-		expect(close.getAttribute('aria-label')).toBe('Dismiss');
-		await userEvent.click(close);
+		await userEvent.click(container.querySelector<HTMLButtonElement>('button')!);
 
 		expect(onclick).toHaveBeenCalledOnce();
 	});
@@ -113,19 +191,24 @@ describe('Banner', () => {
 		expect(container.textContent).toContain('Stack trace');
 	});
 
-	it('drops the side borders for the block placement', () => {
+	it('drops the side and top borders for the block placement', () => {
 		const { container } = render(VariantBanner, { props: { placement: 'block' } });
 
 		const style = getComputedStyle(banner(container));
 		expect(style.borderLeftWidth).toBe('0px');
 		expect(style.borderRightWidth).toBe('0px');
+		expect(style.borderTopWidth).toBe('0px');
 		expect(style.borderBottomWidth).toBe('1px');
 	});
 
 	it('keeps all four borders inline', () => {
 		const { container } = render(VariantBanner);
 
-		expect(getComputedStyle(banner(container)).borderLeftWidth).toBe('1px');
+		const style = getComputedStyle(banner(container));
+		expect(style.borderLeftWidth).toBe('1px');
+		expect(style.borderRightWidth).toBe('1px');
+		expect(style.borderTopWidth).toBe('1px');
+		expect(style.borderBottomWidth).toBe('1px');
 	});
 
 	it('pins Banner.Progress to the bottom edge', () => {
@@ -135,5 +218,24 @@ describe('Banner', () => {
 		const style = getComputedStyle(bar);
 		expect(style.position).toBe('absolute');
 		expect(style.bottom).toBe('0px');
+	});
+
+	it('requires a name on an icon-only Banner.Close by type', () => {
+		const children = createRawSnippet(() => ({ render: () => '<span>Cancel</span>' }));
+		// @ts-expect-error an icon-only close requires a name
+		const unnamed: ComponentProps<typeof Banner.Close> = {};
+		// @ts-expect-error a close takes one name, not two
+		const twice: ComponentProps<typeof Banner.Close> = { label: 'Close', 'aria-label': 'Close' };
+		const named: ComponentProps<typeof Banner.Close> = { label: 'Close' };
+		const withChildren: ComponentProps<typeof Banner.Close> = { children };
+
+		expect([unnamed, twice, named, withChildren]).toHaveLength(4);
+	});
+
+	it('requires a name on Banner.Progress by type', () => {
+		// @ts-expect-error a banner progress bar requires a name
+		const unnamed: ComponentProps<typeof Banner.Progress> = {};
+
+		expect(unnamed).toEqual({});
 	});
 });

@@ -1,61 +1,19 @@
 import { getContext, setContext } from 'svelte';
 
-const key = Symbol('DateRangePicker');
-const frameKey = Symbol('DateRangePickerFrame');
+import { createPickerContext } from '../DatePicker/useDatePicker.svelte.ts';
 
-interface DateRangePickerOptions {
-	disabled: () => boolean;
-	readonly: () => boolean;
-	open: () => boolean;
-	locale: () => string;
-	calendarLabel: { get: () => string | undefined; set: (label: string | undefined) => void };
-}
+const DATE_RANGE_PICKER_FRAME_KEY = Symbol('DateRangePickerFrame');
 
-/** What a `DateRangePicker` shares with the parts bits-ui does not wire to its root. */
-export interface DateRangePickerContext {
-	/** The root's resolved `disabled`, after the enclosing field's. */
-	readonly disabled: boolean;
-	/** The root's `readonly`. */
-	readonly readonly: boolean;
-	/** Whether the calendar is open. */
-	readonly open: boolean;
-	/** The root's BCP 47 `locale`. */
-	readonly locale: string;
-	/** The calendar's accessible name, before bits-ui appends the month heading. */
-	calendarLabel: string | undefined;
-}
+const dateRangePicker = createPickerContext('DateRangePicker', 'Choose a date range');
 
-export const provideDateRangePicker = (options: DateRangePickerOptions): DateRangePickerContext =>
-	setContext<DateRangePickerContext>(key, {
-		get disabled() {
-			return options.disabled();
-		},
-		get readonly() {
-			return options.readonly();
-		},
-		get open() {
-			return options.open();
-		},
-		get locale() {
-			return options.locale();
-		},
-		get calendarLabel() {
-			return options.calendarLabel.get();
-		},
-		set calendarLabel(label) {
-			options.calendarLabel.set(label);
-		}
-	});
+export const provideDateRangePicker = dateRangePicker.provide;
 
-/** The enclosing `DateRangePicker`, or `undefined` when a part is rendered on its own. */
-export const useDateRangePicker = (): DateRangePickerContext | undefined =>
-	getContext<DateRangePickerContext | undefined>(key);
+export const useDateRangePicker = dateRangePicker.use;
 
-/** Hands the attributes bits-ui computes for the range field's root element to `DateRangePicker.Field`. */
+// The attributes bits-ui computes for the range field's root element, which `DateRangePicker.Field` renders.
 export const provideDateRangePickerFrame = (props: () => Record<string, unknown>): void => {
-	setContext(frameKey, props);
+	setContext(DATE_RANGE_PICKER_FRAME_KEY, props);
 };
 
-/** The range field's root attributes, or `undefined` outside a `DateRangePicker`. */
 export const useDateRangePickerFrame = (): (() => Record<string, unknown>) | undefined =>
-	getContext<(() => Record<string, unknown>) | undefined>(frameKey);
+	getContext<(() => Record<string, unknown>) | undefined>(DATE_RANGE_PICKER_FRAME_KEY);

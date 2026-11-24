@@ -12,7 +12,6 @@ import {
 	pane
 } from '../../../../test/layouts.ts';
 import type { PaneData } from '../../../../test/layouts.ts';
-import '../../../../test/panes-queries.ts';
 import type { FloatRect, LayoutNode } from '../../layout.ts';
 
 const OTHER: FloatRect = { x: 450, y: 20, width: 200, height: 150 };
@@ -48,6 +47,7 @@ const floatChoice = (label: string) =>
 	page.getByRole('button', { name: `Float ${label}`, exact: true });
 const anyFloatChoice = () => page.getByRole('button', { name: /^Float / });
 const mark = (name: string) => page.getByRole('button', { name, exact: true });
+const destination = (name: string) => page.getByRole('group', { name, exact: true });
 const announcement = () => page.getByRole('status').element().textContent;
 
 const focusMark = async (name: string) => {
@@ -61,8 +61,24 @@ const startMove = async (label: string) => {
 	await expect.element(page.getByMovingPane()).toHaveFocus();
 };
 
+const startWindowMove = async (label: string, landing: string) => {
+	trigger(label).element().focus();
+	await userEvent.keyboard('{Enter}');
+	await expect.element(mark(landing)).toHaveFocus();
+};
+
+const recordDefaultPrevented = () => {
+	const results: boolean[] = [];
+	const controller = new AbortController();
+	onTestFinished(() => controller.abort());
+	window.addEventListener('keydown', (event) => results.push(event.defaultPrevented), {
+		signal: controller.signal
+	});
+	return results;
+};
+
 describe('FloatKeyboard: floating the moving base pane', () => {
-	it('offers Float on the moving base pane, and floats it in place offset by one step', async () => {
+	it('floats the moving base pane where it is drawn, offset by one step', async () => {
 		const component = renderWindows();
 		await startMove(floatIds.baseLeft);
 
@@ -96,7 +112,7 @@ describe('FloatKeyboard: floating the moving base pane', () => {
 		await userEvent.keyboard('{Escape}');
 		await expect.element(page.getByMovingPane()).not.toBeInTheDocument();
 
-		await startMove(floatIds.paneB);
+		await startWindowMove(floatIds.paneB, `Swap ${floatIds.paneB} with ${floatIds.baseLeft}`);
 
 		await expect.element(anyFloatChoice()).not.toBeInTheDocument();
 	});
@@ -116,7 +132,7 @@ describe('FloatKeyboard: floating the moving base pane', () => {
 describe('FloatKeyboard: docking the moving window pane', () => {
 	it('docks onto a base destination and drops the emptied window', async () => {
 		const component = renderWindows();
-		await startMove(floatIds.paneB);
+		await startWindowMove(floatIds.paneB, `Swap ${floatIds.paneB} with ${floatIds.baseLeft}`);
 
 		await focusMark(`Swap ${floatIds.paneB} with ${floatIds.baseRight}`);
 		await userEvent.keyboard('{ArrowRight}{Enter}');
@@ -144,7 +160,7 @@ describe('FloatKeyboard: docking the moving window pane', () => {
 
 	it('moves focus to the docked pane', async () => {
 		renderWindows();
-		await startMove(floatIds.paneB);
+		await startWindowMove(floatIds.paneB, `Swap ${floatIds.paneB} with ${floatIds.baseLeft}`);
 
 		await focusMark(`Swap ${floatIds.paneB} with ${floatIds.baseRight}`);
 		await userEvent.keyboard('{ArrowRight}{Enter}');
@@ -152,12 +168,17 @@ describe('FloatKeyboard: docking the moving window pane', () => {
 		await expect.element(trigger(floatIds.paneB)).toHaveFocus();
 	});
 
-	it('offers the panes of other windows as destinations, and calls a landing in one a placement', async () => {
+	const dockOntoPaneA = async () => {
 		const component = renderWindows();
-		await startMove(floatIds.paneB);
+		await startWindowMove(floatIds.paneB, `Swap ${floatIds.paneB} with ${floatIds.baseLeft}`);
 
 		await focusMark(`Swap ${floatIds.paneB} with ${floatIds.paneA}`);
 		await userEvent.keyboard('{ArrowRight}{Enter}');
+		return component;
+	};
+
+	it('offers the panes of other windows as destinations', async () => {
+		const component = await dockOntoPaneA();
 
 		await expect
 			.poll(() => entriesOf(component).map((entry) => entry.id))
@@ -170,7 +191,12 @@ describe('FloatKeyboard: docking the moving window pane', () => {
 			first: pane(floatIds.paneA, floatIds.paneA),
 			second: pane(floatIds.paneB, floatIds.paneB)
 		});
-		expect(announcement()).toBe(`${floatIds.paneB} placed right of ${floatIds.paneA}.`);
+	});
+
+	it('calls a landing in another window a placement', async () => {
+		await dockOntoPaneA();
+
+		await expect.poll(announcement).toBe(`${floatIds.paneB} placed right of ${floatIds.paneA}.`);
 	});
 });
 
@@ -183,23 +209,39 @@ describe('FloatKeyboard: MoveTrigger with target="float"', () => {
 		return renderWindows({ layout, floatingMoveTarget: 'float' });
 	};
 
-	it('moves the whole stack of the window and reports it as pressed', async () => {
+	it('reports the trigger as pressed once the window moves', async () => {
 		renderStackWindow();
 		await expect
 			.element(trigger(nestedFloatIds.stackFirst))
 			.toHaveAttribute('aria-pressed', 'false');
 
-		await startMove(nestedFloatIds.stackFirst);
+		await startWindowMove(
+			nestedFloatIds.stackFirst,
+			`Swap ${STACK_LABEL} with ${floatIds.baseLeft}`
+		);
 
 		await expect
 			.element(trigger(nestedFloatIds.stackFirst))
 			.toHaveAttribute('aria-pressed', 'true');
+	});
+
+	it('announces the whole stack of the window as moving', async () => {
+		renderStackWindow();
+
+		await startWindowMove(
+			nestedFloatIds.stackFirst,
+			`Swap ${STACK_LABEL} with ${floatIds.baseLeft}`
+		);
+
 		expect(announcement()).toContain(`Moving ${STACK_LABEL}.`);
 	});
 
 	it('docks the stack whole, leaving no window', async () => {
 		const component = renderStackWindow();
-		await startMove(nestedFloatIds.stackFirst);
+		await startWindowMove(
+			nestedFloatIds.stackFirst,
+			`Swap ${STACK_LABEL} with ${floatIds.baseLeft}`
+		);
 
 		await focusMark(`Swap ${STACK_LABEL} with ${floatIds.baseRight}`);
 		await userEvent.keyboard('{ArrowRight}{Enter}');
@@ -239,28 +281,16 @@ describe('FloatKeyboard: move-mode navigation per layer', () => {
 
 	const renderLayers = () => renderWindows({ layout: createNestedFloatLayout() });
 
-	const recordDefaultPrevented = () => {
-		const results: boolean[] = [];
-		const controller = new AbortController();
-		onTestFinished(() => controller.abort());
-		window.addEventListener('keydown', (event) => results.push(event.defaultPrevented), {
-			signal: controller.signal
-		});
-		return results;
-	};
-
 	it('keeps an arrow from a base pane out of the windows it points at', async () => {
 		renderLayers();
 		await startMove(floatIds.baseRight);
 		await focusMark(`Place ${floatIds.baseRight} right of ${floatIds.baseLeft}`);
-		const prevented = recordDefaultPrevented();
 
 		await userEvent.keyboard('{ArrowRight}');
 
 		await expect
 			.element(mark(`Place ${floatIds.baseRight} right of ${floatIds.baseLeft}`))
 			.toHaveFocus();
-		expect(prevented).toEqual([false]);
 	});
 
 	it('moves between the panes of a window and never into another window', async () => {
@@ -273,14 +303,33 @@ describe('FloatKeyboard: move-mode navigation per layer', () => {
 			.element(mark(`Place ${floatIds.baseLeft} left of ${nestedFloatIds.splitSecond}`))
 			.toHaveFocus();
 		await focusMark(`Place ${floatIds.baseLeft} below ${nestedFloatIds.splitSecond}`);
-		const prevented = recordDefaultPrevented();
 
 		await userEvent.keyboard('{ArrowDown}');
 
 		await expect
 			.element(mark(`Place ${floatIds.baseLeft} below ${nestedFloatIds.splitSecond}`))
 			.toHaveFocus();
-		expect(prevented).toEqual([false]);
+	});
+
+	it('keeps an arrow that finds no destination from scrolling the page', async () => {
+		renderLayers();
+		await startMove(floatIds.baseRight);
+		await focusMark(`Place ${floatIds.baseRight} right of ${floatIds.baseLeft}`);
+		const prevented = recordDefaultPrevented();
+
+		await userEvent.keyboard('{ArrowRight}');
+
+		expect(prevented).toEqual([true]);
+	});
+
+	it('keeps an arrow from the moving pane that finds no neighbor from scrolling the page', async () => {
+		renderLayers();
+		await startMove(floatIds.baseLeft);
+		const prevented = recordDefaultPrevented();
+
+		await userEvent.keyboard('{ArrowLeft}');
+
+		expect(prevented).toEqual([true]);
 	});
 
 	it('crosses to each window in DOM order with F6, then wraps to the base', async () => {
@@ -330,5 +379,111 @@ describe('FloatKeyboard: move-mode navigation per layer', () => {
 
 		expect(prevented).toEqual([false]);
 		await expect.element(page.getByPanesInMoveMode()).not.toBeInTheDocument();
+	});
+});
+
+describe('FloatKeyboard: starting a move by keyboard', () => {
+	const STACK_LABEL = `${nestedFloatIds.stackFirst} and ${nestedFloatIds.stackSecond}`;
+
+	const renderStackWindow = () => {
+		const nested = expectFloat(createNestedFloatLayout());
+		const layout = { ...nested, floats: [nested.floats[1]!] };
+		return renderWindows({ layout, floatingMoveTarget: 'float' });
+	};
+
+	const startStackWindowMove = async () => {
+		trigger(nestedFloatIds.stackFirst).element().focus();
+		await userEvent.keyboard('{Enter}');
+		await expect.element(page.getByMovingPane()).toBeInTheDocument();
+	};
+
+	it('lets an arrow step through a base destination at once when the window holds none', async () => {
+		renderStackWindow();
+		await startStackWindowMove();
+
+		await userEvent.keyboard('{ArrowRight}');
+
+		await expect.element(mark(`Place ${STACK_LABEL} right of ${floatIds.baseLeft}`)).toHaveFocus();
+	});
+
+	it('selects the region the arrow reaches in that base destination', async () => {
+		renderStackWindow();
+		await startStackWindowMove();
+
+		await userEvent.keyboard('{ArrowRight}');
+
+		await expect
+			.element(destination(`Move ${STACK_LABEL} to ${floatIds.baseLeft}`))
+			.toHaveAttribute('data-move-target', 'right');
+	});
+
+	it('docks the window beside the first base pane with an arrow and Enter', async () => {
+		const component = renderStackWindow();
+		await startStackWindowMove();
+
+		await userEvent.keyboard('{ArrowRight}{Enter}');
+
+		await expect.poll(() => component.getLayout()?.type).toBe('split');
+		expect(component.getLayout()).toEqual({
+			type: 'split',
+			id: floatIds.base,
+			direction: 'row',
+			ratio: 0.5,
+			first: {
+				type: 'split',
+				id: expect.any(String),
+				direction: 'row',
+				ratio: 0.5,
+				first: pane(floatIds.baseLeft, floatIds.baseLeft),
+				second: {
+					type: 'stack',
+					id: 'nested-stack',
+					panes: [
+						pane(nestedFloatIds.stackFirst, nestedFloatIds.stackFirst),
+						pane(nestedFloatIds.stackSecond, nestedFloatIds.stackSecond)
+					],
+					activeId: nestedFloatIds.stackFirst
+				}
+			},
+			second: pane(floatIds.baseRight, floatIds.baseRight)
+		});
+	});
+
+	it('lands on the first base destination when the move starts in the first of two windows', async () => {
+		renderWindows();
+		trigger(floatIds.paneA).element().focus();
+
+		await userEvent.keyboard('{Enter}');
+
+		await expect.element(mark(`Swap ${floatIds.paneA} with ${floatIds.baseLeft}`)).toHaveFocus();
+	});
+
+	it('keeps focus on a moving docked pane whose layer holds no destination', async () => {
+		renderWindows({
+			layout: {
+				type: 'float',
+				id: floatIds.float,
+				base: pane(floatIds.baseLeft, floatIds.baseLeft),
+				floats: [
+					{ id: floatIds.entryA, rect: OTHER, content: pane(floatIds.paneA, floatIds.paneA) }
+				]
+			}
+		});
+		await startMove(floatIds.baseLeft);
+
+		await userEvent.keyboard('{ArrowRight}');
+
+		await expect.element(page.getByMovingPane()).toHaveFocus();
+	});
+
+	it('keeps focus on a moving window pane whose window holds a destination', async () => {
+		renderWindows({ layout: createNestedFloatLayout() });
+		await startMove(nestedFloatIds.splitFirst);
+
+		await userEvent.keyboard('{ArrowRight}');
+
+		await expect
+			.element(mark(`Place ${nestedFloatIds.splitFirst} left of ${nestedFloatIds.splitSecond}`))
+			.toHaveFocus();
 	});
 });

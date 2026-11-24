@@ -3,16 +3,19 @@
 Wraps an input with leading or trailing content, such as an icon, a unit suffix, or a state
 icon. The group wears the `input` class from `@viamrobotics/tailwind-config`, and the [`Input`](./Input.svelte) or
 [`NumberInput`](./NumberInput.svelte) directly inside it hands over its border, padding, and
-focus ring. Clicking the group's padding or any non-interactive content focuses the input.
+focus ring. A [`NumberInput.Stepper`](./NumberInputStepper.svelte) placed last steps the
+`NumberInput`. Clicking the group's padding or any non-interactive content focuses the input. A press on a
+button, a link, a form control, a `<summary>`, an element with a `tabindex`, editable content, or
+an element with `role="button"` stays with that element.
 
 A disabled or readonly input restyles the group, and the input's `error` or `warn` state colors
-the group's border. The frame reads the input's attributes in CSS, so no JavaScript runs. Only
-an `<input>` counts, so a disabled button beside it leaves the group alone.
+the group's border. The group reads the input's attributes in CSS, so restyling runs no
+JavaScript. Only an `<input>` counts, so a disabled button beside it leaves the group alone.
 
 ```svelte
 <Input.Group>
 	<Icon icon={mdiMagnify} class="text-subtle-2" />
-	<Input placeholder="Search" bind:value />
+	<Input placeholder="Search" aria-label="Search" bind:value />
 	<Field.StateIcon state="error" />
 </Input.Group>
 ```
@@ -21,6 +24,10 @@ an `<input>` counts, so a disabled button beside it leaves the group alone.
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import { interactiveDescendantAt } from '../interactive-descendant.ts';
+	import SpinButtons from './SpinButtons.svelte';
+	import { provideInputGroup } from './useInputGroup.ts';
+
 	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		/** The input plus any content before or after it, in any order. */
 		children?: Snippet;
@@ -28,16 +35,24 @@ an `<input>` counts, so a disabled button beside it leaves the group alone.
 
 	const { class: extraClasses, children, onpointerdown, ...restProps }: Props = $props();
 
-	const focusableSelector = 'button, a, input, select, textarea, [tabindex]';
+	let numberInputs = $state(0);
+	let placedSteppers = $state(0);
 
-	let group = $state<HTMLDivElement>();
+	provideInputGroup({
+		addNumberInput: () => {
+			numberInputs += 1;
+			return () => (numberInputs -= 1);
+		},
+		addStepper: () => {
+			placedSteppers += 1;
+			return () => (placedSteppers -= 1);
+		}
+	});
 
 	const focusInput = (event: PointerEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
 		onpointerdown?.(event);
-		if (event.defaultPrevented || !group || !(event.target instanceof Element)) return;
-
-		const focusable = event.target.closest(focusableSelector);
-		if (focusable && focusable !== group && group.contains(focusable)) return;
+		const group = event.currentTarget;
+		if (event.defaultPrevented || interactiveDescendantAt(event.target, group)) return;
 
 		event.preventDefault();
 		group.querySelector('input')?.focus();
@@ -46,9 +61,14 @@ an `<input>` counts, so a disabled button beside it leaves the group alone.
 
 <div
 	{...restProps}
-	bind:this={group}
 	onpointerdown={focusInput}
-	class={['inline-flex input items-center gap-1 focus-ring-within', extraClasses]}
+	class={[
+		'group/input relative inline-flex input items-center gap-1 focus-ring-within',
+		extraClasses
+	]}
 >
 	{@render children?.()}
+	{#if numberInputs > 0 && placedSteppers === 0}
+		<SpinButtons />
+	{/if}
 </div>

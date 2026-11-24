@@ -7,8 +7,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Deploy date</Label>
+  <Field label="Deploy date" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <DatePicker bind:value name="deploy">
       <DatePicker.Field>
         <DatePicker.Trigger />

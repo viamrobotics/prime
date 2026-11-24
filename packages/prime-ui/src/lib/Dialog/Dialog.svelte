@@ -10,7 +10,7 @@ Built on [bits-ui `Dialog`](https://bits-ui.com/docs/components/dialog).
 	<Dialog.Content class="w-full max-w-md">
 		<Dialog.Title>Rename</Dialog.Title>
 		<Dialog.Description>Pick a new name.</Dialog.Description>
-		<Dialog.Close />
+		<Dialog.Close aria-label="Close" />
 	</Dialog.Content>
 </Dialog>
 ```

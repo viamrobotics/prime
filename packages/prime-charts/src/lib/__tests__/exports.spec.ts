@@ -4,60 +4,57 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
-
-import Line from '../Chart/Line.svelte';
-import * as library from '../index.ts';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const PACKAGE_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 
 const PACKAGE_BUILD_TIMEOUT_MS = 60_000;
-const COMPONENT_KEYS = new Set(Object.keys(Line));
+const ROOT_DECLARATION = 'Chart/Chart.svelte.d.ts';
 
-const declarations = (directory: string): string[] =>
+const declarationPaths = (directory: string): string[] =>
 	readdirSync(directory, { withFileTypes: true, recursive: true })
 		.filter((entry) => entry.isFile() && entry.name.endsWith('.d.ts'))
 		.map((entry) => join(entry.parentPath, entry.name));
 
-describe('public API', () => {
-	it('exports only the Chart compound and its parts', () => {
-		expect(Object.keys(library)).toEqual(['Chart']);
-		expect(Object.keys(library.Chart).filter((key) => !COMPONENT_KEYS.has(key))).toEqual([
-			'Plot',
-			'Line',
-			'XAxis',
-			'YAxis',
-			'Grid',
-			'Tooltip',
-			'Legend',
-			'Table'
-		]);
+function packageDeclarations(output: string): Map<string, string> {
+	execFileSync(
+		join(PACKAGE_ROOT, 'node_modules/.bin/svelte-package'),
+		['--input', 'src/lib', '--output', output, '--tsconfig', 'tsconfig.package.json'],
+		{ cwd: PACKAGE_ROOT, stdio: 'pipe' }
+	);
+	const declarations = new Map(
+		declarationPaths(output).map((path) => [
+			path.slice(output.length + 1),
+			readFileSync(path, 'utf8')
+		])
+	);
+	if (!declarations.has(ROOT_DECLARATION)) {
+		throw new Error(`svelte-package emitted no ${ROOT_DECLARATION}`);
+	}
+	return declarations;
+}
+
+describe('published declarations', () => {
+	let output: string;
+	let declarations: Map<string, string>;
+
+	beforeAll(() => {
+		output = mkdtempSync(join(tmpdir(), 'prime-charts-declarations-'));
+		declarations = packageDeclarations(output);
+	}, PACKAGE_BUILD_TIMEOUT_MS);
+
+	afterAll(() => {
+		rmSync(output, { recursive: true, force: true });
 	});
 
-	it(
-		'names no LayerCake type and imports no d3 module in the published declarations',
-		{ timeout: PACKAGE_BUILD_TIMEOUT_MS },
-		() => {
-			const output = mkdtempSync(join(tmpdir(), 'prime-charts-declarations-'));
-			try {
-				execFileSync(
-					join(PACKAGE_ROOT, 'node_modules/.bin/svelte-package'),
-					['--input', 'src/lib', '--output', output, '--tsconfig', 'tsconfig.package.json'],
-					{ cwd: PACKAGE_ROOT, stdio: 'pipe' }
-				);
-				const files = declarations(output);
-				expect(files.map((file) => file.slice(output.length + 1)).sort()).toContain(
-					'Chart/Chart.svelte.d.ts'
-				);
-				const leaks = files.filter((file) => /layercake/i.test(readFileSync(file, 'utf8')));
-				expect(leaks).toEqual([]);
-				const d3Imports = files.filter((file) =>
-					/from ['"]d3-|import\(['"]d3-/.test(readFileSync(file, 'utf8'))
-				);
-				expect(d3Imports, 'declarations importing an untyped d3 module').toEqual([]);
-			} finally {
-				rmSync(output, { recursive: true, force: true });
-			}
-		}
-	);
+	const matching = (pattern: RegExp): string[] =>
+		[...declarations].flatMap(([path, source]) => (pattern.test(source) ? [path] : []));
+
+	it('name no LayerCake type', () => {
+		expect(matching(/layercake/i)).toEqual([]);
+	});
+
+	it('import no untyped d3 module', () => {
+		expect(matching(/from ['"]d3-|import\(['"]d3-/)).toEqual([]);
+	});
 });

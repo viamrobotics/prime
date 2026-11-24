@@ -5,6 +5,7 @@ description: "A CodeMirror 6 code editor for Svelte 5, themed with Viam's code t
 
 import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
 import Example from "@docs/doc/Example.astro";
+import KeyboardTable from "@docs/doc/KeyboardTable.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
 import Demo from "./Demo.svelte";
@@ -22,6 +23,8 @@ import UnifiedDiff from "./UnifiedDiff.svelte";
 import unifiedDiffSource from "./UnifiedDiff.svelte?raw";
 import SplitDiff from "./SplitDiff.svelte";
 import splitDiffSource from "./SplitDiff.svelte?raw";
+import States from "./States.svelte";
+import statesSource from "./States.svelte?raw";
 import Validation from "./Validation.svelte";
 import validationSource from "./Validation.svelte?raw";
 
@@ -83,7 +86,7 @@ Every editor needs a name. Pass `aria-label`, or `aria-labelledby` with the id o
 
 ### Two-way binding
 
-`bind:value` holds the document. Typing writes it, and assigning it from outside replaces the document.
+`bind:value` holds the document. Typing writes it, and assigning it from outside replaces the document. State that starts `undefined` shows an empty document.
 
 <Example code={twoWaySource} title="TwoWay.svelte">
   <TwoWay client:visible />
@@ -115,11 +118,15 @@ A function binding receives each edit and decides what `value` becomes. This one
 
 ### Disabled and placeholder
 
-`disabled` turns the editor off. Unlike `readonly`, it takes no focus and no selection, it leaves the tab order, and the textbox is marked `aria-disabled`. `placeholder` is the text shown while the document is empty.
+`disabled` turns the editor off, and it wins over `readonly`. Unlike `readonly`, it takes no focus and no selection, it leaves the tab order, and the textbox is marked `aria-disabled`. `placeholder` is the text shown while the document is empty.
 
 <Example code={disabledSource} title="Disabled.svelte">
   <Disabled client:visible />
 </Example>
+
+### Gutter and wrapping
+
+`lineNumbers` shows the gutter, which holds the line numbers and the fold markers. It is on by default. `wrapLines` wraps long lines instead of scrolling them horizontally. Both reconfigure the editor in place.
 
 ### Unified diff
 
@@ -131,7 +138,7 @@ Set `original` to open the diff view. `value` is compared against it, and the de
 
 ### Split diff
 
-Set `diff="split"` to put `original` beside `value`. The original side is readonly. Switching between unified and split rebuilds the editor, and every other prop change reconfigures it in place.
+Set `diff="split"` to put `original` beside `value`. The original side is readonly. `disabled` applies to both sides. Switching between unified and split rebuilds the editor, and so does changing `collapseUnchanged`. Every other prop change reconfigures it in place.
 
 <Example code={splitDiffSource} title="SplitDiff.svelte">
   <SplitDiff client:visible />
@@ -147,16 +154,36 @@ The editor does not validate the document. Check `value` yourself, then set `ari
   <Validation client:visible />
 </Example>
 
-### Keyboard
+### States
 
-| Input                                              | Action                                         |
-| -------------------------------------------------- | ---------------------------------------------- |
-| Ctrl + F, or Cmd + F on macOS                      | Open the search panel                          |
-| Enter / Shift + Enter in the search field          | Go to the next or previous match               |
-| Escape                                             | Close the search panel                         |
-| Ctrl + Shift + [, or Cmd + Alt + [ on macOS        | Fold the block at the cursor                   |
-| Ctrl + Shift + ], or Cmd + Alt + ] on macOS        | Unfold the block at the cursor                 |
-| Click a fold marker in the gutter                  | Fold or unfold that block                      |
+An editor is editable, readonly, disabled, or invalid. `aria-invalid` marks the invalid one, and the editor never sets it on its own.
+
+<Example code={statesSource} title="States.svelte">
+  <States client:visible />
+</Example>
+
+## Styling
+
+`class` lands on the outer element, and so does every other attribute that is not `aria-*`. Size the editor with a class there, and add `overflow-auto` for a document taller than its box. The `aria-*` attributes go to the editing surface.
+
+Every color is a [tailwind-config](../tailwind-config/) token, so the editor follows the light and dark themes. `--color-gray-1` is the code surface in every state. A readonly editor drops its border, and a disabled editor keeps a transparent border on the disabled fill. The error border comes from `aria-invalid`.
+
+A 2px `--color-link` outline at a 2px offset shows when the editing surface matches `:focus-visible`, which keyboard focus always does. An editable editor shows it on click too, as a native text input does.
+
+The editor sets no data attributes.
+
+## Keyboard
+
+<KeyboardTable
+  bindings={[
+    { keys: "Ctrl + F", text: "or Cmd + F on macOS", action: "Open the search panel" },
+    { keys: "Enter / Shift + Enter", text: "in the search field", action: "Go to the next or previous match" },
+    { keys: "Escape", action: "Close the search panel" },
+    { keys: "Ctrl + Shift + [", text: "or Cmd + Option + [ on macOS", action: "Fold the block at the cursor" },
+    { keys: "Ctrl + Shift + ]", text: "or Cmd + Option + ] on macOS", action: "Expand the collapsed run of unchanged lines next to the cursor, on both sides of a split diff. When there is none, unfold the block at the cursor" },
+    { text: "Click a fold marker in the gutter", action: "Fold or unfold that block" },
+  ]}
+/>
 
 The search panel also replaces, unless the editor is `readonly`. The fold markers share the gutter with the line numbers, so `lineNumbers={false}` hides both and folding stays on the keyboard. Tab moves focus out of the editor and never indents.
 

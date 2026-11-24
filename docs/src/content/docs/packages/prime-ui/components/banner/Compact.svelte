@@ -8,6 +8,6 @@
     <Banner.Actions>
       <a href="#update" class="text-sm font-medium text-link">Update now</a>
     </Banner.Actions>
-    <Banner.Close />
+    <Banner.Close aria-label="Dismiss" />
   </Banner>
 </div>

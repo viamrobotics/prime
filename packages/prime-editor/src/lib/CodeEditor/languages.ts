@@ -8,7 +8,7 @@ import { sql } from '@codemirror/lang-sql';
 
 import type { CodeEditorLanguage } from './code-editor.ts';
 
-const languages: Record<CodeEditorLanguage, () => LanguageSupport> = {
+const LANGUAGE_SUPPORT: Record<CodeEditorLanguage, () => LanguageSupport> = {
 	go,
 	javascript: () => javascript(),
 	json,
@@ -18,5 +18,5 @@ const languages: Record<CodeEditorLanguage, () => LanguageSupport> = {
 };
 
 export function languageSupport(language: CodeEditorLanguage): LanguageSupport {
-	return languages[language]();
+	return LANGUAGE_SUPPORT[language]();
 }

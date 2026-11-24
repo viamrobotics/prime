@@ -1,3 +1,7 @@
+<!--
+@component
+The `role="group"` element that holds a branch's children. By default it renders one row per child node, and a `children` snippet that receives the child nodes replaces them so the consumer arranges the rows, with [`Tree.Row`](./Row.svelte). Place it inside [`Tree.Branch`](./Branch.svelte), after the control.
+-->
 <script lang="ts">
 	import { mergeProps } from '@zag-js/svelte';
 	import type { Snippet } from 'svelte';

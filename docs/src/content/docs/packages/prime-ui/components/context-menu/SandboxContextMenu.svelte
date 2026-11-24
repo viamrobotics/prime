@@ -5,7 +5,7 @@
 
 <ContextMenu>
   <ContextMenu.Trigger
-    class="flex h-32 w-72 items-center justify-center rounded-lg border border-dashed border-medium text-sm text-subtle-2"
+    class="flex h-32 w-72 items-center justify-center rounded-sm border border-dashed border-medium text-sm text-subtle-2"
   >
     Right-click here
   </ContextMenu.Trigger>

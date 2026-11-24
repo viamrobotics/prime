@@ -24,8 +24,7 @@ export const X_SCALES: Readonly<Record<ChartScale, XScaleKind>> = {
 export const isPlaced = (point: ChartPoint<ChartXValue>, toNumber: XToNumber): boolean =>
 	point.y !== null && Number.isFinite(point.y) && Number.isFinite(toNumber(point.x));
 
-// The drawn x domain on the scale's numbers, in either order, and the converter that places a
-// point in it. Point search and key steps treat a point outside the domain like a gap.
+// The drawn x domain on the scale's numbers, in either order, and the converter onto them.
 export interface XWindow {
 	readonly domain: readonly [number, number];
 	readonly toNumber: XToNumber;

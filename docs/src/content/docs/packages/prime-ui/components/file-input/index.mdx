@@ -23,7 +23,7 @@ import validatedSource from "./Validated.svelte?raw";
 - A real `<input type="file">` covers the row, so the picker, a dropped file, the keyboard, and form submission are the browser's, and a form reset empties `value`. `accept`, `multiple`, `name`, `capture`, and `onchange` pass straight through.
 - `value` is a `File[]`. Without `multiple` it holds at most one file, and a cleared input is an empty array.
 - The chosen names show in the row and truncate to its width. A clear button appears beside them.
-- Reads `controlId`, `disabled`, `required`, `state`, and `aria-describedby` from an enclosing [`Field`](../field/).
+- Reads `controlId`, `disabled`, `required`, `state`, `aria-describedby`, and its name from an enclosing [`Field`](../field/).
 
 ## Usage
 
@@ -59,7 +59,7 @@ Inside a [`Field`](../field/) the label and hint wire themselves to the native i
 
 `class` lands on the frame, the element that holds the native input. It carries no width, so set one yourself or let a flex or grid parent stretch it. The frame is the `input` [component class](../../tailwind-config/component-classes/) from `@viamrobotics/tailwind-config`, the same one `Input` wears, so `input-compact` sizes it for a dense panel.
 
-The prompt, an upload icon and "Choose file", is decoration. Pass `children` to replace it. `placeholder` is the text shown while nothing is chosen, and `clearLabel` names the clear button.
+The prompt, an upload icon and "Choose file", or "Choose files" with `multiple`, is decoration. Pass `children` to replace it. `placeholder` is the text shown while nothing is chosen, and `clearLabel` names the clear button.
 
 | Hook               | Where                                                |
 | ------------------ | ---------------------------------------------------- |

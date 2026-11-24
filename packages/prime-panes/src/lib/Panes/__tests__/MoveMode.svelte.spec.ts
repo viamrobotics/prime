@@ -16,12 +16,14 @@ import type { Point } from '../../../../test/input-commands.ts';
 type Received = (LayoutNode<PaneData> | undefined)[];
 
 const DESTINATION_COUNT = 3;
+const ENTER_KEY_CODE = 13;
 const TIME_SERIES = 'Move Camera to Time series';
 const SENSOR_STAT = 'Move Camera to Sensor stat';
 const CAMERA_2 = 'Move Camera to Camera 2';
 const STARTED_CAMERA =
 	'Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape. The arrow keys move between sides and panes, Tab moves between destinations, Enter places the pane, and Escape cancels.';
 const RIGHT = { x: '90%', y: '50%' } as const;
+const LINK = 'rgb(0, 102, 204)';
 
 const CAMERA = pane(ids.mycam, 'Camera');
 const TIME_SERIES_PANE = pane(ids.mytimeseries, 'Time series');
@@ -99,6 +101,16 @@ const clickAt = async (target: Locator, at: Point) => {
 	await commands.mouseDown();
 	await commands.mouseUp();
 };
+
+const pressRepeatingEnter = () =>
+	cdp().send('Input.dispatchKeyEvent', {
+		type: 'keyDown',
+		key: 'Enter',
+		code: 'Enter',
+		windowsVirtualKeyCode: ENTER_KEY_CODE,
+		text: '\r',
+		autoRepeat: true
+	});
 
 const recordDefaultPrevented = () => {
 	const results: boolean[] = [];
@@ -193,6 +205,17 @@ describe('Panes move mode: keyboard', () => {
 
 		await expect.element(trigger('Camera')).toHaveFocus();
 	});
+
+	it('leaves an arrow inside a text field of the moving pane to the field', async () => {
+		render(PanePartsPanes, { variant: 'header' });
+		await startMoveWithKeyboard('Camera');
+		page.getByRole('textbox', { name: 'Note for Camera', exact: true }).element().focus();
+		const prevented = recordDefaultPrevented();
+
+		await userEvent.keyboard('{ArrowLeft}');
+
+		expect(prevented).toEqual([false]);
+	});
 });
 
 describe('Panes move mode: pointer only', () => {
@@ -225,15 +248,21 @@ describe('Panes move mode: canceling', () => {
 		return component;
 	};
 
-	it('cancels the move and focuses the trigger when Escape follows an arrow selection', async () => {
+	it('ends move mode when Escape follows an arrow selection', async () => {
+		await startAndSelectRightEdge([]);
+
+		await userEvent.keyboard('{Escape}');
+
+		await expect.poll(() => allDestinations().elements()).toHaveLength(0);
+		expect(pressedStates()).toEqual(['false', 'false', 'false', 'false']);
+	});
+
+	it('focuses the trigger when Escape follows an arrow selection', async () => {
 		await startAndSelectRightEdge([]);
 
 		await userEvent.keyboard('{Escape}');
 
 		await expect.element(trigger('Camera')).toHaveFocus();
-		await expect.poll(() => allDestinations().elements()).toHaveLength(0);
-		expect(pressedStates()).toEqual(['false', 'false', 'false', 'false']);
-		expect(announcement()).toBe('Move canceled.');
 	});
 
 	it('leaves the layout unchanged and writes nothing when Escape follows an arrow selection', async () => {
@@ -323,20 +352,28 @@ describe('Panes move mode: announcements', () => {
 });
 
 describe('Panes move mode: state', () => {
-	it('reflects move mode on the moving handle with aria-pressed', async () => {
+	it('leaves every handle unpressed before move mode', () => {
 		render(ControlledPanes, { accept: true, handles: true });
-		expect(pressedStates(), 'before move mode').toEqual(['false', 'false', 'false', 'false']);
-		expect(allDestinations().elements(), 'destinations before move mode').toHaveLength(0);
+
+		expect(pressedStates()).toEqual(['false', 'false', 'false', 'false']);
+	});
+
+	it('presses the moving handle alone in move mode', async () => {
+		render(ControlledPanes, { accept: true, handles: true });
 
 		await startMoveWithClick();
-		await expect
-			.element(trigger('Camera'), { message: 'in move mode' })
-			.toHaveAttribute('aria-pressed', 'true');
+
+		await expect.poll(pressedStates).toEqual(['true', 'false', 'false', 'false']);
+	});
+
+	it('releases the moving handle when the move is canceled', async () => {
+		render(ControlledPanes, { accept: true, handles: true });
+		await startMoveWithClick();
+		await expect.element(trigger('Camera')).toHaveAttribute('aria-pressed', 'true');
 
 		await userEvent.keyboard('{Escape}');
-		await expect
-			.poll(pressedStates, { message: 'after cancel' })
-			.toEqual(['false', 'false', 'false', 'false']);
+
+		await expect.poll(pressedStates).toEqual(['false', 'false', 'false', 'false']);
 	});
 
 	it('leaves move mode when the view stops being reorderable', async () => {
@@ -392,13 +429,20 @@ describe('Panes move mode: state', () => {
 		await expect.poll(pressedStates).toEqual(['false', 'false', 'false', 'false']);
 	});
 
-	it('still runs the consumer click handler and enters move mode', async () => {
+	it('runs the consumer click handler of the trigger', async () => {
 		const onclick = vi.fn();
 		render(ControlledPanes, { accept: true, handles: true, handleProps: { onclick } });
 
 		await startMoveWithClick();
 
 		expect(onclick).toHaveBeenCalledTimes(1);
+	});
+
+	it('enters move mode from a trigger that has a consumer click handler', async () => {
+		render(ControlledPanes, { accept: true, handles: true, handleProps: { onclick: vi.fn() } });
+
+		await startMoveWithClick();
+
 		await expect.element(trigger('Camera')).toHaveAttribute('aria-pressed', 'true');
 	});
 });
@@ -411,7 +455,9 @@ describe('Panes move mode: the moving pane changes underneath the move', () => {
 
 		component.relocateCamera();
 
-		await expect.poll(() => original.isConnected).toBe(false);
+		await expect
+			.poll(() => original.isConnected, { message: 'the original trigger is still mounted' })
+			.toBe(false);
 		await expect.element(trigger('Camera')).toHaveFocus();
 		await expect.poll(() => allDestinations().elements()).toHaveLength(DESTINATION_COUNT);
 	});
@@ -423,7 +469,9 @@ describe('Panes move mode: the moving pane changes underneath the move', () => {
 
 		void component.removeAndRestoreCamera();
 
-		await expect.poll(() => original.isConnected).toBe(false);
+		await expect
+			.poll(() => original.isConnected, { message: 'the original trigger is still mounted' })
+			.toBe(false);
 		await expect.element(trigger('Camera')).toHaveFocus();
 		await expect.poll(() => allDestinations().elements()).toHaveLength(DESTINATION_COUNT);
 	});
@@ -456,14 +504,7 @@ describe('Panes.MoveTrigger: the default native button', () => {
 		await userEvent.keyboard('{Enter>}');
 		await expect.poll(() => allDestinations().elements()).toHaveLength(DESTINATION_COUNT);
 
-		await cdp().send('Input.dispatchKeyEvent', {
-			type: 'keyDown',
-			key: 'Enter',
-			code: 'Enter',
-			windowsVirtualKeyCode: 13,
-			text: '\r',
-			autoRepeat: true
-		});
+		await pressRepeatingEnter();
 		await userEvent.keyboard('{/Enter}');
 
 		expect(allDestinations().elements()).toHaveLength(DESTINATION_COUNT);
@@ -478,14 +519,7 @@ describe('Panes.MoveTrigger: the default native button', () => {
 		await userEvent.keyboard('{Enter>}');
 		await expect.poll(() => allDestinations().elements()).toHaveLength(0);
 
-		await cdp().send('Input.dispatchKeyEvent', {
-			type: 'keyDown',
-			key: 'Enter',
-			code: 'Enter',
-			windowsVirtualKeyCode: 13,
-			text: '\r',
-			autoRepeat: true
-		});
+		await pressRepeatingEnter();
 		await userEvent.keyboard('{/Enter}');
 
 		expect(allDestinations().elements()).toHaveLength(0);
@@ -513,14 +547,7 @@ describe('Panes.MoveTrigger: a child with role="button" that is not a native but
 		await expect.poll(() => allDestinations().elements()).toHaveLength(DESTINATION_COUNT);
 		trigger('Camera').element().focus();
 
-		await cdp().send('Input.dispatchKeyEvent', {
-			type: 'keyDown',
-			key: 'Enter',
-			code: 'Enter',
-			windowsVirtualKeyCode: 13,
-			text: '\r',
-			autoRepeat: true
-		});
+		await pressRepeatingEnter();
 		await userEvent.keyboard('{/Enter}');
 
 		expect(allDestinations().elements()).toHaveLength(DESTINATION_COUNT);
@@ -549,22 +576,30 @@ describe('Panes.MoveTrigger: a child with role="button" that is not a native but
 		expect(defaultPrevented, 'the keydown was not canceled').toEqual([true]);
 	});
 
-	it('reports move mode with aria-pressed', async () => {
+	it('reports aria-pressed false before move mode', async () => {
 		renderRoleButton();
-		await expect
-			.element(trigger('Camera'), { message: 'before move mode' })
-			.toHaveAttribute('aria-pressed', 'false');
 
+		await expect.element(trigger('Camera')).toHaveAttribute('aria-pressed', 'false');
+	});
+
+	it('reports aria-pressed true in move mode', async () => {
+		renderRoleButton();
+		trigger('Camera').element().focus();
+
+		await userEvent.keyboard('{Enter}');
+
+		await expect.element(trigger('Camera')).toHaveAttribute('aria-pressed', 'true');
+	});
+
+	it('reports aria-pressed false after a cancel', async () => {
+		renderRoleButton();
 		trigger('Camera').element().focus();
 		await userEvent.keyboard('{Enter}');
-		await expect
-			.element(trigger('Camera'), { message: 'in move mode' })
-			.toHaveAttribute('aria-pressed', 'true');
+		await expect.element(trigger('Camera')).toHaveAttribute('aria-pressed', 'true');
 
 		await userEvent.keyboard('{Escape}');
-		await expect
-			.element(trigger('Camera'), { message: 'after cancel' })
-			.toHaveAttribute('aria-pressed', 'false');
+
+		await expect.element(trigger('Camera')).toHaveAttribute('aria-pressed', 'false');
 	});
 
 	it('toggles move mode once when it is a link and Enter is pressed', async () => {
@@ -640,15 +675,18 @@ describe('Panes.MoveTrigger: unmounted before move mode ended', () => {
 		await expect.element(page.getByPane(ids.mycam)).toHaveFocus();
 	});
 
-	it('shows a focus outline on the wrapper that takes the fallback focus', async () => {
+	it('shows an inset link-colored focus outline on the wrapper that takes the fallback focus', async () => {
 		render(PanePartsPanes, { variant: 'menu' });
 		await startMoveFromMenu();
 		await userEvent.keyboard('{Escape}');
 		await expect.element(page.getByPane(ids.mycam)).toHaveFocus();
 
-		await expect
-			.element(page.getByPane(ids.mycam))
-			.toHaveStyle({ outlineStyle: 'solid', outlineWidth: '2px' });
+		await expect.element(page.getByPane(ids.mycam)).toHaveStyle({
+			outlineStyle: 'solid',
+			outlineWidth: '2px',
+			outlineOffset: '-2px',
+			outlineColor: LINK
+		});
 	});
 
 	it('gives the pane wrapper tabindex -1 so script can focus it', async () => {

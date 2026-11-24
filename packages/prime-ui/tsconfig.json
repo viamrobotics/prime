@@ -18,6 +18,6 @@
 		"strict": true,
 		"noUncheckedSideEffectImports": false
 	},
-	"include": ["vite.config.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"],
+	"include": ["vite.config.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte", "test/**/*.ts"],
 	"exclude": ["node_modules/**", "dist/**"]
 }

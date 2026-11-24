@@ -33,10 +33,10 @@
 <div class="not-content">
   <Tree
     nodes={files}
-    nodeToValue={(file) => file.path}
-    nodeToString={(file) => file.name}
-    nodeToChildren={(file) => file.children}
-    isNodeDisabled={(file) => file.disabled === true}
+    getValue={(file) => file.path}
+    getLabel={(file) => file.name}
+    getChildren={(file) => file.children}
+    isDisabled={(file) => file.disabled === true}
     bind:expanded
     bind:selected
     aria-label="Row states"
@@ -45,7 +45,10 @@
       {#if state.isBranch}
         <Tree.Branch>
           <Tree.BranchControl
-            class="focus-ring flex items-center gap-1 rounded-sm py-1 text-sm hover:bg-light data-[selected]:bg-medium"
+            class={[
+              "focus-ring flex items-center gap-1 rounded-sm py-1 text-sm hover:bg-light data-[selected]:bg-medium data-[selected]:outline-2 data-[selected]:-outline-offset-2 data-[selected]:outline-link",
+              state.disabled && "text-disabled-dark",
+            ]}
             style="padding-inline-start: calc(var(--depth) * 1rem)"
           >
             <Tree.BranchTrigger aria-label={state.expanded ? "Collapse" : "Expand"}>
@@ -58,8 +61,8 @@
       {:else}
         <Tree.Item
           class={[
-            "focus-ring rounded-sm py-1 text-sm hover:bg-light data-[selected]:bg-medium",
-            state.disabled && "text-disabled",
+            "focus-ring rounded-sm py-1 text-sm hover:bg-light data-[selected]:bg-medium data-[selected]:outline-2 data-[selected]:-outline-offset-2 data-[selected]:outline-link",
+            state.disabled && "text-disabled-dark",
           ]}
           style="padding-inline-start: calc(var(--depth) * 1rem + 1rem)"
         >

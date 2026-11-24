@@ -29,7 +29,7 @@ export default defineConfig({
     svelte(),
     starlight({
       plugins: [starlightThemeNova()],
-      // starlight-theme-nova defaults expressiveCode to false; re-enable so
+      // starlight-theme-nova defaults expressiveCode to false. Re-enable it so
       // <Code> from @astrojs/starlight/components works in MDX.
       expressiveCode: true,
       title: "Viam Prime",

@@ -3,11 +3,17 @@
 </script>
 
 <div class="not-content grid max-w-md gap-3">
-  <Textarea placeholder="Default" aria-label="Default" />
-  <Textarea disabled placeholder="Disabled" aria-label="Disabled" />
-  <Textarea readonly value="Read-only value" aria-label="Read-only" />
-  <Field state="error" class="flex flex-col gap-1">
-    <Label>Error</Label>
+  <Field aria-label="Default" class="grid">
+    <Textarea placeholder="Default" />
+  </Field>
+  <Field aria-label="Disabled" disabled class="grid">
+    <Textarea placeholder="Disabled" />
+  </Field>
+  <Field aria-label="Read-only" class="grid">
+    <Textarea readonly value="Read-only value" />
+  </Field>
+  <Field label="Error" state="error" class="flex flex-col gap-1">
+    <Label />
     <Textarea />
     <Hint>Something is wrong.</Hint>
   </Field>

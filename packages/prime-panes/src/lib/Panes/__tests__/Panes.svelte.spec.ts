@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { commands, page, userEvent } from 'vitest/browser';
 
@@ -15,9 +15,11 @@ const TRIGGER_HIT_AREA_PX = 8;
 const TRIGGER_CENTER_PX = TRIGGER_HIT_AREA_PX / 2;
 const DRAG_DISTANCE_PX = 100;
 const RIGHT = { x: '90%', y: '50%' } as const;
+const LINK = 'rgb(0, 102, 204)';
 
 const separator = (index = 0) => page.getByRole('separator').nth(index);
 const setRootTo70 = () => page.getByRole('button', { name: 'Set root to 70%' });
+const moveCamera = () => page.getByRole('button', { name: 'Move Camera', exact: true });
 const owner = () => page.getByTestId('owner').element().textContent;
 const panelsOf = (index = 0) =>
 	separator(index)
@@ -106,7 +108,7 @@ describe('Panes rendering', () => {
 			.elements()
 			.flatMap((element) => [element.id, ...element.getAttribute('aria-controls')!.split(' ')]);
 		expect(claimed).toHaveLength(18);
-		expect(new Set(claimed).size).toBe(claimed.length);
+		expect(new Set(claimed).size).toBe(18);
 	});
 });
 
@@ -134,13 +136,18 @@ describe('Panes resize trigger', () => {
 		expect(document.elementFromPoint(x, boundary + 2)).toBe(trigger);
 	});
 
-	it('shows a 2px info-dark outline on keyboard focus', async () => {
+	it('shows a 2px link-colored outline offset 2px on keyboard focus', async () => {
 		render(BoundPanes);
 		await userEvent.click(setRootTo70());
 		await userEvent.tab();
 
 		await expect.element(separator()).toHaveFocus();
-		await expect.element(separator()).toHaveStyle({ outlineStyle: 'solid', outlineWidth: '2px' });
+		await expect.element(separator()).toHaveStyle({
+			outlineStyle: 'solid',
+			outlineWidth: '2px',
+			outlineOffset: '2px',
+			outlineColor: LINK
+		});
 	});
 });
 
@@ -174,7 +181,7 @@ describe('Panes resize writeback', () => {
 		await userEvent.keyboard('{ArrowDown}');
 
 		await expect.poll(() => received.length).toBe(1);
-		expect(ratioOf(received[0])).not.toBe(0.3);
+		expect(ratioOf(received[0])).toBeCloseTo(0.31, 2);
 		expect(owner()).toBe('0.3');
 		await expect.poll(rootFirstPanelShare).toBeCloseTo(0.3, 2);
 	});
@@ -216,9 +223,9 @@ describe('Panes resize writeback', () => {
 		separator().element().focus();
 		await userEvent.keyboard('{ArrowDown}');
 		await expect.poll(() => received.length).toBe(1);
-
 		await userEvent.click(setRootTo70());
 		await expect.poll(rootFirstPanelShare).toBeCloseTo(0.7, 2);
+
 		await userEvent.click(separator());
 
 		expect(received).toHaveLength(1);
@@ -251,5 +258,54 @@ describe('Panes external sync', () => {
 
 		await expect.poll(owner).toBe('0.7');
 		await expect.poll(rootFirstPanelShare).toBeCloseTo(0.7, 2);
+	});
+});
+
+describe('Panes consumer root handlers', () => {
+	it('passes a key pressed inside the root to the consumer onkeydown', async () => {
+		const onkeydown = vi.fn();
+		render(BoundPanes, { handles: true, rootProps: { onkeydown } });
+		moveCamera().element().focus();
+
+		await userEvent.keyboard('x');
+
+		expect(onkeydown).toHaveBeenCalledWith(expect.objectContaining({ key: 'x' }));
+	});
+
+	it('still cancels move mode on Escape when the consumer passes onkeydown', async () => {
+		render(BoundPanes, { handles: true, rootProps: { onkeydown: vi.fn() } });
+		await userEvent.click(moveCamera());
+
+		await userEvent.keyboard('{Escape}');
+
+		await expect.element(page.getByRole('status')).toHaveTextContent('Move canceled.');
+	});
+
+	it('passes a press inside the root to the consumer onpointerdown', async () => {
+		const onpointerdown = vi.fn();
+		render(BoundPanes, { rootProps: { onpointerdown } });
+
+		await userEvent.click(page.getByRole('region', { name: 'Camera', exact: true }));
+
+		expect(onpointerdown).toHaveBeenCalledTimes(1);
+	});
+
+	it('passes focus leaving the root to the consumer onfocusout', async () => {
+		const onfocusout = vi.fn();
+		render(BoundPanes, { handles: true, rootProps: { onfocusout } });
+		moveCamera().element().focus();
+
+		await userEvent.click(setRootTo70());
+
+		expect(onfocusout).toHaveBeenCalledTimes(1);
+	});
+
+	it('still ends move mode when focus leaves the root and the consumer passes onfocusout', async () => {
+		render(BoundPanes, { handles: true, rootProps: { onfocusout: vi.fn() } });
+		await userEvent.click(moveCamera());
+
+		await userEvent.click(setRootTo70());
+
+		await expect.element(page.getByRole('status')).toHaveTextContent('Move canceled.');
 	});
 });

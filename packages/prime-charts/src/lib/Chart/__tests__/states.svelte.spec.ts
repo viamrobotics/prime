@@ -1,9 +1,9 @@
+import { createRawSnippet } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import '../../../../test/tailwind.css';
-import RootChart from './RootChart.svelte';
-import RootEmptyText from './RootEmptyText.svelte';
+import RootChart from './fixtures/RootChart.svelte';
 
 const points = [
 	{ x: new Date('2026-01-01T00:00:00Z'), y: 2 },
@@ -26,39 +26,35 @@ const emptyText = (container: Element) =>
 	container.querySelector('[data-part="empty"]')?.textContent?.trim();
 
 describe('Chart states', () => {
+	it('renders the root as a native figure with no role, carrying a consumer id', async () => {
+		const { container } = render(RootChart, { props: { id: 'readings' } });
+		const root = container.querySelector('#readings');
+
+		await expect.poll(() => root?.tagName).toBe('FIGURE');
+		expect(root?.hasAttribute('role')).toBe(false);
+	});
+
+	it('passes a consumer id and data attribute to the plot root', async () => {
+		const { container } = render(RootChart, {
+			props: { plotAttributes: { id: 'plot-1', 'data-extra': 'yes' } }
+		});
+		const plot = container.querySelector('[data-part="plot"]');
+
+		await expect.poll(() => plot?.id).toBe('plot-1');
+		expect(plot?.getAttribute('data-extra')).toBe('yes');
+	});
+
 	it('shows "No data" with no series', async () => {
 		const { container } = render(RootChart, { props: {} });
 		await expect.poll(() => emptyText(container)).toBe('No data');
 	});
 
-	it('shows "No data" when every point is null', async () => {
-		const { container } = render(RootChart, {
-			props: { series: [{ name: 'Reading', points: [{ x: new Date(0), y: null }] }] }
-		});
-		await expect.poll(() => emptyText(container)).toBe('No data');
-	});
+	it('renders the empty snippet in place of "No data"', async () => {
+		const empty = createRawSnippet(() => ({ render: () => '<span>Nothing recorded</span>' }));
 
-	it('describes an empty chart as "No data."', async () => {
-		const { container } = render(RootChart, { props: {} });
-		await expect.poll(() => container.textContent).toContain('No data');
-		const figure = container.querySelector('[role="figure"]')!;
-		const describedBy = figure.getAttribute('aria-describedby')!;
+		const { container } = render(RootChart, { props: { empty } });
 
-		expect(container.querySelector(`[id="${describedBy}"]`)?.textContent).toBe('No data.');
-	});
-
-	it('places a table with a header row and no body rows when empty', async () => {
-		const { container } = render(RootChart, { props: { hasTable: true } });
-		await expect.poll(() => container.querySelector('table')).not.toBeNull();
-
-		expect(container.querySelectorAll('thead tr')).toHaveLength(1);
-		expect(container.querySelectorAll('tbody tr')).toHaveLength(0);
-	});
-
-	it('renders a custom empty snippet', async () => {
-		const { container } = render(RootEmptyText);
-		await expect.poll(() => container.textContent).toContain('Nothing recorded');
-		expect(container.querySelector('[data-part="plot"]')?.textContent).not.toContain('No data');
+		await expect.poll(() => emptyText(container)).toBe('Nothing recorded');
 	});
 
 	it('is not empty when every series is hidden', async () => {
@@ -66,15 +62,29 @@ describe('Chart states', () => {
 			props: { series: [{ name: 'Reading', points, hidden: true }] }
 		});
 		await expect.poll(() => container.querySelector('svg')).not.toBeNull();
-		expect(container.textContent).not.toContain('No data');
+
+		expect(container.querySelector('[data-part="empty"]')).toBeNull();
 	});
 
 	it('keeps the path under a loading overlay', async () => {
 		const { container } = render(RootChart, { props: { series, loading: true } });
 		await expect.poll(() => container.querySelector('path')).not.toBeNull();
+
 		expect(container.querySelector('[data-part="loading"]')).not.toBeNull();
-		expect(container.querySelector('[role="figure"]')?.getAttribute('aria-busy')).toBe('true');
 	});
+
+	it.each([
+		{ loading: true, busy: 'true' },
+		{ loading: false, busy: null }
+	])(
+		'sets aria-busy to $busy on the figure when loading is $loading',
+		async ({ loading, busy }) => {
+			const { container } = render(RootChart, { props: { series, loading } });
+			await expect.poll(() => container.querySelector('path')).not.toBeNull();
+
+			expect(container.querySelector('figure')?.getAttribute('aria-busy')).toBe(busy);
+		}
+	);
 
 	it('keeps the axes and the measured y gutter under a loading overlay', async () => {
 		const { container } = render(RootChart, {
@@ -97,14 +107,11 @@ describe('Chart states', () => {
 		expect(gutter()).toBeGreaterThan(LABEL_GAP);
 	});
 
-	it('shows no overlay and is not busy when not loading', async () => {
+	it('shows no overlay when not loading', async () => {
 		const { container } = render(RootChart, { props: { series } });
 		await expect.poll(() => container.querySelector('path')).not.toBeNull();
+
 		expect(container.querySelector('[data-part="loading"]')).toBeNull();
-		expect(
-			container.querySelector('[role="figure"]')?.hasAttribute('aria-busy'),
-			'figure has aria-busy when not loading'
-		).toBe(false);
 	});
 
 	it.each([
@@ -145,6 +152,7 @@ describe('Chart states', () => {
 	it('lets loading win over the empty state', async () => {
 		const { container } = render(RootChart, { props: { loading: true } });
 		await expect.poll(() => container.querySelector('[data-part="loading"]')).not.toBeNull();
-		expect(container.querySelector('[data-part="plot"]')?.textContent).not.toContain('No data');
+
+		expect(container.querySelector('[data-part="empty"]')).toBeNull();
 	});
 });

@@ -4,6 +4,8 @@
  * notation `Enter / Space` for alternatives and `Shift + Tab` for a chord, and every key
  * renders as a `<kbd>`. `text` is prose shown after the keys, or alone when the input is
  * not a named key, such as "Typed characters". Backtick spans in `action` render as code.
+ * `label` names the table for assistive technology, so a page with two tables can tell
+ * them apart, such as "Keyboard bindings with the panel open".
  */
 import { inlineCode } from "./inline-code";
 import { tokenizeKeys } from "./key-tokens";
@@ -16,9 +18,10 @@ interface KeyBinding {
 
 interface Props {
   bindings: KeyBinding[];
+  label?: string;
 }
 
-const { bindings } = Astro.props;
+const { bindings, label = "Keyboard bindings" } = Astro.props;
 
 for (const binding of bindings) {
   if (!binding.keys && !binding.text) {
@@ -27,25 +30,25 @@ for (const binding of bindings) {
 }
 ---
 
-<table>
+<table aria-label={label}>
   <thead>
     <tr>
-      <th>Key</th>
-      <th>Action</th>
+      <th scope="col">Key</th>
+      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
     {
       bindings.map(({ keys, text, action }) => (
         <tr>
-          <td>
+          <th scope="row">
             {keys &&
               tokenizeKeys(keys).map((token) =>
                 token.kind === "key" ? <kbd>{token.text}</kbd> : ` ${token.text} `,
               )}
             {keys && text && " "}
             {text}
-          </td>
+          </th>
           <td set:html={inlineCode(action)} />
         </tr>
       ))

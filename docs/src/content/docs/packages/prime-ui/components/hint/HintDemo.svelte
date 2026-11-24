@@ -8,6 +8,7 @@
   component={Hint}
   controls={{
     disabled: { kind: "boolean", label: "Disabled", default: false },
+    state: { kind: "select", label: "State", default: "none", options: ["none", "info", "warn", "error"] },
   }}
 >
   Lowercase letters, numbers, and dashes.

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import '../tailwind.css';
 
+	import type { ClassValue } from 'svelte/elements';
+
 	import { CAMERA_ROW } from '../layouts.ts';
 	import type { PaneData } from '../layouts.ts';
 	import type { LayoutNode, PaneNode } from '../../src/lib/layout.ts';
@@ -21,10 +23,8 @@
 		hasPaneBody?: boolean;
 		initialLayout?: LayoutNode<PaneData>;
 		hasStateProbe?: boolean;
-		// strip: tab strip of a stacked pane, top 32px of an unstacked one. left: 48px strip down the left side.
-		// drag-only: strip, only during a drag. top-strip: 16px above the tab list, outside it.
 		dropRegion?: 'strip' | 'left' | 'top-strip' | 'drag-only' | 'none';
-		bodyClass?: string;
+		bodyClass?: ClassValue;
 	}
 
 	const {
@@ -74,7 +74,7 @@
 			class={dropRegion === 'strip' && isStacked ? 'relative' : undefined}
 		>
 			{#snippet tab(stacked: PaneNode<PaneData>)}
-				<span data-custom-tab={stacked.id}>Tab {stacked.data.label}</span>
+				<span>Tab {stacked.data.label}</span>
 			{/snippet}
 			{@render region(isStacked)}
 		</Panes.TabList>
@@ -88,7 +88,7 @@
 	{/if}
 {/snippet}
 
-<div data-testid="frame" style="width: 800px; height: 600px">
+<div style="width: 800px; height: 600px">
 	<Panes
 		bind:layout={
 			() => layout,

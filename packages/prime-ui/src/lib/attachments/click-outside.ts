@@ -14,8 +14,9 @@ export interface ClickOutsideOptions {
 /**
  * Runs `handler` on a pointerdown outside the element it is attached to.
  *
- * A press inside the element, or inside content the element opens into a portal (a
- * `Popover` or `Menu` whose trigger is inside it), does not count as outside.
+ * A press inside the element's box does not count as outside, even on something layered over
+ * it. Neither does a press inside open, non-modal content the element opens into a portal (a
+ * `Popover` or `Menu` whose trigger is inside it). A `Dialog` is modal, so a press in it counts.
  *
  * ```svelte
  * <div {@attach clickOutside(() => (open = false))}>…</div>

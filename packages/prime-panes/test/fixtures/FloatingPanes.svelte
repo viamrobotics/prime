@@ -5,7 +5,7 @@
 	import type { PaneData } from '../layouts.ts';
 	import type { FloatEntry, LayoutNode } from '../../src/lib/layout.ts';
 	import { Panes } from '../../src/lib/Panes/panes.ts';
-	import { removeFloat } from '../../src/lib/tree.ts';
+	import { removeFloat } from '../../src/lib/FloatPanes/float-tree.ts';
 
 	interface Props {
 		initial?: LayoutNode<PaneData> | undefined;
@@ -29,8 +29,7 @@
 		withFields = false
 	}: Props = $props();
 
-	// svelte-ignore state_referenced_locally
-	let layout = $state.raw<LayoutNode<PaneData> | undefined>(initial);
+	let layout = $derived<LayoutNode<PaneData> | undefined>(initial);
 	let writes = $state(0);
 
 	export function getLayout() {
@@ -85,7 +84,6 @@
 			{/if}
 			<section
 				aria-label={node.data.label}
-				data-testid="pane"
 				data-pane-id={node.id}
 				data-is-floating={state.isFloating}
 				class="size-full"

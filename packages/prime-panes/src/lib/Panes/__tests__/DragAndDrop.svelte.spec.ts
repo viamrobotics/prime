@@ -15,10 +15,13 @@ type Received = (LayoutNode<PaneData> | undefined)[];
 
 const HELD_PRESS_MS = 300;
 const HOLD_TO_DRAG_MS = 250;
-const TEXT_FIELD_HOLD_MS = 1000;
+const PAST_HOLD_MS = 1000;
+const BEFORE_HOLD_ENDS_MS = 100;
 const SEPARATOR_REACH_PX = 2;
 const DRAG_PX = 40;
 const GRIP_SIZE_PX = 24;
+const GRIP_INSET_PX = 1;
+const GRIP_OUTSET_PX = -2;
 
 const CENTER = { x: '50%', y: '50%' } as const;
 const LEFT = { x: '10%', y: '50%' } as const;
@@ -410,11 +413,11 @@ describe('Panes.DragTrigger: a pressed handle', () => {
 
 	it('arms no pane once the pointer is released just off the pressed handle without a drag', async () => {
 		render(ControlledPanes, { props: { accept: true, handles: true } });
-		await commands.mouseMove(grip('Camera').selector, { x: 1, y: GRIP_SIZE_PX / 2 });
+		await commands.mouseMove(grip('Camera').selector, { x: GRIP_INSET_PX, y: GRIP_SIZE_PX / 2 });
 		await commands.mouseDown();
 		await expect.element(page.getByDragArmedPane()).toBeInTheDocument();
 
-		await commands.mouseMove(grip('Camera').selector, { x: -2, y: GRIP_SIZE_PX / 2 });
+		await commands.mouseMove(grip('Camera').selector, { x: GRIP_OUTSET_PX, y: GRIP_SIZE_PX / 2 });
 		await commands.mouseUp();
 
 		await expect.element(page.getByDraggingPanes()).not.toBeInTheDocument();
@@ -512,10 +515,10 @@ describe('Panes.DragTrigger: a press that starts on a control', () => {
 		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 		render(PanePartsPanes, { props: { variant: 'header' } });
 		await press(holdableButton());
-		vi.advanceTimersByTime(100);
+		vi.advanceTimersByTime(BEFORE_HOLD_ENDS_MS);
 
 		await commands.mouseUp();
-		vi.advanceTimersByTime(TEXT_FIELD_HOLD_MS);
+		vi.advanceTimersByTime(PAST_HOLD_MS);
 
 		await expect.element(page.getByDragArmedPane()).not.toBeInTheDocument();
 	});
@@ -524,10 +527,10 @@ describe('Panes.DragTrigger: a press that starts on a control', () => {
 		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 		render(PanePartsPanes, { props: { variant: 'header' } });
 		await commands.touchStart(holdableButton().selector);
-		vi.advanceTimersByTime(100);
+		vi.advanceTimersByTime(BEFORE_HOLD_ENDS_MS);
 
 		await commands.touchCancel();
-		vi.advanceTimersByTime(TEXT_FIELD_HOLD_MS);
+		vi.advanceTimersByTime(PAST_HOLD_MS);
 
 		await expect.element(page.getByDragArmedPane()).not.toBeInTheDocument();
 	});
@@ -552,7 +555,7 @@ describe('Panes.DragTrigger: a press that starts on a control', () => {
 		await userEvent.keyboard('{Enter}');
 		await expect.element(cameraHeader()).not.toBeInTheDocument();
 
-		vi.advanceTimersByTime(TEXT_FIELD_HOLD_MS);
+		vi.advanceTimersByTime(PAST_HOLD_MS);
 
 		await expect.element(page.getByDragArmedPane()).not.toBeInTheDocument();
 		await commands.mouseUp();
@@ -626,7 +629,7 @@ describe('Panes.DragTrigger: a press that starts on a text field', () => {
 		render(PanePartsPanes, { props: { variant: 'header' } });
 		await press(noteField());
 
-		vi.advanceTimersByTime(TEXT_FIELD_HOLD_MS);
+		vi.advanceTimersByTime(PAST_HOLD_MS);
 		await expect.element(page.getByDragArmedPane()).not.toBeInTheDocument();
 		await commands.mouseMove(noteField().selector, { x: DRAG_PX, y: '50%' });
 

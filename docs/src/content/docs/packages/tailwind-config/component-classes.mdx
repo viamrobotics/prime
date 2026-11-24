@@ -146,14 +146,43 @@ It takes the same `button-*` color and fill modifiers. `icon-button` alone is th
   `aria-labelledby`.
 </Aside>
 
+## underline-tabs
+
+A strip of tabs that marks the selected tab with a line under its label. `underline-tabs` is the strip, a row of tabs 16px apart over a 1px bottom border. `underline-tab` is one tab in it. The selected tab draws a 2px `gray-9` line over the strip's border and sets its text semibold. Hover gives an enabled tab the default text color. Keyboard focus draws the shared outset ring, because this strip does not scroll.
+
+<div class="not-content rounded-sm border border-light p-4">
+  <div class="underline-tabs" role="tablist" aria-label="Account">
+    <div class="underline-tab" role="tab" aria-selected="false" tabindex="-1">Rest</div>
+    <div class="underline-tab" role="tab" aria-selected="true" tabindex="0">Selected</div>
+    <div class="underline-tab" role="tab" aria-selected="false" aria-disabled="true" tabindex="-1">Disabled</div>
+  </div>
+</div>
+
+<Code
+  lang="html"
+  code={`<div class="underline-tabs" role="tablist" aria-label="Account">
+  <div class="underline-tab" role="tab" aria-selected="true">Overview</div>
+  <div class="underline-tab" role="tab" aria-selected="false">Usage</div>
+  <div class="underline-tab" role="tab" aria-selected="false" aria-disabled="true">Billing</div>
+</div>`}
+/>
+
+| State    | Attribute                | What changes                                                                            |
+| -------- | ------------------------ | --------------------------------------------------------------------------------------- |
+| Hover    | `:hover`                 | Default text on an enabled tab, on a device that can hover.                             |
+| Selected | `[aria-selected="true"]` | A 2px `gray-9` line under the label and semibold default text.                          |
+| Disabled | `[aria-disabled="true"]` | Disabled text and a `not-allowed` cursor. A selected tab keeps its line and text color. |
+| Focus    | `:focus-visible`         | The shared 2px outline, offset 2px.                                                     |
+
 ## file-tabs
 
-A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the strip, one 35px row that scrolls sideways and never wraps, and `file-tab` is one tab in it. The selected tab carries a line on top and drops its bottom border, so it joins the content below. Hover darkens an enabled, unselected tab, and keyboard focus draws an inset ring, because the strip's scroll container clips anything drawn outside a tab.
+A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the strip, one 35px row that scrolls sideways and never wraps, and `file-tab` is one tab in it. The selected tab carries a line on top and drops its bottom border, so it joins the content below. Hover darkens an enabled, unselected tab, and keyboard focus draws the `focus-ring-inset` ring, because the strip's scroll container clips anything drawn outside a tab. `file-tab-slot` is a placeholder cell in the strip, such as the spot where a dragged tab will land. It fills the row's height and draws the same separator as a `file-tab`'s right edge.
 
 <div class="not-content rounded-sm border border-light p-4">
   <div class="file-tabs" role="tablist" aria-label="Open files">
     <div class="file-tab" role="tab" aria-selected="false" tabindex="-1">Rest</div>
     <div class="file-tab" role="tab" aria-selected="true" tabindex="0">Selected</div>
+    <div class="file-tab-slot" aria-hidden="true"></div>
     <div class="file-tab" role="tab" aria-selected="false" aria-disabled="true" tabindex="-1">Disabled</div>
   </div>
 </div>
@@ -163,6 +192,7 @@ A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the s
   code={`<div class="file-tabs" role="tablist" aria-label="Open files">
   <div class="file-tab" role="tab" aria-selected="false">main.ts</div>
   <div class="file-tab" role="tab" aria-selected="true">config.json</div>
+  <div class="file-tab-slot" aria-hidden="true"></div>
   <div class="file-tab" role="tab" aria-selected="false" aria-disabled="true">README.md</div>
 </div>`}
 />
@@ -172,7 +202,7 @@ A strip of compact, boxed tabs, like an editor's file tabs. `file-tabs` is the s
 | Hover    | `:hover`                 | A medium background and default text, on an enabled tab.    |
 | Selected | `[aria-selected="true"]` | A dark top line, no bottom border, a white fill, bold text. |
 | Disabled | `[aria-disabled="true"]` | Subtle text and a `not-allowed` cursor, with no hover.      |
-| Focus    | `:focus-visible`         | An inset 2px outline.                                       |
+| Focus    | `:focus-visible`         | The `focus-ring-inset` outline, drawn inside the edge.      |
 
 ## badge
 
@@ -201,7 +231,7 @@ Modifiers: `badge-success`, `badge-warning`, `badge-danger`, `badge-pending`, an
 
 Modifiers: `banner-info`, `banner-success`, `banner-warning`, `banner-danger`, `banner-pending`, and `banner-block`. A banner reads no attributes, so give it a `role` of `status` or `alert`. A `banner-title` inside switches it from the compact one-liner to the stacked layout.
 
-Every tone in the compact and the stacked layout, then `banner-block`, `banner-progress`, and `banner-details`.
+Every tone in the compact and the stacked layout, then `banner-block`, `banner-progress`, and `banner-details`. A warning banner fills its `banner-progress` with `--color-warning-text`, as it does its chip glyph, so the fill holds 3:1 on the gray track.
 
 <BannerGallery />
 
@@ -421,7 +451,7 @@ A bar with a `progress-fill` child. It reads `aria-valuenow`, and when the attri
 </div>`}
 />
 
-`progress-info` is the bare color, named so a tone can be set from data. `progress-warning` completes the set.
+`progress-info` is the bare color, named so a tone can be set from data. `progress-warning` completes the set. It fills with `--color-warning-text`, because `--color-warning-dark` is under 3:1 on the gray track.
 
 <div class="not-content flex flex-col gap-4 rounded-sm border border-light p-4">
   <div class="progress progress-info" role="progressbar" aria-label="Indexing" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40">
@@ -613,7 +643,7 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
 
 ## listbox
 
-`popover-panel` is the frame of a floating panel: a light border, a white fill, and the popover shadow. Inside it, `listbox-option` is one choice and `listbox-heading` labels a group of options. An option reads `data-highlighted` for the keyboard or pointer cursor and `data-disabled` for a choice that cannot be picked.
+`popover-panel` is the frame of a floating panel: a light border, a white fill, and the popover shadow. Inside it, `listbox-option` is one choice and `listbox-heading` labels a group of options. An option reads `data-highlighted` for the keyboard or pointer cursor and `data-disabled` for a choice that cannot be picked. An option does not split its content, so add `justify-between` where a row needs a trailing part. A utility such as `data-highlighted:bg-danger-light` beside `listbox-option` wins the highlighted fill.
 
 <div class="not-content rounded-sm border border-light p-4">
   <div class="popover-panel w-56 p-1" role="listbox" aria-label="Fruit" aria-readonly="true">
@@ -655,7 +685,7 @@ Later states win ties. Disabled and read only beat invalid and warning, and ever
 
 | State       | Attribute            | What changes                              |
 | ----------- | -------------------- | ----------------------------------------- |
-| Highlighted | `[data-highlighted]` | A light background.                       |
+| Highlighted | `[data-highlighted]` | A light background and an inset 2px `--color-link` outline. |
 | Disabled    | `[data-disabled]`    | Disabled text and a `not-allowed` cursor. |
 
 ## date field
@@ -850,7 +880,7 @@ The parts of a month grid. `calendar-nav` is a previous or next month button, `c
 </table>`}
 />
 
-`calendar-day-range` is worn with `calendar-day` in a range calendar and replaces its selected fill. The two ends fill `gray-9` under white text. A selected or highlighted day between them takes a light fill and keeps its text color.
+`calendar-day-range` is worn with `calendar-day` in a range calendar and replaces its selected fill. The two ends fill `gray-9` under white text. A selected or highlighted day between them takes a light fill, keeps its text color, and draws an inset 2px `--color-link` box-shadow. It is a shadow and not an outline, so a focused middle day still shows the `focus-ring` outline.
 
 <div class="not-content rounded-sm border border-light p-4">
   <table aria-label="March 2026">
@@ -882,7 +912,7 @@ The parts of a month grid. `calendar-nav` is a previous or next month button, `c
 | Disabled      | `[data-disabled]`                                | Disabled text and a `not-allowed` cursor.    |
 | Unavailable   | `[data-unavailable]`                             | A line through the text.                     |
 | Range ends    | `[data-selection-start]`, `[data-selection-end]` | A `gray-9` fill under white text.            |
-| Range middle  | `[data-selected]` or `[data-highlighted]`        | A light fill, text color kept.               |
+| Range middle  | `[data-selected]` or `[data-highlighted]`        | A light fill, text color kept, inset link shadow. |
 | Nav disabled  | `[data-disabled]` on `calendar-nav`              | Disabled text and a `not-allowed` cursor.    |
 
 ## switch tones
@@ -1019,12 +1049,12 @@ The `slider-*` classes style the track and thumb of a native `<input type="range
 />`}
 />
 
-## focus-ring and focus-ring-within
+## focus-ring, focus-ring-within, and focus-ring-inset
 
-`focus-ring` draws a 2px outline offset by 2px on `:focus-visible`. `button`, `icon-button`, and `input` already include it. `focus-ring-within` draws the same ring on a frame whose focus lives on a child, and it silences the child's own ring.
+`focus-ring` draws a 2px outline offset by 2px on `:focus-visible`. `button`, `icon-button`, and `input` already include it. `focus-ring-within` draws the same ring on a frame whose focus lives on a child, and it silences the child's own ring. `focus-ring-inset` is the same ring at an offset of -2px, for a control flush against a clipping edge such as a scroll container. `file-tab` includes it.
 
 <div class="not-content flex flex-wrap items-center gap-3 rounded-sm border border-light p-4">
-  <a href="#focus-ring-and-focus-ring-within" class="focus-ring rounded-sm">
+  <a href="#focus-ring-focus-ring-within-and-focus-ring-inset" class="focus-ring rounded-sm">
     Focusable link
   </a>
   <div class="focus-ring-within flex gap-2 rounded-sm border border-light p-1">
@@ -1039,6 +1069,8 @@ The `slider-*` classes style the track and thumb of a native `<input type="range
 
 <Code lang="html" code={`<a href="/docs" class="focus-ring rounded-sm">Focusable link</a>
 
+<div class="overflow-hidden"><button type="button" class="focus-ring-inset">Inset</button></div>
+
 <div class="focus-ring-within flex gap-2 rounded-sm border border-light p-1">
   <button type="button" class="button focus-ring">One</button>
   <button type="button" class="button focus-ring">Two</button>
@@ -1047,7 +1079,30 @@ The `slider-*` classes style the track and thumb of a native `<input type="range
 | State          | Attribute                                    | What changes                      |
 | -------------- | -------------------------------------------- | --------------------------------- |
 | Keyboard focus | `:focus-visible` (`focus-ring`)              | The outline appears.              |
+| Keyboard focus, inset | `:focus-visible` (`focus-ring-inset`) | The outline appears inside the edge. |
 | Focus inside   | `:has(:focus-visible)` (`focus-ring-within`) | The outline appears on the frame. |
+
+## control-label
+
+`control-label` is the label text of a realtime control: extra-small type in the `subtle-1` text color.
+
+<div class="not-content rounded-sm border border-light p-4">
+  <span class="control-label">Velocity</span>
+</div>
+
+<Code lang="html" code={`<span class="control-label">Velocity</span>`} />
+
+## toast-stack-item
+
+`toast-stack-item` holds the stacking styles of a toast or notification item. It reads the `--z-index`, `--x`, `--y`, `--scale`, and `--opacity` variables that the stack's headless machine sets on the item, and it transitions translate, scale, and opacity over 300ms. Under `prefers-reduced-motion: reduce` only the opacity transitions, so the item jumps to its translate and scale and still fades.
+
+<div class="not-content rounded-sm border border-light p-4">
+  <div class="toast-stack-item popover-panel w-56 p-3 text-sm [--z-index:1] [--x:0px] [--y:0px] [--scale:1] [--opacity:1]">
+    Saved
+  </div>
+</div>
+
+<Code lang="html" code={`<div class="toast-stack-item [--z-index:1] [--x:0px] [--y:0px] [--scale:1] [--opacity:1]">Saved</div>`} />
 
 ## Surface and text aliases
 
@@ -1085,6 +1140,15 @@ The `slider-*` classes style the track and thumb of a native `<input type="range
   lang="html"
   code={`<p class="text-display">text-display</p>
 <p class="text-code">text-code</p>`}
+/>
+
+## Hover transition
+
+`transition-hover-colors` animates `color`, `background-color`, `border-color`, `text-decoration-color`, `fill`, and `stroke`. That is the set `transition-colors` animates, minus `outline-color` and the gradient stops, so a focus ring appears at once instead of fading in. `button`, `icon-button`, `input`, `input-button`, and `calendar-nav` wear it, and the `--transition-property-hover-colors` token mints it.
+
+<Code
+  lang="html"
+  code={`<a href="/docs" class="text-subtle-1 transition-hover-colors hover:text-default">Docs</a>`}
 />
 
 ## Elevation

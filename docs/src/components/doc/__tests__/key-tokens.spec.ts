@@ -30,6 +30,10 @@ describe("tokenizeKeys", () => {
     },
     { keys: "/", expected: [key("/")] },
     { keys: "Ctrl + +", expected: [key("Ctrl"), separator("+"), key("+")] },
+    { keys: "Ctrl + /", expected: [key("Ctrl"), separator("+"), key("/")] },
+    { keys: "Ctrl+Z", expected: [key("Ctrl+Z")] },
+    { keys: "  Escape  ", expected: [key("Escape")] },
+    { keys: "Enter  /  Space", expected: [key("Enter"), separator("/"), key("Space")] },
   ])("splits $keys", ({ keys, expected }) => {
     expect(tokenizeKeys(keys)).toEqual(expected);
   });

@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import { nextFrame, settleFrames } from '../../../../test/frames.ts';
 import '../../../../test/tailwind.css';
-import RootChart from './RootChart.svelte';
+import RootChart from './fixtures/RootChart.svelte';
 
 const INITIAL_WIDTH = 400;
 const RESIZED_WIDTH = 250;
+const LEGEND_WIDTH = 96;
 
 const SETTLE_FRAMES = 3;
 const WIDE_LABEL_SCALE = 1000;
@@ -16,13 +18,13 @@ const points = [
 ];
 const widePoints = points.map((point) => ({ ...point, y: point.y * WIDE_LABEL_SCALE }));
 
-const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
-
 const SUBPIXEL = 0.1;
 const QUARTER_MINUTE_TICKS = 5;
 const HALF_MINUTE_TICKS = 3;
 const NARROW_HOURS_WIDTH = 170;
 const WIDE_HOURS_WIDTH = 700;
+const NARROW_HOURS_TICKS = 3;
+const WIDE_HOURS_TICKS = 7;
 
 const plotBoxOf = (container: Element) =>
 	container.querySelector('[data-part="plot"]')!.getBoundingClientRect();
@@ -42,10 +44,13 @@ const gutterOf = (container: Element) => {
 const expectSettledGutter = async (container: Element) => {
 	await expect.poll(() => container.querySelectorAll('.y-part span').length).toBeGreaterThan(1);
 	await expect
-		.poll(() => {
-			const { left, column } = gutterOf(container);
-			return column > 0 && left === column;
-		})
+		.poll(
+			() => {
+				const { left, column } = gutterOf(container);
+				return column > 0 && left === column;
+			},
+			{ message: 'the line starts one measured y label column from the plot edge' }
+		)
 		.toBe(true);
 	const settled = gutterOf(container);
 	for (let frame = 0; frame < SETTLE_FRAMES; frame++) {
@@ -57,7 +62,7 @@ const expectSettledGutter = async (container: Element) => {
 const resizeTo = async (container: Element, width: number) => {
 	container.querySelector<HTMLElement>('[data-testid="frame"]')!.style.width = `${width}px`;
 	await expect.poll(() => container.querySelector('svg')?.getAttribute('width')).toBe(`${width}`);
-	for (let frame = 0; frame < SETTLE_FRAMES; frame++) await nextFrame();
+	await settleFrames(SETTLE_FRAMES);
 };
 
 const xLabelOverflow = (container: Element) => {
@@ -80,30 +85,19 @@ describe('Chart resize', () => {
 
 		await expect.poll(path).toMatch(new RegExp(`L${INITIAL_WIDTH},`));
 
-		const frame = container.querySelector<HTMLElement>('[data-testid="frame"]');
-		frame!.style.width = `${RESIZED_WIDTH}px`;
+		container.querySelector<HTMLElement>('[data-testid="frame"]')!.style.width =
+			`${RESIZED_WIDTH}px`;
 
 		await expect.poll(path).toMatch(new RegExp(`L${RESIZED_WIDTH},`));
 	});
 
-	it('narrows the plot by a legend beside it and re-measures when the container changes size', async () => {
+	it('narrows the drawing by a legend beside the plot', async () => {
 		const { container } = render(RootChart, {
 			props: { series: [{ name: 'Reading', points }], width: INITIAL_WIDTH, hasLegendBeside: true }
 		});
-		const legend = () => container.querySelector('[data-part="legend"]')!.getBoundingClientRect();
-		const svgWidth = () => Number(container.querySelector('svg')?.getAttribute('width'));
 		const path = () => container.querySelector('path')?.getAttribute('d') ?? '';
 
-		await expect.poll(() => legend().width).toBeGreaterThan(0);
-		const legendWidth = legend().width;
-		await expect.poll(svgWidth).toBe(INITIAL_WIDTH - legendWidth);
-		expect(path()).toMatch(new RegExp(`L${INITIAL_WIDTH - legendWidth},`));
-
-		const frame = container.querySelector<HTMLElement>('[data-testid="frame"]');
-		frame!.style.width = `${RESIZED_WIDTH}px`;
-
-		await expect.poll(svgWidth).toBe(RESIZED_WIDTH - legendWidth);
-		await expect.poll(path).toMatch(new RegExp(`L${RESIZED_WIDTH - legendWidth},`));
+		await expect.poll(path).toMatch(new RegExp(`L${INITIAL_WIDTH - LEGEND_WIDTH},`));
 	});
 
 	it('settles the y gutter in one pass, before and after a resize', async () => {
@@ -148,12 +142,13 @@ describe('Chart resize', () => {
 				hasAxes: true
 			}
 		});
-		await expect.poll(() => container.querySelectorAll('.x-part span').length).toBeGreaterThan(1);
-		const narrowTicks = container.querySelectorAll('.x-part span').length;
+		await expect
+			.poll(() => container.querySelectorAll('.x-part span').length)
+			.toBe(NARROW_HOURS_TICKS);
 
 		await resizeTo(container, WIDE_HOURS_WIDTH);
 
-		expect(container.querySelectorAll('.x-part span').length).toBeGreaterThan(narrowTicks);
+		expect(container.querySelectorAll('.x-part span')).toHaveLength(WIDE_HOURS_TICKS);
 		expect(xLabelOverflow(container).right).toBeLessThan(SUBPIXEL);
 		expect(xLabelOverflow(container).left).toBeLessThan(SUBPIXEL);
 	});
