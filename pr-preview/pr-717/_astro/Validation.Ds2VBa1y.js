@@ -1,4 +1,0 @@
-import"./disclose-version.xihTtKlq.js";import{G as e,U as t,V as n,Wt as r,et as i,ft as a,mt as o,st as s,wt as c,xt as l,yt as u}from"./client.C3HOevIA.js";import{t as d}from"./CodeEditor.BjMJOzM9.js";var f=e(`<div class="not-content flex w-full flex-col gap-1"><span id="config-label" class="text-sm font-medium">Config</span> <!> <p id="config-error" aria-live="polite" class="min-h-4 text-xs text-danger-dark"> </p></div>`);function p(e){let p=l(`{
-  "speed": 5,
-}
-`),m=c(()=>{try{JSON.parse(i(p));return}catch(e){return e instanceof Error?e.message:`The config is not valid JSON.`}});var h=f(),g=o(a(h),2);{let e=c(()=>i(m)!==void 0);d(g,{"aria-labelledby":`config-label`,"aria-describedby":`config-error`,get"aria-invalid"(){return i(e)},class:`max-h-64 w-full overflow-auto`,language:`json`,get value(){return i(p)},set value(e){u(p,e,!0)}})}var _=o(g,2),v=a(_,!0);r(_),r(h),s(()=>n(v,i(m))),t(e,h)}export{p as default};
