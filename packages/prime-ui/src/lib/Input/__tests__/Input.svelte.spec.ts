@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, onTestFinished } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
@@ -43,6 +43,20 @@ describe('Input', () => {
 		).toBe('solid');
 		expect(getComputedStyle(field).outlineWidth).toBe('2px');
 		expect(getComputedStyle(field).outlineOffset).toBe('2px');
+	});
+
+	it('draws only the outline when focused under a form reset that rings inputs', async () => {
+		const style = document.createElement('style');
+		style.textContent = '@layer base { input:focus { box-shadow: 0 0 0 1px rgb(37, 99, 235); } }';
+		document.head.append(style);
+		onTestFinished(() => style.remove());
+		const { container } = render(Input, { props: { 'aria-label': 'Name' } });
+
+		await userEvent.click(container);
+		await userEvent.tab();
+
+		expect(getComputedStyle(input(container)).boxShadow).toBe('none');
+		expect(getComputedStyle(input(container)).outlineStyle).toBe('solid');
 	});
 
 	it('takes its width from a consumer class', () => {

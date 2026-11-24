@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'svelte';
 
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
@@ -14,6 +14,14 @@ const pointerDown = (element: Element) => {
 };
 
 const borderOf = (utility: string) => colorOf(utility, 'borderTopColor');
+
+// A base-layer ring on every focused input, as `@tailwindcss/forms` adds.
+function addFormReset() {
+	const style = document.createElement('style');
+	style.textContent = '@layer base { input:focus { box-shadow: 0 0 0 1px rgb(37, 99, 235); } }';
+	document.head.append(style);
+	onTestFinished(() => style.remove());
+}
 
 type Parts = ReturnType<typeof setup>;
 
@@ -174,6 +182,16 @@ describe('Input.Group', () => {
 		await userEvent.click(input);
 
 		expect(getComputedStyle(group).outlineWidth).toBe('2px');
+	});
+
+	it('draws no ring on the focused input inside the group, even under a form reset that rings inputs', async () => {
+		addFormReset();
+		const { input } = setup();
+
+		await userEvent.click(input);
+
+		expect(getComputedStyle(input).outlineStyle).toBe('none');
+		expect(getComputedStyle(input).boxShadow).toBe('none');
 	});
 
 	it.each([

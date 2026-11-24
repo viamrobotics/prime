@@ -66,24 +66,15 @@ describe('Banner', () => {
 		}
 	);
 
-	it.each([
-		{ variant: 'info', name: 'Info' },
-		{ variant: 'success', name: 'Success' },
-		{ variant: 'warning', name: 'Warning' },
-		{ variant: 'danger', name: 'Error' },
-		{ variant: 'pending', name: 'In progress' }
-	] as const)('names the $variant tone as $name in text', ({ variant, name }) => {
-		const { container } = render(VariantBanner, { props: { variant } });
+	it.each(['info', 'success', 'warning', 'danger', 'pending'] as const)(
+		'adds no text of its own for the %s variant',
+		(variant) => {
+			const { container } = render(VariantBanner, { props: { variant } });
 
-		expect(banner(container).querySelector('.sr-only')?.textContent).toBe(`${name}: `);
-		expect(chip(container).textContent).not.toContain(name);
-	});
-
-	it('keeps the tone name when a custom icon takes the chip', () => {
-		const { container } = render(IconBanner);
-
-		expect(banner(container).querySelector('.sr-only')?.textContent).toBe('Info: ');
-	});
+			expect(banner(container).querySelector('.sr-only')).toBeNull();
+			expect(chip(container).textContent?.trim()).toBe('');
+		}
+	);
 
 	it('defaults to the info variant', () => {
 		const { container } = render(VariantBanner);

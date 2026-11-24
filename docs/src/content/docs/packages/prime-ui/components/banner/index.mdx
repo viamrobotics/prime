@@ -29,7 +29,7 @@ import blockSource from "./Block.svelte?raw";
 <BannerDemo client:visible />
 
 - `variant` sets the chip color, the glyph, and the live-region role. `info`, `success`, and `pending` are `status`. `warning` and `danger` are `alert`. `pending` spins in the chip.
-- The tone is also announced in text. The root holds visually hidden text before the content, "Info", "Success", "Warning", "Error", or "In progress", since the chip is decorative and a custom `Banner.Icon` leaves it in place.
+- The banner adds no text of its own. The chip is decorative, so `variant` is styling only, and a `danger` banner fits a dangerous action as well as an error. Content that needs its tone announced says so itself.
 - With no `Banner.Title` the banner is the compact one-liner. A title stacks it.
 - The parts give you the layout. Each lands in its own cell, so what goes inside is your markup.
 - It has no open state. Wrap it in `{#if}` to show and hide it.

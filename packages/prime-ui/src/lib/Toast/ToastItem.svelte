@@ -22,13 +22,6 @@
 		danger: { path: mdiAlertCircle, tone: 'text-danger-dark' }
 	};
 
-	const NAMES: Record<ToastVariant, string> = {
-		info: 'Info',
-		success: 'Success',
-		warning: 'Warning',
-		danger: 'Error'
-	};
-
 	const ROLES: Record<ToastVariant, 'status' | 'alert'> = {
 		info: 'status',
 		success: 'status',
@@ -53,7 +46,6 @@
 >
 	<span {...api.getGhostBeforeProps()}></span>
 	<span {...api.getGhostAfterProps()}></span>
-	<span class="sr-only">{`${NAMES[variant]}: `}</span>
 	<Icon icon={glyph.path} size="base" class={['shrink-0', glyph.tone]} />
 	<span class="min-w-0 truncate text-sm text-default" {...api.getTitleProps()}>{api.title}</span>
 	{#if api.description}

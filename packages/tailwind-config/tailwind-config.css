@@ -325,9 +325,12 @@
  * Bordered field frame. Reads `:disabled`, `[data-disabled]`, `[readonly]`, `[data-readonly]`,
  * `[aria-invalid="true"]`, and `[data-field-state="warn"]`, on itself or on a child `<input>`.
  * Later rules win ties: disabled and readonly beat invalid and warn, and every state beats hover.
+ * It clears `box-shadow`, so a form reset that rings a focused input, such as `@tailwindcss/forms`,
+ * draws no ring beside the outline, and a grouped input draws none inside the group's.
  */
 @utility input {
   @apply rounded-sm border border-light bg-white px-2 py-1.5 text-sm text-default transition-hover-colors focus-ring;
+  box-shadow: none;
 
   &:hover {
     border-color: var(--color-gray-6);
@@ -358,6 +361,7 @@
     flex: 1;
     min-width: 0;
     border: 0;
+    box-shadow: none;
     background-color: transparent;
     padding: 0;
     font-size: inherit;

@@ -2,8 +2,9 @@
 @component
 A notification banner: an icon chip, content, and an optional dismiss button. The variant picks the
 chip color and glyph, and the live-region role: `status` for `info`, `success`, and `pending`,
-`alert` for `warning` and `danger`. `pending` wears a spinner in the chip for work still running. The root also carries the tone as
-visually hidden text before the content, such as "Warning", since the chip is decorative.
+`alert` for `warning` and `danger`. `pending` wears a spinner in the chip for work still running. The chip is
+decorative and the banner adds no text of its own, so content that needs its tone announced says
+so itself, such as a title that starts with "Error".
 Without a `Banner.Title` it is a compact one-liner, with one it stacks. The banner owns no open
 state, so render it inside an `{#if}` to show and hide it.
 
@@ -69,14 +70,6 @@ state, so render it inside an `{#if}` to show and hide it.
 		pending: 'banner-pending'
 	};
 
-	const NAMES: Record<BannerVariant, string> = {
-		info: 'Info',
-		success: 'Success',
-		warning: 'Warning',
-		danger: 'Error',
-		pending: 'In progress'
-	};
-
 	const ROLES: Record<BannerVariant, 'status' | 'alert'> = {
 		info: 'status',
 		success: 'status',
@@ -93,7 +86,6 @@ state, so render it inside an `{#if}` to show and hide it.
 	role={role === undefined ? ROLES[variant] : role}
 	class={['banner', TONE_CLASSES[variant], placement === 'block' && 'banner-block', extraClasses]}
 >
-	<span class="sr-only">{`${NAMES[variant]}: `}</span>
 	{#if !context.hasIcon}
 		<span class="banner-chip" aria-hidden="true">
 			{#if variant === 'pending'}

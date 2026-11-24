@@ -118,7 +118,7 @@ A root that owns data its parts render shares it through a context module beside
 
 ### Menu, Banner, and Toast
 
-`Menu.Content` and `ContextMenu.Content` are named by their trigger by default, with `aria-labelledby` pointing at the trigger id through `Menu/useTriggerName.svelte.ts`, unless the consumer passes `aria-label` or `aria-labelledby`. `Banner` and `Toast` announce their tone as screen-reader-only text in the root (`Info`, `Success`, `Warning`, `Error`, `In progress`), and the tone chip stays `aria-hidden`.
+`Menu.Content` and `ContextMenu.Content` are named by their trigger by default, with `aria-labelledby` pointing at the trigger id through `Menu/useTriggerName.svelte.ts`, unless the consumer passes `aria-label` or `aria-labelledby`. `Banner` and `Toast` add no text of their own: the variant is styling and a live-region role, the tone chip stays `aria-hidden`, and content that needs its tone announced says so itself.
 
 ### ToggleButtons and Tabs
 

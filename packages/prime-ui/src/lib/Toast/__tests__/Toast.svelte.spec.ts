@@ -41,19 +41,17 @@ describe('Toast', () => {
 		expect(region().getAttribute('id')).toMatch(/^toast-group:/);
 	});
 
-	it.each([
-		{ variant: 'info', name: 'Info' },
-		{ variant: 'success', name: 'Success' },
-		{ variant: 'warning', name: 'Warning' },
-		{ variant: 'danger', name: 'Error' }
-	])('names the $variant tone as $name in text', async ({ variant, name }) => {
-		const { container } = render(ToastHost, { duration: HOLD_OPEN });
+	it.each(['info', 'success', 'warning', 'danger'])(
+		'adds no text of its own for the %s variant',
+		async (variant) => {
+			const { container } = render(ToastHost, { duration: HOLD_OPEN });
 
-		await userEvent.click(trigger(container, variant));
+			await userEvent.click(trigger(container, variant));
 
-		const item = await waitForItem();
-		expect(item.querySelector('.sr-only')?.textContent).toBe(`${name}: `);
-	});
+			const item = await waitForItem();
+			expect(item.querySelector('.sr-only')).toBeNull();
+		}
+	);
 
 	it.each([
 		{ preference: 'no-preference', property: 'translate, scale, opacity' },

@@ -41,13 +41,13 @@ describe('Notify', () => {
 		expect(region().getAttribute('id')).toMatch(/^toast-group:/);
 	});
 
-	it('names the tone in text', async () => {
+	it('adds no tone text of its own', async () => {
 		const { container } = render(NotifyHost);
 		await create(container, 'danger');
 
 		const item = await firstItem();
 
-		expect(item.querySelector('.sr-only')?.textContent).toBe('Error: ');
+		expect(item.querySelector('.sr-only')).toBeNull();
 	});
 
 	it.each([
