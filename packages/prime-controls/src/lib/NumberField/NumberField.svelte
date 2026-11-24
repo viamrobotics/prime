@@ -6,8 +6,9 @@ every pointer move, so a function binding sees each intermediate value and can t
 ArrowUp and ArrowDown step by `step`, and a scrub moves `step` per pixel. Hold Shift for 10 times
 that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays unclamped. Up and down
 buttons at the frame's right edge step one `step` on a pointer press, with no modifier, and
-repeat while held. Clearing the field writes nothing: it stays empty while it has focus, takes the
-next number typed, and shows `value` again on blur.
+repeat while held. While the input has focus it shows what was typed: every typed number is written,
+so a function binding may clamp or reject it without rewriting the field mid-entry, and an empty
+field writes nothing. On blur the field shows `value` again.
 
 ```svelte
 <NumberField label="Speed" min={0} max={10} step={0.1} bind:value />
@@ -30,8 +31,8 @@ next number typed, and shows `value` again on blur.
 		'value' | 'min' | 'max' | 'step' | 'type' | 'children' | 'class'
 	> {
 		/**
-		 * Current value. `undefined` renders an empty field. Clearing the field never writes
-		 * `undefined`.
+		 * Current value. `undefined` renders an empty field. Typing writes each number, never
+		 * `undefined`, and the field shows `value` again on blur.
 		 */
 		value?: number;
 
@@ -106,6 +107,7 @@ next number typed, and shows `value` again on blur.
 		disabled,
 		readonly,
 		onkeydown,
+		onfocus,
 		onblur,
 		'aria-describedby': ariaDescribedby,
 		...restProps
@@ -152,32 +154,38 @@ next number typed, and shows `value` again on blur.
 	const isLocked = $derived(Boolean(disabled) || Boolean(readonly));
 	const placementClasses = $derived(PLACEMENT_CLASSES[labelPlacement]);
 
-	// A cleared field holds its emptiness here instead of writing `undefined`, until a number is
-	// written or the field loses focus.
-	let isCleared = $state(false);
+	// While focused, the field shows the typed draft, so a binding that clamps or rejects a partial
+	// number such as the 1 of 150 does not rewrite the input mid-entry.
+	let isFocused = $state(false);
+	let draft = $state<{ value: number | undefined }>();
+	const shown = $derived(isFocused && draft ? draft.value : value);
 
 	function write(next: number) {
-		isCleared = false;
+		draft = undefined;
 		if (next !== value) value = next;
 	}
 
 	function writeTyped(next: number | undefined) {
-		if (next === undefined) {
-			isCleared = true;
-			return;
-		}
-		write(next);
+		if (isFocused) draft = { value: next };
+		if (next !== undefined && next !== value) value = next;
+	}
+
+	function handleFocus(event: FocusEvent & { currentTarget: HTMLInputElement }) {
+		isFocused = true;
+		draft = undefined;
+		onfocus?.(event);
 	}
 
 	function handleBlur(event: FocusEvent & { currentTarget: HTMLInputElement }) {
-		isCleared = false;
+		isFocused = false;
+		draft = undefined;
 		onblur?.(event);
 	}
 
 	function stepBy(direction: number, modifiers: { shiftKey: boolean; altKey: boolean }) {
 		if (isLocked) return;
 		const multiplier = stepMultiplier(modifiers);
-		const base = startingValue(value, bounds);
+		const base = startingValue(shown, bounds);
 		write(settle(base + direction * step * multiplier, step, multiplier, bounds));
 	}
 
@@ -212,7 +220,7 @@ next number typed, and shows `value` again on blur.
 		const pressX = event.clientX;
 		let lastX = pressX;
 		let isScrubbing = false;
-		let accumulated = startingValue(value, bounds);
+		let accumulated = startingValue(shown, bounds);
 		const controller = new AbortController();
 		const options = { capture: true, signal: controller.signal };
 
@@ -260,8 +268,9 @@ next number typed, and shows `value` again on blur.
 			{readonly}
 			state={fieldState}
 			aria-describedby={describedBy}
-			bind:value={() => (isCleared ? undefined : value), writeTyped}
+			bind:value={() => shown, writeTyped}
 			onkeydown={handleKeydown}
+			onfocus={handleFocus}
 			onblur={handleBlur}
 			class={INPUT_CLASS}
 		/>

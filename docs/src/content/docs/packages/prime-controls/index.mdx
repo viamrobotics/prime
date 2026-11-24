@@ -124,7 +124,7 @@ import fileFieldBasicSource from "./FileFieldBasic.svelte?raw"
 
 ### Two-way binding
 
-`bind:value` holds the number. An `undefined` value renders an empty field, and clearing the field writes nothing: it stays empty while it has focus, takes the next number typed, and shows the bound value again on blur. Drag the label sideways to scrub, or focus the input and press the arrow keys.
+`bind:value` holds the number. An `undefined` value renders an empty field. While the input has focus it shows what was typed: each typed number is written, so a function binding may clamp or reject it without rewriting the field mid-entry, and an empty field writes nothing. On blur the field shows the bound value again. Drag the label sideways to scrub, or focus the input and press the arrow keys.
 
 <Example code={twoWaySource} title="TwoWay.svelte">
   <TwoWay client:visible />
