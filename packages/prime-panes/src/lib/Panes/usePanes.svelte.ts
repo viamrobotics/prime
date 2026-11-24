@@ -7,19 +7,10 @@ import type { Slot } from '../node-kind.ts';
 import { placementFor } from '../drop-region.ts';
 import type { DropRegion, EdgeRegion } from '../drop-region.ts';
 import { DEFAULT_FLOAT_MIN_SIZE } from '../FloatPanes/float-geometry.ts';
+import { floatPane, floatStack, setFloatRect } from '../FloatPanes/float-tree.ts';
 import type { FloatSize } from '../FloatPanes/float-geometry.ts';
 import type { FloatEntry, FloatRect, LayoutNode, PaneNode, StackNode } from '../layout.ts';
-import {
-	floatPane,
-	floatStack,
-	movePane,
-	moveStack,
-	reorderPane,
-	selectPane,
-	setFloatRect,
-	stackPanes,
-	swapSlots
-} from '../tree.ts';
+import { movePane, moveStack, reorderPane, selectPane, stackPanes, swapSlots } from '../tree.ts';
 
 import { ALL_REGIONS, EDGE_REGIONS, OPPOSITE_EDGE, OWN_SLOT_REGIONS } from './arrow-regions.ts';
 import { hasDestination, isInWindow, paneIdToSkip, resolveDropTarget } from './drop-target.ts';

@@ -87,6 +87,9 @@
   --color-ghost-light: rgba(0, 0, 0, 0.04);
   --color-ghost-medium: rgba(0, 0, 0, 0.08);
 
+  /* The overlay behind a modal */
+  --color-scrim: rgba(19, 20, 20, 0.4);
+
   /* Brand colors, each a family with the same five variants as the semantic colors */
   --color-power-wire-dark: #bf0035;
   --color-power-wire-light: #ffebf0;
@@ -272,6 +275,37 @@
   &:focus-visible {
     outline: 2px solid var(--color-link);
     outline-offset: 2px;
+  }
+}
+
+/*
+ * `focus-ring` drawn inside the control's edge, for a control flush against a clipping edge
+ * such as a scroll container. The color and width come from `focus-ring`.
+ */
+@utility focus-ring-inset {
+  @apply focus-ring;
+  &:focus-visible {
+    outline-offset: -2px;
+  }
+}
+
+/* The label text of a realtime control. Reads nothing. */
+@utility control-label {
+  @apply text-xs text-subtle-1;
+}
+
+/*
+ * The stacking styles of a toast or notification item. It reads the `--z-index`, `--x`, `--y`,
+ * `--scale`, and `--opacity` variables the stack's headless machine sets on the item. Under
+ * `prefers-reduced-motion: reduce` only the fade transitions, so the translate and scale jump.
+ */
+@utility toast-stack-item {
+  @apply z-[var(--z-index)] opacity-[var(--opacity)] transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale];
+  translate: var(--x) var(--y);
+  scale: var(--scale);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: opacity;
   }
 }
 
@@ -704,10 +738,10 @@
  * 35px row that scrolls sideways and never wraps, with its scrollbar hidden. `file-tab` is one
  * tab in it. Reads `aria-selected="true"` and `aria-disabled="true"`. The selected tab carries a
  * line on top and drops its bottom border, so it joins the content below. The focus ring is
- * inset, as is a nested `focus-ring` or `icon-button`'s, because the strip's scroll container
- * clips anything drawn outside a tab. `file-tab-slot` is a placeholder cell in the strip, such
- * as the spot where a dragged tab will land. It fills the row's height and draws the separator
- * a `file-tab` draws on its right.
+ * `focus-ring-inset`, and a nested `focus-ring` or `icon-button` draws its ring inset too,
+ * because the strip's scroll container clips anything drawn outside a tab. `file-tab-slot` is
+ * a placeholder cell in the strip, such as the spot where a dragged tab will land. It fills the
+ * row's height and draws the separator a `file-tab` draws on its right.
  */
 @utility file-tabs {
   @apply flex overflow-x-auto bg-light;
@@ -716,7 +750,7 @@
 }
 
 @utility file-tab {
-  @apply flex flex-none cursor-pointer items-center gap-1.5 border-t-2 border-r border-b border-t-transparent border-r-gray-3 border-b-gray-3 px-3 text-xs whitespace-nowrap text-subtle-1 outline-none;
+  @apply flex flex-none cursor-pointer items-center gap-1.5 border-t-2 border-r border-b border-t-transparent border-r-gray-3 border-b-gray-3 px-3 text-xs whitespace-nowrap text-subtle-1 focus-ring-inset;
   height: calc(var(--spacing) * 8.75);
 
   &:where(:not([aria-selected="true"], [aria-disabled="true"]):hover) {
@@ -727,10 +761,6 @@
   }
   &[aria-disabled="true"] {
     @apply cursor-not-allowed text-subtle-2;
-  }
-  &:focus-visible {
-    outline: 2px solid var(--color-link);
-    outline-offset: -2px;
   }
   & .focus-ring:focus-visible,
   & .icon-button:focus-visible {
@@ -749,17 +779,20 @@
 
 /*
  * The rows of a listbox. `listbox-option` is one choice. It reads `[data-highlighted]` for a
- * light fill and `[data-disabled]` for disabled text. `listbox-heading` labels a group of
- * options and reads nothing.
+ * light fill with an inset 2px `--color-link` outline, and `[data-disabled]` for disabled text.
+ * It does not split its content, so a consumer adds `justify-between` where it wants that.
+ * `listbox-heading` labels a group of options and reads nothing.
  */
 @utility listbox-option {
-  @apply flex cursor-pointer items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm text-default outline-none select-none;
+  @apply flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-default outline-none select-none;
 
   &[data-disabled] {
     @apply cursor-not-allowed text-disabled-dark;
   }
   &[data-highlighted] {
     @apply bg-light;
+    outline: 2px solid var(--color-link);
+    outline-offset: -2px;
   }
 }
 
@@ -769,7 +802,7 @@
 
 /* A square icon button inside an `input` frame. Reads `:hover` and `:disabled`. Disabled text beats hover. */
 @utility input-button {
-  @apply inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring;
+  @apply inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-hover-colors focus-ring;
 
   @variant hover {
     @apply text-default;
@@ -833,7 +866,7 @@
  * day between them takes a `bg-light` fill and keeps its text color.
  */
 @utility calendar-nav {
-  @apply inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring;
+  @apply inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-hover-colors focus-ring;
 
   @variant hover {
     @apply bg-light text-default;
@@ -875,12 +908,18 @@
   }
 }
 
+/*
+ * The days between the ends of a range. A selected or highlighted middle day takes a light fill
+ * and an inset 2px `--color-link` box-shadow. It is a shadow and not an outline, so a focused
+ * middle day still shows `calendar-day`'s own `focus-ring` outline. The two ends fill `gray-9`.
+ */
 @utility calendar-day-range {
   &.calendar-day:is([data-selected], [data-highlighted]):not(
       [data-selection-start],
       [data-selection-end]
     ) {
     @apply bg-light;
+    box-shadow: inset 0 0 0 2px var(--color-link);
   }
   &.calendar-day:is([data-selection-start], [data-selection-end]) {
     @apply bg-gray-9 text-white;
@@ -1047,16 +1086,18 @@
  * Column spacing is margins on the parts, because an empty grid track still takes its gap.
  *
  * A modifier sets `--banner-light` and `--banner-dark`, and the chip reads them. The glyph
- * paints `--banner-glyph`, which every banner but warning resets to `--banner-dark`, so a nested
- * banner never inherits its parent's glyph. Warning sets it to the text-grade warning token,
- * because its dark tone is too light on its chip. The info
- * default sits behind a `:not()` guard so a modifier wins whichever utility is emitted last.
+ * paints `--banner-glyph` and a `banner-progress` fill paints `--banner-progress-fill`. Every
+ * banner but warning resets both to `--banner-dark`, so a nested banner never inherits its
+ * parent's. Warning sets both to the text-grade warning token, because its dark tone is too
+ * light on its chip and on the progress track. The info default sits behind a `:not()` guard
+ * so a modifier wins whichever utility is emitted last.
  */
 @utility banner {
   @apply relative grid min-h-10 items-center border border-light bg-white p-1.5;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   &:not(.banner-warning) {
     --banner-glyph: var(--banner-dark);
+    --banner-progress-fill: var(--banner-dark);
   }
 
   &:not(.banner-success, .banner-warning, .banner-danger, .banner-pending) {
@@ -1101,6 +1142,7 @@
   --banner-light: var(--color-warning-light);
   --banner-dark: var(--color-warning-dark);
   --banner-glyph: var(--color-warning-text);
+  --banner-progress-fill: var(--color-warning-text);
 }
 
 @utility banner-danger {
@@ -1156,8 +1198,9 @@
 }
 
 /*
- * Pinned to the bottom edge inside the border, filled in the banner's dark tone. The doubled
- * class beats `progress`'s own `position` and fill color.
+ * Pinned to the bottom edge inside the border, filled with the banner's
+ * `--banner-progress-fill`, which holds 3:1 on the track. The doubled class beats `progress`'s
+ * own `position` and fill color.
  */
 @utility banner-progress {
   @apply absolute inset-x-0 bottom-0;
@@ -1165,7 +1208,7 @@
     position: absolute;
   }
   &.progress > .progress-fill {
-    background-color: var(--banner-dark);
+    background-color: var(--banner-progress-fill, var(--banner-dark));
   }
 }
 
@@ -1189,7 +1232,10 @@
   }
 }
 
-/* Tone modifiers for `progress`. Each sets the fill color, and bare `progress` is info. */
+/*
+ * Tone modifiers for `progress`. Each sets the fill color, and bare `progress` is info. Warning
+ * fills with the text-grade warning token, because its dark tone is under 3:1 on the track.
+ */
 @utility progress-info {
   --progress-fill: var(--color-info-dark);
 }
@@ -1199,7 +1245,7 @@
 }
 
 @utility progress-warning {
-  --progress-fill: var(--color-warning-dark);
+  --progress-fill: var(--color-warning-text);
 }
 
 @utility progress-danger {

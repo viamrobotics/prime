@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor, borderColor, colorOf } from '../../__tests__/computed-style.ts';
+import { backgroundColor, borderColor, colorOf } from '../../../../test/computed-style.ts';
 import Input from '../Input.svelte';
-import BoundInput from './BoundInput.svelte';
-import ControlledInput from './ControlledInput.svelte';
-import UndefinedInput from './UndefinedInput.svelte';
+import BoundInput from './fixtures/BoundInput.svelte';
+import ControlledInput from './fixtures/ControlledInput.svelte';
+import UndefinedInput from './fixtures/UndefinedInput.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
@@ -14,7 +14,12 @@ const owner = (container: Element) => container.querySelector('[data-testid="own
 describe('Input', () => {
 	it('renders one bare input wearing the input class and carrying the native attributes and value', () => {
 		const { container } = render(Input, {
-			props: { type: 'email', placeholder: 'you@viam.com', value: 'hi@viam.com' }
+			props: {
+				'aria-label': 'Name',
+				type: 'email',
+				placeholder: 'you@viam.com',
+				value: 'hi@viam.com'
+			}
 		});
 
 		expect(container.children).toHaveLength(1);
@@ -25,7 +30,7 @@ describe('Input', () => {
 	});
 
 	it('draws the shared focus ring on keyboard focus', async () => {
-		const { container } = render(Input);
+		const { container } = render(Input, { props: { 'aria-label': 'Name' } });
 
 		await userEvent.click(container);
 		await userEvent.tab();
@@ -41,7 +46,7 @@ describe('Input', () => {
 	});
 
 	it('takes its width from a consumer class', () => {
-		const { container } = render(Input, { props: { class: 'w-64' } });
+		const { container } = render(Input, { props: { 'aria-label': 'Name', class: 'w-64' } });
 
 		expect(getComputedStyle(input(container)).width).toBe('256px');
 	});
@@ -55,7 +60,7 @@ describe('Input', () => {
 	] as const)(
 		'state $state sets data-field-state $dataState and aria-invalid $invalid',
 		({ state, dataState, invalid }) => {
-			const { container } = render(Input, { props: { state } });
+			const { container } = render(Input, { props: { 'aria-label': 'Name', state } });
 
 			expect(input(container).getAttribute('data-field-state')).toBe(dataState);
 			expect(input(container).getAttribute('aria-invalid')).toBe(invalid);
@@ -63,20 +68,20 @@ describe('Input', () => {
 	);
 
 	it('takes the danger border in the error state', () => {
-		const { container } = render(Input, { props: { state: 'error' } });
+		const { container } = render(Input, { props: { 'aria-label': 'Name', state: 'error' } });
 
 		expect(borderColor(input(container))).toBe(colorOf('border-danger-dark', 'borderTopColor'));
 	});
 
 	it('disables the input and paints the disabled background', () => {
-		const { container } = render(Input, { props: { disabled: true } });
+		const { container } = render(Input, { props: { 'aria-label': 'Name', disabled: true } });
 
 		expect(input(container).disabled, 'native disabled attribute').toBe(true);
 		expect(backgroundColor(input(container))).toBe(colorOf('bg-disabled-light', 'backgroundColor'));
 	});
 
 	it('marks the input readonly with the muted background and no visible border', () => {
-		const { container } = render(Input, { props: { readonly: true } });
+		const { container } = render(Input, { props: { 'aria-label': 'Name', readonly: true } });
 
 		expect(input(container).readOnly, 'native readonly attribute').toBe(true);
 		expect(backgroundColor(input(container))).toBe(colorOf('bg-light', 'backgroundColor'));
@@ -86,7 +91,7 @@ describe('Input', () => {
 	it('forwards native handlers such as oninput', async () => {
 		let typed = '';
 		const { container } = render(Input, {
-			props: { oninput: (event) => (typed = event.currentTarget.value) }
+			props: { 'aria-label': 'Name', oninput: (event) => (typed = event.currentTarget.value) }
 		});
 
 		await userEvent.click(input(container));

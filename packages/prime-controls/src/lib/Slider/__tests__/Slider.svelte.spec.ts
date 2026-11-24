@@ -9,12 +9,22 @@ import Slider from '../Slider.svelte';
 import BoundSlider from './fixtures/BoundSlider.svelte';
 import ControlledSlider from './fixtures/ControlledSlider.svelte';
 import SliderInPanel from './fixtures/SliderInPanel.svelte';
+import SliderWithTrailing from './fixtures/SliderWithTrailing.svelte';
 
 const range = (container: Element) =>
 	container.querySelector<HTMLInputElement>('input[type=range]')!;
 const readout = (container: Element) =>
 	container.querySelector<HTMLInputElement>('input[type=number]')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
+
+function probeStyle(className: string, read: (style: CSSStyleDeclaration) => string) {
+	const probe = document.createElement('span');
+	probe.className = className;
+	document.body.append(probe);
+	const value = read(getComputedStyle(probe));
+	probe.remove();
+	return value;
+}
 
 const SLIDER_MAX = 100;
 const THUMB_CENTER_AT_ZERO_X = 6;
@@ -32,9 +42,14 @@ async function drag(container: Element, fractions: number[]) {
 	await commands.mouseUp();
 }
 
+type ControlledOptions = Pick<ComponentProps<typeof Slider>, 'disabled'> & {
+	initial?: number;
+	shouldAccept?: boolean;
+};
+
 function renderControlled(
 	Component: typeof ControlledSlider | typeof SliderInPanel,
-	props: Partial<ComponentProps<typeof ControlledSlider>> = {}
+	props: ControlledOptions = {}
 ) {
 	const record = vi.fn<(next: number) => void>();
 	const screen = render(Component, {
@@ -301,6 +316,19 @@ describe('Slider hint', () => {
 	});
 });
 
+describe('Slider trailing', () => {
+	it("draws trailing content inside the readout's frame", async () => {
+		render(SliderWithTrailing, { props: { label: 'Opacity', suffix: '%', value: 50 } });
+
+		const button = page.getByRole('button', { name: 'Reset' });
+		await expect.element(button).toBeInTheDocument();
+
+		const readout = page.getByRole('spinbutton', { name: 'Opacity' }).element();
+		expect(button.element().parentElement).toBe(readout.parentElement);
+		expect(readout.parentElement).toHaveClass('input');
+	});
+});
+
 describe('Slider suffix', () => {
 	it('draws the suffix beside the readout and describes the readout by it', async () => {
 		const { container } = render(Slider, { props: { label: 'Opacity', suffix: '%', value: 50 } });
@@ -431,5 +459,86 @@ describe('Slider readout width', () => {
 			spareWidthAfterValue(readout(container)),
 			'negative width is clipped text'
 		).toBeGreaterThanOrEqual(0);
+	});
+});
+
+describe('Slider root and style', () => {
+	it('passes an id and a data attribute to the root', () => {
+		const { container } = render(Slider, {
+			props: { label: 'Opacity', value: 50, id: 'opacity-root', 'data-extra': 'yes' }
+		});
+
+		const root = container.firstElementChild!;
+		expect(root).toHaveAttribute('id', 'opacity-root');
+		expect(root).toHaveAttribute('data-extra', 'yes');
+		expect(range(container)).not.toHaveAttribute('id', 'opacity-root');
+	});
+
+	it('draws the label at 12 px in the subtle-1 text color', () => {
+		const { container } = render(Slider, { props: { label: 'Opacity', value: 50 } });
+
+		const style = getComputedStyle(container.querySelector('label')!);
+
+		expect(style.fontSize).toBe('12px');
+		expect(style.color).toBe(probeStyle('text-subtle-1', (probe) => probe.color));
+	});
+
+	it('paints a disabled track and thumb with the disabled colors at full opacity', () => {
+		const { container } = render(Slider, {
+			props: { label: 'Opacity', value: 50, disabled: true }
+		});
+
+		const input = range(container);
+		const track = getComputedStyle(input, '::-webkit-slider-runnable-track');
+		const thumb = getComputedStyle(input, '::-webkit-slider-thumb');
+
+		expect(getComputedStyle(input).opacity).toBe('1');
+		expect(track.backgroundColor).toBe(
+			probeStyle('bg-disabled-light', (probe) => probe.backgroundColor)
+		);
+		expect(thumb.backgroundColor).toBe(
+			probeStyle('bg-disabled-dark', (probe) => probe.backgroundColor)
+		);
+	});
+
+	it('paints the track of an error slider danger-dark, unlike one with no state', () => {
+		const error = render(Slider, { props: { label: 'Opacity', value: 50, state: 'error' } });
+		const errorTrack = getComputedStyle(
+			range(error.container),
+			'::-webkit-slider-runnable-track'
+		).backgroundColor;
+		const plain = render(Slider, { props: { label: 'Opacity', value: 50 } });
+		const plainTrack = getComputedStyle(
+			range(plain.container),
+			'::-webkit-slider-runnable-track'
+		).backgroundColor;
+
+		expect(errorTrack).toBe(probeStyle('bg-danger-dark', (probe) => probe.backgroundColor));
+		expect(plainTrack).not.toBe(errorTrack);
+	});
+
+	it.each<{ by: string; props: ComponentProps<typeof Slider> }>([
+		{ by: 'label', props: { label: 'Speed', value: 50 } },
+		{ by: 'aria-label', props: { 'aria-label': 'Speed', value: 50 } },
+		{ by: 'aria-labelledby', props: { 'aria-labelledby': 'speed-name', value: 50 } }
+	])('renders named by $by without a console warning', ({ props }) => {
+		const warn = vi.spyOn(console, 'warn');
+		onTestFinished(() => warn.mockRestore());
+
+		render(Slider, { props });
+
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof Slider> = { value: 50 };
+		expect(props).toBeDefined();
+	});
+
+	it('requires a visible label for a hint', () => {
+		// @ts-expect-error hint with aria-label and no visible label
+		const props: ComponentProps<typeof Slider> = { 'aria-label': 'Speed', hint: 'Tip', value: 50 };
+		expect(props).toBeDefined();
 	});
 });

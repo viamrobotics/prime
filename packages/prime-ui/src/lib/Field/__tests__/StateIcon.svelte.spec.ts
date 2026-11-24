@@ -2,9 +2,9 @@ import { mdiAlert, mdiAlertCircle, mdiInformation } from '@mdi/js';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import StateIcon from '../StateIcon.svelte';
-import StateIconField from './StateIconField.svelte';
+import StateIconField from './fixtures/StateIconField.svelte';
 
 const iconPath = (container: Element) => container.querySelector('svg path')?.getAttribute('d');
 

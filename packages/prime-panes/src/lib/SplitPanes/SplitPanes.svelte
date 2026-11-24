@@ -67,7 +67,7 @@
 	const separatorOrientation = $derived(orientation === 'horizontal' ? 'vertical' : 'horizontal');
 </script>
 
-<div {...api.getRootProps()}>
+<div {...api.getRootProps()} class="isolate">
 	<div {...api.getPanelProps({ id: FIRST })}>
 		<PanesNode node={node.first} />
 	</div>
@@ -77,7 +77,7 @@
 		aria-orientation={separatorOrientation}
 		inert={context.movingId !== undefined}
 		class={[
-			'relative z-10 outline-info-dark after:absolute after:bg-gray-6 after:opacity-0 hover:after:opacity-100 focus-visible:outline-2 focus-visible:outline-solid data-dragging:after:opacity-100',
+			'relative z-10 focus-ring after:absolute after:bg-gray-6 after:opacity-0 hover:after:opacity-100 data-dragging:after:opacity-100',
 			TRIGGER_CLASSES_BY_ORIENTATION[orientation]
 		]}
 	></div>

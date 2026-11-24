@@ -11,6 +11,7 @@ Escape closes it and returns focus to the trigger. A press outside closes it and
 
 	import { portalProps, type PortalTarget } from '../portal.ts';
 
+	// side, align, sideOffset, and alignOffset are the anchor-placement vocabulary bits-ui shares with Floating UI. No native name exists, so they keep bits-ui's names.
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;

@@ -1,10 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
+import '../../../../test/tailwind.css';
+import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
 import Notify from '../Notify.svelte';
-import NotifyHost from './NotifyHost.svelte';
+import NotifyHost from './fixtures/NotifyHost.svelte';
 
 const LONG_DURATION_MS = 3000;
 
@@ -26,7 +27,41 @@ const firstItem = async () => {
 	return items()[0];
 };
 
+afterEach(() => emulateReducedMotion('no-preference'));
+
 describe('Notify', () => {
+	it('passes extra attributes to the region', () => {
+		render(NotifyHost);
+
+		expect(region().getAttribute('data-testid')).toBe('region');
+		expect(region().getAttribute('id')).toMatch(/^toast-group:/);
+	});
+
+	it('names the tone in text', async () => {
+		const { container } = render(NotifyHost);
+		await create(container, 'danger');
+
+		const item = await firstItem();
+
+		expect(item.querySelector('.sr-only')?.textContent).toBe('Error: ');
+	});
+
+	it.each([
+		{ preference: 'no-preference', property: 'translate, scale, opacity' },
+		{ preference: 'reduce', property: 'opacity' }
+	] as const)(
+		'transitions $property under prefers-reduced-motion: $preference',
+		async ({ preference, property }) => {
+			await emulateReducedMotion(preference);
+			const { container } = render(NotifyHost);
+			await create(container, 'info');
+
+			const item = await firstItem();
+
+			expect(getComputedStyle(item).transitionProperty).toBe(property);
+		}
+	);
+
 	it('names the region before any notification arrives', () => {
 		render(NotifyHost);
 

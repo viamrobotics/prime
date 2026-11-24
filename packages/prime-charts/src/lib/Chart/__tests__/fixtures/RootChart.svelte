@@ -16,6 +16,8 @@
 		hasLegendBeside?: boolean;
 		isPlotAbsolute?: boolean;
 		hasAxes?: boolean;
+		plotAttributes?: Record<string, string>;
+		id?: string;
 		xFormat?: (value: Date) => string;
 		yFormat?: (value: number) => string;
 	}
@@ -27,6 +29,7 @@
 		hasLegendBeside = false,
 		isPlotAbsolute = false,
 		hasAxes = false,
+		plotAttributes = {},
 		xFormat,
 		yFormat,
 		...bounds
@@ -46,7 +49,10 @@
 		{#if hasLegendBeside}
 			<Chart.Legend class="w-24 shrink-0" />
 		{/if}
-		<Chart.Plot class={isPlotAbsolute ? 'absolute inset-0' : 'min-h-0 min-w-0 flex-1'}>
+		<Chart.Plot
+			{...plotAttributes}
+			class={isPlotAbsolute ? 'absolute inset-0' : 'min-h-0 min-w-0 flex-1'}
+		>
 			{#each series as entry (entry.name)}
 				<Chart.Line name={entry.name} points={entry.points} hidden={entry.hidden} />
 			{/each}

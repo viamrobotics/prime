@@ -6,8 +6,8 @@ month buttons around the month heading, the weekday names, and the day grid. Ren
 
 Arrow keys move between days, and Enter or Space selects the focused day. The header buttons
 change the month, and their names ("Last month" and "Next month" in `en-US`) follow the
-picker's `locale`. The calendar's accessible name is its `aria-label` followed by the month
-on show.
+picker's `locale`. The `previousChevron` and `nextChevron` snippets replace the buttons'
+chevrons. The calendar's accessible name is its `aria-label` followed by the month on show.
 
 ```svelte
 <DatePicker.Content>
@@ -16,6 +16,7 @@ on show.
 ```
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
@@ -30,13 +31,26 @@ on show.
 		id?: string;
 
 		/**
-		 * The calendar's accessible name. The month on show is appended to it.
+		 * The calendar's accessible name, which the panel takes too. The month on show is appended
+		 * to the calendar's.
 		 * @default 'Choose a date'
 		 */
 		'aria-label'?: string;
+
+		/** Replaces the chevron in the previous month button. */
+		previousChevron?: Snippet;
+
+		/** Replaces the chevron in the next month button. */
+		nextChevron?: Snippet;
 	}
 
-	const { class: extraClasses, 'aria-label': label, ...restProps }: Props = $props();
+	const {
+		class: extraClasses,
+		'aria-label': label,
+		previousChevron,
+		nextChevron,
+		...restProps
+	}: Props = $props();
 
 	const picker = useDatePicker();
 
@@ -58,7 +72,11 @@ on show.
 			<DatePicker.PrevButton class="calendar-nav">
 				{#snippet child({ props })}
 					<button {...props} aria-label={previousMonthName}>
-						<Icon icon={mdiChevronLeft} size="base" />
+						{#if previousChevron}
+							{@render previousChevron()}
+						{:else}
+							<Icon icon={mdiChevronLeft} size="base" />
+						{/if}
 					</button>
 				{/snippet}
 			</DatePicker.PrevButton>
@@ -66,7 +84,11 @@ on show.
 			<DatePicker.NextButton class="calendar-nav">
 				{#snippet child({ props })}
 					<button {...props} aria-label={nextMonthName}>
-						<Icon icon={mdiChevronRight} size="base" />
+						{#if nextChevron}
+							{@render nextChevron()}
+						{:else}
+							<Icon icon={mdiChevronRight} size="base" />
+						{/if}
 					</button>
 				{/snippet}
 			</DatePicker.NextButton>

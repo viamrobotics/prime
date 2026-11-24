@@ -2,11 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { colorOf, shapeOf } from '../../__tests__/computed-style.ts';
-import BasicContextMenu from './BasicContextMenu.svelte';
-import BasicMenu from './BasicMenu.svelte';
-import BasicMenubar from './BasicMenubar.svelte';
-import StructuredMenu from './StructuredMenu.svelte';
+import { colorOf, shapeOf } from '../../../../test/computed-style.ts';
+import BasicContextMenu from './fixtures/BasicContextMenu.svelte';
+import BasicMenu from './fixtures/BasicMenu.svelte';
+import BasicMenubar from './fixtures/BasicMenubar.svelte';
+import StructuredMenu from './fixtures/StructuredMenu.svelte';
 
 const menus = () => [...document.querySelectorAll<HTMLElement>('[role="menu"]')];
 const buttonLabeled = (container: Element, label: string) =>

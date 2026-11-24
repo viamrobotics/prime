@@ -4,8 +4,8 @@
   let name = $state("Rover 1");
 </script>
 
-<Field class="not-content flex max-w-xs flex-col gap-1" state="error">
-  <Label>Machine name</Label>
+<Field label="Machine name" class="not-content flex max-w-xs flex-col gap-1" state="error">
+  <Label />
   <Input.Group>
     <Input bind:value={name} />
     <Field.StateIcon />

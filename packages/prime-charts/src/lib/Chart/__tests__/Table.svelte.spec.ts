@@ -196,6 +196,23 @@ describe('Chart.Table', () => {
 		);
 	});
 
+	it('passes a consumer id and data attribute to the wrapper div', async () => {
+		const { container } = render(TableChart, {
+			props: { series: onePoint, tableProps: { id: 'readings-table', 'data-extra': 'yes' } }
+		});
+
+		await expect
+			.poll(() => {
+				const wrapper = table(container)?.parentElement;
+				return {
+					tag: wrapper?.tagName,
+					id: wrapper?.id,
+					extra: wrapper?.getAttribute('data-extra')
+				};
+			})
+			.toEqual({ tag: 'DIV', id: 'readings-table', extra: 'yes' });
+	});
+
 	it.each([
 		{ place: 'before', isTableFirst: true, plotPosition: Node.DOCUMENT_POSITION_FOLLOWING },
 		{ place: 'after', isTableFirst: false, plotPosition: Node.DOCUMENT_POSITION_PRECEDING }

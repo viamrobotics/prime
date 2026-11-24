@@ -2,7 +2,7 @@ import { getContext, setContext } from 'svelte';
 
 import type { SelectOption } from './option.ts';
 
-const key = Symbol('Select');
+const SELECT_KEY = Symbol('Select');
 
 interface SelectOptions {
 	items: () => readonly SelectOption[] | undefined;
@@ -13,11 +13,11 @@ export interface SelectContext {
 }
 
 export const provideSelect = (options: SelectOptions): SelectContext =>
-	setContext<SelectContext>(key, {
+	setContext<SelectContext>(SELECT_KEY, {
 		get items() {
 			return options.items() ?? [];
 		}
 	});
 
 export const useSelect = (): SelectContext | undefined =>
-	getContext<SelectContext | undefined>(key);
+	getContext<SelectContext | undefined>(SELECT_KEY);

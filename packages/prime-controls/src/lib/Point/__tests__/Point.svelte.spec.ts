@@ -10,6 +10,7 @@ import type { PointValue } from '../point.ts';
 import BoundPoint from './fixtures/BoundPoint.svelte';
 import ControlledPoint from './fixtures/ControlledPoint.svelte';
 import PointWithDetails from './fixtures/PointWithDetails.svelte';
+import PointWithTrailing from './fixtures/PointWithTrailing.svelte';
 
 const owner = (container: Element) =>
 	JSON.parse(container.querySelector('[data-testid="owner"]')!.textContent!) as PointValue;
@@ -23,6 +24,15 @@ const boundingRectangles = (name: string) => ({
 	label: axisLabel(name).getBoundingClientRect(),
 	box: spinbutton(name).element().getBoundingClientRect()
 });
+
+function probeStyle(className: string, read: (style: CSSStyleDeclaration) => string) {
+	const probe = document.createElement('span');
+	probe.className = className;
+	document.body.append(probe);
+	const value = read(getComputedStyle(probe));
+	probe.remove();
+	return value;
+}
 
 const MIN_TARGET_PX = 24;
 const MAX_LETTER_WIDTH_PX = 32;
@@ -57,7 +67,12 @@ async function scrubLabel(text: string, offsets: number[]) {
 	await commands.mouseUp();
 }
 
-function renderControlled(props: Partial<ComponentProps<typeof ControlledPoint>> = {}) {
+type ControlledOptions = Pick<ComponentProps<typeof Point>, 'labels'> & {
+	initial?: PointValue;
+	shouldAccept?: boolean;
+};
+
+function renderControlled(props: ControlledOptions = {}) {
 	const record = vi.fn<(next: PointValue) => void>();
 	const screen = render(ControlledPoint, {
 		props: {
@@ -476,6 +491,30 @@ describe('Point per axis', () => {
 		}
 	);
 
+	it.each([
+		{ width: 352, columns: 3 },
+		{ width: 351, columns: 1 }
+	])('lays three axes out in $columns column(s) in a $width px box', ({ width, columns }) => {
+		const { container } = render(Point, { props: { label: 'Position', value: position } });
+		const root = container.querySelector<HTMLElement>('[role="group"]')!;
+		root.style.width = `${width}px`;
+
+		const axes = container.querySelector('[data-point-axes]')!;
+		const lefts = new Set([...axes.children].map((child) => child.getBoundingClientRect().left));
+		expect(lefts.size).toBe(columns);
+	});
+
+	it.each(['x', 'y', 'z'])("draws trailing content inside the %s field's frame", async (axis) => {
+		render(PointWithTrailing, { props: { label: 'Position', value: position } });
+
+		const button = page.getByRole('button', { name: `Reset ${axis}` });
+		await expect.element(button).toBeInTheDocument();
+
+		const field = spinbutton(axis.toUpperCase()).element();
+		expect(button.element().parentElement).toBe(field.parentElement);
+		expect(field.parentElement).toHaveClass('input');
+	});
+
 	it('keeps the axis fields within one pixel of the same width with details, since grid tracks land on fractions', () => {
 		render(PointWithDetails, { props: { label: 'Position', messageAxis: 'y', value: position } });
 
@@ -568,5 +607,54 @@ describe('Point per axis', () => {
 
 		await expect.element(spinbutton('X')).toHaveAccessibleDescription('mm');
 		await expect.element(spinbutton('Y')).not.toHaveAccessibleDescription();
+	});
+});
+
+describe('Point root and naming', () => {
+	const value = { x: 1, y: 2 };
+
+	it('passes an id and a data attribute to the root', () => {
+		const { container } = render(Point, {
+			props: { label: 'Position', value, id: 'position-root', 'data-extra': 'yes' }
+		});
+
+		const root = container.querySelector('[role="group"]')!;
+		expect(root).toHaveAttribute('id', 'position-root');
+		expect(root).toHaveAttribute('data-extra', 'yes');
+	});
+
+	it('draws the label at 12 px in the subtle-1 text color', () => {
+		const { container } = render(Point, { props: { label: 'Position', value } });
+
+		const style = getComputedStyle(container.querySelector('[role="group"] > span')!);
+
+		expect(style.fontSize).toBe('12px');
+		expect(style.color).toBe(probeStyle('text-subtle-1', (probe) => probe.color));
+	});
+
+	it.each<{ by: string; props: ComponentProps<typeof Point> }>([
+		{ by: 'label', props: { label: 'Speed', value: { x: 1, y: 2 } } },
+		{ by: 'aria-label', props: { 'aria-label': 'Speed', value: { x: 1, y: 2 } } },
+		{ by: 'aria-labelledby', props: { 'aria-labelledby': 'speed-name', value: { x: 1, y: 2 } } }
+	])('renders named by $by without a console warning', ({ props }) => {
+		const warn = vi.spyOn(console, 'warn');
+		onTestFinished(() => warn.mockRestore());
+
+		render(Point, { props });
+
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof Point> = { value: { x: 1, y: 2 } };
+		expect(props).toBeDefined();
+	});
+
+	it('requires a visible label for a hint', () => {
+		const value = { x: 1, y: 2 };
+		// @ts-expect-error hint with aria-label and no visible label
+		const props: ComponentProps<typeof Point> = { 'aria-label': 'Speed', hint: 'Tip', value };
+		expect(props).toBeDefined();
 	});
 });

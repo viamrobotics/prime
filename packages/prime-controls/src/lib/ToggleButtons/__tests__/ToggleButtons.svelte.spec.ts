@@ -1,9 +1,21 @@
-import { describe, expect, it } from 'vitest';
+import type { ComponentProps } from 'svelte';
+
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
+import { ToggleButtons } from '../toggle-buttons.ts';
 import BoundToggleButtons from './fixtures/BoundToggleButtons.svelte';
+
+function probeStyle(className: string, read: (style: CSSStyleDeclaration) => string) {
+	const probe = document.createElement('span');
+	probe.className = className;
+	document.body.append(probe);
+	const value = read(getComputedStyle(probe));
+	probe.remove();
+	return value;
+}
 
 const MIN_ROW_HEIGHT_PX = 24;
 const MAX_ROW_HEIGHT_PX = 28;
@@ -158,5 +170,60 @@ describe('ToggleButtons hint', () => {
 		await expect
 			.element(page.getByRole('group', { name: 'Space' }))
 			.not.toHaveAttribute('aria-describedby');
+	});
+});
+
+describe('ToggleButtons root and naming', () => {
+	const items = [
+		{ value: 'local', label: 'Local' },
+		{ value: 'world', label: 'World' }
+	];
+
+	it('passes an id and a data attribute to the root', () => {
+		const { container } = render(ToggleButtons, {
+			props: { label: 'Space', items, id: 'space-root', 'data-extra': 'yes' }
+		});
+
+		const root = container.firstElementChild!;
+		expect(root).toHaveAttribute('id', 'space-root');
+		expect(root).toHaveAttribute('data-extra', 'yes');
+	});
+
+	it('draws the label at 12 px in the subtle-1 text color', () => {
+		const { container } = render(ToggleButtons, { props: { label: 'Space', items } });
+
+		const style = getComputedStyle(container.querySelector('span')!);
+
+		expect(style.fontSize).toBe('12px');
+		expect(style.color).toBe(probeStyle('text-subtle-1', (probe) => probe.color));
+	});
+
+	it.each<{ by: string; props: ComponentProps<typeof ToggleButtons> }>([
+		{ by: 'label', props: { label: 'Speed', items } },
+		{ by: 'aria-label', props: { 'aria-label': 'Speed', items } },
+		{ by: 'aria-labelledby', props: { 'aria-labelledby': 'speed-name', items } }
+	])('renders named by $by without a console warning', ({ props }) => {
+		const warn = vi.spyOn(console, 'warn');
+		onTestFinished(() => warn.mockRestore());
+
+		render(ToggleButtons, { props });
+
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof ToggleButtons> = { items };
+		expect(props).toBeDefined();
+	});
+
+	it('requires a visible label for a hint', () => {
+		// @ts-expect-error hint with aria-label and no visible label
+		const props: ComponentProps<typeof ToggleButtons> = {
+			'aria-label': 'Speed',
+			hint: 'Tip',
+			items
+		};
+		expect(props).toBeDefined();
 	});
 });

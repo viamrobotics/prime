@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Select } from "@viamrobotics/prime-ui";
+  import { Field, Select } from "@viamrobotics/prime-ui";
 
   const groups = [
     {
@@ -48,25 +48,27 @@
 
 <div class="not-content">
   <div class="max-w-xs">
-    <Select items={characters} bind:value={character}>
-      <Select.Trigger class="w-64" aria-label="Character">
-        <Select.Value placeholder="Pick a character" />
-      </Select.Trigger>
-      <Select.Content>
-        <Select.ScrollUpButton />
-        <Select.Viewport>
-          {#each groups as group (group.heading)}
-            <Select.Group>
-              <Select.GroupHeading>{group.heading}</Select.GroupHeading>
-              {#each group.items as item (item.value)}
-                <Select.Item value={item.value} label={item.label} />
-              {/each}
-            </Select.Group>
-          {/each}
-        </Select.Viewport>
-        <Select.ScrollDownButton />
-      </Select.Content>
-    </Select>
+    <Field aria-label="Character">
+      <Select items={characters} bind:value={character}>
+        <Select.Trigger class="w-64">
+          <Select.Value placeholder="Pick a character" />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.ScrollUpButton />
+          <Select.Viewport>
+            {#each groups as group (group.heading)}
+              <Select.Group>
+                <Select.GroupHeading>{group.heading}</Select.GroupHeading>
+                {#each group.items as item (item.value)}
+                  <Select.Item value={item.value} label={item.label} />
+                {/each}
+              </Select.Group>
+            {/each}
+          </Select.Viewport>
+          <Select.ScrollDownButton />
+        </Select.Content>
+      </Select>
+    </Field>
   </div>
 
   <p class="mt-3 text-sm text-subtle-2">value: <code>{character || "none"}</code></p>

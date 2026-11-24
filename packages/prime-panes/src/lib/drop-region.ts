@@ -52,6 +52,12 @@ function clampInto(rect: DropRect, clientX: number, clientY: number): [number, n
 	];
 }
 
+// A tie between the axes reads vertical, and a vertical tie reads top.
+function dominantEdge(offsetX: number, offsetY: number): EdgeRegion {
+	if (Math.abs(offsetX) > Math.abs(offsetY)) return offsetX < 0 ? 'left' : 'right';
+	return offsetY > 0 ? 'bottom' : 'top';
+}
+
 export function getDropRegion(
 	clientX: number,
 	clientY: number,
@@ -62,8 +68,7 @@ export function getDropRegion(
 	const absY = Math.abs(offsetY);
 
 	if (absX < CENTER_ZONE_REACH && absY < CENTER_ZONE_REACH) return 'center';
-	if (absX > absY) return offsetX < 0 ? 'left' : 'right';
-	return offsetY > 0 ? 'bottom' : 'top';
+	return dominantEdge(offsetX, offsetY);
 }
 
 // A point outside `bodyRect` reads as the nearest point on its border.
@@ -99,8 +104,7 @@ export function getDragRegion(
 
 export function nearestEdge(clientX: number, clientY: number, paneRect: DropRect): EdgeRegion {
 	const [offsetX, offsetY] = offsetFromCenter(clientX, clientY, paneRect);
-	if (Math.abs(offsetX) > Math.abs(offsetY)) return offsetX < 0 ? 'left' : 'right';
-	return offsetY < 0 ? 'top' : 'bottom';
+	return dominantEdge(offsetX, offsetY);
 }
 
 export function stackSideOf(stackRect: DropRect, bodyRect: DropRect): EdgeRegion {

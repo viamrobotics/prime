@@ -4,12 +4,12 @@ Headless tree view for Svelte 5. The package owns behavior and accessibility: ke
 
 ## Layout
 
-- `src/lib/Tree/tree-accessors.ts`: `TreeAccessors`, the functions that describe a consumer's node type: `nodeToValue`, `nodeToString`, `nodeToChildren`, and the optional `nodeToChildrenCount` and `isNodeDisabled`. Type only.
+- `src/lib/Tree/tree-accessors.ts`: `TreeAccessors`, the functions that describe a consumer's node type: `getValue`, `getLabel`, `getChildren`, and the optional `getChildCount` and `isDisabled`. Type only.
 - `src/lib/Tree/tree-node-state.ts`: `TreeNodeState`, the `node` snippet's second argument. Type only.
 - `src/lib/Tree/branch-click.ts`: `TreeBranchClick`, what a click or Enter on a branch row does. Type only.
 - `src/lib/Tree/Tree.svelte`: the root. It renders the `role="tree"` element and takes `nodes`, the accessors, `bind:expanded`, `bind:selected`, `selectionMode`, `branchClick`, the `node` snippet, and an optional `children` snippet that renders the root rows itself. It drops a disabled node from each selection and expansion change before the change reaches the binding, unless the binding already held it.
 - `src/lib/Tree/useTree.svelte.ts`: the two contexts. `provideTree` carries the machine api, the `node` snippet, and `branchClick` from the root to the parts, and `provideTreeNode` carries one node, its index path, its sibling count, and its state from `TreeNodeRow` to the parts inside its snippet.
-- `src/lib/Tree/disabled-node.ts`: marks a row disabled and drops its click and activation keys. zag reads `disabled` off the node object, so a node disabled only through `isNodeDisabled` gets its state, `aria-disabled`, and guards here.
+- `src/lib/Tree/disabled-node.ts`: marks a row disabled and drops its click and activation keys. zag reads `disabled` off the node object, so a node disabled only through `isDisabled` gets its state, `aria-disabled`, and guards here.
 - `src/lib/Tree/select-all.ts`: recognizes Ctrl+A and Meta+A outside an editable element. `Tree` selects every node on it in multiple mode, collapsed ones included, as the WAI-ARIA tree pattern specifies.
 - `src/lib/Tree/omit-keys.ts`: copies a props object without the named keys. `Tree` drops zag's tree name and `Item` drops zag's `aria-current` with it before the consumer's attributes merge, because zag's `mergeProps` skips a later `undefined`.
 - `src/lib/Tree/defer-focus.ts`: defers zag's focus notification by a microtask, because a synchronous focus inside zag's keydown transition re-enters the machine and Shift+Arrow extends the selection from the wrong row.
@@ -39,6 +39,6 @@ Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwrig
 
 - Svelte 5 runes only. See [.claude/rules/svelte.md](../../.claude/rules/svelte.md).
 - State flows through `bind:expanded` and `bind:selected`, never a change callback. A function binding can refuse a change by not assigning.
-- No zag.js names in the public API. Props and parts use web-standard vocabulary.
+- No zag.js names in the public API, except `selectionMode` and the part names (`Branch`, `BranchControl`, `BranchTrigger`, `BranchContent`, `Item`, `Indicator`, `IndentGuide`, `Row`), which have no web-standard alternative. Every other prop uses web-standard or the package's own vocabulary.
 - No styling. The tree sets no indentation, icons, or colors. It exposes `depth` in the state and a `--depth` custom property on each row.
 - Tailwind classes reference `@viamrobotics/tailwind-config` tokens only.

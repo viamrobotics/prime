@@ -7,7 +7,7 @@ import Icon from './BannerIcon.svelte';
 import Progress from './BannerProgress.svelte';
 import Title from './BannerTitle.svelte';
 
-export type { BannerVariant } from './useBanner.svelte.ts';
+export type { BannerVariant } from './variant.ts';
 
 export const Banner: typeof Root & {
 	Icon: typeof Icon;

@@ -11,9 +11,12 @@ A dense container for a tool panel's controls, with an optional visible `title`.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 
-	interface Props {
+	interface Props extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'class' | 'children' | 'role' | 'title' | 'aria-label' | 'aria-labelledby'
+	> {
 		/** Visible title, which names the group. Without it, pass `aria-label` or `aria-labelledby`. */
 		title?: string;
 
@@ -40,18 +43,20 @@ A dense container for a tool panel's controls, with an optional visible `title`.
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
 		class: extraClasses,
-		children
+		children,
+		...restProps
 	}: Props & AccessibleName = $props();
 
 	const titleId = $props.id();
 </script>
 
 <div
+	{...restProps}
 	role="group"
 	aria-labelledby={title ? titleId : ariaLabelledby}
 	aria-label={title ? undefined : ariaLabel}
 	class={[
-		'flex flex-col gap-1 rounded-md border border-light bg-gray-1 p-2 text-default',
+		'flex flex-col gap-1 rounded-sm border border-light bg-light p-2 text-default',
 		extraClasses
 	]}
 >

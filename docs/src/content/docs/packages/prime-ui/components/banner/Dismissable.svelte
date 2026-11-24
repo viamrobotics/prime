@@ -8,7 +8,7 @@
   {#if shown}
     <Banner variant="success">
       <Banner.Description>Your changes were saved.</Banner.Description>
-      <Banner.Close onclick={() => (shown = false)} />
+      <Banner.Close aria-label="Dismiss" onclick={() => (shown = false)} />
     </Banner>
   {:else}
     <button type="button" class="button w-fit" onclick={() => (shown = true)}>Show banner</button>

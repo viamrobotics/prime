@@ -8,6 +8,8 @@ are ignored and the browser's own menu shows.
 
 	import { ContextMenu } from 'bits-ui';
 
+	import { useTriggerName } from './useTriggerName.svelte.ts';
+
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;
@@ -16,9 +18,16 @@ are ignored and the browser's own menu shows.
 		disabled?: boolean;
 	}
 
-	const { children, ...restProps }: Props = $props();
+	const { id, children, ...restProps }: Props = $props();
+
+	const name = useTriggerName();
+	const triggerId = $derived(id ?? name?.id);
+
+	$effect.pre(() => {
+		if (name && id) name.id = id;
+	});
 </script>
 
-<ContextMenu.Trigger {...restProps}>
+<ContextMenu.Trigger id={triggerId} {...restProps}>
 	{@render children?.()}
 </ContextMenu.Trigger>

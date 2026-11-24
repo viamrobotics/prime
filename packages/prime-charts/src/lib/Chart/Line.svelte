@@ -31,12 +31,12 @@ One series, drawn as a line clipped to the plot area. A `null` `y` breaks the li
 		unit,
 		color,
 		loading = false,
-		hidden = $bindable(false),
+		hidden = $bindable(),
 		class: className
 	}: Props = $props();
 
 	const plotContext = usePlotContext('Chart.Line');
-	const chart = useChart();
+	const chart = useChart('Chart.Line');
 	const plot = usePlot();
 
 	const series = chart.addSeries({
@@ -53,7 +53,7 @@ One series, drawn as a line clipped to the plot area. A `null` `y` breaks the li
 			return loading;
 		},
 		get hidden() {
-			return hidden;
+			return hidden ?? false;
 		},
 		set hidden(value) {
 			hidden = value;

@@ -147,6 +147,7 @@
   /* Ghost colors (partial fills for hover states) */
   --dark-color-ghost-light: rgba(255, 255, 255, 0.05);
   --dark-color-ghost-medium: rgba(255, 255, 255, 0.1);
+  --dark-color-scrim: rgba(0, 0, 0, 0.6);
 
   /* Chart colors */
   --dark-color-chart-series-1: #5686f2;
@@ -286,6 +287,7 @@
   /* Ghost colors */
   --light-color-ghost-light: rgba(0, 0, 0, 0.04);
   --light-color-ghost-medium: rgba(0, 0, 0, 0.08);
+  --light-color-scrim: rgba(19, 20, 20, 0.4);
 
   /* Chart colors */
   --light-color-chart-series-1: #3f6dd7;
@@ -437,6 +439,7 @@
     /* Ghost colors */
     --color-ghost-light: var(--dark-color-ghost-light);
     --color-ghost-medium: var(--dark-color-ghost-medium);
+    --color-scrim: var(--dark-color-scrim);
 
     /* Chart colors */
     --color-chart-series-1: var(--dark-color-chart-series-1);
@@ -580,6 +583,7 @@
   /* Ghost colors */
   --color-ghost-light: var(--dark-color-ghost-light);
   --color-ghost-medium: var(--dark-color-ghost-medium);
+  --color-scrim: var(--dark-color-scrim);
 
   /* Chart colors */
   --color-chart-series-1: var(--dark-color-chart-series-1);
@@ -722,6 +726,7 @@
   /* Ghost colors */
   --color-ghost-light: var(--light-color-ghost-light);
   --color-ghost-medium: var(--light-color-ghost-medium);
+  --color-scrim: var(--light-color-scrim);
 
   /* Chart colors */
   --color-chart-series-1: var(--light-color-chart-series-1);

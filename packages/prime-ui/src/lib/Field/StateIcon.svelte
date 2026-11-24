@@ -5,8 +5,8 @@ nothing for `none`. Place it after the input inside an `Input.Group`, or anywher
 field.
 
 ```svelte
-<Field state="error">
-	<Label>Email</Label>
+<Field label="Email" state="error">
+	<Label />
 	<Input.Group>
 		<Input type="email" bind:value />
 		<Field.StateIcon />

@@ -1,11 +1,9 @@
 import { getContext, setContext, type Snippet } from 'svelte';
 
 import type { SelectOption } from '../Select/option.ts';
+import type { ComboboxFilter } from './filter.ts';
 
-const key = Symbol('Combobox');
-
-/** Decides whether an option stays in the list for the typed text. */
-export type ComboboxFilter = (option: SelectOption, query: string) => boolean;
+const COMBOBOX_KEY = Symbol('Combobox');
 
 interface ComboboxOptions {
 	items: () => readonly SelectOption[] | undefined;
@@ -16,7 +14,6 @@ interface ComboboxOptions {
 }
 
 export interface ComboboxContext {
-	readonly items: readonly SelectOption[];
 	readonly matches: readonly SelectOption[];
 	query: string;
 	// The typed text while the user types, otherwise the selected label.
@@ -42,10 +39,7 @@ export const provideCombobox = (options: ComboboxOptions): ComboboxContext => {
 	let input = $state<HTMLInputElement | null>(null);
 	let emptyMessage = $state.raw<Snippet>();
 
-	return setContext<ComboboxContext>(key, {
-		get items() {
-			return options.items() ?? [];
-		},
+	return setContext<ComboboxContext>(COMBOBOX_KEY, {
 		get matches() {
 			return matches;
 		},
@@ -77,4 +71,4 @@ export const provideCombobox = (options: ComboboxOptions): ComboboxContext => {
 };
 
 export const useCombobox = (): ComboboxContext | undefined =>
-	getContext<ComboboxContext | undefined>(key);
+	getContext<ComboboxContext | undefined>(COMBOBOX_KEY);

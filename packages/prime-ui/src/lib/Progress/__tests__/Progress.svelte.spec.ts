@@ -1,17 +1,14 @@
+import type { ComponentProps } from 'svelte';
+
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { cdp } from 'vitest/browser';
 
-import { backgroundColor, colorOf } from '../../__tests__/computed-style.ts';
+import { backgroundColor, colorOf } from '../../../../test/computed-style.ts';
+import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
 import Progress from '../Progress.svelte';
 
 const bar = (container: Element) => container.querySelector<HTMLElement>('[role="progressbar"]')!;
 const fill = (container: Element) => container.querySelector<HTMLElement>('.progress-fill')!;
-
-const emulateReducedMotion = (value: 'reduce' | 'no-preference') =>
-	cdp().send('Emulation.setEmulatedMedia', {
-		features: [{ name: 'prefers-reduced-motion', value }]
-	});
 
 afterEach(() => emulateReducedMotion('no-preference'));
 
@@ -39,6 +36,13 @@ describe('Progress', () => {
 
 		expect(bar(container).getAttribute('aria-valuenow')).toBe(now);
 		expect(fill(container).style.width).toBe(width);
+	});
+
+	it('fills nothing when max is 0', () => {
+		const { container } = render(Progress, { props: { value: 5, max: 0, label: 'Upload' } });
+
+		expect(fill(container).style.width).toBe('0%');
+		expect(fill(container).getBoundingClientRect().width).toBe(0);
 	});
 
 	it('omits aria-valuenow when indeterminate', () => {
@@ -84,5 +88,27 @@ describe('Progress', () => {
 		const { container } = render(Progress, { props: { value: 10, label: 'Upload', class: tone } });
 
 		expect(backgroundColor(fill(container))).toBe(colorOf(color, 'backgroundColor'));
+	});
+
+	it('requires a name by type', () => {
+		// @ts-expect-error a Progress requires a name
+		const unnamed: ComponentProps<typeof Progress> = {};
+		// @ts-expect-error a Progress takes one name, not two
+		const twice: ComponentProps<typeof Progress> = { label: 'Upload', 'aria-label': 'Upload' };
+
+		expect([unnamed, twice]).toHaveLength(2);
+	});
+
+	it('applies aria-label as the name', () => {
+		const { container } = render(Progress, { props: { 'aria-label': 'Sync' } });
+
+		expect(bar(container).getAttribute('aria-label')).toBe('Sync');
+	});
+
+	it('passes aria-labelledby through', () => {
+		const { container } = render(Progress, { props: { 'aria-labelledby': 'heading' } });
+
+		expect(bar(container).getAttribute('aria-labelledby')).toBe('heading');
+		expect(bar(container).hasAttribute('aria-label')).toBe(false);
 	});
 });

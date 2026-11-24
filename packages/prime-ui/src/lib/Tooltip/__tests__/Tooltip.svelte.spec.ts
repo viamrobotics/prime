@@ -1,14 +1,19 @@
+import type { ComponentProps } from 'svelte';
+
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor, colorOf, textColor } from '../../__tests__/computed-style.ts';
-import BoundTooltip from './BoundTooltip.svelte';
-import ControlledTooltip from './ControlledTooltip.svelte';
-import HoverOnlyTooltip from './HoverOnlyTooltip.svelte';
-import IconTriggerTooltip from './IconTriggerTooltip.svelte';
-import TabOrderTooltip from './TabOrderTooltip.svelte';
-import UndefinedTooltip from './UndefinedTooltip.svelte';
+import { backgroundColor, colorOf, textColor } from '../../../../test/computed-style.ts';
+import { INTERACTIVE_DESCENDANT_SELECTOR } from '../../interactive-descendant.ts';
+import { Tooltip } from '../tooltip.ts';
+import BoundTooltip from './fixtures/BoundTooltip.svelte';
+import ControlledTooltip from './fixtures/ControlledTooltip.svelte';
+import FocusableChildTooltip from './fixtures/FocusableChildTooltip.svelte';
+import HoverOnlyTooltip from './fixtures/HoverOnlyTooltip.svelte';
+import IconTriggerTooltip from './fixtures/IconTriggerTooltip.svelte';
+import TabOrderTooltip from './fixtures/TabOrderTooltip.svelte';
+import UndefinedTooltip from './fixtures/UndefinedTooltip.svelte';
 
 const button = (container: Element) => container.querySelector('button')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
@@ -158,10 +163,24 @@ describe('Tooltip', () => {
 			expect(icon.getAttribute('aria-describedby')).toBe(tooltip()!.id);
 		});
 
+		it.each(['select', 'textarea', 'summary', 'contenteditable'] as const)(
+			'names the content on a focused %s child while open',
+			async (child) => {
+				const { container } = render(FocusableChildTooltip, { props: { child } });
+				const control = container.querySelector<HTMLElement>('[data-testid="control"]')!;
+
+				control.focus();
+
+				await expect.poll(tooltip).not.toBeNull();
+				expect(document.activeElement).toBe(control);
+				expect(control.getAttribute('aria-describedby')).toBe(tooltip()!.id);
+			}
+		);
+
 		it('opens on hover alone when nothing inside it is focusable', async () => {
 			const { container } = render(HoverOnlyTooltip);
 			const trigger = container.querySelector<HTMLElement>('[data-testid="trigger"]')!;
-			expect(trigger.querySelector('button, a[href], input, [tabindex]')).toBeNull();
+			expect(trigger.querySelector(INTERACTIVE_DESCENDANT_SELECTOR)).toBeNull();
 
 			await userEvent.hover(trigger);
 
@@ -172,17 +191,25 @@ describe('Tooltip', () => {
 		});
 	});
 
-	describe('placement', () => {
+	describe('side', () => {
 		it.each(['top', 'right', 'bottom', 'left'] as const)(
 			'places the content on the %s side',
-			async (placement) => {
-				const { container } = render(BoundTooltip, { props: { openDelay: 0, placement } });
+			async (side) => {
+				const { container } = render(BoundTooltip, { props: { openDelay: 0, side } });
 
 				button(container).focus();
 
-				await expect.poll(() => tooltip()?.getAttribute('data-side')).toBe(placement);
+				await expect.poll(() => tooltip()?.getAttribute('data-side')).toBe(side);
 			}
 		);
+
+		it('names the side prop side, not placement, by type', () => {
+			// @ts-expect-error the content takes side, the name every floating panel uses
+			const placed: ComponentProps<typeof Tooltip.Content> = { placement: 'right' };
+			const sided: ComponentProps<typeof Tooltip.Content> = { side: 'right' };
+
+			expect([placed, sided]).toHaveLength(2);
+		});
 	});
 
 	describe('binding', () => {

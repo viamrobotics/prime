@@ -26,6 +26,24 @@ const emptyText = (container: Element) =>
 	container.querySelector('[data-part="empty"]')?.textContent?.trim();
 
 describe('Chart states', () => {
+	it('renders the root as a native figure with no role, carrying a consumer id', async () => {
+		const { container } = render(RootChart, { props: { id: 'readings' } });
+		const root = container.querySelector('#readings');
+
+		await expect.poll(() => root?.tagName).toBe('FIGURE');
+		expect(root?.hasAttribute('role')).toBe(false);
+	});
+
+	it('passes a consumer id and data attribute to the plot root', async () => {
+		const { container } = render(RootChart, {
+			props: { plotAttributes: { id: 'plot-1', 'data-extra': 'yes' } }
+		});
+		const plot = container.querySelector('[data-part="plot"]');
+
+		await expect.poll(() => plot?.id).toBe('plot-1');
+		expect(plot?.getAttribute('data-extra')).toBe('yes');
+	});
+
 	it('shows "No data" with no series', async () => {
 		const { container } = render(RootChart, { props: {} });
 		await expect.poll(() => emptyText(container)).toBe('No data');
@@ -64,7 +82,7 @@ describe('Chart states', () => {
 			const { container } = render(RootChart, { props: { series, loading } });
 			await expect.poll(() => container.querySelector('path')).not.toBeNull();
 
-			expect(container.querySelector('[role="figure"]')?.getAttribute('aria-busy')).toBe(busy);
+			expect(container.querySelector('figure')?.getAttribute('aria-busy')).toBe(busy);
 		}
 	);
 

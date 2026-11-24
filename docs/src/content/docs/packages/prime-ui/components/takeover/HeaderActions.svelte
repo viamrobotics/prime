@@ -10,7 +10,7 @@
         <Takeover.Title>Edit machine</Takeover.Title>
         <div class="flex items-center gap-2">
           <button type="button" class="button">Save</button>
-          <Takeover.Close />
+          <Takeover.Close aria-label="Close" />
         </div>
       </Takeover.Header>
       <div class="p-4">Actions sit beside the close button.</div>

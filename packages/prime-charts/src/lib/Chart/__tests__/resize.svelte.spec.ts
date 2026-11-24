@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import { nextFrame, settleFrames } from '../../../../test/frames.ts';
 import '../../../../test/tailwind.css';
 import RootChart from './fixtures/RootChart.svelte';
 
@@ -16,8 +17,6 @@ const points = [
 	{ x: new Date('2026-01-01T00:01:00Z'), y: 8 }
 ];
 const widePoints = points.map((point) => ({ ...point, y: point.y * WIDE_LABEL_SCALE }));
-
-const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 
 const SUBPIXEL = 0.1;
 const QUARTER_MINUTE_TICKS = 5;
@@ -63,7 +62,7 @@ const expectSettledGutter = async (container: Element) => {
 const resizeTo = async (container: Element, width: number) => {
 	container.querySelector<HTMLElement>('[data-testid="frame"]')!.style.width = `${width}px`;
 	await expect.poll(() => container.querySelector('svg')?.getAttribute('width')).toBe(`${width}`);
-	for (let frame = 0; frame < SETTLE_FRAMES; frame++) await nextFrame();
+	await settleFrames(SETTLE_FRAMES);
 };
 
 const xLabelOverflow = (container: Element) => {

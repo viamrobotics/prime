@@ -7,10 +7,11 @@ end date. Place a [`DateRangePicker.Trigger`](./DateRangePickerTrigger.svelte) i
 the calendar.
 
 Inside a [`Field`](../Field/Field.svelte) it takes its `id` (the field's `controlId`), `state`,
-`aria-labelledby`, and `aria-describedby` from there. An `error` state, or a typed date outside
-the picker's `min` and `max`, sets `aria-invalid` and the error border, and `warn` the warning
-border, through the same `input` class an [`Input`](../Input/Input.svelte) wears. The border
-darkens while the calendar is open.
+`aria-describedby`, and name from there. An `error` state, or a typed date outside
+the picker's `min` and `max`, sets `aria-invalid` on the frame and on each segment, and draws
+the error border, and `warn` the warning border, through the same `input` class an
+[`Input`](../Input/Input.svelte) wears. A `required` picker sets `aria-required` on each segment.
+The border darkens while the calendar is open.
 
 ```svelte
 <DateRangePicker.Field>
@@ -23,8 +24,9 @@ darkens while the calendar is open.
 
 	import { DateRangePicker } from 'bits-ui';
 
+	import { accessibleNameWarning } from '../accessible-name-warning.ts';
 	import { FieldStates, type FieldState } from '../Field/state.ts';
-	import { useField } from '../Field/useField.svelte.ts';
+	import { controlName, useField } from '../Field/useField.svelte.ts';
 	import { useDateRangePicker, useDateRangePickerFrame } from './useDateRangePicker.svelte.ts';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
@@ -37,7 +39,8 @@ darkens while the calendar is open.
 
 	const {
 		id,
-		'aria-labelledby': labelledBy,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		'aria-describedby': describedBy,
 		state,
 		class: extraClasses,
@@ -46,6 +49,7 @@ darkens while the calendar is open.
 	}: Props = $props();
 
 	const field = useField();
+	const name = $derived(controlName(field, { ariaLabel, ariaLabelledBy }));
 	const picker = useDateRangePicker();
 	const frame = useDateRangePickerFrame();
 	const frameProps = $derived(frame?.() ?? {});
@@ -54,6 +58,15 @@ darkens while the calendar is open.
 		if (!picker) return undefined;
 		return picker.open ? 'open' : 'closed';
 	});
+
+	// bits-ui marks a segment invalid only for a date outside the bounds, and never required.
+	const segmentState = (part: string) => {
+		if (part === 'literal') return {};
+		return {
+			'aria-invalid': currentState === FieldStates.Error || undefined,
+			'aria-required': picker?.required || undefined
+		};
+	};
 </script>
 
 {#snippet dateSegments(type: 'start' | 'end')}
@@ -61,7 +74,7 @@ darkens while the calendar is open.
 		{#snippet child({ props, segments })}
 			<span {...props} class="flex items-center">
 				{#each segments as { part, value }, index (index)}
-					<DateRangePicker.Segment {part} class="date-segment">
+					<DateRangePicker.Segment {part} class="date-segment" {...segmentState(part)}>
 						{value}
 					</DateRangePicker.Segment>
 				{/each}
@@ -74,7 +87,8 @@ darkens while the calendar is open.
 	{...restProps}
 	{...frameProps}
 	id={id ?? field?.controlId ?? (frameProps.id as string | undefined)}
-	aria-labelledby={labelledBy ?? field?.labelledBy}
+	aria-label={name['aria-label']}
+	aria-labelledby={name['aria-labelledby']}
 	aria-describedby={describedBy ?? field?.describedBy}
 	aria-invalid={currentState === FieldStates.Error ||
 		frameProps['data-invalid'] !== undefined ||
@@ -85,6 +99,7 @@ darkens while the calendar is open.
 	data-readonly={picker?.readonly ? '' : undefined}
 	data-state={openState}
 	class={['date-field input', extraClasses]}
+	{@attach accessibleNameWarning('DateRangePicker.Field')}
 >
 	{@render dateSegments('start')}
 	<span aria-hidden="true">–</span>

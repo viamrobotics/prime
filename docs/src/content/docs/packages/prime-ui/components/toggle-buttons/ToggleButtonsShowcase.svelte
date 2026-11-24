@@ -16,23 +16,29 @@
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Default</h4>
-    <ToggleButtons value="mm" {items} aria-label="Units" />
+    <Field aria-label="Units">
+      <ToggleButtons value="mm" {items} />
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
-    <ToggleButtons value="mm" {items} disabled aria-label="Units" />
+    <Field aria-label="Units" disabled>
+      <ToggleButtons value="mm" {items} />
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">One disabled item</h4>
-    <ToggleButtons value="mm" items={someDisabled} aria-label="Units" />
+    <Field aria-label="Units">
+      <ToggleButtons value="mm" items={someDisabled} />
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Error</h4>
-    <Field state="error" class="flex flex-col gap-1">
-      <Label>Units</Label>
+    <Field label="Units" state="error" class="flex flex-col gap-1">
+      <Label />
       <ToggleButtons value="mm" {items} />
       <Hint>Pick the unit the device reports in.</Hint>
     </Field>

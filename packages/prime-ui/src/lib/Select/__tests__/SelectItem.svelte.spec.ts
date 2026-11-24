@@ -3,8 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import BoundSelect from './BoundSelect.svelte';
-import ItemsSelect from './ItemsSelect.svelte';
+import BoundSelect from './fixtures/BoundSelect.svelte';
+import ItemsSelect from './fixtures/ItemsSelect.svelte';
 
 const open = async (container: HTMLElement) => {
 	await userEvent.click(container.querySelector('button')!);

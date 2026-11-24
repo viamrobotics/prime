@@ -4,8 +4,8 @@
   let name = $state("");
 </script>
 
-<Field class="not-content flex max-w-xs flex-col gap-1" required>
-  <Label>Machine name</Label>
+<Field label="Machine name" class="not-content flex max-w-xs flex-col gap-1" required>
+  <Label />
   <Input bind:value={name} placeholder="rover-1" />
   <Hint>Lowercase letters, numbers, and dashes.</Hint>
 </Field>

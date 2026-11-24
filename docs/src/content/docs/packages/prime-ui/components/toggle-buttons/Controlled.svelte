@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ToggleButtons } from "@viamrobotics/prime-ui";
+  import { Field, ToggleButtons } from "@viamrobotics/prime-ui";
 
   const items = [
     { value: "free", label: "Free" },
@@ -11,16 +11,17 @@
 </script>
 
 <div class="not-content">
-  <ToggleButtons
-    {items}
-    aria-label="Plan"
-    bind:value={
-      () => plan,
-      (next) => {
-        if (next !== "enterprise") plan = next;
+  <Field aria-label="Plan">
+    <ToggleButtons
+      {items}
+      bind:value={
+        () => plan,
+        (next) => {
+          if (next !== "enterprise") plan = next;
+        }
       }
-    }
-  />
+    />
+  </Field>
 
   <p class="mt-3 text-sm text-subtle-2">
     value: <code>{plan}</code>. Enterprise is declined by the setter.

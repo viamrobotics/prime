@@ -2,12 +2,12 @@
 @component
 A native multi-line text input with the Viam border and padding. Inside a
 [`Field`](../Field/Field.svelte) it takes its `id` (the field's `controlId`), `disabled`,
-`required`, `state`, and `aria-describedby` from there. It grows with its content where the
+`required`, `state`, `aria-describedby`, and its name from there. It grows with its content where the
 browser supports `field-sizing: content`, and shows `rows` lines elsewhere.
 
 ```svelte
-<Field class="flex flex-col gap-1">
-	<Label>Notes</Label>
+<Field label="Notes" class="flex flex-col gap-1">
+	<Label />
 	<Textarea class="w-64" bind:value />
 </Field>
 ```
@@ -17,6 +17,7 @@ browser supports `field-sizing: content`, and shows `rows` lines elsewhere.
 
 	import type { FieldState } from '../Field/state.ts';
 
+	import { accessibleNameWarning } from '../accessible-name-warning.ts';
 	import { useInputControl } from './useInputControl.svelte.ts';
 
 	interface Props extends Omit<HTMLTextareaAttributes, 'value' | 'children' | 'rows'> {
@@ -39,6 +40,8 @@ browser supports `field-sizing: content`, and shows `rows` lines elsewhere.
 		required,
 		readonly,
 		'aria-describedby': describedBy,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		class: extraClasses,
 		...restProps
 	}: Props = $props();
@@ -48,20 +51,18 @@ browser supports `field-sizing: content`, and shows `rows` lines elsewhere.
 		disabled: () => disabled,
 		required: () => required,
 		state: () => state,
-		describedBy: () => describedBy
+		describedBy: () => describedBy,
+		ariaLabel: () => ariaLabel,
+		ariaLabelledBy: () => ariaLabelledBy
 	});
 </script>
 
 <textarea
 	{...restProps}
+	{...control.attributes}
 	bind:value
-	id={control.id}
 	{rows}
 	class={['field-sizing-content input', extraClasses]}
-	disabled={control.disabled}
-	required={control.required}
 	{readonly}
-	aria-describedby={control.describedBy}
-	aria-invalid={control.invalid}
-	data-field-state={control.fieldState}
+	{@attach accessibleNameWarning('Textarea')}
 ></textarea>

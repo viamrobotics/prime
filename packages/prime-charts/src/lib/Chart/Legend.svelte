@@ -3,28 +3,37 @@
 One toggle button per series, with its color, name, unit and loading mark. Pressing a button toggles the series' `hidden`, and `aria-pressed` is true while the series shows. Place it inside `Chart`, before or after [`Chart.Plot`](./Plot.svelte), in the layout you write.
 -->
 <script lang="ts">
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 	import { assertOutsidePlot, useChart } from './context.svelte.ts';
 	import { seriesLabel } from './formats.ts';
 
-	interface Props {
+	interface Props extends HTMLAttributes<HTMLUListElement> {
 		/** Lands on the legend's list, a wrapping row of the series. */
 		class?: ClassValue;
 	}
 
-	let { class: className }: Props = $props();
+	let { class: className, ...rest }: Props = $props();
+
+	const loadingIdPrefix = $props.id();
 
 	assertOutsidePlot('Chart.Legend');
-	const chart = useChart();
+	const chart = useChart('Chart.Legend');
 </script>
 
 <!-- role="list" restores list semantics that Safari drops under list-style: none. -->
-<ul role="list" data-part="legend" class={['flex flex-wrap gap-x-3', className]}>
-	{#each chart.series as series (series)}
+<ul
+	{...rest}
+	role="list"
+	data-part="legend"
+	aria-label="Shown series"
+	class={['flex flex-wrap gap-x-3', className]}
+>
+	{#each chart.series as series, index (series)}
 		<li class="flex items-center">
 			<button
 				type="button"
 				aria-pressed={!series.hidden}
+				aria-describedby={series.loading ? `${loadingIdPrefix}-loading-${index}` : undefined}
 				data-part="legend-item"
 				class={[
 					'inline-flex min-h-6 min-w-6 cursor-pointer items-center gap-1.5 rounded-sm px-1 text-xs focus-ring',
@@ -49,7 +58,7 @@ One toggle button per series, with its color, name, unit and loading mark. Press
 				{/if}
 			</button>
 			{#if series.loading}
-				<span class="sr-only">Loading</span>
+				<span id="{loadingIdPrefix}-loading-{index}" class="sr-only">Loading</span>
 			{/if}
 		</li>
 	{/each}

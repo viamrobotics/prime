@@ -12,6 +12,6 @@
       <button type="button" class="button">Update module</button>
       <a href="#changelog" class="text-sm font-medium text-link">View changelog</a>
     </Banner.Actions>
-    <Banner.Close />
+    <Banner.Close aria-label="Dismiss" />
   </Banner>
 </div>

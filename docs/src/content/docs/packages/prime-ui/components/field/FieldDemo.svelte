@@ -7,12 +7,13 @@
   name="Field"
   component={Field}
   controls={{
+    label: { kind: "text", label: "Label", default: "Robot name" },
     required: { kind: "boolean", label: "Required", default: false },
     disabled: { kind: "boolean", label: "Disabled", default: false },
     state: { kind: "select", label: "State", default: "none", options: ["none", "info", "warn", "error"] },
   }}
 >
-  <Label>Robot name</Label>
+  <Label />
   <Input.Group>
     <Input placeholder="rover-1" />
     <Field.StateIcon />

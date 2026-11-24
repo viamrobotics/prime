@@ -1,13 +1,13 @@
 <script lang="ts">
   import Sandbox from "@docs/Sandbox.svelte";
 
-  import SandboxSelect from "./SandboxSelect.svelte";
+  import LabeledSelect from "./LabeledSelect.svelte";
 </script>
 
 <!-- `side` and `align` belong to Select.Content, so the generated snippet would mislead. -->
 <Sandbox
   name="Select"
-  component={SandboxSelect}
+  component={LabeledSelect}
   showCode={false}
   controls={{
     side: {

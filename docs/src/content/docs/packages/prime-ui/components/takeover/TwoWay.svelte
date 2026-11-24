@@ -10,7 +10,7 @@
     <Takeover.Content>
       <Takeover.Header>
         <Takeover.Title>Setup wizard</Takeover.Title>
-        <Takeover.Close />
+        <Takeover.Close aria-label="Close" />
       </Takeover.Header>
       <div class="p-4">Close it with the button or Escape.</div>
     </Takeover.Content>

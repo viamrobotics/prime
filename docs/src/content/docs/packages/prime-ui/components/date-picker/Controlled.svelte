@@ -7,8 +7,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Billing day</Label>
+  <Field label="Billing day" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <DatePicker
       bind:value={
         () => value,

@@ -10,16 +10,21 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 ```
 -->
 <script lang="ts">
-	import type { ClassValue } from 'svelte/elements';
+	import type { Snippet } from 'svelte';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
+	import type { AccessibleName } from '../accessible-name.ts';
 
 	import { type FieldState, FieldStates } from '@viamrobotics/prime-ui';
 
-	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
+	import { hintIdFor } from '../Hint/described-by.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import NumberField from '../NumberField/NumberField.svelte';
 	import { longestValueLength } from '../NumberField/number-step.ts';
 
-	interface Props {
+	interface Props extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'class' | 'children' | 'aria-label' | 'aria-labelledby' | 'aria-describedby'
+	> {
 		/** Current value. */
 		value: number;
 
@@ -51,6 +56,12 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		suffix?: string;
 
 		/**
+		 * Content drawn inside the right edge of the readout, after any `suffix`, such as an icon
+		 * button that acts on this value.
+		 */
+		trailing?: Snippet;
+
+		/**
 		 * Contextual state, drawn on the readout. `warn` draws the `warning-dark` border. `error`
 		 * draws the `danger-dark` border and sets `aria-invalid` on the range and the readout. `info`
 		 * changes no border.
@@ -74,21 +85,17 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		max = 100,
 		step = 1,
 		suffix,
+		trailing,
 		state,
 		disabled,
-		class: extraClasses
+		class: extraClasses,
+		...restProps
 	}: Props & AccessibleName = $props();
-
-	// A hint sits beside the visible label, so it is only allowed with one.
-	type AccessibleName =
-		| { label: string }
-		| { label?: undefined; hint?: undefined; 'aria-label': string }
-		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
 
 	const READOUT_CARET_ROOM_PX = 2;
 
 	const id = $props.id();
-	const hintId = `${id}-hint`;
+	const hintId = hintIdFor(id);
 	// The readout's text box is as wide as the longest value in the range, so no value clips. The
 	// width is content-box, so the frame and a suffix add to it instead of eating into it.
 	const readoutStyle = $derived(
@@ -103,9 +110,9 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 	});
 </script>
 
-<div class={[CONTROL_ROW_CLASS, extraClasses]}>
+<div {...restProps} class={['flex items-center gap-2', extraClasses]}>
 	{#if label}
-		<label for={id} class={['shrink-0', CONTROL_LABEL_CLASS]}>{label}</label>
+		<label for={id} class="shrink-0 control-label">{label}</label>
 	{/if}
 	{#if label && hint}
 		<Hint {label} {hint} descriptionId={hintId} {disabled} />
@@ -123,12 +130,12 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		{disabled}
 		class={[
 			'min-h-6 min-w-0 flex-1 cursor-pointer appearance-none bg-transparent',
-			'slider-thumb-gray-7 slider-track-gray-3',
+			'slider-thumb-gray-7 slider-track-gray-3 aria-invalid:slider-track-danger-dark',
 			'[&::-moz-range-track]:h-1 [&::-moz-range-track]:rounded-full [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-full',
 			'slider-thumb-h-3 slider-thumb-w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:rounded-full',
 			'[&::-webkit-slider-thumb]:appearance-none',
 			'focus-ring',
-			'disabled:cursor-not-allowed disabled:opacity-60 disabled:slider-thumb-gray-4'
+			'disabled:cursor-not-allowed disabled:slider-thumb-disabled-dark disabled:slider-track-disabled-light'
 		]}
 		bind:value
 	/>
@@ -139,6 +146,7 @@ The visible `label` names both the range and the readout. Without it, pass `aria
 		{max}
 		{step}
 		{suffix}
+		{trailing}
 		{state}
 		{disabled}
 		style={readoutStyle}

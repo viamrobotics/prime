@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { raiseFloat, removeFloat, setFloatRect } from '../tree.ts';
+import { raiseFloat, removeFloat, setFloatRect } from '../FloatPanes/float-tree.ts';
 import {
 	createFloatLayout,
 	deepFreeze,

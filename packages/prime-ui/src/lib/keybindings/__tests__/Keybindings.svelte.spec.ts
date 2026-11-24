@@ -2,8 +2,8 @@ import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import HotkeyChild from './HotkeyChild.svelte';
-import KeybindingsHost from './KeybindingsHost.svelte';
+import HotkeyChild from './fixtures/HotkeyChild.svelte';
+import KeybindingsHost from './fixtures/KeybindingsHost.svelte';
 
 const recordDefaultPrevented = () => {
 	const seen: boolean[] = [];

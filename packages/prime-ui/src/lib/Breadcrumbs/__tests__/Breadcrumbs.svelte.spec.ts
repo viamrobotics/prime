@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
-import Trail from './Trail.svelte';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
+import Trail from './fixtures/Trail.svelte';
 
 describe('Breadcrumbs', () => {
 	it('is a navigation landmark named Breadcrumb', () => {
@@ -133,7 +133,25 @@ describe('Breadcrumbs', () => {
 	it('replaces the glyph with children', () => {
 		const { container } = render(Trail, { props: { hasEllipsisChildren: true } });
 
-		expect(container.querySelector('li [role="img"]')).toBeNull();
+		expect(container.querySelector('li [role="img"] [role="img"]')).toBeNull();
 		expect(container.querySelector('li [data-custom]')!.textContent).toBe('hidden');
+	});
+
+	it('keeps the ellipsis label when children replace the glyph', () => {
+		const { container } = render(Trail, { props: { hasEllipsisChildren: true } });
+
+		const wrapper = container.querySelector('li [data-custom]')!.parentElement!;
+		expect(wrapper.getAttribute('role')).toBe('img');
+		expect(wrapper.getAttribute('aria-label')).toBe('More');
+	});
+
+	it('applies a custom ellipsis label to the children', () => {
+		const { container } = render(Trail, {
+			props: { hasEllipsisChildren: true, ellipsisLabel: 'Show hidden pages' }
+		});
+
+		expect(
+			container.querySelector('li [data-custom]')!.parentElement!.getAttribute('aria-label')
+		).toBe('Show hidden pages');
 	});
 });

@@ -15,6 +15,7 @@ const TRIGGER_HIT_AREA_PX = 8;
 const TRIGGER_CENTER_PX = TRIGGER_HIT_AREA_PX / 2;
 const DRAG_DISTANCE_PX = 100;
 const RIGHT = { x: '90%', y: '50%' } as const;
+const LINK = 'rgb(0, 102, 204)';
 
 const separator = (index = 0) => page.getByRole('separator').nth(index);
 const setRootTo70 = () => page.getByRole('button', { name: 'Set root to 70%' });
@@ -135,13 +136,18 @@ describe('Panes resize trigger', () => {
 		expect(document.elementFromPoint(x, boundary + 2)).toBe(trigger);
 	});
 
-	it('shows a 2px solid outline on keyboard focus', async () => {
+	it('shows a 2px link-colored outline offset 2px on keyboard focus', async () => {
 		render(BoundPanes);
 		await userEvent.click(setRootTo70());
 		await userEvent.tab();
 
 		await expect.element(separator()).toHaveFocus();
-		await expect.element(separator()).toHaveStyle({ outlineStyle: 'solid', outlineWidth: '2px' });
+		await expect.element(separator()).toHaveStyle({
+			outlineStyle: 'solid',
+			outlineWidth: '2px',
+			outlineOffset: '2px',
+			outlineColor: LINK
+		});
 	});
 });
 

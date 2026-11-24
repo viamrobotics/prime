@@ -22,7 +22,9 @@
     <div class="flex flex-wrap gap-6">
       {#each states as { label, checked, disabled } (label)}
         <span class="flex flex-col items-center gap-1">
-          <Switch {checked} {disabled} aria-label={label} />
+          <Field {label}>
+            <Switch {checked} {disabled} />
+          </Field>
           <span class="text-xs text-subtle-2">{label}</span>
         </span>
       {/each}
@@ -34,7 +36,9 @@
     <div class="flex flex-wrap gap-6">
       {#each tones as { label, className } (label)}
         <span class="flex flex-col items-center gap-1">
-          <Switch checked class={className} aria-label={label} />
+          <Field {label}>
+            <Switch checked class={className} />
+          </Field>
           <span class="text-xs text-subtle-2">{label}</span>
         </span>
       {/each}
@@ -44,13 +48,13 @@
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Error</h4>
     <div class="flex flex-wrap gap-6">
-      <Field state="error" class="flex items-center gap-2">
+      <Field label="off" state="error" class="flex items-center gap-2">
         <Switch />
-        <Label>off</Label>
+        <Label />
       </Field>
-      <Field state="error" class="flex items-center gap-2">
+      <Field label="on" state="error" class="flex items-center gap-2">
         <Switch checked />
-        <Label>on</Label>
+        <Label />
       </Field>
     </div>
   </div>

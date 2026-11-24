@@ -26,7 +26,7 @@
 		</button>
 		{#if isOpen}
 			<div role="menu" aria-label="Actions for {label}">
-				<Panes.MoveTrigger onclick={() => (isOpen = false)}>
+				<Panes.MoveTrigger aria-label="Move {label}" onclick={() => (isOpen = false)}>
 					{#snippet child({ props })}
 						<div role="menuitem" tabindex="-1" aria-label="Move {label}" {...props}>Move</div>
 					{/snippet}

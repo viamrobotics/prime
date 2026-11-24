@@ -87,6 +87,9 @@ const SHIPPED_CLASSES = [
   "calendar-weekday",
   "calendar-day",
   "calendar-day-range",
+  "focus-ring-inset",
+  "control-label",
+  "toast-stack-item",
 ];
 const PANEL_CLASSES = SHIPPED_CLASSES.slice(
   SHIPPED_CLASSES.indexOf("popover-panel"),
@@ -94,13 +97,13 @@ const PANEL_CLASSES = SHIPPED_CLASSES.slice(
 const POPOVER_PANEL_INLINE =
   "rounded-sm border border-light bg-white shadow-popover".split(" ");
 const LISTBOX_OPTION_INLINE =
-  "flex cursor-pointer items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm text-default outline-none select-none data-disabled:cursor-not-allowed data-disabled:text-disabled-dark data-highlighted:bg-light".split(
+  "flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-default outline-none select-none data-disabled:cursor-not-allowed data-disabled:text-disabled-dark data-highlighted:bg-light".split(
     " ",
   );
 const LISTBOX_HEADING_INLINE =
   "px-2 py-1.5 text-xs font-medium text-subtle-2".split(" ");
 const INPUT_BUTTON_INLINE =
-  "inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-subtle-2 focus-ring transition-colors hover:text-default disabled:cursor-not-allowed disabled:text-disabled-dark".split(
+  "inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-subtle-2 focus-ring transition-hover-colors hover:text-default disabled:cursor-not-allowed disabled:text-disabled-dark".split(
     " ",
   );
 const DATE_FIELD_INLINE =
@@ -117,7 +120,7 @@ const DATE_SEGMENT_INLINE = [
   "focus:bg-medium",
 ];
 const CALENDAR_NAV_INLINE =
-  "inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-colors focus-ring hover:bg-light hover:text-default data-disabled:cursor-not-allowed data-disabled:text-disabled-dark".split(
+  "inline-flex size-7 cursor-pointer items-center justify-center rounded-sm text-subtle-2 transition-hover-colors focus-ring hover:bg-light hover:text-default data-disabled:cursor-not-allowed data-disabled:text-disabled-dark".split(
     " ",
   );
 const CALENDAR_WEEKDAY_INLINE =
@@ -208,6 +211,7 @@ const CANDIDATES = [
   "bg-extralight",
   "bg-gray-0",
   "bg-heading",
+  "data-highlighted:bg-danger-light",
   "px-4",
   "w-40",
   ...Z_LAYERS.map(([name]) => `z-${name}`),
@@ -1438,7 +1442,7 @@ describe("theme stylesheets compiled through Tailwind", () => {
     },
   );
 
-  it.each(["button", "input", "icon-button"])(
+  it.each(["button", "input", "icon-button", "input-button", "calendar-nav"])(
     "keeps outline-color out of the .%s transition so the focus ring does not fade",
     (name) => {
       const properties = resolveCustomProperties(
@@ -1525,6 +1529,60 @@ describe("theme stylesheets compiled through Tailwind", () => {
       ).toStrictEqual([]);
     },
   );
+
+  it("rings a focused .file-tab exactly as a focused .focus-ring-inset", () => {
+    const outlineOf = (classes: string[], parent?: StyledElement) =>
+      Object.fromEntries(
+        [
+          ...cascadedDeclarations(
+            cascade,
+            { classes, states: ["focus-visible"], parent },
+            true,
+          ),
+        ].filter(([property]) => property.includes("outline")),
+      );
+
+    const tab = outlineOf(["file-tab"], element(["file-tabs"]));
+
+    expect(tab).toStrictEqual({
+      outline: "2px solid var(--color-link)",
+      "outline-offset": "-2px",
+    });
+    expect(tab).toStrictEqual(outlineOf(["focus-ring-inset"]));
+  });
+
+  const statementsOnUtilityElement = (name: string): string[] => {
+    const source = postcss.parse(
+      readFileSync(path.join(packageDirectory, "tailwind-config.css"), "utf8"),
+    );
+    const statements: string[] = [];
+    source.walkAtRules("utility", (utility) => {
+      if (utility.params !== name) return;
+      utility.walk((node) => {
+        const isOnElement =
+          node.parent === utility ||
+          (node.parent instanceof Rule &&
+            !node.parent.selector.startsWith("& "));
+        if (!isOnElement) return;
+        if (node.type === "decl") {
+          statements.push(`${node.prop}: ${node.value}`);
+        }
+        if (node.type === "atrule" && node.name === "apply") {
+          statements.push(...node.params.split(/\s+/));
+        }
+      });
+    });
+    return statements;
+  };
+
+  it("draws the .file-tab ring through focus-ring-inset with no outline of its own", () => {
+    const statements = statementsOnUtilityElement("file-tab");
+
+    expect(statements).toContain("focus-ring-inset");
+    expect(
+      statements.filter((statement) => statement.includes("outline")),
+    ).toStrictEqual([]);
+  });
 
   it("insets the focus ring of an .icon-button inside a .file-tab and keeps it outset elsewhere", () => {
     const tab = element(["file-tab"], element(["file-tabs"]));
@@ -2044,13 +2102,97 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect(glyphs).toStrictEqual(["#7a5a00", "#e0b84d"]);
   });
 
-  it("fills .banner-progress from --banner-dark, not the glyph color", () => {
+  it("fills .banner-progress from --banner-progress-fill over --banner-dark, apart from the glyph color", () => {
     expect(
       declared(emitted, ".banner-progress.progress > .progress-fill").get(
         "background-color",
       ),
-    ).toBe("var(--banner-dark)");
+    ).toBe("var(--banner-progress-fill, var(--banner-dark))");
   });
+
+  const progressContrastRatio = (
+    theme: ThemeName,
+    trackClasses: string[],
+    ancestor?: StyledElement,
+  ): number => {
+    const context: PaintContext = {
+      cascade,
+      theme: themeProperties(emitted, theme),
+      hasContrastColor: true,
+    };
+    const track = element(trackClasses, ancestor);
+    const fill = element(["progress-fill"], track);
+    return contrastRatio(
+      paintedColor(context, fill, "background-color"),
+      paintedColor(context, track, "background-color"),
+    );
+  };
+
+  it.each(["light", "dark"] as const)(
+    "holds the %s theme .progress-warning fill at 3:1 on its track",
+    (theme) => {
+      expect(
+        progressContrastRatio(theme, ["progress", "progress-warning"]),
+      ).toBeGreaterThanOrEqual(MIN_GLYPH_CONTRAST);
+    },
+  );
+
+  it.each(["light", "dark"] as const)(
+    "holds the %s theme .banner-warning progress fill at 3:1 on its track",
+    (theme) => {
+      expect(
+        progressContrastRatio(
+          theme,
+          ["progress", "banner-progress"],
+          element(["banner", "banner-warning"]),
+        ),
+      ).toBeGreaterThanOrEqual(MIN_GLYPH_CONTRAST);
+    },
+  );
+
+  it.each([
+    ["light", "#2e67d3"],
+    ["dark", "#6f9ee8"],
+  ] as const)(
+    "fills an info banner progress in the %s theme info-dark %s inside a warning banner",
+    (theme, infoDark) => {
+      const outer = element(["banner", "banner-warning"]);
+      const fill = element(
+        ["progress-fill"],
+        element(
+          ["progress", "banner-progress"],
+          element(["banner", "banner-info"], outer),
+        ),
+      );
+      const context: PaintContext = {
+        cascade,
+        theme: themeProperties(emitted, theme),
+        hasContrastColor: true,
+      };
+
+      expect(paintedColor(context, fill, "background-color")).toBe(infoDark);
+    },
+  );
+
+  it.each(["light", "dark"] as const)(
+    "holds the %s theme .switch-warning on track at 3:1 on the page fill",
+    (theme) => {
+      const properties = themeProperties(emitted, theme);
+      const onTrack = resolveCustomProperties(
+        cascadedDeclarations(cascade, element(["switch-warning"]), true).get(
+          "--switch-on",
+        ) ?? "",
+        properties,
+      );
+
+      expect(
+        contrastRatio(
+          onTrack,
+          resolveCustomProperties("var(--color-white)", properties),
+        ),
+      ).toBeGreaterThanOrEqual(MIN_GLYPH_CONTRAST);
+    },
+  );
 
   it.each([
     ["plain", ["button"]],
@@ -2586,21 +2728,24 @@ describe("theme stylesheets compiled through Tailwind", () => {
   });
 
   it.each([
-    ["progress", "--progress-fill"],
-    ["switch", "--switch-on"],
-  ] as const)("assigns the %s tone modifiers to %s", (name, variable) => {
-    const tones = ["info", "success", "warning", "danger"].map((tone) => [
-      tone,
-      declared(emitted, `.${name}-${tone}`).get(variable),
-    ]);
+    ["progress", "--progress-fill", "var(--color-warning-text)"],
+    ["switch", "--switch-on", "var(--color-warning-dark)"],
+  ] as const)(
+    "assigns the %s tone modifiers to %s, warning to %s",
+    (name, variable, warning) => {
+      const tones = ["info", "success", "warning", "danger"].map((tone) => [
+        tone,
+        declared(emitted, `.${name}-${tone}`).get(variable),
+      ]);
 
-    expect(tones).toEqual([
-      ["info", "var(--color-info-dark)"],
-      ["success", "var(--color-success-dark)"],
-      ["warning", "var(--color-warning-dark)"],
-      ["danger", "var(--color-danger-dark)"],
-    ]);
-  });
+      expect(tones).toEqual([
+        ["info", "var(--color-info-dark)"],
+        ["success", "var(--color-success-dark)"],
+        ["warning", warning],
+        ["danger", "var(--color-danger-dark)"],
+      ]);
+    },
+  );
 
   it("animates the indeterminate .progress fill only under the no-preference motion query", () => {
     const indeterminate = rulesOf(
@@ -2642,5 +2787,176 @@ describe("theme stylesheets compiled through Tailwind", () => {
     expect([...stops.keys()]).toStrictEqual(["from", "to"]);
     expect(stops.get("from")).toBe("translateX(-100%)");
     expect(stops.get("to")).toBe("translateX(250%)");
+  });
+
+  describe("scrim, stacking, highlight, and label additions", () => {
+    const RGBA = /^rgba\((\d+), (\d+), (\d+), ([\d.]+)\)$/;
+    const toHex = (channels: number[]) =>
+      `#${channels.map((channel) => Math.round(channel).toString(16).padStart(2, "0")).join("")}`;
+    const compositeOver = (overlay: string, fill: string): string => {
+      const match = RGBA.exec(overlay);
+      if (!match) throw new Error(`${overlay} is not an rgba color`);
+      const alpha = Number(match[4]);
+      const base = parseHex(fill);
+      return toHex(
+        [1, 2, 3].map(
+          (index) =>
+            Number(match[index]) * alpha + base[index - 1]! * (1 - alpha),
+        ),
+      );
+    };
+    const darkTokens = () => declarationsOf(onlyRule(unoptimized, ":root"));
+    const unconditionalDeclarations = (selector: string) => {
+      const found = rulesOf(
+        emitted,
+        (rule) =>
+          rule.selector === selector && enclosingMedia(rule) === undefined,
+      );
+      expect(found).toHaveLength(1);
+      return declarationsOf(found[0]!);
+    };
+
+    it.each([
+      [
+        "light",
+        () => themeDefaults.get("--color-scrim")!,
+        () => themeDefaults.get("--color-white")!,
+      ],
+      [
+        "dark",
+        () => darkTokens().get("--dark-color-scrim")!,
+        () => darkTokens().get("--dark-color-white")!,
+      ],
+    ] as const)(
+      "darkens the %s page fill when the scrim sits over it",
+      (_theme, scrim, fill) => {
+        expect(relativeLuminance(compositeOver(scrim(), fill()))).toBeLessThan(
+          relativeLuminance(fill()),
+        );
+      },
+    );
+
+    it("keeps the light scrim equal to black at 40% over the page text color", () => {
+      expect(themeDefaults.get("--color-scrim")).toBe("rgba(19, 20, 20, 0.4)");
+      expect(darkTokens().get("--dark-color-scrim")).toBe("rgba(0, 0, 0, 0.6)");
+    });
+
+    it("declares the toast-stack-item stacking styles from the machine variables", () => {
+      const declarations = unconditionalDeclarations(".toast-stack-item");
+      expect(declarations.get("z-index")).toBe("var(--z-index)");
+      expect(declarations.get("translate")).toBe("var(--x) var(--y)");
+      expect(declarations.get("scale")).toBe("var(--scale)");
+      expect(declarations.get("opacity")).toBe("var(--opacity)");
+      expect(declarations.get("transition-property")).toBe(
+        "translate, scale, opacity",
+      );
+      expect(declarations.get("will-change")).toBe("translate,opacity,scale");
+      expect(declarations.get("transition-duration")).toBe(".3s");
+    });
+
+    it("fades only under reduced motion on toast-stack-item", () => {
+      const reduced = rulesOf(
+        emitted,
+        (rule) =>
+          rule.selector === ".toast-stack-item" &&
+          enclosingMedia(rule) === "(prefers-reduced-motion: reduce)",
+      );
+      expect(reduced).toHaveLength(1);
+      expect(declarationsOf(reduced[0]!).get("transition-property")).toBe(
+        "opacity",
+      );
+    });
+
+    it("outlines a highlighted listbox-option inside its edge", () => {
+      const styled: StyledElement = {
+        classes: ["listbox-option"],
+        states: ["[data-highlighted]"],
+      };
+      const style = cascadedDeclarations(cascade, styled, true);
+      expect(style.get("outline")).toBe("2px solid var(--color-link)");
+      expect(style.get("outline-offset")).toBe("-2px");
+    });
+
+    it("leaves listbox-option without justify-content", () => {
+      const rules = rulesOf(emitted, (rule) =>
+        startsWithClass(rule, "listbox-option"),
+      );
+      expect(rules.length).toBeGreaterThan(0);
+      expect(
+        rules.filter((rule) => declarationsOf(rule).has("justify-content")),
+      ).toStrictEqual([]);
+    });
+
+    it("lets data-highlighted:bg-danger-light beat the listbox-option highlight fill", () => {
+      const styled: StyledElement = {
+        classes: ["listbox-option", "data-highlighted:bg-danger-light"],
+        states: ["[data-highlighted]"],
+      };
+      expect(
+        cascadedDeclarations(cascade, styled, true).get("background-color"),
+      ).toBe("var(--color-danger-light)");
+    });
+
+    it("rings a middle range day with an inset box-shadow", () => {
+      const middle: StyledElement = {
+        classes: ["calendar-day", "calendar-day-range"],
+        states: ["[data-highlighted]"],
+      };
+      expect(
+        cascadedDeclarations(cascade, middle, true).get("box-shadow"),
+      ).toBe("inset 0 0 0 2px var(--color-link)");
+      const end: StyledElement = {
+        classes: ["calendar-day", "calendar-day-range"],
+        states: ["[data-highlighted]", "[data-selection-start]"],
+      };
+      expect(cascadedDeclarations(cascade, end, true).has("box-shadow")).toBe(
+        false,
+      );
+    });
+
+    it("keeps the focus ring outline offset on a focused middle range day", () => {
+      const focused: StyledElement = {
+        classes: ["calendar-day", "calendar-day-range"],
+        states: ["[data-highlighted]", "focus-visible"],
+      };
+      const style = cascadedDeclarations(cascade, focused, true);
+      expect(style.get("outline-offset")).toBe("2px");
+      expect(style.get("box-shadow")).toBe("inset 0 0 0 2px var(--color-link)");
+    });
+
+    it("draws focus-ring-inset as the focus ring at a negative offset", () => {
+      const focused: StyledElement = {
+        classes: ["focus-ring-inset"],
+        states: ["focus-visible"],
+      };
+      const style = cascadedDeclarations(cascade, focused, true);
+      expect(style.get("outline")).toBe("2px solid var(--color-link)");
+      expect(style.get("outline-offset")).toBe("-2px");
+    });
+
+    it("writes the ring color and width once, in focus-ring", () => {
+      const source = postcss.parse(
+        readFileSync(
+          path.join(packageDirectory, "tailwind-config.css"),
+          "utf8",
+        ),
+      );
+      let body = "";
+      source.walkAtRules("utility", (utility) => {
+        if (utility.params === "focus-ring-inset") body = utility.toString();
+      });
+      expect(body).toContain("@apply focus-ring");
+      expect(body).not.toContain("2px solid");
+    });
+
+    it("sets control-label to the small subtle text", () => {
+      const style = cascadedDeclarations(
+        cascade,
+        { classes: ["control-label"], states: [] },
+        true,
+      );
+      expect(style.get("font-size")).toBe("var(--text-xs)");
+      expect(style.get("color")).toBe("var(--color-subtle-1)");
+    });
   });
 });

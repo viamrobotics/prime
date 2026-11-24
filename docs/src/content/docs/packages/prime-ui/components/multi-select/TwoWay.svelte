@@ -11,8 +11,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Toppings</Label>
+  <Field label="Toppings" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <MultiSelect bind:value={picked} items={toppings} name="toppings">
       <MultiSelect.Trigger>
         <MultiSelect.Value placeholder="Pick toppings" />

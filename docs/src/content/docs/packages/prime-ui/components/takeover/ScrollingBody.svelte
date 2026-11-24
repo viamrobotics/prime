@@ -10,7 +10,7 @@
     <Takeover.Content>
       <Takeover.Header>
         <Takeover.Title>Logs</Takeover.Title>
-        <Takeover.Close />
+        <Takeover.Close aria-label="Close" />
       </Takeover.Header>
       <div class="min-h-0 flex-1 overflow-y-auto p-4">
         {#each rows as row (row)}

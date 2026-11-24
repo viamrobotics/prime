@@ -14,8 +14,14 @@
 	let {
 		series,
 		isBound = false,
-		isLegendFirst = false
-	}: { series: Series[]; isBound?: boolean; isLegendFirst?: boolean } = $props();
+		isLegendFirst = false,
+		legendProps = {}
+	}: {
+		series: Series[];
+		isBound?: boolean;
+		isLegendFirst?: boolean;
+		legendProps?: Record<string, string>;
+	} = $props();
 
 	let hidden = $state(untrack(() => series.map((entry) => entry.hidden ?? false)));
 </script>
@@ -23,7 +29,7 @@
 <div style:width="400px" style:height="240px">
 	<Chart aria-label="Readings" class="flex size-full flex-col">
 		{#if isLegendFirst}
-			<Chart.Legend />
+			<Chart.Legend {...legendProps} />
 		{/if}
 		<Chart.Plot class="min-h-0 flex-1">
 			{#each series as entry, index (entry.name)}
@@ -47,7 +53,7 @@
 			{/each}
 		</Chart.Plot>
 		{#if !isLegendFirst}
-			<Chart.Legend />
+			<Chart.Legend {...legendProps} />
 		{/if}
 	</Chart>
 </div>

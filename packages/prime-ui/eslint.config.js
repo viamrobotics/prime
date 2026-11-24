@@ -49,11 +49,6 @@ export default defineConfig(
 		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
 		languageOptions: {
 			parserOptions: {
-				projectService: {
-					allowDefaultProject: ['eslint.config.js', 'svelte.config.js'],
-					defaultProject: './tsconfig.json'
-				},
-				tsconfigRootDir: import.meta.dirname,
 				extraFileExtensions: ['.svelte'],
 				parser: ts.parser,
 				svelteConfig

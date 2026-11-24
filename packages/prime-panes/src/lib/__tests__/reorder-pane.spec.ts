@@ -8,23 +8,22 @@ import {
 	expectSplit,
 	ids,
 	pane,
-	stackIds
+	SOLO_PANE,
+	stackIds,
+	TAB_A1,
+	TAB_A2,
+	TAB_A3
 } from '../../../test/layouts.ts';
 
 import type { LayoutNode, PaneNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
-
-const SOLO = pane(stackIds.solo, stackIds.solo);
-const TAB_A1 = pane(stackIds.tabA1, stackIds.tabA1);
-const TAB_A2 = pane(stackIds.tabA2, stackIds.tabA2);
-const TAB_A3 = pane(stackIds.tabA3, stackIds.tabA3);
 
 const SIDE_SPLIT: LayoutNode<PaneData> = {
 	type: 'split',
 	id: stackIds.sideSplit,
 	direction: 'column',
 	ratio: 0.4,
-	first: SOLO,
+	first: SOLO_PANE,
 	second: {
 		type: 'stack',
 		id: stackIds.stackB,

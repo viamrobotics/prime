@@ -95,7 +95,7 @@
 					</header>
 				</Panes.DragTrigger>
 			{:else if variant === 'div-move'}
-				<Panes.MoveTrigger>
+				<Panes.MoveTrigger aria-label="Move {label}">
 					{#snippet child({ props })}
 						<svelte:element
 							this={moveTag}

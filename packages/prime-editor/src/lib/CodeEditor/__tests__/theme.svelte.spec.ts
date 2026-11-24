@@ -5,7 +5,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { codeFolding, foldEffect } from '@codemirror/language';
 import { MergeView, unifiedMergeView } from '@codemirror/merge';
 import { openSearchPanel, search, SearchQuery, setSearchQuery } from '@codemirror/search';
-import { type Extension } from '@codemirror/state';
+import { EditorState, type Extension } from '@codemirror/state';
 import {
 	drawSelection,
 	EditorView,
@@ -14,7 +14,8 @@ import {
 	lineNumbers,
 	placeholder
 } from '@codemirror/view';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, onTestFinished, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 import { codeEditorTheme } from '../theme.ts';
 
@@ -31,6 +32,10 @@ const OPAQUE_RGB = {
 	dangerWord: { light: [251.86, 209.12, 208.8], dark: [85.58, 41.26, 41.38] }
 } as const;
 const UNCHANGED_LINES = 'one\ntwo\nthree\nfour\nfive\n';
+const readonlyExtensions = [
+	EditorState.readOnly.of(true),
+	EditorView.contentAttributes.of({ tabindex: '0' })
+];
 
 let host: HTMLElement | undefined;
 let mergeView: MergeView | undefined;
@@ -345,15 +350,28 @@ describe('codeEditorTheme', () => {
 			expect(getComputedStyle(query(root, '.cm-line')).paddingLeft).toBe('8px');
 		});
 
-		it('draws a solid link-colored outline while focused', async () => {
-			const root = mount();
-			(query(root, '.cm-content') as HTMLElement).focus();
+		it('draws no outline after a pointer click into a readonly editor', async () => {
+			const root = mountEditor(readonlyExtensions);
+
+			await userEvent.click(query(root, '.cm-content'));
+
 			await vi.waitFor(() => expect(root.classList).toContain('cm-focused'));
+			expect(getComputedStyle(root).outlineStyle).toBe('none');
+		});
 
+		it('draws a 2px link-colored outline after keyboard focus', async () => {
+			const root = mount();
+			const before = document.createElement('button');
+			document.body.prepend(before);
+			onTestFinished(() => before.remove());
+			before.focus();
+
+			await userEvent.keyboard('{Tab}');
+
+			await vi.waitFor(() => expect(root.classList).toContain('cm-focused'));
 			const style = getComputedStyle(root);
-
-			expect(style.outlineStyle).toBe('solid');
-			expect(style.outlineColor).toBe(resolveColor(root, '--color-link'));
+			expect(style.outlineColor).toBe('rgb(0, 102, 204)');
+			expect(style.outlineWidth).toBe('2px');
 		});
 	});
 
@@ -368,6 +386,25 @@ describe('codeEditorTheme', () => {
 			const root = mountEditor([EditorView.contentAttributes.of({ 'aria-invalid': 'true' })]);
 
 			expect(getComputedStyle(root).borderTopColor).toBe(resolveColor(root, '--color-danger-dark'));
+		});
+	});
+
+	describe('readonly state', () => {
+		it('drops the border of a readonly editor', () => {
+			const root = mountEditor(readonlyExtensions);
+
+			expect(getComputedStyle(root).borderTopWidth).toBe('0px');
+		});
+
+		it('keeps the transparent 1px border when a readonly editor is also disabled', () => {
+			const root = mountEditor([
+				...readonlyExtensions,
+				EditorView.contentAttributes.of({ 'aria-disabled': 'true' })
+			]);
+			const style = getComputedStyle(root);
+
+			expect(style.borderTopWidth).toBe('1px');
+			expect(style.borderTopColor).toBe(TRANSPARENT);
 		});
 	});
 

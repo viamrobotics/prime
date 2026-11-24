@@ -74,9 +74,10 @@ const surfaceTheme = EditorView.theme({
 		borderColor: 'transparent',
 		cursor: 'not-allowed'
 	},
+	'&:has(.cm-content[aria-readonly="true"]:not([aria-disabled="true"]))': { border: 'none' },
 	'.cm-content[aria-disabled="true"]': { userSelect: 'none' },
 	'.cm-placeholder': { color: 'var(--color-subtle-2)' },
-	'&.cm-focused': {
+	'&:has(.cm-content:focus-visible)': {
 		outline: '2px solid var(--color-link)',
 		outlineOffset: '2px'
 	},

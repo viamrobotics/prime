@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { joinDescribedBy } from '../described-by.ts';
+import { hintIdFor, joinDescribedBy } from '../described-by.ts';
+
+describe('hintIdFor', () => {
+	it('derives the hint id from the control id', () => {
+		expect(hintIdFor('speed')).toBe('speed-hint');
+	});
+});
 
 describe('joinDescribedBy', () => {
 	it('joins the present ids with single spaces in their given order', () => {

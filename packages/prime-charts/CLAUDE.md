@@ -16,9 +16,9 @@ Svelte 5 charts built on LayerCake, themed with Viam's design tokens.
 - `src/lib/Chart/summary.ts`: builds the summary text from the series and the x window.
 - `src/lib/Chart/table.ts`: merges the visible series into table rows on x, inside the x window.
 - `src/lib/Chart/formats.ts`: the default time and value formats and the series label, shared by the tooltip, the legend, the table and the summary.
-- `src/lib/Chart/__tests__/`: the browser specs, and the server specs of the logic modules. The browser specs' wrapper components sit in `__tests__/fixtures/`.
+- `src/lib/Chart/__tests__/`: the browser specs, the server specs of the logic modules, and `Chart.ssr.spec.ts`, which server-renders a chart with every part placed. The specs' wrapper components sit in `__tests__/fixtures/`.
 - `src/lib/__tests__/exports.spec.ts`: checks that no published declaration names LayerCake or imports a d3 module.
-- `test/`: shared test infrastructure, never published. `tailwind.css` is the stylesheet the specs import.
+- `test/`: shared test infrastructure, never published. `tailwind.css` is the stylesheet the specs import, and `frames.ts` holds `nextFrame` and `settleFrames`.
 - `styles.css`: the consumer's Tailwind entry. It imports the tokens and points Tailwind at `dist`.
 - The demos live on the package's page in [docs](../../docs/), under `src/content/docs/packages/prime-charts/`.
 
@@ -33,7 +33,7 @@ pnpm --filter @viamrobotics/prime-charts lint       # eslint
 pnpm --filter @viamrobotics/prime-charts format     # prettier --check
 ```
 
-Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwright`. Every other spec runs in Node.
+Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwright`, in the `client` project. Tests named `*.ssr.spec.ts` render with `svelte/server` in Node, in the `ssr` project. Every other spec runs in Node, in the `server` project.
 
 ## API
 
@@ -44,14 +44,15 @@ Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwrig
 - `loading?: boolean`: lays an overlay on the plot and keeps the last lines drawn underneath. Loading wins over the empty state.
 - `empty?: Snippet`: rendered in place of the plot when no series has a point. Defaults to the text "No data".
 - The type requires an accessible name, `{ 'aria-label': string } | { 'aria-labelledby': string }`.
-- Every other attribute goes to the root element, the figure. `Chart` has no layout of its own.
+- The root is a native `<figure>`, and every other attribute of a `figure` goes to it. `Chart` has no layout of its own.
 
 ### `Chart.Plot`
 
-- `class?: ClassValue` and `children`. Owns the drawing, the scales, the tab stop and the loading and empty overlays, which cover the drawing box.
+- `class?: ClassValue` and `children`. Every other attribute of a `div` goes to the plot root, and the plot's own attributes win. Owns the drawing, the scales, the tab stop and the loading and empty overlays, which cover the drawing box.
 - `Chart.Plot` takes and measures the size the consumer gives it and carries none of its own. A plot with no height draws nothing. Typical sizing is `class="h-64"`, or `class="min-h-0 flex-1"` inside a `flex flex-col` chart.
 - The plot draws inside its content box, so padding in its `class` insets the drawing.
 - `Chart.Line`, `Chart.XAxis`, `Chart.YAxis`, `Chart.Grid` and `Chart.Tooltip` go inside it. Outside it, including with no `Chart` at all, they throw `<Part> must be placed inside Chart.Plot.`
+- Outside `Chart`, `Chart.Plot` throws `Chart.Plot must be placed inside Chart.`
 - A second `Chart.Plot` in one `Chart` throws `A Chart takes one Chart.Plot.` Swapping a single plot with `{#key}` or `{#if}` is fine.
 
 ### `Chart.Line`
@@ -63,7 +64,7 @@ One series.
 - `unit?: string`: shown after the series name in the legend, as `cell-01 (°)`, and after its value in the tooltip.
 - `` color?: `--${string}` ``: a CSS variable, such as `'--color-chart-series-4'`, drawn as `var(...)`. The type refuses a raw color value. Without it, a series takes `--color-chart-series-1` to `--color-chart-series-7` by the order its line mounts, wrapping after seven. That matches source order on first render, and a line that mounts later in an `{#if}` takes the next color and the last legend position.
 - `loading?: boolean`: shows the series' loading mark in the legend.
-- `hidden?: boolean`, bindable: the legend toggles it. Unbound, the line keeps the state itself. A hidden series keeps its color and its position.
+- `hidden?: boolean`, bindable: the legend toggles it. A binding may start `undefined`, and the line reads it as `false`. Unbound, the line keeps the state itself. A hidden series keeps its color and its position.
 - `class?: ClassValue`: lands on the line's path and on the dot of each lone point.
 
 ### Points and gaps
@@ -96,14 +97,14 @@ One series.
 
 ### `Chart.Legend`
 
-- One native `<button aria-pressed>` per series, with its color, name, unit and loading mark. Space and Enter toggle the series' `hidden`.
-- Renders where it is placed inside `Chart`, before or after the plot, in the layout the consumer writes. It throws `Chart.Legend must be placed outside Chart.Plot.` inside the plot. It adds no outer margin or padding, and its own items keep their spacing.
-- `class?: ClassValue`: lands on the list. The list lays its items out as a wrapping flex row, its one layout of its own, so a `flex-col` in `class` stacks them.
+- One native `<button aria-pressed>` per series, with its color, name, unit and loading mark. Space and Enter toggle the series' `hidden`. The list is named "Shown series" through `aria-label`, and a loading series' button is described by its visually hidden "Loading" text through `aria-describedby`.
+- Renders where it is placed inside `Chart`, before or after the plot, in the layout the consumer writes. It throws `Chart.Legend must be placed outside Chart.Plot.` inside the plot, and `Chart.Legend must be placed inside Chart.` outside `Chart`. It adds no outer margin or padding, and its own items keep their spacing.
+- `class?: ClassValue`: lands on the list, and every other attribute of a `ul` goes there, with the legend's own attributes winning. The list lays its items out as a wrapping flex row, its one layout of its own, so a `flex-col` in `class` stacks them.
 
 ### `Chart.Table`
 
-- Opt-in. Renders the visible series as a `<table>` with a Time column and one column per series, labeled like the legend. Place it inside `Chart`, outside the plot. Inside `Chart.Plot` it throws `Chart.Table must be placed outside Chart.Plot.`
-- `caption?: string` and `class?: ClassValue`. `class` lands on a wrapper `div` around the `<table>`, and neither has a layout utility of its own. The table is visible by default, and `class="sr-only"` hides it visually and keeps it for screen readers. A table treats `width` and `height` as minimums, so the wrapper, not the table, takes `sr-only`, and a long hidden table never grows the page.
+- Opt-in. Renders the visible series as a `<table>` with a Time column and one column per series, labeled like the legend. Place it inside `Chart`, outside the plot. Inside `Chart.Plot` it throws `Chart.Table must be placed outside Chart.Plot.`, and outside `Chart` it throws `Chart.Table must be placed inside Chart.`
+- `caption?: string` and `class?: ClassValue`. `class` lands on a wrapper `div` around the `<table>`, every other attribute of a `div` goes to that wrapper with the table's own attributes winning, and neither has a layout utility of its own. The table is visible by default, and `class="sr-only"` hides it visually and keeps it for screen readers. A table treats `width` and `height` as minimums, so the wrapper, not the table, takes `sr-only`, and a long hidden table never grows the page.
 - The table's name is `caption`, else the chart's `aria-label`, rendered as a `<caption>`. With only `aria-labelledby` on the chart, the table takes that name through `aria-labelledby` and renders no caption.
 - Rows merge the visible series on x inside the x window. A series with no value at a row's x leaves an empty cell.
 - Time and values format with the axis formats, then the tooltip defaults.
@@ -136,6 +137,8 @@ The arrow keys follow the default series navigation of the Highcharts accessibil
 - A point is a `ChartPoint`, with an `x` and a `y`. `x` is a `ChartXValue`: a `Date`, a `number`, or a `string`. The time scale places a `Date` or epoch milliseconds, and drops a string like a gap. `y` is a `number`, or `null` for a gap.
 - The x scale kind is the root's `x` prop, a `ChartScale`. `'time'` is the only kind. A kind joins the union only together with the scale and the parts that draw on it.
 - Each line registers its series with the root through the internal context and drops it when it unmounts. An empty chart falls back to a fixed domain so no scale yields `NaN`.
-- The root has the `figure` role. Its first child is a visually hidden `<p data-part="summary">`, linked by `aria-describedby`. The text is `No data.`, `Every series is hidden.`, or `Series: <labels>. Time: <a> to <b>. Values: <c> to <d>.` The time or the values part drops out when neither the visible series nor a bound gives it both ends. A consumer `aria-describedby` on `Chart` replaces it, and no summary renders.
+- The root is a native `<figure>`. Its first child is a visually hidden `<p data-part="summary">`, linked by `aria-describedby`. The text is `No data.`, `Every series is hidden.`, or `Series: <labels>. Time: <a> to <b>. Values: <c> to <d>.` The time or the values part drops out when neither the visible series nor a bound gives it both ends. A consumer `aria-describedby` on `Chart` replaces it, and no summary renders.
+- `Chart.Line`, `Chart.XAxis`, `Chart.YAxis`, `Chart.Grid` and `Chart.Tooltip` take `class` only, with no rest spread.
+- Three roots carry layout utilities, as the package's exceptions to a layout-free root. The `Chart.XAxis` root carries `absolute top-full left-0 w-max` on its label box, which places the row of labels below the plot at its natural width. The `Chart.YAxis` root carries `absolute top-0 right-full w-max` on its label box, which places the column of labels left of the plot at its natural width. The `Chart.Tooltip` label box carries `absolute w-max`, which lets the readout be positioned at the active point and measured at its natural width.
 - LayerCake is an implementation detail. No LayerCake name or type appears in the public API or the published declarations, and a consumer never places a LayerCake layer directly.
 - Colors come from `@viamrobotics/tailwind-config` tokens only, never a literal.

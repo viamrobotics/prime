@@ -1,6 +1,6 @@
 <!--
 @component
-An 8px dot showing a state, gray when there is none. It is a `role="img"` named by `label`, and `working` replaces the dot with an animated glyph in the state's color.
+An 8px dot showing a state, gray when there is none. It is a `role="img"` named by an `aria-label`, an `aria-labelledby`, or a `label` it applies as its `aria-label`. One is required. With `working`, `working` replaces the dot with an animated glyph in the state's color.
 
 ```svelte
 <StatusDot state="success" label="Online" />
@@ -11,17 +11,16 @@ An 8px dot showing a state, gray when there is none. It is a `role="img"` named 
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import type { AccessibleName } from '../accessible-name.ts';
 	import type { StatusDotState, StatusDotVariant } from './status-dot.ts';
 
-	interface Props extends HTMLAttributes<HTMLSpanElement> {
+	interface Props extends Omit<HTMLAttributes<HTMLSpanElement>, 'aria-label' | 'aria-labelledby'> {
 		/** Which state to show. Leave it out for the gray dot. */
 		state?: StatusDotState;
 		/** `hollow` draws a ring in the state's color with no fill. @default 'solid' */
 		variant?: StatusDotVariant;
 		/** Replaces the dot with an animated glyph in the state's color, on the same 8px box. @default false */
 		working?: boolean;
-		/** The accessible name. A dot has no text of its own, so this is required. */
-		label: string;
 	}
 
 	const STATE_CLASSES: Record<StatusDotState, string> = {
@@ -37,15 +36,16 @@ An 8px dot showing a state, gray when there is none. It is a `role="img"` named 
 		variant = 'solid',
 		working = false,
 		label,
+		'aria-label': ariaLabel,
 		class: extraClasses,
 		...restProps
-	}: Props = $props();
+	}: Props & AccessibleName = $props();
 </script>
 
 <span
 	{...restProps}
 	role="img"
-	aria-label={label}
+	aria-label={label ?? ariaLabel}
 	class={[
 		'status-dot',
 		state && STATE_CLASSES[state],

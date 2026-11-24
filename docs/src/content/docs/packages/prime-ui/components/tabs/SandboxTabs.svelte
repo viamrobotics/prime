@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { mdiChevronLeft, mdiChevronRight } from "@mdi/js";
-  import { Icon, Tabs, type TabsVariant } from "@viamrobotics/prime-ui";
+  import { Tabs, type TabsVariant } from "@viamrobotics/prime-ui";
 
   const {
     count = 3,
@@ -40,32 +39,10 @@
         {#each shown as tab, index (tab.id)}
           <Tabs.Trigger value={tab.id} disabled={disabled && index === 1}>
             {tab.label}
-            {#snippet actions({ movePrevious, moveNext, canMovePrevious, canMoveNext })}
+            {#snippet actions()}
               {#if reorderable}
-                <button
-                  type="button"
-                  class="icon-button"
-                  aria-label="Move {tab.label} left"
-                  disabled={!canMovePrevious}
-                  onclick={(event) => {
-                    event.stopPropagation();
-                    movePrevious();
-                  }}
-                >
-                  <Icon icon={mdiChevronLeft} size="sm" />
-                </button>
-                <button
-                  type="button"
-                  class="icon-button"
-                  aria-label="Move {tab.label} right"
-                  disabled={!canMoveNext}
-                  onclick={(event) => {
-                    event.stopPropagation();
-                    moveNext();
-                  }}
-                >
-                  <Icon icon={mdiChevronRight} size="sm" />
-                </button>
+                <Tabs.MovePrevious />
+                <Tabs.MoveNext />
               {/if}
             {/snippet}
           </Tabs.Trigger>

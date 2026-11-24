@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { backgroundColor, colorOf, textColor } from '../../__tests__/computed-style.ts';
-import BasicMenu from './BasicMenu.svelte';
-import ControlledMenu from './ControlledMenu.svelte';
+import { backgroundColor, colorOf, textColor } from '../../../../test/computed-style.ts';
+import BasicMenu from './fixtures/BasicMenu.svelte';
+import ControlledMenu from './fixtures/ControlledMenu.svelte';
 
 const buttonLabeled = (container: Element, label: string) =>
 	[...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === label)!;

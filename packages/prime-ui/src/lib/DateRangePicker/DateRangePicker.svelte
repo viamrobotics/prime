@@ -65,14 +65,17 @@ Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-ra
 
 		/**
 		 * Name for form submission. The submitted value is the ISO 8601 interval
-		 * `<start>/<end>`, or empty unless both ends are set.
+		 * `<start>/<end>`, or empty unless both ends are set. A disabled picker submits nothing.
 		 */
 		name?: string;
 
 		/** Disable the picker. Defaults to the enclosing field's `disabled`. */
 		disabled?: boolean;
 
-		/** Make a range required. Defaults to the enclosing field's `required`. */
+		/**
+		 * Make a range required. Defaults to the enclosing field's `required`. Each segment gets
+		 * `aria-required`.
+		 */
 		required?: boolean;
 
 		/** Make the field read-only. @default false */
@@ -114,8 +117,9 @@ Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-ra
 
 	const interval = $derived(value?.start && value.end ? `${value.start}/${value.end}` : '');
 
-	provideDateRangePicker({
+	const picker = provideDateRangePicker({
 		disabled: () => isDisabled,
+		required: () => isRequired,
 		readonly: () => readonly,
 		open: () => open ?? false,
 		locale: () => locale,
@@ -135,7 +139,7 @@ Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-ra
 	{readonly}
 	disabled={isDisabled}
 	required={isRequired}
-	calendarLabel={calendarLabel ?? 'Choose a date range'}
+	calendarLabel={picker.calendarName}
 >
 	{#snippet child({ props })}
 		<DateRangePickerFrameProps {props}>
@@ -144,5 +148,5 @@ Built on [bits-ui `DateRangePicker`](https://bits-ui.com/docs/components/date-ra
 	{/snippet}
 </DateRangePicker.Root>
 {#if name}
-	<input type="hidden" {name} value={interval} />
+	<input type="hidden" {name} value={interval} disabled={isDisabled} />
 {/if}

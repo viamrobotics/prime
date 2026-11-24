@@ -54,7 +54,7 @@ Put the area's content in `ContextMenu.Trigger` and the items in `ContextMenu.Co
 
 ## Styling
 
-Every part that renders an element takes `class` on that element. `ContextMenu.Trigger` renders a `<div>` with no look of its own, so give the area its own size and border. `ContextMenu.Content` wears the `popover-panel` class, which carries the `shadow-popover` token, and the `z-menu` layer. See [z layers](../../tailwind-config/component-classes/#z-layers). The data attributes are the same as on [`Menu`](../menu/#styling).
+Every part that renders an element takes `class` on that element. `ContextMenu.Trigger` renders a `<div>` with no look of its own, so give the area its own size and border. `ContextMenu.Content` is named by its trigger area unless you pass `aria-label` or `aria-labelledby`. It wears the `popover-panel` class, which carries the `shadow-popover` token, and the `z-menu` layer. See [z layers](../../tailwind-config/component-classes/#z-layers). The data attributes are the same as on [`Menu`](../menu/#styling).
 
 ## Keyboard
 

@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { Chart } from '../../chart.ts';
 
-	type Part = 'Line' | 'XAxis' | 'YAxis' | 'Grid' | 'Tooltip' | 'Legend' | 'Table';
+	type Part = 'Plot' | 'Line' | 'XAxis' | 'YAxis' | 'Grid' | 'Tooltip' | 'Legend' | 'Table';
 
 	let { part, placement }: { part: Part; placement: 'no-chart' | 'chart' | 'plot' } = $props();
 </script>
 
 {#snippet child()}
-	{#if part === 'Line'}
+	{#if part === 'Plot'}
+		<Chart.Plot />
+	{:else if part === 'Line'}
 		<Chart.Line name="cell-01" points={[]} />
 	{:else if part === 'XAxis'}
 		<Chart.XAxis />

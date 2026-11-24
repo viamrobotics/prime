@@ -38,6 +38,10 @@ Outside a field, give it an `id` and name it in the control's `aria-describedby`
 
 `class` lands on the `<p>`, alongside the size and the state color. Two Tailwind text colors on one element resolve by stylesheet order, not class order, so to change the color reliably pass `state` rather than fighting it.
 
+## Keyboard
+
+The hint takes no keys and is not a tab stop. A screen reader reads it with the control.
+
 ## API
 
 <PropsTable name="hint" />

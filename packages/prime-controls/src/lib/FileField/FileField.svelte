@@ -11,12 +11,12 @@ to fit, and a button that clears them. A cleared field is an empty array.
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { ClassValue, HTMLInputAttributes } from 'svelte/elements';
+	import type { AccessibleName } from '../accessible-name.ts';
 
 	import { type FieldState, FileInput } from '@viamrobotics/prime-ui';
 
-	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
-	import { joinDescribedBy } from '../Hint/described-by.ts';
-	import Hint from '../Hint/Hint.svelte';
+	import ControlLabel from '../Hint/ControlLabel.svelte';
+	import { hintIdFor, joinDescribedBy } from '../Hint/described-by.ts';
 
 	interface Props extends Omit<
 		HTMLInputAttributes,
@@ -74,27 +74,14 @@ to fit, and a button that clears them. A cleared field is an empty array.
 		...restProps
 	}: Props & AccessibleName = $props();
 
-	// A hint sits beside the visible label, so it is only allowed with one.
-	type AccessibleName =
-		| { label: string }
-		| { label?: undefined; hint?: undefined; 'aria-label': string }
-		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
-
 	const generatedId = $props.id();
 	const id = $derived(providedId ?? generatedId);
-	const hintId = $derived(`${id}-hint`);
+	const hintId = $derived(hintIdFor(id));
 	const describedBy = $derived(joinDescribedBy([ariaDescribedby, label && hint && hintId]));
 </script>
 
-<div class={[CONTROL_ROW_CLASS, extraClasses]}>
-	{#if label}
-		<label for={id} class={['flex min-h-6 min-w-6 shrink-0 items-center', CONTROL_LABEL_CLASS]}>
-			{label}
-		</label>
-	{/if}
-	{#if label && hint}
-		<Hint {label} {hint} descriptionId={hintId} disabled={Boolean(disabled)} />
-	{/if}
+<div class={['flex items-center gap-2', extraClasses]}>
+	<ControlLabel for={id} {label} {hint} disabled={Boolean(disabled)} />
 	<FileInput
 		{...restProps}
 		{id}

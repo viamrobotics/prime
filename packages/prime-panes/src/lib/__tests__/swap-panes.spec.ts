@@ -2,43 +2,29 @@ import { describe, expect, it } from 'vitest';
 
 import { swapPanes } from '../tree.ts';
 import {
+	CAMERA,
+	CAMERA_2,
 	createLayout,
 	createStackLayout,
 	deepFreeze,
 	expectSplit,
 	ids,
-	pane,
-	stackIds
+	SENSOR,
+	SOLO_PANE,
+	split,
+	stack,
+	stackIds,
+	TAB_A1,
+	TAB_A2,
+	TAB_A3,
+	TAB_B1,
+	TAB_B2,
+	TAB_STACK_B,
+	TIME_SERIES
 } from '../../../test/layouts.ts';
 
-import type { LayoutNode, PaneNode, SplitDirection } from '../layout.ts';
+import type { LayoutNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
-
-const CAMERA = pane(ids.mycam, 'Camera');
-const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
-const SENSOR = pane(ids.mysensor, 'Sensor stat');
-const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
-
-const SOLO = pane(stackIds.solo, stackIds.solo);
-const TAB_A1 = pane(stackIds.tabA1, stackIds.tabA1);
-const TAB_A2 = pane(stackIds.tabA2, stackIds.tabA2);
-const TAB_A3 = pane(stackIds.tabA3, stackIds.tabA3);
-const TAB_B1 = pane(stackIds.tabB1, stackIds.tabB1);
-const TAB_B2 = pane(stackIds.tabB2, stackIds.tabB2);
-
-function split(
-	id: string,
-	direction: SplitDirection,
-	ratio: number,
-	first: LayoutNode<PaneData>,
-	second: LayoutNode<PaneData>
-): LayoutNode<PaneData> {
-	return { type: 'split', id, direction, ratio, first, second };
-}
-
-function stack(id: string, panes: PaneNode<PaneData>[], activeId: string): LayoutNode<PaneData> {
-	return { type: 'stack', id, panes, activeId };
-}
 
 function cameraLayout(
 	camera: LayoutNode<PaneData>,
@@ -74,8 +60,6 @@ function stackLayout(
 		split(stackIds.sideSplit, 'column', 0.4, solo, stackB)
 	);
 }
-
-const STACK_B = stack(stackIds.stackB, [TAB_B1, TAB_B2], stackIds.tabB1);
 
 describe('swapPanes', () => {
 	it('returns undefined for an undefined root', () => {
@@ -186,7 +170,11 @@ describe('swapPanes', () => {
 		const result = swapPanes(root, stackIds.tabA1, stackIds.tabA2);
 
 		expect(result).toEqual(
-			stackLayout(stack(stackIds.stackA, [TAB_A2, TAB_A1, TAB_A3], stackIds.tabA1), SOLO, STACK_B)
+			stackLayout(
+				stack(stackIds.stackA, [TAB_A2, TAB_A1, TAB_A3], stackIds.tabA1),
+				SOLO_PANE,
+				TAB_STACK_B
+			)
 		);
 	});
 
@@ -196,7 +184,11 @@ describe('swapPanes', () => {
 		const result = swapPanes(root, stackIds.tabA1, stackIds.tabA3);
 
 		expect(result).toEqual(
-			stackLayout(stack(stackIds.stackA, [TAB_A3, TAB_A2, TAB_A1], stackIds.tabA2), SOLO, STACK_B)
+			stackLayout(
+				stack(stackIds.stackA, [TAB_A3, TAB_A2, TAB_A1], stackIds.tabA2),
+				SOLO_PANE,
+				TAB_STACK_B
+			)
 		);
 	});
 
@@ -206,7 +198,11 @@ describe('swapPanes', () => {
 		const result = swapPanes(root, stackIds.solo, stackIds.tabA2);
 
 		expect(result).toEqual(
-			stackLayout(stack(stackIds.stackA, [TAB_A1, SOLO, TAB_A3], stackIds.solo), TAB_A2, STACK_B)
+			stackLayout(
+				stack(stackIds.stackA, [TAB_A1, SOLO_PANE, TAB_A3], stackIds.solo),
+				TAB_A2,
+				TAB_STACK_B
+			)
 		);
 	});
 
@@ -216,7 +212,11 @@ describe('swapPanes', () => {
 		const result = swapPanes(root, stackIds.solo, stackIds.tabA3);
 
 		expect(result).toEqual(
-			stackLayout(stack(stackIds.stackA, [TAB_A1, TAB_A2, SOLO], stackIds.tabA2), TAB_A3, STACK_B)
+			stackLayout(
+				stack(stackIds.stackA, [TAB_A1, TAB_A2, SOLO_PANE], stackIds.tabA2),
+				TAB_A3,
+				TAB_STACK_B
+			)
 		);
 	});
 
@@ -228,7 +228,7 @@ describe('swapPanes', () => {
 		expect(result).toEqual(
 			stackLayout(
 				stack(stackIds.stackA, [TAB_B1, TAB_A2, TAB_A3], stackIds.tabA2),
-				SOLO,
+				SOLO_PANE,
 				stack(stackIds.stackB, [TAB_A1, TAB_B2], stackIds.tabA1)
 			)
 		);

@@ -38,10 +38,10 @@
 	aria-label="Lazy"
 	{nodes}
 	bind:expanded
-	nodeToValue={(node) => node.id}
-	nodeToString={(node) => node.label}
-	nodeToChildren={(node) => node.children}
-	nodeToChildrenCount={(node) => node.childCount}
+	getValue={(node) => node.id}
+	getLabel={(node) => node.label}
+	getChildren={(node) => node.children}
+	getChildCount={(node) => node.childCount}
 >
 	{#snippet node(item, state)}
 		{#if state.isBranch}

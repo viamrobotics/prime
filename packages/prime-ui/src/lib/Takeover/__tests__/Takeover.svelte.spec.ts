@@ -1,11 +1,13 @@
+import { type ComponentProps, createRawSnippet } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
-import { backgroundColor, colorOf, textColor } from '../../__tests__/computed-style.ts';
-import BoundTakeover from './BoundTakeover.svelte';
-import TextCloseTakeover from './TextCloseTakeover.svelte';
-import UndefinedTakeover from './UndefinedTakeover.svelte';
+import { backgroundColor, colorOf, textColor } from '../../../../test/computed-style.ts';
+import { Takeover } from '../takeover.ts';
+import BoundTakeover from './fixtures/BoundTakeover.svelte';
+import TextCloseTakeover from './fixtures/TextCloseTakeover.svelte';
+import UndefinedTakeover from './fixtures/UndefinedTakeover.svelte';
 
 const ICON_BUTTON_SQUARE_PX = 30;
 
@@ -165,5 +167,17 @@ describe('Takeover', () => {
 		await open(container);
 
 		await vi.waitFor(() => expect(owner(container)).toBe('true'));
+	});
+
+	it('requires a name on an icon-only Takeover.Close by type', () => {
+		const children = createRawSnippet(() => ({ render: () => '<span>Cancel</span>' }));
+		// @ts-expect-error an icon-only close requires a name
+		const unnamed: ComponentProps<typeof Takeover.Close> = {};
+		// @ts-expect-error a close takes one name, not two
+		const twice: ComponentProps<typeof Takeover.Close> = { label: 'Close', 'aria-label': 'Close' };
+		const named: ComponentProps<typeof Takeover.Close> = { label: 'Close' };
+		const withChildren: ComponentProps<typeof Takeover.Close> = { children };
+
+		expect([unnamed, twice, named, withChildren]).toHaveLength(4);
 	});
 });

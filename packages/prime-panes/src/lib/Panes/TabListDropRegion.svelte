@@ -5,7 +5,7 @@ Marks where a dragged pane stacks onto this one. Place it inside [`Panes.TabList
 Three placements work: a visible strip over the tabs, a grip area, and an edge strip that shows only during a drag. A region shown only during a drag should also show in move mode, so move mode can stack there. The root's `data-dragging` and `data-move-mode` attributes drive the styles. The first hit test after a drag starts misses a region that was hidden before, and the next pointer move finds it.
 
 ```svelte
-<Panes.TabList aria-label="Stacked panes" class="flex gap-1">
+<Panes.TabList aria-label="Stacked panes">
 	<Panes.TabListDropRegion
 		class="absolute inset-x-0 top-0 hidden h-4 in-data-dragging:block in-data-move-mode:block"
 	/>

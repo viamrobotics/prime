@@ -1,3 +1,7 @@
+<!--
+@component
+The root of a tree view. It renders the `role="tree"` element, draws each node through the `node` snippet, and owns roving focus, keyboard navigation, selection, and expansion. The `aria-label` or `aria-labelledby` the type requires passes through to the tree element, along with every other attribute of a `div`.
+-->
 <script lang="ts" generics="TNode">
 	import * as treeView from '@zag-js/tree-view';
 	import { mergeProps, normalizeProps, useMachine } from '@zag-js/svelte';
@@ -12,10 +16,6 @@
 	import type { TreeNodeState } from './tree-node-state.ts';
 	import { provideTree } from './useTree.svelte.ts';
 
-	/**
-	 * Renders `nodes` as a tree with roving focus and keyboard navigation. Name the tree with
-	 * `aria-label` or `aria-labelledby`, which pass through to the tree element.
-	 */
 	interface Props extends TreeAccessors<TNode>, Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		/** The root nodes, the single source of truth for what the tree renders. */
 		nodes: readonly TNode[];
@@ -36,21 +36,23 @@
 		children?: Snippet<[readonly TNode[]]>;
 	}
 
+	type AccessibleName = { 'aria-label': string } | { 'aria-labelledby': string };
+
 	let {
 		nodes,
-		expanded = $bindable([]),
-		selected = $bindable([]),
+		expanded = $bindable(),
+		selected = $bindable(),
 		selectionMode = 'single',
 		branchClick = 'toggle-and-select',
 		node,
 		children,
-		nodeToValue,
-		nodeToString,
-		nodeToChildren,
-		nodeToChildrenCount,
-		isNodeDisabled,
+		getValue,
+		getLabel,
+		getChildren,
+		getChildCount,
+		isDisabled,
 		...rest
-	}: Props = $props();
+	}: Props & AccessibleName = $props();
 
 	const id = $props.id();
 
@@ -62,15 +64,15 @@
 	const collection = $derived(
 		treeView.collection<TNode>({
 			rootNode,
-			nodeToValue: (candidate) => (isRoot(candidate) ? ROOT_VALUE : nodeToValue(candidate)),
-			nodeToString: (candidate) => (isRoot(candidate) ? '' : nodeToString(candidate)),
+			nodeToValue: (candidate) => (isRoot(candidate) ? ROOT_VALUE : getValue(candidate)),
+			nodeToString: (candidate) => (isRoot(candidate) ? '' : getLabel(candidate)),
 			nodeToChildren: (candidate) => [
-				...((isRoot(candidate) ? nodes : nodeToChildren(candidate)) ?? [])
+				...((isRoot(candidate) ? nodes : getChildren(candidate)) ?? [])
 			],
-			nodeToChildrenCount: nodeToChildrenCount
-				? (candidate) => (isRoot(candidate) ? nodes.length : nodeToChildrenCount(candidate))
+			nodeToChildrenCount: getChildCount
+				? (candidate) => (isRoot(candidate) ? nodes.length : getChildCount(candidate))
 				: undefined,
-			isNodeDisabled: (candidate) => !isRoot(candidate) && (isNodeDisabled?.(candidate) ?? false)
+			isNodeDisabled: (candidate) => !isRoot(candidate) && (isDisabled?.(candidate) ?? false)
 		})
 	);
 
@@ -88,15 +90,15 @@
 		collection,
 		selectionMode,
 		expandOnClick: branchClick !== 'select',
-		expandedValue: expanded,
-		selectedValue: selected,
+		expandedValue: expanded ?? [],
+		selectedValue: selected ?? [],
 		onExpandedChange: (details: { expandedNodes: TNode[] }) => {
 			// Expand-all-siblings (`*`) also lists leaf siblings, which have nothing to expand.
 			const branches = details.expandedNodes.filter(collection.isBranchNode);
-			expanded = withoutNewlyDisabled(branches.map(collection.getNodeValue), expanded);
+			expanded = withoutNewlyDisabled(branches.map(collection.getNodeValue), expanded ?? []);
 		},
 		onSelectionChange: (details: { selectedValue: string[] }) => {
-			selected = withoutNewlyDisabled(details.selectedValue, selected);
+			selected = withoutNewlyDisabled(details.selectedValue, selected ?? []);
 		}
 	}));
 

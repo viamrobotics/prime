@@ -43,8 +43,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Machine</Label>
+  <Field label="Machine" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <Combobox bind:value={machine} bind:query items={results} filter={() => true}>
       <Input.Group>
         <Combobox.Input placeholder="Search machines" />

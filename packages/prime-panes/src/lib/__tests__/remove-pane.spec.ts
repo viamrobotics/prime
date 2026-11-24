@@ -2,47 +2,32 @@ import { describe, expect, it } from 'vitest';
 
 import { removePane } from '../tree.ts';
 import {
+	CAMERA,
+	CAMERA_2,
 	createLayout,
 	createStackLayout,
 	deepFreeze,
 	expectSplit,
 	ids,
 	pane,
-	stackIds
+	SENSOR,
+	SOLO_PANE,
+	split,
+	stack,
+	stackIds,
+	TAB_A1,
+	TAB_A2,
+	TAB_A3,
+	TAB_B2,
+	TAB_STACK_B,
+	TIME_SERIES
 } from '../../../test/layouts.ts';
 
-import type { LayoutNode, PaneNode, SplitDirection } from '../layout.ts';
+import type { LayoutNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
 
-const CAMERA = pane(ids.mycam, 'Camera');
-const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
-const SENSOR = pane(ids.mysensor, 'Sensor stat');
-const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
-
-const SOLO = pane(stackIds.solo, stackIds.solo);
-const TAB_A1 = pane(stackIds.tabA1, stackIds.tabA1);
-const TAB_A2 = pane(stackIds.tabA2, stackIds.tabA2);
-const TAB_A3 = pane(stackIds.tabA3, stackIds.tabA3);
-const TAB_B1 = pane(stackIds.tabB1, stackIds.tabB1);
-const TAB_B2 = pane(stackIds.tabB2, stackIds.tabB2);
-
-function split(
-	id: string,
-	direction: SplitDirection,
-	ratio: number,
-	first: LayoutNode<PaneData>,
-	second: LayoutNode<PaneData>
-): LayoutNode<PaneData> {
-	return { type: 'split', id, direction, ratio, first, second };
-}
-
-function stack(id: string, panes: PaneNode<PaneData>[], activeId: string): LayoutNode<PaneData> {
-	return { type: 'stack', id, panes, activeId };
-}
-
 const LOWER_SPLIT = split(ids.lowerSplit, 'column', 0.5, SENSOR, CAMERA_2);
-const STACK_B = stack(stackIds.stackB, [TAB_B1, TAB_B2], stackIds.tabB1);
-const SIDE_SPLIT = split(stackIds.sideSplit, 'column', 0.4, SOLO, STACK_B);
+const SIDE_SPLIT = split(stackIds.sideSplit, 'column', 0.4, SOLO_PANE, TAB_STACK_B);
 
 function stackLayout(first: LayoutNode<PaneData>, second: LayoutNode<PaneData>) {
 	return split(stackIds.rootSplit, 'row', 0.6, first, second);
@@ -139,7 +124,7 @@ describe('removePane', () => {
 		expect(result).toEqual(
 			stackLayout(
 				stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3], stackIds.tabA2),
-				split(stackIds.sideSplit, 'column', 0.4, SOLO, TAB_B2)
+				split(stackIds.sideSplit, 'column', 0.4, SOLO_PANE, TAB_B2)
 			)
 		);
 	});
@@ -158,13 +143,13 @@ describe('removePane', () => {
 		const root: LayoutNode<PaneData> = {
 			type: 'float',
 			id: 'float',
-			base: SOLO,
+			base: SOLO_PANE,
 			floats: [entryA, entryB]
 		};
 
 		const result = removePane(root, stackIds.tabA1);
 
-		expect(result).toEqual({ type: 'float', id: 'float', base: SOLO, floats: [entryB] });
+		expect(result).toEqual({ type: 'float', id: 'float', base: SOLO_PANE, floats: [entryB] });
 	});
 
 	it.each([

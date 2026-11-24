@@ -29,7 +29,7 @@ Shows the active point inside [`Chart.Plot`](./Plot.svelte): the series color, i
 	const POINT_GAP = 12;
 
 	const plotContext = usePlotContext('Chart.Tooltip');
-	const chart = useChart();
+	const chart = useChart('Chart.Tooltip');
 	const plot = usePlot();
 	const id = $props.id();
 	const instructionsId = `${id}-instructions`;

@@ -1,13 +1,14 @@
 import { tick } from 'svelte';
-import { describe, expect, it, onTestFinished } from 'vitest';
+import { afterEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
-import ClosableTabs from './ClosableTabs.svelte';
-import ControlledReorderTabs from './ControlledReorderTabs.svelte';
-import MoveControlTabs from './MoveControlTabs.svelte';
-import ReorderTabs from './ReorderTabs.svelte';
+import '../../../../test/tailwind.css';
+import ClosableTabs from './fixtures/ClosableTabs.svelte';
+import ControlledReorderTabs from './fixtures/ControlledReorderTabs.svelte';
+import MoveControlTabs from './fixtures/MoveControlTabs.svelte';
+import MovePartTabs from './fixtures/MovePartTabs.svelte';
+import ReorderTabs from './fixtures/ReorderTabs.svelte';
 
 const MOVE_RIGHT = '{Alt>}{Shift>}{ArrowRight}{/Shift}{/Alt}';
 const MOVE_LEFT = '{Alt>}{Shift>}{ArrowLeft}{/Shift}{/Alt}';
@@ -82,6 +83,8 @@ const travel = (element: Element, start: Point, pointer = MOUSE) =>
 	dispatchPointer('pointermove', element, { x: start.x + TRAVEL_PX, y: start.y }, pointer);
 
 const closableTab = (name: string) => page.getByRole('tab', { name: new RegExp(`^${name}`) });
+const closeButtonOf = (name: string) =>
+	closableTab(name).element().querySelector<HTMLButtonElement>('[data-tab-close]')!;
 
 const lift = async (name: string, element = tab(name).element()) => {
 	travel(element, press(element));
@@ -529,9 +532,28 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		expect(keys).toEqual([]);
 	});
 
+	it('lets Escape through during a press that never became a drag', async () => {
+		render(ReorderTabs);
+		const keys: string[] = [];
+		const controller = new AbortController();
+		onTestFinished(() => controller.abort());
+		document.addEventListener('keydown', (event) => keys.push(event.key), {
+			signal: controller.signal
+		});
+		const overview = tab('Overview').element();
+		const start = press(overview);
+
+		await userEvent.keyboard('{Escape}');
+		travel(overview, start);
+
+		expect(keys).toEqual(['Escape']);
+		await startsNoDrag(overview);
+		dispatchPointer('pointerup', overview, start);
+	});
+
 	it('starts no drag from a press on a nested close button', async () => {
 		render(ClosableTabs, { props: { reorderable: true } });
-		const close = page.getByRole('button', { name: 'Close Usage' }).element() as HTMLElement;
+		const close = closeButtonOf('Usage');
 		const usage = closableTab('Usage').element();
 
 		const start = press(close);
@@ -543,7 +565,7 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 
 	it('lets a nested close button close its tab after a press that travels', async () => {
 		render(ClosableTabs, { props: { reorderable: true } });
-		const close = page.getByRole('button', { name: 'Close Usage' }).element() as HTMLElement;
+		const close = closeButtonOf('Usage');
 		const start = press(close);
 		travel(close, start);
 		dispatchPointer('pointerup', close, start);
@@ -621,6 +643,38 @@ describe('Tabs.List reorderable: dragging a tab', () => {
 		await expect.poll(ghost).not.toBeNull();
 		drop(usage, pastEndOf('API reference'), TOUCH);
 		await expect.poll(order).toBe('overview,api,usage');
+	});
+});
+
+describe('Tabs.List without bind:order', () => {
+	const settle = () => new Promise((resolve) => setTimeout(resolve));
+	const unboundWarnings = (calls: unknown[][]) =>
+		calls.filter(([message]) => String(message).startsWith('prime-ui: Tabs.List is'));
+
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
+	it('warns once in development that a reorderable list has no bound order', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+		render(MoveControlTabs, { props: { isUnbound: true } });
+		await settle();
+
+		expect(unboundWarnings(warn.mock.calls)).toEqual([
+			[
+				'prime-ui: Tabs.List is reorderable without bind:order. Bind order and render the triggers from it in a keyed {#each}, or the strip never shows a move or a close.'
+			]
+		]);
+	});
+
+	it('does not warn when the order is bound', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+		render(ReorderTabs);
+		await settle();
+
+		expect(unboundWarnings(warn.mock.calls)).toEqual([]);
 	});
 });
 
@@ -752,5 +806,47 @@ describe('Tabs.Trigger move controls', () => {
 		await userEvent.click(control('Move Usage left'));
 
 		await expect.element(announcer()).toHaveTextContent('Usage moved to position 1 of 3.');
+	});
+});
+
+describe('Tabs.MovePrevious and Tabs.MoveNext', () => {
+	const control = (name: string) => page.getByRole('button', { name, exact: true });
+	const controlElement = (name: string) => control(name).element() as HTMLButtonElement;
+
+	it('names each button after its tab and direction', async () => {
+		render(MovePartTabs);
+
+		await expect.element(control('Move Overview right')).toBeInTheDocument();
+		await expect.element(control('Move API left')).toBeInTheDocument();
+	});
+
+	it('moves the tab one place and announces it', async () => {
+		render(MovePartTabs);
+
+		await userEvent.click(control('Move Overview right'));
+
+		expect(order()).toBe('usage,overview,api');
+		await expect.element(announcer()).toHaveTextContent('Overview moved to position 2 of 3.');
+	});
+
+	it('disables the buttons at each end', () => {
+		render(MovePartTabs);
+
+		expect(
+			['Move Overview left', 'Move Overview right', 'Move API left', 'Move API right'].map(
+				(name) => controlElement(name).disabled
+			),
+			'disabled for [first left, first right, last left, last right]'
+		).toEqual([true, false, false, true]);
+	});
+
+	it('stays out of the Tab order, so Tab goes from the selected tab to its panel', async () => {
+		render(MovePartTabs);
+		focusTab('Overview');
+
+		await userEvent.keyboard('{Tab}');
+
+		expect(controlElement('Move Overview right').tabIndex).toBe(-1);
+		expect(document.activeElement).toBe(page.getByRole('tabpanel').element());
 	});
 });

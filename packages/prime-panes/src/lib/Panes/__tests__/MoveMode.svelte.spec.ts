@@ -23,6 +23,7 @@ const CAMERA_2 = 'Move Camera to Camera 2';
 const STARTED_CAMERA =
 	'Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape. The arrow keys move between sides and panes, Tab moves between destinations, Enter places the pane, and Escape cancels.';
 const RIGHT = { x: '90%', y: '50%' } as const;
+const LINK = 'rgb(0, 102, 204)';
 
 const CAMERA = pane(ids.mycam, 'Camera');
 const TIME_SERIES_PANE = pane(ids.mytimeseries, 'Time series');
@@ -674,15 +675,18 @@ describe('Panes.MoveTrigger: unmounted before move mode ended', () => {
 		await expect.element(page.getByPane(ids.mycam)).toHaveFocus();
 	});
 
-	it('shows a focus outline on the wrapper that takes the fallback focus', async () => {
+	it('shows an inset link-colored focus outline on the wrapper that takes the fallback focus', async () => {
 		render(PanePartsPanes, { variant: 'menu' });
 		await startMoveFromMenu();
 		await userEvent.keyboard('{Escape}');
 		await expect.element(page.getByPane(ids.mycam)).toHaveFocus();
 
-		await expect
-			.element(page.getByPane(ids.mycam))
-			.toHaveStyle({ outlineStyle: 'solid', outlineWidth: '2px' });
+		await expect.element(page.getByPane(ids.mycam)).toHaveStyle({
+			outlineStyle: 'solid',
+			outlineWidth: '2px',
+			outlineOffset: '-2px',
+			outlineColor: LINK
+		});
 	});
 
 	it('gives the pane wrapper tabindex -1 so script can focus it', async () => {

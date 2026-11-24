@@ -28,15 +28,15 @@
 
   let expanded = $state<string[]>(["src", "src/lib"]);
 
-  const nodeToValue = (file: FileNode) => file.path;
+  const getValue = (file: FileNode) => file.path;
 </script>
 
 <div class="not-content">
   <Tree
     nodes={files}
-    {nodeToValue}
-    nodeToString={(file) => file.name}
-    nodeToChildren={(file) => file.children}
+    {getValue}
+    getLabel={(file) => file.name}
+    getChildren={(file) => file.children}
     bind:expanded
     aria-label="Files"
   >
@@ -63,7 +63,7 @@
                 class="absolute inset-y-0 w-px bg-medium"
                 style="inset-inline-start: calc(var(--depth) * 1rem + 0.5rem)"
               />
-              {#each rows as row, index (nodeToValue(row as FileNode))}
+              {#each rows as row, index (getValue(row as FileNode))}
                 <Tree.Row node={row} {index} />
               {/each}
             {/snippet}

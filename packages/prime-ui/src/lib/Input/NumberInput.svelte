@@ -2,7 +2,7 @@
 @component
 A native number input with the Viam border and padding. It renders one `<input type="number">`, so
 `class` lands on it and the consumer owns its width. Inside a [`Field`](../Field/Field.svelte) it
-takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `aria-describedby` from there. Inside an
+takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, `aria-describedby`, and its name from there. Inside an
 [`Input.Group`](./InputGroup.svelte) it goes borderless.
 
 ```svelte
@@ -14,6 +14,7 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 
 	import type { FieldState } from '../Field/state.ts';
 
+	import { accessibleNameWarning } from '../accessible-name-warning.ts';
 	import { useInputControl } from './useInputControl.svelte.ts';
 
 	interface Props extends Omit<
@@ -47,6 +48,8 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 		required,
 		readonly,
 		'aria-describedby': describedBy,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		class: extraClasses,
 		...restProps
 	}: Props = $props();
@@ -56,20 +59,18 @@ takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `
 		disabled: () => disabled,
 		required: () => required,
 		state: () => state,
-		describedBy: () => describedBy
+		describedBy: () => describedBy,
+		ariaLabel: () => ariaLabel,
+		ariaLabelledBy: () => ariaLabelledBy
 	});
 </script>
 
 <input
 	{...restProps}
+	{...control.attributes}
 	type="number"
 	bind:value={() => value ?? null, (next) => (value = next ?? undefined)}
-	id={control.id}
-	disabled={control.disabled}
-	required={control.required}
 	{readonly}
-	aria-describedby={control.describedBy}
-	aria-invalid={control.invalid}
-	data-field-state={control.fieldState}
 	class={['input', extraClasses]}
+	{@attach accessibleNameWarning('NumberInput')}
 />

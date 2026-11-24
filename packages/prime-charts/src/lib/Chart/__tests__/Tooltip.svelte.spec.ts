@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
+import { nextFrame } from '../../../../test/frames.ts';
 import '../../../../test/tailwind.css';
 import TooltipChart from './fixtures/TooltipChart.svelte';
 
@@ -33,8 +34,6 @@ const readoutLines = (container: Element) =>
 
 const SETTLE_FRAMES = 3;
 const MAX_FRAMES = 120;
-
-const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 
 const labelNodesOf = (container: Element, part: string) => [
 	...container.querySelectorAll(`.${part} span`)

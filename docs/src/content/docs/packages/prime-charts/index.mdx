@@ -125,7 +125,7 @@ Set `xMin`, `xMax`, `yMin`, or `yMax` to fix an edge. A given bound is used exac
 
 ### Hiding a series
 
-The legend renders one toggle button per series. Bind `hidden` on a `Chart.Line` to read or set the state from outside. Unbound, the line keeps the state itself. A hidden series keeps its color and position, and the axes follow the series that remain visible.
+The legend renders one toggle button per series. Bind `hidden` on a `Chart.Line` to read or set the state from outside. A binding may start `undefined`, which reads as `false`. Unbound, the line keeps the state itself. A hidden series keeps its color and position, and the axes follow the series that remain visible.
 
 <Example code={hidingSource} title="Hiding.svelte">
   <Hiding client:visible />
@@ -171,21 +171,21 @@ The figure carries a visually hidden summary, linked through `aria-describedby`.
 
 | Part            | Where `class` lands                          |
 | --------------- | -------------------------------------------- |
-| `Chart`         | The root element, which has the `figure` role |
-| `Chart.Plot`    | The plot element, sized through its `class`  |
+| `Chart`         | The root element, a native `figure` |
+| `Chart.Plot`    | The plot `div`, sized through its `class`    |
 | `Chart.Line`    | The path, or the circle of a single point    |
 | `Chart.Grid`    | The `<g>` that holds the grid lines          |
 | `Chart.XAxis`   | The row of tick labels below the plot        |
 | `Chart.YAxis`   | The column of tick labels beside the plot    |
 | `Chart.Tooltip` | The tooltip box                              |
-| `Chart.Legend`  | The list                                     |
+| `Chart.Legend`  | The list, a `ul`                             |
 | `Chart.Table`   | A wrapper around the `<table>`, with no layout of its own |
 
 An axis `class` styles the tick labels only. The axis line and tick marks take their color from the `--color-chart-axis` token. The labels default to `text-xs` in the axis label color.
 
 The axes size their gutters to their labels, and each side takes the larger of what the parts reserve on it. On `Chart.YAxis`, a font size changes the look and the column width, a color changes the look and no gutter, and a `min-w-*` sets a least width for the labels. On `Chart.XAxis`, a font size changes the look and the row height, a color changes no gutter, and a `min-w-*` has no effect. A border or padding on an axis `class` counts toward its gutter. A margin does not, so it moves the labels out of the plot's box.
 
-Every other attribute on `Chart` also goes to the root element. Colors come from the chart tokens in `@viamrobotics/tailwind-config`, such as `--color-chart-series-1`, so a literal color has no place in a class or in `color`.
+Every other attribute of a `figure` on `Chart` also goes to the root element. `Chart.Plot`, `Chart.Legend` and `Chart.Table` do the same for their `div`, `ul` and wrapper `div`, and each throws outside `Chart`. The other parts take `class` only. Colors come from the chart tokens in `@viamrobotics/tailwind-config`, such as `--color-chart-series-1`, so a literal color has no place in a class or in `color`.
 
 The package sets these `data-part` attributes, so a variant like `[&_[data-part=legend-item]]:text-xs` reaches them from the root.
 
@@ -204,7 +204,7 @@ The package sets these `data-part` attributes, so a variant like `[&_[data-part=
 | `summary`          | The visually hidden figure summary                |
 | `table`            | The data table inside the `Chart.Table` wrapper   |
 
-The root has `aria-busy` while loading. Each legend button has `aria-pressed`, which is true while its series is visible.
+The root has `aria-busy` while loading. Each legend button has `aria-pressed`, which is true while its series is visible. The legend list is named "Shown series", and a loading series' button is described by its hidden "Loading" text.
 
 ## Keyboard
 

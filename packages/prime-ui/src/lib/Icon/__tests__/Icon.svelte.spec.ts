@@ -3,10 +3,10 @@ import { mdiAlert } from '@mdi/js';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import Icon from '../Icon.svelte';
 import { ViamService } from '../icons/index.ts';
-import HardcodedHiddenIcon from './HardcodedHiddenIcon.svelte';
+import HardcodedHiddenIcon from './fixtures/HardcodedHiddenIcon.svelte';
 
 const svg = (container: Element) => container.querySelector('svg')!;
 const width = (element: Element) => getComputedStyle(element).width;

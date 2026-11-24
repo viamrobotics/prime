@@ -21,6 +21,7 @@
 		yFormat?: (value: number) => string;
 		xMin?: Date | number;
 		xMax?: Date | number;
+		tableProps?: Record<string, string>;
 	}
 
 	let {
@@ -32,13 +33,14 @@
 		isTableFirst = false,
 		xFormat,
 		yFormat,
+		tableProps = {},
 		...bounds
 	}: Props = $props();
 </script>
 
 <div style:width="400px" style:height="240px">
 	{#snippet body()}
-		{#if isTableFirst}<Chart.Table {caption} class={tableClass} />{/if}
+		{#if isTableFirst}<Chart.Table {caption} class={tableClass} {...tableProps} />{/if}
 		<Chart.Plot class="h-40">
 			{#each series as entry (entry.name)}
 				<Chart.Line
@@ -53,7 +55,7 @@
 				<Chart.YAxis format={yFormat} />
 			{/if}
 		</Chart.Plot>
-		{#if !isTableFirst}<Chart.Table {caption} class={tableClass} />{/if}
+		{#if !isTableFirst}<Chart.Table {caption} class={tableClass} {...tableProps} />{/if}
 	{/snippet}
 	{#if isLabelled}
 		<span id="chart-title">Pump readings</span>

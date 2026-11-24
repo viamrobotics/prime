@@ -29,6 +29,7 @@ import blockSource from "./Block.svelte?raw";
 <BannerDemo client:visible />
 
 - `variant` sets the chip color, the glyph, and the live-region role. `info`, `success`, and `pending` are `status`. `warning` and `danger` are `alert`. `pending` spins in the chip.
+- The tone is also announced in text. The root holds visually hidden text before the content, "Info", "Success", "Warning", "Error", or "In progress", since the chip is decorative and a custom `Banner.Icon` leaves it in place.
 - With no `Banner.Title` the banner is the compact one-liner. A title stacks it.
 - The parts give you the layout. Each lands in its own cell, so what goes inside is your markup.
 - It has no open state. Wrap it in `{#if}` to show and hide it.
@@ -45,7 +46,7 @@ Every part is a property on `Banner`. A banner renders a `<div>`.
   <Banner.Description>description</Banner.Description>
   <Banner.Actions>...</Banner.Actions>
   <Banner.Details summary="Details">...</Banner.Details>
-  <Banner.Close onclick={dismiss} />
+  <Banner.Close aria-label="Dismiss" onclick={dismiss} />
   <Banner.Progress value={elapsed} label="Time until dismissed" />
 </Banner>
 ```
@@ -70,7 +71,7 @@ Leave the title out and the description sits on one line, with the actions inlin
 
 ### Dismissable
 
-`Banner.Close` takes a native `onclick`. The banner holds no state, so the consumer owns `{#if}`.
+`Banner.Close` takes a native `onclick`, and it requires a name: an `aria-label`, an `aria-labelledby`, or a `label` it applies as its `aria-label`. Pass children instead and their text names the button. The banner holds no state, so the consumer owns `{#if}`.
 
 <Example code={dismissableSource} title="Dismissable.svelte">
   <Dismissable client:visible />

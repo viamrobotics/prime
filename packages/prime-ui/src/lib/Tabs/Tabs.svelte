@@ -2,8 +2,8 @@
 @component
 A tab strip with one panel per tab. Compose it from [`Tabs.List`](./TabsList.svelte) holding
 one [`Tabs.Trigger`](./TabsTrigger.svelte) per tab, and one
-[`Tabs.Content`](./TabsContent.svelte) per tab. With no `value`, or a `value` whose tab is gone,
-the first tab is selected.
+[`Tabs.Content`](./TabsContent.svelte) per tab. With no `value`, or a `value` that names no tab,
+the leftmost tab is selected.
 
 Built on [bits-ui `Tabs`](https://bits-ui.com/docs/components/tabs).
 
@@ -32,7 +32,7 @@ Built on [bits-ui `Tabs`](https://bits-ui.com/docs/components/tabs).
 		/** Element id. `null` is not accepted. */
 		id?: string;
 
-		/** The selected tab's `value`. Two-way bindable. Defaults to the first tab's. */
+		/** The selected tab's `value`. Two-way bindable. Defaults to the leftmost tab's. */
 		value?: string;
 
 		/** The strip's look. `file` is compact, boxed tabs like an editor's file tabs. @default 'underline' */

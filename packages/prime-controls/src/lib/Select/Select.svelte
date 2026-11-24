@@ -37,6 +37,8 @@ Without children it renders those parts itself from `items`, named by `aria-labe
 	import SelectValue from './SelectValue.svelte';
 	import SelectViewport from './SelectViewport.svelte';
 
+	// allowDeselect reaches the root through prime-ui's props and keeps its headless name, since no
+	// native or standard name exists.
 	type RootProps = Omit<ComponentProps<typeof PrimeSelect>, 'children'>;
 
 	interface ComposedProps extends RootProps {

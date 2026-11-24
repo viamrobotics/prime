@@ -2,51 +2,35 @@ import { describe, expect, it } from 'vitest';
 
 import { stackPanes } from '../tree.ts';
 import {
+	CAMERA,
+	CAMERA_2,
 	createLayout,
 	createStackLayout,
 	deepFreeze,
 	ids,
-	pane,
-	stackIds
+	SENSOR,
+	SOLO_PANE,
+	split,
+	stack,
+	stackIds,
+	TAB_A1,
+	TAB_A2,
+	TAB_A3,
+	TAB_B1,
+	TAB_B2,
+	TAB_STACK_A,
+	TAB_STACK_B,
+	TIME_SERIES
 } from '../../../test/layouts.ts';
 
-import type { LayoutNode, PaneNode, SplitDirection } from '../layout.ts';
+import type { LayoutNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
 
 const NEW_STACK_ID = 'new-stack';
 
-const CAMERA = pane(ids.mycam, 'Camera');
-const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
-const SENSOR = pane(ids.mysensor, 'Sensor stat');
-const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
-
-const SOLO = pane(stackIds.solo, stackIds.solo);
-const TAB_A1 = pane(stackIds.tabA1, stackIds.tabA1);
-const TAB_A2 = pane(stackIds.tabA2, stackIds.tabA2);
-const TAB_A3 = pane(stackIds.tabA3, stackIds.tabA3);
-const TAB_B1 = pane(stackIds.tabB1, stackIds.tabB1);
-const TAB_B2 = pane(stackIds.tabB2, stackIds.tabB2);
-
-function split(
-	id: string,
-	direction: SplitDirection,
-	ratio: number,
-	first: LayoutNode<PaneData>,
-	second: LayoutNode<PaneData>
-): LayoutNode<PaneData> {
-	return { type: 'split', id, direction, ratio, first, second };
-}
-
-function stack(id: string, panes: PaneNode<PaneData>[], activeId: string): LayoutNode<PaneData> {
-	return { type: 'stack', id, panes, activeId };
-}
-
 function stackLayout(first: LayoutNode<PaneData>, second: LayoutNode<PaneData>) {
 	return split(stackIds.rootSplit, 'row', 0.6, first, second);
 }
-
-const STACK_A = stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3], stackIds.tabA2);
-const STACK_B = stack(stackIds.stackB, [TAB_B1, TAB_B2], stackIds.tabB1);
 
 function cameraLayout(camera: LayoutNode<PaneData>, innerSplit: LayoutNode<PaneData>) {
 	return split(ids.rootSplit, 'column', 0.3, camera, innerSplit);
@@ -105,7 +89,10 @@ describe('stackPanes', () => {
 		const result = stackPanes(root, stackIds.tabA1, stackIds.solo, NEW_STACK_ID);
 
 		expect(result).toEqual(
-			stackLayout(stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3, SOLO], stackIds.solo), STACK_B)
+			stackLayout(
+				stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3, SOLO_PANE], stackIds.solo),
+				TAB_STACK_B
+			)
 		);
 	});
 
@@ -115,7 +102,7 @@ describe('stackPanes', () => {
 		const result = stackPanes(root, stackIds.solo, stackIds.stackB, NEW_STACK_ID);
 
 		expect(result).toEqual(
-			stackLayout(STACK_A, stack(NEW_STACK_ID, [SOLO, TAB_B1, TAB_B2], stackIds.tabB1))
+			stackLayout(TAB_STACK_A, stack(NEW_STACK_ID, [SOLO_PANE, TAB_B1, TAB_B2], stackIds.tabB1))
 		);
 	});
 
@@ -127,7 +114,7 @@ describe('stackPanes', () => {
 		expect(result).toEqual(
 			stackLayout(
 				stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3, TAB_B1, TAB_B2], stackIds.tabB1),
-				SOLO
+				SOLO_PANE
 			)
 		);
 	});
@@ -144,8 +131,8 @@ describe('stackPanes', () => {
 					stackIds.sideSplit,
 					'column',
 					0.4,
-					stack(NEW_STACK_ID, [SOLO, TAB_A2], stackIds.tabA2),
-					STACK_B
+					stack(NEW_STACK_ID, [SOLO_PANE, TAB_A2], stackIds.tabA2),
+					TAB_STACK_B
 				)
 			)
 		);
@@ -158,12 +145,12 @@ describe('stackPanes', () => {
 
 		expect(result).toEqual(
 			stackLayout(
-				STACK_A,
+				TAB_STACK_A,
 				split(
 					stackIds.sideSplit,
 					'column',
 					0.4,
-					stack(NEW_STACK_ID, [SOLO, TAB_B2], stackIds.tabB2),
+					stack(NEW_STACK_ID, [SOLO_PANE, TAB_B2], stackIds.tabB2),
 					TAB_B1
 				)
 			)
@@ -187,20 +174,22 @@ describe('stackPanes', () => {
 
 describe('stackPanes with an index', () => {
 	it.each([
-		{ index: 0, expected: [SOLO, TAB_A1, TAB_A2, TAB_A3] },
-		{ index: 2, expected: [TAB_A1, TAB_A2, SOLO, TAB_A3] },
-		{ index: 3, expected: [TAB_A1, TAB_A2, TAB_A3, SOLO] },
-		{ index: 99, expected: [TAB_A1, TAB_A2, TAB_A3, SOLO] },
-		{ index: -1, expected: [SOLO, TAB_A1, TAB_A2, TAB_A3] },
-		{ index: -5, expected: [SOLO, TAB_A1, TAB_A2, TAB_A3] },
-		{ index: 1.9, expected: [TAB_A1, SOLO, TAB_A2, TAB_A3] },
-		{ index: undefined, expected: [TAB_A1, TAB_A2, TAB_A3, SOLO] }
+		{ index: 0, expected: [SOLO_PANE, TAB_A1, TAB_A2, TAB_A3] },
+		{ index: 2, expected: [TAB_A1, TAB_A2, SOLO_PANE, TAB_A3] },
+		{ index: 3, expected: [TAB_A1, TAB_A2, TAB_A3, SOLO_PANE] },
+		{ index: 99, expected: [TAB_A1, TAB_A2, TAB_A3, SOLO_PANE] },
+		{ index: -1, expected: [SOLO_PANE, TAB_A1, TAB_A2, TAB_A3] },
+		{ index: -5, expected: [SOLO_PANE, TAB_A1, TAB_A2, TAB_A3] },
+		{ index: 1.9, expected: [TAB_A1, SOLO_PANE, TAB_A2, TAB_A3] },
+		{ index: undefined, expected: [TAB_A1, TAB_A2, TAB_A3, SOLO_PANE] }
 	])('puts the source at index $index of a stacked target', ({ index, expected }) => {
 		const root = createStackLayout();
 
 		const result = stackPanes(root, stackIds.tabA1, stackIds.solo, NEW_STACK_ID, index);
 
-		expect(result).toEqual(stackLayout(stack(stackIds.stackA, expected, stackIds.solo), STACK_B));
+		expect(result).toEqual(
+			stackLayout(stack(stackIds.stackA, expected, stackIds.solo), TAB_STACK_B)
+		);
 	});
 
 	it.each([
@@ -227,7 +216,7 @@ describe('stackPanes with an index', () => {
 		expect(result).toEqual(
 			stackLayout(
 				stack(stackIds.stackA, [TAB_A1, TAB_B1, TAB_B2, TAB_A2, TAB_A3], stackIds.tabB1),
-				SOLO
+				SOLO_PANE
 			)
 		);
 	});
@@ -238,7 +227,7 @@ describe('stackPanes with an index', () => {
 		const result = stackPanes(root, stackIds.solo, stackIds.stackB, NEW_STACK_ID, 0);
 
 		expect(result).toEqual(
-			stackLayout(STACK_A, stack(NEW_STACK_ID, [TAB_B1, TAB_B2, SOLO], stackIds.tabB1))
+			stackLayout(TAB_STACK_A, stack(NEW_STACK_ID, [TAB_B1, TAB_B2, SOLO_PANE], stackIds.tabB1))
 		);
 	});
 });

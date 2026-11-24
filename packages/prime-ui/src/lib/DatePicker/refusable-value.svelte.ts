@@ -18,9 +18,11 @@ export const refusableValue = <TOwned, THanded>({
 	holds
 }: RefusableValueOptions<TOwned, THanded>): RefusableValue<TOwned, THanded> => {
 	let refusedWrites = $state(0);
+	let bounced = $state.raw<{ value: THanded }>();
 
 	const current = $derived.by(() => {
 		void refusedWrites;
+		if (bounced) return bounced.value;
 		return copy(owner.get());
 	});
 
@@ -32,9 +34,14 @@ export const refusableValue = <TOwned, THanded>({
 			if (holds(owner.get(), next)) return;
 			owner.set(next);
 			if (holds(owner.get(), next)) return;
+			// A copy of `undefined` is still `undefined`, so bits-ui would see no change and keep the typed digits. It gets the refused value for one tick and then the owner's.
+			if (copy(owner.get()) === current) bounced = { value: copy(next) };
 			refusedWrites += 1;
 			// bits-ui's first re-read still prefers the digits just typed and then drops them, so a second copy shows the owner's date.
-			void tick().then(() => (refusedWrites += 1));
+			void tick().then(() => {
+				bounced = undefined;
+				refusedWrites += 1;
+			});
 		}
 	};
 };

@@ -1,11 +1,16 @@
+import type { ComponentProps } from 'svelte';
+
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
-import FileInputField from './FileInputField.svelte';
-import InputField from './InputField.svelte';
-import TextareaField from './TextareaField.svelte';
-import WidgetFields from './WidgetFields.svelte';
+import type Field from '../Field.svelte';
+
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
+import FileInputField from './fixtures/FileInputField.svelte';
+import InputField from './fixtures/InputField.svelte';
+import NamedField from './fixtures/NamedField.svelte';
+import TextareaField from './fixtures/TextareaField.svelte';
+import WidgetFields from './fixtures/WidgetFields.svelte';
 
 const parts = (container: Element) => {
 	const label = container.querySelector('label')!;
@@ -66,7 +71,7 @@ describe('Field', () => {
 
 		expect(input.disabled, 'control disabled').toBe(true);
 		expect(getComputedStyle(label).cursor).toBe('not-allowed');
-		expect(textColor(hints[0]!)).toBe(colorOf('text-disabled', 'color'));
+		expect(textColor(hints[0]!)).toBe(colorOf('text-disabled-dark', 'color'));
 	});
 
 	it('cascades required to the label and control', () => {
@@ -351,7 +356,7 @@ describe('Field with widgets', () => {
 
 	it('names a toggle group by its label and describes it by its hint', async () => {
 		const scope = field(render(WidgetFields).container, 'toggle-field');
-		const group = scope.querySelector('[role="group"]')!;
+		const group = scope.querySelector('[role="radiogroup"]')!;
 
 		await vi.waitFor(() => {
 			expect(group.getAttribute('aria-labelledby')).toBe(scope.querySelector('label')?.id);
@@ -391,7 +396,7 @@ describe('Field with widgets', () => {
 		{ widget: 'checkbox', testId: 'checkbox-field', control: '[role="checkbox"]' },
 		{ widget: 'radio', testId: 'radio-field', control: '[role="radiogroup"]' },
 		{ widget: 'switch', testId: 'switch-field', control: '[role="switch"]' },
-		{ widget: 'toggle', testId: 'toggle-field', control: '[role="group"]' }
+		{ widget: 'toggle', testId: 'toggle-field', control: '[role="radiogroup"]' }
 	] as const)(
 		'lets state="none" on the $widget override an error field',
 		({ widget, testId, control }) => {
@@ -417,8 +422,92 @@ describe('Field with widgets', () => {
 				field(container, 'date-field').querySelector('[role="group"]'),
 				field(container, 'daterange-field').querySelector('[role="group"]'),
 				field(container, 'switch-field').querySelector('[role="switch"]'),
-				field(container, 'toggle-field').querySelector('[role="group"]')
+				field(container, 'toggle-field').querySelector('[role="radiogroup"]')
 			].map((control) => control?.getAttribute('aria-invalid'))
 		).toEqual(['true', 'true', 'true', 'true', 'true', 'true', 'true', 'true']);
+	});
+});
+
+describe('Field name', () => {
+	const named = (container: Element) => ({
+		wrapper: container.querySelector('[data-testid="field"]')!,
+		label: container.querySelector('label'),
+		input: container.querySelector('input')!
+	});
+
+	it('requires a name by type', () => {
+		// @ts-expect-error a Field requires a name
+		const unnamed: ComponentProps<typeof Field> = {};
+		// @ts-expect-error a Field takes one name, not two
+		const twice: ComponentProps<typeof Field> = { label: 'Email', 'aria-label': 'Email' };
+		const labeled: ComponentProps<typeof Field> = { label: 'Email' };
+		const ariaLabeled: ComponentProps<typeof Field> = { 'aria-label': 'Email' };
+		const labelledBy: ComponentProps<typeof Field> = { 'aria-labelledby': 'heading' };
+
+		expect([unnamed, twice, labeled, ariaLabeled, labelledBy]).toHaveLength(5);
+	});
+
+	it('renders the field label in a Label with no children', () => {
+		const { label } = named(
+			render(NamedField, { props: { name: { label: 'Email' }, placeLabel: true } }).container
+		);
+
+		expect(label?.textContent?.trim()).toBe('Email');
+	});
+
+	it.each([
+		{ name: { label: 'Email' }, ariaLabel: 'Email', labelledBy: null },
+		{ name: { 'aria-label': 'Work email' }, ariaLabel: 'Work email', labelledBy: null },
+		{ name: { 'aria-labelledby': 'heading' }, ariaLabel: null, labelledBy: 'heading' }
+	] as const)(
+		'names the control from $name with no Label placed',
+		async ({ name, ariaLabel, labelledBy }) => {
+			const { input } = named(render(NamedField, { props: { name } }).container);
+
+			await vi.waitFor(() => {
+				expect({
+					ariaLabel: input.getAttribute('aria-label'),
+					labelledBy: input.getAttribute('aria-labelledby')
+				}).toEqual({ ariaLabel, labelledBy });
+			});
+		}
+	);
+
+	it('names the control by aria-labelledby when a Label is placed', async () => {
+		const { label, input } = named(
+			render(NamedField, { props: { name: { label: 'Email' }, placeLabel: true } }).container
+		);
+
+		await vi.waitFor(() => {
+			expect(input.getAttribute('aria-labelledby')).toBe(label?.id);
+			expect(input.getAttribute('aria-label')).toBeNull();
+		});
+	});
+
+	it('lets an aria-label on the control win over the field name', async () => {
+		const { input } = named(
+			render(NamedField, {
+				props: { name: { label: 'Email' }, placeLabel: true, inputLabel: 'Billing email' }
+			}).container
+		);
+
+		await vi.waitFor(() => {
+			expect({
+				ariaLabel: input.getAttribute('aria-label'),
+				labelledBy: input.getAttribute('aria-labelledby')
+			}).toEqual({ ariaLabel: 'Billing email', labelledBy: null });
+		});
+	});
+
+	it('keeps the name off the wrapper', () => {
+		const { wrapper } = named(
+			render(NamedField, { props: { name: { 'aria-label': 'Work email' } } }).container
+		);
+
+		expect([
+			wrapper.getAttribute('label'),
+			wrapper.getAttribute('aria-label'),
+			wrapper.getAttribute('aria-labelledby')
+		]).toEqual([null, null, null]);
 	});
 });

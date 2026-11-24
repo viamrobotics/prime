@@ -21,6 +21,8 @@ The item parts are the same components as `Menu`'s, so `ContextMenu.Item`, `Cont
 
 	import { ContextMenu } from 'bits-ui';
 
+	import { provideTriggerName } from './useTriggerName.svelte.ts';
+
 	interface Props {
 		/** Whether the menu is open. Two-way bindable. */
 		open?: boolean;
@@ -30,6 +32,10 @@ The item parts are the same components as `Menu`'s, so `ContextMenu.Item`, `Cont
 	}
 
 	let { open = $bindable(), children }: Props = $props();
+
+	const uid = $props.id();
+
+	provideTriggerName(`context-menu-trigger-${uid}`);
 </script>
 
 <ContextMenu.Root bind:open={() => open ?? false, (next) => (open = next)}>

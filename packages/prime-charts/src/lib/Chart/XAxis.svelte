@@ -20,7 +20,7 @@ The time axis below the plot. Its line and tick marks are SVG in the `--color-ch
 	let { format, class: className }: Props = $props();
 
 	const plotContext = usePlotContext('Chart.XAxis');
-	const chart = useChart();
+	const chart = useChart('Chart.XAxis');
 	const plot = usePlot();
 
 	let rowBox = $state<readonly ResizeObserverSize[]>();

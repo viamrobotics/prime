@@ -12,12 +12,15 @@ short text at the end of the title row, such as what the folder holds while it i
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 
 	import { mdiChevronDown } from '@mdi/js';
 	import { Collapsible, Icon } from '@viamrobotics/prime-ui';
 
-	interface Props {
+	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'children' | 'id'> {
+		/** Element id of the root. */
+		id?: string;
+
 		/** Visible title, the text of the button that opens and closes the folder. */
 		title: string;
 
@@ -27,8 +30,14 @@ short text at the end of the title row, such as what the folder holds while it i
 		 */
 		summary?: string;
 
-		/** Whether the controls are shown. Two-way bindable. @default true */
+		/** Whether the controls are shown. Two-way bindable. Open while it is `undefined`. */
 		open?: boolean;
+
+		/**
+		 * Replaces the default chevron at the end of the title row, after any `summary`. Receives
+		 * `{ open }`.
+		 */
+		indicator?: Snippet<[{ open: boolean }]>;
 
 		/** Disable the button that opens and closes the folder. @default false */
 		disabled?: boolean;
@@ -43,29 +52,42 @@ short text at the end of the title row, such as what the folder holds while it i
 	let {
 		title,
 		summary,
-		open = $bindable(true),
+		open = $bindable(),
 		disabled = false,
+		indicator,
 		class: extraClasses,
-		children
+		children,
+		...restProps
 	}: Props = $props();
 </script>
 
-<!-- The trigger draws its chevron only when it has no indicator, so the summary brings one along. -->
-{#snippet summaryIndicator({ open: isOpen }: { open: boolean })}
+<!-- The trigger draws its chevron only when it has no indicator, so this one brings its own. -->
+{#snippet trailing({ open: isOpen }: { open: boolean })}
 	<span class="flex shrink-0 items-center gap-2">
-		<span class="font-normal text-subtle-2">{summary}</span>
-		<Icon
-			icon={mdiChevronDown}
-			size="sm"
-			class={['text-subtle-2 transition-transform', isOpen && 'rotate-180']}
-		/>
+		{#if summary}
+			<span class="font-normal text-subtle-2">{summary}</span>
+		{/if}
+		{#if indicator}
+			{@render indicator({ open: isOpen })}
+		{:else}
+			<Icon
+				icon={mdiChevronDown}
+				size="sm"
+				class={['text-subtle-2 transition-transform', isOpen && 'rotate-180']}
+			/>
+		{/if}
 	</span>
 {/snippet}
 
-<Collapsible bind:open {disabled} class={extraClasses}>
+<Collapsible
+	{...restProps}
+	bind:open={() => open ?? true, (next) => (open = next)}
+	{disabled}
+	class={extraClasses}
+>
 	<Collapsible.Trigger
 		class="min-h-6 rounded-sm text-xs font-semibold"
-		indicator={summary ? summaryIndicator : undefined}
+		indicator={summary || indicator ? trailing : undefined}
 	>
 		{title}
 	</Collapsible.Trigger>

@@ -1,23 +1,38 @@
 import { describe, expect, it } from 'vitest';
 
-import { floatPane, floatStack, moveStack, movePane, stackPanes, swapPanes } from '../tree.ts';
+import { moveStack, movePane, stackPanes, swapPanes } from '../tree.ts';
+import { floatPane, floatStack } from '../FloatPanes/float-tree.ts';
 import {
+	CAMERA,
+	CAMERA_2,
 	createFloatLayout,
 	createLayout,
 	createStackLayout,
 	deepFreeze,
 	expectFloat,
 	expectSplit,
-	FLOAT_RECT,
 	floatIds,
 	ids,
 	pane,
-	stackIds
+	SENSOR,
+	SOLO_PANE,
+	split,
+	stack,
+	stackIds,
+	TAB_A1,
+	TAB_A2,
+	TAB_A3,
+	TAB_B1,
+	TAB_B2,
+	TAB_STACK_A,
+	TAB_STACK_B,
+	TIME_SERIES
 } from '../../../test/layouts.ts';
 
-import type { FloatEntry, LayoutNode, PaneNode, SplitDirection, StackNode } from '../layout.ts';
+import type { FloatEntry, LayoutNode, PaneNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
 
+const FLOAT_RECT = { x: 10, y: 20, width: 300, height: 200 };
 const ENTRY_ID = 'new-entry';
 const FLOAT_ID = 'new-float';
 
@@ -25,37 +40,10 @@ function labeled(id: string): PaneNode<PaneData> {
 	return pane(id, id);
 }
 
-function split(
-	id: string,
-	direction: SplitDirection,
-	ratio: number,
-	first: LayoutNode<PaneData>,
-	second: LayoutNode<PaneData>
-): LayoutNode<PaneData> {
-	return { type: 'split', id, direction, ratio, first, second };
-}
-
-function stack(id: string, panes: PaneNode<PaneData>[], activeId: string): StackNode<PaneData> {
-	return { type: 'stack', id, panes, activeId };
-}
-
 function newEntry(content: LayoutNode<PaneData>): FloatEntry<PaneData> {
 	return { id: ENTRY_ID, rect: FLOAT_RECT, content };
 }
 
-const SOLO = labeled(stackIds.solo);
-const TAB_A1 = labeled(stackIds.tabA1);
-const TAB_A2 = labeled(stackIds.tabA2);
-const TAB_A3 = labeled(stackIds.tabA3);
-const TAB_B1 = labeled(stackIds.tabB1);
-const TAB_B2 = labeled(stackIds.tabB2);
-const STACK_A = stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3], stackIds.tabA2);
-const STACK_B = stack(stackIds.stackB, [TAB_B1, TAB_B2], stackIds.tabB1);
-
-const CAMERA = pane(ids.mycam, 'Camera');
-const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
-const SENSOR = pane(ids.mysensor, 'Sensor stat');
-const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
 const LOWER = split(ids.lowerSplit, 'column', 0.5, SENSOR, CAMERA_2);
 const INNER = split(ids.innerSplit, 'row', 0.6, TIME_SERIES, LOWER);
 
@@ -82,11 +70,11 @@ describe.each([
 		run: (root: LayoutNode<PaneData> | undefined, id: string, hostId?: string) =>
 			floatPane(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID, hostId),
 		sourceId: stackIds.solo,
-		wrapped: split(stackIds.rootSplit, 'row', 0.6, STACK_A, {
+		wrapped: split(stackIds.rootSplit, 'row', 0.6, TAB_STACK_A, {
 			type: 'float',
 			id: FLOAT_ID,
-			base: STACK_B,
-			floats: [newEntry(SOLO)]
+			base: TAB_STACK_B,
+			floats: [newEntry(SOLO_PANE)]
 		})
 	},
 	{
@@ -94,11 +82,11 @@ describe.each([
 		run: (root: LayoutNode<PaneData> | undefined, id: string, hostId?: string) =>
 			floatStack(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID, hostId),
 		sourceId: stackIds.stackA,
-		wrapped: split(stackIds.sideSplit, 'column', 0.4, SOLO, {
+		wrapped: split(stackIds.sideSplit, 'column', 0.4, SOLO_PANE, {
 			type: 'float',
 			id: FLOAT_ID,
-			base: STACK_B,
-			floats: [newEntry(STACK_A)]
+			base: TAB_STACK_B,
+			floats: [newEntry(TAB_STACK_A)]
 		})
 	}
 ])('$name shared rules', ({ run, sourceId, wrapped }) => {
@@ -215,12 +203,12 @@ describe('floatPane', () => {
 				stackIds.rootSplit,
 				'row',
 				0.6,
-				STACK_A,
+				TAB_STACK_A,
 				split(
 					stackIds.sideSplit,
 					'column',
 					0.4,
-					{ type: 'float', id: FLOAT_ID, base: SOLO, floats: [newEntry(TAB_B1)] },
+					{ type: 'float', id: FLOAT_ID, base: SOLO_PANE, floats: [newEntry(TAB_B1)] },
 					TAB_B2
 				)
 			)
@@ -510,8 +498,8 @@ describe('floatStack', () => {
 		expect(result).toEqual({
 			type: 'float',
 			id: FLOAT_ID,
-			base: split(stackIds.sideSplit, 'column', 0.4, SOLO, STACK_B),
-			floats: [newEntry(STACK_A)]
+			base: split(stackIds.sideSplit, 'column', 0.4, SOLO_PANE, TAB_STACK_B),
+			floats: [newEntry(TAB_STACK_A)]
 		});
 	});
 

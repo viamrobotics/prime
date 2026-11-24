@@ -2,7 +2,7 @@ import type { HTMLAttributes } from 'svelte/elements';
 
 type KeydownHandler = NonNullable<HTMLAttributes<HTMLElement>['onkeydown']>;
 
-// zag reads `disabled` off the node object, so a node disabled through `isNodeDisabled` alone gets its state here.
+// zag reads `disabled` off the node object, so a node disabled through `isDisabled` alone gets its state here.
 export function markDisabled<TProps extends object>(props: TProps, disabled: boolean): TProps {
 	if (!disabled) return props;
 	return { ...props, 'data-disabled': '' };

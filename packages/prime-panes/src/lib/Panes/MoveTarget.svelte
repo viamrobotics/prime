@@ -36,9 +36,6 @@
 	const EMPTY_REGION_STRIP_PX = 32;
 	const MARK_SELECTOR = '[data-move-button]:not([data-move-button="center"])';
 
-	const SWAP_FOCUS_CLASSES =
-		'outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid';
-
 	const MARK_BUTTONS = [
 		{
 			region: 'stack',
@@ -370,7 +367,7 @@
 			data-move-button="center"
 			tabindex={tabStopRegion === 'center' ? 0 : -1}
 			aria-label={nameFor('center')}
-			class={['absolute inset-0 z-10 cursor-pointer', SWAP_FOCUS_CLASSES]}
+			class="absolute inset-0 z-10 cursor-pointer focus-ring-inset"
 			onclick={() => handleClick('center')}
 			onfocus={(event) => handleButtonFocus('center', event)}
 		></button>
@@ -385,7 +382,7 @@
 					INDICATOR_CLASSES_BY_REGION[region]
 				]}
 			>
-				<span class="max-w-full truncate bg-info-light px-2 py-1 text-xs text-info-dark">
+				<span class="max-w-full truncate rounded-sm bg-info-light px-2 py-1 text-xs text-info-dark">
 					{movingLabel}
 				</span>
 			</div>
@@ -399,7 +396,7 @@
 			aria-label={nameFor(markRegion)}
 			style={markStyle(markRegion)}
 			class={[
-				'absolute z-20 flex cursor-pointer rounded-sm focus-visible:outline-none',
+				'absolute z-20 flex cursor-pointer rounded-sm focus-ring',
 				buttonClasses,
 				{ 'pointer-events-none opacity-0': !isEngaged }
 			]}

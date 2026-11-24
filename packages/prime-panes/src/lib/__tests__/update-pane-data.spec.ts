@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { updatePaneData } from '../tree.ts';
 import {
+	CAMERA,
+	CAMERA_2,
 	createLayout,
 	createStackLayout,
 	deepFreeze,
@@ -9,33 +11,20 @@ import {
 	expectStack,
 	ids,
 	pane,
-	stackIds
+	SOLO_PANE,
+	split,
+	stackIds,
+	TAB_A1,
+	TAB_A2,
+	TAB_B1,
+	TAB_B2,
+	TIME_SERIES
 } from '../../../test/layouts.ts';
 
-import type { LayoutNode, PaneNode, SplitDirection } from '../layout.ts';
+import type { LayoutNode, PaneNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
 
 const RENAMED = { label: 'Renamed' };
-
-const CAMERA = pane(ids.mycam, 'Camera');
-const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
-const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
-
-const SOLO = pane(stackIds.solo, stackIds.solo);
-const TAB_A1 = pane(stackIds.tabA1, stackIds.tabA1);
-const TAB_A2 = pane(stackIds.tabA2, stackIds.tabA2);
-const TAB_B1 = pane(stackIds.tabB1, stackIds.tabB1);
-const TAB_B2 = pane(stackIds.tabB2, stackIds.tabB2);
-
-function split(
-	id: string,
-	direction: SplitDirection,
-	ratio: number,
-	first: LayoutNode<PaneData>,
-	second: LayoutNode<PaneData>
-): LayoutNode<PaneData> {
-	return { type: 'split', id, direction, ratio, first, second };
-}
 
 function cameraLayout(
 	camera: LayoutNode<PaneData>,
@@ -67,7 +56,7 @@ function stackLayout(
 		'row',
 		0.6,
 		{ type: 'stack', id: stackIds.stackA, panes: panesA, activeId: stackIds.tabA2 },
-		split(stackIds.sideSplit, 'column', 0.4, SOLO, {
+		split(stackIds.sideSplit, 'column', 0.4, SOLO_PANE, {
 			type: 'stack',
 			id: stackIds.stackB,
 			panes: panesB,
@@ -139,14 +128,19 @@ describe('updatePaneData', () => {
 
 	it('replaces the data of the pane in a float entry', () => {
 		const entry = { id: 'entry', rect: { x: 1, y: 2, width: 30, height: 40 }, content: TAB_A1 };
-		const root: LayoutNode<PaneData> = { type: 'float', id: 'float', base: SOLO, floats: [entry] };
+		const root: LayoutNode<PaneData> = {
+			type: 'float',
+			id: 'float',
+			base: SOLO_PANE,
+			floats: [entry]
+		};
 
 		const result = updatePaneData(root, stackIds.tabA1, RENAMED);
 
 		expect(result).toEqual({
 			type: 'float',
 			id: 'float',
-			base: SOLO,
+			base: SOLO_PANE,
 			floats: [{ ...entry, content: pane(stackIds.tabA1, 'Renamed') }]
 		});
 	});

@@ -2,8 +2,8 @@ import { describe, expect, it, vi, type Mock } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
-import ClickOutsideHost from './ClickOutsideHost.svelte';
+import '../../../../test/tailwind.css';
+import ClickOutsideHost from './fixtures/ClickOutsideHost.svelte';
 
 const byTestId = (testId: string) =>
 	document.querySelector<HTMLElement>(`[data-testid="${testId}"]`);

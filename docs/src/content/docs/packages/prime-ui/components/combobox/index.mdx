@@ -123,6 +123,7 @@ Every part that renders an element takes `class` on that element. `Combobox` and
 With focus on the input:
 
 <KeyboardTable
+  label="Keyboard bindings on the input"
   bindings={[
     { keys: "ArrowDown / ArrowUp", action: "Opens the list and highlights an item." },
     { text: "Printable characters", action: "Opens the list, filters it to matches, and highlights the first." },
@@ -132,6 +133,7 @@ With focus on the input:
 With the list open:
 
 <KeyboardTable
+  label="Keyboard bindings with the list open"
   bindings={[
     { keys: "ArrowDown / ArrowUp", action: "Highlights the next or previous item." },
     { keys: "PageDown / PageUp", action: "Highlights the item ten places down or up, stopping at the first or last." },

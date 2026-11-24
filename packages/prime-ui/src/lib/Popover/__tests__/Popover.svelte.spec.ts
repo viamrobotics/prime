@@ -1,3 +1,4 @@
+import { type ComponentProps, createRawSnippet } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
@@ -8,11 +9,12 @@ import {
 	colorOf,
 	shapeOf,
 	textColor
-} from '../../__tests__/computed-style.ts';
-import BoundPopover from './BoundPopover.svelte';
-import ControlledPopover from './ControlledPopover.svelte';
-import TextClosePopover from './TextClosePopover.svelte';
-import UndefinedPopover from './UndefinedPopover.svelte';
+} from '../../../../test/computed-style.ts';
+import { Popover } from '../popover.ts';
+import BoundPopover from './fixtures/BoundPopover.svelte';
+import ControlledPopover from './fixtures/ControlledPopover.svelte';
+import TextClosePopover from './fixtures/TextClosePopover.svelte';
+import UndefinedPopover from './fixtures/UndefinedPopover.svelte';
 
 const ICON_BUTTON_SQUARE_PX = 30;
 const VETOED_OPEN_SETTLE_MS = 100;
@@ -90,16 +92,28 @@ describe('Popover', () => {
 	});
 
 	it.each([
-		{ key: 'Tab', press: '{Tab}', from: closeButton, to: nameField },
-		{ key: 'Shift+Tab', press: '{Shift>}{Tab}{/Shift}', from: nameField, to: closeButton }
-	])('wraps $key from one end of the panel to the other', async ({ press, from, to }) => {
+		{
+			key: 'Tab',
+			press: '{Tab}',
+			from: closeButton,
+			to: outside,
+			lands: 'the control after the trigger'
+		},
+		{
+			key: 'Shift+Tab',
+			press: '{Shift>}{Tab}{/Shift}',
+			from: nameField,
+			to: trigger,
+			lands: 'the trigger'
+		}
+	])('moves $key out of the panel to $lands', async ({ press, from, to }) => {
 		const { container } = render(BoundPopover);
 		await open(container);
 		from().focus();
 
 		await userEvent.keyboard(press);
 
-		expect(document.activeElement).toBe(to());
+		expect(document.activeElement).toBe(to(container));
 	});
 
 	it('closes on Escape and returns focus to the trigger', async () => {
@@ -239,5 +253,29 @@ describe('Popover', () => {
 		await open(container);
 
 		await vi.waitFor(() => expect(owner(container)).toBe('true'));
+	});
+
+	it('requires a name on an icon-only Popover.Close by type', () => {
+		const children = createRawSnippet(() => ({ render: () => '<span>Cancel</span>' }));
+		// @ts-expect-error an icon-only close requires a name
+		const unnamed: ComponentProps<typeof Popover.Close> = {};
+		// @ts-expect-error a close takes one name, not two
+		const twice: ComponentProps<typeof Popover.Close> = { label: 'Close', 'aria-label': 'Close' };
+		const named: ComponentProps<typeof Popover.Close> = { label: 'Close' };
+		const withChildren: ComponentProps<typeof Popover.Close> = { children };
+
+		expect([unnamed, twice, named, withChildren]).toHaveLength(4);
+	});
+
+	it('requires a name on Popover.Content by type', () => {
+		// @ts-expect-error a popover panel requires a name
+		const unnamed: ComponentProps<typeof Popover.Content> = {};
+		// @ts-expect-error a popover panel takes one name, not two
+		const twice: ComponentProps<typeof Popover.Content> = {
+			label: 'Details',
+			'aria-label': 'Details'
+		};
+
+		expect([unnamed, twice]).toHaveLength(2);
 	});
 });

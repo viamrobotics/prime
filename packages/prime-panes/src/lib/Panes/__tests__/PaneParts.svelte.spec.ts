@@ -2,8 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { commands, page } from 'vitest/browser';
 
-import { ids, layoutRoot } from '../../../../test/layouts.ts';
+import { ids, layoutRoot, stackIds } from '../../../../test/layouts.ts';
 import PanePartsPanes from '../../../../test/fixtures/PanePartsPanes.svelte';
+import StackedBodyPanes from '../../../../test/fixtures/StackedBodyPanes.svelte';
 
 const RIGHT = { x: '90%', y: '50%' } as const;
 
@@ -99,5 +100,26 @@ describe('Panes parts: a view that is not reorderable', () => {
 
 		await expect.element(page.getByPanesInMoveMode()).not.toBeInTheDocument();
 		await expect.element(cameraGrip()).toHaveAttribute('aria-pressed', 'false');
+	});
+});
+
+describe('Panes.PaneBody: a consumer id', () => {
+	it('keeps the id and the tabpanel role off a stacked pane with no Panes.TabList', async () => {
+		render(StackedBodyPanes, { props: { hasTabList: false } });
+
+		const body = page.getByPaneBody(stackIds.tabA2);
+		await expect.element(body).toHaveAttribute('id', `body-${stackIds.tabA2}`);
+		await expect.element(page.getByRole('tabpanel')).not.toBeInTheDocument();
+	});
+
+	it('replaces the id with the panel id in a stacked pane with a Panes.TabList', async () => {
+		render(StackedBodyPanes, { props: { hasTabList: true } });
+
+		const panel = page.getByRole('tabpanel');
+		await expect.element(panel).toBeInTheDocument();
+		expect(panel.element().id).not.toBe(`body-${stackIds.tabA2}`);
+		await expect
+			.element(page.getByRole('tab', { name: stackIds.tabA2 }))
+			.toHaveAttribute('aria-controls', panel.element().id);
 	});
 });

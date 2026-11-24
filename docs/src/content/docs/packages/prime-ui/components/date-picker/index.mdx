@@ -15,6 +15,8 @@ import TwoWay from "./TwoWay.svelte";
 import twoWaySource from "./TwoWay.svelte?raw";
 import Controlled from "./Controlled.svelte";
 import controlledSource from "./Controlled.svelte?raw";
+import InField from "./InField.svelte";
+import inFieldSource from "./InField.svelte?raw";
 
 <ComponentIntro name="date-picker" />
 
@@ -48,7 +50,7 @@ Every part is a property on `DatePicker`. `Field` is the segmented input and hol
 
 `bind:value` on the root. The value is a `DateValue` from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/), or `undefined` until one is picked. `value?.toString()` prints it as ISO `YYYY-MM-DD`.
 
-`name` submits the date as its ISO 8601 string, and submits an empty value until a date is chosen.
+`name` submits the date as its ISO 8601 string, and submits an empty value until a date is chosen. A disabled picker submits nothing.
 
 <Example code={twoWaySource} title="TwoWay.svelte">
   <TwoWay client:visible />
@@ -62,13 +64,27 @@ Pass `bind:value` a getter and a setter. The setter can refuse a date by leaving
   <Controlled client:visible />
 </Example>
 
+### In a field
+
+An enclosing [`Field`](../field/) supplies the label, hint, `disabled`, `required`, and `state`. The visible `Label` names the segmented field.
+
+`required` sets `aria-required` on each segment. With a `name`, the form will not submit while no date is chosen.
+
+<Example code={inFieldSource} title="InField.svelte">
+  <InField client:visible />
+</Example>
+
 ### Bounds
 
 `min` and `max` take date objects from [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/), such as `new CalendarDate(2026, 1, 1)`. Dates outside the range cannot be selected in the calendar. A date typed outside the range marks the field `aria-invalid` and paints the same error border as `state="error"`.
 
+### Time of day
+
+`granularity` of `hour`, `minute`, or `second` adds a time of day to the date, with a segment for each unit down to the one named.
+
 ### Accessible names
 
-`DatePicker.Trigger` takes `aria-label`, which defaults to "Open calendar". `DatePicker.Content` takes `aria-label`, which defaults to "Choose a date". `DatePicker.Calendar` takes `aria-label` too. It replaces "Choose a date" at the start of the calendar grid's name, and the month and year stay appended. Set all three to name them on a page that is not in English.
+`DatePicker.Trigger` takes `aria-label`, which defaults to "Open calendar". `DatePicker.Calendar` takes `aria-label`, which defaults to "Choose a date". It names the floating panel and starts the calendar grid's name, with the month and year appended. `DatePicker.Content` takes its own `aria-label` when the panel needs a different name. Set the trigger's and the calendar's to name them on a page that is not in English.
 
 The previous and next month buttons take their names from the root `locale` through `Intl.RelativeTimeFormat`, such as "Last month" and "Next month" in `en-US`. They need no override.
 
@@ -77,7 +93,7 @@ The previous and next month buttons take their names from the root `locale` thro
   <DatePicker.Field>
     <DatePicker.Trigger aria-label="Kalender öffnen" />
   </DatePicker.Field>
-  <DatePicker.Content aria-label="Datum auswählen">
+  <DatePicker.Content>
     <DatePicker.Calendar aria-label="Datum auswählen" />
   </DatePicker.Content>
 </DatePicker>
@@ -95,13 +111,28 @@ The previous and next month buttons take their names from the root `locale` thro
 
 ## Styling
 
-`DatePicker.Field`, `DatePicker.Trigger`, and `DatePicker.Calendar` take `class` on the element they render. `DatePicker` takes no `class`, since it renders no element of its own. `DatePicker.Trigger` takes button attributes, and its `children` replace the calendar icon. `DatePicker.Content` wears `z-popover`. See [z layers](../../tailwind-config/component-classes/#z-layers).
+`DatePicker.Field`, `DatePicker.Trigger`, and `DatePicker.Calendar` take `class` on the element they render. `DatePicker` takes no `class`, since it renders no element of its own. `DatePicker.Trigger` takes button attributes, and its `children` replace the calendar icon. The `previousChevron` and `nextChevron` snippets on `DatePicker.Calendar` replace the chevrons in its month buttons. `DatePicker.Content` wears `z-popover`. See [z layers](../../tailwind-config/component-classes/#z-layers).
+
+Each day in the calendar carries these data attributes, set by bits-ui:
+
+| Attribute                     | Set when                                        |
+| ----------------------------- | ----------------------------------------------- |
+| `data-selected`               | The day is the chosen date.                     |
+| `data-focused`                | The day holds the calendar's focus position.    |
+| `data-today`                  | The day is today.                               |
+| `data-outside-month`          | The day belongs to a neighboring month.         |
+| `data-outside-visible-months` | The day is outside every month on show.         |
+| `data-disabled`               | The day is disabled or outside `min` and `max`. |
+| `data-unavailable`            | The day is unavailable.                         |
+
+The field frame sets `data-state` to `open` or `closed`, `data-disabled`, `data-readonly`, `data-invalid` for a typed date outside `min` and `max`, and `data-field-state` for `error` and `warn`. Each segment sets `data-segment` to its part, along with `data-invalid`, `data-disabled`, and `data-readonly`.
 
 ## Keyboard
 
 With focus on a segment of the field:
 
 <KeyboardTable
+  label="Keyboard bindings in the field"
   bindings={[
     { text: "Digits", action: "Types into the segment." },
     { keys: "ArrowUp / ArrowDown", action: "Steps the segment up or down." },
@@ -113,6 +144,7 @@ With focus on a segment of the field:
 With focus on a day in the open calendar:
 
 <KeyboardTable
+  label="Keyboard bindings with the calendar open"
   bindings={[
     { keys: "ArrowLeft / ArrowRight", action: "Moves to the previous or next day." },
     { keys: "ArrowUp / ArrowDown", action: "Moves to the same day a week earlier or later." },

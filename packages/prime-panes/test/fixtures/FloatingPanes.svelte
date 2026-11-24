@@ -5,7 +5,7 @@
 	import type { PaneData } from '../layouts.ts';
 	import type { FloatEntry, LayoutNode } from '../../src/lib/layout.ts';
 	import { Panes } from '../../src/lib/Panes/panes.ts';
-	import { removeFloat } from '../../src/lib/tree.ts';
+	import { removeFloat } from '../../src/lib/FloatPanes/float-tree.ts';
 
 	interface Props {
 		initial?: LayoutNode<PaneData> | undefined;

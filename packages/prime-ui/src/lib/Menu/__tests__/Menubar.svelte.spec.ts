@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import BasicMenubar from './BasicMenubar.svelte';
+import BasicMenubar from './fixtures/BasicMenubar.svelte';
 
 const trigger = (name: string) =>
 	[...document.querySelectorAll<HTMLElement>('[role="menubar"] [role="menuitem"]')].find(

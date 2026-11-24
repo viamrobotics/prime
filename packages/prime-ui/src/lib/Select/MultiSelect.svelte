@@ -9,8 +9,8 @@ and a `name` submits one hidden input per value. Inside a [`Field`](../Field/Fie
 Built on [bits-ui `Select`](https://bits-ui.com/docs/components/select) with `type="multiple"`.
 
 ```svelte
-<Field class="flex flex-col gap-1">
-	<Label>Toppings</Label>
+<Field label="Toppings" class="flex flex-col gap-1">
+	<Label />
 	<MultiSelect bind:value items={toppings}>
 		<MultiSelect.Trigger>
 			<MultiSelect.Value placeholder="Pick toppings" />

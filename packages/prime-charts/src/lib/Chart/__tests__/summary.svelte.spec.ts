@@ -35,8 +35,7 @@ const yFormat = (value: number) => `${value} u`;
 
 const summaryText = (container: HTMLElement) =>
 	container.querySelector('[data-part="summary"]')?.textContent;
-const figureOf = (container: HTMLElement) =>
-	container.querySelector<HTMLElement>('[role="figure"]')!;
+const figureOf = (container: HTMLElement) => container.querySelector<HTMLElement>('figure')!;
 
 describe('Chart summary', () => {
 	it('describes the figure with the series and both ranges in the axis formats', async () => {

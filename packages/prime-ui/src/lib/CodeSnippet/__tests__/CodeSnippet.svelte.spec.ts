@@ -2,11 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import CodeSnippet from '../CodeSnippet.svelte';
-import DarkCodeSnippet from './DarkCodeSnippet.svelte';
-import NarrowCodeSnippet from './NarrowCodeSnippet.svelte';
-import WrapCodeSnippet from './WrapCodeSnippet.svelte';
+import DarkCodeSnippet from './fixtures/DarkCodeSnippet.svelte';
+import NarrowCodeSnippet from './fixtures/NarrowCodeSnippet.svelte';
+import WrapCodeSnippet from './fixtures/WrapCodeSnippet.svelte';
 
 const code = '{ "name": "viam", "count": 3 }';
 const COPIED_MS = 2000;
@@ -155,6 +155,23 @@ describe('CodeSnippet', () => {
 
 		await expect.element(page.getByRole('region', { name: 'Code' })).toBeVisible();
 		expect(container.querySelector('pre')!.tabIndex).toBe(0);
+	});
+
+	it('wears the shared focus ring on an overflowing snippet', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: longLine } });
+
+		await expect.element(page.getByRole('region', { name: 'Code' })).toBeVisible();
+		expect(container.querySelector('pre')!.classList.contains('focus-ring'), 'focus-ring').toBe(
+			true
+		);
+	});
+
+	it('does not wear the focus ring on a snippet that fits', async () => {
+		const { container } = render(NarrowCodeSnippet, { props: { code: 'a' } });
+		const pre = container.querySelector('pre')!;
+
+		await expect.poll(() => pre.hasAttribute('role')).toBe(false);
+		expect(pre.classList.contains('focus-ring'), 'focus-ring').toBe(false);
 	});
 
 	it('names an overflowing captioned snippet by its caption', async () => {

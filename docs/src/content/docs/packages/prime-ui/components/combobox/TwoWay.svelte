@@ -14,8 +14,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Resource type</Label>
+  <Field label="Resource type" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <Combobox bind:value={resource} bind:query items={resources}>
       <Input.Group>
         <Combobox.Input placeholder="Search resource types" />

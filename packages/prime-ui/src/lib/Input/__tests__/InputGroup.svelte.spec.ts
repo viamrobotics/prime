@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
-import GroupedInput from './GroupedInput.svelte';
+import { borderColor, colorOf } from '../../../../test/computed-style.ts';
+import GroupedInput from './fixtures/GroupedInput.svelte';
 
 const pointerDown = (element: Element) => {
 	const event = new PointerEvent('pointerdown', { bubbles: true, cancelable: true });
@@ -29,7 +29,9 @@ const setup = (props: ComponentProps<typeof GroupedInput> = {}) => {
 		group: container.querySelector<HTMLElement>('[data-testid="group"]')!,
 		input: container.querySelector('input')!,
 		suffix: container.querySelector<HTMLElement>('[data-testid="suffix"]')!,
-		action: container.querySelector<HTMLElement>('[data-testid="action"]')!
+		action: container.querySelector<HTMLElement>('[data-testid="action"]')!,
+		editable: container.querySelector<HTMLElement>('[data-testid="editable"]')!,
+		roleButton: container.querySelector<HTMLElement>('[data-testid="role-button"]')!
 	};
 };
 
@@ -70,6 +72,17 @@ describe('Input.Group', () => {
 		expect(pointerDown(action).defaultPrevented, 'button press passes through').toBe(false);
 		expect(pointerDown(input).defaultPrevented, 'input press passes through').toBe(false);
 		expect(document.activeElement).not.toBe(input);
+	});
+
+	it.each([
+		{ child: 'editable content', part: 'editable' },
+		{ child: 'a role="button" element', part: 'roleButton' }
+	] as const)('leaves a press on $child alone', ({ part }) => {
+		const parts = setup();
+
+		const event = pointerDown(parts[part]);
+
+		expect(event.defaultPrevented, 'pointer-down passes through').toBe(false);
 	});
 
 	it('runs a consumer onpointerdown first and honors its preventDefault', () => {

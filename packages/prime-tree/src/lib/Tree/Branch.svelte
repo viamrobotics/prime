@@ -1,3 +1,7 @@
+<!--
+@component
+The `role="treeitem"` element of a node that has children, and the outermost part of a branch row. Place it first inside the `node` snippet, with [`Tree.BranchControl`](./BranchControl.svelte) and [`Tree.BranchContent`](./BranchContent.svelte) inside it. It sets the `--depth` custom property, which a consumer reads to indent the row.
+-->
 <script lang="ts">
 	import { mergeProps } from '@zag-js/svelte';
 	import type { HTMLAttributes } from 'svelte/elements';

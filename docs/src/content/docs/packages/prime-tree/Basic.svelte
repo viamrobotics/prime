@@ -23,9 +23,9 @@
 <div class="not-content">
   <Tree
     nodes={files}
-    nodeToValue={(file) => file.path}
-    nodeToString={(file) => file.name}
-    nodeToChildren={(file) => file.children}
+    getValue={(file) => file.path}
+    getLabel={(file) => file.name}
+    getChildren={(file) => file.children}
     aria-label="Files"
   >
     {#snippet node(file, state)}
@@ -45,7 +45,7 @@
       {:else}
         <Tree.Item
           class="focus-ring rounded-sm py-1 text-sm"
-          style="padding-inline-start: calc(var(--depth) * 1rem)"
+          style="padding-inline-start: calc(var(--depth) * 1rem + 1rem)"
         >
           {file.name}
         </Tree.Item>

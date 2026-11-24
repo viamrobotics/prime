@@ -29,7 +29,7 @@ const {
 
 {
   props.length > 0 && (
-    <table>
+    <table aria-label={`Props of ${name}`}>
       <thead>
         <tr>
           <th scope="col">Prop</th>
@@ -41,10 +41,10 @@ const {
       <tbody>
         {props.map((prop) => (
           <tr>
-            <td>
+            <th scope="row">
               {prop.bindable && <span class="prop-flag">bind:</span>}
               <code>{prop.name}</code>
-            </td>
+            </th>
             <td>
               <code>{prop.type}</code>
             </td>

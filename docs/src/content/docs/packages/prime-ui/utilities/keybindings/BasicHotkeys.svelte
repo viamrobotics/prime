@@ -43,12 +43,12 @@
     <kbd>{formatKeybinding(reset)}</kbd> to reset, and
     <kbd>{formatKeybinding(save)}</kbd> to save.
   </p>
-  <Field class="flex items-center gap-2">
+  <Field label="Shortcuts enabled" class="flex items-center gap-2">
     <Checkbox bind:checked={isEnabled} />
-    <Label>Shortcuts enabled</Label>
+    <Label />
   </Field>
-  <Field class="flex flex-col gap-1">
-    <Label>Notes</Label>
+  <Field label="Notes" class="flex flex-col gap-1">
+    <Label />
     <Input placeholder="Typing here does not add" />
   </Field>
 </div>

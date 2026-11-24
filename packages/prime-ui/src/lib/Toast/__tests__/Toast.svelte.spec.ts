@@ -1,11 +1,12 @@
 import { mdiAlert, mdiAlertCircle, mdiCheckCircle, mdiInformation } from '@mdi/js';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import '../../__tests__/tailwind.css';
+import '../../../../test/tailwind.css';
+import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
 import Toast from '../Toast.svelte';
-import ToastHost from './ToastHost.svelte';
+import ToastHost from './fixtures/ToastHost.svelte';
 
 const HOLD_OPEN = 60_000;
 const SHORT_DURATION = 600;
@@ -26,7 +27,46 @@ const waitForItem = async () => {
 const waitForNoItems = () =>
 	vi.waitFor(() => expect(items()).toHaveLength(0), { timeout: REMOVAL_TIMEOUT });
 
+afterEach(() => emulateReducedMotion('no-preference'));
+
 describe('Toast', () => {
+	it('passes extra attributes to the region', () => {
+		render(ToastHost);
+
+		expect(region().getAttribute('data-testid')).toBe('region');
+		expect(region().getAttribute('id')).toMatch(/^toast-group:/);
+	});
+
+	it.each([
+		{ variant: 'info', name: 'Info' },
+		{ variant: 'success', name: 'Success' },
+		{ variant: 'warning', name: 'Warning' },
+		{ variant: 'danger', name: 'Error' }
+	])('names the $variant tone as $name in text', async ({ variant, name }) => {
+		const { container } = render(ToastHost, { duration: HOLD_OPEN });
+
+		await userEvent.click(trigger(container, variant));
+
+		const item = await waitForItem();
+		expect(item.querySelector('.sr-only')?.textContent).toBe(`${name}: `);
+	});
+
+	it.each([
+		{ preference: 'no-preference', property: 'translate, scale, opacity' },
+		{ preference: 'reduce', property: 'opacity' }
+	] as const)(
+		'transitions $property under prefers-reduced-motion: $preference',
+		async ({ preference, property }) => {
+			await emulateReducedMotion(preference);
+			const { container } = render(ToastHost, { duration: HOLD_OPEN });
+			await userEvent.click(trigger(container, 'info'));
+
+			const item = await waitForItem();
+
+			expect(getComputedStyle(item).transitionProperty).toBe(property);
+		}
+	);
+
 	it('labels the region', () => {
 		render(ToastHost);
 

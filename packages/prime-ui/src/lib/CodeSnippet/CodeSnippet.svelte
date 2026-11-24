@@ -106,7 +106,8 @@ A read-only block of highlighted code with a copy button.
 			{...scrollRegion}
 			class={[
 				'code-snippet bg-light p-2 text-code',
-				wrapLines ? 'whitespace-pre-wrap' : 'overflow-x-auto whitespace-pre'
+				wrapLines ? 'whitespace-pre-wrap' : 'overflow-x-auto whitespace-pre',
+				scrollRegion.tabindex === 0 && 'focus-ring'
 			]}><code>{@html html}</code></pre>
 		<button
 			type="button"

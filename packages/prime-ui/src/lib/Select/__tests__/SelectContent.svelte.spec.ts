@@ -4,9 +4,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { boxShadow, shapeOf } from '../../__tests__/computed-style.ts';
+import { boxShadow, shapeOf } from '../../../../test/computed-style.ts';
 import { Select } from '../select.ts';
-import PlacedSelect from './PlacedSelect.svelte';
+import PlacedSelect from './fixtures/PlacedSelect.svelte';
 
 const listbox = () => document.querySelector<HTMLElement>('[role="listbox"]');
 

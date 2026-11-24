@@ -9,6 +9,7 @@ import CodeEditor from '../CodeEditor.svelte';
 import BoundCodeEditor from './fixtures/BoundCodeEditor.svelte';
 import ControlledCodeEditor from './fixtures/ControlledCodeEditor.svelte';
 import LabelledCodeEditor from './fixtures/LabelledCodeEditor.svelte';
+import UnsetCodeEditor from './fixtures/UnsetCodeEditor.svelte';
 
 type EditorProps = ComponentProps<typeof CodeEditor>;
 
@@ -25,8 +26,13 @@ const docText = (content: Element) =>
 const token = (container: Element, text: string) =>
 	[...container.querySelectorAll('.cm-line span')].find((span) => span.textContent === text);
 const textboxNamed = (name: string) => page.getByRole('textbox', { name, exact: true });
+const lineWithText = (content: Element, text: string) =>
+	lines(content).find((line) => line.textContent === text);
 
-const MODIFIER = navigator.platform.includes('Mac') ? 'Meta' : 'Control';
+const IS_MAC = navigator.platform.includes('Mac');
+const MODIFIER = IS_MAC ? 'Meta' : 'Control';
+const FOLD_KEY = IS_MAC ? '{Meta>}{Alt>}[[{/Alt}{/Meta}' : '{Control>}{Shift>}[[{/Shift}{/Control}';
+const EXPAND_KEY = IS_MAC ? '{Meta>}{Alt>}]{/Alt}{/Meta}' : '{Control>}{Shift>}]{/Shift}{/Control}';
 const LONG_ORIGINAL = Array.from({ length: 30 }, (_, index) => `line ${index}`).join('\n');
 const LONG_VALUE = LONG_ORIGINAL.replace('line 0', 'line zero');
 const SPLIT_PROPS = {
@@ -111,6 +117,19 @@ describe('CodeEditor', () => {
 			expect(record.mock.calls.map(([next]) => next)).toEqual(['hello!']);
 			expect(docText(content)).toBe('hello!');
 			expect(owner(container)).toBe('hello!');
+		});
+
+		it('starts empty when the bound value is undefined and writes typed text to it', async () => {
+			const { container } = render(UnsetCodeEditor);
+			const [content] = contents(container);
+
+			expect(docText(content)).toBe('');
+			expect(owner(container)).toBe('unset');
+
+			await typeAtLineEnd(lines(content)[0], 'hi');
+
+			expect(owner(container)).toBe('hi');
+			expect(docText(content)).toBe('hi');
 		});
 	});
 
@@ -418,6 +437,20 @@ describe('CodeEditor', () => {
 			expect(lines(content)).toHaveLength(1);
 		});
 
+		it('unfolds a fold with the expand key when no collapsed lines touch the cursor', async () => {
+			const { container } = render(CodeEditor, { props: foldProps });
+			const [content] = contents(container);
+			await expect.poll(() => count(container, '.cm-foldGutter [title="Fold line"]')).toBe(1);
+			await userEvent.click(lines(content)[0]);
+			await userEvent.keyboard(FOLD_KEY);
+			await expect.poll(() => count(content, '.cm-foldPlaceholder')).toBe(1);
+
+			await userEvent.keyboard(EXPAND_KEY);
+
+			await expect.poll(() => count(content, '.cm-foldPlaceholder')).toBe(0);
+			expect(lines(content)).toHaveLength(4);
+		});
+
 		it('drops the fold markers with lineNumbers false', async () => {
 			const { container, rerender } = render(CodeEditor, { props: foldProps });
 			await expect.poll(() => count(container, '.cm-foldGutter')).toBe(1);
@@ -643,6 +676,36 @@ describe('CodeEditor', () => {
 				await rerender({ collapseUnchanged: false });
 
 				await expect.poll(() => count(container, '.cm-collapsedLines')).toBe(0);
+			}
+		);
+
+		it.each([
+			{ diff: 'unified', side: 'value', index: 0, collapsedRuns: 1 },
+			{ diff: 'split', side: 'original', index: 0, collapsedRuns: 2 },
+			{ diff: 'split', side: 'value', index: 1, collapsedRuns: 2 }
+		] as const)(
+			'expands the collapsed lines next to the cursor on the $side side of the $diff diff with the expand key',
+			async ({ diff, index, collapsedRuns }) => {
+				const { container } = render(CodeEditor, {
+					props: {
+						value: LONG_VALUE,
+						original: LONG_ORIGINAL,
+						diff,
+						collapseUnchanged: true,
+						'aria-label': 'Robot config'
+					}
+				});
+				await expect.poll(() => count(container, '.cm-collapsedLines')).toBe(collapsedRuns);
+				const content = contents(container)[index];
+				expect(lineWithText(content, 'line 29')).toBeUndefined();
+
+				await userEvent.click(lineWithText(content, 'line 3')!);
+				await userEvent.keyboard(EXPAND_KEY);
+
+				await expect.poll(() => count(container, '.cm-collapsedLines')).toBe(0);
+				for (const side of contents(container)) {
+					expect(lineWithText(side, 'line 29')?.textContent).toBe('line 29');
+				}
 			}
 		);
 	});

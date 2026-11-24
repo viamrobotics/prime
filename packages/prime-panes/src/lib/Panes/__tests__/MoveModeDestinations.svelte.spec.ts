@@ -15,6 +15,7 @@ import type { Point } from '../../../../test/input-commands.ts';
 const DESTINATION_COUNT = 3;
 const MIN_HIT_AREA_PX = 24;
 const INFO_DARK = 'rgb(46, 103, 211)';
+const LINK = 'rgb(0, 102, 204)';
 const GRAY_8 = 'rgb(78, 79, 82)';
 const UNSELECTED_BAR = { backgroundColor: GRAY_8, opacity: '0.7' } as const;
 const SELECTED_BAR = { backgroundColor: INFO_DARK, opacity: '1' } as const;
@@ -161,7 +162,7 @@ describe('Panes move mode: marking the moving pane', () => {
 		await expect.element(page.getByMovingNotice()).not.toBeInTheDocument();
 	});
 
-	it('outlines the moving pane wrapper inside its edge in info-dark after a mouse click starts the move', async () => {
+	it('outlines the moving pane wrapper inside its edge in the link color after a mouse click starts the move', async () => {
 		render(ControlledPanes, { accept: true, handles: true });
 
 		await startMoveWithClick();
@@ -170,7 +171,7 @@ describe('Panes move mode: marking the moving pane', () => {
 			outlineStyle: 'solid',
 			outlineWidth: '2px',
 			outlineOffset: '-2px',
-			outlineColor: INFO_DARK
+			outlineColor: LINK
 		});
 	});
 
@@ -394,7 +395,7 @@ describe('Panes move mode: edge bars', () => {
 		);
 	});
 
-	it('draws no focus outline on a focused edge button', async () => {
+	it('draws a 2px link-colored outline outside a focused edge button', async () => {
 		render(ControlledPanes, { accept: true, handles: true });
 		await startMoveWithKeyboard('Camera');
 
@@ -402,7 +403,12 @@ describe('Panes move mode: edge bars', () => {
 
 		const focused = mark('Place Camera above Time series');
 		await expect.element(focused).toHaveFocus();
-		await expect.element(focused).toHaveStyle({ outlineStyle: 'none' });
+		await expect.element(focused).toHaveStyle({
+			outlineStyle: 'solid',
+			outlineWidth: '2px',
+			outlineOffset: '2px',
+			outlineColor: LINK
+		});
 	});
 
 	it('draws the selected bar in solid info-dark and no other bar', async () => {
@@ -594,14 +600,17 @@ describe('Panes move mode: destination group', () => {
 			.toHaveAttribute('data-move-preview', 'top');
 	});
 
-	it('shows the full-pane preview and an inset outline on a focused swap', async () => {
+	it('shows the full-pane preview and an inset link-colored outline on a focused swap', async () => {
 		await renderEngaged();
 
 		const swap = mark('Swap Camera with Time series');
 		await expect.element(swap).toHaveFocus();
-		await expect
-			.element(swap)
-			.toHaveStyle({ outlineStyle: 'solid', outlineWidth: '2px', outlineOffset: '-2px' });
+		await expect.element(swap).toHaveStyle({
+			outlineStyle: 'solid',
+			outlineWidth: '2px',
+			outlineOffset: '-2px',
+			outlineColor: LINK
+		});
 		await expect.poll(() => boxOf(timeSeriesPreview())).toEqual(boxOf(timeSeries()));
 		await expect.element(timeSeriesPreview()).toHaveAttribute('data-move-preview', 'center');
 	});

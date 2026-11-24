@@ -3,8 +3,8 @@ import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
 import SelectItems from '../SelectItems.svelte';
-import CustomItemsSelect from './CustomItemsSelect.svelte';
-import ItemsSelect from './ItemsSelect.svelte';
+import CustomItemsSelect from './fixtures/CustomItemsSelect.svelte';
+import ItemsSelect from './fixtures/ItemsSelect.svelte';
 
 const open = async (container: HTMLElement) => {
 	await userEvent.click(container.querySelector('button')!);

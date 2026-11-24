@@ -7,6 +7,7 @@ import PlacementSwap from './fixtures/PlacementSwap.svelte';
 import PlacementTwoPlots from './fixtures/PlacementTwoPlots.svelte';
 
 const insideParts = ['Line', 'XAxis', 'YAxis', 'Grid', 'Tooltip'] as const;
+const chartlessParts = ['Plot', 'Legend', 'Table'] as const;
 const outsideParts = ['Legend', 'Table'] as const;
 
 const thrownMessage = (run: () => unknown) => {
@@ -44,6 +45,14 @@ describe('Chart placement', () => {
 		const message = thrownMessage(() => render(PlacementPart, { props: { part, placement } }));
 
 		expect(message).toBe(`Chart.${part} must be placed inside Chart.Plot.`);
+	});
+
+	it.each(chartlessParts)('throws for a Chart.%s placed outside any Chart', (part) => {
+		const message = thrownMessage(() =>
+			render(PlacementPart, { props: { part, placement: 'no-chart' } })
+		);
+
+		expect(message).toBe(`Chart.${part} must be placed inside Chart.`);
 	});
 
 	it.each(outsideParts)('throws for a Chart.%s inside Chart.Plot', (part) => {

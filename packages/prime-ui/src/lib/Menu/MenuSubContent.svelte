@@ -7,6 +7,7 @@ The floating panel of a [`Menu.Sub`](./MenuSub.svelte). It opens beside its [`Me
 
 	import { DropdownMenu } from 'bits-ui';
 
+	// sideOffset and alignOffset are the anchor-placement vocabulary bits-ui shares with Floating UI. No native name exists, so they keep bits-ui's names.
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
 		id?: string;

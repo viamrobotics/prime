@@ -8,10 +8,11 @@ import {
 	borderColor,
 	colorOf,
 	textColor
-} from '../../__tests__/computed-style.ts';
-import BoundDateRangePicker from './BoundDateRangePicker.svelte';
-import ControlledDateRangePicker from './ControlledDateRangePicker.svelte';
-import UndefinedDateRangePicker from './UndefinedDateRangePicker.svelte';
+} from '../../../../test/computed-style.ts';
+import BoundDateRangePicker from './fixtures/BoundDateRangePicker.svelte';
+import ControlledDateRangePicker from './fixtures/ControlledDateRangePicker.svelte';
+import FormDateRangePicker from './fixtures/FormDateRangePicker.svelte';
+import UndefinedDateRangePicker from './fixtures/UndefinedDateRangePicker.svelte';
 
 type RangeEnd = 'start' | 'end';
 
@@ -43,6 +44,10 @@ const monthButtonNames = () =>
 const calendarName = () =>
 	document.querySelector('[role="application"]')?.getAttribute('aria-label');
 const calendar = () => document.querySelector('[role="dialog"], [role="grid"]');
+const segmentAttributes = (container: Element, attribute: string) =>
+	[...container.querySelectorAll('[role="spinbutton"]')].map((part) =>
+		part.getAttribute(attribute)
+	);
 
 const dayOf = async (date: string) => {
 	let day: HTMLElement | null = null;
@@ -146,6 +151,36 @@ describe('DateRangePicker', () => {
 		await openCalendar(container);
 
 		await vi.waitFor(() => expect(calendarName()).toBe('Choose a reporting period March 2026'));
+	});
+
+	it('names the panel after the calendar', async () => {
+		const { container } = render(BoundDateRangePicker, {
+			props: { calendarLabel: 'Choose a reporting period' }
+		});
+
+		await openCalendar(container);
+
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe(
+				'Choose a reporting period'
+			)
+		);
+	});
+
+	it('replaces the month button chevrons with the chevron snippets', async () => {
+		const { container } = render(BoundDateRangePicker, { props: { chevrons: true } });
+
+		await openCalendar(container);
+
+		await vi.waitFor(() =>
+			expect(
+				[monthButton('Last month'), monthButton('Next month')].map((button) => button?.innerHTML)
+			).toEqual([
+				expect.stringContaining('data-testid="previous-chevron"'),
+				expect.stringContaining('data-testid="next-chevron"')
+			])
+		);
+		expect(document.querySelector('[role="dialog"] button svg')).toBeNull();
 	});
 
 	it('returns focus to the trigger when Escape closes the calendar', async () => {
@@ -344,6 +379,27 @@ describe('DateRangePicker', () => {
 		);
 	});
 
+	it.each([
+		{ disabled: false, submitted: '2026-03-10/2026-03-20' },
+		{ disabled: true, submitted: null }
+	])('disabled=$disabled submits $submitted with the form', ({ disabled, submitted }) => {
+		const { container } = render(FormDateRangePicker, { props: { disabled } });
+
+		expect(new FormData(container.querySelector('form')!).get('period')).toBe(submitted);
+	});
+
+	it.each([
+		{ required: true, expected: 'true' },
+		{ required: false, expected: null }
+	])(
+		'required=$required sets aria-required on every segment to $expected',
+		({ required, expected }) => {
+			const { container } = render(BoundDateRangePicker, { props: { required } });
+
+			expect(segmentAttributes(container, 'aria-required')).toEqual(Array(6).fill(expected));
+		}
+	);
+
 	it('submits an empty value while only the start is picked', async () => {
 		const { container } = render(BoundDateRangePicker, { props: { name: 'period' } });
 		await openCalendar(container);
@@ -390,6 +446,20 @@ describe('DateRangePicker', () => {
 		expect(borderColor(rangeField(container))).toBe(
 			colorOf('border-danger-dark', 'borderTopColor')
 		);
+	});
+
+	it('sets aria-invalid on every segment in the error state', () => {
+		const { container } = render(BoundDateRangePicker, { props: { state: 'error' } });
+
+		expect(segmentAttributes(container, 'aria-invalid')).toEqual(Array(6).fill('true'));
+	});
+
+	it('keeps its own data-state over one passed to the field', () => {
+		const { container } = render(BoundDateRangePicker, {
+			props: { fieldProps: { 'data-state': 'stale' } }
+		});
+
+		expect(rangeField(container).getAttribute('data-state')).toBe('closed');
 	});
 
 	it('darkens the frame while the calendar is open', async () => {

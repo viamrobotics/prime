@@ -113,6 +113,55 @@ describe('Chart.Legend', () => {
 		expect(items).toEqual(['cell-01 (°) Loading', 'cell-02']);
 	});
 
+	it('names the list as the shown series', async () => {
+		const { container } = render(LegendChart, { props: { series: twoSeries } });
+
+		await expect
+			.poll(() => container.querySelector('[data-part="legend"]')?.getAttribute('aria-label'))
+			.toBe('Shown series');
+		expect(container.querySelector('[data-part="legend"]')?.getAttribute('role'), 'list role').toBe(
+			'list'
+		);
+	});
+
+	it('describes only a loading series button as Loading', async () => {
+		const { container } = render(LegendChart, {
+			props: { series: [{ ...twoSeries[0], loading: true }, twoSeries[1]] }
+		});
+		await expect.poll(() => buttons(container).length).toBe(2);
+
+		const descriptions = buttons(container).map((button) => {
+			const id = button.getAttribute('aria-describedby');
+			return id === null ? null : document.getElementById(id)?.textContent;
+		});
+
+		expect(descriptions).toEqual(['Loading', null]);
+	});
+
+	it('gives each loading series its own description id', async () => {
+		const { container } = render(LegendChart, {
+			props: { series: twoSeries.map((entry) => ({ ...entry, loading: true })) }
+		});
+		await expect.poll(() => buttons(container).length).toBe(2);
+
+		const ids = buttons(container).map((button) => button.getAttribute('aria-describedby'));
+
+		expect(new Set(ids).size, `ids were ${ids.join(', ')}`).toBe(2);
+	});
+
+	it('passes a consumer id and data attribute to the list', async () => {
+		const { container } = render(LegendChart, {
+			props: { series: twoSeries, legendProps: { id: 'series-legend', 'data-extra': 'yes' } }
+		});
+
+		await expect
+			.poll(() => {
+				const list = container.querySelector('[data-part="legend"]');
+				return { tag: list?.tagName, id: list?.id, extra: list?.getAttribute('data-extra') };
+			})
+			.toEqual({ tag: 'UL', id: 'series-legend', extra: 'yes' });
+	});
+
 	it.each([
 		{ isLegendFirst: false, flag: Node.DOCUMENT_POSITION_FOLLOWING, place: 'after' },
 		{ isLegendFirst: true, flag: Node.DOCUMENT_POSITION_PRECEDING, place: 'before' }

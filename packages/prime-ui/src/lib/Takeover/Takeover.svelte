@@ -10,7 +10,7 @@ Built on [bits-ui `Dialog`](https://bits-ui.com/docs/components/dialog).
 	<Takeover.Content>
 		<Takeover.Header>
 			<Takeover.Title>Settings</Takeover.Title>
-			<Takeover.Close />
+			<Takeover.Close aria-label="Close" />
 		</Takeover.Header>
 		<p>Body</p>
 	</Takeover.Content>

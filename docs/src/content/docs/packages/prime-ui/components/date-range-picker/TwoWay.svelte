@@ -13,8 +13,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-sm flex-col gap-1">
-    <Label>Reporting period</Label>
+  <Field label="Reporting period" class="flex max-w-sm flex-col gap-1">
+    <Label />
     <DateRangePicker bind:value name="period">
       <DateRangePicker.Field>
         <DateRangePicker.Trigger />

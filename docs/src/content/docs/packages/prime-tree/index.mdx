@@ -75,7 +75,7 @@ import branchesSource from "./Branches.svelte?raw";
 ## Anatomy
 
 ```svelte
-<Tree>
+<Tree aria-label="Files">
   {#snippet node(item, state)}
     <Tree.Branch>
       <Tree.BranchControl>
@@ -98,7 +98,7 @@ import branchesSource from "./Branches.svelte?raw";
 
 ### Basic rows
 
-`nodes` holds the root nodes and is the single source of truth. A later change to it flows into the tree without a remount. The accessors tell the tree how to read your node type: `nodeToValue` returns a unique id, `nodeToString` returns the label used for type-ahead, and `nodeToChildren` returns the children. `nodeToChildrenCount` and `isNodeDisabled` are optional. Return a number from `nodeToChildrenCount` for a branch that may be empty, such as an empty folder, so it still renders as a branch, and `undefined` for a leaf. Any number, including `0`, makes the node a branch. A node for which `isNodeDisabled` returns `true` is never selected or expanded, whether by a click, a key, a range, or select-all.
+`nodes` holds the root nodes and is the single source of truth. A later change to it flows into the tree without a remount. The accessors tell the tree how to read your node type: `getValue` returns a unique id, `getLabel` returns the label used for type-ahead, and `getChildren` returns the children. `getChildCount` and `isDisabled` are optional. Return a number from `getChildCount` for a branch that may be empty, such as an empty folder, so it still renders as a branch, and `undefined` for a leaf. Any number, including `0`, makes the node a branch. A node for which `isDisabled` returns `true` is never selected or expanded, whether by a click, a key, a range, or select-all.
 
 The `node` snippet receives the node and its `TreeNodeState`. It runs once per visible node. Return a `Tree.Branch` for a branch or a `Tree.Item` for a leaf. Inside a branch, `Tree.BranchControl` holds the row you see, and `Tree.BranchContent` renders the children.
 
@@ -112,12 +112,12 @@ The second argument of the `node` snippet is a `TreeNodeState`.
 
 | Field       | Type                 | Meaning                                                                  |
 | ----------- | -------------------- | ------------------------------------------------------------------------ |
-| `value`     | `string`             | The node's value from `nodeToValue`, the key `expanded` and `selected` hold |
-| `isBranch`  | `boolean`            | The node has children, or `nodeToChildrenCount` says it may              |
+| `value`     | `string`             | The node's value from `getValue`, the key `expanded` and `selected` hold |
+| `isBranch`  | `boolean`            | The node has children, or `getChildCount` says it may              |
 | `expanded`  | `boolean`            | The branch is open and its children render. Always `false` on a leaf     |
 | `selected`  | `boolean`            | The node is in `selected`                                                |
 | `focused`   | `boolean`            | The node holds the roving focus, whether or not the tree has DOM focus   |
-| `disabled`  | `boolean`            | `isNodeDisabled` returned `true`. A disabled node cannot be selected or expanded |
+| `disabled`  | `boolean`            | `isDisabled` returned `true`. A disabled node cannot be selected or expanded |
 | `depth`     | `number`             | Nesting depth, starting at 1 for a root node. Matches `aria-level` and `--depth` |
 | `indexPath` | `readonly number[]`  | The index of the node and of each ancestor within its siblings, root first |
 
@@ -184,7 +184,7 @@ The parts set these data attributes, so Tailwind variants like `data-[selected]:
 | `data-focus`      | `BranchControl`, `Item`, `Indicator`             | present on the row holding the roving focus    |
 | `data-disabled`   | `Branch`, `BranchControl`, `BranchTrigger`, `Item`, `Indicator` | present when disabled           |
 
-Focus is roving. One row has `tabindex="0"` and the rest are reachable by the arrow keys, so the tree is a single tab stop. Rows carry `aria-expanded`, `aria-selected`, `aria-level`, `aria-setsize`, and `aria-posinset`, and a disabled row and its control carry `aria-disabled="true"`. A branch row shows expansion with a visual icon, and `Tree.Indicator` is `aria-hidden`, so the label inside the row must name the node. The tree has no name of its own, so name it with `aria-label` or `aria-labelledby`.
+Focus is roving. One row has `tabindex="0"` and the rest are reachable by the arrow keys, so the tree is a single tab stop. Rows carry `aria-expanded`, `aria-selected`, `aria-level`, `aria-setsize`, and `aria-posinset`, and a disabled row and its control carry `aria-disabled="true"`. A branch row shows expansion with a visual icon, and `Tree.Indicator` is `aria-hidden`, so the label inside the row must name the node. The tree has no name of its own, so its type requires one of `aria-label` or `aria-labelledby`.
 
 ## Keyboard
 
@@ -198,7 +198,7 @@ Focus is roving. One row has `tabindex="0"` and the rest are reachable by the ar
     { keys: "Shift + ArrowUp / ArrowDown", action: "Extend a multiple selection" },
     { keys: "Ctrl + A / Meta + A", action: "In multiple mode, select every node that is not disabled, including the children of collapsed branches" },
     { keys: "*", action: "Expand every sibling of the focused row" },
-    { text: "Printable characters", action: "Type-ahead by `nodeToString`" },
+    { text: "Printable characters", action: "Type-ahead by `getLabel`" },
   ]}
 />
 

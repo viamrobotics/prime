@@ -20,7 +20,7 @@ The value axis on the left of the plot. Its line and tick marks are SVG in the `
 	const LABEL_GAP = TICK_SIZE + TICK_LABEL_SPACE;
 
 	const plotContext = usePlotContext('Chart.YAxis');
-	const chart = useChart();
+	const chart = useChart('Chart.YAxis');
 	const plot = usePlot();
 
 	let column = $state<HTMLElement>();

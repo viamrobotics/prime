@@ -11,8 +11,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex flex-col gap-1">
-    <Label>Units</Label>
+  <Field label="Units" class="flex flex-col gap-1">
+    <Label />
     <ToggleButtons bind:value={units} {items} />
     <Hint>Applies to every measurement on the page.</Hint>
   </Field>

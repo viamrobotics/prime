@@ -2,11 +2,11 @@
 @component
 The drawing area, which owns the scales, the tab stop, and the loading and empty overlays. Place [`Chart.Line`](./Line.svelte), [`Chart.XAxis`](./XAxis.svelte), [`Chart.YAxis`](./YAxis.svelte), [`Chart.Grid`](./Grid.svelte) and [`Chart.Tooltip`](./Tooltip.svelte) inside it, and only one plot in a `Chart`.
 
-The plot measures the size its `class` gives it and has none of its own, so a plot with no height draws nothing. It draws inside its content box, so padding in its `class` insets the drawing.
+The plot measures the size its `class` gives it and has none of its own, so a plot with no height draws nothing. It draws inside its content box, so padding in its `class` insets the drawing. Every other attribute of a `div` passes through to its root.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 	import { scaleLinear } from 'd3-scale';
 	import { Html, LayerCake, Svg } from 'layercake';
 	import { providePlot, useChart, type ChartLayer, type ChartPadding } from './context.svelte.ts';
@@ -14,16 +14,16 @@ The plot measures the size its `class` gives it and has none of its own, so a pl
 	import { X_SCALES } from './x-scales.ts';
 	import { yTickCount } from './ticks.ts';
 
-	interface Props {
+	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Lands on the plot's root element. The consumer sizes the plot through it, and the plot draws inside its content box. */
 		class?: ClassValue;
 		/** The drawing parts, such as `Chart.Line`, `Chart.XAxis` and `Chart.Tooltip`. */
 		children?: Snippet;
 	}
 
-	let { class: className, children }: Props = $props();
+	let { class: className, children, ...rest }: Props = $props();
 
-	const chart = useChart();
+	const chart = useChart('Chart.Plot');
 	const plotContext = providePlot();
 	const settings = chart.settings;
 
@@ -67,7 +67,7 @@ The plot measures the size its `class` gives it and has none of its own, so a pl
 	const plotName = $derived(attributes.role ? settings.accessibleName : {});
 </script>
 
-<div data-part="plot" class={['focus-ring', className]} {...plotName} {...attributes}>
+<div {...rest} data-part="plot" class={['focus-ring', className]} {...plotName} {...attributes}>
 	<div class="relative size-full" bind:clientWidth={plotWidth} bind:clientHeight={plotHeight}>
 		<LayerCake {xScale} {yScale} {xDomain} {yDomain} {padding}>
 			<Svg>

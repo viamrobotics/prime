@@ -11,13 +11,13 @@
     <Dialog.Content class="w-full max-w-md gap-4">
       <div class="flex items-start justify-between gap-4">
         <Dialog.Title>Rename machine</Dialog.Title>
-        <Dialog.Close />
+        <Dialog.Close aria-label="Close" />
       </div>
 
       <div class="flex min-h-0 flex-col gap-3 overflow-y-auto">
         <Dialog.Description>The new name shows everywhere the machine is listed.</Dialog.Description>
-        <Field class="flex flex-col gap-1">
-          <Label>Name</Label>
+        <Field label="Name" class="flex flex-col gap-1">
+          <Label />
           <Input bind:value={name} />
         </Field>
       </div>

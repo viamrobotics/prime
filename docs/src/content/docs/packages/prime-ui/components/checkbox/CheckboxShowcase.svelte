@@ -13,12 +13,14 @@
 <div class="not-content flex flex-wrap gap-6">
   {#each states as { label, checked, indeterminate, disabled } (label)}
     <span class="flex flex-col items-center gap-1">
-      <Checkbox {checked} {indeterminate} {disabled} aria-label={label} />
+      <Field aria-label={label}>
+        <Checkbox {checked} {indeterminate} {disabled} />
+      </Field>
       <span class="text-xs text-subtle-2">{label}</span>
     </span>
   {/each}
-  <Field state="error" class="flex items-center gap-2">
+  <Field label="error" state="error" class="flex items-center gap-2">
     <Checkbox name="terms-error" />
-    <Label>error</Label>
+    <Label />
   </Field>
 </div>

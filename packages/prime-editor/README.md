@@ -38,7 +38,7 @@ Set `original` to open a diff view, and `diff="split"` to show it side by side. 
 
 ## Keyboard
 
-Search and code folding work from the keyboard. Tab is not bound, so focus can always leave the editor.
+Search and code folding work from the keyboard. `Ctrl + Shift + ]` (`Cmd + Option + ]` on macOS) expands the collapsed run of unchanged lines next to the cursor in a diff, and unfolds the block at the cursor otherwise. Tab is not bound, so focus can always leave the editor.
 
 ## Documentation
 

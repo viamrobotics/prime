@@ -2,7 +2,7 @@ import Prism from 'prismjs';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import CodeSnippet from '../CodeSnippet.svelte';
 import '../highlight.ts';
 import { codeSnippetLanguages } from '../language.ts';

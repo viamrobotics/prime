@@ -5,9 +5,9 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex items-center gap-2">
+  <Field label="Email me about updates" class="flex items-center gap-2">
     <Checkbox bind:checked />
-    <Label>Email me about updates</Label>
+    <Label />
   </Field>
 
   <p class="mt-3 text-sm text-subtle-2">checked: <code>{checked}</code></p>

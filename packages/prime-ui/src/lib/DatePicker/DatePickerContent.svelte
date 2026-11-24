@@ -2,6 +2,9 @@
 @component
 The floating panel of a [`DatePicker`](./DatePicker.svelte), portaled to the body unless
 `portal` says otherwise. Render a [`DatePicker.Calendar`](./DatePickerCalendar.svelte) inside it.
+
+The panel takes its accessible name from the calendar's `aria-label`, "Choose a date" by default.
+Its own `aria-label` or `aria-labelledby` replaces that.
 -->
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -10,6 +13,7 @@ The floating panel of a [`DatePicker`](./DatePicker.svelte), portaled to the bod
 
 	import { portalProps, type PortalTarget } from '../portal.ts';
 	import { focusDayWithoutScrolling } from './focus-day-without-scrolling.ts';
+	import { useDatePicker } from './useDatePicker.svelte.ts';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		/** Element id. `null` is not accepted. */
@@ -34,7 +38,7 @@ The floating panel of a [`DatePicker`](./DatePicker.svelte), portaled to the bod
 		portal?: PortalTarget;
 	}
 
-	// `side`, `align`, `sideOffset`, and `alignOffset` keep Floating UI's placement terms.
+	// `side`, `align`, `sideOffset`, and `alignOffset` keep bits-ui's names, the anchor-placement vocabulary it shares with Floating UI, since no native name exists for anchor placement.
 	const {
 		class: extraClasses,
 		children,
@@ -48,7 +52,9 @@ The floating panel of a [`DatePicker`](./DatePicker.svelte), portaled to the bod
 		...restProps
 	}: Props = $props();
 
-	const accessibleName = $derived(label ?? (labelledBy ? undefined : 'Choose a date'));
+	const picker = useDatePicker();
+
+	const accessibleName = $derived(label ?? (labelledBy ? undefined : picker?.calendarName));
 </script>
 
 <Portal {...portalProps(portal)}>

@@ -17,13 +17,13 @@
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Input: required, error, disabled</h4>
     <div class="grid max-w-md gap-4">
-      <Field class="flex flex-col gap-1" required>
-        <Label>Robot name</Label>
+      <Field label="Robot name" class="flex flex-col gap-1" required>
+        <Label />
         <Input bind:value={name} placeholder="rover-1" />
         <Hint>Lowercase letters, numbers, and dashes.</Hint>
       </Field>
-      <Field class="flex flex-col gap-1" state="error">
-        <Label>Robot name</Label>
+      <Field label="Robot name" class="flex flex-col gap-1" state="error">
+        <Label />
         <Input.Group>
           <Input value="Rover 1" />
           <Field.StateIcon />
@@ -31,8 +31,8 @@
         <Hint>Lowercase letters, numbers, and dashes.</Hint>
         <Hint>Spaces and capitals are not allowed.</Hint>
       </Field>
-      <Field class="flex flex-col gap-1" disabled>
-        <Label>Robot name</Label>
+      <Field label="Robot name" class="flex flex-col gap-1" disabled>
+        <Label />
         <Input value="rover-1" />
         <Hint>Unavailable while the part is offline.</Hint>
       </Field>
@@ -41,8 +41,8 @@
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Select</h4>
-    <Field class="flex max-w-md flex-col gap-1">
-      <Label>Size</Label>
+    <Field label="Size" class="flex max-w-md flex-col gap-1">
+      <Label />
       <Select bind:value={size} items={sizes}>
         <Select.Trigger>
           <Select.Value placeholder="Pick a size" />
@@ -61,8 +61,8 @@
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">RadioGroup, named by the label</h4>
-    <Field class="flex max-w-md flex-col gap-1">
-      <Label>Shape</Label>
+    <Field label="Shape" class="flex max-w-md flex-col gap-1">
+      <Label />
       <RadioGroup bind:value={shape} name="shape">
         <RadioGroup.Item value="square">Square</RadioGroup.Item>
         <RadioGroup.Item value="round">Round</RadioGroup.Item>
@@ -73,9 +73,13 @@
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Checkbox</h4>
-    <Field class="grid max-w-md grid-cols-[auto_1fr] items-center gap-x-2 gap-y-1" required>
+    <Field
+      label="Accept the terms"
+      class="grid max-w-md grid-cols-[auto_1fr] items-center gap-x-2 gap-y-1"
+      required
+    >
       <Checkbox bind:checked={agreed} />
-      <Label>Accept the terms</Label>
+      <Label />
       <Hint class="col-start-2">Required before the part can be deployed.</Hint>
     </Field>
   </div>

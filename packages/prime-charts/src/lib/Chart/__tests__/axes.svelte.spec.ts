@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import { nextFrame } from '../../../../test/frames.ts';
 import '../../../../test/tailwind.css';
 import AxesChart from './fixtures/AxesChart.svelte';
 import StackedAxesChart from './fixtures/StackedAxesChart.svelte';
@@ -27,8 +28,6 @@ const utcClock = new Intl.DateTimeFormat('en-US', {
 	hour12: false
 });
 const utcFormat = (value: Date) => utcClock.format(value);
-
-const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 
 const labelNodes = (container: Element, part: string) => [
 	...container.querySelectorAll(`.${part} span`)

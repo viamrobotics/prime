@@ -7,6 +7,15 @@ import PanelWithChild from './fixtures/PanelWithChild.svelte';
 
 const group = (container: Element) => container.querySelector('[role="group"]')!;
 
+function probeRadius(className: string) {
+	const probe = document.createElement('span');
+	probe.className = className;
+	document.body.append(probe);
+	const value = getComputedStyle(probe).borderTopLeftRadius;
+	probe.remove();
+	return value;
+}
+
 describe('Panel', () => {
 	it('names the group from the title', async () => {
 		render(PanelWithChild, { props: { title: 'Camera' } });
@@ -67,5 +76,23 @@ describe('Panel', () => {
 		const { container } = render(PanelWithChild, { props: { title: 'Camera', class: 'extra' } });
 
 		expect(group(container).classList.contains('extra'), 'root carries the class').toBe(true);
+	});
+
+	it('passes an id and a data attribute to the root', () => {
+		const { container } = render(PanelWithChild, {
+			props: { title: 'Camera', id: 'camera-root', 'data-extra': 'yes' }
+		});
+
+		expect(group(container)).toHaveAttribute('id', 'camera-root');
+		expect(group(container)).toHaveAttribute('data-extra', 'yes');
+	});
+
+	it('rounds the corners like rounded-sm and not rounded-md', () => {
+		const { container } = render(PanelWithChild, { props: { title: 'Camera' } });
+
+		const radius = getComputedStyle(group(container)).borderTopLeftRadius;
+
+		expect(radius).toBe(probeRadius('rounded-sm'));
+		expect(radius).not.toBe(probeRadius('rounded-md'));
 	});
 });

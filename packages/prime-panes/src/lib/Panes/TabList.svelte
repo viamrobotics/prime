@@ -2,7 +2,7 @@
 @component
 Renders the tabs of the stack that its pane belongs to. Place it in the `pane` snippet of [`Panes`](./Panes.svelte), usually in the header. It renders in every pane, so every pane can include it. An unstacked pane still carries the container, which holds a [`Panes.TabListDropRegion`](./TabListDropRegion.svelte), but the `tablist` role and the tabs appear only when the pane is stacked.
 
-Give the list a name with `aria-label`, since a screen reader announces it on entry. Tabs inherit the list's text size, and the shown tab carries `aria-selected` for styling. Each tab shows the pane's label from `paneLabel`, or the content of the `tab` snippet. The tabs follow the WAI-ARIA tabs pattern with automatic selection. The list has the `tablist` role and each tab the `tab` role. A tab panel is opt-in through [`Panes.PaneBody`](./PaneBody.svelte). A tab drags its own pane, and the empty area of the list drags the whole stack.
+Give the list a name with `aria-label` or `aria-labelledby`, which the type requires, since a screen reader announces it on entry. The list wears the `file-tabs` class and each tab `file-tab`, both from `@viamrobotics/tailwind-config`, and the shown tab carries `aria-selected` for styling. Each tab shows the pane's label from `paneLabel`, or the content of the `tab` snippet. The tabs follow the WAI-ARIA tabs pattern with automatic selection. The list has the `tablist` role and each tab the `tab` role. A tab panel is opt-in through [`Panes.PaneBody`](./PaneBody.svelte). A tab drags its own pane, and the empty area of the list drags the whole stack.
 
 `Panes.TabList` cannot infer `TData`, so an unannotated `tab` snippet receives `PaneNode<unknown>`. Annotate the parameter.
 
@@ -20,8 +20,10 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 	import { flip } from 'svelte/animate';
 	import type { Attachment } from 'svelte/attachments';
 	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import { prefersReducedMotion } from 'svelte/motion';
 	import type { PaneNode } from '../layout.ts';
 
+	import type { AccessibleName } from './accessible-name.ts';
 	import { claimPresses } from './classify-press.ts';
 	import { reorderStepOf, targetIndexFor } from './tab-list-keys.ts';
 	import { usePane, usePanes } from './usePanes.svelte.ts';
@@ -48,7 +50,7 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
 		...rest
-	}: Props = $props();
+	}: Props & AccessibleName = $props();
 
 	interface TabSlot {
 		key: string;
@@ -56,7 +58,6 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 		isPreview: boolean;
 	}
 
-	const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 	const REORDER_SHORTCUTS = 'Alt+Shift+ArrowLeft Alt+Shift+ArrowRight';
 	const PREVIEW_ATTRIBUTES: HTMLAttributes<HTMLElement> = {
 		'aria-hidden': true,
@@ -91,7 +92,7 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 	});
 
 	// Svelte drives the shift itself, so a CSS media query would not stop it.
-	const flipParams = () => (matchMedia(REDUCED_MOTION_QUERY).matches ? { duration: 0 } : {});
+	const flipParams = () => (prefersReducedMotion.current ? { duration: 0 } : {});
 
 	function sourceAt(event: PointerEvent): DragSource {
 		const tab =
@@ -124,8 +125,7 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 			'aria-controls': context.hasPanel(stacked.id) ? pane.panelId(stacked.id) : undefined,
 			tabindex: isActive ? 0 : -1,
 			'aria-keyshortcuts': context.reorderable ? REORDER_SHORTCUTS : undefined,
-			class:
-				'rounded-sm px-2 py-1 hover:bg-ghost-light focus-visible:bg-ghost-light active:bg-ghost-medium aria-selected:font-semibold',
+			class: 'file-tab',
 			onclick: () => pane.select(stacked.id)
 		};
 	}
@@ -179,7 +179,7 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 	role={stack ? 'tablist' : undefined}
 	aria-label={stack ? ariaLabel : undefined}
 	aria-labelledby={stack ? ariaLabelledby : undefined}
-	class={[className, context.reorderable && 'touch-none']}
+	class={['file-tabs', className, context.reorderable && 'touch-none']}
 	onkeydown={(event) => handleKeydown(event, stack?.panes ?? [])}
 	{@attach claimPresses}
 	{@attach joinPane}

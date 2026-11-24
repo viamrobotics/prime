@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	import { normalizeProps, useMachine } from '@zag-js/svelte';
 	import * as toast from '@zag-js/toast';
@@ -25,7 +26,13 @@
 	const rootProps = $derived(api.getRootProps());
 	const titleProps = $derived(api.getTitleProps());
 	const descriptionProps = $derived(api.getDescriptionProps());
-	const closeProps = $derived(api.getCloseTriggerProps());
+	// zag's attribute bag, narrowed to what `Banner.Close` takes beside the name it sets here.
+	const closeProps = $derived(
+		api.getCloseTriggerProps() as Omit<
+			HTMLButtonAttributes,
+			'id' | 'aria-label' | 'aria-labelledby' | 'children'
+		> & { id?: string | null }
+	);
 
 	const variant = $derived(notifyVariantOf(api.type));
 	const description = $derived(item.description);
@@ -56,7 +63,7 @@
 	id={rootProps.id ?? undefined}
 	role={undefined}
 	{variant}
-	class="z-[var(--z-index)] w-96 [translate:var(--x)_var(--y)] [scale:var(--scale)] opacity-[var(--opacity)] focus-ring transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale]"
+	class="toast-stack-item w-96 focus-ring"
 >
 	<Banner.Title {...titleProps} id={titleProps.id ?? undefined}>{item.title}</Banner.Title>
 	{#if description !== undefined}

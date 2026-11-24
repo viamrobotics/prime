@@ -26,9 +26,9 @@ import iconTriggerSource from "./IconTrigger.svelte?raw";
 
 - Composed from three parts. The trigger wraps the control you already have, and the label floats beside it in a portal.
 - Opens when the pointer rests on the trigger for `openDelay`, or at once when the control inside takes keyboard focus. Closes on blur, on Escape, and when the pointer leaves.
-- The trigger is a `<span>`, never a button, so your control keeps its own role and tab stop. While the tooltip is open, that control's `aria-describedby` names the label.
+- The trigger is a `<span>`, never a button, so your control keeps its own role and tab stop. While the tooltip is open, that control's `aria-describedby` names the label. The control is the first button, link, form control, `<summary>`, editable element, or element with a `tabindex` or `role="button"` inside the trigger.
 - `open` is bindable. Bind it to read the state, or give it a getter and setter to decide when the tooltip may open.
-- The label flips to the opposite side when there is no room for `placement`.
+- The label flips to the opposite side when there is no room on its `side`.
 
 ## Anatomy
 
@@ -79,7 +79,7 @@ An [`Icon`](../icon/) is `aria-hidden` and not focusable, so a bare icon inside 
 
 ### Placement and states
 
-`placement` on `Tooltip.Content` picks the side, and `sideOffset` sets the gap in pixels. `interactive` keeps the tooltip open while the pointer is over the label, so a link inside stays reachable. `disabled` keeps it from opening.
+`side` on `Tooltip.Content` picks the side of the trigger, and `sideOffset` sets the gap in pixels. `interactive` keeps the tooltip open while the pointer is over the label, so a link inside stays reachable. `disabled` keeps it from opening.
 
 <TooltipShowcase client:visible />
 

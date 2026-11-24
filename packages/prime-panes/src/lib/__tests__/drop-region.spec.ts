@@ -171,8 +171,25 @@ describe('nearestEdge', () => {
 		expect(nearestEdge(clientX, clientY, paneRect)).toBe(edge);
 	});
 
-	it('reads the exact center as bottom', () => {
-		expect(nearestEdge(150, 250, paneRect)).toBe('bottom');
+	it('reads the exact center as top', () => {
+		expect(nearestEdge(150, 250, paneRect)).toBe('top');
+	});
+
+	it.each([
+		{ edge: 'top', clientX: 70, clientY: 130 },
+		{ edge: 'bottom', clientX: 230, clientY: 370 },
+		{ edge: 'top', clientX: 230, clientY: 130 },
+		{ edge: 'bottom', clientX: 70, clientY: 370 }
+	])(
+		'picks $edge as getDropRegion does on the diagonal at ($clientX, $clientY)',
+		({ clientX, clientY, edge }) => {
+			expect(getDropRegion(clientX, clientY, paneRect)).toBe(edge);
+			expect(nearestEdge(clientX, clientY, paneRect)).toBe(edge);
+		}
+	);
+
+	it('picks top at the exact center as stackSideOf does', () => {
+		expect(nearestEdge(150, 250, paneRect)).toBe(stackSideOf(paneRect, paneRect));
 	});
 });
 

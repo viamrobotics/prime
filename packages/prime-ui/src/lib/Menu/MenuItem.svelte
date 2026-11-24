@@ -27,7 +27,7 @@ The menu closes after the item is activated. A leading icon is part of the child
 	}
 
 	const VARIANT_CLASSES = {
-		default: 'text-default data-highlighted:bg-light',
+		default: '',
 		danger: 'text-danger-dark data-highlighted:bg-danger-light'
 	};
 
@@ -35,11 +35,7 @@ The menu closes after the item is activated. A leading icon is part of the child
 </script>
 
 <DropdownMenu.Item
-	class={[
-		'flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none data-disabled:cursor-not-allowed data-disabled:text-disabled-dark',
-		VARIANT_CLASSES[variant],
-		extraClasses
-	]}
+	class={['listbox-option', VARIANT_CLASSES[variant], extraClasses]}
 	data-variant={variant}
 	{...restProps}
 >

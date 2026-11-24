@@ -1,12 +1,12 @@
 <script lang="ts">
   import Sandbox from "@docs/Sandbox.svelte";
 
-  import SandboxCombobox from "./SandboxCombobox.svelte";
+  import LabeledCombobox from "./LabeledCombobox.svelte";
 </script>
 
 <Sandbox
   name="Combobox"
-  component={SandboxCombobox}
+  component={LabeledCombobox}
   showCode={false}
   controls={{
     state: {

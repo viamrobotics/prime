@@ -1,4 +1,11 @@
-import type { FloatNode, LayoutNode, PaneNode, SplitNode, StackNode } from '../src/lib/layout.ts';
+import type {
+	FloatNode,
+	LayoutNode,
+	PaneNode,
+	SplitDirection,
+	SplitNode,
+	StackNode
+} from '../src/lib/layout.ts';
 
 export interface PaneData {
 	label: string;
@@ -118,6 +125,38 @@ export function pane(id: string, label: string): PaneNode<PaneData> {
 	return { type: 'pane', id, data: { label } };
 }
 
+export function split(
+	id: string,
+	direction: SplitDirection,
+	ratio: number,
+	first: LayoutNode<PaneData>,
+	second: LayoutNode<PaneData>
+): LayoutNode<PaneData> {
+	return { type: 'split', id, direction, ratio, first, second };
+}
+
+export function stack(
+	id: string,
+	panes: PaneNode<PaneData>[],
+	activeId: string
+): StackNode<PaneData> {
+	return { type: 'stack', id, panes, activeId };
+}
+
+export const CAMERA = pane(ids.mycam, 'Camera');
+export const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
+export const SENSOR = pane(ids.mysensor, 'Sensor stat');
+export const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
+
+export const SOLO_PANE = labeledPane(stackIds.solo);
+export const TAB_A1 = labeledPane(stackIds.tabA1);
+export const TAB_A2 = labeledPane(stackIds.tabA2);
+export const TAB_A3 = labeledPane(stackIds.tabA3);
+export const TAB_B1 = labeledPane(stackIds.tabB1);
+export const TAB_B2 = labeledPane(stackIds.tabB2);
+export const TAB_STACK_A = stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3], stackIds.tabA2);
+export const TAB_STACK_B = stack(stackIds.stackB, [TAB_B1, TAB_B2], stackIds.tabB1);
+
 export const CAM_A = pane('cam-a', 'Camera A');
 export const CAM_B = pane('cam-b', 'Camera B');
 export const CAM_C = pane('cam-c', 'Camera C');
@@ -172,8 +211,6 @@ export const floatIds = {
 	paneA: 'float-pane-a',
 	paneB: 'float-pane-b'
 };
-
-export const FLOAT_RECT = { x: 10, y: 20, width: 300, height: 200 };
 
 export function createFloatLayout(): LayoutNode<PaneData> {
 	return {

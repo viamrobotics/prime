@@ -78,7 +78,7 @@ A toast confirms an action the user just took, such as `Saved` or `Copied`. It i
 
 ## Styling
 
-`class` lands on the region. The row's look is fixed.
+`class` and any other attribute you pass land on the region, which keeps the `id` it needs for the Alt + T shortcut. The row's look is fixed. Each row carries its tone as visually hidden text before the title, so a screen reader hears "Warning" or "Error" along with the role. Under `prefers-reduced-motion: reduce` a row keeps its opacity fade and drops the slide and scale.
 
 Each item carries data attributes for styling by state.
 

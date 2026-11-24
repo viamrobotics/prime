@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import StructuredMenu from './StructuredMenu.svelte';
+import StructuredMenu from './fixtures/StructuredMenu.svelte';
 
 const trigger = (container: Element) =>
 	[...container.querySelectorAll('button')].find(

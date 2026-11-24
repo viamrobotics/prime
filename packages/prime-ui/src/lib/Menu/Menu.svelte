@@ -23,6 +23,8 @@ Built on [bits-ui `DropdownMenu`](https://bits-ui.com/docs/components/dropdown-m
 
 	import { DropdownMenu } from 'bits-ui';
 
+	import { provideTriggerName } from './useTriggerName.svelte.ts';
+
 	interface Props {
 		/** Whether the menu is open. Two-way bindable. */
 		open?: boolean;
@@ -32,6 +34,10 @@ Built on [bits-ui `DropdownMenu`](https://bits-ui.com/docs/components/dropdown-m
 	}
 
 	let { open = $bindable(), children }: Props = $props();
+
+	const uid = $props.id();
+
+	provideTriggerName(`menu-trigger-${uid}`);
 </script>
 
 <DropdownMenu.Root bind:open={() => open ?? false, (next) => (open = next)}>

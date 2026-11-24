@@ -376,13 +376,13 @@
 
 <!-- This element holds the moving pane and its move targets, so it receives the F6 that crosses layers and the arrows in move mode. The controls inside are the interactive elements. -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="relative size-full min-h-0 min-w-0" onkeydown={handleFrameKeydown}>
+<div class="relative isolate size-full min-h-0 min-w-0" onkeydown={handleFrameKeydown}>
 	<!-- It comes before the wrapper in the DOM, so Tab from the wrapper still reaches the pane's own controls and then the destinations, and Shift+Tab reaches it. -->
 	{#if isMoving && context.isFloatOffered && context.movingLabel !== undefined}
 		<button
 			type="button"
 			aria-label={floatName(context.movingLabel)}
-			class="absolute top-2/3 left-1/2 z-40 min-h-6 min-w-6 -translate-x-1/2 cursor-pointer rounded-sm border border-info-dark bg-info-light px-2 py-1 text-xs text-info-dark outline-info-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid"
+			class="absolute top-2/3 left-1/2 z-40 min-h-6 min-w-6 -translate-x-1/2 cursor-pointer rounded-sm border border-info-dark bg-info-light px-2 py-1 text-xs text-info-dark focus-ring"
 			onclick={() => context.floatMoving()}
 		>
 			Float
@@ -398,7 +398,7 @@
 		data-moving={isMoving ? '' : undefined}
 		data-drag-armed={isDragArmed ? '' : undefined}
 		inert={destination !== undefined && !isMoving}
-		class="peer relative size-full min-h-0 min-w-0 outline-info-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid data-drag-armed:outline-2 data-drag-armed:-outline-offset-2 data-drag-armed:outline-solid data-moving:focus:outline-2 data-moving:focus:-outline-offset-2 data-moving:focus:outline-solid"
+		class="peer relative size-full min-h-0 min-w-0 focus-ring-inset data-drag-armed:outline-2 data-drag-armed:-outline-offset-2 data-drag-armed:outline-info-dark data-drag-armed:outline-solid data-moving:focus:outline-2 data-moving:focus:-outline-offset-2 data-moving:focus:outline-link data-moving:focus:outline-solid"
 		onkeydown={handleKeydown}
 	>
 		{@render context.pane(node, paneState)}
@@ -430,7 +430,7 @@
 			data-moving-notice
 			class="pointer-events-none absolute inset-0 z-30 flex items-center justify-center p-2"
 		>
-			<p class="max-w-full bg-info-light px-2 py-1 text-center text-xs text-info-dark">
+			<p class="max-w-full rounded-sm bg-info-light px-2 py-1 text-center text-xs text-info-dark">
 				{movingNoticeText}
 			</p>
 		</div>

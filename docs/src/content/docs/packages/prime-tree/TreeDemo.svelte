@@ -49,7 +49,7 @@
   let selectionMode = $state<"single" | "multiple">("single");
   let branchClick = $state<TreeBranchClick>("toggle-and-select");
 
-  const ROW = "rounded-sm py-1 text-sm focus-ring hover:bg-light data-[selected]:bg-medium";
+  const ROW = "rounded-sm py-1 text-sm focus-ring hover:bg-light data-[selected]:bg-medium data-[selected]:outline-2 data-[selected]:-outline-offset-2 data-[selected]:outline-link";
 </script>
 
 <div class="not-content flex flex-col gap-4">
@@ -80,18 +80,18 @@
     bind:selected
     {selectionMode}
     {branchClick}
-    nodeToValue={(file) => file.id}
-    nodeToString={(file) => file.name}
-    nodeToChildren={(file) => file.children}
-    nodeToChildrenCount={(file) =>
+    getValue={(file) => file.id}
+    getLabel={(file) => file.name}
+    getChildren={(file) => file.children}
+    getChildCount={(file) =>
       file.kind === "folder" ? (file.children?.length ?? 0) : undefined}
-    isNodeDisabled={(file) => file.disabled === true}
+    isDisabled={(file) => file.disabled === true}
   >
     {#snippet node(file, state)}
       {#if state.isBranch}
         <Tree.Branch>
           <Tree.BranchControl
-            class={[ROW, "flex items-center gap-1"]}
+            class={[ROW, "flex items-center gap-1", file.disabled && "text-disabled-dark"]}
             style="padding-inline-start: calc(var(--depth) * 1rem)"
           >
             <Tree.BranchTrigger
@@ -106,8 +106,8 @@
         </Tree.Branch>
       {:else}
         <Tree.Item
-          class={[ROW, file.disabled && "text-disabled"]}
-          style="padding-inline-start: calc(var(--depth) * 1rem)"
+          class={[ROW, file.disabled && "text-disabled-dark"]}
+          style="padding-inline-start: calc(var(--depth) * 1rem + 1rem)"
         >
           {file.name}
         </Tree.Item>

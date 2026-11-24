@@ -13,12 +13,14 @@ Every prime-ui value control, such as `Checkbox`, `Input`, `NumberInput`, `Radio
 
 ```svelte
 <script lang="ts">
-  import { Checkbox } from "@viamrobotics/prime-ui";
+  import { Checkbox, Field } from "@viamrobotics/prime-ui";
 
   let checked = $state(false);
 </script>
 
-<Checkbox bind:checked />
+<Field aria-label="Accept the terms">
+  <Checkbox bind:checked />
+</Field>
 ```
 
 ## Fully controlled
@@ -27,13 +29,15 @@ Give `bind:` a **function binding**: a getter and a setter. Your setter is the s
 
 ```svelte
 <script lang="ts">
-  import { Checkbox } from "@viamrobotics/prime-ui";
+  import { Checkbox, Field } from "@viamrobotics/prime-ui";
 
   let checked = $state(false);
 </script>
 
 <!-- only allow turning it on, never off -->
-<Checkbox bind:checked={() => checked, (next) => { if (next) checked = next; }} />
+<Field aria-label="Accept the terms">
+  <Checkbox bind:checked={() => checked, (next) => { if (next) checked = next; }} />
+</Field>
 ```
 
 To react to changes without controlling them, use `$effect`. It also fires on programmatic changes:
@@ -54,13 +58,17 @@ Two things Svelte cannot do for you:
 `Input` and `NumberInput` render a real `<input>`, so alongside `bind:value` they accept every native handler, `oninput`, `onchange`, `onblur`, `onfocus`, and the rest, for side effects and focus handling.
 
 ```svelte
-<Input bind:value onblur={() => validate(value)} />
+<Field aria-label="Name">
+  <Input bind:value onblur={() => validate(value)} />
+</Field>
 ```
 
 `Checkbox`, `RadioGroup.Item`, and `Select.Trigger` render a real `<button>`, so `onfocus`, `onblur`, `onclick`, and `onkeydown` land on it. Your handler runs first, and `preventDefault()` in it stops the widget's. These controls never fire `change` or `input`, since no native control changes underneath. React to a value change with the function binding or `$effect`.
 
 ```svelte
-<Checkbox bind:checked onblur={() => (touched = true)} />
+<Field aria-label="Accept the terms">
+  <Checkbox bind:checked onblur={() => (touched = true)} />
+</Field>
 ```
 
 Two things to know:

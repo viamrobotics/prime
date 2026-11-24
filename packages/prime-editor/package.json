@@ -80,6 +80,7 @@
 				"src/**",
 				"test/**",
 				"tsconfig.json",
+				"vite.config.ts",
 				"svelte.config.js",
 				"package.json"
 			],
@@ -114,6 +115,7 @@
 				"!dist/**",
 				"!.wireit/**",
 				"eslint.config.js",
+				".gitignore",
 				"tsconfig.json",
 				"package.json",
 				"../tailwind-config/tailwind-config.css"

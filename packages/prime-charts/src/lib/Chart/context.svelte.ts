@@ -1,4 +1,4 @@
-import { createContext, getContext, setContext, untrack, type Snippet } from 'svelte';
+import { getContext, setContext, untrack, type Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { ScaleLinear, ScaleTime } from 'd3-scale';
 import { getLayerCakeContext } from 'layercake';
@@ -99,7 +99,8 @@ export interface PlotContext {
 	setAttributes: (attributes: PlotAttributes) => void;
 }
 
-const [getChart, setChart] = createContext<ChartContext>();
+// Symbol keys rather than `createContext`, so a missing chart or plot can be detected and named.
+const CHART_KEY = Symbol('Chart');
 
 function registry<TEntry>() {
 	let entries = $state.raw<TEntry[]>([]);
@@ -208,18 +209,21 @@ export const provideChart = (options: ChartOptions): ChartContext => {
 			else yFormats.register(format as () => AxisFormats['y']);
 		}
 	};
-	setChart(context);
+	setContext(CHART_KEY, context);
 	return context;
 };
 
-export const useChart = getChart;
+export const useChart = (part: string): ChartContext => {
+	const context = getContext<ChartContext | undefined>(CHART_KEY);
+	if (!context) throw new Error(`${part} must be placed inside Chart.`);
+	return context;
+};
 
-// A Symbol key rather than `createContext`, so a missing plot can be detected and named.
 const PLOT_KEY = Symbol('Chart.Plot');
 const chartsWithPlot = new WeakSet<ChartContext>();
 
 export const providePlot = (): PlotContext => {
-	const chart = useChart();
+	const chart = useChart('Chart.Plot');
 	// Checked in an effect, after a `{#key}` or `{#if}` swap has torn the outgoing plot down.
 	$effect(() => {
 		if (chartsWithPlot.has(chart)) throw new Error('A Chart takes one Chart.Plot.');

@@ -12,6 +12,8 @@ import PropsTable from "@docs/doc/PropsTable.astro";
 
 import FieldDemo from "./FieldDemo.svelte";
 import FieldShowcase from "./FieldShowcase.svelte";
+import States from "./States.svelte";
+import statesSource from "./States.svelte?raw";
 import Basic from "./Basic.svelte";
 import basicSource from "./Basic.svelte?raw";
 import WithStateIcon from "./WithStateIcon.svelte";
@@ -21,8 +23,9 @@ import withStateIconSource from "./WithStateIcon.svelte?raw";
 
 <FieldDemo client:visible />
 
+- Requires a name: a `label`, an `aria-label`, or an `aria-labelledby`. A `Label` with no children renders the `label`.
 - Generates the control's id (`controlId`) and hands it to the label's `for` and the control.
-- Collects every `Hint` into the control's `aria-describedby`, and names a `RadioGroup` from the label.
+- Collects every `Hint` into the control's `aria-describedby`, and names the control from the label.
 - `disabled`, `required`, and `state` set once here reach every part.
 - A prop passed to a part directly always wins over the field's value.
 
@@ -31,13 +34,13 @@ import withStateIconSource from "./WithStateIcon.svelte?raw";
 A field is a plain `<div>` around one control, with any number of labels and hints in any order. Its one part is `Field.StateIcon`, which shows the field's `state` as an icon.
 
 ```svelte
-<Field>
+<Field label="Name">
   <Label />
   <Input /> <!-- or NumberInput, Checkbox, RadioGroup, Select -->
   <Hint />
 </Field>
 
-<Field>
+<Field label="Name">
   <Label />
   <Input.Group>
     <Input />
@@ -47,11 +50,29 @@ A field is a plain `<div>` around one control, with any number of labels and hin
 </Field>
 ```
 
+## Naming the field
+
+A field takes exactly one name, and the type rejects a field with none:
+
+- `label` is visible text. A `Label` with no children renders it where you place it. A `Label` with children renders those instead.
+- `aria-label` names the control without visible text, for a control whose purpose the layout already shows.
+- `aria-labelledby` names the control by the id of a visible element elsewhere on the page, such as a heading.
+
+The name reaches the control, never the wrapper `<div>`. A placed `Label` names the control through `aria-labelledby`. With no `Label` placed, the control takes the field's `aria-labelledby` as its own, or its `label` or `aria-label` as its `aria-label`. An `aria-label` or `aria-labelledby` passed to the control directly wins over all of them.
+
+```svelte
+<Field aria-label="Search machines">
+  <Input type="search" placeholder="Search" />
+</Field>
+```
+
+In development, an `Input`, `NumberInput`, `Textarea`, `FileInput`, `Checkbox`, `Switch`, `RadioGroup`, `ToggleButtons`, `Select.Trigger`, `Combobox.Input`, `DatePicker.Field`, or `DateRangePicker.Field` that renders with no accessible name logs a warning to the console.
+
 ## Usage
 
 ### A labeled input with a hint
 
-Nothing in this example names an id, yet the label, the input, and the hint are associated.
+Nothing in this example names an id, yet the label, the input, and the hint are associated. The `Label` has no children, so it renders the field's `label`.
 
 <Example code={basicSource} title="Basic.svelte">
   <Basic client:visible />
@@ -65,6 +86,14 @@ Nothing in this example names an id, yet the label, the input, and the hint are 
   <WithStateIcon client:visible />
 </Example>
 
+### States
+
+`state` is `none`, `info`, `warn`, or `error`, and `disabled` is its own flag. Both are set once on the field and reach the label, control, hint, and `Field.StateIcon`. `error` sets `aria-invalid` on the control. A disabled field reads disabled whatever its `state`.
+
+<Example code={statesSource} title="States.svelte">
+  <States client:visible />
+</Example>
+
 ### Every control
 
 <FieldShowcase client:visible />
@@ -73,19 +102,26 @@ Nothing in this example names an id, yet the label, the input, and the hint are 
 
 | Part                        | Reads from `Field`                                                                                |
 | --------------------------- | ------------------------------------------------------------------------------------------------- |
-| `Label`                     | `for` (the control id), `required`, `disabled`                                                    |
+| `Label`                     | `for` (the control id), `required`, `disabled`, and `label` as its text when it has no children   |
 | `Hint`                      | `disabled`, `state` (error turns red, `warn` and `info` are colored too), and joins the control's `aria-describedby` |
-| `Input`, `NumberInput`      | `controlId`, `disabled`, `required`, `state`, `aria-describedby`                                  |
-| `Checkbox`                  | `controlId`, `disabled`, `required`, `state`, `aria-describedby`                                  |
-| `RadioGroup`                | `controlId`, `disabled`, `required`, `state`, `aria-labelledby`, `aria-describedby`               |
-| `Select` / `Select.Trigger` | `disabled` and `required` on the root, and `controlId`, `state`, and `aria-describedby` on the trigger       |
+| `Input`, `NumberInput`, `Textarea`, `FileInput` | `controlId`, `disabled`, `required`, `state`, `aria-describedby`, and the name as `aria-labelledby` or `aria-label` |
+| `Checkbox`, `Switch`        | `controlId`, `disabled`, `required`, `state`, `aria-describedby`, and the name as `aria-labelledby` or `aria-label`                         |
+| `RadioGroup`                | `controlId`, `disabled`, `required`, `state`, `aria-describedby`, and the name as `aria-labelledby` or `aria-label`                         |
+| `ToggleButtons`             | `controlId`, `disabled`, `state`, `aria-describedby`, and the name as `aria-labelledby` or `aria-label`                                     |
+| `Select` / `Select.Trigger` | `disabled` and `required` on the root, and `controlId`, `state`, `aria-describedby`, and the name as `aria-labelledby` or `aria-label` on the trigger |
+| `Combobox` / `Combobox.Input` | `disabled` and `required` on the root, and `controlId`, `state`, `aria-describedby`, and the name as `aria-labelledby` or `aria-label` on the input |
+| `DatePicker` / `DatePicker.Field`, `DateRangePicker` / `DateRangePicker.Field` | `disabled` and `required` on the root, and `controlId`, `state`, `aria-describedby`, and the name as `aria-labelledby` or `aria-label` on the field part |
 | `Field.StateIcon`           | `state`, and renders nothing for `none`                                                           |
 
 A `Hint` in an `error` field describes the control, but nothing announces it when it appears. To have a screen reader read an error the moment it appears, pass `role="alert"` to that `Hint`. It goes straight to the `<p>`.
 
+## Keyboard
+
+`Field` is a plain `<div>` and takes no keys. Each control inside keeps its own, and clicking a placed `Label` focuses the control.
+
 ## Without a field
 
-Every part still works on its own. Wire it by hand with `for`, `id`, and `aria-describedby`:
+Every part still works on its own. Wire it by hand with `for`, `id`, and `aria-describedby`, and name the control with a `Label` pointed at it or an `aria-label`:
 
 ```svelte
 <Label for="email" required>Email</Label>

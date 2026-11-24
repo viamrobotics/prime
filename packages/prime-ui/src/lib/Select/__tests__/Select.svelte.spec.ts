@@ -2,11 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
-import BoundSelect from './BoundSelect.svelte';
-import ControlledSelect from './ControlledSelect.svelte';
-import IndicatorSelect from './IndicatorSelect.svelte';
-import UndefinedSelect from './UndefinedSelect.svelte';
+import { borderColor, colorOf } from '../../../../test/computed-style.ts';
+import BoundSelect from './fixtures/BoundSelect.svelte';
+import ControlledSelect from './fixtures/ControlledSelect.svelte';
+import IndicatorSelect from './fixtures/IndicatorSelect.svelte';
+import UndefinedSelect from './fixtures/UndefinedSelect.svelte';
 
 const trigger = (container: Element) => container.querySelector('button')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;

@@ -20,7 +20,7 @@
 			expanded: nodeState.expanded,
 			selected: nodeState.selected,
 			focused: nodeState.focused,
-			// zag's own state reads a `disabled` field off the node, not `isNodeDisabled`.
+			// zag's own state reads a `disabled` field off the node, not the `isDisabled` accessor.
 			disabled: tree.api.collection.getNodeDisabled(node),
 			depth: nodeState.depth,
 			indexPath: nodeState.indexPath

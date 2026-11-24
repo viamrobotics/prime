@@ -13,7 +13,7 @@
 		reorderable?: boolean;
 		handles?: boolean;
 		labelPanes?: boolean;
-		handleProps?: HTMLButtonAttributes;
+		handleProps?: Omit<HTMLButtonAttributes, 'aria-label' | 'aria-labelledby'>;
 		rootProps?: HTMLAttributes<HTMLDivElement>;
 	}
 

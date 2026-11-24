@@ -31,7 +31,7 @@ import reorderControlledSource from "./ReorderControlled.svelte?raw";
 <TabsDemo client:visible />
 
 - Composed from parts, so the list, each tab, and each panel are yours to arrange.
-- With no `value`, the first tab is selected. A selection whose tab is removed falls back to the first remaining tab.
+- With no `value`, or a `value` that names no tab, the leftmost tab is selected. A selection whose tab is removed falls back to the leftmost remaining tab.
 - `value` on the root is bindable, two-way or as a getter and setter. [State & binding](../state/) explains both modes.
 - Activation is automatic: <kbd>ArrowLeft</kbd>, <kbd>ArrowRight</kbd>, <kbd>Home</kbd>, and <kbd>End</kbd> move focus and select.
 - Each `Tabs.Trigger` is a `role="tab"` element, not a `<button>`, so a control can sit inside it.
@@ -79,13 +79,21 @@ A trigger's children are its content, so an icon sits beside the label.
   <WithIcons client:visible />
 </Example>
 
-### Controls inside a tab
+### Closing tabs
 
-Put controls in the `actions` snippet of `Tabs.Trigger`, after the label. The tab is then named from its label alone, so a close button's name does not leak into it. A control nested in a tab keeps its own key events, so <kbd>Enter</kbd> and <kbd>Space</kbd> reach it. Its click handler should call `event.stopPropagation()`, or the click also selects the tab. Closing the selected tab falls back to the first remaining tab. The example wraps the list in `{#if}`, so it hides at one tab.
+`closable` on `Tabs.List` gives each tab a close button. The selected tab shows it, and an unselected tab shows it on hover, in a space it keeps the rest of the time. <kbd>Delete</kbd> closes the focused tab, so the close buttons stay out of the Tab order and the strip remains one Tab stop. A close writes `order` without the tab, so bind `order` and render the triggers from it in a keyed `{#each}`. A getter and setter on `bind:order` can refuse the close, such as to confirm discarding unsaved work. A disabled tab cannot be closed. Closing the selected tab falls back to the leftmost remaining tab. When focus was in the closed tab, it moves to the tab selected in its place. The example wraps the list in `{#if}`, so it hides at one tab.
 
 <Example code={closableSource} title="Closable.svelte">
   <Closable client:visible />
 </Example>
+
+### Status
+
+The `status` snippet of `Tabs.Trigger` fills the close button's space while that button is hidden, such as an unsaved dot on a file tab. On a list that is not `closable`, it always shows. Its text describes the tab, so give a visual-only mark a visually hidden word, as the file tabs below do.
+
+### Controls inside a tab
+
+Put other controls in the `actions` snippet of `Tabs.Trigger`, after the label, such as a menu trigger. The tab is then named from its label alone, so a control's name does not leak into it. A control of your own keeps its Tab stop and its own key events, so <kbd>Enter</kbd> and <kbd>Space</kbd> reach it. Its click handler should call `event.stopPropagation()`, or the click also selects the tab. The Reorderable example below puts a menu there.
 
 ### File-style tabs
 
@@ -99,9 +107,9 @@ Put controls in the `actions` snippet of `Tabs.Trigger`, after the label. The ta
 
 `reorderable` on `Tabs.List` lets the user move tabs, with a pointer drag or the keyboard. It works under both variants. The order is yours to hold: `Tabs.List` takes a bindable `order`, the tab values in strip order, and you render the triggers from it in a keyed `{#each}`. Key each trigger by its value, so a move shuffles the existing tabs instead of rebuilding them. A move writes a new array and changes no selection.
 
-A press on a control inside a tab never starts a drag, so a close button keeps working. A disabled tab cannot be moved.
+A press on a control inside a tab never starts a drag, so a close button keeps working. A disabled tab cannot be moved. Setting `reorderable` or `closable` without `bind:order` logs a warning in development, since the strip would never show the change. Moves and closes still write the list's own `order`.
 
-A drag alone fails WCAG 2.5.7, and the keys need a keyboard. The `actions` snippet receives `movePrevious`, `moveNext`, `canMovePrevious`, and `canMoveNext`. Those take the same path as a key, so the move is announced, focus lands on the moved tab, and a binding that refuses the move is honored. The Reorderable example shows them in a tab menu.
+A drag alone fails WCAG 2.5.7, and the keys need a keyboard. Place `Tabs.MovePrevious` and `Tabs.MoveNext` in the `actions` snippet for Move left and Move right buttons. Like the close button, they stay out of the Tab order, since <kbd>Alt</kbd> + <kbd>Shift</kbd> + an arrow makes the same move. For a control of your own, the `actions` snippet receives `movePrevious`, `moveNext`, `canMovePrevious`, and `canMoveNext`. All of them take the same path as a key, so the move is announced, focus lands on the moved tab, and a binding that refuses the move is honored. The Reorderable example puts them in a tab menu, whose trigger stops click propagation so opening it does not select the tab.
 
 <Example code={reorderableSource} title="Reorderable.svelte">
   <Reorderable client:visible />
@@ -119,7 +127,7 @@ A drag alone fails WCAG 2.5.7, and the keys need a keyboard. The `actions` snipp
 
 ## Styling
 
-The root and every part take `class` on their element. The `underline` variant wears the `underline-tabs` class on the list and `underline-tab` on each trigger. The `file` variant wears `file-tabs` and `file-tab`, and its drop placeholder wears `file-tab-slot`. All are classes from tailwind-config. See [file-tabs](../../tailwind-config/component-classes/#file-tabs).
+The root and every part take `class` on their element. The `underline` variant wears the `underline-tabs` class on the list and `underline-tab` on each trigger. The `file` variant wears `file-tabs` and `file-tab`, and its drop placeholder wears `file-tab-slot`. The close, Move left, and Move right buttons wear `icon-button`. All are classes from tailwind-config. See [file-tabs](../../tailwind-config/component-classes/#file-tabs).
 
 | Part      | Attribute       | Value                  |
 | --------- | --------------- | ---------------------- |
@@ -134,7 +142,8 @@ The root and every part take `class` on their element. The `underline` variant w
     { keys: "ArrowLeft / ArrowRight", action: "Moves focus to the previous or next tab and selects it." },
     { keys: "Home / End", action: "Moves focus to the first or last tab and selects it." },
     { keys: "Alt + Shift + ArrowLeft / ArrowRight", action: "Moves the focused tab one place left or right, when the list is reorderable." },
-    { keys: "Tab", action: "Moves focus to the selected panel, stopping first on each control inside the selected tab and the tabs after it." },
+    { keys: "Delete", action: "Closes the focused tab and focuses the tab selected in its place, when the list is closable." },
+    { keys: "Tab", action: "Moves focus to the selected panel, stopping first on each control of your own in an actions snippet. Close and move buttons are skipped." },
   ]}
 />
 

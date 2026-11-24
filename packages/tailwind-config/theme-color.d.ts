@@ -58,6 +58,7 @@ export type ThemeColorName =
   | "--color-disabled-light"
   | "--color-ghost-light"
   | "--color-ghost-medium"
+  | "--color-scrim"
   | "--color-power-wire-dark"
   | "--color-power-wire-light"
   | "--color-power-wire-medium-light"

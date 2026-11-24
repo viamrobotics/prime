@@ -4,15 +4,15 @@
   import SandboxTooltip from "./SandboxTooltip.svelte";
 </script>
 
-<!-- `placement` belongs to Tooltip.Content, so the generated snippet would mislead. -->
+<!-- `side` belongs to Tooltip.Content, so the generated snippet would mislead. -->
 <Sandbox
   name="Tooltip"
   component={SandboxTooltip}
   showCode={false}
   controls={{
-    placement: {
+    side: {
       kind: "select",
-      label: "Placement",
+      label: "Side",
       default: "top",
       options: ["top", "right", "bottom", "left"],
     },

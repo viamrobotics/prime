@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'svelte';
 
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { commands, page, userEvent } from 'vitest/browser';
 
@@ -8,9 +8,21 @@ import '../../../../test/tailwind.css';
 import NumberField from '../NumberField.svelte';
 import BoundNumberField from './fixtures/BoundNumberField.svelte';
 import ControlledNumberField from './fixtures/ControlledNumberField.svelte';
+import FieldsetNumberField from './fixtures/FieldsetNumberField.svelte';
+import NumberFieldWithTrailing from './fixtures/NumberFieldWithTrailing.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
+const frame = (container: Element) => input(container).parentElement!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
+
+function subtleTextColor() {
+	const probe = document.createElement('span');
+	probe.className = 'text-subtle-1';
+	document.body.append(probe);
+	const color = getComputedStyle(probe).color;
+	probe.remove();
+	return color;
+}
 
 const PRESS_X = 5;
 const MIDDLE = '50%';
@@ -26,7 +38,12 @@ async function scrub(offsets: number[], modifier?: 'Alt' | 'Shift') {
 	if (modifier) await commands.keyUp(modifier);
 }
 
-function renderControlled(props: Partial<ComponentProps<typeof ControlledNumberField>> = {}) {
+type ControlledOptions = Pick<
+	ComponentProps<typeof NumberField>,
+	'max' | 'step' | 'disabled' | 'readonly' | 'onkeydown'
+> & { initial?: number; shouldAccept?: boolean };
+
+function renderControlled(props: ControlledOptions = {}) {
 	const record = vi.fn<(next: number | undefined) => void>();
 	const screen = render(ControlledNumberField, {
 		props: { label: 'Speed', shouldAccept: true, record, ...props }
@@ -41,10 +58,18 @@ describe('NumberField', () => {
 		await expect.element(page.getByRole('spinbutton', { name: 'Speed' })).toBeInTheDocument();
 	});
 
-	it('styles the label as subtle text', () => {
-		const { container } = render(NumberField, { props: { label: 'Speed', value: 1 } });
+	it.each<{ labelPlacement: 'outside' | 'inset' }>([
+		{ labelPlacement: 'outside' },
+		{ labelPlacement: 'inset' }
+	])('draws an $labelPlacement label at 12 px in the subtle-1 text color', ({ labelPlacement }) => {
+		const { container } = render(NumberField, {
+			props: { label: 'Speed', labelPlacement, value: 1 }
+		});
 
-		expect(container.querySelector('label')).toHaveClass('text-subtle-1');
+		const style = getComputedStyle(container.querySelector('label')!);
+
+		expect(style.fontSize).toBe('12px');
+		expect(style.color).toBe(subtleTextColor());
 	});
 
 	it('takes its accessible name from aria-label without a label', async () => {
@@ -58,15 +83,15 @@ describe('NumberField', () => {
 		const { container } = render(NumberField, { props: { label: 'Speed' } });
 
 		const labelRight = container.querySelector('label')!.getBoundingClientRect().right;
-		const boxLeft = input(container).getBoundingClientRect().left;
+		const boxLeft = frame(container).getBoundingClientRect().left;
 
 		expect(labelRight).toBeLessThanOrEqual(boxLeft);
 	});
 
-	it('keeps the input-compact class on the input', () => {
+	it('keeps the input-compact class on the group that wears the frame', () => {
 		const { container } = render(NumberField, { props: { label: 'Speed' } });
 
-		expect(input(container)).toHaveClass('input-compact');
+		expect(frame(container)).toHaveClass('input-compact');
 	});
 
 	it.each([
@@ -283,6 +308,19 @@ describe('NumberField', () => {
 		expect(input(container).value).toBe('21');
 	});
 
+	it.each<{ by: string; props: ComponentProps<typeof NumberField> }>([
+		{ by: 'label', props: { label: 'Speed' } },
+		{ by: 'aria-label', props: { 'aria-label': 'Speed' } },
+		{ by: 'aria-labelledby', props: { 'aria-labelledby': 'speed-name' } }
+	])('renders named by $by without a console warning', ({ props }) => {
+		const warn = vi.spyOn(console, 'warn');
+		onTestFinished(() => warn.mockRestore());
+
+		render(NumberField, { props });
+
+		expect(warn).not.toHaveBeenCalled();
+	});
+
 	it('requires an accessible name', () => {
 		// @ts-expect-error no label, aria-label, or aria-labelledby
 		const props: ComponentProps<typeof NumberField> = { value: 0 };
@@ -331,7 +369,7 @@ describe('NumberField hint', () => {
 			.not.toHaveAttribute('aria-describedby');
 	});
 
-	it('describes an inset field by the hint and puts the button after the input', async () => {
+	it('describes an inset field by the hint and puts the button after the frame', async () => {
 		const { container } = render(NumberField, {
 			props: { label: 'X', labelPlacement: 'inset', hint: HINT, value: 1 }
 		});
@@ -339,12 +377,12 @@ describe('NumberField hint', () => {
 		await expect
 			.element(page.getByRole('spinbutton', { name: 'X' }))
 			.toHaveAccessibleDescription(HINT);
-		const inputRight = container.querySelector('input')!.getBoundingClientRect().right;
+		const frameRight = frame(container).getBoundingClientRect().right;
 		const buttonLeft = page
 			.getByRole('button', { name: 'About X' })
 			.element()
 			.getBoundingClientRect().left;
-		expect(buttonLeft).toBeGreaterThanOrEqual(inputRight);
+		expect(buttonLeft).toBeGreaterThanOrEqual(frameRight);
 	});
 
 	it('lists the consumer description before the hint', async () => {
@@ -444,6 +482,163 @@ describe('NumberField suffix', () => {
 	});
 });
 
+const stepButton = (container: Element, direction: 1 | -1) =>
+	container.querySelector<HTMLButtonElement>(`[data-step="${direction}"]`)!;
+
+function hold(button: HTMLButtonElement, modifiers: PointerEventInit = {}) {
+	button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, ...modifiers }));
+}
+
+function press(button: HTMLButtonElement, modifiers: PointerEventInit = {}) {
+	hold(button, modifiers);
+	window.dispatchEvent(new PointerEvent('pointerup'));
+}
+
+function renderInDisabledFieldset() {
+	const record = vi.fn<(next: number | undefined) => void>();
+	const screen = render(FieldsetNumberField, {
+		props: { label: 'Speed', initial: 5, shouldAccept: true, record }
+	});
+	return { ...screen, values: () => record.mock.calls.map(([next]) => next) };
+}
+
+function useFakeTimers() {
+	vi.useFakeTimers();
+	onTestFinished(() => {
+		vi.useRealTimers();
+	});
+}
+
+describe('NumberField stepper', () => {
+	it('steps up by step on a press of the up button', () => {
+		const { container, values } = renderControlled({ initial: 5, step: 0.5 });
+
+		press(stepButton(container, 1));
+
+		expect(values()).toEqual([5.5]);
+	});
+
+	it('steps down by step on a press of the down button', () => {
+		const { container, values } = renderControlled({ initial: 5, step: 0.5 });
+
+		press(stepButton(container, -1));
+
+		expect(values()).toEqual([4.5]);
+	});
+
+	it('steps ten times as far with Shift held', () => {
+		const { container, values } = renderControlled({ initial: 5 });
+
+		press(stepButton(container, 1), { shiftKey: true });
+
+		expect(values()).toEqual([15]);
+	});
+
+	it('clamps a press to max', () => {
+		const { container, values } = renderControlled({ initial: 9.5, max: 10 });
+
+		press(stepButton(container, 1));
+
+		expect(values()).toEqual([10]);
+	});
+
+	it('writes nothing on a press while disabled', () => {
+		const { container, values } = renderControlled({ initial: 5, disabled: true });
+
+		press(stepButton(container, 1));
+
+		expect(values()).toEqual([]);
+	});
+
+	it('writes nothing on a press inside a disabled fieldset', () => {
+		const { container, values } = renderInDisabledFieldset();
+
+		press(stepButton(container, 1));
+
+		expect(values()).toEqual([]);
+	});
+
+	it('hides the stepper inside a disabled fieldset', () => {
+		const { container } = renderInDisabledFieldset();
+
+		const stepper = container.querySelector('[data-number-stepper]')!;
+
+		expect(getComputedStyle(stepper).visibility).toBe('hidden');
+	});
+
+	it('repeats every 60 ms once a press is held past 400 ms', () => {
+		useFakeTimers();
+		const { container, values } = renderControlled({ initial: 5 });
+
+		hold(stepButton(container, 1));
+		vi.advanceTimersByTime(520);
+
+		expect(values(), 'one step on press, then repeats at 460 and 520 ms').toEqual([6, 7, 8]);
+	});
+
+	it('stops repeating once the press is released', () => {
+		useFakeTimers();
+		const { container, values } = renderControlled({ initial: 5 });
+		hold(stepButton(container, 1));
+		vi.advanceTimersByTime(460);
+
+		window.dispatchEvent(new PointerEvent('pointerup'));
+		vi.advanceTimersByTime(1000);
+
+		expect(values()).toEqual([6, 7]);
+	});
+
+	it('draws the stepper last in the frame, right of a suffix and trailing content', async () => {
+		const { container } = render(NumberFieldWithTrailing, {
+			props: { label: 'Length', suffix: 'mm', value: 1 }
+		});
+		const reset = page.getByRole('button', { name: 'Reset' });
+		await expect.element(reset).toBeInTheDocument();
+
+		const stepper = container.querySelector('[data-number-stepper]')!;
+		expect(stepper.parentElement!.lastElementChild).toBe(stepper);
+		expect(reset.element().getBoundingClientRect().right).toBeLessThanOrEqual(
+			stepper.getBoundingClientRect().left
+		);
+	});
+
+	it('keeps the stepper out of the tab order and hidden from assistive technology', () => {
+		const { container } = render(NumberField, { props: { label: 'Length', value: 1 } });
+
+		expect(stepButton(container, 1).tabIndex).toBe(-1);
+		expect(container.querySelector('[data-number-stepper]')).toHaveAttribute('aria-hidden', 'true');
+	});
+});
+
+describe('NumberField trailing', () => {
+	it('draws trailing content after the suffix, inside the group that wears the frame', async () => {
+		const { container } = render(NumberFieldWithTrailing, {
+			props: { label: 'Length', suffix: 'mm', value: 1 }
+		});
+		const button = page.getByRole('button', { name: 'Reset' });
+		await expect.element(button).toBeInTheDocument();
+
+		const group = input(container).parentElement!;
+		expect(group).toHaveClass('input');
+		expect(button.element().parentElement).toBe(group);
+		expect(
+			page.getByText('mm', { exact: true }).element().getBoundingClientRect().right
+		).toBeLessThanOrEqual(button.element().getBoundingClientRect().left);
+	});
+
+	it('groups the input for trailing content alone, with no suffix', async () => {
+		const { container } = render(NumberFieldWithTrailing, {
+			props: { label: 'Length', value: 1 }
+		});
+		const field = input(container);
+
+		await expect.element(page.getByRole('button', { name: 'Reset' })).toBeInTheDocument();
+		expect(field.parentElement).toHaveClass('input');
+		expect(getComputedStyle(field).borderTopWidth).toBe('0px');
+		expect(field).not.toHaveAttribute('aria-describedby');
+	});
+});
+
 describe('NumberField state', () => {
 	it('sets aria-invalid and data-field-state on an error', async () => {
 		render(NumberField, { props: { label: 'Speed', state: 'error', value: 1 } });
@@ -469,56 +664,47 @@ describe('NumberField state', () => {
 		await expect.element(field).not.toHaveAttribute('data-field-state');
 	});
 
-	it('draws the warn and error borders on the bare input', () => {
-		const warn = render(NumberField, { props: { label: 'Speed', state: 'warn', value: 1 } });
-		const warnColor = getComputedStyle(input(warn.container)).borderTopColor;
-		warn.unmount();
-		const error = render(NumberField, { props: { label: 'Speed', state: 'error', value: 1 } });
-		const errorColor = getComputedStyle(input(error.container)).borderTopColor;
-		error.unmount();
-		const none = render(NumberField, { props: { label: 'Speed', value: 1 } });
-		const noneColor = getComputedStyle(input(none.container)).borderTopColor;
+	it.each<{ field: string; suffix?: string }>([
+		{ field: 'a bare field', suffix: undefined },
+		{ field: 'a suffixed field', suffix: 'm' }
+	])('draws distinct warn and error borders on the frame of $field', ({ suffix }) => {
+		function frameBorderColor(state: ComponentProps<typeof NumberField>['state']) {
+			const screen = render(NumberField, { props: { label: 'Speed', suffix, state, value: 1 } });
+			const color = getComputedStyle(frame(screen.container)).borderTopColor;
+			screen.unmount();
+			return color;
+		}
+
+		const warnColor = frameBorderColor('warn');
+		const errorColor = frameBorderColor('error');
+		const noneColor = frameBorderColor(undefined);
 
 		expect(warnColor).not.toBe(noneColor);
 		expect(errorColor).not.toBe(noneColor);
 		expect(warnColor).not.toBe(errorColor);
 	});
-
-	it('draws the border on the group when a suffix is set', () => {
-		const plain = render(NumberField, { props: { label: 'Speed', suffix: 'm', value: 1 } });
-		const plainColor = getComputedStyle(input(plain.container).parentElement!).borderTopColor;
-		plain.unmount();
-		const error = render(NumberField, {
-			props: { label: 'Speed', suffix: 'm', state: 'error', value: 1 }
-		});
-		const group = input(error.container).parentElement!;
-
-		expect(getComputedStyle(group).borderTopColor).not.toBe(plainColor);
-		expect(input(error.container).getAttribute('aria-invalid')).toBe('true');
-	});
 });
 
 describe('NumberField label gap', () => {
-	it('leaves 8 px between the label and the input, so the focus ring clears the label', () => {
+	it('leaves 8 px between the label and the frame, so the focus ring clears the label', () => {
 		const { container } = render(NumberField, { props: { label: 'Speed', value: 1 } });
 		const labelRight = container.querySelector('label')!.getBoundingClientRect().right;
-		const inputLeft = input(container).getBoundingClientRect().left;
+		const frameLeft = frame(container).getBoundingClientRect().left;
 
-		expect(inputLeft - labelRight).toBe(8);
+		expect(frameLeft - labelRight).toBe(8);
 	});
 });
 
 describe('NumberField suffix size', () => {
-	it("draws a suffixed field at the bare field's height and text size", () => {
+	it("draws a suffixed field's frame at the bare field's frame height and text size", () => {
 		const bare = render(NumberField, { props: { label: 'Speed', value: 1 } });
-		const bareHeight = input(bare.container).getBoundingClientRect().height;
+		const bareHeight = frame(bare.container).getBoundingClientRect().height;
 		const bareFontSize = getComputedStyle(input(bare.container)).fontSize;
 		bare.unmount();
 
 		const suffixed = render(NumberField, { props: { label: 'Speed', suffix: 'mm', value: 1 } });
-		const group = input(suffixed.container).parentElement!;
 
-		expect(group.getBoundingClientRect().height).toBe(bareHeight);
+		expect(frame(suffixed.container).getBoundingClientRect().height).toBe(bareHeight);
 		expect(getComputedStyle(input(suffixed.container)).fontSize).toBe(bareFontSize);
 	});
 });

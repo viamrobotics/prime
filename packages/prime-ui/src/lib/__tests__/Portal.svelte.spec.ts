@@ -4,7 +4,7 @@ import { userEvent } from 'vitest/browser';
 
 import type { PortalTarget } from '../portal.ts';
 
-import PortalPanel, { PANEL_KINDS, type PanelKind } from './PortalPanel.svelte';
+import PortalPanel, { PANEL_KINDS, type PanelKind } from './fixtures/PortalPanel.svelte';
 
 const TARGET_SELECTOR = '[data-testid="target"]';
 const OPENED_BY_PRESS: ReadonlySet<PanelKind> = new Set(['context-menu', 'menubar', 'select']);

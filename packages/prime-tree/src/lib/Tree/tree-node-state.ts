@@ -3,9 +3,9 @@
  * placed inside the snippet also carries the matching `aria-*` and `data-*` attributes.
  */
 export interface TreeNodeState {
-	/** The node's value from `nodeToValue`, the key `expanded` and `selected` hold. */
+	/** The node's value from `getValue`, the key `expanded` and `selected` hold. */
 	readonly value: string;
-	/** The node has children, or `nodeToChildrenCount` says it may. A leaf is never expanded. */
+	/** The node has children, or `getChildCount` says it may. A leaf is never expanded. */
 	readonly isBranch: boolean;
 	/** The branch is open and its children render. Always `false` on a leaf. */
 	readonly expanded: boolean;
@@ -13,7 +13,7 @@ export interface TreeNodeState {
 	readonly selected: boolean;
 	/** The node holds the tree's roving focus, whether or not the tree has DOM focus. */
 	readonly focused: boolean;
-	/** `isNodeDisabled` returned `true`. A disabled node cannot be selected or expanded. */
+	/** `isDisabled` returned `true`. A disabled node cannot be selected or expanded. */
 	readonly disabled: boolean;
 	/** Nesting depth, starting at 1 for a root node. Matches `aria-level` and `--depth`. */
 	readonly depth: number;

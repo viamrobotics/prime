@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { ComponentProps } from "svelte";
 
-  import { Checkbox } from "@viamrobotics/prime-ui";
+  import { Checkbox, Field } from "@viamrobotics/prime-ui";
 
   type Props = ComponentProps<typeof Checkbox>;
 
   const { ...rest }: Props = $props();
 </script>
 
-<Checkbox aria-label="Accept the terms" {...rest} />
+<Field aria-label="Accept the terms">
+  <Checkbox {...rest} />
+</Field>

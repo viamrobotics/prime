@@ -1,16 +1,16 @@
 <!--
 @component
 An on/off switch. Inside a [`Field`](../Field/Field.svelte) it takes its `id` (the field's
-`controlId`), `disabled`, `required`, `state`, and `aria-describedby` from there. An `error`
-state sets `aria-invalid`. Always pair it with a `Label`. A `switch-info`, `switch-success`,
+`controlId`), `disabled`, `required`, `state`, `aria-describedby`, and name from there. An `error`
+state sets `aria-invalid`. Name it with a `Label`, or give its `Field` a `label`. A `switch-info`, `switch-success`,
 `switch-warning`, or `switch-danger` class sets the track color while it is on.
 
 Built on [bits-ui `Switch`](https://bits-ui.com/docs/components/switch).
 
 ```svelte
-<Field class="flex items-center gap-2">
+<Field label="Notifications" class="flex items-center gap-2">
 	<Switch bind:checked />
-	<Label>Notifications</Label>
+	<Label />
 </Field>
 ```
 -->
@@ -19,8 +19,9 @@ Built on [bits-ui `Switch`](https://bits-ui.com/docs/components/switch).
 
 	import { Switch } from 'bits-ui';
 
+	import { warnIfUnnamed } from '../accessible-name-warning.ts';
 	import { fieldState, FieldStates, type FieldState } from '../Field/state.ts';
-	import { useField } from '../Field/useField.svelte.ts';
+	import { controlName, useField } from '../Field/useField.svelte.ts';
 
 	interface Props extends Omit<HTMLButtonAttributes, 'children' | 'value'> {
 		/** Checked (on) state. Two-way bindable. @default false */
@@ -40,22 +41,32 @@ Built on [bits-ui `Switch`](https://bits-ui.com/docs/components/switch).
 		checked = $bindable(),
 		disabled,
 		required,
-		state,
+		state: stateProp,
 		'aria-describedby': describedBy,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		class: extraClasses,
 		...restProps
 	}: Props = $props();
 
 	const field = useField();
 	const uid = $props.id();
+	let element = $state<HTMLButtonElement | null>(null);
+
+	const name = $derived(controlName(field, { ariaLabel, ariaLabelledBy }));
+
+	$effect(() => {
+		if (element) warnIfUnnamed(element, 'Switch');
+	});
 
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
 	const isRequired = $derived(required ?? field?.required ?? false);
-	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	const currentState = $derived(stateProp ?? field?.state ?? FieldStates.None);
 	const isError = $derived(fieldState.isError(currentState));
 </script>
 
 <Switch.Root
+	bind:ref={element}
 	bind:checked={() => checked ?? false, (next) => (checked = next)}
 	id={id ?? field?.controlId ?? uid}
 	class={[
@@ -69,9 +80,11 @@ Built on [bits-ui `Switch`](https://bits-ui.com/docs/components/switch).
 	required={isRequired}
 	aria-invalid={isError || undefined}
 	aria-describedby={describedBy ?? field?.describedBy}
+	aria-label={name['aria-label']}
+	aria-labelledby={name['aria-labelledby']}
 	{...restProps}
 >
 	<Switch.Thumb
-		class="pointer-events-none size-4 rounded-full bg-white transition-transform data-[state=checked]:translate-x-4"
+		class="pointer-events-none size-4 rounded-full bg-white transition-transform data-[state=checked]:translate-x-4 motion-reduce:transition-none"
 	/>
 </Switch.Root>

@@ -90,14 +90,14 @@ children.
   <div class="flex flex-col gap-2 border-t border-light bg-light p-4">
     {#each entries as [key, control] (key)}
       {#if control.kind === "boolean"}
-        <Field class="flex items-center gap-2">
+        <Field label={control.label} class="flex items-center gap-2">
           <Checkbox
             bind:checked={() => values[key as keyof TProps] as boolean, (v) => set(key, v)}
           />
           <Label>{control.label}</Label>
         </Field>
       {:else if control.kind === "number"}
-        <Field class="flex flex-col gap-1">
+        <Field label={control.label} class="flex flex-col gap-1">
           <Label>{control.label}</Label>
           <NumberInput
             value={values[key as keyof TProps] as number}
@@ -108,7 +108,7 @@ children.
           />
         </Field>
       {:else if control.kind === "select"}
-        <Field class="flex flex-col gap-1">
+        <Field label={control.label} class="flex flex-col gap-1">
           <Label>{control.label}</Label>
           <Select
             items={control.options.map((option) => ({ value: option, label: option }))}
@@ -127,7 +127,7 @@ children.
           </Select>
         </Field>
       {:else}
-        <Field class="flex flex-col gap-1">
+        <Field label={control.label} class="flex flex-col gap-1">
           <Label>{control.label}</Label>
           <Input
             value={values[key as keyof TProps] as string}

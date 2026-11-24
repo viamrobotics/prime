@@ -1,3 +1,4 @@
+import { type ComponentProps, createRawSnippet } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
@@ -8,11 +9,12 @@ import {
 	colorOf,
 	shapeOf,
 	textColor
-} from '../../__tests__/computed-style.ts';
-import BoundDialog from './BoundDialog.svelte';
-import ControlledDialog from './ControlledDialog.svelte';
-import TextCloseDialog from './TextCloseDialog.svelte';
-import UndefinedDialog from './UndefinedDialog.svelte';
+} from '../../../../test/computed-style.ts';
+import { Dialog } from '../dialog.ts';
+import BoundDialog from './fixtures/BoundDialog.svelte';
+import ControlledDialog from './fixtures/ControlledDialog.svelte';
+import TextCloseDialog from './fixtures/TextCloseDialog.svelte';
+import UndefinedDialog from './fixtures/UndefinedDialog.svelte';
 
 const ICON_BUTTON_SQUARE_PX = 30;
 const VETOED_OPEN_SETTLE_MS = 100;
@@ -62,6 +64,44 @@ describe('Dialog', () => {
 		const overlay = document.querySelector('[data-dialog-overlay]')!;
 		expect(getComputedStyle(overlay).zIndex, 'the z-overlay layer').toBe('1000');
 		expect(getComputedStyle(dialog()!).zIndex, 'the z-dialog layer').toBe('1100');
+	});
+
+	it('dims the page with the scrim token in the light theme', async () => {
+		const { container } = render(BoundDialog);
+
+		await open(container);
+
+		const overlay = document.querySelector<HTMLElement>('[data-dialog-overlay]')!;
+		expect(backgroundColor(overlay)).toBe(colorOf('bg-scrim', 'backgroundColor'));
+	});
+
+	it('dims the page with the dark scrim value under .dark', async () => {
+		document.documentElement.classList.add('dark');
+		try {
+			const { container } = render(BoundDialog);
+
+			await open(container);
+
+			const overlay = document.querySelector<HTMLElement>('[data-dialog-overlay]')!;
+			const expected = colorOf('bg-scrim', 'backgroundColor');
+			expect(backgroundColor(overlay)).toBe(expected);
+			expect(expected).toBe('rgba(0, 0, 0, 0.6)');
+		} finally {
+			document.documentElement.classList.remove('dark');
+		}
+	});
+
+	it('caps its height at the dynamic viewport minus the spacing scale', async () => {
+		const { container } = render(BoundDialog);
+
+		await open(container);
+
+		const probe = document.createElement('div');
+		probe.style.height = 'calc(100dvh - var(--spacing) * 8)';
+		document.body.append(probe);
+		const expected = parseFloat(getComputedStyle(probe).height);
+		probe.remove();
+		expect(parseFloat(getComputedStyle(dialog()!).maxHeight)).toBeCloseTo(expected, 1);
 	});
 
 	it('wears the dialog shadow token', async () => {
@@ -239,5 +279,17 @@ describe('Dialog', () => {
 		await open(container);
 
 		await vi.waitFor(() => expect(owner(container)).toBe('true'));
+	});
+
+	it('requires a name on an icon-only Dialog.Close by type', () => {
+		const children = createRawSnippet(() => ({ render: () => '<span>Cancel</span>' }));
+		// @ts-expect-error an icon-only close requires a name
+		const unnamed: ComponentProps<typeof Dialog.Close> = {};
+		// @ts-expect-error a close takes one name, not two
+		const twice: ComponentProps<typeof Dialog.Close> = { label: 'Close', 'aria-label': 'Close' };
+		const named: ComponentProps<typeof Dialog.Close> = { label: 'Close' };
+		const withChildren: ComponentProps<typeof Dialog.Close> = { children };
+
+		expect([unnamed, twice, named, withChildren]).toHaveLength(4);
 	});
 });

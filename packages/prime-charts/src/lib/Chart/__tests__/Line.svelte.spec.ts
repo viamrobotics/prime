@@ -64,6 +64,28 @@ describe('Chart.Line', () => {
 		expect(paths(container)).toHaveLength(0);
 	});
 
+	describe('hidden binding', () => {
+		it('draws the line and writes the toggle back to a binding that starts undefined', async () => {
+			const { container } = render(LineSeriesChart, {
+				props: {
+					series: reading([at(0, 2), at(1, 8)]),
+					width: WIDTH,
+					height: HEIGHT,
+					isHiddenBound: true
+				}
+			});
+			const frame = container.querySelector('[data-bound-hidden]')!;
+
+			await expect.poll(() => paths(container)).toHaveLength(1);
+			expect(frame.getAttribute('data-bound-hidden')).toBe('undefined');
+
+			container.querySelector('button')!.click();
+
+			await expect.poll(() => frame.getAttribute('data-bound-hidden')).toBe('true');
+			expect(paths(container)).toHaveLength(0);
+		});
+	});
+
 	describe('colors', () => {
 		it('draws three series in the first three palette colors', async () => {
 			const { container } = render(LineSeriesChart, {

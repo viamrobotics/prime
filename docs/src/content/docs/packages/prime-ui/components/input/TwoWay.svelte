@@ -5,8 +5,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Machine name</Label>
+  <Field label="Machine name" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <Input bind:value={name} placeholder="rover-1" />
     <Hint>Lowercase letters, numbers, and dashes.</Hint>
   </Field>

@@ -56,14 +56,17 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 
 		/**
 		 * Name for form submission. The submitted value is the date's ISO 8601 string, or empty
-		 * while no date is chosen.
+		 * while no date is chosen. A disabled picker submits nothing.
 		 */
 		name?: string;
 
 		/** Disable the picker. Defaults to the enclosing field's `disabled`. */
 		disabled?: boolean;
 
-		/** Make a date required. Defaults to the enclosing field's `required`. */
+		/**
+		 * Make a date required. Defaults to the enclosing field's `required`. Each segment gets
+		 * `aria-required`, and with a `name` the form will not submit while no date is chosen.
+		 */
 		required?: boolean;
 
 		/** Make the field read-only. @default false */
@@ -99,11 +102,14 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 
 	let calendarLabel = $state<string>();
 
-	provideDatePicker({
+	const picker = provideDatePicker({
 		disabled: () => isDisabled,
+		required: () => isRequired,
 		readonly: () => readonly,
 		open: () => open ?? false,
 		locale: () => locale,
+		// bits-ui's form input takes no `disabled`, so a disabled picker withholds the name and submits nothing.
+		formName: () => (isDisabled ? undefined : name),
 		calendarLabel: { get: () => calendarLabel, set: (label) => (calendarLabel = label) }
 	});
 </script>
@@ -118,10 +124,7 @@ Built on [bits-ui `DatePicker`](https://bits-ui.com/docs/components/date-picker)
 	{readonly}
 	disabled={isDisabled}
 	required={isRequired}
-	calendarLabel={calendarLabel ?? 'Choose a date'}
+	calendarLabel={picker.calendarName}
 >
 	{@render children?.()}
 </DatePicker.Root>
-{#if name}
-	<input type="hidden" {name} value={value?.toString() ?? ''} />
-{/if}

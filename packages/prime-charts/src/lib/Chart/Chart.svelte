@@ -2,7 +2,7 @@
 @component
 A cartesian chart with an x and a y axis. Place [`Chart.Plot`](./Plot.svelte), which holds the drawing parts, and [`Chart.Legend`](./Legend.svelte) and [`Chart.Table`](./Table.svelte) around it, in the layout you write.
 
-The root has the `figure` role and no layout of its own. It requires an `aria-label` or an `aria-labelledby`, and a visually hidden summary of the series, the time and the values describes it unless you pass your own `aria-describedby`. Every other attribute of a `div` passes through to it.
+The root is a native `figure` and has no layout of its own. It requires an `aria-label` or an `aria-labelledby`, and a visually hidden summary of the series, the time and the values describes it unless you pass your own `aria-describedby`. Every other attribute of a `figure` passes through to it.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -12,7 +12,7 @@ The root has the `figure` role and no layout of its own. It requires an `aria-la
 	import { summarizeFigure } from './summary.ts';
 	import type { ChartScale } from './scale.ts';
 
-	interface Props extends HTMLAttributes<HTMLDivElement> {
+	interface Props extends HTMLAttributes<HTMLElement> {
 		/** The kind of x scale. Defaults to `'time'`. */
 		x?: ChartScale;
 		/** The lower x bound. Left out, it comes from the data. */
@@ -78,8 +78,7 @@ The root has the `figure` role and no layout of its own. It requires an `aria-la
 	);
 </script>
 
-<div
-	role="figure"
+<figure
 	{...rest}
 	aria-describedby={hasOwnDescription ? rest['aria-describedby'] : summaryId}
 	aria-busy={loading || undefined}
@@ -89,4 +88,4 @@ The root has the `figure` role and no layout of its own. It requires an `aria-la
 		<p id={summaryId} data-part="summary" class="sr-only">{summary}</p>
 	{/if}
 	{@render children?.()}
-</div>
+</figure>

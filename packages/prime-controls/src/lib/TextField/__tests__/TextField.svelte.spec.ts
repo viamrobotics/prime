@@ -1,10 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import type { ComponentProps } from 'svelte';
+
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { commands, page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
 import TextField from '../TextField.svelte';
 import BoundTextField from './fixtures/BoundTextField.svelte';
+import UnsetTextField from './fixtures/UnsetTextField.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
@@ -12,12 +15,29 @@ const owner = (container: Element) => container.querySelector('[data-testid="own
 const MIDDLE = '50%';
 const HINT = 'Shown beside the label';
 
+function subtleTextColor() {
+	const probe = document.createElement('span');
+	probe.className = 'text-subtle-1';
+	document.body.append(probe);
+	const color = getComputedStyle(probe).color;
+	probe.remove();
+	return color;
+}
+
 describe('TextField', () => {
 	it('names the input by its label', async () => {
-		const { container } = render(TextField, { props: { label: 'Motion name', value: 'a' } });
+		render(TextField, { props: { label: 'Motion name', value: 'a' } });
 
 		await expect.element(page.getByRole('textbox', { name: 'Motion name' })).toBeInTheDocument();
-		expect(container.querySelector('label')).toHaveClass('text-subtle-1');
+	});
+
+	it('draws the label at 12 px in the subtle-1 text color', () => {
+		const { container } = render(TextField, { props: { label: 'Motion name', value: 'a' } });
+
+		const style = getComputedStyle(container.querySelector('label')!);
+
+		expect(style.fontSize).toBe('12px');
+		expect(style.color).toBe(subtleTextColor());
 	});
 
 	it('takes its accessible name from aria-label without a label', async () => {
@@ -37,6 +57,17 @@ describe('TextField', () => {
 		await field.clear();
 		expect(owner(container)).toBe('""');
 		expect(input(container).value).toBe('');
+	});
+
+	it('binds state that starts undefined and writes typed text back', async () => {
+		const { container } = render(UnsetTextField);
+		const field = page.getByRole('textbox', { name: 'Pin' });
+		await expect.element(field).toHaveValue('');
+		expect(owner(container), 'the bound state before typing').toBe('null');
+
+		await field.fill('GPIO17');
+
+		expect(owner(container)).toBe('"GPIO17"');
 	});
 
 	it('shows a value written from outside', async () => {
@@ -79,6 +110,31 @@ describe('TextField', () => {
 		render(TextField, { props: { label: 'Pin', disabled: true, value: '' } });
 
 		await expect.element(page.getByRole('textbox', { name: 'Pin' })).toBeDisabled();
+	});
+
+	it.each<{ by: string; props: ComponentProps<typeof TextField> }>([
+		{ by: 'label', props: { label: 'Pin' } },
+		{ by: 'aria-label', props: { 'aria-label': 'Pin' } },
+		{ by: 'aria-labelledby', props: { 'aria-labelledby': 'pin-name' } }
+	])('renders named by $by without a console warning', ({ props }) => {
+		const warn = vi.spyOn(console, 'warn');
+		onTestFinished(() => warn.mockRestore());
+
+		render(TextField, { props });
+
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('requires an accessible name', () => {
+		// @ts-expect-error no label, aria-label, or aria-labelledby
+		const props: ComponentProps<typeof TextField> = { value: '' };
+		expect(props).toBeDefined();
+	});
+
+	it('requires a visible label for a hint', () => {
+		// @ts-expect-error hint with aria-label and no visible label
+		const props: ComponentProps<typeof TextField> = { 'aria-label': 'Pin', hint: 'Tip' };
+		expect(props).toBeDefined();
 	});
 });
 

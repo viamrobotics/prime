@@ -17,9 +17,9 @@
 <div class="not-content flex flex-col gap-3">
   <Tree
     nodes={folders}
-    nodeToValue={(folder) => folder.id}
-    nodeToString={(folder) => folder.id}
-    nodeToChildren={(folder) => folder.children}
+    getValue={(folder) => folder.id}
+    getLabel={(folder) => folder.id}
+    getChildren={(folder) => folder.children}
     bind:expanded={
       () => expanded,
       (next) => {
@@ -46,7 +46,7 @@
       {:else}
         <Tree.Item
           class="focus-ring rounded-sm py-1 text-sm"
-          style="padding-inline-start: calc(var(--depth) * 1rem)"
+          style="padding-inline-start: calc(var(--depth) * 1rem + 1rem)"
         >
           {folder.id}
         </Tree.Item>

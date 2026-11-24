@@ -3,8 +3,10 @@
 	import { normalizeProps, useMachine } from '@zag-js/svelte';
 	import * as toast from '@zag-js/toast';
 
+	import type { ToastVariant } from './toast.ts';
+
 	import Icon from '../Icon/Icon.svelte';
-	import { toastVariantOf, type ToastVariant } from './useToast.svelte.ts';
+	import { toastVariantOf } from './useToast.svelte.ts';
 
 	interface Props {
 		item: toast.Props;
@@ -18,6 +20,13 @@
 		success: { path: mdiCheckCircle, tone: 'text-success-dark' },
 		warning: { path: mdiAlert, tone: 'text-warning-dark' },
 		danger: { path: mdiAlertCircle, tone: 'text-danger-dark' }
+	};
+
+	const NAMES: Record<ToastVariant, string> = {
+		info: 'Info',
+		success: 'Success',
+		warning: 'Warning',
+		danger: 'Error'
 	};
 
 	const ROLES: Record<ToastVariant, 'status' | 'alert'> = {
@@ -40,10 +49,11 @@
 <div
 	{...api.getRootProps()}
 	role={ROLES[variant]}
-	class="z-[var(--z-index)] flex h-10 w-80 max-w-[calc(100vw-var(--spacing)*8)] [translate:var(--x)_var(--y)] [scale:var(--scale)] items-center gap-2 rounded-sm border border-medium bg-medium px-3 opacity-[var(--opacity)] focus-ring transition-[translate,scale,opacity] duration-300 will-change-[translate,opacity,scale]"
+	class="toast-stack-item flex h-10 w-80 max-w-[calc(100vw-var(--spacing)*8)] items-center gap-2 rounded-sm border border-medium bg-medium px-3 focus-ring"
 >
 	<span {...api.getGhostBeforeProps()}></span>
 	<span {...api.getGhostAfterProps()}></span>
+	<span class="sr-only">{NAMES[variant]}: </span>
 	<Icon icon={glyph.path} size="base" class={['shrink-0', glyph.tone]} />
 	<span class="min-w-0 truncate text-sm text-default" {...api.getTitleProps()}>{api.title}</span>
 	{#if api.description}

@@ -7,6 +7,6 @@
     <Tooltip.Trigger class="inline-flex">
       <StatusDot state="success" label="Online" tabindex={0} class="focus-ring" />
     </Tooltip.Trigger>
-    <Tooltip.Content placement="right">Connected 2 minutes ago</Tooltip.Content>
+    <Tooltip.Content side="right">Connected 2 minutes ago</Tooltip.Content>
   </Tooltip>
 </div>

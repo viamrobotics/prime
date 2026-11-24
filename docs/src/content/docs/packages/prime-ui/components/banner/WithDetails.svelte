@@ -9,6 +9,6 @@
     <Banner.Details summary="Error output">
       <pre>exit status 1: missing config attribute "board"</pre>
     </Banner.Details>
-    <Banner.Close />
+    <Banner.Close aria-label="Dismiss" />
   </Banner>
 </div>

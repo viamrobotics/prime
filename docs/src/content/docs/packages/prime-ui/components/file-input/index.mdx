@@ -23,7 +23,7 @@ import validatedSource from "./Validated.svelte?raw";
 - A real `<input type="file">` covers the row, so the picker, a dropped file, the keyboard, and form submission are the browser's, and a form reset empties `value`. `accept`, `multiple`, `name`, `capture`, and `onchange` pass straight through.
 - `value` is a `File[]`. Without `multiple` it holds at most one file, and a cleared input is an empty array.
 - The chosen names show in the row and truncate to its width. A clear button appears beside them.
-- Reads `controlId`, `disabled`, `required`, `state`, and `aria-describedby` from an enclosing [`Field`](../field/).
+- Reads `controlId`, `disabled`, `required`, `state`, `aria-describedby`, and its name from an enclosing [`Field`](../field/).
 
 ## Usage
 

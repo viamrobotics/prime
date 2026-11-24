@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import BoundMultiSelect from './BoundMultiSelect.svelte';
-import ControlledMultiSelect from './ControlledMultiSelect.svelte';
-import UndefinedMultiSelect from './UndefinedMultiSelect.svelte';
+import BoundMultiSelect from './fixtures/BoundMultiSelect.svelte';
+import ControlledMultiSelect from './fixtures/ControlledMultiSelect.svelte';
+import UndefinedMultiSelect from './fixtures/UndefinedMultiSelect.svelte';
 
 const trigger = (container: Element) => container.querySelector('button')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;

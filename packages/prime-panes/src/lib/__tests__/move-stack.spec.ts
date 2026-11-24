@@ -1,42 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
 import { moveStack } from '../tree.ts';
-import { createStackLayout, deepFreeze, pane, stackIds } from '../../../test/layouts.ts';
+import {
+	createStackLayout,
+	deepFreeze,
+	SOLO_PANE,
+	split,
+	stackIds,
+	TAB_STACK_A,
+	TAB_STACK_B
+} from '../../../test/layouts.ts';
 
-import type { LayoutNode, SplitDirection, SplitKey, StackNode } from '../layout.ts';
+import type { LayoutNode, SplitDirection, SplitKey } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
 
 const NEW_SPLIT_ID = 'new-split';
-
-const SOLO = pane(stackIds.solo, stackIds.solo);
-
-const STACK_A: StackNode<PaneData> = {
-	type: 'stack',
-	id: stackIds.stackA,
-	panes: [
-		pane(stackIds.tabA1, stackIds.tabA1),
-		pane(stackIds.tabA2, stackIds.tabA2),
-		pane(stackIds.tabA3, stackIds.tabA3)
-	],
-	activeId: stackIds.tabA2
-};
-
-const STACK_B: StackNode<PaneData> = {
-	type: 'stack',
-	id: stackIds.stackB,
-	panes: [pane(stackIds.tabB1, stackIds.tabB1), pane(stackIds.tabB2, stackIds.tabB2)],
-	activeId: stackIds.tabB1
-};
-
-function split(
-	id: string,
-	direction: SplitDirection,
-	ratio: number,
-	first: LayoutNode<PaneData>,
-	second: LayoutNode<PaneData>
-): LayoutNode<PaneData> {
-	return { type: 'split', id, direction, ratio, first, second };
-}
 
 describe('moveStack', () => {
 	it('returns undefined for an undefined root', () => {
@@ -94,8 +72,8 @@ describe('moveStack', () => {
 				stackIds.rootSplit,
 				'row',
 				0.6,
-				STACK_A,
-				split(NEW_SPLIT_ID, 'column', 0.5, SOLO, STACK_B)
+				TAB_STACK_A,
+				split(NEW_SPLIT_ID, 'column', 0.5, SOLO_PANE, TAB_STACK_B)
 			)
 		},
 		{
@@ -105,8 +83,8 @@ describe('moveStack', () => {
 				stackIds.rootSplit,
 				'row',
 				0.6,
-				STACK_A,
-				split(NEW_SPLIT_ID, 'row', 0.5, STACK_B, SOLO)
+				TAB_STACK_A,
+				split(NEW_SPLIT_ID, 'row', 0.5, TAB_STACK_B, SOLO_PANE)
 			)
 		}
 	])(
@@ -130,8 +108,8 @@ describe('moveStack', () => {
 				stackIds.sideSplit,
 				'column',
 				0.4,
-				SOLO,
-				split(NEW_SPLIT_ID, 'row', 0.5, STACK_A, STACK_B)
+				SOLO_PANE,
+				split(NEW_SPLIT_ID, 'row', 0.5, TAB_STACK_A, TAB_STACK_B)
 			)
 		);
 	});

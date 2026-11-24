@@ -88,15 +88,15 @@ The examples on this page also use the `button` and `input` classes from [`@viam
 
 ## Anatomy
 
-Every part is a property on `Panes`, and every part goes inside the `pane` snippet, since each one connects to the pane it renders in. All of them are optional. `Panes.DragTrigger` and `Panes.MoveTrigger` rearrange the pane, `Panes.TabList` and `Panes.TabListDropRegion` stack it, and `Panes.PaneBody` marks its body. `Panes.TabListDropRegion` goes inside `Panes.TabList`. `Panes.MoveTrigger` can sit inside a `Panes.DragTrigger` or stand alone.
+Every part is a property on `Panes`, and every part goes inside the `pane` snippet, since each one connects to the pane it renders in. All of them are optional. `Panes.DragTrigger` and `Panes.MoveTrigger` rearrange the pane, `Panes.TabList` and `Panes.TabListDropRegion` stack it, and `Panes.PaneBody` marks its body. `Panes.TabListDropRegion` goes inside `Panes.TabList`. `Panes.MoveTrigger` can sit inside a `Panes.DragTrigger` or stand alone. `Panes.TabList` and `Panes.MoveTrigger` each require a name, exactly one of `aria-label` or `aria-labelledby`.
 
 ```svelte
 <Panes>
   {#snippet pane(node, state)}
     <Panes.DragTrigger>
-      <Panes.MoveTrigger />
+      <Panes.MoveTrigger aria-label="Move pane" />
     </Panes.DragTrigger>
-    <Panes.TabList>
+    <Panes.TabList aria-label="Stacked panes">
       <Panes.TabListDropRegion />
     </Panes.TabList>
     <Panes.PaneBody />
@@ -209,13 +209,15 @@ With the layout locked, the setter counts each proposal and assigns none of them
 
 Rearranging is on by default. Set `reorderable={false}` to turn it off. Resizing is not affected. Two parts that you place inside the `pane` snippet connect your markup to the pane. `Panes.DragTrigger` makes the elements inside it start a pointer drag, and `Panes.MoveTrigger` toggles move mode, the way to rearrange without dragging. Both do nothing when `reorderable` is `false`.
 
+`Panes.MoveTrigger` requires a name, exactly one of `aria-label` or `aria-labelledby`. The default button and the `props` that `child` receives both carry it.
+
 The two can be laid out in two ways, and the example shows both. A grip can sit inside a `Panes.DragTrigger` as a `Panes.MoveTrigger`, so dragging and the keyboard path share one element. A press on it drags at once, and a click without movement enters move mode. Or a whole header can be the drag surface, with a separate move button inside it. A press on the header drags at once, and a quick click on the button still moves.
 
 <Example code={triggersSource} title="Triggers.svelte" height="15rem">
   <Triggers client:visible />
 </Example>
 
-While a pane is ready to drag, it shows a blue outline and its wrapper carries `data-drag-armed`. Style your own markup from it with a selector such as `[data-drag-armed] header`, or with Tailwind's `in-data-drag-armed:` variant.
+While a pane is ready to drag, it shows an `info-dark` outline and its wrapper carries `data-drag-armed`. Style your own markup from it with a selector such as `[data-drag-armed] header`, or with Tailwind's `in-data-drag-armed:` variant.
 
 #### Excluding an element from dragging
 
@@ -279,7 +281,7 @@ While a drag that can drop onto panes is active, the root carries `data-dragging
 
 Dragging is not the only way to rearrange. Activate a `Panes.MoveTrigger` with a click, Enter, or Space to enter move mode. A button trigger reports it with `aria-pressed`.
 
-Activating the trigger moves focus to the moving pane, which shows a blue focus outline, a light gray wash over its content, and "Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape." Every other pane becomes a destination that shows nothing until it is hovered or focused. A placement makes the same change a drop on that region would, and it goes through `layout` the same way, so a function binding can still veto it.
+Activating the trigger moves focus to the moving pane, which shows a 2px `--color-link` focus outline drawn inside its edge, a light gray wash over its content, and "Moving Camera. Choose a destination with the pointer or arrow keys, or press Escape." Every other pane becomes a destination that shows nothing until it is hovered or focused. A placement makes the same change a drop on that region would, and it goes through `layout` the same way, so a function binding can still veto it.
 
 - With a pointer, the region under the pointer previews with the drag indicator and the moving pane's label. A stack onto a stacked pane previews as a tab in its strip instead. A click places.
 - On touch, a first tap previews a region and a second tap on the same region places.
@@ -346,7 +348,7 @@ const layout: LayoutNode<PaneData> = {
 
 #### Tabs and the pane body
 
-`Panes.TabList` renders the tabs of the stack that its pane belongs to, so place it in the `pane` snippet, usually in the header. It renders in every pane, so every pane can include it. The `tablist` role and the tabs appear only when the pane is stacked. An unstacked pane still carries the container, so it can be a stack target. Selecting is automatic, so focusing a tab with the arrows shows its pane, and a click selects too. [Keyboard](#keyboard) lists the keys.
+`Panes.TabList` renders the tabs of the stack that its pane belongs to, so place it in the `pane` snippet, usually in the header. It requires a name, exactly one of `aria-label` or `aria-labelledby`. It renders in every pane, so every pane can include it. The `tablist` role and the tabs appear only when the pane is stacked. An unstacked pane still carries the container, so it can be a stack target. Selecting is automatic, so focusing a tab with the arrows shows its pane, and a click selects too. [Keyboard](#keyboard) lists the keys.
 
 `Panes.PaneBody` marks the part of the pane below its header. In a stacked pane with a `Panes.TabList` it becomes the `tabpanel` that the tabs control, so a screen reader announces the panel on entry. It is optional. Without it, the tabs still work and nothing claims the `tabpanel` role. Its rect also sets the edges and center of the pane's drop regions, as [Forming a stack](#forming-a-stack) describes.
 
@@ -375,7 +377,7 @@ Place the region inside `Panes.TabList`. Size and position it with `class`. Thre
 A region shown only during a drag should also show in move mode, so move mode can stack there. The root's `data-dragging` and `data-move-mode` attributes drive the styles. The first hit test after a drag starts misses a region that was hidden before, and the next pointer move finds it. The example's strip sits along the very top edge of the pane, and the pane's wrapper is the positioned ancestor.
 
 ```svelte
-<Panes.TabList aria-label="Stacked panes" class="flex gap-1">
+<Panes.TabList aria-label="Stacked panes">
   <Panes.TabListDropRegion
     class="absolute inset-x-0 top-0 hidden h-4 in-data-dragging:block in-data-move-mode:block"
   />
@@ -430,7 +432,7 @@ Over another pane's `Panes.TabListDropRegion`, the preview tab shows at the poin
 The empty area of a `Panes.TabList` drags the whole stack. So does a `Panes.DragTrigger` with `target="stack"`. A `Panes.MoveTrigger` with `target="stack"` moves the whole stack in move mode. Both take `target` as `"pane"`, `"stack"`, or `"float"`, and the default is `"pane"`. On a pane that is not stacked, `target="stack"` acts as `target="pane"`. Inside a floating window, `Panes.MoveTrigger` also takes `target="float"`, which moves the window's pane or stack. See [Windows and assistive technology](#windows-and-assistive-technology).
 
 ```svelte
-<Panes.MoveTrigger target="stack">Move stack</Panes.MoveTrigger>
+<Panes.MoveTrigger target="stack" aria-label="Move stack">Move stack</Panes.MoveTrigger>
 ```
 
 A moving stack is named by its panes' labels, such as "Camera A, Camera B, and Camera C".
@@ -591,7 +593,7 @@ In move mode, a pane or stack in the base has a "Float" destination on its own t
 
 ```svelte
 {#if state.isFloating}
-  <Panes.MoveTrigger target="float">Move window</Panes.MoveTrigger>
+  <Panes.MoveTrigger target="float" aria-label="Move window">Move window</Panes.MoveTrigger>
 {/if}
 ```
 
@@ -602,7 +604,7 @@ The status region announces "Floated Camera." and "Docked Camera left of Map.", 
 A few more things keep a page with windows accessible:
 
 - Give every pane a label through `paneLabel`. A window's name comes from the labels of its panes, and an unlabeled pane leaves the window unnamed.
-- A window clips at its edges. Give a focusable control that sits flush against an edge an inset focus outline, or the edge hides it.
+- A window clips at its edges. Give a focusable control that sits flush against an edge the `focus-ring-inset` class from `@viamrobotics/tailwind-config`, or the edge hides its outline.
 - Place windows so they do not cover a focusable base control entirely when the page loads.
 - The arrow keys move a window only while the window itself has focus. A screen reader in browse mode may keep those keys for itself, so the buttons in the next section matter there too.
 
@@ -681,14 +683,14 @@ Each frame is a live view. The empty view renders its `empty` snippet. The stack
 | Part                      | `class` lands on                                                                  |
 | ------------------------- | --------------------------------------------------------------------------------- |
 | `Panes`                   | The root `div`. Size it here, or it collapses to nothing.                         |
-| `Panes.TabList`           | The container `div`. Tabs inherit its text size.                                  |
+| `Panes.TabList`           | The container `div`, which wears `file-tabs`. Each tab wears `file-tab`.          |
 | `Panes.TabListDropRegion` | The inert region. Size and position it here.                                      |
 | `Panes.PaneBody`          | The body `div`.                                                                   |
 | `Panes.MoveTrigger`       | The `button`. With a `child` snippet, spread `props` on your own element instead. |
 
 `Panes.DragTrigger` renders a `display: contents` wrapper and takes no `class`. Style the elements inside it.
 
-Three snippets replace markup the library would otherwise draw: `dragPreview` replaces the ghost's content, `tab` on `Panes.TabList` replaces a tab's content, and `child` on `Panes.MoveTrigger` replaces the button. A pane's wrapper shows a blue focus outline, and the same outline while a press has armed the pane to drag.
+Three snippets replace markup the library would otherwise draw: `dragPreview` replaces the ghost's content, `tab` on `Panes.TabList` replaces a tab's content, and `child` on `Panes.MoveTrigger` replaces the button. A pane's wrapper, a floating window, and the move-mode swap button wear `focus-ring-inset`. The Float button, the split resize trigger, the move-mode edge marks, and the tabs wear `focus-ring`, with tabs drawn as `file-tab` inside a `file-tabs` strip. Every focus indicator is the 2px `--color-link` outline from `@viamrobotics/tailwind-config`. A press that arms the pane to drag shows the `info-dark` outline instead.
 
 The package sets these data attributes, so Tailwind variants like `in-data-stacked:hidden` and `in-data-dragging:block` work without a wrapper or script.
 
@@ -839,7 +841,7 @@ Every operation except `addPaneToUpperRight` returns `undefined` for an `undefin
 
 ## Persisting a layout
 
-The setter of a function binding is the place to save. This recipe saves like the app's teleop workspaces do.
+The setter of a function binding is the place to save. This recipe stores the layout through a `save` callback you supply, such as a request to a server or a write to local storage.
 
 - A structural change (swap, move, add, or remove) saves immediately.
 - A resize saves after a short pause, because a drag produces many changes.
@@ -899,114 +901,6 @@ To tell the two apart, compare the previous and next trees while ignoring `ratio
 ```
 
 The structural save cancels a pending resize save first, because the structural tree already holds the latest ratios. The check serializes both trees without any `ratio` field, so pane `data` has to be JSON-serializable, as it is when you store the layout. A change to pane `data`, such as through `updatePaneData`, therefore counts as structural and saves at once.
-
-## Migrating from the app's `nodes.ts`
-
-The app stores a workspace as a protobuf `WorkspaceNode` tree and renders it with `svelte-splitpanes`. The library replaces both the helpers in `nodes.ts` and the recursive `panes.svelte` rendering. The library model has no protobuf semantics, so the conversion lives at your boundary.
-
-### Differences
-
-| Protobuf                                                         | Library                                                          |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `WorkspaceNode` with a `nodeId` and a `oneof node`               | `LayoutNode` with a `type` of `'split'` or `'pane'`, and an `id` |
-| `SplitDirection` enum: `UNSPECIFIED`, `COLUMN`, `ROW`            | `'row'` or `'column'`                                            |
-| `splitPercentage`, where 0 means missing                         | `ratio`, always strictly between 0 and 1                         |
-| A split whose `first` or `second` is `undefined`                 | Not representable. A split always has two children.              |
-| Widget content in `oneof node`, such as `camera` or `timeSeries` | `data` on a pane                                                 |
-
-### Function names
-
-| `nodes.ts`                                              | `@viamrobotics/prime-panes`                                    |
-| ------------------------------------------------------- | -------------------------------------------------------------- |
-| `addNodeToUpperRight(workspace, node)`                  | `addPaneToUpperRight(root, pane, newSplitId)`                  |
-| `removeNode(workspace, nodeId)`                         | `removePane(root, paneId)`                                     |
-| `swapNodes(workspace, nodeId1, nodeId2)`                | `swapPanes(root, firstId, secondId)`                           |
-| `moveNode(workspace, nodeId, targetId, direction, key)` | `movePane(root, paneId, targetId, direction, key, newSplitId)` |
-| `setSplitPercentage(workspace, nodeId, percentage)`     | `setSplitRatio(root, splitId, ratio)`                          |
-| `updateNodeContent(workspace, nodeId, content)`         | `updatePaneData(root, paneId, data)`                           |
-
-The app's format has no stack and no float. A converter must flatten each `StackNode` and `FloatNode` into its panes or reject it, because `WorkspaceNode` cannot hold either. The converter below rejects them.
-
-Two differences matter when you port callers. The `nodes.ts` functions mutate the workspace and return it, or return `undefined` when nothing changed. The library functions never mutate, and they return the same root reference when nothing changed. The library also asks you for the id of any split it creates, where `nodes.ts` calls `crypto.randomUUID()` inside.
-
-### Converting between the formats
-
-This converter reads a protobuf tree into the library model and writes it back. Pane `data` is the `oneof node` content, so widget code keeps working with the protobuf shapes it already knows.
-
-```ts
-import {
-  SplitDirection,
-  type WorkspaceNode,
-} from "@viamrobotics/web-client/teleop/v1/teleop";
-import type { LayoutNode } from "@viamrobotics/prime-panes";
-
-type WidgetNode = Exclude<
-  WorkspaceNode["node"],
-  { oneofKind: "split" | undefined }
->;
-export type Layout = LayoutNode<WidgetNode> | undefined;
-
-const DEFAULT_RATIO = 0.5;
-
-const readRatio = (splitPercentage: number) =>
-  splitPercentage > 0 && splitPercentage < 1 ? splitPercentage : DEFAULT_RATIO;
-
-export const fromWorkspaceNode = (node: WorkspaceNode | undefined): Layout => {
-  if (!node) return undefined;
-
-  if (node.node.oneofKind === "split") {
-    const { direction, splitPercentage, first, second } = node.node.split;
-    const firstLayout = fromWorkspaceNode(first);
-    const secondLayout = fromWorkspaceNode(second);
-
-    // A split with one child collapses to the child it has.
-    if (!firstLayout || !secondLayout) return firstLayout ?? secondLayout;
-
-    return {
-      type: "split",
-      id: node.nodeId,
-      // UNSPECIFIED reads as column.
-      direction: direction === SplitDirection.ROW ? "row" : "column",
-      // A stored 0 means missing.
-      ratio: readRatio(splitPercentage),
-      first: firstLayout,
-      second: secondLayout,
-    };
-  }
-
-  if (node.node.oneofKind === undefined) return undefined;
-
-  return { type: "pane", id: node.nodeId, data: node.node };
-};
-
-export const toWorkspaceNode = (layout: NonNullable<Layout>): WorkspaceNode => {
-  if (layout.type === "pane") {
-    return { nodeId: layout.id, node: layout.data };
-  }
-
-  if (layout.type !== "split") {
-    throw new Error(`The workspace format has no ${layout.type}.`);
-  }
-
-  return {
-    nodeId: layout.id,
-    node: {
-      oneofKind: "split",
-      split: {
-        direction:
-          layout.direction === "row"
-            ? SplitDirection.ROW
-            : SplitDirection.COLUMN,
-        splitPercentage: layout.ratio,
-        first: toWorkspaceNode(layout.first),
-        second: toWorkspaceNode(layout.second),
-      },
-    },
-  };
-};
-```
-
-Use `fromWorkspaceNode(workspace.layoutRoot)` to seed the bound layout. In the persistence recipe, call `toWorkspaceNode` inside `save`, and skip it when the layout is `undefined`. A split with a missing child collapses to the child it has, and a workspace with no `layoutRoot` is an empty layout. An unspecified direction on read becomes `column`, so the first save writes `COLUMN` back. That is a one-time normalization of old data.
 
 ## Limitations
 

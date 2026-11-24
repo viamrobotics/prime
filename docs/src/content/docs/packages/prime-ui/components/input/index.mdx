@@ -25,7 +25,7 @@ import adornedSource from "./Adorned.svelte?raw";
 - `bind:value` plus `oninput`, `onchange`, `onblur`, and the rest, side by side.
 - Three contextual states, `info`, `warn`, and `error`, each with a matching [`Field.StateIcon`](../field/). `none` shows no icon.
 - `Input.Group` frames the input with icons, units, and buttons.
-- Reads `controlId`, `disabled`, `required`, `state`, and `aria-describedby` from an enclosing [`Field`](../field/).
+- Reads `controlId`, `disabled`, `required`, `state`, `aria-describedby`, and its name from an enclosing [`Field`](../field/).
 
 ## Anatomy
 
@@ -65,7 +65,7 @@ For the controlled mode, where your setter can decline a keystroke, see [State &
 
 ### With adornments
 
-A leading `Icon`, the input, and a unit suffix inside an `Input.Group`. You set the width, here with `class="w-64"` on the group. Pressing the group's padding or the icon focuses the input.
+A leading `Icon`, the input, and a unit suffix inside an `Input.Group`. You set the width, here with `class="w-64"` on the group. Pressing the group's padding or the icon focuses the input. A press on a button, a link, another control, a `<summary>`, editable content, or an element with a `tabindex` or `role="button"` inside the group stays with that element.
 
 <Example code={adornedSource} title="Adorned.svelte">
   <Adorned client:visible />

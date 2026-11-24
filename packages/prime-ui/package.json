@@ -56,12 +56,13 @@
 			]
 		},
 		"package": {
-			"command": "svelte-package && publint && node ../../scripts/check-declarations.mjs dist",
+			"command": "svelte-package --tsconfig ./tsconfig.package.json && publint && node ../../scripts/check-declarations.mjs dist",
 			"files": [
 				"src/lib/**",
 				"../../scripts/check-declarations.mjs",
 				"svelte.config.js",
 				"tsconfig.json",
+				"tsconfig.package.json",
 				"package.json"
 			],
 			"output": [
@@ -81,6 +82,8 @@
 			"command": "svelte-check --tsconfig ./tsconfig.json",
 			"files": [
 				"src/**",
+				"test/**",
+				"vite.config.ts",
 				"tsconfig.json",
 				"svelte.config.js",
 				"package.json",
@@ -97,6 +100,7 @@
 			"command": "vitest run --passWithNoTests",
 			"files": [
 				"src/**",
+				"test/**",
 				"vite.config.ts",
 				"tsconfig.json",
 				"svelte.config.js",
@@ -119,6 +123,7 @@
 				"!dist/**",
 				"!.wireit/**",
 				"eslint.config.js",
+				".gitignore",
 				"tsconfig.json",
 				"package.json",
 				"../tailwind-config/tailwind-config.css"
@@ -151,6 +156,7 @@
 		"@zag-js/svelte": "^1.48.0",
 		"@zag-js/toast": "^1.48.0",
 		"bits-ui": "^2.21.0",
+		"esm-env": "^1.2.2",
 		"prismjs": "^1.30.0"
 	},
 	"peerDependencies": {

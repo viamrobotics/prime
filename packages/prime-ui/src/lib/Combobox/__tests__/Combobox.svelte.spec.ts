@@ -3,17 +3,17 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import type { ComboboxFilter } from '../useCombobox.svelte.ts';
+import type { ComboboxFilter } from '../filter.ts';
 
-import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
+import { borderColor, colorOf } from '../../../../test/computed-style.ts';
 import ComboboxEmpty from '../ComboboxEmpty.svelte';
 import ComboboxInput from '../ComboboxInput.svelte';
 import ComboboxItems from '../ComboboxItems.svelte';
-import BoundCombobox from './BoundCombobox.svelte';
-import ControlledCombobox from './ControlledCombobox.svelte';
-import CustomItemsCombobox from './CustomItemsCombobox.svelte';
-import IndicatorCombobox from './IndicatorCombobox.svelte';
-import UndefinedCombobox from './UndefinedCombobox.svelte';
+import BoundCombobox from './fixtures/BoundCombobox.svelte';
+import ControlledCombobox from './fixtures/ControlledCombobox.svelte';
+import CustomItemsCombobox from './fixtures/CustomItemsCombobox.svelte';
+import IndicatorCombobox from './fixtures/IndicatorCombobox.svelte';
+import UndefinedCombobox from './fixtures/UndefinedCombobox.svelte';
 
 const input = (container: Element) =>
 	container.querySelector<HTMLInputElement>('[role="combobox"]')!;

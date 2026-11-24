@@ -4,21 +4,25 @@ A compact number field for tool panels: a native `<input type="number">` that st
 when it has a visible `label`, scrubs by dragging that label sideways. A scrub writes `value` on
 every pointer move, so a function binding sees each intermediate value and can throttle or veto.
 ArrowUp and ArrowDown step by `step`, and a scrub moves `step` per pixel. Hold Shift for 10 times
-that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays unclamped.
+that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays unclamped. Up and down
+buttons at the frame's right edge step the same way on a pointer press and repeat while held.
 
 ```svelte
 <NumberField label="Speed" min={0} max={10} step={0.1} bind:value />
 ```
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { ClassValue, HTMLInputAttributes } from 'svelte/elements';
+	import type { AccessibleName } from '../accessible-name.ts';
 
 	import { type FieldState, Input, NumberInput } from '@viamrobotics/prime-ui';
 
-	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
-	import { joinDescribedBy } from '../Hint/described-by.ts';
+	import ControlLabel from '../Hint/ControlLabel.svelte';
+	import { hintIdFor, joinDescribedBy } from '../Hint/described-by.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import { type Bounds, clamp, settle, startingValue, stepMultiplier } from './number-step.ts';
+	import NumberStepper from './NumberStepper.svelte';
 
 	interface Props extends Omit<
 		HTMLInputAttributes,
@@ -40,15 +44,22 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		hint?: string;
 
 		/**
-		 * Short text such as a unit, drawn inside the input's right edge and part of the control's
-		 * accessible description. The input sits in a prime-ui `Input.Group`, which wears the border.
+		 * Short text such as a unit, drawn after the value and part of the control's accessible
+		 * description.
 		 */
 		suffix?: string;
 
 		/**
+		 * Content drawn after any `suffix` and before the stepper, such as an icon button that acts
+		 * on this field. Content that keeps its box while hidden, as `invisible` does, keeps the
+		 * input's width fixed.
+		 */
+		trailing?: Snippet;
+
+		/**
 		 * Contextual state. `warn` draws the `warning-dark` border. `error` draws the `danger-dark`
-		 * border and sets `aria-invalid`. `info` changes no border. With a `suffix`, the group wears
-		 * the border.
+		 * border and sets `aria-invalid`. `info` changes no border. The input sits in a prime-ui
+		 * `Input.Group`, which wears the border.
 		 */
 		state?: FieldState;
 
@@ -80,6 +91,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		label,
 		hint,
 		suffix,
+		trailing,
 		state,
 		labelPlacement = 'outside',
 		min,
@@ -94,29 +106,23 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		...restProps
 	}: Props & AccessibleName = $props();
 
-	// A hint sits beside the visible label, so it is only allowed with one.
-	type AccessibleName =
-		| { label: string }
-		| { label?: undefined; hint?: undefined; 'aria-label': string }
-		| { label?: undefined; hint?: undefined; 'aria-labelledby': string };
-
 	const PLACEMENT_CLASSES = {
 		outside: {
-			root: CONTROL_ROW_CLASS,
-			label: 'flex min-h-6 min-w-6 shrink-0 items-center',
-			input: 'min-w-0 flex-1 input-compact',
+			root: 'flex items-center gap-2',
+			label: '',
 			group: 'min-w-0 flex-1 input-compact'
 		},
 		inset: {
 			root: 'relative flex items-center',
-			label:
-				'absolute top-1/2 left-px flex h-6 min-w-6 -translate-y-1/2 items-center justify-center',
+			label: 'absolute top-1/2 left-px h-6 -translate-y-1/2 justify-center',
 			// `input-compact` sets its padding on a doubled class, which outranks a plain `pl-*` utility.
-			input: 'min-w-0 flex-1 input-compact pl-7!',
-			// The group wears the frame, so it takes the left padding the bare input would.
 			group: 'min-w-0 flex-1 input-compact pl-7!'
 		}
 	} as const;
+
+	// The frame draws its own stepper as its last item, so the browser's is hidden.
+	const INPUT_CLASS =
+		'min-w-0 flex-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none';
 
 	const SCRUB_THRESHOLD_PX = 4;
 	const STEP_KEYS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1 };
@@ -131,7 +137,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 			return max;
 		}
 	};
-	const hintId = $derived(`${id}-hint`);
+	const hintId = $derived(hintIdFor(id));
 	const suffixId = $derived(`${id}-suffix`);
 	const describedBy = $derived(
 		joinDescribedBy([
@@ -147,15 +153,20 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 		if (next !== value) value = next;
 	}
 
+	function stepBy(direction: number, modifiers: { shiftKey: boolean; altKey: boolean }) {
+		if (isLocked) return;
+		const multiplier = stepMultiplier(modifiers);
+		const base = startingValue(value, bounds);
+		write(settle(base + direction * step * multiplier, step, multiplier, bounds));
+	}
+
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }) {
 		onkeydown?.(event);
 		const direction = STEP_KEYS[event.key];
 		if (event.defaultPrevented || direction === undefined || isLocked) return;
 
 		event.preventDefault();
-		const multiplier = stepMultiplier(event);
-		const base = startingValue(value, bounds);
-		write(settle(base + direction * step * multiplier, step, multiplier, bounds));
+		stepBy(direction, event);
 	}
 
 	function swallowNextClick(label: HTMLLabelElement) {
@@ -209,23 +220,15 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 </script>
 
 <div class={[placementClasses.root, extraClasses]}>
-	{#if label}
-		<label
-			for={id}
-			class={[
-				placementClasses.label,
-				CONTROL_LABEL_CLASS,
-				!isLocked && 'cursor-ew-resize touch-none select-none'
-			]}
-			onpointerdown={handleLabelPointerdown}
-		>
-			{label}
-		</label>
-	{/if}
-	{#if label && hint && labelPlacement === 'outside'}
-		<Hint {label} {hint} descriptionId={hintId} disabled={Boolean(disabled)} />
-	{/if}
-	{#snippet numberInput(inputClass: ClassValue)}
+	<ControlLabel
+		for={id}
+		{label}
+		hint={labelPlacement === 'outside' ? hint : undefined}
+		disabled={Boolean(disabled)}
+		class={[placementClasses.label, !isLocked && 'cursor-ew-resize touch-none select-none']}
+		onpointerdown={handleLabelPointerdown}
+	/>
+	<Input.Group class={['group/number-field', placementClasses.group]}>
 		<NumberInput
 			{...restProps}
 			{id}
@@ -238,17 +241,14 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 			aria-describedby={describedBy}
 			bind:value
 			onkeydown={handleKeydown}
-			class={inputClass}
+			class={INPUT_CLASS}
 		/>
-	{/snippet}
-	{#if suffix}
-		<Input.Group class={placementClasses.group}>
-			{@render numberInput('min-w-0 flex-1')}
+		{#if suffix}
 			<span id={suffixId} class="shrink-0 text-subtle-2">{suffix}</span>
-		</Input.Group>
-	{:else}
-		{@render numberInput(placementClasses.input)}
-	{/if}
+		{/if}
+		{@render trailing?.()}
+		<NumberStepper onstep={stepBy} {isLocked} />
+	</Input.Group>
 	<!-- An inset label sits inside the input's left edge, so its hint goes after the input. -->
 	{#if label && hint && labelPlacement === 'inset'}
 		<Hint {label} {hint} descriptionId={hintId} disabled={Boolean(disabled)} class="ml-1" />

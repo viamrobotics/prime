@@ -1,13 +1,13 @@
 <!--
 @component
 A native text input with the Viam border and padding. Inside a [`Field`](../Field/Field.svelte)
-it takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `aria-describedby` from there. An
+it takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, `aria-describedby`, and its name from there. An
 `error` state sets `aria-invalid` and the error border. See [`Field`](../Field/Field.svelte) for
 pairing it with a `Hint` or a `Field.StateIcon`.
 
 ```svelte
-<Field class="flex flex-col gap-1">
-	<Label>Email</Label>
+<Field label="Email" class="flex flex-col gap-1">
+	<Label />
 	<Input type="email" class="w-64" bind:value />
 </Field>
 ```
@@ -15,8 +15,8 @@ pairing it with a `Hint` or a `Field.StateIcon`.
 To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.svelte).
 
 ```svelte
-<Field state="error">
-	<Label>Email</Label>
+<Field label="Email" state="error">
+	<Label />
 	<Input.Group>
 		<Input type="email" bind:value />
 		<Field.StateIcon />
@@ -29,6 +29,7 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 
 	import type { FieldState } from '../Field/state.ts';
 
+	import { accessibleNameWarning } from '../accessible-name-warning.ts';
 	import { useInputControl } from './useInputControl.svelte.ts';
 
 	interface Props extends Omit<HTMLInputAttributes, 'value' | 'children' | 'type'> {
@@ -68,6 +69,8 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 		required,
 		readonly,
 		'aria-describedby': describedBy,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		class: extraClasses,
 		...restProps
 	}: Props = $props();
@@ -77,19 +80,17 @@ To add an icon or a suffix, put the input in an [`Input.Group`](./InputGroup.sve
 		disabled: () => disabled,
 		required: () => required,
 		state: () => state,
-		describedBy: () => describedBy
+		describedBy: () => describedBy,
+		ariaLabel: () => ariaLabel,
+		ariaLabelledBy: () => ariaLabelledBy
 	});
 </script>
 
 <input
 	{...restProps}
+	{...control.attributes}
 	bind:value
-	id={control.id}
 	class={['input', extraClasses]}
-	disabled={control.disabled}
-	required={control.required}
 	{readonly}
-	aria-describedby={control.describedBy}
-	aria-invalid={control.invalid}
-	data-field-state={control.fieldState}
+	{@attach accessibleNameWarning('Input')}
 />

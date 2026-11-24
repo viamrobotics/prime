@@ -18,7 +18,7 @@ import customComponentSource from "./CustomComponent.svelte?raw";
 
 `icon` accepts an SVG path string or a Svelte component. A string is the `d` attribute of a path on a 24 by 24 viewBox, which is what every `@mdi/js` export is. A component renders as is, so any icon library that ships Svelte components works.
 
-- `size` takes one of eight tokens, `xs` through `4xl`, from `iconSizes` in `packages/prime-ui/src/lib/Icon/icon.ts`. Color follows `currentColor`.
+- `size` takes one of eight `IconSize` tokens, `xs` (12px) through `4xl` (36px). Color follows `currentColor`.
 - Decorative by default: `aria-hidden` and not focusable. Add an `aria-label` when it stands alone.
 - `Icon` bundles no paths of its own. Your bundler keeps only the icons you import.
 
@@ -89,6 +89,10 @@ prime ships no general icon set. It ships only the Viam glyphs, under `@viamrobo
 ## Migrating from the curated names
 
 `Icon` takes an import, not a curated kebab-case name such as `icon="cog"`. The [Icons section of the migration page](../../migrating/#icons) maps each old name to its `@mdi/js` export or Viam glyph.
+
+## Keyboard
+
+The icon is not interactive, so it takes no keys.
 
 ## API
 

@@ -13,9 +13,9 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <h4 class="text-xs font-medium text-subtle-2 uppercase">In a field</h4>
-    <Field class="flex max-w-xs flex-col gap-1" required>
-      <Label>Email</Label>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">In a field, text from the field</h4>
+    <Field label="Email" class="flex max-w-xs flex-col gap-1" required>
+      <Label />
       <Input type="email" placeholder="you@viam.com" />
     </Field>
   </div>

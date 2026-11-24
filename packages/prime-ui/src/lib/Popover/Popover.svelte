@@ -8,9 +8,9 @@ Built on [bits-ui `Popover`](https://bits-ui.com/docs/components/popover).
 ```svelte
 <Popover bind:open>
 	<Popover.Trigger class="button">Open</Popover.Trigger>
-	<Popover.Content>
+	<Popover.Content aria-label="Details">
 		<p>Details</p>
-		<Popover.Close />
+		<Popover.Close aria-label="Close" />
 	</Popover.Content>
 </Popover>
 ```

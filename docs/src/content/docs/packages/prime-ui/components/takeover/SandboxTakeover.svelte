@@ -7,7 +7,7 @@
   <Takeover.Content>
     <Takeover.Header>
       <Takeover.Title>Setup wizard</Takeover.Title>
-      <Takeover.Close />
+      <Takeover.Close aria-label="Close" />
     </Takeover.Header>
     <div class="p-4">Fill the viewport with a focused task.</div>
   </Takeover.Content>

@@ -3,12 +3,12 @@
 A file chooser on a native `<input type="file">`, drawn as one framed row: a prompt, the chosen
 file names, and a button that clears them. The native input covers the row, so a click, a drop,
 the keyboard, and form submission are the browser's. Inside a [`Field`](../Field/Field.svelte) it
-takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, and `aria-describedby`
-from there.
+takes its `id` (the field's `controlId`), `disabled`, `required`, `state`, `aria-describedby`, and its
+name from there.
 
 ```svelte
-<Field class="flex flex-col gap-1">
-	<Label>Audio file</Label>
+<Field label="Audio file" class="flex flex-col gap-1">
+	<Label />
 	<FileInput accept=".wav,.mp3" class="w-64" bind:value />
 </Field>
 ```
@@ -21,6 +21,7 @@ from there.
 
 	import type { FieldState } from '../Field/state.ts';
 
+	import { accessibleNameWarning } from '../accessible-name-warning.ts';
 	import Icon from '../Icon/Icon.svelte';
 	import { holdsFiles, toFileList } from './file-list.ts';
 	import { useInputControl } from './useInputControl.svelte.ts';
@@ -64,6 +65,8 @@ from there.
 		required,
 		multiple,
 		'aria-describedby': describedBy,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		class: extraClasses,
 		children,
 		onchange,
@@ -75,7 +78,9 @@ from there.
 		disabled: () => disabled,
 		required: () => required,
 		state: () => fieldState,
-		describedBy: () => describedBy
+		describedBy: () => describedBy,
+		ariaLabel: () => ariaLabel,
+		ariaLabelledBy: () => ariaLabelledBy
 	});
 
 	let input = $state<HTMLInputElement>();
@@ -96,9 +101,11 @@ from there.
 		const form = input?.form;
 		if (!form) return;
 
+		let pendingReset: ReturnType<typeof setTimeout> | undefined;
+
 		const followReset = (event: Event) => {
 			// The browser resets its controls after this event's listeners, unless one cancels it.
-			setTimeout(() => {
+			pendingReset = setTimeout(() => {
 				if (event.defaultPrevented) return;
 				value = [];
 				syncNativeInput();
@@ -106,7 +113,10 @@ from there.
 		};
 
 		form.addEventListener('reset', followReset);
-		return () => form.removeEventListener('reset', followReset);
+		return () => {
+			form.removeEventListener('reset', followReset);
+			clearTimeout(pendingReset);
+		};
 	});
 
 	const choose: HTMLInputAttributes['onchange'] = (event) => {
@@ -132,16 +142,12 @@ from there.
 >
 	<input
 		{...restProps}
+		{...control.attributes}
 		bind:this={input}
 		type="file"
-		id={control.id}
 		{multiple}
-		disabled={control.disabled}
-		required={control.required}
-		aria-describedby={control.describedBy}
-		aria-invalid={control.invalid}
-		data-field-state={control.fieldState}
 		onchange={choose}
+		{@attach accessibleNameWarning('FileInput')}
 		class="absolute inset-0 size-full cursor-pointer opacity-0 file:cursor-pointer disabled:cursor-not-allowed disabled:file:cursor-not-allowed"
 	/>
 	<span aria-hidden="true" class="flex shrink-0 items-center gap-1 border-r border-light pr-2">
@@ -153,7 +159,10 @@ from there.
 		{/if}
 	</span>
 	<span
-		class={['min-w-0 flex-1 truncate', files.length === 0 && !control.disabled && 'text-subtle-2']}
+		class={[
+			'min-w-0 flex-1 truncate',
+			files.length === 0 && !control.attributes.disabled && 'text-subtle-2'
+		]}
 	>
 		{names || placeholder}
 	</span>
@@ -161,7 +170,7 @@ from there.
 		<button
 			type="button"
 			aria-label={clearLabel}
-			disabled={control.disabled}
+			disabled={control.attributes.disabled}
 			onclick={clear}
 			class={[
 				'relative -my-1 -mr-1 flex min-h-6 min-w-6 shrink-0 items-center justify-center rounded-sm',

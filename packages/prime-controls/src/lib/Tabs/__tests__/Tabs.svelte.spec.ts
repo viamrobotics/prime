@@ -1,8 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import type { ComponentProps } from 'svelte';
+
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
+import { Tabs } from '../tabs.ts';
 import BoundTabs from './fixtures/BoundTabs.svelte';
 import ClassedTabs from './fixtures/ClassedTabs.svelte';
 import TabsHarness from './fixtures/TabsHarness.svelte';
@@ -157,5 +160,23 @@ describe('Tabs panel scale', () => {
 
 		expect(content.flexDirection).toBe('column');
 		expect(content.rowGap).toBe('4px');
+	});
+});
+
+describe('Tabs.List name', () => {
+	it('requires an accessible name', () => {
+		// @ts-expect-error no aria-label or aria-labelledby
+		const props: ComponentProps<typeof Tabs.List> = {};
+		expect(props).toBeDefined();
+	});
+
+	it('renders named by aria-label without a console warning', async () => {
+		const warn = vi.spyOn(console, 'warn');
+		onTestFinished(() => warn.mockRestore());
+
+		render(TabsHarness);
+
+		await expect.element(page.getByRole('tablist', { name: 'Mode' })).toBeInTheDocument();
+		expect(warn).not.toHaveBeenCalled();
 	});
 });

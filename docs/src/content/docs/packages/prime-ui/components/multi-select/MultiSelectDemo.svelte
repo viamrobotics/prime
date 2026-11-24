@@ -1,13 +1,13 @@
 <script lang="ts">
   import Sandbox from "@docs/Sandbox.svelte";
 
-  import SandboxMultiSelect from "./SandboxMultiSelect.svelte";
+  import LabeledMultiSelect from "./LabeledMultiSelect.svelte";
 </script>
 
 <!-- `state` belongs to MultiSelect.Trigger, so the generated snippet would mislead. -->
 <Sandbox
   name="MultiSelect"
-  component={SandboxMultiSelect}
+  component={LabeledMultiSelect}
   showCode={false}
   controls={{
     state: {

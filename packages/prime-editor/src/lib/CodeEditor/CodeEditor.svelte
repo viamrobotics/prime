@@ -1,3 +1,17 @@
+<!--
+@component
+A code editor built on CodeMirror 6, with syntax highlighting, search, folding, and a diff view.
+Bind the document with `bind:value`. Setting `original` compares `value` against it in a diff
+view, unified by default or side by side with `diff="split"`. Every editor needs a name, from
+`aria-label` or `aria-labelledby`. With `collapseUnchanged`, Ctrl+Shift+] (Cmd+Option+] on macOS)
+expands the folded run of unchanged lines next to the cursor.
+
+```svelte
+<CodeEditor bind:value={config} language="json" aria-label="Robot config" />
+<CodeEditor bind:value={config} original={savedConfig} diff="split" aria-label="Robot config" />
+```
+-->
+
 <script lang="ts">
 	import type { Attachment } from 'svelte/attachments';
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -49,6 +63,7 @@
 		originalNameContentAttributes,
 		otherAriaContentAttributes
 	} from './aria-attributes.ts';
+	import { expandUnchanged } from './expand-unchanged.ts';
 	import { languageSupport } from './languages.ts';
 	import { codeEditorTheme } from './theme.ts';
 
@@ -83,6 +98,7 @@
 		original?: string;
 		/** The diff view's layout while `original` is set. */
 		diff?: CodeEditorDiff;
+		// `@codemirror/merge`'s option name, kept because no native or standard name exists.
 		/**
 		 * Folds each long run of unchanged lines in the diff view into one row that expands on
 		 * click. Changing it rebuilds the editor.
@@ -102,7 +118,7 @@
 	type AccessibleName = { 'aria-label': string } | { 'aria-labelledby': string };
 
 	let {
-		value = $bindable(''),
+		value = $bindable(),
 		language,
 		readonly = false,
 		disabled = false,
@@ -201,7 +217,7 @@
 		// A function binding can veto or transform the write without changing `value`, so no effect
 		// re-runs. Read it back once the update finishes and put the doc in line.
 		queueMicrotask(() => {
-			if (editor === update.view) replaceDoc(update.view, value);
+			if (editor === update.view) replaceDoc(update.view, value ?? '');
 		});
 	}
 
@@ -213,6 +229,7 @@
 				...defaultKeymap,
 				...searchKeymap,
 				...historyKeymap,
+				{ key: 'Ctrl-Shift-]', mac: 'Cmd-Alt-]', run: expandUnchanged },
 				...foldKeymap
 			]),
 			search(),
@@ -250,7 +267,7 @@
 			return new EditorView({
 				parent: node,
 				state: EditorState.create({
-					doc: value,
+					doc: value ?? '',
 					extensions: [
 						sharedExtensions(),
 						valueEditorExtensions(),
@@ -282,7 +299,7 @@
 							originalNameCompartment.of(originalNameExtension)
 						]
 					},
-					b: { doc: value, extensions: [sharedExtensions(), valueEditorExtensions()] }
+					b: { doc: value ?? '', extensions: [sharedExtensions(), valueEditorExtensions()] }
 				})
 		);
 		originalEditor = mergeView.a;
@@ -338,7 +355,7 @@
 	});
 
 	$effect(() => {
-		const text = value;
+		const text = value ?? '';
 		if (editor) replaceDoc(editor, text);
 	});
 

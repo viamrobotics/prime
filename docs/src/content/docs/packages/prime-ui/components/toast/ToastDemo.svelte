@@ -29,8 +29,8 @@
 
 <div class="not-content flex max-w-md flex-col gap-3">
   <div class="grid grid-cols-2 gap-3">
-    <Field class="flex flex-col gap-1">
-      <Label>Variant</Label>
+    <Field label="Variant" class="flex flex-col gap-1">
+      <Label />
       <Select bind:value={() => variant, selectVariant} items={variants}>
         <Select.Trigger>
           <Select.Value />
@@ -42,8 +42,8 @@
         </Select.Content>
       </Select>
     </Field>
-    <Field class="flex flex-col gap-1">
-      <Label>Title</Label>
+    <Field label="Title" class="flex flex-col gap-1">
+      <Label />
       <Input bind:value={title} />
     </Field>
   </div>

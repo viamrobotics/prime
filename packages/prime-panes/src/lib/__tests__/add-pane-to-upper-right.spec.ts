@@ -8,10 +8,11 @@ import {
 	expectSplit,
 	expectStack,
 	ids,
-	pane
+	pane,
+	split
 } from '../../../test/layouts.ts';
 
-import type { FloatEntry, LayoutNode, SplitDirection } from '../layout.ts';
+import type { FloatEntry, LayoutNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
 
 const NEW = pane('new', 'new');
@@ -21,16 +22,6 @@ const ENTRY: FloatEntry<PaneData> = {
 	rect: { x: 0, y: 0, width: 10, height: 10 },
 	content: pane('p', 'p')
 };
-
-function split(
-	id: string,
-	direction: SplitDirection,
-	ratio: number,
-	first: LayoutNode<PaneData>,
-	second: LayoutNode<PaneData>
-): LayoutNode<PaneData> {
-	return { type: 'split', id, direction, ratio, first, second };
-}
 
 describe('addPaneToUpperRight', () => {
 	it('returns the new pane when the root is undefined', () => {

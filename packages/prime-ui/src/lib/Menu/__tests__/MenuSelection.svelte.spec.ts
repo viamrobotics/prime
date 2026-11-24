@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import BoundSelection from './BoundSelection.svelte';
-import ControlledSelection from './ControlledSelection.svelte';
-import UndefinedSelection from './UndefinedSelection.svelte';
+import BoundSelection from './fixtures/BoundSelection.svelte';
+import ControlledSelection from './fixtures/ControlledSelection.svelte';
+import UndefinedSelection from './fixtures/UndefinedSelection.svelte';
 
 const readout = (container: Element, id: string) =>
 	container.querySelector(`[data-testid="${id}"]`)?.textContent;

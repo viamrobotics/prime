@@ -12,7 +12,7 @@ import type {
 
 import { isEditableTarget } from './editable-target.ts';
 
-const key = Symbol('Keybindings');
+const KEYBINDINGS_KEY = Symbol('Keybindings');
 
 interface Registration {
 	binding: Keybinding;
@@ -103,12 +103,12 @@ export const provideKeybindings = (): KeybindingsContext => {
 		return () => window.removeEventListener('keydown', onkeydown, { capture: true });
 	});
 
-	return setContext<KeybindingsContext>(key, context);
+	return setContext<KeybindingsContext>(KEYBINDINGS_KEY, context);
 };
 
 /** The shortcut registry from the nearest `provideKeybindings`. Throws outside one. */
 export const useKeybindings = (): KeybindingsContext => {
-	const context = getContext<KeybindingsContext | undefined>(key);
+	const context = getContext<KeybindingsContext | undefined>(KEYBINDINGS_KEY);
 	if (!context) throw new Error('useKeybindings() needs a provideKeybindings() above it');
 	return context;
 };

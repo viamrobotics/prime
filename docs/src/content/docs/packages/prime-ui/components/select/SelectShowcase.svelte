@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Select } from "@viamrobotics/prime-ui";
+  import { Field, Select } from "@viamrobotics/prime-ui";
 
   const sizes = [
     { value: "sm", label: "Small" },
@@ -22,36 +22,42 @@
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Placeholder, with a disabled item</h4>
     <div class="max-w-xs">
-      <Select items={sizes}>
-        <Select.Trigger class="w-64" aria-label="Size">
-          <Select.Value placeholder="Pick a size" />
-        </Select.Trigger>
-        {@render options()}
-      </Select>
+      <Field aria-label="Size">
+        <Select items={sizes}>
+          <Select.Trigger class="w-64">
+            <Select.Value placeholder="Pick a size" />
+          </Select.Trigger>
+          {@render options()}
+        </Select>
+      </Field>
     </div>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Error</h4>
     <div class="max-w-xs">
-      <Select items={sizes}>
-        <Select.Trigger class="w-64" aria-label="Size" state="error">
-          <Select.Value placeholder="Pick a size" />
-        </Select.Trigger>
-        {@render options()}
-      </Select>
+      <Field aria-label="Size">
+        <Select items={sizes}>
+          <Select.Trigger class="w-64" state="error">
+            <Select.Value placeholder="Pick a size" />
+          </Select.Trigger>
+          {@render options()}
+        </Select>
+      </Field>
     </div>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
     <div class="max-w-xs">
-      <Select items={sizes} value="md" disabled>
-        <Select.Trigger class="w-64" aria-label="Size">
-          <Select.Value placeholder="Pick a size" />
-        </Select.Trigger>
-        {@render options()}
-      </Select>
+      <Field aria-label="Size">
+        <Select items={sizes} value="md" disabled>
+          <Select.Trigger class="w-64">
+            <Select.Value placeholder="Pick a size" />
+          </Select.Trigger>
+          {@render options()}
+        </Select>
+      </Field>
     </div>
   </div>
 </div>

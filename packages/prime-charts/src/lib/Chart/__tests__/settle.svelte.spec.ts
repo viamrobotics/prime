@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import { settleFrames } from '../../../../test/frames.ts';
 import '../../../../test/tailwind.css';
 import type { ChartPoint } from '../point.ts';
 import AxesChart from './fixtures/AxesChart.svelte';
@@ -24,12 +25,6 @@ const FIXED_COLUMN = { className: 'w-24', width: 96 };
 const FRACTIONAL_COLUMN = { className: 'min-w-[60.3px]', width: 60.3 };
 
 const reading = (points: ChartPoint[]) => [{ name: 'Reading', points }];
-
-const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
-
-const settleFrames = async () => {
-	for (let frame = 0; frame < SETTLE_FRAMES; frame++) await nextFrame();
-};
 
 const errors: string[] = [];
 const recordError = (event: ErrorEvent) => {
@@ -85,7 +80,7 @@ const recordPaddingChanges = (container: Element) => {
 const waitUntilSettled = async (container: Element) => {
 	await expect.poll(() => container.querySelectorAll('.x-part span').length).toBeGreaterThan(0);
 	await expect.poll(() => container.querySelector('path')).not.toBeNull();
-	await settleFrames();
+	await settleFrames(SETTLE_FRAMES);
 };
 
 const minutesPastTen = (minutes: number, seconds: number) =>
@@ -106,14 +101,14 @@ describe('Chart axes settling', () => {
 			props: { series: reading(points), width: CHART_WIDTH }
 		});
 		await expect.poll(() => container.querySelectorAll('.x-part span').length).toBeGreaterThan(1);
-		await settleFrames();
+		await settleFrames(SETTLE_FRAMES);
 
 		const unsettled: number[] = [];
 		const overhanging: number[] = [];
 		for (let width = CHART_WIDTH; width >= BAND_NARROWEST_WIDTH; width--) {
 			const recorder = recordPaddingChanges(container);
 			frameOf(container).style.width = `${width}px`;
-			await settleFrames();
+			await settleFrames(SETTLE_FRAMES);
 			recorder.stop();
 			if (recorder.changes.length > 1) unsettled.push(width);
 			if (xLabelBoxes(container).at(-1)!.right > plotBoxOf(container).right + SUBPIXEL) {
@@ -140,7 +135,7 @@ describe('Chart axes settling', () => {
 				}))
 			)
 		});
-		await settleFrames();
+		await settleFrames(SETTLE_FRAMES);
 		recorder.stop();
 
 		expect(
@@ -194,7 +189,7 @@ describe('Chart axes settling', () => {
 		const labelWidth = xLabelBoxes(container)[0].width;
 
 		frameOf(container).style.width = `${Math.ceil(labelWidth * LABEL_TO_PLOT_RATIO)}px`;
-		await settleFrames();
+		await settleFrames(SETTLE_FRAMES);
 
 		const [label] = xLabelBoxes(container);
 		const plot = plotBoxOf(container);
@@ -294,7 +289,7 @@ describe('Chart axes measuring', () => {
 		await rerender({
 			series: reading(wholeMinutes.map((point) => ({ ...point, y: point.y * WIDE_Y_LABEL_SCALE })))
 		});
-		await settleFrames();
+		await settleFrames(SETTLE_FRAMES);
 
 		expect(pathBoxOf(container).left).toBeGreaterThan(narrowLeft);
 		expect(errors.filter((message) => message.includes('ResizeObserver loop'))).toEqual([]);
@@ -316,7 +311,7 @@ describe('Chart axes measuring', () => {
 			series: reading(points.map((point) => ({ ...point, y: point.y * WIDE_Y_LABEL_SCALE }))),
 			xFormat
 		});
-		await settleFrames();
+		await settleFrames(SETTLE_FRAMES);
 
 		expect({ before: narrowTicks, after: xLabelBoxes(container).length }).toEqual({
 			before: ONE_MINUTE_TICKS,

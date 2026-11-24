@@ -1,7 +1,10 @@
+import type { ComponentProps } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 
+import { bareTreeProps } from '../../../../test/tree-props.ts';
+import type TreeRoot from '../Tree.svelte';
 import BasicTree from '../../../../test/fixtures/BasicTree.svelte';
 import LazyTree from '../../../../test/fixtures/LazyTree.svelte';
 import PartsTree from '../../../../test/fixtures/PartsTree.svelte';
@@ -19,6 +22,15 @@ describe('Tree', () => {
 		render(PartsTree);
 
 		await expect.element(page.getByRole('tree')).toHaveAccessibleName('Files');
+	});
+
+	it('requires an aria-label or an aria-labelledby in its type', async () => {
+		// @ts-expect-error a tree with neither name does not type check
+		const unnamed: ComponentProps<typeof TreeRoot> = bareTreeProps;
+		render(BasicTree);
+
+		expect(unnamed.nodes).toEqual([]);
+		await expect.element(page.getByRole('tree')).toHaveAccessibleName('Sample');
 	});
 
 	it('carries no aria-labelledby when the consumer names the tree by aria-label', async () => {
@@ -91,7 +103,7 @@ describe('Tree', () => {
 		await expect.element(itemOf(name)).toHaveAttribute(attribute, value);
 	});
 
-	it('marks a branch with no children aria-expanded="false" when nodeToChildrenCount returns 0', async () => {
+	it('marks a branch with no children aria-expanded="false" when getChildCount returns 0', async () => {
 		render(BasicTree);
 
 		await expect.element(itemOf('Empty')).toHaveAttribute('aria-expanded', 'false');
@@ -134,7 +146,7 @@ describe('Tree', () => {
 	});
 });
 
-describe('Tree with nodeToChildrenCount', () => {
+describe('Tree with getChildCount', () => {
 	it('renders a node whose children have not loaded as a collapsed branch', async () => {
 		render(LazyTree);
 

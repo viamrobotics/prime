@@ -2,25 +2,25 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
+import { borderColor, colorOf } from '../../../../test/computed-style.ts';
 import Textarea from '../Textarea.svelte';
-import BoundTextarea from './BoundTextarea.svelte';
-import ControlledTextarea from './ControlledTextarea.svelte';
-import UndefinedTextarea from './UndefinedTextarea.svelte';
+import BoundTextarea from './fixtures/BoundTextarea.svelte';
+import ControlledTextarea from './fixtures/ControlledTextarea.svelte';
+import UndefinedTextarea from './fixtures/UndefinedTextarea.svelte';
 
 const textarea = (container: Element) => container.querySelector('textarea')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
 describe('Textarea', () => {
 	it('renders one bare textarea wearing the input class', () => {
-		const { container } = render(Textarea);
+		const { container } = render(Textarea, { props: { 'aria-label': 'Notes' } });
 
 		expect(container.children).toHaveLength(1);
 		expect(textarea(container).classList).toContain('input');
 	});
 
 	it('draws the shared focus ring on keyboard focus', async () => {
-		const { container } = render(Textarea);
+		const { container } = render(Textarea, { props: { 'aria-label': 'Notes' } });
 
 		await userEvent.click(container);
 		await userEvent.tab();
@@ -39,19 +39,19 @@ describe('Textarea', () => {
 		{ rows: undefined, shown: 3 },
 		{ rows: 6, shown: 6 }
 	])('rows $rows shows $shown rows', ({ rows, shown }) => {
-		const { container } = render(Textarea, { props: { rows } });
+		const { container } = render(Textarea, { props: { 'aria-label': 'Notes', rows } });
 
 		expect(textarea(container).rows).toBe(shown);
 	});
 
 	it('takes its width from a consumer class', () => {
-		const { container } = render(Textarea, { props: { class: 'w-64' } });
+		const { container } = render(Textarea, { props: { 'aria-label': 'Notes', class: 'w-64' } });
 
 		expect(getComputedStyle(textarea(container)).width).toBe('256px');
 	});
 
 	it('sizes to its content', () => {
-		const { container } = render(Textarea);
+		const { container } = render(Textarea, { props: { 'aria-label': 'Notes' } });
 
 		expect(getComputedStyle(textarea(container)).fieldSizing).toBe('content');
 	});
@@ -105,7 +105,7 @@ describe('Textarea', () => {
 	] as const)(
 		'state $state sets aria-invalid $invalid and paints the $border border',
 		({ state, dataState, invalid, border }) => {
-			const { container } = render(Textarea, { props: { state } });
+			const { container } = render(Textarea, { props: { 'aria-label': 'Notes', state } });
 
 			expect(textarea(container).getAttribute('data-field-state')).toBe(dataState);
 			expect(textarea(container).getAttribute('aria-invalid')).toBe(invalid);
@@ -116,7 +116,7 @@ describe('Textarea', () => {
 	it('forwards native handlers such as oninput', async () => {
 		let typed = '';
 		const { container } = render(Textarea, {
-			props: { oninput: (event) => (typed = event.currentTarget.value) }
+			props: { 'aria-label': 'Notes', oninput: (event) => (typed = event.currentTarget.value) }
 		});
 
 		await userEvent.click(textarea(container));

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ToggleButtons } from "@viamrobotics/prime-ui";
+  import { Field, ToggleButtons } from "@viamrobotics/prime-ui";
 
   const items = [
     { value: "mm", label: "mm" },
@@ -11,7 +11,9 @@
 </script>
 
 <div class="not-content">
-  <ToggleButtons bind:value={units} {items} aria-label="Units" />
+  <Field aria-label="Units">
+    <ToggleButtons bind:value={units} {items} />
+  </Field>
 
   <p class="mt-3 text-sm text-subtle-2">value: <code>{units}</code></p>
 </div>

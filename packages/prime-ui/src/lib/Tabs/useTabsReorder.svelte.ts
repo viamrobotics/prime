@@ -1,18 +1,22 @@
 import { getContext, setContext, tick } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
+import { closedMessage } from './close.ts';
 import { moveTo, reorderedMessage, sameOrder } from './reorder.ts';
 
-const key = Symbol('TabsReorder');
+const TABS_REORDER_KEY = Symbol('TabsReorder');
 
 interface TabsReorderOptions {
 	reorderable: () => boolean;
+	closable: () => boolean;
 	order: { get: () => string[] | undefined; set: (next: string[]) => void };
 	registered: () => readonly string[];
+	selected: () => string | undefined;
 }
 
 export interface TabsReorderContext {
 	readonly reorderable: boolean;
+	readonly closable: boolean;
 	// The bound `order`, or the triggers' registration order while it is unset.
 	readonly order: readonly string[];
 	readonly announcement: string;
@@ -21,6 +25,8 @@ export interface TabsReorderContext {
 	elementOf: (value: string) => HTMLElement | undefined;
 	// Reads `order` back after the write, so a function binding that refuses leaves focus and the announcement alone.
 	move: (value: string, index: number, options: { focus: boolean }) => void;
+	// Writes `order` without the tab, read back the same way as a move.
+	close: (value: string) => void;
 }
 
 // A tab's accessible name: its `aria-labelledby` text, else its `aria-label`, else its own text.
@@ -49,9 +55,17 @@ export const provideTabsReorder = (options: TabsReorderOptions): TabsReorderCont
 		announcement = message === announcement ? `${message}\u00a0` : message;
 	};
 
-	return setContext<TabsReorderContext>(key, {
+	const focusSelected = () => {
+		const selected = options.selected();
+		if (selected !== undefined) elements.get(selected)?.focus();
+	};
+
+	return setContext<TabsReorderContext>(TABS_REORDER_KEY, {
 		get reorderable() {
 			return options.reorderable();
+		},
+		get closable() {
+			return options.closable();
 		},
 		get order() {
 			return order();
@@ -82,9 +96,22 @@ export const provideTabsReorder = (options: TabsReorderOptions): TabsReorderCont
 				if (focus) elements.get(value)?.focus();
 				announce(message);
 			});
+		},
+		close: (value) => {
+			const before = order();
+			if (!before.includes(value)) return;
+			const element = elements.get(value);
+			const message = closedMessage(labelOf(element));
+			const hadFocus = element?.contains(element.ownerDocument.activeElement) ?? false;
+			options.order.set(before.filter((existing) => existing !== value));
+			if (order().includes(value)) return;
+			void tick().then(() => {
+				if (hadFocus) focusSelected();
+				announce(message);
+			});
 		}
 	});
 };
 
 export const useTabsReorder = (): TabsReorderContext | undefined =>
-	getContext<TabsReorderContext | undefined>(key);
+	getContext<TabsReorderContext | undefined>(TABS_REORDER_KEY);

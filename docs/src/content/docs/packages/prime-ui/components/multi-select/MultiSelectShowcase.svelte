@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MultiSelect } from "@viamrobotics/prime-ui";
+  import { Field, MultiSelect } from "@viamrobotics/prime-ui";
 
   const toppings = [
     { value: "cheese", label: "Cheese" },
@@ -20,41 +20,49 @@
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Placeholder, with a disabled item</h4>
-    <MultiSelect items={toppings}>
-      <MultiSelect.Trigger class="w-64" aria-label="Toppings">
-        <MultiSelect.Value placeholder="Pick toppings" />
-      </MultiSelect.Trigger>
-      {@render options()}
-    </MultiSelect>
+    <Field aria-label="Toppings">
+      <MultiSelect items={toppings}>
+        <MultiSelect.Trigger class="w-64">
+          <MultiSelect.Value placeholder="Pick toppings" />
+        </MultiSelect.Trigger>
+        {@render options()}
+      </MultiSelect>
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Several values</h4>
-    <MultiSelect items={toppings} value={["cheese", "olives", "peppers"]}>
-      <MultiSelect.Trigger class="w-64" aria-label="Toppings">
-        <MultiSelect.Value placeholder="Pick toppings" />
-      </MultiSelect.Trigger>
-      {@render options()}
-    </MultiSelect>
+    <Field aria-label="Toppings">
+      <MultiSelect items={toppings} value={["cheese", "olives", "peppers"]}>
+        <MultiSelect.Trigger class="w-64">
+          <MultiSelect.Value placeholder="Pick toppings" />
+        </MultiSelect.Trigger>
+        {@render options()}
+      </MultiSelect>
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Error</h4>
-    <MultiSelect items={toppings}>
-      <MultiSelect.Trigger class="w-64" aria-label="Toppings" state="error">
-        <MultiSelect.Value placeholder="Pick toppings" />
-      </MultiSelect.Trigger>
-      {@render options()}
-    </MultiSelect>
+    <Field aria-label="Toppings">
+      <MultiSelect items={toppings}>
+        <MultiSelect.Trigger class="w-64" state="error">
+          <MultiSelect.Value placeholder="Pick toppings" />
+        </MultiSelect.Trigger>
+        {@render options()}
+      </MultiSelect>
+    </Field>
   </div>
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">Disabled</h4>
-    <MultiSelect items={toppings} value={["cheese"]} disabled>
-      <MultiSelect.Trigger class="w-64" aria-label="Toppings">
-        <MultiSelect.Value placeholder="Pick toppings" />
-      </MultiSelect.Trigger>
-      {@render options()}
-    </MultiSelect>
+    <Field aria-label="Toppings">
+      <MultiSelect items={toppings} value={["cheese"]} disabled>
+        <MultiSelect.Trigger class="w-64">
+          <MultiSelect.Value placeholder="Pick toppings" />
+        </MultiSelect.Trigger>
+        {@render options()}
+      </MultiSelect>
+    </Field>
   </div>
 </div>

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import BasicContextMenu from './BasicContextMenu.svelte';
+import BasicContextMenu from './fixtures/BasicContextMenu.svelte';
 
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 const log = (container: Element) => container.querySelector('[data-testid="log"]')?.textContent;

@@ -1,3 +1,7 @@
+<!--
+@component
+The expand and collapse affordance of a branch row. It toggles the branch on every click, whatever `branchClick` says, and renders a `span`. Place it inside [`Tree.BranchControl`](./BranchControl.svelte), around a [`Tree.Indicator`](./Indicator.svelte).
+-->
 <script lang="ts">
 	import { mergeProps } from '@zag-js/svelte';
 	import type { HTMLAttributes } from 'svelte/elements';

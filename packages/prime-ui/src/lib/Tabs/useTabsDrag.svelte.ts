@@ -2,7 +2,7 @@ import { getContext, setContext } from 'svelte';
 
 import type { TabsReorderContext } from './useTabsReorder.svelte.ts';
 
-const key = Symbol('TabsDrag');
+const TABS_DRAG_KEY = Symbol('TabsDrag');
 
 export interface DragPoint {
 	x: number;
@@ -41,7 +41,7 @@ export const provideTabsDrag = (reorder: TabsReorderContext): TabsDragContext =>
 		liftedLabel = '';
 	};
 
-	return setContext<TabsDragContext>(key, {
+	return setContext<TabsDragContext>(TABS_DRAG_KEY, {
 		get lifted() {
 			return lifted;
 		},
@@ -79,4 +79,4 @@ export const provideTabsDrag = (reorder: TabsReorderContext): TabsDragContext =>
 };
 
 export const useTabsDrag = (): TabsDragContext | undefined =>
-	getContext<TabsDragContext | undefined>(key);
+	getContext<TabsDragContext | undefined>(TABS_DRAG_KEY);

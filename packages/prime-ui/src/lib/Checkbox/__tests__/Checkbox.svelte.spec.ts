@@ -4,11 +4,11 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
 import Checkbox from '../Checkbox.svelte';
-import BoundCheckbox from './BoundCheckbox.svelte';
-import ControlledCheckbox from './ControlledCheckbox.svelte';
-import UndefinedCheckbox from './UndefinedCheckbox.svelte';
+import BoundCheckbox from './fixtures/BoundCheckbox.svelte';
+import ControlledCheckbox from './fixtures/ControlledCheckbox.svelte';
+import UndefinedCheckbox from './fixtures/UndefinedCheckbox.svelte';
 
 const box = (container: Element) =>
 	container.querySelector<HTMLButtonElement>('[role="checkbox"]')!;

@@ -2,48 +2,31 @@ import { describe, expect, it } from 'vitest';
 
 import { movePane } from '../tree.ts';
 import {
+	CAMERA,
+	CAMERA_2,
 	createLayout,
 	createStackLayout,
 	deepFreeze,
 	expectSplit,
 	ids,
 	pane,
-	stackIds
+	SENSOR,
+	SOLO_PANE,
+	split,
+	stackIds,
+	TAB_A1,
+	TAB_A2,
+	TAB_A3,
+	TAB_B1,
+	TAB_B2,
+	TAB_STACK_B,
+	TIME_SERIES
 } from '../../../test/layouts.ts';
 
 import type { LayoutNode, PaneNode, SplitDirection, SplitKey, StackNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
 
 const NEW_SPLIT_ID = 'new-split';
-
-const CAMERA = pane(ids.mycam, 'Camera');
-const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
-const SENSOR = pane(ids.mysensor, 'Sensor stat');
-const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
-
-const SOLO = pane(stackIds.solo, stackIds.solo);
-const TAB_A1 = pane(stackIds.tabA1, stackIds.tabA1);
-const TAB_A2 = pane(stackIds.tabA2, stackIds.tabA2);
-const TAB_A3 = pane(stackIds.tabA3, stackIds.tabA3);
-const TAB_B1 = pane(stackIds.tabB1, stackIds.tabB1);
-const TAB_B2 = pane(stackIds.tabB2, stackIds.tabB2);
-
-const STACK_B: StackNode<PaneData> = {
-	type: 'stack',
-	id: stackIds.stackB,
-	panes: [TAB_B1, TAB_B2],
-	activeId: stackIds.tabB1
-};
-
-function split(
-	id: string,
-	direction: SplitDirection,
-	ratio: number,
-	first: LayoutNode<PaneData>,
-	second: LayoutNode<PaneData>
-): LayoutNode<PaneData> {
-	return { type: 'split', id, direction, ratio, first, second };
-}
 
 function stackA(panes: PaneNode<PaneData>[], activeId: string): StackNode<PaneData> {
 	return { type: 'stack', id: stackIds.stackA, panes, activeId };
@@ -191,8 +174,14 @@ describe('movePane with stacks', () => {
 				stackIds.rootSplit,
 				'row',
 				0.6,
-				split(NEW_SPLIT_ID, 'column', 0.5, SOLO, stackA([TAB_A1, TAB_A2, TAB_A3], stackIds.tabA2)),
-				STACK_B
+				split(
+					NEW_SPLIT_ID,
+					'column',
+					0.5,
+					SOLO_PANE,
+					stackA([TAB_A1, TAB_A2, TAB_A3], stackIds.tabA2)
+				),
+				TAB_STACK_B
 			)
 		);
 	});
@@ -212,8 +201,8 @@ describe('movePane with stacks', () => {
 					stackIds.sideSplit,
 					'column',
 					0.4,
-					split(NEW_SPLIT_ID, 'row', 0.5, SOLO, TAB_A2),
-					STACK_B
+					split(NEW_SPLIT_ID, 'row', 0.5, SOLO_PANE, TAB_A2),
+					TAB_STACK_B
 				)
 			)
 		);
@@ -230,7 +219,7 @@ describe('movePane with stacks', () => {
 				'row',
 				0.6,
 				split(NEW_SPLIT_ID, 'row', 0.5, TAB_A1, stackA([TAB_A2, TAB_A3], stackIds.tabA2)),
-				split(stackIds.sideSplit, 'column', 0.4, SOLO, STACK_B)
+				split(stackIds.sideSplit, 'column', 0.4, SOLO_PANE, TAB_STACK_B)
 			)
 		);
 	});
@@ -250,7 +239,7 @@ describe('movePane with stacks', () => {
 					stackIds.sideSplit,
 					'column',
 					0.4,
-					SOLO,
+					SOLO_PANE,
 					split(NEW_SPLIT_ID, 'row', 0.5, TAB_B1, TAB_B2)
 				)
 			)

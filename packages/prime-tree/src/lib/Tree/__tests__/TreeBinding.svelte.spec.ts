@@ -4,6 +4,7 @@ import { page } from 'vitest/browser';
 
 import BoundTree from '../../../../test/fixtures/BoundTree.svelte';
 import ControlledTree from '../../../../test/fixtures/ControlledTree.svelte';
+import UnboundTree from '../../../../test/fixtures/UnboundTree.svelte';
 
 const itemOf = (name: string) => page.getByRole('treeitem', { name, exact: true });
 const attempts = () => page.getByTestId('attempts');
@@ -32,6 +33,15 @@ describe('Tree binding', () => {
 		await itemOf('Docs').getByText('Docs').click();
 
 		await expect.poll(() => screen.component.getExpanded()).toEqual(['docs']);
+	});
+
+	it('writes expansion and selection to bindings that start undefined', async () => {
+		const screen = render(UnboundTree);
+
+		await itemOf('Docs').getByText('Docs').click();
+
+		await expect.poll(() => screen.component.getExpanded()).toEqual(['docs']);
+		await expect.poll(() => screen.component.getSelected()).toEqual(['docs']);
 	});
 
 	it('leaves a branch collapsed when the function binding refuses the expansion', async () => {

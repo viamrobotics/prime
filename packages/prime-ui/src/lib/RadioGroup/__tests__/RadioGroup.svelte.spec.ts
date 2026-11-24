@@ -3,12 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
-import { colorOf, textColor } from '../../__tests__/computed-style.ts';
-import BoundRadioGroup from './BoundRadioGroup.svelte';
-import ControlledRadioGroup from './ControlledRadioGroup.svelte';
-import DescribedRadioGroup from './DescribedRadioGroup.svelte';
-import IndicatorRadioGroup from './IndicatorRadioGroup.svelte';
-import UndefinedRadioGroup from './UndefinedRadioGroup.svelte';
+import { colorOf, textColor } from '../../../../test/computed-style.ts';
+import BoundRadioGroup from './fixtures/BoundRadioGroup.svelte';
+import ControlledRadioGroup from './fixtures/ControlledRadioGroup.svelte';
+import DescribedRadioGroup from './fixtures/DescribedRadioGroup.svelte';
+import IndicatorRadioGroup from './fixtures/IndicatorRadioGroup.svelte';
+import UndefinedRadioGroup from './fixtures/UndefinedRadioGroup.svelte';
 
 const group = (container: Element) => container.querySelector<HTMLElement>('[role="radiogroup"]')!;
 const radios = (container: Element) => [

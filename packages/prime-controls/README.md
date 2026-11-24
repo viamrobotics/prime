@@ -47,7 +47,9 @@ Pass `suffix` to draw a short text such as a unit inside the input's right edge.
 <NumberField label="Length" suffix="mm" bind:value={length} />
 ```
 
-Pass `state` (`'warn'` or `'error'`) to draw a `warning-dark` or `danger-dark` border. An error also sets `aria-invalid="true"`. `'info'` draws no border. `NumberField` and `Point` take it, and `Point` gives one state to every axis.
+Pass a `trailing` snippet to draw content such as an icon button inside the right edge, after any `suffix`. `Point` passes it the axis and `Slider` draws it in its readout.
+
+Pass `state` (`'warn'` or `'error'`) to draw a `warning-dark` or `danger-dark` border. An error also sets `aria-invalid="true"`. `'info'` draws no border. `NumberField`, `Point`, and `Slider` take it, and `Point` gives one state to every axis.
 
 ```svelte
 <NumberField label="Speed" state="warn" bind:value={speed} />
@@ -65,7 +67,7 @@ Pass `state` (`'warn'` or `'error'`) to draw a `warning-dark` or `danger-dark` b
 <TextField label="Motion name" placeholder="builtin" bind:value={name} />
 ```
 
-A text input in the `NumberField` row layout, without scrub. The bound value is a string, and an empty field is `''`. It takes `hint` and `state` as `NumberField` does.
+A text input in the `NumberField` row layout, without scrub. The bound value is a string. It starts `undefined` unless you set it, and a cleared field binds `''`. It takes `hint` and `state` as `NumberField` does.
 
 ### FileField
 
@@ -93,7 +95,7 @@ A native file input in the `TextField` row layout. The bound value is a `File[]`
 <Point label="Position" step={0.1} bind:value={position} />
 ```
 
-The defined axes decide how many fields render: `x` and `y`, plus `z` and `w` when present.
+The defined axes decide how many fields render: `x` and `y`, plus `z` and `w` when present. The axes sit in one row when the box is wide enough and stack in a narrow one.
 
 ### Slider
 
@@ -107,7 +109,7 @@ The defined axes decide how many fields render: `x` and `y`, plus `z` and `w` wh
 <Slider label="Opacity" min={0} max={1} step={0.01} bind:value={opacity} />
 ```
 
-A native range with a number readout beside it. A drag writes the value on every pointer move.
+A native range with a number readout beside it. A drag writes the value on every pointer move. A visible `label` names both, or pass `aria-label`.
 
 ### Select
 
@@ -150,7 +152,7 @@ A row of mutually exclusive buttons at panel scale. A visible `label` names the 
 </Panel>
 ```
 
-A dense group of controls. A visible `title` names it, or pass `aria-label`.
+A dense group of controls. A visible `title` names it, or pass `aria-label`. `Point`, `Slider`, `ToggleButtons`, `Panel`, and `Folder` pass an `id`, `data-*`, or `aria-*` attribute through to their root.
 
 ### Folder
 
@@ -160,7 +162,7 @@ A dense group of controls. A visible `title` names it, or pass `aria-label`.
 </Folder>
 ```
 
-A collapsible group inside a panel, open by default.
+A collapsible group inside a panel. It renders open while `open` is `undefined`. The `indicator` snippet replaces the chevron.
 
 ### Tabs
 

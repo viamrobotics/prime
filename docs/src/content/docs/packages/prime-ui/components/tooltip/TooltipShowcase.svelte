@@ -1,19 +1,19 @@
 <script lang="ts">
   import { Tooltip } from "@viamrobotics/prime-ui";
 
-  const placements = ["top", "right", "bottom", "left"] as const;
+  const sides = ["top", "right", "bottom", "left"] as const;
 </script>
 
 <div class="not-content flex flex-col gap-6">
   <div class="flex flex-col gap-2">
-    <h4 class="text-xs font-medium text-subtle-2 uppercase">Placement</h4>
+    <h4 class="text-xs font-medium text-subtle-2 uppercase">Side</h4>
     <div class="flex flex-wrap gap-4 px-24 py-12">
-      {#each placements as placement (placement)}
+      {#each sides as side (side)}
         <Tooltip>
           <Tooltip.Trigger class="inline-flex">
-            <button type="button" class="button">{placement}</button>
+            <button type="button" class="button">{side}</button>
           </Tooltip.Trigger>
-          <Tooltip.Content {placement}>On the {placement}</Tooltip.Content>
+          <Tooltip.Content {side}>On the {side}</Tooltip.Content>
         </Tooltip>
       {/each}
     </div>

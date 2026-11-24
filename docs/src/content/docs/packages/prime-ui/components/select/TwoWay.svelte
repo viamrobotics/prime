@@ -11,8 +11,8 @@
 </script>
 
 <div class="not-content">
-  <Field class="flex max-w-xs flex-col gap-1">
-    <Label>Size</Label>
+  <Field label="Size" class="flex max-w-xs flex-col gap-1">
+    <Label />
     <Select bind:value={size} items={sizes} name="size">
       <Select.Trigger>
         <Select.Value placeholder="Pick a size" />

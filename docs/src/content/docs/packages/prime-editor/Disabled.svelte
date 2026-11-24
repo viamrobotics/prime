@@ -7,9 +7,9 @@
 </script>
 
 <div class="not-content flex w-full flex-col gap-3">
-  <Field class="flex items-center gap-2">
+  <Field class="flex items-center gap-2" label="Disabled">
     <Checkbox bind:checked={disabled} />
-    <Label>Disabled</Label>
+    <Label />
   </Field>
   <CodeEditor
     aria-label="Query"

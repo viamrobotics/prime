@@ -16,8 +16,8 @@
 
   <div class="flex flex-col gap-2">
     <h4 class="text-xs font-medium text-subtle-2 uppercase">In a field</h4>
-    <Field class="flex max-w-xs flex-col gap-1">
-      <Label>Robot name</Label>
+    <Field label="Robot name" class="flex max-w-xs flex-col gap-1">
+      <Label />
       <Input placeholder="rover-1" />
       <Hint>Lowercase letters, numbers, and dashes.</Hint>
     </Field>

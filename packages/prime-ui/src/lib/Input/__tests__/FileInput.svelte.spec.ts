@@ -3,12 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
-import { borderColor, colorOf } from '../../__tests__/computed-style.ts';
+import { borderColor, colorOf } from '../../../../test/computed-style.ts';
 import FileInput from '../FileInput.svelte';
-import BoundFileInput from './BoundFileInput.svelte';
-import ControlledFileInput from './ControlledFileInput.svelte';
-import FormFileInput from './FormFileInput.svelte';
-import UndefinedFileInput from './UndefinedFileInput.svelte';
+import BoundFileInput from './fixtures/BoundFileInput.svelte';
+import ControlledFileInput from './fixtures/ControlledFileInput.svelte';
+import FormFileInput from './fixtures/FormFileInput.svelte';
+import UndefinedFileInput from './fixtures/UndefinedFileInput.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
 const frame = (container: Element) => container.querySelector('div')!;
@@ -170,6 +170,17 @@ describe('FileInput', () => {
 
 		expect(owner(container)).toBe(bound);
 		expect(input(container).files).toHaveLength(held);
+	});
+
+	it('writes nothing to the binding when a form reset unmounts it', async () => {
+		const { container } = render(FormFileInput, { props: { unmountOnReset: true } });
+		await userEvent.upload(input(container), audio('greeting.wav'));
+
+		await page.getByRole('button', { name: 'Reset form' }).click();
+		await afterPendingTimers();
+
+		expect(container.querySelector('input[type="file"]'), 'unmounted by the reset').toBeNull();
+		expect(owner(container)).toBe('greeting.wav');
 	});
 
 	it('truncates a long name inside a narrow frame', async () => {

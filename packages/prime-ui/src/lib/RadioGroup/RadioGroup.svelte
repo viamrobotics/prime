@@ -2,8 +2,8 @@
 @component
 A radio group. Compose options with [`RadioGroup.Item`](./RadioGroupItem.svelte).
 Inside a [`Field`](../Field/Field.svelte) it takes its `id` (the field's
-`controlId`), `disabled`, `required`, `state`, `aria-labelledby`, and `aria-describedby`
-from there. An `error` state sets
+`controlId`), `disabled`, `required`, `state`, `aria-describedby`, and name from there.
+ An `error` state sets
 `aria-invalid` and colors the items' default icons. See [`Field`](../Field/Field.svelte) for pairing it
 with a `Hint`.
 
@@ -14,8 +14,8 @@ focus, set `onfocusin` and `onfocusout` on `RadioGroup`, or `onfocus` and `onblu
 item.
 
 ```svelte
-<Field class="flex flex-col gap-1">
-	<Label>Size</Label>
+<Field label="Size" class="flex flex-col gap-1">
+	<Label />
 	<RadioGroup bind:value name="size">
 		<RadioGroup.Item value="sm">Small</RadioGroup.Item>
 		<RadioGroup.Item value="md">Medium</RadioGroup.Item>
@@ -28,8 +28,9 @@ item.
 
 	import { RadioGroup } from 'bits-ui';
 
+	import { warnIfUnnamed } from '../accessible-name-warning.ts';
 	import { fieldState, FieldStates, type FieldState } from '../Field/state.ts';
-	import { useField } from '../Field/useField.svelte.ts';
+	import { controlName, useField } from '../Field/useField.svelte.ts';
 
 	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
 		/** The selected value. Two-way bindable. */
@@ -58,8 +59,9 @@ item.
 		name,
 		disabled,
 		required,
-		state,
-		'aria-labelledby': labelledBy,
+		state: stateProp,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		'aria-describedby': describedBy,
 		class: extraClasses,
 		children,
@@ -68,21 +70,30 @@ item.
 
 	const field = useField();
 	const uid = $props.id();
+	let element = $state<HTMLDivElement | null>(null);
+
+	const accessibleName = $derived(controlName(field, { ariaLabel, ariaLabelledBy }));
+
+	$effect(() => {
+		if (element) warnIfUnnamed(element, 'RadioGroup');
+	});
 
 	const isDisabled = $derived(disabled ?? field?.disabled ?? false);
 	const isRequired = $derived(required ?? field?.required ?? false);
-	const currentState = $derived(state ?? field?.state ?? FieldStates.None);
+	const currentState = $derived(stateProp ?? field?.state ?? FieldStates.None);
 	const isError = $derived(fieldState.isError(currentState));
 </script>
 
 <RadioGroup.Root
+	bind:ref={element}
 	bind:value={() => value ?? '', (next) => (value = next)}
 	{orientation}
 	{name}
 	disabled={isDisabled}
 	required={isRequired}
 	aria-invalid={isError || undefined}
-	aria-labelledby={labelledBy ?? field?.labelledBy}
+	aria-label={accessibleName['aria-label']}
+	aria-labelledby={accessibleName['aria-labelledby']}
 	aria-describedby={describedBy ?? field?.describedBy}
 	id={id ?? field?.controlId ?? uid}
 	class={['group flex', orientation === 'vertical' ? 'flex-col' : 'flex-row', extraClasses]}

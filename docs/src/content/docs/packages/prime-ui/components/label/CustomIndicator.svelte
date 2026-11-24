@@ -2,7 +2,7 @@
   import { Field, Input, Label } from "@viamrobotics/prime-ui";
 </script>
 
-<Field class="not-content flex max-w-xs flex-col gap-1" required>
+<Field label="Email" class="not-content flex max-w-xs flex-col gap-1" required>
   <Label>
     Email
     {#snippet indicator()}

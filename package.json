@@ -62,6 +62,7 @@
     "test": {
       "dependencies": [
         "./packages/tailwind-config:test",
+        "./packages/tweakpane-config:test",
         "./packages/prime-ui:test",
         "./packages/prime-panes:test",
         "./packages/prime-tree:test",

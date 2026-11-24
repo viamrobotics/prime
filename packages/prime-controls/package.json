@@ -84,6 +84,7 @@
 				"test/**",
 				"tsconfig.json",
 				"svelte.config.js",
+				"vite.config.ts",
 				"package.json",
 				"../tailwind-config/tailwind-config.css",
 				"../tailwind-config/tailwind-config-dark.css"
@@ -124,6 +125,7 @@
 				"!dist/**",
 				"!.wireit/**",
 				"eslint.config.js",
+				".gitignore",
 				"tsconfig.json",
 				"package.json",
 				"../tailwind-config/tailwind-config.css"
@@ -185,7 +187,6 @@
 		"svelte",
 		"controls",
 		"number input",
-		"vector",
-		"tweakpane"
+		"vector"
 	]
 }

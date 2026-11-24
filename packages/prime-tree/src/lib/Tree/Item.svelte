@@ -1,3 +1,7 @@
+<!--
+@component
+The `role="treeitem"` element of a leaf node. It holds the roving `tabindex`, carries `aria-selected`, and sets the `--depth` custom property. Place it as the outermost part of a leaf row in the `node` snippet.
+-->
 <script lang="ts">
 	import { mergeProps } from '@zag-js/svelte';
 	import type { HTMLAttributes } from 'svelte/elements';

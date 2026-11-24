@@ -9,7 +9,7 @@
       <div class="flex items-center gap-2">
         <input class="input" aria-label="Name" value="Arm" />
         <Popover.Close class="button">Done</Popover.Close>
-        <Popover.Close />
+        <Popover.Close aria-label="Close" />
       </div>
     </Popover.Content>
   </Popover>

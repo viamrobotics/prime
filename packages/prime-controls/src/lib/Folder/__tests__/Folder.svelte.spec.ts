@@ -1,10 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
+import Folder from '../Folder.svelte';
 import BoundFolder from './fixtures/BoundFolder.svelte';
 import DefaultFolder from './fixtures/DefaultFolder.svelte';
+import IndicatorFolder from './fixtures/IndicatorFolder.svelte';
+import UnsetFolder from './fixtures/UnsetFolder.svelte';
 
 const trigger = () => page.getByRole('button', { name: 'Lighting', exact: true });
 const child = () => page.getByText('Intensity', { exact: true });
@@ -142,5 +145,53 @@ describe('Folder summary', () => {
 
 		await expect.element(summarized()).toHaveAttribute('aria-expanded', 'false');
 		await vi.waitFor(() => expect(getComputedStyle(chevron()).rotate).toBe('none'));
+	});
+});
+
+describe('Folder root and indicator', () => {
+	it('passes an id and a data attribute to the root', () => {
+		const { container } = render(Folder, {
+			props: { title: 'Lighting', id: 'lighting-root', 'data-extra': 'yes' }
+		});
+
+		const root = container.firstElementChild!;
+		expect(root).toHaveAttribute('id', 'lighting-root');
+		expect(root).toHaveAttribute('data-extra', 'yes');
+	});
+
+	it('mounts open with a binding that starts undefined and warns of nothing', async () => {
+		const error = vi.spyOn(console, 'error');
+		onTestFinished(() => error.mockRestore());
+
+		render(UnsetFolder);
+
+		await expect.element(trigger()).toHaveAttribute('aria-expanded', 'true');
+		await expect.element(child()).toBeVisible();
+		expect(error).not.toHaveBeenCalled();
+	});
+
+	it('draws the indicator in place of the chevron and flips it on toggle', async () => {
+		render(IndicatorFolder);
+
+		const indicator = page.getByTestId('indicator');
+		await expect.element(indicator).toHaveTextContent('Hide');
+		expect(trigger().element().querySelector('svg'), 'no default chevron').toBeNull();
+
+		await trigger().click();
+
+		await expect.element(indicator).toHaveTextContent('Show');
+	});
+
+	it('keeps the summary and draws the indicator after it in place of the chevron', async () => {
+		render(IndicatorFolder, { props: { summary: 'Set' } });
+
+		const indicator = page.getByTestId('indicator');
+		await expect.element(indicator).toHaveTextContent('Hide');
+		const summary = page.getByText('Set', { exact: true }).element().getBoundingClientRect();
+
+		const button = page.getByRole('button', { name: /^Lighting\s*Set/ }).element();
+
+		expect(button.querySelector('svg'), 'no default chevron').toBeNull();
+		expect(indicator.element().getBoundingClientRect().left).toBeGreaterThanOrEqual(summary.right);
 	});
 });
