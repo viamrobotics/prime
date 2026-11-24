@@ -35,6 +35,11 @@ const lastStrip = () => page.getByRole('tablist').last();
 const moveButton = (name: string) => page.getByRole('button', { name, exact: true });
 const announcer = () => page.getByRole('status');
 
+const startKeyboardMove = async (name: string) => {
+	moveButton(name).element().focus();
+	await userEvent.keyboard('{Enter}');
+};
+
 const orderIn = (strip: ReturnType<typeof firstStrip>) =>
 	strip
 		.getByTabSlot()
@@ -108,6 +113,21 @@ describe('Panes.TabList: Alt+Shift+Arrow on a focused tab', () => {
 		expect(announcer().element().textContent).toBe('');
 	});
 
+	it.each([
+		['keeps the first tab in place on Alt+Shift+ArrowLeft', 'Camera A', MOVE_LEFT],
+		['keeps the last tab in place on Alt+Shift+ArrowRight', 'Camera C', MOVE_RIGHT]
+	])('%s', async (_name, label, keys) => {
+		const received: Received = [];
+		const { component } = render(StackPanes, { received });
+		tab(label).element().focus();
+
+		await userEvent.keyboard(keys);
+
+		expect(received).toEqual([]);
+		expect(component.getLayout()).toEqual(CAMERA_ROW);
+		expect(announcer().element().textContent).toBe('');
+	});
+
 	it('names the shortcut on each tab while reorderable', async () => {
 		render(StackPanes);
 
@@ -140,8 +160,7 @@ describe('Panes.TabList: Alt+Shift+Arrow on a focused tab', () => {
 describe('Panes move mode: reordering a tab by keyboard', () => {
 	it('names the reorder placement with the current position of the moving pane', async () => {
 		render(StackPanes, { hasTriggers: true });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 
 		await userEvent.keyboard(TO_OWN_REORDER);
 
@@ -150,8 +169,7 @@ describe('Panes move mode: reordering a tab by keyboard', () => {
 
 	it('moves the position one place and renames the button', async () => {
 		render(StackPanes, { hasTriggers: true });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 		await userEvent.keyboard(TO_OWN_REORDER);
 
 		await userEvent.keyboard('{ArrowRight}');
@@ -161,8 +179,7 @@ describe('Panes move mode: reordering a tab by keyboard', () => {
 
 	it('shows the label of the moving pane in its preview tab, since no ghost follows a keyboard move', async () => {
 		render(StackPanes, { hasTriggers: true });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 		await userEvent.keyboard(TO_OWN_REORDER);
 
 		await userEvent.keyboard('{ArrowRight}');
@@ -172,8 +189,7 @@ describe('Panes move mode: reordering a tab by keyboard', () => {
 
 	it('announces each position it moves to', async () => {
 		render(StackPanes, { hasTriggers: true });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 		await userEvent.keyboard(TO_OWN_REORDER);
 
 		await userEvent.keyboard('{ArrowRight}');
@@ -183,8 +199,7 @@ describe('Panes move mode: reordering a tab by keyboard', () => {
 
 	it('shows the preview tab at the chosen position and takes the moving tab out of the strip', async () => {
 		render(StackPanes, { hasTriggers: true });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 		await userEvent.keyboard(TO_OWN_REORDER);
 
 		await userEvent.keyboard('{ArrowRight}');
@@ -196,8 +211,7 @@ describe('Panes move mode: reordering a tab by keyboard', () => {
 
 	it('shows no preview tab once the selection returns to an edge', async () => {
 		render(StackPanes, { hasTriggers: true });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 		await userEvent.keyboard(TO_OWN_REORDER + '{ArrowRight}');
 		await expect.poll(() => orderIn(firstStrip())).toContain('preview Camera A');
 
@@ -209,8 +223,7 @@ describe('Panes move mode: reordering a tab by keyboard', () => {
 
 	it('places the pane at the chosen position on Enter and keeps it active', async () => {
 		const { component } = render(StackPanes, { hasTriggers: true });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 		await userEvent.keyboard(TO_OWN_REORDER + '{ArrowRight}{ArrowRight}');
 
 		await userEvent.keyboard('{Enter}');
@@ -225,8 +238,7 @@ describe('Panes move mode: reordering a tab by keyboard', () => {
 	it('leaves the layout as it was when Enter follows the default position', async () => {
 		const received: Received = [];
 		const { component } = render(StackPanes, { hasTriggers: true, received });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 		await userEvent.keyboard(TO_OWN_REORDER);
 
 		await userEvent.keyboard('{Enter}');
@@ -280,8 +292,7 @@ describe('Panes move mode: reordering a tab by pointer', () => {
 describe('Panes move mode: choosing where "Stack with" inserts', () => {
 	it('defaults to the end of the stack', async () => {
 		render(StackPanes, { hasTriggers: true, initialLayout: TWO_STACKS });
-		moveButton('Move A1').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move A1');
 
 		await userEvent.keyboard(TO_STACK_WITH);
 
@@ -290,8 +301,7 @@ describe('Panes move mode: choosing where "Stack with" inserts', () => {
 
 	it('shows no preview tab for a destination that is not stacked', async () => {
 		render(StackPanes, { hasTriggers: true });
-		moveButton('Move Camera A').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move Camera A');
 
 		await userEvent.keyboard(TO_STACK_WITH);
 
@@ -301,8 +311,7 @@ describe('Panes move mode: choosing where "Stack with" inserts', () => {
 
 	it('moves the position one gap per arrow and shows the preview tab there', async () => {
 		render(StackPanes, { hasTriggers: true, initialLayout: TWO_STACKS });
-		moveButton('Move A1').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move A1');
 		await userEvent.keyboard(TO_STACK_WITH);
 
 		await userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
@@ -313,8 +322,7 @@ describe('Panes move mode: choosing where "Stack with" inserts', () => {
 
 	it('continues to the right edge when ArrowRight follows the end', async () => {
 		render(StackPanes, { hasTriggers: true, initialLayout: TWO_STACKS });
-		moveButton('Move A1').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move A1');
 		await userEvent.keyboard(TO_STACK_WITH);
 
 		await userEvent.keyboard('{ArrowRight}');
@@ -327,8 +335,7 @@ describe('Panes move mode: choosing where "Stack with" inserts', () => {
 			hasTriggers: true,
 			initialLayout: TWO_STACKS
 		});
-		moveButton('Move A1').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move A1');
 		await userEvent.keyboard(TO_STACK_WITH + '{ArrowLeft}{ArrowLeft}');
 
 		await userEvent.keyboard('{Enter}');
@@ -344,8 +351,7 @@ describe('Panes move mode: choosing where "Stack with" inserts', () => {
 			hasTriggers: true,
 			initialLayout: TWO_STACKS
 		});
-		moveButton('Move A1').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move A1');
 		await userEvent.keyboard(TO_STACK_WITH);
 
 		await userEvent.keyboard('{Enter}');
@@ -361,8 +367,7 @@ describe('Panes move mode: choosing where "Stack with" inserts', () => {
 			moveTarget: 'stack',
 			initialLayout: TWO_STACKS
 		});
-		moveButton('Move A1').element().focus();
-		await userEvent.keyboard('{Enter}');
+		await startKeyboardMove('Move A1');
 
 		await userEvent.keyboard(TO_STACK_WITH);
 

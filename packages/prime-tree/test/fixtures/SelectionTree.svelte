@@ -6,14 +6,16 @@
 	import { Tree } from '../../src/lib/Tree/tree.ts';
 	import type { TreeBranchClick } from '../../src/lib/Tree/branch-click.ts';
 	import { sampleAccessors, sampleNodes } from '../nodes.ts';
+	import type { SampleNode } from '../nodes.ts';
 
 	interface Props {
+		nodes?: SampleNode[];
 		selectionMode?: 'single' | 'multiple';
 		branchClick?: TreeBranchClick;
 		initialExpanded?: string[];
 	}
 
-	const { selectionMode, branchClick, initialExpanded = [] }: Props = $props();
+	const { nodes = sampleNodes, selectionMode, branchClick, initialExpanded = [] }: Props = $props();
 
 	let expanded = $state<string[]>(untrack(() => [...initialExpanded]));
 	let selected = $state<string[]>([]);
@@ -29,7 +31,7 @@
 
 <Tree
 	aria-label="Sample"
-	nodes={sampleNodes}
+	{nodes}
 	bind:expanded
 	bind:selected
 	{selectionMode}

@@ -22,8 +22,7 @@ export default defineConfig({
 						commands: inputCommands
 					},
 					setupFiles: ['./test/panes-queries.ts'],
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**']
+					include: ['src/**/*.svelte.{test,spec}.{js,ts}']
 				}
 			},
 

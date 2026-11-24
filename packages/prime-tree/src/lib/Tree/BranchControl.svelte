@@ -3,6 +3,7 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	import { deferFocus } from './defer-focus.ts';
+	import { disableActivation } from './disabled-node.ts';
 	import { useTree, useTreeNode } from './useTree.svelte.ts';
 
 	type Props = HTMLAttributes<HTMLDivElement>;
@@ -27,9 +28,16 @@
 	};
 
 	const attrs = $derived.by(() => {
-		const zagProps = deferFocus(
-			tree.api.getBranchControlProps({ node: current.node, indexPath: current.indexPath })
-		);
+		const zagProps = {
+			...disableActivation(
+				deferFocus(
+					tree.api.getBranchControlProps({ node: current.node, indexPath: current.indexPath })
+				),
+				current.state.disabled
+			),
+			// Focus rests on this button, not on the treeitem that zag gives aria-expanded to.
+			'aria-expanded': current.state.expanded
+		};
 
 		if (tree.branchClick !== 'toggle') return mergeProps(zagProps, rest);
 

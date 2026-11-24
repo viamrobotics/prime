@@ -6,10 +6,11 @@ A CodeMirror 6 code editor for Svelte 5, themed with Viam's code tokens, with a 
 
 - `src/lib/CodeEditor/CodeEditor.svelte`: the editor. It takes `bind:value`, `language`, `readonly`, `disabled`, `placeholder`, `lineNumbers`, `wrapLines`, `original`, `diff`, `collapseUnchanged`, and the attributes of a `div`. Setting `original` opens the diff view.
 - `src/lib/CodeEditor/code-editor.ts`: the `CodeEditorLanguage` and `CodeEditorDiff` types. Type only.
+- `src/lib/CodeEditor/aria-attributes.ts`: routes the `aria-*` attributes onto the editing surface and builds the original side's name in a split diff.
 - `src/lib/CodeEditor/languages.ts`: `languageSupport`, which maps a `CodeEditorLanguage` to its CodeMirror grammar.
 - `src/lib/CodeEditor/theme.ts`: `codeEditorTheme`, the editor theme and highlight style. Every color is a `--color-code-*` or other token variable from `@viamrobotics/tailwind-config`.
 - `src/lib/index.ts`: the public exports.
-- `src/lib/CodeEditor/__tests__/`: the specs and their wrapper components, excluded from the published package.
+- `src/lib/CodeEditor/__tests__/`: the specs, excluded from the published package. `fixtures/` holds the wrapper components the specs render.
 - `test/`: shared test infrastructure, never published. `tailwind.css` is the stylesheet the specs import.
 - `styles.css`: the consumer's Tailwind entry. It imports the tokens and points Tailwind at `dist`.
 - The demos live on the package's page in [docs](../../docs/), under `src/content/docs/packages/prime-editor/`.
@@ -40,3 +41,4 @@ Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwrig
 - The unified diff reconfigures its own compartment when `original` appears or disappears, and sends a new `original` as a change to the original document.
 - Every editor needs `aria-label` or `aria-labelledby`, and `$props()` is annotated `Props & AccessibleName` so omitting both is a type error. A readonly editor keeps `tabindex` 0 so it stays reachable by keyboard. A disabled editor has no tab stop, takes no focus or selection, and marks the editing surface `aria-disabled`. `disabled` wins over `readonly`, and in a split diff it applies to both sides.
 - Colors come from `@viamrobotics/tailwind-config` tokens only, never a literal.
+- CodeMirror paints the selection behind the lines, so the cursor-line, fold, and collapsed-lines bands, the diff tints, the changed-word fills, and the search match are translucent. Each lands on its opaque token over the surface. An opaque fill hides the selection under it. The selected search match stays opaque, since it covers exactly a selected range.

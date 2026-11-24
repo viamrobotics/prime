@@ -130,6 +130,13 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 		};
 	}
 
+	function moveTab(event: KeyboardEvent, panes: PaneNode<unknown>[], from: number, to: number) {
+		if (!context.reorderable || to < 0 || to >= panes.length) return;
+
+		event.preventDefault();
+		pane.reorder(panes[from].id, to);
+	}
+
 	function handleKeydown(
 		event: KeyboardEvent & { currentTarget: HTMLDivElement },
 		panes: PaneNode<unknown>[]
@@ -142,11 +149,7 @@ Give the list a name with `aria-label`, since a screen reader announces it on en
 
 		const reorderStep = reorderStepOf(event);
 		if (reorderStep !== undefined) {
-			const reorderedIndex = focusedIndex + reorderStep;
-			if (!context.reorderable || reorderedIndex < 0 || reorderedIndex >= panes.length) return;
-
-			event.preventDefault();
-			pane.reorder(panes[focusedIndex].id, reorderedIndex);
+			moveTab(event, panes, focusedIndex, focusedIndex + reorderStep);
 			return;
 		}
 		if (event.ctrlKey || event.altKey || event.metaKey) return;

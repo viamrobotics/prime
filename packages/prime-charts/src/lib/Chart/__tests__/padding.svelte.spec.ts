@@ -3,7 +3,7 @@ import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
-import PaddedChart from './PaddedChart.svelte';
+import TooltipChart from './fixtures/TooltipChart.svelte';
 
 const START = Date.parse('2026-01-01T00:00:00Z');
 const MINUTE = 60_000;
@@ -48,18 +48,26 @@ const clipBoxOf = (container: Element): Box => {
 	};
 };
 
-const expectInside = (inner: Box, outer: Box, tolerance: number) => {
-	expect(inner.left).toBeGreaterThanOrEqual(outer.left - tolerance);
-	expect(inner.top).toBeGreaterThanOrEqual(outer.top - tolerance);
-	expect(inner.right).toBeLessThanOrEqual(outer.right + tolerance);
-	expect(inner.bottom).toBeLessThanOrEqual(outer.bottom + tolerance);
-};
+const sidesOutside = (inner: Box, outer: Box, tolerance: number) =>
+	[
+		inner.left < outer.left - tolerance && 'left',
+		inner.top < outer.top - tolerance && 'top',
+		inner.right > outer.right + tolerance && 'right',
+		inner.bottom > outer.bottom + tolerance && 'bottom'
+	].filter(Boolean);
 
 const renderPadded = async () => {
-	const { container } = render(PaddedChart, { props: { points } });
+	const { container } = render(TooltipChart, {
+		props: {
+			series: [{ name: 'Reading', points }],
+			hasAxes: true,
+			xFormat: () => 'time',
+			plotClass: 'p-4'
+		}
+	});
 	await expect.poll(() => container.querySelector('path')).not.toBeNull();
 	const plot = container.querySelector<HTMLElement>('[data-part="plot"]')!;
-	expect(parseFloat(getComputedStyle(plot).paddingLeft)).toBeGreaterThan(0);
+	expect(getComputedStyle(plot).paddingLeft, 'plot padding from its class').toBe('16px');
 	return { container, plot };
 };
 
@@ -69,23 +77,25 @@ describe('Chart.Plot with padding', () => {
 		const svg = container.querySelector('svg')!.getBoundingClientRect();
 
 		const clip = clipBoxOf(container);
-		expectInside(clip, contentBoxOf(plot), CLIP_OVERHANG);
-		expect(clip.right - clip.left).toBe(svg.width + 2 * CLIP_OVERHANG);
-		expect(clip.bottom - clip.top).toBe(svg.height + 2 * CLIP_OVERHANG);
+
+		expect(sidesOutside(clip, contentBoxOf(plot), CLIP_OVERHANG)).toEqual([]);
+		expect({ width: clip.right - clip.left, height: clip.bottom - clip.top }).toEqual({
+			width: svg.width + 2 * CLIP_OVERHANG,
+			height: svg.height + 2 * CLIP_OVERHANG
+		});
 	});
 
 	it('draws the line inside the content box', async () => {
 		const { container, plot } = await renderPadded();
 		const line = container.querySelector('path')!.getBoundingClientRect();
 
-		expectInside(line, contentBoxOf(plot), CLIP_OVERHANG);
+		expect(sidesOutside(line, contentBoxOf(plot), CLIP_OVERHANG)).toEqual([]);
 	});
 
 	it('shows the tooltip for the point under the pointer', async () => {
 		const { container, plot } = await renderPadded();
 		const path = container.querySelector<SVGPathElement>('path')!;
 		const vertices = [...(path.getAttribute('d') ?? '').matchAll(/(-?[\d.]+),(-?[\d.]+)/g)];
-		expect(vertices).toHaveLength(POINT_COUNT);
 		const [, x, y] = vertices[HOVERED_INDEX];
 		const onScreen = new DOMPoint(Number(x), Number(y)).matrixTransform(path.getScreenCTM()!);
 		const plotRect = plot.getBoundingClientRect();

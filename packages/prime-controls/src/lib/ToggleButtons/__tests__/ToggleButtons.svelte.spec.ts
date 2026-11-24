@@ -3,7 +3,7 @@ import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
-import BoundToggleButtons from './BoundToggleButtons.svelte';
+import BoundToggleButtons from './fixtures/BoundToggleButtons.svelte';
 
 const MIN_ROW_HEIGHT_PX = 24;
 const MAX_ROW_HEIGHT_PX = 28;
@@ -47,10 +47,10 @@ describe('ToggleButtons', () => {
 	});
 
 	it.each([
-		{ form: 'items', composed: false },
-		{ form: 'composed Item parts', composed: true }
-	])('renders $form between 24px and 28px tall in text-xs', async ({ composed }) => {
-		render(BoundToggleButtons, { props: { composed } });
+		{ form: 'items', isComposed: false },
+		{ form: 'composed Item parts', isComposed: true }
+	])('renders $form between 24px and 28px tall in text-xs', async ({ isComposed }) => {
+		render(BoundToggleButtons, { props: { isComposed } });
 
 		const item = option('Local').element();
 		const height = item.getBoundingClientRect().height;
@@ -71,6 +71,51 @@ describe('ToggleButtons', () => {
 
 		await expect.element(page.getByRole('group', { name: 'Orientation' })).toBeVisible();
 		await expect.element(page.getByText('Orientation')).toBeVisible();
+	});
+});
+
+describe('ToggleButtons parts', () => {
+	it('sets item padding to 6px across and 2px down', () => {
+		render(BoundToggleButtons);
+
+		const item = getComputedStyle(option('Local').element());
+
+		expect(item.paddingLeft).toBe('6px');
+		expect(item.paddingTop).toBe('2px');
+	});
+
+	it('does not select an item whose entry is disabled', async () => {
+		const { container } = render(BoundToggleButtons, { props: { isViewDisabled: true } });
+
+		await userEvent.click(option('View'), { force: true });
+
+		expect(owner(container)).toBe('local');
+	});
+
+	it('disables the radio of a disabled entry', async () => {
+		render(BoundToggleButtons, { props: { isViewDisabled: true } });
+
+		await expect.element(option('View')).toBeDisabled();
+		await expect.element(option('World')).not.toBeDisabled();
+	});
+
+	it('puts the class prop on the root row', () => {
+		const { container } = render(BoundToggleButtons, { props: { class: 'extra' } });
+
+		const root = container.querySelector('.extra')!;
+
+		expect(root.contains(option('Local').element()), 'the class element holds the buttons').toBe(
+			true
+		);
+	});
+
+	it('lays the label and the buttons out in one row with an 8px gap', () => {
+		render(BoundToggleButtons, { props: { label: 'Orientation' } });
+
+		const row = getComputedStyle(page.getByText('Orientation').element().parentElement!);
+
+		expect(row.display).toBe('flex');
+		expect(row.columnGap).toBe('8px');
 	});
 });
 
@@ -98,6 +143,12 @@ describe('ToggleButtons hint', () => {
 		await userEvent.tab();
 		await expect.element(page.getByRole('button', { name: 'About Space' })).toHaveFocus();
 		await expect.element(page.getByRole('tooltip')).toHaveTextContent(HINT);
+	});
+
+	it('disables the hint button when the group is disabled', async () => {
+		render(BoundToggleButtons, { props: { label: 'Space', hint: HINT, disabled: true } });
+
+		await expect.element(page.getByRole('button', { name: 'About Space' })).toBeDisabled();
 	});
 
 	it('renders no button and no description without a hint', async () => {

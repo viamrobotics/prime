@@ -1,6 +1,6 @@
 # @viamrobotics/prime-controls
 
-Compact realtime controls for Svelte 5 tool panels: number fields, vectors, and sliders that step by keyboard and scrub by dragging, text and file fields, plus panels, folders, and tabs to group them.
+Compact realtime controls for Svelte 5 tool panels: number fields, vectors, and sliders that step by keyboard and scrub by dragging, text and file fields, a compact select and toggle buttons, plus panels, folders, and tabs to group them.
 
 > [!NOTE]
 > Under active development. The public API is unstable until 1.0.
@@ -35,7 +35,7 @@ Requires `svelte` `^5.29.0`. Import the stylesheets once, after Tailwind:
 
 Drag the label sideways to scrub, or press ArrowUp and ArrowDown to step. Shift steps by 10 times and Alt by a tenth. A function binding receives every value a scrub writes and can veto or throttle by not assigning.
 
-Pass `hint` to put an info button beside the label that shows the text in a tooltip and describes the field to a screen reader. `NumberField`, `Point`, `Slider`, and `ToggleButtons` take it with a visible `label`. A childless `Select` has none, so it names the button from `aria-label`.
+Pass `hint` to put an info button beside the label that shows the text in a tooltip and describes the field to a screen reader. `NumberField`, `TextField`, `FileField`, `Point`, `Slider`, and `ToggleButtons` take it with a visible `label`. A childless `Select` has none, so it names the button from `aria-label`.
 
 ```svelte
 <NumberField label="Speed" hint="Metres per second" bind:value={speed} />
@@ -108,6 +108,39 @@ The defined axes decide how many fields render: `x` and `y`, plus `z` and `w` wh
 ```
 
 A native range with a number readout beside it. A drag writes the value on every pointer move.
+
+### Select
+
+```svelte
+<script lang="ts">
+	import { Select } from '@viamrobotics/prime-controls';
+
+	const modes = [
+		{ value: 'move', label: 'Move' },
+		{ value: 'rotate', label: 'Rotate' }
+	];
+	let mode = $state('move');
+</script>
+
+<Select items={modes} bind:value={mode} aria-label="Mode" />
+```
+
+The prime-ui select at panel scale. Without children it renders its own trigger and list from `items`, named by `aria-label` or `aria-labelledby`. Pass `Select.Trigger`, `Select.Value`, `Select.Content`, `Select.Viewport`, and `Select.Items` to compose it, with the same parts and keyboard as prime-ui's.
+
+### ToggleButtons
+
+```svelte
+<ToggleButtons
+	label="Space"
+	items={[
+		{ value: 'local', label: 'Local' },
+		{ value: 'world', label: 'World' }
+	]}
+	bind:value
+/>
+```
+
+A row of mutually exclusive buttons at panel scale. A visible `label` names the group, or pass `aria-label`. Compose it from `ToggleButtons.Item` children when `items` is omitted.
 
 ### Panel
 

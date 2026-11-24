@@ -3,7 +3,7 @@
 
 	import { layoutRoot } from '../layouts.ts';
 	import type { PaneData } from '../layouts.ts';
-	import type { LayoutNode } from '../../src/lib/layout.ts';
+	import type { LayoutNode, PaneNode } from '../../src/lib/layout.ts';
 	import { Panes } from '../../src/lib/Panes/panes.ts';
 
 	interface Props {
@@ -16,7 +16,7 @@
 </script>
 
 <button type="button" onclick={() => (layout = undefined)}>Clear layout</button>
-{#snippet pane(node: { id: string; data: PaneData })}
+{#snippet pane(node: PaneNode<PaneData>)}
 	<section aria-label={node.data.label} data-testid="pane" data-pane-id={node.id} class="size-full">
 		{node.data.label}
 	</section>
@@ -24,7 +24,7 @@
 {#snippet empty()}
 	<p data-testid="empty">No panes</p>
 {/snippet}
-<div data-testid="frame" style="width: 800px; height: 600px">
+<div style="width: 800px; height: 600px">
 	{#if withEmpty}
 		<Panes bind:layout class="size-full" data-testid="root" {pane} {empty} />
 	{:else}

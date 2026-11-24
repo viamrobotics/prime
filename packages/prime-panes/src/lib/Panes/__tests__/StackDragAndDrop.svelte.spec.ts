@@ -20,6 +20,7 @@ import type { PaneData } from '../../../../test/layouts.ts';
 import type { LayoutNode } from '../../layout.ts';
 
 const TOP_ZONE = { x: '50%', y: 10 } as const;
+const LEFT_EDGE = { x: '10%', y: '50%' } as const;
 const RIGHT_EDGE = { x: '90%', y: '50%' } as const;
 const EMPTY_STRIP_AREA = { x: '95%', y: '50%' } as const;
 const INSIDE_LEFT_REGION = { x: 24, y: '50%' } as const;
@@ -232,7 +233,7 @@ describe('Panes stacks: leaving a stack beside it', () => {
 
 		await commands.mouseMove(grip('Camera A').selector);
 		await commands.mouseDown();
-		await commands.mouseMove(page.getByPane('cam-a').selector, { x: '10%', y: '50%' });
+		await commands.mouseMove(page.getByPane('cam-a').selector, LEFT_EDGE);
 		await commands.mouseUp();
 
 		await expect
@@ -391,7 +392,7 @@ describe('Panes.TabListDropRegion drop regions', () => {
 	it('reads a foreign tab strip with no TabListDropRegion as the top edge', async () => {
 		const { component } = render(StackPanes, { hasTriggers: true, dropRegion: 'none' });
 
-		await dragSoloTo(strip('cam-a'), { x: '50%', y: 10 });
+		await dragSoloTo(strip('cam-a'), TOP_ZONE);
 		await commands.mouseUp();
 
 		await expect

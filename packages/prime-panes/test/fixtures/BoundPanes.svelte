@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../tailwind.css';
 
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	import { ids, layoutRoot } from '../layouts.ts';
 	import type { PaneData } from '../layouts.ts';
@@ -14,9 +14,16 @@
 		handles?: boolean;
 		labelPanes?: boolean;
 		handleProps?: HTMLButtonAttributes;
+		rootProps?: HTMLAttributes<HTMLDivElement>;
 	}
 
-	const { reorderable, handles = false, labelPanes = true, handleProps }: Props = $props();
+	const {
+		reorderable,
+		handles = false,
+		labelPanes = true,
+		handleProps,
+		rootProps
+	}: Props = $props();
 
 	let layout = $state<LayoutNode<PaneData> | undefined>(structuredClone(layoutRoot));
 
@@ -31,8 +38,9 @@
 	Set root to 70%
 </button>
 <span data-testid="owner">{rootRatio}</span>
-<div data-testid="frame" style="width: 800px; height: 600px">
+<div style="width: 800px; height: 600px">
 	<Panes
+		{...rootProps}
 		bind:layout
 		{reorderable}
 		paneLabel={labelPanes ? (node) => node.data.label : undefined}
@@ -50,12 +58,7 @@
 					</Panes.MoveTrigger>
 				</Panes.DragTrigger>
 			{/if}
-			<section
-				aria-label={node.data.label}
-				data-testid="pane"
-				data-pane-id={node.id}
-				class="size-full"
-			>
+			<section aria-label={node.data.label} data-pane-id={node.id} class="size-full">
 				{node.data.label}
 			</section>
 		{/snippet}

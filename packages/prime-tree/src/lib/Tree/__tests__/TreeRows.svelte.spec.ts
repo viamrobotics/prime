@@ -35,7 +35,7 @@ describe('Tree custom rows', () => {
 		await expect.element(itemOf('Readme')).toHaveAttribute('aria-setsize', '2');
 	});
 
-	it('moves focus into custom rows with Arrow Down', async () => {
+	it('moves focus on ArrowDown in node order, not in the order the snippet placed the rows', async () => {
 		render(CustomRowsTree);
 		(
 			document.querySelector('[data-part="branch-control"][data-value="docs"]') as HTMLElement
@@ -54,10 +54,15 @@ describe('Tree custom rows', () => {
 		await expect.element(page.getByTestId('placeholder-empty')).toHaveTextContent('Nothing here');
 	});
 
-	it('hides the indent guide from assistive technology and marks its depth', async () => {
+	it('hides the indent guide from assistive technology', async () => {
 		render(CustomRowsTree);
 
 		await expect.element(page.getByTestId('guide-docs')).toHaveAttribute('aria-hidden', 'true');
-		await expect.element(page.getByTestId('guide-docs')).toHaveAttribute('data-depth', '1');
+	});
+
+	it('marks the indent guide with the depth of its branch', async () => {
+		render(CustomRowsTree);
+
+		await expect.element(page.getByTestId('guide-guides')).toHaveAttribute('data-depth', '2');
 	});
 });

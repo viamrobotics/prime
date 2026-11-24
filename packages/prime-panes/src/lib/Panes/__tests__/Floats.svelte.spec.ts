@@ -9,11 +9,10 @@ import {
 	createNestedFloatLayout,
 	expectFloat,
 	floatIds,
-	nestedFloatIds
+	nestedFloatIds,
+	pane
 } from '../../../../test/layouts.ts';
-import '../../../../test/panes-queries.ts';
 import type { Point } from '../../../../test/input-commands.ts';
-import { movePane } from '../../tree.ts';
 
 const entryIdsOf = (layout: Parameters<typeof expectFloat>[0]) =>
 	expectFloat(layout).floats.map((entry) => entry.id);
@@ -22,6 +21,14 @@ function floatWithRect(rect: { x: number; y: number; width: number; height: numb
 	const layout = expectFloat(createFloatLayout());
 	return { ...layout, floats: [{ ...layout.floats[0]!, rect }, layout.floats[1]!] };
 }
+
+interface FloatingComponent {
+	getLayout: () => never;
+	getWrites: () => number;
+	addWindow: () => void;
+}
+
+const componentOf = (screen: { component: unknown }) => screen.component as FloatingComponent;
 
 const OVERFLOW_HEIGHT_PX = 400;
 
@@ -45,7 +52,10 @@ describe('Floats', () => {
 			width: '120px',
 			height: '90px'
 		});
-		expect(page.getByFloat(floatIds.float).element().contains(entry.element())).toBe(true);
+		expect(
+			page.getByFloat(floatIds.float).element().contains(entry.element()),
+			'the window sits inside the float node'
+		).toBe(true);
 		await expect.element(page.getByRole('region', { name: floatIds.baseLeft })).toBeVisible();
 	});
 
@@ -59,7 +69,7 @@ describe('Floats', () => {
 			width: '300px',
 			height: '200px'
 		});
-		const component = screen.component as unknown as { getLayout: () => never };
+		const component = componentOf(screen);
 		expect(expectFloat(component.getLayout()).floats[0]!.rect).toEqual(stored);
 	});
 
@@ -88,10 +98,7 @@ describe('Floats', () => {
 
 	it('raises a lower window on press with exactly one write', async () => {
 		const screen = render(FloatingPanes);
-		const component = screen.component as unknown as {
-			getLayout: () => never;
-			getWrites: () => number;
-		};
+		const component = componentOf(screen);
 
 		await page.getByRole('region', { name: floatIds.paneA }).click();
 
@@ -103,10 +110,7 @@ describe('Floats', () => {
 
 	it('writes nothing when the top window is pressed', async () => {
 		const screen = render(FloatingPanes);
-		const component = screen.component as unknown as {
-			getLayout: () => never;
-			getWrites: () => number;
-		};
+		const component = componentOf(screen);
 
 		await page.getByRole('region', { name: floatIds.paneB }).click();
 
@@ -120,17 +124,16 @@ describe('Floats', () => {
 			[...page.getByFloat(floatIds.float).element().querySelectorAll('[data-float-entry]')].map(
 				(element) => element.getAttribute('data-float-entry')
 			);
-		const before = order();
 
 		await page.getByRole('region', { name: floatIds.paneA }).click();
 
 		await expect.element(page.getByFloatEntry(floatIds.entryA)).toHaveStyle({ zIndex: '2' });
-		expect(order()).toEqual(before);
+		expect(order()).toEqual([floatIds.entryA, floatIds.entryB]);
 	});
 
 	it('raises a lower window when focus moves into it', async () => {
 		const screen = render(FloatingPanes);
-		const component = screen.component as unknown as { getLayout: () => never };
+		const component = componentOf(screen);
 
 		page
 			.getByRole('button', { name: `Close ${floatIds.paneA}` })
@@ -144,7 +147,7 @@ describe('Floats', () => {
 
 	it('removes a window with its close button', async () => {
 		const screen = render(FloatingPanes);
-		const component = screen.component as unknown as { getLayout: () => never };
+		const component = componentOf(screen);
 
 		await page.getByRole('button', { name: `Close ${floatIds.paneB}` }).click();
 
@@ -165,21 +168,17 @@ describe('Floats', () => {
 		await expect.element(page.getByPane(floatIds.baseLeft)).not.toHaveAttribute('data-floating');
 	});
 
-	it('reports isFloating for panes in a split and a stack inside a window', async () => {
+	it.each([
+		{ name: 'the first pane of a split', id: nestedFloatIds.splitFirst },
+		{ name: 'the second pane of a split', id: nestedFloatIds.splitSecond },
+		{ name: 'the active tab of a stack', id: nestedFloatIds.stackFirst }
+	])('reports isFloating for $name inside a window', async ({ id }) => {
 		render(FloatingPanes, { props: { initial: createNestedFloatLayout() } });
 
-		for (const id of [nestedFloatIds.splitFirst, nestedFloatIds.splitSecond]) {
-			await expect
-				.element(page.getByRole('region', { name: id }))
-				.toHaveAttribute('data-is-floating', 'true');
-			await expect.element(page.getByPane(id)).toHaveAttribute('data-floating');
-		}
 		await expect
-			.element(page.getByRole('region', { name: nestedFloatIds.stackFirst }))
+			.element(page.getByRole('region', { name: id }))
 			.toHaveAttribute('data-is-floating', 'true');
-		await expect
-			.element(page.getByPane(nestedFloatIds.stackFirst))
-			.toHaveAttribute('data-floating');
+		await expect.element(page.getByPane(id)).toHaveAttribute('data-floating');
 	});
 
 	it('renders the empty snippet behind the windows when there is no base', async () => {
@@ -192,7 +191,7 @@ describe('Floats', () => {
 
 	it('renders a newly added window last in DOM order and keeps an older one in place after a raise', async () => {
 		const screen = render(FloatingPanes);
-		const component = screen.component as unknown as { addWindow: () => void };
+		const component = componentOf(screen);
 		const order = () =>
 			[...page.getByFloat(floatIds.float).element().querySelectorAll('[data-float-entry]')].map(
 				(element) => element.getAttribute('data-float-entry')
@@ -213,7 +212,7 @@ describe('Floats', () => {
 				initial: { ...layout, floats: [{ ...layout.floats[0]!, rect: over }, layout.floats[1]!] }
 			}
 		});
-		const component = screen.component as unknown as { getLayout: () => never };
+		const component = componentOf(screen);
 
 		await page.getByRole('region', { name: floatIds.paneA }).click();
 
@@ -238,8 +237,7 @@ describe('Floats: dropping a dragged pane', () => {
 
 	it('docks a window pane beside a base pane and drops the emptied entry', async () => {
 		const screen = render(FloatingPanes, { props: { handles: true } });
-		const component = screen.component as unknown as { getLayout: () => never };
-		const before = expectFloat(createFloatLayout());
+		const component = componentOf(screen);
 
 		await dropOnto(grip(floatIds.paneB), page.getByPane(floatIds.baseRight), {
 			x: '90%',
@@ -247,18 +245,26 @@ describe('Floats: dropping a dragged pane', () => {
 		});
 
 		await expect.poll(() => entryIdsOf(component.getLayout())).toEqual([floatIds.entryA]);
-		const docked = expectFloat(component.getLayout());
-		const split = docked.base as { second: { id: string } };
-		expect(docked.base).toEqual(
-			expectFloat(
-				movePane(before, floatIds.paneB, floatIds.baseRight, 'row', 'second', split.second.id)
-			).base
-		);
+		expect(expectFloat(component.getLayout()).base).toEqual({
+			type: 'split',
+			id: floatIds.base,
+			direction: 'row',
+			ratio: 0.5,
+			first: pane(floatIds.baseLeft, floatIds.baseLeft),
+			second: {
+				type: 'split',
+				id: expect.any(String),
+				direction: 'row',
+				ratio: 0.5,
+				first: pane(floatIds.baseRight, floatIds.baseRight),
+				second: pane(floatIds.paneB, floatIds.paneB)
+			}
+		});
 	});
 
 	it('targets the window pane where a window overlaps a base pane', async () => {
 		const screen = render(FloatingPanes, { props: { handles: true } });
-		const component = screen.component as unknown as { getLayout: () => never };
+		const component = componentOf(screen);
 
 		await dropOnto(grip(floatIds.baseRight), page.getByPane(floatIds.paneA), {
 			x: '90%',
@@ -274,7 +280,7 @@ describe('Floats: dropping a dragged pane', () => {
 
 	it('targets the pane in the upper window where two windows overlap', async () => {
 		const screen = render(FloatingPanes, { props: { handles: true } });
-		const component = screen.component as unknown as { getLayout: () => never };
+		const component = componentOf(screen);
 
 		await dropOnto(grip(floatIds.baseRight), page.getByPane(floatIds.paneB), { x: 10, y: 10 });
 

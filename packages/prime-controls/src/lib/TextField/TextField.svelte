@@ -14,6 +14,7 @@ An empty field is the empty string.
 	import { type FieldState, Input } from '@viamrobotics/prime-ui';
 
 	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
+	import { joinDescribedBy } from '../Hint/described-by.ts';
 	import Hint from '../Hint/Hint.svelte';
 
 	interface Props extends Omit<HTMLInputAttributes, 'value' | 'type' | 'children' | 'class'> {
@@ -63,9 +64,7 @@ An empty field is the empty string.
 	const generatedId = $props.id();
 	const id = $derived(providedId ?? generatedId);
 	const hintId = $derived(`${id}-hint`);
-	const describedBy = $derived(
-		[ariaDescribedby, label && hint ? hintId : undefined].filter(Boolean).join(' ') || undefined
-	);
+	const describedBy = $derived(joinDescribedBy([ariaDescribedby, label && hint && hintId]));
 </script>
 
 <div class={[CONTROL_ROW_CLASS, extraClasses]}>

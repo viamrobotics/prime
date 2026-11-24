@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { commands, page, userEvent } from 'vitest/browser';
 import type { Locator } from 'vitest/browser';
@@ -35,10 +35,6 @@ const destination = (moving: string, target: string) =>
 	page.getByRole('group', { name: `Move ${moving} to ${target}`, exact: true });
 const labelsOf = (locator: Locator) =>
 	locator.elements().map((element) => element.getAttribute('aria-label'));
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('Panes stacks: stacking in move mode beside a region on the left side', () => {
 	it('reaches "Stack with" when ArrowLeft follows the left edge', async () => {
@@ -313,17 +309,28 @@ describe('Panes stacks: a stacked pane placed on a center in move mode', () => {
 			]);
 	});
 
-	it('swaps the whole stack with the pane and announces the stack', async () => {
-		const { component } = render(StackPanes, { hasTriggers: true });
+	const swapStackWithSolo = async () => {
 		grip('Camera A').element().focus();
 		await userEvent.keyboard('{Enter}');
 		await userEvent.keyboard('{ArrowRight}{ArrowRight}');
-
 		await userEvent.keyboard('{Enter}');
+	};
+
+	it('swaps the whole stack with the pane', async () => {
+		const { component } = render(StackPanes, { hasTriggers: true });
+
+		await swapStackWithSolo();
 
 		await expect
 			.poll(() => component.getLayout())
 			.toEqual({ ...CAMERA_ROW, first: SOLO, second: CAMERAS });
+	});
+
+	it('announces the whole stack swapped with the pane', async () => {
+		render(StackPanes, { hasTriggers: true });
+
+		await swapStackWithSolo();
+
 		await expect
 			.element(page.getByRole('status'))
 			.toHaveTextContent('Camera A, Camera B, and Camera C swapped with Solo.');
@@ -614,6 +621,15 @@ describe('Panes stacks: selecting a tab during a move', () => {
 		await expect.element(page.getByPanesInMoveMode()).not.toBeInTheDocument();
 		await expect.element(page.getByRole('status')).toHaveTextContent('Move canceled.');
 		expect(component.getLayout()).toEqual(CAMERA_B_SHOWN);
+	});
+
+	it('keeps focus on the tab activated during a whole-stack move', async () => {
+		render(StackPanes, { hasTriggers: true, keepInactiveMounted: true, moveTarget: 'stack' });
+		await userEvent.click(grip('Camera A'));
+		await expect.element(page.getByPanesInMoveMode()).toBeInTheDocument();
+
+		await userEvent.click(tab('Camera B'));
+
 		await expect.element(tab('Camera B')).toHaveFocus();
 	});
 });

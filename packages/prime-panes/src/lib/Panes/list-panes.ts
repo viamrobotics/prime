@@ -27,3 +27,17 @@ export function findPane<TData>(
 ): PaneNode<TData> | undefined {
 	return listPanes(root).find((pane) => pane.id === paneId);
 }
+
+export function findStack<TData>(
+	root: LayoutNode<TData> | undefined,
+	stackId: string
+): StackNode<TData> | undefined {
+	return listStacks(root).find((stack) => stack.id === stackId);
+}
+
+export function findStackHolding<TData>(
+	root: LayoutNode<TData> | undefined,
+	paneId: string
+): StackNode<TData> | undefined {
+	return listStacks(root).find((stack) => stack.panes.some((pane) => pane.id === paneId));
+}

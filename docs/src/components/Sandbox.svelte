@@ -3,7 +3,7 @@
 Docs playground shell: renders a live prime-ui component above a controls panel
 built from prime-ui's own inputs, so tweaking a control re-renders the component.
 
-`controls` is keyed by the target component's prop names; each entry seeds a
+`controls` is keyed by the target component's prop names. Each entry seeds a
 control and its default value. Pass inner content (e.g. `RadioGroup.Item`s) as
 children.
 
@@ -19,7 +19,7 @@ children.
 ```
 -->
 <!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -- Component props are contravariant, so only any admits every demo's Props interface. -->
-<script lang="ts" generics="Props extends ComponentProps<any>">
+<script lang="ts" generics="TProps extends ComponentProps<any>">
   import type { Component, ComponentProps, Snippet } from "svelte";
 
   import { Checkbox, Field, Input, Label, NumberInput, Select } from "@viamrobotics/prime-ui";
@@ -30,12 +30,12 @@ children.
     | { kind: "boolean"; label: string; default: boolean }
     | { kind: "select"; label: string; default: string; options: string[] };
 
-  interface Props_ {
+  interface Props {
     /** The component to render live. */
-    component: Component<Props>;
+    component: Component<TProps>;
 
     /** Controls keyed by the target component's prop names. */
-    controls: Partial<Record<keyof Props, Control>>;
+    controls: Partial<Record<keyof TProps, Control>>;
 
     /** Tag name used in the generated code snippet. */
     name?: string;
@@ -47,14 +47,14 @@ children.
     children?: Snippet;
   }
 
-  const { component, controls, name = "Component", showCode = true, children }: Props_ = $props();
+  const { component, controls, name = "Component", showCode = true, children }: Props = $props();
 
   const entries = $derived(Object.entries(controls) as [string, Control][]);
 
-  const seed = (): Partial<Props> => {
-    const initial: Partial<Props> = {};
+  const seed = (): Partial<TProps> => {
+    const initial: Partial<TProps> = {};
     for (const [key, control] of Object.entries(controls) as [string, Control][]) {
-      initial[key as keyof Props] = control.default as Props[keyof Props];
+      initial[key as keyof TProps] = control.default as TProps[keyof TProps];
     }
     return initial;
   };
@@ -62,7 +62,7 @@ children.
   const values = $state(seed());
 
   const set = (key: string, value: unknown) => {
-    values[key as keyof Props] = value as Props[keyof Props];
+    values[key as keyof TProps] = value as TProps[keyof TProps];
   };
 
   const Preview = $derived(component);
@@ -70,7 +70,7 @@ children.
   const code = $derived.by(() => {
     const props = entries
       .map(([key]) => {
-        const value = values[key as keyof Props];
+        const value = values[key as keyof TProps];
         return typeof value === "string" ? `  ${key}="${value}"` : `  ${key}={${String(value)}}`;
       })
       .join("\n");
@@ -81,9 +81,9 @@ children.
 <div class="overflow-hidden rounded-lg border border-light not-content">
   <div class="flex min-h-32 items-center justify-center bg-white p-8">
     {#if children}
-      <Preview {...values as Props}>{@render children()}</Preview>
+      <Preview {...values as TProps}>{@render children()}</Preview>
     {:else}
-      <Preview {...values as Props} />
+      <Preview {...values as TProps} />
     {/if}
   </div>
 
@@ -92,7 +92,7 @@ children.
       {#if control.kind === "boolean"}
         <Field class="flex items-center gap-2">
           <Checkbox
-            bind:checked={() => values[key as keyof Props] as boolean, (v) => set(key, v)}
+            bind:checked={() => values[key as keyof TProps] as boolean, (v) => set(key, v)}
           />
           <Label>{control.label}</Label>
         </Field>
@@ -100,7 +100,7 @@ children.
         <Field class="flex flex-col gap-1">
           <Label>{control.label}</Label>
           <NumberInput
-            value={values[key as keyof Props] as number}
+            value={values[key as keyof TProps] as number}
             min={control.min}
             max={control.max}
             step={control.step}
@@ -112,7 +112,7 @@ children.
           <Label>{control.label}</Label>
           <Select
             items={control.options.map((option) => ({ value: option, label: option }))}
-            bind:value={() => values[key as keyof Props] as string, (v) => set(key, v)}
+            bind:value={() => values[key as keyof TProps] as string, (v) => set(key, v)}
           >
             <Select.Trigger>
               <Select.Value placeholder={control.label} />
@@ -130,7 +130,7 @@ children.
         <Field class="flex flex-col gap-1">
           <Label>{control.label}</Label>
           <Input
-            value={values[key as keyof Props] as string}
+            value={values[key as keyof TProps] as string}
             oninput={(e) => set(key, e.currentTarget.value)}
           />
         </Field>

@@ -37,6 +37,13 @@ describe('getDropRegion', () => {
 	});
 
 	it.each([
+		{ edge: 'top', clientX: 60, clientY: 79 },
+		{ edge: 'bottom', clientX: 140, clientY: 111 }
+	])('reads a point on the exact diagonal as $edge', ({ clientX, clientY, edge }) => {
+		expect(getDropRegion(clientX, clientY, rect)).toBe(edge);
+	});
+
+	it.each([
 		{ axis: 'x', clientX: centerX + 0.39 * (width / 2), clientY: centerY },
 		{ axis: 'y', clientX: centerX, clientY: centerY - 0.39 * (height / 2) }
 	])('treats just inside the center threshold on $axis as center', ({ clientX, clientY }) => {
@@ -155,6 +162,17 @@ describe('nearestEdge', () => {
 
 	it('reads a point outside the pane by its dominant axis', () => {
 		expect(nearestEdge(700, 250, paneRect)).toBe('right');
+	});
+
+	it.each([
+		{ edge: 'top', clientX: 70, clientY: 130 },
+		{ edge: 'bottom', clientX: 230, clientY: 370 }
+	])('reads a point on the exact diagonal as $edge', ({ clientX, clientY, edge }) => {
+		expect(nearestEdge(clientX, clientY, paneRect)).toBe(edge);
+	});
+
+	it('reads the exact center as bottom', () => {
+		expect(nearestEdge(150, 250, paneRect)).toBe('bottom');
 	});
 });
 

@@ -25,8 +25,7 @@ export default defineConfig({
 						instances: [{ browser: 'chromium', headless: true }],
 						viewport: { width: 1000, height: 1400 }
 					},
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**']
+					include: ['src/**/*.svelte.{test,spec}.{js,ts}']
 				}
 			},
 

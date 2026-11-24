@@ -41,10 +41,16 @@ const highlightStyle = HighlightStyle.define([
 	}
 ]);
 
-// A changed word is its line's tint with a share of the bright color mixed in, so it reads as
-// the same hue, stronger.
-const changedWordFill = (kind: 'success' | 'danger') =>
-	`color-mix(in srgb, var(--color-${kind}-bright) 14%, var(--color-${kind}-light))`;
+// Lines paint above CodeMirror's selection layer, so these fills are translucent. A nested mix steers each over gray-1 onto its opaque token, and a word fill onto the bright share of its line.
+const LINE_BAND_FILL = 'color-mix(in srgb, var(--color-gray-9) 4.3%, transparent)';
+const SUCCESS_LINE_FILL =
+	'color-mix(in srgb, color-mix(in srgb, var(--color-success-light) 97%, var(--color-success-bright)) 75%, transparent)';
+const DANGER_LINE_FILL =
+	'color-mix(in srgb, color-mix(in srgb, var(--color-danger-light) 92%, var(--color-danger-medium)) 82%, transparent)';
+const SEARCH_MATCH_FILL =
+	'color-mix(in srgb, color-mix(in srgb, var(--color-warning-light) 97%, var(--color-warning-bright)) 78%, transparent)';
+const SUCCESS_WORD_FILL = 'color-mix(in srgb, var(--color-success-bright) 14%, transparent)';
+const DANGER_WORD_FILL = 'color-mix(in srgb, var(--color-danger-bright) 14%, transparent)';
 
 const DIFF_SIGN_WIDTH = '2ch';
 const DIFF_LINE_INDENT = `calc(var(--spacing) * 2 + ${DIFF_SIGN_WIDTH})`;
@@ -58,7 +64,7 @@ const surfaceTheme = EditorView.theme({
 		lineHeight: 'var(--text-xs--line-height)',
 		border: '1px solid var(--color-gray-3)',
 		borderRadius: 'var(--radius-sm)',
-		// The gutter and the scroller are square, so they are clipped to the rounded corners.
+		// The gutter and the scroller are square, so overflow clips them to the border radius.
 		overflow: 'hidden'
 	},
 	'&:has(.cm-content[aria-invalid="true"])': { borderColor: 'var(--color-danger-dark)' },
@@ -86,7 +92,7 @@ const surfaceTheme = EditorView.theme({
 		backgroundColor: 'var(--color-gray-1)',
 		border: 'none'
 	},
-	'.cm-activeLine': { backgroundColor: 'var(--color-gray-2)' },
+	'.cm-activeLine': { backgroundColor: LINE_BAND_FILL },
 	'.cm-activeLineGutter': {
 		backgroundColor: 'var(--color-gray-2)',
 		color: 'var(--color-default)'
@@ -101,7 +107,7 @@ const surfaceTheme = EditorView.theme({
 	'.cm-foldGutter .cm-gutterElement': { cursor: 'pointer' },
 	'.cm-foldPlaceholder': {
 		color: 'var(--color-subtle-1)',
-		backgroundColor: 'var(--color-gray-2)',
+		backgroundColor: LINE_BAND_FILL,
 		border: 'none'
 	},
 
@@ -129,27 +135,27 @@ const surfaceTheme = EditorView.theme({
 	'.cm-textfield:focus-visible, .cm-button:focus-visible, .cm-panel button[name="close"]:focus-visible':
 		{ outline: '2px solid var(--color-link)', outlineOffset: '2px' },
 	'.cm-panel button[name="close"]': { color: 'var(--color-default)', cursor: 'pointer' },
-	'.cm-searchMatch': { backgroundColor: 'var(--color-warning-light)' },
+	'.cm-searchMatch': { backgroundColor: SEARCH_MATCH_FILL },
 	'.cm-searchMatch.cm-searchMatch-selected': {
 		backgroundColor: 'var(--color-warning-medium)',
 		outline: '1px solid var(--color-warning-bright)'
 	},
 
 	'&.cm-merge-b .cm-changedLine, .cm-inlineChangedLine': {
-		backgroundColor: 'var(--color-success-light)'
+		backgroundColor: SUCCESS_LINE_FILL
 	},
 	'&.cm-merge-a .cm-changedLine, .cm-deletedChunk': {
-		backgroundColor: 'var(--color-danger-light)'
+		backgroundColor: DANGER_LINE_FILL
 	},
 	// Naming `.cm-content` matches the specificity of the merge view's own underline gradient.
 	'&.cm-merge-b .cm-content .cm-changedText': {
-		background: changedWordFill('success')
+		background: SUCCESS_WORD_FILL
 	},
 	[[
 		'&.cm-merge-a .cm-content .cm-changedText',
 		'.cm-content .cm-deletedChunk .cm-deletedText',
 		'&.cm-merge-b .cm-deletedText'
-	].join(', ')]: { background: changedWordFill('danger') },
+	].join(', ')]: { background: DANGER_WORD_FILL },
 
 	// Every line of a diff leaves room for the sign, so changed and unchanged code stay aligned.
 	'&.cm-merge-a .cm-line, &.cm-merge-b .cm-line, .cm-deletedChunk': {
@@ -176,7 +182,7 @@ const surfaceTheme = EditorView.theme({
 	'.cm-mergeView': { border: 'none' },
 	'.cm-content .cm-collapsedLines': {
 		color: 'var(--color-subtle-1)',
-		background: 'var(--color-gray-2)',
+		background: LINE_BAND_FILL,
 		padding: 'var(--spacing) calc(var(--spacing) * 2)'
 	},
 	'.cm-collapsedLines:before, .cm-collapsedLines:after': { content: 'none' }

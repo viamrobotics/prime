@@ -1,3 +1,7 @@
+<!--
+@component
+One series, drawn as a line clipped to the plot area. A `null` `y` breaks the line, and a point with no neighbor on either side draws as a dot. Its name, unit and color label it in the legend and the tooltip.
+-->
 <script lang="ts" generics="TXValue extends ChartXValue = Date">
 	import type { ClassValue } from 'svelte/elements';
 	import { line } from 'd3-shape';
@@ -11,12 +15,13 @@
 		points: ChartPoint<TXValue>[];
 		/** Shown after the series name in the legend, and after its value in the tooltip. */
 		unit?: string;
-		/** A CSS variable such as `'--color-chart-series-4'`. Defaults to the palette slot for the line's position. */
+		/** A CSS variable, such as `'--color-chart-series-4'`, drawn as `var(...)`. Defaults to `--color-chart-series-1` to `--color-chart-series-7` in the order the lines mount, wrapping after seven. */
 		color?: `--${string}`;
 		/** Shows the series' loading mark in the legend. */
 		loading?: boolean;
-		/** Hides the series. The legend toggles it, and a hidden series keeps its color and position. */
+		/** Hides the series, which keeps its color and its position. Bindable, and the legend toggles it. Unbound, the line keeps the state itself. */
 		hidden?: boolean;
+		/** Lands on the line's path and on the dot of each lone point. */
 		class?: ClassValue;
 	}
 
@@ -71,8 +76,9 @@
 	const runs = $derived.by(() => {
 		const result: Placed[][] = [];
 		let current: Placed[] = [];
+		const { toNumber } = chart.xWindow;
 		for (const point of points) {
-			const x = plot.xScale(chart.xToNumber(point.x));
+			const x = plot.xScale(toNumber(point.x));
 			const y = point.y === null ? Number.NaN : plot.yScale(point.y);
 			if (Number.isFinite(x) && Number.isFinite(y)) {
 				current.push({ x, y });

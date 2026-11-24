@@ -2,6 +2,7 @@
 	import { mergeProps } from '@zag-js/svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import { disableRow } from './disabled-node.ts';
 	import { useTree, useTreeNode } from './useTree.svelte.ts';
 
 	type Props = HTMLAttributes<HTMLDivElement>;
@@ -13,7 +14,10 @@
 
 	const attrs = $derived(
 		mergeProps(
-			tree.api.getBranchProps({ node: current.node, indexPath: current.indexPath }),
+			disableRow(
+				tree.api.getBranchProps({ node: current.node, indexPath: current.indexPath }),
+				current.state.disabled
+			),
 			{
 				'aria-posinset': current.indexPath.at(-1)! + 1,
 				'aria-setsize': current.setSize

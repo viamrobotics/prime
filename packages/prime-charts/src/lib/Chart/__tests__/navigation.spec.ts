@@ -91,7 +91,7 @@ describe('nearestPoint', () => {
 
 	it('skips a point with a parseable string x like a gap', () => {
 		const mixed = withStringX();
-		expect(nearestPoint([mixed], [1, 2], plot, everything)?.index).not.toBe(1);
+		expect(nearestPoint([mixed], [0.9, 2], plot, everything)).toEqual({ series: mixed, index: 0 });
 	});
 
 	it('lands on the placed point nearest the pointer past a string x point', () => {
@@ -145,32 +145,36 @@ describe('firstPoint', () => {
 describe('isAvailable', () => {
 	it('keeps a drawable point of a visible series', () => {
 		const shown = series([1, null]);
-		expect(isAvailable([shown], { series: shown, index: 0 }, everything)).toBe(true);
+		expect(isAvailable([shown], { series: shown, index: 0 }, everything), 'a drawn point').toBe(
+			true
+		);
 	});
 
 	it('drops a gapped point', () => {
 		const shown = series([1, null]);
-		expect(isAvailable([shown], { series: shown, index: 1 }, everything)).toBe(false);
+		expect(isAvailable([shown], { series: shown, index: 1 }, everything), 'a gap').toBe(false);
 	});
 
 	it('drops an index past the end of the points', () => {
 		const shown = series([1, null]);
-		expect(isAvailable([shown], { series: shown, index: 2 }, everything)).toBe(false);
+		expect(isAvailable([shown], { series: shown, index: 2 }, everything), 'past the end').toBe(
+			false
+		);
 	});
 
 	it('drops a point of a hidden series', () => {
 		const hidden = series([1], true);
-		expect(isAvailable([hidden], { series: hidden, index: 0 }, everything)).toBe(false);
+		expect(isAvailable([hidden], { series: hidden, index: 0 }, everything), 'hidden').toBe(false);
 	});
 
 	it('drops a point of a removed series', () => {
 		const shown = series([1, null]);
-		expect(isAvailable([], { series: shown, index: 0 }, everything)).toBe(false);
+		expect(isAvailable([], { series: shown, index: 0 }, everything), 'removed').toBe(false);
 	});
 
 	it('drops a point with a parseable string x', () => {
 		const mixed = withStringX();
-		expect(isAvailable([mixed], { series: mixed, index: 1 }, everything)).toBe(false);
+		expect(isAvailable([mixed], { series: mixed, index: 1 }, everything), 'string x').toBe(false);
 	});
 });
 
@@ -189,7 +193,7 @@ describe('step', () => {
 		['PageDown', 23, 24],
 		['PageUp', 1, 0]
 	] as const)('moves %s from %i to %i', (key, from, to) => {
-		expect(step([long], { series: long, index: from }, key, everything)).toEqual({
+		expect(step([long], { series: long, index: from }, key, plot, everything)).toEqual({
 			series: long,
 			index: to
 		});
@@ -197,7 +201,7 @@ describe('step', () => {
 
 	it('pages by at least one point', () => {
 		const short = series([1, 2, 3]);
-		expect(step([short], { series: short, index: 0 }, 'PageDown', everything).index).toBe(1);
+		expect(step([short], { series: short, index: 0 }, 'PageDown', plot, everything).index).toBe(1);
 	});
 
 	const gapped = series([null, 1, null, null, 4, null]);
@@ -208,23 +212,25 @@ describe('step', () => {
 		['Home', 4, 1],
 		['End', 1, 4]
 	] as const)('steps over gaps with %s from %i to %i', (key, from, to) => {
-		expect(step([gapped], { series: gapped, index: from }, key, everything).index).toBe(to);
+		expect(step([gapped], { series: gapped, index: from }, key, plot, everything).index).toBe(to);
 	});
 
 	it('steps over a point with a parseable string x with ArrowRight', () => {
 		const mixed = withStringX();
-		expect(step([mixed], { series: mixed, index: 0 }, 'ArrowRight', everything).index).toBe(2);
+		expect(step([mixed], { series: mixed, index: 0 }, 'ArrowRight', plot, everything).index).toBe(
+			2
+		);
 	});
 
 	it('steps over a point with a parseable string x with ArrowLeft', () => {
 		const mixed = withStringX();
-		expect(step([mixed], { series: mixed, index: 2 }, 'ArrowLeft', everything).index).toBe(0);
+		expect(step([mixed], { series: mixed, index: 2 }, 'ArrowLeft', plot, everything).index).toBe(0);
 	});
 
 	it('moves down to the next series at the point nearest in time', () => {
 		const top = series([1, 2, 3, 4, 5]);
 		const bottom = series([6, 7, 8], false, [0, 2.9, 4]);
-		expect(step([top, bottom], { series: top, index: 3 }, 'ArrowDown', everything)).toEqual({
+		expect(step([top, bottom], { series: top, index: 3 }, 'ArrowDown', plot, everything)).toEqual({
 			series: bottom,
 			index: 1
 		});
@@ -233,7 +239,7 @@ describe('step', () => {
 	it('moves up to the previous series at the point nearest in time', () => {
 		const top = series([1, 2, 3, 4, 5]);
 		const bottom = series([6, 7, 8], false, [0, 2.9, 4]);
-		expect(step([top, bottom], { series: bottom, index: 1 }, 'ArrowUp', everything)).toEqual({
+		expect(step([top, bottom], { series: bottom, index: 1 }, 'ArrowUp', plot, everything)).toEqual({
 			series: top,
 			index: 3
 		});
@@ -242,7 +248,7 @@ describe('step', () => {
 	it('moves vertically past a point with a parseable string x in the target', () => {
 		const top = series([1, 2, 3]);
 		const mixed = withStringX();
-		expect(step([top, mixed], { series: top, index: 1 }, 'ArrowDown', everything)).toEqual({
+		expect(step([top, mixed], { series: top, index: 1 }, 'ArrowDown', plot, everything)).toEqual({
 			series: mixed,
 			index: 0
 		});
@@ -256,7 +262,7 @@ describe('step', () => {
 
 	it('skips hidden series and series without a point going down', () => {
 		const { top, bottom, all } = hiddenSkipping();
-		expect(step(all, { series: top, index: 1 }, 'ArrowDown', everything)).toEqual({
+		expect(step(all, { series: top, index: 1 }, 'ArrowDown', plot, everything)).toEqual({
 			series: bottom,
 			index: 1
 		});
@@ -264,7 +270,7 @@ describe('step', () => {
 
 	it('skips hidden series and series without a point going up', () => {
 		const { top, bottom, all } = hiddenSkipping();
-		expect(step(all, { series: bottom, index: 0 }, 'ArrowUp', everything)).toEqual({
+		expect(step(all, { series: bottom, index: 0 }, 'ArrowUp', plot, everything)).toEqual({
 			series: top,
 			index: 0
 		});
@@ -273,15 +279,17 @@ describe('step', () => {
 	it('stays in the first series on ArrowUp', () => {
 		const top = series([1]);
 		const bottom = series([2]);
-		expect(step([top, bottom], { series: top, index: 0 }, 'ArrowUp', everything).series).toBe(top);
+		expect(step([top, bottom], { series: top, index: 0 }, 'ArrowUp', plot, everything).series).toBe(
+			top
+		);
 	});
 
 	it('stays in the last series on ArrowDown', () => {
 		const top = series([1]);
 		const bottom = series([2]);
-		expect(step([top, bottom], { series: bottom, index: 0 }, 'ArrowDown', everything).series).toBe(
-			bottom
-		);
+		expect(
+			step([top, bottom], { series: bottom, index: 0 }, 'ArrowDown', plot, everything).series
+		).toBe(bottom);
 	});
 });
 
@@ -315,19 +323,21 @@ describe('inside the x window', () => {
 		['ArrowLeft', 6, 5],
 		['ArrowRight', 14, 15]
 	] as const)('moves %s from %i to %i without leaving the window', (key, from, to) => {
-		expect(step([long], { series: long, index: from }, key, cut).index).toBe(to);
+		expect(step([long], { series: long, index: from }, key, plot, cut).index).toBe(to);
 	});
 
 	it('pages down within the window only', () => {
-		expect(step([long], { series: long, index: 18 }, 'PageDown', windowOf(0, 19)).index).toBe(19);
+		expect(step([long], { series: long, index: 18 }, 'PageDown', plot, windowOf(0, 19)).index).toBe(
+			19
+		);
 	});
 
 	it('pages up within the window only', () => {
-		expect(step([long], { series: long, index: 6 }, 'PageUp', windowOf(5, 24)).index).toBe(5);
+		expect(step([long], { series: long, index: 6 }, 'PageUp', plot, windowOf(5, 24)).index).toBe(5);
 	});
 
 	it('keeps the point when it is itself outside the window', () => {
-		expect(step([long], { series: long, index: 20 }, 'ArrowLeft', cut).index).toBe(20);
+		expect(step([long], { series: long, index: 20 }, 'ArrowLeft', plot, cut).index).toBe(20);
 	});
 
 	it('picks the inside point when the pointer is at the left plot edge', () => {
@@ -356,7 +366,7 @@ describe('inside the x window', () => {
 		const outside = series([4, 5], false, [30, 31]);
 		const bottom = series([6, 7, 8]);
 		expect(
-			step([top, outside, bottom], { series: top, index: 1 }, 'ArrowDown', windowOf(0, 2))
+			step([top, outside, bottom], { series: top, index: 1 }, 'ArrowDown', plot, windowOf(0, 2))
 		).toEqual({
 			series: bottom,
 			index: 1
@@ -368,7 +378,7 @@ describe('inside the x window', () => {
 		const outside = series([4, 5], false, [30, 31]);
 		const bottom = series([6, 7, 8]);
 		expect(
-			step([top, outside, bottom], { series: bottom, index: 1 }, 'ArrowUp', windowOf(0, 2))
+			step([top, outside, bottom], { series: bottom, index: 1 }, 'ArrowUp', plot, windowOf(0, 2))
 		).toEqual({
 			series: top,
 			index: 1
@@ -380,7 +390,8 @@ describe('inside the x window', () => {
 		const straddling = series([4, 5], false, [-5, 10]);
 		const bottom = series([6, 7, 8]);
 		expect(
-			step([top, straddling, bottom], { series: top, index: 0 }, 'ArrowDown', windowOf(0, 2)).series
+			step([top, straddling, bottom], { series: top, index: 0 }, 'ArrowDown', plot, windowOf(0, 2))
+				.series
 		).toBe(bottom);
 	});
 
@@ -389,7 +400,7 @@ describe('inside the x window', () => {
 		const straddling = series([4, 5], false, [-5, 10]);
 		const bottom = series([6, 7, 8]);
 		expect(
-			step([top, straddling, bottom], { series: bottom, index: 0 }, 'ArrowUp', windowOf(0, 2))
+			step([top, straddling, bottom], { series: bottom, index: 0 }, 'ArrowUp', plot, windowOf(0, 2))
 				.series
 		).toBe(top);
 	});
@@ -402,7 +413,9 @@ describe('inside the x window', () => {
 	it('moves ArrowDown to the target point nearest in time inside the window when the nearest overall is outside', () => {
 		const top = series(Array.from({ length: 25 }, (_, index) => index));
 		const lower = series([1, 2, 3], false, [4, 7, 30]);
-		expect(step([top, lower], { series: top, index: 5 }, 'ArrowDown', windowOf(5, 15))).toEqual({
+		expect(
+			step([top, lower], { series: top, index: 5 }, 'ArrowDown', plot, windowOf(5, 15))
+		).toEqual({
 			series: lower,
 			index: 1
 		});
@@ -411,37 +424,128 @@ describe('inside the x window', () => {
 	it('moves ArrowUp to the target point nearest in time inside the window when the nearest overall is outside', () => {
 		const upper = series([1, 2, 3], false, [4, 7, 30]);
 		const bottom = series(Array.from({ length: 25 }, (_, index) => index));
-		expect(step([upper, bottom], { series: bottom, index: 5 }, 'ArrowUp', windowOf(5, 15))).toEqual(
-			{
-				series: upper,
-				index: 1
-			}
-		);
+		expect(
+			step([upper, bottom], { series: bottom, index: 5 }, 'ArrowUp', plot, windowOf(5, 15))
+		).toEqual({
+			series: upper,
+			index: 1
+		});
 	});
 
 	it('counts a point exactly on the window end as inside going to the end', () => {
 		const line = series([1, 2, 3, 4]);
-		expect(step([line], { series: line, index: 1 }, 'End', windowOf(1, 2)).index).toBe(2);
+		expect(step([line], { series: line, index: 1 }, 'End', plot, windowOf(1, 2)).index).toBe(2);
 	});
 
 	it('counts a point exactly on the window start as inside going home', () => {
 		const line = series([1, 2, 3, 4]);
-		expect(step([line], { series: line, index: 2 }, 'Home', windowOf(1, 2)).index).toBe(1);
+		expect(step([line], { series: line, index: 2 }, 'Home', plot, windowOf(1, 2)).index).toBe(1);
 	});
 
 	it('keeps a point the window still contains', () => {
 		const line = series([1, 2, 3]);
-		expect(isAvailable([line], { series: line, index: 2 }, windowOf(0, 2))).toBe(true);
+		expect(isAvailable([line], { series: line, index: 2 }, windowOf(0, 2)), 'on the end').toBe(
+			true
+		);
 	});
 
 	it('drops a point past the window end', () => {
 		const line = series([1, 2, 3]);
-		expect(isAvailable([line], { series: line, index: 2 }, windowOf(0, 1.5))).toBe(false);
+		expect(isAvailable([line], { series: line, index: 2 }, windowOf(0, 1.5)), 'past the end').toBe(
+			false
+		);
 	});
 
 	it('drops a point before the window start', () => {
 		const line = series([1, 2, 3]);
-		expect(isAvailable([line], { series: line, index: 0 }, windowOf(0.5, 2))).toBe(false);
+		expect(
+			isAvailable([line], { series: line, index: 0 }, windowOf(0.5, 2)),
+			'before the start'
+		).toBe(false);
+	});
+});
+
+describe('on either x scale direction', () => {
+	const line = series([0, 0, 0, 0, 0]);
+	const ordered = { x: (time: number) => time / MINUTE, y: (value: number) => value };
+	const reversed = { x: (time: number) => 4 - time / MINUTE, y: (value: number) => value };
+
+	it.each([
+		[3, 1],
+		[3.8, 0],
+		[0.9, 3],
+		[0.2, 4],
+		[2.4, 2]
+	] as const)(
+		'picks the point under the pointer at %s on a reversed scale as %i',
+		(pixel, index) => {
+			expect(nearestPoint([line], [pixel, 0], reversed, windowOf(4, 0))).toEqual({
+				series: line,
+				index
+			});
+		}
+	);
+
+	it.each([
+		[1, 1],
+		[0.2, 0],
+		[3.1, 3],
+		[3.8, 4],
+		[1.6, 2]
+	] as const)(
+		'picks the point under the pointer at %s on an ordered scale as %i',
+		(pixel, index) => {
+			expect(nearestPoint([line], [pixel, 0], ordered, windowOf(0, 4))).toEqual({
+				series: line,
+				index
+			});
+		}
+	);
+
+	it('skips gaps on a reversed scale', () => {
+		const gapped = series([0, null, null, 3, 0]);
+		expect(nearestPoint([gapped], [2.6, 0], reversed, windowOf(4, 0))).toEqual({
+			series: gapped,
+			index: 0
+		});
+	});
+
+	it('stays inside a reversed window at its edge', () => {
+		expect(nearestPoint([line], [3.8, 0], reversed, windowOf(3, 1))).toEqual({
+			series: line,
+			index: 1
+		});
+	});
+
+	const long = series(Array.from({ length: 25 }, (_, index) => index));
+	const reversedLong = { x: (time: number) => 24 - time / MINUTE, y: (value: number) => value };
+
+	it.each([
+		['ArrowRight', 10, 9],
+		['ArrowLeft', 10, 11],
+		['Home', 10, 24],
+		['End', 10, 0],
+		['PageDown', 10, 8],
+		['PageUp', 10, 12],
+		['ArrowRight', 0, 0],
+		['ArrowLeft', 24, 24],
+		['PageDown', 1, 0],
+		['PageUp', 23, 24]
+	] as const)('moves %s from %i to %i in screen order on a reversed scale', (key, from, to) => {
+		expect(
+			step([long], { series: long, index: from }, key, reversedLong, windowOf(24, 0)).index
+		).toBe(to);
+	});
+
+	it('moves ArrowDown to the point nearest in time on a reversed scale', () => {
+		const top = series([1, 2, 3, 4, 5]);
+		const bottom = series([6, 7, 8], false, [0, 2.9, 4]);
+		expect(
+			step([top, bottom], { series: top, index: 3 }, 'ArrowDown', reversed, windowOf(4, 0))
+		).toEqual({
+			series: bottom,
+			index: 1
+		});
 	});
 });
 

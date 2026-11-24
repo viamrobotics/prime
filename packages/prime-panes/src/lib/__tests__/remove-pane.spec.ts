@@ -6,53 +6,91 @@ import {
 	createStackLayout,
 	deepFreeze,
 	expectSplit,
-	expectStack,
 	ids,
 	pane,
-	stackIds,
-	tabIds
+	stackIds
 } from '../../../test/layouts.ts';
 
-import type { LayoutNode } from '../layout.ts';
+import type { LayoutNode, PaneNode, SplitDirection } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
+
+const CAMERA = pane(ids.mycam, 'Camera');
+const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
+const SENSOR = pane(ids.mysensor, 'Sensor stat');
+const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
+
+const SOLO = pane(stackIds.solo, stackIds.solo);
+const TAB_A1 = pane(stackIds.tabA1, stackIds.tabA1);
+const TAB_A2 = pane(stackIds.tabA2, stackIds.tabA2);
+const TAB_A3 = pane(stackIds.tabA3, stackIds.tabA3);
+const TAB_B1 = pane(stackIds.tabB1, stackIds.tabB1);
+const TAB_B2 = pane(stackIds.tabB2, stackIds.tabB2);
+
+function split(
+	id: string,
+	direction: SplitDirection,
+	ratio: number,
+	first: LayoutNode<PaneData>,
+	second: LayoutNode<PaneData>
+): LayoutNode<PaneData> {
+	return { type: 'split', id, direction, ratio, first, second };
+}
+
+function stack(id: string, panes: PaneNode<PaneData>[], activeId: string): LayoutNode<PaneData> {
+	return { type: 'stack', id, panes, activeId };
+}
+
+const LOWER_SPLIT = split(ids.lowerSplit, 'column', 0.5, SENSOR, CAMERA_2);
+const STACK_B = stack(stackIds.stackB, [TAB_B1, TAB_B2], stackIds.tabB1);
+const SIDE_SPLIT = split(stackIds.sideSplit, 'column', 0.4, SOLO, STACK_B);
+
+function stackLayout(first: LayoutNode<PaneData>, second: LayoutNode<PaneData>) {
+	return split(stackIds.rootSplit, 'row', 0.6, first, second);
+}
 
 describe('removePane', () => {
 	it('returns undefined for an undefined root', () => {
-		expect(removePane<PaneData>(undefined, ids.mycam)).toBeUndefined();
+		const root = undefined;
+
+		const result = removePane<PaneData>(root, ids.mycam);
+
+		expect(result).toBeUndefined();
 	});
 
-	it('returns the same root when the id is not found', () => {
-		const root = createLayout();
+	it.each([
+		{ name: 'the id names no node', create: createLayout, paneId: 'missing' },
+		{ name: 'the id names a split', create: createLayout, paneId: ids.innerSplit },
+		{ name: 'the id names a stack', create: createStackLayout, paneId: stackIds.stackA }
+	])('returns the same root when $name', ({ create, paneId }) => {
+		const root = create();
 
-		expect(removePane(root, 'missing')).toBe(root);
-	});
+		const result = removePane(root, paneId);
 
-	it('returns the same root when the id names a split', () => {
-		const root = createLayout();
-
-		expect(removePane(root, ids.innerSplit)).toBe(root);
+		expect(result).toBe(root);
 	});
 
 	it('returns undefined when the only pane is removed', () => {
-		const root: LayoutNode<PaneData> = { type: 'pane', id: 'only', data: { label: 'only' } };
+		const root = pane('only', 'only');
 
-		expect(removePane(root, 'only')).toBeUndefined();
+		const result = removePane(root, 'only');
+
+		expect(result).toBeUndefined();
 	});
 
 	it('removes a pane deep in the tree and promotes its sibling', () => {
-		const result = expectSplit(removePane(createLayout(), ids.mytimeseries));
-		const lower = expectSplit(result.second);
+		const root = createLayout();
 
-		expect(result.id).toBe(ids.rootSplit);
-		expect(lower.id).toBe(ids.lowerSplit);
-		expect(lower.first.id).toBe(ids.mysensor);
+		const result = removePane(root, ids.mytimeseries);
+
+		expect(result).toEqual(split(ids.rootSplit, 'column', 0.3, CAMERA, LOWER_SPLIT));
 	});
 
-	it('removes a child of the root so the sibling becomes the root', () => {
-		const result = expectSplit(removePane(createLayout(), ids.mycam));
+	it('makes the sibling the root when a child of the root is removed', () => {
+		const root = createLayout();
 
-		expect(result.id).toBe(ids.innerSplit);
-		expect(result.first.id).toBe(ids.mytimeseries);
+		const result = removePane(root, ids.mycam);
+
+		expect(result).toEqual(split(ids.innerSplit, 'row', 0.6, TIME_SERIES, LOWER_SPLIT));
 	});
 
 	it('keeps the reference of every subtree off the path', () => {
@@ -65,77 +103,81 @@ describe('removePane', () => {
 		expect(result.second).toBe(inner.second);
 	});
 
-	it('does not mutate a deep-frozen input', () => {
-		const root = deepFreeze(createLayout());
-		const before = structuredClone(root);
-
-		expect(() => removePane(root, ids.mysensor)).not.toThrow();
-		expect(root).toEqual(before);
-	});
-});
-
-describe('removePane with stacks', () => {
 	it('removes a stacked pane from its stack and keeps the active pane', () => {
-		const result = expectSplit(removePane(createStackLayout(), stackIds.tabA1));
-		const stack = expectStack(result.first);
+		const root = createStackLayout();
 
-		expect(tabIds(stack)).toEqual([stackIds.tabA2, stackIds.tabA3]);
-		expect(stack.activeId).toBe(stackIds.tabA2);
+		const result = removePane(root, stackIds.tabA1);
+
+		expect(result).toEqual(
+			stackLayout(stack(stackIds.stackA, [TAB_A2, TAB_A3], stackIds.tabA2), SIDE_SPLIT)
+		);
 	});
 
 	it('makes the next pane active when the active pane leaves', () => {
-		const result = expectSplit(removePane(createStackLayout(), stackIds.tabA2));
-		const stack = expectStack(result.first);
+		const root = createStackLayout();
 
-		expect(tabIds(stack)).toEqual([stackIds.tabA1, stackIds.tabA3]);
-		expect(stack.activeId).toBe(stackIds.tabA3);
+		const result = removePane(root, stackIds.tabA2);
+
+		expect(result).toEqual(
+			stackLayout(stack(stackIds.stackA, [TAB_A1, TAB_A3], stackIds.tabA3), SIDE_SPLIT)
+		);
 	});
 
 	it('makes the previous pane active when the last active pane leaves', () => {
-		const root: LayoutNode<PaneData> = {
-			type: 'stack',
-			id: 'tabs',
-			panes: [pane('one', 'one'), pane('two', 'two'), pane('three', 'three')],
-			activeId: 'three'
-		};
-		const stack = expectStack(removePane(root, 'three'));
+		const root = stack('tabs', [TAB_A1, TAB_A2, TAB_A3], stackIds.tabA3);
 
-		expect(tabIds(stack)).toEqual(['one', 'two']);
-		expect(stack.activeId).toBe('two');
+		const result = removePane(root, stackIds.tabA3);
+
+		expect(result).toEqual(stack('tabs', [TAB_A1, TAB_A2], stackIds.tabA2));
 	});
 
 	it('collapses a stack left with one pane to that pane', () => {
-		const result = expectSplit(removePane(createStackLayout(), stackIds.tabB1));
-		const side = expectSplit(result.second);
+		const root = createStackLayout();
 
-		expect(side.second.type).toBe('pane');
-		expect(side.second.id).toBe(stackIds.tabB2);
+		const result = removePane(root, stackIds.tabB1);
+
+		expect(result).toEqual(
+			stackLayout(
+				stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3], stackIds.tabA2),
+				split(stackIds.sideSplit, 'column', 0.4, SOLO, TAB_B2)
+			)
+		);
 	});
 
 	it('collapses a root stack left with one pane to the pane as the root', () => {
+		const root = stack('tabs', [TAB_A1, TAB_A2], stackIds.tabA1);
+
+		const result = removePane(root, stackIds.tabA2);
+
+		expect(result).toEqual(TAB_A1);
+	});
+
+	it('removes the pane of a float entry and drops the entry', () => {
+		const entryA = { id: 'entry-a', rect: { x: 0, y: 0, width: 100, height: 80 }, content: TAB_A1 };
+		const entryB = { id: 'entry-b', rect: { x: 5, y: 5, width: 50, height: 40 }, content: TAB_A2 };
 		const root: LayoutNode<PaneData> = {
-			type: 'stack',
-			id: 'tabs',
-			panes: [pane('one', 'one'), pane('two', 'two')],
-			activeId: 'one'
+			type: 'float',
+			id: 'float',
+			base: SOLO,
+			floats: [entryA, entryB]
 		};
 
-		expect(removePane(root, 'two')).toEqual({ type: 'pane', id: 'one', data: { label: 'one' } });
+		const result = removePane(root, stackIds.tabA1);
+
+		expect(result).toEqual({ type: 'float', id: 'float', base: SOLO, floats: [entryB] });
 	});
 
-	it('returns the same root when the id names a stack', () => {
-		const root = createStackLayout();
-		expect(removePane(root, stackIds.stackA)).toBe(root);
+	it.each([
+		{ name: 'a plain pane', create: createLayout, paneId: ids.mysensor },
+		{ name: 'an active stacked pane', create: createStackLayout, paneId: stackIds.tabA2 },
+		{ name: 'a pane whose stack collapses', create: createStackLayout, paneId: stackIds.tabB1 }
+	])('leaves a deep-frozen input unchanged removing $name', ({ create, paneId }) => {
+		const root = deepFreeze(create());
+		const before = structuredClone(root);
+
+		const result = removePane(root, paneId);
+
+		expect(root).toEqual(before);
+		expect(result).not.toBe(root);
 	});
-
-	it.each([stackIds.tabA2, stackIds.tabB1])(
-		'does not mutate a deep-frozen input removing %s',
-		(id) => {
-			const root = deepFreeze(createStackLayout());
-			const before = structuredClone(root);
-
-			expect(() => removePane(root, id)).not.toThrow();
-			expect(root).toEqual(before);
-		}
-	);
 });

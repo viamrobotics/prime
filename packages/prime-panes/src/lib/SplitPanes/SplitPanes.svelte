@@ -20,6 +20,7 @@
 	const SECOND = 'second' satisfies SplitKey;
 	const RESIZE_TRIGGER_ID = `${FIRST}:${SECOND}` as const;
 	const MIN_RATIO_CHANGE = 0.0001;
+	const PERCENT = 100;
 
 	const ORIENTATION_BY_DIRECTION: Record<SplitDirection, Orientation> = {
 		row: 'horizontal',
@@ -36,7 +37,7 @@
 	const context = usePanes();
 
 	const orientation = $derived(ORIENTATION_BY_DIRECTION[node.direction]);
-	const sizes = $derived([node.ratio * 100, (1 - node.ratio) * 100]);
+	const sizes = $derived([node.ratio * PERCENT, (1 - node.ratio) * PERCENT]);
 
 	const service = useMachine(splitter.machine, () => ({
 		id: `${context.idPrefix}-${node.id}`,
@@ -50,7 +51,7 @@
 		onResizeEnd() {
 			// The details zag passes can hold sizes from an earlier resize, such as after a layout change from outside.
 			const [firstSize] = api.getSizes();
-			const next = firstSize / 100;
+			const next = firstSize / PERCENT;
 			if (Math.abs(next - node.ratio) < MIN_RATIO_CHANGE) {
 				return;
 			}

@@ -29,8 +29,7 @@
 		withFields = false
 	}: Props = $props();
 
-	// svelte-ignore state_referenced_locally
-	let layout = $state.raw<LayoutNode<PaneData> | undefined>(initial);
+	let layout = $derived<LayoutNode<PaneData> | undefined>(initial);
 	let writes = $state(0);
 
 	export function getLayout() {
@@ -85,7 +84,6 @@
 			{/if}
 			<section
 				aria-label={node.data.label}
-				data-testid="pane"
 				data-pane-id={node.id}
 				data-is-floating={state.isFloating}
 				class="size-full"

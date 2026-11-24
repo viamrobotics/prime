@@ -188,7 +188,7 @@ const readEntry = async (
   };
 };
 
-const collectEntries = async (
+export const collectEntries = async (
   lib: string,
   links: ComponentLinks,
 ): Promise<Entry[]> => {

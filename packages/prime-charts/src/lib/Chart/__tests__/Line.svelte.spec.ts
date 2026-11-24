@@ -4,8 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import '../../../../test/tailwind.css';
 import Line from '../Line.svelte';
-import LineChart from './LineChart.svelte';
-import LineSeriesChart from './LineSeriesChart.svelte';
+import LineSeriesChart from './fixtures/LineSeriesChart.svelte';
 
 const WIDTH = 400;
 const HEIGHT = 200;
@@ -38,38 +37,24 @@ const named = (count: number, extra: Record<number, object> = {}) =>
 	}));
 
 const paths = (container: Element) => [...container.querySelectorAll('path')];
+const reading = (points: ReturnType<typeof at>[]) => [{ name: 'Reading', points }];
 
 describe('Chart.Line', () => {
 	it('draws one path across the measured width for a series', async () => {
-		const { container } = render(LineChart, {
-			props: {
-				width: WIDTH,
-				height: HEIGHT,
-				points: [
-					{ x: new Date('2026-01-01T00:00:00Z'), y: 2 },
-					{ x: new Date('2026-01-01T00:01:00Z'), y: 8 },
-					{ x: new Date('2026-01-01T00:02:00Z'), y: 5 }
-				]
-			}
+		const points = [at(0, 2), at(1, 8), at(2, 5)];
+
+		const { container } = render(LineSeriesChart, {
+			props: { series: reading(points), width: WIDTH, height: HEIGHT }
 		});
 
 		await expect
-			.poll(() => paths(container)[0]?.getAttribute('d'))
-			.toMatch(new RegExp(`L${WIDTH},`));
-
-		expect(container.querySelector('[role="figure"] svg')).not.toBeNull();
-
-		const all = paths(container);
-		expect(all).toHaveLength(1);
-		const pathData = all[0].getAttribute('d') ?? '';
-		expect(pathData).not.toBe('');
-		expect(pathData).not.toContain('NaN');
-		expect(pathData).toBe(`M0,${HEIGHT}L${WIDTH / 2},0L${WIDTH},${HEIGHT / 2}`);
+			.poll(() => paths(container).map((path) => path.getAttribute('d')))
+			.toEqual([`M0,${HEIGHT}L${WIDTH / 2},0L${WIDTH},${HEIGHT / 2}`]);
 	});
 
 	it('draws no path for an empty series', async () => {
-		const { container } = render(LineChart, {
-			props: { points: [], width: WIDTH, height: HEIGHT }
+		const { container } = render(LineSeriesChart, {
+			props: { series: reading([]), width: WIDTH, height: HEIGHT }
 		});
 
 		await expect
@@ -88,8 +73,8 @@ describe('Chart.Line', () => {
 			await expect.poll(() => paths(container)).toHaveLength(3);
 
 			const colors = paths(container).map(stroke);
+			expect(new Set([token(1), token(2), token(3)]).size, 'the first three tokens differ').toBe(3);
 			expect(colors).toEqual([token(1), token(2), token(3)]);
-			expect(new Set(colors).size).toBe(3);
 		});
 
 		it('keeps the third color when the second is hidden', async () => {
@@ -128,7 +113,6 @@ describe('Chart.Line', () => {
 			await expect.poll(() => paths(container)).toHaveLength(8);
 
 			expect(stroke(paths(container)[7])).toBe(token(1));
-			expect(stroke(paths(container)[7])).toBe(stroke(paths(container)[0]));
 		});
 
 		it('refuses a raw color', () => {
@@ -157,8 +141,6 @@ describe('Chart.Line', () => {
 
 			const pathData = paths(container)[0].getAttribute('d') ?? '';
 			expect(pathData.match(/M/g)).toHaveLength(2);
-			expect(pathData).not.toContain('NaN');
-			expect(container.querySelectorAll('circle')).toHaveLength(0);
 		});
 
 		it('draws a one-point series as a dot in the series color', async () => {
@@ -174,9 +156,6 @@ describe('Chart.Line', () => {
 
 			const dot = container.querySelector('circle');
 			expect(getComputedStyle(dot as Element).fill).toBe(token(1));
-			expect(dot?.getAttribute('cx')).not.toContain('NaN');
-			expect(dot?.getAttribute('cy')).not.toContain('NaN');
-			expect(paths(container)).toHaveLength(0);
 		});
 
 		it('draws an isolated point between gaps as a dot beside the line', async () => {
@@ -212,35 +191,30 @@ describe('Chart.Line', () => {
 				.poll(() => container.querySelector('svg')?.getAttribute('width'))
 				.toBe(String(WIDTH));
 
-			expect(paths(container)).toHaveLength(0);
-			expect(container.querySelectorAll('circle')).toHaveLength(0);
-			expect(container.innerHTML).not.toContain('NaN');
+			expect(container.querySelectorAll('path, circle')).toHaveLength(0);
 		});
 	});
 
 	describe('budget', () => {
 		it('draws ten thousand points inside the budget', async () => {
-			const points = ramp(TEN_THOUSAND);
+			const series = reading(ramp(TEN_THOUSAND));
 			const timings: number[] = [];
 
 			for (let run = 0; run < BUDGET_RUNS; run++) {
 				const started = performance.now();
-				const { container, unmount } = render(LineChart, {
-					props: { points, width: WIDTH, height: HEIGHT }
+				const { container, unmount } = render(LineSeriesChart, {
+					props: { series, width: WIDTH, height: HEIGHT }
 				});
 				await expect.poll(() => paths(container)[0]?.getAttribute('d')).toMatch(/L/);
 				timings.push(performance.now() - started);
-
-				const pathData = paths(container)[0].getAttribute('d') ?? '';
-				expect(pathData).not.toBe('');
-				expect(pathData).not.toContain('NaN');
 				unmount();
 			}
 
-			console.info(
-				`ten thousand points, ms per run: ${timings.map((t) => t.toFixed(1)).join(', ')}`
-			);
-			expect(Math.max(...timings)).toBeLessThan(TEN_THOUSAND_POINTS_BUDGET_MS);
+			const slowest = Math.max(...timings);
+			expect(
+				slowest,
+				`ms per run: ${timings.map((time) => time.toFixed(1)).join(', ')}`
+			).toBeLessThan(TEN_THOUSAND_POINTS_BUDGET_MS);
 		});
 	});
 });

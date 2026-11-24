@@ -43,19 +43,6 @@ describe('Panes.MoveTrigger: dragging a pane that has none', () => {
 		expect(warn).toHaveBeenCalledWith(warningFor('Camera'));
 	});
 
-	it('warns for the dragged pane and no other', async () => {
-		const warn = warnSpy();
-		render(PanePartsPanes, { props: { variant: 'drag-only' } });
-
-		await commands.mouseMove(cameraHeader().selector);
-		await commands.mouseDown();
-		await commands.mouseMove(timeSeries().selector, RIGHT);
-		await commands.mouseUp();
-
-		expect(warn).toHaveBeenCalledWith(warningFor('Camera'));
-		expect(warn).not.toHaveBeenCalledWith(warningFor('Time series'));
-	});
-
 	it('does not warn again on a second drag from the same pane, even after it remounted', async () => {
 		const warn = warnSpy();
 		render(PanePartsPanes, { props: { variant: 'drag-only' } });

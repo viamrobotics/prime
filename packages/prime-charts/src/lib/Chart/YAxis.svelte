@@ -1,7 +1,11 @@
+<!--
+@component
+The value axis on the left of the plot. Its line and tick marks are SVG in the `--color-chart-axis` color, and its tick labels are HTML. It reserves the label column's width on the left, and half a label height at the top and bottom. One y axis serves every series and shows no unit of its own.
+-->
 <script lang="ts">
 	import type { ClassValue } from 'svelte/elements';
 	import { useChart, usePlot, usePlotContext } from './context.svelte.ts';
-	import { yTickCount } from './ticks.ts';
+	import { TICK_SIZE, yTickCount } from './ticks.ts';
 
 	interface Props {
 		/** Formats each tick label. A consumer whose series share a unit adds it here. */
@@ -12,7 +16,6 @@
 
 	let { format, class: className }: Props = $props();
 
-	const TICK_SIZE = 6;
 	const TICK_LABEL_SPACE = 4;
 	const LABEL_GAP = TICK_SIZE + TICK_LABEL_SPACE;
 

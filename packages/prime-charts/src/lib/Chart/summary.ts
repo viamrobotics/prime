@@ -49,7 +49,6 @@ const windowedYs = (
 		)
 	);
 
-// Describes the figure for a screen reader: the visible series, the time range and the value range.
 export function summarizeFigure(input: SummaryInput): string {
 	const { series, xWindow, formatTime, formatValue } = input;
 	const { toNumber } = xWindow;

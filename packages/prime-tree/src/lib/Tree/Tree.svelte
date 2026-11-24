@@ -6,6 +6,8 @@
 
 	import TreeNodes from './TreeNodes.svelte';
 	import type { TreeBranchClick } from './branch-click.ts';
+	import { omitKeys } from './omit-keys.ts';
+	import { isSelectAllKey } from './select-all.ts';
 	import type { TreeAccessors } from './tree-accessors.ts';
 	import type { TreeNodeState } from './tree-node-state.ts';
 	import { provideTree } from './useTree.svelte.ts';
@@ -52,13 +54,15 @@
 
 	const id = $props.id();
 
+	const ROOT_VALUE = 'prime-tree-root';
+
 	const rootNode = {} as TNode;
 	const isRoot = (candidate: TNode) => candidate === rootNode;
 
 	const collection = $derived(
 		treeView.collection<TNode>({
 			rootNode,
-			nodeToValue: (candidate) => (isRoot(candidate) ? 'prime-tree-root' : nodeToValue(candidate)),
+			nodeToValue: (candidate) => (isRoot(candidate) ? ROOT_VALUE : nodeToValue(candidate)),
 			nodeToString: (candidate) => (isRoot(candidate) ? '' : nodeToString(candidate)),
 			nodeToChildren: (candidate) => [
 				...((isRoot(candidate) ? nodes : nodeToChildren(candidate)) ?? [])
@@ -70,6 +74,15 @@
 		})
 	);
 
+	const isDisabledValue = (value: string) => {
+		const found = collection.findNode(value);
+		return found !== undefined && collection.getNodeDisabled(found);
+	};
+
+	// zag lists disabled nodes in ranges, select-all, and expand-all-siblings. A value already bound stays.
+	const withoutNewlyDisabled = (next: string[], previous: readonly string[]) =>
+		next.filter((value) => previous.includes(value) || !isDisabledValue(value));
+
 	const service = useMachine(treeView.machine as treeView.Machine<TNode>, () => ({
 		id,
 		collection,
@@ -79,10 +92,11 @@
 		selectedValue: selected,
 		onExpandedChange: (details: { expandedNodes: TNode[] }) => {
 			// Expand-all-siblings (`*`) also lists leaf siblings, which have nothing to expand.
-			expanded = details.expandedNodes.filter(collection.isBranchNode).map(collection.getNodeValue);
+			const branches = details.expandedNodes.filter(collection.isBranchNode);
+			expanded = withoutNewlyDisabled(branches.map(collection.getNodeValue), expanded);
 		},
 		onSelectionChange: (details: { selectedValue: string[] }) => {
-			selected = details.selectedValue;
+			selected = withoutNewlyDisabled(details.selectedValue, selected);
 		}
 	}));
 
@@ -100,10 +114,17 @@
 		}
 	});
 
-	// zag labels the tree by an element this component never renders, so its label must not shadow the consumer's.
-	const treeProps = $derived(
-		mergeProps(api.getTreeProps(), { 'aria-labelledby': undefined, 'aria-label': undefined }, rest)
-	);
+	const selectAll = (event: KeyboardEvent) => {
+		if (!isSelectAllKey(event)) return;
+		event.preventDefault();
+		if (selectionMode === 'multiple') api.setSelectedValue(collection.getValues());
+	};
+
+	const treeProps = $derived.by(() => {
+		// zag names the tree by a default label and by a label element this package never renders.
+		const zagProps = omitKeys(api.getTreeProps(), ['aria-label', 'aria-labelledby']);
+		return mergeProps(zagProps, { onkeydown: selectAll }, rest);
+	});
 </script>
 
 <div {...treeProps}>

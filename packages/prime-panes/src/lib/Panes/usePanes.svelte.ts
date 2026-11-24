@@ -23,7 +23,7 @@ import {
 
 import { ALL_REGIONS, EDGE_REGIONS, OPPOSITE_EDGE, OWN_SLOT_REGIONS } from './arrow-regions.ts';
 import { hasDestination, isInWindow, paneIdToSkip, resolveDropTarget } from './drop-target.ts';
-import { findPane, listSlots, listStacks } from './list-panes.ts';
+import { findPane, findStack, findStackHolding, listSlots } from './list-panes.ts';
 import {
 	CANCELED_MESSAGE,
 	dockedMessage,
@@ -55,7 +55,6 @@ export interface RegisteredPane {
 }
 
 export interface RegisteredFloatWindow {
-	// `drawnRect` reads the rect the window is drawn at.
 	drawnRect: () => FloatRect;
 	content: () => LayoutNode<unknown>;
 }
@@ -269,6 +268,15 @@ interface RegisteredFloat extends RegisteredFloatWindow {
 	id: string;
 }
 
+interface PaneRegistration extends RegisteredPane {
+	id: string;
+}
+
+interface DestinationRegistration {
+	id: string;
+	select: (region: DropRegion) => void;
+}
+
 type Release =
 	| { mode: 'reposition'; entryId: string; rect: FloatRect }
 	| { mode: 'dock'; source: DockSource; target: DropTarget }
@@ -288,7 +296,7 @@ const MOVE_TRIGGER_SERVES: Record<DragSource['type'], (target: DragSource['type'
 
 const FLOAT_OFFSET_PX = 10;
 
-/** Shift inverts a press's default. A float source moves its window and docks with Shift. A pane or stack docks and floats with Shift. */
+// Shift inverts a press's default. A float source moves its window and docks with Shift. A pane or stack docks and floats with Shift.
 function dragModeOf(source: DragSource, isShiftHeld: boolean): DragMode {
 	if (source.type === 'float') return isShiftHeld ? 'dock' : 'reposition';
 	return isShiftHeld ? 'float' : 'dock';
@@ -311,25 +319,106 @@ function dockSourceOf(
 	}
 }
 
+function isSourcePresent<TData>(root: LayoutNode<TData> | undefined, source: DockSource) {
+	switch (source.type) {
+		case 'stack':
+			return findStack(root, source.id) !== undefined;
+		case 'pane':
+			return findPane(root, source.id) !== undefined;
+		default:
+			return source satisfies never;
+	}
+}
+
+function rearrange<TData>(
+	root: LayoutNode<TData>,
+	source: DragSource,
+	{ targetId, region, index }: DropTarget
+) {
+	if (region === 'stack' && targetId === source.id) {
+		return selectPane(reorderPane(root, source.id, index ?? Infinity), source.id);
+	}
+	if (region === 'stack') return stackPanes(root, targetId, source.id, createNodeId(), index);
+	if (region === 'center') return swapSlots(root, source.id, targetId);
+
+	const { direction, key } = placementFor(region);
+	switch (source.type) {
+		case 'stack':
+			return moveStack(root, source.id, targetId, direction, key, createNodeId());
+		case 'pane':
+			return movePane(root, source.id, targetId, direction, key, createNodeId());
+		case 'float':
+			return root;
+		default:
+			return source satisfies never;
+	}
+}
+
+function floatCarried<TData>(root: LayoutNode<TData>, source: DockSource, rect: FloatRect) {
+	switch (source.type) {
+		case 'pane':
+			return floatPane(root, source.id, rect, createNodeId(), createNodeId());
+		case 'stack':
+			return floatStack(root, source.id, rect, createNodeId(), createNodeId());
+		default:
+			return source satisfies never;
+	}
+}
+
+function shownPaneIdOf<TData>(slot: Slot<TData>) {
+	switch (slot.type) {
+		case 'stack':
+			return shownPaneId(slot);
+		case 'pane':
+			return slot.id;
+		default:
+			return slot satisfies never;
+	}
+}
+
+function precedesInDocument(first: HTMLElement | undefined, second: HTMLElement | undefined) {
+	if (!first || !second) return false;
+	return (first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+}
+
+function layersInOrder(panes: RegisteredPane[]) {
+	const windowPanes = panes
+		.filter((registered) => registered.layer !== undefined)
+		.sort((first, second) => (precedesInDocument(first.element(), second.element()) ? -1 : 1));
+	const layers = windowPanes.map((registered) => registered.layer);
+	return [undefined, ...layers.filter((layer, index) => layers.indexOf(layer) === index)];
+}
+
 const CONTEXT_KEY = Symbol('panes');
 const PANE_CONTEXT_KEY = Symbol('pane');
 
-export function providePanes<TData>(
-	idPrefix: Readonly<string>,
+interface PanesInputs<TData> {
+	idPrefix: string;
 	layout: {
 		get: () => LayoutNode<TData> | undefined;
 		set: (next: LayoutNode<TData> | undefined) => void;
-	},
-	pane: () => Snippet<[PaneNode<TData>, PaneState]>,
-	reorderable: () => boolean,
-	paneLabel: () => (pane: PaneNode<TData>) => string,
-	keepInactiveMounted: () => boolean,
-	empty: () => Snippet | undefined,
-	floatMinSize: () => (entry: FloatEntry<TData>) => FloatSize
-): PanesContext<TData> {
-	let grabbedSource = $state<DragSource>();
+	};
+	pane: () => Snippet<[PaneNode<TData>, PaneState]>;
+	reorderable: () => boolean;
+	paneLabel: () => (pane: PaneNode<TData>) => string;
+	keepInactiveMounted: () => boolean;
+	empty: () => Snippet | undefined;
+	floatMinSize: () => (entry: FloatEntry<TData>) => FloatSize;
+}
+
+export function providePanes<TData>({
+	idPrefix,
+	layout,
+	pane,
+	reorderable,
+	paneLabel,
+	keepInactiveMounted,
+	empty,
+	floatMinSize
+}: PanesInputs<TData>): PanesContext<TData> {
+	let grabbedSource = $state.raw<DragSource>();
 	let isShiftHeld = $state(false);
-	let dragPress = $state<DragPress>();
+	let dragPress = $state.raw<DragPress>();
 	let dragPoint = $state.raw<DragPoint>();
 	let dragOver = $state.raw<DragOver>();
 	let floatDragPreview = $state.raw<FloatDragPreview>();
@@ -342,9 +431,9 @@ export function providePanes<TData>(
 	let announcement = $state('');
 	let selectedRegions = $state<Record<string, DropRegion>>({});
 	let selectedIndices = $state<Record<string, number>>({});
-	let registeredPanes: ({ id: string } & RegisteredPane)[] = [];
+	let registeredPanes: PaneRegistration[] = [];
 	const panelPaneIds = new SvelteSet<string>();
-	let registeredDestinations: { id: string; select: (region: DropRegion) => void }[] = [];
+	let registeredDestinations: DestinationRegistration[] = [];
 	let moveTriggers: { paneId: string; target: DragSource['type'] }[] = [];
 	let warnedDrags: { paneId: string; type: DragSource['type'] }[] = [];
 
@@ -378,22 +467,23 @@ export function providePanes<TData>(
 		};
 	});
 
+	function registeredFloatOf(entryId: string) {
+		return registeredFloats.findLast((float) => float.id === entryId);
+	}
+
+	function registeredPaneOf(paneId: string | undefined) {
+		return registeredPanes.findLast((registered) => registered.id === paneId);
+	}
+
+	function registeredDestinationOf(paneId: string | undefined) {
+		return registeredDestinations.findLast((registered) => registered.id === paneId);
+	}
+
 	function dockSourceFor(source: DragSource, triggerPaneId: string | undefined) {
 		if (source.type !== 'float') return source;
 
-		const content = registeredFloats.findLast((float) => float.id === source.id)?.content();
+		const content = registeredFloatOf(source.id)?.content();
 		return content && dockSourceOf(content, triggerPaneId);
-	}
-
-	function isSourcePresent(root: LayoutNode<TData> | undefined, source: DockSource) {
-		switch (source.type) {
-			case 'stack':
-				return listStacks(root).some((stack) => stack.id === source.id);
-			case 'pane':
-				return findPane(root, source.id) !== undefined;
-			default:
-				return source satisfies never;
-		}
 	}
 
 	function update(transform: (root: LayoutNode<TData>) => LayoutNode<TData> | undefined) {
@@ -406,30 +496,6 @@ export function providePanes<TData>(
 		layout.set(after);
 		// A deep $state parent stores a proxy of `after`, so only a change from `before` shows acceptance.
 		return layout.get() !== before;
-	}
-
-	function rearrange(
-		root: LayoutNode<TData>,
-		source: DragSource,
-		{ targetId, region, index }: DropTarget
-	) {
-		if (region === 'stack' && targetId === source.id) {
-			return selectPane(reorderPane(root, source.id, index ?? Infinity), source.id);
-		}
-		if (region === 'stack') return stackPanes(root, targetId, source.id, createNodeId(), index);
-		if (region === 'center') return swapSlots(root, source.id, targetId);
-
-		const { direction, key } = placementFor(region);
-		switch (source.type) {
-			case 'stack':
-				return moveStack(root, source.id, targetId, direction, key, createNodeId());
-			case 'pane':
-				return movePane(root, source.id, targetId, direction, key, createNodeId());
-			case 'float':
-				return root;
-			default:
-				return source satisfies never;
-		}
 	}
 
 	function cancelDrag() {
@@ -445,7 +511,7 @@ export function providePanes<TData>(
 	}
 
 	function drawnRectOf(entryId: string) {
-		return registeredFloats.findLast((float) => float.id === entryId)?.drawnRect();
+		return registeredFloatOf(entryId)?.drawnRect();
 	}
 
 	function startRepositioning({ id }: FloatSource) {
@@ -522,18 +588,15 @@ export function providePanes<TData>(
 	}
 
 	function shownPaneIdOfSlot(source: DockSource) {
-		const stack = listStacks(layout.get()).find((candidate) =>
-			source.type === 'stack'
-				? candidate.id === source.id
-				: candidate.panes.some((pane) => pane.id === source.id)
-		);
+		const root = layout.get();
+		const stack =
+			source.type === 'stack' ? findStack(root, source.id) : findStackHolding(root, source.id);
 		return stack ? shownPaneId(stack) : source.id;
 	}
 
 	// The slot's rendered rect in the root's box.
 	function slotBoxOf(source: DockSource): FloatRect | undefined {
-		const shownId = shownPaneIdOfSlot(source);
-		const registered = registeredPanes.findLast((other) => other.id === shownId);
+		const registered = registeredPaneOf(shownPaneIdOfSlot(source));
 		const slot = registered?.bounds();
 		const root = registered?.rootBounds();
 		if (!slot || !root) return undefined;
@@ -546,7 +609,7 @@ export function providePanes<TData>(
 		};
 	}
 
-	// The slot's rendered rect, moved by how far the pointer travelled since the press.
+	// The slot's rendered rect, moved by how far the pointer traveled since the press.
 	function floatRectOf(source: DockSource): FloatRect | undefined {
 		const box = slotBoxOf(source);
 		if (!box || !dragOrigin || !pointerAt) return undefined;
@@ -596,17 +659,6 @@ export function providePanes<TData>(
 		}
 	}
 
-	function floatCarried(root: LayoutNode<TData>, source: DockSource, rect: FloatRect) {
-		switch (source.type) {
-			case 'pane':
-				return floatPane(root, source.id, rect, createNodeId(), createNodeId());
-			case 'stack':
-				return floatStack(root, source.id, rect, createNodeId(), createNodeId());
-			default:
-				return source satisfies never;
-		}
-	}
-
 	function applyRelease(release: Release) {
 		switch (release.mode) {
 			case 'reposition':
@@ -631,7 +683,7 @@ export function providePanes<TData>(
 				return pane ? [pane] : [];
 			}
 			case 'stack':
-				return listStacks(root).find((stack) => stack.id === source.id)?.panes ?? [];
+				return findStack(root, source.id)?.panes ?? [];
 			case 'float':
 				return [];
 			default:
@@ -649,7 +701,7 @@ export function providePanes<TData>(
 			case 'pane':
 				return labelFor(source.id);
 			case 'stack': {
-				const stack = listStacks(layout.get()).find((candidate) => candidate.id === source.id);
+				const stack = findStack(layout.get(), source.id);
 				return stack ? joinLabels(stack.panes.map((pane) => labelFor(pane.id))) : source.id;
 			}
 			case 'float':
@@ -664,9 +716,7 @@ export function providePanes<TData>(
 			case 'stack':
 				return sourceLabel(source);
 			case 'pane': {
-				const stack = listStacks(layout.get()).find((candidate) =>
-					candidate.panes.some((pane) => pane.id === source.id)
-				);
+				const stack = findStackHolding(layout.get(), source.id);
 				return sourceLabel(stack ? { type: 'stack', id: stack.id } : source);
 			}
 			case 'float':
@@ -731,26 +781,12 @@ export function providePanes<TData>(
 	function endMove(paneId: string, message: string) {
 		finishMove(message);
 		// A placement can remount the pane, so focus waits for the new trigger to register.
-		void tick().then(() =>
-			registeredPanes.findLast((registered) => registered.id === paneId)?.focus()
-		);
-	}
-
-	function shownIdOf(slot: Slot<TData>) {
-		switch (slot.type) {
-			case 'stack':
-				return shownPaneId(slot);
-			case 'pane':
-				return slot.id;
-			default:
-				return slot satisfies never;
-		}
+		void tick().then(() => registeredPaneOf(paneId)?.focus());
 	}
 
 	function shownPanes() {
 		return listSlots(layout.get()).flatMap((slot) => {
-			const shownId = shownIdOf(slot);
-			const registered = registeredPanes.findLast((other) => other.id === shownId);
+			const registered = registeredPaneOf(shownPaneIdOf(slot));
 			return registered ? [registered] : [];
 		});
 	}
@@ -764,27 +800,11 @@ export function providePanes<TData>(
 		});
 	}
 
-	function precedesInDocument(first: HTMLElement | undefined, second: HTMLElement | undefined) {
-		if (!first || !second) return false;
-		return (first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
-	}
-
-	function layersInOrder(panes: RegisteredPane[]) {
-		const windowPanes = panes
-			.filter((registered) => registered.layer !== undefined)
-			.sort((first, second) => (precedesInDocument(first.element(), second.element()) ? -1 : 1));
-		const layers = windowPanes.map((registered) => registered.layer);
-		return [undefined, ...layers.filter((layer, index) => layers.indexOf(layer) === index)];
-	}
-
-	function firstDestinationIn(
-		panes: ({ id: string } & RegisteredPane)[],
-		layer: string | undefined
-	) {
+	function firstDestinationIn(panes: PaneRegistration[], layer: string | undefined) {
 		for (const registered of panes) {
 			if (registered.layer !== layer) continue;
 			const region = registered.firstMoveRegion();
-			const destination = registeredDestinations.findLast((other) => other.id === registered.id);
+			const destination = registeredDestinationOf(registered.id);
 			if (region !== undefined && destination !== undefined) return { destination, region };
 		}
 		return undefined;
@@ -811,6 +831,157 @@ export function providePanes<TData>(
 
 		warnedDrags = [...warnedDrags, { paneId, type }];
 		console.warn(MISSING_MOVE_TRIGGER_WARNING[type](labelFor(paneId)));
+	}
+
+	function startDrag(point: DragPoint, origin: DragPoint) {
+		if (!reorderable() || dragPress?.phase !== 'armed') return false;
+
+		const { paneId, source } = dragPress;
+		if (source.type === 'float' && !startRepositioning(source)) return false;
+
+		if (movingSource !== undefined) finishMove(CANCELED_MESSAGE);
+		grabbedSource = source;
+		dragOrigin = origin;
+		warnWithoutMoveTrigger(paneId, source.type);
+		moveDrag(point);
+		return true;
+	}
+
+	function finishDrag() {
+		const release = readRelease();
+		cancelDrag();
+		if (reorderable() && release) applyRelease(release);
+	}
+
+	function startMove(paneId: string, source: DragSource) {
+		const moveSource = dockSourceFor(source, paneId);
+		if (!reorderable() || !moveSource || !hasDestination(layout.get(), moveSource)) return;
+
+		moving = { triggerPaneId: paneId, source: moveSource };
+		selectedRegions = {};
+		selectedIndices = {};
+		announcement = startedMessage(sourceLabel(moveSource));
+		registeredPaneOf(paneId)?.focusWrapper();
+		// Destinations register when they mount, after the move state renders.
+		void tick().then(() => leaveWindowWithoutDestination(paneId));
+	}
+
+	function leaveWindowWithoutDestination(paneId: string) {
+		const panes = shownPanes();
+		const layer = panes.find((registered) => registered.id === paneId)?.layer;
+		if (layer === undefined || firstDestinationIn(panes, layer) !== undefined) return;
+
+		// The trigger's own layer holds no destination, so walking every layer from the base skips it.
+		selectFirstDestinationAmong(panes, layersInOrder(panes));
+	}
+
+	function isMoving(source: DragSource, triggerPaneId?: string) {
+		const moveSource = dockSourceFor(source, triggerPaneId);
+		return (
+			movingSource !== undefined &&
+			moveSource !== undefined &&
+			movingSource.type === moveSource.type &&
+			movingSource.id === moveSource.id
+		);
+	}
+
+	function floatMoving() {
+		if (moving === undefined || movingSource === undefined) return;
+
+		const { triggerPaneId, source } = moving;
+		const label = sourceLabel(source);
+		const rect = floatInPlaceRectOf(source);
+		const accepted = rect !== undefined && update((root) => floatCarried(root, source, rect));
+		endMove(triggerPaneId, accepted ? floatedMessage(label) : rejectedMessage(label));
+	}
+
+	function destinationFor(
+		node: PaneNode<unknown>,
+		stack: StackNode<unknown> | undefined,
+		{ hasStackRegion, hasTabList }: { hasStackRegion: boolean; hasTabList: boolean }
+	) {
+		const source = movingSource;
+		const isShown = stack === undefined || stack.activeId === node.id;
+		if (source === undefined || !isShown) return undefined;
+
+		switch (source.type) {
+			case 'stack':
+				return stack?.id === source.id ? undefined : destinationOfSlot(node, stack, hasStackRegion);
+			case 'pane':
+				if (stack?.panes.some((pane) => pane.id === source.id)) {
+					return ownSlotOf(stack, source, hasTabList);
+				}
+				return node.id === source.id ? undefined : destinationOfSlot(node, stack, hasStackRegion);
+			default:
+				return source satisfies never;
+		}
+	}
+
+	function place(
+		{ targetId, label, insertion }: Pick<MoveDestination, 'targetId' | 'label' | 'insertion'>,
+		region: DropRegion,
+		index?: number
+	) {
+		if (moving === undefined || movingSource === undefined) return;
+
+		const { triggerPaneId, source } = moving;
+		const insertAt =
+			region === 'stack' && insertion
+				? Math.min(index ?? insertion.defaultIndex, insertion.lastIndex)
+				: undefined;
+		const isReorder = insertAt !== undefined && insertion?.isReorder === true;
+		const movingName = region === 'center' ? slotLabel(source) : sourceLabel(source);
+		const target = { targetId: isReorder ? source.id : targetId, region, index: insertAt };
+		const wasInWindow = isInWindow(layout.get(), source.id);
+		const accepted = update((root) => rearrange(root, source, target));
+		const isDocked = accepted && wasInWindow && !isInWindow(layout.get(), source.id);
+		const landedMessage = isDocked ? dockedMessage : placedMessage;
+		const placed = isReorder
+			? reorderedMessage(movingName, { position: insertAt + 1, total: insertion.total })
+			: landedMessage(region, movingName, label);
+		endMove(triggerPaneId, accepted ? placed : rejectedMessage(movingName));
+	}
+
+	async function focusMovingPane() {
+		// A pane that remounts registers in onMount, after the flush that removed the focused element.
+		await tick();
+		const registered = registeredPaneOf(moving?.triggerPaneId);
+		if (registered) {
+			registered.focus();
+		} else {
+			abandonMove();
+		}
+	}
+
+	function crossToNeighbor(paneId: string, direction: EdgeRegion) {
+		const skippedId = paneIdToSkip(layout.get(), movingSource);
+		const neighborId = findNeighbor(paneBounds(), paneId, direction, skippedId);
+		const destination = registeredDestinationOf(neighborId);
+		destination?.select(OPPOSITE_EDGE[direction]);
+		return destination !== undefined;
+	}
+
+	function crossToLayer(paneId: string, step: LayerStep) {
+		const panes = shownPanes();
+		const current = panes.find((registered) => registered.id === paneId);
+		if (movingSource === undefined || current === undefined) return false;
+
+		const layers = layersInOrder(panes);
+		const currentIndex = layers.indexOf(current.layer);
+		const stepped = layers.map(
+			(_, offset) => layers[(currentIndex + step * offset + layers.length) % layers.length]
+		);
+		return selectFirstDestinationAmong(panes, stepped.slice(1));
+	}
+
+	function selectFirstDestinationAmong(panes: PaneRegistration[], layers: (string | undefined)[]) {
+		for (const layer of layers) {
+			const found = firstDestinationIn(panes, layer);
+			if (found === undefined) continue;
+			found.destination.select(found.region);
+			return true;
+		}
+		return false;
 	}
 
 	return setContext(CONTEXT_KEY, {
@@ -885,27 +1056,8 @@ export function providePanes<TData>(
 		disarmDrag() {
 			dragPress = undefined;
 		},
-		startDrag(point, origin) {
-			if (!reorderable() || dragPress?.phase !== 'armed') return false;
-
-			const { paneId, source } = dragPress;
-			if (source.type === 'float' && !startRepositioning(source)) return false;
-
-			if (movingSource !== undefined) {
-				moving = undefined;
-				announcement = CANCELED_MESSAGE;
-			}
-			grabbedSource = source;
-			dragOrigin = origin;
-			warnWithoutMoveTrigger(paneId, source.type);
-			moveDrag(point);
-			return true;
-		},
-		finishDrag() {
-			const release = readRelease();
-			cancelDrag();
-			if (reorderable() && release) applyRelease(release);
-		},
+		startDrag,
+		finishDrag,
 		setDragShift,
 		registerFloat(entryId, floatWindow) {
 			const registered = { id: entryId, ...floatWindow };
@@ -924,56 +1076,13 @@ export function providePanes<TData>(
 		dropTargetFor(node, stack, region, index) {
 			return dragSource && resolveDropTarget(dragSource, node, stack, region, index);
 		},
-		startMove(paneId, source) {
-			const moveSource = dockSourceFor(source, paneId);
-			if (!reorderable() || !moveSource || !hasDestination(layout.get(), moveSource)) return;
-
-			moving = { triggerPaneId: paneId, source: moveSource };
-			selectedRegions = {};
-			selectedIndices = {};
-			announcement = startedMessage(sourceLabel(moveSource));
-			registeredPanes.findLast((registered) => registered.id === paneId)?.focusWrapper();
-		},
-		isMoving(source, triggerPaneId) {
-			const moveSource = dockSourceFor(source, triggerPaneId);
-			return (
-				movingSource !== undefined &&
-				moveSource !== undefined &&
-				movingSource.type === moveSource.type &&
-				movingSource.id === moveSource.id
-			);
-		},
+		startMove,
+		isMoving,
 		get isFloatOffered() {
 			return isFloatOffered;
 		},
-		floatMoving() {
-			if (moving === undefined || movingSource === undefined) return;
-
-			const { triggerPaneId, source } = moving;
-			const label = sourceLabel(source);
-			const rect = floatInPlaceRectOf(source);
-			const accepted = rect !== undefined && update((root) => floatCarried(root, source, rect));
-			endMove(triggerPaneId, accepted ? floatedMessage(label) : rejectedMessage(label));
-		},
-		destinationFor(node, stack, { hasStackRegion, hasTabList }) {
-			const source = movingSource;
-			const isShown = stack === undefined || stack.activeId === node.id;
-			if (source === undefined || !isShown) return undefined;
-
-			switch (source.type) {
-				case 'stack':
-					return stack?.id === source.id
-						? undefined
-						: destinationOfSlot(node, stack, hasStackRegion);
-				case 'pane':
-					if (stack?.panes.some((pane) => pane.id === source.id)) {
-						return ownSlotOf(stack, source, hasTabList);
-					}
-					return node.id === source.id ? undefined : destinationOfSlot(node, stack, hasStackRegion);
-				default:
-					return source satisfies never;
-			}
-		},
+		floatMoving,
+		destinationFor,
 		selectRegion(paneId, region) {
 			if (movingSource !== undefined) selectedRegions[paneId] = region;
 		},
@@ -987,26 +1096,7 @@ export function providePanes<TData>(
 		notify(message) {
 			announcement = message;
 		},
-		place({ targetId, label, insertion }, region, index) {
-			if (moving === undefined || movingSource === undefined) return;
-
-			const { triggerPaneId, source } = moving;
-			const insertAt =
-				region === 'stack' && insertion
-					? Math.min(index ?? insertion.defaultIndex, insertion.lastIndex)
-					: undefined;
-			const isReorder = insertAt !== undefined && insertion?.isReorder === true;
-			const movingName = region === 'center' ? slotLabel(source) : sourceLabel(source);
-			const target = { targetId: isReorder ? source.id : targetId, region, index: insertAt };
-			const wasInWindow = isInWindow(layout.get(), source.id);
-			const accepted = update((root) => rearrange(root, source, target));
-			const isDocked = accepted && wasInWindow && !isInWindow(layout.get(), source.id);
-			const landedMessage = isDocked ? dockedMessage : placedMessage;
-			const placed = isReorder
-				? reorderedMessage(movingName, { position: insertAt + 1, total: insertion.total })
-				: landedMessage(region, movingName, label);
-			endMove(triggerPaneId, accepted ? placed : rejectedMessage(movingName));
-		},
+		place,
 		registerPane(paneId, pane) {
 			const registered = { id: paneId, ...pane };
 			registeredPanes = [...registeredPanes, registered];
@@ -1026,43 +1116,9 @@ export function providePanes<TData>(
 				registeredDestinations = registeredDestinations.filter((other) => other !== registered);
 			};
 		},
-		async focusMovingPane() {
-			// A pane that remounts registers in onMount, after the flush that removed the focused element.
-			await tick();
-			const registered = registeredPanes.findLast((other) => other.id === moving?.triggerPaneId);
-			if (registered) {
-				registered.focus();
-			} else {
-				abandonMove();
-			}
-		},
-		crossToNeighbor(paneId, direction) {
-			const neighborId = findNeighbor(
-				paneBounds(),
-				paneId,
-				direction,
-				paneIdToSkip(layout.get(), movingSource)
-			);
-			const destination = registeredDestinations.findLast((other) => other.id === neighborId);
-			destination?.select(OPPOSITE_EDGE[direction]);
-			return destination !== undefined;
-		},
-		crossToLayer(paneId, step) {
-			const panes = shownPanes();
-			const current = panes.find((registered) => registered.id === paneId);
-			if (movingSource === undefined || current === undefined) return false;
-
-			const layers = layersInOrder(panes);
-			const currentIndex = layers.indexOf(current.layer);
-			for (let offset = 1; offset < layers.length; offset++) {
-				const index = (currentIndex + step * offset + layers.length) % layers.length;
-				const found = firstDestinationIn(panes, layers[index]);
-				if (found === undefined) continue;
-				found.destination.select(found.region);
-				return true;
-			}
-			return false;
-		},
+		focusMovingPane,
+		crossToNeighbor,
+		crossToLayer,
 		recordMoveTrigger(paneId, target) {
 			if (!moveTriggers.some((trigger) => trigger.paneId === paneId && trigger.target === target)) {
 				moveTriggers = [...moveTriggers, { paneId, target }];

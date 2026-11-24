@@ -3,7 +3,7 @@
 
 	import { untrack } from 'svelte';
 
-	import CodeEditor from '../CodeEditor.svelte';
+	import CodeEditor from '../../CodeEditor.svelte';
 
 	interface Props extends Omit<ComponentProps<typeof CodeEditor>, 'value'> {
 		initial?: string;

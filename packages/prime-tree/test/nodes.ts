@@ -34,3 +34,13 @@ export const sampleAccessors = {
 		node.id === 'empty' ? 0 : (node.children?.length ?? undefined),
 	isNodeDisabled: (node: SampleNode) => node.disabled ?? false
 };
+
+export const lockedFolderNodes: SampleNode[] = [
+	{
+		id: 'archive',
+		label: 'Archive',
+		disabled: true,
+		children: [{ id: 'old', label: 'Old' }]
+	},
+	{ id: 'notes', label: 'Notes' }
+];

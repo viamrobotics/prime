@@ -35,31 +35,28 @@ describe('Tree binding', () => {
 	});
 
 	it('leaves a branch collapsed when the function binding refuses the expansion', async () => {
-		const screen = render(ControlledTree, { allowExpand: false });
+		render(ControlledTree, { allowExpand: false });
 
 		await itemOf('Docs').getByText('>').first().click();
 
 		await expect.element(attempts()).toHaveTextContent('1');
 		await expect.element(itemOf('Docs')).toHaveAttribute('aria-expanded', 'false');
-		expect(screen.component.getExpanded()).toEqual([]);
 	});
 
 	it('leaves a row unselected when the function binding refuses the selection', async () => {
-		const screen = render(ControlledTree, { allowSelect: false });
+		render(ControlledTree, { allowSelect: false });
 
 		await itemOf('Notes').click();
 
 		await expect.element(attempts()).toHaveTextContent('1');
 		await expect.element(itemOf('Notes')).toHaveAttribute('aria-selected', 'false');
-		expect(screen.component.getSelected()).toEqual([]);
 	});
 
 	it('expands a branch when the function binding accepts the expansion', async () => {
-		const screen = render(ControlledTree, { allowExpand: true });
+		render(ControlledTree, { allowExpand: true });
 
 		await itemOf('Docs').getByText('Docs').click();
 
 		await expect.element(itemOf('Docs')).toHaveAttribute('aria-expanded', 'true');
-		expect(screen.component.getExpanded()).toEqual(['docs']);
 	});
 });

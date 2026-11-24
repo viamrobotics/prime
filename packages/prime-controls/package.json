@@ -1,7 +1,7 @@
 {
 	"name": "@viamrobotics/prime-controls",
 	"version": "0.5.0",
-	"description": "Compact realtime controls for Svelte 5 tool panels: number fields and vectors that scrub by pointer and step by keyboard.",
+	"description": "Compact realtime controls for Svelte 5 tool panels: number, vector, slider, text, file, select, and toggle controls, with panels, folders, and tabs to group them.",
 	"license": "Apache-2.0",
 	"publishConfig": {
 		"access": "public",

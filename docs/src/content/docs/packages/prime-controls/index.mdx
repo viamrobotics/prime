@@ -117,7 +117,7 @@ import fileFieldBasicSource from "./FileFieldBasic.svelte?raw"
 
 ## NumberField
 
-`NumberField` wraps a native `<input type="number">` with an optional visible `label`. Without a `label`, pass `aria-label` or `aria-labelledby`, and the field does not scrub.
+`NumberField` wraps a native `<input type="number">` with an optional visible `label`. Without a `label`, pass `aria-label` or `aria-labelledby`, and the field does not scrub. `labelPlacement` is `'outside'` by default, and `'inset'` draws the label inside the input's left edge as a prefix, which fits a short label such as one axis letter.
 
 ### Two-way binding
 
@@ -255,7 +255,7 @@ The `details` snippet draws content under one axis field, at that field's width,
 
 `FileField` is prime-ui's [`FileInput`](../prime-ui/components/file-input/) in the `TextField` row layout. A native `<input type="file">` covers the control, so the picker, a dropped file, and the keyboard are the browser's, and `accept`, `multiple`, and the other native attributes pass through. The label is a plain `<label>`. Without a `label`, pass `aria-label` or `aria-labelledby`. `hint` and `state` work as they do on `NumberField`.
 
-`bind:value` holds a `File[]`. Without `multiple` it holds at most one file, and a cleared field is an empty array. The chosen names truncate to the row, so the control never grows past a narrow pane, and a clear button appears beside them. `accept` only filters the picker, so check the files yourself and set `state="error"` on one you refuse.
+`bind:value` holds a `File[]`. Without `multiple` it holds at most one file, and a cleared field is an empty array. The chosen names truncate to the row, so the control never grows past a narrow pane, and a clear button appears beside them, named by `clearLabel`, which defaults to `Clear selection`. `accept` only filters the picker, so check the files yourself and set `state="error"` on one you refuse.
 
 <Example code={fileFieldBasicSource} title="FileFieldBasic.svelte">
   <FileFieldBasic client:visible />

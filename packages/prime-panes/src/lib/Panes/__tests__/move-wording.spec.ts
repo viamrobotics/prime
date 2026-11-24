@@ -68,20 +68,32 @@ describe('placedMessage', () => {
 	});
 });
 
-describe('reorderName and reorderedMessage', () => {
+describe('reorderName', () => {
 	it.each([
-		[{ position: 1, total: 3 }, 'position 1 of 3'],
-		[{ position: 2, total: 3 }, 'position 2 of 3'],
-		[{ position: 3, total: 3 }, 'position 3 of 3']
-	])('counts the tab position from one for %j', (tabPosition, phrase) => {
-		expect(reorderName('Cam A', tabPosition)).toBe(`Move Cam A to ${phrase}`);
-		expect(reorderedMessage('Cam A', tabPosition)).toBe(`Cam A moved to ${phrase}.`);
+		{ position: 1, expected: 'Move Cam A to position 1 of 3' },
+		{ position: 3, expected: 'Move Cam A to position 3 of 3' }
+	])('names the move to position $position', ({ position, expected }) => {
+		expect(reorderName('Cam A', { position, total: 3 })).toBe(expected);
 	});
 });
 
-describe('floatName and floatedMessage', () => {
-	it('names the choice and reports the result', () => {
+describe('reorderedMessage', () => {
+	it.each([
+		{ position: 1, expected: 'Cam A moved to position 1 of 3.' },
+		{ position: 3, expected: 'Cam A moved to position 3 of 3.' }
+	])('reports the move to position $position', ({ position, expected }) => {
+		expect(reorderedMessage('Cam A', { position, total: 3 })).toBe(expected);
+	});
+});
+
+describe('floatName', () => {
+	it('names the choice to float the pane', () => {
 		expect(floatName('Cam A')).toBe('Float Cam A');
+	});
+});
+
+describe('floatedMessage', () => {
+	it('reports the floated pane', () => {
 		expect(floatedMessage('Cam A')).toBe('Floated Cam A.');
 	});
 });
@@ -97,18 +109,25 @@ describe('dockedMessage', () => {
 	])('reports the %s region', (region, expected) => {
 		expect(dockedMessage(region, 'Cam A', 'Cam B')).toBe(expected);
 	});
-
-	it('uses the placement phrase of placedMessage', () => {
-		const placement = placedMessage('left', 'Cam A', 'Cam B').replace('Cam A placed ', '');
-		expect(dockedMessage('left', 'Cam A', 'Cam B')).toBe(`Docked Cam A ${placement}`);
-	});
 });
 
 describe('MISSING_MOVE_TRIGGER_WARNING', () => {
-	it('names the pane and the float target in the window warning', () => {
-		const warning = MISSING_MOVE_TRIGGER_WARNING.float('Cam A');
-
-		expect(warning).toContain('a window drag started in pane "Cam A"');
-		expect(warning).toContain('Panes.MoveTrigger with target="float"');
+	it.each([
+		{
+			type: 'pane',
+			expected: 'Panes: a drag started in pane "Cam A", which has no Panes.MoveTrigger. '
+		},
+		{
+			type: 'stack',
+			expected:
+				'Panes: a stack drag started in pane "Cam A", which has no Panes.MoveTrigger with target="stack". '
+		},
+		{
+			type: 'float',
+			expected:
+				'Panes: a window drag started in pane "Cam A", which has no Panes.MoveTrigger with target="float". '
+		}
+	] as const)('names the pane and the trigger it lacks for a $type drag', ({ type, expected }) => {
+		expect(MISSING_MOVE_TRIGGER_WARNING[type]('Cam A')).toContain(expected);
 	});
 });

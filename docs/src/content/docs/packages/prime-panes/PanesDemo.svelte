@@ -112,7 +112,7 @@
           <Panes.DragTrigger>
             <Panes.MoveTrigger
               aria-label="Move {node.data.label}"
-              class="inline-flex size-6 cursor-grab items-center justify-center text-subtle-1 active:cursor-grabbing"
+              class="inline-flex size-6 cursor-grab items-center justify-center text-subtle-1 active:cursor-grabbing focus-ring"
             >
               <svg
                 viewBox="0 0 16 16"
@@ -165,7 +165,7 @@
             <button
               type="button"
               aria-label="Close {node.data.label}"
-              class="inline-flex size-6 items-center justify-center text-subtle-1"
+              class="inline-flex size-6 items-center justify-center text-subtle-1 focus-ring"
               onclick={() =>
                 (layout = removeFloat(layout, state.floatEntryId!))}
             >
@@ -183,7 +183,7 @@
             <button
               type="button"
               aria-label="Remove {node.data.label}"
-              class="inline-flex size-6 items-center justify-center text-subtle-1"
+              class="inline-flex size-6 items-center justify-center text-subtle-1 focus-ring"
               onclick={() => (layout = removePane(layout, node.id))}
             >
               <svg

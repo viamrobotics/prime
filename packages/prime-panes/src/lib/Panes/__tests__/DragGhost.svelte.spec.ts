@@ -11,6 +11,9 @@ import DragGhost from '../DragGhost.svelte';
 
 const POINT = { clientX: 100, clientY: 80 };
 const MOVED_POINT = { clientX: 300, clientY: 200 };
+const POINT_INSIDE_GHOST = { x: 117, y: 97 };
+const HEADER_PRESS = { x: 10, y: 10 };
+const HEADER_PAST_THRESHOLD = { x: 50, y: 10 };
 
 const preview: DragPreview<unknown> = {
 	type: 'stack',
@@ -31,7 +34,7 @@ describe('DragGhost', () => {
 		render(DragGhost, { point: POINT, preview });
 
 		await expect.element(ghost()).toBeVisible();
-		expect(ghost().element().matches(':popover-open')).toBe(true);
+		expect(ghost().element().matches(':popover-open'), 'the ghost is in the top layer').toBe(true);
 	});
 
 	it('places its top-left corner 12px right of and below the pointer', async () => {
@@ -47,7 +50,7 @@ describe('DragGhost', () => {
 		render(DragGhost, { point: POINT, preview });
 		await expect.element(ghost()).toBeVisible();
 
-		const hits = document.elementsFromPoint(117, 97);
+		const hits = document.elementsFromPoint(POINT_INSIDE_GHOST.x, POINT_INSIDE_GHOST.y);
 
 		expect(hits).not.toContain(ghost().element());
 	});
@@ -118,9 +121,9 @@ describe('Panes dragPreview', () => {
 		render(PanePartsPanes, { variant: 'drag-only', dragPreview });
 		const header = page.getByPaneHeader('Camera');
 
-		await commands.mouseMove(header.selector, { x: 10, y: 10 });
+		await commands.mouseMove(header.selector, HEADER_PRESS);
 		await commands.mouseDown();
-		await commands.mouseMove(header.selector, { x: 50, y: 10 });
+		await commands.mouseMove(header.selector, HEADER_PAST_THRESHOLD);
 
 		await expect.element(ghost()).toHaveTextContent('Dragging Camera');
 		await commands.mouseUp();

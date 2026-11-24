@@ -30,7 +30,15 @@ Requires `svelte` `^5.29.0`. Import the stylesheet once, after Tailwind:
 <CodeEditor aria-label="Config" language="json" bind:value />
 ```
 
-`language` is one of `go`, `javascript`, `json`, `python`, `sql`, and `typescript`. Set `original` to open a diff view, and `diff="split"` to show it side by side. A function binding receives every edit and can veto or transform it. Search and code folding work from the keyboard, and `aria-invalid` marks the document invalid.
+Every editor needs `aria-label` or `aria-labelledby`, and omitting both is a type error. Every `aria-*` attribute goes to the editing surface, and every other attribute goes to the outer `div`.
+
+`language` is one of `go`, `javascript`, `json`, `python`, `sql`, and `typescript`, and a missing `language` is plain text. `readonly` blocks edits while the document stays focusable and copyable, and `disabled` turns the editor off. `placeholder` fills an empty document, `lineNumbers` shows the gutter with its fold markers, and `wrapLines` wraps long lines. `aria-invalid` marks the document invalid.
+
+Set `original` to open a diff view, and `diff="split"` to show it side by side. `collapseUnchanged` folds long runs of unchanged lines. A split diff names the original side `<name>, original`. A function binding receives every edit and can veto or transform it.
+
+## Keyboard
+
+Search and code folding work from the keyboard. Tab is not bound, so focus can always leave the editor.
 
 ## Documentation
 

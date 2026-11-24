@@ -4,7 +4,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
 import TextField from '../TextField.svelte';
-import BoundTextField from './BoundTextField.svelte';
+import BoundTextField from './fixtures/BoundTextField.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
@@ -66,6 +66,15 @@ describe('TextField', () => {
 		expect(getComputedStyle(label).cursor).not.toBe('ew-resize');
 	});
 
+	it('uses a provided id for the input and its label', async () => {
+		const { container } = render(TextField, {
+			props: { id: 'pin-field', label: 'Pin', value: '' }
+		});
+
+		expect(input(container).id).toBe('pin-field');
+		expect(container.querySelector('label')!.htmlFor).toBe('pin-field');
+	});
+
 	it('disables the input', async () => {
 		render(TextField, { props: { label: 'Pin', disabled: true, value: '' } });
 
@@ -103,14 +112,30 @@ describe('TextField hint', () => {
 		await expect.element(page.getByRole('button', { name: 'About Pin' })).toBeDisabled();
 	});
 
-	it('keeps the existing description next to the hint', async () => {
+	it('lists the consumer description before the hint', async () => {
 		render(TextField, {
-			props: { label: 'Pin', hint: HINT, value: '', 'aria-describedby': 'note' }
+			props: { id: 'pin', label: 'Pin', hint: HINT, value: '', 'aria-describedby': 'note' }
 		});
 
 		await expect
 			.element(page.getByRole('textbox', { name: 'Pin' }))
-			.toHaveAttribute('aria-describedby', expect.stringContaining('note'));
+			.toHaveAttribute('aria-describedby', 'note pin-hint');
+	});
+
+	it('passes the consumer description through when there is no hint', async () => {
+		render(TextField, { props: { label: 'Pin', value: '', 'aria-describedby': 'note' } });
+
+		await expect
+			.element(page.getByRole('textbox', { name: 'Pin' }))
+			.toHaveAttribute('aria-describedby', 'note');
+	});
+
+	it('sets no aria-describedby without a description or a hint', async () => {
+		render(TextField, { props: { label: 'Pin', value: '' } });
+
+		await expect
+			.element(page.getByRole('textbox', { name: 'Pin' }))
+			.not.toHaveAttribute('aria-describedby');
 	});
 });
 
@@ -129,5 +154,13 @@ describe('TextField state', () => {
 		const field = page.getByRole('textbox', { name: 'Pin' });
 		await expect.element(field).not.toHaveAttribute('aria-invalid');
 		await expect.element(field).toHaveAttribute('data-field-state', 'warn');
+	});
+
+	it('marks an info without aria-invalid', async () => {
+		render(TextField, { props: { label: 'Pin', state: 'info', value: '' } });
+
+		const field = page.getByRole('textbox', { name: 'Pin' });
+		await expect.element(field).not.toHaveAttribute('aria-invalid');
+		await expect.element(field).toHaveAttribute('data-field-state', 'info');
 	});
 });

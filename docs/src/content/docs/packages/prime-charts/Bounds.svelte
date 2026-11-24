@@ -25,7 +25,7 @@
     </Chart.Plot>
   </Chart>
 
-  <Chart aria-label="Bounds from the data" xMin={windowStart} xMax={windowEnd} yMin={0}>
+  <Chart aria-label="An x window and a y floor" xMin={windowStart} xMax={windowEnd} yMin={0}>
     <Chart.Plot class="h-56">
       <Chart.Grid />
       <Chart.XAxis />

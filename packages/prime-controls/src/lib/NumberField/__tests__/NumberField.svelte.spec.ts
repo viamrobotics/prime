@@ -6,8 +6,8 @@ import { commands, page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
 import NumberField from '../NumberField.svelte';
-import BoundNumberField from './BoundNumberField.svelte';
-import ControlledNumberField from './ControlledNumberField.svelte';
+import BoundNumberField from './fixtures/BoundNumberField.svelte';
+import ControlledNumberField from './fixtures/ControlledNumberField.svelte';
 
 const input = (container: Element) => container.querySelector('input')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
@@ -29,7 +29,7 @@ async function scrub(offsets: number[], modifier?: 'Alt' | 'Shift') {
 function renderControlled(props: Partial<ComponentProps<typeof ControlledNumberField>> = {}) {
 	const record = vi.fn<(next: number | undefined) => void>();
 	const screen = render(ControlledNumberField, {
-		props: { label: 'Speed', accept: true, record, ...props }
+		props: { label: 'Speed', shouldAccept: true, record, ...props }
 	});
 	return { ...screen, values: () => record.mock.calls.map(([next]) => next) };
 }
@@ -66,7 +66,7 @@ describe('NumberField', () => {
 	it('keeps the input-compact class on the input', () => {
 		const { container } = render(NumberField, { props: { label: 'Speed' } });
 
-		expect(input(container).classList.contains('input-compact')).toBe(true);
+		expect(input(container)).toHaveClass('input-compact');
 	});
 
 	it.each([
@@ -193,48 +193,88 @@ describe('NumberField', () => {
 		expect(document.activeElement).toBe(input(container));
 	});
 
-	it('keeps the original value and text when the binding vetoes a scrub and a key press', async () => {
-		const { container, values } = renderControlled({ initial: 3, accept: false });
+	it('starts writing on a 5 px move, the first whole pixel past the 4 px threshold', async () => {
+		const { values } = renderControlled({ initial: 1 });
+
+		await scrub([5]);
+
+		expect(values()).toEqual([6]);
+	});
+
+	it('keeps focus off the input after a scrub releases on the label', async () => {
+		const { container } = renderControlled({ initial: 1 });
+
+		await scrub([10]);
+
+		expect(document.activeElement).not.toBe(input(container));
+	});
+
+	it('lets a label click focus the input after a scrub released off the label', async () => {
+		const { container } = renderControlled({ initial: 1 });
+		await scrub([200]);
+
+		await userEvent.click(container.querySelector('label')!);
+
+		expect(document.activeElement).toBe(input(container));
+	});
+
+	it('keeps the original value and text when the binding vetoes a scrub', async () => {
+		const { container, values } = renderControlled({ initial: 3, shouldAccept: false });
 
 		await scrub([10, 20]);
 
-		expect(values().length).toBeGreaterThan(0);
-		expect(owner(container)).toBe('3');
-		expect(input(container).value).toBe('3');
-
-		await userEvent.click(input(container));
-		await userEvent.keyboard('{ArrowUp}');
-
-		expect(values().at(-1)).toBe(4);
+		expect(values(), 'each move offered from the scrub start, not from the vetoed value').toEqual([
+			13, 23
+		]);
 		expect(owner(container)).toBe('3');
 		expect(input(container).value).toBe('3');
 	});
 
-	it.each([{ disabled: true }, { readonly: true }])(
-		'neither scrubs nor steps with %o',
-		async (props) => {
-			const { container, values } = renderControlled({ initial: 3, ...props });
+	it('keeps the original value and text when the binding vetoes a key press', async () => {
+		const { container, values } = renderControlled({ initial: 3, shouldAccept: false });
 
-			await scrub([10, 20]);
-			input(container).focus();
-			await userEvent.keyboard('{ArrowUp}');
+		await userEvent.click(input(container));
+		await userEvent.keyboard('{ArrowUp}');
 
-			expect(values()).toEqual([]);
-			expect(input(container).value).toBe('3');
-			expect(container.querySelector('label')!.classList.contains('cursor-ew-resize')).toBe(false);
-		}
-	);
+		expect(values()).toEqual([4]);
+		expect(owner(container)).toBe('3');
+		expect(input(container).value).toBe('3');
+	});
+
+	it.each([{ disabled: true }, { readonly: true }])('does not scrub with %o', async (props) => {
+		const { container, values } = renderControlled({ initial: 3, ...props });
+
+		await scrub([10, 20]);
+
+		expect(values()).toEqual([]);
+		expect(input(container).value).toBe('3');
+	});
+
+	it.each([{ disabled: true }, { readonly: true }])('does not step with %o', async (props) => {
+		const { container, values } = renderControlled({ initial: 3, ...props });
+		input(container).focus();
+
+		await userEvent.keyboard('{ArrowUp}');
+
+		expect(values()).toEqual([]);
+		expect(input(container).value).toBe('3');
+	});
+
+	it.each([{ disabled: true }, { readonly: true }])('drops the resize cursor with %o', (props) => {
+		const { container } = renderControlled({ initial: 3, ...props });
+
+		expect(container.querySelector('label')).not.toHaveClass('cursor-ew-resize');
+	});
 
 	it('marks a scrubbable label with the resize cursor', () => {
 		const { container } = render(NumberField, { props: { label: 'Speed' } });
 
 		const label = container.querySelector('label')!;
-		expect(label.classList.contains('cursor-ew-resize')).toBe(true);
-		expect(label.classList.contains('select-none')).toBe(true);
+		expect(label).toHaveClass('cursor-ew-resize', 'select-none');
 		expect(getComputedStyle(label).touchAction).toBe('none');
 	});
 
-	it('two-way: the parent reflects a scrub', async () => {
+	it('reflects a scrub in a two-way bound parent', async () => {
 		const { container } = render(BoundNumberField, { props: { label: 'Speed', initial: 1 } });
 
 		await scrub([10, 20]);
@@ -246,6 +286,12 @@ describe('NumberField', () => {
 	it('requires an accessible name', () => {
 		// @ts-expect-error no label, aria-label, or aria-labelledby
 		const props: ComponentProps<typeof NumberField> = { value: 0 };
+		expect(props).toBeDefined();
+	});
+
+	it('requires a visible label for a hint', () => {
+		// @ts-expect-error hint with aria-label and no visible label
+		const props: ComponentProps<typeof NumberField> = { 'aria-label': 'Speed', hint: 'Tip' };
 		expect(props).toBeDefined();
 	});
 });
@@ -301,14 +347,14 @@ describe('NumberField hint', () => {
 		expect(buttonLeft).toBeGreaterThanOrEqual(inputRight);
 	});
 
-	it('keeps the existing description next to the hint', async () => {
+	it('lists the consumer description before the hint', async () => {
 		render(NumberField, {
-			props: { label: 'Speed', hint: HINT, value: 1, 'aria-describedby': 'note' }
+			props: { label: 'Speed', hint: HINT, value: 1, id: 'speed', 'aria-describedby': 'note' }
 		});
 
 		await expect
 			.element(page.getByRole('spinbutton', { name: 'Speed' }))
-			.toHaveAttribute('aria-describedby', expect.stringContaining('note'));
+			.toHaveAttribute('aria-describedby', 'note speed-hint');
 	});
 
 	it('does not scrub when a drag starts on the hint button', async () => {
@@ -344,7 +390,7 @@ describe('NumberField suffix', () => {
 		const field = input(container);
 		const group = field.parentElement!;
 
-		expect(group.classList.contains('input')).toBe(true);
+		expect(group).toHaveClass('input');
 		expect(field.getBoundingClientRect().right).toBeLessThanOrEqual(
 			page.getByText('mm', { exact: true }).element().getBoundingClientRect().left
 		);
@@ -371,23 +417,21 @@ describe('NumberField suffix', () => {
 		expect(owner(container)).toBe('35');
 	});
 
-	it('merges the hint, the suffix, and a consumer description', async () => {
+	it('lists the consumer description, then the hint, then the suffix', async () => {
 		render(NumberField, {
 			props: {
 				label: 'Length',
 				hint: 'Tip length',
 				suffix: 'mm',
 				value: 1,
+				id: 'length',
 				'aria-describedby': 'note'
 			}
 		});
 
-		const field = page.getByRole('spinbutton', { name: 'Length' });
-		const describedBy = field.element().getAttribute('aria-describedby')!.split(' ');
-		expect(describedBy).toHaveLength(3);
-		expect(describedBy[0]).toBe('note');
-		await expect.element(field).toHaveAccessibleDescription(expect.stringContaining('Tip length'));
-		await expect.element(field).toHaveAccessibleDescription(expect.stringContaining('mm'));
+		await expect
+			.element(page.getByRole('spinbutton', { name: 'Length' }))
+			.toHaveAttribute('aria-describedby', 'note length-hint length-suffix');
 	});
 
 	it('gives an inset group the left padding the input took', () => {
@@ -396,7 +440,7 @@ describe('NumberField suffix', () => {
 		});
 		const group = input(container).parentElement!;
 
-		expect(parseFloat(getComputedStyle(group).paddingLeft)).toBeGreaterThanOrEqual(28);
+		expect(getComputedStyle(group).paddingLeft).toBe('28px');
 	});
 });
 

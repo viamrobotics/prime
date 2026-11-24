@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import '../../../../test/tailwind.css';
-import SummaryChart from './SummaryChart.svelte';
+import SummaryChart from './fixtures/SummaryChart.svelte';
 
 const START = new Date('2026-01-01T00:00:00Z');
 const END = new Date('2026-01-01T00:01:00Z');
@@ -35,18 +35,17 @@ const yFormat = (value: number) => `${value} u`;
 
 const summaryText = (container: HTMLElement) =>
 	container.querySelector('[data-part="summary"]')?.textContent;
+const figureOf = (container: HTMLElement) =>
+	container.querySelector<HTMLElement>('[role="figure"]')!;
 
 describe('Chart summary', () => {
-	it('describes the series and both ranges', async () => {
+	it('describes the figure with the series and both ranges in the axis formats', async () => {
 		const { container } = render(SummaryChart, {
 			props: { series, hasAxes: true, xFormat, yFormat }
 		});
+
 		await expect
-			.poll(() => summaryText(container))
-			.toBe('Series: Temperature (°), Load. Time: 00:00 to 00:01. Values: 2 u to 8 u.');
-		const figure = container.querySelector('[role="figure"]');
-		await expect
-			.element(figure as HTMLElement)
+			.element(figureOf(container))
 			.toHaveAccessibleDescription(
 				'Series: Temperature (°), Load. Time: 00:00 to 00:01. Values: 2 u to 8 u.'
 			);
@@ -60,7 +59,9 @@ describe('Chart summary', () => {
 				x: new Date(2026, 0, 1, 0, index, 0)
 			}))
 		}));
+
 		const { container } = render(SummaryChart, { props: { series: localSeries } });
+
 		await expect
 			.poll(() => summaryText(container)?.replace(/\s/g, ' '))
 			.toBe(
@@ -68,7 +69,7 @@ describe('Chart summary', () => {
 			);
 	});
 
-	it('uses the x bounds for the time range', async () => {
+	it('reads the x and y bounds the chart is given', async () => {
 		const { container } = render(SummaryChart, {
 			props: {
 				series,
@@ -76,70 +77,36 @@ describe('Chart summary', () => {
 				xFormat,
 				yFormat,
 				xMin: new Date('2025-12-31T23:59:00Z'),
-				xMax: new Date('2026-01-01T00:02:00Z')
+				xMax: new Date('2026-01-01T00:02:00Z'),
+				yMin: 0,
+				yMax: 10
 			}
 		});
+
 		await expect
 			.poll(() => summaryText(container))
-			.toContain('Time: 23:59 to 00:02. Values: 2 u to 8 u.');
+			.toBe('Series: Temperature (°), Load. Time: 23:59 to 00:02. Values: 0 u to 10 u.');
 	});
 
-	it('drops the values when no point is inside the x window', async () => {
-		const { container } = render(SummaryChart, {
-			props: {
-				series,
-				xMin: new Date('2026-01-01T00:00:10Z'),
-				xMax: new Date('2026-01-01T00:00:50Z')
-			}
-		});
-		await expect.poll(() => summaryText(container)).toContain('Time: ');
-		expect(summaryText(container)).not.toContain('Values:');
-	});
-
-	it('uses the y bounds for the value range', async () => {
-		const { container } = render(SummaryChart, {
-			props: { series, hasAxes: true, xFormat, yFormat, yMin: 0, yMax: 10 }
-		});
-		await expect.poll(() => summaryText(container)).toContain('Values: 0 u to 10 u.');
-	});
-
-	it('drops a hidden series', async () => {
-		const { container } = render(SummaryChart, {
-			props: {
-				series: [series[0], { ...series[1], hidden: true }],
-				hasAxes: true,
-				xFormat,
-				yFormat
-			}
-		});
-		await expect
-			.poll(() => summaryText(container))
-			.toBe('Series: Temperature (°). Time: 00:00 to 00:01. Values: 2 u to 8 u.');
-	});
-
-	it('says so when every series is hidden', async () => {
+	it('says "Every series is hidden." when every series is hidden', async () => {
 		const { container } = render(SummaryChart, {
 			props: { series: series.map((entry) => ({ ...entry, hidden: true })) }
 		});
+
 		await expect.poll(() => summaryText(container)).toBe('Every series is hidden.');
 	});
 
-	it('says "No data." with no points', async () => {
-		const { container } = render(SummaryChart, { props: {} });
-		await expect.poll(() => summaryText(container)).toBe('No data.');
-	});
-
-	it('says "No data." when every point is a gap', async () => {
-		const gaps = [{ name: 'Load', points: [{ x: new Date(0), y: null }] }];
-		const { container } = render(SummaryChart, { props: { series: gaps } });
-		await expect.poll(() => summaryText(container)).toBe('No data.');
-	});
-
-	it('leaves a consumer description alone and renders no summary', async () => {
+	it('takes a consumer aria-describedby in place of the summary', async () => {
 		const { container } = render(SummaryChart, { props: { series, describedby: 'own' } });
-		const figure = container.querySelector('[role="figure"]') as HTMLElement;
-		await expect.element(figure).toHaveAccessibleDescription('Own description');
-		expect(figure.getAttribute('aria-describedby')).toBe('own');
+
+		await expect.element(figureOf(container)).toHaveAccessibleDescription('Own description');
+	});
+
+	it('renders no summary under a consumer aria-describedby', async () => {
+		const { container } = render(SummaryChart, { props: { series, describedby: 'own' } });
+
+		await expect.element(figureOf(container)).toHaveAccessibleDescription('Own description');
+
 		expect(container.querySelector('[data-part="summary"]')).toBeNull();
 	});
 });

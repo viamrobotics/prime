@@ -29,21 +29,26 @@ describe('stack rendering', () => {
 		expect(renderedNotes()).toEqual(['Note for Camera A', 'Note for Solo']);
 	});
 
-	it('keeps inactive panes mounted, hidden, and inert with keepInactiveMounted', async () => {
+	it('keeps inactive panes mounted and hidden with keepInactiveMounted', async () => {
 		render(StackPanes, { keepInactiveMounted: true });
 
 		await expect.element(note('Camera A')).toBeVisible();
 		await expect.element(note('Camera B')).not.toBeVisible();
 		await expect.element(note('Camera C')).not.toBeVisible();
-		await expect.element(page.getByStackPane('cam-a')).not.toHaveAttribute('inert');
-		await expect.element(page.getByStackPane('cam-b')).toHaveAttribute('inert');
-		await expect.element(page.getByStackPane('cam-c')).toHaveAttribute('inert');
 		expect(renderedNotes()).toEqual([
 			'Note for Camera A',
 			'Note for Camera B',
 			'Note for Camera C',
 			'Note for Solo'
 		]);
+	});
+
+	it('makes inactive panes inert and the active one interactive with keepInactiveMounted', async () => {
+		render(StackPanes, { keepInactiveMounted: true });
+
+		await expect.element(page.getByStackPane('cam-a')).not.toHaveAttribute('inert');
+		await expect.element(page.getByStackPane('cam-b')).toHaveAttribute('inert');
+		await expect.element(page.getByStackPane('cam-c')).toHaveAttribute('inert');
 	});
 
 	it('keeps an inactive pane state across a tab switch with keepInactiveMounted', async () => {
@@ -76,7 +81,7 @@ describe('Panes.TabList', () => {
 		expect(page.getByLabelText('Cameras').elements()).toHaveLength(1);
 	});
 
-	it('renders a tab per pane in order with the tab roles and ARIA attributes', async () => {
+	it('renders a tab per pane in order inside a named tablist', async () => {
 		render(StackPanes);
 
 		await expect.element(page.getByRole('tablist', { name: 'Cameras' })).toBeInTheDocument();
@@ -86,12 +91,36 @@ describe('Panes.TabList', () => {
 			'Camera B',
 			'Camera C'
 		]);
+	});
+
+	it('marks only the active tab selected', async () => {
+		render(StackPanes);
+
+		await expect.element(tab('Camera A')).toBeInTheDocument();
+		const tabs = page.getByRole('tab').elements();
 		expect(tabs.map((element) => element.getAttribute('aria-selected'))).toEqual([
 			'true',
 			'false',
 			'false'
 		]);
+	});
+
+	it('gives only the active tab a tab stop', async () => {
+		render(StackPanes);
+
+		await expect.element(tab('Camera A')).toBeInTheDocument();
+		const tabs = page.getByRole('tab').elements();
 		expect(tabs.map((element) => element.tabIndex)).toEqual([0, -1, -1]);
+	});
+
+	it('moves the tab stop to the tab that a click selects', async () => {
+		render(StackPanes);
+
+		await userEvent.click(tab('Camera C'));
+
+		await expect.element(tab('Camera C')).toHaveAttribute('tabindex', '0');
+		await expect.element(tab('Camera A')).toHaveAttribute('tabindex', '-1');
+		await expect.element(tab('Camera B')).toHaveAttribute('tabindex', '-1');
 	});
 
 	it('has no tabpanel and no aria-controls without a PaneBody', async () => {
@@ -179,6 +208,57 @@ describe('Panes.TabList', () => {
 		await expect.element(tab('Camera B')).toHaveAttribute('aria-selected', 'true');
 		await expect.element(tab('Camera B')).toHaveFocus();
 		expect(component.getLayout()).toMatchObject({ first: { activeId: 'cam-b' } });
+	});
+
+	it('wraps from the first tab to the last on ArrowLeft', async () => {
+		const { component } = render(StackPanes);
+		tab('Camera A').element().focus();
+
+		await userEvent.keyboard('{ArrowLeft}');
+
+		await expect.element(tab('Camera C')).toHaveFocus();
+		expect(component.getLayout()).toMatchObject({ first: { activeId: 'cam-c' } });
+	});
+
+	it('wraps from the last tab to the first on ArrowRight', async () => {
+		const { component } = render(StackPanes);
+		tab('Camera C').element().focus();
+
+		await userEvent.keyboard('{ArrowRight}');
+
+		await expect.element(tab('Camera A')).toHaveFocus();
+		expect(component.getLayout()).toMatchObject({ first: { activeId: 'cam-a' } });
+	});
+
+	it('moves to the last tab on End', async () => {
+		const { component } = render(StackPanes);
+		tab('Camera A').element().focus();
+
+		await userEvent.keyboard('{End}');
+
+		await expect.element(tab('Camera C')).toHaveFocus();
+		expect(component.getLayout()).toMatchObject({ first: { activeId: 'cam-c' } });
+	});
+
+	it('moves to the first tab on Home', async () => {
+		const { component } = render(StackPanes);
+		tab('Camera C').element().focus();
+
+		await userEvent.keyboard('{Home}');
+
+		await expect.element(tab('Camera A')).toHaveFocus();
+		expect(component.getLayout()).toMatchObject({ first: { activeId: 'cam-a' } });
+	});
+
+	it('ignores an arrow pressed with Ctrl', async () => {
+		const received: (LayoutNode<PaneData> | undefined)[] = [];
+		render(StackPanes, { received });
+		tab('Camera A').element().focus();
+
+		await userEvent.keyboard('{Control>}{ArrowRight}{/Control}');
+
+		await expect.element(tab('Camera A')).toHaveFocus();
+		expect(received).toEqual([]);
 	});
 
 	it('lands focus on the new active tab after a click selection', async () => {

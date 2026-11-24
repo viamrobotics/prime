@@ -14,14 +14,6 @@
 	let expanded = $state<string[]>([]);
 	let selected = $state<string[]>([]);
 	let attempts = $state(0);
-
-	export function getExpanded() {
-		return $state.snapshot(expanded);
-	}
-
-	export function getSelected() {
-		return $state.snapshot(selected);
-	}
 </script>
 
 <span data-testid="attempts">{attempts}</span>

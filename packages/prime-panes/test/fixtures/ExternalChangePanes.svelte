@@ -25,7 +25,7 @@
 	}
 </script>
 
-<div data-testid="frame" style="width: 800px; height: 600px">
+<div style="width: 800px; height: 600px">
 	<Panes bind:layout paneLabel={(node) => node.data.label} class="size-full">
 		{#snippet pane(node)}
 			<Panes.MoveTrigger
@@ -34,12 +34,7 @@
 			>
 				::
 			</Panes.MoveTrigger>
-			<section
-				aria-label={node.data.label}
-				data-testid="pane"
-				data-pane-id={node.id}
-				class="size-full"
-			>
+			<section aria-label={node.data.label} data-pane-id={node.id} class="size-full">
 				{node.data.label}
 			</section>
 		{/snippet}

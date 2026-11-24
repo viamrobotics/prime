@@ -1,3 +1,9 @@
+<!--
+@component
+A cartesian chart with an x and a y axis. Place [`Chart.Plot`](./Plot.svelte), which holds the drawing parts, and [`Chart.Legend`](./Legend.svelte) and [`Chart.Table`](./Table.svelte) around it, in the layout you write.
+
+The root has the `figure` role and no layout of its own. It requires an `aria-label` or an `aria-labelledby`, and a visually hidden summary of the series, the time and the values describes it unless you pass your own `aria-describedby`. Every other attribute of a `div` passes through to it.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -17,11 +23,11 @@
 		yMin?: number;
 		/** The upper y bound, used exactly. Left out, it comes from the data, rounded out to the next tick. */
 		yMax?: number;
-		/** Lays an overlay on the plot and keeps the last lines drawn underneath. */
+		/** Lays an overlay on the plot and keeps the last lines drawn underneath. Loading wins over the empty state. */
 		loading?: boolean;
 		/** Rendered in place of the plot when no series has a point. Defaults to the text "No data". */
 		empty?: Snippet;
-		/** `Chart.Plot`, which holds the drawing parts, and `Chart.Legend`, in the layout the consumer writes. */
+		/** `Chart.Plot`, with `Chart.Legend` and `Chart.Table` around it, in the layout the consumer writes. */
 		children?: Snippet;
 	}
 

@@ -23,7 +23,7 @@
 		stack?: StackNode<TData>;
 	}
 
-	const ARROW_KEY_CONTROLS = 'input, select, textarea, [contenteditable]';
+	const KEY_CONTROLS = 'input, select, textarea, [contenteditable]';
 	const LAYER_SWITCH_KEY = 'F6';
 
 	const { node, stack }: Props = $props();
@@ -102,12 +102,16 @@
 		}
 	}
 
+	function focusTabAfterRender(paneId: string) {
+		void tick().then(() => document.getElementById(tabIdIn(paneId, paneId))?.focus());
+	}
+
 	function select(paneId: string) {
 		context.abandonMove();
 		const isAccepted = context.update((root) => selectPane(root, paneId));
 		if (!isAccepted) return;
 		// Selecting swaps which pane renders, so the tab that held focus may be gone.
-		void tick().then(() => document.getElementById(tabIdIn(paneId, paneId))?.focus());
+		focusTabAfterRender(paneId);
 	}
 
 	function reorder(paneId: string, index: number) {
@@ -122,7 +126,22 @@
 		const position = { position: index + 1, total: stack.panes.length };
 		context.notify(reorderedMessage(context.labelFor(paneId), position));
 		// Showing the moved pane can remount the pane that held focus.
-		void tick().then(() => document.getElementById(tabIdIn(paneId, paneId))?.focus());
+		focusTabAfterRender(paneId);
+	}
+
+	function sourceFor(type: DragSource['type']): DragSource {
+		switch (type) {
+			case 'stack':
+				return stack ? { type, id: stack.id } : { type: 'pane', id: node.id };
+			case 'pane':
+				return { type, id: node.id };
+			case 'float':
+				return floatEntryId === undefined
+					? { type: 'pane', id: node.id }
+					: { type, id: floatEntryId };
+			default:
+				return type satisfies never;
+		}
 	}
 
 	providePane({
@@ -164,20 +183,7 @@
 		get isDragArmed() {
 			return isDragArmed;
 		},
-		sourceFor(type) {
-			switch (type) {
-				case 'stack':
-					return stack ? { type, id: stack.id } : { type: 'pane', id: node.id };
-				case 'pane':
-					return { type, id: node.id };
-				case 'float':
-					return floatEntryId === undefined
-						? { type: 'pane', id: node.id }
-						: { type, id: floatEntryId };
-				default:
-					return type satisfies never;
-			}
-		},
+		sourceFor,
 		holdDrag: (source) => context.holdDrag(node.id, source),
 		armDrag: (source) => context.armDrag(node.id, source),
 		disarmDrag: context.disarmDrag,
@@ -310,23 +316,40 @@
 
 	onMount(() => wrapper && context.registerDropSurface(node.id, wrapper, dropTargetAt));
 
+	// An arrow or F6 inside a control that reads it, such as a text field, is the control's.
+	function isInKeyControl(target: EventTarget | null) {
+		return target instanceof Element && target.closest(KEY_CONTROLS) !== null;
+	}
+
 	function handleKeydown(event: KeyboardEvent) {
 		const edge = edgeOfArrow(event);
 		if (!isMoving || edge === undefined || event.defaultPrevented) return;
 		if (!isInSameRoot(event.target, event.currentTarget)) return;
-		// An arrow inside a control that reads it, such as a text field, is the control's.
-		if (event.target instanceof Element && event.target.closest(ARROW_KEY_CONTROLS)) return;
+		if (isInKeyControl(event.target)) return;
 
 		if (context.crossToNeighbor(node.id, edge)) event.preventDefault();
 	}
 
-	// Covers the moving pane and its destination controls, so the layer switch works from either.
+	function isMoveKeyFor(event: KeyboardEvent) {
+		if (context.movingSource === undefined || event.defaultPrevented) return false;
+		return isInSameRoot(event.target, event.currentTarget) && !isInKeyControl(event.target);
+	}
+
 	function handleLayerKeydown(event: KeyboardEvent) {
-		if (event.key !== LAYER_SWITCH_KEY || context.movingSource === undefined) return;
-		if (event.defaultPrevented || !isInSameRoot(event.target, event.currentTarget)) return;
-		if (event.target instanceof Element && event.target.closest(ARROW_KEY_CONTROLS)) return;
+		if (event.key !== LAYER_SWITCH_KEY || !isMoveKeyFor(event)) return;
 
 		if (context.crossToLayer(node.id, event.shiftKey ? -1 : 1)) event.preventDefault();
+	}
+
+	// An arrow that found no destination still belongs to the move, so it never scrolls the page.
+	function holdArrowKey(event: KeyboardEvent) {
+		if (edgeOfArrow(event) !== undefined && isMoveKeyFor(event)) event.preventDefault();
+	}
+
+	// Covers the moving pane and its destination controls, so the layer switch and the arrows work from either.
+	function handleFrameKeydown(event: KeyboardEvent) {
+		handleLayerKeydown(event);
+		holdArrowKey(event);
 	}
 
 	function stackZoneStyleOf(dropRegion: HTMLElement, overlay: HTMLElement) {
@@ -351,9 +374,9 @@
 	);
 </script>
 
-<!-- This element holds the moving pane and its move targets, so it receives the F6 that crosses layers in move mode. The controls inside are the interactive elements. -->
+<!-- This element holds the moving pane and its move targets, so it receives the F6 that crosses layers and the arrows in move mode. The controls inside are the interactive elements. -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="relative size-full min-h-0 min-w-0" onkeydown={handleLayerKeydown}>
+<div class="relative size-full min-h-0 min-w-0" onkeydown={handleFrameKeydown}>
 	<!-- It comes before the wrapper in the DOM, so Tab from the wrapper still reaches the pane's own controls and then the destinations, and Shift+Tab reaches it. -->
 	{#if isMoving && context.isFloatOffered && context.movingLabel !== undefined}
 		<button

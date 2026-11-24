@@ -40,18 +40,29 @@ describe('nested Panes roots: drag isolation', () => {
 
 		await expect.element(innerRoot()).toHaveAttribute('data-dragging');
 		await expect.element(outerRoot()).not.toHaveAttribute('data-dragging');
-		await commands.mouseUp();
 	});
 
-	it('changes the inner layout and leaves the outer layout unchanged when an inner trigger drag drops on another inner pane', async () => {
+	it('swaps the inner slots when an inner trigger drag drops on the center of another inner pane', async () => {
 		const { component } = render(NestedPanes);
-		const outerBefore = component.getOuterLayout();
-		const innerBefore = component.getInnerLayout();
-
 		await pressAndMoveTo(grip('inner-a'), CENTER, content('inner-b'), CENTER);
+
 		await commands.mouseUp();
 
-		await expect.poll(() => component.getInnerLayout()).not.toEqual(innerBefore);
+		await expect
+			.poll(() => component.getInnerLayout())
+			.toMatchObject({ first: { id: 'inner-stack' }, second: { id: 'inner-a' } });
+	});
+
+	it('leaves the outer layout unchanged when an inner trigger drag drops on another inner pane', async () => {
+		const { component } = render(NestedPanes);
+		const outerBefore = component.getOuterLayout();
+		await pressAndMoveTo(grip('inner-a'), CENTER, content('inner-b'), CENTER);
+
+		await commands.mouseUp();
+
+		await expect
+			.poll(() => component.getInnerLayout(), { message: 'the inner drop landed' })
+			.toMatchObject({ first: { id: 'inner-stack' }, second: { id: 'inner-a' } });
 		expect(component.getOuterLayout()).toEqual(outerBefore);
 	});
 
@@ -61,7 +72,6 @@ describe('nested Panes roots: drag isolation', () => {
 		await pressAndMoveTo(content('inner-a'), PLAIN_AREA, content('outer-b'), OUTER_B_AREA);
 
 		await expect.element(outerRoot()).not.toHaveAttribute('data-dragging');
-		await commands.mouseUp();
 	});
 
 	it('leaves the outer layout unchanged when a press on an inner pane plain area is released over another outer pane', async () => {
@@ -74,16 +84,25 @@ describe('nested Panes roots: drag isolation', () => {
 		expect(component.getOuterLayout()).toEqual(outerBefore);
 	});
 
-	it('keeps data-dragging off the inner root and the inner layout unchanged when the outer pane holding it drags', async () => {
-		const { component } = render(NestedPanes);
-		const innerBefore = component.getInnerLayout();
+	it('keeps data-dragging off the inner root while the outer pane holding it drags', async () => {
+		render(NestedPanes);
 
 		await pressAndMoveTo(grip('outer-a'), CENTER, content('outer-b'), OUTER_B_AREA);
+
 		await expect.element(outerRoot()).toHaveAttribute('data-dragging');
 		await expect.element(innerRoot()).not.toHaveAttribute('data-dragging');
+	});
+
+	it('leaves the inner layout unchanged when the outer pane holding it drops on another outer pane', async () => {
+		const { component } = render(NestedPanes);
+		const innerBefore = component.getInnerLayout();
+		await pressAndMoveTo(grip('outer-a'), CENTER, content('outer-b'), OUTER_B_AREA);
+
 		await commands.mouseUp();
 
-		await expect.poll(() => component.getOuterLayout()).toMatchObject({ first: { id: 'outer-b' } });
+		await expect
+			.poll(() => component.getOuterLayout(), { message: 'the outer drop landed' })
+			.toMatchObject({ first: { id: 'outer-b' } });
 		expect(component.getInnerLayout()).toEqual(innerBefore);
 	});
 });
@@ -141,7 +160,7 @@ describe('nested Panes roots: announcements', () => {
 		await userEvent.keyboard('{Enter}');
 
 		await expect.poll(() => component.getInnerLayout()).not.toEqual(innerBefore);
-		expect(statusText('inner-root')).not.toBe('');
+		expect(statusText('inner-root')).toBe('inner-a swapped with inner-b.');
 		expect(statusText('outer-root')).toBe(outerStatusBefore);
 	});
 });

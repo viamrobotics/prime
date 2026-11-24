@@ -21,8 +21,7 @@ export default defineConfig({
 						viewport: { width: 1000, height: 1400 },
 						commands: inputCommands
 					},
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**']
+					include: ['src/**/*.svelte.{test,spec}.{js,ts}']
 				}
 			},
 

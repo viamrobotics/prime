@@ -8,7 +8,6 @@ import {
 	deepFreeze,
 	expectFloat,
 	expectSplit,
-	expectStack,
 	FLOAT_RECT,
 	floatIds,
 	ids,
@@ -16,218 +15,320 @@ import {
 	stackIds
 } from '../../../test/layouts.ts';
 
-import type { LayoutNode } from '../layout.ts';
+import type { FloatEntry, LayoutNode, PaneNode, SplitDirection, StackNode } from '../layout.ts';
 import type { PaneData } from '../../../test/layouts.ts';
 
 const ENTRY_ID = 'new-entry';
 const FLOAT_ID = 'new-float';
 
+function labeled(id: string): PaneNode<PaneData> {
+	return pane(id, id);
+}
+
+function split(
+	id: string,
+	direction: SplitDirection,
+	ratio: number,
+	first: LayoutNode<PaneData>,
+	second: LayoutNode<PaneData>
+): LayoutNode<PaneData> {
+	return { type: 'split', id, direction, ratio, first, second };
+}
+
+function stack(id: string, panes: PaneNode<PaneData>[], activeId: string): StackNode<PaneData> {
+	return { type: 'stack', id, panes, activeId };
+}
+
+function newEntry(content: LayoutNode<PaneData>): FloatEntry<PaneData> {
+	return { id: ENTRY_ID, rect: FLOAT_RECT, content };
+}
+
+const SOLO = labeled(stackIds.solo);
+const TAB_A1 = labeled(stackIds.tabA1);
+const TAB_A2 = labeled(stackIds.tabA2);
+const TAB_A3 = labeled(stackIds.tabA3);
+const TAB_B1 = labeled(stackIds.tabB1);
+const TAB_B2 = labeled(stackIds.tabB2);
+const STACK_A = stack(stackIds.stackA, [TAB_A1, TAB_A2, TAB_A3], stackIds.tabA2);
+const STACK_B = stack(stackIds.stackB, [TAB_B1, TAB_B2], stackIds.tabB1);
+
+const CAMERA = pane(ids.mycam, 'Camera');
+const TIME_SERIES = pane(ids.mytimeseries, 'Time series');
+const SENSOR = pane(ids.mysensor, 'Sensor stat');
+const CAMERA_2 = pane(ids.mycam2, 'Camera 2');
+const LOWER = split(ids.lowerSplit, 'column', 0.5, SENSOR, CAMERA_2);
+const INNER = split(ids.innerSplit, 'row', 0.6, TIME_SERIES, LOWER);
+
+const BASE_LEFT = labeled(floatIds.baseLeft);
+const BASE_RIGHT = labeled(floatIds.baseRight);
+const PANE_A = labeled(floatIds.paneA);
+const PANE_B = labeled(floatIds.paneB);
+const ENTRY_A: FloatEntry<PaneData> = {
+	id: floatIds.entryA,
+	rect: { x: 0, y: 0, width: 100, height: 80 },
+	content: PANE_A
+};
+const ENTRY_B: FloatEntry<PaneData> = {
+	id: floatIds.entryB,
+	rect: { x: 50, y: 50, width: 120, height: 90 },
+	content: PANE_B
+};
+
+const ENTRY_STACK = stack('stk', [labeled('t1'), labeled('t2')], 't1');
+
 describe.each([
 	{
 		name: 'floatPane',
 		run: (root: LayoutNode<PaneData> | undefined, id: string, hostId?: string) =>
-			floatPane(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID, hostId)
+			floatPane(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID, hostId),
+		sourceId: stackIds.solo,
+		wrapped: split(stackIds.rootSplit, 'row', 0.6, STACK_A, {
+			type: 'float',
+			id: FLOAT_ID,
+			base: STACK_B,
+			floats: [newEntry(SOLO)]
+		})
 	},
 	{
 		name: 'floatStack',
 		run: (root: LayoutNode<PaneData> | undefined, id: string, hostId?: string) =>
-			floatStack(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID, hostId)
+			floatStack(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID, hostId),
+		sourceId: stackIds.stackA,
+		wrapped: split(stackIds.sideSplit, 'column', 0.4, SOLO, {
+			type: 'float',
+			id: FLOAT_ID,
+			base: STACK_B,
+			floats: [newEntry(STACK_A)]
+		})
 	}
-])('$name shared rules', ({ name, run }) => {
-	const sourceId = name === 'floatPane' ? stackIds.solo : stackIds.stackA;
-
+])('$name shared rules', ({ run, sourceId, wrapped }) => {
 	it('returns undefined for an undefined root', () => {
-		expect(run(undefined, sourceId)).toBeUndefined();
+		const root = undefined;
+
+		const result = run(root, sourceId);
+
+		expect(result).toBeUndefined();
 	});
 
 	it('returns the same root when the source id names no node', () => {
 		const root = deepFreeze(createStackLayout());
-		expect(run(root, 'missing')).toBe(root);
+
+		const result = run(root, 'missing');
+
+		expect(result).toBe(root);
 	});
 
 	it('returns the same root when the host names no node', () => {
 		const root = deepFreeze(createStackLayout());
-		expect(run(root, sourceId, 'missing')).toBe(root);
+
+		const result = run(root, sourceId, 'missing');
+
+		expect(result).toBe(root);
 	});
 
 	it('returns the same root when the host is the source', () => {
 		const root = deepFreeze(createStackLayout());
-		expect(run(root, sourceId, sourceId)).toBe(root);
+
+		const result = run(root, sourceId, sourceId);
+
+		expect(result).toBe(root);
 	});
 
 	it('wraps a host that is not a float node in a new float node with the entry', () => {
 		const root = deepFreeze(createStackLayout());
-		const result = run(root, sourceId, stackIds.stackB)!;
-		expect(findInSplits(result, FLOAT_ID)).toMatchObject({
-			type: 'float',
-			id: FLOAT_ID,
-			base: { id: stackIds.stackB },
-			floats: [{ id: ENTRY_ID, rect: FLOAT_RECT }]
-		});
+
+		const result = run(root, sourceId, stackIds.stackB);
+
+		expect(result).toEqual(wrapped);
 	});
 });
 
-function findInSplits(node: LayoutNode<PaneData>, id: string): LayoutNode<PaneData> | undefined {
-	if (node.id === id) return node;
-	if (node.type === 'split') return findInSplits(node.first, id) ?? findInSplits(node.second, id);
-	if (node.type === 'float') {
-		return (node.base && findInSplits(node.base, id)) || undefined;
-	}
-	return undefined;
-}
-
 describe('floatPane', () => {
-	it.each([ids.rootSplit, stackIds.stackA])('returns the same root when the source is %s', (id) => {
+	it.each([
+		{ name: 'a split', id: ids.rootSplit },
+		{ name: 'a stack', id: stackIds.stackA }
+	])('returns the same root when the source is $name', ({ id }) => {
 		const root = deepFreeze(createStackLayout());
-		expect(floatPane(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID)).toBe(root);
+
+		const result = floatPane(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID);
+
+		expect(result).toBe(root);
 	});
 
 	it('wraps the root by default and the root collapses around the removed pane', () => {
 		const root = deepFreeze(createLayout());
-		const result = expectFloat(floatPane(root, ids.mycam, FLOAT_RECT, ENTRY_ID, FLOAT_ID));
-		expect(result.id).toBe(FLOAT_ID);
-		expect(result.base).toBe(expectSplit(root).second);
-		expect(result.floats).toEqual([
-			{ id: ENTRY_ID, rect: FLOAT_RECT, content: expectSplit(root).first }
-		]);
+
+		const result = floatPane(root, ids.mycam, FLOAT_RECT, ENTRY_ID, FLOAT_ID);
+
+		expect(result).toEqual({
+			type: 'float',
+			id: FLOAT_ID,
+			base: INNER,
+			floats: [newEntry(CAMERA)]
+		});
 	});
 
 	it('stores the rect as given, never clamped', () => {
-		const wild = { x: -50, y: 99999, width: 0, height: -3 };
-		const result = expectFloat(floatPane(createLayout(), ids.mycam, wild, ENTRY_ID, FLOAT_ID));
-		expect(result.floats[0]!.rect).toEqual(wild);
-	});
+		const outOfBoundsRect = { x: -50, y: 99999, width: 0, height: -3 };
 
-	it('returns the same root when the host is inside the source', () => {
-		const root = deepFreeze(createStackLayout());
-		expect(floatPane(root, stackIds.tabA1, FLOAT_RECT, ENTRY_ID, FLOAT_ID, stackIds.tabA1)).toBe(
-			root
+		const result = expectFloat(
+			floatPane(createLayout(), ids.mycam, outOfBoundsRect, ENTRY_ID, FLOAT_ID)
 		);
+
+		expect(result.floats[0]!.rect).toEqual(outOfBoundsRect);
 	});
 
 	it('wraps a non-ancestor host and collapses the source parent', () => {
 		const root = deepFreeze(createLayout());
-		const result = expectSplit(
-			floatPane(root, ids.mycam, FLOAT_RECT, ENTRY_ID, FLOAT_ID, ids.mysensor)
+
+		const result = floatPane(root, ids.mycam, FLOAT_RECT, ENTRY_ID, FLOAT_ID, ids.mysensor);
+
+		expect(result).toEqual(
+			split(
+				ids.innerSplit,
+				'row',
+				0.6,
+				TIME_SERIES,
+				split(
+					ids.lowerSplit,
+					'column',
+					0.5,
+					{
+						type: 'float',
+						id: FLOAT_ID,
+						base: SENSOR,
+						floats: [newEntry(CAMERA)]
+					},
+					CAMERA_2
+				)
+			)
 		);
-		expect(result.id).toBe(ids.innerSplit);
-		const lower = expectSplit(result.second);
-		expect(lower.first).toMatchObject({
-			type: 'float',
-			id: FLOAT_ID,
-			base: { id: ids.mysensor },
-			floats: [{ id: ENTRY_ID, content: { id: ids.mycam } }]
-		});
-		expect(lower.second).toBe(expectSplit(expectSplit(expectSplit(root).second).second).second);
 	});
 
 	it('removes a stacked pane from its stack and collapses a stack left with one pane', () => {
 		const root = deepFreeze(createStackLayout());
-		const result = expectSplit(
-			floatPane(root, stackIds.tabB1, FLOAT_RECT, ENTRY_ID, FLOAT_ID, stackIds.solo)
+
+		const result = floatPane(root, stackIds.tabB1, FLOAT_RECT, ENTRY_ID, FLOAT_ID, stackIds.solo);
+
+		expect(result).toEqual(
+			split(
+				stackIds.rootSplit,
+				'row',
+				0.6,
+				STACK_A,
+				split(
+					stackIds.sideSplit,
+					'column',
+					0.4,
+					{ type: 'float', id: FLOAT_ID, base: SOLO, floats: [newEntry(TAB_B1)] },
+					TAB_B2
+				)
+			)
 		);
-		const side = expectSplit(result.second);
-		expect(side.first).toMatchObject({ type: 'float', base: { id: stackIds.solo } });
-		expect(side.second).toMatchObject({ type: 'pane', id: stackIds.tabB2 });
 	});
 
 	it('keeps the stack and its active pane when it keeps two or more panes', () => {
 		const root = deepFreeze(createStackLayout());
+
 		const result = expectSplit(
 			floatPane(root, stackIds.tabA3, FLOAT_RECT, ENTRY_ID, FLOAT_ID, stackIds.solo)
 		);
-		const stack = expectStack(result.first);
-		expect(stack.panes.map((tab) => tab.id)).toEqual([stackIds.tabA1, stackIds.tabA2]);
-		expect(stack.activeId).toBe(stackIds.tabA2);
+
+		expect(result.first).toEqual(stack(stackIds.stackA, [TAB_A1, TAB_A2], stackIds.tabA2));
 	});
 
 	it('takes a pane out of a stack that is the host, and what remains is the host', () => {
 		const root = deepFreeze(createStackLayout());
+
 		const result = expectSplit(
 			floatPane(root, stackIds.tabA1, FLOAT_RECT, ENTRY_ID, FLOAT_ID, stackIds.stackA)
 		);
-		const float = expectFloat(result.first);
-		expect(float.id).toBe(FLOAT_ID);
-		expect(expectStack(float.base).panes.map((tab) => tab.id)).toEqual([
-			stackIds.tabA2,
-			stackIds.tabA3
-		]);
-		expect(float.floats[0]!.content).toMatchObject({ id: stackIds.tabA1 });
+
+		expect(result.first).toEqual({
+			type: 'float',
+			id: FLOAT_ID,
+			base: stack(stackIds.stackA, [TAB_A2, TAB_A3], stackIds.tabA2),
+			floats: [newEntry(TAB_A1)]
+		});
 	});
 
 	it('collapses a host stack left with one pane to that pane', () => {
 		const root = deepFreeze(createStackLayout());
+
 		const result = expectSplit(
 			floatPane(root, stackIds.tabB1, FLOAT_RECT, ENTRY_ID, FLOAT_ID, stackIds.stackB)
 		);
-		const float = expectFloat(expectSplit(result.second).second);
-		expect(float.base).toMatchObject({ type: 'pane', id: stackIds.tabB2 });
+
+		expect(expectSplit(result.second).second).toEqual({
+			type: 'float',
+			id: FLOAT_ID,
+			base: TAB_B2,
+			floats: [newEntry(TAB_B1)]
+		});
 	});
 
-	it('adds an entry at the end of a float node host and keeps its id', () => {
-		const root = deepFreeze(createFloatLayout());
-		const result = expectFloat(
-			floatPane(root, floatIds.baseLeft, FLOAT_RECT, ENTRY_ID, FLOAT_ID, floatIds.float)
-		);
-		expect(result.id).toBe(floatIds.float);
-		expect(result.base).toMatchObject({ id: floatIds.baseRight });
-		expect(result.floats.map((entry) => entry.id)).toEqual([
-			floatIds.entryA,
-			floatIds.entryB,
-			ENTRY_ID
-		]);
-	});
+	it.each([
+		{ name: 'named', hostId: floatIds.float },
+		{ name: 'the default root', hostId: undefined }
+	])(
+		'adds an entry at the end of a float node host that is $name and keeps its id',
+		({ hostId }) => {
+			const root = deepFreeze(createFloatLayout());
 
-	it('uses a float node root as the default host', () => {
-		const root = deepFreeze(createFloatLayout());
-		const result = expectFloat(floatPane(root, floatIds.baseRight, FLOAT_RECT, ENTRY_ID, FLOAT_ID));
-		expect(result.id).toBe(floatIds.float);
-		expect(result.floats.at(-1)).toMatchObject({ id: ENTRY_ID });
-	});
+			const result = floatPane(root, floatIds.baseLeft, FLOAT_RECT, ENTRY_ID, FLOAT_ID, hostId);
 
-	it('returns the same root when the pane is already the whole content of an entry of the host', () => {
-		const root = deepFreeze(createFloatLayout());
-		expect(floatPane(root, floatIds.paneA, FLOAT_RECT, ENTRY_ID, FLOAT_ID)).toBe(root);
-		expect(floatPane(root, floatIds.paneA, FLOAT_RECT, ENTRY_ID, FLOAT_ID, floatIds.float)).toBe(
-			root
-		);
-	});
+			expect(result).toEqual({
+				type: 'float',
+				id: floatIds.float,
+				base: BASE_RIGHT,
+				floats: [ENTRY_A, ENTRY_B, newEntry(BASE_LEFT)]
+			});
+		}
+	);
+
+	it.each([
+		{ name: 'the default root', hostId: undefined },
+		{ name: 'named', hostId: floatIds.float }
+	])(
+		'returns the same root when the pane is already the whole content of an entry of the host that is $name',
+		({ hostId }) => {
+			const root = deepFreeze(createFloatLayout());
+
+			const result = floatPane(root, floatIds.paneA, FLOAT_RECT, ENTRY_ID, FLOAT_ID, hostId);
+
+			expect(result).toBe(root);
+		}
+	);
 
 	it('moves an entry pane to another host and drops the emptied entry', () => {
 		const root = deepFreeze(createFloatLayout());
-		const result = expectFloat(
-			floatPane(root, floatIds.paneA, FLOAT_RECT, ENTRY_ID, FLOAT_ID, floatIds.baseRight)
+
+		const result = floatPane(
+			root,
+			floatIds.paneA,
+			FLOAT_RECT,
+			ENTRY_ID,
+			FLOAT_ID,
+			floatIds.baseRight
 		);
-		expect(result.floats.map((entry) => entry.id)).toEqual([floatIds.entryB]);
-		const base = expectSplit(result.base);
-		expect(base.second).toMatchObject({
+
+		expect(result).toEqual({
 			type: 'float',
-			id: FLOAT_ID,
-			base: { id: floatIds.baseRight },
-			floats: [{ id: ENTRY_ID, content: { id: floatIds.paneA } }]
+			id: floatIds.float,
+			base: split(floatIds.base, 'row', 0.5, BASE_LEFT, {
+				type: 'float',
+				id: FLOAT_ID,
+				base: BASE_RIGHT,
+				floats: [newEntry(PANE_A)]
+			}),
+			floats: [ENTRY_B]
 		});
 	});
 
 	it('wraps an entry content in a float node nested in the entry', () => {
 		const root = deepFreeze(createFloatLayout());
-		const result = expectFloat(
-			floatPane(root, floatIds.baseLeft, FLOAT_RECT, ENTRY_ID, FLOAT_ID, floatIds.paneA)
-		);
-		expect(result.floats[0]).toMatchObject({
-			id: floatIds.entryA,
-			content: {
-				type: 'float',
-				id: FLOAT_ID,
-				base: { id: floatIds.paneA },
-				floats: [{ id: ENTRY_ID, content: { id: floatIds.baseLeft } }]
-			}
-		});
-		expect(result.base).toMatchObject({ id: floatIds.baseRight });
-	});
 
-	it('adds an entry to a nested float node found by id', () => {
-		const root = deepFreeze(createFloatLayout());
-		const nested = floatPane(
+		const result = floatPane(
 			root,
 			floatIds.baseLeft,
 			FLOAT_RECT,
@@ -235,49 +336,182 @@ describe('floatPane', () => {
 			FLOAT_ID,
 			floatIds.paneA
 		);
-		const result = expectFloat(
-			floatPane(nested, floatIds.baseRight, FLOAT_RECT, 'second-entry', 'unused-float', FLOAT_ID)
+
+		expect(result).toEqual({
+			type: 'float',
+			id: floatIds.float,
+			base: BASE_RIGHT,
+			floats: [
+				{
+					...ENTRY_A,
+					content: { type: 'float', id: FLOAT_ID, base: PANE_A, floats: [newEntry(BASE_LEFT)] }
+				},
+				ENTRY_B
+			]
+		});
+	});
+
+	it('adds an entry to a nested float node found by id', () => {
+		const root = deepFreeze<LayoutNode<PaneData>>({
+			type: 'float',
+			id: floatIds.float,
+			base: BASE_RIGHT,
+			floats: [
+				{
+					...ENTRY_A,
+					content: {
+						type: 'float',
+						id: FLOAT_ID,
+						base: PANE_A,
+						floats: [newEntry(BASE_LEFT)]
+					}
+				}
+			]
+		});
+
+		const result = floatPane(
+			root,
+			floatIds.baseRight,
+			FLOAT_RECT,
+			'second-entry',
+			'unused-float',
+			FLOAT_ID
 		);
-		const inner = expectFloat(result.floats[0]!.content);
-		expect(inner.id).toBe(FLOAT_ID);
-		expect(inner.floats.map((entry) => entry.id)).toEqual([ENTRY_ID, 'second-entry']);
+
+		expect(result).toEqual({
+			type: 'float',
+			id: floatIds.float,
+			floats: [
+				{
+					...ENTRY_A,
+					content: {
+						type: 'float',
+						id: FLOAT_ID,
+						base: PANE_A,
+						floats: [
+							newEntry(BASE_LEFT),
+							{ id: 'second-entry', rect: FLOAT_RECT, content: BASE_RIGHT }
+						]
+					}
+				}
+			]
+		});
 	});
 
 	it('leaves a base-less float node when the base pane floats out of a float node with entries', () => {
+		const entry = { id: 'e', rect: FLOAT_RECT, content: labeled('p') };
 		const root = deepFreeze<LayoutNode<PaneData>>({
 			type: 'float',
 			id: 'f',
-			base: pane('only-base', 'Base'),
-			floats: [{ id: 'e', rect: FLOAT_RECT, content: pane('p', 'P') }]
+			base: labeled('only-base'),
+			floats: [entry]
 		});
-		const result = expectFloat(floatPane(root, 'only-base', FLOAT_RECT, ENTRY_ID, FLOAT_ID));
-		expect(result.id).toBe('f');
-		expect(result.base).toBeUndefined();
-		expect(result.floats.map((entry) => entry.id)).toEqual(['e', ENTRY_ID]);
+
+		const result = floatPane(root, 'only-base', FLOAT_RECT, ENTRY_ID, FLOAT_ID);
+
+		expect(result).toEqual({
+			type: 'float',
+			id: 'f',
+			floats: [entry, newEntry(labeled('only-base'))]
+		});
+	});
+
+	it('floats a pane that is the whole content of an entry of an inner float node over the outer host', () => {
+		const root = deepFreeze<LayoutNode<PaneData>>({
+			type: 'float',
+			id: 'outer',
+			base: labeled('outer-base'),
+			floats: [
+				{
+					id: 'holder',
+					rect: FLOAT_RECT,
+					content: {
+						type: 'float',
+						id: 'inner',
+						base: labeled('inner-base'),
+						floats: [{ id: 'inner-entry', rect: FLOAT_RECT, content: labeled('x') }]
+					}
+				}
+			]
+		});
+
+		const result = floatPane(root, 'x', FLOAT_RECT, ENTRY_ID, FLOAT_ID);
+
+		expect(result).toEqual({
+			type: 'float',
+			id: 'outer',
+			base: labeled('outer-base'),
+			floats: [
+				{ id: 'holder', rect: FLOAT_RECT, content: labeled('inner-base') },
+				newEntry(labeled('x'))
+			]
+		});
+	});
+
+	it('floats the pane into a new base-less float node holding the entry when nothing of the host remains', () => {
+		const root = deepFreeze<LayoutNode<PaneData>>({
+			type: 'float',
+			id: 'host',
+			floats: [
+				{
+					id: 'host-entry',
+					rect: FLOAT_RECT,
+					content: {
+						type: 'float',
+						id: 'inner',
+						floats: [{ id: 'inner-entry', rect: FLOAT_RECT, content: labeled('x') }]
+					}
+				}
+			]
+		});
+
+		const result = floatPane(root, 'x', FLOAT_RECT, ENTRY_ID, FLOAT_ID);
+
+		expect(result).toEqual({
+			type: 'float',
+			id: FLOAT_ID,
+			floats: [newEntry(labeled('x'))]
+		});
 	});
 });
 
 describe('floatStack', () => {
-	it.each([stackIds.solo, stackIds.tabA1])('returns the same root when the source is %s', (id) => {
+	it.each([
+		{ name: 'a pane', id: stackIds.solo },
+		{ name: 'a stacked pane', id: stackIds.tabA1 }
+	])('returns the same root when the source is $name', ({ id }) => {
 		const root = deepFreeze(createStackLayout());
-		expect(floatStack(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID)).toBe(root);
+
+		const result = floatStack(root, id, FLOAT_RECT, ENTRY_ID, FLOAT_ID);
+
+		expect(result).toBe(root);
 	});
 
 	it('returns the same root when the host is a pane inside the stack', () => {
 		const root = deepFreeze(createStackLayout());
-		expect(floatStack(root, stackIds.stackA, FLOAT_RECT, ENTRY_ID, FLOAT_ID, stackIds.tabA3)).toBe(
-			root
+
+		const result = floatStack(
+			root,
+			stackIds.stackA,
+			FLOAT_RECT,
+			ENTRY_ID,
+			FLOAT_ID,
+			stackIds.tabA3
 		);
+
+		expect(result).toBe(root);
 	});
 
 	it('floats the whole stack over the root by default', () => {
 		const root = deepFreeze(createStackLayout());
-		const result = expectFloat(floatStack(root, stackIds.stackA, FLOAT_RECT, ENTRY_ID, FLOAT_ID));
-		expect(result.base).toBe(expectSplit(root).second);
-		expect(result.floats[0]).toEqual({
-			id: ENTRY_ID,
-			rect: FLOAT_RECT,
-			content: expectSplit(root).first
+
+		const result = floatStack(root, stackIds.stackA, FLOAT_RECT, ENTRY_ID, FLOAT_ID);
+
+		expect(result).toEqual({
+			type: 'float',
+			id: FLOAT_ID,
+			base: split(stackIds.sideSplit, 'column', 0.4, SOLO, STACK_B),
+			floats: [newEntry(STACK_A)]
 		});
 	});
 
@@ -285,60 +519,54 @@ describe('floatStack', () => {
 		const root = deepFreeze<LayoutNode<PaneData>>({
 			type: 'float',
 			id: 'f',
-			base: pane('b', 'B'),
-			floats: [
-				{
-					id: 'e',
-					rect: FLOAT_RECT,
-					content: {
-						type: 'stack',
-						id: 'stk',
-						panes: [pane('t1', 'T1'), pane('t2', 'T2')],
-						activeId: 't1'
-					}
-				}
-			]
+			base: labeled('b'),
+			floats: [{ id: 'e', rect: FLOAT_RECT, content: ENTRY_STACK }]
 		});
-		expect(floatStack(root, 'stk', FLOAT_RECT, ENTRY_ID, FLOAT_ID)).toBe(root);
+
+		const result = floatStack(root, 'stk', FLOAT_RECT, ENTRY_ID, FLOAT_ID);
+
+		expect(result).toBe(root);
 	});
 
 	it('adds the stack as an entry of a float node host', () => {
-		const root = deepFreeze<LayoutNode<PaneData>>({
-			type: 'split',
-			id: 'outer',
-			direction: 'row',
-			ratio: 0.5,
-			first: {
-				type: 'stack',
-				id: 'stk',
-				panes: [pane('t1', 'T1'), pane('t2', 'T2')],
-				activeId: 't1'
-			},
-			second: {
+		const entry = { id: 'e', rect: FLOAT_RECT, content: labeled('p') };
+		const root = deepFreeze(
+			split('outer', 'row', 0.5, ENTRY_STACK, {
 				type: 'float',
 				id: 'f',
-				base: pane('b', 'B'),
-				floats: [{ id: 'e', rect: FLOAT_RECT, content: pane('p', 'P') }]
-			}
+				base: labeled('b'),
+				floats: [entry]
+			})
+		);
+
+		const result = floatStack(root, 'stk', FLOAT_RECT, ENTRY_ID, FLOAT_ID, 'f');
+
+		expect(result).toEqual({
+			type: 'float',
+			id: 'f',
+			base: labeled('b'),
+			floats: [entry, newEntry(ENTRY_STACK)]
 		});
-		const result = expectFloat(floatStack(root, 'stk', FLOAT_RECT, ENTRY_ID, FLOAT_ID, 'f'));
-		expect(result.id).toBe('f');
-		expect(result.floats.map((entry) => entry.id)).toEqual(['e', ENTRY_ID]);
-		expect(result.floats[1]!.content).toMatchObject({ type: 'stack', id: 'stk' });
 	});
 });
 
 describe('docking out of an entry', () => {
 	it('movePane docks an entry pane beside a base pane and drops the emptied entry', () => {
 		const root = deepFreeze(createFloatLayout());
-		const result = expectFloat(
-			movePane(root, floatIds.paneA, floatIds.baseRight, 'column', 'first', 's')
-		);
-		expect(result.floats.map((entry) => entry.id)).toEqual([floatIds.entryB]);
-		const base = expectSplit(result.base);
-		expect(expectSplit(base.second)).toMatchObject({
-			first: { id: floatIds.paneA },
-			second: { id: floatIds.baseRight }
+
+		const result = movePane(root, floatIds.paneA, floatIds.baseRight, 'column', 'first', 's');
+
+		expect(result).toEqual({
+			type: 'float',
+			id: floatIds.float,
+			base: split(
+				floatIds.base,
+				'row',
+				0.5,
+				BASE_LEFT,
+				split('s', 'column', 0.5, PANE_A, BASE_RIGHT)
+			),
+			floats: [ENTRY_B]
 		});
 	});
 
@@ -346,55 +574,57 @@ describe('docking out of an entry', () => {
 		const root = deepFreeze<LayoutNode<PaneData>>({
 			type: 'float',
 			id: 'f',
-			base: pane('b', 'B'),
-			floats: [{ id: 'e', rect: FLOAT_RECT, content: pane('p', 'P') }]
+			base: labeled('b'),
+			floats: [{ id: 'e', rect: FLOAT_RECT, content: labeled('p') }]
 		});
-		expect(movePane(root, 'p', 'b', 'row', 'second', 's')).toMatchObject({
-			type: 'split',
-			id: 's',
-			first: { id: 'b' },
-			second: { id: 'p' }
-		});
+
+		const result = movePane(root, 'p', 'b', 'row', 'second', 's');
+
+		expect(result).toEqual(split('s', 'row', 0.5, labeled('b'), labeled('p')));
 	});
 
 	it('stackPanes docks an entry pane into a stack with a base pane and drops the entry', () => {
 		const root = deepFreeze(createFloatLayout());
-		const result = expectFloat(stackPanes(root, floatIds.baseLeft, floatIds.paneB, 'new-stack'));
-		expect(result.floats.map((entry) => entry.id)).toEqual([floatIds.entryA]);
-		const stack = expectStack(expectSplit(result.base).first);
-		expect(stack.panes.map((tab) => tab.id)).toEqual([floatIds.baseLeft, floatIds.paneB]);
+
+		const result = stackPanes(root, floatIds.baseLeft, floatIds.paneB, 'new-stack');
+
+		expect(result).toEqual({
+			type: 'float',
+			id: floatIds.float,
+			base: split(
+				floatIds.base,
+				'row',
+				0.5,
+				stack('new-stack', [BASE_LEFT, PANE_B], floatIds.paneB),
+				BASE_RIGHT
+			),
+			floats: [ENTRY_A]
+		});
 	});
 
 	it('swapPanes exchanges an entry pane with a base pane and keeps the entry', () => {
 		const root = deepFreeze(createFloatLayout());
-		const result = expectFloat(swapPanes(root, floatIds.paneA, floatIds.baseLeft));
-		expect(result.floats[0]).toMatchObject({
-			id: floatIds.entryA,
-			content: { id: floatIds.baseLeft }
+
+		const result = swapPanes(root, floatIds.paneA, floatIds.baseLeft);
+
+		expect(result).toEqual({
+			type: 'float',
+			id: floatIds.float,
+			base: split(floatIds.base, 'row', 0.5, PANE_A, BASE_RIGHT),
+			floats: [{ ...ENTRY_A, content: BASE_LEFT }, ENTRY_B]
 		});
-		expect(expectSplit(result.base).first).toMatchObject({ id: floatIds.paneA });
 	});
 
 	it('moveStack docks an entry stack beside a base pane and drops the emptied entry', () => {
 		const root = deepFreeze<LayoutNode<PaneData>>({
 			type: 'float',
 			id: 'f',
-			base: pane('b', 'B'),
-			floats: [
-				{
-					id: 'e',
-					rect: FLOAT_RECT,
-					content: {
-						type: 'stack',
-						id: 'stk',
-						panes: [pane('t1', 'T1'), pane('t2', 'T2')],
-						activeId: 't1'
-					}
-				}
-			]
+			base: labeled('b'),
+			floats: [{ id: 'e', rect: FLOAT_RECT, content: ENTRY_STACK }]
 		});
-		const result = expectSplit(moveStack(root, 'stk', 'b', 'row', 'first', 's'));
-		expect(result.first).toMatchObject({ type: 'stack', id: 'stk' });
-		expect(result.second).toMatchObject({ id: 'b' });
+
+		const result = moveStack(root, 'stk', 'b', 'row', 'first', 's');
+
+		expect(result).toEqual(split('s', 'row', 0.5, ENTRY_STACK, labeled('b')));
 	});
 });

@@ -1,14 +1,20 @@
 <script lang="ts">
-	import CodeEditor from '../CodeEditor.svelte';
+	import CodeEditor from '../../CodeEditor.svelte';
 
-	let { split = false }: { split?: boolean } = $props();
+	let {
+		isSplit = false,
+		labelledby = 'query-label',
+		label
+	}: { isSplit?: boolean; labelledby?: string; label?: string } = $props();
 </script>
 
 <span id="query-label">Query</span>
+<span id="other-label">Other</span>
 <CodeEditor
 	value="SELECT 1"
-	original={split ? 'SELECT 2' : undefined}
-	diff={split ? 'split' : 'unified'}
+	original={isSplit ? 'SELECT 2' : undefined}
+	diff={isSplit ? 'split' : 'unified'}
 	language="sql"
-	aria-labelledby="query-label"
+	aria-label={label}
+	aria-labelledby={labelledby}
 />

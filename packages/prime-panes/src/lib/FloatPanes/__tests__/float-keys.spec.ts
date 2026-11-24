@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import type { FloatRect } from '../../layout.ts';
 import {
 	isArrowKey,
 	moveFloatRectByKey,
@@ -13,11 +14,11 @@ const START = { x: 200, y: 150, width: 300, height: 200 };
 
 describe('isArrowKey', () => {
 	it.each(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'])('accepts %s', (key) => {
-		expect(isArrowKey(key)).toBe(true);
+		expect(isArrowKey(key), `${key} is an arrow key`).toBe(true);
 	});
 
 	it.each(['Enter', 'a', 'toString', 'PageDown'])('rejects %s', (key) => {
-		expect(isArrowKey(key)).toBe(false);
+		expect(isArrowKey(key), `${key} is not an arrow key`).toBe(false);
 	});
 });
 
@@ -35,21 +36,44 @@ describe('moveFloatRectByKey', () => {
 		});
 	});
 
-	it('stops at the near edges of the box', () => {
-		const rect = { x: 5, y: 3, width: 300, height: 200 };
-		expect(moveFloatRectByKey(rect, 'ArrowLeft', 10, BOX, MINIMUM).x).toBe(0);
-		expect(moveFloatRectByKey(rect, 'ArrowUp', 10, BOX, MINIMUM).y).toBe(0);
-	});
-
-	it('stops at the far edges of the box', () => {
-		const rect = { x: 495, y: 395, width: 300, height: 200 };
-		expect(moveFloatRectByKey(rect, 'ArrowRight', 100, BOX, MINIMUM).x).toBe(500);
-		expect(moveFloatRectByKey(rect, 'ArrowDown', 100, BOX, MINIMUM).y).toBe(400);
-	});
-
-	it('steps from where the window is drawn when the stored rect lies outside the box', () => {
-		const rect = { x: 900, y: 150, width: 300, height: 200 };
-		expect(moveFloatRectByKey(rect, 'ArrowLeft', 10, BOX, MINIMUM).x).toBe(490);
+	it.each<{ name: string; key: ArrowKey; distance: number; rect: FloatRect; expected: FloatRect }>([
+		{
+			name: 'stops at the left edge of the box',
+			key: 'ArrowLeft',
+			distance: 10,
+			rect: { x: 5, y: 3, width: 300, height: 200 },
+			expected: { x: 0, y: 3, width: 300, height: 200 }
+		},
+		{
+			name: 'stops at the top edge of the box',
+			key: 'ArrowUp',
+			distance: 10,
+			rect: { x: 5, y: 3, width: 300, height: 200 },
+			expected: { x: 5, y: 0, width: 300, height: 200 }
+		},
+		{
+			name: 'stops at the right edge of the box',
+			key: 'ArrowRight',
+			distance: 100,
+			rect: { x: 495, y: 395, width: 300, height: 200 },
+			expected: { x: 500, y: 395, width: 300, height: 200 }
+		},
+		{
+			name: 'stops at the bottom edge of the box',
+			key: 'ArrowDown',
+			distance: 100,
+			rect: { x: 495, y: 395, width: 300, height: 200 },
+			expected: { x: 495, y: 400, width: 300, height: 200 }
+		},
+		{
+			name: 'steps from where the window is drawn when the stored rect lies outside the box',
+			key: 'ArrowLeft',
+			distance: 10,
+			rect: { x: 900, y: 150, width: 300, height: 200 },
+			expected: { x: 490, y: 150, width: 300, height: 200 }
+		}
+	])('$name', ({ key, distance, rect, expected }) => {
+		expect(moveFloatRectByKey(rect, key, distance, BOX, MINIMUM)).toEqual(expected);
 	});
 });
 
@@ -67,14 +91,37 @@ describe('resizeFloatRectByKey', () => {
 		});
 	});
 
-	it('stops shrinking at the minimum', () => {
+	it.each<{ name: string; key: ArrowKey; distance: number; expected: FloatRect }>([
+		{
+			name: 'stops shrinking the width at the minimum',
+			key: 'ArrowLeft',
+			distance: 100,
+			expected: { x: 200, y: 150, width: 120, height: 100 }
+		},
+		{
+			name: 'stops shrinking the height at the minimum',
+			key: 'ArrowUp',
+			distance: 100,
+			expected: { x: 200, y: 150, width: 130, height: 90 }
+		}
+	])('$name', ({ key, distance, expected }) => {
 		const rect = { x: 200, y: 150, width: 130, height: 100 };
-		expect(resizeFloatRectByKey(rect, 'ArrowLeft', 100, BOX, MINIMUM).width).toBe(120);
-		expect(resizeFloatRectByKey(rect, 'ArrowUp', 100, BOX, MINIMUM).height).toBe(90);
+
+		expect(resizeFloatRectByKey(rect, key, distance, BOX, MINIMUM)).toEqual(expected);
 	});
 
-	it('stops growing at the edges of the box', () => {
-		expect(resizeFloatRectByKey(START, 'ArrowRight', 1000, BOX, MINIMUM).width).toBe(600);
-		expect(resizeFloatRectByKey(START, 'ArrowDown', 1000, BOX, MINIMUM).height).toBe(450);
+	it.each<{ name: string; key: ArrowKey; expected: FloatRect }>([
+		{
+			name: 'stops growing the width at the right edge of the box',
+			key: 'ArrowRight',
+			expected: { x: 200, y: 150, width: 600, height: 200 }
+		},
+		{
+			name: 'stops growing the height at the bottom edge of the box',
+			key: 'ArrowDown',
+			expected: { x: 200, y: 150, width: 300, height: 450 }
+		}
+	])('$name', ({ key, expected }) => {
+		expect(resizeFloatRectByKey(START, key, 1000, BOX, MINIMUM)).toEqual(expected);
 	});
 });

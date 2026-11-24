@@ -1,3 +1,9 @@
+<!--
+@component
+The drawing area, which owns the scales, the tab stop, and the loading and empty overlays. Place [`Chart.Line`](./Line.svelte), [`Chart.XAxis`](./XAxis.svelte), [`Chart.YAxis`](./YAxis.svelte), [`Chart.Grid`](./Grid.svelte) and [`Chart.Tooltip`](./Tooltip.svelte) inside it, and only one plot in a `Chart`.
+
+The plot measures the size its `class` gives it and has none of its own, so a plot with no height draws nothing. It draws inside its content box, so padding in its `class` insets the drawing.
+-->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
@@ -25,7 +31,7 @@
 	const yScale = scaleLinear();
 	const points = $derived(domainPoints(chart.series));
 	const xDomain = $derived([...chart.xWindow.domain]);
-	const isEmpty = $derived(!hasData(chart.series, chart.xToNumber));
+	const isEmpty = $derived(!hasData(chart.series, chart.xWindow.toNumber));
 
 	const layersOf = (kind: ChartLayer['kind']) =>
 		plotContext.layers.filter((layer) => layer.kind === kind);
@@ -44,7 +50,7 @@
 	let plotHeight = $state(0);
 	const yTicks = $derived(yTickCount(plotHeight - padding.top - padding.bottom));
 	const yDomain = $derived(
-		computeYDomain(points, chart.xToNumber, settings.yMin, settings.yMax, yTicks)
+		computeYDomain(points, chart.xWindow.toNumber, settings.yMin, settings.yMax, yTicks)
 	);
 
 	// Half the line stroke, so a line along a plot edge keeps its full width.

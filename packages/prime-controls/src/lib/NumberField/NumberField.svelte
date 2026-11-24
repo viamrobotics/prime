@@ -16,6 +16,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 	import { type FieldState, Input, NumberInput } from '@viamrobotics/prime-ui';
 
 	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
+	import { joinDescribedBy } from '../Hint/described-by.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import { type Bounds, clamp, settle, startingValue, stepMultiplier } from './number-step.ts';
 
@@ -133,9 +134,11 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 	const hintId = $derived(`${id}-hint`);
 	const suffixId = $derived(`${id}-suffix`);
 	const describedBy = $derived(
-		[ariaDescribedby, label && hint ? hintId : undefined, suffix ? suffixId : undefined]
-			.filter(Boolean)
-			.join(' ') || undefined
+		joinDescribedBy([
+			ariaDescribedby,
+			Boolean(label && hint) && hintId,
+			Boolean(suffix) && suffixId
+		])
 	);
 	const isLocked = $derived(Boolean(disabled) || Boolean(readonly));
 	const placementClasses = $derived(PLACEMENT_CLASSES[labelPlacement]);
@@ -222,25 +225,7 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 	{#if label && hint && labelPlacement === 'outside'}
 		<Hint {label} {hint} descriptionId={hintId} disabled={Boolean(disabled)} />
 	{/if}
-	{#if suffix}
-		<Input.Group class={placementClasses.group}>
-			<NumberInput
-				{...restProps}
-				{id}
-				{min}
-				{max}
-				{step}
-				{disabled}
-				{readonly}
-				{state}
-				aria-describedby={describedBy}
-				bind:value
-				onkeydown={handleKeydown}
-				class="min-w-0 flex-1"
-			/>
-			<span id={suffixId} class="shrink-0 text-subtle-2">{suffix}</span>
-		</Input.Group>
-	{:else}
+	{#snippet numberInput(inputClass: ClassValue)}
 		<NumberInput
 			{...restProps}
 			{id}
@@ -253,8 +238,16 @@ that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays uncl
 			aria-describedby={describedBy}
 			bind:value
 			onkeydown={handleKeydown}
-			class={placementClasses.input}
+			class={inputClass}
 		/>
+	{/snippet}
+	{#if suffix}
+		<Input.Group class={placementClasses.group}>
+			{@render numberInput('min-w-0 flex-1')}
+			<span id={suffixId} class="shrink-0 text-subtle-2">{suffix}</span>
+		</Input.Group>
+	{:else}
+		{@render numberInput(placementClasses.input)}
 	{/if}
 	<!-- An inset label sits inside the input's left edge, so its hint goes after the input. -->
 	{#if label && hint && labelPlacement === 'inset'}

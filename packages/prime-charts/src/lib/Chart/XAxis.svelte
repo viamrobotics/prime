@@ -1,10 +1,14 @@
+<!--
+@component
+The time axis below the plot. Its line and tick marks are SVG in the `--color-chart-axis` color, and its tick labels are HTML. It reserves the label row's height at the bottom of the plot, and the overhang of its first and last labels on the left and right.
+-->
 <script lang="ts">
 	import type { Attachment } from 'svelte/attachments';
 	import type { ClassValue } from 'svelte/elements';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { scaleTime } from 'd3-scale';
 	import { useChart, usePlot, usePlotContext, type ChartLayer } from './context.svelte.ts';
-	import { edgeOverhang, xTickCount } from './ticks.ts';
+	import { edgeOverhang, TICK_SIZE, xTickCount } from './ticks.ts';
 
 	interface Props {
 		/** Formats each tick label. Defaults to the time scale's own format. */
@@ -14,8 +18,6 @@
 	}
 
 	let { format, class: className }: Props = $props();
-
-	const TICK_SIZE = 6;
 
 	const plotContext = usePlotContext('Chart.XAxis');
 	const chart = useChart();
@@ -58,7 +60,7 @@
 	// The ticks and their places come from the domain and the room the other parts leave, never
 	// from the drawing width, which the overhang narrows.
 	const count = $derived(xTickCount(plot.containerWidth - otherLeft - otherRight));
-	const unitScale = $derived(scaleTime().domain(plotContext.xWindow.domain).range([0, 1]));
+	const unitScale = $derived(scaleTime().domain(chart.xWindow.domain).range([0, 1]));
 	const ticks = $derived(unitScale.ticks(count));
 	const label = $derived(format ?? unitScale.tickFormat(count));
 

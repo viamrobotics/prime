@@ -1,13 +1,11 @@
 import type { ChartPoint, ChartXValue } from './point.ts';
 import { isInsideWindow, isPlaced, type XWindow } from './x-scales.ts';
 
-// A series as point search and key steps read it.
 export interface NavigationSeries {
 	readonly hidden: boolean;
 	readonly points: readonly ChartPoint<ChartXValue>[];
 }
 
-// One point of one series: the series and the point's index in its `points`.
 export interface ActivePoint<TSeries extends NavigationSeries = NavigationSeries> {
 	readonly series: TSeries;
 	readonly index: number;
@@ -19,7 +17,6 @@ export interface PlotPosition {
 	y: (value: number) => number;
 }
 
-// A key that moves the active point.
 export type NavigationKey =
 	| 'ArrowLeft'
 	| 'ArrowRight'
@@ -33,12 +30,12 @@ export type NavigationKey =
 type Step = <TSeries extends NavigationSeries>(
 	series: readonly TSeries[],
 	active: ActivePoint<TSeries>,
-	xWindow: XWindow
+	xWindow: XWindow,
+	direction: Direction
 ) => ActivePoint<TSeries>;
 
-const PAGE_FRACTION = 10;
+const PAGES_PER_SERIES = 10;
 
-// A point the converter cannot place, or outside the window, is a gap.
 function isDrawable(point: ChartPoint<ChartXValue> | undefined, xWindow: XWindow): boolean {
 	if (point === undefined || !isPlaced(point, xWindow.toNumber)) return false;
 	return isInsideWindow(xWindow.toNumber(point.x), xWindow);
@@ -52,22 +49,35 @@ const hasPoint = (series: NavigationSeries, xWindow: XWindow): boolean =>
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
 
-// Binary search, over the points whose x the scale can place, for the first at or after
-// `target`, then a walk outward past gaps.
+// Which way positions run as x rises. Pixels fall on a reversed domain, and on a reversed range.
+type Direction = 1 | -1;
+
+const ASCENDING: Direction = 1;
+const DESCENDING: Direction = -1;
+
+function pixelDirection(plot: PlotPosition, xWindow: XWindow): Direction {
+	const [start, end] = xWindow.domain;
+	return Math.sign(plot.x(end) - plot.x(start)) === Math.sign(end - start) ? ASCENDING : DESCENDING;
+}
+
+// Binary search, over the points whose x the scale can place, in x order, for the first not
+// before `target` in `direction`, then a walk outward past gaps.
 function nearestIndex(
 	points: readonly ChartPoint<ChartXValue>[],
 	target: number,
 	position: (point: ChartPoint<ChartXValue>) => number,
+	direction: Direction,
 	xWindow: XWindow
 ): number | undefined {
 	const placed = points.flatMap((point, index) =>
 		Number.isFinite(xWindow.toNumber(point.x)) ? [index] : []
 	);
+	const isBeforeTarget = (index: number) => (position(points[index]) - target) * direction < 0;
 	let low = 0;
 	let high = placed.length;
 	while (low < high) {
 		const middle = (low + high) >>> 1;
-		if (position(points[placed[middle]]) < target) low = middle + 1;
+		if (isBeforeTarget(placed[middle])) low = middle + 1;
 		else high = middle;
 	}
 	const split = low < placed.length ? placed[low] : points.length;
@@ -116,6 +126,7 @@ export function nearestPoint<TSeries extends NavigationSeries>(
 	xWindow: XWindow
 ): ActivePoint<TSeries> | undefined {
 	if (!Number.isFinite(pointerX) || !Number.isFinite(pointerY)) return undefined;
+	const direction = pixelDirection(plot, xWindow);
 	let best: ActivePoint<TSeries> | undefined;
 	let bestDistance = Infinity;
 	for (const entry of series) {
@@ -124,6 +135,7 @@ export function nearestPoint<TSeries extends NavigationSeries>(
 			entry.points,
 			pointerX,
 			(point) => plot.x(xWindow.toNumber(point.x)),
+			direction,
 			xWindow
 		);
 		if (index === undefined) continue;
@@ -140,11 +152,15 @@ export function nearestPoint<TSeries extends NavigationSeries>(
 	return best;
 }
 
-const pageSize = (count: number) => Math.max(1, Math.floor(count / PAGE_FRACTION));
+const pageSize = (count: number) => Math.max(1, Math.floor(count / PAGES_PER_SERIES));
+
+// Left to right as drawn, so the horizontal keys follow the screen on either axis direction.
+const inScreenOrder = (indices: number[], direction: Direction): number[] =>
+	direction === ASCENDING ? indices : [...indices].reverse();
 
 function along(offset: (position: number, count: number) => number): Step {
-	return (_series, active, xWindow) => {
-		const drawable = drawableIndices(active.series.points, xWindow);
+	return (_series, active, xWindow, direction) => {
+		const drawable = inScreenOrder(drawableIndices(active.series.points, xWindow), direction);
 		const position = drawable.indexOf(active.index);
 		if (position < 0) return active;
 		const next = clamp(offset(position, drawable.length), 0, drawable.length - 1);
@@ -162,6 +178,7 @@ function across(direction: -1 | 1): Step {
 			target.points,
 			xWindow.toNumber(point.x),
 			(entry) => xWindow.toNumber(entry.x),
+			ASCENDING,
 			xWindow
 		);
 		if (index === undefined) return active;
@@ -182,14 +199,12 @@ const STEPS: Record<NavigationKey, Step> = {
 
 export const isNavigationKey = (key: string): key is NavigationKey => Object.hasOwn(STEPS, key);
 
-// Left and right step one point, Home and End go to the ends of the series, and PageUp and
-// PageDown step a tenth of the series, at least one. Up and down go to the previous or next
-// visible series, at its point nearest in time. At an end, the point stays.
 export function step<TSeries extends NavigationSeries>(
 	series: readonly TSeries[],
 	active: ActivePoint<TSeries>,
 	key: NavigationKey,
+	plot: PlotPosition,
 	xWindow: XWindow
 ): ActivePoint<TSeries> {
-	return STEPS[key](series, active, xWindow);
+	return STEPS[key](series, active, xWindow, pixelDirection(plot, xWindow));
 }

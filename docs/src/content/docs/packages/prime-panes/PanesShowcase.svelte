@@ -63,7 +63,7 @@
       <Panes.DragTrigger>
         <Panes.MoveTrigger
           aria-label="Move {node.data.label}"
-          class="inline-flex size-6 cursor-grab items-center justify-center text-subtle-1 active:cursor-grabbing"
+          class="inline-flex size-6 cursor-grab items-center justify-center text-subtle-1 active:cursor-grabbing focus-ring"
         >
           <svg
             viewBox="0 0 16 16"
@@ -98,6 +98,15 @@
           class="button px-2 py-0.5 text-xs"
         >
           Move stack
+        </Panes.MoveTrigger>
+      {/if}
+      {#if state.isFloating}
+        <Panes.MoveTrigger
+          target="float"
+          aria-label="Dock {node.data.label}"
+          class="button px-2 py-0.5 text-xs"
+        >
+          Dock
         </Panes.MoveTrigger>
       {/if}
     </header>

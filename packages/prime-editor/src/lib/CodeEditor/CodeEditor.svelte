@@ -34,7 +34,7 @@
 		highlightActiveLineGutter,
 		keymap,
 		lineNumbers as lineNumberGutter,
-		placeholder as placeholderExtension,
+		placeholder as emptyDocPlaceholder,
 		type ViewUpdate
 	} from '@codemirror/view';
 	import { classHighlighter } from '@lezer/highlight';
@@ -42,15 +42,22 @@
 
 	import type { CodeEditorDiff, CodeEditorLanguage } from './code-editor.ts';
 
+	import {
+		ORIGINAL_SIDE_SUFFIX,
+		isAriaAttribute,
+		nameContentAttributes,
+		originalNameContentAttributes,
+		otherAriaContentAttributes
+	} from './aria-attributes.ts';
 	import { languageSupport } from './languages.ts';
 	import { codeEditorTheme } from './theme.ts';
+
+	type Editability = 'editable' | 'readonly' | 'disabled';
 
 	/**
 	 * Every `aria-*` attribute goes to the editing surface, the element with the `textbox` role.
 	 * Every other attribute goes to the editor's outer element.
 	 */
-	type Editability = 'editable' | 'readonly' | 'disabled';
-
 	interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		/**
 		 * The document. Bind it with `bind:value`, or with a function binding to veto or transform
@@ -119,10 +126,6 @@
 	const ariaCompartment = new Compartment();
 	const unifiedDiffCompartment = new Compartment();
 
-	const ARIA_PREFIX = 'aria-';
-	const ORIGINAL_SIDE_SUFFIX = 'original';
-	const NAME_ATTRIBUTES = ['aria-label', 'aria-labelledby'];
-
 	// Unchanged lines kept visible around each change, and the shortest run worth folding.
 	const COLLAPSED_CONTEXT = { margin: 3, minSize: 4 };
 
@@ -143,39 +146,17 @@
 	);
 	const editability = $derived(editabilityOf(disabled, readonly));
 	const originalEditability = $derived(editabilityOf(disabled, true));
-	const placeholderText = $derived<Extension>(placeholder ? placeholderExtension(placeholder) : []);
-	const wrapLinesExtension = $derived<Extension>(wrapLines ? EditorView.lineWrapping : []);
-	const nameExtension = $derived(ariaContentAttributes(isNameAttribute));
-	const originalNameExtension = $derived(
-		EditorView.contentAttributes.of(originalNameAttributes(rest, originalLabelId))
+	const placeholderExtension = $derived<Extension>(
+		placeholder ? emptyDocPlaceholder(placeholder) : []
 	);
-	const ariaExtension = $derived(ariaContentAttributes((name) => !isNameAttribute(name)));
+	const wrapLinesExtension = $derived<Extension>(wrapLines ? EditorView.lineWrapping : []);
+	const nameExtension = $derived(nameContentAttributes(rest));
+	const originalNameExtension = $derived(originalNameContentAttributes(rest, originalLabelId));
+	const ariaExtension = $derived(otherAriaContentAttributes(rest));
 	const elementAttributes = $derived<HTMLAttributes<HTMLDivElement>>(
-		Object.fromEntries(Object.entries(rest).filter(([name]) => !name.startsWith(ARIA_PREFIX)))
+		Object.fromEntries(Object.entries(rest).filter(([name]) => !isAriaAttribute(name)))
 	);
 	const collapsedContext = $derived(collapseUnchanged ? COLLAPSED_CONTEXT : undefined);
-
-	function isNameAttribute(name: string) {
-		return NAME_ATTRIBUTES.includes(name);
-	}
-
-	function originalNameAttributes(
-		attributes: Record<string, unknown>,
-		labelId: string
-	): Record<string, string> {
-		const label = attributes['aria-label'];
-		const labelledby = attributes['aria-labelledby'];
-		if (labelledby != null) return { 'aria-labelledby': `${labelledby} ${labelId}` };
-		if (label != null) return { 'aria-label': `${label}, ${ORIGINAL_SIDE_SUFFIX}` };
-		return {};
-	}
-
-	function ariaContentAttributes(isIncluded: (name: string) => boolean): Extension {
-		const attributes = Object.entries(rest)
-			.filter(([name, value]) => name.startsWith(ARIA_PREFIX) && isIncluded(name) && value != null)
-			.map(([name, value]) => [name, String(value)]);
-		return EditorView.contentAttributes.of(Object.fromEntries(attributes));
-	}
 
 	function editabilityOf(isDisabled: boolean, isReadonly: boolean): Editability {
 		if (isDisabled) return 'disabled';
@@ -250,10 +231,10 @@
 		];
 	}
 
-	function editableExtensions(): Extension {
+	function valueEditorExtensions(): Extension {
 		return [
 			editabilityCompartment.of(editabilityExtension(editability)),
-			placeholderCompartment.of(placeholderText),
+			placeholderCompartment.of(placeholderExtension),
 			nameCompartment.of(nameExtension),
 			ariaCompartment.of(ariaExtension),
 			EditorView.updateListener.of(writeValue)
@@ -272,7 +253,7 @@
 					doc: value,
 					extensions: [
 						sharedExtensions(),
-						editableExtensions(),
+						valueEditorExtensions(),
 						unifiedDiffCompartment.of(unifiedDiffExtension(original))
 					]
 				})
@@ -301,7 +282,7 @@
 							originalNameCompartment.of(originalNameExtension)
 						]
 					},
-					b: { doc: value, extensions: [sharedExtensions(), editableExtensions()] }
+					b: { doc: value, extensions: [sharedExtensions(), valueEditorExtensions()] }
 				})
 		);
 		originalEditor = mergeView.a;
@@ -341,7 +322,7 @@
 	});
 
 	$effect(() => {
-		reconfigure([editor], placeholderCompartment.reconfigure(placeholderText));
+		reconfigure([editor], placeholderCompartment.reconfigure(placeholderExtension));
 	});
 
 	$effect(() => {

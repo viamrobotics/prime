@@ -142,14 +142,14 @@ describe('Panes move mode: arrow navigation from the moving pane', () => {
 		expect(defaultPrevented, 'the keydown was not canceled').toEqual([true]);
 	});
 
-	it('leaves an arrow keydown to the browser when no pane lies that way from the moving pane', async () => {
+	it('cancels the arrow keydown when no pane lies that way from the moving pane', async () => {
 		render(ControlledPanes, { accept: true, handles: true });
 		await startMoveWithKeyboard('Camera');
 		const defaultPrevented = recordDefaultPrevented();
 
 		await userEvent.keyboard('{ArrowUp}');
 
-		expect(defaultPrevented, 'the keydown was canceled').toEqual([false]);
+		expect(defaultPrevented, 'the keydown was not canceled').toEqual([true]);
 		await expect.element(page.getByPane(ids.mycam)).toHaveFocus();
 		await expect.element(page.getByMovePreview()).not.toBeInTheDocument();
 		await expect.poll(() => allDestinations().elements()).toHaveLength(DESTINATION_COUNT);
@@ -179,7 +179,7 @@ describe('Panes move mode: arrow navigation from the moving pane', () => {
 		await expect.element(mark('Place Camera right of Time series')).toHaveFocus();
 	});
 
-	it('leaves an arrow keydown to the browser when no pane lies that way from a destination', async () => {
+	it('cancels the arrow keydown when no pane lies that way from a destination', async () => {
 		render(ControlledPanes, { accept: true, handles: true });
 		await startMoveWithKeyboard('Camera');
 		await userEvent.keyboard('{ArrowDown}{ArrowLeft}');
@@ -188,7 +188,7 @@ describe('Panes move mode: arrow navigation from the moving pane', () => {
 
 		await userEvent.keyboard('{ArrowLeft}');
 
-		expect(defaultPrevented, 'the keydown was canceled').toEqual([false]);
+		expect(defaultPrevented, 'the keydown was not canceled').toEqual([true]);
 	});
 
 	it('moves the same way from the focused moving pane wrapper when a mouse click started the move', async () => {

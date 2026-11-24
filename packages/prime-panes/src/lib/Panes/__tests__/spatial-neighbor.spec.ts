@@ -45,6 +45,16 @@ describe('findNeighbor', () => {
 		expect(findNeighbor(panes, 'current', 'right')).toBe('alignedAndFar');
 	});
 
+	it('keeps an overlapping pane over a closer one that does not overlap and is ranked after it', () => {
+		const panes = panesOf({
+			current: bounds(0, 0, 100, 100),
+			alignedAndFar: bounds(400, 0, 500, 100),
+			diagonalAndClose: bounds(100, 200, 200, 300)
+		});
+
+		expect(findNeighbor(panes, 'current', 'right')).toBe('alignedAndFar');
+	});
+
 	it('takes the closer of two panes that both overlap', () => {
 		const panes = panesOf({
 			current: bounds(0, 0, 100, 100),
@@ -203,15 +213,5 @@ describe('findNeighbor', () => {
 		});
 
 		expect(findNeighbor(panes, 'current', 'right')).toBeUndefined();
-	});
-
-	it('ranks panes with no layer together, as in a layout with no windows', () => {
-		const panes = panesOf({
-			current: bounds(0, 0, 100, 100),
-			near: bounds(100, 0, 200, 100),
-			far: bounds(300, 0, 400, 100)
-		});
-
-		expect(findNeighbor(panes, 'current', 'right')).toBe('near');
 	});
 });

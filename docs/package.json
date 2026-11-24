@@ -96,6 +96,12 @@
 				"../packages/prime-editor/src/lib/**",
 				"../packages/prime-charts/src/lib/**",
 				"../packages/tweakpane-config/dist/**",
+				"../packages/prime-ui/styles.css",
+				"../packages/prime-panes/styles.css",
+				"../packages/prime-tree/styles.css",
+				"../packages/prime-controls/styles.css",
+				"../packages/prime-editor/styles.css",
+				"../packages/prime-charts/styles.css",
 				"../packages/tailwind-config/tailwind-config.css",
 				"../packages/tailwind-config/tailwind-config-dark.css"
 			],

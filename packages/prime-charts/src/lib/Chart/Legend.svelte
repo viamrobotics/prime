@@ -1,10 +1,14 @@
+<!--
+@component
+One toggle button per series, with its color, name, unit and loading mark. Pressing a button toggles the series' `hidden`, and `aria-pressed` is true while the series shows. Place it inside `Chart`, before or after [`Chart.Plot`](./Plot.svelte), in the layout you write.
+-->
 <script lang="ts">
 	import type { ClassValue } from 'svelte/elements';
 	import { assertOutsidePlot, useChart } from './context.svelte.ts';
 	import { seriesLabel } from './formats.ts';
 
 	interface Props {
-		/** Lands on the legend's outer element. */
+		/** Lands on the legend's list, a wrapping row of the series. */
 		class?: ClassValue;
 	}
 

@@ -98,7 +98,7 @@ import branchesSource from "./Branches.svelte?raw";
 
 ### Basic rows
 
-`nodes` holds the root nodes and is the single source of truth. A later change to it flows into the tree without a remount. The accessors tell the tree how to read your node type: `nodeToValue` returns a unique id, `nodeToString` returns the label used for type-ahead, and `nodeToChildren` returns the children. `nodeToChildrenCount` and `isNodeDisabled` are optional. Return a number from `nodeToChildrenCount` for a branch that may be empty, such as an empty folder, so it still renders as a branch, and `undefined` for a leaf. Any number, including `0`, makes the node a branch.
+`nodes` holds the root nodes and is the single source of truth. A later change to it flows into the tree without a remount. The accessors tell the tree how to read your node type: `nodeToValue` returns a unique id, `nodeToString` returns the label used for type-ahead, and `nodeToChildren` returns the children. `nodeToChildrenCount` and `isNodeDisabled` are optional. Return a number from `nodeToChildrenCount` for a branch that may be empty, such as an empty folder, so it still renders as a branch, and `undefined` for a leaf. Any number, including `0`, makes the node a branch. A node for which `isNodeDisabled` returns `true` is never selected or expanded, whether by a click, a key, a range, or select-all.
 
 The `node` snippet receives the node and its `TreeNodeState`. It runs once per visible node. Return a `Tree.Branch` for a branch or a `Tree.Item` for a leaf. Inside a branch, `Tree.BranchControl` holds the row you see, and `Tree.BranchContent` renders the children.
 
@@ -107,8 +107,6 @@ A collapsed branch never calls the snippet for its children, and indentation is 
 <Example code={basicSource} title="Basic.svelte" height="12rem">
   <Basic client:visible />
 </Example>
-
-The second argument of the `node` snippet is a `TreeNodeState`.
 
 The second argument of the `node` snippet is a `TreeNodeState`.
 
@@ -128,7 +126,7 @@ Indentation is yours. Use `depth` as in the recipe above, or read the `--depth` 
 
 ### Two-way binding
 
-`bind:expanded` and `bind:selected` hold arrays of node values. `selectionMode` is `'single'` by default and `'multiple'` allows several selected rows. `expandOnClick` defaults to `true`, so a click on a branch row toggles it.
+`bind:expanded` and `bind:selected` hold arrays of node values. `selectionMode` is `'single'` by default and `'multiple'` allows several selected rows. A click on a branch row toggles it by default, which `branchClick` changes.
 
 <Example code={twoWaySource} title="TwoWay.svelte" height="16rem">
   <TwoWay client:visible />
@@ -170,23 +168,23 @@ A row reads its state from the `node` snippet's second argument, and the same st
 
 The root renders one element, `role="tree"`, with `tabindex="-1"`. `class` and every other attribute land on it, so size it with a class and make it the scroll container with `overflow-auto` when the tree is taller than its box. To reach the element itself, pass an attachment through the rest props.
 
-Each part spreads the attributes you pass over its own, so `class`, `style`, and event handlers all work on every part. Each renders `children`, except that `Tree.BranchContent` treats `children` as the row renderer and `Tree.Row` renders no element of its own. `Tree.Item` leaves `aria-current` to you. The package renders only what the snippet returns, so it adds no wrappers or default styles.
+Each part spreads the attributes you pass over its own, so `class`, `style`, and event handlers all work on every part. Each renders `children`, except that `Tree.BranchContent` treats `children` as the row renderer and `Tree.Row` renders no element of its own. A selected `Tree.Item` carries `aria-selected="true"` and no `aria-current`. An `aria-current` you pass, such as `"page"` on the row of the open document, lands on the element as given. The package renders only what the snippet returns, so it adds no wrappers or default styles.
 
 The package sets a `--depth` custom property on `Tree.Branch` and `Tree.Item`, and a branch's control inherits it. Use it in a style attribute for indentation, as the recipes do. `state.depth` is the script-side equivalent. For the utility classes the recipes wear, such as `focus-ring`, see the [component classes](../tailwind-config/component-classes/).
 
-Zag sets these data attributes, so Tailwind variants like `data-[selected]:bg-medium` work without a wrapper.
+The parts set these data attributes, so Tailwind variants like `data-[selected]:bg-medium` work without a wrapper.
 
 | Attribute         | Parts                                            | Value                                          |
 | ----------------- | ------------------------------------------------ | ---------------------------------------------- |
 | `data-part`       | every part                                       | The part name, such as `branch-control`        |
-| `data-value`      | `Branch`, `BranchControl`, `BranchTrigger`, `Item` | The node's value                             |
-| `data-depth`      | `Branch`, `BranchControl`, `Item`, `IndentGuide` | Nesting depth, starting at 1                   |
-| `data-state`      | `Branch`, `BranchControl`, `BranchTrigger`, `Indicator` | `open` or `closed`                      |
+| `data-value`      | `Branch`, `BranchControl`, `BranchTrigger`, `BranchContent`, `Item` | The node's value    |
+| `data-depth`      | `Branch`, `BranchControl`, `BranchContent`, `Item`, `IndentGuide` | Nesting depth, starting at 1                   |
+| `data-state`      | `Branch`, `BranchControl`, `BranchTrigger`, `BranchContent`, `Indicator` | `open` or `closed`     |
 | `data-selected`   | `Branch`, `BranchControl`, `Item`, `Indicator`   | present when selected                          |
 | `data-focus`      | `BranchControl`, `Item`, `Indicator`             | present on the row holding the roving focus    |
 | `data-disabled`   | `Branch`, `BranchControl`, `BranchTrigger`, `Item`, `Indicator` | present when disabled           |
 
-Focus is roving. One row has `tabindex="0"` and the rest are reachable by the arrow keys, so the tree is a single tab stop. Rows carry `aria-expanded`, `aria-selected`, `aria-level`, `aria-setsize`, and `aria-posinset`. A branch row shows expansion with a visual icon, and `Tree.Indicator` is `aria-hidden`, so the label inside the row must name the node. Name the tree itself with `aria-label` or `aria-labelledby`.
+Focus is roving. One row has `tabindex="0"` and the rest are reachable by the arrow keys, so the tree is a single tab stop. Rows carry `aria-expanded`, `aria-selected`, `aria-level`, `aria-setsize`, and `aria-posinset`, and a disabled row and its control carry `aria-disabled="true"`. A branch row shows expansion with a visual icon, and `Tree.Indicator` is `aria-hidden`, so the label inside the row must name the node. The tree has no name of its own, so name it with `aria-label` or `aria-labelledby`.
 
 ## Keyboard
 
@@ -198,6 +196,7 @@ Focus is roving. One row has `tabindex="0"` and the rest are reachable by the ar
     { keys: "Home / End", action: "Move focus to the first or last visible row" },
     { keys: "Enter / Space", action: "Select the focused row. On a branch, do what `branchClick` sets" },
     { keys: "Shift + ArrowUp / ArrowDown", action: "Extend a multiple selection" },
+    { keys: "Ctrl + A / Meta + A", action: "In multiple mode, select every node that is not disabled, including the children of collapsed branches" },
     { keys: "*", action: "Expand every sibling of the focused row" },
     { text: "Printable characters", action: "Type-ahead by `nodeToString`" },
   ]}

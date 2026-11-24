@@ -12,8 +12,17 @@ import type { DropRegion, EdgeRegion } from '../../drop-region.ts';
 describe('edgeOfArrow', () => {
 	const UNMODIFIED = { altKey: false, ctrlKey: false, metaKey: false };
 
-	it('maps an arrow key to its edge', () => {
-		expect(edgeOfArrow({ ...UNMODIFIED, key: 'ArrowUp' })).toBe('top');
+	it.each([
+		{ key: 'ArrowLeft', edge: 'left' },
+		{ key: 'ArrowRight', edge: 'right' },
+		{ key: 'ArrowUp', edge: 'top' },
+		{ key: 'ArrowDown', edge: 'bottom' }
+	] as const)('maps $key to the $edge edge', ({ key, edge }) => {
+		expect(edgeOfArrow({ ...UNMODIFIED, key })).toBe(edge);
+	});
+
+	it.each(['Enter', 'Tab', 'Home'])('maps no edge to the %s key', (key) => {
+		expect(edgeOfArrow({ ...UNMODIFIED, key })).toBeUndefined();
 	});
 
 	it.each([{ modifier: 'ctrlKey' }, { modifier: 'metaKey' }, { modifier: 'altKey' }] as const)(
@@ -124,9 +133,9 @@ describe('stepRegion', () => {
 	});
 
 	it.each([
-		{ side: 'left', from: 'left', direction: 'left' },
-		{ side: 'right', from: 'right', direction: 'right' },
-		{ side: 'bottom', from: 'bottom', direction: 'bottom' }
+		{ side: 'left', direction: 'left' },
+		{ side: 'right', direction: 'right' },
+		{ side: 'bottom', direction: 'bottom' }
 	] as const)(
 		'leaves the pane when the $direction arrow follows the stack on the $side',
 		({ side, direction }) => {

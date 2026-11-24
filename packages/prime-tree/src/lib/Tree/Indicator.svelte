@@ -2,6 +2,7 @@
 	import { mergeProps } from '@zag-js/svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import { markDisabled } from './disabled-node.ts';
 	import { useTree, useTreeNode } from './useTree.svelte.ts';
 
 	type Props = HTMLAttributes<HTMLSpanElement>;
@@ -17,7 +18,7 @@
 			? tree.api.getBranchIndicatorProps(nodeProps)
 			: tree.api.getItemIndicatorProps(nodeProps);
 
-		return mergeProps(indicatorProps, rest);
+		return mergeProps(markDisabled(indicatorProps, current.state.disabled), rest);
 	});
 </script>
 

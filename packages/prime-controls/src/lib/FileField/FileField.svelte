@@ -15,6 +15,7 @@ to fit, and a button that clears them. A cleared field is an empty array.
 	import { type FieldState, FileInput } from '@viamrobotics/prime-ui';
 
 	import { CONTROL_LABEL_CLASS, CONTROL_ROW_CLASS } from '../control-label.ts';
+	import { joinDescribedBy } from '../Hint/described-by.ts';
 	import Hint from '../Hint/Hint.svelte';
 
 	interface Props extends Omit<
@@ -82,9 +83,7 @@ to fit, and a button that clears them. A cleared field is an empty array.
 	const generatedId = $props.id();
 	const id = $derived(providedId ?? generatedId);
 	const hintId = $derived(`${id}-hint`);
-	const describedBy = $derived(
-		[ariaDescribedby, label && hint ? hintId : undefined].filter(Boolean).join(' ') || undefined
-	);
+	const describedBy = $derived(joinDescribedBy([ariaDescribedby, label && hint && hintId]));
 </script>
 
 <div class={[CONTROL_ROW_CLASS, extraClasses]}>

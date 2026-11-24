@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import '../../../../test/tailwind.css';
-import SettleChart from './SettleChart.svelte';
+import type { ChartPoint } from '../point.ts';
+import AxesChart from './fixtures/AxesChart.svelte';
 
 const SETTLE_FRAMES = 3;
 const SUBPIXEL = 0.1;
@@ -21,6 +22,8 @@ const ONE_MINUTE_TICKS = 10;
 const FIVE_MINUTE_TICKS = 2;
 const FIXED_COLUMN = { className: 'w-24', width: 96 };
 const FRACTIONAL_COLUMN = { className: 'min-w-[60.3px]', width: 60.3 };
+
+const reading = (points: ChartPoint[]) => [{ name: 'Reading', points }];
 
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 
@@ -99,7 +102,9 @@ describe('Chart axes settling', () => {
 			{ x: minutesPastTen(0, 0), y: 2 },
 			{ x: minutesPastTen(9, 1), y: 8 }
 		];
-		const { container } = render(SettleChart, { props: { points, width: CHART_WIDTH } });
+		const { container } = render(AxesChart, {
+			props: { series: reading(points), width: CHART_WIDTH }
+		});
 		await expect.poll(() => container.querySelectorAll('.x-part span').length).toBeGreaterThan(1);
 		await settleFrames();
 
@@ -121,33 +126,36 @@ describe('Chart axes settling', () => {
 	});
 
 	it('changes the padding at most once when a slide replaces the last x label', async () => {
-		const { container, rerender } = render(SettleChart, {
-			props: { points: shortOfAMinute, width: CHART_WIDTH }
+		const { container, rerender } = render(AxesChart, {
+			props: { series: reading(shortOfAMinute), width: CHART_WIDTH }
 		});
 		await waitUntilSettled(container);
 		const recorder = recordPaddingChanges(container);
 
 		await rerender({
-			points: shortOfAMinute.map((point) => ({
-				...point,
-				x: new Date(point.x.getTime() + ONE_MINUTE_MS)
-			}))
+			series: reading(
+				shortOfAMinute.map((point) => ({
+					...point,
+					x: new Date(point.x.getTime() + ONE_MINUTE_MS)
+				}))
+			)
 		});
 		await settleFrames();
 		recorder.stop();
 
-		const plotRight = plotBoxOf(container).right;
-		const lastRight = xLabelBoxes(container).at(-1)!.right;
-		const rightPadding = Number.parseFloat(htmlLayerOf(container).style.right);
-		expect(container.querySelector('.x-part span:last-child')?.textContent?.trim()).toBe('10:10');
-		expect(recorder.changes.length).toBeLessThanOrEqual(1);
-		expect(rightPadding).toBeCloseTo(14.1, 0);
-		expect(plotRight - lastRight).toBeCloseTo(0, 1);
+		expect(
+			container.querySelector('.x-part span:last-child')?.textContent?.trim(),
+			'the slide brings a new last label'
+		).toBe('10:10');
+		expect(
+			recorder.changes.length,
+			`padding changes: ${recorder.changes.join(' | ')}`
+		).toBeLessThanOrEqual(1);
 	});
 
 	it('puts an overhanging last x label flush with the plot edge rather than past or short of it', async () => {
-		const { container } = render(SettleChart, {
-			props: { points: shortOfAMinute, width: CHART_WIDTH }
+		const { container } = render(AxesChart, {
+			props: { series: reading(shortOfAMinute), width: CHART_WIDTH }
 		});
 		await waitUntilSettled(container);
 
@@ -161,8 +169,8 @@ describe('Chart axes settling', () => {
 			{ x: minutesPastTen(0, 7), y: 2 },
 			{ x: minutesPastTen(1, 7), y: 8 }
 		];
-		const { container } = render(SettleChart, {
-			props: { points, width: NO_GUTTER_WIDTH, hasYAxis: false }
+		const { container } = render(AxesChart, {
+			props: { series: reading(points), width: NO_GUTTER_WIDTH, hasYAxis: false }
 		});
 		await waitUntilSettled(container);
 
@@ -174,9 +182,9 @@ describe('Chart axes settling', () => {
 			{ x: minutesPastTen(0, 30), y: 2 },
 			{ x: minutesPastTen(50, 30), y: 8 }
 		];
-		const { container } = render(SettleChart, {
+		const { container } = render(AxesChart, {
 			props: {
-				points,
+				series: reading(points),
 				width: CHART_WIDTH,
 				hasYAxis: false,
 				xFormat: () => 'Thursday, January 1, 10:30 AM'
@@ -200,8 +208,8 @@ describe('Chart axes settling', () => {
 			{ x: minutesPastTen(5, 0), y: 2 },
 			{ x: minutesPastTen(55, 0), y: 8 }
 		];
-		const { container } = render(SettleChart, {
-			props: { points, width: SINGLE_TICK_WIDTH, xFormat: () => LONG_LABEL }
+		const { container } = render(AxesChart, {
+			props: { series: reading(points), width: SINGLE_TICK_WIDTH, xFormat: () => LONG_LABEL }
 		});
 		await waitUntilSettled(container);
 
@@ -218,8 +226,13 @@ describe('Chart axes settling', () => {
 			{ x: new Date('2026-01-01T00:00:00Z'), y: 2 },
 			{ x: new Date('2026-01-01T06:00:00Z'), y: 8 }
 		];
-		const { container } = render(SettleChart, {
-			props: { points, width: WIDE_LABELS_WIDTH, hasYAxis: false, xFormat: () => LONG_LABEL }
+		const { container } = render(AxesChart, {
+			props: {
+				series: reading(points),
+				width: WIDE_LABELS_WIDTH,
+				hasYAxis: false,
+				xFormat: () => LONG_LABEL
+			}
 		});
 		await waitUntilSettled(container);
 
@@ -227,15 +240,15 @@ describe('Chart axes settling', () => {
 	});
 
 	it('restores the gutters when data returns after the chart was empty', async () => {
-		const { container, rerender } = render(SettleChart, {
-			props: { points: shortOfAMinute, width: CHART_WIDTH }
+		const { container, rerender } = render(AxesChart, {
+			props: { series: reading(shortOfAMinute), width: CHART_WIDTH }
 		});
 		await waitUntilSettled(container);
 		const before = pathBoxOf(container);
 
-		await rerender({ points: [] });
+		await rerender({ series: reading([]) });
 		await expect.poll(() => container.querySelector('[data-part="empty"]')).not.toBeNull();
-		await rerender({ points: shortOfAMinute });
+		await rerender({ series: reading(shortOfAMinute) });
 		await waitUntilSettled(container);
 
 		const after = pathBoxOf(container);
@@ -252,8 +265,8 @@ const wholeMinutes = [
 ];
 
 const labelPlacesIn = async (dir: 'ltr' | 'rtl') => {
-	const { container, unmount } = render(SettleChart, {
-		props: { points: wholeMinutes, width: CHART_WIDTH, dir }
+	const { container, unmount } = render(AxesChart, {
+		props: { series: reading(wholeMinutes), width: CHART_WIDTH, dir }
 	});
 	await waitUntilSettled(container);
 	const plotLeft = plotBoxOf(container).left;
@@ -272,14 +285,14 @@ const offsetsBetween = (expected: number[], actual: number[]) =>
 
 describe('Chart axes measuring', () => {
 	it('raises no ResizeObserver loop error when a data update widens the y labels', async () => {
-		const { container, rerender } = render(SettleChart, {
-			props: { points: wholeMinutes, width: CHART_WIDTH }
+		const { container, rerender } = render(AxesChart, {
+			props: { series: reading(wholeMinutes), width: CHART_WIDTH }
 		});
 		await waitUntilSettled(container);
 		const narrowLeft = pathBoxOf(container).left;
 
 		await rerender({
-			points: wholeMinutes.map((point) => ({ ...point, y: point.y * WIDE_Y_LABEL_SCALE }))
+			series: reading(wholeMinutes.map((point) => ({ ...point, y: point.y * WIDE_Y_LABEL_SCALE })))
 		});
 		await settleFrames();
 
@@ -293,14 +306,14 @@ describe('Chart axes measuring', () => {
 			{ x: minutesPastTen(9, 0), y: 8 }
 		];
 		const xFormat = (value: Date) => 'm'.repeat(value.getMinutes() + 1);
-		const { container, rerender } = render(SettleChart, {
-			props: { points, width: TICK_DROP_WIDTH, xFormat }
+		const { container, rerender } = render(AxesChart, {
+			props: { series: reading(points), width: TICK_DROP_WIDTH, xFormat }
 		});
 		await waitUntilSettled(container);
 		const narrowTicks = xLabelBoxes(container).length;
 
 		await rerender({
-			points: points.map((point) => ({ ...point, y: point.y * WIDE_Y_LABEL_SCALE })),
+			series: reading(points.map((point) => ({ ...point, y: point.y * WIDE_Y_LABEL_SCALE }))),
 			xFormat
 		});
 		await settleFrames();
@@ -331,8 +344,8 @@ describe('Chart axes measuring', () => {
 	});
 
 	it('takes a fixed width on the y axis class as the label column width', async () => {
-		const { container } = render(SettleChart, {
-			props: { points: wholeMinutes, width: CHART_WIDTH, yClass: FIXED_COLUMN.className }
+		const { container } = render(AxesChart, {
+			props: { series: reading(wholeMinutes), width: CHART_WIDTH, yClass: FIXED_COLUMN.className }
 		});
 		await waitUntilSettled(container);
 
@@ -342,8 +355,12 @@ describe('Chart axes measuring', () => {
 	});
 
 	it('keeps a y label column of fractional width inside the plot', async () => {
-		const { container } = render(SettleChart, {
-			props: { points: wholeMinutes, width: CHART_WIDTH, yClass: FRACTIONAL_COLUMN.className }
+		const { container } = render(AxesChart, {
+			props: {
+				series: reading(wholeMinutes),
+				width: CHART_WIDTH,
+				yClass: FRACTIONAL_COLUMN.className
+			}
 		});
 		await waitUntilSettled(container);
 

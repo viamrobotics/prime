@@ -595,7 +595,7 @@ In move mode, a pane or stack in the base has a "Float" destination on its own t
 {/if}
 ```
 
-The arrow keys in move mode stay within one layer, which is the base or one window. F6 moves to the next layer, the base first and then each window, and Shift+F6 moves back. On a Mac laptop, F6 needs the Fn key.
+The arrow keys in move mode stay within one layer, which is the base or one window. F6 moves to the next layer, the base first and then each window, and Shift+F6 moves back. On a Mac laptop, F6 needs the Fn key. A move that starts in a window holding no destination for it begins on the first destination in the base layer, so the arrow keys work at once. During a move, an arrow key never scrolls the page, even when it finds no destination.
 
 The status region announces "Floated Camera." and "Docked Camera left of Map.", with the placement, as it does for other move-mode messages.
 
@@ -735,7 +735,7 @@ During move mode, with focus on the moving pane's trigger:
 
 <KeyboardTable
   bindings={[
-    { text: "Arrow keys", action: "Step between the sides of a pane, then cross into the adjacent pane. Arrows in a text field stay with it." },
+    { text: "Arrow keys", action: "Step between the sides of a pane, then cross into the adjacent pane. They never scroll the page. Arrows in a text field stay with it." },
     { keys: "Tab / Shift + Tab", action: "Moves between destinations. Each destination is one Tab stop." },
     { keys: "Enter / Space", action: "Places the pane at the focused destination." },
     { keys: "F6 / Shift + F6", action: "Moves to the next or previous layer: the base, then each window." },

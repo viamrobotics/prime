@@ -44,7 +44,7 @@
 	Set root to 70%
 </button>
 <span data-testid="owner">{rootRatio}</span>
-<div data-testid="frame" style="width: 800px; height: 600px">
+<div style="width: 800px; height: 600px">
 	<Panes
 		bind:layout={
 			() => layout,
@@ -69,12 +69,7 @@
 					</Panes.MoveTrigger>
 				</Panes.DragTrigger>
 			{/if}
-			<section
-				aria-label={node.data.label}
-				data-testid="pane"
-				data-pane-id={node.id}
-				class="size-full"
-			>
+			<section aria-label={node.data.label} data-pane-id={node.id} class="size-full">
 				{node.data.label}
 			</section>
 		{/snippet}

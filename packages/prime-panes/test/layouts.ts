@@ -70,7 +70,7 @@ export const stackIds = {
 };
 
 function labeledPane(id: string): PaneNode<PaneData> {
-	return { type: 'pane', id, data: { label: id } };
+	return pane(id, id);
 }
 
 const stackLayoutRoot: LayoutNode<PaneData> = {

@@ -5,7 +5,7 @@ import { getLayerCakeContext } from 'layercake';
 import { domainPoints, xDomain } from './domain.ts';
 import type { ChartPoint, ChartXValue } from './point.ts';
 import type { ChartScale } from './scale.ts';
-import { X_SCALES, type XToNumber, type XWindow } from './x-scales.ts';
+import { X_SCALES, type XWindow } from './x-scales.ts';
 
 const PALETTE = [
 	'--color-chart-series-1',
@@ -83,7 +83,6 @@ export interface ChartContext {
 	readonly series: readonly ChartSeries[];
 	readonly visibleSeries: readonly ChartSeries[];
 	readonly axisFormats: Readonly<AxisFormats>;
-	readonly xToNumber: XToNumber;
 	// The drawn x window, from the bounds and the series the domain reads.
 	readonly xWindow: XWindow;
 	addSeries: (input: SeriesInput) => ChartSeries;
@@ -96,7 +95,6 @@ export interface ChartContext {
 export interface PlotContext {
 	readonly layers: readonly ChartLayer[];
 	readonly attributes: HTMLAttributes<HTMLDivElement>;
-	readonly xWindow: XWindow;
 	addLayer: (layer: ChartLayer) => void;
 	setAttributes: (attributes: PlotAttributes) => void;
 }
@@ -111,7 +109,7 @@ function registry<TEntry>() {
 		},
 		register(entry: TEntry) {
 			$effect(() => {
-				// Registration runs inside the caller's effect, which must not track the list it grows.
+				// Untracked, so the effect never reruns, and registers the entry again, when the list changes.
 				untrack(() => {
 					entries = [...entries, entry];
 				});
@@ -123,7 +121,6 @@ function registry<TEntry>() {
 	};
 }
 
-// Each option is a thunk over one of the root's live props.
 export type ChartOptions = { readonly [TKey in keyof ChartSettings]: () => ChartSettings[TKey] };
 
 export const provideChart = (options: ChartOptions): ChartContext => {
@@ -171,9 +168,6 @@ export const provideChart = (options: ChartOptions): ChartContext => {
 		},
 		get axisFormats() {
 			return { x: xFormats.entries.at(-1)?.(), y: yFormats.entries.at(-1)?.() };
-		},
-		get xToNumber() {
-			return toNumber;
 		},
 		get xWindow() {
 			return { domain: windowDomain, toNumber };
@@ -244,9 +238,6 @@ export const providePlot = (): PlotContext => {
 		get attributes() {
 			return Object.assign({}, ...attributes.entries.map((entry) => entry()));
 		},
-		get xWindow() {
-			return chart.xWindow;
-		},
 		addLayer: (layer) => layers.register(layer),
 		setAttributes: (entry) => attributes.register(entry)
 	};
@@ -254,16 +245,12 @@ export const providePlot = (): PlotContext => {
 	return context;
 };
 
-// `part` names the caller, such as `'Chart.Line'`, in the error thrown when no `Chart.Plot`
-// encloses it. Call it before `usePlot`.
 export const usePlotContext = (part: string): PlotContext => {
 	const context = getContext<PlotContext | undefined>(PLOT_KEY);
 	if (!context) throw new Error(`${part} must be placed inside Chart.Plot.`);
 	return context;
 };
 
-// `part` names a part that renders where it is placed, such as `'Chart.Legend'`, in the error
-// thrown when a `Chart.Plot` encloses it.
 export const assertOutsidePlot = (part: string): void => {
 	if (getContext(PLOT_KEY)) throw new Error(`${part} must be placed outside Chart.Plot.`);
 };

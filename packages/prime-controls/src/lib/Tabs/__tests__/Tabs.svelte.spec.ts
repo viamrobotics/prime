@@ -3,13 +3,23 @@ import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
-import BoundTabs from './BoundTabs.svelte';
-import TabsHarness from './TabsHarness.svelte';
+import BoundTabs from './fixtures/BoundTabs.svelte';
+import ClassedTabs from './fixtures/ClassedTabs.svelte';
+import TabsHarness from './fixtures/TabsHarness.svelte';
 
 const tab = (name: string) => page.getByRole('tab', { name, exact: true });
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')!.textContent;
 const rootProperty = (name: string) =>
 	getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+const resolvedFontSize = (size: string) => {
+	const node = document.createElement('span');
+	node.style.fontSize = size;
+	document.body.append(node);
+	const resolved = getComputedStyle(node).fontSize;
+	node.remove();
+	return resolved;
+};
 
 describe('Tabs', () => {
 	it('names the tablist from its aria-label', async () => {
@@ -18,12 +28,10 @@ describe('Tabs', () => {
 		await expect.element(page.getByRole('tablist', { name: 'Mode' })).toBeInTheDocument();
 	});
 
-	it('names each tab from its text', async () => {
+	it.each(['Move', 'Rotate', 'Scale'])('names the %s tab from its text', async (name) => {
 		render(TabsHarness);
 
-		for (const name of ['Move', 'Rotate', 'Scale']) {
-			await expect.element(tab(name)).toBeInTheDocument();
-		}
+		await expect.element(tab(name)).toBeInTheDocument();
 	});
 
 	it('selects the first tab and shows its content', async () => {
@@ -46,19 +54,27 @@ describe('Tabs', () => {
 		await expect.element(page.getByText('Move controls')).not.toBeVisible();
 	});
 
-	it('moves to the next tab with ArrowRight and selects it', async () => {
+	it('moves focus to the next tab with ArrowRight', async () => {
 		render(TabsHarness);
+		(tab('Move').element() as HTMLElement).focus();
 
+		await userEvent.keyboard('{ArrowRight}');
+
+		await expect.element(tab('Rotate')).toHaveFocus();
+	});
+
+	it('selects the focused tab with Enter', async () => {
+		render(TabsHarness);
 		(tab('Move').element() as HTMLElement).focus();
 		await userEvent.keyboard('{ArrowRight}');
-		await expect.element(tab('Rotate')).toHaveFocus();
 
 		await userEvent.keyboard('{Enter}');
+
 		await expect.element(tab('Rotate')).toHaveAttribute('aria-selected', 'true');
 		await expect.element(page.getByText('Rotate controls')).toBeVisible();
 	});
 
-	it('reads the selection through bind:value', async () => {
+	it('writes the clicked tab to bind:value', async () => {
 		const { container } = render(BoundTabs, { props: { initial: 'move' } });
 
 		await tab('Rotate').click();
@@ -66,7 +82,7 @@ describe('Tabs', () => {
 		expect(owner(container)).toBe('rotate');
 	});
 
-	it('drives the strip when the parent sets the value', async () => {
+	it('selects the tab the parent sets through the value', async () => {
 		const { container } = render(BoundTabs, { props: { initial: 'move' } });
 
 		await page.getByRole('button', { name: 'Pick scale' }).click();
@@ -76,59 +92,70 @@ describe('Tabs', () => {
 		expect(owner(container)).toBe('scale');
 	});
 
-	it('sizes triggers to the panel scale', () => {
+	it.each([
+		{ part: 'root', selector: ':has(> [role="tablist"])', marker: 'root-extra' },
+		{ part: 'list', selector: '[role="tablist"]', marker: 'list-extra' },
+		{ part: 'trigger', selector: '[role="tab"]', marker: 'trigger-extra' },
+		{ part: 'content', selector: '[role="tabpanel"]', marker: 'content-extra' }
+	])('puts the class prop on the $part element', ({ selector, marker }) => {
+		const { container } = render(ClassedTabs);
+
+		const element = container.querySelector(selector)!;
+
+		expect(element.classList.contains(marker), `${selector} carries ${marker}`).toBe(true);
+	});
+});
+
+describe('Tabs panel scale', () => {
+	it('sets trigger text to text-xs', () => {
 		render(TabsHarness);
 
 		const trigger = getComputedStyle(tab('Move').element());
-		const extraSmall = rootProperty('--text-xs');
-		const small = rootProperty('--text-sm');
-		const probe = (size: string) => {
-			const node = document.createElement('span');
-			node.style.fontSize = size;
-			document.body.append(node);
-			const resolved = getComputedStyle(node).fontSize;
-			node.remove();
-			return resolved;
-		};
 
-		expect(trigger.fontSize).toBe(probe(extraSmall));
-		expect(trigger.fontSize).not.toBe(probe(small));
+		expect(trigger.fontSize).toBe(resolvedFontSize(rootProperty('--text-xs')));
+		expect(trigger.fontSize).not.toBe(resolvedFontSize(rootProperty('--text-sm')));
 	});
 
-	it('keeps a hit target of at least min-h-6', () => {
+	it('sets a trigger minimum height of 24px', () => {
 		render(TabsHarness);
 
-		const probe = document.createElement('div');
-		probe.style.height = 'calc(var(--spacing) * 6)';
-		document.body.append(probe);
-		const minimum = probe.getBoundingClientRect().height;
-		probe.remove();
-
-		expect(tab('Move').element().getBoundingClientRect().height).toBeGreaterThanOrEqual(minimum);
-	});
-
-	it('tightens trigger padding below prime-ui', () => {
-		render(TabsHarness);
-
-		const spacing = parseFloat(rootProperty('--spacing'));
-		const unit = parseFloat(getComputedStyle(document.documentElement).fontSize);
-		const pixelsPerStep = rootProperty('--spacing').endsWith('rem') ? spacing * unit : spacing;
 		const trigger = getComputedStyle(tab('Move').element());
 
-		expect(parseFloat(trigger.paddingTop)).toBe(pixelsPerStep * 1);
-		expect(parseFloat(trigger.paddingBottom)).toBe(pixelsPerStep * 0.5);
+		expect(trigger.minHeight).toBe('24px');
 	});
 
-	it('tightens the gap between triggers below prime-ui', () => {
+	it('sets trigger padding to 4px above and 2px below, tighter than prime-ui', () => {
 		render(TabsHarness);
 
-		const probe = document.createElement('div');
-		probe.style.width = 'calc(var(--spacing) * 2)';
-		document.body.append(probe);
-		const expected = getComputedStyle(probe).width;
-		probe.remove();
+		const trigger = getComputedStyle(tab('Move').element());
+
+		expect(trigger.paddingTop).toBe('4px');
+		expect(trigger.paddingBottom).toBe('2px');
+	});
+
+	it('sets the gap between triggers to 8px, tighter than prime-ui', () => {
+		render(TabsHarness);
 
 		const list = getComputedStyle(page.getByRole('tablist').element());
-		expect(list.columnGap).toBe(expected);
+
+		expect(list.columnGap).toBe('8px');
+	});
+
+	it('stacks the root as a column with a 4px gap', () => {
+		const { container } = render(TabsHarness);
+
+		const root = getComputedStyle(container.querySelector(':has(> [role="tablist"])')!);
+
+		expect(root.flexDirection).toBe('column');
+		expect(root.rowGap).toBe('4px');
+	});
+
+	it('stacks the content as a column with a 4px gap', () => {
+		render(TabsHarness);
+
+		const content = getComputedStyle(page.getByRole('tabpanel').element());
+
+		expect(content.flexDirection).toBe('column');
+		expect(content.rowGap).toBe('4px');
 	});
 });

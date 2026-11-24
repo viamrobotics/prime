@@ -4,7 +4,6 @@ import { commands, page } from 'vitest/browser';
 
 import FloatingPanes from '../../../../test/fixtures/FloatingPanes.svelte';
 import { createFloatLayout, expectFloat, floatIds } from '../../../../test/layouts.ts';
-import '../../../../test/panes-queries.ts';
 import type { Point } from '../../../../test/input-commands.ts';
 import type { FloatRect } from '../../layout.ts';
 
@@ -76,6 +75,42 @@ describe('FloatResize', () => {
 		await commands.mouseUp();
 
 		await expect.poll(() => storedRect(component)).toEqual({ ...RECT, width: 401, height: 301 });
+		expect(component.getWrites()).toBe(1);
+	});
+
+	it.each([
+		{
+			handle: 'e',
+			press: { x: 299, y: 100 },
+			release: { x: 600, y: 300 },
+			expected: { x: 200, y: 150, width: 401, height: 200 }
+		},
+		{
+			handle: 's',
+			press: { x: 150, y: 199 },
+			release: { x: 400, y: 450 },
+			expected: { x: 200, y: 150, width: 300, height: 301 }
+		},
+		{
+			handle: 'ne',
+			press: { x: 299, y: 1 },
+			release: { x: 600, y: 100 },
+			expected: { x: 200, y: 99, width: 401, height: 251 }
+		},
+		{
+			handle: 'sw',
+			press: { x: 1, y: 199 },
+			release: { x: 150, y: 450 },
+			expected: { x: 149, y: 150, width: 351, height: 301 }
+		}
+	])('resizes from $handle with one write on release', async ({ press, release, expected }) => {
+		const component = renderWindow(RECT);
+
+		await pressWindowAt(press);
+		await moveInBox(release);
+		await commands.mouseUp();
+
+		await expect.poll(() => storedRect(component)).toEqual(expected);
 		expect(component.getWrites()).toBe(1);
 	});
 

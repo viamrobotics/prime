@@ -3,9 +3,12 @@ import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
-import BoundSelect from './BoundSelect.svelte';
-import ChildlessSelect from './ChildlessSelect.svelte';
-import HintedSelect from './HintedSelect.svelte';
+import BoundSelect from './fixtures/BoundSelect.svelte';
+import ChildlessSelect from './fixtures/ChildlessSelect.svelte';
+import CustomItemSelect from './fixtures/CustomItemSelect.svelte';
+import GroupedSelect from './fixtures/GroupedSelect.svelte';
+import HintedSelect from './fixtures/HintedSelect.svelte';
+import OrphanItems from './fixtures/OrphanItems.svelte';
 
 const MIN_ROW_HEIGHT_PX = 24;
 const MAX_ROW_HEIGHT_PX = 28;
@@ -31,22 +34,29 @@ afterEach(async () => {
 });
 
 describe('Select', () => {
-	it('opens on click and lists the items', async () => {
+	it.each(['Move', 'Rotate', 'Scale'])('lists the %s item when it opens on click', async (name) => {
 		render(BoundSelect);
 
 		await trigger().click();
 
-		for (const name of ['Move', 'Rotate', 'Scale']) {
-			await expect.element(option(name)).toBeInTheDocument();
-		}
+		await expect.element(option(name)).toBeInTheDocument();
 	});
 
-	it('opens with the keyboard and Enter picks the highlighted item', async () => {
-		const { container } = render(BoundSelect);
+	it('opens with ArrowDown from the focused trigger', async () => {
+		render(BoundSelect);
+		(trigger().element() as HTMLElement).focus();
 
+		await userEvent.keyboard('{ArrowDown}');
+
+		await expect.element(option('Move')).toBeInTheDocument();
+	});
+
+	it('picks the highlighted item with Enter and closes the list', async () => {
+		const { container } = render(BoundSelect);
 		(trigger().element() as HTMLElement).focus();
 		await userEvent.keyboard('{ArrowDown}');
 		await expect.element(option('Move')).toBeInTheDocument();
+
 		await userEvent.keyboard('{ArrowDown}{Enter}');
 
 		await vi.waitFor(() => expect(owner(container)).toBe('rotate'));
@@ -68,7 +78,7 @@ describe('Select', () => {
 
 		await trigger().click({ force: true });
 
-		expect(listbox()).toBeNull();
+		expect(listbox(), 'the list stays closed').toBeNull();
 	});
 
 	describe('without children', () => {
@@ -163,5 +173,101 @@ describe('Select hint', () => {
 		await expect
 			.element(page.getByRole('combobox', { name: 'Mode' }))
 			.not.toHaveAttribute('aria-describedby');
+	});
+});
+
+describe('Select parts', () => {
+	const opened = async () => {
+		const screen = render(GroupedSelect);
+		await trigger().click();
+		await expect.element(option('Alpha')).toBeInTheDocument();
+		return screen;
+	};
+
+	it('sets item padding to 6px across and 2px down', async () => {
+		await opened();
+
+		const item = getComputedStyle(option('Alpha').element());
+
+		expect(item.paddingLeft).toBe('6px');
+		expect(item.paddingTop).toBe('2px');
+	});
+
+	it('sets group heading padding to 6px across and 2px down', async () => {
+		await opened();
+
+		const heading = getComputedStyle(page.getByText('Modes', { exact: true }).element());
+
+		expect(heading.paddingLeft).toBe('6px');
+		expect(heading.paddingTop).toBe('2px');
+	});
+
+	it('puts the class prop on the trigger', () => {
+		render(GroupedSelect);
+
+		expect(
+			trigger().element().classList.contains('trigger-extra'),
+			'trigger carries the class'
+		).toBe(true);
+	});
+
+	it('puts the class prop on a hand-built item', async () => {
+		await opened();
+
+		expect(
+			option('Alpha').element().classList.contains('item-extra'),
+			'item carries the class'
+		).toBe(true);
+	});
+
+	it('marks a disabled item aria-disabled', async () => {
+		await opened();
+
+		await expect.element(option('Beta')).toHaveAttribute('aria-disabled', 'true');
+	});
+
+	it('does not pick a disabled item', async () => {
+		const { container } = await opened();
+
+		await option('Beta').click({ force: true });
+
+		expect(owner(container)).toBe('');
+	});
+});
+
+describe('Select.Items', () => {
+	it('renders the children snippet for each item with its selected state', async () => {
+		render(CustomItemSelect);
+
+		await trigger().click();
+
+		await expect.element(option('Alpha:false')).toBeInTheDocument();
+		await expect
+			.element(page.getByRole('option', { name: /Beta/ }))
+			.toHaveTextContent('Beta:false');
+	});
+
+	it('passes disabled through to the item', async () => {
+		render(CustomItemSelect);
+
+		await trigger().click();
+
+		await expect
+			.element(page.getByRole('option', { name: /Beta/ }))
+			.toHaveAttribute('aria-disabled', 'true');
+	});
+
+	it('marks the picked item selected in the children snippet', async () => {
+		render(CustomItemSelect);
+		await trigger().click();
+		await option('Alpha:false').click();
+
+		await trigger().click();
+
+		await expect.element(option('Alpha:true')).toBeInTheDocument();
+	});
+
+	it('throws outside a Select', () => {
+		expect(() => render(OrphanItems)).toThrow('Select.Items must be rendered inside a Select.');
 	});
 });

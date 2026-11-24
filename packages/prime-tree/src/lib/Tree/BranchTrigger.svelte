@@ -2,6 +2,7 @@
 	import { mergeProps } from '@zag-js/svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import { disableActivation } from './disabled-node.ts';
 	import { useTree, useTreeNode } from './useTree.svelte.ts';
 
 	type Props = HTMLAttributes<HTMLSpanElement>;
@@ -13,7 +14,10 @@
 
 	const attrs = $derived(
 		mergeProps(
-			tree.api.getBranchTriggerProps({ node: current.node, indexPath: current.indexPath }),
+			disableActivation(
+				tree.api.getBranchTriggerProps({ node: current.node, indexPath: current.indexPath }),
+				current.state.disabled
+			),
 			rest
 		)
 	);

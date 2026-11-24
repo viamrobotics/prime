@@ -1,9 +1,14 @@
+<!--
+@component
+Horizontal grid lines at the y axis ticks, across the plot area.
+-->
 <script lang="ts">
 	import type { ClassValue } from 'svelte/elements';
 	import { usePlot, usePlotContext } from './context.svelte.ts';
 	import { yTickCount } from './ticks.ts';
 
 	interface Props {
+		/** Lands on the group that holds the grid lines. */
 		class?: ClassValue;
 	}
 

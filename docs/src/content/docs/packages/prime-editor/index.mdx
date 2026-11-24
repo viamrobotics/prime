@@ -115,11 +115,15 @@ A function binding receives each edit and decides what `value` becomes. This one
 
 ### Disabled and placeholder
 
-`disabled` turns the editor off. Unlike `readonly`, it takes no focus and no selection, it leaves the tab order, and the textbox is marked `aria-disabled`. `placeholder` is the text shown while the document is empty.
+`disabled` turns the editor off, and it wins over `readonly`. Unlike `readonly`, it takes no focus and no selection, it leaves the tab order, and the textbox is marked `aria-disabled`. `placeholder` is the text shown while the document is empty.
 
 <Example code={disabledSource} title="Disabled.svelte">
   <Disabled client:visible />
 </Example>
+
+### Gutter and wrapping
+
+`lineNumbers` shows the gutter, which holds the line numbers and the fold markers. It is on by default. `wrapLines` wraps long lines instead of scrolling them horizontally. Both reconfigure the editor in place.
 
 ### Unified diff
 
@@ -131,7 +135,7 @@ Set `original` to open the diff view. `value` is compared against it, and the de
 
 ### Split diff
 
-Set `diff="split"` to put `original` beside `value`. The original side is readonly. Switching between unified and split rebuilds the editor, and every other prop change reconfigures it in place.
+Set `diff="split"` to put `original` beside `value`. The original side is readonly. `disabled` applies to both sides. Switching between unified and split rebuilds the editor, and so does changing `collapseUnchanged`. Every other prop change reconfigures it in place.
 
 <Example code={splitDiffSource} title="SplitDiff.svelte">
   <SplitDiff client:visible />

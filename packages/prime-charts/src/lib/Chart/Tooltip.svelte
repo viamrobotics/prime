@@ -1,3 +1,7 @@
+<!--
+@component
+Shows the active point inside [`Chart.Plot`](./Plot.svelte): the series color, its name, the time, and the value followed by the unit. Placing it makes the plot a tab stop while a visible series has a point inside the x window. The pointer picks the nearest point of a visible series, and the arrow keys move between points and series. A polite live region announces each point the keyboard reaches, and `Escape` hides the tooltip.
+-->
 <script lang="ts">
 	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
 	import { useChart, usePlot, usePlotContext, type ChartSeries } from './context.svelte.ts';
@@ -16,7 +20,7 @@
 		xFormat?: (value: Date) => string;
 		/** Formats the value. Defaults to the y axis's `format`, then `Intl.NumberFormat`. */
 		yFormat?: (value: number) => string;
-		/** Lands on the readout. */
+		/** Lands on the visible readout box. */
 		class?: ClassValue;
 	}
 
@@ -37,13 +41,13 @@
 	let readoutHeight = $state(0);
 
 	const active = $derived(
-		chosen && isAvailable(chart.series, chosen, plotContext.xWindow) ? chosen : undefined
+		chosen && isAvailable(chart.series, chosen, chart.xWindow) ? chosen : undefined
 	);
-	const isInteractive = $derived(firstPoint(chart.series, plotContext.xWindow) !== undefined);
+	const isInteractive = $derived(firstPoint(chart.series, chart.xWindow) !== undefined);
 
 	const isVisible = $derived(isShown && isInteractive);
 
-	// Losing the tab stop also drops the blur and pointer-leave handlers that would hide the reading, so it is reset here.
+	// Losing the tab stop also drops the blur and pointer-leave handlers, so `hide` runs here, or the readout would come back with the points.
 	$effect(() => {
 		if (!isInteractive) hide();
 	});
@@ -54,7 +58,7 @@
 	const reading = $derived.by(() => {
 		const point = active?.series.points[active.index];
 		if (!active || !point || point.y === null) return undefined;
-		const time = chart.xToNumber(point.x);
+		const time = chart.xWindow.toNumber(point.x);
 		const value = formatValue(point.y);
 		return {
 			series: active.series,
@@ -98,17 +102,18 @@
 		isAnnounced = false;
 	};
 
+	// On the window, so `Escape` also dismisses a readout the pointer shows without moving it, as WCAG 1.4.13 asks.
+	const onWindowKeydown = (event: KeyboardEvent) => {
+		if (event.key === 'Escape') hide();
+	};
+
 	const onkeydown = (event: KeyboardEvent) => {
-		if (event.key === 'Escape') {
-			hide();
-			return;
-		}
 		if (!isNavigationKey(event.key)) return;
 		event.preventDefault();
 		show(
 			active
-				? step(chart.series, active, event.key, plotContext.xWindow)
-				: firstPoint(chart.series, plotContext.xWindow),
+				? step(chart.series, active, event.key, { x: plot.xScale, y: plot.yScale }, chart.xWindow)
+				: firstPoint(chart.series, chart.xWindow),
 			true
 		);
 	};
@@ -116,7 +121,7 @@
 	const onpointermove = (event: PointerEvent) => {
 		const position = plot.pointer(event);
 		show(
-			nearestPoint(chart.series, position, { x: plot.xScale, y: plot.yScale }, plotContext.xWindow),
+			nearestPoint(chart.series, position, { x: plot.xScale, y: plot.yScale }, chart.xWindow),
 			false
 		);
 	};
@@ -125,7 +130,7 @@
 		role: 'application',
 		tabindex: 0,
 		'aria-describedby': instructionsId,
-		onfocus: () => show(active ?? firstPoint(chart.series, plotContext.xWindow), true),
+		onfocus: () => show(active ?? firstPoint(chart.series, chart.xWindow), true),
 		onblur: hide,
 		onkeydown,
 		onpointermove,
@@ -169,11 +174,13 @@
 	{/if}
 {/snippet}
 
+<svelte:window onkeydowncapture={onWindowKeydown} />
+
 <div role="status" aria-live="polite" aria-atomic="true" class="sr-only">{announcement}</div>
 {#if isInteractive}
 	<p id={instructionsId} class="sr-only">
 		Left and right arrows move between points. Up and down arrows move between series. Home and End
-		go to the first and last point. Page Up and Page Down move by a tenth of the series. Escape
-		hides the tooltip.
+		go to the leftmost and rightmost point. Page Up and Page Down move by a tenth of the series.
+		Escape hides the tooltip.
 	</p>
 {/if}
