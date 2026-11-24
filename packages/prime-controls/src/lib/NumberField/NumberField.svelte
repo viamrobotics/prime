@@ -6,7 +6,8 @@ every pointer move, so a function binding sees each intermediate value and can t
 ArrowUp and ArrowDown step by `step`, and a scrub moves `step` per pixel. Hold Shift for 10 times
 that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays unclamped. Up and down
 buttons at the frame's right edge step one `step` on a pointer press, with no modifier, and
-repeat while held.
+repeat while held. Clearing the field writes nothing: it stays empty while it has focus, takes the
+next number typed, and shows `value` again on blur.
 
 ```svelte
 <NumberField label="Speed" min={0} max={10} step={0.1} bind:value />
@@ -28,7 +29,10 @@ repeat while held.
 		HTMLInputAttributes,
 		'value' | 'min' | 'max' | 'step' | 'type' | 'children' | 'class'
 	> {
-		/** Current value. An empty field is `undefined`. */
+		/**
+		 * Current value. `undefined` renders an empty field. Clearing the field never writes
+		 * `undefined`.
+		 */
 		value?: number;
 
 		/**
@@ -92,7 +96,7 @@ repeat while held.
 		hint,
 		suffix,
 		trailing,
-		state,
+		state: fieldState,
 		labelPlacement = 'outside',
 		min,
 		max,
@@ -102,6 +106,7 @@ repeat while held.
 		disabled,
 		readonly,
 		onkeydown,
+		onblur,
 		'aria-describedby': ariaDescribedby,
 		...restProps
 	}: Props & AccessibleName = $props();
@@ -147,8 +152,26 @@ repeat while held.
 	const isLocked = $derived(Boolean(disabled) || Boolean(readonly));
 	const placementClasses = $derived(PLACEMENT_CLASSES[labelPlacement]);
 
+	// A cleared field holds its emptiness here instead of writing `undefined`, until a number is
+	// written or the field loses focus.
+	let isCleared = $state(false);
+
 	function write(next: number) {
+		isCleared = false;
 		if (next !== value) value = next;
+	}
+
+	function writeTyped(next: number | undefined) {
+		if (next === undefined) {
+			isCleared = true;
+			return;
+		}
+		write(next);
+	}
+
+	function handleBlur(event: FocusEvent & { currentTarget: HTMLInputElement }) {
+		isCleared = false;
+		onblur?.(event);
 	}
 
 	function stepBy(direction: number, modifiers: { shiftKey: boolean; altKey: boolean }) {
@@ -235,10 +258,11 @@ repeat while held.
 			{step}
 			{disabled}
 			{readonly}
-			{state}
+			state={fieldState}
 			aria-describedby={describedBy}
-			bind:value
+			bind:value={() => (isCleared ? undefined : value), writeTyped}
 			onkeydown={handleKeydown}
+			onblur={handleBlur}
 			class={INPUT_CLASS}
 		/>
 		{#if suffix}

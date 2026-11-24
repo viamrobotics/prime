@@ -5,16 +5,16 @@ a [`PointValue`](./point.ts) and renders `x` and `y`, plus `z` and `w` when they
 axes sit in one row where each has room for its value, and stack one a row in a narrower box. Editing
 one axis writes a new object with that axis changed and every other axis as it was. Clearing an axis
 writes nothing. Its field stays empty while it is being typed in and shows the axis's number again
-on blur.
+on blur. An `undefined` axis listed in `axes` renders empty with that axis's `placeholder`, which
+shows a value that differs across a selection.
 
 ```svelte
 <Point label="Position" step={0.1} bind:value={position} />
 ```
 -->
-<script lang="ts">
+<script lang="ts" generics="T extends Partial<PointValue>">
 	import type { Snippet } from 'svelte';
 	import type { ClassValue, HTMLAttributes } from 'svelte/elements';
-	import { SvelteSet } from 'svelte/reactivity';
 	import type { AccessibleName } from '../accessible-name.ts';
 
 	import type { FieldState } from '@viamrobotics/prime-ui';
@@ -28,8 +28,12 @@ on blur.
 		HTMLAttributes<HTMLDivElement>,
 		'class' | 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-describedby'
 	> {
-		/** The vector. Its defined axes decide how many fields render. */
-		value: PointValue;
+		/**
+		 * The vector. `x` and `y` always render, and `z` and `w` render when defined or listed in
+		 * `axes`. An `undefined` axis renders empty and stays `undefined` in every write, so a write
+		 * carries a number only for the axes that have one.
+		 */
+		value: T;
 
 		/** Visible label for the group. Without it, pass `aria-label` or `aria-labelledby`. */
 		label?: string;
@@ -65,8 +69,9 @@ on blur.
 		state?: FieldState;
 
 		/**
-		 * What single axes set for themselves: `min`, `max`, `step`, `suffix`, `state`, and
-		 * `describedBy`. An axis listed here uses its own value in place of the control's.
+		 * What single axes set for themselves: `min`, `max`, `step`, `suffix`, `state`, `describedBy`,
+		 * and `placeholder`. An axis listed here uses its own value in place of the control's, and
+		 * renders even while its value is `undefined`.
 		 */
 		axes?: Partial<Record<PointAxis, PointAxisOptions>>;
 
@@ -110,7 +115,12 @@ on blur.
 	}: Props & AccessibleName = $props();
 
 	const AXES: PointAxis[] = ['x', 'y', 'z', 'w'];
-	const definedAxes = $derived(AXES.filter((axis) => value[axis] !== undefined));
+	const REQUIRED_AXES = new Set<PointAxis>(['x', 'y']);
+	const shownAxes = $derived(
+		AXES.filter(
+			(axis) => REQUIRED_AXES.has(axis) || value[axis] !== undefined || axes?.[axis] !== undefined
+		)
+	);
 
 	// The axes sit in one row from about 7.3rem a field, the room for an inset label, eight
 	// characters, trailing content, and the stepper. Narrower than that they stack, one a row.
@@ -123,17 +133,8 @@ on blur.
 	const labelId = $props.id();
 	const hintId = hintIdFor(labelId);
 
-	// An `undefined` axis would drop its field, so a cleared axis writes nothing. It is held here
-	// instead, which lets its field stay empty until a number is typed or the field loses focus.
-	const clearedAxes = new SvelteSet<PointAxis>();
-
 	function writeAxis(axis: PointAxis, next: number | undefined) {
-		if (next === undefined) {
-			clearedAxes.add(axis);
-			return;
-		}
-		clearedAxes.delete(axis);
-		value = { ...value, [axis]: next };
+		if (next !== undefined) value = { ...value, [axis]: next };
 	}
 </script>
 
@@ -156,8 +157,8 @@ on blur.
 		{/if}
 	{/if}
 	<!-- Equal grid columns keep every axis the same width, whatever `details` holds. -->
-	<div data-point-axes class={['grid gap-1', ROW_FROM[definedAxes.length]]}>
-		{#each definedAxes as axis (axis)}
+	<div data-point-axes class={['grid gap-1', ROW_FROM[shownAxes.length]]}>
+		{#each shownAxes as axis (axis)}
 			<div class="flex min-w-0 flex-col gap-1">
 				{#snippet axisTrailing()}
 					{@render trailingContent?.(axis)}
@@ -171,13 +172,11 @@ on blur.
 					step={axes?.[axis]?.step ?? step}
 					suffix={axes?.[axis]?.suffix ?? suffix}
 					state={axes?.[axis]?.state ?? state}
+					placeholder={axes?.[axis]?.placeholder}
 					{disabled}
 					class="min-w-0"
 					trailing={trailingContent ? axisTrailing : undefined}
-					onblur={() => clearedAxes.delete(axis)}
-					bind:value={
-						() => (clearedAxes.has(axis) ? undefined : value[axis]), (next) => writeAxis(axis, next)
-					}
+					bind:value={() => value[axis], (next) => writeAxis(axis, next)}
 				/>
 				{@render details?.(axis)}
 			</div>

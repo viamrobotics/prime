@@ -725,3 +725,56 @@ describe('NumberField suffix size', () => {
 		expect(getComputedStyle(input(suffixed.container)).fontSize).toBe(bareFontSize);
 	});
 });
+
+describe('NumberField cleared', () => {
+	it('stays empty and writes nothing when cleared', async () => {
+		const { container, values } = renderControlled({ initial: 20 });
+
+		await userEvent.clear(input(container));
+
+		await expect.element(input(container)).toHaveFocus();
+		expect(input(container).value).toBe('');
+		expect(values()).toEqual([]);
+		expect(owner(container)).toBe('20');
+	});
+
+	it('never writes undefined into a plain binding', async () => {
+		const { container } = render(BoundNumberField, { props: { label: 'Speed', initial: 20 } });
+
+		await userEvent.clear(input(container));
+
+		expect(owner(container)).toBe('20');
+		expect(input(container).value).toBe('');
+	});
+
+	it('writes the typed number after a clear, not the old number with digits appended', async () => {
+		const { container, values } = renderControlled({ initial: 20 });
+
+		await userEvent.clear(input(container));
+		await userEvent.keyboard('35');
+
+		expect(values()).toEqual([3, 35]);
+		expect(owner(container)).toBe('35');
+		expect(input(container).value).toBe('35');
+	});
+
+	it('shows the bound value again when an empty field loses focus', async () => {
+		const { container } = render(BoundNumberField, { props: { label: 'Speed', initial: 20 } });
+
+		await userEvent.clear(input(container));
+		await userEvent.tab();
+
+		expect(input(container).value).toBe('20');
+		expect(owner(container)).toBe('20');
+	});
+
+	it('shows the stepped number when an arrow key follows a clear', async () => {
+		const { container } = render(BoundNumberField, { props: { label: 'Speed', initial: 20 } });
+
+		await userEvent.clear(input(container));
+		await userEvent.keyboard('{ArrowUp}');
+
+		expect(owner(container)).toBe('21');
+		expect(input(container).value).toBe('21');
+	});
+});

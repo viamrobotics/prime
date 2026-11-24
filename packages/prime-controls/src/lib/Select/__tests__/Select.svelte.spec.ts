@@ -3,6 +3,7 @@ import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
+import { Select } from '../select.ts';
 import BoundSelect from './fixtures/BoundSelect.svelte';
 import ChildlessSelect from './fixtures/ChildlessSelect.svelte';
 import CustomItemSelect from './fixtures/CustomItemSelect.svelte';
@@ -269,5 +270,36 @@ describe('Select.Items', () => {
 
 	it('throws outside a Select', () => {
 		expect(() => render(OrphanItems)).toThrow('Select.Items must be rendered inside a Select.');
+	});
+});
+
+describe('Select width', () => {
+	const items = [
+		{ value: 'move', label: 'Move' },
+		{ value: 'rotate', label: 'Rotate' }
+	];
+	const CONTAINER_WIDTH = '256px';
+
+	it("fills its container's width without children", () => {
+		const { container } = render(ChildlessSelect);
+		container.style.width = CONTAINER_WIDTH;
+
+		expect(trigger().element().getBoundingClientRect().width).toBe(
+			container.getBoundingClientRect().width
+		);
+	});
+
+	it("fills its container's width with a hint", () => {
+		const { container } = render(HintedSelect);
+		container.style.width = CONTAINER_WIDTH;
+
+		const row = trigger().element().parentElement!;
+		expect(row.getBoundingClientRect().width).toBe(container.getBoundingClientRect().width);
+	});
+
+	it('puts class on the trigger', async () => {
+		render(Select, { props: { items, 'aria-label': 'Mode', class: 'min-w-0 flex-1' } });
+
+		await expect.element(trigger()).toHaveClass('min-w-0', 'flex-1');
 	});
 });

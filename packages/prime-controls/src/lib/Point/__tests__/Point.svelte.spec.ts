@@ -653,3 +653,51 @@ describe('Point root and naming', () => {
 		expect(props).toBeDefined();
 	});
 });
+
+describe('Point mixed axes', () => {
+	const MIXED = { placeholder: '-' };
+
+	it('renders an undefined axis listed in axes empty, with its placeholder', async () => {
+		render(Point, {
+			props: { label: 'Position', value: { x: 1, y: 2, z: undefined }, axes: { z: MIXED } }
+		});
+
+		await expect.element(spinbutton('Z')).toHaveValue(null);
+		await expect.element(spinbutton('Z')).toHaveAttribute('placeholder', '-');
+	});
+
+	it('renders an undefined x or y empty', async () => {
+		render(Point, {
+			props: { label: 'Position', value: { x: undefined, y: 2 }, axes: { x: MIXED } }
+		});
+
+		await expect.element(spinbutton('X')).toHaveValue(null);
+		await expect.element(spinbutton('X')).toHaveAttribute('placeholder', '-');
+		await expect.element(spinbutton('Y')).toHaveValue(2);
+	});
+
+	it('drops an undefined z that axes does not list', () => {
+		render(Point, { props: { label: 'Position', value: { x: 1, y: 2, z: undefined } } });
+
+		expect(axisLabels()).toEqual(['X', 'Y']);
+	});
+
+	it('keeps an undefined axis undefined when another axis is edited', async () => {
+		const record = vi.fn<(next: PointValue) => void>();
+		render(ControlledPoint, {
+			props: {
+				label: 'Position',
+				initial: { x: 1, y: 2, z: undefined },
+				axes: { z: MIXED },
+				shouldAccept: true,
+				record
+			}
+		});
+
+		await userEvent.fill(spinbutton('X'), '9');
+
+		expect(record).toHaveBeenLastCalledWith({ x: 9, y: 2, z: undefined });
+		expect(record.mock.lastCall?.[0].z).toBeUndefined();
+		await expect.element(spinbutton('Z')).toHaveValue(null);
+	});
+});

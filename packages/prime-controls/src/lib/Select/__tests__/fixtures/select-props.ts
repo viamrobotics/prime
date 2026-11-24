@@ -28,3 +28,8 @@ export const childlessLabelledbyHinted: SelectProps = { 'aria-labelledby': 'mode
 
 // @ts-expect-error children and a hint cannot mix
 export const composedWithHint: SelectProps = { children: parts, hint: 'How it moves' };
+
+export const childlessWithClass: SelectProps = { 'aria-label': 'Mode', class: 'flex-1' };
+
+// @ts-expect-error class lands on the childless trigger, so children cannot take one
+export const composedWithClass: SelectProps = { children: parts, class: 'flex-1' };
