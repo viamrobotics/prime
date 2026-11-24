@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
 import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
+import { allowTransitions, blockTransitions } from '../../../../test/transitions.ts';
 import Toast from '../Toast.svelte';
 import ToastHost from './fixtures/ToastHost.svelte';
 
@@ -27,7 +28,10 @@ const waitForItem = async () => {
 const waitForNoItems = () =>
 	vi.waitFor(() => expect(items()).toHaveLength(0), { timeout: REMOVAL_TIMEOUT });
 
-afterEach(() => emulateReducedMotion('no-preference'));
+afterEach(async () => {
+	blockTransitions();
+	await emulateReducedMotion('no-preference');
+});
 
 describe('Toast', () => {
 	it('passes extra attributes to the region', () => {
@@ -57,6 +61,7 @@ describe('Toast', () => {
 	] as const)(
 		'transitions $property under prefers-reduced-motion: $preference',
 		async ({ preference, property }) => {
+			allowTransitions();
 			await emulateReducedMotion(preference);
 			const { container } = render(ToastHost, { duration: HOLD_OPEN });
 			await userEvent.click(trigger(container, 'info'));

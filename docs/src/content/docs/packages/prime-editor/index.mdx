@@ -168,7 +168,7 @@ An editor is editable, readonly, disabled, or invalid. `aria-invalid` marks the 
 
 Every color is a [tailwind-config](../tailwind-config/) token, so the editor follows the light and dark themes. `--color-gray-1` is the code surface in every state. A readonly editor drops its border, and a disabled editor keeps a transparent border on the disabled fill. The error border comes from `aria-invalid`.
 
-A 2px `--color-link` outline at a 2px offset shows when the editing surface has keyboard focus. A click into a readonly editor shows no ring. An editable editor shows it on click too, as a native text input does.
+A 2px `--color-link` outline at a 2px offset shows when the editing surface matches `:focus-visible`, which keyboard focus always does. An editable editor shows it on click too, as a native text input does.
 
 The editor sets no data attributes.
 

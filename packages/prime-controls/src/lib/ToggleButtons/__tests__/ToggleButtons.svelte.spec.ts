@@ -75,13 +75,13 @@ describe('ToggleButtons', () => {
 	it('names the group from aria-label', async () => {
 		render(BoundToggleButtons);
 
-		await expect.element(page.getByRole('group', { name: 'Space' })).toBeVisible();
+		await expect.element(page.getByRole('radiogroup', { name: 'Space' })).toBeVisible();
 	});
 
 	it('names the group from its visible label', async () => {
 		render(BoundToggleButtons, { props: { label: 'Orientation' } });
 
-		await expect.element(page.getByRole('group', { name: 'Orientation' })).toBeVisible();
+		await expect.element(page.getByRole('radiogroup', { name: 'Orientation' })).toBeVisible();
 		await expect.element(page.getByText('Orientation')).toBeVisible();
 	});
 });
@@ -145,7 +145,7 @@ describe('ToggleButtons hint', () => {
 
 		expect(page.getByRole('tooltip').query()).toBeNull();
 		await expect
-			.element(page.getByRole('group', { name: 'Space' }))
+			.element(page.getByRole('radiogroup', { name: 'Space' }))
 			.toHaveAccessibleDescription(HINT);
 	});
 
@@ -168,7 +168,7 @@ describe('ToggleButtons hint', () => {
 
 		expect(page.getByRole('button', { name: 'About Space' }).query()).toBeNull();
 		await expect
-			.element(page.getByRole('group', { name: 'Space' }))
+			.element(page.getByRole('radiogroup', { name: 'Space' }))
 			.not.toHaveAttribute('aria-describedby');
 	});
 });

@@ -53,7 +53,7 @@
 >
 	<span {...api.getGhostBeforeProps()}></span>
 	<span {...api.getGhostAfterProps()}></span>
-	<span class="sr-only">{NAMES[variant]}: </span>
+	<span class="sr-only">{`${NAMES[variant]}: `}</span>
 	<Icon icon={glyph.path} size="base" class={['shrink-0', glyph.tone]} />
 	<span class="min-w-0 truncate text-sm text-default" {...api.getTitleProps()}>{api.title}</span>
 	{#if api.description}

@@ -45,5 +45,5 @@ Tests named `*.svelte.spec.ts` run in Chromium through `@vitest/browser-playwrig
 - CodeMirror paints the selection behind the lines, so the cursor-line, fold, and collapsed-lines bands, the diff tints, the changed-word fills, and the search match are translucent. Each lands on its opaque token over the surface. An opaque fill hides the selection under it. The selected search match stays opaque, since it covers exactly a selected range.
 - `Ctrl-Shift-]` (`Cmd-Alt-]` on macOS) is bound ahead of the fold keymap. It expands the collapsed run of unchanged lines at the cursor, and falls through to unfold when there is none.
 - `--color-gray-1` is the code surface in every state. A readonly editor drops its border, and a disabled editor keeps a transparent one on the disabled fill.
-- The focus ring is a 2px `--color-link` outline on `:has(.cm-content:focus-visible)`, so a click into a readonly editor shows none.
+- The focus ring is a 2px `--color-link` outline on `:has(.cm-content:focus-visible)`, and `.cm-focused` draws no outline, so the ring follows the browser's `:focus-visible` heuristic. CodeMirror focuses the content from script on mousedown, so a click into a readonly editor matches `:focus-visible` only when the previously focused element did.
 - `bind:value` with no fallback can start `undefined`, and the editor reads it as `value ?? ''`.

@@ -115,8 +115,8 @@ describe('Panes.PaneBody: a consumer id', () => {
 	it('replaces the id with the panel id in a stacked pane with a Panes.TabList', async () => {
 		render(StackedBodyPanes, { props: { hasTabList: true } });
 
-		const panel = page.getByRole('tabpanel');
-		await expect.element(panel).toBeInTheDocument();
+		const panel = page.getByPaneBody(stackIds.tabA2);
+		await expect.element(panel).toHaveAttribute('role', 'tabpanel');
 		expect(panel.element().id).not.toBe(`body-${stackIds.tabA2}`);
 		await expect
 			.element(page.getByRole('tab', { name: stackIds.tabA2 }))

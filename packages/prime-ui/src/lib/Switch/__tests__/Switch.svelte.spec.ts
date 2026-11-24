@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 
 import { backgroundColor, colorOf } from '../../../../test/computed-style.ts';
 import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
+import { allowTransitions, blockTransitions } from '../../../../test/transitions.ts';
 import Switch from '../Switch.svelte';
 import BoundSwitch from './fixtures/BoundSwitch.svelte';
 import ControlledSwitch from './fixtures/ControlledSwitch.svelte';
@@ -14,21 +15,26 @@ const toggle = (container: Element) =>
 const thumb = (container: Element) => toggle(container).firstElementChild!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
-afterEach(() => emulateReducedMotion('no-preference'));
+afterEach(async () => {
+	blockTransitions();
+	await emulateReducedMotion('no-preference');
+});
 
 describe('Switch', () => {
 	it('slides the thumb with a transition', () => {
+		allowTransitions();
 		const { container } = render(Switch);
 
 		expect(parseFloat(getComputedStyle(thumb(container)).transitionDuration)).toBeGreaterThan(0);
 	});
 
 	it('holds the thumb still under prefers-reduced-motion', async () => {
+		allowTransitions();
 		await emulateReducedMotion('reduce');
 
 		const { container } = render(Switch);
 
-		expect(parseFloat(getComputedStyle(thumb(container)).transitionDuration)).toBe(0);
+		expect(getComputedStyle(thumb(container)).transitionProperty).toBe('none');
 	});
 
 	it('renders an off, valid switch by default', () => {

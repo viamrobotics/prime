@@ -6,6 +6,8 @@ import CustomRowsTree from '../../../../test/fixtures/CustomRowsTree.svelte';
 import PartsTree from '../../../../test/fixtures/PartsTree.svelte';
 
 const countOf = (html: string, fragment: string) => html.split(fragment).length - 1;
+const groupTagOf = (html: string, value: string) =>
+	html.match(new RegExp(`<div[^>]*role="group"[^>]*data-value="${value}"[^>]*>`))?.[0] ?? '';
 
 describe('Tree on the server', () => {
 	it('renders the tree, its branches, and its items', () => {
@@ -46,10 +48,12 @@ describe('Tree on the server', () => {
 		expect(body).toContain('aria-label="Readme"');
 	});
 
-	it('does not render the children of a collapsed branch', () => {
-		const { body } = render(BasicTree);
+	it('hides the group of a collapsed branch and shows the group of an expanded one', () => {
+		const collapsed = render(BasicTree).body;
+		const expanded = render(BasicTree, { props: { initialExpanded: ['docs'] } }).body;
 
-		expect(body).toContain('aria-label="Docs"');
-		expect(body).not.toContain('aria-label="Readme"');
+		expect(groupTagOf(collapsed, 'docs')).toContain('hidden');
+		expect(groupTagOf(expanded, 'docs')).toContain('role="group"');
+		expect(groupTagOf(expanded, 'docs')).not.toContain('hidden');
 	});
 });

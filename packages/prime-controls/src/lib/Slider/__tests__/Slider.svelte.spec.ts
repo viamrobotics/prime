@@ -26,6 +26,40 @@ function probeStyle(className: string, read: (style: CSSStyleDeclaration) => str
 	return value;
 }
 
+const TRACK = '::-webkit-slider-runnable-track';
+const THUMB = '::-webkit-slider-thumb';
+
+function cascadedPseudoBackground(element: Element, pseudo: string) {
+	let background = '';
+	const visit = (rules: CSSRuleList, scope: string) => {
+		for (const rule of rules) {
+			if (!(rule instanceof CSSStyleRule)) {
+				if ('cssRules' in rule) visit((rule as CSSGroupingRule).cssRules, scope);
+				continue;
+			}
+			const selector = scope ? rule.selectorText.replaceAll('&', scope) : rule.selectorText;
+			if (!selector.endsWith(pseudo)) {
+				if (element.matches(selector)) visit(rule.cssRules, selector);
+				continue;
+			}
+			if (element.matches(selector.slice(0, -pseudo.length)) && rule.style.background) {
+				background = rule.style.background;
+			}
+		}
+	};
+	for (const sheet of document.styleSheets) visit(sheet.cssRules, '');
+	return background;
+}
+
+function pseudoBackgroundColor(element: Element, pseudo: string) {
+	const probe = document.createElement('span');
+	probe.style.background = cascadedPseudoBackground(element, pseudo);
+	document.body.append(probe);
+	const color = getComputedStyle(probe).backgroundColor;
+	probe.remove();
+	return color;
+}
+
 const SLIDER_MAX = 100;
 const THUMB_CENTER_AT_ZERO_X = 6;
 const MOVES = [10, 20, 30, 40, 50];
@@ -415,15 +449,25 @@ describe('Slider readout width', () => {
 		return field.getBoundingClientRect().width - frame - textWidth;
 	}
 
-	it.each([{ suffix: undefined }, { suffix: '%' }])(
-		'keeps the 64 px readout when the range is short, with suffix $suffix',
-		({ suffix }) => {
-			const { container } = render(Slider, { props: { label: 'Opacity', suffix, value: 50 } });
-			const frame = readout(container).closest('div')!;
+	it('keeps the 64 px readout when the range is short', () => {
+		const { container } = render(Slider, { props: { label: 'Opacity', value: 50 } });
+		const frame = readout(container).closest('div')!;
 
-			expect(frame.getBoundingClientRect().width).toBe(READOUT_MIN_WIDTH_PX);
-		}
-	);
+		expect(frame.getBoundingClientRect().width).toBe(READOUT_MIN_WIDTH_PX);
+	});
+
+	it('grows a short readout past 64 px to fit a suffix and the stepper', () => {
+		const { container } = render(Slider, {
+			props: { label: 'Opacity', suffix: '%', value: SLIDER_MAX }
+		});
+		const frame = readout(container).closest('div')!;
+
+		expect(frame.getBoundingClientRect().width).toBeGreaterThan(READOUT_MIN_WIDTH_PX);
+		expect(
+			spareWidthAfterValue(readout(container)),
+			'negative width is clipped text'
+		).toBeGreaterThanOrEqual(0);
+	});
 
 	it('widens the readout past 64 px when the range needs it', () => {
 		const { container } = render(Slider, {
@@ -487,31 +531,23 @@ describe('Slider root and style', () => {
 		const { container } = render(Slider, {
 			props: { label: 'Opacity', value: 50, disabled: true }
 		});
-
 		const input = range(container);
-		const track = getComputedStyle(input, '::-webkit-slider-runnable-track');
-		const thumb = getComputedStyle(input, '::-webkit-slider-thumb');
 
 		expect(getComputedStyle(input).opacity).toBe('1');
-		expect(track.backgroundColor).toBe(
+		expect(pseudoBackgroundColor(input, TRACK)).toBe(
 			probeStyle('bg-disabled-light', (probe) => probe.backgroundColor)
 		);
-		expect(thumb.backgroundColor).toBe(
+		expect(pseudoBackgroundColor(input, THUMB)).toBe(
 			probeStyle('bg-disabled-dark', (probe) => probe.backgroundColor)
 		);
 	});
 
 	it('paints the track of an error slider danger-dark, unlike one with no state', () => {
 		const error = render(Slider, { props: { label: 'Opacity', value: 50, state: 'error' } });
-		const errorTrack = getComputedStyle(
-			range(error.container),
-			'::-webkit-slider-runnable-track'
-		).backgroundColor;
 		const plain = render(Slider, { props: { label: 'Opacity', value: 50 } });
-		const plainTrack = getComputedStyle(
-			range(plain.container),
-			'::-webkit-slider-runnable-track'
-		).backgroundColor;
+
+		const errorTrack = pseudoBackgroundColor(range(error.container), TRACK);
+		const plainTrack = pseudoBackgroundColor(range(plain.container), TRACK);
 
 		expect(errorTrack).toBe(probeStyle('bg-danger-dark', (probe) => probe.backgroundColor));
 		expect(plainTrack).not.toBe(errorTrack);

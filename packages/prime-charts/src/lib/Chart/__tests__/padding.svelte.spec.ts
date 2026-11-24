@@ -10,6 +10,7 @@ const MINUTE = 60_000;
 const POINT_COUNT = 13;
 const HOVERED_INDEX = 6;
 const CLIP_OVERHANG = 1;
+const LAYOUT_UNIT = 1 / 64;
 
 const points = Array.from({ length: POINT_COUNT }, (_, index) => ({
 	x: new Date(START + index * MINUTE),
@@ -79,10 +80,15 @@ describe('Chart.Plot with padding', () => {
 		const clip = clipBoxOf(container);
 
 		expect(sidesOutside(clip, contentBoxOf(plot), CLIP_OVERHANG)).toEqual([]);
-		expect({ width: clip.right - clip.left, height: clip.bottom - clip.top }).toEqual({
-			width: svg.width + 2 * CLIP_OVERHANG,
-			height: svg.height + 2 * CLIP_OVERHANG
-		});
+		const sizeGaps = {
+			width: Math.abs(clip.right - clip.left - (svg.width + 2 * CLIP_OVERHANG)),
+			height: Math.abs(clip.bottom - clip.top - (svg.height + 2 * CLIP_OVERHANG))
+		};
+
+		expect(
+			Math.max(sizeGaps.width, sizeGaps.height),
+			`clip size off the svg box plus the overhang by ${JSON.stringify(sizeGaps)}, where Chromium snaps the svg box to a 1/64px layout unit`
+		).toBeLessThanOrEqual(LAYOUT_UNIT / 2);
 	});
 
 	it('draws the line inside the content box', async () => {

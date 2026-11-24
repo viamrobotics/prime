@@ -6,7 +6,7 @@
 
 <Folder title="Lighting" {summary}>
 	{#snippet indicator({ open }: { open: boolean })}
-		<span data-testid="indicator">{open ? 'Hide' : 'Show'}</span>
+		<span data-testid="indicator" aria-hidden="true">{open ? 'Hide' : 'Show'}</span>
 	{/snippet}
 	<span>Intensity</span>
 </Folder>

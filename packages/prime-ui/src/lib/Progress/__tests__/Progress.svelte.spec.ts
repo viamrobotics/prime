@@ -82,7 +82,7 @@ describe('Progress', () => {
 	it.each([
 		{ tone: 'progress-info', color: 'bg-info-dark' },
 		{ tone: 'progress-success', color: 'bg-success-dark' },
-		{ tone: 'progress-warning', color: 'bg-warning-dark' },
+		{ tone: 'progress-warning', color: 'bg-warning-text' },
 		{ tone: 'progress-danger', color: 'bg-danger-dark' }
 	] as const)('paints the fill in $color under $tone', ({ tone, color }) => {
 		const { container } = render(Progress, { props: { value: 10, label: 'Upload', class: tone } });

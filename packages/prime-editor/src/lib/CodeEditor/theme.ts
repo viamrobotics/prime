@@ -77,6 +77,8 @@ const surfaceTheme = EditorView.theme({
 	'&:has(.cm-content[aria-readonly="true"]:not([aria-disabled="true"]))': { border: 'none' },
 	'.cm-content[aria-disabled="true"]': { userSelect: 'none' },
 	'.cm-placeholder': { color: 'var(--color-subtle-2)' },
+	// Replaces CodeMirror's default outline on any focus, so a pointer focus shows no ring.
+	'&.cm-focused': { outline: 'none' },
 	'&:has(.cm-content:focus-visible)': {
 		outline: '2px solid var(--color-link)',
 		outlineOffset: '2px'

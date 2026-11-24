@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 
 import '../../../../test/tailwind.css';
 import { emulateReducedMotion } from '../../../../test/reduced-motion.ts';
+import { allowTransitions, blockTransitions } from '../../../../test/transitions.ts';
 import Notify from '../Notify.svelte';
 import NotifyHost from './fixtures/NotifyHost.svelte';
 
@@ -27,7 +28,10 @@ const firstItem = async () => {
 	return items()[0];
 };
 
-afterEach(() => emulateReducedMotion('no-preference'));
+afterEach(async () => {
+	blockTransitions();
+	await emulateReducedMotion('no-preference');
+});
 
 describe('Notify', () => {
 	it('passes extra attributes to the region', () => {
@@ -52,6 +56,7 @@ describe('Notify', () => {
 	] as const)(
 		'transitions $property under prefers-reduced-motion: $preference',
 		async ({ preference, property }) => {
+			allowTransitions();
 			await emulateReducedMotion(preference);
 			const { container } = render(NotifyHost);
 			await create(container, 'info');

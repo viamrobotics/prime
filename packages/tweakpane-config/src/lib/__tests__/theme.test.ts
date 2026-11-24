@@ -1,12 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { primeTheme, primeThemeDark } from "../theme.js";
-
-vi.mock("svelte-tweakpane-ui", () => ({
-  ThemeUtils: { presets: { light: {}, standard: {}, dark: {} } },
-}));
 
 const tailwindDir = resolve(import.meta.dirname, "../../../../tailwind-config");
 

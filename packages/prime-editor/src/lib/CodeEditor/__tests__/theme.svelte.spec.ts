@@ -34,6 +34,7 @@ const OPAQUE_RGB = {
 const UNCHANGED_LINES = 'one\ntwo\nthree\nfour\nfive\n';
 const readonlyExtensions = [
 	EditorState.readOnly.of(true),
+	EditorView.editable.of(false),
 	EditorView.contentAttributes.of({ tabindex: '0' })
 ];
 
@@ -350,8 +351,15 @@ describe('codeEditorTheme', () => {
 			expect(getComputedStyle(query(root, '.cm-line')).paddingLeft).toBe('8px');
 		});
 
-		it('draws no outline after a pointer click into a readonly editor', async () => {
+		it('draws no outline when a pointer click moves focus into a readonly editor', async () => {
 			const root = mountEditor(readonlyExtensions);
+			const before = document.createElement('button');
+			before.textContent = 'Before';
+			document.body.prepend(before);
+			onTestFinished(() => before.remove());
+			// CodeMirror focuses the content from script on mousedown, and Chromium carries the
+			// previous focus's :focus-visible state over to a script focus.
+			await userEvent.click(before);
 
 			await userEvent.click(query(root, '.cm-content'));
 

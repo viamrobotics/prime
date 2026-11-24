@@ -251,6 +251,8 @@ The `details` snippet draws content under one axis field, at that field's width,
 
 `NumberField`, `Point`, and `Slider` take a `state` of `'none'`, `'info'`, `'warn'`, or `'error'`, prime-ui's `FieldState`. `'warn'` draws the `warning-dark` border. `'error'` draws the `danger-dark` border and sets `aria-invalid="true"`. `'info'` changes no border, because prime-ui's `input` style has no info rule, and this package draws none of its own. `Point` takes one state for the whole control and gives it to every axis field, and `axes` sets one on single axes. `Slider` draws its state on the readout, and an error marks the range invalid and turns its track `danger-dark`. With a `suffix`, the border belongs to the group. A color is never the only signal, so pair a warn or error with text, such as a hint.
 
+Every control takes `disabled`. `NumberField` and `TextField` also take `readonly`, which keeps the value visible and focusable but stops edits, steps, and scrubs. The panels below render each control in each state it supports.
+
 <Example code={statesSource} title="States.svelte">
   <States client:visible />
 </Example>

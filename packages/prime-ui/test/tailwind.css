@@ -1,6 +1,6 @@
 @import '../tailwind.css';
 @import '@viamrobotics/tailwind-config/dark';
 
-* {
+:root:not([data-allow-transitions]) * {
 	transition: none !important;
 }

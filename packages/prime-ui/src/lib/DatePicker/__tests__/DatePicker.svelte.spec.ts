@@ -291,7 +291,7 @@ describe('DatePicker', () => {
 		const { container } = render(ControlledDatePicker, { props: { empty: true } });
 		segment(container, 'month').focus();
 
-		await userEvent.keyboard('03152026');
+		await userEvent.keyboard('03152');
 
 		await vi.waitFor(() => expect(shownSegments(container)).toEqual(['Empty', 'Empty', 'Empty']));
 		expect(owner(container)).toBe('undefined');

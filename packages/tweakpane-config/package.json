@@ -80,6 +80,7 @@
       "command": "vitest run",
       "files": [
         "src/lib/**",
+        "test/**",
         "../tailwind-config/tailwind-config.css",
         "../tailwind-config/tailwind-config-dark.css",
         "vitest.config.ts",

@@ -93,7 +93,7 @@ state, so render it inside an `{#if}` to show and hide it.
 	role={role === undefined ? ROLES[variant] : role}
 	class={['banner', TONE_CLASSES[variant], placement === 'block' && 'banner-block', extraClasses]}
 >
-	<span class="sr-only">{NAMES[variant]}: </span>
+	<span class="sr-only">{`${NAMES[variant]}: `}</span>
 	{#if !context.hasIcon}
 		<span class="banner-chip" aria-hidden="true">
 			{#if variant === 'pending'}

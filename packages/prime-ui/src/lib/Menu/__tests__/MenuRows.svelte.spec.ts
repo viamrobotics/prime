@@ -12,7 +12,7 @@ const menu = () => document.querySelector<HTMLElement>('[role="menu"]');
 const trigger = (container: Element) => container.querySelector<HTMLElement>('button')!;
 const row = (role: string, name: string) =>
 	[...document.querySelectorAll<HTMLElement>(`[role="${role}"]`)].find((candidate) =>
-		candidate.textContent?.trim().startsWith(name)
+		candidate.textContent?.includes(name)
 	)!;
 
 const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));

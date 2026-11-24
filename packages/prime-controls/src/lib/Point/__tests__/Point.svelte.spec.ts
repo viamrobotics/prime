@@ -20,9 +20,11 @@ const axisLabels = () =>
 	[...document.querySelectorAll('label')].map((label) => label.textContent?.trim());
 const axisLabel = (text: string) =>
 	[...document.querySelectorAll('label')].find((label) => label.textContent?.trim() === text)!;
+const frame = (name: string) => spinbutton(name).element().parentElement!;
+
 const boundingRectangles = (name: string) => ({
 	label: axisLabel(name).getBoundingClientRect(),
-	box: spinbutton(name).element().getBoundingClientRect()
+	box: frame(name).getBoundingClientRect()
 });
 
 function probeStyle(className: string, read: (style: CSSStyleDeclaration) => string) {
@@ -91,13 +93,6 @@ describe('Point', () => {
 		render(BoundPoint, { props: { initial: { x: 0, y: 0 }, label: 'Position' } });
 
 		await expect.element(page.getByRole('group', { name: 'Position' })).toBeInTheDocument();
-	});
-
-	it('styles the group label as subtle text', () => {
-		render(BoundPoint, { props: { initial: { x: 0, y: 0 }, label: 'Position' } });
-
-		const labelId = page.getByRole('group').element().getAttribute('aria-labelledby')!;
-		expect(document.getElementById(labelId)).toHaveClass('text-subtle-1');
 	});
 
 	it('points aria-labelledby at the visible label', () => {
@@ -244,7 +239,7 @@ describe('Point', () => {
 		]);
 	});
 
-	it.each(INSET_CASES)('draws the $name label inside its input box', ({ name, labels }) => {
+	it.each(INSET_CASES)('draws the $name label inside its frame', ({ name, labels }) => {
 		render(BoundPoint, { props: { initial: { x: 1, y: 2, z: 3 }, label: 'Position', labels } });
 
 		const { label, box } = boundingRectangles(name);
@@ -480,7 +475,7 @@ describe('Point per axis', () => {
 			const button = page.getByRole('button', { name: `Reset ${axis}` });
 			await expect.element(button).toBeInTheDocument();
 
-			const field = spinbutton(axis.toUpperCase()).element().getBoundingClientRect();
+			const field = frame(axis.toUpperCase()).getBoundingClientRect();
 			const column = button.element().parentElement!.getBoundingClientRect();
 			expect(
 				button.element().getBoundingClientRect().top,

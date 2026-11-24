@@ -31,7 +31,6 @@ const lineWithText = (content: Element, text: string) =>
 
 const IS_MAC = navigator.platform.includes('Mac');
 const MODIFIER = IS_MAC ? 'Meta' : 'Control';
-const FOLD_KEY = IS_MAC ? '{Meta>}{Alt>}[[{/Alt}{/Meta}' : '{Control>}{Shift>}[[{/Shift}{/Control}';
 const EXPAND_KEY = IS_MAC ? '{Meta>}{Alt>}]{/Alt}{/Meta}' : '{Control>}{Shift>}]{/Shift}{/Control}';
 const LONG_ORIGINAL = Array.from({ length: 30 }, (_, index) => `line ${index}`).join('\n');
 const LONG_VALUE = LONG_ORIGINAL.replace('line 0', 'line zero');
@@ -441,9 +440,10 @@ describe('CodeEditor', () => {
 			const { container } = render(CodeEditor, { props: foldProps });
 			const [content] = contents(container);
 			await expect.poll(() => count(container, '.cm-foldGutter [title="Fold line"]')).toBe(1);
-			await userEvent.click(lines(content)[0]);
-			await userEvent.keyboard(FOLD_KEY);
+			await userEvent.click(foldMarker(container)!);
 			await expect.poll(() => count(content, '.cm-foldPlaceholder')).toBe(1);
+			await userEvent.click(lines(content)[0], { position: { x: 1, y: 1 } });
+			expect(count(content, '.cm-foldPlaceholder')).toBe(1);
 
 			await userEvent.keyboard(EXPAND_KEY);
 
