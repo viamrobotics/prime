@@ -1,5 +1,14 @@
 # @viamrobotics/prime-controls
 
+## 0.7.0
+### Minor Changes
+
+- 8a226c9: `Point` renders an `undefined` axis empty with a per-axis `placeholder`, and a childless `Select` fills its container's width and takes a `class` for its trigger.
+
+### Patch Changes
+
+- 8a226c9: A focused `NumberField` or `Slider` readout shows what was typed, so clearing it or a binding that clamps or rejects a partial number no longer rewrites the field mid-entry.
+
 ## 0.6.0
 ### Minor Changes
 
