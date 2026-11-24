@@ -121,13 +121,16 @@ describe('firstPoint', () => {
 		const hidden = series([1, 2], true);
 		const empty = series([null, null]);
 		const gapped = series([null, 5, 6]);
-		expect(firstPoint([hidden, empty, gapped], everything)).toEqual({ series: gapped, index: 1 });
+		expect(firstPoint([hidden, empty, gapped], plot, everything)).toEqual({
+			series: gapped,
+			index: 1
+		});
 	});
 
 	it('finds nothing when every series is hidden or without a point', () => {
 		const hidden = series([1, 2], true);
 		const empty = series([null, null]);
-		expect(firstPoint([hidden, empty], everything)).toBeUndefined();
+		expect(firstPoint([hidden, empty], plot, everything)).toBeUndefined();
 	});
 
 	it('starts past a leading point with a parseable string x', () => {
@@ -138,7 +141,7 @@ describe('firstPoint', () => {
 				{ x: 2 * MINUTE, y: 2 }
 			]
 		};
-		expect(firstPoint([leading], everything)).toEqual({ series: leading, index: 1 });
+		expect(firstPoint([leading], plot, everything)).toEqual({ series: leading, index: 1 });
 	});
 });
 
@@ -298,21 +301,21 @@ describe('inside the x window', () => {
 	const cut = windowOf(5, 15);
 
 	it('starts first focus on the first point inside', () => {
-		expect(firstPoint([long], cut)).toEqual({ series: long, index: 5 });
+		expect(firstPoint([long], plot, cut)).toEqual({ series: long, index: 5 });
 	});
 
 	it('starts first focus on a point exactly on the window start', () => {
-		expect(firstPoint([long], windowOf(3, 4))?.index).toBe(3);
+		expect(firstPoint([long], plot, windowOf(3, 4))?.index).toBe(3);
 	});
 
 	it('skips a series wholly outside on first focus', () => {
 		const outside = series([1, 2], false, [30, 31]);
-		expect(firstPoint([outside, long], cut)).toEqual({ series: long, index: 5 });
+		expect(firstPoint([outside, long], plot, cut)).toEqual({ series: long, index: 5 });
 	});
 
 	it('reads a reversed domain as its ordered ends', () => {
 		const reversed = { ...cut, domain: [15 * MINUTE, 5 * MINUTE] } as const;
-		expect(firstPoint([long], reversed)?.index).toBe(5);
+		expect(firstPoint([long], plot, reversed)?.index).toBe(5);
 	});
 
 	it.each([
@@ -536,6 +539,16 @@ describe('on either x scale direction', () => {
 			step([long], { series: long, index: from }, key, reversedLong, windowOf(24, 0)).index
 		).toBe(to);
 	});
+
+	it.each([
+		['reversed', reversedLong, windowOf(24, 0), 24],
+		['ordered', plot, windowOf(0, 24), 0]
+	] as const)(
+		'starts first focus on the leftmost drawn point with the scale %s',
+		(_direction, position, xWindow, index) => {
+			expect(firstPoint([long], position, xWindow)).toEqual({ series: long, index });
+		}
+	);
 
 	it('moves ArrowDown to the point nearest in time on a reversed scale', () => {
 		const top = series([1, 2, 3, 4, 5]);

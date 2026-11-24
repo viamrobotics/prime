@@ -208,7 +208,7 @@ The root has `aria-busy` while loading. Each legend button has `aria-pressed`, w
 
 ## Keyboard
 
-Tab order follows DOM order, so a legend placed before `Chart.Plot` puts its buttons ahead of the plot. The plot is a tab stop when a `Chart.Tooltip` is placed and a visible series has a point inside the x window. Focusing the plot shows the tooltip on the active point. On first focus that is the first point inside the window of the first visible series that has one, and after that it is the point focus left. Hidden series, gaps, and points outside the window are skipped. Every key and the pointer stay inside the window, and a point exactly on a bound is inside.
+Tab order follows DOM order, so a legend placed before `Chart.Plot` puts its buttons ahead of the plot. The plot is a tab stop when a `Chart.Tooltip` is placed and a visible series has a point inside the x window. Focusing the plot shows the tooltip on the active point. On first focus that is the leftmost point inside the window of the first visible series that has one, the point `Home` reaches, and after that it is the point focus left. Hidden series, gaps, and points outside the window are skipped. Every key and the pointer stay inside the window, and a point exactly on a bound is inside.
 
 <KeyboardTable
   bindings={[

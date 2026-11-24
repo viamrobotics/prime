@@ -108,14 +108,20 @@ export function isAvailable<TSeries extends NavigationSeries>(
 	);
 }
 
-// The first drawable point of the first visible series that has one.
+// Left to right as drawn, so first focus and the horizontal keys follow the screen on either axis direction.
+const inScreenOrder = (indices: number[], direction: Direction): number[] =>
+	direction === ASCENDING ? indices : [...indices].reverse();
+
+// The leftmost drawn point of the first visible series that has one, the point `Home` reaches.
 export function firstPoint<TSeries extends NavigationSeries>(
 	series: readonly TSeries[],
+	plot: PlotPosition,
 	xWindow: XWindow
 ): ActivePoint<TSeries> | undefined {
 	const first = series.find((entry) => hasPoint(entry, xWindow));
 	if (!first) return undefined;
-	return { series: first, index: drawableIndices(first.points, xWindow)[0] };
+	const drawable = drawableIndices(first.points, xWindow);
+	return { series: first, index: inScreenOrder(drawable, pixelDirection(plot, xWindow))[0] };
 }
 
 // Each series contributes its point nearest in x, and the closest of those by pixel distance wins.
@@ -153,10 +159,6 @@ export function nearestPoint<TSeries extends NavigationSeries>(
 }
 
 const pageSize = (count: number) => Math.max(1, Math.floor(count / PAGES_PER_SERIES));
-
-// Left to right as drawn, so the horizontal keys follow the screen on either axis direction.
-const inScreenOrder = (indices: number[], direction: Direction): number[] =>
-	direction === ASCENDING ? indices : [...indices].reverse();
 
 function along(offset: (position: number, count: number) => number): Step {
 	return (_series, active, xWindow, direction) => {

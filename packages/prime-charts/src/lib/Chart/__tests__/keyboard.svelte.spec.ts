@@ -269,11 +269,11 @@ describe('Chart.Tooltip keyboard', () => {
 			}
 		});
 		await tabIntoChart(container);
-		await expect.poll(() => liveText(container)).toBe('cell-01, 00:00:00, 1');
+		await expect.poll(() => liveText(container)).toBe('cell-01, 00:02:00, 3');
 
-		const reads = await readAfter(container, ['{ArrowLeft}', '{ArrowRight}']);
+		const reads = await readAfter(container, ['{ArrowRight}', '{ArrowLeft}']);
 
-		expect(reads).toEqual(['cell-01, 00:01:00, 2', 'cell-01, 00:00:00, 1']);
+		expect(reads).toEqual(['cell-01, 00:01:00, 2', 'cell-01, 00:02:00, 3']);
 	});
 
 	it('hides the readout and empties the live region when the window leaves every point', async () => {

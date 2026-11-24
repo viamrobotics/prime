@@ -40,10 +40,14 @@ Shows the active point inside [`Chart.Plot`](./Plot.svelte): the series color, i
 	let readoutWidth = $state(0);
 	let readoutHeight = $state(0);
 
+	const plotPosition = $derived({ x: plot.xScale, y: plot.yScale });
+
 	const active = $derived(
 		chosen && isAvailable(chart.series, chosen, chart.xWindow) ? chosen : undefined
 	);
-	const isInteractive = $derived(firstPoint(chart.series, chart.xWindow) !== undefined);
+	const isInteractive = $derived(
+		firstPoint(chart.series, plotPosition, chart.xWindow) !== undefined
+	);
 
 	const isVisible = $derived(isShown && isInteractive);
 
@@ -112,25 +116,22 @@ Shows the active point inside [`Chart.Plot`](./Plot.svelte): the series color, i
 		event.preventDefault();
 		show(
 			active
-				? step(chart.series, active, event.key, { x: plot.xScale, y: plot.yScale }, chart.xWindow)
-				: firstPoint(chart.series, chart.xWindow),
+				? step(chart.series, active, event.key, plotPosition, chart.xWindow)
+				: firstPoint(chart.series, plotPosition, chart.xWindow),
 			true
 		);
 	};
 
 	const onpointermove = (event: PointerEvent) => {
 		const position = plot.pointer(event);
-		show(
-			nearestPoint(chart.series, position, { x: plot.xScale, y: plot.yScale }, chart.xWindow),
-			false
-		);
+		show(nearestPoint(chart.series, position, plotPosition, chart.xWindow), false);
 	};
 
 	const attributes: HTMLAttributes<HTMLDivElement> = {
 		role: 'application',
 		tabindex: 0,
 		'aria-describedby': instructionsId,
-		onfocus: () => show(active ?? firstPoint(chart.series, chart.xWindow), true),
+		onfocus: () => show(active ?? firstPoint(chart.series, plotPosition, chart.xWindow), true),
 		onblur: hide,
 		onkeydown,
 		onpointermove,

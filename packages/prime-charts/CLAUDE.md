@@ -119,7 +119,7 @@ The arrow keys follow the default series navigation of the Highcharts accessibil
 
 - Tab order follows DOM order. A legend placed before `Chart.Plot` puts its buttons ahead of the plot.
 - The plot is a tab stop only when a `Chart.Tooltip` is placed and a visible series has a point inside the x window. When it stops being a tab stop while the tooltip shows, the tooltip hides.
-- Focusing the plot shows the tooltip on the active point. On first focus that is the first point inside the x window of the first visible series that has one. After that it is the point focus left.
+- Focusing the plot shows the tooltip on the active point. On first focus that is the leftmost point inside the x window of the first visible series that has one, the point `Home` reaches, on either axis direction. After that it is the point focus left.
 - `ArrowLeft` and `ArrowRight` move to the point drawn to the left or right. `Home` and `End` move to the leftmost or rightmost point of the series. `PageUp` and `PageDown` move left or right by a tenth of the series. The horizontal keys follow the screen on either axis direction.
 - `ArrowUp` and `ArrowDown` move to the previous or next visible series, at its point nearest in time.
 - Hidden series, gaps and points outside the x window are skipped. Navigation stays inside the x window for first focus, every key and the pointer, and a point exactly on a bound is inside.
