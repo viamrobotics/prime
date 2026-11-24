@@ -1,5 +1,18 @@
 # @viamrobotics/prime-charts
 
+## 0.3.0
+### Minor Changes
+
+- 49ad89d: Render `Chart` as a native `<figure>` and pass rest attributes to `Chart.Plot`, `Chart.Legend`, and `Chart.Table`.
+
+### Patch Changes
+
+- 49ad89d: Fix accessibility, behavior, and documentation defects across components.
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+  - @viamrobotics/tailwind-config@1.12.0
+
 ## 0.2.0
 ### Minor Changes
 

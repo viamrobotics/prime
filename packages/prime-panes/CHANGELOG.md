@@ -1,5 +1,18 @@
 # @viamrobotics/prime-panes
 
+## 0.2.0
+### Minor Changes
+
+- 49ad89d: Require a name on `Panes.TabList` and `Panes.MoveTrigger`, and draw tabs and focus rings with tailwind-config classes.
+
+### Patch Changes
+
+- 49ad89d: Fix accessibility, behavior, and documentation defects across components.
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+  - @viamrobotics/tailwind-config@1.12.0
+
 ## 0.1.3
 ### Patch Changes
 

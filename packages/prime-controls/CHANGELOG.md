@@ -1,5 +1,25 @@
 # @viamrobotics/prime-controls
 
+## 0.6.0
+### Minor Changes
+
+- 49ad89d: Share one `AccessibleName` across controls, add a `Folder` `indicator` snippet, and pass rest attributes to the roots.
+- 49ad89d: `NumberField`, `Point`, and the `Slider` readout show prime-ui's `NumberInput` stepper after any `suffix` or `trailing` content.
+- 49ad89d: Add a `trailing` snippet to `NumberField`, `Point`, and `Slider`, for content such as an icon button inside the right edge of the input's frame. `Point` passes it the axis, and `Slider` draws it in its readout.
+- 49ad89d: `Point` stacks its axes one a row when its box is too narrow for a row of them: under 15rem for two axes, 22rem for three, and 29rem for four. Its root is now a size container, so give it a width where its parent would otherwise shrink it to its content.
+
+### Patch Changes
+
+- 49ad89d: Fix accessibility, behavior, and documentation defects across components.
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+- Updated dependencies [49ad89d]
+  - @viamrobotics/prime-ui@0.7.0
+  - @viamrobotics/tailwind-config@1.12.0
+
 ## 0.5.0
 ### Minor Changes
 

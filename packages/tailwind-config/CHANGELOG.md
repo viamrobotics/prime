@@ -1,5 +1,15 @@
 # @viamrobotics/tailwind-config
 
+## 1.12.0
+### Minor Changes
+
+- 49ad89d: Add the `--color-scrim` token, the `toast-stack-item`, `focus-ring-inset`, and `control-label` classes, and a link-colored highlight ring.
+- 49ad89d: Add the `underline-tabs`, `underline-tab`, and `file-tab-slot` component classes.
+
+### Patch Changes
+
+- 49ad89d: Fix accessibility, behavior, and documentation defects across components.
+
 ## 1.11.0
 ### Minor Changes
 
