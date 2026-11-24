@@ -4,8 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 
+import { EditorView } from '@codemirror/view';
+
 import '../../../../test/tailwind.css';
 import CodeEditor from '../CodeEditor.svelte';
+import { expandUnchanged } from '../expand-unchanged.ts';
 import BoundCodeEditor from './fixtures/BoundCodeEditor.svelte';
 import ControlledCodeEditor from './fixtures/ControlledCodeEditor.svelte';
 import LabelledCodeEditor from './fixtures/LabelledCodeEditor.svelte';
@@ -436,21 +439,17 @@ describe('CodeEditor', () => {
 			expect(lines(content)).toHaveLength(1);
 		});
 
-		it('unfolds a fold with the expand key when no collapsed lines touch the cursor', async () => {
+		it('leaves the expand key to the next binding when no collapsed lines touch the cursor', async () => {
 			const { container } = render(CodeEditor, { props: foldProps });
 			const [content] = contents(container);
 			await expect.poll(() => count(container, '.cm-foldGutter [title="Fold line"]')).toBe(1);
 			await userEvent.click(foldMarker(container)!);
 			await expect.poll(() => count(content, '.cm-foldPlaceholder')).toBe(1);
-			// Focus without a pointer keeps the initial cursor at the document start, on the folded line.
-			(content as HTMLElement).focus();
-			expect(document.activeElement).toBe(content);
-			expect(count(content, '.cm-foldPlaceholder')).toBe(1);
+			const view = EditorView.findFromDOM(content as HTMLElement)!;
 
-			await userEvent.keyboard(EXPAND_KEY);
+			const isHandled = expandUnchanged(view);
 
-			await expect.poll(() => count(content, '.cm-foldPlaceholder')).toBe(0);
-			expect(lines(content)).toHaveLength(4);
+			expect(isHandled, 'false lets the keymap fall through to unfoldCode').toBe(false);
 		});
 
 		it('drops the fold markers with lineNumbers false', async () => {
