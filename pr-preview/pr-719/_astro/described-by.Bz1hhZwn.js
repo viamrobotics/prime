@@ -1,0 +1,1 @@
+function e(e){return e.filter(Boolean).join(` `)||void 0}function t(e){return`${e}-hint`}export{e as n,t};
