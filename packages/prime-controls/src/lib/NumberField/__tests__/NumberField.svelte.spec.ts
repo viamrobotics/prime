@@ -483,15 +483,15 @@ describe('NumberField suffix', () => {
 	});
 });
 
-const stepButton = (container: Element, direction: 1 | -1) =>
+const stepButton = (container: Element, direction: 'up' | 'down') =>
 	container.querySelector<HTMLButtonElement>(`[data-step="${direction}"]`)!;
 
-function hold(button: HTMLButtonElement, modifiers: PointerEventInit = {}) {
-	button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, ...modifiers }));
+function hold(button: HTMLButtonElement) {
+	button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0 }));
 }
 
-function press(button: HTMLButtonElement, modifiers: PointerEventInit = {}) {
-	hold(button, modifiers);
+function press(button: HTMLButtonElement) {
+	hold(button);
 	window.dispatchEvent(new PointerEvent('pointerup'));
 }
 
@@ -526,7 +526,7 @@ describe('NumberField stepper', () => {
 	it('steps up by step on a press of the up button', () => {
 		const { container, values } = renderControlled({ initial: 5, step: 0.5 });
 
-		press(stepButton(container, 1));
+		press(stepButton(container, 'up'));
 
 		expect(values()).toEqual([5.5]);
 	});
@@ -534,23 +534,15 @@ describe('NumberField stepper', () => {
 	it('steps down by step on a press of the down button', () => {
 		const { container, values } = renderControlled({ initial: 5, step: 0.5 });
 
-		press(stepButton(container, -1));
+		press(stepButton(container, 'down'));
 
 		expect(values()).toEqual([4.5]);
-	});
-
-	it('steps ten times as far with Shift held', () => {
-		const { container, values } = renderControlled({ initial: 5 });
-
-		press(stepButton(container, 1), { shiftKey: true });
-
-		expect(values()).toEqual([15]);
 	});
 
 	it('clamps a press to max', () => {
 		const { container, values } = renderControlled({ initial: 9.5, max: 10 });
 
-		press(stepButton(container, 1));
+		press(stepButton(container, 'up'));
 
 		expect(values()).toEqual([10]);
 	});
@@ -558,7 +550,7 @@ describe('NumberField stepper', () => {
 	it('writes nothing on a press while disabled', () => {
 		const { container, values } = renderControlled({ initial: 5, disabled: true });
 
-		press(stepButton(container, 1));
+		press(stepButton(container, 'up'));
 
 		expect(values()).toEqual([]);
 	});
@@ -566,7 +558,7 @@ describe('NumberField stepper', () => {
 	it('writes nothing on a press inside a disabled fieldset', () => {
 		const { container, values } = renderInDisabledFieldset();
 
-		press(stepButton(container, 1));
+		press(stepButton(container, 'up'));
 
 		expect(values()).toEqual([]);
 	});
@@ -595,7 +587,7 @@ describe('NumberField stepper', () => {
 		useFakeTimers();
 		const { container, values } = renderControlled({ initial: 5 });
 
-		hold(stepButton(container, 1));
+		hold(stepButton(container, 'up'));
 		vi.advanceTimersByTime(520);
 
 		expect(values(), 'one step on press, then repeats at 460 and 520 ms').toEqual([6, 7, 8]);
@@ -604,7 +596,7 @@ describe('NumberField stepper', () => {
 	it('stops repeating once the press is released', () => {
 		useFakeTimers();
 		const { container, values } = renderControlled({ initial: 5 });
-		hold(stepButton(container, 1));
+		hold(stepButton(container, 'up'));
 		vi.advanceTimersByTime(460);
 
 		window.dispatchEvent(new PointerEvent('pointerup'));
@@ -630,7 +622,7 @@ describe('NumberField stepper', () => {
 	it('keeps the stepper out of the tab order and hidden from assistive technology', () => {
 		const { container } = render(NumberField, { props: { label: 'Length', value: 1 } });
 
-		expect(stepButton(container, 1).tabIndex).toBe(-1);
+		expect(stepButton(container, 'up').tabIndex).toBe(-1);
 		expect(container.querySelector('[data-number-stepper]')).toHaveAttribute('aria-hidden', 'true');
 	});
 });

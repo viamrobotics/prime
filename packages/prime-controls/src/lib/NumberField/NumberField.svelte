@@ -5,7 +5,8 @@ when it has a visible `label`, scrubs by dragging that label sideways. A scrub w
 every pointer move, so a function binding sees each intermediate value and can throttle or veto.
 ArrowUp and ArrowDown step by `step`, and a scrub moves `step` per pixel. Hold Shift for 10 times
 that and Alt for a tenth. Both clamp to `min` and `max`, while typing stays unclamped. Up and down
-buttons at the frame's right edge step the same way on a pointer press and repeat while held.
+buttons at the frame's right edge step one `step` on a pointer press, with no modifier, and
+repeat while held.
 
 ```svelte
 <NumberField label="Speed" min={0} max={10} step={0.1} bind:value />
@@ -22,7 +23,6 @@ buttons at the frame's right edge step the same way on a pointer press and repea
 	import { hintIdFor, joinDescribedBy } from '../Hint/described-by.ts';
 	import Hint from '../Hint/Hint.svelte';
 	import { type Bounds, clamp, settle, startingValue, stepMultiplier } from './number-step.ts';
-	import NumberStepper from './NumberStepper.svelte';
 
 	interface Props extends Omit<
 		HTMLInputAttributes,
@@ -113,16 +113,14 @@ buttons at the frame's right edge step the same way on a pointer press and repea
 			group: 'min-w-0 flex-1 input-compact'
 		},
 		inset: {
-			root: 'relative flex items-center',
-			label: 'absolute top-1/2 left-px h-6 -translate-y-1/2 justify-center',
+			root: 'relative isolate flex items-center',
+			label: 'absolute top-1/2 left-px z-10 h-6 -translate-y-1/2 justify-center',
 			// `input-compact` sets its padding on a doubled class, which outranks a plain `pl-*` utility.
 			group: 'min-w-0 flex-1 input-compact pl-7!'
 		}
 	} as const;
 
-	// The frame draws its own stepper as its last item, so the browser's is hidden.
-	const INPUT_CLASS =
-		'min-w-0 flex-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none';
+	const INPUT_CLASS = 'min-w-0 flex-1';
 
 	const SCRUB_THRESHOLD_PX = 4;
 	const STEP_KEYS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1 };
@@ -228,7 +226,7 @@ buttons at the frame's right edge step the same way on a pointer press and repea
 		class={[placementClasses.label, !isLocked && 'cursor-ew-resize touch-none select-none']}
 		onpointerdown={handleLabelPointerdown}
 	/>
-	<Input.Group class={['group/number-field', placementClasses.group]}>
+	<Input.Group class={placementClasses.group}>
 		<NumberInput
 			{...restProps}
 			{id}
@@ -247,7 +245,7 @@ buttons at the frame's right edge step the same way on a pointer press and repea
 			<span id={suffixId} class="shrink-0 text-subtle-2">{suffix}</span>
 		{/if}
 		{@render trailing?.()}
-		<NumberStepper onstep={stepBy} {isLocked} />
+		<NumberInput.Stepper />
 	</Input.Group>
 	<!-- An inset label sits inside the input's left edge, so its hint goes after the input. -->
 	{#if label && hint && labelPlacement === 'inset'}

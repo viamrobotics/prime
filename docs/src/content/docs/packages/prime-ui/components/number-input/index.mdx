@@ -5,10 +5,15 @@ description: A native numeric input that works inside Input.Group.
 
 import ComponentIntro from "@docs/doc/ComponentIntro.astro";
 import Example from "@docs/doc/Example.astro";
+import PartsDoc from "@docs/doc/PartsDoc.astro";
 import PropsTable from "@docs/doc/PropsTable.astro";
 
+import GroupedStepper from "./GroupedStepper.svelte";
+import groupedStepperSource from "./GroupedStepper.svelte?raw";
 import NumberInputDemo from "./NumberInputDemo.svelte";
 import NumberInputShowcase from "./NumberInputShowcase.svelte";
+import StandaloneStepper from "./StandaloneStepper.svelte";
+import standaloneStepperSource from "./StandaloneStepper.svelte?raw";
 import TwoWay from "./TwoWay.svelte";
 import twoWaySource from "./TwoWay.svelte?raw";
 
@@ -18,7 +23,22 @@ import twoWaySource from "./TwoWay.svelte?raw";
 
 - Its own native `<input type="number">`. It takes the same `state` as [`Input`](../input/) and works inside an [`Input.Group`](../input/#anatomy) with a [`Field.StateIcon`](../field/).
 - `value` is `number | undefined`. No string parsing on your side.
-- `min`, `max`, and `step` are the native attributes. The browser owns stepping, spin buttons, and the wheel.
+- `min`, `max`, and `step` are the native attributes. The browser owns stepping and the wheel.
+- `NumberInput.Stepper` stands in for the browser's spin buttons and mirrors them.
+
+## Anatomy
+
+On its own, a `NumberInput` renders a frame that holds the native input and a `NumberInput.Stepper`. Inside an `Input.Group` it renders the bare input, and you place `NumberInput.Stepper` as the group's last child, after a suffix or a `Field.StateIcon`.
+
+```svelte
+<NumberInput />
+
+<Input.Group>
+  <NumberInput />
+  <span>mm</span>
+  <NumberInput.Stepper />
+</Input.Group>
+```
 
 ## Usage
 
@@ -30,18 +50,36 @@ import twoWaySource from "./TwoWay.svelte?raw";
 
 For the controlled mode, see [State & binding](../state/).
 
+### Stepper
+
+`NumberInput.Stepper` mirrors the browser's spin buttons. A press calls the input's `stepUp()` or `stepDown()`, so the value moves one `step` within `min` and `max`, and the input fires `input` and `change`. `bind:value`, a function binding that refuses the write, and your own `oninput` and `onchange` all see it. Holding a button repeats the step. The stepper is for a pointer only. It takes no focus, keeps focus where it is, and is hidden from assistive technology, since the input is already a spinbutton and the keyboard stays native. It shows while the frame is hovered or holds focus, and always on a touch screen. A disabled or read-only input hides it.
+
+A standalone `NumberInput` renders one in place of the browser's spin buttons:
+
+<Example code={standaloneStepperSource} title="StandaloneStepper.svelte">
+  <StandaloneStepper client:visible />
+</Example>
+
+Inside an `Input.Group`, the group renders the stepper as its last child, right of a unit suffix, so the browser's spin buttons never show. Placing `<NumberInput.Stepper />` last yourself does the same.
+
+<Example code={groupedStepperSource} title="GroupedStepper.svelte">
+  <GroupedStepper client:visible />
+</Example>
+
 ### States
 
 <NumberInputShowcase client:visible />
 
 ## Styling
 
-Same as [`Input`](../input/#styling): `class` lands on the `<input>`, and it carries no width. Inside an `Input.Group` the input goes borderless and the group carries the border. The input carries `data-field-state` and `aria-invalid` from `state`.
+`class` lands on the frame of a standalone `NumberInput`, and it carries no width. Every other attribute lands on the `<input>`. Inside an `Input.Group` the input goes borderless, `class` lands on the `<input>`, and the group carries the border. The stepper fills the frame's height and meets its right border at any frame size. The input carries `data-field-state` and `aria-invalid` from `state`.
 
 ## Keyboard
 
-Native number input behavior: <kbd>ArrowUp</kbd> and <kbd>ArrowDown</kbd> step by `step` within `min` and `max`. Nothing is added or intercepted.
+Native number input behavior: <kbd>ArrowUp</kbd> and <kbd>ArrowDown</kbd> step by `step` within `min` and `max`. Nothing is added or intercepted. `NumberInput.Stepper` takes no Tab stop, like the browser's spin buttons.
 
 ## API
 
 <PropsTable name="number-input" />
+
+<PartsDoc name="number-input" />

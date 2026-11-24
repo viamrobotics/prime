@@ -30,6 +30,7 @@ import SsrMenu from './fixtures/SsrMenu.svelte';
 import SsrMenubar from './fixtures/SsrMenubar.svelte';
 import SsrMultiSelect from './fixtures/SsrMultiSelect.svelte';
 import SsrNotify from './fixtures/SsrNotify.svelte';
+import SsrNumberInput from './fixtures/SsrNumberInput.svelte';
 import SsrPopover from './fixtures/SsrPopover.svelte';
 import SsrRadioGroup from './fixtures/SsrRadioGroup.svelte';
 import SsrSelect from './fixtures/SsrSelect.svelte';
@@ -77,6 +78,11 @@ const rows: { name: string; expected: string; html: () => string }[] = [
 		name: 'NumberInput',
 		expected: 'type="number"',
 		html: () => render(NumberInput, { props: { 'aria-label': 'Quantity', value: 3 } }).body
+	},
+	{
+		name: 'NumberInput.Stepper',
+		expected: 'data-number-stepper',
+		html: () => render(SsrNumberInput).body
 	},
 	{
 		name: 'Progress',

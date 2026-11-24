@@ -118,7 +118,7 @@ import fileFieldBasicSource from "./FileFieldBasic.svelte?raw"
 
 ## NumberField
 
-`NumberField` wraps a native `<input type="number">` with an optional visible `label`. The input sits in a prime-ui `Input.Group` that wears the frame, with up and down buttons at its right edge that step on a pointer press and repeat while held. They show while the field is hovered or focused, take no focus, and are hidden from assistive technology. Without a `label`, pass `aria-label` or `aria-labelledby`, and the field does not scrub. `labelPlacement` is `'outside'` by default, and `'inset'` draws the label inside the input's left edge as a prefix, which fits a short label such as one axis letter.
+`NumberField` wraps a native `<input type="number">` with an optional visible `label`. The input sits in a prime-ui `Input.Group` that wears the frame, with prime-ui's `NumberInput.Stepper` at its right edge, whose up and down buttons step by `step` on a pointer press and repeat while held. They show while the field is hovered or focused, take no focus, and are hidden from assistive technology. Without a `label`, pass `aria-label` or `aria-labelledby`, and the field does not scrub. `labelPlacement` is `'outside'` by default, and `'inset'` draws the label inside the input's left edge as a prefix, which fits a short label such as one axis letter.
 
 ### Two-way binding
 
@@ -154,7 +154,7 @@ A scrub writes on every pointer move, so a function binding receives each interm
 | Drag the label sideways        | Scrub, moving the value by `step` for each pixel         |
 | Shift or Alt while scrubbing   | Scale each pixel by 10 or by a tenth                     |
 | Click the label                | Focus the input                                          |
-| Press the up or down button    | Step once, and repeat while held                         |
+| Press the up or down button    | Step once by `step`, and repeat while held               |
 | Slider: Arrow Left / Right / Up / Down | The range moves by `step`, natively              |
 | Slider: Home / End             | The range jumps to `min` or `max`, natively              |
 | Slider: readout                | Steps like a `NumberField`, without scrubbing            |

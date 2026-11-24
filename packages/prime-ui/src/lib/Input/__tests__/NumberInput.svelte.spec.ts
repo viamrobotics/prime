@@ -12,20 +12,21 @@ const input = (container: Element) => container.querySelector('input')!;
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
 
 describe('NumberInput', () => {
-	it('renders one bare number input carrying its value', () => {
+	it('renders one frame holding one number input carrying its value', () => {
 		const { container } = render(NumberInput, { props: { 'aria-label': 'Quantity', value: 5 } });
 
 		expect(container.children).toHaveLength(1);
+		expect(container.querySelectorAll('input')).toHaveLength(1);
 		expect(input(container).type).toBe('number');
 		expect(input(container).value).toBe('5');
 	});
 
-	it('takes its width from a consumer class', () => {
+	it('takes its width on the frame from a consumer class', () => {
 		const { container } = render(NumberInput, {
 			props: { 'aria-label': 'Quantity', class: 'w-24' }
 		});
 
-		expect(getComputedStyle(input(container)).width).toBe('96px');
+		expect(getComputedStyle(container.firstElementChild!).width).toBe('96px');
 	});
 
 	it.each([
