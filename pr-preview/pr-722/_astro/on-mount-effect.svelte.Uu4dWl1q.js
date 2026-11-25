@@ -1,1 +1,0 @@
-import{ct as e,nt as t}from"./client.C3HOevIA.js";function n(n){e(()=>t(()=>n()))}export{n as t};

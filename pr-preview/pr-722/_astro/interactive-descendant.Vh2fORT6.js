@@ -1,1 +1,0 @@
-var e=`button, a, input, select, textarea, summary, [tabindex], [contenteditable]:not([contenteditable="false"]), [role="button"]`,t=(t,n)=>{let r=t instanceof Element?t.closest(e):null;return r===null||r===n||!n.contains(r)?null:r};export{t as n,e as t};
