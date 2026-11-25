@@ -1,6 +1,6 @@
 {
 	"name": "@viamrobotics/prime-map",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "MapLibre maps for Svelte 5: the map, markers, map controls, and an optional Three.js bridge.",
 	"license": "Apache-2.0",
 	"publishConfig": {
