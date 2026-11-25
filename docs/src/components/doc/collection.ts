@@ -5,4 +5,5 @@ export type ComponentCollection =
   | "prime-tree"
   | "prime-controls"
   | "prime-editor"
-  | "prime-charts";
+  | "prime-charts"
+  | "prime-map";

@@ -1,0 +1,122 @@
+---
+title: "@viamrobotics/prime-map"
+description: "MapLibre maps for Svelte 5, with markers, map controls, and an optional Three.js bridge."
+---
+
+import { Aside, Code, Steps, Tabs, TabItem } from "@astrojs/starlight/components"
+import Example from "@docs/doc/Example.astro";
+import PropsTable from "@docs/doc/PropsTable.astro";
+
+import Demo from "./Demo.svelte";
+import Markers from "./Markers.svelte";
+import markersSource from "./Markers.svelte?raw";
+import Coordinates from "./Coordinates.svelte";
+import coordinatesSource from "./Coordinates.svelte?raw";
+
+`@viamrobotics/prime-map` is a set of MapLibre maps for Svelte 5. A `MapLibre` fills its parent and hands the map to the markers, controls, and layers inside it.
+
+<Aside type="caution">
+  The public API is unstable until 1.0. Expect breaking changes in minor
+  releases.
+</Aside>
+
+<Demo client:only="svelte" />
+
+- `MapLibre`, a map on OpenStreetMap or Google Maps tiles, with a reactive context for its children.
+- `MapLibreMarker` and `DirectionalMarker`, a pin and a heading arrow.
+- `CenterControls`, `FollowControls`, `NavigationControls`, and `SatelliteControls`.
+- `LngLatInput`, a latitude and longitude pair of fields.
+- Mercator and Cartesian conversions between longitude and latitude and meters.
+- A Three.js bridge on `@viamrobotics/prime-map/three` that renders a scene on the map.
+
+## Installation
+
+<Steps>
+
+1. Install the package and its peers. The `svelte` peer is `^5.29.0` and the `maplibre-gl` peer is `^6.0.0`. Add `three` only for the `./three` subpath.
+
+   <Tabs syncKey="pkg">
+     <TabItem label="pnpm">
+       <Code
+         code="pnpm add @viamrobotics/prime-map @viamrobotics/prime-ui @viamrobotics/prime-controls @viamrobotics/tailwind-config maplibre-gl"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="npm">
+       <Code
+         code="npm install @viamrobotics/prime-map @viamrobotics/prime-ui @viamrobotics/prime-controls @viamrobotics/tailwind-config maplibre-gl"
+         lang="sh"
+       />
+     </TabItem>
+     <TabItem label="yarn">
+       <Code
+         code="yarn add @viamrobotics/prime-map @viamrobotics/prime-ui @viamrobotics/prime-controls @viamrobotics/tailwind-config maplibre-gl"
+         lang="sh"
+       />
+     </TabItem>
+   </Tabs>
+
+2. Import the stylesheets once, after Tailwind. `MapLibre` imports maplibre-gl's own stylesheet.
+
+   ```css
+   @import "tailwindcss";
+   @import "@viamrobotics/prime-ui/styles.css";
+   @import "@viamrobotics/prime-controls/styles.css";
+   @import "@viamrobotics/prime-map/styles.css";
+   ```
+
+</Steps>
+
+## Usage
+
+`MapLibre` fills its parent, so give the parent a size. `bind:center` and `bind:zoom` follow the camera, `bind:satellite` follows the satellite view, and `bind:map` gives the maplibre-gl `Map`. Its children mount once the map loads its first style. A child reads the map through `useMapLibre()`, whose `map`, `center`, `zoom`, `maxZoom`, `size`, `mapProvider`, `apiKey`, and `satellite` are reactive, and listens to a map event with `useMapLibreEvent(event, listener)`. Both throw outside a `MapLibre`.
+
+### Markers
+
+`MapLibreMarker` draws maplibre-gl's pin, or an `element` you pass. `DirectionalMarker` draws an arrow that points along `rotation`, clockwise in degrees.
+
+<Example code={markersSource} title="Markers.svelte" height="20rem">
+  <Markers client:only="svelte" />
+</Example>
+
+### Coordinates
+
+`LngLatInput` needs no map. It calls `oninput` with a new `LngLat` when either field takes a number, and never for an empty field.
+
+<Example code={coordinatesSource} title="Coordinates.svelte">
+  <Coordinates client:visible />
+</Example>
+
+### Three.js
+
+`useMapLibreThreeRenderer(scene, camera, render)` adds a custom layer that copies the map's projection onto `camera.current` and places every object whose `userData.lngLat` holds a `{ lng, lat }`. A `THREE.Line` takes a list of points. `useMapLibreThreeRaycast(camera)` returns a `pointer` and a `compute(raycaster)` for picking those objects. Import both from `@viamrobotics/prime-map/three`, and call them in a component inside a `MapLibre`.
+
+## API
+
+### MapLibre
+
+<PropsTable name="map-libre" collection="prime-map" />
+
+### MapLibreMarker
+
+<PropsTable name="map-libre-marker" collection="prime-map" />
+
+### DirectionalMarker
+
+<PropsTable name="directional-marker" collection="prime-map" />
+
+### LngLatInput
+
+<PropsTable name="lng-lat-input" collection="prime-map" />
+
+### FollowControls
+
+<PropsTable name="follow-controls" collection="prime-map" />
+
+### NavigationControls
+
+<PropsTable name="navigation-controls" collection="prime-map" />
+
+### CenterControls
+
+<PropsTable name="center-controls" collection="prime-map" />

@@ -23,6 +23,7 @@
 				"../packages/prime-controls:package",
 				"../packages/prime-editor:package",
 				"../packages/prime-charts:package",
+				"../packages/prime-map:package",
 				"../packages/tweakpane-config:package"
 			],
 			"files": [
@@ -38,13 +39,15 @@
 				"../packages/prime-controls/dist/**",
 				"../packages/prime-editor/dist/**",
 				"../packages/prime-charts/dist/**",
+				"../packages/prime-map/dist/**",
 				"../packages/tweakpane-config/dist/**",
 				"../packages/prime-ui/src/lib/**",
 				"../packages/prime-panes/src/lib/**",
 				"../packages/prime-tree/src/lib/**",
 				"../packages/prime-controls/src/lib/**",
 				"../packages/prime-editor/src/lib/**",
-				"../packages/prime-charts/src/lib/**"
+				"../packages/prime-charts/src/lib/**",
+				"../packages/prime-map/src/lib/**"
 			],
 			"output": [],
 			"packageLocks": [
@@ -79,6 +82,7 @@
 				"../packages/prime-controls:package",
 				"../packages/prime-editor:package",
 				"../packages/prime-charts:package",
+				"../packages/prime-map:package",
 				"../packages/tweakpane-config:package"
 			],
 			"files": [
@@ -98,9 +102,11 @@
 				"../packages/prime-controls/dist/**",
 				"../packages/prime-editor/dist/**",
 				"../packages/prime-charts/dist/**",
+				"../packages/prime-map/dist/**",
 				"../packages/prime-controls/src/lib/**",
 				"../packages/prime-editor/src/lib/**",
 				"../packages/prime-charts/src/lib/**",
+				"../packages/prime-map/src/lib/**",
 				"../packages/tweakpane-config/dist/**",
 				"../packages/prime-ui/styles.css",
 				"../packages/prime-panes/styles.css",
@@ -108,6 +114,7 @@
 				"../packages/prime-controls/styles.css",
 				"../packages/prime-editor/styles.css",
 				"../packages/prime-charts/styles.css",
+				"../packages/prime-map/styles.css",
 				"../packages/tailwind-config/tailwind-config.css",
 				"../packages/tailwind-config/tailwind-config-dark.css"
 			],
@@ -144,6 +151,7 @@
 				"../packages/prime-controls/src/lib/**",
 				"../packages/prime-editor/src/lib/**",
 				"../packages/prime-charts/src/lib/**",
+				"../packages/prime-map/src/lib/**",
 				"../packages/tweakpane-config/src/lib/**",
 				"../packages/prime-ui/styles.css",
 				"../packages/prime-panes/styles.css",
@@ -151,6 +159,7 @@
 				"../packages/prime-controls/styles.css",
 				"../packages/prime-editor/styles.css",
 				"../packages/prime-charts/styles.css",
+				"../packages/prime-map/styles.css",
 				"../packages/tailwind-config/tailwind-config.css",
 				"../packages/tailwind-config/tailwind-config-dark.css"
 			],
@@ -180,6 +189,7 @@
 		"@viamrobotics/prime-controls": "workspace:^",
 		"@viamrobotics/prime-charts": "workspace:^",
 		"@viamrobotics/prime-editor": "workspace:^",
+		"@viamrobotics/prime-map": "workspace:^",
 		"@viamrobotics/prime-panes": "workspace:^",
 		"@viamrobotics/prime-tree": "workspace:^",
 		"@viamrobotics/prime-ui": "workspace:^",
@@ -198,6 +208,7 @@
 		"eslint-plugin-perfectionist": "^5.10.0",
 		"eslint-plugin-svelte": "catalog:",
 		"globals": "catalog:",
+		"maplibre-gl": "6.9.1",
 		"playwright": "^1.65.0",
 		"svelte": "^5.55.5",
 		"svelte-check": "catalog:",
