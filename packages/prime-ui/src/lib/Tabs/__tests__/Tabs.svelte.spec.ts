@@ -8,6 +8,7 @@ import BoundTabs from './fixtures/BoundTabs.svelte';
 import ClosableTabs from './fixtures/ClosableTabs.svelte';
 import ControlledTabs from './fixtures/ControlledTabs.svelte';
 import LabelledActionTab from './fixtures/LabelledActionTab.svelte';
+import RebuiltTabs from './fixtures/RebuiltTabs.svelte';
 import SingleTab from './fixtures/SingleTab.svelte';
 import UndefinedTabs from './fixtures/UndefinedTabs.svelte';
 
@@ -30,6 +31,10 @@ const selectedLabels = (container: Element) =>
 		.filter((item) => item.getAttribute('aria-selected') === 'true')
 		.map((item) => item.textContent?.trim());
 const owner = (container: Element) => container.querySelector('[data-testid="owner"]')?.textContent;
+const writes = (container: Element) =>
+	container.querySelector('[data-testid="writes"]')?.textContent;
+const sections = (...ids: string[]) =>
+	ids.map((id) => ({ id, label: id[0]!.toUpperCase() + id.slice(1) }));
 const button = (container: Element, name: string) =>
 	[...container.querySelectorAll('button')].find((item) => item.textContent?.trim() === name)!;
 const closeButton = (container: Element, label: string) =>
@@ -215,6 +220,67 @@ describe('Tabs', () => {
 		expect(labels(container)).toEqual(['Overview', 'Usage']);
 		expect(selectedLabels(container)).toEqual(['Usage']);
 		expect(visiblePanels(container)).toEqual(['Usage panel']);
+	});
+
+	it('keeps the selection when the tab list is rebuilt from fresh objects with the same ids', async () => {
+		const ids = ['details', 'appearance', 'pov'];
+		const { container, rerender } = render(RebuiltTabs, {
+			props: { tabs: sections(...ids), initial: 'appearance' }
+		});
+
+		await rerender({ tabs: sections(...ids) });
+		expect(selectedLabels(container)).toEqual(['Appearance']);
+		await rerender({ tabs: sections(...ids) });
+		await tick();
+
+		expect(selectedLabels(container)).toEqual(['Appearance']);
+		expect(visiblePanels(container)).toEqual(['Appearance panel']);
+		expect(owner(container)).toBe('appearance');
+		expect(writes(container), 'the bound value is never written').toBe('0');
+	});
+
+	it('keeps the selection when a rebuilt list adds and removes other tabs', async () => {
+		const { container, rerender } = render(RebuiltTabs, {
+			props: { tabs: sections('details', 'appearance', 'pov'), initial: 'appearance' }
+		});
+
+		await rerender({ tabs: sections('intro', 'details', 'appearance', 'pov') });
+		expect(selectedLabels(container)).toEqual(['Appearance']);
+		await rerender({ tabs: sections('intro', 'appearance', 'pov') });
+		await tick();
+
+		expect(labels(container)).toEqual(['Intro', 'Appearance', 'Pov']);
+		expect(selectedLabels(container)).toEqual(['Appearance']);
+		expect(visiblePanels(container)).toEqual(['Appearance panel']);
+		expect(writes(container)).toBe('0');
+	});
+
+	it('keeps the selection when every tab remounts with the same ids', async () => {
+		const ids = ['details', 'appearance', 'pov'];
+		const { container, rerender } = render(RebuiltTabs, {
+			props: { tabs: sections(...ids), initial: 'appearance', remount: true }
+		});
+
+		await rerender({ tabs: sections(...ids) });
+		expect(selectedLabels(container)).toEqual(['Appearance']);
+		await tick();
+
+		expect(selectedLabels(container)).toEqual(['Appearance']);
+		expect(visiblePanels(container)).toEqual(['Appearance panel']);
+		expect(writes(container)).toBe('0');
+	});
+
+	it('falls back to the leftmost tab when a rebuilt list drops the selected tab', async () => {
+		const { container, rerender } = render(RebuiltTabs, {
+			props: { tabs: sections('details', 'appearance', 'pov'), initial: 'appearance' }
+		});
+
+		await rerender({ tabs: sections('details', 'pov') });
+		await tick();
+
+		expect(selectedLabels(container)).toEqual(['Details']);
+		expect(visiblePanels(container)).toEqual(['Details panel']);
+		expect(owner(container), 'the fallback is computed, not written').toBe('appearance');
 	});
 
 	it('renders the panel of a single tab whose list is hidden', () => {

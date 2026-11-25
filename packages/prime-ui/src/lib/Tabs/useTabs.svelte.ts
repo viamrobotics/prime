@@ -24,17 +24,48 @@ interface TriggerEntry {
 	element: HTMLElement;
 }
 
-const createRegistry = <TEntry>() => {
+// An entry that unregisters while still present stays until the microtask after the flush. One that
+// registers with its key before then takes its place, so a read between the two never finds it missing.
+const createRegistry = <TEntry>(
+	keyOf: (entry: TEntry) => string,
+	isPresent: (entry: TEntry) => boolean = () => true
+) => {
 	let entries = $state.raw<TEntry[]>([]);
+	let leaving: TEntry[] = [];
+
+	const removeLeaving = () => {
+		if (leaving.length === 0) return;
+		entries = entries.filter((entry) => !leaving.includes(entry));
+		leaving = [];
+	};
+
+	const add = (entry: TEntry) => {
+		const key = keyOf(entry);
+		const replaced = leaving.find((existing) => keyOf(existing) === key);
+		if (replaced === undefined) {
+			entries = [...entries, entry];
+			return;
+		}
+		leaving = leaving.filter((existing) => existing !== replaced);
+		entries = entries.map((existing) => (existing === replaced ? entry : existing));
+	};
+
+	const remove = (entry: TEntry) => {
+		if (!isPresent(entry)) {
+			entries = entries.filter((existing) => existing !== entry);
+			return;
+		}
+		leaving.push(entry);
+		queueMicrotask(removeLeaving);
+	};
+
 	return {
 		get entries() {
 			return entries;
 		},
 		add: (entry: TEntry) => {
-			untrack(() => (entries = [...entries, entry]));
-			return () => {
-				entries = entries.filter((existing) => existing !== entry);
-			};
+			untrack(() => add(entry));
+			return () => remove(entry);
 		}
 	};
 };
@@ -51,8 +82,11 @@ const leftmostOf = (entries: readonly TriggerEntry[]) =>
 	)?.value;
 
 export const provideTabs = (options: TabsOptions): TabsContext => {
-	const triggers = createRegistry<TriggerEntry>();
-	const panels = createRegistry<string>();
+	const triggers = createRegistry<TriggerEntry>(
+		(entry) => entry.value,
+		(entry) => entry.element.isConnected
+	);
+	const panels = createRegistry<string>((value) => value);
 
 	const triggerValues = $derived(triggers.entries.map((entry) => entry.value));
 

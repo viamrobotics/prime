@@ -54,7 +54,7 @@ file tab, and selecting it scrolls the strip to show it.
 	}
 
 	const {
-		value,
+		value: valueProp,
 		disabled = false,
 		class: extraClasses,
 		children,
@@ -62,6 +62,10 @@ file tab, and selecting it scrolls the strip to show it.
 		status,
 		...restProps
 	}: Props = $props();
+
+	// The prop re-notifies when its source changes, such as a keyed `{#each}` item replaced by an
+	// equal one. A `$derived` notifies only when the string changes.
+	const value = $derived(valueProp);
 
 	const uid = $props.id();
 	const labelId = `${uid}-label`;
