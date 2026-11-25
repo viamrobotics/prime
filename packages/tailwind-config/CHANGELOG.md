@@ -1,5 +1,10 @@
 # @viamrobotics/tailwind-config
 
+## 1.12.1
+### Patch Changes
+
+- 44bed22: `input` clears `box-shadow`, so a form reset such as `@tailwindcss/forms` no longer draws a second focus ring on an input or inside an `Input.Group`.
+
 ## 1.12.0
 ### Minor Changes
 
