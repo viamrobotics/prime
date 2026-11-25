@@ -1,0 +1,1 @@
+import{Ft as e,ht as t,zt as n}from"./client.C3HOevIA.js";var r=Symbol(`MenuTriggerName`),i=e=>{let i=t({id:e});return n(r,i),i},a=()=>e(r);export{a as n,i as t};
