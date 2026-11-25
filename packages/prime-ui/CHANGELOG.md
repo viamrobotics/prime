@@ -1,5 +1,10 @@
 # @viamrobotics/prime-ui
 
+## 0.7.2
+### Patch Changes
+
+- 8454667: Fix `Tabs` selecting the wrong tab when its trigger list is rebuilt with the same ids.
+
 ## 0.7.1
 ### Patch Changes
 
