@@ -24,27 +24,39 @@ interface TriggerEntry {
 	element: HTMLElement;
 }
 
-// A tab that re-registers in the flush that unregistered it keeps its place, so a read between
-// the two never finds it missing. Its removal waits for the microtask after that flush.
-const createRegistry = <TEntry>(keyOf: (entry: TEntry) => string) => {
+// An entry that unregisters while still present stays until the microtask after the flush. One that
+// registers with its key before then takes its place, so a read between the two never finds it missing.
+const createRegistry = <TEntry>(
+	keyOf: (entry: TEntry) => string,
+	isPresent: (entry: TEntry) => boolean = () => true
+) => {
 	let entries = $state.raw<TEntry[]>([]);
-	const leaving = new Set<TEntry>();
+	let leaving: TEntry[] = [];
 
 	const removeLeaving = () => {
-		if (leaving.size === 0) return;
-		entries = entries.filter((entry) => !leaving.has(entry));
-		leaving.clear();
+		if (leaving.length === 0) return;
+		entries = entries.filter((entry) => !leaving.includes(entry));
+		leaving = [];
 	};
 
 	const add = (entry: TEntry) => {
 		const key = keyOf(entry);
-		const replaced = [...leaving].find((existing) => keyOf(existing) === key);
+		const replaced = leaving.find((existing) => keyOf(existing) === key);
 		if (replaced === undefined) {
 			entries = [...entries, entry];
 			return;
 		}
-		leaving.delete(replaced);
+		leaving = leaving.filter((existing) => existing !== replaced);
 		entries = entries.map((existing) => (existing === replaced ? entry : existing));
+	};
+
+	const remove = (entry: TEntry) => {
+		if (!isPresent(entry)) {
+			entries = entries.filter((existing) => existing !== entry);
+			return;
+		}
+		leaving.push(entry);
+		queueMicrotask(removeLeaving);
 	};
 
 	return {
@@ -53,10 +65,7 @@ const createRegistry = <TEntry>(keyOf: (entry: TEntry) => string) => {
 		},
 		add: (entry: TEntry) => {
 			untrack(() => add(entry));
-			return () => {
-				leaving.add(entry);
-				queueMicrotask(removeLeaving);
-			};
+			return () => remove(entry);
 		}
 	};
 };
@@ -73,7 +82,10 @@ const leftmostOf = (entries: readonly TriggerEntry[]) =>
 	)?.value;
 
 export const provideTabs = (options: TabsOptions): TabsContext => {
-	const triggers = createRegistry<TriggerEntry>((entry) => entry.value);
+	const triggers = createRegistry<TriggerEntry>(
+		(entry) => entry.value,
+		(entry) => entry.element.isConnected
+	);
 	const panels = createRegistry<string>((value) => value);
 
 	const triggerValues = $derived(triggers.entries.map((entry) => entry.value));

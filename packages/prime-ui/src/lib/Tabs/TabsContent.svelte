@@ -17,14 +17,14 @@ selected.
 		value: string;
 	}
 
-	const { value, class: extraClasses, children, ...restProps }: Props = $props();
+	const { value: valueProp, class: extraClasses, children, ...restProps }: Props = $props();
+
+	// A `$derived` notifies only when the string changes, not whenever the prop's source does.
+	const value = $derived(valueProp);
 
 	const tabs = useTabs();
 
-	// A `$derived` notifies only when the string changes, not whenever the prop's source does.
-	const registeredValue = $derived(value);
-
-	$effect(() => tabs?.registerPanel(registeredValue));
+	$effect(() => tabs?.registerPanel(value));
 </script>
 
 <Tabs.Content {value} class={['focus-ring', extraClasses]} {...restProps}>
