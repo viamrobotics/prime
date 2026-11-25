@@ -26,4 +26,5 @@ export const collections = {
   "prime-controls": components("prime-controls", "anchors"),
   "prime-editor": components("prime-editor", "anchors"),
   "prime-charts": components("prime-charts", "anchors"),
+  "prime-map": components("prime-map", "anchors"),
 };

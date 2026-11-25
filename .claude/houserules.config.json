@@ -240,6 +240,24 @@
       ]
     },
     {
+      "name": "prime-map",
+      "prefix": "PRIME_MAP",
+      "packageName": "@viamrobotics/prime-map",
+      "pathPrefix": "packages/prime-map/",
+      "sourcePath": "packages/prime-map/src",
+      "label": "Prime Map",
+      "fixCommands": [
+        "lint:fix",
+        "format:fix"
+      ],
+      "verifyCommands": [
+        "check",
+        "lint",
+        "format",
+        "test"
+      ]
+    },
+    {
       "name": "docs",
       "prefix": "DOCS",
       "packageName": "@viamrobotics/prime-docs",

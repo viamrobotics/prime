@@ -67,6 +67,18 @@ export const sourceAliases = [
     replacement: here("../packages/prime-charts/src/lib/index.ts"),
   },
   {
+    find: "@viamrobotics/prime-map/styles.css",
+    replacement: here("../packages/prime-map/styles.css"),
+  },
+  {
+    find: /^@viamrobotics\/prime-map\/three$/,
+    replacement: here("../packages/prime-map/src/lib/three.ts"),
+  },
+  {
+    find: /^@viamrobotics\/prime-map$/,
+    replacement: here("../packages/prime-map/src/lib/index.ts"),
+  },
+  {
     find: /^@viamrobotics\/tweakpane-config$/,
     replacement: here("../packages/tweakpane-config/src/lib/index.ts"),
   },

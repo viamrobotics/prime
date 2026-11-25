@@ -12,6 +12,7 @@ Each package publishes as `@viamrobotics/<name>` and owns its build, tests, and 
 - [`prime-controls`](packages/prime-controls/CLAUDE.md): realtime tool-panel controls.
 - [`prime-editor`](packages/prime-editor/CLAUDE.md): CodeMirror 6 editor with a diff view.
 - [`prime-charts`](packages/prime-charts/CLAUDE.md): charts built on LayerCake, starting with a time-series line chart.
+- [`prime-map`](packages/prime-map/CLAUDE.md): MapLibre maps, with markers, map controls, and an optional Three.js bridge.
 - [`tailwind-config`](packages/tailwind-config/CLAUDE.md): design tokens and fonts.
 - [`tweakpane-config`](packages/tweakpane-config/CLAUDE.md): Tweakpane theme for the docs demos.
 

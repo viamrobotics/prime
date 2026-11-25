@@ -7,6 +7,7 @@
 @import "@viamrobotics/prime-controls/styles.css";
 @import "@viamrobotics/prime-editor/styles.css";
 @import "@viamrobotics/prime-charts/styles.css";
+@import "@viamrobotics/prime-map/styles.css";
 @import "starlight-theme-nova/tailwind.css";
 
 /* Each package's styles.css is the entry consumers use and points at the built dist. Under
@@ -18,6 +19,7 @@
 @source "../../packages/prime-controls/src/lib";
 @source "../../packages/prime-editor/src/lib";
 @source "../../packages/prime-charts/src/lib";
+@source "../../packages/prime-map/src/lib";
 
 /* Starlight's font variables point at Viam's fonts instead of nova's. */
 :root {
