@@ -99,19 +99,23 @@ file tab, and selecting it scrolls the strip to show it.
 		else if (tab.right > view.right) list.scrollLeft += tab.right - view.right;
 	});
 
+	// The `value` prop re-notifies when its source changes, such as a keyed `{#each}` item replaced
+	// by an equal one. A `$derived` notifies only when the string changes.
+	const registeredValue = $derived(value);
+
 	$effect(() => {
 		if (!element || !tabs) return;
-		return tabs.register(value, element);
+		return tabs.register(registeredValue, element);
 	});
 
 	$effect(() => {
 		if (!element || !reorder) return;
-		return reorder.track(value, element);
+		return reorder.track(registeredValue, element);
 	});
 
 	$effect(() => {
 		if (!element || !drag || !isMovable) return;
-		return watchTabDrag(element, value, drag);
+		return watchTabDrag(element, registeredValue, drag);
 	});
 
 	const moveBy = (step: number) => {

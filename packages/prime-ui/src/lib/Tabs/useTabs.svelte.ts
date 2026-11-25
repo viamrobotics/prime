@@ -24,16 +24,38 @@ interface TriggerEntry {
 	element: HTMLElement;
 }
 
-const createRegistry = <TEntry>() => {
+// A tab that re-registers in the flush that unregistered it keeps its place, so a read between
+// the two never finds it missing. Its removal waits for the microtask after that flush.
+const createRegistry = <TEntry>(keyOf: (entry: TEntry) => string) => {
 	let entries = $state.raw<TEntry[]>([]);
+	const leaving = new Set<TEntry>();
+
+	const removeLeaving = () => {
+		if (leaving.size === 0) return;
+		entries = entries.filter((entry) => !leaving.has(entry));
+		leaving.clear();
+	};
+
+	const add = (entry: TEntry) => {
+		const key = keyOf(entry);
+		const replaced = [...leaving].find((existing) => keyOf(existing) === key);
+		if (replaced === undefined) {
+			entries = [...entries, entry];
+			return;
+		}
+		leaving.delete(replaced);
+		entries = entries.map((existing) => (existing === replaced ? entry : existing));
+	};
+
 	return {
 		get entries() {
 			return entries;
 		},
 		add: (entry: TEntry) => {
-			untrack(() => (entries = [...entries, entry]));
+			untrack(() => add(entry));
 			return () => {
-				entries = entries.filter((existing) => existing !== entry);
+				leaving.add(entry);
+				queueMicrotask(removeLeaving);
 			};
 		}
 	};
@@ -51,8 +73,8 @@ const leftmostOf = (entries: readonly TriggerEntry[]) =>
 	)?.value;
 
 export const provideTabs = (options: TabsOptions): TabsContext => {
-	const triggers = createRegistry<TriggerEntry>();
-	const panels = createRegistry<string>();
+	const triggers = createRegistry<TriggerEntry>((entry) => entry.value);
+	const panels = createRegistry<string>((value) => value);
 
 	const triggerValues = $derived(triggers.entries.map((entry) => entry.value));
 

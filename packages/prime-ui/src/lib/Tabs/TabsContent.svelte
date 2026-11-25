@@ -21,7 +21,10 @@ selected.
 
 	const tabs = useTabs();
 
-	$effect(() => tabs?.registerPanel(value));
+	// A `$derived` notifies only when the string changes, not whenever the prop's source does.
+	const registeredValue = $derived(value);
+
+	$effect(() => tabs?.registerPanel(registeredValue));
 </script>
 
 <Tabs.Content {value} class={['focus-ring', extraClasses]} {...restProps}>
